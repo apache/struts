@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <title>WebWork - 
+        HttpSession in Action
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>Use this if you want to be web agnostic (independent of the servlet API)</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">ActionContext.getContext().getSession()</pre>
+</div></div>
+
+<p>The following gives you the same thing as above:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">ServletActionContext.getRequest().getSession()</pre>
+</div></div>
+
+<p>Note: Be sure not to use ActionContext.getContext() in the constructor of your action since the values may not be set up already (returning null for getSession()).</p>
+
+<p>If you really need to get access to the HttpSession, use the ServletConfigInterceptor (see <a href="Interceptors.html" title="Interceptors">Interceptors</a>).</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

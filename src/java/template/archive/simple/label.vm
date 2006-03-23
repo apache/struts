@@ -1,0 +1,6 @@
+<label
+#if ($parameters.id)               id="$!webwork.htmlEncode($parameters.id)"                #end
+#if ($parameters.cssClass)         class="$!webwork.htmlEncode($parameters.cssClass)"       #end
+#if ($parameters.cssStyle)         style="$!webwork.htmlEncode($parameters.cssStyle)"       #end
+#if ($parameters.for)              for="$!webwork.htmlEncode($parameters.for)"              #end
+>#if ($parameters.nameValue)$!webwork.htmlEncode($parameters.nameValue)#end</label>

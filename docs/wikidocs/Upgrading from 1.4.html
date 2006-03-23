@@ -1,0 +1,232 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Upgrading from 1.4
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h3><a name="Upgradingfrom1.4-Packagechanges"></a>Package changes</h3>
+<p>Webwork1.x was seperated into two projects, XWork and Webwork.  From this, several classes have been moved to different package names.</p>
+<ul>
+	<li>ActionSupport has moved from <b>webwork.ActionSupport</b> to <b>com.opensymphony.xwork.ActionSupport</b>
+	<ul>
+		<li>doExecute() no longer exists, override execute()</li>
+		<li>the methods addError and addErrorMessage are now addFieldError and addActionError respectively</li>
+	</ul>
+	</li>
+</ul>
+
+
+<h3><a name="Upgradingfrom1.4-Configurationchanges"></a>Configuration changes</h3>
+
+<ul>
+	<li><b>actions.xml/views.properties needs to be converted to xwork.xml</b><br/>
+If you're using an actions.xml file to configure your webwork 1, you can use the attached XSLT to convert the actions.xml file to a vanilla xwork.xml file.<br/>
+To apply this XSLT, you'll need to do the following: <br/>
+Get a copy of the XSLT. You can find the latest version in CVS in webwork/src/etc/actions.xsl . Next, find yourself an XSLT rendering engine. Xalan is a good choice and can be found at <a href="http://xml.apache.org/xalan-j/index.html" title="Visit page outside Confluence">&#104;ttp://xml.apache.org/xalan-j/index.html</a> <br/>
+Finally, do the conversion. </li>
+</ul>
+
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">java org.apache.xalan.xslt.<span class="code-object">Process</span> -IN actions.xml -XSL actions.xsl -OUT xwork.xml</pre>
+</div></div>
+
+<p>Remember that you'll need to Xalan libraries in your classpath to run the above command. <br/>
+If you want to look at these pages directly in your browser, I recommend user Internet Explorer as it automagically formats XML documents reasonably. There one caveat though. WW1 had a way to shorten the declaration of actions by allowing you to specify a package prefix in webwork.properties file. Since this information is outside the actions.xml file, the XSLT is unable to take advantage of it. Consequently, you might need to edit the xwork.xml file to update the class names. </p>
+
+
+<p>WebWork 1.x configuration used a pull paradigm to load action configurations when they are asked for, whereas WebWork2 builds the configuration up-front to make the configuration queryable. The webwork.MigrationConfiguration must therefore act as an adapter between these two paradigms. It does this by returning a custom RuntimeConfiguration which first tries the default XWork Configuration (which, by default, loads configuration information from a file named "xwork.xml" in the root of the classpath) and then attempts to load action configuration using the Configuration classes from WebWork 1.x. In this way, an application can be slowly converted over to WebWork2 while reusing the configuration and Actions from a WebWork 1.x application.  One caveat in this is that your migrated application MUST be rebuilt against the WebWork2 and migration jar files, as the classloader will rightly recognize that the webwork.Action and webwork.ActionSupport in WebWork 1.x are not the same as those provided by the migration jar files. Other than that, it should be seamless (and let us know if it isn't).</p>
+
+<p>If the webwork.MigrationRuntimeConfiguration does not find the action configuration using the RuntimeConfiguration from the supplied RuntimeConfiguration (which is acquried from the Xwork DefaultConfiguration and will load configurations from all of the sources configured for XWork / WebWork2), it will build an ActionConfiguration by instantiating an Action using the ActionFactories from WebWork 1.x. The ActionFactory stack used is a subset of the default ActionFactory stack used in WebWork 1.x:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml">factory = new JavaActionFactory();
+        factory = new ScriptActionFactoryProxy(factory);
+        factory = new XMLActionFactoryProxy(factory);
+        factory = new PrefixActionFactoryProxy(factory);
+        factory = new JspActionFactoryProxy(factory);
+        factory = new CommandActionFactoryProxy(factory);
+        factory = new AliasingActionFactoryProxy(factory);
+        factory = new CommandActionFactoryProxy(factory);
+        factory = new ContextActionFactoryProxy(factory);</pre>
+</div></div>
+
+<p>Some of the ActionFactory classes have been left out as they are handled by Interceptors in WebWork2. If the Action instance is created (meaning that the configuration has been found in the webwork.properties or actions.xml files used by the WebWork 1.x configuration classes) a parameter Map is created by introspecting the Action instance. A Map is needed for results and, again, WebWork 1.x used a pull paradigm to find results when they were needed, so a LazyResultMap is created which extends HashMap and overrides get() to look up the Result configuration if it has not previously been loaded. If the result ends in the Action suffix (defaulting to ".action"), then a ChainingResult is created, otherwise a ServletDispatcherResult is created. Using the Action class of the instantiated Action, the Map of parameters introspected from the Action instance, and the LazyResultMap, a new ActionConfig is created. The ActionConfig is saved into a special Package, "webwork-migration", so that it will pick up the default Interceptor stack defined for that package. The "webwork-migration" package is defined in a webwork-migration.xml file which is included in the migration jar file and which is automatically added to the Xwork configuration providers when the MigrationConfiguration is used:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;!DOCTYPE xwork PUBLIC <span class="code-quote">"-//OpenSymphony Group//XWork 1.0//EN"</span> <span class="code-quote">"http://www.opensymphony.com/xwork/xwork-1.0.dtd"</span>&gt;</span>
+
+<span class="code-tag">&lt;xwork&gt;</span>
+    <span class="code-tag">&lt;include file=<span class="code-quote">"webwork-default.xml"</span>/&gt;</span>
+    <span class="code-tag">&lt;package name=<span class="code-quote">"webwork-migration"</span> abstract=<span class="code-quote">"true"</span> extends=<span class="code-quote">"webwork-default"</span>&gt;</span>
+        <span class="code-tag">&lt;interceptors&gt;</span>
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"migrationStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"timer"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"logger"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"chain"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"static-params"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"prepare"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"params"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"workflow"</span>/&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+        <span class="code-tag">&lt;/interceptors&gt;</span>
+        <span class="code-tag">&lt;default-interceptor-ref name=<span class="code-quote">"migrationStack"</span>/&gt;</span>
+    <span class="code-tag">&lt;/package&gt;</span>
+<span class="code-tag">&lt;/xwork&gt;</span></pre>
+</div></div>
+
+<p>Here we can see that a number of the functions previously performed by ActionFactories in WebWork 1.x are now replaced by Interceptors in WebWork2, including the parameters, the chaining, calling prepare(), and the workflow (which was formerly implemented in ActionSupport in WebWork 1.x).</p>
+
+<p>By creating and saving the ActionConfig in the PackageConfig for the "webwork-migration" package, the ActionConfig for the migrated Action is available for future calls, obviating the need to re-parse the old configuration files and making the configuration for the Action available for querying via the configuration API for tools such as the configuration browser.</p>
+
+
+<h3><a name="Upgradingfrom1.4-TagChanges"></a>Tag Changes</h3>
+<p>The biggest change is the use of OGNL for accessing object properties.  Properties are no longer accessed with a forward slash "<b>/</b>" but with a dot "<b>.</b>" Also, rather than using "<b>..</b>" to traverse down the stack, we now use "[n]" where n is some positive number. Lastly, in WebWork 1.x one could access special named objects (the request scope attributes to be exact) by using "@foo", but now special variables are accessed using "#foo".  However, it is important to note that "#foo" does NOT access the request attributes. "#foo" is merely a request to another object in the OgnlContext other than the root.  See <a href="OGNL.html" title="OGNL">OGNL</a> reference for more details.</p>
+
+<p>Also see <a href="JSP Expression Language Comparison with WebWork 1.x.html" title="JSP Expression Language Comparison with WebWork 1.x">JSP Expression Language Comparison with WebWork 1.x</a> for a table of the expression language changes.</p>
+
+<h4><a name="Upgradingfrom1.4-propertytag"></a>property tag</h4>
+
+<p>The <a href="property.html" title="property">property</a> tag is now only used to print out values from the stack. In WW1, it was also used to set a variable in the scope, and to push properties to the top of the stack. These functions are now performed by the <a href="set.html" title="set">set</a> and <a href="push.html" title="push">push</a> tags.</p>
+
+<h4><a name="Upgradingfrom1.4-actiontag"></a>action tag</h4>
+
+<p>The <a href="action.html" title="action">action</a> tag does not evaluate the body section any more and does not push the executed action onto the ValueStack.  Instead, use the "<b>id</b>" attribute to assign a name to the action and reference it as "<b>#id</b>".</p>
+
+<h4><a name="Upgradingfrom1.4-Examples"></a>Examples</h4>
+
+<p>Lets enumerate some examples of differences between code snips using <a href="WebWork.html" title="WebWork">WW:WebWork</a> and <a href="WebWork.html" title="WebWork">WW:WebWork</a>.</p>
+
+<ul>
+	<li><em>New JSP syntax</em></li>
+</ul>
+
+
+<p>There are numerous changes in syntax. First of all there are new tags and secondly there is a new expression language. Here's a small example:</p>
+
+<p><b>Webwork 1</b></p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:property value=<span class="code-quote">"a/b"</span>&gt;</span>
+  <span class="code-tag">&lt;ww:property value=<span class="code-quote">"foo"</span> /&gt;</span>
+<span class="code-tag">&lt;/ww:property&gt;</span></pre>
+</div></div>
+<p><b>Webwork 2</b></p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:push value=<span class="code-quote">"a.b"</span>&gt;</span>
+  <span class="code-tag">&lt;ww:property value=<span class="code-quote">"foo"</span> /&gt;</span>
+<span class="code-tag">&lt;/ww:push&gt;</span></pre>
+</div></div>
+
+<p>One can note that the "push" tag doesn't just push it pops too at the end of the tag. Surprise! Also note the "." instead of the "/" for traversing object properties.</p>
+
+<ul>
+	<li><em>List errors posted by an Action</em><br/>
+<b>Webwork 1</b>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;webwork:if test=<span class="code-quote">"hasErrorMessages == true"</span>&gt;</span>
+  ERROR:<span class="code-tag">&lt;br /&gt;</span>
+  <span class="code-tag">&lt;font color=<span class="code-quote">"red"</span>&gt;</span>
+    <span class="code-tag">&lt;webwork:iterator value=<span class="code-quote">"errorMessages"</span>&gt;</span>
+      <span class="code-tag">&lt;webwork:property/&gt;</span><span class="code-tag">&lt;br /&gt;</span>
+    <span class="code-tag">&lt;/webwork:iterator&gt;</span>
+  <span class="code-tag">&lt;/font&gt;</span>
+<span class="code-tag">&lt;/webwork:if&gt;</span></pre>
+</div></div>
+<p><b>Webwork 2</b></p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;webwork:if test=<span class="code-quote">"hasErrors()"</span>&gt;</span>
+  ERROR:<span class="code-tag">&lt;br /&gt;</span>
+  <span class="code-tag">&lt;font color=<span class="code-quote">"red"</span>&gt;</span>
+    <span class="code-tag">&lt;webwork:iterator value=<span class="code-quote">"actionErrors"</span>&gt;</span>
+      <span class="code-tag">&lt;webwork:property/&gt;</span><span class="code-tag">&lt;br /&gt;</span>
+    <span class="code-tag">&lt;/webwork:iterator&gt;</span>
+  <span class="code-tag">&lt;/font&gt;</span>
+<span class="code-tag">&lt;/webwork:if&gt;</span></pre>
+</div></div></li>
+</ul>
+
+
+
+<h2><a name="Upgradingfrom1.4-Updateyourweb.xmlfile"></a>Update your web.xml file</h2>
+<ul>
+	<li>If you're using Velocity for views, you'll need to make sure you have the following snippet. Specifically note that the &lt;load-on-startup&gt; tag is now required so that the servlet can initialize some important Velocity properties.
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;servlet&gt;
+    &lt;servlet-name&gt;velocity&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;com.opensymphony.webwork.views.velocity.WebWorkVelocityServlet&lt;/servlet-class&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+&lt;/servlet&gt;</pre>
+</div></div></li>
+</ul>
+
+
+<ul>
+	<li>Set the property <b>webwork.velocity.configfile</b> in your _<em>webwork.properties</em>_. For example:
+<div class="code"><div class="codeContent">
+<pre class="code-java">webwork.velocity.configfile=velocity.properties</pre>
+</div></div></li>
+</ul>
+
+
+<p>WebWork will use this file to initialize the Velocity engine. The search path for the file is:</p>
+<ol>
+	<li>context root (web root)</li>
+	<li>WEB-INF/</li>
+	<li>classpath</li>
+</ol>
+
+
+
+<ul>
+	<li>Additional Steps:</li>
+</ul>
+<ol>
+	<li>If you used the &lt;ww:action taglib in 1.3... you used to refernece the java Action classname. In 2.x this reference is now the action name not the class. you will need to change all your old references in your view.</li>
+</ol>
+
+
+<h3><a name="Upgradingfrom1.4-ResultExceptiondoesn%27texistanymore"></a>ResultException doesn't exist anymore</h3>
+
+<p>It might be possible to copy WW1's ResultException, and write an Interceptor that catches the ResultExceptions and add the result of getMessage() to the actionErrors of the<br/>
+executed Action and return ResultException.getResult(). </p>
+
+<p>Maybe it would be possible to include ResultException in WW2 too to make migration easier?!</p>
+<h3><a name="Upgradingfrom1.4-DateFormatterdoesn%27texistanymore"></a>DateFormatter doesn't exist anymore</h3>
+<p>It can be replaced by directly using <b>java.text.DateFormat</b></p>
+<h3><a name="Upgradingfrom1.4-addError%28String%2CString%29inwebwork.action.ActionSupporthasbeenremoved"></a>addError(String, String) in webwork.action.ActionSupport has been removed</h3>
+
+<p>The new method to use is <b>addFieldError(String, String)</b>.</p>
+<h3><a name="Upgradingfrom1.4-addErrorMessage%28String%29inwebwork.action.ActionSupporthasbeenremoved"></a>addErrorMessage(String) in webwork.action.ActionSupport has been removed</h3>
+
+<p>The new method is now <b>addActionError(String)</b>.</p>
+<h3><a name="Upgradingfrom1.4-webwork.util.ValueStackhasbeenremoved"></a>webwork.util.ValueStack has been removed</h3>
+
+<p>The ValueStack is <b>com.opensymphony.xwork.util.OgnlValueStack</b></p>
+
+<p>The old methods <b>pushValue</b> and <b>popValue</b> are renamed to simply <b>push</b> and<br/>
+<b>pop</b>.</p>
+
+<p>An instance of the ValueStack can be obtained by using <b>ActionContext.getContext().getValueStack</b> instead of the old <b>ValueStack.getStack()</b>.</p>
+<h3><a name="Upgradingfrom1.4-AwareInterfaceshavebeenremoved"></a>*Aware-Interfaces have been removed</h3>
+
+<p>Instead of implementing <b>ServletRequestAware</b> etc the <br/>
+<b>[Servlet]ActionContext.getXXX</b>-methods can be used to obtain application-map, request, response etc.</p>
+<h3><a name="Upgradingfrom1.4-CommandDriveninterfaceremoved"></a>CommandDriven interface removed</h3>
+
+<p>The <b>CommandDriven</b> interface is removed. It is not neccesary to implement a special interface when working with commands anymore. Use the <b>method</b> attribute in your <b>action</b>-Element in xwork.xml to tell xwork which method to invoke on your action.</p>
+<h3><a name="Upgradingfrom1.4-isCommand%28String%29methodhasbeenremoved"></a>isCommand(String) method has been removed</h3>
+
+<p>You can see which alias you're accessing by doing this: ActionContext.getContext().getActionInvocation().getProxy().getActionName()</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

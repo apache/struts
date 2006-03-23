@@ -1,0 +1,81 @@
+<html>
+    <head>
+        <title>WebWork 2 : 结果类型</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : 结果类型
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Dec 13, 2004 by <font color="#0050B2">casey</font>.
+				    </div>
+
+				    <p class="paragraph"><h2 style="margin: 4px 0px 4px 0px;" class="heading2"><a name="ResultTypes-Overview">  综述</a></h2></p><b class="strong">结果类型</b>是一些类, 用于决定活动值执行完毕并返回一个结果后应该执行那些动作. 开发者可以根据应用会环境的需要自由的创建自己的结果类型. 在WebWork 2中, 例如, Servlet和Velocity结果类型已经编写完成用来处理视图绘制.<p class="paragraph"><ins class="inserted">注意:</ins> 所有WebWork附带的结果类型都实现了<tt class="monospaced">com.opensymphony.xwork.Result</tt>接口, 它描述了所有活动执行结果的通用接口, 不管是显示Web页面, 生成电子邮件, 发送JMS消息, 等等.</p>结果类型定义了类并将它映射为到一个名字以便在活动结果配置中引用. 它为这些类提供了简写的名值对. 
+<div class="code"><div class="codeHeader"><b>webwork-default.xml的片断</b></div><div class="codeContent">
+<pre>...&#10;<span class="xml&#45;tag">&lt;result&#45;types&gt;</span>&#10;    <span class="xml&#45;tag">&lt;result&#45;type name=<span class="xml&#45;quote">&quot;dispatcher&quot;</span> class=<span class="xml&#45;quote">&quot;com.opensymphony.webwork.dispatcher.ServletDispatcherResult&quot;</span> default=<span class="xml&#45;quote">&quot;true&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;result&#45;type name=<span class="xml&#45;quote">&quot;redirect&quot;</span> class=<span class="xml&#45;quote">&quot;com.opensymphony.webwork.dispatcher.ServletRedirectResult&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;result&#45;type name=<span class="xml&#45;quote">&quot;velocity&quot;</span> class=<span class="xml&#45;quote">&quot;com.opensymphony.webwork.dispatcher.VelocityResult&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;result&#45;type name=<span class="xml&#45;quote">&quot;chain&quot;</span> class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.ActionChainResult&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;result&#45;type name=<span class="xml&#45;quote">&quot;xslt&quot;</span> class=<span class="xml&#45;quote">&quot;com.opensymphony.webwork.views.xslt.XSLTResult&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;result&#45;type name=<span class="xml&#45;quote">&quot;jasper&quot;</span> class=<span class="xml&#45;quote">&quot;com.opensymphony.webwork.views.jasperreports.JasperReportsResult&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;result&#45;type name=<span class="xml&#45;quote">&quot;freemarker&quot;</span> class=<span class="xml&#45;quote">&quot;com.opensymphony.webwork.views.freemarker.FreemarkerResult&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;result&#45;type name=<span class="xml&#45;quote">&quot;httpheader&quot;</span> class=<span class="xml&#45;quote">&quot;com.opensymphony.webwork.dispatcher.HttpHeaderResult&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;result&#45;type name=<span class="xml&#45;quote">&quot;stream&quot;</span> class=<span class="xml&#45;quote">&quot;com.opensymphony.webwork.dispatcher.StreamResult&quot;</span>/&gt;</span>&#10;<span class="xml&#45;tag">&lt;/result&#45;types&gt;</span>&#10;...</pre>
+</div></div><br/>
+
+<div class="code"><div class="codeHeader"><b>xwork.xml的片断</b></div><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;include file=<span class="xml&#45;quote">&quot;webwork&#45;default.xml&quot;</span>/&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;package name=<span class="xml&#45;quote">&quot;myPackage&quot;</span> extends=<span class="xml&#45;quote">&quot;default&quot;</span>&gt;</span>&#10;  <span class="xml&#45;tag">&lt;action name=<span class="xml&#45;quote">&quot;bar&quot;</span> class=<span class="xml&#45;quote">&quot;myPackage.barAction&quot;</span>&gt;</span>&#10;    <span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; default result type is <span class="xml&#45;quote">&quot;dispatcher&quot;</span> &#45;&#45;&gt;</span></span>&#10;    <span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; default result name is <span class="xml&#45;quote">&quot;success&quot;</span> &#45;&#45;&gt;</span></span>&#10;    <span class="xml&#45;tag">&lt;result&gt;</span>foo.jsp<span class="xml&#45;tag">&lt;/result&gt;</span>&#10;    <span class="xml&#45;tag">&lt;result name=<span class="xml&#45;quote">&quot;error&quot;</span>&gt;</span>error.jsp<span class="xml&#45;tag">&lt;/result&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/result&gt;</span>&#10;  <span class="xml&#45;tag">&lt;/action&gt;</span>&#10;<span class="xml&#45;tag">&lt;/package&gt;</span></pre>
+</div></div><p class="paragraph"><h2 class="heading2"><a name="ResultTypes-ResultTypes"> Result Types</a></h2></p>Webwork提供了<tt class="monospaced">com.opensymphony.xwork.Result</tt>接口的几个实现使得基于Web的应用容易与活动相结合.  这些结果类型包括:<br/>
+
+<table class="wikitable">
+<tr>
+<th> Result Type </th><th> name </th><th> class </th>
+</tr><tr>
+<td> <a href="Dispatcher Result.html" title="Dispatcher Result">Dispatcher Result</a> </td><td> dispatcher </td><td> com.opensymphony.webwork.dispatcher.ServletDispatcherResult </td>
+</tr><tr>
+<td> <a href="Redirect Result.html" title="Redirect Result">Redirect Result</a> </td><td> redirect </td><td> com.opensymphony.webwork.dispatcher.ServletRedirectResult </td>
+</tr><tr>
+<td> <a href="Action Chaining Result.html" title="Action Chaining Result">Action Chaining Result</a> </td><td> chain </td><td> com.opensymphony.xwork.ActionChainResult </td>
+</tr><tr>
+<td> <a href="Velocity Result.html" title="Velocity Result">Velocity Result</a> </td><td> velocity </td><td> com.opensymphony.webwork.dispatcher.VelocityResult </td>
+</tr><tr>
+<td> <a href="FreeMarker Result.html" title="FreeMarker Result">FreeMarker Result</a> </td><td> freemarker </td><td> com.opensymphony.webwork.views.freemarker.FreemarkerResult </td>
+</tr><tr>
+<td> <a href="JasperReports Result.html" title="JasperReports Result">JasperReports Result</a> </td><td> jasper </td><td> com.opensymphony.webwork.views.jasperreports.JasperReportsResult </td>
+</tr><tr>
+<td> <a href="XSL Result.html" title="XSL Result">XSL Result</a> </td><td> xslt </td><td> com.opensymphony.webwork.views.xslt.XSLTResult </td>
+</tr><tr>
+<td> <a href="HttpHeader Result.html" title="HttpHeader Result">HttpHeader Result</a> </td><td> header </td><td> com.opensymphony.webwork.dispatcher.HttpHeaderResult </td>
+</tr><tr>
+<td> <a href="Stream Result.html" title="Stream Result">Stream Result</a> </td><td> stream </td><td> com.opensymphony.webwork.dispatcher.StreamResult </td>
+</tr>
+</table><br/>
+结果在xwork.xml中指定并嵌套在&lt;action&gt;中. 如果你只需要指定"location"属性, 可以使用简写形式:<br/>
+
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;action name=<span class="xml&#45;quote">&quot;bar&quot;</span> class=<span class="xml&#45;quote">&quot;myPackage.barAction&quot;</span>&gt;</span>&#10;  <span class="xml&#45;tag">&lt;result name=<span class="xml&#45;quote">&quot;success&quot;</span> type=<span class="xml&#45;quote">&quot;dispatcher&quot;</span>&gt;</span>&#10;    <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;location&quot;</span>&gt;</span>foo.jsp<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;  <span class="xml&#45;tag">&lt;/result&gt;</span>&#10;<span class="xml&#45;tag">&lt;/action&gt;</span></pre>
+</div></div><p class="paragraph">或简写为</p><div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;action name=<span class="xml&#45;quote">&quot;bar&quot;</span> class=<span class="xml&#45;quote">&quot;myPackage.barAction&quot;</span>&gt;</span>&#10;  <span class="xml&#45;tag">&lt;result name=<span class="xml&#45;quote">&quot;success&quot;</span> type=<span class="xml&#45;quote">&quot;dispatcher&quot;</span>&gt;</span>foo.jsp<span class="xml&#45;tag">&lt;/result&gt;</span>&#10;<span class="xml&#45;tag">&lt;/action&gt;</span></pre>
+</div></div><p class="paragraph">如果你扩展了webwork-default.xml, 那么缺省结果类型是&quot;dispatcher&quot;. 如果你不指定结果名字, 它将被指定为&quot;success&quot;. 这意味着你个一进一步简写</p><div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;action name=<span class="xml&#45;quote">&quot;bar&quot;</span> class=<span class="xml&#45;quote">&quot;myPackage.barAction&quot;</span>&gt;</span>&#10;  <span class="xml&#45;tag">&lt;result&gt;</span>foo.jsp<span class="xml&#45;tag">&lt;/result&gt;</span>&#10;<span class="xml&#45;tag">&lt;/action&gt;</span></pre>
+</div></div><p class="paragraph"><ins class="inserted">注意:</ins> location元素将作为表达式进行解析.  下面的例子说明了这样做的好处:
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;result name=<span class="xml&#45;quote">&quot;success&quot;</span> type=<span class="xml&#45;quote">&quot;redirect&quot;</span>&gt;</span>/displayCart.action&#63;userId=$&#123;userId&#125;<span class="xml&#45;tag">&lt;/result&gt;</span></pre>
+</div></div></p><ins class="inserted">注意:</ins> 你也可以为多个活动指定全局结果.  当你为多个不同活动设置相同的属性时, 这能节省一些时间. 关于结果和全局结果的更多信息, 参见<a href="Results.html" title="Results">结果</a>一节.<br/>
+
+
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

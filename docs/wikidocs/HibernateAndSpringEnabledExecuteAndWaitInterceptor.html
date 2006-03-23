@@ -1,0 +1,116 @@
+<html>
+    <head>
+        <title>WebWork - 
+        HibernateAndSpringEnabledExecuteAndWaitInterceptor
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>Find example code below for an extension of the <em>ExecuteAndWaitInterceptor</em>.</p>
+
+<p>The goal of this code is to allow a background process to execute while having access to the same open Hibernate session object.</p>
+
+<p>The SessionFactory dependency is injected into the <em>OpenSessionExecuteAndWaitInterceptor</em> by Spring.  You may use other methods of dependency injection if you are more comfortable with them.  By overriding the <em>getNewBackgroundProcess()</em> method, this interceptor uses our custom <em>OpenSessionBackgroundProcess</em> instead of the WebWork default.</p>
+
+<p>Overriding the <em>beforeInvocation()</em> and <em>afterInvocation()</em> methods in the <em>OpenSessionBackgroundProcess</em> ensure that the session will stay open throughout the life of the background process, and any Spring transaction management will also be used.</p>
+
+<p>As this code is heavily dependent on Spring and Hibernate, you shouldn't expect to see it packaged with a WebWork distribution.  It does, however, serve as a useful example of extending the <a href="Execute and Wait Interceptor.html" title="Execute and Wait Interceptor">Execute and Wait Interceptor</a></p>
+
+<div class="code" style="border-style: solid; "><div class="codeHeader" style="border-bottom-style: solid; "><b>OpenSessionExecuteAndWaitInterceptor.java</b></div><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">import</span> net.sf.hibernate.SessionFactory;
+
+<span class="code-keyword">import</span> com.opensymphony.webwork.interceptor.BackgroundProcess;
+<span class="code-keyword">import</span> com.opensymphony.webwork.interceptor.ExecuteAndWaitInterceptor;
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionInvocation;
+
+
+/**
+ * The OpenSessionExecuteAndWaitInterceptor will obtain a Hibernate
+ * Session Factory from a Spring.
+ * 
+ * The session factory will then be passed to the BackgroundProcess,
+ * to open a session, enable Spring's transaction management 
+ * capabilities, and bind the Session to the background thread.
+ * 
+ */
+<span class="code-keyword">public</span> class OpenSessionExecuteAndWaitInterceptor <span class="code-keyword">extends</span> ExecuteAndWaitInterceptor {
+       
+    SessionFactory sessionFactory;
+
+    
+	<span class="code-keyword">public</span> SessionFactory getSessionFactory() {
+		<span class="code-keyword">return</span> sessionFactory;
+	}
+
+
+	<span class="code-keyword">public</span> void setSessionFactory(SessionFactory sessionFactory) {
+		<span class="code-keyword">this</span>.sessionFactory = sessionFactory;
+	}
+
+	<span class="code-keyword">protected</span> BackgroundProcess getNewBackgroundProcess(<span class="code-object">String</span> arg0, ActionInvocation arg1, <span class="code-object">int</span> arg2) {
+		<span class="code-keyword">return</span> <span class="code-keyword">new</span> OpenSessionBackgroundProcess(arg0, arg1, arg2, sessionFactory);
+	}
+
+}</pre>
+</div></div>
+
+<div class="code" style="border-style: solid; "><div class="codeHeader" style="border-bottom-style: solid; "><b>OpenSessionBackgroundProcess.java</b></div><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">import</span> net.sf.hibernate.FlushMode;
+<span class="code-keyword">import</span> net.sf.hibernate.Session;
+<span class="code-keyword">import</span> net.sf.hibernate.SessionFactory;
+
+<span class="code-keyword">import</span> org.springframework.orm.hibernate.SessionFactoryUtils;
+<span class="code-keyword">import</span> org.springframework.orm.hibernate.SessionHolder;
+<span class="code-keyword">import</span> org.springframework.transaction.support.TransactionSynchronizationManager;
+
+<span class="code-keyword">import</span> com.opensymphony.webwork.interceptor.BackgroundProcess;
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionInvocation;
+
+/**
+ * The OpenSessionBackgroundProcess, when instantiated with a
+ * HibernateSessionFactory, will open a session, enable Spring's transaction
+ * management capabilities, and bind the Session to the background thread.
+ * 
+ */
+<span class="code-keyword">public</span> class OpenSessionBackgroundProcess <span class="code-keyword">extends</span> BackgroundProcess {
+
+	SessionFactory sessionFactory;
+
+	Session openSession;
+
+	<span class="code-keyword">public</span> OpenSessionBackgroundProcess(<span class="code-object">String</span> name,
+			ActionInvocation invocation, <span class="code-object">int</span> threadPriority,
+			SessionFactory factory) {
+		<span class="code-keyword">super</span>(name, invocation, threadPriority);
+		<span class="code-keyword">this</span>.sessionFactory = factory;
+	}
+
+	<span class="code-keyword">protected</span> void beforeInvocation() <span class="code-keyword">throws</span> Exception {
+		openSession = SessionFactoryUtils.getSession(sessionFactory, <span class="code-keyword">true</span>);
+		openSession.setFlushMode(FlushMode.NEVER);
+		TransactionSynchronizationManager.bindResource(sessionFactory,
+				<span class="code-keyword">new</span> SessionHolder(openSession));
+		<span class="code-keyword">super</span>.beforeInvocation();
+	}
+
+	<span class="code-keyword">protected</span> void afterInvocation() <span class="code-keyword">throws</span> Exception {
+		<span class="code-keyword">super</span>.afterInvocation();
+		TransactionSynchronizationManager.unbindResource(sessionFactory);
+		SessionFactoryUtils
+				.closeSessionIfNecessary(openSession, sessionFactory);
+	}
+
+
+}</pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

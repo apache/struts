@@ -1,0 +1,217 @@
+<project name="webwork" default="jar" basedir=".">
+    <!-- overridden properties (must be before the import!) -->
+    <property name="src.test" value="src/test"/>
+    <property name="src.xdt" value="src/xdt"/>
+    <property name="compile.version" value="1.4"/>
+    <property name="test.compile.version" value="1.4"/>
+
+    <import file="osbuild.xml"/>
+    
+    <!-- overriding the one found in osbuild.xml to exclude xwork-tiger,
+         which breaks the unit tests currently -->
+    <path id="cp">
+        <fileset dir="lib">
+            <include name="**/*.jar"/>
+            <include name="**/*.zip"/>
+            <exclude name="**/jalopy/**"/>
+            <exclude name="**/tiger/**"/>
+        </fileset>
+    </path>
+
+    <mkdir dir="${build}/xwork-src"/>
+    <path id="javadoc.path">
+        <path path="${src.java}"/>
+        <path path="${build}/xwork-src"/>
+    </path>
+
+    <property name="build.tagdocs" value="${build}/tagdocs"/>
+    <property name="docs.tags" value="${docs}/tags"/>
+
+    <target name="init" depends="common.init" unless="skip.ivy">
+        <taskdef name="ivy-configure" classname="fr.jayasoft.ivy.ant.IvyConfigure" classpathref="cp"/>
+        <taskdef name="ivy-resolve" classname="fr.jayasoft.ivy.ant.IvyResolve" classpathref="cp"/>
+        <taskdef name="ivy-retrieve" classname="fr.jayasoft.ivy.ant.IvyRetrieve" classpathref="cp"/>
+        <taskdef name="ivy-publish" classname="fr.jayasoft.ivy.ant.IvyPublish" classpathref="cp"/>
+        <taskdef name="ivy-report" classname="fr.jayasoft.ivy.ant.IvyReport" classpathref="cp"/>
+        <taskdef name="ivy-deliver" classname="fr.jayasoft.ivy.ant.IvyDeliver" classpathref="cp"/>
+
+        <ivy-retrieve/>
+    </target>
+
+    <target name="javadocs" depends="common.init">
+        <!-- first, unzip the xwork-src jar so we can generate unified javadocs -->
+        <unjar src="${lib}/source/xwork-src.jar" dest="${build}/xwork-src"/>
+        <antcall target="common.javadocs"/>
+    </target>
+
+    <target name="ivyrep.copy-ivy" depends="init">
+        <ivy-deliver deliverpattern="${ivyrep.path}/opensymphony/${name}/[artifact]-[revision].[ext]"
+                     pubrevision="${version}-${TIME}" pubdate="${TIME}"/>
+    </target>
+
+    <target name="reports" depends="common.reports">
+        <mkdir dir="${dist.docs}/dependencies"/>
+<!--
+        <ivy-report todir="${dist.docs}/dependencies" graph="false"/>
+-->
+    </target>
+
+    <macrodef name="webapp">
+        <attribute name="name"/>
+        <sequential>
+            <mkdir dir="${dist}/webapps/@{name}/src"/>
+            <copy todir="${dist}/webapps/@{name}/src">
+                <fileset dir="webapps/@{name}/src" includes="**/**"/>
+            </copy>
+        </sequential>
+    </macrodef>
+
+    <target name="predist">
+        <!-- grab the README.txt file -->
+        <copy file="${src}/etc/README.txt" todir="${dist}"/>
+				
+        <mkdir dir="${dist}/dist" />
+				<move file="${build}/${name}-nostatic-${version}.jar" todir="${dist}/dist" />
+        <move file="${build}/${name}-static-${version}.zip" todir="${dist}/dist" />
+        
+        <!-- prepare the template project -->
+        <webapp name="blank"/>
+        <copy todir="${dist}/webapps/blank">
+            <fileset dir="webapps/blank/" includes="*.iml" />
+        </copy>
+
+        <!-- prepare each tutorial/example -->
+        <webapp name="starter"/>
+        <webapp name="showcase"/>
+        <webapp name="shopping-cart"/>
+        <webapp name="portlet"/>
+
+        <!-- copy over elements required to build the final wars -->
+        <copy file="webapps/build.xml" todir="${dist}/webapps"/>
+    </target>
+
+    <target name="xdoclet-taglib" depends="init">
+        <taskdef
+            name="xdoclet"
+            classname="xdoclet.DocletTask"
+            classpathref="cp"
+            />
+        <xdoclet destdir="src/java/META-INF"
+                 excludedtags="@version,@author,@return,@exception,@todo"
+                 verbose="false"
+                 force="true"
+                 >
+            <!--
+                 mergedir="src/etc"
+            -->
+            <fileset dir="${src.java}">
+                <include name="com/opensymphony/webwork/views/**/*.java"/>
+                <include name="com/opensymphony/webwork/components/**/*.java"/>
+            </fileset>
+            <configParam name="Jspversion" value="1.2"/>
+            <configParam name="Taglibversion" value="${version}"/>
+            <configParam name="Description" value="WebWork JSP Taglib"/>
+            <configParam name="Shortname" value="WebWork Taglib"/>
+            <configParam name="Displayname" value="WebWork Taglib"/>
+            <configParam name="Smallicon" value=""/>
+            <configParam name="Largeicon" value=""/>
+            <configParam name="Uri" value="/webwork"/>
+            <xmlTemplate templateFile="${src.xdt}/taglib_tld.xdt" destinationfile="taglib.tld"/>
+        </xdoclet>
+    </target>
+
+    <target name="xdoclet-tagdoc" depends="init">
+        <mkdir dir="${build.tagdocs}"/>
+        <taskdef name="xdoclet" classname="xdoclet.DocletTask" classpathref="cp"/>
+        <xdoclet destdir="${build.tagdocs}"
+                excludedtags="@version,@author,@return,@exception"
+                verbose="false"
+                force="true"
+            >
+            <fileset dir="${src.java}">
+                <include name="com/opensymphony/webwork/views/**/*.java"/>
+                <include name="com/opensymphony/webwork/components/**/*.java"/>
+            </fileset>
+            <xmlTemplate templateFile="${src.xdt}/tagdoc.xdt" destinationfile="{0}.html"/>
+        </xdoclet>
+        <xdoclet destdir="${build.tagdocs}"
+                excludedtags="@version,@author,@return,@exception"
+                verbose="false"
+                force="true"
+            >
+            <fileset dir="${src.java}">
+                <include name="com/opensymphony/webwork/views/**/*.java"/>
+                <include name="com/opensymphony/webwork/components/**/*.java"/>
+            </fileset>
+            <configParam name="Taglibversion" value="${version}"/>
+            <template templateFile="${src.xdt}/tagdoc-toc.xdt" destinationfile="index.html"/>
+        </xdoclet>
+
+        <mkdir dir="${docs.tags}"/>
+        <copy todir="${docs.tags}" flatten="true" includeemptydirs="false">
+            <fileset dir="${build.tagdocs}" includes="**/*.html">
+                <size value="10" when="more"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="mavenrep" depends="jar">
+        <!-- webwork -->
+        <copy file="pom.xml" tofile="/opt/repository/ibiblio.org/opensymphony/poms/${name}-${version}-SNAPSHOT.pom"/>
+        <copy file="${build}/${name}-${version}.jar" tofile="/opt/repository/ibiblio.org/opensymphony/jars/${name}-${version}-SNAPSHOT.jar"/>
+        <copy file="${build}/${name}-src-${version}.jar" tofile="/opt/repository/ibiblio.org/opensymphony/jars/${name}-src-${version}-SNAPSHOT.jar"/>
+    </target>
+
+    <!-- overridden targets -->
+    <target name="jar" depends="compile">
+        <mkdir dir="${build}"/>
+
+        <jar basedir="${build.java}" jarfile="${build}/${name}-${version}.jar">
+            <manifest>
+                <attribute name="Main-Class" value="com.opensymphony.webwork.Main"/>
+                <attribute name="Implementation-Title" value="${fullname}"/>
+                <attribute name="Implementation-Version" value="${version}"/>
+            </manifest>
+        </jar>
+        <jar basedir="${src.java}" jarfile="${build}/${name}-src-${version}.jar">
+            <zipgroupfileset file="lib/source/xwork-src.jar"/>
+            <manifest>
+                <attribute name="Implementation-Title" value="${fullname}"/>
+                <attribute name="Implementation-Version" value="${version}"/>
+            </manifest>
+        </jar>
+        <jar jarfile="${build}/${name}-nostatic-${version}.jar">
+            <fileset dir="${build.java}">
+                <exclude name="com/opensymphony/webwork/static/**/*" />
+            </fileset>
+            <manifest>
+                <attribute name="Main-Class" value="com.opensymphony.webwork.Main"/>
+                <attribute name="Implementation-Title" value="${fullname}"/>
+                <attribute name="Implementation-Version" value="${version}"/>
+            </manifest>
+        </jar>        
+        <zip destfile="${build}/${name}-static-${version}.zip">
+            <zipfileset dir="${build.java}/com/opensymphony/webwork/static" prefix="webwork" />
+        </zip>
+    </target>
+
+    <target name="dist" depends="common.dist" description="generate distribution zip file">
+        <propertyfile file="${dist}/build.properties">
+            <entry key="skip.ivy" value="true"/>
+        </propertyfile>
+    </target>
+
+    <target name="clean" depends="common.clean">
+        <delete dir="webapps/base/build"/>
+        <delete dir="webapps/blank/build"/>
+        <delete dir="webapps/showcase/build"/>
+        <delete dir="webapps/starter/build"/>
+        <delete dir="webapps/ajax/build"/>
+        <delete dir="webapps/shopping-cart/build"/>
+        <delete dir="webapps/portlet/build"/>
+<!--
+        <delete dir="webapps/wwia/build"/>
+-->
+    </target>
+
+</project>

@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Components
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>These documents are out of date. As of WebWork 2.2, the WebWork IoC container has been deprecated (though not removed) and the WebWork team recommends you use <a href="Spring.html" title="Spring">Spring</a> for all your IoC needs</td></tr></table>
+
+<h2><a name="Components-Overview"></a>Overview</h2>
+
+<p>WebWork builds on XWork's component implementation by providing lifecycle management of component objects and then making these components available to your action classes (or any other user code for that matter) as required. </p>
+
+<p>Two types of classes in WebWork can use an enabler interface for inversion of control: Actions and Components. In order for an Action class to have its components set, the ComponentInterceptor must be made available for the Action to set those resources. In turn, if those components require other components to be initialized and set for their own use, those initializations take place at the time the ComponentInterceptor intercepts the action as well. </p>
+
+<h2><a name="Components-ScopesandLifecycle"></a>Scopes and Lifecycle</h2>
+
+<p>Components can be configured to exist across three different scopes in WebWork:</p>
+<ol>
+	<li>for the duration of a single request,</li>
+	<li>across a user session, or</li>
+	<li>for the entire lifetime of the web application.</li>
+</ol>
+
+
+<p>WW:WebWork lazy loads components, meaning that components, no matter what scope, are initialized at the time they are used and disposed of at the end of the given lifecycle of that scope.  Thus, an application scoped component, for example, will be initialized the first time a user makes a request to an action that implements the enabler interface of that component and will be disposed of at the time the application closes.</p>
+
+<p>While components are allowed to have dependencies on other components they must not depend on another component that is of a narrower scope. So, for example, a session component cannot depend on a component that is only of request scope.</p>
+
+<p>All components must be registered in the components.xml file, which is discussed in the Configuration section.</p>
+
+<h2><a name="Components-ObtainingaComponentManager"></a>Obtaining a ComponentManager</h2>
+
+<p>During any request there are three component managers in existence, one for each scope. They are stored as an attribute called "DefaultComponentManager" in their respective scope objects. So if for example you need to retrieve the ComponentManager object for the request scope, the following code will do the trick:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">ComponentManager cm = (ComponentManager) request.getAttribute(<span class="code-quote">"DefaultComponentManager"</span>);</pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

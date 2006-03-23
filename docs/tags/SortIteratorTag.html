@@ -1,0 +1,100 @@
+
+<html>
+<head>
+<title>&lt;ww:sort /&gt;</title>
+</head>
+
+<body>
+
+<h1>Tag Name: &lt;ww:sort /&gt;</h1>
+
+<h2>Description</h2>
+<p>
+
+Sort a List using a Comparator both passed in as the tag attribute.
+
+</p>
+
+<p>
+<!-- START SNIPPET: javadoc --> <b>NOTE: JSP-TAG</b> <p>A Tag that sorts a List using a Comparator both passed in as the tag attribute. If 'id' attribute is specified, the sorted list will be placed into the PageContext attribute using the key specified by 'id'. The sorted list will ALWAYS be pushed into the stack and poped at the end of this tag.</p> <!-- END SNIPPET: javadoc --> <!-- START SNIPPET: params --> <ul> <li>id (String) - if specified, the sorted iterator will be place with this id under page context</li> <li>source (Object) - the source for the sort to take place (should be iteratable) else JspException will be thrown</li> <li>comparator* (Object) - the comparator used to do sorting (should be a type of Comparator or its decendent) else JspException will be thrown</li> </ul> <!-- END SNIPPET: params --> <pre> <!-- START SNIPPET: example --> USAGE 1: &lt;ww:sort comparator="myComparator" source="myList"&gt; &lt;ww:iterator&gt; &lt;!-- do something with each sorted elements --&gt; &lt;ww:property value="..." /&gt; &lt;/ww:iterator&gt; &lt;/ww:sort&gt; USAGE 2: &lt;ww:sort id="mySortedList" comparator="myComparator" source="myList" /&gt; &lt;% Iterator sortedIterator = (Iterator) pageContext.getAttribute("mySortedList"); for (Iterator i = sortedIterator; i.hasNext(); ) { // do something with each of the sorted elements } %&gt; <!-- END SNIPPET: example --> </pre>
+</p>
+
+<h2>Attributes</h2>
+<p>
+
+<!-- START SNIPPET: tagattributes -->
+<table width="100%">
+<tr>
+
+<th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">comparator</td>
+
+<!-- Required -->
+<td align="left" valign="top"><b>true</b></td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">java.util.Comparator</td>
+
+<!-- Description -->
+<td align="left" valign="top">The comparator to use</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">source</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The iterable source to sort</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The id of the tag element.</td>
+
+</tr>
+
+</table>
+<!-- END SNIPPET: tagattributes -->
+
+</p>
+<p>
+<center><a href="index.html">Back to Taglib Index</a></center>
+</p>
+</body>
+</html>
+

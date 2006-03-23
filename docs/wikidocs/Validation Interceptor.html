@@ -1,0 +1,79 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Validation Interceptor
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    
+<p> This interceptor runs the action through the standard validation framework, which in turn checks the action against
+ any validation rules (found in files such as <i>ActionClass-validation.xml</i>) and adds field-level and action-level
+ error messages (provided that the action implements com.opensymphony.xwork.ValidationAware). This interceptor
+ is often one of the last (or second to last) interceptors applied in a stack, as it assumes that all values have
+ already been set on the action.</p>
+
+<p> <p/>This interceptor does nothing if the name of the method being invoked is specified in the <b>excludeMethods</b>
+ parameter. <b>excludeMethods</b> accepts a comma-delimited list of method names. For example, requests to
+ <b>foo!input.action</b> and <b>foo!back.action</b> will be skipped by this interceptor if you set the
+ <b>excludeMethods</b> parameter to "input, back".</p>
+
+<p> <p/>Note that this has nothing to do with the com.opensymphony.xwork.Validateable interface and simply adds
+ error messages to the action. The workflow of the action request does not change due to this interceptor. Rather,
+ this interceptor is often used in conjuction with the <b>workflow</b> interceptor.</p>
+
+<p> <p/></p>
+
+<p> <b>NOTE:</b> As this method extends off MethodFilterInterceptor, it is capable of
+ deciding if it is applicable only to selective methods in the action class. See
+ <code>MethodFilterInterceptor</code> for more info.</p>
+
+
+<h1><a name="ValidationInterceptor-Parameters"></a>Parameters</h1>
+
+
+<p> <ul></p>
+
+<p> <li>None</li></p>
+
+<p> </ul></p>
+
+
+<h1><a name="ValidationInterceptor-ExtendingtheInterceptor"></a>Extending the Interceptor</h1>
+
+
+<p> There are no known extension points for this interceptor.</p>
+
+
+<h1><a name="ValidationInterceptor-Examples"></a>Examples</h1>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;action name=<span class="code-quote">"someAction"</span> class=<span class="code-quote">"com.examples.SomeAction"</span>&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"params"</span>/&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"validation"</span>/&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"workflow"</span>/&gt;</span>
+    <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span>&gt;</span>good_result.ftl<span class="code-tag">&lt;/result&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span>
+
+&lt;-- in the following case myMethod of the action class will not
+       get validated --&gt;
+<span class="code-tag">&lt;action name=<span class="code-quote">"someAction"</span> class=<span class="code-quote">"com.examples.SomeAction"</span>&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"params"</span>/&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"validation"</span>&gt;</span>
+        <span class="code-tag">&lt;param name=<span class="code-quote">"excludeMethods"</span>&gt;</span>myMethod<span class="code-tag">&lt;/param&gt;</span>
+    <span class="code-tag">&lt;/interceptor-ref&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"workflow"</span>/&gt;</span>
+    <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span>&gt;</span>good_result.ftl<span class="code-tag">&lt;/result&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

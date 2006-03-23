@@ -1,0 +1,169 @@
+<html>
+    <head>
+        <title>WebWork - 
+        WebWorkTargetSource Shopping Cart Example
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="WebWorkTargetSourceShoppingCartExample-WebWorkTargetSourceShoppingCartExample"></a>WebWorkTargetSource Shopping Cart Example</h1>
+
+<p>Here is a modified version of the shopping cart example which uses the WebWorkTargetSource. Its a quick hack to show how the WebWorkTargetSource and not as a complete solution or template for usage. If my documentation is unclear (probable) or none of this makes sense (quite possible too) then just replace the existing versions of DefaultCart.java and applicationContext.xml with these versions and fire up the example.</p>
+
+<h2><a name="WebWorkTargetSourceShoppingCartExample-DefaultCartModifications"></a>DefaultCart Modifications</h2>
+
+<p>Two modifications to DefaultCart.java are necessary in order to make the autowiring work. When spring goes to look for beans to autowire it will see two ShoppingCarts and barf as for autowiring to work it needs to see only one. To avoid this the DefaultCart has been modified to not implement the ShoppingCart interface. However there is a fun inner class and inner interface that makes this change a bit more complex. In order to make the DefaultCart compile (and still work) all references to CartEntry need to be changed to ShoppingCart.CartEntry.</p>
+
+
+<div class="code" style="border-style: solid; "><div class="codeHeader" style="border-bottom-style: solid; "><b>DefaultCart.java</b></div><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> com.opensymphony.webwork.example.ajax.cart;
+
+<span class="code-keyword">import</span> com.opensymphony.webwork.example.ajax.catalog.Product;
+
+<span class="code-keyword">import</span> java.util.HashMap;
+<span class="code-keyword">import</span> java.util.HashSet;
+<span class="code-keyword">import</span> java.util.Map;
+<span class="code-keyword">import</span> java.util.Set;
+
+<span class="code-keyword">import</span> sun.reflect.Reflection;
+
+/**
+ * DefaultCart - Poorly Modified by Eric Molitor &lt;eric@tuxbot.com&gt;
+ *
+ * @author Jason Carreira &lt;jcarreira@eplus.com&gt;
+ */
+<span class="code-keyword">public</span> class DefaultCart {
+    Map contents = <span class="code-keyword">new</span> HashMap();
+
+    <span class="code-keyword">public</span> <span class="code-keyword">static</span> DefaultCart getCart() {
+        <span class="code-keyword">return</span> <span class="code-keyword">new</span> DefaultCart();
+    }
+
+    <span class="code-keyword">public</span> void addToCart(<span class="code-object">int</span> quantity, Product product) {
+        ShoppingCart.CartEntry entry = (ShoppingCart.CartEntry) contents.get(product);
+        <span class="code-keyword">if</span> (entry == <span class="code-keyword">null</span>) {
+            entry = <span class="code-keyword">new</span> DefaultCartEntry(quantity, product);
+            contents.put(product, entry);
+        } <span class="code-keyword">else</span> {
+            entry.setQuantity(entry.getQuantity() + quantity);
+        }
+    }
+
+    <span class="code-keyword">public</span> void setQuantity(<span class="code-object">int</span> quantity, Product product) {
+        <span class="code-keyword">if</span> (quantity &lt;= 0) {
+            contents.remove(product);
+            <span class="code-keyword">return</span>;
+        }
+        ShoppingCart.CartEntry entry = (ShoppingCart.CartEntry ) contents.get(product);
+        <span class="code-keyword">if</span> (entry == <span class="code-keyword">null</span>) {
+            entry = <span class="code-keyword">new</span> DefaultCartEntry(quantity, product);
+            contents.put(product, entry);
+        } <span class="code-keyword">else</span> {
+            entry.setQuantity(quantity+entry.getQuantity());
+        }
+    }
+
+    <span class="code-keyword">public</span> void removeFromCart(Product product) {
+        contents.remove(product);
+    }
+
+    <span class="code-keyword">public</span> Set getContents() {
+        <span class="code-keyword">return</span> <span class="code-keyword">new</span> HashSet(contents.values());
+    }
+
+    <span class="code-keyword">public</span> <span class="code-object">int</span> getQuantityForProduct(Product product) {
+        ShoppingCart.CartEntry entry = (ShoppingCart.CartEntry) contents.get(product);
+        <span class="code-keyword">if</span> (entry == <span class="code-keyword">null</span>) {
+            <span class="code-keyword">return</span> 0;
+        }
+        <span class="code-keyword">return</span> entry.getQuantity();
+    }
+
+    <span class="code-keyword">public</span> <span class="code-object">String</span> toString() {
+        <span class="code-keyword">return</span> <span class="code-quote">"DefaultCart{"</span> +
+                <span class="code-quote">"contents="</span> + contents +
+                <span class="code-quote">"}"</span>;
+    }
+
+    <span class="code-keyword">public</span> <span class="code-keyword">static</span> <span class="code-object">Object</span> getBean() {
+
+       <span class="code-object">System</span>.out.println(<span class="code-quote">"!!!!!!!!!!!! Parent is:"</span> + Reflection.getCallerClass(1));
+        <span class="code-keyword">new</span> Exception(<span class="code-quote">"poo"</span>).printStackTrace();
+       <span class="code-keyword">return</span> <span class="code-keyword">new</span> DefaultCart();
+    }
+
+    class DefaultCartEntry <span class="code-keyword">implements</span> ShoppingCart.CartEntry {
+        <span class="code-keyword">private</span> <span class="code-object">int</span> quantity;
+        <span class="code-keyword">private</span> Product product;
+
+        <span class="code-keyword">public</span> DefaultCartEntry(<span class="code-object">int</span> quantity, Product product) {
+            <span class="code-keyword">this</span>.quantity = quantity;
+            <span class="code-keyword">this</span>.product = product;
+        }
+
+        <span class="code-keyword">public</span> <span class="code-object">int</span> getQuantity() {
+            <span class="code-keyword">return</span> quantity;
+        }
+
+        <span class="code-keyword">public</span> void setQuantity(<span class="code-object">int</span> quantity) {
+            <span class="code-keyword">this</span>.quantity = quantity;
+        }
+
+        <span class="code-keyword">public</span> Product getProduct() {
+            <span class="code-keyword">return</span> product;
+        }
+    }
+}</pre>
+</div></div>
+
+
+<h2><a name="WebWorkTargetSourceShoppingCartExample-applicationContext.xmlModifications"></a>applicationContext.xml Modifications</h2>
+
+<p>In order to get a session specific shopping cart we need to modify the actionContext to call our WebWorkTargetSource. We do this by using a ProxyFactory which creates an object based on our interface (ShoppingCart) and uses the targetSource to invoke our custom TargetSource (WebWorkTargetSource). WebWorkTargetSource however needs to know the underlying implementation in order to fetch and create new instances. We pass a reference to the new shoppingCartTarget bean definition which just references our new DefaultCart. In order to keep things from getting confused we're set both beans to autowire by name.</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;?xml version=<span class="code-quote">"1.0"</span> encoding=<span class="code-quote">"UTF-8"</span>?&gt;</span>
+<span class="code-tag">&lt;!DOCTYPE beans PUBLIC <span class="code-quote">"-//SPRING//DTD BEAN//EN"</span> <span class="code-quote">"http://www.springframework.org/dtd/spring-beans.dtd"</span>&gt;</span>
+
+<span class="code-tag">&lt;beans default-autowire=<span class="code-quote">"autodetect"</span>&gt;</span>
+
+    &lt;bean id=<span class="code-quote">"catalog"</span>
+          singleton=<span class="code-quote">"true"</span>
+          class=<span class="code-quote">"com.opensymphony.webwork.example.ajax.catalog.TestCatalog"</span>/&gt;
+
+    <span class="code-tag">&lt;bean id=<span class="code-quote">"shoppingCart"</span> class=<span class="code-quote">"org.springframework.aop.framework.ProxyFactoryBean"</span> autowire=<span class="code-quote">"byName"</span>&gt;</span>
+
+        <span class="code-tag">&lt;property name=<span class="code-quote">"proxyTargetClass"</span>&gt;</span>
+            <span class="code-tag">&lt;value&gt;</span>true<span class="code-tag">&lt;/value&gt;</span>
+        <span class="code-tag">&lt;/property&gt;</span>
+        <span class="code-tag">&lt;property name=<span class="code-quote">"proxyInterfaces"</span>&gt;</span>
+            <span class="code-tag">&lt;list&gt;</span>
+                <span class="code-tag">&lt;value&gt;</span>com.opensymphony.webwork.example.ajax.cart.ShoppingCart<span class="code-tag">&lt;/value&gt;</span>
+            <span class="code-tag">&lt;/list&gt;</span>
+        <span class="code-tag">&lt;/property&gt;</span>
+        <span class="code-tag">&lt;property name=<span class="code-quote">"targetSource"</span>&gt;</span>
+            <span class="code-tag">&lt;bean class=<span class="code-quote">"org.tuxbot.webwork.spring.WebWorkTargetSource"</span>&gt;</span>
+                <span class="code-tag">&lt;property name=<span class="code-quote">"targetBeanName"</span>&gt;</span>
+                    <span class="code-tag">&lt;value&gt;</span>shoppingCartTarget<span class="code-tag">&lt;/value&gt;</span>
+                <span class="code-tag">&lt;/property&gt;</span>
+            <span class="code-tag">&lt;/bean&gt;</span>
+        <span class="code-tag">&lt;/property&gt;</span>
+    <span class="code-tag">&lt;/bean&gt;</span>
+
+    &lt;bean id=<span class="code-quote">"shoppingCartTarget"</span>
+          class=<span class="code-quote">"com.opensymphony.webwork.example.ajax.cart.DefaultCart"</span>
+          singleton=<span class="code-quote">"false"</span> autowire=<span class="code-quote">"byName"</span>&gt;
+    <span class="code-tag">&lt;/bean&gt;</span>
+
+<span class="code-tag">&lt;/beans&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

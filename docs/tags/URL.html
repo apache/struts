@@ -1,0 +1,280 @@
+
+<html>
+<head>
+<title>&lt;ww:url /&gt;</title>
+</head>
+
+<body>
+
+<h1>Tag Name: &lt;ww:url /&gt;</h1>
+
+<h2>Description</h2>
+<p>
+
+This tag is used to create a URL
+
+</p>
+
+<p>
+<!-- START SNIPPET: javadoc --> <p>This tag is used to create a URL.</p> <p>You can use the "param" tag inside the body to provide additional request parameters.</p> <b>NOTE:</b> <p>When includeParams is 'all' or 'get', the parameter defined in param tag will take precedence and will not be overriden if they exists in the parameter submitted. For example, in Example 3 below, if there is a id parameter in the url where the page this tag is included like http://<host>:<port>/<context>/editUser.action?id=3333&name=John the generated url will be http://<host>:<port>/context>/editUser.action?id=22&name=John cause the parameter defined in the param tag will take precedence.</p> <!-- END SNIPPET: javadoc --> <!-- START SNIPPET: params --> <ul> <li>action (String) - (value or action choose either one, if both exist value takes precedence) action's name (alias) <li> <li>value (String) - (value or action choose either one, if both exist value takes precedence) the url itself</li> <li>scheme (String) - http scheme (http, https) default to the scheme this request is in</li> <li>namespace - action's namespace</li> <li>method (String) - action's method, default to execute() </li> <li>encode (Boolean) - url encode the generated url. Default is true</li> <li>includeParams (String) - The includeParams attribute may have the value 'none', 'get' or 'all'. Default is 'get'. none - include no parameters in the URL get - include only GET parameters in the URL (default) all - include both GET and POST parameters in the URL </li> <li>includeContext (Boolean) - determine wheather to include the web app context path. Default is true.</li> </ul> <!-- END SNIPPET: params --> <p/> <b>Examples</b> <pre> <!-- START SNIPPET: example --> &lt;-- Example 1 --&gt; &lt;ww:url value="editGadget.action"&gt; &lt;ww:param name="id" value="%{selected}" /&gt; &lt;/ww:url&gt; &lt;-- Example 2 --&gt; &lt;ww:url action="editGadget"&gt; &lt;ww:param name="id" value="%{selected}" /&gt; &lt;/ww:url&gt; &lt;-- Example 3--&gt; &lt;ww:url includeParams="get" &gt; &lt:param name="id" value="%{'22'}" /&gt; &lt;/ww:url&gt; <!-- END SNIPPET: example --> </pre>
+</p>
+
+<h2>Attributes</h2>
+<p>
+
+<!-- START SNIPPET: tagattributes -->
+<table width="100%">
+<tr>
+
+<th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">includeParams</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">get</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The includeParams attribute may have the value 'none', 'get' or 'all'.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">scheme</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set scheme attribute</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">value</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The target value to use, if not using action</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">action</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The action generate url for, if not using value</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">namespace</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The namespace to use</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">method</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The method of action to use</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">encode</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">Boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">whether to encode parameters</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">includeContext</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">Boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">whether actual context should be included in url</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">portletMode</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The resulting portlet mode</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">windowState</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The resulting portlet window state</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">portletUrlType</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Specifies if this should be a portlet render or action url</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">anchor</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The anchor for this URL</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">id for referencing element. For UI and form tags it will be used as HTML id attribute</td>
+
+</tr>
+
+</table>
+<!-- END SNIPPET: tagattributes -->
+
+</p>
+<p>
+<center><a href="index.html">Back to Taglib Index</a></center>
+</p>
+</body>
+</html>
+

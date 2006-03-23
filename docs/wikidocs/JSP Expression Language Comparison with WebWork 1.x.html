@@ -1,0 +1,78 @@
+<html>
+    <head>
+        <title>WebWork - 
+         Expression Language Comparison with WebWork 1.x
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'>Situation</th>
+<th class='confluenceTh'>Previous (WW-1.4)</th>
+<th class='confluenceTh'>Current (WW-2.1)</th>
+</tr>
+<tr>
+<td class='confluenceTd'>Referring to an object in the PageContext scope</td>
+<td class='confluenceTd'>@itemIdOrName</td>
+<td class='confluenceTd'>#attr['itemIdOrName']</td>
+</tr>
+<tr>
+<td class='confluenceTd'>Referring to an object in the Request scope</td>
+<td class='confluenceTd'>itemIdOrName</td>
+<td class='confluenceTd'>Same, but use #request['itemIdOrName'] if nested in an iteration.</td>
+</tr>
+<tr>
+<td class='confluenceTd'>Referring to an object in the Session scope</td>
+<td class='confluenceTd'>@itemIdOrName</td>
+<td class='confluenceTd'>#session['itemIdOrName']</td>
+</tr>
+<tr>
+<td class='confluenceTd'>Referring to an object in the Application scope</td>
+<td class='confluenceTd'>@itemIdOrName</td>
+<td class='confluenceTd'>#application['itemIdOrName']</td>
+</tr>
+<tr>
+<td class='confluenceTd'>Property Setters</td>
+<td class='confluenceTd'>foo/bar translates to getFoo().setBar()</td>
+<td class='confluenceTd'>foo.bar translates to getFoo().setBar()</td>
+</tr>
+<tr>
+<td class='confluenceTd'>Property Getters</td>
+<td class='confluenceTd'>foo/bar translates to getFoo().getBar()</td>
+<td class='confluenceTd'>foo.bar translates to getFoo().getBar()</td>
+</tr>
+<tr>
+<td class='confluenceTd'>Boolean/boolean Property Getters</td>
+<td class='confluenceTd'>foo/bar translates to getFoo().getBar() if bar is java.lang.Boolean, if primitive bar translates to getFoo().isBar()</td>
+<td class='confluenceTd'> Same, except uses dot notation instead of a slash (i.e. foo.bar)</td>
+</tr>
+<tr>
+<td class='confluenceTd'>Collections as Properties</td>
+<td class='confluenceTd'>N/A</td>
+<td class='confluenceTd'>Collections (including arrays) are similar to other objects, except they allow indexing: foo.bar[indexOrKeyName] translates to getFoo().getBar().get(indexOrKeyName)</td>
+</tr>
+<tr>
+<td class='confluenceTd'>curly braces - {}, evaluates contents of braces first, and use the result as the property to then evaluate. </td>
+<td class='confluenceTd'>&lt;webwork:property value="{'name'}"/&gt; translates to getName() on the curent object.</td>
+<td class='confluenceTd'>No longer used.</td>
+</tr>
+<tr>
+<td class='confluenceTd'>Reference a static variable</td>
+<td class='confluenceTd'>@com.fully.qualified.class.name.TheActualClass@STATIC_ATTRIBUTE_NAME</td>
+<td class='confluenceTd'>Still in use.</td>
+</tr>
+</tbody></table>
+
+<p><em>Originally written by Jay Bose and sent to the mailing list</em></p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>Showcase - Non-UI Tag - Example Submited </title>
+</head>
+<body>
+
+<h1>Example Submitted</h1>
+<table>
+	#wwlabel ("label=Name" "name=name")
+	#wwlabel ("label=Birthday" "name=birthday")
+	#wwlabel ("label=Biography" "name=bio")
+	#wwlabel ("label=Favourite Color" "name=favouriteColor")
+	#wwlabel ("label=Friends" "name=friends")
+	#wwlabel ("label=Legal Age" "name=legalAge")
+	#wwlabel ("label=Region" "name=region")
+	#wwlabel ("label=State" "name=state")
+	#wwlabel ("label=Picture" "name=picture")
+	#wwlabel ("label=Favourite Language" "name=favouriteLanguage")
+	#wwlabel ("label=Favourite Vehical Type" "name=favouriteVehicalType")
+	#wwlabel ("label=Favourite Vehical Specific" "name=favouriteVehicalSpecific")
+	<tr>
+		<td>Favourite Cartoon Characters (Left):</td>
+		<td>
+            #set ( $startCount = 1)
+		    #foreach( $item in $leftSideCartoonCharacters)
+				$startCount.${item}&nbsp;
+				#set ( $startCount = $startCount + 1)
+            #end
+		</td>
+	</tr>
+	<tr>
+		<td>Favourite Cartoon Characters (Right):</td>
+		<td>
+            #set ( $startCount = 1)
+		    #foreach( $item in $rightSideCartoonCharacters)
+				$startCount.${item}&nbsp;
+				#set ( $startCount = $startCount + 1)
+            #end
+		</td>
+	</tr>
+</table>
+
+#wwurl ("id=url" "value=index.jsp")
+#wwa("href=${url}")Back to index.jsp#end
+
+</body>
+</html>

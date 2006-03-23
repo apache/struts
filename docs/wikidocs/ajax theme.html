@@ -1,0 +1,77 @@
+<html>
+    <head>
+        <title>WebWork - 
+         theme
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>The ajax theme extends the <a href="xhtml theme.html" title="xhtml theme">xhtml theme</a>, providing AJAX features on top of everything provided by its parent theme. This theme uses two popular AJAX/JavaScript libraries: Dojo and DWR. These AJAX features are:</p>
+
+<ul>
+	<li><a href="AJAX Client Side Validation.html" title="AJAX Client Side Validation">AJAX Client Side Validation</a></li>
+	<li>Remote <a href="form.html" title="form">form</a> submission support (works with the <a href="submit.html" title="submit">submit</a> tag as well)</li>
+	<li>An advanced <a href="div.html" title="div">div</a> template that provides dynamic reloading of partial HTML</li>
+	<li>An advanced <a href="a.html" title="a">a</a> template that provides the ability to load and evaluate JavaScript remotely</li>
+	<li>An AJAX-only <a href="tabbedPanel.html" title="tabbedPanel">tabbedPanel</a> implementation</li>
+	<li>A rich pub-sub event model</li>
+</ul>
+
+
+<h1><a name="ajaxtheme-BrowserCompatibility"></a>Browser Compatibility</h1>
+
+<p>AJAX (as a technology) uses a browser side scripting component that varies between browers (and sometimes versions).  To hide those differences from the developer, we utilize the dojo toolkit (<a href="http://www.dojotoolkit.org" title="Visit page outside Confluence">&#104;ttp://www.dojotoolkit.org</a>).  The following browsers are supported by dojo, and any UI's created with the AJAX theme should act the same for all those browsers listed below: </p>
+<ul>
+	<li>IE 5.5+</li>
+	<li>FF 1.0+</li>
+	<li>Latest Safari (on up-to-date OS versions)</li>
+	<li>Latest Opera</li>
+	<li>Latest Konqueror</li>
+</ul>
+
+
+
+<h1><a name="ajaxtheme-ExtendingtheXHTMLTheme"></a>Extending the XHTML Theme</h1>
+
+<p>The wrapping behavior provided by this theme is almost exactly like that provided by the <a href="xhtml theme.html" title="xhtml theme">xhtml theme</a>. The only difference is that the <b>controlheader.ftl</b> template is slightly different:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;#include <span class="code-quote">"/${parameters.templateDir}/xhtml/controlheader-core.ftl"</span> /&gt;</span>
+<span class="code-tag">&lt;#if parameters.form?exists &amp;&amp; parameters.form.validate?default(false) == true&gt;</span>
+	<span class="code-tag">&lt;#-- can't mutate the data model in freemarker --&gt;</span>
+    <span class="code-tag">&lt;#if parameters.onblur?exists&gt;</span>
+        ${tag.addParameter('onblur', <span class="code-quote">"validate(this);${parameters.onblur}"</span>)}
+    <span class="code-tag">&lt;#else&gt;</span>
+        ${tag.addParameter('onblur', <span class="code-quote">"validate(this);"</span>)}
+    <span class="code-tag">&lt;/#if&gt;</span>
+<span class="code-tag">&lt;/#if&gt;</span>
+    <span class="code-tag">&lt;td&gt;</span></pre>
+</div></div>
+
+<p>This provides for <a href="AJAX Client Side Validation.html" title="AJAX Client Side Validation">AJAX Client Side Validation</a> by checking if the <em>validate</em> attribute is set to true. If it is, on each <b>onblur</b> event for HTML <a href="Tags.html" title="Tags">Tags</a>, a validation request is made. Some people don't like the onblur behavior and would rather a more advanced timer (say, 200ms) be kicked off after every keystroke. You can override this template and provide that type of behavior if you would like.</p>
+
+<h1><a name="ajaxtheme-SpecialNotes"></a>Special Notes</h1>
+
+<p>While most of the templates in this theme are self explanatory, there are some templates that should be called out and explained in detail:</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='tipMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/check.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>Especially with this theme, it is strongly recommended you use the <a href="head.html" title="head">head</a> tag. See the <a href="ajax head template.html" title="ajax head template">ajax head template</a> for more information. Without it, you most likely not have AJAX support set up properly.</td></tr></table>
+
+<ul>
+	<li><a href="ajax head template.html" title="ajax head template">ajax head template</a></li>
+	<li><a href="ajax div template.html" title="ajax div template">ajax div template</a></li>
+	<li><a href="ajax a template.html" title="ajax a template">ajax a template</a></li>
+</ul>
+
+
+<p>In addition to these templates, it is important to make yourself familiar with the <a href="ajax event system.html" title="ajax event system">ajax event system</a> provided by WebWork and Dojo.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

@@ -1,0 +1,171 @@
+<html>
+    <head>
+        <title>WebWork - 
+        iterator
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>Please make sure you have read the <a href="Tag Syntax.html" title="Tag Syntax">Tag Syntax</a> document and understand how tag attribute syntax works.</td></tr></table>
+
+<h1><a name="iterator-Description"></a>Description</h1>
+
+<p><p>Iterator will iterate over a value. An iterable value can be either of: java.util.Collection, java.util.Iterator,</p>
+
+<h1><a name="iterator-Parameters"></a>Parameters</h1>
+<p><table width="100%">
+<tr></p>
+
+<p><th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">status</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Boolean</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">if specified, an instanceof IteratorStatus will be pushed into stack upon each iteration</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">value</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Object/String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">the iteratable source to iterate over, else an the object itself will be put into a newly created List</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Object/String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">id for referencing element. For UI and form tags it will be used as HTML id attribute</td></p>
+
+<p></tr></p>
+
+<p></table></p>
+
+<h1><a name="iterator-Examples"></a>Examples</h1>
+
+<p> <p>The following example retrieves the value of the getDays() method of the current object on the value stack and
+ uses it to iterate over. The &lt;ww:property/&gt; tag prints out the current value of the iterator.</p></p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:iterator value=<span class="code-quote">"days"</span>&gt;</span>
+  <span class="code-tag">&lt;p&gt;</span>day is: <span class="code-tag">&lt;ww:property/&gt;</span><span class="code-tag">&lt;/p&gt;</span>
+<span class="code-tag">&lt;/ww:iterator&gt;</span></pre>
+</div></div>
+
+
+<p> <p>The following example uses a Bean tag and places it into the ActionContext. The iterator tag will retrieve
+ that object from the ActionContext and then calls its getDays() method as above. The status attribute is also used to
+ create a IteratorStatus object, which in this example, its odd() method is used to alternate row
+ colours:</p></p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:bean name=<span class="code-quote">"com.opensymphony.webwork.example.IteratorExample"</span> id=<span class="code-quote">"it"</span>&gt;</span>
+  <span class="code-tag">&lt;ww:param name=<span class="code-quote">"day"</span> value=<span class="code-quote">"'foo'"</span>/&gt;</span>
+  <span class="code-tag">&lt;ww:param name=<span class="code-quote">"day"</span> value=<span class="code-quote">"'bar'"</span>/&gt;</span>
+<span class="code-tag">&lt;/ww:bean&gt;</span>
+<span class="code-tag">&lt;p/&gt;</span>
+<span class="code-tag">&lt;table border=<span class="code-quote">"0"</span> cellspacing=<span class="code-quote">"0"</span> cellpadding=<span class="code-quote">"1"</span>&gt;</span>
+<span class="code-tag">&lt;tr&gt;</span>
+  <span class="code-tag">&lt;th&gt;</span>Days of the week<span class="code-tag">&lt;/th&gt;</span>
+<span class="code-tag">&lt;/tr&gt;</span>
+<span class="code-tag">&lt;p/&gt;</span>
+<span class="code-tag">&lt;ww:iterator value=<span class="code-quote">"#it.days"</span> status=<span class="code-quote">"rowstatus"</span>&gt;</span>
+  <span class="code-tag">&lt;tr&gt;</span>
+    <span class="code-tag">&lt;ww:if test=<span class="code-quote">"#rowstatus.odd == true"</span>&gt;</span>
+      <span class="code-tag">&lt;td style=<span class="code-quote">"background: grey"</span>&gt;</span><span class="code-tag">&lt;ww:property/&gt;</span><span class="code-tag">&lt;/td&gt;</span>
+    <span class="code-tag">&lt;/ww:if&gt;</span>
+    <span class="code-tag">&lt;ww:else&gt;</span>
+      <span class="code-tag">&lt;td&gt;</span><span class="code-tag">&lt;ww:property/&gt;</span><span class="code-tag">&lt;/td&gt;</span>
+    <span class="code-tag">&lt;/ww:else&gt;</span>
+  <span class="code-tag">&lt;/tr&gt;</span>
+<span class="code-tag">&lt;/ww:iterator&gt;</span>
+<span class="code-tag">&lt;/table&gt;</span></pre>
+</div></div>
+
+
+<p> <p> The next example will further demonstrate the use of the status attribute, using a DAO obtained from the action
+ class through OGNL, iterating over groups and their users (in a security context). The last() method indicates if the
+ current object is the last available in the iteration, and if not, we need to seperate the users using a comma: </p></p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;webwork:iterator value=<span class="code-quote">"groupDao.groups"</span> status=<span class="code-quote">"groupStatus"</span>&gt;</span>
+		<span class="code-tag">&lt;tr class=<span class="code-quote">"&lt;webwork:if test="</span>#groupStatus.odd == true <span class="code-quote">"&gt;</span>odd<span class="code-tag">&lt;/webwork:if&gt;</span><span class="code-tag">&lt;webwork:else&gt;</span>even<span class="code-tag">&lt;/webwork:else&gt;</span>"</span>&gt;
+			<span class="code-tag">&lt;td&gt;</span><span class="code-tag">&lt;webwork:property value=<span class="code-quote">"name"</span> /&gt;</span><span class="code-tag">&lt;/td&gt;</span>
+			<span class="code-tag">&lt;td&gt;</span><span class="code-tag">&lt;webwork:property value=<span class="code-quote">"description"</span> /&gt;</span><span class="code-tag">&lt;/td&gt;</span>
+			<span class="code-tag">&lt;td&gt;</span>
+				<span class="code-tag">&lt;webwork:iterator value=<span class="code-quote">"users"</span> status=<span class="code-quote">"userStatus"</span>&gt;</span>
+					<span class="code-tag">&lt;webwork:property value=<span class="code-quote">"fullName"</span> /&gt;</span><span class="code-tag">&lt;webwork:if test=<span class="code-quote">"!#userStatus.last"</span>&gt;</span>,<span class="code-tag">&lt;/webwork:if&gt;</span>
+				<span class="code-tag">&lt;/webwork:iterator&gt;</span>
+			<span class="code-tag">&lt;/td&gt;</span>
+		<span class="code-tag">&lt;/tr&gt;</span>
+	<span class="code-tag">&lt;/webwork:iterator&gt;</span></pre>
+</div></div>
+
+
+<p> </p> The next example iterates over a an action collection and passes every iterator value to another action. The
+ trick here lies in the use of the '[0]' operator. It takes the current iterator value and passes it on to the edit
+ action. Using the '[0]' operator has the same effect as using &gt;ww:property /&gt;. (The latter, however, does not
+ work from inside the param tag). </p></p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:action name=<span class="code-quote">"entries"</span> id=<span class="code-quote">"entries"</span>/&gt;</span>
+		<span class="code-tag">&lt;ww:iterator value=<span class="code-quote">"#entries.entries"</span> &gt;</span>
+			<span class="code-tag">&lt;ww:property value=<span class="code-quote">"name"</span> /&gt;</span>
+			<span class="code-tag">&lt;ww:property /&gt;</span>
+			<span class="code-tag">&lt;ww:push value=<span class="code-quote">"..."</span>&gt;</span>
+				<span class="code-tag">&lt;ww:action name=<span class="code-quote">"edit"</span> id=<span class="code-quote">"edit"</span> &gt;</span>
+					<span class="code-tag">&lt;ww:param name=<span class="code-quote">"entry"</span> value=<span class="code-quote">"[0]"</span> /&gt;</span>
+				<span class="code-tag">&lt;/ww:action&gt;</span>
+			<span class="code-tag">&lt;/push&gt;</span>
+		<span class="code-tag">&lt;/ww:iterator&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

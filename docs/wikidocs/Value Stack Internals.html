@@ -1,0 +1,105 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Value Stack Internals
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>As Matt Ho explained on the mailing list:</p>
+
+<p> A value stack is essentially a List.  Calling [1] on the stack, <br/>
+ returns a substack beginning with the element at index 1.  It's only <br/>
+ when you call methods on the stack that your actual objects will be <br/>
+ called.</p>
+
+<p> Said another way, let's say I have a value stack that consists of a <br/>
+ model and an action as follows:</p>
+
+<p> [ model, action ]</p>
+
+<p> here's how the following ognl would resolve:</p>
+
+<p> [0] - a CompoundRoot object that contains our stack, [model, action]</p>
+
+<p> [1] - another CompoundRoot that contains only [action]</p>
+
+<p> [0].toString() - calls toString() on the first object in the value <br/>
+ stack (excluding the CompoundRoot) that supports the toString() method</p>
+
+<p> [1].foo - call getFoo() on the first object in the value stack <br/>
+ starting from [OS:action] and excluding the CompoundRoot that supports a <br/>
+ getFoo() method</p>
+
+<p> I hope this doesn't sound too confusing :\</p>
+
+<p> If you're using Velocity, this can most easily be written as:</p>
+
+<p> $stack.findValue("[0]").peek()</p>
+
+<p> Unfortunately, &lt;ww:property value="[0].peek()"/&gt; won't work as this <br/>
+ would translate into "starting at the top of the value stack (and <br/>
+ excluding the CompoundRoot), find the first object that has a method <br/>
+ called peek()"</p>
+
+<p>--------thanks Matt!</p>
+
+<p>here is the com.opensymphony.xwork.util.CompoundRoot class which Matt mentions:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> class CompoundRoot <span class="code-keyword">extends</span> ArrayList {
+    <span class="code-comment">//~ Constructors ///////////////////////////////////////////////////////////
+</span>
+    <span class="code-keyword">public</span> CompoundRoot() {
+    }
+
+    <span class="code-keyword">public</span> CompoundRoot(List list) {
+        <span class="code-keyword">super</span>(list);
+    }
+
+    <span class="code-comment">//~ Methods ////////////////////////////////////////////////////////////////
+</span>
+    <span class="code-keyword">public</span> CompoundRoot cutStack(<span class="code-object">int</span> index) {
+        <span class="code-keyword">return</span> <span class="code-keyword">new</span> CompoundRoot(subList(index, size()));
+    }
+
+    <span class="code-keyword">public</span> <span class="code-object">Object</span> peek() {
+        <span class="code-keyword">return</span> get(0);
+    }
+
+    <span class="code-keyword">public</span> <span class="code-object">Object</span> pop() {
+        <span class="code-keyword">return</span> remove(0);
+    }
+
+    <span class="code-keyword">public</span> void push(<span class="code-object">Object</span> o) {
+        add(0, o);
+    }
+}</pre>
+</div></div>
+<h3><a name="ValueStackInternals-What%27sonthestack%3F"></a>What's on the stack?</h3>
+
+<p>NOTE: When rendering Freemarker / Velocity templates or result,<br/>
+WebWork2 contains the following items by default in the ValueStack:</p>
+
+<ul>
+	<li>req - the current HttpServletRequest</li>
+	<li>res - the current HttpServletResponse</li>
+	<li>stack - the current OgnlValueStack</li>
+	<li>ognl - an instance of OgnlTool</li>
+	<li>ui - a (now deprecated) instance of a ui tag renderer</li>
+</ul>
+
+
+<p>@See com.opensymphony.webwork.views.util.ContextUtil</p>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

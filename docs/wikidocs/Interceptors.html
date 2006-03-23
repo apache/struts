@@ -1,0 +1,293 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Interceptors
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>See <a href="Interceptor Configuration.html" title="Interceptor Configuration">Interceptor Configuration</a> for basic information about how interceptors are configured.</p>
+
+<h2><a name="Interceptors-Overview"></a>Overview</h2>
+
+
+<p>An interceptor is a stateless class that follows the interceptor pattern, as
+found in {@link  javax.servlet.Filter} and in AOP languages.</p>
+
+<p><p/></p>
+
+<p>Interceptors are objects that dynamically intercept Action invocations. 
+They provide the developer with the opportunity to define code that can be executed 
+before and/or after the execution of an action. They also have the ability 
+to prevent an action from executing. Interceptors provide developers a way to 
+encapulate common functionality in a re-usable form that can be applied to 
+one or more Actions.</p>
+
+<p><p/></p>
+
+<p>Interceptors <b>must</b> be stateless and not assume that a new instance will be created for each request or Action.
+Interceptors may choose to either short-circuit the ActionInvocation execution and return a return code
+(such as com.opensymphony.xwork.Action#SUCCESS), or it may choose to do some processing before
+and/or after delegating the rest of the procesing using ActionInvocation#invoke().</p>
+
+<p><br clear="all" /></p>
+
+<h3><a name="Interceptors-Webwork%26XWorkInterceptors"></a>Webwork &amp; XWork Interceptors</h3>
+
+<p>Interceptor classes are also defined using a key-value pair specified in the xwork configuration file.  The names specified below come specified in <a href="webwork-default.xml.html" title="webwork-default.xml">webwork\-default.xml</a>.  If you extend the webwork-default package, then you can use the names below.  Otherwise they must be defined in your package with a name-class pair specified in the &lt;interceptors&gt; tag.</p>
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'> Interceptor </th>
+<th class='confluenceTh'> Name </th>
+<th class='confluenceTh'> Description </th>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Alias Interceptor.html" title="Alias Interceptor">Alias Interceptor</a> </td>
+<td class='confluenceTd'> alias </td>
+<td class='confluenceTd'> Converts similar parameters that may be named differently between requests. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Chaining Interceptor.html" title="Chaining Interceptor">Chaining Interceptor</a> </td>
+<td class='confluenceTd'> chain </td>
+<td class='confluenceTd'> Makes the previous action's properties available to the current action. Commonly used together with &lt;result type="chain"&gt; (in the previous action). </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Component Interceptor.html" title="Component Interceptor">Component Interceptor</a> </td>
+<td class='confluenceTd'> component </td>
+<td class='confluenceTd'> Enables and makes the components available to the Actions. Refer to components.xml </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Conversion Error Interceptor.html" title="Conversion Error Interceptor">Conversion Error Interceptor</a> </td>
+<td class='confluenceTd'> conversionError </td>
+<td class='confluenceTd'> adds conversion errors from the ActionContext to the Action's field errors </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Create Session Interceptor.html" title="Create Session Interceptor">Create Session Interceptor</a> </td>
+<td class='confluenceTd'> createSession </td>
+<td class='confluenceTd'> create an HttpSession automatically, usefull with certain interceptor (eg. TokenInterceptor) when an HttpSession is required in order to work properly </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Execute and Wait Interceptor.html" title="Execute and Wait Interceptor">Execute and Wait Interceptor</a> </td>
+<td class='confluenceTd'> execAndWait </td>
+<td class='confluenceTd'> an interceptor that executes the action in the background and then sends the user off to an intermediate waiting page. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Exception Interceptor.html" title="Exception Interceptor">Exception Interceptor</a> </td>
+<td class='confluenceTd'> exception </td>
+<td class='confluenceTd'> Maps exceptions to a result. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="File Upload Interceptor.html" title="File Upload Interceptor">File Upload Interceptor</a> </td>
+<td class='confluenceTd'> fileUpload </td>
+<td class='confluenceTd'> an interceptor that adds easy access to file upload support.  See the javadoc for more info </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="I18n Interceptor.html" title="I18n Interceptor">I18n Interceptor</a> </td>
+<td class='confluenceTd'> i18n </td>
+<td class='confluenceTd'> remembers the locale selected for a user's session </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Logger Interceptor.html" title="Logger Interceptor">Logger Interceptor</a> </td>
+<td class='confluenceTd'> logger </td>
+<td class='confluenceTd'> Outputs the name of the action </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Model Driven Interceptor.html" title="Model Driven Interceptor">Model Driven Interceptor</a> </td>
+<td class='confluenceTd'> model-driven </td>
+<td class='confluenceTd'> If the action implements ModelDriven, pushes the getModel() result onto the valuestack. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Parameters Interceptor.html" title="Parameters Interceptor">Parameters Interceptor</a> </td>
+<td class='confluenceTd'> params </td>
+<td class='confluenceTd'> Sets the request parameters onto the action. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Prepare Interceptor.html" title="Prepare Interceptor">Prepare Interceptor</a> </td>
+<td class='confluenceTd'> prepare </td>
+<td class='confluenceTd'> If the action implements Preparable, calls its prepare() method. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Scope Interceptor.html" title="Scope Interceptor">Scope Interceptor</a> </td>
+<td class='confluenceTd'> scope </td>
+<td class='confluenceTd'> simple mechanism for storing action state in the session or application scope </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Servlet Config Interceptor.html" title="Servlet Config Interceptor">Servlet Config Interceptor</a> </td>
+<td class='confluenceTd'> servlet-config </td>
+<td class='confluenceTd'> Give access to HttpServletRequest and HttpServletResponse (think twice before using this since this ties you to the Servlet api) </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Static Parameters Interceptor.html" title="Static Parameters Interceptor">Static Parameters Interceptor</a> </td>
+<td class='confluenceTd'> static-params </td>
+<td class='confluenceTd'> Sets the xwork.xml defined parameters onto the action.  These are the &lt;param&gt; tags that are direct children of the &lt;action&gt; tag. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Timer Interceptor.html" title="Timer Interceptor">Timer Interceptor</a> </td>
+<td class='confluenceTd'> timer </td>
+<td class='confluenceTd'> Outputs how long the action (including nested interceptors and view) takes to execute </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Token Interceptor.html" title="Token Interceptor">Token Interceptor</a> </td>
+<td class='confluenceTd'> token </td>
+<td class='confluenceTd'> Checks for valid token presence in action, prevents duplicate form submission </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Token Session Interceptor.html" title="Token Session Interceptor">Token Session Interceptor</a> </td>
+<td class='confluenceTd'> token-session </td>
+<td class='confluenceTd'> Same as above, but storing the submitted data in session when handed an invalid token </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Validation Interceptor.html" title="Validation Interceptor">Validation Interceptor</a> </td>
+<td class='confluenceTd'> validation </td>
+<td class='confluenceTd'> Performs validation using the validators defined in {Action}-validation.xml </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Workflow Interceptor.html" title="Workflow Interceptor">Workflow Interceptor</a> </td>
+<td class='confluenceTd'> workflow </td>
+<td class='confluenceTd'> Calls the validate method in your action class.  If action errors created then it returns the INPUT view. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Parameter Filter Interceptor.html" title="Parameter Filter Interceptor">Parameter Filter Interceptor</a> </td>
+<td class='confluenceTd'> N/A </td>
+<td class='confluenceTd'> Removes parameters from the list of those available to actions etc. </td>
+</tr>
+</tbody></table>
+
+
+<h4><a name="Interceptors-MethodFiltering"></a>Method Filtering</h4>
+
+
+<p>An abstract <code>Interceptor</code> that is applied to selectively according
+to specified included/excluded method lists.</p>
+
+<p><p/></p>
+
+<p>Setable parameters are as follows:</p>
+
+<p><ul>
+		<li>excludeMethods - methods name to be excluded</li>
+		<li>includeMethods - methods name to be included</li>
+</ul></p>
+
+<p><p/></p>
+
+<p><b>NOTE:</b> If method name are available in both includeMethods and 
+excludeMethods, it will still be considered as an included method. In short
+includeMethods takes precedence over excludeMethods.</p>
+
+<p><p/></p>
+
+<p>Interceptors that extends this capability would be :-</p>
+
+<p><ul>
+   <li>TokenInterceptor</li>
+   <li>TokenSessionStoreInterceptor</li>
+   <li>DefaultWorkflowInterceptor</li>
+   <li>ValidationInterceptor</li>
+</ul></p>
+
+
+
+<h4><a name="Interceptors-InterceptorParameterOverriding"></a>Interceptor Parameter Overriding</h4>
+
+
+<p>Interceptor's parameter could be overriden through the following ways :-</p>
+
+<p><p/></p>
+
+<p><b>Method 1:</b>
+<pre>
+&lt;action name="myAction" class="myActionClass"&gt;
+  &lt;interceptor-ref name="exception"/&gt;
+    &lt;interceptor-ref name="alias"/&gt;
+    &lt;interceptor-ref name="params"/&gt;
+    &lt;interceptor-ref name="servlet-config"/&gt;
+    &lt;interceptor-ref name="prepare"/&gt;
+    &lt;interceptor-ref name="i18n"/&gt;
+    &lt;interceptor-ref name="chain"/&gt;
+    &lt;interceptor-ref name="model-driven"/&gt;
+    &lt;interceptor-ref name="fileUpload"/&gt;
+    &lt;interceptor-ref name="static-params"/&gt;
+    &lt;interceptor-ref name="params"/&gt;
+    &lt;interceptor-ref name="conversionError"/&gt;
+    &lt;interceptor-ref name="validation"&gt;
+      &lt;param name="excludeMethods"&gt;myValidationExcudeMethod&lt;/param&gt;
+    &lt;/interceptor-ref&gt;
+    &lt;interceptor-ref name="workflow"&gt;
+      &lt;param name="excludeMethods"&gt;myWorkflowExcludeMethod&lt;/param&gt;
+    &lt;/interceptor-ref&gt;
+&lt;/action&gt;
+</pre></p>
+
+<p><b>Method 2:</b>
+<pre>
+&lt;action name="myAction" class="myActionClass"&gt;
+  &lt;interceptor-ref name="defaultStack"&gt;
+    &lt;param name="validator.excludeMethods"&gt;myValidationExcludeMethod&lt;/param&gt;
+    &lt;param name="workflow.excludeMethods"&gt;myWorkflowExcludeMethod&lt;/param&gt;
+  &lt;/interceptor-ref&gt;
+&lt;/action&gt;
+</pre></p>
+
+<p><p/></p>
+
+<p>In the first method, the whole default stack is copied and the parameter then 
+changed accordingly.</p>
+
+<p><p/></p>
+
+<p>In the second method, the <interceptor-ref .../> refer to an existing 
+interceptor-stack, namely default-stack in this example, and override the validator
+and workflow interceptor excludeMethods typically in this case. Note that in the
+<param ... /> tag, the name attribute contains a dot (.) the word before the dot(.)
+specifies the interceptor name whose parameter is to be overriden and the word after
+the dot (.) specifies the parameter itself. Essetially it is as follows :-</p>
+
+<p><pre>
+   &lt;interceptor-name&gt;.&lt;parameter-name&gt;
+</pre></p>
+
+<p><b>Note</b> also that in this case the <interceptor-ref ... > name attribute 
+is used to indicate an interceptor stack which makes sense as if it is refering 
+to the interceptor itself it would be just using Method 1 describe above.</p>
+
+
+<h4><a name="Interceptors-OrderofInterceptorExecution"></a>Order of Interceptor Execution</h4>
+
+<p>Interceptors provide an excellent means to wrap before/after processing.  The concept reduces code duplication (think AOP).</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;interceptor-stack name=<span class="code-quote">"xaStack"</span>&gt;
+  &lt;interceptor-ref name=<span class="code-quote">"thisWillRunFirstInterceptor"</span>/&gt;
+  &lt;interceptor-ref name=<span class="code-quote">"thisWillRunNextInterceptor"</span>/&gt;
+  &lt;interceptor-ref name=<span class="code-quote">"followedByThisInterceptor"</span>/&gt;
+  &lt;interceptor-ref name=<span class="code-quote">"thisWillRunLastInterceptor"</span>/&gt;
+&lt;/interceptor-stack&gt;</pre>
+</div></div>
+<p>Note that some interceptors will interrupt the stack/chain/flow... so the order is very important.</p>
+
+<p>Interceptors implementing com.opensymphony.xwork.interceptor.PreResultListener will run after the Action executes its action method but before the Result executes</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">thisWillRunFirstInterceptor
+  thisWillRunNextInterceptor
+    followedByThisInterceptor
+      thisWillRunLastInterceptor
+        MyAction1
+        MyAction2 (chain)
+        MyPreResultListener
+        MyResult (result)
+      thisWillRunLastInterceptor
+    followedByThisInterceptor
+  thisWillRunNextInterceptor
+thisWillRunFirstInterceptor</pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

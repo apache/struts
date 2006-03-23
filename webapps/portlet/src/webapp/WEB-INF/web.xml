@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app id="WebWorkPortlet">
+	<!-- Uncomment/comment this if you need/don't need Spring support -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/applicationContext*.xml</param-value>
+	</context-param>
+	<filter id="filterdispatcher">
+		<filter-name>webwork</filter-name>
+		<filter-class>
+			com.opensymphony.webwork.dispatcher.FilterDispatcher
+		</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>webwork</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<listener>
+		<listener-class>
+			org.springframework.web.context.ContextLoaderListener
+		</listener-class>
+	</listener>
+	<listener>
+		<listener-class>
+			com.opensymphony.webwork.portlet.context.ServletContextHolderListener
+		</listener-class>
+	</listener>
+
+
+	<servlet id="preparator">
+		<servlet-name>preparator</servlet-name>
+		<servlet-class>
+			com.opensymphony.webwork.portlet.context.PreparatorServlet
+		</servlet-class>
+	</servlet>
+	<servlet id="dwr">
+		<servlet-name>dwr</servlet-name>
+		<servlet-class>uk.ltd.getahead.dwr.DWRServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>CewolfServlet</servlet-name>
+		<servlet-class>de.laures.cewolf.CewolfRenderer</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>CewolfServlet</servlet-name>
+		<url-pattern>/cewolf/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>dwr</servlet-name>
+		<url-pattern>/dwr/*</url-pattern>
+	</servlet-mapping>
+
+	<taglib>
+		<taglib-uri>/cewolf</taglib-uri>
+		<taglib-location>/WEB-INF/tld/cewolf.tld</taglib-location>
+	</taglib>
+
+</web-app>

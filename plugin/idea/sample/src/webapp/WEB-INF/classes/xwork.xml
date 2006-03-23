@@ -1,0 +1,23 @@
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+
+<xwork>
+    <include file="webwork-default.xml"/>
+
+    <package name="test" extends="webwork-default">
+        <action name="test">
+            <result>test.jsp</result>
+        </action>
+    </package>
+
+    <package name="test2" extends="webwork-default">
+        <action name="test2">
+            <result>test.jsp</result>
+        </action>
+    </package>
+
+    <package name="test3" extends="webwork-default" namespace="/222">
+        <action name="test3">
+            <result>test.jsp</result>
+        </action>
+    </package>
+</xwork>

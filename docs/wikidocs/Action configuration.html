@@ -1,0 +1,89 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Action configuration
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>Actions are the basic "unit-of-work" in WebWork, they define, well, actions. An action will usually be a request, (and usually a button click, or form submit). The main action element (tag is too synonymous with JSP) has two parts, the friendly name (referenced in the URL, i.e. saveForm.action) and the corresponding "handler" class.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;action name=<span class="code-quote">"formTest"</span> class=<span class="code-quote">"com.opensymphony.webwork.example.FormAction"</span> method=<span class="code-quote">"processForm"</span>&gt;</span></pre>
+</div></div>
+
+<p>The optional "<b>method</b>" parameter tells WebWork which method to call based upon this action. If you leave the method parameter blank, WebWork will call the method <b>execute()</b> by default. If there is no execute() method and no method specified in the xml file, WebWork will throw an exception.</p>
+
+<p>Also, you can tell WebWork to invoke "<b>doSomething</b>"  method in your action by using the pattern "<b>actionName&#33;something</b>" in your form.  For example, "<b>formTest&#33;save.action</b>" will invoke the method "<b>save</b>" in FormAction class.  The method must be public, take no arguments and also returns a String which indicate the name of the result to be executed:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> <span class="code-object">String</span> save() <span class="code-keyword">throws</span> Exception
+  {
+      ...
+      <span class="code-keyword">return</span> SUCCESS;
+  }</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>All the configuration for "<b>actionName</b>" will be used for "actionName&#33;something" (interceptors, result types, etc...)</p>
+
+
+<h2><a name="Actionconfiguration-ActionSupport"></a>Action Support</h2>
+
+<p>Action class attribute could be left out such as following </p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;action name=<span class="code-quote">"myAction"</span>&gt;
+   ....
+&lt;/action&gt;</pre>
+</div></div>
+
+<p>In this case, the class will default to com.opensymphony.xwork.ActionSupport which have an execute() method that returns SUCCESS by default.</p>
+
+
+<h2><a name="Actionconfiguration-DefaultActionReference"></a>Default Action Reference</h2>
+
+<p>Since Webwork 2.2.1 you are also able to specify a default action to be executed when no other action is matched in the xwork.xml.  This feature is provided mainly to eliminate the need to create an action class and/or element for very simple or similar results.&nbsp; The default action name can be set inside the package element like below:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;package name=<span class="code-quote">"myPackage"</span> ....&gt;</span>
+
+...
+
+<span class="code-tag">&lt;default-action-ref name=<span class="code-quote">"simpleViewResultAction"</span>&gt;</span>
+
+&lt;!-- 
+An example of a default action that is just a simple class 
+that has 3 fields: successUrl, errorUrl, and inputUrl.  This action 
+parses the request url to set the result values.  In the normal case 
+it just renders velocity results of the same name as the requested url.
+--&gt;
+<span class="code-tag">&lt;action name=<span class="code-quote">"simpleViewResultAction"</span> class=<span class="code-quote">"SimpleViewResultAction"</span>&gt;</span>
+	<span class="code-tag">&lt;result type=<span class="code-quote">"velocity"</span>&gt;</span>${successUrl}<span class="code-tag">&lt;/result&gt;</span>
+	<span class="code-tag">&lt;result name=<span class="code-quote">"error"</span> type=<span class="code-quote">"velocity"</span>&gt;</span>${errorUrl}<span class="code-tag">&lt;/result&gt;</span>
+	<span class="code-tag">&lt;result name=<span class="code-quote">"input"</span> type=<span class="code-quote">"velocity"</span>&gt;</span>${inputUrl}<span class="code-tag">&lt;/result&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span>
+
+... 
+
+<span class="code-tag">&lt;/package&gt;</span></pre>
+</div></div>
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Caution</b><br /><br/>
+This feature should be configured such that there is only one default action per namespace.  Therefore if you have multiple packages declaring a default action with the same namespace, it is not guaranteed which action will be the default.</td></tr></table>
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Note</b><br />
+<p>Note that the name attribute is left out for the first result, as WebWork will default to "success" if it is left out. </p></td></tr></table>
+
+<p>In this case any request to action not defined in this package will automatically trigger action with alias "simpleViewResultAction" to be executed.</p>
+
+
+<p>Most of the content here provided by Matt Dowell &lt;matt.dowell@notiva.com&gt;</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

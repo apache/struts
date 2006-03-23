@@ -1,0 +1,112 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Internationalization
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="Internationalization-Description"></a>Description</h1>
+
+<p>WebWork supports internationalization (in short, i18n) in two different places: the UI tags and the action/field error messages.</p>
+<ul>
+	<li><a href="Tags.html" title="Tags">Tags</a> Typically the <a href="i18n.html" title="i18n">i18n</a> and <a href="text.html" title="text">text</a> tag</li>
+	<li><a href="Validation.html" title="Validation">Validation</a></li>
+</ul>
+
+
+<h1><a name="Internationalization-ResourceBundleSearchOrder"></a>Resource Bundle Search Order</h1>
+
+<p>Resource bundles are searched in the following order:<p/>
+<p/>
+<ol>
+<li>ActionClass.properties</li>
+<li>BaseClass.properties (all the way to Object.properties)</li>
+<li>Interface.properties (every interface and sub-interface)</li>
+<li>ModelDriven's model (if implements ModelDriven), for the model object repeat from 1</li>
+<li>package.properties (of the directory where class is located and every parent directory all the way to the root directory)</li>
+<li>search up the i18n message key hierarchy itself</li>
+<li>global resource properties (webwork.custom.i18n.resources) defined in webwork.properties</li>
+</ol>
+<p/></p>
+
+<p>For more information, checkout the LocalizedTextUtil class.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='tipMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/check.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Package Hierarchy</b><br />
+<p>To clarify #5, while traversing the package hierarchy, WW will look for a file package.properties:<p/>
+com/<br/>
+&nbsp; acme/<br/>
+&nbsp; &nbsp; package.properties<br/>
+&nbsp; &nbsp; actions/<br/>
+&nbsp; &nbsp; &nbsp; package.properties<br/>
+&nbsp; &nbsp; &nbsp; FooAction.java<br/>
+&nbsp; &nbsp; &nbsp; FooAction.properties<br/>
+<p/>
+If FooAction.properties does not exist, com/acme/action/package.properties will be searched for, if
+not found com/acme/package.properties, if not found com/package.properties, etc.
+<p/></p></td></tr></table>
+
+
+<h1><a name="Internationalization-Examples"></a>Examples</h1>
+
+<h2><a name="Internationalization-UsinggetText%28%29"></a>Using getText()</h2>
+
+<p>To display i18n text, you can use a call to getText() in the <a href="property.html" title="property">property</a> tag, or any other tag such as the UI tags (this is especially useful for labels of UI tags):</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:property value=<span class="code-quote">"getText('some.key')"</span> /&gt;</span></pre>
+</div></div>
+
+
+<h2><a name="Internationalization-TextTag"></a>Text Tag</h2>
+
+<p>You may also use the <a href="text.html" title="text">text</a> tag:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:text name=<span class="code-quote">"some.key"</span> /&gt;</span></pre>
+</div></div>
+
+
+<h2><a name="Internationalization-I18nTag"></a>I18n Tag</h2>
+
+<p>Also, note that there is an <a href="i18n.html" title="i18n">i18n</a> tag that will push a resource bundle on to the stack, allowing you to display text that would otherwise not be part of the resource bundle search hierarchy mentioned previously.</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:i18n name=<span class="code-quote">"some.package.bundle"</span> &gt;</span>
+     <span class="code-tag">&lt;ww:text name=<span class="code-quote">"some.key"</span> /&gt;</span>
+<span class="code-tag">&lt;/ww:i18n&gt;</span></pre>
+</div></div>
+
+<p>&nbsp;<table cellpadding='5' width='85%' cellspacing='8px' class='warningMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/forbidden.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><br/>
+Internationalization in SiteMesh decorators is possible, but there are a few quirks about it. Check out the <a href="SiteMesh.html" title="SiteMesh">SiteMesh</a> page to learn how to be integrate WebWork and SiteMesh, including integration tips.</td></tr></table></p>
+
+
+
+<h1><a name="Internationalization-I18nInterceptor"></a>I18n Interceptor</h1>
+
+<p>See <a href="I18n Interceptor.html" title="I18n Interceptor">I18n Interceptor</a> for more info. It basically pushes a locale into the ActionContext map upon every request. Webwork (components, ActionSupport etc.) honours this and hence every i18n related aspect will used this locale. Its a pretty elegant way of changing locale upon request as well.</p>
+
+
+<h1><a name="Internationalization-Globalresource%28webwork.custom.i18n.resources%29inwebwork.properties"></a>Global resource (webwork.custom.i18n.resources) in webwork.properties</h1>
+
+<p>A global resource bundle could be specified through the 'webwork.custom.i18n.resources' property in
+webwork.properties. The locale can be siwtched by 'webwork.locale' in the webwork.properties as well.
+<p/></p>
+
+
+<h1><a name="Internationalization-ComparisonwithStruts"></a>Comparison with Struts</h1>
+
+<p>Struts users should be familiar with the application.properties resource bundle, where you can put all the messages
+in the application that are going to be translated. WebWork, though, splits the resource bundles per action or model
+class, and you may end up with duplicated messages in those resource bundles. A quick fix for that is to create a
+file called ActionSupport.properties in com/opensymphony/xwork and put it on your classpath. This will only work well
+if all your actions subclass ActionSupport.
+<p/></p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

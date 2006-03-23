@@ -1,0 +1,82 @@
+
+<html>
+<head>
+<title>&lt;ww:include /&gt;</title>
+</head>
+
+<body>
+
+<h1>Tag Name: &lt;ww:include /&gt;</h1>
+
+<h2>Description</h2>
+<p>
+
+Include a servlet's output (result of servlet or a JSP page)
+
+</p>
+
+<p>
+<!-- START SNIPPET: javadoc --> <p>Include a servlet's output (result of servlet or a JSP page).</p> <!-- END SNIPPET: javadoc --> <!-- START SNIPPET: params --> <ul> <li>value* (String) - jsp page to be included</li> </ul> <!-- END SNIPPET: params --> <p/> <b>Examples</b> <pre> <!-- START SNIPPET: example --> &lt;-- One: --&gt; &lt;ww:include value="myJsp.jsp" /&gt; &lt;-- Two: --&gt; &lt;ww:include value="myJsp.jsp"&gt; &lt;ww:param name="param1" value="value2" /&gt; &lt;ww:param name="param2" value="value2" /&gt; &lt;/ww:include&gt; &lt;-- Three: --&gt; &lt;ww:include value="myJsp.jsp"&gt; &lt;ww:param name="param1"&gt;value1&lt;/ww:param&gt; &lt;ww:param name="param2"&gt;value2&lt;ww:param&gt; &lt;/ww:include&gt; <!-- END SNIPPET: example --> <!-- START SNIPPET: exampledescription --> Example one - do an include myJsp.jsp page Example two - do an include to myJsp.jsp page with parameters param1=value1 and param2=value2 Example three - do an include to myJsp.jsp page with parameters param1=value1 and param2=value2 <!-- END SNIPPET: exampledescription --> </pre>
+</p>
+
+<h2>Attributes</h2>
+<p>
+
+<!-- START SNIPPET: tagattributes -->
+<table width="100%">
+<tr>
+
+<th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">value</td>
+
+<!-- Required -->
+<td align="left" valign="top"><b>true</b></td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The jsp/servlet output to include</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">id for referencing element. For UI and form tags it will be used as HTML id attribute</td>
+
+</tr>
+
+</table>
+<!-- END SNIPPET: tagattributes -->
+
+</p>
+<p>
+<center><a href="index.html">Back to Taglib Index</a></center>
+</p>
+</body>
+</html>
+

@@ -1,0 +1,88 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Result Configuration
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="ResultConfiguration-Description"></a>Description</h1>
+
+<p>Results are string constants that Actions return to indicate the status of an Action execution. A standard set of Results are defined by default: error, input, login, none and success. Developers are, of course, free to create their own Results to indicate more application specific cases.  Results are mapped to defined <a href="Result Types.html" title="Result Types">Result Types</a> using a name-value pair structure.</p>
+<ul>
+	<li><a href="Global results.html" title="Global results">Global results</a></li>
+	<li><a href="Default results.html" title="Default results">Default results</a></li>
+</ul>
+
+
+<h1><a name="ResultConfiguration-Resulttags"></a>Result tags</h1>
+
+<p>Result tags tell WebWork what to do next after the action has been called. There are a standard set of result codes built-in to WebWork, (in the Action interface) they include:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-object">String</span> SUCCESS = <span class="code-quote">"success"</span>;
+<span class="code-object">String</span> NONE    = <span class="code-quote">"none"</span>;
+<span class="code-object">String</span> ERROR   = <span class="code-quote">"error"</span>;
+<span class="code-object">String</span> INPUT   = <span class="code-quote">"input"</span>;
+<span class="code-object">String</span> LOGIN   = <span class="code-quote">"login"</span>;</pre>
+</div></div>
+
+<p>You can extend these as you see fit. Most of the time you will have either <b>SUCCESS</b> or <b>ERROR</b>, with <b>SUCCESS</b> moving on to the next page in your application;</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>
+    <span class="code-tag">&lt;param name=<span class="code-quote">"location"</span>&gt;</span>/thank_you.jsp<span class="code-tag">&lt;/param&gt;</span>
+<span class="code-tag">&lt;/result&gt;</span></pre>
+</div></div>
+
+<p>...and <b>ERROR</b> moving on to an error page, or the preceding page;</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;result name=<span class="code-quote">"error"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>
+    <span class="code-tag">&lt;param name=<span class="code-quote">"location"</span>&gt;</span>/error.jsp<span class="code-tag">&lt;/param&gt;</span>
+<span class="code-tag">&lt;/result&gt;</span></pre>
+</div></div>
+
+<p>Results are specified in a xwork xml config file(xwork.xml) nested inside &lt;action&gt;.  If the <tt>location</tt> param is the only param being specified in the result tag, you can simplify it as follows:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;action name=<span class="code-quote">"bar"</span> class=<span class="code-quote">"myPackage.barAction"</span>&gt;</span>
+  <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>
+    <span class="code-tag">&lt;param name=<span class="code-quote">"location"</span>&gt;</span>foo.jsp<span class="code-tag">&lt;/param&gt;</span>
+  <span class="code-tag">&lt;/result&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span></pre>
+</div></div>
+
+<p>or simplified</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;action name=<span class="code-quote">"bar"</span> class=<span class="code-quote">"myPackage.barAction"</span>&gt;</span>
+  <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>foo.jsp<span class="code-tag">&lt;/result&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span></pre>
+</div></div>
+
+<p>or even simplified further</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;action name=<span class="code-quote">"bar"</span> class=<span class="code-quote">"myPackage.barAction"</span>&gt;</span>
+   <span class="code-tag">&lt;result&gt;</span>foo.jsp<span class="code-tag">&lt;/result&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span></pre>
+</div></div>
+
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Default Action Class</b><br />
+<p>If the class attribute is not specified in the action tag, it will default to WebWork's ActionSupport.</p></td></tr></table>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Default Location Parameter</b><br />
+<p>If no param tag eg. &lt;param name="location"&gt; ,,, &lt;/param&gt;  is given as child of the &lt;result ..&gt; tag, WebWork will assume the text enclosed within the &lt;result&gt; &lt;/result&gt; tags to be the location.</p></td></tr></table>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Default Result Type</b><br />
+<p>If no type attribute is specified in the &lt;result ...&gt; tag, WebWork assume the type to be dispatcher. (Analogus to Servlet's Specs. SerlvetDispatcher's forward).</p></td></tr></table>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

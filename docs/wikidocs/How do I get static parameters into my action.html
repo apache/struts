@@ -1,0 +1,79 @@
+<html>
+    <head>
+        <title>WebWork - 
+         do I get static parameters into my action
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>Static parameters could be defined into an action through xwork.xml like bellow:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;action name=<span class="code-quote">"myAction"</span> class=<span class="code-quote">" ... "</span>&gt;
+     &lt;param name=<span class="code-quote">"myStaticParam1"</span>&gt;myStaticValue1&lt;/param&gt;
+     &lt;param name=<span class="code-quote">"myStaticParam2"</span>&gt;myStaticValue2&lt;/param&gt;
+     &lt;param name=<span class="code-quote">"myStaticParam3"</span>&gt;myStaticValue3&lt;/param&gt;
+  &lt;/action&gt;</pre>
+</div></div>
+
+<p><b>+ Method A +</b><br/>
+Have the action class itself implements com.opensymphony.xwork.config.entities.Parameterizable and the static parameters will be set into it through the setParams(Map) method. In the example above, the key and value will be as tabulated below:</p>
+
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'>key</th>
+<th class='confluenceTh'>value</th>
+</tr>
+<tr>
+<td class='confluenceTd'>myStaticParam1</td>
+<td class='confluenceTd'>myStaticValue1</td>
+</tr>
+<tr>
+<td class='confluenceTd'>myStaticParam2</td>
+<td class='confluenceTd'>myStaticValue2</td>
+</tr>
+<tr>
+<td class='confluenceTd'>myStaticParam3</td>
+<td class='confluenceTd'>myStaticValue3</td>
+</tr>
+</tbody></table>
+
+
+<p><b>+ Method B +</b><br/>
+Have the action class itself define getter/setter for the static parameter itself and those static parameter will be set through those setter and getter. In the case above, the action class could be as follows:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> class MyAction <span class="code-keyword">extends</span> ActionSupport {
+     ...
+     
+     <span class="code-keyword">public</span> <span class="code-object">String</span> getMyStaticParam1() { ....}
+     <span class="code-keyword">public</span> void setMyStaticParam1(<span class="code-object">String</span> myStaticParam1) { ... }
+
+     <span class="code-keyword">public</span> <span class="code-object">String</span> getMyStaticParam2() { ... }
+     <span class="code-keyword">public</span> void setMyStaticParam2(<span class="code-object">String</span> myStaticParam2) { ... }
+  
+     <span class="code-keyword">public</span> <span class="code-object">String</span> getMyStaticParam3() { ... }
+     <span class="code-keyword">public</span> void setMyStaticParam3(<span class="code-object">String</span> myStaticParam3) { ... }
+
+     ...
+  }</pre>
+</div></div>
+
+<p>The getter and setter, will be set appropriately.</p>
+
+<p><b>NOTE:</b> For this to work, 'static-params' interceptor must be added to the action.</p>
+
+<p>@see com.opensymphony.xwork.interceptor.StaticParametersInterceptor<br/>
+@see com.opensymphony.xwork.config.entities.Parameterizable</p>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

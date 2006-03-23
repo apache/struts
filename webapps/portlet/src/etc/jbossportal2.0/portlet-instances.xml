@@ -1,0 +1,15 @@
+<?xml version="1.0" standalone="yes"?>
+<!--
+  ~ Copyright (c) 2002-2006 by OpenSymphony
+  ~ All rights reserved.
+  -->
+<instances>
+   <instance>
+      <instance-name>WebWorkPortletInstance</instance-name>
+      <component-ref>WebWorkPortlet</component-ref>
+   </instance>
+   <instance>
+      <instance-name>WebWorkPortlet2Instance</instance-name>
+      <component-ref>WebWorkPortlet2</component-ref>
+   </instance>
+</instances>

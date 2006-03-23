@@ -1,0 +1,174 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Lesson 1 - Setting up webwork in a web application
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="Lesson1-Settingupwebworkinawebapplication-Lesson1%3ASettingupwebworkinawebapplication"></a>Lesson 1: Setting up webwork in a web application</h1>
+
+<p>For this lesson, you need to have a Servlet container set up and know how to create a web application. If you don't, we suggest you learn about  <a href="http://jakarta.apache.org/tomcat/" title="Visit page outside Confluence">Apache Tomcat</a>, which is a free Servlet container from the Apache Jakarta Project, or Resin, from <a href="http://www.caucho.com/" title="Visit page outside Confluence">Caucho Technology</a>, which is free for noncommercial use.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='infoMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/information.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Notation</b><br />
+<p>Throughout these lessons, we'll assume that your web application root is the directory [webapp], and that your Java source files are kept in [src].</p></td></tr></table>
+
+<p>To install WebWork in a web application: </p>
+
+<ol>
+	<li>Download WebWork. The current version can be found at <a href="http://www.opensymphony.com/webwork/" title="Visit page outside Confluence">WebWork's home page</a>. This tutorial is based on version 2.1.7.</li>
+	<li>Set up an empty web application. For example, if you are using Tomcat, this will have something like the following directories (the directory "webwork-lessons" is referred to as [webapp] in these lessons):
+<div class="code"><div class="codeContent">
+<pre class="code-java">[the tomcat root directory]
+\|_webapps
+  \|_webwork-lessons
+    \|_WEB-INF
+      \|_classes
+      \|_lib</pre>
+</div></div></li>
+	<li>Copy the required WebWork libraries to your web application:</li>
+</ol>
+<ul class="alternate" type="square">
+	<li>copy <tt>webwork-2.1.7.jar</tt> to <tt>[webapp]/WEB-INF/lib</tt> ,</li>
+	<li>copy <tt>lib/core/&#42;.jar</tt> to <tt>[webapp]/WEB-INF/lib</tt> (not to <tt>[webapp]/WEB-INF/lib/core</tt>).</li>
+</ul>
+<ol>
+	<li>Configure <tt>[webapp]/WEB-INF/web.xml</tt>, and create <tt>[webapp]/WEB-INF/classes/xwork.xml</tt> and <tt>[webapp]/WEB-INF/classes/validators.xml</tt>, as described below.</li>
+</ol>
+
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='warningMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/forbidden.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">WebWork jar name</b><br />
+<p>If you have a later version of WebWork than 2.1.7, the WebWork jar will not be named webwork-2.1.7.jar. Be sure to replace all occurrences of this jar's name below with the name of the jar you are using.</p></td></tr></table>
+
+<h3><a name="Lesson1-Settingupwebworkinawebapplication-web.xml%3A"></a>web.xml:</h3>
+
+<p>Create the following <tt>web.xml</tt> file in <tt>[webapp]/WEB-INF</tt>. If you already have a <tt>web.xml</tt> file, just add the content of the &lt;web-app&gt; tag below to your existing &lt;web-app&gt; tag.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;?xml version=<span class="code-quote">"1.0"</span>?&gt;</span>
+&lt;!DOCTYPE web-app PUBLIC <span class="code-quote">"-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"</span>
+<span class="code-quote">"http://java.sun.com/dtd/web-app_2_3.dtd"</span>&gt;
+
+<span class="code-tag">&lt;web-app&gt;</span>
+	<span class="code-tag">&lt;display-name&gt;</span>My WebWork Application<span class="code-tag">&lt;/display-name&gt;</span>
+	<span class="code-tag">&lt;servlet&gt;</span>
+		<span class="code-tag">&lt;servlet-name&gt;</span>webwork<span class="code-tag">&lt;/servlet-name&gt;</span>
+		<span class="code-tag">&lt;servlet-class&gt;</span>com.opensymphony.webwork.dispatcher.ServletDispatcher<span class="code-tag">&lt;/servlet-class&gt;</span>
+		<span class="code-tag">&lt;load-on-startup&gt;</span>1<span class="code-tag">&lt;/load-on-startup&gt;</span>
+	<span class="code-tag">&lt;/servlet&gt;</span>
+	<span class="code-tag">&lt;servlet-mapping&gt;</span>
+		<span class="code-tag">&lt;servlet-name&gt;</span>webwork<span class="code-tag">&lt;/servlet-name&gt;</span>
+		<span class="code-tag">&lt;url-pattern&gt;</span>*.action<span class="code-tag">&lt;/url-pattern&gt;</span>
+	<span class="code-tag">&lt;/servlet-mapping&gt;</span>
+	<span class="code-tag">&lt;taglib&gt;</span>
+		<span class="code-tag">&lt;taglib-uri&gt;</span>webwork<span class="code-tag">&lt;/taglib-uri&gt;</span>
+		<span class="code-tag">&lt;taglib-location&gt;</span>/WEB-INF/lib/webwork-2.1.7.jar<span class="code-tag">&lt;/taglib-location&gt;</span>
+	<span class="code-tag">&lt;/taglib&gt;</span>
+<span class="code-tag">&lt;/web-app&gt;</span></pre>
+</div></div>
+
+<p>This registers <tt>ServletDispatcher</tt> as a servlet, and maps it to the suffix <tt>&#42;.action</tt>. We will go into this more in the section on Actions in the <a href="Lesson 3 - An html form with data.html" title="Lesson 3 - An html form with data">next lesson</a>. WebWork's taglib descriptor allows WebWork tags to be used (see <a href="TutorialLesson04-01.html" title="TutorialLesson04-01">lesson 4.1</a>).</p>
+
+<blockquote><p>Read more: <a href="web.xml.html" title="web.xml">web.xml</a></p></blockquote>
+
+<h3><a name="Lesson1-Settingupwebworkinawebapplication-xwork.xml%3A"></a>xwork.xml:</h3>
+
+<p>Create the following file <tt>xwork.xml</tt> in <tt>[webapp]/WEB-INF/classes/</tt>.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml">&lt;!DOCTYPE xwork PUBLIC <span class="code-quote">"-//OpenSymphony Group//XWork 1.0//EN"</span> 
+<span class="code-quote">"http://www.opensymphony.com/xwork/xwork-1.0.dtd"</span>&gt;
+
+<span class="code-tag">&lt;xwork&gt;</span>
+	<span class="code-tag"><span class="code-comment">&lt;!-- Include webwork defaults (from WebWork JAR). --&gt;</span></span>
+	<span class="code-tag">&lt;include file=<span class="code-quote">"webwork-default.xml"</span> /&gt;</span>
+	
+	<span class="code-tag"><span class="code-comment">&lt;!-- Configuration for the default package. --&gt;</span></span>
+	<span class="code-tag">&lt;package name=<span class="code-quote">"default"</span> extends=<span class="code-quote">"webwork-default"</span>&gt;</span>
+	<span class="code-tag">&lt;/package&gt;</span>
+<span class="code-tag">&lt;/xwork&gt;</span></pre>
+</div></div>
+
+<p>For now, this xwork.xml does only two things:</p>
+
+<ul>
+	<li>It informs WebWork that it should import the configuration information from <tt>webwork-default.xml</tt>. (This file is located at the root of the <tt>webwork-2.1.7.jar</tt>, so it is sure to be found.)</li>
+</ul>
+
+
+<ul>
+	<li>It defines a default package (with the &lt;package&gt; section) where WebWork elements like actions, results and interceptors are registered.</li>
+</ul>
+
+
+<blockquote><p>Read more: <a href="xwork.xml.html" title="xwork.xml">xwork.xml</a></p></blockquote>
+
+
+<h3><a name="Lesson1-Settingupwebworkinawebapplication-validators.xml%3A"></a>validators.xml:</h3>
+
+<p>Create a file <tt>validators.xml</tt> in <tt>[webapp]/WEB-INF/classes/</tt> with the following content:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;validators&gt;</span> 
+	&lt;validator name=<span class="code-quote">"required"</span>
+		class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.RequiredFieldValidator"</span>/&gt; 
+	&lt;validator name=<span class="code-quote">"requiredstring"</span>
+		class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.RequiredStringValidator"</span>/&gt; 
+	&lt;validator name=<span class="code-quote">"int"</span>
+		class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.IntRangeFieldValidator"</span>/&gt; 
+	&lt;validator name=<span class="code-quote">"date"</span>
+		class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.DateRangeFieldValidator"</span>/&gt; 
+	&lt;validator name=<span class="code-quote">"expression"</span>
+		class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.ExpressionValidator"</span>/&gt; 
+	&lt;validator name=<span class="code-quote">"fieldexpression"</span>
+		class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.FieldExpressionValidator"</span>/&gt; 
+	&lt;validator name=<span class="code-quote">"email"</span>
+		class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.EmailValidator"</span>/&gt; 
+	&lt;validator name=<span class="code-quote">"url"</span>
+		class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.URLValidator"</span>/&gt; 
+	&lt;validator name=<span class="code-quote">"visitor"</span>
+		class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.VisitorFieldValidator"</span>/&gt; 
+	&lt;validator name=<span class="code-quote">"conversion"</span>
+		class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.ConversionErrorFieldValidator"</span>/&gt; 
+<span class="code-tag">&lt;/validators&gt;</span></pre>
+</div></div>
+
+<p>This file defines the validators used, for example, for validating html form fields.</p>
+
+<blockquote><p>Read more: <a href="Validation.html" title="Validation">Validation</a></p></blockquote>
+
+<h2><a name="Lesson1-Settingupwebworkinawebapplication-AllSetUp%21"></a>All Set Up!</h2>
+
+<p>Restart your servlet container (for example, restart Tomcat), and your webapp should be ready for use as a skeleton WebWork application. </p>
+
+<p>To test whether everything is working, create <tt>[webapp]/test.jsp</tt>:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;html&gt;
+&lt;body&gt;
+Hello html world
+&lt;hr/&gt;
+&lt;%
+  out.println(<span class="code-quote">"Hello jsp world."</span>);
+%&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div></div>
+
+<p>If you can load this file in your browser and see the two Hello messages, your web application is working.</p>
+
+<hr />
+
+<p><a href="Lesson 2 - An html form with no data.html" title="Lesson 2 - An html form with no data">Next Lesson</a></p>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

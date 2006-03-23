@@ -1,0 +1,60 @@
+<html>
+    <head>
+        <title>WebWork - 
+         do I populate a form bean and get the value using the taglib
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>First off, if you're coming from Struts, you may feel more comfortable using FormBeans instead of using the Action as your form bean. Be aware, though, that in Webwork you DO have the option of having the properties directly in the Action class. If you want to use a FormBean, here's an example:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> class TestAction <span class="code-keyword">extends</span> ActionSupport {
+    <span class="code-keyword">private</span> TestBean myBean;
+
+    <span class="code-keyword">public</span> TestBean getMyBean() {
+        <span class="code-keyword">return</span> myBean;
+    }
+
+    <span class="code-keyword">public</span> void setMyBean(TestBean myBean) {
+        <span class="code-keyword">this</span>.myBean = myBean;
+    }
+
+    <span class="code-keyword">protected</span> <span class="code-object">String</span> doExecute() <span class="code-keyword">throws</span> Exception {
+        myBean = <span class="code-keyword">new</span> TestBean();
+        BeanUtil.setProperties(ActionContext.getContext().getParameters(), myBean);
+        <span class="code-keyword">return</span> SUCCESS;
+    }
+}</pre>
+</div></div>
+
+<p>Then, in your success.jsp, which is mapped as the success result of TestAction in the views.properties or actions.xml (see the docs for how to configure actions and view mappings), you can do this:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;!-- This will call getMyBean() on your action and put it on the top of the value stack -&gt;
+&lt;webwork:property value=<span class="code-quote">"myBean"</span>&gt; 
+&lt;!- This will call getName() on your TestBean and print it to the page --&gt;
+The name is: &lt;webwork:property value=<span class="code-quote">"name"</span>/&gt;
+&lt;/webwork:property&gt;</pre>
+</div></div>
+<p>This is a good way to do it if you have several parameters from the TestBean that you want to display, but, if you have just one, like in this case, it's probably better to do this:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;webwork:property value=<span class="code-quote">"myBean/name"</span>/&gt;</pre>
+</div></div>
+
+<p><u><b>NOTE:</b></u><br/>
+As of WW2.2, the following should be used</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;webwork:property value=<span class="code-quote">"myBean.name"</span> /&gt;</pre>
+</div></div>
+
+<p>Which will call getMyBean.getName() and print that out to the page.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

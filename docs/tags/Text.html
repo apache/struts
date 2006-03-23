@@ -1,0 +1,82 @@
+
+<html>
+<head>
+<title>&lt;ww:text /&gt;</title>
+</head>
+
+<body>
+
+<h1>Tag Name: &lt;ww:text /&gt;</h1>
+
+<h2>Description</h2>
+<p>
+
+Render a I18n text message.
+
+</p>
+
+<p>
+<!-- START SNIPPET: javadoc --> Render a I18n text message. <p/> The message must be in a resource bundle with the same name as the action that it is associated with. In practice this means that you should create a properties file in the same package as your Java class with the same name as your class, but with .properties extension. <p/> If the named message is not found, then the body of the tag will be used as default message. If no body is used, then the name of the message will be used. <!-- END SNIPPET: javadoc --> <!-- START SNIPPET: params --> <ul> <li>name* (String) - the i18n message key</li> </ul> <!-- END SNIPPET: params --> <p/> Example: <pre> <!-- START SNIPPET: exdescription --> Accessing messages from a given bundle (the i18n Shop example bundle in the first example) and using bundle defined through ww in the second example.</p> <!-- END SNIPPET: exdescription --> </pre> <pre> <!-- START SNIPPET: example --> &lt;!-- First Example --&gt; &lt;ww:i18n name="webwork.action.test.i18n.Shop"&gt; &lt;ww:text name="main.title"/&gt; &lt;/ww:i18n&gt; &lt;!-- Second Example --&gt; &lt;ww:text name="main.title" /&gt; <!-- END SNIPPET: example --> </pre> <pre> <!-- START SNIPPET: i18nExample --> &lt;ww:text name="some.key" /&gt; <!-- END SNIPPET: i18nExample --> </pre>
+</p>
+
+<h2>Attributes</h2>
+<p>
+
+<!-- START SNIPPET: tagattributes -->
+<table width="100%">
+<tr>
+
+<th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">name</td>
+
+<!-- Required -->
+<td align="left" valign="top"><b>true</b></td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Name of resource property to fetch</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">id for referencing element. For UI and form tags it will be used as HTML id attribute</td>
+
+</tr>
+
+</table>
+<!-- END SNIPPET: tagattributes -->
+
+</p>
+<p>
+<center><a href="index.html">Back to Taglib Index</a></center>
+</p>
+</body>
+</html>
+

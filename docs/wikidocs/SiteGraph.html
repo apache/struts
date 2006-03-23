@@ -1,0 +1,112 @@
+<html>
+    <head>
+        <title>WebWork - 
+        SiteGraph
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="SiteGraph-Introduction"></a>Introduction</h1>
+
+<p>WebWork comes with a utility called SiteGraph. SiteGraph is used to generate graphical diagrams representing the flow of your web application. It does this by parsing your configuration files, action classes, and view (JSP, Velocity, and FreeMarker) files. An example of a typical output of SiteGraph is provided (for the full size, click <a href="http://wiki.opensymphony.com/download/attachments/3459/example.gif?version=1" title="example.gif attached to SiteGraph">here</a>):</p>
+
+<p><div align="center"><img src="SiteGraph_attachments/example.gif" width="400" border="0" /></div></p>
+
+<p>Additional information can be found in the JavaDocs:</p>
+<p>SiteGraph is a tool that renders out GraphViz-generated images depicting your
+WebWork-powered web application's flow. SiteGraph requires GraphViz be installed
+and that the "dot" executable be in your command path. You can find GraphViz
+at http://www.graphviz.org.</p>
+
+<h2><a name="SiteGraph-UnderstandingtheOutput"></a>Understanding the Output</h2>
+
+<p>There are several key things to notice when looking at the output from SiteGraph:</p>
+<ul>
+	<li>Boxes: those shaded red indicate an action; those shaded green indicate a view file (JSP, etc).</li>
+	<li>Links: arrows colored green imply that no new HTTP request is being made; black arrows indicate a new HTTP request.</li>
+	<li>Link labels: labels may sometimes contain additional useful information. For example, a label of <b>href</b> means that the link behavior is that of a hyper-text reference. The complete label behaviors are provided:
+	<ul>
+		<li><b>href</b> - a view file references an action by name (typically ending with the extension ".action")</li>
+		<li><b>action</b> - a view file makes a call to the <a href="Action.html" title="action">Action</a> tag</li>
+		<li><b>form</b> - a view file is linked to an action using the <a href="Form.html" title="form">Form</a> tag</li>
+		<li><b>redirect</b> - an action is redirecting to another view or action</li>
+		<li><b>! notation</b> - a link to an action overrides the method to invoke</li>
+	</ul>
+	</li>
+</ul>
+
+
+<h2><a name="SiteGraph-Requirements"></a>Requirements</h2>
+<p>SiteGraph requires that your view files be structured in a very specific way. Because it has to read these files, only certain styles are supported. The requirements are:</p>
+<ul>
+	<li>The JSP tags must use the "ww" namespace.
+	<ul>
+		<li>In JSP: &lt;ww:xxx/&gt;</li>
+		<li>In FreeMarker: &lt;@ww.xxx/&gt;</li>
+		<li>In Velocity: N/A</li>
+	</ul>
+	</li>
+	<li>Use of the <a href="Form.html" title="form">Form</a> tag and <a href="Action.html" title="action">Action</a> tag must be linking directly to the action name (and optional namespace). This means that &lt;ww:form action="foo"/&gt; is OK, but &lt;ww:form action="foo.action"/&gt; is not.</li>
+	<li>All code is expected to be using the <a href="Alt Syntax.html" title="Alt Syntax">Alt Syntax</a>.</li>
+</ul>
+
+
+<h1><a name="SiteGraph-Settingup"></a>Setting up</h1>
+
+<p>SiteGraph is built in to WebWork, so if you're up and running with WebWork, you don't need to do anything additional java packages. However, SiteGraph does require the "dot" package by <a href="http://www.graphviz.org" title="Visit page outside Confluence">GraphViz</a>. </p>
+
+<p>You'll need to download the latest version of GraphViz and make sure that the dot executable (dot.exe in Windows) is in your command path. In Windows the GraphViz installer typically automatically adds dot.exe to your path. However, you may need to do this by hand depending on your system configuration.</p>
+
+<h1><a name="SiteGraph-Usage"></a>Usage</h1>
+
+<p>You can use SiteGraph with the following command:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">java -cp ... -jar webwork.jar 
+     sitegraph
+     -config CONFIG_DIR 
+     -views VIEWS_DIRS 
+     -output OUTPUT 
+     [-ns NAMESPACE]</pre>
+</div></div>
+
+<p>Where:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-none">Usage: -config CONFIG_DIR -views VIEWS_DIRS -output OUTPUT [-ns NAMESPACE]
+       CONFIG_DIR =&gt; a directory containing xwork.xml
+       VIEWS_DIRS =&gt; comma seperated list of dirs containing JSPs, VMs, etc
+       OUPUT      =&gt; the directory where the output should go
+       NAMESPACE  =&gt; the namespace path restriction (/, /foo, etc)</pre>
+</div></div>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='warningMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/forbidden.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>You must supply the correct classpath when invoking the SiteGraph tool. Specifically, the XWork, WebWork, and their dependencies must be included in the classpath. Futhermore, <b>you must also include your action class files referenced in xwork.xml</b>. Without the proper class path entries, SiteGraph will not function properly.</td></tr></table>
+
+<p>Once you have run SiteGraph, check the directory specified in the "output" argument (OUTPUT). In there you will find two files: <b>out.dot</b> and <b>out.gif</b>. You may immediately open up <b>out.gif</b> and view the web application flow. However, you may also wish to either run the <b>out.dot</b> file through a different GraphVis layout engine (neato, twopi, etc), so the original dot file is provided as well. You may also wish to edit the dot file before rendering the final flow diagram.</p>
+
+<h1><a name="SiteGraph-AutomaticExecution"></a>Automatic Execution</h1>
+
+<p>Some advanced users may wish to execute SiteGraph from within their application &#8211; this could be required if you are developing an application that supports WebWork plugin capabilities. This can easily be done. See the JavaDocs for more info:</p>
+
+<p>If you wish to use SiteGraph through its API rather than through the command line,
+you can do that as well. All you need to do is create a new SiteGraph instance,
+optionally specify a Writer to output the dot content to, and then call
+#prepare().</p>
+
+<p>The command line version of SiteGraph does exactly this (except for overriding the Writer):</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">SiteGraph siteGraph = <span class="code-keyword">new</span> SiteGraph(configDir, views, output, namespace);
+siteGraph.prepare();
+siteGraph.render();</pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

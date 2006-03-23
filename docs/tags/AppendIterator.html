@@ -1,0 +1,64 @@
+
+<html>
+<head>
+<title>&lt;ww:append /&gt;</title>
+</head>
+
+<body>
+
+<h1>Tag Name: &lt;ww:append /&gt;</h1>
+
+<h2>Description</h2>
+<p>
+
+Append the values of a list of iterators to one iterator
+
+</p>
+
+<p>
+<!-- START SNIPPET: javadoc --> <p>Component for AppendIteratorTag, which jobs is to append iterators to form an appended iterator whereby entries goes from one iterator to another after each respective iterator is exhausted of entries.</p> <p>For example, if there are 3 iterator appended (each iterator has 3 entries), the following will be how the appended iterator entries will be arranged:</p> <ol> <li>First Entry of the First Iterator</li> <li>Second Entry of the First Iterator</li> <li>Third Entry of the First Iterator</li> <li>First Entry of the Second Iterator</li> <li>Second Entry of the Second Iterator</li> <li>Third Entry of the Second Iterator</li> <li>First Entry of the Third Iterator</li> <li>Second Entry of the Third Iterator</li> <li>Third Entry of the Third ITerator</li> </ol> <!-- END SNIPPET: javadoc --> <!-- START SNIPPET: params --> <ul> <li>id (String) - the id of which if supplied will have the resultant appended iterator stored under in the stack's context</li> </ul> <!-- END SNIPPET: params --> <!-- START SNIPPET: code --> public class AppendIteratorTagAction extends ActionSupport { private List myList1; private List myList2; private List myList3; public String execute() throws Exception { myList1 = new ArrayList(); myList1.add("1"); myList1.add("2"); myList1.add("3"); myList2 = new ArrayList(); myList2.add("a"); myList2.add("b"); myList2.add("c"); myList3 = new ArrayList(); myList3.add("A"); myList3.add("B"); myList3.add("C"); return "done"; } public List getMyList1() { return myList1; } public List getMyList2() { return myList2; } public List getMyList3() { return myList3; } } <!-- END SNIPPET: code --> <!-- START SNIPPET: example --> &lt;ww:append id="myAppendIterator"&gt; &lt;ww:param value="%{myList1}" /&gt; &lt;ww:param value="%{myList2}" /&gt; &lt;ww:param value="%{myList3}" /&gt; &lt;/ww:append&gt; &lt;ww:iterator value="%{#myAppendIterator}"&gt; &lt;ww:property /&gt; &lt;/ww:iterator&gt; <!-- END SNIPPET: example -->
+</p>
+
+<h2>Attributes</h2>
+<p>
+
+<!-- START SNIPPET: tagattributes -->
+<table width="100%">
+<tr>
+
+<th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">the id of which if supplied will have the resultant appended iterator stored under in the stack's context</td>
+
+</tr>
+
+</table>
+<!-- END SNIPPET: tagattributes -->
+
+</p>
+<p>
+<center><a href="index.html">Back to Taglib Index</a></center>
+</p>
+</body>
+</html>
+

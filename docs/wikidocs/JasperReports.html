@@ -1,0 +1,364 @@
+<html>
+    <head>
+        <title>WebWork - 
+        JasperReports
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h2><a name="JasperReports-Introduction"></a>Introduction</h2>
+
+
+<p>JasperReports (<a href="http://jasperreports.sourceforge.net" title="Visit page outside Confluence">&#104;ttp://jasperreports.sourceforge.net</a>) is one of the leading open-source java reporting libraries. It compiles .jrxml (XML source) to .jasper (=compiled version) files, which in turn can be transformed to several output types (PDF, CSV, XLS and HTML).</p>
+
+<p>In the following example, we will use Webwork to dynamically create a PDF with a list of persons. Our WW action will be used to create a List with objects, and our JasperReport Result will use this list to fill our template, and return the PDF.</p>
+
+<p>I assume you already have a WW webapp working.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>Note: although this is a very simple example, I suggest you read the fine documentation of both WW and JR.</td></tr></table>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='infoMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/information.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Used versions</b><br />
+<p>Webwork 2.2 beta 3 (but should apply to previous versions)<br/>
+JasperReports 1.1.0<br/>
+JDK 1.4.2</p></td></tr></table>
+
+<p>Right, let's begin.</p>
+
+<h2><a name="JasperReports-OurPersonclass"></a>Our Person class</h2>
+
+<p>We start by defining a simple POJO class: Person.java</p>
+
+<div class="code"><div class="codeHeader"><b>com.mevipro.test.Person.java</b></div><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> com.mevipro.test;
+
+<span class="code-keyword">public</span> class Person {
+	
+	<span class="code-keyword">private</span> <span class="code-object">Long</span> id;
+
+	<span class="code-keyword">private</span> <span class="code-object">String</span> name;
+
+	<span class="code-keyword">private</span> <span class="code-object">String</span> lastName;
+
+	<span class="code-keyword">public</span> Person() {
+		<span class="code-keyword">super</span>();
+	}
+
+	<span class="code-keyword">public</span> Person(<span class="code-object">String</span> name, <span class="code-object">String</span> lastName) {
+		<span class="code-keyword">super</span>();
+		<span class="code-keyword">this</span>.name = name;
+		<span class="code-keyword">this</span>.lastName = lastName;
+	}
+	
+	
+
+	<span class="code-keyword">public</span> Person(<span class="code-object">Long</span> id, <span class="code-object">String</span> name, <span class="code-object">String</span> lastName) {
+		<span class="code-keyword">super</span>();
+		<span class="code-keyword">this</span>.id = id;
+		<span class="code-keyword">this</span>.name = name;
+		<span class="code-keyword">this</span>.lastName = lastName;
+	}
+
+	/**
+	 * @<span class="code-keyword">return</span> Returns the id.
+	 */
+	<span class="code-keyword">public</span> <span class="code-object">Long</span> getId() {
+		<span class="code-keyword">return</span> id;
+	}
+
+	/**
+	 * @param id The id to set.
+	 */
+	<span class="code-keyword">public</span> void setId(<span class="code-object">Long</span> id) {
+		<span class="code-keyword">this</span>.id = id;
+	}
+
+	/**
+	 * @<span class="code-keyword">return</span> Returns the lastName.
+	 */
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getLastName() {
+		<span class="code-keyword">return</span> lastName;
+	}
+
+	/**
+	 * @param lastName The lastName to set.
+	 */
+	<span class="code-keyword">public</span> void setLastName(<span class="code-object">String</span> lastName) {
+		<span class="code-keyword">this</span>.lastName = lastName;
+	}
+
+	/**
+	 * @<span class="code-keyword">return</span> Returns the name.
+	 */
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getName() {
+		<span class="code-keyword">return</span> name;
+	}
+
+	/**
+	 * @param name The name to set.
+	 */
+	<span class="code-keyword">public</span> void setName(<span class="code-object">String</span> name) {
+		<span class="code-keyword">this</span>.name = name;
+	}
+	
+	
+}</pre>
+</div></div>
+
+<p>Nothing special. Just your basic properties, constructor, getters and setters.</p>
+
+<h2><a name="JasperReports-JasperReportslibraries"></a>JasperReports libraries</h2>
+
+<p>Before we can continue, we need to add the JR libraries to our classpath. You can download the JR project here: <a href="http://www.sourceforge.net/projects/jasperreports" title="Visit page outside Confluence">&#104;ttp://www.sourceforge.net/projects/jasperreports</a><br/>
+Save the jasperreports-X-project.zip to your harddisk, and extract the files.</p>
+
+<p>We need the following files:</p>
+<ul class="alternate" type="square">
+	<li>dist/jasperreports-X.jar</li>
+	<li>lib/commons-*.jar (all the commons - except maybe for commons-logging)</li>
+	<li>lib/itext-X.jar</li>
+	<li>lib/jdt-compiler.jar</li>
+</ul>
+
+
+<p>Copy these jars over to your WW_WEBAPP/WEB-INF/lib directory, and add them to your classpath.</p>
+
+<h2><a name="JasperReports-ShowmetheAction"></a>Show me the Action</h2>
+
+<div class="code"><div class="codeHeader"><b>com.mevipro.test.action.JasperAction</b></div><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> com.mevipro.test.action;
+
+<span class="code-keyword">import</span> java.util.ArrayList;
+<span class="code-keyword">import</span> java.util.List;
+
+<span class="code-keyword">import</span> net.sf.jasperreports.engine.JasperCompileManager;
+
+<span class="code-keyword">import</span> com.mevipro.test.Person;
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionSupport;
+
+<span class="code-keyword">public</span> class JasperAction <span class="code-keyword">extends</span> ActionSupport {
+	
+	<span class="code-comment">//basic List - it will serve as our dataSource later on
+</span>	<span class="code-keyword">private</span> List myList;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.opensymphony.xwork.ActionSupport#execute()
+	 */
+	<span class="code-keyword">public</span> <span class="code-object">String</span> execute() <span class="code-keyword">throws</span> Exception {
+
+		<span class="code-comment">// create some imaginary persons
+</span>		Person p1 = <span class="code-keyword">new</span> Person(<span class="code-keyword">new</span> <span class="code-object">Long</span>(1), <span class="code-quote">"Patrick"</span>, <span class="code-quote">"Lightbuddie"</span>);
+		Person p2 = <span class="code-keyword">new</span> Person(<span class="code-keyword">new</span> <span class="code-object">Long</span>(2), <span class="code-quote">"Jason"</span>, <span class="code-quote">"Carrora"</span>);
+		Person p3 = <span class="code-keyword">new</span> Person(<span class="code-keyword">new</span> <span class="code-object">Long</span>(3), <span class="code-quote">"Alexandru"</span>, <span class="code-quote">"Papesco"</span>);
+		Person p4 = <span class="code-keyword">new</span> Person(<span class="code-keyword">new</span> <span class="code-object">Long</span>(4), <span class="code-quote">"Jay"</span>, <span class="code-quote">"Boss"</span>);
+
+		/*
+		 * store everything in a list - normally, <span class="code-keyword">this</span> should be coming from a
+		 * database but <span class="code-keyword">for</span> the sake of simplicity, I left that out
+		 */
+		myList = <span class="code-keyword">new</span> ArrayList();
+		myList.add(p1);
+		myList.add(p2);
+		myList.add(p3);
+		myList.add(p4);
+		
+		/*
+		 * Here we compile our xml jasper template to a jasper file.
+		 * Note: <span class="code-keyword">this</span> isn't exactly considered 'good practice'.
+		 * You should either use precompiled jasper files (.jasper) or provide some kind of check
+		 * to make sure you're not compiling the file on every request.
+		 * If you don't have to compile the report, you just setup your data source (eg. a List)
+		 */
+		<span class="code-keyword">try</span> {
+			JasperCompileManager.compileReportToFile(
+					<span class="code-quote">"WW_WEBAPP/jasper/our_jasper_template.jrxml"</span>,
+					<span class="code-quote">"WW_WEBAPP/jasper/our_compiled_template.jasper"</span>);
+		} <span class="code-keyword">catch</span> (Exception e) {
+			e.printStackTrace();
+			<span class="code-keyword">return</span> ERROR;
+		}
+		<span class="code-comment">//<span class="code-keyword">if</span> all goes well ..
+</span>		<span class="code-keyword">return</span> SUCCESS;
+	}
+
+	/**
+	 * @<span class="code-keyword">return</span> Returns the myList.
+	 */
+	<span class="code-keyword">public</span> List getMyList() {
+		<span class="code-keyword">return</span> myList;
+	}
+
+}</pre>
+</div></div>
+
+<p>Once again - I guess everything is pretty clear. Our JasperAction will create a list of several People. The JasperCompileManager will then compile the jrxml template to a .jasper file.</p>
+<table cellpadding='5' width='85%' cellspacing='8px' class='warningMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/forbidden.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>Again, don't use this in production code. You should of course either provide compiled templates, or do some sort of checking to avoid compiling the template on every request. But for our demonstration, or development, this suits our needs just fine.</td></tr></table>
+
+<h2><a name="JasperReports-OurJaspertemplate"></a>Our Jasper template</h2>
+
+<p>JR uses a special XML page to define templates which will be compiled to .jasper files. These templates will be used to design the resulting report. It's pretty straightforward.<br/>
+This is a handwritten version - for more complex versions I seriously suggest taking a look a the various GUI designers.</p>
+
+<div class="code"><div class="codeHeader"><b>our_jasper_template.jrxml</b></div><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;?xml version=<span class="code-quote">"1.0"</span>?&gt;</span>
+    &lt;!DOCTYPE jasperReport 
+  PUBLIC <span class="code-quote">"-//JasperReports//DTD Report Design//EN"</span> 
+  <span class="code-quote">"http://jasperreports.sourceforge.net/dtds/jasperreport.dtd"</span>&gt;
+    <span class="code-tag">&lt;jasperReport name=<span class="code-quote">"jasper_test"</span>&gt;</span>
+      <span class="code-tag"><span class="code-comment">&lt;!-- our fields --&gt;</span></span>
+      <span class="code-tag">&lt;field name=<span class="code-quote">"name"</span> class=<span class="code-quote">"java.lang.String"</span>/&gt;</span>
+      <span class="code-tag">&lt;field name=<span class="code-quote">"lastName"</span> class=<span class="code-quote">"java.lang.String"</span>/&gt;</span>
+      <span class="code-tag">&lt;title&gt;</span>
+        <span class="code-tag">&lt;band height=<span class="code-quote">"50"</span>&gt;</span>
+          <span class="code-tag">&lt;staticText&gt;</span>
+            <span class="code-tag">&lt;reportElement x=<span class="code-quote">"0"</span> y=<span class="code-quote">"0"</span> width=<span class="code-quote">"180"</span> height=<span class="code-quote">"15"</span>/&gt;</span>
+            <span class="code-tag">&lt;textElement/&gt;</span>
+            <span class="code-tag">&lt;text&gt;</span>
+              <span class="code-tag">&lt;![CDATA[Webwork JasperReports Sample]]&gt;</span>
+            <span class="code-tag">&lt;/text&gt;</span>
+          <span class="code-tag">&lt;/staticText&gt;</span>
+        <span class="code-tag">&lt;/band&gt;</span>
+      <span class="code-tag">&lt;/title&gt;</span>
+      <span class="code-tag">&lt;pageHeader&gt;</span>
+        <span class="code-tag">&lt;band&gt;</span><span class="code-tag">&lt;/band&gt;</span>
+      <span class="code-tag">&lt;/pageHeader&gt;</span>
+      <span class="code-tag">&lt;columnHeader&gt;</span>
+        <span class="code-tag">&lt;band height=<span class="code-quote">"20"</span>&gt;</span>
+          <span class="code-tag">&lt;staticText&gt;</span>
+            <span class="code-tag">&lt;reportElement x=<span class="code-quote">"180"</span> y=<span class="code-quote">"0"</span> width=<span class="code-quote">"180"</span> height=<span class="code-quote">"20"</span>/&gt;</span>
+            <span class="code-tag">&lt;textElement&gt;</span>
+              <span class="code-tag">&lt;font isUnderline=<span class="code-quote">"true"</span>/&gt;</span>
+            <span class="code-tag">&lt;/textElement&gt;</span>
+            <span class="code-tag">&lt;text&gt;</span>
+              <span class="code-tag">&lt;![CDATA[NAME]]&gt;</span>
+            <span class="code-tag">&lt;/text&gt;</span>
+          <span class="code-tag">&lt;/staticText&gt;</span>
+          <span class="code-tag">&lt;staticText&gt;</span>
+            <span class="code-tag">&lt;reportElement x=<span class="code-quote">"360"</span> y=<span class="code-quote">"0"</span> width=<span class="code-quote">"180"</span> height=<span class="code-quote">"20"</span>/&gt;</span>
+            <span class="code-tag">&lt;textElement&gt;</span>
+              <span class="code-tag">&lt;font isUnderline=<span class="code-quote">"true"</span>/&gt;</span>
+            <span class="code-tag">&lt;/textElement&gt;</span>
+            <span class="code-tag">&lt;text&gt;</span>
+              <span class="code-tag">&lt;![CDATA[LASTNAME]]&gt;</span>
+            <span class="code-tag">&lt;/text&gt;</span>
+          <span class="code-tag">&lt;/staticText&gt;</span>
+        <span class="code-tag">&lt;/band&gt;</span>
+      <span class="code-tag">&lt;/columnHeader&gt;</span>
+      <span class="code-tag">&lt;detail&gt;</span>
+        <span class="code-tag">&lt;band height=<span class="code-quote">"20"</span>&gt;</span>
+          <span class="code-tag">&lt;textField&gt;</span>
+            <span class="code-tag">&lt;reportElement x=<span class="code-quote">"180"</span> y=<span class="code-quote">"0"</span> width=<span class="code-quote">"180"</span> height=<span class="code-quote">"15"</span>/&gt;</span>
+            <span class="code-tag">&lt;textElement/&gt;</span>
+            <span class="code-tag">&lt;textFieldExpression&gt;</span>
+              <span class="code-tag">&lt;![CDATA[$F{name}]]&gt;</span>
+            <span class="code-tag">&lt;/textFieldExpression&gt;</span>
+          <span class="code-tag">&lt;/textField&gt;</span>
+          <span class="code-tag">&lt;textField&gt;</span>
+            <span class="code-tag">&lt;reportElement x=<span class="code-quote">"360"</span> y=<span class="code-quote">"0"</span> width=<span class="code-quote">"180"</span> height=<span class="code-quote">"15"</span>/&gt;</span>
+            <span class="code-tag">&lt;textElement/&gt;</span>
+            <span class="code-tag">&lt;textFieldExpression&gt;</span>
+              <span class="code-tag">&lt;![CDATA[$F{lastName}]]&gt;</span>
+            <span class="code-tag">&lt;/textFieldExpression&gt;</span>
+          <span class="code-tag">&lt;/textField&gt;</span>
+        <span class="code-tag">&lt;/band&gt;</span>
+      <span class="code-tag">&lt;/detail&gt;</span>
+      <span class="code-tag">&lt;columnFooter&gt;</span>
+        <span class="code-tag">&lt;band&gt;</span><span class="code-tag">&lt;/band&gt;</span>
+      <span class="code-tag">&lt;/columnFooter&gt;</span>
+      <span class="code-tag">&lt;pageFooter&gt;</span>
+        <span class="code-tag">&lt;band height=<span class="code-quote">"15"</span>&gt;</span>
+          <span class="code-tag">&lt;staticText&gt;</span>
+            <span class="code-tag">&lt;reportElement x=<span class="code-quote">"0"</span> y=<span class="code-quote">"0"</span> width=<span class="code-quote">"40"</span> height=<span class="code-quote">"15"</span>/&gt;</span>
+            <span class="code-tag">&lt;textElement/&gt;</span>
+            <span class="code-tag">&lt;text&gt;</span>
+              <span class="code-tag">&lt;![CDATA[Page:]]&gt;</span>
+            <span class="code-tag">&lt;/text&gt;</span>
+          <span class="code-tag">&lt;/staticText&gt;</span>
+          <span class="code-tag">&lt;textField&gt;</span>
+            <span class="code-tag">&lt;reportElement x=<span class="code-quote">"40"</span> y=<span class="code-quote">"0"</span> width=<span class="code-quote">"100"</span> height=<span class="code-quote">"15"</span>/&gt;</span>
+            <span class="code-tag">&lt;textElement/&gt;</span>
+            <span class="code-tag">&lt;textFieldExpression class=<span class="code-quote">"java.lang.Integer"</span>&gt;</span>
+              <span class="code-tag">&lt;![CDATA[$V{PAGE_NUMBER}]]&gt;</span>
+            <span class="code-tag">&lt;/textFieldExpression&gt;</span>
+          <span class="code-tag">&lt;/textField&gt;</span>
+        <span class="code-tag">&lt;/band&gt;</span>
+      <span class="code-tag">&lt;/pageFooter&gt;</span>
+      <span class="code-tag">&lt;summary&gt;</span>
+        <span class="code-tag">&lt;band&gt;</span><span class="code-tag">&lt;/band&gt;</span>
+      <span class="code-tag">&lt;/summary&gt;</span>
+    <span class="code-tag">&lt;/jasperReport&gt;</span></pre>
+</div></div>
+
+<p>Save this file in WW_WEBAPP/jasper/ as 'our_jasper_template.jrxml'.</p>
+
+<p>Most important: we declared the fields name and lastName (not surprisingly, two properties from our Person.class). This means we will now be able to use these fields in our Jasper template.</p>
+
+<p>We define two columnheaders (NAME and LASTNAME), and then add our fields to the detail band (for a better explanation, look at the JR tutorial). This 'detail' band will iterate over our List of People. This is the default behaviour of JR - so if you want to display more information from the Person, add them to this band.</p>
+
+<p>In the detail band we use the <div class="code"><div class="codeContent">
+<pre class="code-java">$F{name}</pre>
+</div></div> expression. This means JR will ask WW how to retrieve the field value. WW will happily look up this value in the stack (find the person, and invoke the getName() getter), and return it. Similar for the <div class="code"><div class="codeContent">
+<pre class="code-java">$F{lastName}</pre>
+</div></div></p>
+
+<p>The rest is mostly markup to define the layout.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='tipMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/check.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>Use a logger (commons-logging, log4j, ..) to watch com.opensymphony.webwork.views.jasperreports in debug mode, if you have any troubles</td></tr></table>
+
+<h2><a name="JasperReports-RegistertheAction"></a>Register the Action</h2>
+
+<p>Alright, time to add the action to our xwork.xml file:</p>
+
+<div class="code"><div class="codeHeader"><b>xwork.xml</b></div><div class="codeContent">
+<pre class="code-java">&lt;action name=<span class="code-quote">"myJasperTest"</span> class=<span class="code-quote">"com.mevipro.test.action.JasperAction"</span>&gt;
+	&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"jasper"</span>&gt;
+		&lt;param name=<span class="code-quote">"location"</span>&gt;/jasper/our_compiled_template.jasper&lt;/param&gt;
+		&lt;param name=<span class="code-quote">"dataSource"</span>&gt;myList&lt;/param&gt;
+		&lt;param name=<span class="code-quote">"format"</span>&gt;PDF&lt;/param&gt;
+	&lt;/result&gt;
+&lt;/action&gt;</pre>
+</div></div>
+
+<p>Let's explore this a bit further. I assume you are familiar with the xwork notation &amp; schema, if not, check the documentation.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;action name=<span class="code-quote">"myJasperTest"</span> class=<span class="code-quote">"com.mevipro.test.action.JasperAction"</span>&gt;</pre>
+</div></div>
+<p>We simply register our JasperAction with the name 'myJasperTest' - this means that we can execute this Action by sending a request to myJasperTest.action in our browser.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"jasper"</span>&gt;</pre>
+</div></div>
+<p>When our JasperAction executes correctly, we will use the Result type registered with the name 'jasper'. This is already done when you include the webwork-default (<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;include file=<span class="code-quote">"webwork-<span class="code-keyword">default</span>.xml"</span>/&gt;</pre>
+</div></div>). This result type will be configured by our params, which we'll specify below:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;param name=<span class="code-quote">"location"</span>&gt;/jasper/our_compiled_template.jasper&lt;/param&gt;</pre>
+</div></div>
+<p>This parameter defines the location of our compiled jasper file, which will be filled by WW with our dataSource:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;param name=<span class="code-quote">"dataSource"</span>&gt;myList&lt;/param&gt;</pre>
+</div></div>
+<p>The name of the dataSource - this is the name of the getter you want to call (this will result in a getMyList() call to your JasperAction). It will be used to fill the template with data.</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;param name=<span class="code-quote">"format"</span>&gt;PDF&lt;/param&gt;</pre>
+</div></div>
+<p>This specifies the format to which the jasper file will be transformed. Possible values are: PDF, CSV, XLS and HTML.</p>
+
+<h2><a name="JasperReports-Conclusion"></a>Conclusion</h2>
+
+<p>You should now be able to execute <a href="http://localhost:8080/YOUR_WEBAPP/myJasperTest.action" title="Visit page outside Confluence">&#104;ttp://localhost:8080/YOUR_WEBAPP/myJasperTest.action</a> - and you should see a nice list of names.<br/>
+WW provides probably the most elegant way to deal with JasperReport files; specify the location of the .jasper file, specify what dataSource you want to use, and there you go.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

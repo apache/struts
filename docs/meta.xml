@@ -1,0 +1,148 @@
+<project>
+    <name>WebWork</name>
+    <jiraId>10030</jiraId>
+    <jiraName>WW</jiraName>
+    <confluenceName>WW</confluenceName>
+
+    <forums>
+        <usersId>1</usersId>
+        <devId>32</devId>
+        <cvsId>9</cvsId>
+    </forums>
+
+    <docs>
+        <url>wikidocs/Documentation.html</url>
+    </docs>
+
+    <owners>
+        <person>
+            <name>Patrick Lightbody</name>
+            <email>plightbo@gmail.com</email>
+        </person>
+        <person>
+            <name>Jason Carreira</name>
+            <email>jcarreira@gmail.com</email>
+        </person>
+    </owners>
+
+    <developers>
+        <person>
+            <name>Jay Bose</name>
+            <email></email>
+            <role>Docmentation</role>
+        </person>
+        <person>
+            <name>Rene Gielen</name>
+            <email></email>
+            <role>Docmentation, Development, etc</role>
+        </person>
+        <person>
+            <name>Toby Jee</name>
+            <email></email>
+            <role>Docmentation, Development, etc</role>
+        </person>
+        <person>
+            <name>Rainer Hermanns</name>
+            <email></email>
+            <role>Development, Portlet, AJAX, etc</role>
+        </person>
+        <person>
+            <name>Alexandru Popescu</name>
+            <email></email>
+            <role>Development</role>
+        </person>
+        <person>
+            <name>Bob Lee</name>
+            <email></email>
+            <role>Misc</role>
+        </person>
+        <person>
+            <name>Gabe Zimmerman</name>
+            <email></email>
+            <role>Type conversion</role>
+        </person>
+        <person>
+            <name>Nils-Helge Garli</name>
+            <email></email>
+            <role>Portlet integration</role>
+        </person>
+        <person>
+            <name>Henry Hu</name>
+            <email></email>
+            <role>Portlet integration</role>
+        </person>
+        <person>
+            <name>Ian Roughley</name>
+            <email></email>
+            <role>AJAX components</role>
+        </person>
+        <person>
+            <name>Cameron Braid</name>
+            <email></email>
+            <role>UI templates</role>
+        </person>
+        <person>
+            <name>Mathias Bogaert</name>
+            <email>m.bogaert at memenco dot com</email>
+            <role>Bugfixing, UI templates, Velocity</role>
+        </person>
+        <person>
+            <name>Claus Ibsen</name>
+            <email></email>
+            <role>Unit tests, Bugfixing</role>
+        </person>
+        <person>
+            <name>Philip Luppens</name>
+            <email></email>
+            <role>Documentation</role>
+        </person>
+    </developers>
+
+    <releases>
+        <release>
+            <version>2.2.2-RC1</version>
+            <date>03/18/2006</date>
+            <jiraId>21600</jiraId>
+            <downloads>
+                <download>
+                    <url>https://webwork.dev.java.net/files/documents/693/31211/webwork-2.2.2-RC1.zip</url>
+                    <name>Full release</name>
+                </download>
+            </downloads>
+        </release>
+        <release>
+            <version>2.2.1</version>
+            <date>02/03/2006</date>
+            <jiraId>21591</jiraId>
+            <downloads>
+                <download>
+                    <url>https://webwork.dev.java.net/files/documents/693/28623/webwork-2.2.1.zip</url>
+                    <name>Full release</name>
+                </download>
+            </downloads>
+        </release>
+        <release>
+            <version>2.2</version>
+            <date>1/10/2006</date>
+            <jiraId>21320</jiraId>
+            <downloads>
+                <download>
+                    <url>https://webwork.dev.java.net/files/documents/693/27236/webwork-2.2.zip</url>
+                    <name>Full release</name>
+                </download>
+            </downloads>
+        </release>
+        <release>
+            <version>2.1.7</version>
+            <date>12/14/2004</date>
+            <jiraId>21421</jiraId>
+            <downloads>
+                <download>
+                    <url>https://webwork.dev.java.net/files/documents/693/9723/webwork-2.1.7.zip</url>
+                    <name>Full release</name>
+                </download>
+            </downloads>
+        </release>
+    </releases>
+
+</project>

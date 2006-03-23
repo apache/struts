@@ -1,0 +1,302 @@
+<html>
+    <head>
+        <title>WebWork - 
+        url
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>Please make sure you have read the <a href="Tag Syntax.html" title="Tag Syntax">Tag Syntax</a> document and understand how tag attribute syntax works.</td></tr></table>
+
+<h1><a name="url-Description"></a>Description</h1>
+
+<p><p>This tag is used to create a URL.</p></p>
+
+<p><p>You can use the "param" tag inside the body to provide
+additional request parameters.</p></p>
+
+<p><b>NOTE:</b>
+<p>When includeParams is 'all' or 'get', the parameter defined in param tag will take
+precedence and will not be overriden if they exists in the parameter submitted. For 
+example, in Example 3 below, if there is a id parameter in the url where the page this
+tag is included like http://<host>:<port>/<context>/editUser.action?id=3333&name=John
+the generated url will be http://<host>:<port>/context>/editUser.action?id=22&name=John
+cause the parameter defined in the param tag will take precedence.</p></p>
+
+
+<h1><a name="url-Parameters"></a>Parameters</h1>
+<p><table width="100%">
+<tr></p>
+
+<p><th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">includeParams</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">get</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Object/String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">The includeParams attribute may have the value 'none', 'get' or 'all'.</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">scheme</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Object/String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">Set scheme attribute</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">value</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Object/String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">The target value to use, if not using action</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">action</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Object/String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">The action generate url for, if not using value</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">namespace</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Object/String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">The namespace to use</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">method</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Object/String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">The method of action to use</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">encode</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">true</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Boolean</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">whether to encode parameters</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">includeContext</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">true</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Boolean</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">whether actual context should be included in url</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">portletMode</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Object/String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">The resulting portlet mode</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">windowState</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Object/String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">The resulting portlet window state</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">portletUrlType</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Object/String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">Specifies if this should be a portlet render or action url</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">anchor</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Object/String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">The anchor for this URL</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Object/String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">id for referencing element. For UI and form tags it will be used as HTML id attribute</td></p>
+
+<p></tr></p>
+
+<p></table></p>
+
+<h1><a name="url-Examples"></a>Examples</h1>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;-- Example 1 --&gt;</span>
+<span class="code-tag">&lt;ww:url value=<span class="code-quote">"editGadget.action"</span>&gt;</span>
+    <span class="code-tag">&lt;ww:param name=<span class="code-quote">"id"</span> value=<span class="code-quote">"%{selected}"</span> /&gt;</span>
+<span class="code-tag">&lt;/ww:url&gt;</span>
+
+<span class="code-tag">&lt;-- Example 2 --&gt;</span>
+<span class="code-tag">&lt;ww:url action=<span class="code-quote">"editGadget"</span>&gt;</span>
+    <span class="code-tag">&lt;ww:param name=<span class="code-quote">"id"</span> value=<span class="code-quote">"%{selected}"</span> /&gt;</span>
+<span class="code-tag">&lt;/ww:url&gt;</span>
+
+<span class="code-tag">&lt;-- Example 3--&gt;</span>
+<span class="code-tag">&lt;ww:url includeParams=<span class="code-quote">"get"</span>  &gt;</span>
+    &amp;lt:param name=<span class="code-quote">"id"</span> value=<span class="code-quote">"%{'22'}"</span> /&gt;
+<span class="code-tag">&lt;/ww:url&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

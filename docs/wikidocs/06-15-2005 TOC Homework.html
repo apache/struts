@@ -1,0 +1,183 @@
+<html>
+    <head>
+        <title>WebWork - 
+        06-15-2005 TOC Homework
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="06-15-2005TOCHomework-DocTeamSuggestions"></a>Doc Team Suggestions</h1>
+
+<h2><a name="06-15-2005TOCHomework-DocumentationStyle"></a>Documentation Style</h2>
+
+<p><a href="Style Guide.html" title="Style Guide">Click here</a> for the suggestions on documentation style.</p>
+
+
+<h2><a name="06-15-2005TOCHomework-Documentation%3A"></a>Documentation:</h2>
+
+<p>One-paragraph description of what is WebWork. And then, an explanation of how the documentation is divided:</p>
+
+<p><cite>If you're new to WebWork, please read the <b>Overview</b> and proceed to the <b>Tutorial</b> to get started. Experienced users can refer to the <b>Cookbook</b> for advanced topics. Use the <b>Reference</b> on an as-needed basis for more specific details. For detailed information about WebWork project, read the section <b>Project Information</b>. Information about many projects related to WebWork can be found in <b>Related Projects</b></cite></p>
+
+<p><cite>If you have any questions, you can ask them at the user forum/mailing list. Please be sure to read the <b>FAQ</b> before asking any questions.</cite></p>
+
+<ol>
+	<li>Overview</li>
+	<li>Project Information</li>
+	<li>FAQ</li>
+	<li>Tutorial</li>
+	<li>Cookbook</li>
+	<li>Reference</li>
+	<li>Related Projects</li>
+</ol>
+
+
+<p><em>(details on each of the above follows)</em></p>
+
+<h3><a name="06-15-2005TOCHomework-Overview"></a>Overview</h3>
+<ol>
+	<li>What is WebWork</li>
+	<li>Comparison to Struts (Tapestry, JSF, etc.?) &#8211; <em>current material and links to existing articles</em></li>
+	<li>Articles and press about WebWork</li>
+	<li>Projects using WebWork / Testimonials</li>
+</ol>
+
+
+<h3><a name="06-15-2005TOCHomework-ProjectInformation"></a>Project Information</h3>
+<ol>
+	<li>License</li>
+	<li>Deployment notes</li>
+	<li>WebWork versions
+	<ul>
+		<li>Current release</li>
+		<li>Previous releases</li>
+		<li>Migrating from WebWork 1.x;</li>
+	</ul>
+	</li>
+	<li>Dependencies</li>
+	<li>WebWork Team</li>
+	<li>WebWork community
+	<ul>
+		<li>Mailing lists / Forum</li>
+		<li>Bug tracker</li>
+		<li>Wiki</li>
+		<li>How to contribute?</li>
+	</ul>
+	</li>
+</ol>
+
+
+<h3><a name="06-15-2005TOCHomework-FAQ"></a>FAQ</h3>
+<ol>
+	<li>Category 1</li>
+	<li>Category 2</li>
+	<li>Etc.</li>
+</ol>
+
+
+<p><em>The questions included in the FAQ should be extracted from the User Forum/Mailing List. Someone could review recent messages and find out which questions are asked the most. After that, separate the questions into categories to form the subsections.</em></p>
+
+<h3><a name="06-15-2005TOCHomework-Tutorial"></a>Tutorial</h3>
+<ol>
+	<li>Downloading and installing WebWork</li>
+	<li>Setting up the test environment (to test tutorial source code)</li>
+	<li>Basic configuration and your first action (Hello WebWorld)</li>
+	<li>Understanding actions</li>
+	<li>Understanding results</li>
+	<li>Meet WebWork tag library <em>(would also explain a little bit of OGNL)</em></li>
+	<li>Evaluating other view options: Velocity</li>
+	<li>Evaluating other view options: FreeMarker</li>
+	<li>Understanding interceptors</li>
+	<li>Performing validation</li>
+	<li>Performing dependency injection (IoC) through components</li>
+	<li>Going i18n (internationalization)</li>
+	<li>Retrieving data without a full request using XHR/Ajax</li>
+</ol>
+
+
+<p><em>This should be in conformance to Patrick's example app. Vitor will talk to Patrick to get his opinions on the sequence of lessons suggested above and how to make the tutorial conformant to the example app.</em></p>
+
+<h3><a name="06-15-2005TOCHomework-Cookbook"></a>Cookbook</h3>
+<ul>
+	<li>Tips and tricks on Application Servers <em>(this was in "Overview")</em></li>
+	<li>Stuff from the current <a href="Cookbook.html" title="Cookbook">Cookbook</a>...</li>
+</ul>
+
+
+<p><em>All the tips in the <a href="Cookbook.html" title="Cookbook">Cookbook</a> should be revised. Some of them could belong to the tutorial instead (basic stuff). 3rd party integration tips could be separated from the rest. Also, it would be good if all of them also followed the same structure, kind of like a tutorial lesson, but on advanced topics. The differences between the Tutorial and the Cookbook would be:</em></p>
+
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'>&nbsp;</th>
+<th class='confluenceTh'> Tutorial </th>
+<th class='confluenceTh'> Cookbook </th>
+</tr>
+<tr>
+<td class='confluenceTd'> User level required: </td>
+<td class='confluenceTd'> Begginner </td>
+<td class='confluenceTd'> Intermediate </td>
+</tr>
+<tr>
+<td class='confluenceTd'> Availability of Source code: </td>
+<td class='confluenceTd'> In the documentation and in the <tt>src</tt> folder of the distribution (ready for deploy and test). </td>
+<td class='confluenceTd'> Only in the documentation, and may not be <em>complete</em>. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> Should be read in sequence? </td>
+<td class='confluenceTd'> Yes. </td>
+<td class='confluenceTd'> No. </td>
+</tr>
+</tbody></table>
+
+<p><em>A question that arised in the TOC discussion was: what's the difference between the Cookbook and the FAQ? Well, some of the items in the Cookbook are also FAQs (people ask about them a lot), so they would also be included in the FAQ, with links to the Cookbook. The FAQ should have quick answers or link to longer answers, such as the Cookbook. The Cookbook is tutorial-style, a collection of mini HOW-TOs.</em></p>
+
+<h3><a name="06-15-2005TOCHomework-Reference"></a>Reference</h3>
+<ol>
+	<li>Introduction &#8211; <em>This will have parts of Overview in it, rather than forwarding them to Overview altogether.</em></li>
+	<li>Architecture</li>
+	<li>Configuration</li>
+	<li>Interceptors</li>
+	<li>Action Chaining</li>
+	<li>IOC / Dependency Injection</li>
+	<li>UI Components - JSP, Velocity, Freemarker, JavaScript validation and DWR support</li>
+	<li>Result Types</li>
+	<li>Type Conversion</li>
+	<li>Validation</li>
+	<li>OGNL / Object Graph Navigation Language</li>
+	<li>Internationalization</li>
+	<li>3rd Party Integration - Sitemesh, Spring, Pico, Hibernate, JUnit, Quartz, etc.</li>
+</ol>
+
+
+<p><em>An important thing about the reference is that it should be written in book-style (or hibernate-reference-style) so a PDF version would be generated and people could print it, pass it around the office or read it while working out or relaxing in bed. <img class="emoticon" src="./icons/emoticons/smile.gif" height="20" width="20" align="absmiddle" alt="" border="0"/> Therefore, Confluence's PDF features play a big part in this. Some questions that came up during the discussions:</em></p>
+
+<ul>
+	<li><em>The reference could link to other pages in some situations. Links in confluence do not reference URLs, but the page's names. Does Confluence convert them to the URL before writing the PDF? If not, should the Reference not link to any pages outside it?</em></li>
+</ul>
+
+
+<ul>
+	<li><em>Can we select which pages are converted into PDF? If we want to convert only the Reference to PDF, can we do that? How does that work?</em></li>
+</ul>
+
+
+<h3><a name="06-15-2005TOCHomework-RelatedProjects"></a>Related Projects</h3>
+<ol>
+	<li>WebFlow (graphical chart tool)</li>
+	<li>EclipseWork (Eclipse Plugin)</li>
+	<li>IDEA Plugin</li>
+	<li>WebWork Optional</li>
+	<li>Etc. ?</li>
+</ol>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

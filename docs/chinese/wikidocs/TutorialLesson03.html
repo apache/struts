@@ -1,0 +1,108 @@
+<html>
+    <head>
+        <title>WebWork 2 : TutorialLesson03</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : TutorialLesson03
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Sep 16, 2004 by <font color="#0050B2">vitorsouza</font>.
+				    </div>
+
+				    <p class="paragraph"><h1 style="margin: 4px 0px 4px 0px;" class="heading1"><a name="TutorialLesson03-Lesson3%3AActionsandResults"> 第三课: 活动和结果</a></h1></p>活动(Action)是程序执行的基本单元. 活动是一个注册在WebWork配置文件中用以响应某一请求的类. 在模型-视图-控制器方式中, 活动是控制器的一部分, 留给JSP页面的是他们最擅长的工作: 创建视图.<p class="paragraph">下面是在WenWork中创建活动的可能的步骤:</p><ol>
+<li> 创建一个调用活动的JSP页面;</li>
+<li> 创建一个活动类;</li>
+<li> 创建一个处理结果的JSP页面;</li>
+<li> 在<tt class="monospaced">xwork.xml</tt>中注册活动.</li>
+</ol><br/>
+本指南的第一个例子正是<em class="emphasis">&quot;Hello, WebWorld!&quot;</em>. 下面的代码展示了含有一个活动配置信息的WebWork配置文件<tt class="monospaced">xwork.xml</tt>, 该活动注册在<tt class="monospaced">default</tt>包中.
+<p class="paragraph"><h3 class="heading3"><a name="TutorialLesson03-xwork.xml%3A"> xwork.xml:</a></h3>
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;&#33;DOCTYPE xwork PUBLIC <span class="xml&#45;quote">&quot;&#45;//OpenSymphony Group//XWork 1.0//EN&quot;</span>&#10;<span class="xml&#45;quote">&quot;&#104;ttp://www.opensymphony.com/xwork/xwork&#45;1.0.dtd&quot;</span>&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;xwork&gt;</span>&#10;	<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; Include webwork defaults (from WebWork JAR). &#45;&#45;&gt;</span></span>&#10;	<span class="xml&#45;tag">&lt;include file=<span class="xml&#45;quote">&quot;webwork&#45;default.xml&quot;</span> /&gt;</span>&#10;	&#10;	<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; Configuration for the default package. &#45;&#45;&gt;</span></span>&#10;	<span class="xml&#45;tag">&lt;package name=<span class="xml&#45;quote">&quot;default&quot;</span> extends=<span class="xml&#45;quote">&quot;webwork&#45;default&quot;</span>&gt;</span>&#10;		<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; Default interceptor stack. &#45;&#45;&gt;</span></span> &#10;		<span class="xml&#45;tag">&lt;default&#45;interceptor&#45;ref name=<span class="xml&#45;quote">&quot;defaultStack&quot;</span> /&gt;</span> &#10;		&#10;		<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; Action: Lesson 03: HelloWebWorldAction. &#45;&#45;&gt;</span></span> &#10;		<span class="xml&#45;tag">&lt;action name=<span class="xml&#45;quote">&quot;helloWebWorld&quot;</span> class=<span class="xml&#45;quote">&quot;lesson03.HelloWebWorldAction&quot;</span>&gt;</span> &#10;			<span class="xml&#45;tag">&lt;result name=<span class="xml&#45;quote">&quot;success&quot;</span> type=<span class="xml&#45;quote">&quot;dispatcher&quot;</span>&gt;</span>ex01&#45;success.jsp<span class="xml&#45;tag">&lt;/result&gt;</span> &#10;		<span class="xml&#45;tag">&lt;/action&gt;</span> &#10;	<span class="xml&#45;tag">&lt;/package&gt;</span>&#10;<span class="xml&#45;tag">&lt;/xwork&gt;</span></pre>
+</div></div></p>不需要关心<tt class="monospaced">default-interceptor-ref</tt>. 目前我们仅关注活动. 这个配置文件告诉WebWork一个名为<tt class="monospaced">helloWebWorld</tt>的活动由类<tt class="monospaced">lesson03.HelloWebWorldAction</tt>实现. 对于这一活动, 我们定义了一个名为<tt class="monospaced">success</tt>的结果, 它指向页面<tt class="monospaced">ex01-success.jsp</tt>.<br/>
+
+<blockquote class="blockquote"> 进一步阅读: <a href="xwork.xml.html" title="xwork.xml">xwork.xml</a></blockquote><p class="paragraph">一旦我们看到调用活动的代码, 一切会变得清晰:</p><h3 class="heading3"><a name="TutorialLesson03-ex01index.jsp%3A"> ex01-index.jsp:</a></h3>
+<div class="code"><div class="codeContent">
+<pre>&lt;html&gt;&#10;&lt;head&gt;&#10;&lt;title&gt;WebWork Tutorial &#45; Lesson 3 &#45; Example 1&lt;/title&gt;&#10;&lt;/head&gt;&#10;&#10;&lt;body&gt;&#10;&#10;&lt;p&gt;Click the button below to activate HelloWebWorldAction.&lt;/p&gt;&#10;&#10;&lt;form action=<span class="java&#45;quote">&quot;helloWebWorld.action&quot;</span> method=<span class="java&#45;quote">&quot;post&quot;</span>&gt;&#10;&lt;p&gt;&lt;input type=<span class="java&#45;quote">&quot;submit&quot;</span> value=<span class="java&#45;quote">&quot;Hello&#33;&quot;</span> /&gt;&lt;/p&gt;&#10;&lt;/form&gt;&#10;&#10;&lt;/body&gt;&#10;&lt;/html&gt;</pre>
+</div></div><p class="paragraph">这就是页面与WebWork相结合的方式: 通过访问<tt class="monospaced">&#42;.action</tt>地址. 回想上一课, 这就是我们为什么注册<tt class="monospaced">ServletDispatcher</tt>并将它映射到<tt class="monospaced">&#42;.action</tt>的原因.</p>当我们点击例子页面上的按钮时, 浏览器将把表单数据发送到地址<tt class="monospaced">helloWebWorld.action</tt>. 由于这个地址符合映射<tt class="monospaced">&#42;.action</tt>, Servlet容器将激活WebWork的<tt class="monospaced">ServletDispatcher</tt>, 它将读出<tt class="monospaced">xwork.xml</tt> 并查找名为<tt class="monospaced">helloWebWorld</tt>的活动. 如果找到了, 活动类的一个<b class="strong">新的</b>实例将被创建并且方法<tt class="monospaced">execute()</tt>将被执行.<p class="paragraph">先来看看活动类:</p><h3 class="heading3"><a name="TutorialLesson03-HelloWebWorldAction.java%3A"> HelloWebWorldAction.java:</a></h3>
+<div class="code"><div class="codeContent">
+<pre><span class="java&#45;keyword">package</span> lesson03; &#10;&#10;<span class="java&#45;keyword">import</span> com.opensymphony.xwork.ActionSupport; &#10;&#10;<span class="java&#45;keyword">public</span> class HelloWebWorldAction <span class="java&#45;keyword">extends</span> ActionSupport &#123; &#10;	<span class="java&#45;object">String</span> hello; &#10;	<span class="java&#45;keyword">public</span>&#160;<span class="java&#45;object">String</span> getHello() &#123; &#10;		<span class="java&#45;keyword">return</span> hello; &#10;	&#125;&#10;	<span class="java&#45;keyword">public</span>&#160;<span class="java&#45;object">String</span> execute() <span class="java&#45;keyword">throws</span> Exception &#123; &#10;		hello = <span class="java&#45;quote">&quot;Hello, WebWorld&#33;&quot;</span>; &#10;		<span class="java&#45;keyword">return</span> SUCCESS; &#10;	&#125; &#10;&#125;</pre>
+</div></div><p class="paragraph">首先, 该类扩展了<tt class="monospaced">com.opensymphony.xwork.ActionSupport</tt>并实现了方法<tt class="monospaced">public String execute()</tt>. 对于新手而言, 所有的活动类都应当这样编写. 其次, <tt class="monospaced">execute()</tt>方法仅设置了<tt class="monospaced">hello</tt>属性(property)的值并返回值为<tt class="monospaced">&quot;success&quot;</tt>的字符串常量<tt class="monospaced">SUCCESS</tt>.</p>当ServletDispatcher得到<tt class="monospaced">execute()</tt>的返回值<tt class="monospaced">&quot;success&quot;</tt>后, 再次在<tt class="monospaced">xwork.xml</tt>中查找与success同名的结果, 如配置文件所描述的, 找到并前进到<tt class="monospaced">ex01-success.jsp</tt>. <p class="paragraph">让我们看看这个页面做了什么:</p><h3 class="heading3"><a name="TutorialLesson03-ex01success.jsp%3A"> ex01-success.jsp:</a></h3>
+<div class="code"><div class="codeContent">
+<pre>&lt;&#37;&#64; taglib uri=<span class="java&#45;quote">&quot;webwork&quot;</span> prefix=<span class="java&#45;quote">&quot;ww&quot;</span> &#37;&gt; &#10;&lt;html&gt; &#10;&lt;head&gt; &#10;&lt;title&gt;WebWork Tutorial &#45; Lesson 3 &#45; Example 1&lt;/title&gt; &#10;&lt;/head&gt; &#10;&lt;body&gt; &#10;&#10;&lt;ww:property value=<span class="java&#45;quote">&quot;hello&quot;</span> /&gt; &#10;&#10;&lt;/body&gt; &#10;&lt;/html&gt;</pre>
+</div></div><p class="paragraph">如果运行这个例子, 你会发现页面上显示着<tt class="monospaced">&quot;Hello, WebWorld!&quot;</tt>. 看起来是因为<tt class="monospaced">&lt;ww:property value=&quot;hello&quot; /&gt;</tt>标签在刚刚执行的活动类中查找了属性<tt class="monospaced">hello</tt>. 事实上, 该标签查找页个存取器(accessor)方法, 因此最终调用了<tt class="monospaced">getHello()</tt>. 由于<tt class="monospaced">HelloWebWorldAction</tt>被调用并将属性hello设置为<tt class="monospaced">&quot;Hello, WebWorld!&quot;</tt>, 因此<tt class="monospaced">getHello()</tt>返回该值并被结果页面用于显示.</p><blockquote class="blockquote"> <a href="TutorialExamples.html" title="TutorialExamples">试一试这个例子!</a></blockquote>
+<p class="paragraph"><h2 class="heading2"><a name="TutorialLesson03-SupplyingDatatotheAction"> 为活动提供数据</a></h2></p>上一个例子演示了WebWork的活动是如何工作的, 但如果不能为活动提供数据我们就不能做更多. 让我们看一个这样的例子:
+<p class="paragraph"><h3 class="heading3"><a name="TutorialLesson03-xwork.xml%3A"> xwork.xml:</a></h3>
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;&#33;DOCTYPE xwork PUBLIC <span class="xml&#45;quote">&quot;&#45;//OpenSymphony Group//XWork 1.0//EN&quot;</span>&#10;<span class="xml&#45;quote">&quot;&#104;ttp://www.opensymphony.com/xwork/xwork&#45;1.0.dtd&quot;</span>&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;xwork&gt;</span>&#10;	<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; Include webwork defaults (from WebWork JAR). &#45;&#45;&gt;</span></span>&#10;	<span class="xml&#45;tag">&lt;include file=<span class="xml&#45;quote">&quot;webwork&#45;default.xml&quot;</span> /&gt;</span>&#10;	&#10;	<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; Configuration for the default package. &#45;&#45;&gt;</span></span>&#10;	<span class="xml&#45;tag">&lt;package name=<span class="xml&#45;quote">&quot;default&quot;</span> extends=<span class="xml&#45;quote">&quot;webwork&#45;default&quot;</span>&gt;</span>&#10;		<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; Default interceptor stack. &#45;&#45;&gt;</span></span> &#10;		<span class="xml&#45;tag">&lt;default&#45;interceptor&#45;ref name=<span class="xml&#45;quote">&quot;defaultStack&quot;</span> /&gt;</span> &#10;		&#10;		<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; Action: Lesson 03: HelloAction. &#45;&#45;&gt;</span></span>&#10;		<span class="xml&#45;tag">&lt;action name=<span class="xml&#45;quote">&quot;hello&quot;</span> class=<span class="xml&#45;quote">&quot;lesson03.HelloAction&quot;</span>&gt;</span>&#10;			<span class="xml&#45;tag">&lt;result name=<span class="xml&#45;quote">&quot;error&quot;</span> type=<span class="xml&#45;quote">&quot;dispatcher&quot;</span>&gt;</span>ex02&#45;index.jsp<span class="xml&#45;tag">&lt;/result&gt;</span>&#10;			<span class="xml&#45;tag">&lt;result name=<span class="xml&#45;quote">&quot;success&quot;</span> type=<span class="xml&#45;quote">&quot;dispatcher&quot;</span>&gt;</span>ex02&#45;success.jsp<span class="xml&#45;tag">&lt;/result&gt;</span>&#10;		<span class="xml&#45;tag">&lt;/action&gt;</span>&#10;	<span class="xml&#45;tag">&lt;/package&gt;</span>&#10;<span class="xml&#45;tag">&lt;/xwork&gt;</span></pre>
+</div></div></p><h3 class="heading3"><a name="TutorialLesson03-HelloAction.java%3A"> HelloAction.java:</a></h3>
+<div class="code"><div class="codeContent">
+<pre><span class="java&#45;keyword">package</span> lesson03;&#10;&#10;<span class="java&#45;keyword">import</span> com.opensymphony.xwork.ActionSupport;&#10;&#10;<span class="java&#45;keyword">public</span> class HelloAction <span class="java&#45;keyword">extends</span> ActionSupport &#123;&#10;	<span class="java&#45;object">String</span> person;&#10;	<span class="java&#45;keyword">public</span>&#160;<span class="java&#45;object">String</span> getPerson() &#123;&#10;		<span class="java&#45;keyword">return</span> person;&#10;	&#125;&#10;	<span class="java&#45;keyword">public</span> void setPerson(<span class="java&#45;object">String</span> person) &#123;&#10;		<span class="java&#45;keyword">this</span>.person = person;&#10;	&#125;&#10;	<span class="java&#45;keyword">public</span>&#160;<span class="java&#45;object">String</span> execute() <span class="java&#45;keyword">throws</span> Exception &#123;&#10;		<span class="java&#45;keyword">if</span> ((person == <span class="java&#45;keyword">null</span>) || (person.length() == 0)) <span class="java&#45;keyword">return</span> ERROR;&#10;		<span class="java&#45;keyword">else</span>&#160;<span class="java&#45;keyword">return</span> SUCCESS;&#10;	&#125;&#10;&#125;</pre>
+</div></div>
+<p class="paragraph"><h3 class="heading3"><a name="TutorialLesson03-ex02index.jsp%3A"> ex02-index.jsp:</a></h3>
+<div class="code"><div class="codeContent">
+<pre>&lt;html&gt;&#10;&lt;head&gt;&#10;&lt;title&gt;WebWork Tutorial &#45; Lesson 3 &#45; Example 2&lt;/title&gt;&#10;&lt;/head&gt;&#10;&#10;&lt;body&gt;&#10;&#10;&lt;p&gt;What&#039;s your name&#63;&lt;/p&gt;&#10;&#10;&lt;form action=<span class="java&#45;quote">&quot;hello.action&quot;</span> method=<span class="java&#45;quote">&quot;post&quot;</span>&gt;&#10;&lt;p&gt;&lt;input type=<span class="java&#45;quote">&quot;text&quot;</span> name=<span class="java&#45;quote">&quot;person&quot;</span> /&gt;&lt;input type=<span class="java&#45;quote">&quot;submit&quot;</span> /&gt;&lt;/p&gt;&#10;&lt;/form&gt;&#10;&#10;&lt;/body&gt;&#10;&lt;/html&gt;</pre>
+</div></div></p><h3 class="heading3"><a name="TutorialLesson03-ex02success.jsp%3A"> ex02-success.jsp:</a></h3>
+<div class="code"><div class="codeContent">
+<pre>&lt;&#37;&#64; taglib uri=<span class="java&#45;quote">&quot;webwork&quot;</span> prefix=<span class="java&#45;quote">&quot;ww&quot;</span> &#37;&gt;&#10;&lt;html&gt;&#10;&lt;head&gt;&#10;&lt;title&gt;WebWork Tutorial &#45; Lesson 3 &#45; Example 2&lt;/title&gt;&#10;&lt;/head&gt;&#10;&lt;body&gt;&#10;&#10;Hello, &lt;ww:property value=<span class="java&#45;quote">&quot;person&quot;</span> /&gt;&#10;&#10;&lt;/body&gt;&#10;&lt;/html&gt;</pre>
+</div></div><p class="paragraph">让我们分析一下差别: 本例中我们通过POST方式发送名为<tt class="monospaced">person</tt>的表单数据. 这样, 在<tt class="monospaced">HelloAction</tt>新的实例创建之后, WebWork的<tt class="monospaced">ServletDispatcher</tt>将试图使用发送的数据填充活动的属性<tt class="monospaced">person</tt>, 因此调用哑(mutator)方法<tt class="monospaced">setPerson()</tt>(事实上, 这一步工作是由<tt class="monospaced">ParametersInterceptor</tt>完成的, 我们将在<a href="TutorialLesson05.html" title="TutorialLesson05">第五课</a>中学到 &#8211; 目前, 只需要知道当活动执行时, 属性已经被设置了).</p>如果你查看活动类的代码, 你会发现在<tt class="monospaced">execute()</tt>期间, 将检查属性是否已填写(也就是说表单字段是否提供了数据). 如果已填写, 将返回<tt class="monospaced">SUCCESS</tt>, 从而将请求分发到<tt class="monospaced">ex02-success.jsp</tt>, 否则, 返回<tt class="monospaced">ERROR</tt>, 返回<tt class="monospaced">ex02-index.jsp</tt>.<br/>
+
+<blockquote class="blockquote"> <a href="TutorialExamples.html" title="TutorialExamples">试一试这个例子!</a></blockquote>
+<p class="paragraph"><h2 class="heading2"><a name="TutorialLesson03-TypesofResult"> 结果的类型(Types of Result)</a></h2></p>通过上面的例子, 当我们提到一个结果是<tt class="monospaced">&quot;dispatcher&quot;</tt>类型时意味着WebWork查找一个名为<tt class="monospaced">dispatcher</tt>的 <tt class="monospaced">结果类型</tt>并找出它由哪个结果类实现. 只要活动返回该类型的结果, 该结果类的一个实例就被激活.<p class="paragraph">结果类实现了<tt class="monospaced">com.opensymphony.xwork.Result</tt>接口. WebWork附带一些已实现的结果类, 但如果需要, 也可以构建自己的结果类. WebWork附带的结果类型已经配置在<tt class="monospaced">webwork-default.xml</tt>中:</p><ul class="star">
+<li> <b class="strong">dispatcher</b> (<tt class="monospaced">com.opensymphony.webwork.dispatcher.ServletDispatcherResult</tt>): 将结果转发到指定的地址;</li>
+</ul>
+<ul class="star">
+<li> <b class="strong">redirect</b> (<tt class="monospaced">com.opensymphony.webwork.dispatcher.ServletRedirectResult</tt>): 将结果重定向到指定的地址. 与dispatcher不同, 重定向不向指定的页面发送表单数据(通过POST或GET);</li>
+</ul>
+<ul class="star">
+<li> <b class="strong">velocity</b> (<tt class="monospaced">com.opensymphony.webwork.dispatcher.VelocityResult</tt>): 使用一个Velocity模版作为结果. You could use the dispatcher to forward results to Velocity pages if you have如果你在<tt class="monospaced">web.xml</tt>中配置了 <tt class="monospaced">VelocityServlet</tt>, 你就可以使用dispatcher将结果转发到Velocity页面, 不过使用Velocity结果是更好的方式. 关于Velocity的更多信息请参阅<a href="TutorialLesson04-02.html" title="TutorialLesson04-02">4.2</a>;</li>
+</ul>
+<ul class="star">
+<li> <b class="strong">chain</b> (<tt class="monospaced">com.opensymphony.xwork.ActionChainResult</tt>): 将一个活动链接在另一个活动上, 也就是说, 一个活动的结果是另一个活动;</li>
+</ul>
+<ul class="star">
+<li> <b class="strong">xslt</b> (<tt class="monospaced">com.opensymphony.webwork.views.xslt.XSLTResult</tt>): 用一个由XSLT样式单转换的XML文档作为结果.</li>
+</ul><br/>
+<blockquote class="blockquote"> 进一步阅读: <a href="Result Types.html" title="Result Types">结果类型(Result Types)</a></blockquote>
+<p class="paragraph"><h2 class="heading2"><a name="TutorialLesson03-Movingon"> 继续进行</a></h2></p>上述例子展示了活动和结果的主要概念: 它们是响应请求的代码执行的单元, 完成某些处理然后根据结果将请求转发到其他地址. 虽然这些看起来非常简单, 它却是WebWork功能的核心. <p class="paragraph">下面列出的另一些可以用活动实现的内容, 仅仅是在继续进行到其他课程前让你了解到WebWork可以做到哪些:</p><ul class="star">
+<li> 使用截取器, 可以记录每一个活动的执行甚至计算执行时间(<a href="TutorialLesson05.html" title="TutorialLesson05">第五课</a>);</li>
+</ul>
+<ul class="star">
+<li> 通过实现ModelDriven接口, 活动可以直接操作业务对象;</li>
+</ul>
+<ul class="star">
+<li> 对发送到action的数据的校验规则可以在XML文件中配置. 如果某些数据不符合你的规范, 活动不会执行, 同时错误信息会连接到该活动(参见: <a href="Validation.html" title="Validation">校验</a>);</li>
+</ul>
+<ul class="star">
+<li> 通过将WebWork UI标签与校验框架相关联, 表单能够自动显示由无效输入到值的错误信息(<a href="TutorialLesson04-01-01.html" title="TutorialLesson04-01-01">4.1.1</a>);</li>
+</ul>
+<ul class="star">
+<li> WebWork能够自动为某些活动提供组件, 并允许反转控制(参见: <span class="error">&#91;反转控制与组件&#93;</span>);</li>
+</ul><br/>
+下一课将讨论WebWork能够使用的不同类型的试图.<p class="paragraph"><hr class="line"/></p><a href="TutorialLesson02.html" title="TutorialLesson02">上一课</a> | <a href="TutorialLesson04.html" title="TutorialLesson04">下一课</a><br/>
+
+
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

@@ -1,0 +1,65 @@
+<html>
+    <head>
+        <title>WebWork 2 : 校验</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : 校验
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Dec 05, 2004 by <font color="#0050B2">plightbo</font>.
+				    </div>
+
+				    <p class="paragraph">WebWork依靠<a href="http://wiki.opensymphony.com//display/XW/XWork" title="XWork">XWork</a>的校验框架将应用的输入校验规则应用到活动中.  本节仅提供很少的信息让你可以上手并缺内容集中在This section only provides the bare minimum to get you started and focuses on WebWork为支持客户端校验而对XWork校验器进行的扩展.</p><em class="emphasis">更多信息请参阅XWork<a href="http://wiki.opensymphony.com//display/XW/Validation+Framework" title="Validation Framework">校验框架文档</a>.</em><p class="paragraph"><b class="strong">参考内容</b>
+<ol>
+<li> <a href="Simple validators.html" title="Simple validators">简单校验器</a></li>
+<li> <a href="Visitor validation.html" title="Visitor validation">访问者校验</a></li>
+<li> <a href="Client-Side Validation.html" title="Client-Side Validation">客户端校验</a></li>
+<li> <a href="Validation Examples.html" title="Validation Examples">示例</a></li>
+</ol></p><h2 class="heading2"><a name="Validation-RegisteringValidators"> 注册校验器</a></h2><p class="paragraph">校验规则包含在校验器中, 它必须在ValidatorFactory中注册.  简单的办法是在根类路径(/WEB-INF/classes)中添加文件<b class="strong">validators.xml</b>并在其中声明你使用的全部校验器.  文件的语法如下:
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;validators&gt;</span>&#10;    <span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;required&quot;</span> &#10;        class=<span class="xml&#45;quote">&quot;com.opensymphony.webwork.validators.JavaScriptRequiredFieldValidator&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;requiredstring&quot;</span>&#10;        class=<span class="xml&#45;quote">&quot;com.opensymphony.webwork.validators.JavaScriptRequiredStringValidator&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;stringlength&quot;</span>&#10;        class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.validator.validators.StringLengthFieldValidator&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;int&quot;</span>&#10;        class=<span class="xml&#45;quote">&quot;com.opensymphony.webwork.validators.JavaScriptIntRangeFieldValidator&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;date&quot;</span>&#10;        class=<span class="xml&#45;quote">&quot;com.opensymphony.webwork.validators.JavaScriptDateRangeFieldValidator&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;expression&quot;</span>&#10;        class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.validator.validators.ExpressionValidator&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;fieldexpression&quot;</span>&#10;        class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.validator.validators.FieldExpressionValidator&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;email&quot;</span>&#10;        class=<span class="xml&#45;quote">&quot;com.opensymphony.webwork.validators.JavaScriptEmailValidator&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;url&quot;</span>&#10;        class=<span class="xml&#45;quote">&quot;com.opensymphony.webwork.validators.JavaScriptURLValidator&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;visitor&quot;</span>&#10;        class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.validators.VisitorFieldValidator&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;conversion&quot;</span>&#10;        class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.validator.validators.ConversionErrorFieldValidator&quot;</span>/&gt;</span>&#10;<span class="xml&#45;tag">&lt;/validators&gt;</span></pre>
+</div></div><br/>
+这里声明了WebWork附带的全部校验器.</p><h2 class="heading2"><a name="Validation-TurningonValidation"> 打开校验</a></h2><p class="paragraph">激活对某活动校验的方法是将ValidationInterceptor加入活动的interceptor-refs中(参见<a href="xwork.xml.html" title="xwork.xml">xwork.xml</a>):
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;interceptor name=<span class="xml&#45;quote">&quot;validator&quot;</span> class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.validator.ValidationInterceptor&quot;</span>/&gt;</span></pre>
+</div></div></p>注意: 缺省的<b class="strong">validationWorkflowStack</b>已经包含该拦截器.
+<p class="paragraph"><h2 class="heading2"><a name="Validation-DefiningValidationRules"> 定义校验规则</a></h2></p>校验规则可以指定给:<br/>
+
+<ol>
+<li> 每个活动类: 在文件ActionName-validation.xml中</li>
+<li> 每个活动别名: 在文件ActionName-alias-validation.xml中</li>
+<li> 活动类的继承链或实现的接口: WebWork搜索活动类的继承树寻找父类或接口的校验规则</li>
+</ol><br/>
+下面是一个例子SimpleAction-validation.xml:<br/>
+
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;&#33;DOCTYPE validators PUBLIC <span class="xml&#45;quote">&quot;&#45;//OpenSymphony Group//XWork Validator 1.0//EN&quot;</span>&#10;        <span class="xml&#45;quote">&quot;&#104;ttp://www.opensymphony.com/xwork/xwork&#45;validator&#45;1.0.dtd&quot;</span>&gt;</span>&#10;<span class="xml&#45;tag">&lt;validators&gt;</span>&#10;    <span class="xml&#45;tag">&lt;field name=<span class="xml&#45;quote">&quot;bar&quot;</span>&gt;</span>&#10;        <span class="xml&#45;tag">&lt;field&#45;validator type=<span class="xml&#45;quote">&quot;required&quot;</span>&gt;</span>&#10;            <span class="xml&#45;tag">&lt;message&gt;</span>You must enter a value for bar.<span class="xml&#45;tag">&lt;/message&gt;</span>&#10;        <span class="xml&#45;tag">&lt;/field&#45;validator&gt;</span>&#10;        <span class="xml&#45;tag">&lt;field&#45;validator type=<span class="xml&#45;quote">&quot;int&quot;</span>&gt;</span>&#10;            <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;min&quot;</span>&gt;</span>6<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;            <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;max&quot;</span>&gt;</span>10<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;            <span class="xml&#45;tag">&lt;message&gt;</span>bar must be between $&#123;min&#125; and $&#123;max&#125;, current value is $&#123;bar&#125;.<span class="xml&#45;tag">&lt;/message&gt;</span>&#10;        <span class="xml&#45;tag">&lt;/field&#45;validator&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/field&gt;</span>&#10;    <span class="xml&#45;tag">&lt;field name=<span class="xml&#45;quote">&quot;date&quot;</span>&gt;</span>&#10;        <span class="xml&#45;tag">&lt;field&#45;validator type=<span class="xml&#45;quote">&quot;date&quot;</span>&gt;</span>&#10;            <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;min&quot;</span>&gt;</span>12/22/2002<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;            <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;max&quot;</span>&gt;</span>12/25/2002<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;            <span class="xml&#45;tag">&lt;message&gt;</span>The date must be between 12&#45;22&#45;2002 and 12&#45;25&#45;2002.<span class="xml&#45;tag">&lt;/message&gt;</span>&#10;        <span class="xml&#45;tag">&lt;/field&#45;validator&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/field&gt;</span>&#10;    <span class="xml&#45;tag">&lt;field name=<span class="xml&#45;quote">&quot;foo&quot;</span>&gt;</span>&#10;        <span class="xml&#45;tag">&lt;field&#45;validator type=<span class="xml&#45;quote">&quot;int&quot;</span>&gt;</span>&#10;            <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;min&quot;</span>&gt;</span>0<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;            <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;max&quot;</span>&gt;</span>100<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;            <span class="xml&#45;tag">&lt;message key=<span class="xml&#45;quote">&quot;foo.range&quot;</span>&gt;</span>Could not find foo.range&#33;<span class="xml&#45;tag">&lt;/message&gt;</span>&#10;        <span class="xml&#45;tag">&lt;/field&#45;validator&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/field&gt;</span>&#10;    <span class="xml&#45;tag">&lt;validator type=<span class="xml&#45;quote">&quot;expression&quot;</span>&gt;</span>&#10;        <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;expression&quot;</span>&gt;</span>foo &gt; bar<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;        <span class="xml&#45;tag">&lt;message&gt;</span>Foo must be greater than Bar. Foo = $&#123;foo&#125;, Bar = $&#123;bar&#125;.<span class="xml&#45;tag">&lt;/message&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/validator&gt;</span>&#10;<span class="xml&#45;tag">&lt;/validators&gt;</span></pre>
+</div></div><p class="paragraph">这里是SimpleAction类的校验文件. Validators(和field-validators)元素必须具备<b class="strong">type</b>属性, 它引用ValidatorFactory中注册的一个校验器的名字. Validator元素也可以包含&lt;param&gt;元素, 使用name和value属性将参数设置到校验器实例中. 下文是对message元素的讨论.</p>每个Validator或Field-Validator元素必需定义一个message元素. message元素有一个属性"key", 它不是必需的. 如果校验失败, message元素的正文(body)将作为默认消息加到活动中.<p class="paragraph">"key"属性定义了消息的键值, 如果活动实现了LocaleAware接口(ActionSupport类已经实现了这一接口), 将在活动的资源包中使用getText()方法查找相应的消息内容. 这提供了根据用户请求的区域设置(或任何设置到LocaleAware活动中的区域)选择对应的区域化消息的能力.</p>在使用key从资源包中获取消息或直接得到默认消息之后, 当前校验器被压入值栈, 然后将对消息进行解析, 将$&#123;...&#125;部分用$&#123;和&#125;之间的字符串的赋值结果进行替换. 可以使用校验器和活动对象来定义参数化消息. 下面是参数化消息的例子:<br/>
+
+<div class="code"><div class="codeContent">
+<pre>bar must be between $&#123;min&#125; and $&#123;max&#125;, current value is $&#123;bar&#125;.</pre>
+</div></div><p class="paragraph">它将从IntRangeFieldValidator中取出min和max参数, 从活动中取出bar的值.</p>
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

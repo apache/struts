@@ -1,0 +1,312 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Setting up Eclipse with Tomcat
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="SettingupEclipsewithTomcat-SettingupEclipsewithTomcat"></a>Setting up Eclipse with Tomcat</h1>
+
+
+<h3><a name="SettingupEclipsewithTomcat-Introduction"></a>Introduction</h3>
+
+<p>When I started using WebWork I went through the trouble of setting up my development environment to cater for web development. What I wanted was a fast turn around time, i.e. if I changed a .jsp file I could just refresh the web browser to see the changes. Also changes in WebWork related configurations will have immediate effect. And finally minor java changes from within Eclipse is also hot replaced.</p>
+
+<p>I will document how to setup Eclipse and install a tomcat plugin so all is integrated within Eclipse and you can easily start, stop, restart Tomcat, see output in the Eclipse console, debug, make code changes on the fly, etc. etc. so development is a joy.</p>
+
+<p>If you are fortunate enough to use the JetBrains IDEA editor then all this is already setup for you.<img class="emoticon" src="./icons/emoticons/tongue.gif" height="20" width="20" align="absmiddle" alt="" border="0"/></p>
+
+<h3><a name="SettingupEclipsewithTomcat-Preface"></a>Preface</h3>
+
+<p>I used these tools&nbsp;</p>
+
+<p>Windows XP<br/>
+Eclipse 3.11<br/>
+Tomcat 5.5.x<br/>
+Sysdeo Tomcat Plugin Launcher 0.80</p>
+
+<h3><a name="SettingupEclipsewithTomcat-InstallTomcatPlugin%26nbsp%3B"></a>Install Tomcat Plugin&nbsp;</h3>
+
+<p>There are several Tomcat plugins to Eclipse, and I tried several versions. I found that Sysdeo was the best one for my needs.</p>
+
+<p>There is a good Eclipse plugin homepage at <a href="http://www.eclipse-plugins.info" title="Visit page outside Confluence">&#104;ttp://www.eclipse-plugins.info</a></p>
+
+<p>Download the Sysdeo plugin from it's homepage at <a href="http://www.sysdeo.com/eclipse/tomcatplugin" title="Visit page outside Confluence">&#104;ttp://www.sysdeo.com/eclipse/tomcatplugin</a></p>
+
+<p> Unzip the downloaded file to &lt;ECLIPSE_HOME&gt;\plugins</p>
+
+<h3><a name="SettingupEclipsewithTomcat-InstallingTomcat"></a>Installing Tomcat</h3>
+
+<p>If you don't have Tomcat installed then download it from <a href="http://tomcat.apache.org" title="Visit page outside Confluence">&#104;ttp://tomcat.apache.org</a></p>
+
+<h3><a name="SettingupEclipsewithTomcat-ConfigureTomcatPlugininEclipse"></a>Configure Tomcat Plugin in Eclipse</h3>
+
+<p>&nbsp;Restart/Start Eclips so the plugin is loaded.</p>
+
+<p>If the plugin is working you will immediately notice 3 new icons in the Eclipse toolbar <img src="Setting up Eclipse with Tomcat_attachments/sysdeo_eclipse_plugin_toolbar.PNG" align="absmiddle" border="0" /><br/>
+These icons are for starting, stopping and restarting Tomcat.<br/>
+Now you need to configure the plugin <b>Windows</b> &#45;&gt; <b>Preference</b>. And the select the <b>Tomcat</b> tab.<br/>
+Here you select the Tomcat version to 5.x and enter the &lt;TOMCAT_HOME&gt; folder. You leave Context decleration mode to Server.xml.<br/>
+Leave the <b>advanced</b> tab as default. <b>JVM Settings</b> should have a JRE selected. And the <b>source path</b> should have ticked Automatically compute source path.</p>
+
+<h3><a name="SettingupEclipsewithTomcat-CreateanewProject"></a>Create a new Project</h3>
+
+<p>When you create a new project in Eclipse you folders follow a certain structure standard to make this work.</p>
+
+<p>I have this folder structure</p>
+
+<p>&lt;project_home&gt;<br/>
++ src<br/>
+&nbsp;&nbsp; + java<br/>
++ webapp<br/>
+&nbsp;&nbsp; + WEB-INF<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + lib</p>
+
+<p>&nbsp;In the <b>lib</b> folder copy your needed .jar files. I have these files:</p>
+<div class="panel"><div class="panelContent">
+<p>commons-logging.jar<br/>
+dwr.jar<br/>
+freemarker.jar<br/>
+javamail.jar<br/>
+log4j-1.2.9.jar<br/>
+ognl.jar<br/>
+oscore.jar<br/>
+rife-continuations.jar<br/>
+servletapi.jar<br/>
+spring.jar<br/>
+webwork-2.2.1.jar<br/>
+xwork.jar&nbsp;</p>
+</div></div>
+<p>&nbsp;</p>
+
+<p>And in WEB-INF your should have web.xml and the Spring configuration file. And if you use Spring log4j ConfigListener you could also store log4j.properties here. I have these 3 files:<br/>
+<b>applicationContext.xml</b><br/>
+<b>log4j.properties</b><br/>
+<b>web.xml</b></p>
+
+<p>The spring configuration file is basically empty to start with <b>ApplicationContext.xml</b></p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;?xml version=<span class="code-quote">"1.0"</span> encoding=<span class="code-quote">"UTF-8"</span>?&gt;
+&lt;!DOCTYPE beans PUBLIC <span class="code-quote">"-<span class="code-comment">//SPRING//DTD BEAN//EN"</span> <span class="code-quote">"http://www.springframework.org/dtd/spring-beans.dtd"</span>&gt;
+</span>&lt;beans <span class="code-keyword">default</span>-autowire=<span class="code-quote">"autodetect"</span>&gt;
+&lt;/beans&gt;</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>And the <b>web.xml</b></p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;?xml version=<span class="code-quote">"1.0"</span> encoding=<span class="code-quote">"ISO-8859-1"</span>?&gt;
+&lt;!DOCTYPE web-app PUBLIC <span class="code-quote">"-<span class="code-comment">//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"</span> <span class="code-quote">"http://java.sun.com/dtd/web-app_2_3.dtd"</span>&gt;
+</span>&lt;web-app&gt;
+
+	&lt;context-param&gt;
+		&lt;param-name&gt;log4jConfigLocation&lt;/param-name&gt;
+		&lt;param-value&gt;/WEB-INF/log4j.properties&lt;/param-value&gt;
+	&lt;/context-param&gt;
+
+	&lt;filter&gt;
+		&lt;filter-name&gt;webwork&lt;/filter-name&gt;
+		&lt;filter-class&gt;com.opensymphony.webwork.dispatcher.FilterDispatcher&lt;/filter-class&gt;
+	&lt;/filter&gt;
+
+	&lt;filter-mapping&gt;
+		&lt;filter-name&gt;webwork&lt;/filter-name&gt;
+		&lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+	&lt;/filter-mapping&gt;
+
+	&lt;listener&gt;
+		&lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
+	&lt;/listener&gt;
+
+	&lt;listener&gt;
+		&lt;listener-class&gt;org.springframework.web.util.Log4jConfigListener&lt;/listener-class&gt;
+	&lt;/listener&gt;
+
+	&lt;servlet&gt;
+		&lt;servlet-name&gt;freemarker&lt;/servlet-name&gt;
+		&lt;servlet-class&gt;com.opensymphony.webwork.views.freemarker.FreemarkerServlet&lt;/servlet-class&gt;
+	&lt;/servlet&gt;
+
+	&lt;servlet-mapping&gt;
+		&lt;servlet-name&gt;freemarker&lt;/servlet-name&gt;
+		&lt;url-pattern&gt;*.ftl&lt;/url-pattern&gt;
+	&lt;/servlet-mapping&gt;
+
+	&lt;welcome-file-list&gt;
+		&lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt;
+		&lt;welcome-file&gt;index.html&lt;/welcome-file&gt;
+	&lt;/welcome-file-list&gt;
+
+&lt;/web-app&gt;</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>And my <b>log4j.properties</b></p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">log4j.rootLogger=INFO, console
+
+log4j.appender.console=org.apache.log4j.ConsoleAppender
+log4j.appender.console.layout=org.apache.log4j.PatternLayout
+log4j.appender.console.layout.ConversionPattern=%d{dd MMM yyyy HH:mm:ss} %-5p %c - %m%n
+
+#log4j.category.org.springframework=DEBUG
+#log4j.category.com.opensymphony.webwork=DEBUG
+#log4j.category.com.opensymphony.xwork=DEBUG</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>Now the tricky part is that we still need some configuration files for WebWork that usually resides in the classpath folder. These files we must store outside the webapp folder due Eclipse hot java code deployer. So these files:<br/>
+&nbsp;&nbsp;&nbsp;<b>webwork.properties</b><br/>
+&nbsp;&nbsp;&nbsp;<b>xwork.xml</b><br/>
+Is stored in the <b>src/java</b> folder.</p>
+
+<p>This is my <b>webwork.properties</b> that is setup for development&nbsp;</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">webwork.objectFactory = spring
+webwork.devMode = <span class="code-keyword">true</span>
+webwork.configuration.xml.reload = <span class="code-keyword">true</span>
+webwork.url.http.port = 8080</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>And then the <b>xwork.xml</b> where we configure our action</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;!DOCTYPE xwork PUBLIC <span class="code-quote">"-<span class="code-comment">//OpenSymphony Group//XWork 1.1.1//EN"</span> <span class="code-quote">"http://www.opensymphony.com/xwork/xwork-1.1.1.dtd"</span>&gt;
+</span>&lt;xwork&gt;
+&lt;include file=<span class="code-quote">"webwork-<span class="code-keyword">default</span>.xml"</span>/&gt;
+&lt;<span class="code-keyword">package</span> name=<span class="code-quote">"<span class="code-keyword">default</span>"</span> <span class="code-keyword">extends</span>=<span class="code-quote">"webwork-<span class="code-keyword">default</span>"</span>&gt;
+&lt;/<span class="code-keyword">package</span>&gt;
+&lt;/xwork&gt;</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>Now we are nearly ready. We must tell Eclipse to output the compiled source files to <b>webapp/WEB-INF/classes</b>. This is done by <b>Project</b> &#45;&gt; <b>Properties</b>. Then select the <b>Java Build Path</b> tab. Then type "&lt;project_name&gt;<b>webapp/WEB-INF/classes</b>" in the default output folder. Then Eclipse would put the compiled source files to our web app classes folder <b>AND</b> also copy all other configuration files within the <b>src/java</b> folder, and thus also our <b>webwork.properties</b> and <b>xwork.xml</b> is copied.</p>
+
+<p><font color="#ff0000">It is important to put</font> <font color="#ff0000"><b>webwork.properties</b></font> <font color="#ff0000">and</font> <font color="#ff0000"><b>xwork.xml</b></font> <font color="#ff0000">in the</font> <font color="#ff0000"><b>src/java</b></font> <font color="#ff0000">folder as Eclipse will automatically clean the build source folder when it compiles. So if we put</font> <font color="#ff0000"><b>webwork.properties</b></font> <font color="#ff0000">and</font> <font color="#ff0000"><b>xwork.xml</b></font> <font color="#ff0000">in the</font> <font color="#ff0000"><b>WEB-INF/classes</b></font> <font color="#ff0000">folder Eclipse will delete them. That is why we put the files in</font> <font color="#ff0000"><b>src/java</b></font> <font color="#ff0000">instead.</font></p>
+
+<p>Now we are done configuring and setup our development environment in Eclipse. Now let's test it.</p>
+
+<h3><a name="SettingupEclipsewithTomcat-Nowlet%27smakethefamousHelloWorldandsecodechangesonthefly%3A%29"></a>Now let's make the famous Hello World and se code changes on the fly <img class="emoticon" src="./icons/emoticons/smile.gif" height="20" width="20" align="absmiddle" alt="" border="0"/></h3>
+
+<p>In the webapp folder we could create a welcome page to see if tomcat works. So we create a <b>index.html</b> file</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;html&gt;
+&lt;body&gt;
+&lt;h1&gt;Hello World&lt;/h1&gt;
+&lt;p/&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>Now we are readt to start Tomcat so click the icon <b>Start Tomcat</b>. If everyting works you will se Tomcat startup and output in the console panel in Eclipse. Now point your webbrowser to the url <a href="http://localhost:8080" title="Visit page outside Confluence">&#104;ttp://localhost:8080</a>. And the welcome page should be displayed.</p>
+
+<p>Next we create a simple action named HelloAction</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> dk.claus;
+
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionSupport;
+
+<span class="code-keyword">public</span> class HelloAction <span class="code-keyword">extends</span> ActionSupport {
+
+	<span class="code-keyword">private</span> <span class="code-object">String</span> world;
+
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getWorld() {
+		<span class="code-keyword">return</span> world;
+	}
+
+	<span class="code-keyword">public</span> void setWorld(<span class="code-object">String</span> world) {
+		<span class="code-keyword">this</span>.world = world;
+	}
+
+	<span class="code-keyword">public</span> <span class="code-object">String</span> execute() <span class="code-keyword">throws</span> Exception {
+		world = <span class="code-quote">"Hello World from your Action"</span>;
+		<span class="code-keyword">return</span> SUCCESS;
+	}
+
+}</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>So we must change our <b>xwork.properties</b> to know this action</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;!DOCTYPE xwork PUBLIC <span class="code-quote">"-<span class="code-comment">//OpenSymphony Group//XWork 1.1.1//EN"</span> <span class="code-quote">"http://www.opensymphony.com/xwork/xwork-1.1.1.dtd"</span>&gt;
+</span>
+&lt;xwork&gt;
+    &lt;include file=<span class="code-quote">"webwork-<span class="code-keyword">default</span>.xml"</span>/&gt;
+
+    &lt;<span class="code-keyword">package</span> name=<span class="code-quote">"<span class="code-keyword">default</span>"</span> <span class="code-keyword">extends</span>=<span class="code-quote">"webwork-<span class="code-keyword">default</span>"</span>&gt;
+
+    	&lt;action name=<span class="code-quote">"hello"</span> class=<span class="code-quote">"dk.claus.HelloAction"</span>&gt;
+    		&lt;result name=<span class="code-quote">"success"</span>&gt;hello.jsp&lt;/result&gt;
+    	&lt;/action&gt;
+
+    &lt;/<span class="code-keyword">package</span>&gt;
+
+&lt;/xwork&gt;</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>And then we need to have a link on our welcome page, so we change it:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;html&gt;
+&lt;body&gt;
+&lt;h1&gt;Hello World&lt;/h1&gt;
+&lt;p/&gt;
+
+&lt;a xhref=<span class="code-quote">"hello.action"</span>&gt;Hello World Action&lt;/a&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>And finally we must make a result page for the action, so we create a hello.jsp page.</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;%@ taglib uri=<span class="code-quote">"/webwork"</span> prefix=<span class="code-quote">"ww"</span>%&gt;
+
+&lt;html&gt;
+&lt;body&gt;
+  &lt;h1&gt;This is hello world action&lt;/h1&gt;
+  &lt;p/&gt;
+  What did the action say? &lt;ww:property value=<span class="code-quote">"world"</span>/&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>Now save all these files and refresh your browser. The welcome page should now contain the link. Clicking the link would execute your action and show the result page.</p>
+
+<p>Now change the code in the action by changing the world text to something different. Save the file and refresh the browser. Isn't this great <img class="emoticon" src="./icons/emoticons/thumbs_up.gif" height="19" width="19" align="absmiddle" alt="" border="0"/>&nbsp;</p>
+
+<p>Hope this guide can help you setup a development environment that is trouly a joy to work with.</p>
+
+<h3><a name="SettingupEclipsewithTomcat-StoppingTomcat"></a>Stopping Tomcat</h3>
+
+<p>You must remember to use the 'Stop Tomcat' toolbar button. If you kill the application using the red terminate button in Eclipse you could potentially have Eclipse stop responding. This happened for me twice.&nbsp;&nbsp;</p>
+
+<h3><a name="SettingupEclipsewithTomcat-Hotcodereplacefailed"></a>Hot code replace failed</h3>
+
+<p>If you add, rename or delete methods Eclipse can't replace the code and you will get a warning dialog. Here you should remember to click 'Continue' and then click the Stop Tomcat button (or Restart Tomcat button). This ensure that Tomcat is properly shutdown.</p>
+
+<h3><a name="SettingupEclipsewithTomcat-Debugging"></a>Debugging</h3>
+
+<p>Not a problem at all. Just set a breakpoint in your code and you are off to go. That is truly a joy<img class="emoticon" src="./icons/emoticons/biggrin.gif" height="20" width="20" align="absmiddle" alt="" border="0"/> and that can't be easiler.<br/>
+<img src="Setting up Eclipse with Tomcat_attachments/sysdeo_eclipse_plugin_debug.PNG" align="absmiddle" border="0" /></p>
+
+<h3><a name="SettingupEclipsewithTomcat-Theend"></a>The end</h3>
+
+<p>I hope this guide added something to the table. I decided I wanted to create this guide on this wiki site to contribute something back to this great web framework.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

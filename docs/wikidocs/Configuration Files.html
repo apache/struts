@@ -1,0 +1,76 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Configuration Files
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="ConfigurationFiles-MainConfigurationFiles"></a>Main Configuration Files</h1>
+
+<p>WebWork has two main configuration files you need to be aware of: web.xml and xwork.xml. Here you will find out all the information you need for both WebWork's required and optional configuration files. </p>
+
+<p>Below are all the files that you may need to be aware of. Some of this configuration files can be reloaded dynamically, making development much easier. See <a href="Reloading configuration.html" title="Reloading configuration">Reloading configuration</a> for more information.</p>
+
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'>File</th>
+<th class='confluenceTh'>Optional</th>
+<th class='confluenceTh'>Location (relative to webapp)</th>
+<th class='confluenceTh'>Purpose</th>
+</tr>
+<tr>
+<td class='confluenceTd'><a href="web.xml.html" title="web.xml">web.xml</a></td>
+<td class='confluenceTd'>no</td>
+<td class='confluenceTd'>/WEB-INF/</td>
+<td class='confluenceTd'>Web deployment descriptor to include all necessary WebWork components</td>
+</tr>
+<tr>
+<td class='confluenceTd'><a href="xwork.xml.html" title="xwork.xml">xwork.xml</a></td>
+<td class='confluenceTd'>no</td>
+<td class='confluenceTd'>/WEB-INF/classes/</td>
+<td class='confluenceTd'>Main configuration, contains result/view types, action mappings, interceptors, etc</td>
+</tr>
+<tr>
+<td class='confluenceTd'><a href="webwork.properties.html" title="webwork.properties">webwork.properties</a></td>
+<td class='confluenceTd'>yes</td>
+<td class='confluenceTd'>/WEB-INF/classes/</td>
+<td class='confluenceTd'>WebWork properties</td>
+</tr>
+<tr>
+<td class='confluenceTd'><a href="webwork-default.xml.html" title="webwork-default.xml">webwork\-default.xml</a></td>
+<td class='confluenceTd'>yes</td>
+<td class='confluenceTd'>/WEB-INF/lib/webwork-x.x.jar</td>
+<td class='confluenceTd'>Default configuration that should be included in xwork.xml</td>
+</tr>
+<tr>
+<td class='confluenceTd'><a href="velocity.properties.html" title="velocity.properties">velocity.properties</a></td>
+<td class='confluenceTd'>yes</td>
+<td class='confluenceTd'>/WEB-INF/classes/</td>
+<td class='confluenceTd'>Override the default velocity configuration</td>
+</tr>
+</tbody></table>
+
+<h1><a name="ConfigurationFiles-StaticContent"></a>Static Content</h1>
+
+<p>Common static content that is needed by webwork (JavaScript and CSS files, etc.) is server automatically by the FilterDispatcher filter.  Any request starting with "/webwork/" denotes that static content is required, and then mapping the value after "/webwork/" to common packages in WebWork and, optionally in your class path.</p>
+
+<p>By default, the following packages are searched:</p>
+<ul class="alternate" type="square">
+	<li>com.opensymphony.webwork.static</li>
+	<li>template</li>
+</ul>
+
+
+<p>Additional packages can be specified by providing a comma seperated list to the configuration parameter named "packages" (configured in web.xml for the FilterDispatcher filter). When specifying additional static content, you should be careful not to expose sensitive configuration information (i.e. database password).</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

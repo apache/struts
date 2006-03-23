@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Action Chaining
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="ActionChaining-Overview"></a>Overview</h1>
+
+<p>WebWork provides the ability to chain multiple actions into a defined sequence or workflow. This feature works by applying a <a href="Chain Result.html" title="Chain Result">Chain Result</a> to a given action, and intercepting its target action's invocation with a <a href="http://www.opensymphony.com/webwork/api/com/opensymphony/xwork/interceptor/ChainingInterceptor.html" title="Visit page outside Confluence">ChainingInterceptor</a>. </p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='warningMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/forbidden.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Warning</b><br /><br/>
+In general, Action Chaining is not recommended. However, there are other options, such as the <a href="redirect after post.html" title="redirect after post">redirect after post</a> technique.</td></tr></table>
+
+<h2><a name="ActionChaining-ChainResult"></a>Chain Result</h2>
+
+<p>The <a href="Chain Result.html" title="Chain Result">Chain Result</a> is a result type that invokes an action with its own interceptor stack and result. This allows an action to forward requests to a target action, while propagating the state of the source action. Below is an example of how to define this sequence.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;package name=<span class="code-quote">"public"</span> extends=<span class="code-quote">"webwork-default"</span>&gt;</span>
+    <span class="code-tag"><span class="code-comment">&lt;!-- Chain creatAccount to login, using the default parameter --&gt;</span></span>
+    <span class="code-tag">&lt;action name=<span class="code-quote">"createAccount"</span> class=<span class="code-quote">"..."</span>&gt;</span>
+        <span class="code-tag">&lt;result type=<span class="code-quote">"chain"</span>&gt;</span>login<span class="code-tag">&lt;/result&gt;</span>
+    <span class="code-tag">&lt;/action&gt;</span>
+
+    <span class="code-tag">&lt;action name=<span class="code-quote">"login"</span> class=<span class="code-quote">"..."</span>&gt;</span>
+        <span class="code-tag"><span class="code-comment">&lt;!-- Chain to another namespace --&gt;</span></span>
+        <span class="code-tag">&lt;result type=<span class="code-quote">"chain"</span>&gt;</span>
+            <span class="code-tag">&lt;param name=<span class="code-quote">"actionName"</span>&gt;</span>dashboard<span class="code-tag">&lt;/param&gt;</span>
+            <span class="code-tag">&lt;param name=<span class="code-quote">"namespace"</span>&gt;</span>/secure<span class="code-tag">&lt;/param&gt;</span>
+        <span class="code-tag">&lt;/result&gt;</span>
+    <span class="code-tag">&lt;/action&gt;</span>
+<span class="code-tag">&lt;/package&gt;</span>
+
+<span class="code-tag">&lt;package name=<span class="code-quote">"secure"</span> extends=<span class="code-quote">"webwork-default"</span> namespace=<span class="code-quote">"/secure"</span>&gt;</span>
+    <span class="code-tag">&lt;action name=<span class="code-quote">"dashboard"</span> class=<span class="code-quote">"..."</span>&gt;</span>
+        <span class="code-tag">&lt;result&gt;</span>dashboard.jsp<span class="code-tag">&lt;/result&gt;</span>
+    <span class="code-tag">&lt;/action&gt;</span>
+<span class="code-tag">&lt;/package&gt;</span></pre>
+</div></div>
+
+<p>Another action in the same namespace (or the default "" namespace) can be executed after this action (see <a href="Configuration Files.html" title="Configuration Files">Configuration Files</a>). An optional "namespace" parameter may also be added to specify an action in a different namespace. </p>
+
+
+
+<h2><a name="ActionChaining-ChainingInterceptor"></a>Chaining Interceptor</h2>
+
+<p>If you need to copy the properties from your previous Actions in the chain to the current action, you should apply the <a href="http://www.opensymphony.com/webwork/api/com/opensymphony/xwork/interceptor/ChainingInterceptor.html" title="Visit page outside Confluence">ChainingInterceptor</a>. The interceptor will copy the original parameters from the request, and the ValueStack is passed in to the target action. The source action is remembered by the ValueStack, allowing the target action to access the properties of the preceding action(s) using the ValueStack, and also makes these properties available to the final result of the chain, such as the JSP or Velocity page. </p>
+
+<p>One common use of action chaining is to provide lookup lists (like for a dropdown list of states, etc). Since these actions get put on the ValueStack, these properties will be available in the view. This functionality can also be done using the ActionTag to execute an action from the display page. You may also use the <a href="Redirect Action Result.html" title="Redirect Action Result">Redirect Action Result</a> to accomplish this.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

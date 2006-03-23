@@ -1,0 +1,69 @@
+<html>
+    <head>
+        <title>WebWork 2 : 开始WebWork之旅</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : 开始WebWork之旅
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    本页由<font color="#0050B2">casey</font>最后修改于2004年9月10日.
+				    </div>
+
+				    <p class="paragraph">本站点内容适合于已经理解了相关技术的有经验的开发者.  在开始深入了解Webwork如何工作并运行演示程序之前, 推荐您重新审视下列概念:
+<ul type="square" class="minus">
+<li> Java</li>
+<li> Servlets, JSP, and Tag Libraries</li>
+<li> JavaBeans</li>
+<li> HTML and HTTP</li>
+<li> Web Containers (ex. Tomcat)</li>
+<li> XML</li>
+</ul>
+<h4 class="heading4"><a name="GettingStarted-Website%26amp%3Bdownloads%3Caname%3D%22GettingStartedWebsite%2526amp%253Bdownloads%22%3E%3C%2Fa%3E"> 站点及下载 <a name="GettingStarted-Website%26amp%3Bdownloads"></a></a></h4></p>本站点提供多中下载内容.  参见下列链接:<br/>
+
+<ul type="square" class="minus">
+<li> <a href="https://webwork.dev.java.net/servlets/ProjectDocumentList" title="Visit page outside Confluence">下载Webwork</a> - 下在WebWork发布包</li>
+<li> <a href="http://www.opensymphony.com/contact.jsp" title="Visit page outside Confluence">Webwork邮件列表</a> - <a href="https://webwork.dev.java.net/servlets/SummarizeList?listName=dev" title="Visit page outside Confluence">浏览邮件存档</a>或者<a href="mailto:dev@webwork.dev.java.net" title="Send mail to post a question">张贴问题</a>. 该列表全部由积极的开发者, 代码捐献者以及重要用户组成.  这也是得到问题答案的最好的, 最快的方法.</li>
+<li> <a href="https://webwork.dev.java.net/source/browse/webwork" title="Visit page outside Confluence">CVS</a> - 浏览CVS和java.net网站的代码</li>
+<li> <a href="http://wiki.opensymphony.com/display/WW/WebWork" title="Visit page outside Confluence">Webwork Wiki</a> - Powered by <a href="http://www.atlassian.com/software/confluence/default.jsp?clicked=footer" title="Visit page outside Confluence">Confluence</a>, the professional J2EE wiki</li>
+<li> <a href="http://jira.opensymphony.com/secure/BrowseProject.jspa?id=10030" title="Visit page outside Confluence">Webwork的Bug和问题</a> - Powered by <a href="http://www.atlassian.com/software/jira" title="Visit page outside Confluence">JIRA:Bug &amp; Issue Traking System</a></li>
+<li> <a href="http://www.opensymphony.com" title="Visit page outside Confluence">OpenSymphony主页</a></li>
+</ul>
+<h4 class="heading4"><a name="GettingStarted-What%26%23039%3Bsincludedinthedistro%3Caname%3D%22GettingStartedincludedindistro%22%3E%3C%2Fa%3E"> 发行包包含的内容 <a name="GettingStarted-includedindistro"></a></a></h4><p class="paragraph">发行包包含下列目录结构:</p><div class="preformatted"><div class="preformattedContent">
+<pre>docs/&#10;lib/&#10;src/&#10;src/java/template/&#10;webwork&#45;(VERSION).jar&#10;webwork&#45;example.war&#10;webwork&#45;migration.jar</pre>
+</div></div><p class="paragraph">docs目录包含当前版本的Javadoc, 您正在阅读的文档, 以及Junit的构建报告.  lib目录包含WebWork必需的以及可选用的支持包:</p><div class="preformatted"><div class="preformattedContent">
+<pre>lib/&#10;      core/&#10;      migration/&#10;      optional/</pre>
+</div></div><p class="paragraph">注意: 没有一个可选包是WebWork运行时必须使用的.  如果你希望使用某些特性如JasperReport或FreeMarker结果类型, 就必须包含可选包.</p>Webwork也将全部的源文件和JSP标签模版打包在其中.<p class="paragraph"><h4 class="heading4"><a name="GettingStarted-Installing%3Caname%3D%22GettingStartedInstalling%22%3E%3C%2Fa%3E"> 安装 <a name="GettingStarted-Installing"></a></a></h4></p>下文介绍如何设置你的Web应用.  复制webwork-(VERSION).jar, /lib/core目录中全部的*.jar 文件以及/lib/optional目录中需要的*.jar文件到你的webapp/lib目录中.  如果你需要定制你自己的模版(用于描述如何使用webwork UI标签绘制HTML), 将/src/java/template目录复制到你的webapp/目录中.  你的Web应用看起来可能像这样:<br/>
+
+<div class="code"><div class="codeContent">
+<pre>/mywebapp/&#10;/mywebapp/template/&#10;/mywebapp/META&#45;INF/&#10;/mywebapp/WEB&#45;INF/&#10;/mywebapp/WEB&#45;INF/classes/&#10;/mywebapp/WEB&#45;INF/lib/&#10;/mywebapp/WEB&#45;INF/lib/CORE&amp;OPTIONAL &#42;.jar&#10;/mywebapp/WEB&#45;INF/web.xml</pre>
+</div></div><p class="paragraph"> 你可以直接前进到<a href="Documentation.html#Documentation-Configuration" title="Configuration on Documentation">配置</a>或<a href="Documentation.html#Documentation-Tutorial" title="Tutorial on Documentation">Webwork指南</a></p><h4 class="heading4"><a name="GettingStarted-Runningdemos%3Caname%3D%22GettingStartedRunningdemos%22%3E%3C%2Fa%3E"> 运行演示程序<a name="GettingStarted-Runningdemos"></a></a></h4><p class="paragraph">为了运行webwork应用和演示程序, 你需要一个servlet/jsp引擎. 如果没有, 建议你了解一下<a href="http://jakarta.apache.org/tomcat/" title="Visit page outside Confluence">Apache Tomcat</a>, 这是一个由Apache Jakarta项目开发的免费的Servlet容器, 也可以使用<a href="http://www.caucho.com/" title="Visit page outside Confluence">Caucho Technology</a>的Resin, 它可以免费用于非商业用途.  当你的Servlet容器设置完毕后, 就可以安装webwork示例应用(*.war)和其他任何演示程序了, 只需将.war文件放置在容器的webapp目录下即可.  Tomcat的目录位置如下:
+<div class="code"><div class="codeContent">
+<pre>&lt;TOMCAT&#95;HOME&gt;/webapps/webwork&#45;example.war</pre>
+</div></div><br/>
+当war文件放置在正确的位置后, 启动web容器并通过Web浏览器访问下面的URL.</p><b class="strong">http://</b><cite class="citation">HOST:PORT</cite><b class="strong">/webwork-example</b><br/>
+
+
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

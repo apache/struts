@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <title>WebWork - 
+         Syntax
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>The tag syntax in WebWork is extremely easy to understand. To quickly get started, all you need to know is that all attributes are applied as Strings initially. They are then parsed for the syntax <b>%{ ... }</b>, and anything in between the braces is evaluated against the value stack. </p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Upgrade note!</b><br />The tag syntax was not always this easy &#8211; if you are upgrading from WebWork 2.1.7 or previous versions, you may wish to read about the <a href="Alt Syntax.html" title="Alt Syntax">Alt Syntax</a>.</td></tr></table>
+
+<p>Like most things in life, it turns out that this isn't quite <em>that</em> simple. Specifically, there are actually three rules to be aware of:</p>
+
+<ol>
+	<li>All <em>String</em> attribute types are <em>parsed</em> for the <b>%{ ... }</b> characters.</li>
+	<li>All <em>non-String</em> attribute types are <b>not</b> parsed, but instead evaluated directly as an <a href="OGNL.html" title="OGNL">OGNL</a> expression</li>
+	<li>The exception to rule #2 is that if the <em>non-String</em> attribute starts with <b>%{</b> and ends with <b>}</b>, those characters are cut off before evaluating the expression.</li>
+</ol>
+
+
+<p>The best way to understand these rules is by looking at some examples.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>We recognize that these rules can be confusing. Generally, you should not need to know them at all, as 99.9% of the time everything will "just work". However, as we see in the examples, there are some tricky situations that require understanding of these rules. In future versions of WebWork, will be trying to make the tag syntax even simpler</td></tr></table>
+
+<h1><a name="TagSyntax-SomeExamples"></a>Some Examples</h1>
+
+<p>The most basic example explaining how the tag syntax works is as follows. This example shows off rule #1 only:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:textfield label=<span class="code-quote">"%{getText("</span>state.label<span class="code-quote">")}"</span> name=<span class="code-quote">"state"</span>/&gt;</span></pre>
+</div></div>
+
+<p>In this example, the label is dynamically evaluated and set to the outcome of the <a href="OGNL.html" title="OGNL">OGNL</a> expression <b>getText("state.label")</b>, which will in turn invoke the <a href="Internationalization.html" title="Internationalization">Internationalization</a> system are retrieve the value of the i18n key <em>state.label</em>. The name, being a String attribute, is simply set to the string <b>state</b>.</p>
+
+<p>The next example shows off rule #2:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:select label=<span class="code-quote">"%{getText("</span>state.label<span class="code-quote">")}"</span> name=<span class="code-quote">"state"</span> multiple=<span class="code-quote">"true"</span>/&gt;</span></pre>
+</div></div>
+
+<p>While this looks very similar to the last example, the key thing to recognize is that the <em>multiple</em> attribute is of type <em>Boolean</em>, which means it falls under rule #2. Generally you won't even notice this, because <b>true</b> as an <a href="OGNL.html" title="OGNL">OGNL</a> expression evaluated to true, which is what you want.</p>
+
+<p>Now let's suppose we want to extend this example to show off rule #3 by making the multiple attribute dynamic:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:select label=<span class="code-quote">"%{getText("</span>state.label<span class="code-quote">")}"</span> name=<span class="code-quote">"state"</span> multiple=<span class="code-quote">"%{allowMultiple}"</span>/&gt;</span></pre>
+</div></div>
+
+<p>Because the attribute is of type <em>Boolean</em> and starts and ends with the correct characters from rule #3, it is reduced to the expression <em>allowMultiple</em>, which is evaluated against the value stack, returning a true of false value, just like in the previous example.</p>
+
+<p>There is one trick example to keep an eye on, however. For example, the following is probably <b>incorrect</b>:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:textfield label=<span class="code-quote">"%{getText("</span>state.label<span class="code-quote">")}"</span> name=<span class="code-quote">"state"</span> value=<span class="code-quote">"CA"</span>/&gt;</span></pre>
+</div></div>
+
+<p>This example will only work if the expression <em>CA</em> can result in something, meaning that your action has a method <em>getCA()</em>, which is probably not what you expected. This is because the <em>value</em> attribute is of type <em>Object</em> and therefore rule #2 applies. If the desire is to set a static String as the initial value, you would need to supply an <a href="OGNL.html" title="OGNL">OGNL</a> expression that returns a String. For example, this is the <b>correct</b> way to do it:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:textfield label=<span class="code-quote">"%{getText("</span>state.label<span class="code-quote">")}"</span> name=<span class="code-quote">"state"</span> value=<span class="code-quote">"%{'CA'}"</span>/&gt;</span></pre>
+</div></div>
+
+<p>While you could set the value attribute as just "'CA'", we recommend the parsed expressions so that, in the future when WebWork supports parsed attributes for all types, your code will still work.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

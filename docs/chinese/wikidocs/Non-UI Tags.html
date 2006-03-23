@@ -1,0 +1,369 @@
+<html>
+    <head>
+        <title>WebWork 2 : 非UI类标签</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : 非UI类标签
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Dec 14, 2004 by <font color="#0050B2">plightbo</font>.
+				    </div>
+
+				    <p class="paragraph"><a name="Non-UITags-top"></a><br/>
+下列标签与值栈交互, 并控制页面逻辑.</p><table class="wikitable">
+<tr>
+<th>	标签名					</th><th>	描述	</th>
+</tr><tr>
+<td>	<b class="strong"><a href="#Non-UITags-Common" title="Common on Non-UI Tags">通用标签</a></b></td><td> </td>
+</tr><tr>
+<td>	<a href="#Non-UITags-param" title="param on Non-UI Tags">&lt;ww:param /&gt;</a>					</td><td>	为支持参数的标签设置参数</td>
+</tr><tr>
+<td>	<a href="#Non-UITags-property" title="property on Non-UI Tags">&lt;ww:property /&gt;</a>					</td><td>	从值栈中提取值并显示 </td>
+</tr><tr>
+<td>	<a href="#Non-UITags-push" title="push on Non-UI Tags">&lt;ww:push /&gt;</a>					</td><td>	将指定对象压入值栈顶端 </td>
+</tr><tr>
+<td>	<a href="#Non-UITags-set" title="set on Non-UI Tags">&lt;ww:set /&gt;</a>						</td><td>	创建你自己的命名变量 </td>
+</tr><tr>
+<td>	<a href="URL tag.html" title="URL tag">URL tag</a> (&lt;ww:url /&gt;)						</td><td>	构建一个已编码的URL </td>
+</tr><tr>
+<td>	<b class="strong"><a href="#Non-UITags-Componentisation" title="Componentisation on Non-UI Tags">组件化标签</a></b>	</td><td> </td>
+</tr><tr>
+<td>	<a href="#Non-UITags-action" title="action on Non-UI Tags">&lt;ww:action /&gt;</a>					</td><td>	提供另一种调用活动的方法 </td>
+</tr><tr>
+<td>	<a href="#Non-UITags-bean" title="bean on Non-UI Tags">&lt;ww:bean /&gt;</a>					</td><td>	初始化一个Bean以便访问它的功能  </td>
+</tr><tr>
+<td>	<a href="#Non-UITags-include" title="include on Non-UI Tags">&lt;ww:include /&gt;</a>					</td><td>	用于包含另一个页面或活动 </td>
+</tr><tr>
+<td>	<b class="strong"><a href="#Non-UITags-Flow-Control" title="Flow-Control on Non-UI Tags">流程控制标签</a></b></td><td> </td>
+</tr><tr>
+<td>	<a href="#Non-UITags-if" title="if on Non-UI Tags">&lt;ww:if /&gt;</a>						</td><td>	根据条件决定语句是否执行  </td>
+</tr><tr>
+<td>	<a href="#Non-UITags-elseif" title="elseif on Non-UI Tags">&lt;ww:elseif /&gt;</a>					</td><td>	当前一个测试失败后用于决定语句是否执行.  </td>
+</tr><tr>
+<td>	<a href="#Non-UITags-else" title="else on Non-UI Tags">&lt;ww:else /&gt;</a>					</td><td>	如果前一个测试为false时执行  </td>
+</tr><tr>
+<td>	<b class="strong"><a href="#Non-UITags-Iteration" title="Iteration on Non-UI Tags">迭代标签</a></b>	</td><td> </td>
+</tr><tr>
+<td>	<a href="#Non-UITags-iterator" title="iterator on Non-UI Tags">&lt;ww:iterator /&gt;</a>				</td><td>	在一个集合上进行迭代  </td>
+</tr><tr>
+<td>	<a href="#Non-UITags-generator" title="generator on Non-UI Tags">&lt;ww:generator /&gt;</a>				</td><td>	常见迭代器  </td>
+</tr><tr>
+<td>	<a href="#Non-UITags-append" title="append on Non-UI Tags">&lt;ww:append /&gt;</a>					</td><td>	添加一个迭代器列表  </td>
+</tr><tr>
+<td>	<a href="#Non-UITags-subset" title="subset on Non-UI Tags">&lt;ww:subset /&gt;</a>					</td><td>	迭代一个可迭代对象的一部分 </td>
+</tr><tr>
+<td>	<a href="#Non-UITags-merge" title="merge on Non-UI Tags">&lt;ww:merge /&gt;</a>					</td><td>	将几个迭代器合并为一个  </td>
+</tr><tr>
+<td>	<a href="#Non-UITags-sort" title="sort on Non-UI Tags">&lt;ww:sort /&gt;</a>					</td><td>	对一个迭代器排序   </td>
+</tr>
+</table><br/>
+<a name="Non-UITags-Common"></a>
+<h2 class="heading2"><a name="Non-UITags-CommonTags"> 通用标签</a></h2><p class="paragraph"><a name="Non-UITags-param"></a>
+<h3 class="heading3"><a name="Non-UITags-%3Cfontcolor%3D%22blue%22%3E%26lt%3Bww%3Aparam%2F%26gt%3B%3C%2Ffont%3E"><font color="blue"><b class="strong">&lt;ww:param /&gt;</b></font></a></h3></p>允许为支持增加参数的标签设置参数. <br/>
+
+<table class="wikitable">
+<tr>
+<th>属性名</th><th>必需</th><th>描述</th>
+</tr><tr>
+<td>value</td><td>否</td><td>用于向标签传递数据.</td>
+</tr><tr>
+<td>name</td><td>否</td><td>调用的活动名称. </td>
+</tr>
+</table><br/>
+你可以将param标签放置在支持参数标签的内部, param标签把参数加入到它的父标签. 如果value没有给定, 它将使用正文内容(body)作为value值.<p class="paragraph">在下面的例子中, 每一个param标签都把参数加到Counter上. 这意味着param将调用Counter对应的setter方法.</p><div class="code"><div class="codeContent">
+<pre>&lt;ww:bean name=<span class="java&#45;quote">&quot;&#039;webwork.util.Counter&#039;&quot;</span> id=<span class="java&#45;quote">&quot;year&quot;</span>&gt;&#10;  &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;first&#039;&quot;</span> value=<span class="java&#45;quote">&quot;text(&#039;firstBirthYear&#039;)&quot;</span>/&gt;&#10;  &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;last&#039;&quot;</span> value=<span class="java&#45;quote">&quot;2000&quot;</span>/&gt;&#10;&#10;  &lt;ui:combobox label=<span class="java&#45;quote">&quot;&#039;Birth year&#039;&quot;</span> size=<span class="java&#45;quote">&quot;6&quot;</span> maxlength=<span class="java&#45;quote">&quot;4&quot;</span> name=<span class="java&#45;quote">&quot;&#039;birthYear&#039;&quot;</span> list=<span class="java&#45;quote">&quot;#year&quot;</span>/&gt;&#10;&lt;/ww:bean&gt;</pre>
+</div></div>
+<p class="paragraph"><a name="Non-UITags-property"></a><br/>
+<a href="#Non-UITags-top" title="top on Non-UI Tags">返回</a>
+<h3 class="heading3"><a name="Non-UITags-%3Cfontcolor%3D%22blue%22%3E%26lt%3Bww%3Aproperty%2F%26gt%3B%3C%2Ffont%3E"><font color="blue"><b class="strong">&lt;ww:property /&gt;</b></font></a></h3></p>property标签从值栈中提取值并显示.<br/>
+
+<table class="wikitable">
+<tr>
+<th>属性名</th><th>必需</th><th>描述</th>
+</tr><tr>
+<td>id</td><td>否</td><td>为一个元素指定唯一的名字(<a href="#Non-UITags-Notes-Id" title="Notes-Id on Non-UI Tags">注意</a>).</td>
+</tr><tr>
+<td>value</td><td>否</td><td>用于向标签传递数据.</td>
+</tr><tr>
+<td>escape</td><td>否</td><td>决定正文是否需要进行适当的转码以符合HTML字符要求[<i>如"&amp;"转换为"&amp;amp;"</i>]</td>
+</tr>
+</table><br/>
+下面的例子描述它的不同用法:<br/>
+
+<div class="code"><div class="codeContent">
+<pre>Print getX().getY() &#10;&lt;ww:property value=<span class="java&#45;quote">&quot;x.y&quot;</span>/&gt;</pre>
+</div></div><p class="paragraph">缺生情况下将对HTML字符进行转码, 然而如果property标签的内容包含在正文(body)中时, 将不进行转码.  显示使用escape属性将覆盖缺省行为. 引用的文字在转码时, 其外面的引号(quote)将被去掉.</p>还要注意如果property标签的正文为空时(has an empty body), 它的行为与没有正文时一样.
+<p class="paragraph"><a name="Non-UITags-push"></a><br/>
+<a href="#Non-UITags-top" title="top on Non-UI Tags">返回</a>
+<h3 class="heading3"><a name="Non-UITags-%3Cfontcolor%3D%22blue%22%3E%26lt%3Bww%3Apush%2F%26gt%3B%3C%2Ffont%3E"><font color="blue"><b class="strong">&lt;ww:push /&gt;</b></font></a></h3></p>利用ww:push, 你可以将对象压入值栈的顶部. <br/>
+
+<table class="wikitable">
+<tr>
+<th>属性名 </th><th>必需</th><th>描述</th>
+</tr><tr>
+<td>value</td><td><b class="strong">是</b></td><td>用于向标签传递数据.</td>
+</tr>
+</table><p class="paragraph">与ww:set(见下文)标签的功能类似, 因此在决定使用前应当都看一下.</p><div class="code"><div class="codeContent">
+<pre>&lt;ww:push value=<span class="java&#45;quote">&quot;counter&quot;</span>&gt;&#10;  &lt;ww:property value=<span class="java&#45;quote">&quot;count&quot;</span>/&gt;&#10;&lt;/ww:push&gt;</pre>
+</div></div><p class="paragraph">要将一个活动放入值栈中可以使用下面的代码:</p><div class="code"><div class="codeContent">
+<pre>&lt;ww:action name=<span class="java&#45;quote">&quot;&#039;SomeAction&#039;&quot;</span> id=<span class="java&#45;quote">&quot;sa&quot;</span>/&gt;&#10;&lt;ww:push value=<span class="java&#45;quote">&quot;#sa&quot;</span>&gt;&#10; foo = &lt;ww:property value=<span class="java&#45;quote">&quot;foo&quot;</span>/&gt;&#10;&lt;/ww:push&gt;</pre>
+</div></div><br/>
+
+<p class="paragraph"><a name="Non-UITags-set"></a><br/>
+<a href="#Non-UITags-top" title="top on Non-UI Tags">返回</a>
+<h3 class="heading3"><a name="Non-UITags-%3Cfontcolor%3D%22blue%22%3E%26lt%3Bww%3Aset%2F%26gt%3B%3C%2Ffont%3E"><font color="blue"><b class="strong">&lt;ww:set /&gt;</b></font></a></h3></p>使用ww:set标签, 你可以在JSP中创建一个自己命名变量. 可以使用#variableName的形式引用该变量. <br/>
+   
+<table class="wikitable">
+<tr>
+<th>属性名 </th><th>必需</th><th>描述</th>
+</tr><tr>
+<td>name </td><td><b class="strong">是</b></td><td>变量的唯一名称, 可以使用&quot;#name&quot;访问它.</td>
+</tr><tr>
+<td>value</td><td>否</td><td>用于向标签传递数据.</td>
+</tr><tr>
+<td>scope</td><td>否</td><td>变量的作用范围: 可以是page, request, session, application</td>
+</tr>
+</table><br/>
+将值栈中对象的值设置到指定的scope中. 如果值未给定, 将使用栈顶值. 如果scope未指定, 缺省的scope是活动上下文, 如果该请求并未执行任何活动, 将使用PageContext.
+<p class="paragraph"><a name="Non-UITags-Componentisation"></a><br/>
+<a href="#Non-UITags-top" title="top on Non-UI Tags">返回</a><br/>
+<h2 class="heading2"><a name="Non-UITags-ComponentisationTags"> 组合化标签</a></h2></p>
+<h3 class="heading3"><a name="Non-UITags-%3Cfontcolor%3D%22blue%22%3E%26lt%3Bww%3Aaction%2F%26gt%3B%3C%2Ffont%3E"><font color="blue"><b class="strong">&lt;ww:action /&gt;</b></font></a></h3><p class="paragraph">Action标签提供另一种调用活动的方法. 这是除了调用一个URL之外的另一个办法; 即 - *.action会被发送到ServletDispatcher.</p><table class="wikitable">
+<tr>
+<th>属性名 </th><th>必需</th><th>描述</th>
+</tr><tr>
+<td>id</td><td>否</td><td>为元素指定唯一名称(<a href="#Non-UITags-Notes-Id" title="Notes-Id on Non-UI Tags">注意</a>).</td>
+</tr><tr>
+<td>name</td><td><b class="strong">是</b></td><td>被调用活动的名字. </td>
+</tr><tr>
+<td>namespace		</td><td>		否		</td><td>	活动的名空间</td>
+</tr><tr>
+<td>executeResult	</td><td>		否		</td><td>	是否执行结果 </td>
+</tr>
+</table><p class="paragraph">如果指定了<b class="strong">id</b>属性, 被执行的活动就可以使用&quot;<b class="strong">#id</b>&quot;在活动上下文中引用.</p>本例中, 活动ClientInfo将被执行, 它的方法将被用于获取信息并执行条件检查.<br/>
+
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;ww:action name=<span class="xml&#45;quote">&quot;&#039;ClientInfo&#039;&quot;</span> id=<span class="xml&#45;quote">&quot;cinfo&quot;</span>&gt;</span>&#10;  <span class="xml&#45;tag">&lt;ww:param name=<span class="xml&#45;quote">&quot;detailedMode&quot;</span> value=<span class="xml&#45;quote">&quot;false&quot;</span>/&gt;</span>&#10;<span class="xml&#45;tag">&lt;/ww:action&gt;</span>&#10;Browser:<span class="xml&#45;tag">&lt;ww:property value=<span class="xml&#45;quote">&quot;#cinfo.browser&quot;</span>/&gt;</span><span class="xml&#45;tag">&lt;br&gt;</span>&#10;Version:<span class="xml&#45;tag">&lt;ww:property value=<span class="xml&#45;quote">&quot;#cinfo.version&quot;</span>/&gt;</span><span class="xml&#45;tag">&lt;br&gt;</span>&#10;Supports GIF:<span class="xml&#45;tag">&lt;ww:if test=<span class="xml&#45;quote">&quot;#cinfo.supportsType(&#039;image/gif&#039;) == true&quot;</span>&gt;</span>Yes<span class="xml&#45;tag">&lt;/ww:if&gt;</span>&#10;<span class="xml&#45;tag">&lt;ww:else&gt;</span>No<span class="xml&#45;tag">&lt;/ww:else&gt;</span><span class="xml&#45;tag">&lt;br&gt;</span></pre>
+</div></div>&#160;<p class="paragraph"><a href="#Non-UITags-top" title="top on Non-UI Tags">返回</a><br/>
+<a name="Non-UITags-bean"></a>
+<h3 class="heading3"><a name="Non-UITags-%3Cfontcolor%3D%22blue%22%3E%26lt%3Bww%3Abean%2F%26gt%3B%3C%2Ffont%3E"><font color="blue"><b class="strong">&lt;ww:bean /&gt;</b></font></a></h3></p>创建一个JavaBean并初始化它的属性, 并将它放入ActionContext.
+<table class="wikitable">
+<tr>
+<th>属性名 </th><th>必需</th><th>描述</th>
+</tr><tr>
+<td>id</td><td>否</td><td>为元素指定唯一名称(<a href="#Non-UITags-Notes-Id" title="Notes-Id on Non-UI Tags">注意</a>).</td>
+</tr><tr>
+<td>name</td><td><b class="strong">是</b></td><td>被调用的活动[<i>可能是笔误</i>]名. </td>
+</tr>
+</table><br/>
+本例中, Counter被用作bean. 我们可以调用需要的方法. 本例中,我们调用setFirst()将出生年设置为1975并调用setLast()将它设置为2000. 然后将Counter作为一个迭代器显示一个组合框(combo box). <br/>
+
+<div class="code"><div class="codeContent">
+<pre>&lt;ww:bean name=<span class="java&#45;quote">&quot;&#039;webwork.util.Counter&#039;&quot;</span> id=<span class="java&#45;quote">&quot;year&quot;</span>&gt;&#10;  &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;first&#039;&quot;</span> value=<span class="java&#45;quote">&quot;text(&#039;firstBirthYear&#039;)&quot;</span>/&gt;&#10;  &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;last&#039;&quot;</span> value=<span class="java&#45;quote">&quot;2000&quot;</span>/&gt;&#10;&#10;  &lt;ui:combobox label=<span class="java&#45;quote">&quot;&#039;Birth year&#039;&quot;</span> size=<span class="java&#45;quote">&quot;6&quot;</span> maxlength=<span class="java&#45;quote">&quot;4&quot;</span> name=<span class="java&#45;quote">&quot;&#039;birthYear&#039;&quot;</span> list=<span class="java&#45;quote">&quot;#year&quot;</span>/&gt;&#10;&lt;/ww:bean&gt;</pre>
+</div></div>
+<p class="paragraph"><a href="#Non-UITags-top" title="top on Non-UI Tags">返回</a><br/>
+<a name="Non-UITags-include"></a>
+<h3 class="heading3"><a name="Non-UITags-%3Cfontcolor%3D%22blue%22%3E%26lt%3Bww%3Ainclude%2F%26gt%3B%3C%2Ffont%3E"><font color="blue"><b class="strong">&lt;ww:include /&gt;</b></font></a></h3></p>用于包含另一个页面或活动. <br/>
+
+<table class="wikitable">
+<tr>
+<th>属性名 </th><th>必需</th><th>描述</th>
+</tr><tr>
+<td>page </td><td>否</td><td>页面或活动的名称.</td>
+</tr><tr>
+<td>value</td><td>否</td><td>用于向标签传递数据.</td>
+</tr>
+</table><p class="paragraph">本例中, beaninfo.jsp引入了一个Person对象people[0]. 看一下beaninfo.jsp的例子并注意它是如何利用&quot;..&quot;从值栈中取出父页面的值. 
+<div class="code"><div class="codeContent">
+<pre>&lt;ww:property value=<span class="java&#45;quote">&quot;people&#91;0&#93;&quot;</span>&gt;&#10;  &lt;ww:include value=<span class="java&#45;quote">&quot;&#039;beaninfo.jsp&#039;&quot;</span>/&gt;&#10;&lt;/ww:property&gt;</pre>
+</div></div></p>本例中调用了一个活动. 
+<div class="code"><div class="codeContent">
+<pre>&lt;h1&gt;RSS viewer&lt;/h1&gt;&#10;&lt;ww:include value=<span class="java&#45;quote">&quot;&#039;rss.viewer.action&#039;&quot;</span>/&gt;</pre>
+</div></div>
+<p class="paragraph"><a name="Non-UITags-FlowControl"></a>
+<h2 class="heading2"><a name="Non-UITags-FlowControlTags"> 流程控制标签</a></h2></p>   <a href="#Non-UITags-top" title="top on Non-UI Tags">返回</a><br/>
+<a name="Non-UITags-if"></a>
+<h3 class="heading3"><a name="Non-UITags-%3Cfontcolor%3D%22blue%22%3E%26lt%3Bww%3Aif%2F%26gt%3B%3C%2Ffont%3E"><font color="blue"><b class="strong">&lt;ww:if /&gt;</b></font></a></h3>
+根据条件决定语句是否执行. <br/>
+
+<table class="wikitable">
+<tr>
+<th>属性 </th><th>必需</th><th>描述</th>
+</tr><tr>
+<td>id</td><td>否</td><td>为元素指定唯一名称(<a href="#Non-UITags-Notes-Id" title="Notes-Id on Non-UI Tags">注意</a>).</td>
+</tr><tr>
+<td>test</td><td><b class="strong">是</b></td><td>由WebWork解析器进行计算赋值的条件表达式. 它返回布尔值true或false. </td>
+</tr>
+</table><br/>
+本例中, 如果测试条件为true将执行标签内容(body). elseIf标签和else标签将不被执行. <br/>
+
+<div class="code"><div class="codeContent">
+<pre>&lt;ww:<span class="java&#45;keyword">if</span> test=<span class="java&#45;quote">&quot;<span class="java&#45;keyword">true</span> == <span class="java&#45;keyword">true</span>&quot;</span>&gt;&#10;   &lt;b&gt;<span class="java&#45;keyword">if</span>: Success&lt;/b&gt;&#10;&lt;/ww:<span class="java&#45;keyword">if</span>&gt;&#10;&#10;&lt;ww:elseIf test=<span class="java&#45;quote">&quot;<span class="java&#45;keyword">true</span> == <span class="java&#45;keyword">true</span>&quot;</span>&gt;&#10;   &lt;b&gt;elseIf: Failure&lt;/b&gt;&#10;&lt;/ww:elseIf&gt;&#10;&#10;&lt;ww:<span class="java&#45;keyword">else</span>&gt;&#10;   &lt;b&gt;<span class="java&#45;keyword">else</span>: Failure&lt;/b&gt;&#10;&lt;/ww:<span class="java&#45;keyword">else</span>&gt;</pre>
+</div></div><p class="paragraph"><a href="#Non-UITags-top" title="top on Non-UI Tags">return to top</a><br/>
+<a name="Non-UITags-elseif"></a>
+<h3 class="heading3"><a name="Non-UITags-%3Cfontcolor%3D%22blue%22%3E%26lt%3Bww%3Aelseif%2F%26gt%3B%3C%2Ffont%3E"><font color="blue"><b class="strong">&lt;ww:elseif /&gt;</b></font></a></h3></p>当前一个测试失败后用于决定语句是否执行. <br/>
+
+<table class="wikitable">
+<tr>
+<th>属性 </th><th>必需</th><th>描述</th>
+</tr><tr>
+<td>id</td><td>否</td><td>为元素指定唯一名称(<a href="#Non-UITags-Notes-Id" title="Notes-Id on Non-UI Tags">注意</a>).</td>
+</tr><tr>
+<td>test</td><td><b class="strong">是</b></td><td>由WebWork解析器进行计算赋值的条件表达式. 它返回布尔值true或false. </td>
+</tr>
+</table><br/><p class="paragraph">本例中, 由于elseIf标签的条件为true而if标签的条件为false, 因此将执行其内容(body).</p><div class="code"><div class="codeContent">
+<pre>&lt;ww:<span class="java&#45;keyword">if</span> test=<span class="java&#45;quote">&quot;<span class="java&#45;keyword">true</span> == <span class="java&#45;keyword">false</span>&quot;</span>&gt;&#10;   &lt;b&gt;<span class="java&#45;keyword">if</span>: Failures&lt;/b&gt;&#10;&lt;/ww:<span class="java&#45;keyword">if</span>&gt;&#10;&#10;&lt;ww:elseIf test=<span class="java&#45;quote">&quot;<span class="java&#45;keyword">true</span> == <span class="java&#45;keyword">true</span>&quot;</span>&gt;&#10;   &lt;b&gt;elseIf: Success&lt;/b&gt;&#10;&lt;/ww:elseIf&gt;&#10;&#10;&lt;ww:<span class="java&#45;keyword">else</span>&gt;&#10;   &lt;b&gt;<span class="java&#45;keyword">else</span>: Failure&lt;/b&gt;&#10;&lt;/ww:<span class="java&#45;keyword">else</span>&gt;</pre>
+</div></div><p class="paragraph"><a href="#Non-UITags-top" title="top on Non-UI Tags">return to top</a><br/>
+<a name="Non-UITags-else"></a>
+<h3 class="heading3"><a name="Non-UITags-%3Cfontcolor%3D%22blue%22%3E%26lt%3Bww%3Aelse%2F%26gt%3B%3C%2Ffont%3E"><font color="blue"><b class="strong">&lt;ww:else /&gt;</b></font></a></h3></p>如果前一个测试为false时执行. <br/>
+
+<table class="wikitable">
+<th>属性 </th><th>必需</th><th>描述</th>
+</tr><tr>
+<td>id</td><td>否</td><td>为元素指定唯一名称(<a href="#Non-UITags-Notes-Id" title="Notes-Id on Non-UI Tags">注意</a>).</td>
+</tr>
+</table><br/>
+本例中, 由于if标签和elseIf标签的条件均为false, else标签将执行其内容(body). <br/>
+
+<div class="code"><div class="codeContent">
+<pre>&lt;ww:<span class="java&#45;keyword">if</span> test=<span class="java&#45;quote">&quot;<span class="java&#45;keyword">true</span> == <span class="java&#45;keyword">false</span>&quot;</span>&gt;&#10;   &lt;b&gt;<span class="java&#45;keyword">if</span>: Failures&lt;/b&gt;&#10;&lt;/ww:<span class="java&#45;keyword">if</span>&gt;&#10;&#10;&lt;ww:elseIf test=<span class="java&#45;quote">&quot;<span class="java&#45;keyword">true</span> == <span class="java&#45;keyword">false</span>&quot;</span>&gt;&#10;   &lt;b&gt;elseIf: Failure&lt;/b&gt;&#10;&lt;/ww:elseIf&gt;&#10;&#10;&lt;ww:<span class="java&#45;keyword">else</span>&gt;&#10;   &lt;b&gt;<span class="java&#45;keyword">else</span>: Success&lt;/b&gt;&#10;&lt;/ww:<span class="java&#45;keyword">else</span>&gt;</pre>
+</div></div><p class="paragraph"><a name="Non-UITags-Iteration"></a>
+<h2 class="heading2"><a name="Non-UITags-IterationTags"> 迭代标签</a></h2></p>   <a href="#Non-UITags-top" title="top on Non-UI Tags">返回</a><br/>
+<a name="Non-UITags-iterator"></a>
+<h3 class="heading3"><a name="Non-UITags-%3Cfontcolor%3D%22blue%22%3E%26lt%3Bww%3Aiterator%2F%26gt%3B%3C%2Ffont%3E"><font color="blue"><b class="strong">&lt;ww:iterator /&gt;</b></font></a></h3>
+<p class="paragraph">Iterator标签将在一个集合之上进行迭代. 可迭代的值可以是下列之一: java.util.Collection, java.util.Iterator, java.util.Enumeration, java.util.Map, 数组, XML节点 或XML的NodeList.</p><table class="wikitable">
+<tr>
+<th>属性名 </th><th>必需</th><th>描述</th>
+</tr><tr>
+<td>id</td><td>否</td><td>为元素指定唯一名称(<a href="#Non-UITags-Notes-Id" title="Notes-Id on Non-UI Tags">注意</a>).</td>
+</tr><tr>
+<td>status</td><td>否</td><td>该属性表示IteratorStatus对象将被暴露(exposed)出来并以此命名. 使用IteratorStatus对象可以获取迭代信息: getCount(), getIndex(), isFirst(), isLast(), isEven(), isOdd(). </td>
+</tr><tr>
+<td>value</td><td>否</td><td>用于向标签传递数据.</td>
+</tr>
+</table><br/>
+本例中, iterator标签将在Counter上进行迭代. property标签将输出从1到10的迭代值. <br/>
+
+<div class="code"><div class="codeContent">
+<pre>&lt;ww:bean name=<span class="java&#45;quote">&quot;&#039;webwork.util.Counter&#039;&quot;</span>&gt;&#10;  &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;last&#039;&quot;</span> value=<span class="java&#45;quote">&quot;10&quot;</span>/&gt;&#10;&#10;  &lt;ww:iterator&gt;&#10;    &lt;ww:property/&gt;&lt;br /&gt;&#10;  &lt;/ww:iterator&gt;&#10;&lt;/ww:bean&gt;</pre>
+</div></div><p class="paragraph">本例中, 我们使用一对IteratorStatus以查看迭代中的位置.</p><div class="code"><div class="codeContent">
+<pre>&lt;h1&gt;Testing iterator status&lt;/h1&gt;&#10;&#10;&lt;ww:bean name=<span class="java&#45;quote">&quot;&#039;webwork.util.Counter&#039;&quot;</span> id=<span class="java&#45;quote">&quot;rowcounter&quot;</span>&gt;&#10;  &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;first&#039;&quot;</span> value=<span class="java&#45;quote">&quot;0&quot;</span>/&gt;&#10;  &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;last&#039;&quot;</span> value=<span class="java&#45;quote">&quot;5&quot;</span>/&gt;&#10;&lt;/ww:bean&gt;&#10;&#10;&lt;table border=<span class="java&#45;quote">&quot;1&quot;</span>&gt;&#10;  &lt;ww:iterator value=<span class="java&#45;quote">&quot;#rowcounter&quot;</span> status=<span class="java&#45;quote">&quot;rowstatus&quot;</span>&gt;&#10;  &lt;tr&gt;&#10;    &lt;ww:bean name=<span class="java&#45;quote">&quot;&#039;webwork.util.Counter&#039;&quot;</span> id=<span class="java&#45;quote">&quot;colcounter&quot;</span>&gt;&#10;    	&lt;ww:param name=<span class="java&#45;quote">&quot;&#039;first&#039;&quot;</span> value=<span class="java&#45;quote">&quot;0&quot;</span>/&gt;&#10;    	&lt;ww:param name=<span class="java&#45;quote">&quot;&#039;last&#039;&quot;</span> value=<span class="java&#45;quote">&quot;5&quot;</span>/&gt;&#10;    &lt;/ww:bean&gt;&#10;    &#10;    &lt;ww:iterator value=<span class="java&#45;quote">&quot;#colcounter&quot;</span> status=<span class="java&#45;quote">&quot;colstatus&quot;</span>&gt;&#10;     &lt;&#33;&#45;&#45;&#10;        <span class="java&#45;keyword">if</span> it is (first row) or (first column) or (last row) then&#10;        output the column number.&#10;      &#45;&#45;&gt;&#10;      &lt;ww:<span class="java&#45;keyword">if</span> test=<span class="java&#45;quote">&quot;#rowstatus.first==<span class="java&#45;keyword">true</span> || #colstatus.first==<span class="java&#45;keyword">true</span> || #rowstatus.last==<span class="java&#45;keyword">true</span>&quot;</span>&gt;&#10;        &lt;th&gt;&lt;ww:property value=<span class="java&#45;quote">&quot;#colstatus.count&quot;</span>/&gt;&lt;/th&gt;&#10;      &lt;/ww:<span class="java&#45;keyword">if</span>&gt;&#10;      &#10;      &lt;ww:<span class="java&#45;keyword">else</span>&gt;&#10;        &lt;td&gt;&lt;ww:property/&gt;&lt;/td&gt;&#10;      &lt;/ww:<span class="java&#45;keyword">else</span>&gt;&#10;      &#10;    &lt;/ww:iterator&gt;&#10;&#10;  &lt;/tr&gt;&#10;  &lt;/ww:iterator&gt;&#10;&lt;/table&gt;</pre>
+</div></div><p class="paragraph">这里我们利用IteratorStatus完成隔行加入一个额外的换行. 这在绘制隔行不同的底色的HTML表格时十分有用. 奇数和偶数属性据可使用.</p><div class="code"><div class="codeContent">
+<pre>&lt;ww:iterator status=<span class="java&#45;quote">&quot;status&quot;</span>&gt;&#10;   &lt;ww:<span class="java&#45;keyword">if</span> test=<span class="java&#45;quote">&quot;#status.odd == <span class="java&#45;keyword">true</span>&quot;</span>&gt; &lt;br /&gt; &lt;/ww:<span class="java&#45;keyword">if</span>&gt;&#10;   &lt;br /&gt;&#10;&lt;/ww:iterator&gt; &#10;&#10;Here we use the IteratorStatus determine every fourth row to insert an extra line <span class="java&#45;keyword">break</span>. &#10;&lt;ww:iterator status=<span class="java&#45;quote">&quot;status&quot;</span>&gt;&#10;  &lt;ww:<span class="java&#45;keyword">if</span> test=<span class="java&#45;quote">&quot;#status.modulus(4) == 0&quot;</span>&gt; &lt;br /&gt; &lt;/ww:<span class="java&#45;keyword">if</span>&gt;&#10;  &lt;br /&gt;&#10;&lt;/ww:iterator&gt;</pre>
+</div></div><p class="paragraph">下面列出IteratorStatus对象可用的操作:
+<ul class="star">
+<li> even : boolean - 如果当前迭代位置是偶数返回true</li>
+<li> odd : boolean - 如果当前迭代位置是奇数返回true</li>
+<li> count : int - 返回当前迭代位置的计数(从1开始)</li>
+<li> index : int - 返回当前迭代位置的编号(从0开始)</li>
+<li> first : boolean - 如果当前迭代位置是第一位时返回true</li>
+<li> last : boolean - 如果当前迭代位置是最后一位时返回true</li>
+<li> modulus(operand : int) : int - 返回当前计数(从1开始)与指定操作数的模数</li>
+</ul></p>   <a href="#Non-UITags-top" title="top on Non-UI Tags">返回</a><br/>
+<a name="Non-UITags-generator"></a>
+<h3 class="heading3"><a name="Non-UITags-%3Cfontcolor%3D%22blue%22%3E%26lt%3Bww%3Agenerator%2F%26gt%3B%3C%2Ffont%3E"><font color="blue"><b class="strong">&lt;ww:generator /&gt;</b></font></a></h3><p class="paragraph">使用给定值生成迭代器(Iterator).</p><table class="wikitable">
+<tr>
+<th>属性 </th><th>必需</th><th>描述</th>
+</tr><tr>
+<td>id</td><td>否</td><td>为元素指定唯一名称(<a href="#Non-UITags-Notes-Id" title="Notes-Id on Non-UI Tags">注意</a>).</td>
+</tr><tr>
+<td>count</td><td>否</td><td>迭代中的元素数量.</td>
+</tr><tr>
+<td>separator</td><td>否</td><td>StringTokenizer用于断字的字符.</td>
+</tr><tr>
+<td>val</td><td><b class="strong">是</b></td><td>用于生成迭代列表的字符串.</td>
+</tr>
+</table><p class="paragraph">本例中创建了两个迭代器. 一个是val=&quot;&#039;foo,bar,xyzzy&#039;&quot; 另一个是val=&quot;&#039; &#039;&quot;.</p><div class="code"><div class="codeContent">
+<pre>&lt;h1&gt;Testing append, subset, and value generators&lt;/h1&gt;&#10;&#10;&lt;table border=<span class="java&#45;quote">&quot;1&quot;</span>&gt;&#10;  &lt;ww:bean name=<span class="java&#45;quote">&quot;&#039;webwork.util.Counter&#039;&quot;</span>&gt;&#10;    &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;last&#039;&quot;</span> value=<span class="java&#45;quote">&quot;5&quot;</span>/&gt;&#10;    &lt;ww:iterator id=<span class="java&#45;quote">&quot;colcount&quot;</span>&gt;&#10;      &lt;tr&gt;&#10;&#10;        &lt;&#33;&#45;&#45;&#10;           Generator will create an Iterator that has 5 items.&#10;           The first 3 are <span class="java&#45;quote">&quot;foo,bar,xyzzy&quot;</span>. Item 4 and 5 will be&#10;           foo and bar respectively. If the count is more than&#10;           the items, you start over.&#10;        &#45;&#45;&gt;&#10;        &#10;        &lt;ww:generator val=<span class="java&#45;quote">&quot;&#039;foo,bar,xyzzy&#039;&quot;</span> separator=<span class="java&#45;quote">&quot;&#039;,&#039;&quot;</span> count=<span class="java&#45;quote">&quot;#colcount&quot;</span> id=<span class="java&#45;quote">&quot;values&quot;</span>/&gt;&#10;&#10;       &lt;&#33;&#45;&#45;&#10;           Generator will create an Iterator that has infinite&#10;            . Count=&#45;1 means indefinite.&#10;        &#45;&#45;&gt;&#10;        &lt;ww:generator val=<span class="java&#45;quote">&quot;&#039; &#039;&quot;</span> count=<span class="java&#45;quote">&quot;&#45;1&quot;</span> id=<span class="java&#45;quote">&quot;space&quot;</span>/&gt;&#10;        &lt;ww:append&gt;&#10;          &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;source&#039;&quot;</span> value=<span class="java&#45;quote">&quot;#values&quot;</span>/&gt;&#10;          &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;source&#039;&quot;</span> value=<span class="java&#45;quote">&quot;#space&quot;</span>/&gt;&#10;&#10;          &lt;ww:subset count=<span class="java&#45;quote">&quot;6&quot;</span>&gt;&#10;            &lt;ww:iterator&gt;&#10;              &lt;td width=<span class="java&#45;quote">&quot;40&quot;</span>&gt;&lt;ww:property/&gt;&lt;/td&gt;&#10;            &lt;/ww:iterator&gt;&#10;          &lt;/iterator:subset&gt;&#10;        &lt;/iterator:append&gt;&#10;      &lt;/tr&gt;&#10;    &lt;/ww:iterator&gt;&#10;  &lt;/ww:bean&gt;&#10;&lt;/table&gt;</pre>
+</div></div><p class="paragraph"><img class="rendericon" src="./icons/emoticons/warning.png" height="16" width="16" align="absmiddle" alt="" border="0"/> 该标签目前是多余的, 可以使用OGNL来完成:
+<div class="code"><div class="codeContent">
+<pre>&lt;ww:iterator value=<span class="java&#45;quote">&quot;&#123;1, 2, 3, 4&#125;&quot;</span>&gt;&#10;&lt;/ww:iterator&gt;</pre>
+</div></div></p>   <a href="#Non-UITags-top" title="top on Non-UI Tags">返回</a><br/>
+<a name="Non-UITags-append"></a>
+<h3 class="heading3"><a name="Non-UITags-%3Cfontcolor%3D%22blue%22%3E%26lt%3Bww%3Aappend%2F%26gt%3B%3C%2Ffont%3E"><font color="blue"><b class="strong">&lt;ww:append /&gt;</b></font></a></h3><p class="paragraph">Append标签用于添加一个迭代器列表. 迭代的值将被添加在一起并作为一个迭代器使用. 该迭代器的输出顺序与添加顺序一致.</p><table class="wikitable">
+<tr>
+<th>属性 </th><th>必需</th><th>描述</th>
+</tr><tr>
+<td>id</td><td>否</td><td>为元素指定唯一名称(<a href="#Non-UITags-Notes-Id" title="Notes-Id on Non-UI Tags">注意</a>).</td>
+</tr>
+</table><p class="paragraph">本例中, 添加了两个迭代器#values和#spaces. 这意味着#spaces的值在#values之后.</p><div class="code"><div class="codeContent">
+<pre>&lt;h1&gt;Testing append, subset, and value generators&lt;/h1&gt;&#10;&#10;&lt;table border=<span class="java&#45;quote">&quot;1&quot;</span>&gt;&#10;  &lt;ww:bean name=<span class="java&#45;quote">&quot;&#039;webwork.util.Counter&#039;&quot;</span>&gt;&#10;    &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;last&#039;&quot;</span> value=<span class="java&#45;quote">&quot;5&quot;</span>/&gt;&#10;    &lt;ww:iterator id=<span class="java&#45;quote">&quot;colcount&quot;</span>&gt;&#10;      &lt;tr&gt;&#10;        &lt;ww:generator val=<span class="java&#45;quote">&quot;&#039;foo,bar,xyzzy&#039;&quot;</span> separator=<span class="java&#45;quote">&quot;&#039;,&#039;&quot;</span> count=<span class="java&#45;quote">&quot;#colcount&quot;</span> id=<span class="java&#45;quote">&quot;values&quot;</span>/&gt;&#10;        &lt;ww:generator val=<span class="java&#45;quote">&quot;&#039; &#039;&quot;</span> count=<span class="java&#45;quote">&quot;&#45;1&quot;</span> id=<span class="java&#45;quote">&quot;space&quot;</span>/&gt;&#10;        &lt;ww:append&gt;&#10;          &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;source&#039;&quot;</span> value=<span class="java&#45;quote">&quot;#values&quot;</span>/&gt;&#10;          &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;source&#039;&quot;</span> value=<span class="java&#45;quote">&quot;#space&quot;</span>/&gt;&#10;&#10;          &lt;ww:subset count=<span class="java&#45;quote">&quot;6&quot;</span>&gt;&#10;            &lt;ww:iterator&gt;&#10;              &lt;td width=<span class="java&#45;quote">&quot;40&quot;</span>&gt;&lt;ww:property/&gt;&lt;/td&gt;&#10;            &lt;/ww:iterator&gt;&#10;          &lt;/iterator:subset&gt;&#10;        &lt;/iterator:append&gt;&#10;      &lt;/tr&gt;&#10;    &lt;/ww:iterator&gt;&#10;  &lt;/ww:bean&gt;&#10;&lt;/table&gt;</pre>
+</div></div><p class="paragraph"><a href="#Non-UITags-top" title="top on Non-UI Tags">返回</a><br/>
+<a name="Non-UITags-subset"></a>
+<h3 class="heading3"><a name="Non-UITags-%3Cfontcolor%3D%22blue%22%3E%26lt%3Bww%3Asubset%2F%26gt%3B%3C%2Ffont%3E"><font color="blue"><b class="strong">&lt;ww:subset /&gt;</b></font></a></h3></p>Subset标签仅迭代source的一部分. 它从起点开始并进行count指定的迭代次数. 如果你想迭代到最后, 可以将count设置为&#45;1. 如果不提供source属性, 将使用值栈的当前对象- &quot;.&quot;. <br/>
+
+<table class="wikitable">
+<tr>
+<th>属性 </th><th>必需</th><th>描述</th>
+</tr><tr>
+<td>id</td><td>否</td><td>为元素指定唯一名称(<a href="#Non-UITags-Notes-Id" title="Notes-Id on Non-UI Tags">注意</a>).</td>
+</tr><tr>
+<td>count</td><td>否</td><td>指定迭代次数.</td>
+</tr><tr>
+<td>source</td><td>否</td><td>指定本标签操作的迭代器. 可以是Enumeration, Iterator, 或Collection. </td>
+</tr><tr>
+<td>start</td><td>否</td><td>指定开始迭代的位置. </td>
+</tr>
+</table><p class="paragraph">本例中, subset标签将对值栈中当前对象的6个元素进行迭代.</p><div class="code"><div class="codeContent">
+<pre>&lt;h1&gt;Testing append, subset, and value generators&lt;/h1&gt;&#10;&#10;&lt;table border=<span class="java&#45;quote">&quot;1&quot;</span>&gt;&#10;  &lt;ww:bean name=<span class="java&#45;quote">&quot;&#039;webwork.util.Counter&#039;&quot;</span>&gt;&#10;    &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;last&#039;&quot;</span> value=<span class="java&#45;quote">&quot;5&quot;</span>/&gt;&#10;    &lt;ww:iterator id=<span class="java&#45;quote">&quot;colcount&quot;</span>&gt;&#10;    &lt;tr&gt;&#10;      &lt;ww:generator val=<span class="java&#45;quote">&quot;&#039;foo,bar,xyzzy&#039;&quot;</span> separator=<span class="java&#45;quote">&quot;&#039;,&#039;&quot;</span> count=<span class="java&#45;quote">&quot;#colcount&quot;</span> id=<span class="java&#45;quote">&quot;values&quot;</span>/&gt;&#10;      &lt;ww:generator val=<span class="java&#45;quote">&quot;&#039; &#039;&quot;</span> count=<span class="java&#45;quote">&quot;&#45;1&quot;</span> id=<span class="java&#45;quote">&quot;space&quot;</span>/&gt;&#10;      &lt;ww:append&gt;&#10;        &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;source&#039;&quot;</span> value=<span class="java&#45;quote">&quot;#values&quot;</span>/&gt;&#10;        &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;source&#039;&quot;</span> value=<span class="java&#45;quote">&quot;#space&quot;</span>/&gt;&#10;&#10;        &lt;ww:subset count=<span class="java&#45;quote">&quot;6&quot;</span>&gt;&#10;          &lt;ww:iterator&gt;&#10;            &lt;td width=<span class="java&#45;quote">&quot;40&quot;</span>&gt;&lt;ww:property/&gt;&lt;/td&gt;&#10;          &lt;/ww:iterator&gt;&#10;        &lt;/iterator:subset&gt;&#10;      &lt;/iterator:append&gt;&#10;      &lt;/tr&gt;&#10;    &lt;/ww:iterator&gt;&#10;  &lt;/ww:bean&gt;&#10;&lt;/table&gt;</pre>
+</div></div><p class="paragraph"><a href="#Non-UITags-top" title="top on Non-UI Tags">返回</a><br/>
+<a name="Non-UITags-merge"></a>
+<h3 class="heading3"><a name="Non-UITags-%3Cfontcolor%3D%22blue%22%3E%26lt%3Bww%3Amerge%2F%26gt%3B%3C%2Ffont%3E"><font color="blue"><b class="strong">&lt;ww:merge /&gt;</b></font></a></h3></p>将几个迭代器合并为一个. 该标签将这些迭代器交织在一起. If one iterator runs out, it will drop off and the others will continue weaving until there are no more values. <br/>
+
+<table class="wikitable">
+<tr>
+<th>属性 </th><th>必需</th><th>描述</th>
+</tr><tr>
+<td>id</td><td>否</td><td>为元素指定唯一名称(<a href="#Non-UITags-Notes-Id" title="Notes-Id on Non-UI Tags">注意</a>).</td>
+</tr>
+</table><p class="paragraph">本例中, #foo, #bar, and #xyzzy被合并在一起. 因此, 输出顺序是foo, bar, xyzzy until #foo #xyzzy iterators run out in which case #bar will finish.</p><div class="code"><div class="codeContent">
+<pre>Three value generators with merge and subset limits:&lt;br&gt;&#10;&lt;ww:generator val=<span class="java&#45;quote">&quot;&#039;foo&#039;&quot;</span> count=<span class="java&#45;quote">&quot;5&quot;</span> id=<span class="java&#45;quote">&quot;foo&quot;</span>/&gt;&#10;&lt;ww:generator val=<span class="java&#45;quote">&quot;&#039;bar&#039;&quot;</span> count=<span class="java&#45;quote">&quot;10&quot;</span> id=<span class="java&#45;quote">&quot;bar&quot;</span>/&gt;&#10;&lt;ww:generator val=<span class="java&#45;quote">&quot;&#039;xyzzy&#039;&quot;</span> count=<span class="java&#45;quote">&quot;5&quot;</span> id=<span class="java&#45;quote">&quot;xyzzy&quot;</span>/&gt;&#10;&lt;ww:merge&gt;&#10;  &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;source&#039;&quot;</span> value=<span class="java&#45;quote">&quot;#foo&quot;</span>/&gt;&#10;  &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;source&#039;&quot;</span> value=<span class="java&#45;quote">&quot;#bar&quot;</span>/&gt;&#10;  &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;source&#039;&quot;</span> value=<span class="java&#45;quote">&quot;#xyzzy&quot;</span>/&gt;&#10;&#10;  &lt;ww:subset count=<span class="java&#45;quote">&quot;30&quot;</span>&gt;&#10;    &lt;ww:iterator status=<span class="java&#45;quote">&quot;status&quot;</span>&gt;&#10;      &lt;ww:property value=<span class="java&#45;quote">&quot;#status.count&quot;</span>/&gt;:&lt;ww:property/&gt;&lt;br&gt;&#10;    &lt;/ww:iterator&gt;&#10;  &lt;/iterator:subset&gt;&#10;&lt;/iterator:merge&gt;</pre>
+</div></div><p class="paragraph"><a href="#Non-UITags-top" title="top on Non-UI Tags">返回</a><br/>
+<a name="Non-UITags-sort"></a>
+<h3 class="heading3"><a name="Non-UITags-%3Cfontcolor%3D%22blue%22%3E%26lt%3Bww%3Asort%2F%26gt%3B%3C%2Ffont%3E"><font color="blue"><b class="strong">&lt;ww:sort /&gt;</b></font></a></h3></p>Sort可以对一个迭代器进行排序. 它使用你提供的比较器(Comparator)进行比较, 使用Collections.sort()方法进行排序. <br/>
+
+<table class="wikitable">
+<tr>
+<th>属性 </th><th>必需</th><th>描述</th>
+</tr><tr>
+<td>id</td><td>否</td><td>为元素指定唯一名称(<a href="#Non-UITags-Notes-Id" title="Notes-Id on Non-UI Tags">注意</a>).</td>
+</tr><tr>
+<td>comparator</td><td><b class="strong">是</b></td><td>用于集合排序的Compartor. </td>
+</tr><tr>
+<td>source</td><td>否</td><td>指定本标签操作的迭代器.可以是Enumeration, Iterator, 或Collection. </td>
+</tr>
+</table><p class="paragraph">本例进行升序排序.</p><div class="code"><div class="codeContent">
+<pre>&lt;ww:bean name=<span class="java&#45;quote">&quot;&#039;webwork.util.Counter&#039;&quot;</span> id=<span class="java&#45;quote">&quot;counter&quot;</span>&gt;&#10;  &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;first&#039;&quot;</span> value=<span class="java&#45;quote">&quot;0&quot;</span>/&gt;&#10;  &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;last&#039;&quot;</span> value=<span class="java&#45;quote">&quot;5&quot;</span>/&gt;&#10;&lt;/ww:bean&gt;&#10;&#10;&lt;ww:bean name=<span class="java&#45;quote">&quot;&#039;webwork.util.Sorter&#039;&quot;</span> id=<span class="java&#45;quote">&quot;sorter&quot;</span>/&gt;&#10;&#10;Ascending:&lt;br /&gt;&#10;&lt;ww:sort source=<span class="java&#45;quote">&quot;#counter&quot;</span> comparator=<span class="java&#45;quote">&quot;#sorter.ascending&quot;</span>&gt;&#10;  &lt;ww:iterator&gt;&#10;    &lt;ww:property/&gt;&lt;br /&gt;&#10;  &lt;/ww:iterator&gt;&#10;&lt;/iterator:sort&gt;</pre>
+</div></div><p class="paragraph">本例进行降序排序.</p><div class="code"><div class="codeContent">
+<pre>&lt;ww:bean name=<span class="java&#45;quote">&quot;&#039;webwork.util.Sorter&#039;&quot;</span> id=<span class="java&#45;quote">&quot;sorter&quot;</span>/&gt;&#10;&#10;&lt;ww:bean name=<span class="java&#45;quote">&quot;&#039;webwork.util.Counter&#039;&quot;</span> id=<span class="java&#45;quote">&quot;counter&quot;</span>&gt;&#10;  &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;first&#039;&quot;</span> value=<span class="java&#45;quote">&quot;0&quot;</span>/&gt;&#10;  &lt;ww:param name=<span class="java&#45;quote">&quot;&#039;last&#039;&quot;</span> value=<span class="java&#45;quote">&quot;5&quot;</span>/&gt;&#10;&lt;/ww:bean&gt;&#10;&#10;Descending:&lt;br&gt;&#10;&lt;ww:sort source=<span class="java&#45;quote">&quot;#counter&quot;</span> comparator=<span class="java&#45;quote">&quot;#sorter.descending&quot;</span>&gt;&#10;  &lt;ww:iterator&gt;&#10;    &lt;ww:property/&gt;&lt;br&gt;&#10;  &lt;/ww:iterator&gt;&#10;&lt;/iterator:sort&gt;</pre>
+</div></div><p class="paragraph">本例进行字符串升序排序.</p><div class="code"><div class="codeContent">
+<pre>&lt;ww:bean name=<span class="java&#45;quote">&quot;&#039;webwork.util.Sorter&#039;&quot;</span> id=<span class="java&#45;quote">&quot;sorter&quot;</span>/&gt;&#10;&#10;Sorting strings:&lt;br&gt;&#10;&lt;ww:generator val=<span class="java&#45;quote">&quot;&#039;Rickard,Maurice,Hristo&#039;&quot;</span> separator=<span class="java&#45;quote">&quot;&#039;,&#039;&quot;</span> id=<span class="java&#45;quote">&quot;names&quot;</span>/&gt;&#10;&lt;ww:sort source=<span class="java&#45;quote">&quot;#names&quot;</span> comparator=<span class="java&#45;quote">&quot;#sorter.ascending&quot;</span>&gt;&#10;  &lt;ww:iterator&gt;&#10;    &lt;ww:property/&gt;&lt;br&gt;&#10;  &lt;/ww:iterator&gt;&#10;&lt;/iterator:sort&gt;</pre>
+</div></div><p class="paragraph"><h2 class="heading2"><a name="Non-UITags-Notes">注意</a></h2>
+<a name="Non-UITags-NotesId"></a><br/>
+<img class="rendericon" src="./icons/emoticons/information.png" height="16" width="16" align="absmiddle" alt="" border="0"/>&#160;<b class="strong">Id</b> 属性&quot;id&quot;为元素指定名字. 该名称在整个文档中必须是唯一的. 该属性是由TagSupport提供的, 因此永远是一个字符串.         不需要像其他WebWork标签那样使用字符串文法(string literal); 也就是说 - id=&quot;&#039;age&#039;&quot;.         你可以直接使用id=&quot;age&quot;.</p><a name="Non-UITags-NotesScope"></a><br/>
+<img class="rendericon" src="./icons/emoticons/information.png" height="16" width="16" align="absmiddle" alt="" border="0"/> 必需注意的是所有将某些值保存在值栈的标签(如i18n或bean)都将在标签结束时从值栈中将它们删除.<br/>
+因此, 如果你用bean标签实例化一个bean(&lt;ww:bean name=&quot;&#039;br.univap.fcc.sgpw.util.FormattersHelper&#039;&quot;&gt;), 该bean仅在&lt;/ww:bean&gt;标签之前才能在值栈中访问.
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

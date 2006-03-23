@@ -1,0 +1,41 @@
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+
+<!-- START SNIPPET: xworkSample -->
+
+<xwork>
+    <include file="webwork-default.xml"/>
+
+    <package name="person" extends="webwork-default" namespace="/person">
+        <action name="listPeople" class="com.opensymphony.webwork.showcase.person.ListPeople">
+            <interceptor-ref name="validationWorkflowStack"/>
+            <result type="freemarker">listPeople.ftl</result>
+        </action>
+
+        <!-- our JasperReports example -->
+        <action name="jasperList" class="com.opensymphony.webwork.showcase.jasper.JasperAction">
+            <result name="success" type="jasper">
+                <param name="location">/jasper/sample_report.jasper</param>
+                <param name="dataSource">people</param>
+                <param name="documentName">peoplereport</param>
+            </result>
+        </action>
+
+
+        <action name="newPerson" class="com.opensymphony.webwork.showcase.person.CreatePerson">
+            <result type="redirect">listPeople.action</result>
+            <result name="input" type="freemarker">newPerson.ftl</result>
+        </action>
+
+        <action name="editPerson" class="com.opensymphony.webwork.showcase.person.EditPerson">
+            <result>editPeople.jsp</result>
+        </action>
+
+        <action name="doEditPerson" class="com.opensymphony.webwork.showcase.person.EditPerson" method="save">
+            <result name="error">editPeople.jsp</result>
+            <result type="redirect">listPeople.action</result>
+        </action>
+    </package>
+</xwork>
+
+<!--  END SNIPPET: xworkSample -->
+

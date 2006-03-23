@@ -1,0 +1,147 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Validations Annotation
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="ValidationsAnnotation-ValidationsAnnotation"></a>Validations Annotation</h1>
+
+<p><p>If you want to use several annotations of the same type, these annotation must be nested within the @Validations() annotation.</p></p>
+
+<h2><a name="ValidationsAnnotation-Usage"></a>Usage</h2>
+
+<p><p/>Used at METHOD level.</p>
+
+<h2><a name="ValidationsAnnotation-Parameters"></a>Parameters</h2>
+
+<p><table class='confluenceTable'></p>
+
+<p><tr>
+<th class='confluenceTh'> Parameter </th>
+<th class='confluenceTh'> Required </th>
+<th class='confluenceTh'> Notes </th>
+</tr>
+<tr>
+<td class='confluenceTd'> requiredFields </td>
+<td class='confluenceTd'> no </td></p>
+
+<p><td class='confluenceTd'> Add list of RequiredFieldValidators  </td>
+</tr>
+<tr>
+<td class='confluenceTd'> customValidators </td>
+<td class='confluenceTd'> no </td>
+<td class='confluenceTd'> Add list of CustomValidators </td>
+</tr>
+<tr>
+<td class='confluenceTd'> conversionErrorFields </td></p>
+
+<p><td class='confluenceTd'> no </td>
+<td class='confluenceTd'> Add list of ConversionErrorFieldValidators </td>
+</tr>
+<tr>
+<td class='confluenceTd'> dateRangeFields </td>
+<td class='confluenceTd'> no </td>
+<td class='confluenceTd'> Add list of DateRangeFieldValidators </td>
+</tr>
+<tr>
+<td class='confluenceTd'> emails </td>
+<td class='confluenceTd'> no </td>
+<td class='confluenceTd'> Add list of EmailValidators </td>
+</tr>
+<tr>
+<td class='confluenceTd'> fieldExpressions </td>
+<td class='confluenceTd'> no </td>
+<td class='confluenceTd'> Add list of FieldExpressionValidators </td>
+</tr>
+<tr>
+<td class='confluenceTd'> intRangeFields </td>
+<td class='confluenceTd'> no </td>
+<td class='confluenceTd'> Add list of IntRangeFieldValidators </td>
+</tr>
+<tr>
+<td class='confluenceTd'> requiredFields </td>
+<td class='confluenceTd'> no </td>
+<td class='confluenceTd'> Add list of RequiredFieldValidators </td>
+</tr>
+<tr>
+<td class='confluenceTd'> requiredStrings </td>
+<td class='confluenceTd'> no </td>
+<td class='confluenceTd'> Add list of RequiredStringValidators </td>
+</tr>
+<tr>
+<td class='confluenceTd'> stringLengthFields </td>
+<td class='confluenceTd'> no </td>
+<td class='confluenceTd'> Add list of StringLengthFieldValidators </td>
+</tr>
+<tr>
+<td class='confluenceTd'> urls </td>
+<td class='confluenceTd'> no </td>
+<td class='confluenceTd'> Add list of UrlValidators </td>
+</tr>
+<tr>
+<td class='confluenceTd'> visitorFields </td>
+<td class='confluenceTd'> no </td>
+<td class='confluenceTd'> Add list of VisitorFieldValidators </td>
+</tr>
+<tr>
+<td class='confluenceTd'> stringRegexs </td></p>
+
+<p><td class='confluenceTd'> no </td>
+<td class='confluenceTd'> Add list of StringRegexValidator </td>
+</tr>
+<tr>
+<td class='confluenceTd'> regexFields </td>
+<td class='confluenceTd'> no </td>
+<td class='confluenceTd'> Add list of RegexFieldValidator </td>
+</tr>
+<tr>
+<td class='confluenceTd'> expressions </td>
+<td class='confluenceTd'> no </td>
+<td class='confluenceTd'> Add list of ExpressionValidator </td>
+</tr>
+</table></p>
+
+<h2><a name="ValidationsAnnotation-Examples"></a>Examples</h2>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">@Validations(
+          requiredFields =
+                  {@RequiredFieldValidator(type = ValidatorType.SIMPLE, fieldName = <span class="code-quote">"customfield"</span>, message = <span class="code-quote">"You must enter a value <span class="code-keyword">for</span> field."</span>)},
+          requiredStrings =
+                  {@RequiredStringValidator(type = ValidatorType.SIMPLE, fieldName = <span class="code-quote">"stringisrequired"</span>, message = <span class="code-quote">"You must enter a value <span class="code-keyword">for</span> string."</span>)},
+          emails =
+                  { @EmailValidator(type = ValidatorType.SIMPLE, fieldName = <span class="code-quote">"emailaddress"</span>, message = <span class="code-quote">"You must enter a value <span class="code-keyword">for</span> email."</span>)},
+          urls =
+                  { @UrlValidator(type = ValidatorType.SIMPLE, fieldName = <span class="code-quote">"hreflocation"</span>, message = <span class="code-quote">"You must enter a value <span class="code-keyword">for</span> email."</span>)},
+          stringLengthFields =
+                  {@StringLengthFieldValidator(type = ValidatorType.SIMPLE, trim = <span class="code-keyword">true</span>, minLength=<span class="code-quote">"10"</span> , maxLength = <span class="code-quote">"12"</span>, fieldName = <span class="code-quote">"needstringlength"</span>, message = <span class="code-quote">"You must enter a stringlength."</span>)},
+          intRangeFields =
+                  { @IntRangeFieldValidator(type = ValidatorType.SIMPLE, fieldName = <span class="code-quote">"intfield"</span>, min = <span class="code-quote">"6"</span>, max = <span class="code-quote">"10"</span>, message = <span class="code-quote">"bar must be between ${min} and ${max}, current value is ${bar}."</span>)},
+          dateRangeFields =
+                  {@DateRangeFieldValidator(type = ValidatorType.SIMPLE, fieldName = <span class="code-quote">"datefield"</span>, min = <span class="code-quote">"-1"</span>, max = <span class="code-quote">"99"</span>, message = <span class="code-quote">"bar must be between ${min} and ${max}, current value is ${bar}."</span>)},
+          expressions = {
+              @ExpressionValidator(expression = <span class="code-quote">"foo &gt; 1"</span>, message = <span class="code-quote">"Foo must be greater than Bar 1. Foo = ${foo}, Bar = ${bar}."</span>),
+              @ExpressionValidator(expression = <span class="code-quote">"foo &gt; 2"</span>, message = <span class="code-quote">"Foo must be greater than Bar 2. Foo = ${foo}, Bar = ${bar}."</span>),
+              @ExpressionValidator(expression = <span class="code-quote">"foo &gt; 3"</span>, message = <span class="code-quote">"Foo must be greater than Bar 3. Foo = ${foo}, Bar = ${bar}."</span>),
+              @ExpressionValidator(expression = <span class="code-quote">"foo &gt; 4"</span>, message = <span class="code-quote">"Foo must be greater than Bar 4. Foo = ${foo}, Bar = ${bar}."</span>),
+              @ExpressionValidator(expression = <span class="code-quote">"foo &gt; 5"</span>, message = <span class="code-quote">"Foo must be greater than Bar 5. Foo = ${foo}, Bar = ${bar}."</span>)
+  }
+  )
+  <span class="code-keyword">public</span> <span class="code-object">String</span> execute() <span class="code-keyword">throws</span> Exception {
+      <span class="code-keyword">return</span> SUCCESS;
+  }</pre>
+</div></div>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

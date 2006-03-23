@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <title>WebWork - 
+        fieldexpression validator
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="fieldexpressionvalidator-Description"></a>Description</h1>
+<p>Validates a field using an OGNL expression.</p>
+
+<h1><a name="fieldexpressionvalidator-Parameters"></a>Parameters</h1>
+<p><ul>
+   <li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
+   <li>expression - The Ognl expression (must evaluate to a boolean) which is to be evalidated the stack</li>
+</ul></p>
+
+
+<h1><a name="fieldexpressionvalidator-Examples"></a>Examples</h1>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag"><span class="code-comment">&lt;!-- Plain Validator Syntax --&gt;</span></span>
+<span class="code-tag">&lt;validators&gt;</span>
+    <span class="code-tag"><span class="code-comment">&lt;!-- Plain Validator Syntax --&gt;</span></span>
+    <span class="code-tag">&lt;validator type=<span class="code-quote">"fieldexpression"</span>&gt;</span>
+       <span class="code-tag">&lt;param name=<span class="code-quote">"fieldName"</span>&gt;</span>myField<span class="code-tag">&lt;/param&gt;</span>
+       <span class="code-tag">&lt;param name=<span class="code-quote">"expression"</span>&gt;</span><span class="code-tag">&lt;![CDATA[#myCreditLimit &gt;</span> #myGirfriendCreditLimit]]&gt;<span class="code-tag">&lt;/param&gt;</span>
+       <span class="code-tag">&lt;message&gt;</span>My credit limit should be MORE than my girlfriend<span class="code-tag">&lt;/message&gt;</span>
+    <span class="code-tag">&lt;validator&gt;</span>
+    
+    <span class="code-tag"><span class="code-comment">&lt;!-- Field Validator Syntax --&gt;</span></span>
+    <span class="code-tag">&lt;field name=<span class="code-quote">"myField"</span>&gt;</span>
+        <span class="code-tag">&lt;field-validator type=<span class="code-quote">"fieldexpression"</span>&gt;</span>
+            <span class="code-tag">&lt;param name=<span class="code-quote">"expression"</span>&gt;</span><span class="code-tag">&lt;![CDATA[#myCreditLimit &gt;</span> #myGirfriendCreditLimit]]&gt;<span class="code-tag">&lt;/param&gt;</span>
+            <span class="code-tag">&lt;message&gt;</span>My credit limit should be MORE than my girlfriend<span class="code-tag">&lt;/message&gt;</span>
+        <span class="code-tag">&lt;/field-validator&gt;</span>
+    <span class="code-tag">&lt;/field&gt;</span>
+    
+<span class="code-tag">&lt;/vaidators&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

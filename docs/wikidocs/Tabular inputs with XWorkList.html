@@ -1,0 +1,141 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Tabular inputs with XWorkList
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>Sometimes you need a way to enter tabular data such as list of quantity for products in a shopping cart, marks from a list of examination candiates, etc.  If you just have one input value per line item, you can use a HashMap to store the value.  This can be expanded to support multiple input values by having multiple HashMap.  This describes a number of alternatives using some of more advanced features of WebWork.  Assume you want to capture the quantity and a gift note for a list of products in a shopping cart (i.e Amazon).</p>
+
+<h2><a name="TabularinputswithXWorkList-1.Whenthenumberoflineitemsisknown"></a>1. When the number of line items is known</h2>
+
+<p>If you are using JSP:<br/>
+the cart.jsp file in altSyntax</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;ww:iterator value=<span class="code-quote">"cart.items"</span>&gt;
+  &lt;ww:hidden name=<span class="code-quote">"cart.items[%{#rowstatus.index}].productId"</span> value=<span class="code-quote">"%{productId}"</span>&gt;
+  &lt;ww:textfield name=<span class="code-quote">"cart.items[%{#rowstatus.index}].qty"</span> value=<span class="code-quote">"%{qty}"</span> /&gt;
+  &lt;ww:textfield name=<span class="code-quote">"cart.items[%{#rowstatus.index}].note"</span> value=<span class="code-quote">"%{note}"</span> /&gt;
+&lt;/ww:iterator&gt;</pre>
+</div></div>
+
+<p>the cart.jsp file (non altSyntax)</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;ww:iterator value=<span class="code-quote">"cart.items"</span>&gt;
+  &lt;ww:hidden name=<span class="code-quote">"'cart.items[' + #rowstatus.index + '].productId'"</span> value=<span class="code-quote">"productId"</span>&gt;
+  &lt;ww:textfield name=<span class="code-quote">"'cart.items[' + #rowstatus.index + '].qty'"</span> value=<span class="code-quote">"qty"</span> /&gt;
+  &lt;ww:textfield name=<span class="code-quote">"'cart.items[' + #rowstatus.index + '].note'"</span> value=<span class="code-quote">"note"</span> /&gt;
+&lt;/ww:iterator&gt;</pre>
+</div></div>
+
+<p>Alternatively, if you use Velocity as your view technology of choice:<br/>
+the cart.vm file</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">#foreach ( $item in $cart.items )
+  #set($index = $velocityCount - 1)
+  &lt;input type=<span class="code-quote">"hidden"</span> name=<span class="code-quote">"cart.items[$index].productId"</span> value=<span class="code-quote">"$item.productId"</span>&gt;
+  &lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"cart.items[$index].qty"</span> value=<span class="code-quote">"$item.qty"</span>&gt;
+  &lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"cart.items[$index].note"</span> value=<span class="code-quote">"$item.note"</span>&gt;
+#end</pre>
+</div></div>
+
+<p>the UpdateCartAction.class</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> class UpdateCartAction <span class="code-keyword">extends</span> ActionSupport {
+
+	<span class="code-keyword">public</span> Cart getCart() {
+                <span class="code-comment">// Lazy initialization
+</span>                Cart result = ActionContext.getContext().getSession.get(<span class="code-quote">"cart.key"</span>);
+                <span class="code-keyword">if</span> ( result == <span class="code-keyword">null</span> ) {
+                        result = <span class="code-keyword">new</span> Cart();
+                        ActionContext.getContext().getSession.put(<span class="code-quote">"cart.key"</span>, result);
+                }
+		<span class="code-keyword">return</span> result;
+	}
+
+	<span class="code-keyword">public</span> <span class="code-object">String</span> execute() <span class="code-keyword">throws</span> Exception {
+                <span class="code-comment">// Just ensuring our cart is initialized...
+</span>		Cart cart = getCart();
+
+		<span class="code-comment">// loop through a
+</span>	}
+}</pre>
+</div></div>
+
+<p>the Cart.class</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> class Cart <span class="code-keyword">implements</span> Serializable {
+  <span class="code-keyword">private</span> List items = <span class="code-keyword">new</span> ArrayList();
+
+  <span class="code-keyword">public</span> List getItems() {
+    <span class="code-keyword">return</span> items;
+  } 
+
+  <span class="code-keyword">public</span> void addItem(CartItem item) {
+      ...
+  }
+}</pre>
+</div></div>
+
+<p>the CartItem.class</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> class CartItem <span class="code-keyword">implements</span> Serializable {
+  <span class="code-keyword">private</span> <span class="code-object">int</span> qty;
+  <span class="code-keyword">private</span> <span class="code-object">int</span> productId;
+  <span class="code-keyword">private</span> <span class="code-object">String</span> note;
+
+  <span class="code-comment">// getters/setters...
+</span>}</pre>
+</div></div>
+
+
+<h3><a name="TabularinputswithXWorkList-Explanation"></a>Explanation</h3>
+
+<p>The resulting html code is rendered as </p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;input type=<span class="code-quote">"hidden"</span> name=<span class="code-quote">"cart.items[0].productId"</span> value=<span class="code-quote">"1"</span>&gt;
+&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"cart.items[0].qty"</span> value=<span class="code-quote">"2"</span>&gt;
+&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"cart.items[0].note"</span> value=<span class="code-quote">"This is a fun book!"</span>&gt;
+
+&lt;input type=<span class="code-quote">"hidden"</span> name=<span class="code-quote">"cart.items[1].productId"</span> value=<span class="code-quote">"2"</span>&gt;
+&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"cart.items[1].qty"</span> value=<span class="code-quote">"2"</span>&gt;
+&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"cart.items[1].note"</span> value=<span class="code-quote">"You love <span class="code-keyword">this</span> one"</span>&gt;
+
+&lt;input type=<span class="code-quote">"hidden"</span> name=<span class="code-quote">"cart.items[2].productId"</span> value=<span class="code-quote">"3"</span>&gt;
+&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"cart.items[2].qty"</span> value=<span class="code-quote">"$item.qty"</span>&gt;
+&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"cart.items[2].note"</span> value=""&gt;</pre>
+</div></div>
+
+<p>Webwork will populate all the entries in Cart with the correct values.<br/>
+In depth, the ParametersInterceptor would apply the form results to our model, leading to the call similar like</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">((CartItem) updateCartAction.getCart().getItems().get(0)).setProductId(1);</pre>
+</div></div>
+<p>for the first shown line in the rendered result.</p>
+
+<h2><a name="TabularinputswithXWorkList-2.Whenthenumberoflineitemsisunknown"></a>2. When the number of line items is unknown</h2>
+
+<p>For example, you want to allow the user to enter any number of ISBN, quanty and a note.  You can replace ArrayList with XWorkList, which will automatically create new items if the index is greater than the size of the list.</p>
+
+<h2><a name="TabularinputswithXWorkList-3.UseTypeConversion"></a>3. Use Type Conversion</h2>
+
+<p>If you want more advanced way to do this, check out <a href="Type Conversion.html" title="Type Conversion">Type Conversion</a> documentation.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

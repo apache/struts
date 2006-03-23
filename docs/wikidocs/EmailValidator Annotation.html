@@ -1,0 +1,74 @@
+<html>
+    <head>
+        <title>WebWork - 
+        EmailValidator Annotation
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="EmailValidatorAnnotation-EmailValidatorAnnotation"></a>EmailValidator Annotation</h1>
+
+<p>This validator checks that a field is a valid e-mail address if it contains a non-empty String.</p>
+
+<h2><a name="EmailValidatorAnnotation-Usage"></a>Usage</h2>
+
+<p><p/>The annotation must be applied at method level.</p>
+
+<h2><a name="EmailValidatorAnnotation-Parameters"></a>Parameters</h2>
+
+<p><table class='confluenceTable'>
+<tr>
+<th class='confluenceTh'> Parameter </th>
+<th class='confluenceTh'> Required </th>
+<th class='confluenceTh'> Default </th>
+<th class='confluenceTh'> Notes </th>
+</tr>
+<tr>
+<td class='confluenceTd'>message</td>
+<td class='confluenceTd'>yes</td>
+<td class='confluenceTd'>&nbsp;</td>
+<td class='confluenceTd'>field error message</td>
+</tr>
+<tr>
+<td class='confluenceTd'>key</td>
+<td class='confluenceTd'>no</td>
+<td class='confluenceTd'>&nbsp;</td>
+<td class='confluenceTd'>i18n key from language specific properties file.</td>
+</tr>
+<tr>
+<td class='confluenceTd'>fieldName</td>
+<td class='confluenceTd'>no</td>
+<td class='confluenceTd'>&nbsp;</td>
+<td class='confluenceTd'>&nbsp;</td>
+</tr>
+<tr>
+<td class='confluenceTd'>shortCircuit</td>
+<td class='confluenceTd'>no</td>
+<td class='confluenceTd'>false</td>
+<td class='confluenceTd'>If this validator should be used as shortCircuit.</td>
+</tr>
+<tr>
+<td class='confluenceTd'>type</td>
+<td class='confluenceTd'>yes</td>
+<td class='confluenceTd'>ValidatorType.FIELD</td>
+<td class='confluenceTd'>Enum value from ValidatorType. Either FIELD or SIMPLE can be used here.</td>
+</tr>
+</table></p>
+
+<h2><a name="EmailValidatorAnnotation-Examples"></a>Examples</h2>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">@EmailValidator(message = <span class="code-quote">"Default message"</span>, key = <span class="code-quote">"i18n.key"</span>, shortCircuit = <span class="code-keyword">true</span>)</pre>
+</div></div>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

@@ -1,0 +1,293 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Style Guide
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>This page contains my suggestions on documentation style. I will <em>try</em> to demonstrate my suggestions by writing a document that justifies them. I'm an advocate of <b>learning by example</b>. As Mark Twain said, <cite>"Few things are harder to put up with than the annoyance of a good example"</cite> (<a href="http://www.gunnar.cc/quotes.html" title="Visit page outside Confluence">Samuel Langhornne Clemens (1835-1910)</a>).</p>
+
+<h2><a name="StyleGuide-PullingcontentfromCVS"></a>Pulling content from CVS</h2>
+
+<p>A large part of the WebWork 2.2 documentation effort is to make documentation easier to handle in the future. At on the onset of this effort, everyone agreed that pulling as much source code, examples, and documentation from source control would help greatly. As such, we've installed a modified version of the <b>snippet macro</b> in the OpenSymphony wiki. </p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='infoMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/information.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Important!</b><br />Whenever you write documentation, ask yourself if you can somehow have this documentation checked in to source control in the form of example code or JavaDocs. This will make the documentation much more likely to be useful for years to come.</td></tr></table>
+
+<p>The standard way to use it is to do the following:</p>
+
+<p>{snippet:id=description|javadoc=true|url=com.opensymphony.xwork.interceptor.LoggingInterceptor}</p>
+
+<p>or</p>
+
+<p>{snippet:id=example|javadoc=true|lang=xml|url=com.opensymphony.xwork.interceptor.LoggingInterceptor}</p>
+
+<p>or</p>
+
+<p>{snippet:id=sitegraph-usage|lang=none|url=webwork/src/java/com/opensymphony/webwork/sitegraph/sitegraph-usage.txt}</p>
+
+<p>or</p>
+
+<p>{snippet:id=ajax-validation-example|lang=xml|url=webwork/webapps/ajax/src/webapp/lesson1/example.jsp}</p>
+
+<p>Where:</p>
+
+<ul>
+	<li>id is the <em>name</em> of the snippet (*required).</li>
+	<li>url is the URL where the snippet can be found (<b>required</b>).</li>
+	<li>lang is the language that the code block should be required as. If this snippet is simply text, don't include this parameter and the content will be printed outside of a code block.</li>
+	<li>javadoc indicates if the content is within a JavaDoc block. If this is set to true, then the preceeding "* " (asterisk-space) characters will be stripped before printing the content out. Also, the content is assumed to the HTML escaped already and therefore won't be escaped again.</li>
+</ul>
+
+
+<p>All snippets are marked off by the pattern <b>START SNIPPET: XXX</b> and <b>END SNIPPET: XXX</b> where <b>XXX</b> is the <em>name</em> of the snippet that is assigned in the id attribute of the macro. The URL is typically a location that points to the project's source control contents.</p>
+
+<h3><a name="StyleGuide-AnoteaboutURLs"></a>A note about URLs</h3>
+
+<p>As you probably noticed in the examples, there are several formats that the URL patterns can be in. A fully-qualified URL is always allowed, though that is often not practical. We've customized the macro to be a bit more intelligent with the URL attribute:</p>
+
+<ul>
+	<li>If the URL appears to be a class, we assume it lives in <em>src/java</em>, convert all the dots to slashes, and then append <em>.java</em> to it.</li>
+	<li>If the URL doesn't start with "http", then it is assumed to start with _<a href="https://opensymphony.dev.java.net/source/browse/*checkout*/_" title="Visit page outside Confluence">&#104;ttps://opensymphony.dev.java.net/source/browse/*checkout*/_</a>, as you saw in the third example.</li>
+</ul>
+
+
+<p>Note that the short-hand class notation will only work for top-level projects (WebWork, OSWorkflow, etc) and not any sub-projects within the projects, such as example webapps in WebWork. If you wish to include content from a class in a sub-project, you'll need to list out the full path, like in the fourth example.</p>
+
+<h3><a name="StyleGuide-Anoteaboutsnippetmarkers"></a>A note about snippet markers</h3>
+
+<p>All snippet markers should be commented out if possible. How they are commented out depends on where the snippet is. If the snippet is for HTML or XML, you can do:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag"><span class="code-comment">&lt;!-- START SNIPPET: xxx --&gt;</span></span>
+...
+<span class="code-tag"><span class="code-comment">&lt;!-- END SNIPPET: xxx --&gt;</span></span></pre>
+</div></div>
+
+<p>If the snippet is in Java code, you can do:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">if</span> (<span class="code-keyword">true</span> != <span class="code-keyword">false</span>) {
+    <span class="code-comment">// START SNIPPET: xxx
+</span>    <span class="code-object">System</span>.out.println(<span class="code-quote">"This is some silly code!"</span>);
+    <span class="code-comment">// END SNIPPET: xxx
+</span>}</pre>
+</div></div>
+
+<p>If the snippet is found in JavaDocs, you should use HTML comments as they won't render in the JavaDocs. For XML examples in JavaDocs (see <a href="Timer Interceptor.html" title="Timer Interceptor">Timer Interceptor</a> for an example), it can be a bit tricky. This is because in your JavaDocs you want to use the &lt;pre&gt; tag, but you don't want the wiki to display it. A good technique is to embed the snippet markers <em>inside</em> the &lt;pre&gt; tag:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-none">* &lt;pre&gt;
+ * &lt;!-- START SNIPPET: example --&gt;
+ * &amp;lt;!-- records only the action's execution time --&amp;gt;
+ * &amp;lt;action name="someAction" class="com.examples.SomeAction"&amp;gt;
+ *     &amp;lt;interceptor-ref name="completeStack"/&amp;gt;
+ *     &amp;lt;interceptor-ref name="timer"/&amp;gt;
+ *     &amp;lt;result name="success"&amp;gt;good_result.ftl&amp;lt;/result&amp;gt;
+ * &amp;lt;/action&amp;gt;
+ * &lt;!-- END SNIPPET: example --&gt;</pre>
+</div></div>
+
+<h2><a name="StyleGuide-AboutHeadings"></a>About Headings</h2>
+
+<p><img class="emoticon" src="./icons/emoticons/star_yellow.gif" height="16" width="16" align="absmiddle" alt="" border="0"/> This section refers to: <a href="http://wiki.opensymphony.com/renderer/notationhelp.action?section=headings" title="Visit page outside Confluence">Notation Guide >> Headings</a>.</p>
+
+<p>Headings should definetly be used. This sections tries to justify why. </p>
+
+<p>First rule: don't use "h1" at the top of each page. The page title serves as the "top level header" already, so there is no need to duplicate that information again. Also, when the docs end up the website, SiteMesh will place a top level "h1" element using the page title.</p>
+
+<h3><a name="StyleGuide-Documentsections"></a>Document sections</h3>
+
+<p>Headings can help you divide your document in sections, subsections, sub-subsections and so forth.</p>
+
+<h4><a name="StyleGuide-Advantages"></a>Advantages</h4>
+
+<p>Your document becomes more organized.</p>
+
+<h4><a name="StyleGuide-Disadvantages"></a>Disadvantages</h4>
+
+<p>If you exaggerate you could fragment your text too much. </p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='warningMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/forbidden.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Warning</b><br />
+<p>This is definetly an example of this, since this whole "Headings" section has such few paragraphs that it really should have been written in just one section.</p>
+
+<p><em>Aren't warning boxes neat?</em></p></td></tr></table>
+
+
+<h3><a name="StyleGuide-Headingscapitalization"></a>Headings capitalization</h3>
+
+<p>I think headers <tt>h1</tt> and <tt>h2</tt> should have all words capitalized (such as "Vitor's Suggestions on Documentation Style" and "About Headings"), but <tt>h3</tt> and smaller would have just the first word (such as "Headings capitalization"). Except, of course, for words that are always capitalized (eg. "Understanding WebWork's importance to OpenSymphony and its community"). This gives even more importance to bigger headings.</p>
+
+
+<h3><a name="StyleGuide-Avoidskippingheaders"></a>Avoid skipping headers</h3>
+
+<p>I mean, avoid going from a <tt>h1</tt> directly to a <tt>h3</tt> without using <tt>h2</tt> before. This would be like havin a section 1.1.1 directly below section 1, without the existance of section 1.1.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='tipMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/check.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Handy Hint</b><br />
+<p>One thing that I like to do is leave <b>five</b> blank lines before <tt>h1</tt> headings, <b>three</b> before <tt>h2</tt>'s and <b>two</b> before <tt>h3</tt>'s. Also, in Portuguese (I'm Brazilian), we write small numbers using their names instead of numeric representation (<b>five</b> instead of <b>5</b>). I don't know if this is also a good practice in written english.</p>
+
+<p><em>Aren't tip boxes neat?</em></p></td></tr></table>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Be Careful</b><br />
+<p>If you find yourself writting too many <tt>h1</tt> headings in a single page, consider breaking the page into child pages and linking to them.</p>
+
+<p><em>Aren't note boxes neat?</em></p></td></tr></table>
+
+
+
+<h2><a name="StyleGuide-MoreonTextEffects"></a>More on Text Effects</h2>
+
+<p><img class="emoticon" src="./icons/emoticons/star_yellow.gif" height="16" width="16" align="absmiddle" alt="" border="0"/> This section refers to: <a href="http://wiki.opensymphony.com/renderer/notationhelp.action?section=texteffects" title="Visit page outside Confluence">Notation Guide >> Text Effects</a>.</p>
+
+<p>Text effects should be largely used, although I have some questions on some of them. <b>Strong</b>, <em>emphasis</em>, and <u>inserted</u> can be used to denote importante parts of a sentence. But I really think <u>inserted</u> should have been called <u>underline</u> in <a href="http://wiki.opensymphony.com/renderer/notationhelp.action" title="Visit page outside Confluence">the notation guide</a>. I don't see the point of using <del>deleted</del>, since when someone changes a page and deletes stuff, <a href="http://confluence.atlassian.com" title="Visit page outside Confluence">Confluence</a> keeps the old versions in history.</p>
+
+<p>I can't think of a situation in WebWork's doc for <sup>superscript</sup> and <sub>subscript</sub>, but it doesn't hurt to mention them. I can't say anything about %span% because I frankly don't know what it does. <tt>Monospaced</tt> is heavily used, for instance, to refer to <tt>webwork-default.xml</tt> file or items in source code examples: <tt>&lt;xmltag /&gt;</tt>, <tt>JavaClass</tt> or <tt>javaVariable</tt>.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='infoMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/information.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Boxes vs. Block Quotes</b><br />
+<p>I think boxes and block quotes do the same job, but boxes are better. Therefore, I suggest we don't use block quotes.</p>
+
+<p><em>Aren't info boxes neat? Aren't them all neat? By now you may have realized I think we should definetly use them...</em></p></td></tr></table>
+
+<p><font color="red">Colors should be used in very specific cases</font>, or else <font color="blue">each documentation writers would color his/her pages the way he/she thinks it's better, and it would look like a mess</font>. One such specific case in which colors can help is when you want them to work as tags or captions. For (a lame) example, in this paragraph, <font color="red">guidelines are in red</font> and <font color="blue">justifications are in blue</font>. Yes, it's a really really lame example, I know. <img class="emoticon" src="./icons/emoticons/smile.gif" height="20" width="20" align="absmiddle" alt="" border="0"/></p>
+
+
+
+<h2><a name="StyleGuide-TextBreaks"></a>Text Breaks</h2>
+
+<p><img class="emoticon" src="./icons/emoticons/star_yellow.gif" height="16" width="16" align="absmiddle" alt="" border="0"/> This section refers to: <a href="http://wiki.opensymphony.com/renderer/notationhelp.action?section=breaks" title="Visit page outside Confluence">Notation Guide >> Text Breaks</a>.</p>
+
+<p>Text breaks shouldn't be used. If you'd like paragraphs or headings to have more spacing (before or after), the style sheet should be changed, not the contents. Patrick explained this a long time ago. Other stuff in this section (paragraphs, horizontal ruler, &#8212; symbol and &#8211; symbol) can be used when necessary.</p>
+
+
+
+<h2><a name="StyleGuide-Links"></a>Links</h2>
+
+<p><img class="emoticon" src="./icons/emoticons/star_yellow.gif" height="16" width="16" align="absmiddle" alt="" border="0"/> This section refers to: <a href="http://wiki.opensymphony.com/renderer/notationhelp.action?section=links" title="Visit page outside Confluence">Notation Guide >> Links</a>.</p>
+
+<p>All types of links can and should be used. I already used a few in this document. Just watch out for links to non-existing pages when writing on the official documentation.</p>
+
+
+
+<h2><a name="StyleGuide-Lists"></a>Lists</h2>
+
+<p><img class="emoticon" src="./icons/emoticons/star_yellow.gif" height="16" width="16" align="absmiddle" alt="" border="0"/> This section refers to: <a href="http://wiki.opensymphony.com/renderer/notationhelp.action?section=lists" title="Visit page outside Confluence">Notation Guide >> Lists</a>.</p>
+
+<p>Lists can be used for many purposes. Every time we list some things that are in order, ordered lists are used. If they don't have a specific order, unordered lists are the case. List should be nested if needed for a better organization. Unordered lists should be created only with the <tt>*</tt> (star) notation only, so all pages use the same style of bullet.</p>
+
+<ul>
+	<li>This is an unordered list in star notation;</li>
+	<li>Items can have sub-items
+	<ul>
+		<li>That can have sub-items
+		<ul>
+			<li>That can have sub-items...
+			<ul>
+				<li>What is the limit?</li>
+			</ul>
+			</li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+	<li>Mixing ordered and unordered lists is possible:
+	<ol>
+		<li>One;</li>
+		<li>Two;</li>
+		<li>Three.</li>
+	</ol>
+	</li>
+</ul>
+
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='tipMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/check.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">List indentation</b><br />
+<p>Use tabs to indent nested lists. This way your page's markup is more readable and easier to maintain.</p></td></tr></table>
+
+
+
+<h2><a name="StyleGuide-ImagesandIcons"></a>Images and Icons</h2>
+
+<p><img class="emoticon" src="./icons/emoticons/star_yellow.gif" height="16" width="16" align="absmiddle" alt="" border="0"/> This section refers to: <a href="http://wiki.opensymphony.com/renderer/notationhelp.action?section=images" title="Visit page outside Confluence">Notation Guide >> Images</a> and <a href="http://wiki.opensymphony.com/renderer/notationhelp.action?section=miscellaneous" title="Visit page outside Confluence">Notation Guide >> Misc</a>.</p>
+
+<p>External images should be used only when strictly necessary (meaning, don't use images as list bullets or box icons). Also, try to use only images that are very unlikely to be removed from its current URL, to reduce document maintenance. Pay attention on copyright issues too! Attached images are less prone to become missing links, however, we should not clutter the documentation with unnecessary attachments and copyrights are also a issue here.</p>
+
+<p>Example: <span class="error">Cannot resolve external resource into attachment.</span></p>
+
+<p>Icons are cool in a number of situations. Some of them, such as <img class="emoticon" src="./icons/emoticons/information.gif" height="16" width="16" align="absmiddle" alt="" border="0"/>, <img class="emoticon" src="./icons/emoticons/add.gif" height="16" width="16" align="absmiddle" alt="" border="0"/>, <img class="emoticon" src="./icons/emoticons/lightbulb_on.gif" height="16" width="16" align="absmiddle" alt="" border="0"/> or <img class="emoticon" src="./icons/emoticons/star_yellow.gif" height="16" width="16" align="absmiddle" alt="" border="0"/> can make the documentation look professional, but some others, such as <img class="emoticon" src="./icons/emoticons/smile.gif" height="20" width="20" align="absmiddle" alt="" border="0"/> and <img class="emoticon" src="./icons/emoticons/thumbs_up.gif" height="19" width="19" align="absmiddle" alt="" border="0"/> may give a feeling of amateurship and I wouldn't advise them for pages that are exported to form the official documentation.</p>
+
+
+
+<h2><a name="StyleGuide-Tables"></a>Tables</h2>
+
+<p><img class="emoticon" src="./icons/emoticons/star_yellow.gif" height="16" width="16" align="absmiddle" alt="" border="0"/> This section refers to: <a href="http://wiki.opensymphony.com/renderer/notationhelp.action?section=tables" title="Visit page outside Confluence">Notation Guide >> Tables</a>.</p>
+
+<p>Tables are very useful when lists just don't do it. Meaning: don't write a table when a list suffices. Tables are more organized, because you can align the text in columns. Since the markup text for tables in confluence is not very easy to read, remember complex and big tables are very hard to maintain.</p>
+
+<p>The table below was copied from a reference page on WebWork's configuration (just the first two lines were copied). This is an example where tables are good: a list wouldn't be as organized as this table to display these files and their properties.</p>
+
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'>File</th>
+<th class='confluenceTh'>Optional</th>
+<th class='confluenceTh'>Location (relative to webapp)</th>
+<th class='confluenceTh'>Purpose</th>
+</tr>
+<tr>
+<td class='confluenceTd'><a href="web.xml.html" title="web.xml">web.xml</a></td>
+<td class='confluenceTd'>no</td>
+<td class='confluenceTd'>/WEB-INF/</td>
+<td class='confluenceTd'>Web deployment descriptor to include all necessary WebWork components</td>
+</tr>
+<tr>
+<td class='confluenceTd'><a href="xwork.xml.html" title="xwork.xml">xwork.xml</a></td>
+<td class='confluenceTd'>no</td>
+<td class='confluenceTd'>/WEB-INF/classes/</td>
+<td class='confluenceTd'>Main configuration, contains result/view types, action mappings, interceptors, etc</td>
+</tr>
+</tbody></table>
+
+
+
+<h2><a name="StyleGuide-AdvancedFormatting"></a>Advanced Formatting</h2>
+
+<p><img class="emoticon" src="./icons/emoticons/star_yellow.gif" height="16" width="16" align="absmiddle" alt="" border="0"/> This section refers to: <a href="http://wiki.opensymphony.com/renderer/notationhelp.action?section=advanced" title="Visit page outside Confluence">Notation Guide >> Advanced Formatting</a>.</p>
+
+<p>I've already made my point about info, warning, tip and note boxes. Other interesting markups are <tt>noformat</tt> and <tt>code</tt>. The former can be used for general purpose text while the latter is used to display example source code, be it HTML, XML, Java or anything that is part of a software solution. When displaying something that has a name, use a title, as the example below demonstrates.</p>
+
+<div class="code"><div class="codeHeader"><b>HelloWorld.java</b></div><div class="codeContent">
+<pre class="code-java">/** Hello World class. */
+<span class="code-keyword">public</span> class HelloWorld {
+  /** Main method. */
+  <span class="code-keyword">public</span> <span class="code-keyword">static</span> void main(<span class="code-object">String</span>[] args) {
+    <span class="code-object">System</span>.out.println(<span class="code-quote">"Hello, World!"</span>);
+  }
+}</pre>
+</div></div>
+
+<p>A typical example of <tt>noformat</tt> would be the command line statements to compile and run the code above. We should also standardize terminal notation ({$} for command prompt).</p>
+
+<div class="preformatted"><div class="preformattedContent">
+<pre>$ javac HelloWorld.java
+
+$ java HelloWorld
+Hello, World!
+</pre>
+</div></div>
+
+<p>Do not use tabs inside <tt>noformat</tt> and <tt>code</tt>, use two spaces instead. This way your code is indented but keeps lines short. Large lines should be splitted as to fit in a 800x600 resolution screen without horizontal scroll bars.</p>
+
+
+
+<h2><a name="StyleGuide-YourCommentsPlease"></a>Your Comments Please</h2>
+
+<p>Please contribute to this page. Let me know if you have a different opinion on something (please justify it). Please warn me if I wrote something wrong or if this proposed Style Guide is missing something. Feel free to correct my english, since I'm not a native speaker.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

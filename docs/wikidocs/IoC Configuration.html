@@ -1,0 +1,104 @@
+<html>
+    <head>
+        <title>WebWork - 
+         Configuration
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>These documents are out of date. As of WebWork 2.2, the WebWork IoC container has been deprecated (though not removed) and the WebWork team recommends you use <a href="Spring.html" title="Spring">Spring</a> for all your IoC needs</td></tr></table>
+
+<h2><a name="IoCConfiguration-Configurationweb.xml"></a>Configuration - web.xml</h2>
+
+<p>To configure WebWork's component management, the following lines must be added in the appropriate places to web.xml:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;filter&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>container<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;filter-class&gt;</span>com.opensymphony.webwork.lifecycle.RequestLifecycleFilter<span class="code-tag">&lt;/filter-class&gt;</span>
+<span class="code-tag">&lt;/filter&gt;</span>
+
+<span class="code-tag">&lt;filter-mapping&gt;</span>
+   <span class="code-tag">&lt;filter-name&gt;</span>container<span class="code-tag">&lt;/filter-name&gt;</span>
+   <span class="code-tag">&lt;url-pattern&gt;</span>*.action<span class="code-tag">&lt;/url-pattern&gt;</span> <span class="code-tag"><span class="code-comment">&lt;!-- modify appropriately --&gt;</span></span>
+<span class="code-tag">&lt;/filter-mapping&gt;</span>
+
+<span class="code-tag"><span class="code-comment">&lt;!-- Optionally you may instead apply the filter to EVERY URI instead of just *.action.  --&gt;</span></span> 
+<span class="code-tag"><span class="code-comment">&lt;!-- You might want to do this for example:  --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- * your page flow goes to a jsp directly (as opposed to only *.action URIs) --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- * the jsp has an action in it to be run with the ww:action tag --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- * the action in the jsp implements any enabler interfaces to get components served to it --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- The reason: (Per Patrick Lightbody) --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- "The components work by looking for a ComponentManager in the request --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- attributes. It gets placed there by a filter. If it is on *.action and a --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- request comes in through a JSP, the filter won't be applied and it will --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- never work." --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- The overhead in doing this is small, so don't worry overly much about the  --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- performance of this. --&gt;</span></span>
+<span class="code-tag"><span class="code-comment">&lt;!-- &lt;filter-mapping&gt;</span> --&gt;</span>
+<span class="code-tag"><span class="code-comment">&lt;!--    &lt;filter-name&gt;</span>container<span class="code-tag">&lt;/filter-name&gt;</span> --&gt;</span>
+<span class="code-tag"><span class="code-comment">&lt;!--    &lt;url-pattern&gt;</span>*<span class="code-tag">&lt;/url-pattern&gt;</span>  --&gt;</span>
+<span class="code-tag"><span class="code-comment">&lt;!-- &lt;/filter-mapping&gt;</span> --&gt;</span>
+
+<span class="code-tag">&lt;listener&gt;</span>
+    <span class="code-tag">&lt;listener-class&gt;</span>com.opensymphony.webwork.lifecycle.SessionLifecycleListener<span class="code-tag">&lt;/listener-class&gt;</span>
+<span class="code-tag">&lt;/listener&gt;</span>
+
+<span class="code-tag">&lt;listener&gt;</span>
+    <span class="code-tag">&lt;listener-class&gt;</span>com.opensymphony.webwork.lifecycle.ApplicationLifecycleListener<span class="code-tag">&lt;/listener-class&gt;</span>
+<span class="code-tag">&lt;/listener&gt;</span></pre>
+</div></div>
+
+<p>These settings allow WebWork to manage components across the application, session and request scopes. Note that even if one or more of the scopes are not required by your application, all three scopes need to be specified in web.xml for WebWork's component management to function correctly.</p>
+
+<h2><a name="IoCConfiguration-Configurationxwork.xml"></a>Configuration - xwork.xml</h2>
+
+<p>The ComponentInterceptor class is used to apply the IoC pattern to XWork actions (ie, to supply components to actions). The ComponentInterceptor should be declared in the &lt;interceptors&gt; block of xwork.xml as follows:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml">&lt;interceptor name=<span class="code-quote">"component"</span>
+        class=<span class="code-quote">"com.opensymphony.xwork.interceptor.component.ComponentInterceptor"</span>/&gt;</pre>
+</div></div>
+
+<p>You should ensure that any actions that are to be supplied with components have this interceptor applied. (See OS:XWork Interceptors for information on how to apply interceptors to actions.)<br/>
+If you want to apply IoC to objects other than actions or other components, you will need to use the ComponentManager object directly.</p>
+
+<p>Note too, that the ComponentInterceptor is applied as part of the webwork defaultStack. Thus, if you are applying the defaultStack to the action, you would include the ComponentInterceptor.</p>
+
+<h2><a name="IoCConfiguration-Configurationcomponents.xml"></a>Configuration - components.xml</h2>
+
+<p>The components.xml file is used to specify the components that are to be available. The components specified here are loaded into XWork's ComponentManager and are then made available to any actions that are an instance of the specified enabler. The components.xml file must be placed in the root of the classpath (ie, in the WEB-INF/classes directory).<br/>
+Here is an example components.xml file that configures a Counter component. The Counter object will live in session scope, and will be passed to any objects that are enabled due to their implementing the CounterAware interface:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;components&gt;</span>
+    <span class="code-tag">&lt;component&gt;</span>
+        <span class="code-tag">&lt;scope&gt;</span>session<span class="code-tag">&lt;/scope&gt;</span>
+        <span class="code-tag">&lt;class&gt;</span>com.opensymphony.webwork.example.counter.Counter<span class="code-tag">&lt;/class&gt;</span>
+        <span class="code-tag">&lt;enabler&gt;</span>com.opensymphony.webwork.example.counter.CounterAware<span class="code-tag">&lt;/enabler&gt;</span>
+    <span class="code-tag">&lt;/component&gt;</span>
+<span class="code-tag">&lt;/components&gt;</span></pre>
+</div></div>
+
+<p>Each component must have the following three attributes:</p>
+
+<ul>
+	<li><em>scope</em>: Valid values are <em>application</em>, <em>session</em> and <em>request</em>. This determines the component's lifetime. Application scope components will be created when the webapp starts up, and they will survive for the whole lifetime of the webapp. Session scoped components exist for the duration of a user session, while components in request scope only last for the duration of a single client request.</li>
+	<li><em>class</em>: This specifies the component's class. An instance of this object will live for the duration of the specified scope, and will be made available to any actions (or other code) as required. Note that components are lazy-loaded, so if nothing makes use of the component during its lifetime, the component will never actually be instantiated. At the moment components must have a zero argument constructor.</li>
+	<li><em>enabler</em>: Any actions that are an instanceof the enabler class or interface will be passed an instance of the component.</li>
+</ul>
+
+
+
+<p>Note that while components are allowed to have dependencies on other components they must not depend on another component that is of a narrower scope. So for example, a session component cannot depend on a component that is only of request scope.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

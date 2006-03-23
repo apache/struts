@@ -1,0 +1,19 @@
+<portlet-tabbed-pane>
+    <portlet-tab label="WebWorkPortlet">
+        <title lang="en">WebWorkPortlet Example</title>
+        <portlet-tabbed-pane style="sub-menu">
+            <portlet-tab label="webworkportlettab">
+                <title lang="en">WebWorkPortlet Example Application</title>
+                <table-layout>
+                    <row-layout>
+                        <column-layout>
+                            <portlet-frame label="webworkportlet">
+                                <portlet-class>webwork-portlet#WebWorkPortlet</portlet-class>
+                            </portlet-frame>
+                        </column-layout>
+                    </row-layout>
+                </table-layout>
+            </portlet-tab>
+        </portlet-tabbed-pane>
+    </portlet-tab>
+</portlet-tabbed-pane>

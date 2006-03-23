@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <title>WebWork 2 : Spring</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : Spring
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Nov 03, 2004 by <font color="#0050B2">matthew</font>.
+				    </div>
+
+				    <p class="paragraph"><h2 style="margin: 4px 0px 4px 0px;" class="heading2"><a name="Spring-WhatisSpringandWhydoyouwanttouseitwithWebWork%3F"> What is Spring and Why do you want to use it with WebWork?</a></h2>
+Check out <a href="http://www.springframework.org" title="Visit page outside Confluence">&#104;ttp://www.springframework.org</a> for more details about Spring.  To summarize,  Spring provides several different layers. Spring&#039;s IoC container, for instance, provides a nice transparent way to wire together objects with their dependencies, such as services they use. It can also, with the help of its AOP framework, provide transactional behavior to plain Java beans. Spring also provides an MVC framework, which is what could be compared to WebWork.  There are those who believe WebWork is a better MVC framework, and so would choose WebWork for this part and integrate the rest of the Spring stack.
+<br clear="all" />
+There are a number of ways to integrate Spring into WebWork.</p><h2 class="heading2"><a name="Spring-UseSpringObjectFactory"> Use SpringObjectFactory</a></h2><p class="paragraph">The <a href="http://xwork-optional.dev.java.net" title="Visit page outside Confluence">xwork-optional</a> package from dev.java.net contains a module <b class="strong">xwork-spring</b> that contains all the necessary code to use Spring in WebWork.  It contains primarily a SpringObjectFactory to wire up the dependencies for an Action before passing it to WebWork. Each action should be configured within a Spring application context as a prototype (because WebWork assumes a new instance of a class for every action invocation).  Specify something like this in applicationContext.xml:
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;bean name=<span class="xml&#45;quote">&quot;some&#45;action&quot;</span> class=<span class="xml&#45;quote">&quot;fully.qualified.class.name&quot;</span> singleton=<span class="xml&#45;quote">&quot;false&quot;</span>&gt;</span>&#10;    <span class="xml&#45;tag">&lt;property name=<span class="xml&#45;quote">&quot;someProperty&quot;</span>&gt;</span><span class="xml&#45;tag">&lt;ref bean=<span class="xml&#45;quote">&quot;someOtherBean&quot;</span>/&gt;</span><span class="xml&#45;tag">&lt;/property&gt;</span>&#10;<span class="xml&#45;tag">&lt;/bean&gt;</span></pre>
+</div></div></p>and in xwork.xml:
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;action name=<span class="xml&#45;quote">&quot;myAction&quot;</span> class=<span class="xml&#45;quote">&quot;some&#45;action&quot;</span>&gt;</span>&#10;    <span class="xml&#45;tag">&lt;result name=<span class="xml&#45;quote">&quot;success&quot;</span>&gt;</span>view.jsp<span class="xml&#45;tag">&lt;/result&gt;</span>&#10;<span class="xml&#45;tag">&lt;/action&gt;</span></pre>
+</div></div><p class="paragraph">Notice that the WebWork Action&#039;s class name <b class="strong">some-action</b> is the bean name defined in the Spring application context.</p>Another advantage of the SpringObjectFactory approach is that it can also be used to load interceptors using the same sort of logic. If the interceptor is stateless, then it&#039;s possible to create the interceptor as a singelton instance, but otherwise it&#039;s best to create it as a Spring prototype. 
+<br clear="all" />
+In order to be used, the default ObjectFactory that WebWork uses should be replaced with an instance of the SpringObjectFactory. There are two different ways to accomplish this.  The first method is to use the ContextListener in the xwork-optional package. This method assumes that the Spring application context has already been configured.  Add the following to web.xml:
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; This needs to be after Spring ContextLoaderListener &#45;&#45;&gt;</span></span>&#10;<span class="xml&#45;tag">&lt;listener&gt;</span>&#10;  <span class="xml&#45;tag">&lt;listener&#45;class&gt;</span>com.opensymphony.xwork.spring.SpringObjectFactoryListener<span class="xml&#45;tag">&lt;/listener&#45;class&gt;</span>&#10;<span class="xml&#45;tag">&lt;/listener&gt;</span></pre>
+</div></div><p class="paragraph">Note: this is actually a XWork configuration but for simplicity, I just assume WebWork.</p>The second method is to call the <b class="strong">initObjectFactory</b> method on <b class="strong">com.opensymphony.xwork.spring.SpringObjectFactory</b>.  The easiest way to do this is to have Spring&#039;s application configure and supply the aforementioned method as the &quot;init-method&quot;.  Add the following to your applicationContext.xml:
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;bean id=<span class="xml&#45;quote">&quot;spring&#45;object&#45;factory&quot;</span> class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.spring.SpringObjectFactory&quot;</span> init&#45;method=<span class="xml&#45;quote">&quot;initObjectFactory&quot;</span>/&gt;</span></pre>
+</div></div><p class="paragraph">Note: The second option should work when only using Xwork (as compared to XW and WW2).</p>
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

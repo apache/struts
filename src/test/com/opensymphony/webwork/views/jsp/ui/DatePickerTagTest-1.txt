@@ -1,0 +1,19 @@
+<tr>
+    <td class="tdLabel"></td>
+    <td>
+<script type="text/javascript" src="/webwork/jscalendar/calendar.js"></script>
+<script type="text/javascript" src="/webwork/jscalendar/lang/calendar-en.js"></script>
+<script type="text/javascript" src="/webwork/jscalendar/calendar-setup.js"></script>
+<input type="text" name="" id=""/>
+<a href="#" id="_button"><img src="/webwork/jscalendar/img.gif" width="16" height="16" border="0" alt="Click Here to Pick up the date"></a>
+<script type="text/javascript">
+    Calendar.setup({
+        inputField     :    "",
+        button         :    "_button",
+        step           :    1
+    });
+</script>
+</td>
+</tr>
+
+

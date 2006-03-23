@@ -1,0 +1,100 @@
+<!DOCTYPE xwork PUBLIC 
+	"-//OpenSymphony Group//XWork 1.1.1//EN"
+	"http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+	
+<xwork>
+	<include file="webwork-default.xml" />
+
+	<package name="validation" extends="webwork-default" namespace="/validation">
+	    <action name="quizBasic" class="com.opensymphony.webwork.showcase.validation.QuizAction">
+            <result name="input">quiz-basic.jsp</result>
+            <result>quiz-success.jsp</result>
+        </action>
+
+        <action name="quizClient" class="com.opensymphony.webwork.showcase.validation.QuizAction">
+            <result name="input">quiz-client.jsp</result>
+            <result>quiz-success.jsp</result>
+        </action>
+
+        <action name="quizClientCss" class="com.opensymphony.webwork.showcase.validation.QuizAction">
+            <result name="input">quiz-client-css.jsp</result>
+            <result>quiz-success.jsp</result>
+        </action>
+
+        <action name="quizAjax" class="com.opensymphony.webwork.showcase.validation.QuizAction">
+            <result name="input">quiz-ajax.jsp</result>
+            <result>quiz-success.jsp</result>
+        </action>
+	</package>
+
+
+	<package name="validationExamples" extends="webwork-default" namespace="/validation" >
+
+		<action name="list">
+			<result>index.jsp</result>
+		</action>
+		
+		
+		<!-- ======================== -->
+		<!-- === Field Validators === -->
+		<!-- ======================== -->
+		
+		<action name="showFieldValidatorsExamples" class="com.opensymphony.webwork.showcase.validation.FieldValidatorsExampleAction" method="input">
+			<result name="input" type="dispatcher">/validation/fieldValidatorsExample.jsp</result>
+		</action>
+		
+		<action name="submitFieldValidatorsExamples" class="com.opensymphony.webwork.showcase.validation.FieldValidatorsExampleAction" method="submit">
+			<result name="input" type="dispatcher">/validation/fieldValidatorsExample.jsp</result>
+			<result type="dispatcher">/validation/successFieldValidatorsExample.jsp</result>
+		</action>
+		
+		
+		
+		<!-- ============================ -->
+		<!-- === Non Field Validators === -->
+		<!-- ============================ -->
+		
+		<action name="showNonFieldValidatorsExamples" class="com.opensymphony.webwork.showcase.validation.NonFieldValidatorsExampleAction" method="input">
+			<result name="input">/validation/nonFieldValidatorsExample.jsp</result>		
+		</action>
+		
+		<action name="submitNonFieldValidatorsExamples" class="com.opensymphony.webwork.showcase.validation.NonFieldValidatorsExampleAction" method="submit">
+			<result name="input">/validation/nonFieldValidatorsExample.jsp</result>		
+			<result>/validation/successNonFieldValidatorsExample.jsp</result>
+		</action>
+		
+		
+		
+		<!-- ========================== -->
+		<!-- === Visitor Validators === -->
+		<!-- ========================== -->
+		
+		<action name="showVisitorValidatorsExamples" class="com.opensymphony.webwork.showcase.validation.VisitorValidatorsExampleAction" method="input">
+			<result name="input">/validation/visitorValidatorsExample.jsp</result>
+		</action>
+		
+		<action name="submitVisitorValidatorsExamples" class="com.opensymphony.webwork.showcase.validation.VisitorValidatorsExampleAction" method="submit">
+			<result name="input">/validation/visitorValidatorsExample.jsp</result>
+			<result>/validation/successVisitorValidatorsExample.jsp</result>
+		</action>
+
+
+
+		<!-- ========================== -->
+		<!-- === Visitor Validators === -->
+		<!-- ========================== -->
+
+		<action name="clientSideValidationExample" class="com.opensymphony.webwork.showcase.validation.FieldValidatorsExampleAction" method="input">
+			<result name="input">/validation/clientSideValidationExample.jsp</result>
+		</action>
+
+		<action name="submitClientSideValidationExample" class="com.opensymphony.webwork.showcase.validation.FieldValidatorsExampleAction" method="submit">
+			<result name="input">/validation/clientSideValidationExample.jsp</result>
+			<result>/validation/successClientSideValidationExample.jsp</result>
+		</action>
+
+
+
+    </package>
+</xwork>
+	

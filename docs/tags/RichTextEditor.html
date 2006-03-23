@@ -1,0 +1,1594 @@
+
+<html>
+<head>
+<title>&lt;ww:richtexteditor /&gt;</title>
+</head>
+
+<body>
+
+<h1>Tag Name: &lt;ww:richtexteditor /&gt;</h1>
+
+<h2>Description</h2>
+<p>
+
+Render a rich text editor element
+
+</p>
+
+<p>
+<!-- START SNIPPET: javadoc --> Create a Rich Text Editor based on FCK editor (www.fckeditor.net). <!-- END SNIPPET: javadoc --> <p/> <pre> <!-- START SNIPPET: example --> &lt;ww:richtexteditor toolbarCanCollapse="false" width="700" label="Description 1" name="description1" value="Some Content I keyed In In The Tag Itself" /&gt; <!-- END SNIPPET: example --> </pre> <!-- START SNIPPET: serversidebrowsing --> It is possible to have a rich text editor do server side browsing when for example the image button is clicked. To integrate this functionality with webwork, one need to defined the following action definition typically in xwork.xml <pre> &lt;package name="richtexteditor-browse" extends="webwork-default" namespace="/webwork/richtexteditor/editor/filemanager/browser/default/connectors/jsp"&gt; &lt;action name="connector" class="com.opensymphony.webwork.components.DefaultRichtexteditorConnector" method="browse"> &lt;result name="getFolders" type="richtexteditorGetFolders" /&gt; &lt;result name="getFoldersAndFiles" type="richtexteditorGetFoldersAndFiles" /&gt; &lt;result name="createFolder" type="richtexteditorCreateFolder" /&gt; &lt;result name="fileUpload" type="richtexteditorFileUpload" /&gt; &lt;/action&gt; &lt;/package&gt; </pre> By default whenever a browse command is triggered (eg. by clicking on the 'image' button and then 'browse server' button, the url '/webwork/static/richtexteditor/editor/filemanager/browser/default/browser.html?&Type=Image&Connector=connectors/jsp/connector.action'. The page browser.html which comes with FCK Editor will trigger the url '/webwork/richtexteditor/editor/filemanager/browser/default/connectors/jsp/connector.action' which will caused the webwork's DefaultRichtexteditorConnector to be executed. The trigerring url could be changed by altering the 'imageBrowseURL'. There 3 types of such related url, namely 'imageBrowseURL', 'linkBrowseURL' and 'flashBrowseURL'. It is recomended that the default one being used. One could change the Connector parameter instead. For example <pre> /webwork/static/richtexteditor/editor/filemanager/browser/default/browser.html? &Type=Image&Connector=connectors/jsp/connector.action </pre> could be changed to <pre> /webwork/static/richtexteditor/editor/filemanager/browser/default/browser.html? &Type=Image&Connector=myLittlePath/myConnector.action </pre> In this case the action will need to have a namespace of '/webwork/richtexteditor/editor/filemanager/browser/default/myLittlePath' and action name of 'myConnector' <p/> By default the action method that needs to be defined in xwork.xml needs to be 'browse'. If this needs to be something else say, myBrowse, the following could be used <pre> public String myBrowse() { browse(); } </pre> <!-- END SNIPPET: serversidebrowsing --> <p/> <!-- START SNIPPET: serversideuploading --> It is possible for the richtexteditor to do server side uploading as well. For example when clicking on the 'Image' button and then the 'Upload' tab and then selecting a file from client local machine and the clicking 'Send it to the server'. To integrate this functionality with webwork, one need to defined the following action definition typically in xwork.xml <pre> &lt;package name="richtexteditor-upload" extends="webwork-default" namespace="/webwork/richtexteditor/editor/filemanager/upload"&gt; &lt;action name="uploader" class="com.opensymphony.webwork.components.DefaultRichtexteditorConnector" method="upload"&gt; &lt;result name="richtexteditorFileUpload" /&gt; &lt;/action&gt; &lt;/package&gt; </pre> By default whenever an upload command is triggered, a '/webwork/static/richtexteditor/editor/filemanager/upload/uploader.action?Type=Image' will be issued. This could be changed by setting the imageUploadURL attribute of the tag. When this link is issued, the webwork action will get executed. There's 3 such related upload url namely, 'imageUploadURL', 'linkUploadURL' and 'flashUploadURL'. It is recomended that the default one being used. However one could change the url, but need to include the Type parameter. For example <pre> /webwork/static/richtexteditor/editor/filemanager/upload/uploader.action?Type=Image </pre> could be changed to <pre> /webwork/static/richtexteditor/editor/filemanager/upload/aDifferentUploader.action?Type=Image </pre> In this case the action will need to have a namespace of '/webwork/static/richtexteditor/editor/filemanager/upload' and action name of 'aDifferentUploader' By default the action method that needs to be defined in xwork.xml needs to be 'upload'. If this needs to be something else say, myUpload, the following could be used <pre> public String myUpload() { upload(); } </pre> <!-- END SNIPPET: serversideuploading --> <!-- START SNIPPET: richtexteditoraction --> The webwork action that handles the server-side browsing and uploading needs to extends from AbstractRichtexteditorConnector. There are four abstract methods need to be implemented, namely <p/> <pre> protected abstract String calculateServerPath(String serverPath, String folderPath, String type) throws Exception; protected abstract Folder[] getFolders(String virtualFolderPath, String type) throws Exception; protected abstract FoldersAndFiles getFoldersAndFiles(String virtualFolderPath, String type) throws Exception; protected abstract CreateFolderResult createFolder(String virtualFolderPath, String type, String newFolderName) throws Exception; protected abstract FileUploadResult fileUpload(String virtualFolderPath, String type, String filename, String contentType, java.io.File newFile) throws Exception; protected abstract void unknownCommand(String command, String virtualFolderPath, String type, String filename, String contentType, java.io.File newFile) throws Exception; </pre> <!-- END SNIPPET: richtexteditoraction -->
+</p>
+
+<h2>Attributes</h2>
+<p>
+
+<!-- START SNIPPET: tagattributes -->
+<table width="100%">
+<tr>
+
+<th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">checkBrowser</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">Boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">Whether the rich text editor should check for browser compatibility when rendering its toolbar</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">displayError</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">Boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">Whether should the rich text editor display error when it fails to render etc.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">autoDetectLanguage</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">Boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">Tells the editor to automatically detect the user language preferences to adapt its interface language. With Internet Explorer, the language configured in the Windows Control Panel is used. With Firefox, the browser language is used</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">baseHref</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top"> </td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Base URL used to resolve links (on images, links, styles, etc.). For example, if BaseHref is set to 'http://www.fredck.com', an image that points to "/images/Logo.gif" will be interpreted by the editor as "http://www.fredck.com/images/Logo.gif", without touching the "src" attribute of the image.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">basePath</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">/webwork/static/richtexteditor/</td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the dir where the FCKeditor files reside on the server</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">contentLangDirection</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">ltr</td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Sets the direction of the editor area contents. Either ltr or rtl</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">customConfigurationsPath</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top"> </td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the path of a custom file that can override some configurations. It is recommended to use absolute paths (starting with /), like /myfckconfig.js.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">debug</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">false</td>
+
+<!-- Type -->
+<td align="left" valign="top">Boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">Enables the debug window to be shown when calling the FCKDebug.Output() function.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">defaultLanguage</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">en</td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Sets the default language used for the editor's interface localization. The default language is used when the AutoDetectLanguage options is disabled or when the user language is not available.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">editorAreaCSS</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">css/fck_editorarea.css</td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the CSS styles file to be used in the editing area. In this way you can point to a file that reflects your web site styles</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">enableSourceXHTML</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Tells the editor to process the HTML source to XHTML when switching from WYSIWYG to Source view</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">enableXHTML</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Tells the editor to process the HTML source to XHTML on form post.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">fillEmptyBlocks</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Block elements (like P, DIV, H1, PRE, etc...) are forced to have content (a &amp;nbsp;). Empty blocks are "collapsed" by while browsing, so a empty &lt;p&gt;&lt;/p&gt; is not visible. While editing, the editor "expand" empty blocks so you can insert content inside then. Setting this option to "true" results useful to reflect the same output when browsing and editing.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">flashBrowserURL</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">/webwork/static/ richtexteditor/ editor/filemanager/ browser/default/browser.html? Type=Flash& Connector=connectors/jsp/connector.action</td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Sets the URL of the page called when the user clicks the 'Browse Server' button in the "Flash" dialog window. In this way, you can create your custom Flash Browser that is well integrated with your system.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">flashUploadURL</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">/webwork/static/ richtexteditor/ editor/filemanager/ upload/uploader.action? Type=Flash</td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">Sets the URL of the upload handler called when the user clicks the 'Send it to server' button in the "Flash" dialog window. In this way, you can create your custom Flash Uploader that is well integrated with your system.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">fontColors</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">000000, 993300, 333300, 003300, 003366, 000080, 333399, 333333, 800000, FF6600, 808000, 808080, 008080, 0000FF, 666699, 808080, FF0000, FF9900, 99CC00, 339966, 33CCCC, 3366FF, 800080, 999999, FF00FF, FFCC00, FFFF00, 00FF00, 00FFFF, 00CCFF, 993366, C0C0C0, FF99CC, FFCC99, FFFF99, CCFFCC, CCFFFF, 99CCFF, CC99FF, FFFFFF</td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">Sets the colors that must be shown in the colors panels (in the toolbar).</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">fontFormats</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">p; div; pre; address; h1; h2; h3; h4; h5; h6</td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">Sets the list of formats to be shown in the "Format" toolbar command.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">fontNames</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">Arial; Comic Sans MS; Courier New; Tahoma; Times New Roman; Verdana</td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">Sets the list of fonts to be shown in the "Font" toolbar command.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">fontSizes</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">1/xx-small; 2/x-small; 3/small; 4/medium; 5/large; 6/x-large; 7/xx-large</td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">Sets the list of font sizes to be shown in the "Size" toolbar command.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">forcePasteAsPlainText</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">false</td>
+
+<!-- Type -->
+<td align="left" valign="top">boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">Converts the clipboard contents to pure text on pasting operations</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">forceSimpleAmpersand</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">false</td>
+
+<!-- Type -->
+<td align="left" valign="top">boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">Forces the ampersands (&) on tags attributes to not be converted to '&amp;amp;' This conversion is a W3C requirement for XHTML, so it is recommended to leave this option to 'false'.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">formatIndentator</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">' '</td>
+
+<!-- Type -->
+<td align="left" valign="top">boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">Sets the characters to be used when indenting the HTML source when formatting it. Useful values are a sequence of spaces (' ') or a tab char ('\t').</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">formatOutput</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">The output HTML generated by the editor will be processed and formatted.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">formatSource</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">The HTML shown by the editor, while switching from WYSIWYG to Source views, will be processed and formatted</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">fullPage</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">false</td>
+
+<!-- Type -->
+<td align="left" valign="top">boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">Enables full page editing (from &lt;HTML&gt; to &lt;/HTML&gt;). It also enables the 'Page Properties' toolbar button.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">geckoUseSPAN</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">Tells Gecko browsers to use SPAN instead of &lt;B&gt;, &lt;I&gt; and &lt;U&gt; for bold, italic an underline</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">height</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">200</td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the height of the rich text editor</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">imageBrowserURL</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">/webwork/static/ richtexteditor/ editor/filemanager/ browser/default/browser.html? Type=Image& Connector=connectors/jsp/connector.action</td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">Sets the URL of the page called when the user clicks the 'Browse Server' button in the 'Image' dialog window. In this way, you can create your custom Image Browser that is well integrated with your system.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">imageUploadURL</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">/webwork/static/ richtexteditor/ editor/filemanager/ upload/uploader.action? Type=Image</td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">Sets the URL of the upload handler called when the user clicks the 'Send it to server' button in the 'Image' dialog window. In this way, you can create your custom Image Uploader that is well integrated with your system.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">linkBrowserURL</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">/webwork/static/ richtexteditor/ editor/filemanager/ browser/default/browser.html? Type=File& Connector=connectors/jsp/connector.action</td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">Sets the URL of the page called when the user clicks the 'Browse Server' button in the 'Link' dialog window. In this way, you can create your custom File Browser that is well integrated with your system.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">linkUploadURL</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">/webwork/static/ richtexteditor/ editor/filemanager/ upload/uploader.action? Type=File</td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">Sets the URL of the upload handler called when the user clicks the 'Send it to server' button in the 'Link' dialog window. In this way, you can create your custom Link Uploader that is well integrated with your system.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">pluginsPath</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">/webwork/static/richtexteditor/plugins/</td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">Sets the base path used when looking for registered plugins.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">skinPath</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">/webwork/static/richtexteditor/skins/default</td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">Sets the path to the skin (graphical interface settings) to be used by the editor.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">startupFocus</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">false</td>
+
+<!-- Type -->
+<td align="left" valign="top">boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">Forces the editor to get the keyboard input focus on startup (page load)</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">stylesXmlPath</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">/webwork/static/richtexteditor/fckstyles.xml</td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">Sets the path to the XML file that has the definitions and rules of the styles used by the 'Style' toolbar command</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">tabSpaces</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">0</td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the number of spaces (&amp;nbsp) to be inserted when the user hits the 'tab' key. This is an Internet Explorer only feature. Other browsers insert spaces automatically by default.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">toolbarCanCollapse</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">Tells the editor that the toolbar can be Collapsed/Expanded by the user when clicking the vertical bar placed on the left of it (on the right for 'rtl' languages).</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">toolbarSet</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">Default</td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the name of the toolbar to display</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">toolbarStartExpanded</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">Decide if the toolbar should be expanded when the rich text editor is loaded</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">useBROnCarriageReturn</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">Decide if a &lt;br/&gt; should be used in place of the occurence of a carriage return</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">width</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">100%</td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">set the width of the rich text editor</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">allowFlashBrowse</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">determine if to allow flash browsing</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">allowFlashUpload</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">determine if to allow flash upload</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">allowImageBrowse</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">determine if to allow image browsing</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">allowImageUpload</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">determine if to allow image uploading</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">allowLinkBrowse</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">determine if to allow link browsing</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">allowLinkUpload</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">determine if to allow link uploading</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">flashUploadAllowedExtension</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">.(swf|fla)$</td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">regexp for allowed flash upload file format</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">flashUploadDeniedExtension</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top"></td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">regexp for deinied flash upload file format</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">imageUploadAllowedExtension</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">.(jpg|gif|jpeg|png)$</td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">regexp for allowed image upload file format</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">imageUploadDeniedExtension</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top"></td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">regexp for denied image upload file format</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">linkUploadAllowedExtension</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top"></td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">regexp for allowed link upload file format</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">linkUploadDeniedExtension</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">.(php| php3| php5| phtml| asp| aspx| ascx| jsp| cfm| cfc| pl| bat| exe| dll| reg| cgi)$</td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">regexp for denied link upload file format</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">smileyImages</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">js array of smilies files to be included</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">smileyPath</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">/webwork/static/ richtexteditor/editor/ images/smiley/msn/</td>
+
+<!-- Type -->
+<td align="left" valign="top">string</td>
+
+<!-- Description -->
+<td align="left" valign="top">path where smilies are located</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">theme</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The theme (other than default) to use for rendering the element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">template</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The template (other than default) to use for rendering the element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">cssClass</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The css class to use for element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">cssStyle</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The css style definitions for element ro use</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">title</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the html title attribute on rendered html element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">disabled</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the html disabled attribute on rendered html element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">label</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Label expression used for rendering a element specific label</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">labelPosition</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">left</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">deprecated.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">labelposition</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">define label position of form element (top/left)</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">requiredposition</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">define required position of required form element (left|right)</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">name</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The name to set for element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">required</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">false</td>
+
+<!-- Type -->
+<td align="left" valign="top">Boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">If set to true, the rendered element will indicate that input is required</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">tabindex</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the html tabindex attribute on rendered html element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">value</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Preset the value of input element.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">onclick</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the html onclick attribute on rendered html element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">ondblclick</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the html ondblclick attribute on rendered html element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">onmousedown</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the html onmousedown attribute on rendered html element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">onmouseup</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the html onmouseup attribute on rendered html element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">onmouseover</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the html onmouseover attribute on rendered html element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">onmousemove</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the html onmousemove attribute on rendered html element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">onmouseout</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the html onmouseout attribute on rendered html element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">onfocus</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the html onfocus attribute on rendered html element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">onblur</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the html onblur attribute on rendered html element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">onkeypress</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the html onkeypress attribute on rendered html element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">onkeydown</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the html onkeydown attribute on rendered html element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">onkeyup</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the html onkeyup attribute on rendered html element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">onselect</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the html onselect attribute on rendered html element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">onchange</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the html onchange attribute on rendered html element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">tooltip</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top"></td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the tooltip of this particular component</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">tooltipConfig</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top"></td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the tooltip configuration</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">id for referencing element. For UI and form tags it will be used as HTML id attribute</td>
+
+</tr>
+
+</table>
+<!-- END SNIPPET: tagattributes -->
+
+</p>
+<p>
+<center><a href="index.html">Back to Taglib Index</a></center>
+</p>
+</body>
+</html>
+

@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <title>WebWork 2 : Using Checkboxes - EditAction.java</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : Using Checkboxes - EditAction.java
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Jun 18, 2004 by <font color="#0050B2">plightbo</font>.
+				    </div>
+
+				    <div class="code"><div class="codeContent">
+<pre><span class="java&#45;keyword">package</span> cash.action;&#10;&#10;<span class="java&#45;keyword">import</span> org.apache.log4j.Logger;&#10;&#10;<span class="java&#45;keyword">import</span> cash.config.ConfigManager;&#10;<span class="java&#45;keyword">import</span> cash.model.User;&#10;<span class="java&#45;keyword">import</span> cash.util.HibernateUtil;&#10;<span class="java&#45;keyword">import</span> cash.validator.PasswordFormatValidator;&#10;&#10;<span class="java&#45;keyword">import</span> net.sf.hibernate.LockMode;&#10;&#10;/&#42;&#42;&#10; &#42; Edit a user&#10; &#42; &#64;author Joel Hockey&#10; &#42; &#64;version $Id: Using\040Checkboxes\040-\040EditAction.java.html,v 1.1 2005/03/21 04:16:01 plightbo Exp $&#10; &#42;/&#10;<span class="java&#45;keyword">public</span> class EditAction <span class="java&#45;keyword">extends</span> HibernateAction &#123;&#10;    <span class="java&#45;keyword">private</span>&#160;<span class="java&#45;keyword">static</span>&#160;<span class="java&#45;keyword">final</span> Logger LOG = Logger.getLogger(EditAction.class);&#10;&#10;    <span class="java&#45;keyword">private</span> User m&#95;user = <span class="java&#45;keyword">new</span> User();&#10;    <span class="java&#45;keyword">private</span>&#160;<span class="java&#45;object">String</span> m&#95;repeatPassword;&#10;&#10;    /&#42;&#42; <span class="java&#45;keyword">return</span> user to be edited. &#42;/&#10;    <span class="java&#45;keyword">public</span> User getUser() &#123; <span class="java&#45;keyword">return</span> m&#95;user; &#125;&#10;&#10;    /&#42;&#42; &#64;param pwd repeat of password &#42;/&#10;    <span class="java&#45;keyword">public</span> void setRepeatPassword(<span class="java&#45;object">String</span> pwd) &#123; m&#95;repeatPassword = pwd; &#125;&#10;    /&#42;&#42; &#64;<span class="java&#45;keyword">return</span> repeat password &#42;/&#10;    <span class="java&#45;keyword">public</span>&#160;<span class="java&#45;object">String</span> getRepeatPassword() &#123; <span class="java&#45;keyword">return</span> m&#95;repeatPassword; &#125;&#10;&#10;    /&#42;&#42; override <span class="java&#45;keyword">super</span> &#42;/&#10;    <span class="java&#45;keyword">public</span>&#160;<span class="java&#45;object">String</span> execute() <span class="java&#45;keyword">throws</span> Exception &#123;&#10;        LOG.debug(<span class="java&#45;quote">&quot;EditAction started&quot;</span>);&#10;&#10;        <span class="java&#45;comment">// get original user from session, check that password is valid, update and save.</span>&#10;        User u = (User)get(<span class="java&#45;quote">&quot;user&quot;</span>);&#10;        HibernateUtil.currentSession().lock(u, LockMode.NONE);&#10;&#10;        <span class="java&#45;comment">// check that password has actually changed before updating</span>&#10;        <span class="java&#45;keyword">if</span> (&#33;PasswordFormatValidator.PASSWORD&#95;MASK.equals(m&#95;user.getPassword())) &#123;&#10;            <span class="java&#45;keyword">if</span> (&#33;u.changePassword(m&#95;user.getPassword())) &#123;&#10;                addFieldError(<span class="java&#45;quote">&quot;user.password&quot;</span>, <span class="java&#45;quote">&quot;password must be different to previous &quot;</span>&#10;                    &#43; ConfigManager.getConfig().getUser().getNoRepeatHistory() &#43; <span class="java&#45;quote">&quot; passwords&quot;</span>);&#10;                <span class="java&#45;keyword">return</span> INPUT;&#10;            &#125;&#10;        &#125;&#10;&#10;        m&#95;user.copy(u);&#10;        HibernateUtil.currentSession().save(u);&#10;        User loginUser = (User)get(LoginAction.LOGIN&#95;USER);&#10;        <span class="java&#45;keyword">if</span> (u.getId() == loginUser.getId()) &#123;&#10;            set(LoginAction.LOGIN&#95;USER, u);&#10;        &#125;&#10;        <span class="java&#45;keyword">return</span> SUCCESS;&#10;    &#125;&#10;&#125;</pre>
+</div></div>
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

@@ -1,0 +1,95 @@
+<html>
+    <head>
+        <title>WebWork 2 : Select标签</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : Select标签
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Dec 14, 2004 by <font color="#0050B2">casey</font>.
+				    </div>
+
+				    <p class="paragraph"><h3 style="margin: 4px 0px 4px 0px;" class="heading3"><a name="Selecttag-%26lt%3Bww%3Aselect%2F%26gt%3B"> &lt;ww:select /&gt;</a></h3></p>生成一个SELECT选项列表. quot;listKey&quot;属性是列表中每个元素的用于生成&lt;option&gt;标签中value的属性. &quot;listValue&quot;属性填充option的文本标签(显示名称). 一大特性是根据&quot;value&quot;属性自动选中适当的选项. 如果value于当前listKey相等, 该选项设为selected(如果类型符合的话; 见下文).<br/>
+
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;ww:select label=<span class="xml&#45;quote">&quot;&#039;Users&#039;&quot;</span> &#10;	name=<span class="xml&#45;quote">&quot;&#039;userId&#039;&quot;</span> &#10;	listKey=<span class="xml&#45;quote">&quot;id&quot;</span> &#10;	listValue=<span class="xml&#45;quote">&quot;name&quot;</span> &#10;	list=<span class="xml&#45;quote">&quot;app.users&quot;</span> &#10;	value=<span class="xml&#45;quote">&quot;app.user.id&quot;</span> &#10;	onchange=<span class="xml&#45;quote">&quot;&#039;chooseUser(this)&#039;&quot;</span>&#10;/&gt;</span></pre>
+</div></div><p class="paragraph">将生成下列结果(假设getApp().getUser().getId() == 2):
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;tr&gt;</span>&#10;	<span class="xml&#45;tag">&lt;td&gt;</span>Users<span class="xml&#45;tag">&lt;/td&gt;</span>&#10;	<span class="xml&#45;tag">&lt;td&gt;</span>&#10;		<span class="xml&#45;tag">&lt;select name=<span class="xml&#45;quote">&quot;userId&quot;</span> onchange=<span class="xml&#45;quote">&quot;chooseUser(this)&quot;</span>&gt;</span>&#10;			<span class="xml&#45;tag">&lt;option value=<span class="xml&#45;quote">&quot;1&quot;</span>&gt;</span>&#10;				User Number One&#10;			<span class="xml&#45;tag">&lt;/option&gt;</span>&#10;			<span class="xml&#45;tag">&lt;option value=<span class="xml&#45;quote">&quot;2&quot;</span> selected=<span class="xml&#45;quote">&quot;selected&quot;</span>&gt;</span>&#10;				User Number Two&#10;			<span class="xml&#45;tag">&lt;/option&gt;</span>&#10;		<span class="xml&#45;tag">&lt;/select&gt;</span>&#10;	<span class="xml&#45;tag">&lt;td&gt;</span>&#10;<span class="xml&#45;tag">&lt;/tr&gt;</span></pre>
+</div></div></p>当然, &lt;td&gt;等格式依赖于你使用的<a href="Themes.html" title="Themes">模版</a>.<p class="paragraph"><b class="strong">用法示例</b>
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;ww:select label=<span class="xml&#45;quote">&quot;&#039;Pets&#039;&quot;</span> &#10;        name=<span class="xml&#45;quote">&quot;&#039;petIds&#039;&quot;</span> &#10;        list=<span class="xml&#45;quote">&quot;petDao.pets&quot;</span> &#10;        listKey=<span class="xml&#45;quote">&quot;id&quot;</span> &#10;        listValue=<span class="xml&#45;quote">&quot;name&quot;</span> &#10;        multiple=<span class="xml&#45;quote">&quot;true&quot;</span> &#10;        size=<span class="xml&#45;quote">&quot;3&quot;</span> &#10;        required=<span class="xml&#45;quote">&quot;true&quot;</span> &#10;/&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;ww:select label=<span class="xml&#45;quote">&quot;&#039;Months&#039;&quot;</span> &#10;        name=<span class="xml&#45;quote">&quot;&#039;months&#039;&quot;</span> &#10;        list=<span class="xml&#45;quote">&quot;#&#123;&#039;01&#039;:&#039;Jan&#039;, &#039;02&#039;:&#039;Feb&#039;, &#91;...&#93;&#125;&quot;</span> &#10;        value=<span class="xml&#45;quote">&quot;selectedMonth&quot;</span>&#10;        required=<span class="xml&#45;quote">&quot;true&quot;</span> &#10;/&gt;</span>&#10;&#10;// The month id (01, 02, ...) returned by the getSelectedMonth() call &#10;// against the stack will be auto&#45;selected</pre>
+</div></div></p>注意: 对于任何使用列表数据的标签(select可能是最常见的), 它使用OGNL的列表表示法(参见上面的例子&quot;months&quot;), 注意的是, 这里键值(在months例子中是&#039;01&#039;, &#039;02&#039;等等)是手工输入的.  &#039;1&#039;是字符, &#039;01&#039;是字符串, &quot;1&quot;是字符串.  如果&quot;value&quot;属性返回的值和&quot;列表&quot;中的键值类型不同时, 即使字符串值相同, 也无法匹配.  如果无法匹配, 列表中将没有自动选中的选项.<p class="paragraph"><b class="strong">属性</b>
+<table class="wikitable">
+<tr>
+<th>	名字			</th><th>	必需	</th><th>	描述	</th>
+</tr><tr>
+<td>	id				</td><td>	否			</td><td>	HTML的id属性	</td>
+</tr><tr>
+<td>	name 			</td><td>	<b class="strong">是</b>		</td><td>	HTML的name属性	</td>
+</tr><tr>
+<td>	value			</td><td>	否			</td><td>	字段值	</td>
+</tr><tr>
+<td>	list			</td><td>	否			</td><td>	列表使用的可迭代数据源, 如果烈表是Map (key, value), 	key将作为option的value, value作为它的内容(body)</td>
+</tr><tr>
+<td>	listKey			</td><td>	否			</td><td>	列表对象的键值属性	</td>
+</tr><tr>
+<td>	listValue		</td><td>	否			</td><td>	列表对象的内容属性	</td>
+</tr><tr>
+<td>	headerKey		</td><td>	否			</td><td>	第一个选项的建值	</td>
+</tr><tr>
+<td>	headerValue		</td><td>	否			</td><td>	第一个选项的值	</td>
+</tr><tr>
+<td>	emptyOption		</td><td>	否			</td><td>	是否在选项头(header option)后加入空白(--)选项	</td>
+</tr><tr>
+<td>	multiple		</td><td>	否			</td><td>	是否允许多选?	</td>
+</tr><tr>
+<td>	size			</td><td>	否			</td><td>	HTML的size属性</td>
+</tr><tr>
+<td>	disabled		</td><td>	否			</td><td>	HTML的disabled属性	</td>
+</tr><tr>
+<td>	tabindex		</td><td>	否			</td><td>	HTML的tabindex属性</td>
+</tr><tr>
+<td>	onchange		</td><td>	否			</td><td>	HTML的onchange属性	</td>
+</tr><tr>
+<td>	onclick 		</td><td>	否			</td><td>	HTML的onclick属性	</td>
+</tr><tr>
+<td>	label			</td><td>	否			</td><td>	用于模版中的标签文字	</td>
+</tr><tr>
+<td>	labelposition	</td><td>	否			</td><td>	标签的对齐方式 (left,right,center)	</td>
+</tr><tr>
+<td>	required		</td><td>	否			</td><td>	在表单提交时是否是必需字段	</td>
+</tr><tr>
+<td>	cssClass		</td><td>	否			</td><td>	HTML的class属性	</td>
+</tr><tr>
+<td>	cssStyle		</td><td>	否			</td><td>	HTML的style属性	</td>
+</tr><tr>
+<td>	theme			</td><td>	否			</td><td>	使用的主题	</td>
+</tr><tr>
+<td>	template		</td><td>	否			</td><td>	使用的模版名	</td>
+</tr>
+</table></p>
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

@@ -1,0 +1,105 @@
+<html>
+    <head>
+        <title>WebWork - 
+        FreeMarker Tags
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>FreeMarker tags are extensions of the generic <a href="Tags.html" title="Tags">Tags</a> provided by WebWork. You can get started almost immediately by simply knowing the generic structure in which the tags can be accessed: <b>&lt;@ww.xxx&gt; ...&lt;/@ww.xxx&gt;</b>, where xxx is any of the tags supported by WebWork.</p>
+
+<h1><a name="FreeMarkerTags-Syntax"></a>Syntax</h1>
+
+<p>For example, in JSP you might create a form like so:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:form action=<span class="code-quote">"updatePerson"</span>&gt;</span>
+    <span class="code-tag">&lt;ww:textfield label=<span class="code-quote">"First name"</span> name=<span class="code-quote">"firstName"</span>/&gt;</span>
+    <span class="code-tag">&lt;ww:submit value=<span class="code-quote">"Update"</span>/&gt;</span>
+<span class="code-tag">&lt;/ww:form&gt;</span></pre>
+</div></div>
+
+<p>In FreeMarker the same form is built like so:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;@ww.form action=<span class="code-quote">"updatePerson"</span>&gt;</span>
+    <span class="code-tag">&lt;@ww.textfield label=<span class="code-quote">"First name"</span> name=<span class="code-quote">"firstName"</span>/&gt;</span>
+    <span class="code-tag">&lt;@ww.submit value=<span class="code-quote">"Update"</span>/&gt;</span>    
+<span class="code-tag">&lt;/@ww.form&gt;</span></pre>
+</div></div>
+
+<p>While this covers almost all know need to know for for FreeMarker tags, there are a few other advanced features you should read about, specifically with how attributes and parameters work together, and how attribute types (String, List, etc) can affect the tag behavior.</p>
+
+<h1><a name="FreeMarkerTags-AttributesandParameters"></a>Attributes and Parameters</h1>
+
+<p>Unlike older versions of JSP (in which the <a href="JSP Tags.html" title="JSP Tags">JSP Tags</a> are based), FreeMarker allows for <em>dynamic attributes</em>, much like JSP 2.0. What this means is that you can supply attributes to the tags that the tag doesn't even support. Those attributes that cannot be applied directly to the tag object will instead be set on the tag's general <b>parameters</b> map. </p>
+
+<p>For example, suppose you have the following code in JSP:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:url value=<span class="code-quote">"somePage"</span>&gt;</span>
+    <span class="code-tag">&lt;ww:param name=<span class="code-quote">"personId"</span> value=<span class="code-quote">"%{personId}"</span>/&gt;</span>
+<span class="code-tag">&lt;/ww:url&gt;</span></pre>
+</div></div>
+
+<p>In FreeMarker, you can simplify this as:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;@ww.url value=<span class="code-quote">"somePage"</span> personId=<span class="code-quote">"${personId}"</span>/&gt;</span></pre>
+</div></div>
+
+<p>In addition to being able to replace cases where you might use the <a href="param.html" title="param">param</a> tag, you can also use this functionality when building additional templates or themes for your <a href="Form Tags.html" title="Form Tags">Form Tags</a>. For example, suppose you created a "three column" theme to replace the typical two column theme (xhtml). You might want an additional parameter to display in the third column called "description". Your form can be:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;@ww.form action=<span class="code-quote">"updatePerson"</span>&gt;</span>
+    <span class="code-tag">&lt;@ww.textfield label=<span class="code-quote">"First name"</span> name=<span class="code-quote">"firstName"</span> description=<span class="code-quote">"..."</span>/&gt;</span>
+    <span class="code-tag">&lt;@ww.submit value=<span class="code-quote">"Update"</span>/&gt;</span>    
+<span class="code-tag">&lt;/@ww.form&gt;</span></pre>
+</div></div>
+
+<p>And then in your new template you can refer to the description using <b>${parameters.description}</b>.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>Sometimes you may still wish to use the param tag, such as when you are nesting complex HTML within tags. The param tag has support beyond what FreeMarker can provide as inline attributes: it can take the entire body of the param tag and apply that as the <em>value</em> attribute.</td></tr></table>
+
+<h1><a name="FreeMarkerTags-AttributeTypes"></a>Attribute Types</h1>
+
+<p>Remember that all tag attributes must first be set as Strings &#8211; they are then later evaluated (using <a href="OGNL.html" title="OGNL">OGNL</a>) to a different type, such as List, int, or boolean. This generally works just fine, but it can be limiting when using FreeMarker which provides more advanced ways to apply attributes. Suppose the following example:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;@ww.select label=<span class="code-quote">"Foo label - ${foo}"</span> name=<span class="code-quote">"${name}"</span> list=<span class="code-quote">"%{{1, 2, 3}}"</span>/&gt;</span></pre>
+</div></div>
+
+<p>What will happen here is that each attribute will be evaluated to a string as best it can. This may involve calling the toString() method on the internal FreeMarker objects in the hash. In this case, all objects will end up being exactly what you would expect. Then, when the tag runs, the <em>list</em> attribute will be converted from a String to a List using <a href="OGNL.html" title="OGNL">OGNL</a>'s advanced collection support.</p>
+
+<p>But suppose you wish to use FreeMarker's list or hash support instead? You can do this:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;@ww.select label=<span class="code-quote">"Foo label - ${foo}"</span> name=<span class="code-quote">"${name}"</span> list={1, 2, 3}/&gt;</span></pre>
+</div></div>
+
+<p>Notice that the list attribute no longer has quotes around it. Now it will come in to the tag as an object that can't easily be converted to a String. Normally, the tag would just call toString(), which would return "[1, 2, 3]" and be unable to be converted back to a List by OGNL. Rather than go through all this back and forth anyway, the FreeMarker tag support within WebWork will recognize collections and not pass them through the normal tag attribute, but instead set them directly in the <b>parameters</b> map, ready to be consumed by the template.</p>
+
+<p>In the end, everything tends to do what you would expect, but it can help to understand the difference of when OGNL is being used and when it isn't, and how attribute types get converted.</p>
+
+<h1><a name="FreeMarkerTags-JSPTagSupport"></a>JSP Tag Support</h1>
+
+<p>While WebWork provides native FreeMarker Tags, you might wish to use other third-party tags that are only available for JSP. Fortunately, FreeMarker has the ability to run JSP tags. To do so, you must include the JspSupportServlet outlined in <a href="web.xml 2.1.x compatibility.html" title="web.xml 2.1.x compatibility">web.xml 2.1.x compatibility</a>, as this allows the FreeMarker integration to get access to the required objects needed to emulate a JSP taglib container.</p>
+
+<p>Once you've done that, you can simply add something like this in your templates:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;#assign cewolf=JspTaglibs[<span class="code-quote">"/WEB-INF/cewolf.tld"</span>] /&gt;</span>
+...
+<span class="code-tag">&lt;@cewold.xxx ... /&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

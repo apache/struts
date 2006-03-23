@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- START SNIPPET: dwr -->
+<!DOCTYPE dwr PUBLIC 
+	"-//GetAhead Limited//DTD Direct Web Remoting 1.0//EN" 
+	"http://www.getahead.ltd.uk/dwr/dwr10.dtd">
+
+<dwr>
+    <allow>
+        <create creator="new" javascript="validator">
+            <param name="class" value="com.opensymphony.webwork.validators.DWRValidator"/>
+        </create>
+        <convert converter="bean" match="com.opensymphony.xwork.ValidationAwareSupport"/>
+    </allow>
+
+    <signatures>
+        <![CDATA[
+        import java.util.Map;
+        import com.opensymphony.webwork.validators.DWRValidator;
+
+        DWRValidator.doPost(String, String, Map<String, String>);
+        ]]>
+    </signatures>
+</dwr>
+<!-- END SNIPPET: dwr -->

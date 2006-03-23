@@ -1,0 +1,384 @@
+<html>
+    <head>
+        <title>WebWork 2 : WebWork 2.1.7</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : WebWork 2.1.7
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Dec 14, 2004 by <font color="#0050B2">plightbo</font>.
+				    </div>
+
+				    <p class="paragraph"><h2 style="margin: 4px 0px 4px 0px;" class="heading2"><a name="WebWork2.1.7-WebWork2.1.7releasenotes"> WebWork 2.1.7 release notes</a></h2></p><h3 class="heading3"><a name="WebWork2.1.7-Keychanges"> Key changes</a></h3>
+<ul class="star">
+<li> XWork upgraded to 1.0.5<ul class="star">
+<li> Using i18n, especially the ww:text tag, is now possible in SiteMesh decorators. See <a href="SiteMesh.html" title="SiteMesh">SiteMesh</a>.</li>
+<li> Issues where the ActionContext wasn&#039;t properly cleaned up (after ww:include and ww:action) have been resolved.</li>
+<li> Configuration<ul class="star">
+<li> If the action class is not specified, it now defaults to com.opensymphony.xwork.ActionSupport.</li>
+<li> If the result name is not specified, it is assumed to be &quot;success&quot;.</li>
+</ul></li>
+</ul></li>
+<li> Non-UI tags<ul class="star">
+<li> ww:text and ww:url have an id attribute that, when specified, causes the tag not to print out the localized text but rather store the result in the ActionContext to be referenced later. See <a href="SiteMesh.html" title="SiteMesh">SiteMesh</a>, <a href="URL tag.html" title="URL tag">URL tag</a>, and <a href="Text Tag.html" title="Text tag">Text Tag</a>.</li>
+</ul></li>
+<li> UI tags<ul class="star">
+<li> ww:form has an added target attribute.</li>
+<li> ww:form exposes &quot;namespace&quot; in the parameters Map in templates.</li>
+<li> ww:form tag defaults the id and name attribute to the action name that it is submitting to.</li>
+<li> Form elements default the id attribute to &quot;&#91;formId&#93;_&#91;elementName&#93;&quot;.</li>
+<li> Form elements default the &quot;required&quot; attribute to true if there is any validator associated with that field and the form&#039;s validate attribute is enabled.</li>
+<li> ww:textarea has an added &quot;wrap&quot; attribute.</li>
+<li> XHTML theme: added a parameter called &quot;after&quot; and that will add text to the right of the form element.</li>
+</ul></li>
+<li> Replaced old prototype client-side validation with XmlHttpRequest-based solution (STILL IN PROTOTYPE PHASE, works in XHTML theme only).</li>
+<li> Interceptors<ul class="star">
+<li> ServletConfigInterceptor now checks for actions implementing PrincipalAware and adds a Principal that ties in to the HttpServletRequest&#039;s Principal.</li>
+<li> Minor bug fixes in the ExecuteAndWaitInterceptor and FileUploadInterceptor.</li>
+</ul></li>
+<li> Results<ul class="star">
+<li> JasperReportsResult and StreamResult both support the Content-disposition header.</li>
+<li> JasperReports integration has been upgraded to 0.6.3.</li>
+<li> WebWorkResultSupport has a simple conditionalParse() method making support for ${} notation in your results easier (it will parse only if the parse attribute is true).</li>
+</ul></li>
+</ul>
+<h3 class="heading3"><a name="WebWork2.1.7-Upgradesteps"> Upgrade steps</a></h3>
+<ol>
+<li> Copy over the new webwork.jar and xwork.jar files.</li>
+<li> If you are using JasperReports, you will need to upgrade to the latest JasperReports jars of 0.6.3 because the package name has changed.</li>
+<li> Read the migration notes for anything that you should be aware of.</li>
+</ol>
+<h3 class="heading3"><a name="WebWork2.1.7-Migrationnotes"> Migration notes</a></h3>
+<ul class="star">
+<li> If you were using the old client-side validation code, it is still possible to keep using it but you will likely need to modify form-close.vm and controlheader.vm in the XHTML theme and form.vm in the simple theme. We recommend supporting the new prototype as it is a lot easier to use and doesn&#039;t require special validators.</li>
+<li> It is possible, though very unlikely, that the default ids for the UI tags and the default name for the form tag might cause you some trouble. Please be aware of this change.</li>
+</ul>
+<h3 class="heading3"><a name="WebWork2.1.7-Changelog"> Changelog</a></h3><p class="paragraph"><p>
+    <table  width="100%" cellspacing="0" class="grid">
+        <tr>
+            <th colspan="3" style="text-align: left;">
+                <a href="http://jira.opensymphony.com/secure/IssueNavigator.jspa?&pid=10030&fixfor=21421&sorter/field=issuekey&sorter/order=DESC&tempMax=100&reset=true&">OpenSymphony JIRA</a>
+                <span class="smalltext">(26 issues)</span>
+            </th>
+        </tr>
+        <tr>
+                        <th style="text-align: left;">
+                T                                                                                                                                                                            </th>
+                        <th style="text-align: left;">
+                                Key                                                                                                                                                            </th>
+                        <th style="text-align: left;">
+                                                Summary                                                                                                                                            </th>
+                    </tr>
+                                            <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-706"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-706">WW-706</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-706">Text tag and URL tag should have option to store contents to context</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-704"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-704">WW-704</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-704">Integrate PrincipalInterceptor with ServletConfigInterceptor</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-703"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-703">WW-703</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-703">Add wrap attribute to textarea</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-702"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-702">WW-702</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-702">Required (*) should be on by default if a validator exists</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-701"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-701">WW-701</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-701">UI tags should have default ids and names</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-698"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-698">WW-698</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-698">webwork.i18n.encoding does not get set by the ServletDispatcher</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-696"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-696">WW-696</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-696">StreamResult should accept file option</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-695"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-695">WW-695</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-695">JSP Form Tags does not have a target attribute</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-694"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-694">WW-694</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-694">ExecuteAndWaitInterceptor can return null results</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-693"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-693">WW-693</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-693">FileUploadInterceptor don't check  the allowed files's Enumeration whitch  is null.</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-692"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-692">WW-692</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-692">Webwork package of jasper reports packaged as dori.jasper.  Latest release of Jasper Reports packaged as net.sf.jasperreports</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-691"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-691">WW-691</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-691">JasperReports 0.6.3 support</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-687"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-687">WW-687</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-687">Freemarker - add method buildUrl to FreemakerWebworkUtil</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-686"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-686">WW-686</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-686">JasperReport result - Content-Disposition management</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-684"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-684">WW-684</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-684">Default action class and result name.</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-681"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-681">WW-681</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-681">getText() doesn't work in Sitemesh filters</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-677"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-677">WW-677</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-677">ww:include replaces existing value stack with new one</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-676"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-676">WW-676</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-676">Freemarker Support:TemplatePath in web.xml has no effect</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-668"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-668">WW-668</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-668">Externalise the JavaScript validation support from the JSP taglibs</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-649"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-649">WW-649</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-649">Field errors should be displayed in the order they're in the POJO</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-638"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-638">WW-638</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-638">Freemarker result encoding error</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-637"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-637">WW-637</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-637">textarea does not have maxlength attribute</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-617"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-617">WW-617</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-617">Stale Action Invocation left in Stack Context</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-490"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-490">WW-490</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-490">Is WW ignoring webwork.locale setting?</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-455"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-455">WW-455</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-455">Select tag template does not work properly for Object like BigDecima</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-351"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-351">WW-351</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-351">Forwarding unknown tag attributes</a>
+                                    </td>
+                            </tr>
+            </table>
+</p>
+</p>
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:37</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

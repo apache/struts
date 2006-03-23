@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <title>WebWork 2 : 客户端校验</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : 客户端校验
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Jul 22, 2004 by <font color="#0050B2">unkyaku</font>.
+				    </div>
+
+				    <p class="paragraph">WebWork在XWork标准校验框架基础上增加了客户端校验支持.  你可以在表单中的在&lt;<a href="UI Tags.html#UITags-form" title="form on UI Tags">ww:form</a>&gt;标签中指定<b class="strong">validate=&quot;true&quot;</b>来激活客户端校验:</p><div class="code"><div class="codeContent">
+<pre>&lt;ww:form name=<span class="java&#45;quote">&quot;&#039;test&#039;&quot;</span> action=<span class="java&#45;quote">&quot;&#039;javascriptValidation&#039;&quot;</span> validate=<span class="java&#45;quote">&quot;<span class="java&#45;keyword">true</span>&quot;</span>&gt;&#10;  ...&#10;&lt;/ww:form&gt;</pre>
+</div></div><p class="paragraph">为此你必须为表单指定<em class="emphasis">name</em>.</p>还应当确认&lt;ww:form&gt;标签中设置了正确的<em class="emphasis">action</em>和<em class="emphasis">namespace</em>属性.  例如, 如果有一个名为&quot;submitProfile&quot;的活动在名空间&quot;/user&quot;中, 必须使用下列代码
+<div class="code"><div class="codeContent">
+<pre>&lt;ww:form namespace=<span class="java&#45;quote">&quot;&#039;/user&#039;&quot;</span> action=<span class="java&#45;quote">&quot;&#039;submitProfile&#039;&quot;</span> validate=<span class="java&#45;quote">&quot;<span class="java&#45;keyword">true</span>&quot;</span>&gt;&#10;  ...&#10;&lt;/ww:form&gt;</pre>
+</div></div><p class="paragraph">而下面的代码中, 表单可以正常工作, 客户端校验则不能:
+<div class="code"><div class="codeContent">
+<pre>&lt;ww:form action=<span class="java&#45;quote">&quot;&#039;/user/submitProfile.action&#039;&quot;</span> validate=<span class="java&#45;quote">&quot;<span class="java&#45;keyword">true</span>&quot;</span>&gt;&#10;  ...&#10;&lt;/ww:form&gt;</pre>
+</div></div></p>当然, 这需要你已经完成了所有标准的<a href="Validation.html" title="Validation">校验配置</a>工作.  客户端教研室用于服务器端校验相同的校验规则.  如果服务器端校验不工作, 客户端校验也不工作.<br/>
+
+<div class="panel"><div class="panelContent" style="background-color: #ffffce; ">
+<p class="paragraph"><img class="rendericon" src="./icons/emoticons/information.png" height="16" width="16" align="absmiddle" alt="" border="0"/> 并非全部校验器都支持客户端校验. 仅有实现ScriptValidationAware接口的校验器支持这个特性.  具体情况参见WebWork校验器列表</p><img class="rendericon" src="./icons/emoticons/information.png" height="16" width="16" align="absmiddle" alt="" border="0"/> 注意: 在<a href="UI Tags.html" title="UI Tags">UI标签</a>中的<em class="emphasis">required</em>属性并不进行任何客户端校验.
+</div></div><p class="paragraph"><br clear="all" />
+<img class="rendericon" src="./icons/emoticons/warning.png" height="16" width="16" align="absmiddle" alt="" border="0"/>  <b class="strong">升级警告</b>:  该特性在WebWork 2.1引入.  如果从上个版本升级, 确认<a href="Validation.html" title="Validation">validators.xml</a>中使用了正确的校验器.  你<em class="emphasis">必须</em>使用标准XWork校验器的<b class="strong">com.opensymphony.webwork.validators.JavaScriptRequired&#42;Validator</b>版本. 
+<br clear="all" /></p><h2 class="heading2"><a name="Client-SideValidation-BuildingaValidatorthatsupportsclientsidevalidation"> 构建支持客户端校验的校验器</a></h2><p class="paragraph">任何实现<b class="strong">com.opensymphony.webwork.validators.ScriptValidationAware</b>接口的校验器都支持客户端校验:</p><div class="code"><div class="codeContent">
+<pre><span class="java&#45;keyword">public</span>&#160;<span class="java&#45;keyword">interface</span> ScriptValidationAware <span class="java&#45;keyword">extends</span> FieldValidator &#123;&#10;    <span class="java&#45;keyword">public</span>&#160;<span class="java&#45;object">String</span> validationScript(Map parameters);&#10;&#125;</pre>
+</div></div><p class="paragraph">如果激活了客户端校验, <b class="strong">validationScript</b>返回的字符串将在客户端表端提交前执行.  例如,  <b class="strong">requiredstring</b>校验器包含下列代码:</p><div class="code"><div class="codeContent">
+<pre><span class="java&#45;keyword">public</span>&#160;<span class="java&#45;object">String</span> validationScript(Map parameters) &#123;&#10;        <span class="java&#45;object">String</span> field = (<span class="java&#45;object">String</span>) parameters.get(<span class="java&#45;quote">&quot;name&quot;</span>);&#10;        <span class="java&#45;object">StringBuffer</span> js = <span class="java&#45;keyword">new</span>&#160;<span class="java&#45;object">StringBuffer</span>();&#10;&#10;        js.append(<span class="java&#45;quote">&quot;value = form.elements&#91;&#039;&quot;</span> &#43; field &#43; <span class="java&#45;quote">&quot;&#039;&#93;.value;&#92;n&quot;</span>);&#10;        js.append(<span class="java&#45;quote">&quot;<span class="java&#45;keyword">if</span> (value == &#92;&quot;</span>&#92;<span class="java&#45;quote">&quot;) &#123;&#92;n&quot;</span>);&#10;        js.append(<span class="java&#45;quote">&quot;&#92;talert(&#039;&quot;</span> &#43; getMessage(<span class="java&#45;keyword">null</span>) &#43; <span class="java&#45;quote">&quot;&#039;);&#92;n&quot;</span>);&#10;        js.append(<span class="java&#45;quote">&quot;&#92;treturn &#039;&quot;</span> &#43; field &#43; <span class="java&#45;quote">&quot;&#039;;&#92;n&quot;</span>);&#10;        js.append(<span class="java&#45;quote">&quot;&#125;&#92;n&quot;</span>);&#10;        js.append(<span class="java&#45;quote">&quot;&#92;n&quot;</span>);&#10;&#10;        <span class="java&#45;keyword">return</span> js.toString();&#10;&#125;</pre>
+</div></div><p class="paragraph">目前只支持JavaScript.</p>
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

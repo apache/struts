@@ -1,0 +1,120 @@
+<html>
+    <head>
+        <title>WebWork - 
+        set
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>Please make sure you have read the <a href="Tag Syntax.html" title="Tag Syntax">Tag Syntax</a> document and understand how tag attribute syntax works.</td></tr></table>
+
+<h1><a name="set-Description"></a>Description</h1>
+<p> <p>The set tag assigns a value to a variable in a specified scope. It is useful when you wish to assign a variable to a
+ complex expression and then simply reference that variable each time rather than the complex expression. This is
+ useful in both cases: when the complex expression takes time (performance improvement) or is hard to read (code
+ readability improvement).</P></p>
+
+
+<h1><a name="set-Parameters"></a>Parameters</h1>
+<p><table width="100%">
+<tr></p>
+
+<p><th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">name</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top"><b>true</b></td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">The name of the new variable that is assigned the value of <i>value</i></td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">scope</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">action</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">The scope in which to assign the variable. Can be <b>application</b>, <b>session</b>, <b>request</b>, <b>page</b>, or <b>action</b>.</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">value</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Object/String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">The value that is assigned to the variable named <i>name</i></td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Object/String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">id for referencing element. For UI and form tags it will be used as HTML id attribute</td></p>
+
+<p></tr></p>
+
+<p></table></p>
+
+<h1><a name="set-Examples"></a>Examples</h1>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:set name=<span class="code-quote">"personName"</span> value=<span class="code-quote">"person.name"</span>/&gt;</span>
+Hello, <span class="code-tag">&lt;ww:property value=<span class="code-quote">"#personName"</span>/&gt;</span>. How are you?</pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

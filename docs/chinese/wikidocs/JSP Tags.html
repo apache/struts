@@ -1,0 +1,95 @@
+<html>
+    <head>
+        <title>WebWork 2 : JSP标签</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : JSP标签
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Nov 30, 2004 by <font color="#0050B2">jcarreira</font>.
+				    </div>
+
+				    <p class="paragraph"><h1 style="margin: 4px 0px 4px 0px;" class="heading1"><a name="JSPTags-WebWork%26%23039%3BsSupportedViewsJSP">WebWork支持的视图 - JSP</a></h1></p>JavaServer Pages (JSP)是WebWork(WW)支持的重要视图技术. 本节提供将JSP作为WebWork的一项视图技术的相关知识.<p class="paragraph"><b class="strong">参考内容</b>
+<ol>
+<li> <a href="Non-UI Tags.html" title="Non-UI Tags">非UI标签</a></li>
+<li> <a href="UI Tags.html" title="UI Tags">UI标签</a><ol>
+<li> <a href="Templates.html" title="Templates">模版</a> (UI标签如何绘制HTML)</li>
+<li> <a href="Themes.html" title="Themes">主题</a></li>
+</ol></li>
+<li> <a href="Iteration Tags.html" title="Iteration Tags">迭代标签</a></li>
+<li> <a href="Common Tags.html" title="Common Tags">通用标签</a></li>
+</ol><br/>
+也可以查看<a href="WebWork 2 UI Tag Guide.html" title="WebWork 2 UI Tag Guide">WebWork 2 UI标签指南</a>.</p><h2 class="heading2"><a name="JSPTags-Background">背景</a></h2><p class="paragraph">那么什么是JSP呢? 从技术角度来看, JSP是&quot;一个有Web开发人员创建的包含JSP技术特定的标签, 声明和脚本, 并与其它静态标签(HTML or XML)组合而成的页面. JSP页面使用扩展名.jsp; 这通知web服务器使用JSP引擎处理页面上的元素.&quot; 更多信息参见JSP文档.</p>另外, JSP&quot;提供简单, 快速的创建显示动态生成内容的web页面的方法. JSP规范, 由Sun领导在一个行业领域制定, 定义了服务器和JSP页面的交互情况, 描述了页面的格式和语法.&quot; 更多信息参见JSP文档.<p class="paragraph">因此你可以创建第一个JSP并部署到Web服务器中. 当用户第一次访问页面时, servlet容器如Tomcat将把JSP编译成Servlet, 并用它绘制Web页面. 那么, 如果最终结果是servlet, 为什么不直接编写servlet? 因为Servlet不是从Web内容中抽象Web表示的有效方式. 在早期, 人们只使用Servlet编写Web页面. 开发者可以使用Serlet动态输出HTML代码. 典型办法是输出HTML代码 - out.write(&quot;&lt;HTML&gt;..);. 对于维护而言这种方法简直是噩梦, 且开发成本很大, 因为它需要一个Java开发人员.</p>JSP技术出现后, 开发者可以使用者一新技术作为表示层. 早期的JSP规范有限地支持定制标签, 因此早期开发这使用脚本和JavaScript创建动态站点. 混合使用Java和HTML并不那么理想, 因为Java代码包含在标签中. 这使JSP代码难以阅读理解. 对于简单的站点这种方法可以工作的很好, 但不适于复杂站点. 复杂站点需要一种可管理, 可维护的方式抽象设计和逻辑.<p class="paragraph">目前JSP已经成熟了, 对定制标签提供强大的支持. 开发者可以编写定制标签库来实现简单或复杂的任务. 定制标签使用与HTML和XML一致的简单语义格式抽象功能. 使用编写良好的JSP标签, 开发者可以不使用Java代码来开发和维护复杂站点.</p><h2 class="heading2"><a name="JSPTags-WebWork%26%23039%3BsJSPtags">WebWork的JSP标签</a></h2><p class="paragraph">最初编写一个JSP标签是令人畏缩的任务, 但不用担心, WebWork提供了扩展标签库来简化Web站点开发. 标签库分成<a href="Non-UI Tags.html" title="Non-UI Tags">非UI标签</a> and <a href="UI Tags.html" title="UI Tags">UI标签</a>两部分. 两者之间主要区别是, UI标签包含一个隐含JSP模版来绘制HTML表单空间或一组HTML标签产生组合输出结果如table. 这些模版时缺省的并可以满足开发要求. 但是如果你有其他需求, WebWork也提供了使用你自己的模版替代缺省模版的能力. 另外, 你也可以将这些模版组织在一个目录下作为一个主题引用.</p>主题提供了为站点更换外观(skin)的能力. 一套外观不仅仅意味着不同的图形, 颜色等. 还意味着不同视图技术对应的不同视觉效果. 例如, 你可以为WAP, HTML和DHTML分别定义主题.<p class="paragraph">非UI提供对流程控制, 国际化, WebWork活动, 迭代, 文本, JavaBean等功能的支持.</p>关于这些标签更详细的描述在WebWork标签库附录中: <a href="Non-UI Tags.html" title="Non-UI Tags">非UI标签</a>, <a href="UI Tags.html" title="UI Tags">UI标签</a>.<p class="paragraph"><h2 class="heading2"><a name="JSPTags-Anexample">示例</a></h2></p>介绍如何在WebWork使用JSP视图技术的最佳方式是学习一个简单但完整的例子. 我们考察的例子实际上是一个网上商店应用, 如果你已经部署了WebWork的例子, 就可以在index.jsp中找到它. WebWork提供了许多例子以便人们更好的理解它的特性和能力. 网上商店应用是一个绝好的例子, 因为它使用了大量WebWork特性.<p class="paragraph">在进入示例细节之前, 先看一下应用的用例(use case). 下面的列表展示了订购CD的流程.</p><ol>
+<li> 应用引导用户选择语言.</li>
+<li> 为用户提供CD列表. 列表中包含了每个CD的唱片名, 艺术家, 和价格.</li>
+<li> 用户选择想要的CD及数量将它们放入购物车.</li>
+<li> 用户继续向购物车中添加或删除CD.</li>
+<li> 用户想要订货时将进行核对, 这时需要显示购物车中的内容.</li>
+<li> 如果愿意的话用户可以再次购物.</li>
+</ol>
+<h3 class="heading3"><a name="JSPTags-Step1Userselectsdesiredlanguage">第一步 - 用户选择语言</a></h3><p class="paragraph">让我们开始浏览应用. 当你在示例索引页面种选择该应用时, 它将连接到webwork/i18n/index.jsp. 通过查看该页面, 我们知道它将转向活动 - i18n.Language.action. 缺省情况下, WebWork将*.action映射到ServletDispatcher. 该类负责获取适当的活动类并执行它. 如果执行结果被指定到一个视图(JSP), 将转向该视图.</p>ServletDispatcher通过解析请求URI来决定使用哪一个活动类. 本例中, URI是i18n.Language.action. 该URI直接映射到webwork.action.test.i18n包中的类Language. 注意URI并不是 webwork.action.test.i18n.Language.action而仅仅是i18n.Language.action. 这时因为我们在webwork.properties文件中重新定义了 webwork.action.packages属性. 这允许在任何活动前使用前缀webwork.action.test.<br/>
+
+<div class="code"><div class="codeContent">
+<pre>webwork.action.packages=webwork.action.test, webwork.action.standard</pre>
+</div></div><p class="paragraph">现在查看活动Language. 第一个发现是它扩展了Shop(Shop扩展了ActionSupport). 该类是一个你将多次使用的基类. 我们将在后面看到, 该类提供了一组有用的功能. 另外, 它提供了执行的缺省流程. 缺省情况下活动将执行execute方法. 当在ActionSupport类执行execute时, 它将判断URI是否有一个命令后缀如!foo. 本例中foo是需要执行的命令. 该命令将被转换成doFoo()方法调用, 由ActionSupport在活动中调用. 这允许你调用活动中的方法.</p><p class="paragraph">我们的URI不是一个命令, 因此ActionSupport将首先调用doValidate()方法. 这允许你在执行前完成校验. 由于我们没有该方法, ActionSupport将调用doExecute(). 本例中, Language监察是否已经设置了语言. 如果没有, 将返回ERROR. ServletDispatcher查找与i18n.Language.error对应的视图. 查看WEB-INF/classes目录下的views.properties文件, 可以找到应用的设置信息如下. 对于该错误, 可以查到它对应于langauge.jsp.因此dispatcher将转向该页面.</p>Webshop view mapping:<br/>
+
+<div class="code"><div class="codeContent">
+<pre># Webshop (I18N example adaptation)&#10;i18n.Shop.success=shop.jsp&#10;i18n.Add.success=shop.jsp&#10;i18n.Delete.success=shop.jsp&#10;i18n.Checkout.success=checkout.jsp&#10;i18n.Language.success=shop.jsp&#10;i18n.Language.error=language.jsp&#10;i18n.Restart.success=shop.jsp&#10;i18n.Cart.success=cart.jsp&#10;i18n.CDList.success=cdlist.jsp</pre>
+</div></div><p class="paragraph">那么当活动被提取出来时真正发生了什么? 缺省情况下, WebWork使用DefaultActionFactory作为ActionFactory. 该工厂和其他链接一起的工厂将被调用并视图完成活动获取.</p>以Language为例. Dispatcher将调用DefaultActionFactory并要求它返回对应的活动. 该工厂把请求放在链上. 一旦放在链上, 每一个工厂要么忽略请求, 要么对活动进行某些处理, 也可以返回活动. 下面的列表是DefaultActionFactory包含的工厂代理.<br/>
+
+<ol>
+<li> ParametersActionFactoryProxy - 为匹配的参数调用活动的Setter方法.</li>
+<li> PrepareActionFactoryProxy - 调用活动的prepare()方法. 允许活动在校验或执行前完成任何需要的准备活动.</li>
+<li> ContextActionFactoryProxy - 设置活动上下文(context). 活动可以实现*Aware接口通知代理需要设置哪些内容.</li>
+<li> CommandActionFactoryProxy - 剥去URI中的命令并将命令设置到活动中.</li>
+<li> AliasingActionFactoryProxy - 如果URI是一个别名, 将获取活动名称.</li>
+<li> JspActionFactoryProxy - 将JSP包装成活动.</li>
+<li> PrefixActionFactoryProxy - 使用配置文件中的前缀查找活动类.</li>
+<li> XMLActionFactoryProxy - 获取一个XML活动.</li>
+<li> ScriptActionFactoryProxy - 包装并执行JavaScript.</li>
+<li> JavaActionFactory - 返回适当的Java活动对象.</li>
+</ol><br/>
+如你所见, 在DefaultActionFactory的盖头下发生了许多事情. 让我们回到例子中开始查看选择语言的页面language.jsp. 在这个页面中, 使用单选按钮(radio button)显示了一组语言列表. 让我们进一步产看绘制控件的代码.<br/>
+
+<div class="code"><div class="codeContent">
+<pre>&lt;webwork:action name=<span class="java&#45;quote">&quot;&#039;i18n.LanguageList&#039;&quot;</span>&gt;&#10;   &lt;ui:radio label=<span class="java&#45;quote">&quot;&#039;Language&#039;&quot;</span> name=<span class="java&#45;quote">&quot;&#039;language&#039;&quot;</span> list=<span class="java&#45;quote">&quot;languages&quot;</span>/&gt;&#10;&lt;/webwork:action&gt;</pre>
+</div></div><p class="paragraph">首先注意非UI标签action. 该标签执行活动LanguageList. 执行时, 该类将加载locale-to-language映射表并保存到属性languages中. 该标签随后将活动对象放入值栈以便引用.</p>现在看看UI标签radio. 该标签创建一个HTML的INPUT控件, 类型为radio. 控键的名字是language, 控件的文本是Language. 控件的值来自于活动LanguageList的getLanguages()方法调用. 该标签随后遍历映射表将键值作为VALUE属性, 映射值作为显示的文本.<p class="paragraph">现在用户可以选择语言并提交表单. 表单被再次提交到活动Language. 这一次请求参数language包含在请求中. 当活动再次创建时, ParametersActionFactoryProxy将调用活动的setter方法. 这意味着调用方法setLanguage(). 现在, 当doExecute()执行时会发现用户已经选择了语言, 这时将创建对应的Locale对象并将它放入用户的session中.</p><div class="code"><div class="codeContent">
+<pre>session.put(<span class="java&#45;quote">&quot;locale&quot;</span>, locale);</pre>
+</div></div><p class="paragraph">注意将信息放入session是多么的简单. 但session属性是从哪来的呢? 记住活动继承了Shop而该类实现了SessionAware接口. 因为SessionAware包含的setSession()方法将被调用来设置用户的session. 现在我们将locale放入session并返回SUCCESS. Dispatcher将查找别名为i18n.Language.success并发现它映射为shop.jsp. 用户将被转到该页面开始购物.</p><h3 class="heading3"><a name="JSPTags-Step2UserispresentedwithalistofCDs">第二步 - 显示CD列表</a></h3><p class="paragraph">在这一步中, 用户已经选择了语言并将locale对象放入session. 用户现在在shop.jsp中. 查看该页面的代码我们发现几处使用了非UI标签text. 该标签从资源包中提取文本. 该标签能识别locale并使用适当的资源包获取正确的文本.</p><div class="code"><div class="codeContent">
+<pre>&lt;webwork:text name=<span class="java&#45;quote">&quot;&#039;main.title&#039;&quot;</span>/&gt;</pre>
+</div></div><p class="paragraph">我们也注意到该页面包含另一个页面i18n.CDList.action. 非UI标签include将调用活动CDList如果成功的话将在页面中包含cdlist.jsp. 活动CDList将从文本文件中加载CD列表并放入list. CD列表加载完毕后我们将注意力转移到页面cdlist.jsp</p><div class="code"><div class="codeContent">
+<pre>CD:&lt;webwork:include page=<span class="java&#45;quote">&quot;i18n.CDList.action&quot;</span>  /&gt;</pre>
+</div></div><p class="paragraph">cdlist.jsp提供一个SELECT表单控件.
+ 本例中, 我们不使用WebWork的UI标签select. 我们使用WebWork的非UI标签iterator来创建SELECT控件. 该标签可以遍历CD列表. 那么CD列表从哪里来呢? 记住, 在此之前我们调用了CDList. 活动调用后, WebWork将活动放入值栈以便视图引用. 因此, 我们将使用活动CDList的方法getCDList(). 该方法返回list而iterator标签将遍历它. 每一次迭代都将输出一个OPTION元素. 还需要注意非UI标签property. 对于列表中的每一个成员, property标签从CD中取出唱片名, 艺术家, 和国家. 还需要注意最后一个property使用活动ComputePrice来决定CD的价格. 语义@pricer/computePrice(price)意味着调用对象pricer的getComputePrice方法并将CD的价格作为参数. 非常酷. <img class="rendericon" src="./icons/emoticons/smile.gif" height="20" width="20" align="absmiddle" alt="" border="0"/></p><div class="code"><div class="codeContent">
+<pre>&lt;webwork:action name=<span class="java&#45;quote">&quot;&#039;webwork.action.test.i18n.ComputePrice&#039;&quot;</span> id=<span class="java&#45;quote">&quot;pricer&quot;</span>/&gt;&#10;&#10;&lt;select name=<span class="java&#45;quote">&quot;album&quot;</span>&gt;&#10;   &lt;webwork:iterator value=<span class="java&#45;quote">&quot;CDList&quot;</span>&gt;&#10;   &lt;option value=<span class="java&#45;quote">&quot;&lt;webwork:property value=&quot;</span>album<span class="java&#45;quote">&quot;/&gt;&quot;</span>&gt;&#10;      &lt;webwork:property value=<span class="java&#45;quote">&quot;album&quot;</span>/&gt;,&#10;      &lt;webwork:property value=<span class="java&#45;quote">&quot;artist&quot;</span>/&gt;, &lt;webwork:property value=<span class="java&#45;quote">&quot;country&quot;</span>/&gt;,&#10;      &lt;webwork:property value=<span class="java&#45;quote">&quot;&#64;pricer/computePrice(price)&quot;</span>/&gt;&#10;   &lt;/option&gt;&#10;   &lt;/webwork:iterator&gt;&#10;&lt;/select&gt;</pre>
+</div></div><p class="paragraph">现在回到shop.jsp. 查看代码进一步展示的其他有趣的方面. 看看UI标签textfield的label属性. 注意属性的值是方法调用text(&#039;main.qtyLabel&#039;). 该方法从资源文件中获取对应的字符串. 但是活动有getText()方法吗? 记住Shop扩展了ActionSupport. 该活动提供该方法.</p><div class="code"><div class="codeContent">
+<pre>&lt;ui:textfield label=<span class="java&#45;quote">&quot;text(&#039;main.qtyLabel&#039;)&quot;</span> name=<span class="java&#45;quote">&quot;&#039;quantity&#039;&quot;</span> value=<span class="java&#45;quote">&quot;1&quot;</span> size=<span class="java&#45;quote">&quot;3&quot;</span>/&gt;</pre>
+</div></div><p class="paragraph">shop.jsp中最后一个值的关注的内容是它包含了用户购物车.</p><div class="code"><div class="codeContent">
+<pre>&lt;webwork:include value=<span class="java&#45;quote">&quot;&#039;cart.jsp&#039;&quot;</span>  /&gt;</pre>
+</div></div><p class="paragraph">当cart.jsp(见下文)被包含时, 使用下面的代码取得用户购物内容. 属性value的值被转换成一组方法调用getCart()/getItems(). Shop调用的第一个方法将返回Cart, 然后在Cart上调用下一个方法. 如果第一个方法没有取得cart, Shop将创建一个空的cart并放入用户session.</p><div class="code"><div class="codeContent">
+<pre>&lt;webwork:property value=<span class="java&#45;quote">&quot;cart/items&quot;</span>&gt;&#10;&lt;webwork:<span class="java&#45;keyword">if</span> test=<span class="java&#45;quote">&quot;.&quot;</span>&gt;&#10;&#10;    &lt;center&gt;&#10;    &lt;table border=<span class="java&#45;quote">&quot;0&quot;</span> cellpadding=<span class="java&#45;quote">&quot;0&quot;</span> width=<span class="java&#45;quote">&quot;100&#37;&quot;</span> bgcolor=&#039;&lt;webwork:text name=<span class="java&#45;quote">&quot;&#039;cart.bgcolor&#039;&quot;</span>/&gt;&#039;&gt;&#10;    &lt;tr&gt;&#10;      &lt;td&gt;&lt;b&gt;&lt;webwork:text name=<span class="java&#45;quote">&quot;&#039;cd.albumLabel&#039;&quot;</span>/&gt;&lt;/b&gt;&lt;/td&gt;&#10;      &lt;td&gt;&lt;b&gt;&lt;webwork:text name=<span class="java&#45;quote">&quot;&#039;cd.artistLabel&#039;&quot;</span>/&gt;&lt;/b&gt;&lt;/td&gt;&#10;      &lt;td&gt;&lt;b&gt;&lt;webwork:text name=<span class="java&#45;quote">&quot;&#039;cd.countryLabel&#039;&quot;</span>/&gt;&lt;/b&gt;&lt;/td&gt;&#10;      &lt;td&gt;&lt;b&gt;&lt;webwork:text name=<span class="java&#45;quote">&quot;&#039;cd.priceLabel&#039;&quot;</span>/&gt;&lt;/b&gt;&lt;/td&gt;&#10;      &lt;td&gt;&lt;b&gt;&lt;webwork:text name=<span class="java&#45;quote">&quot;&#039;cd.quantityLabel&#039;&quot;</span>/&gt;&lt;/b&gt;&lt;/td&gt;&#10;      &lt;td&gt;&lt;/td&gt;&#10;   &lt;/tr&gt;&#10;&#10;&lt;webwork:action name=<span class="java&#45;quote">&quot;&#039;i18n.ComputePrice&#039;&quot;</span> id=<span class="java&#45;quote">&quot;pricer&quot;</span>/&gt;&#10;&lt;webwork:iterator&gt;&#10;   &lt;tr&gt;&#10;      &lt;webwork:property value=<span class="java&#45;quote">&quot;cd&quot;</span>&gt;&#10;      &lt;td&gt;&lt;b&gt;&lt;webwork:property value=<span class="java&#45;quote">&quot;album&quot;</span>/&gt;&lt;/b&gt;&lt;/td&gt;&#10;      &lt;td&gt;&lt;b&gt;&lt;webwork:property value=<span class="java&#45;quote">&quot;artist&quot;</span>/&gt;&lt;/b&gt;&lt;/td&gt;&#10;      &lt;td&gt;&lt;b&gt;&lt;webwork:property value=<span class="java&#45;quote">&quot;country&quot;</span>/&gt;&lt;/b&gt;&lt;/td&gt;&#10;      &lt;td&gt;&lt;b&gt;&lt;webwork:property value=<span class="java&#45;quote">&quot;&#64;pricer/computePrice(price)&quot;</span>/&gt;&lt;/b&gt;&lt;/td&gt;&#10;      &lt;/webwork:property&gt;&#10;&#10;      &lt;td&gt;&lt;b&gt;&lt;webwork:property value=<span class="java&#45;quote">&quot;quantity&quot;</span>/&gt;&lt;/b&gt;&lt;/td&gt;&#10;      &lt;td&gt;&#10;         &lt;form action=<span class="java&#45;quote">&quot;i18n.Delete.action&quot;</span> method=<span class="java&#45;quote">&quot;post&quot;</span>&gt;&#10;           &lt;input type=submit value=&#039;&lt;webwork:text name=<span class="java&#45;quote">&quot;&#039;cart.delLabel&#039;&quot;</span>/&gt;&#039;&gt;&#10;           &lt;input type=hidden name=<span class="java&#45;quote">&quot;album&quot;</span> value=&#039;&lt;webwork:property value=<span class="java&#45;quote">&quot;cd/album&quot;</span>/&gt;&#039;&gt;&#10;         &lt;/form&gt;&#10;      &lt;/td&gt;&#10;   &lt;/tr&gt;&#10;&lt;/webwork:iterator&gt;&#10;&#10;   &lt;/table&gt;&#10;   &lt;p&gt;&#10;   &lt;p&gt;&#10;   &lt;form action=<span class="java&#45;quote">&quot;i18n.Checkout.action&quot;</span>  method=<span class="java&#45;quote">&quot;post&quot;</span>&gt;&#10;        &lt;input type=<span class="java&#45;quote">&quot;submit&quot;</span> value=&#039;&lt;webwork:text name=<span class="java&#45;quote">&quot;&#039;cart.checkoutLabel&#039;&quot;</span>/&gt;&#039;&gt;&#10;   &lt;/form&gt;&#10;  &lt;/center&gt;&#10;&#10;&lt;/webwork:<span class="java&#45;keyword">if</span>&gt;&#10;&lt;/webwork:property&gt;</pre>
+</div></div><p class="paragraph"><h3 class="heading3"><a name="JSPTags-Step3UseraddsCDtotheirshoppingcart">第三步 - 用户向购物车中增加CD</a></h3></p>现在用户看到CD列表. 用户选择一个CD, 输入数量并提交表单. 表单提交到i18n.Add.action, 它对应于活动Add. 提交的参数被设置到活动中. 在我们的场景中, 它包括数量和唱片名. 随后活动的doExecute()方法被调用, 获取用户的购物车并将CD加入进去. 活动返回SUCCESS, 它映射到shop.jsp. 这次用户的购物车中有内容并显示在CD列表下面.<p class="paragraph"><h3 class="heading3"><a name="JSPTags-Step4UsercontinuestoaddorremoveCDs">第四步 - 用户继续增加或删除CD</a></h3></p>这里用户重复增加或删除CD的过程. 当他结束购物时, 将进行核对.<p class="paragraph"><h3 class="heading3"><a name="JSPTags-Step5Userchecksout">第五步 - 用户核对</a></h3></p>本步骤中, 用户结束购物并决定进行核对. 表单提交到i18n.Checkout.action. 它对应于活动Checkout. 该活动计算用户购物车中物品的总额并将它设置到属性totalPrice. 活动返回SUCCESS, 它对应视图checkout.jsp. 该视图显示用户购物车中的物品以及总价.<p class="paragraph"><h3 class="heading3"><a name="JSPTags-Step6Usercanshopagainifdesired.">第六步 - 如果愿意用户可以再次购物</a></h3></p>本步骤中, 用户可以再次购物. 如果他们选择重新开始, 可以选择链接i18n.Restart.action. 该活动删除用户购物车并返回SUCCESS, 它对应视图shop.jsp, 重新开始整个过程.<p class="paragraph"><h2 class="heading2"><a name="JSPTags-Summary">总结</a></h2></p>希望本示例能成为您理解使用WebWork特性的JSP的起点. 本例并没有完全展示WebWork, 它仅仅是一个简介. 还有其他的例子可以帮助你进一步了解WebWork. 另外, 你还可以阅读referecnce章节以了解WebWork更多信息. 
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

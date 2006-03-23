@@ -1,0 +1,105 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Basic Validation
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="BasicValidation-Description"></a>Description</h1>
+<p>The following are the steps to configure a basic validation using Webwork.</p>
+
+<h2><a name="BasicValidation-Step1%3A"></a>Step 1:</h2>
+<p>Write up a html form.</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;html&gt;</span>
+<span class="code-tag">&lt;head&gt;</span>
+    <span class="code-tag">&lt;title&gt;</span>Validation - Basic<span class="code-tag">&lt;/title&gt;</span>
+    <span class="code-tag">&lt;ww:head/&gt;</span>
+<span class="code-tag">&lt;/head&gt;</span>
+
+<span class="code-tag">&lt;body&gt;</span>
+
+<span class="code-tag">&lt;b&gt;</span>What is your favorite color?<span class="code-tag">&lt;/b&gt;</span>
+<span class="code-tag">&lt;p/&gt;</span>
+
+<span class="code-tag">&lt;ww:form method=<span class="code-quote">"post"</span>&gt;</span>
+    <span class="code-tag">&lt;ww:textfield label=<span class="code-quote">"Name"</span> name=<span class="code-quote">"name"</span>/&gt;</span>
+    <span class="code-tag">&lt;ww:textfield label=<span class="code-quote">"Age"</span> name=<span class="code-quote">"age"</span>/&gt;</span>
+    <span class="code-tag">&lt;ww:textfield label=<span class="code-quote">"Favorite color"</span> name=<span class="code-quote">"answer"</span>/&gt;</span>
+    <span class="code-tag">&lt;ww:submit/&gt;</span>
+<span class="code-tag">&lt;/ww:form&gt;</span>
+
+<span class="code-tag">&lt;/body&gt;</span>
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+
+
+<h2><a name="BasicValidation-Step2%3A"></a>Step 2:</h2>
+<p>Write up the action class</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> class QuizAction <span class="code-keyword">extends</span> ActionSupport {
+    <span class="code-object">String</span> name;
+    <span class="code-object">int</span> age;
+    <span class="code-object">String</span> answer;
+
+    <span class="code-keyword">public</span> <span class="code-object">String</span> getName() {
+        <span class="code-keyword">return</span> name;
+    }
+
+    <span class="code-keyword">public</span> void setName(<span class="code-object">String</span> name) {
+        <span class="code-keyword">this</span>.name = name;
+    }
+
+    <span class="code-keyword">public</span> <span class="code-object">int</span> getAge() {
+        <span class="code-keyword">return</span> age;
+    }
+
+    <span class="code-keyword">public</span> void setAge(<span class="code-object">int</span> age) {
+        <span class="code-keyword">this</span>.age = age;
+    }
+
+    <span class="code-keyword">public</span> <span class="code-object">String</span> getAnswer() {
+        <span class="code-keyword">return</span> answer;
+    }
+
+    <span class="code-keyword">public</span> void setAnswer(<span class="code-object">String</span> answer) {
+        <span class="code-keyword">this</span>.answer = answer;
+    }
+}</pre>
+</div></div>
+
+
+<h2><a name="BasicValidation-Step3%3A"></a>Step3:</h2>
+<p>Write up the validators to be used. The validation.xml format is either &lt;ActionClassName&gt;&#45;validation.xml or &lt;ActionClassName&gt;&#45;&lt;ActionContextName&gt;-validation.xml</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml">&lt;!--
+    Add the following DOCTYPE declaration as first line of your XXX-validation.xml file:
+    <span class="code-tag">&lt;!DOCTYPE validators PUBLIC <span class="code-quote">"-//OpenSymphony Group//XWork Validator 1.0.2//EN"</span> <span class="code-quote">"http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd"</span>&gt;</span>
+--&gt;
+<span class="code-tag">&lt;validators&gt;</span>
+    <span class="code-tag">&lt;field name=<span class="code-quote">"name"</span>&gt;</span>
+        <span class="code-tag">&lt;field-validator type=<span class="code-quote">"requiredstring"</span>&gt;</span>
+            <span class="code-tag">&lt;message&gt;</span>You must enter a name<span class="code-tag">&lt;/message&gt;</span>
+        <span class="code-tag">&lt;/field-validator&gt;</span>
+    <span class="code-tag">&lt;/field&gt;</span>
+    <span class="code-tag">&lt;field name=<span class="code-quote">"age"</span>&gt;</span>
+        <span class="code-tag">&lt;field-validator type=<span class="code-quote">"int"</span>&gt;</span>
+            <span class="code-tag">&lt;param name=<span class="code-quote">"min"</span>&gt;</span>13<span class="code-tag">&lt;/param&gt;</span>
+            <span class="code-tag">&lt;param name=<span class="code-quote">"max"</span>&gt;</span>19<span class="code-tag">&lt;/param&gt;</span>
+            <span class="code-tag">&lt;message&gt;</span>Only people ages 13 to 19 may take this quiz<span class="code-tag">&lt;/message&gt;</span>
+        <span class="code-tag">&lt;/field-validator&gt;</span>
+    <span class="code-tag">&lt;/field&gt;</span>
+<span class="code-tag">&lt;/validators&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

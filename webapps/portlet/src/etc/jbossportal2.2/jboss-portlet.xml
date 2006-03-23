@@ -1,0 +1,16 @@
+<portlet-app>
+<!--
+  ~ Copyright (c) 2002-2006 by OpenSymphony
+  ~ All rights reserved.
+  -->
+   <portlet>
+      <portlet-name>WebWorkPortlet</portlet-name>
+      <security>
+      </security>
+   </portlet>
+   <portlet>
+      <portlet-name>WebWorkPortlet2</portlet-name>
+      <security>
+      </security>
+   </portlet>
+</portlet-app>

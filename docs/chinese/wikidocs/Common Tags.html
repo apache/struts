@@ -1,0 +1,83 @@
+<html>
+    <head>
+        <title>WebWork 2 : 通用标签</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : 通用标签
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Nov 29, 2004 by <font color="#0050B2">jcarreira</font>.
+				    </div>
+
+				    <p class="paragraph"><h3 style="margin: 4px 0px 4px 0px;" class="heading3"><a name="CommonTags-Param"> Param</a></h3>
+设置父标签的参数. 如包含在ww:url和ww:action中.
+<div class="code"><div class="codeContent">
+<pre>&lt;ww:action name=<span class="java&#45;quote">&quot;VelocityCounter&quot;</span> id=<span class="java&#45;quote">&quot;vc&quot;</span>&gt;&#10; &lt;ww:param name=<span class="java&#45;quote">&quot;foo&quot;</span> value=<span class="java&#45;quote">&quot;&#039;BAR&#039;&quot;</span>/&gt;&#10;&lt;/ww:action&gt;&#10;javascript:popUp(&#039;&lt;ww:url value=<span class="java&#45;quote">&quot;wiki.opensymphony.com/exec/edit&quot;</span>&gt;&lt;ww:param name=<span class="java&#45;quote">&quot;name&quot;</span> value=<span class="java&#45;quote">&quot;Common Tags&quot;</span>/&gt;&lt;/ww:url&gt;&#039;)</pre>
+</div></div><br/>
+摘自webwork.tld:
+<div class="code"><div class="codeContent">
+<pre>&lt;attribute&gt;&#10;   &lt;name&gt;name&lt;/name&gt;&#10;   &lt;required&gt;<span class="java&#45;keyword">true</span>&lt;/required&gt;&#10;   &lt;rtexprvalue&gt;<span class="java&#45;keyword">true</span>&lt;/rtexprvalue&gt;&#10;&lt;/attribute&gt;&#10;&lt;attribute&gt;&#10;   &lt;name&gt;value&lt;/name&gt;&#10;   &lt;required&gt;<span class="java&#45;keyword">false</span>&lt;/required&gt;&#10;   &lt;rtexprvalue&gt;<span class="java&#45;keyword">true</span>&lt;/rtexprvalue&gt;&#10;&lt;/attribute&gt;</pre>
+</div></div>
+<h3 class="heading3"><a name="CommonTags-Property"> Property</a></h3></p>用于获取结果属性的值. 如果value未给定, 将使用栈顶值.<br/>
+
+<div class="code"><div class="codeContent">
+<pre>&lt;ww:property value=<span class="java&#45;quote">&quot;id&quot;</span>&#160;<span class="java&#45;keyword">default</span>=<span class="java&#45;quote">&quot;#session&#91;OS:&#039;customer&#039;&#93;.id&quot;</span>/&gt;</pre>
+</div></div><br/>
+摘自webwork.tld:
+<div class="code"><div class="codeContent">
+<pre>&lt;attribute&gt;&#10;   &lt;name&gt;value&lt;/name&gt;&#10;   &lt;required&gt;<span class="java&#45;keyword">false</span>&lt;/required&gt;&#10;   &lt;rtexprvalue&gt;<span class="java&#45;keyword">true</span>&lt;/rtexprvalue&gt;&#10; &lt;/attribute&gt;&#10; &lt;attribute&gt;&#10;    &lt;name&gt;<span class="java&#45;keyword">default</span>&lt;/name&gt;&#10;    &lt;required&gt;<span class="java&#45;keyword">false</span>&lt;/required&gt;&#10;    &lt;rtexprvalue&gt;<span class="java&#45;keyword">true</span>&lt;/rtexprvalue&gt;&#10; &lt;/attribute&gt;</pre>
+</div></div>
+<h3 class="heading3"><a name="CommonTags-Push"> Push</a></h3>
+使用ww:push可以将一个值压入值栈. 这与ww:set(见下文)类似, 因此在决定使用前应当都看一下.
+<div class="code"><div class="codeContent">
+<pre>&lt;ww:push value=<span class="java&#45;quote">&quot;counter&quot;</span>&gt;&#10;  &lt;ww:property value=<span class="java&#45;quote">&quot;count&quot;</span>/&gt;&#10;&lt;/ww:push&gt;&#10;&#10;&#10;To make an action available on the stack:&#10;&#10;&lt;ww:action name=<span class="java&#45;quote">&quot;&#039;SomeAction&#039;&quot;</span> id=<span class="java&#45;quote">&quot;sa&quot;</span>/&gt;&#10;&lt;ww:push value=<span class="java&#45;quote">&quot;#sa&quot;</span>&gt;&#10; foo = &lt;ww:property value=<span class="java&#45;quote">&quot;foo&quot;</span>/&gt;&#10;&lt;/ww:push&gt;</pre>
+</div></div><br/>
+摘自webwork.tld:
+<div class="code"><div class="codeContent">
+<pre>&lt;attribute&gt;&#10;   &lt;name&gt;value&lt;/name&gt;&#10;   &lt;required&gt;<span class="java&#45;keyword">true</span>&lt;/required&gt;&#10;   &lt;rtexprvalue&gt;<span class="java&#45;keyword">true</span>&lt;/rtexprvalue&gt;&#10;&lt;/attribute&gt;</pre>
+</div></div>
+<h3 class="heading3"><a name="CommonTags-Set"> Set</a></h3>
+使用ww:set标签, 你可以在JSP中创建一个自己命名变量. 可以使用#<em class="emphasis">variableName</em>的形式引用该变量.
+<div class="code"><div class="codeContent">
+<pre>&lt;ww:set name=<span class="java&#45;quote">&quot;huba&quot;</span> value=<span class="java&#45;quote">&quot;foo.bar&quot;</span> scope=<span class="java&#45;quote">&quot;webwork&quot;</span> /&gt;&#10;&#10;&lt;ww:property value=<span class="java&#45;quote">&quot;#huba.otherExpression().baz&quot;</span>/&gt;)</pre>
+</div></div><br/>
+摘自webwork.tld:
+<div class="code"><div class="codeContent">
+<pre>&lt;info&gt;&#10;   Sets the value of an object in the VS to a scope&#10;   (page, stack, application, session). If the value&#10;   is not given, the top of the stack is used. If the&#10;   scope is not given, the <span class="java&#45;keyword">default</span> scope of <span class="java&#45;quote">&quot;webwork&quot;</span>&#10;   is used.&#10;&lt;/info&gt;&#10;&lt;attribute&gt;&#10;   &lt;name&gt;name&lt;/name&gt;&#10;   &lt;required&gt;<span class="java&#45;keyword">true</span>&lt;/required&gt;&#10;   &lt;rtexprvalue&gt;<span class="java&#45;keyword">true</span>&lt;/rtexprvalue&gt;&#10;&lt;/attribute&gt;&#10;&lt;attribute&gt;&#10;   &lt;name&gt;value&lt;/name&gt;&#10;   &lt;required&gt;<span class="java&#45;keyword">false</span>&lt;/required&gt;&#10;   &lt;rtexprvalue&gt;<span class="java&#45;keyword">true</span>&lt;/rtexprvalue&gt;&#10;&lt;/attribute&gt;&#10;&lt;attribute&gt;&#10;   &lt;name&gt;scope&lt;/name&gt;&#10;   &lt;required&gt;<span class="java&#45;keyword">false</span>&lt;/required&gt;&#10;   &lt;rtexprvalue&gt;<span class="java&#45;keyword">true</span>&lt;/rtexprvalue&gt;&#10;&lt;/attribute&gt;</pre>
+</div></div>
+<h3 class="heading3"><a name="CommonTags-Url"> Url</a></h3>
+该标签构造一个编码的URL. 该标签的最简版本, &lt;ww:url/&gt;, 输出本页面的相对URL. 下面是例子:<br/>
+ /jsp/cart.jsp?template=%5BLjava.lang.String%3B%40e29f36&amp;id=%5BLjava.lang.String%3B%40429be9<br/>
+下面是更长的例子:
+<div class="code"><div class="codeContent">
+<pre>&lt;ww:url value=<span class="java&#45;quote">&quot;www.google.com/search&quot;</span>&gt;&#10;  &lt;ww:param name=<span class="java&#45;quote">&quot;sourceid&quot;</span> value=<span class="java&#45;quote">&quot;&#039;navclient&#039;&quot;</span>/&gt;&#10;  &lt;ww:param name=<span class="java&#45;quote">&quot;ie&quot;</span> value=<span class="java&#45;quote">&quot;&#039;UTF&#45;8&#039;&quot;</span>/&gt;&#10;  &lt;ww:param name=<span class="java&#45;quote">&quot;oe&quot;</span> value=<span class="java&#45;quote">&quot;&#039;UTF&#45;8&#039;&quot;</span>/&gt;&#10;  &lt;ww:param name=<span class="java&#45;quote">&quot;q&quot;</span> value=<span class="java&#45;quote">&quot;&#039;webwork&#039;&quot;</span>/&gt;&#10;&lt;/ww:url&gt;</pre>
+</div></div><br/>
+输出结果为:<br/>
+<a href="http://www.google.com/search?sourceid=navclient&amp;ie=UTF-8&amp;oe=UTF-8&amp;q=webwork" title="Visit page outside Confluence">&#104;ttp://www.google.com/search?sourceid=navclient&amp;ie=UTF-8&amp;oe=UTF-8&amp;q=webwork</a><p class="paragraph">摘自webwork.tld:
+<div class="code"><div class="codeContent">
+<pre>&lt;attribute&gt;&#10;   &lt;name&gt;value&lt;/name&gt;&#10;   &lt;required&gt;<span class="java&#45;keyword">false</span>&lt;/required&gt;&#10;   &lt;rtexprvalue&gt;<span class="java&#45;keyword">false</span>&lt;/rtexprvalue&gt;&#10;&lt;/attribute&gt;&#10;&lt;attribute&gt;&#10;    &lt;name&gt;id&lt;/name&gt;&#10;    &lt;required&gt;<span class="java&#45;keyword">false</span>&lt;/required&gt;&#10;    &lt;rtexprvalue&gt;<span class="java&#45;keyword">false</span>&lt;/rtexprvalue&gt;&#10;&lt;/attribute&gt;</pre>
+</div></div></p>
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

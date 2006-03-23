@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <title>WebWork 2 : JUnit</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : JUnit
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Jun 09, 2004 by <font color="#0050B2">ctran</font>.
+				    </div>
+
+				    <p class="paragraph">你可以采用几种方法对活动类进行单元测试.</p><h2 class="heading2"><a name="JUnit-Thesimplestistoinstantiateyouractions%2Ccallsettersthenexecute%28%29.Thisallowsyoutobypassallthecomplicatedcontainersetup."> 最简单的办法是初始化活动类, 调用setters, 然后调用execute().  这样可以跳过所有复杂的容器设置工作.</a></h2><p class="paragraph">从Petsoar中摘录的例子:
+<div class="code"><div class="codeContent">
+<pre><span class="java&#45;keyword">package</span> org.petsoar.actions.inventory;&#10;&#10;<span class="java&#45;keyword">import</span> com.mockobjects.constraint.IsEqual;&#10;<span class="java&#45;keyword">import</span> com.mockobjects.dynamic.C;&#10;<span class="java&#45;keyword">import</span> com.mockobjects.dynamic.Mock;&#10;<span class="java&#45;keyword">import</span> com.opensymphony.xwork.Action;&#10;<span class="java&#45;keyword">import</span> junit.framework.TestCase;&#10;<span class="java&#45;keyword">import</span> org.petsoar.pets.Pet;&#10;<span class="java&#45;keyword">import</span> org.petsoar.pets.PetStore;&#10;&#10;<span class="java&#45;keyword">public</span> class TestViewPet <span class="java&#45;keyword">extends</span> TestCase &#123;&#10;    <span class="java&#45;keyword">private</span> Mock mockPetStore;&#10;    <span class="java&#45;keyword">private</span> ViewPet action;&#10;&#10;    <span class="java&#45;keyword">protected</span> void setUp() <span class="java&#45;keyword">throws</span> Exception &#123;&#10;        mockPetStore = <span class="java&#45;keyword">new</span> Mock(PetStore.class);&#10;        PetStore petStore = (PetStore) mockPetStore.proxy();&#10;&#10;        action = <span class="java&#45;keyword">new</span> ViewPet();&#10;        action.setPetStore(petStore);&#10;    &#125;&#10;&#10;    <span class="java&#45;keyword">public</span> void testViewPet() <span class="java&#45;keyword">throws</span> Exception &#123;&#10;        Pet existingPet = <span class="java&#45;keyword">new</span> Pet();&#10;        existingPet.setName(<span class="java&#45;quote">&quot;harry&quot;</span>);&#10;        existingPet.setId(1);&#10;&#10;        Pet expectedPet = <span class="java&#45;keyword">new</span> Pet();&#10;        expectedPet.setName(<span class="java&#45;quote">&quot;harry&quot;</span>);&#10;        expectedPet.setId(1);&#10;&#10;        mockPetStore.expectAndReturn(<span class="java&#45;quote">&quot;getPet&quot;</span>, C.args(<span class="java&#45;keyword">new</span> IsEqual(<span class="java&#45;keyword">new</span>&#160;<span class="java&#45;object">Long</span>(1))), existingPet);&#10;        action.setId(1);&#10;&#10;        <span class="java&#45;object">String</span> result = action.execute();&#10;&#10;        assertEquals(Action.SUCCESS, result);&#10;        assertEquals(expectedPet, existingPet);&#10;        mockPetStore.verify();&#10;    &#125;&#10;&#10;    <span class="java&#45;keyword">public</span> void testViewPetNoId() <span class="java&#45;keyword">throws</span> Exception &#123;&#10;        mockPetStore.expectAndReturn(<span class="java&#45;quote">&quot;getPet&quot;</span>, C.ANY&#95;ARGS, <span class="java&#45;keyword">null</span>);&#10;&#10;        <span class="java&#45;object">String</span> result = action.execute();&#10;&#10;        assertEquals(Action.ERROR, result);&#10;        assertEquals(1, action.getActionErrors().size());&#10;        assertEquals(<span class="java&#45;quote">&quot;Invalid pet selected.&quot;</span>, action.getActionErrors().iterator().next());&#10;        assertNull(action.getPet());&#10;        mockPetStore.verify();&#10;    &#125;&#10;&#10;    <span class="java&#45;keyword">public</span> void testViewPetInvalidId() <span class="java&#45;keyword">throws</span> Exception &#123;&#10;        action.setId(&#45;1);&#10;        testViewPetNoId();&#10;    &#125;&#10;&#125;</pre>
+</div></div></p><h2 class="heading2"><a name="JUnit-Testinterceptorsand%2Forresulttypes"> 测试截取器和结果类型</a></h2><p class="paragraph">查看XWork/WebWork中的测试用例.  它很全面并提供了很好的起点.  例如,  下面是如何测试<b class="strong">ParametersInterceptor</b>:</p><div class="code"><div class="codeContent">
+<pre><span class="java&#45;keyword">public</span> void testDoesNotAllowMethodInvocations() &#123;&#10;    Map params = <span class="java&#45;keyword">new</span> HashMap();&#10;    params.put(<span class="java&#45;quote">&quot;&#64;java.lang.<span class="java&#45;object">System</span>&#64;exit(1).dummy&quot;</span>, <span class="java&#45;quote">&quot;dumb value&quot;</span>);&#10;&#10;    HashMap extraContext = <span class="java&#45;keyword">new</span> HashMap();&#10;    extraContext.put(ActionContext.PARAMETERS, params);&#10;&#10;    <span class="java&#45;keyword">try</span> &#123;&#10;        ActionProxy proxy = ActionProxyFactory.getFactory().&#10;               createActionProxy(<span class="java&#45;quote">&quot;&quot;, MockConfigurationProvider.MODEL&#95;DRIVEN&#95;PARAM&#95;TEST, extraContext);&#10;        assertEquals(Action.SUCCESS, proxy.execute());&#10;&#10;        ModelDrivenAction action = (ModelDrivenAction) proxy.getAction();&#10;        TestBean model = (TestBean) action.getModel();&#10;&#10;        <span class="java&#45;object">String</span> property = <span class="java&#45;object">System</span>.getProperty(&quot;</span>webwork.security.test&quot;);&#10;        assertNull(property);&#10;    &#125; <span class="java&#45;keyword">catch</span> (Exception e) &#123;&#10;        e.printStackTrace();&#10;        fail();&#10;    &#125;&#10;&#125;</pre>
+</div></div>
+<p class="paragraph">注意: 这不是唯一的办法, 因此请自己决定.</p>
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

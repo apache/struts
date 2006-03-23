@@ -1,0 +1,11 @@
+<tr>
+    <td class="tdLabel"><label for="foo" class="label">mylabel:</label></td>
+    <td>
+<input type="text" name="foo" value="hello" id="foo"/><br/>
+<select onChange="this.form.elements['foo'].value=this.options[this.selectedIndex].value">
+    <option value="foo" selected="selected">foo</option>
+    <option value="bar">bar</option>
+    <option value="baz">baz</option>
+</select>
+    </td>
+</tr>

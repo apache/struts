@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <title>WebWork - 
+         to escape special chars in resource bundles
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h3><a name="Howtoescapespecialcharsinresourcebundles-NormalJavaresourcebundles"></a>Normal Java resource bundles</h3>
+
+<p>In this case the important aspect is the following:<table cellpadding='5' width='85%' cellspacing='8px' class='infoMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/information.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">API: java.util.Properties</b><br /><br/>
+ The method does not treat a backslash character, \, before a non-valid escape character as an error; the backslash is silently dropped. For example, in a Java string the sequence "\z" would cause a compile time error. In contrast, this method silently drops the backslash. Therefore, this method treats the two character sequence "\b" as equivalent to the single character 'b'.</td></tr></table></p>
+
+<h3><a name="Howtoescapespecialcharsinresourcebundles-MessageFormatrules"></a>MessageFormat rules</h3>
+
+<p>Extensively describing rules for embedding ' and {. (see javadoc API for MessageFormat)</p>
+
+<p>The special chars ', { and }:</p>
+
+<ul class="alternate" type="square">
+	<li>escape ' with another ': resulting in '' (double-single quote)</li>
+	<li>escape \ with another \: resulting in \ \ (double backslash)</li>
+	<li>enclose } with ': resulting in '}'</li>
+	<li>enclose { with ': resulting in '{'</li>
+</ul>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

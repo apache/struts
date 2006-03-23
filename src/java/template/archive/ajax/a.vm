@@ -1,0 +1,13 @@
+<a dojoType="BindAnchor" evalResult="true"
+#if ($parameters.id) id="$!webwork.htmlEncode($parameters.id)" #end
+#if ($parameters.href) href="$!webwork.htmlEncode($parameters.href)" #end
+#if ($parameters.notifyTopics) notifyTopics="$!webwork.htmlEncode($parameters.notifyTopics)" #end
+#if ($parameters.errorText) errorHtml="$!webwork.htmlEncode($parameters.errorText)" #end
+#if ($parameters.showErrorTransportText)  showTransportError="true" #end
+#if ($parameters.afterLoading) onLoad="$!parameters.afterLoading" #end
+#if ($parameters.preInvokeJS) preInvokeJS="$!parameters.preInvokeJS" #end
+#if ($parameters.tabindex) tabindex="$!webwork.htmlEncode($parameters.tabindex)" #end
+#if ($parameters.cssClass) class="$!webwork.htmlEncode($parameters.cssClass)" #end
+#if ($parameters.cssStyle) style="$!webwork.htmlEncode($parameters.cssStyle)" #end
+#parse("/$parameters.templateDir/simple/scripting-events.vm")
+>

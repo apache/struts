@@ -1,0 +1,61 @@
+<html>
+    <head>
+        <title>WebWork - 
+         Overview
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>These documents are out of date. As of WebWork 2.2, the WebWork IoC container has been deprecated (though not removed) and the WebWork team recommends you use <a href="Spring.html" title="Spring">Spring</a> for all your IoC needs</td></tr></table>
+
+<h2><a name="IoCOverview-Overview"></a>Overview</h2>
+
+<p>In many applications you have component objects that are required by a given class to use. In a nutshell, the IoC pattern allows a parent object (in the case of Webwork, XWork's ComponentManager instance) to give a resource Object to the action Object that needs it (usually an action, but it could be any object that implements the appropriate <em>enabler</em>) rather than said Object's needing to obtain the resource itself.</p>
+
+<p>There are two ways of implementing IoC: Instantiation and using an enabler interface. With instantiation, a given action Object is instantiated with the resource Object as a constructor parameter. With enablers interfaces, the action will have an interface with a method, say "setComponent(ComponentObject r);" that will allow the resource to be passed to said action Object after it is instantiated. The  ComponentObject is passed, because the Object implements the given interface. XWork uses <em>enablers</em> to pass components. </p>
+
+<h2><a name="IoCOverview-WhyIoC%3F"></a>Why IoC?</h2>
+
+<p>So why is IoC useful? It means that you can develop components (generally services of some sort) in a top-down fashion, without the need to build a registry class that the client must then call to obtain the component instance.</p>
+
+<p>Traditionally when implementing services you are probably used to following steps similar to these:</p>
+<ol>
+	<li>Write the component (eg an ExchangeRateService)</li>
+	<li>Write the client class (eg an XWork action)</li>
+	<li>Write a registry class that holds the component object (eg Registry)</li>
+	<li>Write code that gives the component object to the registry (eg Registry.registerService(new MyExchangeRateService()))</li>
+	<li>Use the registry to obtain the service from your client class (eg ExchangeRateService ers = Registry.getExchangeRateService())</li>
+	<li>Make calls to the component from the client class (eg String baseCurrencyCode = ers.getBaseCurrency())</li>
+</ol>
+
+
+<p>Using IoC, the process is reduced to the following:</p>
+<ol>
+	<li>Write the component class (eg an ExchangeRateService)</li>
+	<li>Register the component class with XWork (eg componentManager.addEnabler(MyExchangeRateService, ExchangeRateAware))</li>
+	<li>Write the client class, making sure it implements the enabling interface (eg an XWork action that implements ExchangeRateAware)</li>
+	<li>Access the component instance directly from your client action (eg String baseCurencyCode = ers.getBaseCurrency())</li>
+</ol>
+
+
+<p>More advantages of Inversion of Control are the following:</p>
+<ol>
+	<li>Testability - You can more easily test your objects by passing mock objects using the enabler method rather than needing to create full containers that allow your objects to get the components they need.</li>
+	<li>A component describes itself. When you instantiate a component, you can easily determine what dependencies it requires without looking at the source or using trial and error.</li>
+	<li>Dependencies can be discovered easily using reflection. This has many benefits ranging from diagram generation to runtime optimization (by determining in advance which components will be needed to fufill a request and preparing them asyncronously, for example).</li>
+	<li>Avoids the super-uber-mega-factory pattern where all the components of the app are held together by a single class that is directly tied back to other domain specific classes, making it hard to 'just use that one class'.</li>
+	<li>Adheres to Law of Demeter. Some people think this is silly, but in practise I've found it works much better. Each class is coupled to only what it actually uses (and it should never use too much) and no more. This encourages smaller responsibility specific classes which leads to cleaner design.</li>
+	<li>Allows context to be isolated and explicitly passed around. ThreadLocals may be ok in a web-app, but they aren't well suited for high concurrency async applications (such as message driven applications).</li>
+</ol>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

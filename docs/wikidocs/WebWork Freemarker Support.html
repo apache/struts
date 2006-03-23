@@ -1,0 +1,158 @@
+<html>
+    <head>
+        <title>WebWork - 
+        WebWork Freemarker Support
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="WebWorkFreemarkerSupport-FreemarkerSupportinWebWork"></a>Freemarker Support in WebWork</h1>
+
+<p>Freemarker views can be rendered either via the webwork result type <tt>freemarker</tt>, or by using the <tt>dispatcher</tt> result type in conjunction Webwork's FreemarkerServlet.</p>
+
+<p>This document will focus on using the <tt>freemarker</tt> result since it is the recommended approach.  An section follows to show how to use the FreemarkerServlet.</p>
+
+<h3><a name="WebWorkFreemarkerSupport-Configureyouractiontousethe%7B%7Bfreemarker%7D%7Dresulttype"></a>Configure your action to use the <tt>freemarker</tt> result type</h3>
+
+<p>The <tt>freemarker</tt> result type is defined in <tt>webwork-default.xml</tt>, so normally you just include it, and define your resutls to use <tt>type="freemarker"</tt>.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;include file=<span class="code-quote">"webwork-default.xml"</span>/&gt;</span>
+...
+<span class="code-tag">&lt;action name=<span class="code-quote">"test"</span> class=<span class="code-quote">"package.Test"</span>&gt;</span>
+  <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"freemarker"</span>&gt;</span>/WEB-INF/views/testView.ftl<span class="code-tag">&lt;/result&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span>
+...</pre>
+</div></div>
+
+
+
+<h3><a name="WebWorkFreemarkerSupport-PropertyResoloution"></a>Property Resoloution</h3>
+
+<p>Your action properties are automatically resolved - just like in a velocity view. </p>
+
+<p><b>for example</b> <tt>${name</tt>} will result in <tt>stack.findValue("name")</tt>, which <em>generaly</em> results in <tt>action.getName()</tt> being executed.</p>
+
+<p>A search process is used to resolve the variable, searching the following scopes in order, until a value is found :</p>
+<ul>
+	<li>freemarker variables</li>
+	<li>value stack</li>
+	<li>request attributes</li>
+	<li>session attributes</li>
+	<li>servlet context attributes</li>
+</ul>
+
+
+<h3><a name="WebWorkFreemarkerSupport-ObjectsintheContext"></a>Objects in the Context</h3>
+
+<p>The following variables exist in the freemarer views</p>
+
+<ul>
+	<li><tt>req</tt> - the current HttpServletRequest</li>
+	<li><tt>res</tt> - the current HttpServletResponse</li>
+	<li><tt>stack</tt> - the current OgnlValueStack</li>
+	<li><tt>ognl</tt> - the OgnlTool instance
+	<ul>
+		<li>This class contains useful methods to execute OGNL expressions against arbitary objects, and a method to generate a select list using the &lt;ww:select&gt; pattern. (i.e. taking the name of the list property, a listKey and listValue)</li>
+	</ul>
+	</li>
+	<li><tt>webwork</tt> - an instance of FreemarkerWebWorkUtil</li>
+	<li><tt>action</tt> - the current WebWork action</li>
+	<li><tt>exception</tt> - <em>optional</em> the Exception instance, if the view is a JSP exception or Servlet exception view</li>
+</ul>
+
+
+
+
+<h3><a name="WebWorkFreemarkerSupport-FreeMarkerconfigurationwithrecent%28post2.1%29releases"></a>FreeMarker configuration with recent (post 2.1) releases</h3>
+
+<p>To configure the freemarker engine that webwork uses, just add a file <tt>freemarker.properties</tt> to the classpath.  The supported properties are those that the freemarker Configuration object expects - see the freemarker documentation for these.  These properties are used for both the <tt>freemarker</tt> result type, and the webwork provided FreemarkerServlet.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">default_encoding=ISO-8859-1
+template_update_delay=5
+locale=no_NO</pre>
+</div></div>
+
+
+<h3><a name="WebWorkFreemarkerSupport-UsingwebworkUItagsoranyJSPTagLibrary"></a>Using webwork UI tags - or any JSP Tag Library</h3>
+
+<p>Freemarker has builtin support for using any JSP taglib. You can use JSP taglibs in FreeMarker even if<br/>
+a) your servlet container has no support for JSP, or <br/>
+b) you didn't specify the taglib in your web.xml - note how in the example below we refer to the taglib by its webapp-absolute URL, so no configuration in web.xml is needed.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;#assign ww=JspTaglibs[<span class="code-quote">"/WEB-INF/webwork.tld"</span>] /&gt;
+
+&lt;@ww.form method=<span class="code-quote">"'post'"</span> name=<span class="code-quote">"'inputform'"</span> action=<span class="code-quote">"'save.action'"</span> &gt;
+    &lt;@ww.hidden name=<span class="code-quote">"'id'"</span> /&gt;
+    &lt;@ww.textarea label=<span class="code-quote">"'Details'"</span> name=<span class="code-quote">"'details'"</span> rows=5 cols=40 /&gt;
+    &lt;@ww.submit value=<span class="code-quote">"'Save'"</span> align=<span class="code-quote">"center"</span> /&gt;
+&lt;/@ww.form&gt;</pre>
+</div></div>
+
+<p>NOTE : numeric properties for tags MUST be numbers, not strings.  as in the rows and cols properties above.  if  you use cols="40" you will receive an exception.  Other than that, the freemarker tag container behaves as you would expect.</p>
+
+
+
+
+
+
+<h2><a name="WebWorkFreemarkerSupport-UsingtheFreemarkerServlet"></a>Using the FreemarkerServlet</h2>
+
+<p>The FreemarkerServlet provided in the freemarker.jar will work out of the box <b>however</b> it won't provide any webwork specific functionality such as the context variables, property resoloution etc.  Therefore webwork provides its own servlet to provide this integration.</p>
+
+<h3><a name="WebWorkFreemarkerSupport-RegistertheFreemarkerServletinweb.xml"></a>Register the FreemarkerServlet in web.xml</h3>
+
+<p>To use freemarker as a view engine, the webwork2 FreemarkerServlet needs to be configured, and mapped to the file extension that you use for your templates.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;servlet&gt;</span>
+  <span class="code-tag">&lt;servlet-name&gt;</span>freemarker<span class="code-tag">&lt;/servlet-name&gt;</span>
+  <span class="code-tag">&lt;servlet-class&gt;</span>com.opensymphony.webwork.views.freemarker.FreemarkerServlet<span class="code-tag">&lt;/servlet-class&gt;</span>
+<span class="code-tag">&lt;/servlet&gt;</span>
+
+<span class="code-tag">&lt;servlet-mapping&gt;</span>
+  <span class="code-tag">&lt;servlet-name&gt;</span>freemarker<span class="code-tag">&lt;/servlet-name&gt;</span>
+  <span class="code-tag">&lt;url-pattern&gt;</span>*.ftl<span class="code-tag">&lt;/url-pattern&gt;</span>
+<span class="code-tag">&lt;/servlet-mapping&gt;</span></pre>
+</div></div>
+
+<h3><a name="WebWorkFreemarkerSupport-ConfigureActionstousethisservlet%28xwork.xmlconfiguration%29"></a>Configure Actions to use this servlet (xwork.xml configuration)</h3>
+
+<p>To use the freemarker view, just use the <tt>dispatcher</tt> result type, and specify the location to the template file. </p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;action name=<span class="code-quote">"test"</span> class=<span class="code-quote">"package.Test"</span>&gt;</span>
+  <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>/WEB-INF/views/testView.ftl<span class="code-tag">&lt;/result&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span></pre>
+</div></div>
+
+<h3><a name="WebWorkFreemarkerSupport-Extendingtheservlet"></a>Extending the servlet</h3>
+
+<p>NOTE: these docs need to be revised, since the FreemarkerServlet has changed since they were written.</p>
+
+<p>Please refer to the freemarker site for details about the base freemarker servlet.</p>
+
+<p>Be carfeul when subclassing com.opensymphony.webwork.views.freemarker.FreemarkerServlet when overriding </p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">protected</span> TemplateModel createModel(
+    ObjectWrapper wrapper, 
+    ServletContext servletContext, 
+    HttpServletRequest request, 
+    HttpServletResponse response)</pre>
+</div></div>
+
+<p>Please call super.createModel(...) and wrap it with a new model to avoid problems with action property resoloution.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

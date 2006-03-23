@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <title>WebWork - 
+         validator
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="datevalidator-Description"></a>Description</h1>
+<p>Field Validator that checks if the date supplied is within a specific range.</p>
+
+<h1><a name="datevalidator-Parameters"></a>Parameters</h1>
+<p><ul>
+		<li>fieldName - The field name this validator is validating. Required if using Plain-Validator Syntax otherwise not required</li>
+     <li>min - the min date range. If not specified will not be checked.</li>
+     <li>max - the max date range. If not specified will not be checked.</li>
+</ul></p>
+
+<h1><a name="datevalidator-Examples"></a>Examples</h1>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;validators&gt;</span>
+		<span class="code-tag"><span class="code-comment">&lt;!-- Plain Validator syntax --&gt;</span></span>
+		<span class="code-tag">&lt;validator type=<span class="code-quote">"date"</span>&gt;</span>
+	        <span class="code-tag">&lt;param name=<span class="code-quote">"fieldName"</span>&gt;</span>birthday<span class="code-tag">&lt;/param&gt;</span>
+          <span class="code-tag">&lt;param name=<span class="code-quote">"min"</span>&gt;</span>01/01/1990<span class="code-tag">&lt;/param&gt;</span>
+          <span class="code-tag">&lt;param name=<span class="code-quote">"max"</span>&gt;</span>01/01/2000<span class="code-tag">&lt;/param&gt;</span>
+          <span class="code-tag">&lt;message&gt;</span>Birthday must be within ${min} and ${max}<span class="code-tag">&lt;/message&gt;</span>
+		<span class="code-tag">&lt;/validator&gt;</span>
+
+      <span class="code-tag"><span class="code-comment">&lt;!-- Field Validator Syntax --&gt;</span></span>
+      <span class="code-tag">&lt;field name=<span class="code-quote">"birthday"</span>&gt;</span>
+      	<span class="code-tag">&lt;field-validator type=<span class="code-quote">"date"</span>&gt;</span>
+       	    <span class="code-tag">&lt;param name=<span class="code-quote">"min"</span>&gt;</span>01/01/1990<span class="code-tag">&lt;/param&gt;</span>
+              <span class="code-tag">&lt;param name=<span class="code-quote">"max"</span>&gt;</span>01/01/2000<span class="code-tag">&lt;/param&gt;</span>
+              <span class="code-tag">&lt;message&gt;</span>Birthday must be within ${min} and ${max}<span class="code-tag">&lt;/message&gt;</span>
+      	<span class="code-tag">&lt;/field&gt;</span>
+      <span class="code-tag">&lt;/field&gt;</span>
+
+<span class="code-tag">&lt;/validators&gt;</span></pre>
+</div></div>
+
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

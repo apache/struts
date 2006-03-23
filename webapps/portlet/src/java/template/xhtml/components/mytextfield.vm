@@ -1,0 +1,15 @@
+<div align="center"> 
+       <input type="text" 
+              name="$!webwork.htmlEncode($parameters.name)" 
+       #if ($parameters.size) size="$!webwork.htmlEncode($parameters.size)" #end 
+       #if ($parameters.maxlength) maxlength="$!webwork.htmlEncode($parameters.maxlength)" #end 
+       #if ($parameters.nameValue) value="$!webwork.htmlEncode($parameters.nameValue)" #end 
+       #if ($parameters.disabled == true) disabled="disabled" #end 
+       #if ($parameters.readonly) readonly="readonly" #end 
+       #if ($parameters.onkeyup) onkeyup="$!webwork.htmlEncode($parameters.onkeyup)" #end 
+       #if ($parameters.tabindex) tabindex="$!webwork.htmlEncode($parameters.tabindex)" #end 
+       #if ($parameters.onchange) onchange="$!webwork.htmlEncode($parameters.onchange)" #end 
+       #if ($parameters.id) id="$!webwork.htmlEncode($parameters.id)" #end 
+       /><br /> 
+       $!webwork.htmlEncode($parameters.label) 
+</div>

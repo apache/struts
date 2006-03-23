@@ -1,0 +1,13 @@
+<button type="submit" dojoType="BindButton"<#rt/>
+#if ($parameters.form && $parameters.form.id)  formId="$parameters.form.id" #end
+#if ($parameters.name) name="$!webwork.htmlEncode($parameters.name)" #end
+#if ($parameters.nameValue) value="$!webwork.htmlEncode($parameters.nameValue)" #end
+#if ($parameters.cssClass) class="$!webwork.htmlEncode($parameters.cssClass)" #end
+#if ($parameters.cssStyle) style="$!webwork.htmlEncode($parameters.cssStyle)" #end
+#if ($parameters.resultDivId) targetDiv="$!webwork.htmlEncode($parameters.resultDivId)" #end
+#if ($parameters.onLoadJS) onLoad="$!parameters.onLoadJS" #end
+#if ($parameters.preInvokeJS) preInvokeJS="$!parameters.preInvokeJS" #end
+#if ($parameters.notifyTopics) notifyTopics="$!webwork.htmlEncode($parameters.notifyTopics)" #end
+#if ($parameters.listenTopics) listenTopics="$!webwork.htmlEncode($parameters.listenTopics)" #end
+#parse("/$parameters.templateDir/simple/scripting-events.vm")
+/>

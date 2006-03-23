@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <title>WebWork 2 : TutorialLesson02</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : TutorialLesson02
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Sep 16, 2004 by <font color="#0050B2">vitorsouza</font>.
+				    </div>
+
+				    <p class="paragraph"><h1 style="margin: 4px 0px 4px 0px;" class="heading1"><a name="TutorialLesson02-Lesson2%3ASettinguptheWebApplication"> 第二课: 设置Web应用</a></h1></p>这里假定你已经设置好Servlet容器并知道如何创建web应用. 如果没有, 建议你了解一下<a href="http://jakarta.apache.org/tomcat/" title="Visit page outside Confluence">Apache Tomcat</a>, 这是一个由Apache Jakarta项目开发的免费的Servlet容器, 也可以使用<a href="http://www.caucho.com/" title="Visit page outside Confluence">Caucho Technology</a>的Resin, 它可以免费用于非商业用途.<p class="paragraph">要使用WebWork, 需要将上一课中介绍的必要的类库(<tt class="monospaced">webwork-2.1.1.jar</tt>和<tt class="monospaced">lib/core/&#42;.jar</tt>)复制到Web应用的<tt class="monospaced">WEB-INF/lib</tt>目录中. 然后, 配置<tt class="monospaced">web.xml</tt>病床建起它的两个XML文件: <tt class="monospaced">xwork.xml</tt>和<tt class="monospaced">validators.xml</tt>. 这三个文件将在下文介绍.</p><h3 class="heading3"><a name="TutorialLesson02-web.xml%3A"> web.xml:</a></h3><p class="paragraph">修改web应用的web.xml如下:</p><div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;&#63;xml version=<span class="xml&#45;quote">&quot;1.0&quot;</span>&#63;&gt;</span>&#10;<span class="xml&#45;tag">&lt;&#33;DOCTYPE web&#45;app PUBLIC <span class="xml&#45;quote">&quot;&#45;//Sun Microsystems, Inc.//DTD Web Application 2.3//EN&quot;</span>&#10;<span class="xml&#45;quote">&quot;&#104;ttp://java.sun.com/dtd/web&#45;app&#95;2&#95;3.dtd&quot;</span>&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;web&#45;app&gt;</span>&#10;	<span class="xml&#45;tag">&lt;display&#45;name&gt;</span>My WebWork Application<span class="xml&#45;tag">&lt;/display&#45;name&gt;</span>&#10;	<span class="xml&#45;tag">&lt;servlet&gt;</span>&#10;		<span class="xml&#45;tag">&lt;servlet&#45;name&gt;</span>webwork<span class="xml&#45;tag">&lt;/servlet&#45;name&gt;</span>&#10;		<span class="xml&#45;tag">&lt;servlet&#45;class&gt;</span>com.opensymphony.webwork.dispatcher.ServletDispatcher<span class="xml&#45;tag">&lt;/servlet&#45;class&gt;</span>&#10;		<span class="xml&#45;tag">&lt;load&#45;on&#45;startup&gt;</span>1<span class="xml&#45;tag">&lt;/load&#45;on&#45;startup&gt;</span>&#10;	<span class="xml&#45;tag">&lt;/servlet&gt;</span>&#10;	<span class="xml&#45;tag">&lt;servlet&#45;mapping&gt;</span>&#10;		<span class="xml&#45;tag">&lt;servlet&#45;name&gt;</span>webwork<span class="xml&#45;tag">&lt;/servlet&#45;name&gt;</span>&#10;		<span class="xml&#45;tag">&lt;url&#45;pattern&gt;</span>&#42;.action<span class="xml&#45;tag">&lt;/url&#45;pattern&gt;</span>&#10;	<span class="xml&#45;tag">&lt;/servlet&#45;mapping&gt;</span>&#10;	<span class="xml&#45;tag">&lt;taglib&gt;</span>&#10;		<span class="xml&#45;tag">&lt;taglib&#45;uri&gt;</span>webwork<span class="xml&#45;tag">&lt;/taglib&#45;uri&gt;</span>&#10;		<span class="xml&#45;tag">&lt;taglib&#45;location&gt;</span>/WEB&#45;INF/lib/webwork&#45;2.1.1.jar<span class="xml&#45;tag">&lt;/taglib&#45;location&gt;</span>&#10;	<span class="xml&#45;tag">&lt;/taglib&gt;</span>&#10;<span class="xml&#45;tag">&lt;/web&#45;app&gt;</span></pre>
+</div></div><p class="paragraph">要使用WebWork你必须注册<tt class="monospaced">ServletDispatcher</tt>并映射到<tt class="monospaced">&#42;.action</tt>. 这些行为何如此重要将在<a href="TutorialLesson03.html" title="TutorialLesson03">下一课</a>中关于活动的章节进行解释. 在这一例子中同时声明了WebWork标签库描述文件以便使用WebWork标签(关于WebWork标签的更多信息请参阅<a href="TutorialLesson04-01.html" title="TutorialLesson04-01">4.1</a>) &#8211; 如果你不使用WebWork标签, 可以安全的删掉它.</p><blockquote class="blockquote"> 进一步阅读: <a href="web.xml.html" title="web.xml">web.xml</a></blockquote>
+<p class="paragraph"><h3 class="heading3"><a name="TutorialLesson02-xwork.xml%3A"> xwork.xml:</a></h3></p>在根类路径(也就是<tt class="monospaced">WEB-INF/classes</tt>)中创建文件<tt class="monospaced">xwork.xml</tt>, 这是WebWork自身的配置文件. 现在, 在文件中加入下列内容:<br/>
+
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;&#33;DOCTYPE xwork PUBLIC <span class="xml&#45;quote">&quot;&#45;//OpenSymphony Group//XWork 1.0//EN&quot;</span> &#10;<span class="xml&#45;quote">&quot;&#104;ttp://www.opensymphony.com/xwork/xwork&#45;1.0.dtd&quot;</span>&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;xwork&gt;</span>&#10;	<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; Include webwork defaults (from WebWork JAR). &#45;&#45;&gt;</span></span>&#10;	<span class="xml&#45;tag">&lt;include file=<span class="xml&#45;quote">&quot;webwork&#45;default.xml&quot;</span> /&gt;</span>&#10;	&#10;	<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; Configuration for the default package. &#45;&#45;&gt;</span></span>&#10;	<span class="xml&#45;tag">&lt;package name=<span class="xml&#45;quote">&quot;default&quot;</span> extends=<span class="xml&#45;quote">&quot;webwork&#45;default&quot;</span>&gt;</span>&#10;	<span class="xml&#45;tag">&lt;/package&gt;</span>&#10;<span class="xml&#45;tag">&lt;/xwork&gt;</span></pre>
+</div></div><p class="paragraph">这只是配置文件的一个骨架, 在我们遍历整个指南的过程中, 它将不断的增长. 目前为止, 它只做两件事情:</p><ul class="star">
+<li> 通知WebWork需要从<tt class="monospaced">webwork-default.xml</tt>(位于<tt class="monospaced">webwork-2.1.1.jar</tt>的根目录中并一直可用)中导入配置信息 &#8211; 该文件定义了包<tt class="monospaced">webwork-default</tt>, 它包含了WebWork应用所需的<em class="emphasis">缺省</em>配置;</li>
+</ul>
+<ul class="star">
+<li> 定义了一个<tt class="monospaced">default</tt>包, 活动(actions), 结果(results)和截取器(interceptors)将注册在其中. 这个包还扩展(extends)了<tt class="monospaced">webwork-default</tt>, 也就是说, <tt class="monospaced">default</tt>包将继承(inherit)定义在<tt class="monospaced">webwork-default</tt>中的全部配置.</li>
+</ul><br/>
+<blockquote class="blockquote"> 进一步阅读: <a href="xwork.xml.html" title="xwork.xml">xwork.xml</a></blockquote>
+<p class="paragraph"><h3 class="heading3"><a name="TutorialLesson02-validators.xml%3A"> validators.xml:</a></h3></p>再次在根类路径中创建文件<tt class="monospaced">validators.xml</tt>, 并下列内容包含:<br/>
+
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;&#33;DOCTYPE validators PUBLIC <span class="xml&#45;quote">&quot;&#45;//OpenSymphony Group//XWork Validator&#10;1.0//EN&quot;</span>&#160;<span class="xml&#45;quote">&quot;&#104;ttp://www.opensymphony.com/xwork/xwork&#45;validator&#45;1.0.dtd&quot;</span>&gt;</span> &#10;&#10;<span class="xml&#45;tag">&lt;validators&gt;</span> &#10;	<span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;required&quot;</span>&#10;		class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.validator.validators.RequiredFieldValidator&quot;</span>/&gt;</span> &#10;	<span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;requiredstring&quot;</span>&#10;		class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.validator.validators.RequiredStringValidator&quot;</span>/&gt;</span> &#10;	<span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;int&quot;</span>&#10;		class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.validator.validators.IntRangeFieldValidator&quot;</span>/&gt;</span> &#10;	<span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;date&quot;</span>&#10;		class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.validator.validators.DateRangeFieldValidator&quot;</span>/&gt;</span> &#10;	<span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;expression&quot;</span>&#10;		class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.validator.validators.ExpressionValidator&quot;</span>/&gt;</span> &#10;	<span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;fieldexpression&quot;</span>&#10;		class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.validator.validators.FieldExpressionValidator&quot;</span>/&gt;</span> &#10;	<span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;email&quot;</span>&#10;		class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.validator.validators.EmailValidator&quot;</span>/&gt;</span> &#10;	<span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;url&quot;</span>&#10;		class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.validator.validators.URLValidator&quot;</span>/&gt;</span> &#10;	<span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;visitor&quot;</span>&#10;		class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.validator.validators.VisitorFieldValidator&quot;</span>/&gt;</span> &#10;	<span class="xml&#45;tag">&lt;validator name=<span class="xml&#45;quote">&quot;conversion&quot;</span>&#10;		class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.validator.validators.ConversionErrorFieldValidator&quot;</span>/&gt;</span> &#10;<span class="xml&#45;tag">&lt;/validators&gt;</span></pre>
+</div></div><p class="paragraph">该文件定义可用的校验器.</p><blockquote class="blockquote"> 进一步阅读: <a href="Validation.html" title="Validation">校验</a></blockquote>
+<p class="paragraph"><h2 class="heading2"><a name="TutorialLesson02-AllSetUp%21"> 全部设置完成!</a></h2></p>现在一个WebWork应用的骨架已经配置完成. 下一课将学习如何使用WenWork的活动, 视图和截取器.<p class="paragraph"><hr class="line"/></p><a href="TutorialLesson01.html" title="TutorialLesson01">上一课</a> | <a href="TutorialLesson03.html" title="TutorialLesson03">下一课</a><br/>
+
+
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

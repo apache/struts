@@ -1,0 +1,218 @@
+<html>
+    <head>
+        <title>WebWork - 
+        AdminApp
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>TODO: Documenting updated version (currently at <a href="http://www.i-tao.com/adminapp.html" title="Visit page outside Confluence">&#104;ttp://www.i-tao.com/adminapp.html</a>). IN PROGRESS.</p>
+
+<h2><a name="AdminApp-Introduction"></a>Introduction</h2>
+<p>This page aims at providing some additional information about the <a href="http://www.hibernate.org" title="Visit page outside Confluence">Hibernate</a> <a href="http://www.hibernate.org/159.html#a5" title="Visit page outside Confluence">AdminApp</a>. The Hibernate AdminApp (hereafter referred to as AA) was created by the Hibernate developers to show a possible implementation strategy for Hibernate with Webwork. Although AA can still be used as a starting point for webapplications, most of its libraries become quite aged (WW 2.0 beta, Hibernate 2, XWork 1.0 beta). Therefore, a shiny <a href="http://www.i-tao.com/adminapp.html" title="Visit page outside Confluence">new fork</a> (AA2) has been created by Ron Chan.</p>
+
+<p>AA2 relies on WW2.2, Hibernate 3.1, and Spring as its IoC container (rather than XWork's, which has been deprecated in WW 2.2). We'll first discuss the original AA. Later on, we'll show the differences with AA2. Ron, if you're reading this, feel free to point out any mistakes/edit this document.</p>
+
+<p>Like we pointed out before, AA shows a possible implementation strategy to use Hibernate in WebWork in combination with a so-called open-session-in-view pattern (<a href="http://www.hibernate.org/43.html" title="Visit page outside Confluence">more info</a>, <a href="http://www.jroller.com/page/cardsharp?entry=open_session_in_view_pattern" title="Visit page outside Confluence">even more</a>). This pattern allows maximum flexibility in our view layer by creating a Hibernate Session object that will live till the end of the request (after the view has been rendered). This allows lazy loading of objects in our view, rather than having to preload all objects and their associations in our business layer, and yet ensures the correct disposing of the Session object.</p>
+
+<p>To accomplish this, AA uses XWork's <a href="Inversion of Control.html" title="Inversion of Control">components</a> and <a href="Interceptors.html" title="Interceptors">interceptors</a>:</p>
+
+<ul>
+	<li><a href="Inversion of Control.html" title="Inversion of Control">components</a>: XWork manages the lifecycle of objects in several scopes (application, session, request) and takes care of the IoC through the ..Aware interfaces (so called enablers). Hibernate's expensive-to-create SessionFactory will thus be created in the application scope (meaning it will only be initialised once when the application starts up), while the Session objects, used to load our models, is registered in the request scope (will be created once per request).</li>
+</ul>
+
+
+<ul>
+	<li><a href="Interceptors.html" title="Interceptors">interceptors</a>: AA uses an interceptor (the HibernateInterceptor) to extract the Session from the WebWork action, so it can control the transactions, redirect/rollback on errors and properly dispose the Session after the view is rendered.</li>
+</ul>
+
+
+<h2><a name="AdminApp-AdminAppSourceOverview"></a>AdminApp Source Overview</h2>
+
+<p>Now, let's properly dissect the AA files:</p>
+<ul>
+	<li>/lib: contains the various jars for our application. Nothing special here.</li>
+	<li>/src/java/org/hibernate/admin/action: lists our WebWork actions. All actions extend an abstract AbstractAction file, which overrides the execute() method from our XWork's ActionSupport. This is where we define a setHibernateSession() method, which is the method we declared in our enabler interface (HibernateSessionAware). This will notify XWork to invoke its IoC magic to set the HibernateSession.</li>
+</ul>
+
+
+<div class="code"><div class="codeHeader"><b>org.hibernate.admin.action.AbstractAction</b></div><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> <span class="code-object">String</span> execute() <span class="code-keyword">throws</span> Exception {
+	
+		<span class="code-comment">// We go to INPUT on field and data errors
+</span>		<span class="code-keyword">if</span> ( hasErrors() ) {
+			LOG.debug(<span class="code-quote">"action not executed, field or action errors"</span>);
+			LOG.debug( <span class="code-quote">"Field errors: "</span> + getFieldErrors() );
+			LOG.debug( <span class="code-quote">"Action errors: "</span> + getActionErrors() );
+			<span class="code-keyword">return</span> INPUT;
+		}
+
+		LOG.debug(<span class="code-quote">"executing action"</span>);
+		<span class="code-keyword">return</span> go();
+	}
+	
+	<span class="code-keyword">protected</span> <span class="code-keyword">abstract</span> <span class="code-object">String</span> go() <span class="code-keyword">throws</span> HibernateException;
+
+	<span class="code-keyword">public</span> void setHibernateSession(HibernateSession session) {
+		<span class="code-keyword">this</span>.session = session;
+	}
+
+	<span class="code-keyword">protected</span> Session getSession() <span class="code-keyword">throws</span> HibernateException {
+		<span class="code-keyword">return</span> session.getSession();
+	}</pre>
+</div></div>
+<p>In this execute() method we'll simply call a abstract go() method (which is then defined in each of the actions). When we need the Hibernate Session, we use the getSession() method, inherited from our AbstractAction. Don't worry about transactions or saving so called dirty objects (our HibernateInterceptor takes care of all that). As you can see, this totally minimizes the LoC (lines of code) needed to retrieve or manipulated our models).</p>
+<div class="code"><div class="codeHeader"><b>org.hibernate.admin.action.EditUserAction</b></div><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> class EditUserAction <span class="code-keyword">extends</span> AbstractAction {
+	<span class="code-comment">//.. ommited <span class="code-keyword">for</span> brevity
+</span>	
+	<span class="code-keyword">protected</span> <span class="code-object">String</span> go() <span class="code-keyword">throws</span> HibernateException {
+		..
+		getSession().update(user);
+		..
+		<span class="code-keyword">return</span> SUCCESS;
+	}
+	
+	<span class="code-comment">//.. getters and setters ommited
+</span>
+}</pre>
+</div></div>
+
+<p>There are 3 more *-validation.xml files in this directory containing the validation logic for the Actions. XWork will validate your request before the action gets executed, so you can decouple your (simple) validation logic from your Action. For example, take a look at the CreateUserAction-validation.xml:</p>
+
+<div class="code"><div class="codeHeader"><b>CreateUserAction-validation.xml</b></div><div class="codeContent">
+<pre class="code-xml">..
+    <span class="code-tag">&lt;field name=<span class="code-quote">"user.name.lastName"</span>&gt;</span>
+        <span class="code-tag">&lt;field-validator type=<span class="code-quote">"requiredstring"</span>&gt;</span>
+            <span class="code-tag">&lt;message&gt;</span>You must enter a last name.<span class="code-tag">&lt;/message&gt;</span>
+        <span class="code-tag">&lt;/field-validator&gt;</span>
+    <span class="code-tag">&lt;/field&gt;</span>
+    <span class="code-tag">&lt;field name=<span class="code-quote">"user.email"</span>&gt;</span>
+        <span class="code-tag">&lt;field-validator type=<span class="code-quote">"email"</span>&gt;</span>
+            <span class="code-tag">&lt;message&gt;</span>Please correct the e-mail address.<span class="code-tag">&lt;/message&gt;</span>
+        <span class="code-tag">&lt;/field-validator&gt;</span>
+        <span class="code-tag">&lt;field-validator type=<span class="code-quote">"required"</span>&gt;</span>
+            <span class="code-tag">&lt;message&gt;</span>Please enter an e-mail address.<span class="code-tag">&lt;/message&gt;</span>
+        <span class="code-tag">&lt;/field-validator&gt;</span>
+    <span class="code-tag">&lt;/field&gt;</span>
+..</pre>
+</div></div>
+
+<p><a href="Validation.html" title="Validation">Several validator types</a> are available. Here we rely on XWork to validate our Actions, but it's also possible to validate our object Models (see <a href="Validation.html" title="Validation">WW Validation</a>). You will mostly use these to validate submitted forms in your webapp. </p>
+
+<p>When a validator fails, you will automatically be returned to the input page with a clear indication which field failed to validate if: </p>
+
+<p>a) actually provided an input type in your <a href="xwork.xml.html" title="xwork.xml">xwork.xml</a> file</p>
+<div class="code"><div class="codeHeader"><b>xwork.xml</b></div><div class="codeContent">
+<pre class="code-xml">..
+        <span class="code-tag">&lt;result name=<span class="code-quote">"input"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>
+		<span class="code-tag">&lt;param name=<span class="code-quote">"location"</span>&gt;</span>/editUser.jsp<span class="code-tag">&lt;/param&gt;</span>
+	<span class="code-tag">&lt;/result&gt;</span>
+	..</pre>
+</div></div>
+<p>b) you enabled the validation interceptor in your <a href="xwork.xml.html" title="xwork.xml">xwork.xml</a></p>
+<div class="code"><div class="codeHeader"><b>xwork.xml</b></div><div class="codeContent">
+<pre class="code-xml">..
+	<span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"defaultStack"</span>/&gt;</span>
+	<span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"validation"</span>/&gt;</span>
+	..</pre>
+</div></div>
+<p>c) you use the WebWork tag library (warning: this is the old syntax):</p>
+<div class="code"><div class="codeHeader"><b>CreateUser.jsp</b></div><div class="codeContent">
+<pre class="code-xml">..
+<span class="code-tag">&lt;ww:form name=<span class="code-quote">"'createUserForm'"</span> action=<span class="code-quote">"'createUser.action'"</span> method=<span class="code-quote">"'POST'"</span>&gt;</span>
+    <span class="code-tag">&lt;ww:textfield label=<span class="code-quote">"'Username'"</span> name=<span class="code-quote">"'user.handle'"</span>/&gt;</span>
+..</pre>
+</div></div>
+
+<p>New syntax (since 2.2):</p>
+
+<div class="code"><div class="codeHeader"><b>CreateUser.jsp</b></div><div class="codeContent">
+<pre class="code-xml">..
+<span class="code-tag">&lt;ww:form name=<span class="code-quote">"createUserForm"</span> action=<span class="code-quote">"createUser"</span> method=<span class="code-quote">"POST"</span>&gt;</span>
+    <span class="code-tag">&lt;ww:textfield label=<span class="code-quote">"Username"</span> name=<span class="code-quote">"user.handle"</span>/&gt;</span>
+..</pre>
+</div></div>
+
+<ul>
+	<li>/src/java/org/hibernate/admin/component: contains the components and enablers for both the HibernateSessionFactory and the HibernateSession. These components are declared in the /src/java/<a href="Inversion of Control.html" title="Inversion of Control">components.xml</a> file (which will be copied to the root of your compiled classes afterwards):</li>
+</ul>
+
+
+<div class="code"><div class="codeHeader"><b>components.xml</b></div><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;components&gt;</span>
+
+    <span class="code-tag">&lt;component&gt;</span>
+        <span class="code-tag">&lt;scope&gt;</span>request<span class="code-tag">&lt;/scope&gt;</span>
+        <span class="code-tag">&lt;class&gt;</span>org.hibernate.admin.component.HibernateSession<span class="code-tag">&lt;/class&gt;</span>
+        <span class="code-tag">&lt;enabler&gt;</span>org.hibernate.admin.component.HibernateSessionAware<span class="code-tag">&lt;/enabler&gt;</span>
+    <span class="code-tag">&lt;/component&gt;</span>
+
+    <span class="code-tag">&lt;component&gt;</span>
+        <span class="code-tag">&lt;scope&gt;</span>application<span class="code-tag">&lt;/scope&gt;</span>
+        <span class="code-tag">&lt;class&gt;</span>org.hibernate.admin.component.HibernateSessionFactory<span class="code-tag">&lt;/class&gt;</span>
+        <span class="code-tag">&lt;enabler&gt;</span>org.hibernate.admin.component.HibernateSessionFactoryAware<span class="code-tag">&lt;/enabler&gt;</span>
+    <span class="code-tag">&lt;/component&gt;</span>
+
+<span class="code-tag">&lt;/components&gt;</span></pre>
+</div></div>
+
+<ul>
+	<li>/src/java/org/hibernate/admin/interceptor: contains the Hibernate interceptor. <a href="Interceptors.html" title="Interceptors">Interceptors</a> are an incredibly powerful feature of WebWork - it allows you to control invocations before and after they excute, manipulate their results, or, as in our case, extract the HibernateSession object and dispose it after the Action has been executed (and the view rendered). Because we use a try/catch/finally block, we're able to catch exceptions and yet make sure our Session gets closed properly (the number one cause of db connection leaks).</li>
+</ul>
+
+
+<div class="code"><div class="codeHeader"><b>org.hibernate.admin.interceptor.HibernateInterceptor</b></div><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> <span class="code-object">String</span> intercept(ActionInvocation invocation) <span class="code-keyword">throws</span> Exception {
+		Action action = invocation.getAction();
+		<span class="code-keyword">if</span> ( !(action <span class="code-keyword">instanceof</span> AbstractAction) ) <span class="code-keyword">return</span> invocation.invoke();
+		
+		HibernateSession hs = ( (AbstractAction) action ).getHibernateSession();
+		<span class="code-keyword">try</span> {
+			<span class="code-keyword">return</span> invocation.invoke();
+		}
+		
+		<span class="code-comment">// Note that all the cleanup is done
+</span>		<span class="code-comment">// after the view is rendered, so we
+</span>		<span class="code-comment">// have an open session in the view
+</span>		
+		<span class="code-keyword">catch</span> (Exception e) {	
+			hs.setRollBackOnly(<span class="code-keyword">true</span>);
+			<span class="code-keyword">if</span> (e <span class="code-keyword">instanceof</span> HibernateException) {
+				LOG.error(<span class="code-quote">"HibernateException in execute()"</span>, e);
+				<span class="code-keyword">return</span> Action.ERROR;
+			}
+			<span class="code-keyword">else</span> {
+				LOG.error(<span class="code-quote">"Exception in execute()"</span>, e);
+				<span class="code-keyword">throw</span> e;
+			}
+		}
+		
+		<span class="code-keyword">finally</span> {
+			<span class="code-keyword">try</span> {
+				hs.disposeSession();
+			}
+			<span class="code-keyword">catch</span> (HibernateException e) {
+				LOG.error(<span class="code-quote">"HibernateException in dispose()"</span>, e);
+				<span class="code-keyword">return</span> Action.ERROR;
+			}
+		}
+	}</pre>
+</div></div>
+
+
+<h2><a name="AdminApp-Conclusion"></a>Conclusion</h2>
+<p>In this document, we tried to point out several key features in the Hibernate AdminApp. In part II, we'll have a look at the new AdminApp, which is far more up to date, and uses Spring as its IoC container. No more implements ActionSupport or Aware interfaces, resulting in even cleaner code.</p>
+
+<p>AdminApp is a very good example of how a webapp can be structered, using as many advantages from the various frameworks as possible.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

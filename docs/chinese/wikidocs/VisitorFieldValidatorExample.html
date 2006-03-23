@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <title>WebWork 2 : VisitorFieldValidatorExample</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : VisitorFieldValidatorExample
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Nov 29, 2004 by <font color="#0050B2">jcarreira</font>.
+				    </div>
+
+				    <p class="paragraph">I&#039;ve been using the validator in webwork and have found myself duplicating a few of the validations throughout the app, so after asking a few questions I was told what to do.</p>basically I have a creation form to create a Car, and then I have another to Edit and Update the Car, I wanted to create just one validation file that would validate that Car, I was using 2 validation files, CreateCarAction-validation.xml and UpdateCarAction-validation.xml and both were identical.<p class="paragraph">what I had to do was:</p>first i had to expose the Car object in my action, then I had to create a validation file for the action, and placed this file in the same package as the CarAction in this example;<p class="paragraph">CarAction-validation.xml
+<div class="code"><div class="codeContent">
+<pre>&lt;&#33;DOCTYPE validators PUBLIC <span class="java&#45;quote">&quot;&#45;<span class="java&#45;comment">//OpenSymphony Group//XWork Validator 1.0//EN&quot;</span>&#160;<span class="java&#45;quote">&quot;&#104;ttp://www.opensymphony.com/xwork/xwork&#45;validator&#45;1.0.dtd&quot;</span>&gt;</span>&#10;&lt;validators&gt;&#10;    &lt;field name=<span class="java&#45;quote">&quot;car&quot;</span>&gt;&#10;        &lt;field&#45;validator type=<span class="java&#45;quote">&quot;visitor&quot;</span>&gt;&#10;            &lt;message&gt;Car Visitor: &lt;/message&gt;&#10;        &lt;/field&#45;validator&gt;&#10;    &lt;/field&gt;&#10;&lt;/validators&gt;</pre>
+</div></div></p>next I had to create Car-validation.xml file and put this file in the same package as the Car class<p class="paragraph">Car-validation.xml
+<div class="code"><div class="codeContent">
+<pre>&lt;&#33;DOCTYPE validators PUBLIC <span class="java&#45;quote">&quot;&#45;<span class="java&#45;comment">//OpenSymphony Group//XWork Validator 1.0//EN&quot;</span>&#160;<span class="java&#45;quote">&quot;&#104;ttp://www.opensymphony.com/xwork/xwork&#45;validator&#45;1.0.dtd&quot;</span>&gt;</span>&#10;&lt;validators&gt;&#10;&#10;    &lt;field name=<span class="java&#45;quote">&quot;name&quot;</span>&gt;&#10;        &lt;field&#45;validator type=<span class="java&#45;quote">&quot;requiredstring&quot;</span>&gt;&#10;            &lt;message&gt;Name is REQUIRED&lt;/message&gt;&#10;        &lt;/field&#45;validator&gt;&#10;    &lt;/field&gt;&#10;    &lt;field name=<span class="java&#45;quote">&quot;model&quot;</span>&gt;&#10;        &lt;field&#45;validator type=<span class="java&#45;quote">&quot;requiredstring&quot;</span>&gt;&#10;            &lt;message&gt;Model is REQUIRED&lt;/message&gt;&#10;        &lt;/field&#45;validator&gt;&#10;    &lt;/field&gt;&#10;&#10;&lt;/validators&gt;</pre>
+</div></div></p>so now if the input strings car.model and car.name are empty you should get fieldErrors added to the car.name and car.model fields, you just need to make sure that in your action you expose the Car object.<p class="paragraph">heres the CarAction.java file:
+<div class="code"><div class="codeContent">
+<pre><span class="java&#45;keyword">public</span> class CarAction <span class="java&#45;keyword">extends</span> ActionSupport &#123;&#10;&#10;    <span class="java&#45;keyword">private</span> Car car = <span class="java&#45;keyword">new</span> Car();&#10;&#10;    <span class="java&#45;keyword">public</span> Car getCar() &#123;&#10;        <span class="java&#45;keyword">return</span> car;&#10;    &#125;&#10;&#10;    <span class="java&#45;keyword">public</span> void setCar(Car car) &#123;&#10;        <span class="java&#45;keyword">this</span>.car = car;&#10;    &#125;&#10;&#10;    <span class="java&#45;keyword">public</span>&#160;<span class="java&#45;object">String</span> execute() &#123;&#10;        <span class="java&#45;keyword">return</span> SUCCESS;&#10;    &#125;&#10;&#10;&#10;&#125;</pre>
+</div></div><br/>
+heres my Car bean:
+<div class="code"><div class="codeContent">
+<pre><span class="java&#45;keyword">public</span> class Car &#123;&#10;    <span class="java&#45;keyword">private</span>&#160;<span class="java&#45;object">String</span> name;&#10;    <span class="java&#45;keyword">private</span>&#160;<span class="java&#45;object">String</span> model;&#10;&#10;    <span class="java&#45;keyword">public</span> Car() &#123;&#125;&#10;&#10;   <span class="java&#45;keyword">public</span>&#160;<span class="java&#45;object">String</span> getName() &#123;&#10;        <span class="java&#45;keyword">return</span> name;&#10;    &#125;&#10;&#10;    <span class="java&#45;keyword">public</span> void setName(<span class="java&#45;object">String</span> name) &#123;&#10;        <span class="java&#45;keyword">this</span>.name = name;&#10;    &#125;&#10;&#10;    <span class="java&#45;keyword">public</span>&#160;<span class="java&#45;object">Integer</span> getId() &#123;&#10;        <span class="java&#45;keyword">return</span> id;&#10;    &#125;&#10;&#10;    <span class="java&#45;keyword">public</span> void setId(<span class="java&#45;object">Integer</span> id) &#123;&#10;        <span class="java&#45;keyword">this</span>.id = id;&#10;    &#125;&#10;&#10;    <span class="java&#45;keyword">public</span>&#160;<span class="java&#45;object">String</span> getModel() &#123;&#10;        <span class="java&#45;keyword">return</span> model;&#10;    &#125;&#10;&#10;    <span class="java&#45;keyword">public</span> void setModel(<span class="java&#45;object">String</span> model) &#123;&#10;        <span class="java&#45;keyword">this</span>.model = model;&#10;    &#125;&#10;&#125;</pre>
+</div></div><br/>
+and then the car.vm file:
+<div class="code"><div class="codeContent">
+<pre>&lt;form method=<span class="java&#45;quote">&quot;get&quot;</span>&gt;&#10;&#10;&lt;table border=<span class="java&#45;quote">&quot;1&quot;</span> align=<span class="java&#45;quote">&quot;center&quot;</span>&gt;&#10;&#10;    #tag( TextField <span class="java&#45;quote">&quot;label=Car ID&quot;</span>&#160;<span class="java&#45;quote">&quot;name=car.id&quot;</span>&#160;<span class="java&#45;quote">&quot;value=car.id&quot;</span> )&#10;    #tag( TextField <span class="java&#45;quote">&quot;label=Car Name&quot;</span>&#160;<span class="java&#45;quote">&quot;name=car.name&quot;</span>&#160;<span class="java&#45;quote">&quot;value=car.name&quot;</span> )&#10;    #tag( TextField <span class="java&#45;quote">&quot;label=Car Model&quot;</span>&#160;<span class="java&#45;quote">&quot;name=car.model&quot;</span>&#160;<span class="java&#45;quote">&quot;value=car.model&quot;</span> )&#10;&#10;    #tag( Submit <span class="java&#45;quote">&quot;value=&#039;Submit Car&#039;&quot;</span>&#160;<span class="java&#45;quote">&quot;align=center&quot;</span>)&#10;&#10;&lt;/table&gt;&#10;&#10;&lt;/form&gt;</pre>
+</div></div></p>
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:37</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

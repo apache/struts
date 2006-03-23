@@ -1,0 +1,64 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Conversion Error Interceptor
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>To fully document this interceptor, it is best to look at the JavaDocs for the subclass of the interceptor, ConversionErrorInterceptor:</p>
+
+
+<p> This interceptor adds any error found in the ActionContext's conversionErrors map as a field error (provided
+ that the action implements ValidationAware). In addition, any field that contains a validation error has its
+ original value saved such that any subsequent requests for that value return the original value rather than the value
+ in the action. This is important because if the value "abc" is submitted and can't be converted to an int, we want to
+ display the original string ("abc") again rather than the int value (likely 0, which would make very little sense to
+ the user).</p>
+
+
+
+<p>... as well as the JavaDocs for the interceptor itself, WebWorkConversionErrorInterceptor:</p>
+
+
+<p> This interceptor extends ConversionErrorInterceptor but only adds conversion errors from the ActionContext to
+ the field errors of the action if the field value is not null, "", or {""} (a size 1 String array with only an empty
+ String). See ConversionErrorInterceptor for more information, as well as the Type Conversion documentation.</p>
+
+
+<h1><a name="ConversionErrorInterceptor-Parameters"></a>Parameters</h1>
+
+
+<p> <ul></p>
+
+<p> <li>None</li></p>
+
+<p> </ul></p>
+
+
+<h1><a name="ConversionErrorInterceptor-ExtendingtheInterceptor"></a>Extending the Interceptor</h1>
+
+
+<p> There are no known extension points for this interceptor.</p>
+
+
+<h1><a name="ConversionErrorInterceptor-Examples"></a>Examples</h1>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;action name=<span class="code-quote">"someAction"</span> class=<span class="code-quote">"com.examples.SomeAction"</span>&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"params"</span>/&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"conversionError"</span>/&gt;</span>
+    <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span>&gt;</span>good_result.ftl<span class="code-tag">&lt;/result&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

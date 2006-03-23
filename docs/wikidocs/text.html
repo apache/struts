@@ -1,0 +1,117 @@
+<html>
+    <head>
+        <title>WebWork - 
+        text
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>Please make sure you have read the <a href="Tag Syntax.html" title="Tag Syntax">Tag Syntax</a> document and understand how tag attribute syntax works.</td></tr></table>
+
+<h1><a name="text-Description"></a>Description</h1>
+<p>Render a I18n text message. </p>
+
+<p><p/></p>
+
+<p>The message must be in a resource bundle
+with the same name as the action that it is associated with. In practice
+this means that you should create a properties file in the same package
+as your Java class with the same name as your class, but with .properties
+extension.</p>
+
+<p><p/></p>
+
+<p>If the named message is not found, then the body of the tag will be used as default message.
+If no body is used, then the name of the message will be used.</p>
+
+
+<h1><a name="text-Parameters"></a>Parameters</h1>
+<p><table width="100%">
+<tr></p>
+
+<p><th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">name</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top"><b>true</b></td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Object/String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">Name of resource property to fetch</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Object/String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">id for referencing element. For UI and form tags it will be used as HTML id attribute</td></p>
+
+<p></tr></p>
+
+<p></table></p>
+
+<h1><a name="text-Examples"></a>Examples</h1>
+<div class="code"><div class="codeContent">
+<pre class="code-none">Accessing messages from a given bundle (the i18n Shop example bundle in the first example) and using bundle defined through ww in the second example.&lt;/p&gt;</pre>
+</div></div>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag"><span class="code-comment">&lt;!-- First Example --&gt;</span></span>
+<span class="code-tag">&lt;ww:i18n name=<span class="code-quote">"webwork.action.test.i18n.Shop"</span>&gt;</span>
+    <span class="code-tag">&lt;ww:text name=<span class="code-quote">"main.title"</span>/&gt;</span>
+<span class="code-tag">&lt;/ww:i18n&gt;</span>
+
+<span class="code-tag"><span class="code-comment">&lt;!-- Second Example --&gt;</span></span>
+<span class="code-tag">&lt;ww:text name=<span class="code-quote">"main.title"</span> /&gt;</span></pre>
+</div></div>
+
+<p>Other example</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:text name=<span class="code-quote">"format.money"</span>&gt;</span><span class="code-tag">&lt;ww:param name=<span class="code-quote">"value"</span> value=<span class="code-quote">"myMoneyValue"</span>/&gt;</span><span class="code-tag">&lt;/ww:text&gt;</span></pre>
+</div></div> 
+<p>where</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">format.money={0,number,currency}</pre>
+</div></div>
+
+<p>For documentation on possibilities for formatting text, see</p>
+<ol>
+	<li><a href="http://java.sun.com/j2se/1.4.2/docs/api/java/text/MessageFormat.html" title="Visit page outside Confluence">&#104;ttp://java.sun.com/j2se/1.4.2/docs/api/java/text/MessageFormat.html</a></li>
+	<li><a href="http://java.sun.com/docs/books/tutorial/i18n/format/decimalFormat.html" title="Visit page outside Confluence">&#104;ttp://java.sun.com/docs/books/tutorial/i18n/format/decimalFormat.html</a></li>
+</ol>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

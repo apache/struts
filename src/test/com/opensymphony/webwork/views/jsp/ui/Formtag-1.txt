@@ -1,0 +1,8 @@
+<form id="myAction" name="myForm" onsubmit="submitMe(); customOnsubmit(); return true;" action="myAction" method="POST" enctype="myEncType" title="mytitle">
+<table class="wwFormTable">
+</table>
+</form>
+
+<script>
+	function customOnsubmit() {}
+</script>

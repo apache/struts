@@ -1,0 +1,73 @@
+#*
+  -- WebWork, Web Application Framework
+  --
+  -- Distributable under LGPL license.
+  -- See terms of license at opensource.org
+  --
+  --
+  -- tabbedpane.jsp
+  --
+  -- Required Parameters:
+  --   * contentName      - The name of the data map to be used.
+  --
+  -- Optional Parameters:
+  --   * tabAlign 	-	 The Alignment of the tabs. Default is the CENTER of the control.
+  --   * id  				- 	 Id of the control.
+  --
+  *#
+
+#bean ("com.opensymphony.webwork.util.Counter" $tabIndex)
+#set ($tabIndex.first = 0)
+#set ($tabIndex.last = $tag.content.size())
+
+<table border="1" cellspacing="0" cellpadding="5" id="$!webwork.htmlEncode($tag.id)">
+
+	<tr valign="bottom" align="$!webwork.htmlEncode($tag.tabAlign)">
+
+	#if ($tabAlign == 'CENTER' || $tabAlign == 'RIGHT')
+        <th colspan ="1" width="*"></th>
+    #end
+
+    #foreach ($c in $tag.content)
+        $stack.push($c)
+
+        <th width="10%"
+            #if ($tag.compareNumbers($tag.selectedIndex, $tabIndex.current))
+                #set ($isCur = 'true')
+                bgcolor="#A0B3FC"
+            #else
+                #set ($isCur = 'false')
+                bgcolor="#C0C0C0"
+            #end
+        >
+
+        #url ($url)
+        <a href="$url.addParameter($tag.indexLink, $tabIndex.next)">
+
+        #if ($isCur == 'true')
+            <em>
+        #end
+        $!webwork.htmlEncode($key)
+        #if ($isCur == 'true')
+            </em>
+        #end
+
+        </a>
+
+        </th>
+
+        #set ($trash = $stack.pop())
+    #end
+
+    #if ($tabAlign == 'CENTER' || $tabAlign == 'LEFT')
+        <th colspan ="1" width="*"></th>
+    #end
+
+    </tr>
+	<tr>
+		<td bgcolor="#E1EAE8" colspan="$tag.colSpanLength" width="100%">
+			#includeservlet ($tag.selectedUrl)
+		</td>
+	</tr>
+
+</table>

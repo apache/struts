@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <title>WebWork - 
+         head template
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>The ajax <a href="head.html" title="head">head</a> template builds upon the <a href="xhtml head template.html" title="xhtml head template">xhtml head template</a> by providing additional JavaScript includes for the <a href="http://dojotoolkit.org" title="Visit page outside Confluence">Dojo Toolkit</a>, which is used by the <a href="ajax a template.html" title="ajax a template">ajax a template</a>, <a href="ajax div template.html" title="ajax div template">ajax div template</a> , and the <a href="ajax tabbedPanel template.html" title="ajax tabbedPanel template">ajax tabbedPanel template</a>. It is required to use this tag, <tt>&lt;ww:head theme="ajax"/&gt;</tt>, in your HTML <tt>&lt;head&gt;</tt> block if you wish to use AJAX feature. The contents of <b>head.ftl</b> are:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;#include <span class="code-quote">"/${parameters.templateDir}/xhtml/head.ftl"</span> /&gt;</span>
+<span class="code-tag">&lt;script language=<span class="code-quote">"JavaScript"</span> type=<span class="code-quote">"text/javascript"</span>&gt;</span>
+    // Dojo configuration
+    djConfig = {
+        baseRelativePath: <span class="code-quote">"<span class="code-tag">&lt;@ww.url includeParams='none' value='/webwork/dojo/' encode='false'/&gt;</span>"</span>,
+        isDebug: ${parameters.debug},
+        bindEncoding: <span class="code-quote">"${parameters.encoding}"</span>,
+        debugAtAllCosts: true // not needed, but allows the Venkman debugger to work with the includes
+    };
+<span class="code-tag">&lt;/script&gt;</span>
+&lt;script language=<span class="code-quote">"JavaScript"</span> type=<span class="code-quote">"text/javascript"</span>
+        src=<span class="code-quote">"<span class="code-tag">&lt;@ww.url includeParams='none' value='/webwork/dojo/dojo.js' encode='false'/&gt;</span>"</span>&gt;<span class="code-tag">&lt;/script&gt;</span>
+&lt;script language=<span class="code-quote">"JavaScript"</span> type=<span class="code-quote">"text/javascript"</span>
+        src=<span class="code-quote">"<span class="code-tag">&lt;@ww.url includeParams='none' value='/webwork/ajax/dojoRequire.js' encode='false'/&gt;</span>"</span>&gt;<span class="code-tag">&lt;/script&gt;</span>
+&lt;script language=<span class="code-quote">"JavaScript"</span> type=<span class="code-quote">"text/javascript"</span>
+        src=<span class="code-quote">"<span class="code-tag">&lt;@ww.url includeParams='none' value='/webwork/CommonFunctions.js' encode='false'/&gt;</span>"</span>&gt;<span class="code-tag">&lt;/script&gt;</span></pre>
+</div></div>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>
+<p>If you are having trouble getting the AJAX theme to work, you should include the above JavaScript in your page manually, changing "isDebug: false" to "isDebug: true".  This will log out debugging information directly to the screen.</p></td></tr></table>
+
+<p>Note that Dojo is configured to use the same character encoding specified in <a href="webwork.properties.html" title="webwork.properties">webwork.properties</a>, typically UTF-8. For a simple example of how to use the <a href="head.html" title="head">head</a> tag with the AJAX theme, simply do the following in your HTML:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:head theme=<span class="code-quote">"ajax"</span>/&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

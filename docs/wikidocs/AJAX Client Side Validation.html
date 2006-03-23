@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <title>WebWork - 
+         Client Side Validation
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>AJAX-based client side validation improves upon <a href="Pure JavaScript Client Side Validation.html" title="Pure JavaScript Client Side Validation">Pure JavaScript Client Side Validation</a> by using a combination of JavaScript, DOM manipulation, and remote server communication via <a href="http://getahead.ltd.uk/dwr" title="Visit page outside Confluence">DWR</a>. Unlike the pure client side implementation, AJAX-based validation communicates with the server. This means all your validation rules that worked when submitting a form will still work within the browser.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>This validation mode only works with the <a href="ajax theme.html" title="ajax theme">ajax theme</a></td></tr></table>
+
+<p>The validation occurs on each <b>onblur</b> event for each form element. As each user types in some values and moves to the next form element, the value (and all other values previously entered) will be sent to the server for validation. The entire validation stack is run, including visitor validators and your action's validate() method.</p>
+
+<p>If there is an error, like the pure implementation, the HTML and DOM will be updated immediately.</p>
+
+<p>For an example of this, see <a href="AJAX Validation.html" title="AJAX Validation">AJAX Validation</a>.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

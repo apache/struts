@@ -1,0 +1,133 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Webwork 2 HTML form buttons Howto
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h2><a name="Webwork2HTMLformbuttonsHowto-HTMLFormButtonsandWebwork2"></a>HTML Form Buttons and Webwork2</h2>
+
+<p>This Howto will describe the usage of HTML form buttons to invoke different behavior in actions.</p>
+<h3><a name="Webwork2HTMLformbuttonsHowto-Determinewhichbuttonwaspressed"></a>Determine which button was pressed</h3>
+
+<p>The trick is that the type conversion of XWork can be used to test which button was pressed in a simple way. When a button is pressed, a parameter is set in webwork with the name and value that are specified as the <em>name</em> and <em>value</em> attributes of your HTML button. XWork converts this automatically to boolean value if an appropriate property of the Action is found.<br/>
+These boolean Properties can be tested to determine which button was pressed:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;form action=<span class="code-quote">"MyAction.action"</span>&gt;
+&lt;input type=<span class="code-quote">"submit"</span> name=<span class="code-quote">"buttonOnePressed"</span> value=<span class="code-quote">"First option"</span>&gt; 
+&lt;input type=<span class="code-quote">"submit"</span> name=<span class="code-quote">"buttonTwoPressed"</span> value=<span class="code-quote">"Alternative Option"</span>&gt;
+&lt;/form&gt;</pre>
+</div></div>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> class MyAction <span class="code-keyword">extends</span> Action {
+
+    /**
+     * Action implementation
+     *
+     * Sets the message according to which button was pressed.
+     **/
+    <span class="code-keyword">public</span> <span class="code-object">String</span> execute() {
+        <span class="code-keyword">if</span> (buttonOnePressed) {
+            message=<span class="code-quote">"You pressed the first button"</span>;
+        } <span class="code-keyword">else</span> <span class="code-keyword">if</span> (buttonTwoPressed) {
+            message=<span class="code-quote">"You pressed the second button"</span>;
+        } <span class="code-keyword">else</span> {
+            <span class="code-keyword">return</span> ERROR;
+        }
+        <span class="code-keyword">return</span> SUCCES;
+    }
+
+    <span class="code-comment">// Input parameters
+</span>    <span class="code-keyword">private</span> <span class="code-object">boolean</span> buttonOnePressed=<span class="code-keyword">false</span>;
+    <span class="code-keyword">private</span> <span class="code-object">boolean</span> buttonTwoPressed=<span class="code-keyword">false</span>;
+
+    <span class="code-keyword">public</span> void setButtonOnePressed(<span class="code-object">boolean</span> value) {
+        <span class="code-keyword">this</span>.buttonOnePressed = value;
+    }
+
+
+    <span class="code-keyword">public</span> void setButtonTwoPressed(<span class="code-object">boolean</span> value) {
+        <span class="code-keyword">this</span>.buttonTwoPressed = value;
+    }
+
+    <span class="code-comment">// Output parameters
+</span>
+    <span class="code-keyword">private</span> <span class="code-object">String</span> message;
+    <span class="code-keyword">public</span> <span class="code-object">String</span> getMessage() {
+        <span class="code-keyword">return</span> message;
+    }
+}</pre>
+</div></div>
+
+<p>*Note_<em>: Do not use String properties with buttons and test for the value that's set. This will break as soon as the _value</em> attribute of the HTML button changes! This is likely because the <em>value</em> attribute used as the text shown to the user.</p>
+<h3><a name="Webwork2HTMLformbuttonsHowto-Dynamicsetofbuttons"></a>Dynamic set of buttons</h3>
+
+<p>Consider a web page showing a shopping cart or similiar tabular data. Often there is a button belonging to each row, in case of the shopping cart a delete button to remove the item from the cart. The number of buttons is dynamic and the id that couples the button to an item cannot go to the <em>value</em> attribute because all buttons should read "delete".</p>
+
+<p>The solution is to __name* the buttons like delete[123], delete[594], delete[494] where 123, 594 and 494 are e.g. the items' ids:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;form action=<span class="code-quote">"UpdateCart.action"</span>&gt;
+  &lt;ww:iterate value=<span class="code-quote">"items"</span>&gt;
+    &lt;ww:property value=<span class="code-quote">"name"</span>&gt; 
+    &lt;input type=<span class="code-quote">"submit"</span> name=<span class="code-quote">"delete[&lt;ww:property value='id'&gt;]"</span> value=<span class="code-quote">"delete"</span> /&gt; &lt;br/&gt;
+  &lt;/ww:iterate&gt;
+&lt;/form&gt;</pre>
+</div></div>
+
+<p>When e.g. the button for the item with the property id == "27" is pressed, a parameter named <em>delete[27]</em> and value "delete" is set in your action. The trick is to us declare your action's property "delete" as <em>java.util.Map</em>. Then, a key will exist for the button that was pressed:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> void class UpdateCart <span class="code-keyword">implements</span> Action {
+    <span class="code-comment">// must be initialized to be usable as a webwork input parameter
+</span>    <span class="code-keyword">private</span> Map delete = <span class="code-keyword">new</span> HashMap(); 
+
+    /** This is somewhat counter intuitive. But a property like <span class="code-quote">"delete[OS:27]"</span>
+     *  that is set to <span class="code-quote">"delete"</span> by webwork will be interpreted by the underlying    
+     *  OGNL expression engine as "set the property 27 of the action's property
+     *  <span class="code-quote">"delete"</span> to the value <span class="code-quote">"delete"</span>. So we must provide a getter <span class="code-keyword">for</span> <span class="code-keyword">this</span>
+     */ action. A setter is not needed.
+    <span class="code-keyword">public</span> Map getDelete() {
+        <span class="code-keyword">return</span> delete;
+    }
+
+    <span class="code-keyword">public</span> <span class="code-object">String</span> execute() {
+        <span class="code-keyword">for</span>(Iterator i = delete.keySet().iterator(); i.hasNext(); ) {
+            <span class="code-object">String</span> id = (<span class="code-object">String</span>) i.next();
+            ...
+            <span class="code-comment">// <span class="code-keyword">do</span> what ever you want
+</span>            ...
+         }
+         ...
+    }
+}</pre>
+</div></div>
+
+<p>In this case it would not be necessary to iterate the whole keySet because it contains only one key but the same code can be use to handle sets of checkboxes if this is prefered later:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;form action=<span class="code-quote">"UpdateCart.action"</span>&gt;
+  &lt;ww:iterate value=<span class="code-quote">"items"</span>&gt;
+    &lt;ww:property value=<span class="code-quote">"name"</span>&gt; 
+    &lt;input type=<span class="code-quote">"checkbox"</span> name=<span class="code-quote">"delete[&lt;ww:property value='item'/&gt;]"</span> value=<span class="code-quote">"delete"</span>&gt; &lt;br/&gt;
+  &lt;/ww:iterate&gt;
+  &lt;input type=<span class="code-quote">"submit"</span> name=<span class="code-quote">"updateCart"</span> value=<span class="code-quote">"Update the cart"</span>/&gt;
+&lt;/form&gt;</pre>
+</div></div>
+
+
+<p>The two implementations can even be combined two provide a quick "delete this item" button and a set of checkboxes for "mass updates". All with the above code, cool eh?</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

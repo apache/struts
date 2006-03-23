@@ -1,0 +1,76 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Create a webapp project structure for your web application
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <table cellpadding='5' width='85%' cellspacing='8px' class='infoMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/information.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Starting with a blank web application</b><br />
+<p>You can use the <em>webapps/build.xml</em> file to create a project structure to help you get started quickly.<br/>
+Just run 'ant new' and follow instructions.</p></td></tr></table>
+<p>&nbsp;</p>
+<div class="preformatted"><div class="preformattedContent">
+<pre>new:
+     [echo]
+     [echo]             +=============================================================+
+     [echo]             |              -- Create a new web application  --            |
+     [echo]             +=============================================================+
+     [echo]
+
+    [input] Enter the name of your new application [myapp]? ww-sample
+     [echo] Creating 'ww-sample' web application...
+     [copy] Copying 7 files to /Users/rainerh/projects/webwork/webapps/ww-sample
+     [copy] Copying 1 file to /Users/rainerh/projects/webwork/webapps/ww-sample
+     [echo]
+     [echo]             +=============================================================+
+     [echo]             |    -- Your Web Application was created successfully! --     |
+     [echo]             |                                                             |
+     [echo]             | Now you should be able to cd to your application and run:   |
+     [echo]             | &gt; ant build -Dwebapp=ww-sample                              |
+     [echo]             +=============================================================+
+
+BUILD SUCCESSFUL
+</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>This task creates a new directory within the webapps dir.</p>
+
+<p>For example, this is the setup for a new webapp project created with 'ant new' webapp name 'ww-sample':</p>
+<div class="preformatted"><div class="preformattedContent">
+<pre>webapps/
+  ww-sample/
+    src/
+      java/
+         com/opensymphony/webwork/example/HomeAction.java -- A simple action example implementation
+      webapp/
+        index.jsp -- redirects to home.action
+        WEB-INF/
+          classes/
+            webwork.properties -- Simple properties to use Spring and run webwork in devMode
+            xwork.xml -- Basic action mapping sample with 1 action mapping
+          pages/
+            home.jsp -- The home.jsp referenced via the HomeAction
+          applicationContext.xml -- blank Spring definition file. Add your Spring beans here.
+          web.xml -- basic web.xml for webwork
+</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>You can now use the newly created project structure to get your webwork-based project<br/>
+running.</p>
+
+<p>You may want to look at the other sample webapp projects, to get some examples of advanced usages.<br/>
+Have a look at the showcase, starter, or shopping-cart applications. </p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

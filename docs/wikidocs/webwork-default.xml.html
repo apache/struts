@@ -1,0 +1,237 @@
+<html>
+    <head>
+        <title>WebWork - 
+        webwork-default.xml
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>A base configuration file named webwork-default.xml is included in the webwork jar file. This file may be included at the top of your xwork.xml file to include the standard configuration settings without having to copy them, like so:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;!DOCTYPE xwork PUBLIC <span class="code-quote">"-//OpenSymphony Group//XWork 1.0//EN"</span> <span class="code-quote">"http://www.opensymphony.com/xwork/xwork-1.0.dtd"</span>&gt;</span><span class="code-tag">&lt;xwork&gt;</span>
+    <span class="code-tag">&lt;include file=<span class="code-quote">"webwork-default.xml"</span>/&gt;</span>    
+    
+    <span class="code-tag">&lt;package name=<span class="code-quote">"default"</span> extends=<span class="code-quote">"webwork-default"</span>&gt;</span>
+    ...
+    <span class="code-tag">&lt;/package&gt;</span>
+<span class="code-tag">&lt;/xwork&gt;</span></pre>
+</div></div>
+
+<p>The contents of webwork-default.xml are here:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;!DOCTYPE xwork PUBLIC <span class="code-quote">"-//OpenSymphony Group//XWork 1.1.1//EN"</span> <span class="code-quote">"http://www.opensymphony.com/xwork/xwork-1.1.1.dtd"</span>&gt;</span>
+<span class="code-tag">&lt;xwork&gt;</span>
+    <span class="code-tag">&lt;package name=<span class="code-quote">"webwork-default"</span>&gt;</span>
+        <span class="code-tag">&lt;result-types&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"chain"</span> class=<span class="code-quote">"com.opensymphony.xwork.ActionChainResult"</span>/&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"dispatcher"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.ServletDispatcherResult"</span> default=<span class="code-quote">"true"</span>/&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"freemarker"</span> class=<span class="code-quote">"com.opensymphony.webwork.views.freemarker.FreemarkerResult"</span>/&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"httpheader"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.HttpHeaderResult"</span>/&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"jasper"</span> class=<span class="code-quote">"com.opensymphony.webwork.views.jasperreports.JasperReportsResult"</span>/&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"redirect"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.ServletRedirectResult"</span>/&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"redirect-action"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.ServletActionRedirectResult"</span>/&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"stream"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.StreamResult"</span>/&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"tiles"</span> class=<span class="code-quote">"com.opensymphony.webwork.views.tiles.TilesResult"</span>/&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"velocity"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.VelocityResult"</span>/&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"xslt"</span> class=<span class="code-quote">"com.opensymphony.webwork.views.xslt.XSLTResult"</span>/&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"plaintext"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.PlainTextResult"</span> /&gt;</span>
+            
+            <span class="code-tag"><span class="code-comment">&lt;!-- Results necessary when using 'browse server' and 'upload' feature of Richtexteditor --&gt;</span></span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"richtexteditorGetFolders"</span> class=<span class="code-quote">"com.opensymphony.webwork.views.jsp.ui.RichtexteditorGetFoldersResult"</span> /&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"richtexteditorGetFoldersAndFiles"</span> class=<span class="code-quote">"com.opensymphony.webwork.views.jsp.ui.RichtexteditorGetFoldersAndFilesResult"</span> /&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"richtexteditorCreateFolder"</span> class=<span class="code-quote">"com.opensymphony.webwork.views.jsp.ui.RichtexteditorCreateFolderResult"</span> /&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"richtexteditorFileUpload"</span> class=<span class="code-quote">"com.opensymphony.webwork.views.jsp.ui.RichtexteditorFileUploadResult"</span> /&gt;</span>
+            
+        <span class="code-tag">&lt;/result-types&gt;</span>
+
+        <span class="code-tag">&lt;interceptors&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"alias"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.AliasInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"autowiring"</span> class=<span class="code-quote">"com.opensymphony.xwork.spring.interceptor.ActionAutowiringInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"chain"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.ChainingInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"component"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.component.ComponentInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"conversionError"</span> class=<span class="code-quote">"com.opensymphony.webwork.interceptor.WebWorkConversionErrorInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"createSession"</span> class=<span class="code-quote">"com.opensymphony.webwork.interceptor.CreateSessionInterceptor"</span> /&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"external-ref"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.ExternalReferencesInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"execAndWait"</span> class=<span class="code-quote">"com.opensymphony.webwork.interceptor.ExecuteAndWaitInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"exception"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.ExceptionMappingInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"fileUpload"</span> class=<span class="code-quote">"com.opensymphony.webwork.interceptor.FileUploadInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"i18n"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.I18nInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"logger"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.LoggingInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"model-driven"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.ModelDrivenInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"params"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.ParametersInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"prepare"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.PrepareInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"static-params"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.StaticParametersInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"scope"</span> class=<span class="code-quote">"com.opensymphony.webwork.interceptor.ScopeInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"servlet-config"</span> class=<span class="code-quote">"com.opensymphony.webwork.interceptor.ServletConfigInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"sessionAutowiring"</span> class=<span class="code-quote">"com.opensymphony.webwork.spring.interceptor.SessionContextAutowiringInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"timer"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.TimerInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"token"</span> class=<span class="code-quote">"com.opensymphony.webwork.interceptor.TokenInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"token-session"</span> class=<span class="code-quote">"com.opensymphony.webwork.interceptor.TokenSessionStoreInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"validation"</span> class=<span class="code-quote">"com.opensymphony.xwork.validator.ValidationInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"workflow"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.DefaultWorkflowInterceptor"</span>/&gt;</span>
+
+            <span class="code-tag"><span class="code-comment">&lt;!-- Basic stack --&gt;</span></span>
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"basicStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"exception"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"servlet-config"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"prepare"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"static-params"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"params"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"conversionError"</span>/&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+
+            <span class="code-tag"><span class="code-comment">&lt;!-- Sample validation and workflow stack --&gt;</span></span>
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"validationWorkflowStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"validation"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"workflow"</span>/&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+
+            <span class="code-tag"><span class="code-comment">&lt;!-- Sample file upload stack --&gt;</span></span>
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"fileUploadStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"fileUpload"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+
+            &lt;!-- Sample WebWork Inversion of Control stack
+                 Note: WebWork's IoC is deprecated - please
+                 look at alternatives such as Spring --&gt;
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"componentStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"component"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+
+            <span class="code-tag"><span class="code-comment">&lt;!-- Sample model-driven stack  --&gt;</span></span>
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"modelDrivenStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"model-driven"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+
+            <span class="code-tag"><span class="code-comment">&lt;!-- Sample action chaining stack --&gt;</span></span>
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"chainStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"chain"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+
+            <span class="code-tag"><span class="code-comment">&lt;!-- Sample i18n stack --&gt;</span></span>
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"i18nStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"i18n"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+
+            &lt;!-- Sample execute and wait stack.
+                 Note: execAndWait should always be the *last* interceptor. --&gt;
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"executeAndWaitStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"execAndWait"</span>/&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+
+            &lt;!-- An example of the params-prepare-params trick. This stack
+                 is exactly the same as the defaultStack, except that it
+                 includes one extra interceptor before the prepare interceptor:
+                 the params interceptor.
+
+                 This is useful for when you wish to apply parameters directly
+                 to an object that you wish to load externally (such as a DAO
+                 or database or service layer), but can't load that object
+                 until at least the ID parameter has been loaded. By loading
+                 the parameters twice, you can retrieve the object in the
+                 prepare() method, allowing the second params interceptor to
+                 apply the values on the object. --&gt;
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"paramsPrepareParamsStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"exception"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"alias"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"params"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"servlet-config"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"prepare"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"i18n"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"chain"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"model-driven"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"fileUpload"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"static-params"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"params"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"conversionError"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"validation"</span>&gt;</span>
+                    <span class="code-tag">&lt;param name=<span class="code-quote">"excludeMethods"</span>&gt;</span>input,back,cancel<span class="code-tag">&lt;/param&gt;</span>
+                <span class="code-tag">&lt;/interceptor-ref&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"workflow"</span>&gt;</span>
+                    <span class="code-tag">&lt;param name=<span class="code-quote">"excludeMethods"</span>&gt;</span>input,back,cancel<span class="code-tag">&lt;/param&gt;</span>
+                <span class="code-tag">&lt;/interceptor-ref&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+
+            &lt;!-- A complete stack with all the common interceptors in place.
+                 Generally, this stack should be the one you use, though it
+                 may do more than you need. Also, the ordering can be
+                 switched around (ex: if you wish to have your servlet-related
+                 objects applied before prepare() is called, you'd need to move
+                 servlet-config interceptor up.
+
+                 This stack also excludes from the normal validation and workflow
+                 the method names input, back, and cancel. These typically are
+                 associated with requests that should not be validated.
+                 --&gt;
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"defaultStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"exception"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"alias"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"servlet-config"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"prepare"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"i18n"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"chain"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"model-driven"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"fileUpload"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"static-params"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"params"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"conversionError"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"validation"</span>&gt;</span>
+                    <span class="code-tag">&lt;param name=<span class="code-quote">"excludeMethods"</span>&gt;</span>input,back,cancel,browse<span class="code-tag">&lt;/param&gt;</span>
+                <span class="code-tag">&lt;/interceptor-ref&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"workflow"</span>&gt;</span>
+                    <span class="code-tag">&lt;param name=<span class="code-quote">"excludeMethods"</span>&gt;</span>input,back,cancel,browse<span class="code-tag">&lt;/param&gt;</span>
+                <span class="code-tag">&lt;/interceptor-ref&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+
+            &lt;!-- The completeStack is here for backwards compatibility for
+                 applications that still refer to the defaultStack by the
+                 old name --&gt;
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"completeStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"defaultStack"</span>/&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+        <span class="code-tag">&lt;/interceptors&gt;</span>
+
+        <span class="code-tag">&lt;default-interceptor-ref name=<span class="code-quote">"defaultStack"</span>/&gt;</span>
+    <span class="code-tag">&lt;/package&gt;</span>
+    <span class="code-tag">&lt;package name=<span class="code-quote">"webwork-portlet-default"</span> extends=<span class="code-quote">"webwork-default"</span>&gt;</span>
+
+	   <span class="code-tag">&lt;result-types&gt;</span>
+			<span class="code-tag">&lt;result-type name=<span class="code-quote">"dispatcher"</span> class=<span class="code-quote">"com.opensymphony.webwork.portlet.result.PortletResult"</span> default=<span class="code-quote">"true"</span>/&gt;</span>
+			<span class="code-tag">&lt;result-type name=<span class="code-quote">"freemarker"</span> class=<span class="code-quote">"com.opensymphony.webwork.views.freemarker.PortletFreemarkerResult"</span>/&gt;</span>
+			<span class="code-tag">&lt;result-type name=<span class="code-quote">"velocity"</span> class=<span class="code-quote">"com.opensymphony.webwork.portlet.result.PortletVelocityResult"</span>/&gt;</span>
+	   <span class="code-tag">&lt;/result-types&gt;</span>
+
+	   <span class="code-tag">&lt;action name=<span class="code-quote">"renderDirect"</span> class=<span class="code-quote">"com.opensymphony.webwork.portlet.dispatcher.DirectRenderFromEventAction"</span>&gt;</span>
+	   		<span class="code-tag">&lt;result name=<span class="code-quote">"success"</span>&gt;</span>${location}<span class="code-tag">&lt;/result&gt;</span>
+	   <span class="code-tag">&lt;/action&gt;</span>
+	   <span class="code-tag">&lt;action name=<span class="code-quote">"freemarkerDirect"</span> class=<span class="code-quote">"com.opensymphony.webwork.portlet.dispatcher.DirectRenderFromEventAction"</span>&gt;</span>
+	   		<span class="code-tag">&lt;result type=<span class="code-quote">"freemarker"</span> name=<span class="code-quote">"success"</span>&gt;</span>${location}<span class="code-tag">&lt;/result&gt;</span>
+	   <span class="code-tag">&lt;/action&gt;</span>
+	   <span class="code-tag">&lt;action name=<span class="code-quote">"velocityDirect"</span> class=<span class="code-quote">"com.opensymphony.webwork.portlet.dispatcher.DirectRenderFromEventAction"</span>&gt;</span>
+	   		<span class="code-tag">&lt;result type=<span class="code-quote">"velocity"</span> name=<span class="code-quote">"success"</span>&gt;</span>${location}<span class="code-tag">&lt;/result&gt;</span>
+	   <span class="code-tag">&lt;/action&gt;</span>
+	<span class="code-tag">&lt;/package&gt;</span>
+<span class="code-tag">&lt;/xwork&gt;</span></pre>
+</div></div>
+
+<p>This file defines all of the default bundled results and interceptors and many interceptor stacks which you can use either as-is or as a basis for your own application-specific interceptor stacks. <b>Notice the name of the package is "webwork-default"</b>.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

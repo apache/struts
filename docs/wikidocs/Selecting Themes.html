@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Selecting Themes
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>Themes can be selected using several different rules, in this order:</p>
+
+<ol>
+	<li>The <em>theme</em> attribute on the specific tag</li>
+	<li>The <em>theme</em> attribute on a tag's surrounding <a href="form.html" title="form">form</a> tag</li>
+	<li>The page-scoped attribute named <em>theme</em></li>
+	<li>The request-scoped attribute named <em>theme</em></li>
+	<li>The session-scoped attribute named <em>theme</em></li>
+	<li>The application-scoped attribute named <em>theme</em></li>
+	<li>The <b>webwork.ui.theme</b> property in <a href="webwork.properties.html" title="webwork.properties">webwork.properties</a> (defaults to <em>xhtml</em>)</li>
+</ol>
+
+
+<p>A few important concepts come from this order:</p>
+
+<ul>
+	<li>You can override an entire form's theme by only changing the <em>theme</em> attribute for the forum. This makes it easy to use the <a href="ajax theme.html" title="ajax theme">ajax theme</a> in just a few select places.</li>
+	<li>You can change the theme for a user's session. This might be useful if users can customize their look and feel.</li>
+	<li>If you want to change the theme for the entire application, adjust your <a href="webwork.properties.html" title="webwork.properties">webwork.properties</a>.</li>
+</ul>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

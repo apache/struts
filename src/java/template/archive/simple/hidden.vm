@@ -1,0 +1,8 @@
+<input
+    type="hidden"
+    #if ($parameters.name)      name="$!webwork.htmlEncode($parameters.name)"       #end
+    #if ($parameters.nameValue) value="$!webwork.htmlEncode($parameters.nameValue)" #end
+    #if ($parameters.cssClass)  class="$!webwork.htmlEncode($parameters.cssClass)"  #end
+    #if ($parameters.cssStyle)  style="$!webwork.htmlEncode($parameters.cssStyle)"  #end
+    #if ($parameters.id)        id="$!webwork.htmlEncode($parameters.id)"           #end
+/>

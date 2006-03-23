@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Interceptor Configuration
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="InterceptorConfiguration-Description"></a>Description</h1>
+
+<p>Interceptors allow you to define code to be executed before and/or after the execution of an action. Interceptors can be a powerful tool when writing web applications. Some of the most common implementations of an Interceptor might be: </p>
+<ul>
+	<li>Security Checking (ensuring the user is logged in)</li>
+	<li>Trace Logging (logging every action)</li>
+	<li>Bottleneck Checking (start a timer before and after every action, to check bottlenecks in your application)<br/>
+You can also chain Interceptors together to create an interceptor <b>stack</b>. If you wanted to do a login check, security check, and logging all before an Action call, this could easily be done with an interceptor package.</li>
+</ul>
+
+
+<p>Intercepters must first be defined (to give name them) and can be chained together as a stack:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;interceptors&gt;</span>
+  <span class="code-tag">&lt;interceptor name=<span class="code-quote">"security"</span> class=<span class="code-quote">"com.mycompany.security.SecurityInterceptor"</span>/&gt;</span>
+  <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"defaultComponentStack"</span>&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"component"</span>/&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"defaultStack"</span>/&gt;</span>
+  <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+<span class="code-tag">&lt;/interceptors&gt;</span></pre>
+</div></div>
+
+<p>To use them in your actions:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;action name=<span class="code-quote">"VelocityCounter"</span> class=<span class="code-quote">"com.opensymphony.webwork.example.counter.SimpleCounter"</span>&gt;</span>
+   <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span>&gt;</span>...<span class="code-tag">&lt;/result&gt;</span>
+   <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"defaultComponentStack"</span>/&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span></pre>
+</div></div>
+
+<p>NOTE: Reference name can be either the name of the interceptor or the name of a stack</p>
+
+<p>For more details, see <a href="Interceptors.html" title="Interceptors">Interceptors</a> reference.</p>
+
+<p>Most of the content here provided by Matt Dowell &lt;matt.dowell@notiva.com&gt;</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

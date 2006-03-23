@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <title>WebWork 2 : Exposing webwork objects to JSTL, with a JSTL and DisplayTag Example</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : Exposing webwork objects to JSTL, with a JSTL and DisplayTag Example
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Nov 30, 2004 by <font color="#0050B2">jcarreira</font>.
+				    </div>
+
+				    <div class="code"><div class="codeContent">
+<pre>&lt;ww:set name=<span class="java&#45;quote">&quot;jobz&quot;</span> value=<span class="java&#45;quote">&quot;jobs&quot;</span> scope=<span class="java&#45;quote">&quot;request&quot;</span> /&gt;</pre>
+</div></div><br/>
+The full example below shows a webwork variable &quot;jobs&quot; being exposed as &quot;jobz&quot; to the request scope and being used with jstl and the display tag.
+<div class="code"><div class="codeContent">
+<pre>&lt;&#37;&#64; taglib uri=<span class="java&#45;quote">&quot;/WEB&#45;INF/tlds/c.tld&quot;</span> prefix=<span class="java&#45;quote">&quot;c&quot;</span> &#37;&gt;&#10;&lt;&#37;&#64; taglib uri=<span class="java&#45;quote">&quot;/WEB&#45;INF/tlds/fmt.tld&quot;</span> prefix=<span class="java&#45;quote">&quot;fmt&quot;</span> &#37;&gt;&#10;&lt;&#37;&#64; taglib uri=<span class="java&#45;quote">&quot;/WEB&#45;INF/tlds/displaytag&#45;el&#45;12.tld&quot;</span> prefix=<span class="java&#45;quote">&quot;display&quot;</span> &#37;&gt;&#10;&lt;&#37;&#64; taglib uri=<span class="java&#45;quote">&quot;/WEB&#45;INF/tlds/webwork.tld&quot;</span> prefix=<span class="java&#45;quote">&quot;ww&quot;</span> &#37;&gt;&#10;&#10;&lt;ww:set name=<span class="java&#45;quote">&quot;jobz&quot;</span> value=<span class="java&#45;quote">&quot;jobs&quot;</span> scope=<span class="java&#45;quote">&quot;request&quot;</span> /&gt;&#10;&#10;&lt;h1&gt;&lt;fmt:message key=<span class="java&#45;quote">&quot;title.listAllJobs&quot;</span>/&gt;&lt;/h1&gt;&#10;&lt;display:table name=<span class="java&#45;quote">&quot;jobz&quot;</span> class=<span class="java&#45;quote">&quot;simple&quot;</span> id=<span class="java&#45;quote">&quot;row&quot;</span> &gt;&#10;  &lt;display:column  titleKey=<span class="java&#45;quote">&quot;label.global.actions&quot;</span> &gt;&#10;  		&lt;c:url <span class="java&#45;keyword">var</span>=<span class="java&#45;quote">&quot;viewurl&quot;</span> value=<span class="java&#45;quote">&quot;/viewJobDetail.action&quot;</span>&gt;&#10;			&lt;c:param name=<span class="java&#45;quote">&quot;name&quot;</span> value=<span class="java&#45;quote">&quot;$&#123;row.name&#125;&quot;</span>/&gt;&#10;  			&lt;c:param name=<span class="java&#45;quote">&quot;groupName&quot;</span> value=<span class="java&#45;quote">&quot;$&#123;row.group&#125;&quot;</span>/&gt;&#10;		&lt;/c:url&gt;&#10;  		&lt;c:url <span class="java&#45;keyword">var</span>=<span class="java&#45;quote">&quot;exeurl&quot;</span> value=<span class="java&#45;quote">&quot;/viewJobDetail.action&quot;</span>&gt;&#10;			&lt;c:param name=<span class="java&#45;quote">&quot;name&quot;</span> value=<span class="java&#45;quote">&quot;$&#123;row.name&#125;&quot;</span>/&gt;&#10;  			&lt;c:param name=<span class="java&#45;quote">&quot;groupName&quot;</span> value=<span class="java&#45;quote">&quot;$&#123;row.group&#125;&quot;</span>/&gt;&#10;  			&lt;c:param name=<span class="java&#45;quote">&quot;executeJobAction&quot;</span> value=<span class="java&#45;quote">&quot;execute&quot;</span>/&gt;&#10;		&lt;/c:url&gt;&#10;  		&lt;c:url <span class="java&#45;keyword">var</span>=<span class="java&#45;quote">&quot;editurl&quot;</span> value=<span class="java&#45;quote">&quot;/viewJobDetail.action&quot;</span>&gt;&#10;			&lt;c:param name=<span class="java&#45;quote">&quot;name&quot;</span> value=<span class="java&#45;quote">&quot;$&#123;row.name&#125;&quot;</span>/&gt;&#10;  			&lt;c:param name=<span class="java&#45;quote">&quot;groupName&quot;</span> value=<span class="java&#45;quote">&quot;$&#123;row.group&#125;&quot;</span>/&gt;&#10;  			&lt;c:param name=<span class="java&#45;quote">&quot;editAction&quot;</span> value=<span class="java&#45;quote">&quot;edit&quot;</span>/&gt;&#10;		&lt;/c:url&gt;&#10;	&lt;a href=&#039;&lt;c:out value=<span class="java&#45;quote">&quot;$&#123;viewurl&#125;&quot;</span>/&gt;&#039;&gt;&lt;fmt:message key=<span class="java&#45;quote">&quot;label.global.view&quot;</span>/&gt;&lt;/a&gt; |&#10;	&lt;a href=&#039;&lt;c:out value=<span class="java&#45;quote">&quot;$&#123;editurl&#125;&quot;</span>/&gt;&#039;&gt;&lt;fmt:message key=<span class="java&#45;quote">&quot;label.global.edit&quot;</span>/&gt;&lt;/a&gt; |&#10;	&lt;a href=&#039;&lt;c:out value=<span class="java&#45;quote">&quot;$&#123;exeurl&#125;&quot;</span>/&gt;&#039;&gt;&lt;fmt:message key=<span class="java&#45;quote">&quot;label.global.execute&quot;</span>/&gt;&lt;/a&gt; &nbsp;&#10;  &lt;/display:column&gt; &#10;&#10;  &lt;display:column property=<span class="java&#45;quote">&quot;group&quot;</span> titleKey=<span class="java&#45;quote">&quot;label.job.group&quot;</span> sortable=<span class="java&#45;quote">&quot;<span class="java&#45;keyword">true</span>&quot;</span>   /&gt;&#10;  &lt;display:column property=<span class="java&#45;quote">&quot;name&quot;</span> titleKey=<span class="java&#45;quote">&quot;label.job.name&quot;</span> sortable=<span class="java&#45;quote">&quot;<span class="java&#45;keyword">true</span>&quot;</span>  /&gt;&#10;  &lt;display:column property=<span class="java&#45;quote">&quot;description&quot;</span> titleKey=<span class="java&#45;quote">&quot;label.job.description&quot;</span> /&gt;&#10;  &lt;display:column property=<span class="java&#45;quote">&quot;jobClass&quot;</span> titleKey=<span class="java&#45;quote">&quot;label.job.jobClass&quot;</span> sortable=<span class="java&#45;quote">&quot;<span class="java&#45;keyword">true</span>&quot;</span>  /&gt;&#10;&#10;&lt;/display:table&gt;</pre>
+</div></div><br/>
+Please note, at the time of this writing the &quot;titleKey&quot; attribute of the display tag&#039;s column tag is not yet released into a final version. It is a feature that is currently, only available through cvs.
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

@@ -1,0 +1,116 @@
+<html>
+    <head>
+        <title>WebWork - 
+        JUnit
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>There's a number of approaches you can take to unit-test your WebWork actions.  </p>
+
+<h2><a name="JUnit-Thesimplestistoinstantiateyouractions%2Ccallsettersthenexecute%28%29.Thisallowsyoutobypassallthecomplicatedcontainersetup."></a>The simplest is to instantiate your actions, call setters then execute().  This allows you to bypass all the complicated container setup.</h2>
+
+<p>Taken from Petsoar:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> org.petsoar.actions.inventory;
+
+<span class="code-keyword">import</span> com.mockobjects.constraint.IsEqual;
+<span class="code-keyword">import</span> com.mockobjects.dynamic.C;
+<span class="code-keyword">import</span> com.mockobjects.dynamic.Mock;
+<span class="code-keyword">import</span> com.opensymphony.xwork.Action;
+<span class="code-keyword">import</span> junit.framework.TestCase;
+<span class="code-keyword">import</span> org.petsoar.pets.Pet;
+<span class="code-keyword">import</span> org.petsoar.pets.PetStore;
+
+<span class="code-keyword">public</span> class TestViewPet <span class="code-keyword">extends</span> TestCase {
+    <span class="code-keyword">private</span> Mock mockPetStore;
+    <span class="code-keyword">private</span> ViewPet action;
+
+    <span class="code-keyword">protected</span> void setUp() <span class="code-keyword">throws</span> Exception {
+        mockPetStore = <span class="code-keyword">new</span> Mock(PetStore.class);
+        PetStore petStore = (PetStore) mockPetStore.proxy();
+
+        action = <span class="code-keyword">new</span> ViewPet();
+        action.setPetStore(petStore);
+    }
+
+    <span class="code-keyword">public</span> void testViewPet() <span class="code-keyword">throws</span> Exception {
+        Pet existingPet = <span class="code-keyword">new</span> Pet();
+        existingPet.setName(<span class="code-quote">"harry"</span>);
+        existingPet.setId(1);
+
+        Pet expectedPet = <span class="code-keyword">new</span> Pet();
+        expectedPet.setName(<span class="code-quote">"harry"</span>);
+        expectedPet.setId(1);
+
+        mockPetStore.expectAndReturn(<span class="code-quote">"getPet"</span>, C.args(<span class="code-keyword">new</span> IsEqual(<span class="code-keyword">new</span> <span class="code-object">Long</span>(1))), existingPet);
+        action.setId(1);
+
+        <span class="code-object">String</span> result = action.execute();
+
+        assertEquals(Action.SUCCESS, result);
+        assertEquals(expectedPet, existingPet);
+        mockPetStore.verify();
+    }
+
+    <span class="code-keyword">public</span> void testViewPetNoId() <span class="code-keyword">throws</span> Exception {
+        mockPetStore.expectAndReturn(<span class="code-quote">"getPet"</span>, C.ANY_ARGS, <span class="code-keyword">null</span>);
+
+        <span class="code-object">String</span> result = action.execute();
+
+        assertEquals(Action.ERROR, result);
+        assertEquals(1, action.getActionErrors().size());
+        assertEquals(<span class="code-quote">"Invalid pet selected."</span>, action.getActionErrors().iterator().next());
+        assertNull(action.getPet());
+        mockPetStore.verify();
+    }
+
+    <span class="code-keyword">public</span> void testViewPetInvalidId() <span class="code-keyword">throws</span> Exception {
+        action.setId(-1);
+        testViewPetNoId();
+    }
+}</pre>
+</div></div>
+
+<h2><a name="JUnit-Testinterceptorsand%2Forresulttypes"></a>Test interceptors and/or result types</h2>
+
+<p>Check out the test suites in XWork/WebWork.  These are pretty comprehensive and provide a good starting point.  For example,  this is how the <b>ParametersInterceptor</b> is tested:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> void testDoesNotAllowMethodInvocations() {
+    Map params = <span class="code-keyword">new</span> HashMap();
+    params.put(<span class="code-quote">"@java.lang.<span class="code-object">System</span>@exit(1).dummy"</span>, <span class="code-quote">"dumb value"</span>);
+
+    HashMap extraContext = <span class="code-keyword">new</span> HashMap();
+    extraContext.put(ActionContext.PARAMETERS, params);
+
+    <span class="code-keyword">try</span> {
+        ActionProxy proxy = ActionProxyFactory.getFactory().
+               createActionProxy("", MockConfigurationProvider.MODEL_DRIVEN_PARAM_TEST, extraContext);
+        assertEquals(Action.SUCCESS, proxy.execute());
+
+        ModelDrivenAction action = (ModelDrivenAction) proxy.getAction();
+        TestBean model = (TestBean) action.getModel();
+
+        <span class="code-object">String</span> property = <span class="code-object">System</span>.getProperty(<span class="code-quote">"webwork.security.test"</span>);
+        assertNull(property);
+    } <span class="code-keyword">catch</span> (Exception e) {
+        e.printStackTrace();
+        fail();
+    }
+}</pre>
+</div></div>
+
+
+<p>Note: these are not the ONLY ways so make your own judgement.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

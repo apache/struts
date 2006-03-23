@@ -1,0 +1,12 @@
+<input type="file"
+                                   name="$!webwork.htmlEncode($parameters.name)"
+#if ($parameters.size)             size="$!webwork.htmlEncode($parameters.size)"            #end
+#if ($parameters.nameValue)        value="$!webwork.htmlEncode($parameters.nameValue)"      #end
+#if ($parameters.disabled && $parameters.disabled == true)
+                                   disabled="disabled"                                      #end
+#if ($parameters.id)               id="$!webwork.htmlEncode($parameters.id)"                #end
+#if ($parameters.accept)           accept="$!webwork.htmlEncode($parameters.accept)"        #end
+#if ($parameters.cssClass)         class="$!webwork.htmlEncode($parameters.cssClass)"       #end
+#if ($parameters.cssStyle)         style="$!webwork.htmlEncode($parameters.cssStyle)"       #end
+#parse("/$parameters.templateDir/simple/scripting-events.vm")
+/>

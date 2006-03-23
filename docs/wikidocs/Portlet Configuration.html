@@ -1,0 +1,125 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Portlet Configuration
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="PortletConfiguration-XWorkconfiguration"></a>XWork configuration</h1>
+
+<p>The base package of your application should extend the <em>webwork-portlet-default</em> package, e.g:</p>
+<div class="code"><div class="codeHeader"><b>xwork.xml</b></div><div class="codeContent">
+<pre class="code-java">&lt;include file=<span class="code-quote">"webwork-<span class="code-keyword">default</span>.xml"</span> /&gt;
+
+&lt;<span class="code-keyword">package</span> name=<span class="code-quote">"view"</span> <span class="code-keyword">extends</span>=<span class="code-quote">"webwork-portlet-<span class="code-keyword">default</span>"</span> namespace=<span class="code-quote">"/view"</span>&gt;</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h1><a name="PortletConfiguration-Portletinitparameters"></a>Portlet init parameters</h1>
+
+<p>Below is the init-param elements that you can set up in <em>portlet.xml</em> for configuring the portlet mode &#45;&gt; xwork namespace mappings for the portlet. Basically, you can think of the different portlet modes as different sub-applications, so it can be useful to set up the xwork.xml configuration with different namespaces for the different portlets and modes:</p>
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'> Key </th>
+<th class='confluenceTh'> Description </th>
+<th class='confluenceTh'> Default </th>
+</tr>
+<tr>
+<td class='confluenceTd'> portletNamespace </td>
+<td class='confluenceTd'> The namespace for the portlet in the xwork configuration. This namespace is prepended to all action lookups, and makes it possible to host multiple portlets in the same portlet application. If this parameter is set, the complete namespace will be <em>/portletNamespace/modeNamespace/actionName</em> </td>
+<td class='confluenceTd'> The default namespace. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> viewNamespace </td>
+<td class='confluenceTd'> The namespace in the xwork config for the view portlet mode. </td>
+<td class='confluenceTd'> The default namespace. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> editNamespace </td>
+<td class='confluenceTd'> The namespace in the xwork config for the edit portlet mode. </td>
+<td class='confluenceTd'> The default namespace. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> helpNamespace </td>
+<td class='confluenceTd'> The namespace in the xwork config for the help portlet mode. </td>
+<td class='confluenceTd'> The default namespace. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> defaultViewAction </td>
+<td class='confluenceTd'> Name of the action to use as default for the view portlet mode, when no action name is present. </td>
+<td class='confluenceTd'> default </td>
+</tr>
+<tr>
+<td class='confluenceTd'> defaultEditAction </td>
+<td class='confluenceTd'> Name of the action to use as default for the edit portlet mode, when no action name is present. </td>
+<td class='confluenceTd'> default </td>
+</tr>
+<tr>
+<td class='confluenceTd'> defaultHelpAction </td>
+<td class='confluenceTd'> Name of the action to use as default for the help portlet mode, when no action name is present. </td>
+<td class='confluenceTd'> default </td>
+</tr>
+</tbody></table>
+<p>e.g.</p>
+<div class="code"><div class="codeHeader"><b>portlet.xml</b></div><div class="codeContent">
+<pre class="code-java">&lt;init-param&gt;
+    &lt;!-- Portlet namespace --&gt;
+    &lt;name&gt;portletNamespace&lt;/name&gt;
+    &lt;value&gt;/portletA&lt;/value&gt;
+&lt;/init-param&gt;
+&lt;init-param&gt;
+    &lt;!-- The base namespace of the view portlet mode --&gt;
+    &lt;name&gt;viewNamespace&lt;/name&gt;
+    &lt;value&gt;/view&lt;/value&gt;
+&lt;/init-param&gt;
+&lt;init-param&gt;
+    &lt;!-- The <span class="code-keyword">default</span> action to invoke in view mode --&gt;
+    &lt;name&gt;defaultViewAction&lt;/name&gt;
+    &lt;value&gt;index&lt;/value&gt;
+&lt;/init-param&gt;</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>This snippet from <em>portlet.xml</em> will set up the portlet with a namespace of <em>/portletA/. This means that all requests to this portlet will get the namespace prepended when looking up the action. In addition, the &#95;view</em> portlet mode will map to the <em>/view</em> namespace, so a request for action <em>myAction</em> will resolve to the namespace and action <em>/portletA/view/myAction</em>. It also means that if no action is requested, the default action of <em>index</em> will be used for the request.</p>
+
+<h1><a name="PortletConfiguration-Portletphases"></a>Portlet phases</h1>
+
+<p>The portlet specification describes that a portlet request cycle can consist of two phases, an <em>event</em> phase and a <em>render</em> phase. In case of an <em>event</em> in the portlet, it will always execute before the <em>render</em> phase. The <em>event</em> phase is typically for changing the state of the application. In a portlet, this is typically when a form is submitted. The <em>render</em> pahse will then prepare and dispatch to the view. It's recommended that you set up the result from an action that is executed in the <em>event</em> phase to point to another action that is executed in the <em>render</em> phase, which again is responsible for dispatching to the actual view.</p>
+
+<h1><a name="PortletConfiguration-Portletresultdispatching"></a>Portlet result dispatching</h1>
+
+<p>The <em>webwork-portlet-default</em> package defines a special default result type, which is responsible for performing the result logic of an Action execution. Typically, this involves including a JSP for rendering, or preparing a render action if one is configured for the current event action.</p>
+
+<p>This result type has three main modes of execution.</p>
+<ul>
+	<li>If the Action is executed in the render phase, it will perform a PortletRequestDispatcher.include(req, res) to the resource specified in the <em>location</em> attribute.</li>
+	<li>If the Action is executed in the event phase, and the result is an action mapping, it will set a render parameter on the ActionResponse to indicate which Action should be executed in the render phase. This follows good web application design, which promotes the use of a redirect after an event, which in this case means that an Action executed in the event phase will be followed by a redirect to an Action executed in the render phase.</li>
+	<li>If the Action is executed in the event phase, and the result is not an action mapping, the esult will prepare a special Action called "renderDirect" (specified in the <em>webwork-portlet-default</em> package) whose sole purpose is to render the specified web resource (usually a JSP).</li>
+</ul>
+
+
+<p>The action executed in event mode can pass render parameters to the next action to execute in render mode through a query string in the result configuration:</p>
+<div class="code"><div class="codeHeader"><b>xwork.xml</b></div><div class="codeContent">
+<pre class="code-java">&lt;result name=<span class="code-quote">"success"</span>&gt;/displayCart.action?userId=${userId}&lt;/result&gt;</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>This will set up a <em>render parameter</em> called <em>userId</em> with the value of the <em>userId</em> property of the dispatching action.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

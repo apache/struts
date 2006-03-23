@@ -1,0 +1,65 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Chaining Interceptor
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    
+<p> An interceptor that copies all the properties of every object in the value stack to the currently executing object,
+ except for any object that implements Unchainable. A collection of optional <i>includes</i> and
+ <i>excludes</i> may be provided to control how and which parameters are copied. Only includes or excludes may be
+ specified. Specifying both results in undefined behavior. See the javadocs for {@link OgnlUtil#copy(Object, Object,
+ java.util.Map, java.util.Collection, java.util.Collection)} for more information.</p>
+
+<p> <p/> It is important to remember that this interceptor does nothing if there are no objects already on the stack.
+ This means two things: One, you can safely apply it to all your actions without any worry of adverse affects. Two, it
+ is up to you to ensure an object exists in the stack prior to invoking this action. The most typical way this is done
+ is through the use of the <b>chain</b> result type, which combines with this interceptor to make up the action
+ chaining feature.</p>
+
+
+<h1><a name="ChainingInterceptor-Parameters"></a>Parameters</h1>
+
+
+<p> <ul></p>
+
+<p> <li>excludes (optional) - the list of parameter names to exclude from copying (all others will be included).</li></p>
+
+<p> <li>includes (optional) - the list of parameter names to include when copying (all others will be excluded).</li></p>
+
+<p> </ul></p>
+
+
+<h1><a name="ChainingInterceptor-ExtendingtheInterceptor"></a>Extending the Interceptor</h1>
+
+
+<p> There are no known extension points to this interceptor.</p>
+
+
+<h1><a name="ChainingInterceptor-Examples"></a>Examples</h1>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;action name=<span class="code-quote">"someAction"</span> class=<span class="code-quote">"com.examples.SomeAction"</span>&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+    <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"chain"</span>&gt;</span>otherAction<span class="code-tag">&lt;/result&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span>
+
+<span class="code-tag">&lt;action name=<span class="code-quote">"otherAction"</span> class=<span class="code-quote">"com.examples.OtherAction"</span>&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"chain"</span>/&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+    <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span>&gt;</span>good_result.ftl<span class="code-tag">&lt;/result&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

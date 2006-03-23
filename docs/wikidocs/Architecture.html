@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Architecture
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>The WebWork architecture can best be explained with a diagram:</p>
+
+<p><img src="Architecture_attachments/arch.png" align="absmiddle" border="0" /></p>
+
+<p>In the diagram, an initial request goes to the Servlet container (such as Tomcat or Resin), the request goes through the standard filter chain. This includes the (optional) <b>ActionContextCleanUp</b> filter, which is required if you wish to integrate in with technologies such as <a href="SiteMesh.html" title="SiteMesh">SiteMesh</a>. Next, the required <b>FilterDispatcher</b> is called, which in turn consults the <a href="ActionMapper.html" title="ActionMapper">ActionMapper</a> to determine if the request should invoke an action.</p>
+
+<p>If the ActionMapper determines that an action should be invoked, the FilterDispatcher than delegates to the <b>ActionProxy</b>, which in turn consults the WebWork <a href="Configuration Files.html" title="Configuration Files">Configuration Files</a> manager, which finally reads your <a href="xwork.xml.html" title="xwork.xml">xwork.xml</a> file. Next, the ActionProxy creates an <b>ActionInvocation</b>, which is responsible for the command pattern implementation. This includes invoking any <b>interceptors</b> (the <em>before()</em> method) before finally invoking the <b>action</b> itself.</p>
+
+<p>Once the action returns, the ActionInvocation is responsible for looking up the proper <b>result</b> associated with the <b>action result code</b> mapped in xwork.xml. The result is then executed, which often (but not always, as is the case for <a href="Action Chaining.html" title="Action Chaining">Action Chaining</a>) involves a template written in <a href="JSP.html" title="JSP">JSP</a> or <a href="FreeMarker.html" title="FreeMarker">FreeMarker</a> to be rendered. While rendering, the templates can utilize the <a href="Tags.html" title="Tags">Tags</a> provided by WebWork. Some of those components will work with the ActionMapper to render proper URLs for additional requests.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>All objects in this architecture (action, result, interceptor, etc) are created by an ObjectFactory. This ObjectFactory is pluggable and is how frameworks like <a href="Spring.html" title="Spring">Spring</a> and <a href="Pico.html" title="Pico">Pico</a> integrate. You can also provide your own ObjectFactory for any reason that requires knowing when objects in WebWork are created.</td></tr></table>
+
+<p>Finally, the interceptors are executed again (in reverse order, calling the <em>after()</em> method) and finally returning back through the filters configured in web.xml. If the ActionContextCleanUp filter is present, the FilterDispatcher will <em>not</em> clean up the ThreadLocal <b>ActionContext</b>. If the ActionContextCleanUp filter is not present, the FilterDispatcher will cleanup all ThreadLocals.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

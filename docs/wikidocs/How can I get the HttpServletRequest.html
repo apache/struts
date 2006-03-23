@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <title>WebWork - 
+         can I get the HttpServletRequest
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p><u><b>Method A:</b></u><br/>
+ServletActionContext.getRequest() (works internally using a ThreadLocal)</p>
+
+<p><u><b>Method B:</b></u><br/>
+Have the action implements ServletRequestAware and the servlet request will be set through setServletRequest(HttpServletRequest) method. This requires the action to have a 'servlet-config' interceptor added.</p>
+
+<p>@see <a href="webwork-default.xml.html" title="webwork-default.xml">webwork\-default.xml</a><br/>
+@see com.opensymphony.webwork.interceptor.ServletRequestAware<br/>
+@see com.opensymphony.webwork.interceptor.<a href="Servlet Config Interceptor.html" title="Servlet Config Interceptor">ServletConfigInterceptor</a></p>
+
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <title>WebWork - 
+        required validator
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="requiredvalidator-Description"></a>Description</h1>
+<p>RequiredFieldValidator checks if the specified field is not null.</p>
+
+<h1><a name="requiredvalidator-Parameters"></a>Parameters</h1>
+<p><ul>
+		<li>fieldName - field name if plain-validator syntax is used, not needed if field-validator syntax is used</li>
+</ul></p>
+
+
+<h1><a name="requiredvalidator-Examples"></a>Examples</h1>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;validators&gt;</span>
+
+        <span class="code-tag"><span class="code-comment">&lt;!-- Plain Validator Syntax --&gt;</span></span>
+        <span class="code-tag">&lt;validator type=<span class="code-quote">"required"</span>&gt;</span>
+            <span class="code-tag">&lt;param name=<span class="code-quote">"fieldName"</span>&gt;</span>username<span class="code-tag">&lt;/param&gt;</span>
+            <span class="code-tag">&lt;message&gt;</span>username must not be null<span class="code-tag">&lt;/message&gt;</span>
+        <span class="code-tag">&lt;/validator&gt;</span>
+
+
+        <span class="code-tag"><span class="code-comment">&lt;!-- Field Validator Syntax --&gt;</span></span>
+        <span class="code-tag">&lt;field name=<span class="code-quote">"username"</span>&gt;</span>
+            <span class="code-tag">&lt;field-validator type=<span class="code-quote">"required"</span>&gt;</span>
+            	   <span class="code-tag">&lt;message&gt;</span>username must not be null<span class="code-tag">&lt;/message&gt;</span>
+            <span class="code-tag">&lt;/field-validator&gt;</span>
+        <span class="code-tag">&lt;/field&gt;</span>
+
+    <span class="code-tag">&lt;/validators&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

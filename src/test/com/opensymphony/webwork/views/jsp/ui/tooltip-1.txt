@@ -1,0 +1,20 @@
+<form id="myFormId" name="myForm" onsubmit="customOnsubmit(); return true;" action="/testAction.action">
+ <table class="wwFormTable"> 
+<tr>
+    <td class="tdLabel"><label for="myId" class="label">MyLabel:
+      <img 
+      	src='/webwork/tooltip/myTooltip.gif' 
+      	alt="myTooltip" 
+      	title="myTooltip" 
+      	onmouseover="this.T_ABOVE=true;this.T_BGCOLOR='#ffffff';this.T_BGIMG='/webwork/tooltip/myBgImg.gif';this.T_BORDERWIDTH=10;this.T_BORDERCOLOR='#eeeeee';this.T_DELAY=2000;this.T_FIX=[300, 300];this.T_FONTCOLOR='#dddddd';this.T_FONTFACE='San-Serif,Verdana';this.T_FONTSIZE='20';this.T_FONTWEIGHT='bold';this.T_LEFT=true;this.T_OFFSETX=10;this.T_OFFSETY=20;this.T_OPACITY=90;this.T_PADDING=30;this.T_SHADOWCOLOR='#cccccc';this.T_SHADOWWIDTH=40;this.T_STATIC=true;this.T_STICKY=true;this.T_TEMP=3000;this.T_TEXTALIGN='right';this.T_TITLE='MyTitle';this.T_TITLECOLOR='#bbbbbb';this.T_WIDTH=600;return escape('myTooltip');" /></label></td>
+    <td><input type="text" name="" id="myId"/></td>
+</tr>
+</table>
+</form>
+
+<script>
+	function customOnsubmit() { }
+</script>
+
+<!-- javascript that is needed for tooltips -->
+<script language="JavaScript" type="text/javascript" src="/webwork/tooltip/wz_tooltip.js"></script>

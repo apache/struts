@@ -1,0 +1,136 @@
+
+<html>
+<head>
+<title>&lt;ww:generator /&gt;</title>
+</head>
+
+<body>
+
+<h1>Tag Name: &lt;ww:generator /&gt;</h1>
+
+<h2>Description</h2>
+<p>
+
+Generate an iterator for a iterable source.
+
+</p>
+
+<p>
+<!-- START SNIPPET: javadoc --> <b>NOTE: JSP-TAG</b> <p>Generate an iterator based on the val attribute supplied.</P> <b>NOTE:</b> The generated iterator will <b>ALWAYS</b> be pushed into the top of the stack, and poped at the end of the tag. <!-- END SNIPPET: javadoc --> <!-- START SNIPPET: params --> <ul> <li>val* (Object) - the source to be parsed into an iterator </li> <li>count (Object) - the max number (Integer, Float, Double, Long, String) entries to be in the iterator</li> <li>separator (String) - the separator to be used in separating the <i>val</i> into entries of the iterator</li> <li>id (String) - the id to store the resultant iterator into page context, if such id is supplied</li> <li>converter (Object) - the converter (must extends off IteratorGenerator.Converter interface) to convert the String entry parsed from <i>val</i> into an object</li> </ul> <!-- END SNIPPET: params --> <!-- START SNIPPET: example --> Example One: <pre> Generate a simple iterator &lt;ww:generator val="%{'aaa,bbb,ccc,ddd,eee'}"&gt; &lt;ww:iterator&gt; &lt;ww:property /&gt;&lt;br/&gt; &lt;/ww:iterator&gt; &lt;/ww:generator&gt; </pre> This generates an iterator and print it out using the iterator tag. Example Two: <pre> Generate an iterator with count attribute &lt;ww:generator val="%{'aaa,bbb,ccc,ddd,eee'}" count="3"&gt; &lt;ww:iterator&gt; &lt;ww:property /&gt;&lt;br/&gt; &lt;/ww:iterator&gt; &lt;/ww:generator&gt; </pre> This generates an iterator, but only 3 entries will be available in the iterator generated, namely aaa, bbb and ccc respectively because count attribute is set to 3 Example Three: <pre> Generate an iterator with id attribute &lt;ww:generator val="%{'aaa,bbb,ccc,ddd,eee'}" count="4" separator="," id="myAtt" /&gt; &lt;% Iterator i = (Iterator) pageContext.getAttribute("myAtt"); while(i.hasNext()) { String s = (String) i.next(); %> &lt;%=s%&gt; &lt;br/&gt; &lt;% } %&gt; </pre> This generates an iterator and put it in the PageContext under the key as specified by the id attribute. Example Four: <pre> Generate an iterator with comparator attribute &lt;ww:generator val="%{'aaa,bbb,ccc,ddd,eee'}" converter="%{myConverter}"&gt; &lt;ww:iterator&gt; &lt;ww:property /&gt;&lt;br/&gt; &lt;/ww:iterator&gt; &lt;/ww:generator&gt; public class GeneratorTagAction extends ActionSupport { .... public Converter getMyConverter() { return new Converter() { public Object convert(String value) throws Exception { return "converter-"+value; } }; } ... } </pre> This will generate an iterator with each entries decided by the converter supplied. With this converter, it simply add "converter-" to each entries. <!-- END SNIPPET: example -->
+</p>
+
+<h2>Attributes</h2>
+<p>
+
+<!-- START SNIPPET: tagattributes -->
+<table width="100%">
+<tr>
+
+<th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">count</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Integer</td>
+
+<!-- Description -->
+<td align="left" valign="top">the max number entries to be in the iterator</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">separator</td>
+
+<!-- Required -->
+<td align="left" valign="top"><b>true</b></td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">the separator to be used in separating the <i>val</i> into entries of the iterator</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">val</td>
+
+<!-- Required -->
+<td align="left" valign="top"><b>true</b></td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">the source to be parsed into an iterator</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">converter</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">com.opensymphony.webwork.util.IteratorGenerator.Converter</td>
+
+<!-- Description -->
+<td align="left" valign="top">the converter to convert the String entry parsed from <i>val</i> into an object</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">the id to store the resultant iterator into page context, if such id is supplied</td>
+
+</tr>
+
+</table>
+<!-- END SNIPPET: tagattributes -->
+
+</p>
+<p>
+<center><a href="index.html">Back to Taglib Index</a></center>
+</p>
+</body>
+</html>
+

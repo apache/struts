@@ -1,0 +1,112 @@
+<html>
+    <head>
+        <title>WebWork - 
+        WebLogic 6.1
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="WebLogic6.1-RunningWebWork2onWeblogicServer6.1"></a>Running WebWork 2 on Weblogic Server 6.1</h1>
+
+<p>This document describes why WebWork 2 doesn't work "as-is" on Weblogic Server 6.1 and shows how to build an additional JAR that will fix the problems.</p>
+
+<p>Note: the service pack of Weblogic Server 6.1 used is SP4.</p>
+
+<p>The first part of this document describes the technical problems and the theoretical solution.</p>
+
+<h2><a name="WebLogic6.1-WhyWebWorkDoesn%27tWork"></a>Why WebWork Doesn't Work</h2>
+
+<p>Weblogic 6.1 was published just prior to the finalization of the Servlet 2.3 specification. The incompatibility is that servlet filters and listeners in Weblogic 6.1 do not work with the 2.3 spec primarily because the servlet context is not retrieved in the same way.  This causes virtually all filter initialization operations to fail with an AbstractMethodError exception.</p>
+
+<h2><a name="WebLogic6.1-HowWebWorkIsModified"></a>How WebWork Is Modified</h2>
+
+<p>In Servlet 2.3, the servlet context is available from the session object; this is not true for Weblogic Server 6.1.  Hence, filters and listeners must be modified to retrieve the servlet context from a different source; this is accomplished by retrieving the servlet context  from the FilterConfig passed to the servlet filters during initialzation.</p>
+
+<p>However, the WebWork code cannot be modifed to do this, because this will break the Servlet 2.3 specification.  The goal is to leave the "original" WebWork modified so that it is still Servlet 2.3 compatible, and then to add an additional JAR that "breaks" WebWork to work on Weblogic Server 6.1.</p>
+
+<p>Hence, if you want to run WebWork under Servlet 2.3, the default, then simply build WebWork as usual.</p>
+
+<p>But if you want to run WebWork under Servlet 2.3, you need to build the additional JAR and put it into your WAR file, and then modify your web.xml to use the new classes instead of the standard ones.</p>
+
+<p>The standard WebWork has already been modified slightly to make the above effort possible:</p>
+
+<ol>
+	<li>RequestLifecycleFilter is modified to retrieve its servlet context from the method getServletContext(). This method, getServletContext(), is then implemented to return the servlet context from where it is available in Servlet 2.3: the session object.  The logical operation is unchanged, but now subclasses can override getServletContext() to retrieve the servlet context from a different location as we'll see below.</li>
+	<li>SessionLifecycleListener is modified in the same way as RequestLifecycleFilter. The method, getServletContext(), is implemented to return the servlet context, in this case also from the session object. Again, subclasses can override the getServletContext() method to restore the servlet context from a different source.  Again, this class's functionality is unchanged.</li>
+</ol>
+
+
+<p>Now, in a separate project, the following classes are added and compiled into a separate JAR:</p>
+
+<h3><a name="WebLogic6.1-RequestLifecycleFilterCompatWeblogic61"></a>RequestLifecycleFilterCompatWeblogic61</h3>
+
+<p>This subclass of RequestLifecycleFilter simply overrides getServletContext() to retrieve the servlet context from the filter config, creates a singleton class, SessionContextSingleton, and assigns the servlet context to the singleton so that the listeners will have the ability to retrieve it.</p>
+
+<h3><a name="WebLogic6.1-SessionLifecycleListenerCompatWeblogic61"></a>SessionLifecycleListenerCompatWeblogic61</h3>
+
+<p>This subclass of SessionLifecycleListener simply overrides getServletContext() to retrieve the servlet context from the singleton created above.</p>
+
+<h3><a name="WebLogic6.1-FilterDispatcherCompatWeblogic61"></a>FilterDispatcherCompatWeblogic61</h3>
+
+<p>Although the superclass of this class, FilterDispatcher, is commented out, this subclass retrieves the servlet context in the same way as RequestLifecycleFilterCompatWeblogic61 in case it is ever resurrected. At this time, this class is unnecessary.</p>
+
+<h3><a name="WebLogic6.1-ServletContextSingleton"></a>ServletContextSingleton</h3>
+
+<p>A singleton class whose sole purpose is to hold the servlet context so that listener classes have access to it.</p>
+
+<h2><a name="WebLogic6.1-SettingUpWebWork2toRunonWeblogic6.1"></a>Setting Up WebWork 2 to Run on Weblogic 6.1</h2>
+
+<h3><a name="WebLogic6.1-BuildingYourOwnProject"></a>Building Your Own Project</h3>
+
+<p>In the web.xml file, make the following class name substitutions:</p>
+
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'> Old Class Name </th>
+<th class='confluenceTh'> New Class Name </th>
+</tr>
+<tr>
+<td class='confluenceTd'> RequestLifecycleFilter </td>
+<td class='confluenceTd'> RequestLifecycleFilterCompatWeblogic61 </td>
+</tr>
+<tr>
+<td class='confluenceTd'> SessionLifecycleListener </td>
+<td class='confluenceTd'> SessionLifecycleListenerCompatWeblogic61 </td>
+</tr>
+<tr>
+<td class='confluenceTd'> FilterDispatcher </td>
+<td class='confluenceTd'> FilterDispatcherCompatWeblogic61 </td>
+</tr>
+</tbody></table>
+
+<h2><a name="WebLogic6.1-FAQ"></a>FAQ</h2>
+
+<h3><a name="WebLogic6.1-IstillgettheAbstractMethodErrorExceptionwhenWeblogicServerstartsup.WhatamIdoingwrong%3F"></a>I still get the AbstractMethodError Exception when Weblogic Server starts up.  What am I doing wrong?</h3>
+
+<ol>
+	<li>Check to see if a webwork-example.war is still lingering in your mydomain/applications folder and delete it if it is there.</li>
+	<li>See next FAQ question.</li>
+</ol>
+
+
+<h3><a name="WebLogic6.1-Theserverbehaviorseemslikeitisfromaprevioussourcecodebase%3BIcan%27tdebugit.What%27stheclue%3F"></a>The server behavior seems like it is from a previous source code base; I can't debug it.  What's the clue?</h3>
+
+<p>Sometimes BEA Weblogic Server doesn't "rebuild" its temporary files.  Do the following to force the temporary files to rebuild:</p>
+
+<ol>
+	<li>Stop the server.</li>
+	<li>Delete the .wlnotdelete folder in mydomain/applications.</li>
+	<li>Restart the server.</li>
+</ol>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

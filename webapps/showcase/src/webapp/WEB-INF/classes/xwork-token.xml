@@ -1,0 +1,63 @@
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+<xwork>
+    <include file="webwork-default.xml"/>
+
+    <package name="token" extends="webwork-default" namespace="/token">
+
+        <action name="tokenPrepare" class="com.opensymphony.webwork.showcase.token.TokenAction">
+            <interceptor-ref name="defaultStack"/>
+            <result name="input">example1.jsp</result>
+        </action>
+
+        <action name="transfer" class="com.opensymphony.webwork.showcase.token.TokenAction">
+            <interceptor-ref name="defaultStack"/>
+            <interceptor-ref name="token"/>
+            <result name="invalid.token">doublePost.jsp</result>
+            <result name="success">transferDone.jsp</result>
+        </action>
+
+
+
+        <action name="tokenPrepare2" class="com.opensymphony.webwork.showcase.token.TokenAction">
+            <interceptor-ref name="defaultStack"/>
+            <result name="input">example2.jsp</result>
+        </action>
+
+        <action name="transfer2" class="com.opensymphony.webwork.showcase.token.TokenAction">
+            <interceptor-ref name="defaultStack"/>
+            <interceptor-ref name="token"/>
+            <result name="invalid.token">doublePost.jsp</result>
+            <result name="success" type="redirect">transferDone.jsp</result>
+        </action>
+
+
+
+        <action name="tokenPrepare3" class="com.opensymphony.webwork.showcase.token.TokenAction">
+            <interceptor-ref name="defaultStack"/>
+            <result name="input">example3.jsp</result>
+        </action>
+
+        <action name="transfer3" class="com.opensymphony.webwork.showcase.token.TokenAction">
+            <interceptor-ref name="defaultStack"/>
+            <interceptor-ref name="token-session"/>
+            <result name="invalid.token">doublePost.jsp</result>
+            <result name="success" type="redirect">transferDone.jsp</result>
+        </action>
+
+
+        <action name="tokenPrepare4" class="com.opensymphony.webwork.showcase.token.TokenAction">
+            <interceptor-ref name="defaultStack"/>
+            <interceptor-ref name="createSession"/> <!-- we must have a session when using freemarker and the @ww.token tag -->
+            <result name="input" type="freemarker">example4.ftl</result>
+        </action>
+
+        <action name="transfer4" class="com.opensymphony.webwork.showcase.token.TokenAction">
+            <interceptor-ref name="defaultStack"/>
+            <interceptor-ref name="token"/>
+            <result name="invalid.token">doublePost.jsp</result>
+            <result name="success">transferDone.jsp</result>
+        </action>
+
+    </package>
+
+</xwork>

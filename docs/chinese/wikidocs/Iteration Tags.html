@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <title>WebWork 2 : 迭代标签</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : 迭代标签
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Nov 30, 2004 by <font color="#0050B2">jcarreira</font>.
+				    </div>
+
+				    <ul class="star">
+<li> iterator</li>
+<li> <em class="emphasis">generator</em></li>
+<li> <em class="emphasis">append</em></li>
+<li> <em class="emphasis">subset</em></li>
+<li> <em class="emphasis">merge</em></li>
+<li> <em class="emphasis">sort</em></li>
+</ul><p class="paragraph">Iterator 将在一个值上进行迭代. 迭代值可以是下列类型之一: java.util.Collection,  java.util.Iterator, java.util.Enumeration, java.util.Map, 数组.</p>示例:<br/>
+
+<div class="code"><div class="codeContent">
+<pre>&lt;ww:iterator value=<span class="java&#45;quote">&quot;days&quot;</span>&gt;&#10;   &lt;p&gt;day is: &lt;ww:property/&gt;&lt;/p&gt;&#10; &lt;/ww:iterator&gt;</pre>
+</div></div>&#160;<p class="paragraph"></p>上面的例子中调用值栈中当前对象的getDays()方法去的迭代值并进行迭代. &lt;ww:property/&gt;标签输出了迭代当前值.<p class="paragraph"></p>下面的例子中使用BeanTag并将它放入ActionContext. Iterator标签从ActionContext中获取对象并调用getDays(). 属性status用来创建一个IteratorStatus对象, 本例中使用它的odd()方法来实改变行颜色:<br/>
+
+<div class="code"><div class="codeContent">
+<pre>&lt;ww:bean name=<span class="java&#45;quote">&quot;com.opensymphony.webwork.example.IteratorExample&quot;</span> id=<span class="java&#45;quote">&quot;it&quot;</span>&gt;&#10;   &lt;ww:param name=<span class="java&#45;quote">&quot;day&quot;</span> value=<span class="java&#45;quote">&quot;&#039;foo&#039;&quot;</span>/&gt;&#10;   &lt;ww:param name=<span class="java&#45;quote">&quot;day&quot;</span> value=<span class="java&#45;quote">&quot;&#039;bar&#039;&quot;</span>/&gt;&#10; &lt;/ww:bean&gt;&#10;&#10; &lt;table border=<span class="java&#45;quote">&quot;0&quot;</span> cellspacing=<span class="java&#45;quote">&quot;0&quot;</span> cellpadding=<span class="java&#45;quote">&quot;1&quot;</span>&gt;&#10; &lt;tr&gt;&#10;   &lt;th&gt;Days of the week&lt;/th&gt;&#10; &lt;/tr&gt;&#10;&#10; &lt;ww:iterator value=<span class="java&#45;quote">&quot;#it.days&quot;</span> status=<span class="java&#45;quote">&quot;rowstatus&quot;</span>&gt;&#10;   &lt;tr&gt;&#10;     &lt;ww:<span class="java&#45;keyword">if</span> test=<span class="java&#45;quote">&quot;#rowstatus.odd == <span class="java&#45;keyword">true</span>&quot;</span>&gt;&#10;       &lt;td style=<span class="java&#45;quote">&quot;background: grey&quot;</span>&gt;&lt;ww:property/&gt;&lt;/td&gt;&#10;     &lt;/ww:<span class="java&#45;keyword">if</span>&gt;&#10;     &lt;ww:<span class="java&#45;keyword">else</span>&gt;&#10;       &lt;td&gt;&lt;ww:property/&gt;&lt;/td&gt;&#10;     &lt;/ww:<span class="java&#45;keyword">else</span>&gt;&#10;   &lt;/tr&gt;&#10; &lt;/ww:iterator&gt;&#10; &lt;/table&gt;</pre>
+</div></div><p class="paragraph">下一个例子进一步演示了status属性的作用, 通过OGNL从活动中取出对象DAO, 使用DAO迭代组和组包含的用户(在一个安全环境中). 方法last()表示当前对象是否是迭代中最后一个对象, 如果不是, 需要使用逗号把用户分开:</p><div class="code"><div class="codeContent">
+<pre>&lt;webwork:iterator value=<span class="java&#45;quote">&quot;groupDao.groups&quot;</span> status=<span class="java&#45;quote">&quot;groupStatus&quot;</span>&gt;&#10;    &lt;tr class=<span class="java&#45;quote">&quot;&lt;webwork:<span class="java&#45;keyword">if</span> test=&quot;</span>#groupStatus.odd == <span class="java&#45;keyword">true</span>&#160;<span class="java&#45;quote">&quot;&gt;odd&lt;/webwork:<span class="java&#45;keyword">if</span>&gt;&lt;webwork:<span class="java&#45;keyword">else</span>&gt;even&lt;/webwork:<span class="java&#45;keyword">else</span>&gt;&quot;</span>&gt;&#10;        &lt;td&gt;&lt;webwork:property value=<span class="java&#45;quote">&quot;name&quot;</span> /&gt;&lt;/td&gt;&#10;        &lt;td&gt;&lt;webwork:property value=<span class="java&#45;quote">&quot;description&quot;</span> /&gt;&lt;/td&gt;&#10;        &lt;td&gt;&#10;            &lt;webwork:iterator value=<span class="java&#45;quote">&quot;users&quot;</span> status=<span class="java&#45;quote">&quot;userStatus&quot;</span>&gt;&#10;                &lt;webwork:property value=<span class="java&#45;quote">&quot;fullName&quot;</span> /&gt;&lt;webwork:<span class="java&#45;keyword">if</span> test=<span class="java&#45;quote">&quot;&#33;#userStatus.last&quot;</span>&gt;,&lt;/webwork:<span class="java&#45;keyword">if</span>&gt;                &#10;            &lt;/webwork:iterator&gt;&#10;        &lt;/td&gt;&#10;    &lt;/tr&gt;&#10;&lt;/webwork:iterator&gt;</pre>
+</div></div><p class="paragraph">下一个例子迭代一个活动的集合, 并将每个迭代值传递给另一个活动.</p><div class="code"><div class="codeContent">
+<pre>&lt;ww:action name=<span class="java&#45;quote">&quot;entries&quot;</span> id=<span class="java&#45;quote">&quot;entries&quot;</span>/&gt;&#10;&lt;ww:iterator value=<span class="java&#45;quote">&quot;#entries.entries&quot;</span> &gt;&#10;   &lt;ww:property value=<span class="java&#45;quote">&quot;name&quot;</span> /&gt;&#10;   &lt;ww:property /&gt;&#10;   &lt;ww:push value=<span class="java&#45;quote">&quot;...&quot;</span>/&gt;&#10;&#10;   &lt;ww:action name=<span class="java&#45;quote">&quot;edit&quot;</span> id=<span class="java&#45;quote">&quot;edit&quot;</span> &gt;&#10;     &lt;ww:param name=<span class="java&#45;quote">&quot;entry&quot;</span> value=<span class="java&#45;quote">&quot;&#91;0&#93;&quot;</span> /&gt;&#10;   &lt;/ww:action&gt;&#10;&lt;/ww:iterator&gt;</pre>
+</div></div><p class="paragraph">这里的窍门是使用了操作符&#039;&#91;:0&#93;&#039;. 它获取当前值并传递给活动edit. 
+&#039;&#91;:0&#93;&#039;操作符与<em class="emphasis">&lt;ww:property /&gt;</em>的效果一样. (当然, 这个标签不能用在param标签中).<br/>
+参见OS:WebWork2 EL.</p>
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

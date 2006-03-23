@@ -1,0 +1,10 @@
+License Disclaimer:
+
+All contents of this directory are Copyright (c) the Dojo Foundation, with the
+following exceptions:
+-------------------------------------------------------------------------------
+
+MD5.js:
+	* Copyright 1998-2005, Paul Johnstone
+	  Distributed under the terms of the BSD License
+		http://pajhome.org.uk/crypt/md5/index.html

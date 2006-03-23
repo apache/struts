@@ -1,0 +1,288 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Understanding actions
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h2><a name="Understandingactions-Actions"></a>Actions</h2>
+
+<p>we will create a form in which you can enter your name. For example, if you enter "Bob" and click the submit button,<br/>
+you'll get a page saying "Hello, Bob&#33;". If you don't enter a name, you'll get a screen saying: "Hmm, you don't seem to have entered a name. Go back and try again please."</p>
+
+<p>As before, we set everything up in four steps: create the form, create the action, register the action, and create the landing page (or in this case, pages).</p>
+
+<h3><a name="Understandingactions-1.Createtheform"></a>1. Create the form</h3>
+
+<p>Paste this html into webapp/page03.jsp:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;html&gt;</span>
+<span class="code-tag">&lt;head&gt;</span>
+	<span class="code-tag">&lt;title&gt;</span>A simple form with data<span class="code-tag">&lt;/title&gt;</span>
+<span class="code-tag">&lt;/head&gt;</span>
+<span class="code-tag">&lt;body&gt;</span>
+	<span class="code-tag">&lt;p&gt;</span>What is your name?<span class="code-tag">&lt;/p&gt;</span>
+
+	<span class="code-tag">&lt;form action=<span class="code-quote">"form03.action"</span> method=<span class="code-quote">"post"</span>&gt;</span>
+		<span class="code-tag">&lt;p&gt;</span><span class="code-tag">&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"yourName"</span>&gt;</span><span class="code-tag">&lt;/p&gt;</span>
+		<span class="code-tag">&lt;p&gt;</span><span class="code-tag">&lt;input type=<span class="code-quote">"submit"</span> value=<span class="code-quote">"Submit your name."</span> /&gt;</span><span class="code-tag">&lt;/p&gt;</span>
+	<span class="code-tag">&lt;/form&gt;</span>
+
+<span class="code-tag">&lt;/body&gt;</span>
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+<p>&nbsp;</p>
+
+<h3><a name="Understandingactions-2.Createtheformaction"></a>2. Create the form action</h3>
+
+<p>Paste this code into src/lessons/Form03Action.java:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> lessons;
+
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionSupport;
+
+<span class="code-keyword">public</span> class Form03Action <span class="code-keyword">extends</span> ActionSupport {
+
+  <span class="code-object">String</span> yourName;
+
+  <span class="code-keyword">public</span> void setYourName(<span class="code-object">String</span> p_yourName) {
+    yourName = p_yourName;
+  }
+
+  <span class="code-keyword">public</span> <span class="code-object">String</span> getYourName() {
+    <span class="code-keyword">return</span> yourName;
+  }
+
+
+  <span class="code-keyword">public</span> <span class="code-object">String</span> execute() <span class="code-keyword">throws</span> Exception {
+    <span class="code-keyword">if</span> (yourName == <span class="code-keyword">null</span> || yourName.length() == 0)
+      <span class="code-keyword">return</span> ERROR;
+    <span class="code-keyword">else</span>
+      <span class="code-keyword">return</span> SUCCESS;
+  }
+
+}</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<h3><a name="Understandingactions-3.Registertheactioninxwork.xml%3A"></a>3. Register the action in xwork.xml:</h3>
+
+<p>Edit webapp/WEB-INF/classes/xwork.xml:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;!DOCTYPE xwork PUBLIC <span class="code-quote">"-//OpenSymphony Group//XWork 1.0//EN"</span> <span class="code-quote">"http://www.opensymphony.com/xwork/xwork-1.0.dtd"</span>&gt;</span>
+
+<span class="code-tag">&lt;xwork&gt;</span>
+  <span class="code-tag"><span class="code-comment">&lt;!-- Include webwork defaults (from WebWork JAR). --&gt;</span></span>
+  <span class="code-tag">&lt;include file=<span class="code-quote">"webwork-default.xml"</span> /&gt;</span>
+
+  <span class="code-tag"><span class="code-comment">&lt;!-- Configuration for the default package. --&gt;</span></span>
+  <span class="code-tag">&lt;package name=<span class="code-quote">"default"</span> extends=<span class="code-quote">"webwork-default"</span>&gt;</span>
+    <span class="code-tag"><span class="code-comment">&lt;!-- Default interceptor stack. --&gt;</span></span>
+    <span class="code-tag">&lt;default-interceptor-ref name=<span class="code-quote">"defaultStack"</span> /&gt;</span>
+
+    <span class="code-tag"><span class="code-comment">&lt;!-- 02 --&gt;</span></span>
+    <span class="code-tag">&lt;action name=<span class="code-quote">"form02"</span> class=<span class="code-quote">"lessons.Form02Action"</span>&gt;</span>
+      <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>page02-success.jsp<span class="code-tag">&lt;/result&gt;</span>
+    <span class="code-tag">&lt;/action&gt;</span>
+
+    <span class="code-tag"><span class="code-comment">&lt;!-- 03 --&gt;</span></span>
+    <span class="code-tag">&lt;action name=<span class="code-quote">"form03"</span> class=<span class="code-quote">"lessons.Form03Action"</span>&gt;</span>
+      <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>page03-success.jsp<span class="code-tag">&lt;/result&gt;</span>
+      <span class="code-tag">&lt;result name=<span class="code-quote">"error"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>page03-error.jsp<span class="code-tag">&lt;/result&gt;</span>
+    <span class="code-tag">&lt;/action&gt;</span>
+
+  <span class="code-tag">&lt;/package&gt;</span>
+<span class="code-tag">&lt;/xwork&gt;</span></pre>
+</div></div>
+<p>&nbsp;</p>
+
+<h3><a name="Understandingactions-4.Createthesuccessanderrorpages"></a>4. Create the success and error pages</h3>
+
+<p>Create webapp/page03-success.jsp:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;%@ taglib uri=<span class="code-quote">"webwork"</span> prefix=<span class="code-quote">"ww"</span> %&gt;</span>
+<span class="code-tag">&lt;html&gt;</span>
+<span class="code-tag">&lt;head&gt;</span>
+	<span class="code-tag">&lt;title&gt;</span>Success page for form with data<span class="code-tag">&lt;/title&gt;</span>
+<span class="code-tag">&lt;/head&gt;</span>
+<span class="code-tag">&lt;body&gt;</span>
+
+Hello, <span class="code-tag">&lt;ww:property value=<span class="code-quote">"yourName"</span> /&gt;</span>!
+
+<span class="code-tag">&lt;/body&gt;</span>
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>Create webapp/page03-error.jsp:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;html&gt;</span>
+<span class="code-tag">&lt;head&gt;</span>
+	<span class="code-tag">&lt;title&gt;</span>Error page for form with data<span class="code-tag">&lt;/title&gt;</span>
+<span class="code-tag">&lt;/head&gt;</span>
+<span class="code-tag">&lt;body&gt;</span>
+
+Hmm, you don't seem to have entered a name. Go back and try again please.
+
+<span class="code-tag">&lt;/body&gt;</span>
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+<p>&nbsp;</p>
+
+<h3><a name="Understandingactions-Tryit"></a>Try it</h3>
+
+<p>Don't forget to compile your action to webapp/WEB-INF/classes, and to restart your web application if necessary.</p>
+
+<p>Go ahead and try it now: click the form submit button and see what happens. Try it with and without entering a name.</p>
+
+<h2><a name="Understandingactions-Howthecodeworks"></a>How the code works</h2>
+
+<p>There are only two differences between this example and the previous lesson.</p>
+<ul class="alternate" type="square">
+	<li>When the action is called, its <tt>setYourName()</tt> setter method is called with the contents of the form field named <tt>yourName</tt>.</li>
+	<li>After the action has been called (which is when its execute() method returns), WebWork has two options. If ERROR is returned, WebWork will return page03-error.jsp; if SUCCESS, page03-success.jsp. Just as in the last lesson, the &lt;ww:property&gt; tag calls the action's getter (in this case, <tt>getYourName()</tt>).</li>
+</ul>
+
+
+<h1><a name="Understandingactions-Anhtmlformwithdata%2Cwithoutgettersorsetters"></a>An html form with data, without getters or setters</h1>
+
+<p>For the form field named "yourName" in the previous lesson, we also had to create the getters and setters <tt>getYourName()</tt> and <tt>setYourName()</tt> in the action, as well as the private variable <tt>yourName</tt>. With dozens of forms and hundreds of form fields, you'll be typing thousands of getters and setters. That can get old fast. In this lesson, we'll repeat the last lesson, but without any of that extra typing.</p>
+
+<h3><a name="Understandingactions-1.Createthehtmlform"></a>1. Create the html form</h3>
+
+<p>Use the same JSP form from the previous lesson, but change the form action to <tt>page04.action</tt>:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;html&gt;</span>
+<span class="code-tag">&lt;head&gt;</span>
+	<span class="code-tag">&lt;title&gt;</span>A simple form with data<span class="code-tag">&lt;/title&gt;</span>
+<span class="code-tag">&lt;/head&gt;</span>
+<span class="code-tag">&lt;body&gt;</span>
+	<span class="code-tag">&lt;p&gt;</span>What is your name?<span class="code-tag">&lt;/p&gt;</span>
+
+	<span class="code-tag">&lt;form action=<span class="code-quote">"form04.action"</span> method=<span class="code-quote">"post"</span>&gt;</span>
+		<span class="code-tag">&lt;p&gt;</span><span class="code-tag">&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"yourName"</span>&gt;</span><span class="code-tag">&lt;/p&gt;</span>
+		<span class="code-tag">&lt;p&gt;</span><span class="code-tag">&lt;input type=<span class="code-quote">"submit"</span> value=<span class="code-quote">"Submit your name."</span> /&gt;</span><span class="code-tag">&lt;/p&gt;</span>
+	<span class="code-tag">&lt;/form&gt;</span>
+
+<span class="code-tag">&lt;/body&gt;</span>
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+<p>&nbsp;</p>
+
+<h3><a name="Understandingactions-2.Createtheformaction"></a>2. Create the form action</h3>
+
+<p>Paste this code into <tt>src/lessons/Form04Action.java</tt>:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> lessons;
+
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionSupport;
+<span class="code-keyword">import</span> com.opensymphony.webwork.interceptor.ParameterAware;
+
+<span class="code-keyword">import</span> java.util.Map;
+
+<span class="code-keyword">public</span> class Form04Action <span class="code-keyword">extends</span> ActionSupport <span class="code-keyword">implements</span> ParameterAware {
+
+  Map parameters;
+
+  <span class="code-keyword">public</span> Map getParameters() {
+    <span class="code-keyword">return</span> parameters;
+  }
+
+  <span class="code-keyword">public</span> void setParameters(Map parameters) {
+    <span class="code-keyword">this</span>.parameters = parameters;
+  }
+
+  <span class="code-keyword">public</span> <span class="code-object">String</span> execute() {
+    <span class="code-object">String</span>[] yourName = (<span class="code-object">String</span>[]) parameters.get(<span class="code-quote">"yourName"</span>);
+    <span class="code-keyword">if</span>(yourName == <span class="code-keyword">null</span> || yourName[0] == <span class="code-keyword">null</span> || yourName[0].length() == 0)
+      <span class="code-keyword">return</span> ERROR;
+    <span class="code-keyword">else</span>
+      <span class="code-keyword">return</span> SUCCESS;
+  }
+}</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<h3><a name="Understandingactions-Registertheactioninxwork.xml%3A"></a>Register the action in xwork.xml:</h3>
+
+<p>Edit <tt>webapp/WEB-INF/classes/xwork.xml</tt>:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;!DOCTYPE xwork PUBLIC <span class="code-quote">"-//OpenSymphony Group//XWork 1.0//EN"</span> <span class="code-quote">"http://www.opensymphony.com/xwork/xwork-1.0.dtd"</span>&gt;</span>
+
+<span class="code-tag">&lt;xwork&gt;</span>
+  <span class="code-tag"><span class="code-comment">&lt;!-- Include webwork defaults (from WebWork JAR). --&gt;</span></span>
+  <span class="code-tag">&lt;include file=<span class="code-quote">"webwork-default.xml"</span> /&gt;</span>
+
+  <span class="code-tag"><span class="code-comment">&lt;!-- Configuration for the default package. --&gt;</span></span>
+  <span class="code-tag">&lt;package name=<span class="code-quote">"default"</span> extends=<span class="code-quote">"webwork-default"</span>&gt;</span>
+    <span class="code-tag"><span class="code-comment">&lt;!-- Default interceptor stack. --&gt;</span></span>
+    <span class="code-tag">&lt;default-interceptor-ref name=<span class="code-quote">"defaultStack"</span> /&gt;</span>
+
+    <span class="code-tag"><span class="code-comment">&lt;!-- 02 --&gt;</span></span>
+    <span class="code-tag">&lt;action name=<span class="code-quote">"form02"</span> class=<span class="code-quote">"lessons.Form02Action"</span>&gt;</span>
+      <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>page02-success.jsp<span class="code-tag">&lt;/result&gt;</span>
+    <span class="code-tag">&lt;/action&gt;</span>
+
+    <span class="code-tag"><span class="code-comment">&lt;!-- 03 --&gt;</span></span>
+    <span class="code-tag">&lt;action name=<span class="code-quote">"form03"</span> class=<span class="code-quote">"lessons.Form03Action"</span>&gt;</span>
+      <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>page03-success.jsp<span class="code-tag">&lt;/result&gt;</span>
+      <span class="code-tag">&lt;result name=<span class="code-quote">"error"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>page03-error.jsp<span class="code-tag">&lt;/result&gt;</span>
+    <span class="code-tag">&lt;/action&gt;</span>
+
+    <span class="code-tag"><span class="code-comment">&lt;!-- 04 --&gt;</span></span>
+    <span class="code-tag">&lt;action name=<span class="code-quote">"form04"</span> class=<span class="code-quote">"lessons.Form04Action"</span>&gt;</span>
+      <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>page04-success.jsp<span class="code-tag">&lt;/result&gt;</span>
+      <span class="code-tag">&lt;result name=<span class="code-quote">"error"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>page03-error.jsp<span class="code-tag">&lt;/result&gt;</span>
+      <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"servlet-config"</span>/&gt;</span>
+    <span class="code-tag">&lt;/action&gt;</span>
+
+  <span class="code-tag">&lt;/package&gt;</span>
+<span class="code-tag">&lt;/xwork&gt;</span></pre>
+</div></div>
+<p>&nbsp;</p>
+
+<h3><a name="Understandingactions-Createthesuccessanderrorpages"></a>Create the success and error pages</h3>
+
+<p>We'll use the same error page, but create a slightly different success page <tt>page04-success.jsp</tt>. The only difference is the &lt;ww:property&gt; tag.</p>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;%@ taglib uri=<span class="code-quote">"webwork"</span> prefix=<span class="code-quote">"ww"</span> %&gt;</span>
+<span class="code-tag">&lt;html&gt;</span>
+<span class="code-tag">&lt;head&gt;</span>
+	<span class="code-tag">&lt;title&gt;</span>Success page for form with data<span class="code-tag">&lt;/title&gt;</span>
+<span class="code-tag">&lt;/head&gt;</span>
+<span class="code-tag">&lt;body&gt;</span>
+
+Hello, <span class="code-tag">&lt;ww:property value=<span class="code-quote">"parameters.yourName"</span> /&gt;</span>!
+
+<span class="code-tag">&lt;/body&gt;</span>
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+<p>&nbsp;</p>
+
+<h3><a name="Understandingactions-Tryit"></a>Try it</h3>
+
+<p>Don't forget to compile your action to webapp/WEB-INF/classes, and to restart your web application if necessary.</p>
+
+<p>Go ahead and try it now. Load <tt>page04.jsp</tt>, enter "Bob" in the text field, and click the form submit button. You should see <tt>page04-success.jsp</tt> saying "Hello, Bob&#33;"</p>
+
+<h2><a name="Understandingactions-Howthecodeworks"></a>How the code works</h2>
+
+<p>You've probably figured out what is going on just from looking at the code.</p>
+
+<p>Instead of a setter <tt>setYourName()</tt> setting a private variable <tt>yourName</tt> in the action, <tt>setParameters()</tt> magically extracts everything from the JSP <tt>request</tt> object and puts into a private local Map <tt>parameters</tt>. Then <tt>execute()</tt>, instead of looking for a <tt>yourName</tt> variable, is able to get the value of the "yourName" field from <tt>parameters</tt>. So far so good .</p>
+
+<p>Back on the <tt>page04-success.jsp</tt> page, <tt>&lt;ww:property value="yourName" /&gt;</tt> isn't going to work any more, because there is no <tt>getYourName()</tt> getter in the action. Instead, <tt>&lt;ww:property value="parameters.yourName" /&gt;</tt> calls the <tt>getParameters()</tt> getter, and is able to get the value of the "yourName" field. Pretty neat&#33;</p>
+
+<p>We haven't covered how to handle radio buttons, checkboxes, and other strange html form fields. That involves dealing with the fact that every entry in the <tt>parameters</tt> Map is a String[]. We'll cover this in a later lesson.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

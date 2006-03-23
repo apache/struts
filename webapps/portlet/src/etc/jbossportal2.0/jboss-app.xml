@@ -1,0 +1,7 @@
+<jboss-app>
+<!--
+  ~ Copyright (c) 2002-2006 by OpenSymphony
+  ~ All rights reserved.
+  -->
+   <app-name>webwork-portlet</app-name>
+</jboss-app>

@@ -1,0 +1,61 @@
+<html>
+    <head>
+        <title>WebWork - 
+         Interceptor
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    
+<p> An interceptor that handles setting the locale specified in a session as the locale for the current action request.
+ In addition, this interceptor will look for a specific HTTP request parameter and set the locale to whatever value is
+ provided. This means that this interceptor can be used to allow for your application to dynamically change the locale
+ for the user's session. This is very useful for applications that require multi-lingual support and want the user to
+ be able to set his or her language preference at any point. The locale parameter is removed during the execution of
+ this interceptor, ensuring that properties aren't set on an action (such as request_locale) that have no typical
+ corresponding setter in your action.</p>
+
+<p> <p/>For example, using the default parameter name, a request to <b>foo.action?request_locale=en_US</b>, then the
+ locale for US English is saved in the user's session and will be used for all future requests.</p>
+
+
+<h1><a name="I18nInterceptor-Parameters"></a>Parameters</h1>
+
+
+<p> <ul></p>
+
+<p> <li>parameterName (optional) - the name of the HTTP request parameter that dictates the locale to switch to and save
+ in the session. By default this is <b>request_locale</b></li></p>
+
+<p> <li>attributeName (optional) - the name of the session key to store the selected locale. By default this is
+ <b>WW_TRANS_I18N_LOCALE</b></li></p>
+
+<p> </ul></p>
+
+
+<h1><a name="I18nInterceptor-ExtendingtheInterceptor"></a>Extending the Interceptor</h1>
+
+
+<p> There are no known extensions points for this interceptor.</p>
+
+
+<h1><a name="I18nInterceptor-Examples"></a>Examples</h1>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;action name=<span class="code-quote">"someAction"</span> class=<span class="code-quote">"com.examples.SomeAction"</span>&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"i18n"</span>/&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+    <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span>&gt;</span>good_result.ftl<span class="code-tag">&lt;/result&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

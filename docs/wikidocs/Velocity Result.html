@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Velocity Result
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    
+<p> Using the Servlet container's JspFactory, this result mocks a JSP
+ execution environment and then displays a Velocity template that will be
+ streamed directly to the servlet output.</p>
+
+
+<h1><a name="VelocityResult-Parameters"></a>Parameters</h1>
+
+
+<p> <ul></p>
+
+<p> <li><b>location (default)</b> - the location of the template to process.</li></p>
+
+<p> <li><b>parse</b> - true by default. If set to false, the location param will 
+ not be parsed for Ognl expressions.</li></p>
+
+<p> </ul>
+ <p>
+ This result follows the same rules from WebWorkResultSupport.
+ </p></p>
+
+
+<h1><a name="VelocityResult-Examples"></a>Examples</h1>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"velocity"</span>&gt;</span>
+  <span class="code-tag">&lt;param name=<span class="code-quote">"location"</span>&gt;</span>foo.vm<span class="code-tag">&lt;/param&gt;</span>
+<span class="code-tag">&lt;/result&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

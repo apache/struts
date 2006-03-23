@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <title>WebWork - 
+         do I get JEE J2EE security info
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p><u><b>Method A:</b></u></p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">HttpServletRequest request = ....   <span class="code-comment">// get HttpServletRequest
+</span>request.getAuthType()               <span class="code-comment">// http or https
+</span>request.getRemoteUser()             <span class="code-comment">// the user principal (in string)
+</span>request.getUserPrincipal()          <span class="code-comment">// get a Principal object
+</span>request.isUserInRole(<span class="code-object">String</span>)</pre>
+</div></div>
+
+<p><b><u>Method B: (Recommended)</u></b></p>
+<ul>
+	<li>Not tied to Servlet spec</li>
+	<li>Help in unit testing</li>
+</ul>
+
+
+<p>Have the action implements PrincipalAware and add 'servlet-config' interceptor to it. a PrincipalProxy object will be set to method setPrincipalProxy(PrincipalProxy). With PrincipalProxy, one could have access to methods such as isUserInRole(), getUserPrincipal(), getRemoteUser(), isRequestSecure() etc. </p>
+
+<p>@see com.opensymphony.webwork.interceptor.PrincipalProxy<br/>
+@see com.opensymphony.webwork.interceptor.PrincipalAware<br/>
+@see com.opensymphony.webwork.interceptor.ServletConfigInterceptor</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

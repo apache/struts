@@ -1,0 +1,132 @@
+<html>
+    <head>
+        <title>WebWork - 
+         Validation - points for discussion
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="AJAXValidation-pointsfordiscussion-WebWork2AjaxValidation"></a>WebWork 2 Ajax Validation</h1>
+
+<h2><a name="AJAXValidation-pointsfordiscussion-ValidationservletvsInterceptor"></a>Validation servlet vs Interceptor</h2>
+<ul>
+	<li>Using a validation servlet requires the app developer to map any servlet filters for any action that is to be validated to the validation servlet as well.</li>
+	<li>Using a validation interceptor executes the validation within the context of any mapped servlet filters, as well as within the context of the action.</li>
+</ul>
+
+
+<h2><a name="AJAXValidation-pointsfordiscussion-CustomAjaxcodeorThirdPartyLibrary"></a>Custom Ajax code or Third Party Library</h2>
+
+<ul>
+	<li>The DOJO Toolkit  promises to be a very flexible and powerful toolkit, however they are only in the beginning stages.  A lot of the code is coming from other dhtml toolkit projects that are very mature.</li>
+	<li>We only require a fairly simple xmlhttp layer a the moment.  Dojo have released their dojo.io.bind package  <a href="http://dojotoolkit.org/intro_to_dojo_io.html" title="Visit page outside Confluence">&#104;ttp://dojotoolkit.org/intro_to_dojo_io.html</a> which should be sufficient for us, however I think we can produce our own XmlHTTP code for now.</li>
+	<li>I have implemented some custom xmlhttp / javascript code <a href="http://www.drivelater.com.au" title="Visit page outside Confluence">&#104;ttp://www.drivelater.com.au</a> - do a search.  It works in IE and FireFox.</li>
+</ul>
+
+
+<h2><a name="AJAXValidation-pointsfordiscussion-Shouldwebworkprovideastaticresourceloader"></a>Should webwork provide a static resource loader</h2>
+<ul>
+	<li>We need to provide a developer friendly way of exposing webwork static resources - primarily javascript files
+	<ol>
+		<li>User could copy them into a folder
+		<ul>
+			<li>This either requires a separate zip download or packaging these files within the jar</li>
+			<li>This is a bad idea because it is error prone when the user upgrades</li>
+		</ul>
+		</li>
+		<li>Provide a resource loading servlet that serves the resources from the webwork jar<br/>
+requires a servlet definition and mapping in web.xml
+		<ul>
+			<li>could use a webwork.properties setting for the servlet prefix to allow user to 'mount' the static resources under a different prefix<br/>
+this makes jar upgrades easy and transparent</li>
+			<li>I have a prototype of this working in one of my apps - however it is restricted to mounting a single package on a single prefix.  No support for multiple mappings.  <div class="preformatted"><div class="preformattedContent">
+<pre>i.e.  mount com.opensymphony.webwork.static at /webwork 
+request /webwork/validationAjax.js 
+loads  com.opensymphony.webwork.static.validationAjax.js
+</pre>
+</div></div></li>
+		</ul>
+		</li>
+		<li>Get the validationServlet to serve the javascript code.  Use '/validationServlet/client.js' as the url</li>
+		<li>Any other ideas ?</li>
+	</ol>
+	</li>
+</ul>
+
+
+<h2><a name="AJAXValidation-pointsfordiscussion-SupportedBrowsers"></a>Supported Browsers</h2>
+<ul>
+	<li>We need to define what browsers we will support.</li>
+</ul>
+
+
+<h2><a name="AJAXValidation-pointsfordiscussion-JavaScriptAPI"></a>JavaScript API</h2>
+<ul>
+	<li>In webwork CVS /src/webapp/validationServlet.js contains a sample ValidationServlet client javascript class.  It handles the communication with the validation servlet, and exposes callbacks for handling the errors.  NOTE : I think we can re-work this a bit.  I currently have lots of onWhatever callbacks. I think we should just have onErrors, and let the template designer do what they want with the Errors object.
+	<ul>
+		<li>Sample Usage
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">var</span> validation = <span class="code-keyword">new</span> ValidationServlet('/validationServlet/client.js');
+validation.onErrors = function(inputObject, errors) {
+	<span class="code-comment">// clear old errors
+</span>	<span class="code-comment">// display <span class="code-keyword">new</span> errors
+</span>}</pre>
+</div></div></li>
+		<li>The errors param for the onErrors callback is a javascript object that has this structure
+<div class="code"><div class="codeContent">
+<pre class="code-java">class Errors {
+	<span class="code-object">String</span>[] actionErrors;
+	Map&lt;<span class="code-object">String</span>, <span class="code-object">String</span>[]&gt; fieldErrors; <span class="code-comment">// fieldName is the key
+</span>}</pre>
+</div></div></li>
+	</ul>
+	</li>
+</ul>
+
+
+<ul>
+	<li>See this in action in webwork cvs head
+<div class="preformatted"><div class="preformattedContent">
+<pre> 
+/src/java/templates/xhtml/validation.vm
+/src/webapp/validationServlet.js
+/src/webapp/javascript-input.jsp
+</pre>
+</div></div> </li>
+</ul>
+
+
+<ul>
+	<li>Cloves' provided example API :
+<div class="code"><div class="codeContent">
+<pre class="code-java">function addActionErrors(messages); <span class="code-comment">// should messages be an array?!
+</span>function addFieldErrors(fieldName, messages); <span class="code-comment">// should messages be an array?!
+</span>function clearActionErrors();
+function clearFieldErrors(fieldName);
+function clearErrors(formName);</pre>
+</div></div></li>
+</ul>
+
+
+<h2><a name="AJAXValidation-pointsfordiscussion-NewWebWorktheme"></a>New WebWork theme</h2>
+<ul>
+	<li>We need to develop a new slick looking template based on css that has full client side javascript support.</li>
+	<li>We could mix some ideas from
+	<ul>
+		<li><a href="http://www.themaninblue.com/experiment/InForm/margin.htm" title="Visit page outside Confluence">&#104;ttp://www.themaninblue.com/experiment/InForm/margin.htm</a></li>
+		<li><a href="http://www.baekdal.com/articles/Usability/usable-XMLHttpRequest/" title="Visit page outside Confluence">&#104;ttp://www.baekdal.com/articles/Usability/usable-XMLHttpRequest/</a></li>
+	</ul>
+	</li>
+</ul>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

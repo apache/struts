@@ -1,0 +1,12 @@
+<div dojoType='BindDiv'
+	id="mylabel"
+	href="a"
+	loadingHtml="b"
+	errorHtml="c"
+	showTransportError='true'
+	delay='4000'
+	refresh='1000'
+	listenTopics='g'
+	onLoad='h'
+
+></div>

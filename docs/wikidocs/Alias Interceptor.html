@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Alias Interceptor
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    
+<p> The aim of this Interceptor is to alias a named parameter to a different named parameter. By acting as the glue
+ between actions sharing similiar parameters (but with different names), it can help greatly with action chaining.</p>
+
+<p> <p/>  Action's alias expressions should be in the form of  #{ "name1" : "alias1", "name2" : "alias2" }. This means
+ that assuming an action (or something else in the stack) has a value for the expression named <i>name1</i> and the
+ action this interceptor is applied to has a setter named <i>alias1</i>, <i>alias1</i> will be set with the value from
+ <i>name1</i>.</p>
+
+
+<h1><a name="AliasInterceptor-Parameters"></a>Parameters</h1>
+
+
+<p> <ul></p>
+
+<p> <li>aliasesKey (optional) - the name of the action parameter to look for the alias map (by default this is
+ <i>aliases</i>).</li></p>
+
+<p> </ul></p>
+
+
+<h1><a name="AliasInterceptor-ExtendingtheInterceptor"></a>Extending the Interceptor</h1>
+
+
+<p> This interceptor does not have any known extension points.</p>
+
+
+<h1><a name="AliasInterceptor-Examples"></a>Examples</h1>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;action name=<span class="code-quote">"someAction"</span> class=<span class="code-quote">"com.examples.SomeAction"</span>&gt;</span>
+    <span class="code-tag"><span class="code-comment">&lt;!-- The value for the foo parameter will be applied as if it were named bar --&gt;</span></span>
+    <span class="code-tag">&lt;param name=<span class="code-quote">"aliases"</span>&gt;</span>#{ 'foo' : 'bar' }<span class="code-tag">&lt;/param&gt;</span>
+
+    <span class="code-tag"><span class="code-comment">&lt;!-- note: the alias interceptor is included with the defaultStack in webwork-default.xml --&gt;</span></span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"alias"</span>/&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+    <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span>&gt;</span>good_result.ftl<span class="code-tag">&lt;/result&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

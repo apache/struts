@@ -1,0 +1,12 @@
+.dojoTaskBarItem {
+	background-color: ThreeDFace;
+	border: outset 2px;
+	display: inline;
+	margin-right: 5px;
+	cursor: pointer;
+}
+
+.dojoTaskBarItem img {
+	vertical-align: middle;
+	margin-right: 5px;
+}

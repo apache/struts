@@ -1,0 +1,10 @@
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+<xwork>
+    <include file="webwork-default.xml"/>
+
+    <package name="continuations" extends="webwork-default" namespace="/continuations">
+        <action name="guess" class="com.opensymphony.webwork.showcase.Guess">
+            <result type="freemarker">guess.ftl</result>
+        </action>
+    </package>
+</xwork>

@@ -1,0 +1,64 @@
+
+<html>
+<head>
+<title>&lt;ww:merge /&gt;</title>
+</head>
+
+<body>
+
+<h1>Tag Name: &lt;ww:merge /&gt;</h1>
+
+<h2>Description</h2>
+<p>
+
+Merge the values of a list of iterators into one iterator
+
+</p>
+
+<p>
+<!-- START SNIPPET: javadoc --> <p>Component for MergeIteratorTag, which job is to merge iterators and successive call to the merged iterator will cause each merge iterator to have a chance to expose its element, subsequently next call will allow the next iterator to expose its element. Once the last iterator is done exposing its element, the first iterator is allowed to do so again (unless it is exhausted of entries).</P> <p>Internally the task are delegated to MergeIteratorFilter</p> <p>Example if there are 3 lists being merged, each list have 3 entries, the following will be the logic.</P> <ol> <li>Display first element of the first list</li> <li>Display first element of the second list</li> <li>Display first element of the third list</li> <li>Display second element of the first list</li> <li>Display second element of the second list</li> <li>Display second element of the third list</li> <li>Display third element of the first list</li> <li>Display thrid element of the second list</li> <li>Display third element of the thrid list</li> </ol> <!-- END SNIPPET: javadoc --> <!-- START SNIPPET: params --> <ul> <li>id (String) - the id where the resultant merged iterator will be stored in the stack's context</li> </ul> <!-- END SNIPPET: params --> <!-- START SNIPPET: javacode --> public class MergeIteratorTagAction extends ActionSupport { private List myList1; private List myList2; private List myList3; public List getMyList1() { return myList1; } public List getMyList2() { return myList2; } public List getMyList3() { return myList3; } public String execute() throws Exception { myList1 = new ArrayList(); myList1.add("1"); myList1.add("2"); myList1.add("3"); myList2 = new ArrayList(); myList2.add("a"); myList2.add("b"); myList2.add("c"); myList3 = new ArrayList(); myList3.add("A"); myList3.add("B"); myList3.add("C"); return "done"; } } <!-- END SNIPPET: javacode --> <!-- START SNIPPET: example --> &lt;ww:merge id="myMergedIterator1"&gt; &lt;ww:param value="%{myList1}" /&gt; &lt;ww:param value="%{myList2}" /&gt; &lt;ww:param value="%{myList3}" /&gt; &lt;/ww:merge&gt; &lt;ww:iterator value="%{#myMergedIterator1}"&gt; &lt;ww:property /&gt; &lt;/ww:iterator&gt; <!-- END SNIPPET: example --> <!-- START SNIPPET: description --> This wil generate "1aA2bB3cC". <!-- START SNIPPET: description -->
+</p>
+
+<h2>Attributes</h2>
+<p>
+
+<!-- START SNIPPET: tagattributes -->
+<table width="100%">
+<tr>
+
+<th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">the id where the resultant merged iterator will be stored in the stack's context</td>
+
+</tr>
+
+</table>
+<!-- END SNIPPET: tagattributes -->
+
+</p>
+<p>
+<center><a href="index.html">Back to Taglib Index</a></center>
+</p>
+</body>
+</html>
+

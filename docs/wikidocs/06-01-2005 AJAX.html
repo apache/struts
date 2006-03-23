@@ -1,0 +1,377 @@
+<html>
+    <head>
+        <title>WebWork - 
+        06-01-2005 AJAX
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="06-01-2005AJAX-Transcript"></a>Transcript</h1>
+<div class="preformatted"><div class="preformattedContent">
+<pre>	PSquad33	my biggest concerns are making sure we don't bite off more than we can chew and that we keep WebWork... WebWork
+	jcarreira	Have you looked at Cameron's stuff?
+	iroughley	what were your thoughts on Camerons checkins?
+	PSquad33	i'm not interested in becoming a vehicle for distributing dojo
+	iroughley	yes
+	jcarreira	I wanted to talk to him about contributing his stuff back to dojo
+	PSquad33	all the javascript widget stuff sounds like it is getting a little too far away from webwork. but still, it is interesting
+	PSquad33	anyway, i'll be on and off
+	iroughley	I like dojo as the transport, but as soon as you get too far into JS I am concerned abouot browser compatibility
+	jcarreira	I like the idea of making the components dojo widgets, but I want the JSP tags to write out the dojo widgets... that way we can maintain server-side state
+	jcarreira	yeah, that's a good reason to put it in dojo... more people using it = more compatibility testing
+	iroughley	exactly
+	PSquad33	are we going to support dojo entirely, or will this be optional stuff? i just don't want to divert focus
+	PSquad33	maybe we should make an seperate project or something. do my concerns make sense?
+	jcarreira	well, I think we should have an Ajax theme
+	iroughley	I like using it as the transport, and the event stuff is good.
+	jcarreira	I don't know... I think it's important to have rich widgets as part of the framework...
+	PSquad33	sure -- but we can't abandon our base either
+	jcarreira	...and they're going to do drag-n-drop, etc.
+	PSquad33	people still use the plain old XHTML theme
+	PSquad33	i want to keep the goals in sync
+	PSquad33	anyway, my big concern is that I feel a bit left out of the loop -- and if I do, our users defintiely will
+	iroughley	I guess my underlying issue with the code that cameron added, was that it had no dependency with webwork
+	PSquad33	so you guys need to really hold my hand on this if you think this is the right direction to go
+	PSquad33	show me the vision in simple to understand terms
+	PSquad33	ian: exactly
+	PSquad33	ian: that is exactly my concern -- we're going to fragment the user base at this rate
+	jcarreira	yeah.. I don't want to get into the biz of maintaining add-ons to dojo
+	iroughley	it could be used with or without webwork, and then we are developing for someone else
+	jcarreira	I wanted to talk to him about contributing the JS stuff back to dojo, and we just use it
+	jcarreira	I've been trying to think through if we need the server-side events too
+	iroughley	so then move in the direction that I think we are going - tag libs around the attributes for the dojo elements
+	jcarreira	yep
+	iroughley	so that we can link into server side state
+	jcarreira	Should we just maintain UI widget dependencies on the client-side?
+	jcarreira	or should we try to implement a real MVC style where the model changes cause the correct view components to update?
+	iroughley	this is a urious question
+	iroughley	i like loose dependencies on the client, via topics
+	iroughley	so far, for what I am doing it works well
+	jcarreira	so the UI components just know to listen to topics and refresh themselves?
+	iroughley	yes
+	jcarreira	in that case it can just be a UI component theme
+	iroughley	the caveat is that the components have a known grnularity, that is understood by the developer
+	iroughley	yes
+	jcarreira	except for the extra JSP attributes
+	iroughley	and changed per theme
+	jcarreira	what do you mean about the granularity?
+	iroughley	you have to know that a remote div (for example) might get a list from the server, or render a domain object
+	jcarreira	I was thinking the remote div would just get HTML and set its innerHtml
+	iroughley	so when you call that div to refresh itself you are doing work to obtain the information
+	jcarreira	that way it's just like a ww:action tag...
+	iroughley	yes
+	iroughley	the action does the work
+	jcarreira	and if you have it like this:
+	jcarreira	&lt;ww:remotediv action="foo"/&gt;
+	jcarreira	actually...
+	jcarreira	this could just be a theme for the ww:action tag...
+	jcarreira	...except it's not a UI tag
+	iroughley	true
+	jcarreira	but it could wrap a ww:action tag and delegate calls to it
+	jcarreira	but maybe that's limiting its reusability
+	jcarreira	&lt;ww:remotediv href="foo.action"&gt;&lt;ww:action name="foo"/&gt;&lt;/ww:remotediv&gt;
+	jcarreira	the contents of the ww:remotediv would be the original content (no need for a separate call to load the content), then the href would be used when it refreshes
+	iroughley	that's a good idea
+	iroughley	i haven't had a chance to implement the initial content yet (as per your suggestion last week)
+	jcarreira	what are the params to the remotediv tag?
+	iroughley	so, i guess that the UI doesn't need to maintain dependencies on the client, just make calls via remote div's (or other components) and let the actions determine the state
+	jcarreira	yeah
+	jcarreira	but we need things like select boxes which can populate
+	|&lt;--	PSquad33 has left efnet (Read error: Connection reset by peer)
+	iroughley	is, url, updateFreq, loadingText, reloadingText, errortext, showErrorTransportText, topicName
+	jcarreira	for example, if I'm shopping and I select a catalog, it should populate the product categories in a select list automatically
+	jcarreira	...I'd also like to be able to have a lazy-loading tree widget
+	iroughley	i agree
+	jcarreira	the loadingText can go away.. just make it the body enclosed by the tag
+	iroughley	that was my plan
+	jcarreira	we need a way to tell it to load immediately... then the default text would be there while it loads the first time
+	iroughley	:)
+	iroughley	my idea exactly
+	iroughley	monday I hope it will be done
+	jcarreira	cool
+	iroughley	could the select tag and tree tag use topics to refresh state from the server
+	jcarreira	what do you mean?
+	iroughley	then use DWR or dojo to obtain JS to refresh themselves
+	jcarreira	ah
+	--&gt;|	PSquad33 (~PSquad32@c-67-160-147-93.hsd1.or.comcast.net) has joined #webwork
+	PSquad33	back
+	PSquad33	sorry about that
+	PSquad33	you guys still talking about stuff
+	jcarreira	but where do they call to get the stuff to refresh themselves?
+	PSquad33	?
+	jcarreira	yep
+	iroughley	yeah
+	jcarreira	you need to bind something to DWR to populate the list, right?
+	iroughley	the data has to be sourced from somewhere originally, right?
+	iroughley	yep
+	jcarreira	yeah... originally it might be in the action
+	iroughley	exactly
+	PSquad33	let me know when you guys are ready to talk strategy. i don't have much to add technically, but i want to make sure we are absolutely clear on our strategy and market perception.
+	jcarreira	would we want to populate the data on the client?
+	iroughley	what do you mean?
+	jcarreira	pre-populate a data structure and select from there...
+	|&lt;--	PSquad33 has left efnet (Remote host closed the connection)
+	iroughley	personally I wouldn't - if you are using ajax the assumption is that the data may change, and should be refreshed from the server
+	iroughley	that doesn;t mean that we shouldn't have a static tree widget
+	jcarreira	I guess I don't know how DWR works... how do you tell it what to call? Can it load data from the session?
+	iroughley	DWR (i think) makes a call to a method on a serverside object - like a spring BO
+	jcarreira	can it access the session to get its data?
+	iroughley	i would think that you could have it access a WW action, and return the session information from there
+	iroughley	i haven't looked at it lately
+	jcarreira	I'm asking Patrick... he keeps getting kicked off
+	iroughley	do you want to try another IRC server?
+	jcarreira	nah, it's his client
+	jcarreira	he's got a cheesy shareware one for mac
+	iroughley	ok - so if anyone changes the select list they update an element in the session - then the select list uses DWR to call an action with a list name (?) which obtains a refreshed (possibly) list from the session
+	jcarreira	I was using an onChange() call... it uses bind() to call and set something into the session
+	iroughley	that would work
+	jcarreira	we need a way to make it easy for users to bind onChange to a call to the server
+	jcarreira	You shouldn't have to write a JS function everytime
+	--&gt;|	PSquad32_ (~chatzilla@c-67-160-147-93.hsd1.or.comcast.net) has joined #webwork
+	PSquad32_	yo yo
+	PSquad32_	chatzilla to the rescue
+	jcarreira	ok, Patrick was just explaining DWR to me
+	iroughley	but it's more complex than that, as it might not be the same element - it may be a different one
+	iroughley	ok
+	jcarreira	no, it shouldn't change anything client-side
+	PSquad32_	so yeah, lemme know when you are ready to talk strategy. dojo doesn't seem to line up with what webwork is about at all, so i'm a bit worried
+	jcarreira	it should make a call to the server, set some session state, then return and send a client-side topic message
+	iroughley	ok - yes
+	jcarreira	it's maybe a little more chatty, but it's simple to understand and model
+	jcarreira	and very loosely coupled
+	iroughley	could we set up each of the UI tags to define whether they send or update, and then wire it up for the users?
+	iroughley	more chatty, but the calls are going to be very small
+	jcarreira	what do you mean?
+	jcarreira	I think each UI component should be able to be given a URL to hit with the new value onChange()
+	jcarreira	and a topic to publish to
+	iroughley	agreed
+	iroughley	so that call will be small (not alot of data in the URL)
+	jcarreira	and also have a topic to listen to that would load the value... so that would need a url to get the list
+	iroughley	yes
+	iroughley	and that call is going to be returning just the list, and not a complete HTML page - do the data being sent back to the client will be small
+	jcarreira	yep.. but in what form does it return the list?
+	jcarreira	...patrick, we're almost done with the Js stuff....
+	iroughley	innerHTML?
+	jcarreira	what does it mean if you set the innerHtml of a select tag? what do you set it to?
+	iroughley	it's easy and whatever is called on the server to get the data out of the session can format it to html
+	iroughley	I would think that any tag can be gotten by id, and then html set in it
+	iroughley	so &lt;OPTION&gt;one&lt;/OPTION&gt; etc.
+	PSquad32_	i'm going to play a game of halo -- be back in a few :)
+	jcarreira	yes, but what do you set into the innerHtml of a select tag to populate it? is it just the &lt;options&gt;?
+	iroughley	i think so
+	iroughley	haven't tried it, but it makes sense
+	jcarreira	ok, so for the tree... it needs to get javascript back, probably, or some data structure... should we support both?
+	Fracture	Hi
+	jcarreira	Hi Fracture...
+	Fracture	i'm going to read the log to catch up
+	iroughley	i think that depends on the core tree widget that we use and augment for the implementation
+	jcarreira	true... I've been playing with dtree for a while... it's pretty easy
+	jcarreira	Fracture, I'm not sure who you are IRL...
+	iroughley	do you think that returning JS or HTML would be easier with dtree?
+	jcarreira	JS
+	iroughley	i think that's fine then - the action/object that obtains the data from the session can modify it to JS to return to the browser
+	jcarreira	This is how I add things to the tree:
+	jcarreira	&lt;ww:iterator value="categories"&gt;
+	jcarreira	tree.add(&lt;ww:property value="id"/&gt;,&lt;ww:property value="(parentCategory == null)?0:parentCategory.id"/&gt;,'&lt;ww:property value="name"/&gt;','javascript:changeCategory(&lt;ww:property value="id"/&gt;);','&lt;ww:property value="name"/&gt;','_top','/img/folder.gif','/img/folderopen.gif');
+	jcarreira	&lt;/ww:iterator&gt;
+	jcarreira	then you add it to the page like this:
+	jcarreira	document.write(tree);
+	iroughley	cool
+	iroughley	we could even use JS for the select - just an implementation detail, as it will be hidden from teh end user
+	jcarreira	but I think we can get to that later... I'm ok hardwiring this one together for now.. but we should make it easy to create components that send changes to the server to update server state and then send update events on topics
+	Fracture	is Cameron :)
+	jcarreira	ahh.. ok...
+	=-=	Fracture is now known as Cameron-
+	jcarreira	Cameron, let us know when you're caught up
+	Cameron-	shall do .. half way there.
+	iroughley	i would agree with that
+	iroughley	while we are handwiring, we should also start thinking about a naming convention for the topics
+	jcarreira	categoryChange, userChange, etc?
+	iroughley	yes - I have been using topic_{html id}_event - i.e. topic_myRemoteDivId_refresh
+	iroughley	but they can easily change
+	jcarreira	I think we should make it easy to type and remember... users will end up needing to do some wiring themselves at some point
+	iroughley	makes sense
+	iroughley	on some of the elements i added a topic to publish to - perhaps I should go ahead and add this to them all
+	jcarreira	where would we be defining topics?
+	iroughley	at the moment I autowire some, and give the user the option of specifying them on some
+	jcarreira	well, we should talk through that with Patrick... how we're going to position this Ajax stuff... if we're going to add attributes to the taglibs, etc.
+	jcarreira	which are autowired?
+	jcarreira	brb
+	iroughley	from memory I think the autowired ones are - remotediv sends a "refesh", tab header sends a "tab selected"
+	iroughley	remote div can specify a topic to listen to and refrsh itself - i think that might be the only one for now
+	Cameron-	ok - I agree that these dojo widgets that I have created really belong in dojo - or a separate project. I was just demonstrating that rather than us write javascript code (that the ww components use) we write them as dojo widgets, and use the components to bind data to them. When using more interactive client controls - webwork more becomes a controller for marshaling data. I do think that we need to bundle a dojo build with w
+	iroughley	oh - the remote link / &lt;a href&gt; is autowired to send a "refresh"
+	Cameron-	and also allow our users to use a different profile build - if they meet our dependencies
+	PSquad32_	cameron: this whole dependency on dojo widgets is very un-webwork-ish
+	PSquad32_	i _really_ think it is not the right direction
+	Cameron-	we depend on DRW, we depend on XmlHttpRequest..
+	Cameron-	we have to have dependencies
+	PSquad32_	but we're depending on a framework
+	PSquad32_	the others are libraries
+	PSquad32_	dojo is a framework
+	PSquad32_	think about it from user's perspective. when they upgrade to 2.2, what are they going to see?
+	PSquad32_	what is the "webwork message"?
+	PSquad32_	what is our story? we can't have 4 different versions of the same story
+	jcarreira	well, that's where we need to decide if this is a theme
+	jcarreira	I think this is the Ajax theme
+	jcarreira	and it requires dojo
+	jcarreira	I think we bundle a dojo profile with the example app
+	PSquad32_	i think that is fine (a lot of this is marketing more than anything)
+	iroughley	are there cases where you might needs to utilize multiple themes for a single compnent?
+	jcarreira	yes
+	iroughley	i.e. 2 different styles of lists or tabbed controls on the same page
+	iroughley	so each of these would then need to be developed from teh core ajax theme
+	jcarreira	sometimes I end up using the "simple" theme because the layout requires I can't put it in the table
+	jcarreira	what do you mean?
+	iroughley	it's late - i think i just confused myself :)
+	jcarreira	what's our status with JSP 2?
+	jcarreira	with JSP 2 you can just add more attributes without having to put them in the TLD, right?
+	PSquad32_	i am fine iwth requiring jsp 2
+	jcarreira	I don't really know the features of JSP 2 :-)
+	jcarreira	but requiring JSP 2 is requiring J2EE 1.4 and J2SE 1.4, right?
+	jcarreira	which means no WebSphere 4.x or 5.0
+	PSquad32_	websphere 5 is JDK 1.4
+	jcarreira	5.1 is
+	iroughley	if that is the case i would opt not to exclude those markets
+	PSquad32_	that's fine
+	PSquad32_	we don't need JSP 2 features
+	PSquad32_	ww:param works
+	PSquad32_	i have to run
+	PSquad32_	let's keep thinking about what the webwork story is -- how all this fits in
+	PSquad32_	we can't just say the old stuff doens't matter or isn't supported
+	Cameron-	so Pat - what is the wework story ?
+	PSquad32_	well, i think we all need to work on that
+	PSquad32_	i'll draft up some thoughts -- maybe you guys can too
+	jcarreira	ok, so if not JSP2, then we need to pull those attributes out and use ww:param to parameterize the tag for this specific theme
+	PSquad32_	my main concern is that you guys understand what i'm saying :)
+	PSquad32_	anyway, i have to run
+	PSquad32_	see ya
+	jcarreira	later
+	Cameron-	bye
+	iroughley	later
+	jcarreira	so if this is going to be a theme, we can't add theme-specific attributes
+	iroughley	for the remote div that cameron added - right?
+	Cameron-	you can - using ww:param no ?
+	jcarreira	right, I mean attributes to the TLD
+	Cameron-	you could probably add optional ones, and document them as 'only used for xxx theme'
+	jcarreira	Hmm... could be.... as long as it's very clear... I don't want to be answering questions about why the topic isn't being used with the xhtml theme
+	Cameron-	true
+	jcarreira	speaking of which, does anyone know if someone actually build a real XHTML theme using div's and CSS instead of tables?
+	jcarreira	built
+	iroughley	no idea
+	Cameron-	no idea
+	iroughley	a while back i thought cloves and pat were talking about doing it
+	Cameron-	yeah - I rememer hearing that.
+	iroughley	so the plan is to move forward with a dojo/ajax theme?
+	jcarreira	yes
+	jcarreira	who wants to take what?
+	Cameron-	with regards to your 'topics' ... are they for use client side .. or do these events get routed to an action too ?
+	jcarreira	Cameron, you're going to talk to the dojo guys about contributing the remote div, remote link, and remote submit stuff to dojo?
+	jcarreira	they're the dojo.event.Topic stuff that lets you do publish/subscribe in JS
+	Cameron-	yep - i'll do that.
+	iroughley	we will also require theme specific tags then, right?
+	Cameron-	so you use topics for inter widget communication ?
+	iroughley	remote div for example
+	jcarreira	I built it as a wrapper around their event stuff
+	iroughley	yes - mainly for server side refreshes at the moment
+	jcarreira	I think let's keep the theme specific attributes for now
+	jcarreira	the idea is for a component to update its server state then publish a message on a topic
+	Cameron-	so something emits an event, a widget is triggered, which then refreshes itself ?
+	Cameron-	sure
+	jcarreira	yep, the developer specifies with the tags which topic(s) a component listens to to refresh itself
+	iroughley	or parts of itself - like the drop down list elements
+	jcarreira	and which topic a component publishes on when it is changed
+	jcarreira	so they are loosely coupled and the developer specifies which thing listens to the others
+	Cameron-	cool.
+	jcarreira	so about dojo and source
+	iroughley	so - there are 3 parts as i see it - 1. the dojo UI widgets, 2. the events/topics, and 3. the WW tag/component that combines them all
+	Cameron-	yep
+	iroughley	go ahead jason
+	jcarreira	should we just bundle the __package__.js?
+	Cameron-	we also need the other 'non bundled' files.. like html templates, css files and other widget resources (gif/jpg)
+	jcarreira	yeah, the tags generate JS to use the dojo widgets and JS to wire them to topics
+	jcarreira	ok
+	jcarreira	where do those come from?
+	Cameron-	I setup an ant target dojo-profile that causes dojo to build a __package__.js and copy it and other non bundled resources into the os/static/dojo package
+	Cameron-	where do those come from ? dunno what you mean
+	jcarreira	Well, I don't know about bundling the sources to dojo into webwork's CVS
+	jcarreira	I think we should just bundle the final built product, like we do with other libraries
+	iroughley	also, if they are in webwork.static, can the end user override the images easily if they wanted?
+	Cameron-	that depends on how the widet is authored
+	Cameron-	authored
+	jcarreira	how does one specify the images to be used?
+	jcarreira	can it be done so that the template could be edited to change where they come from?
+	Cameron-	the widget can take a img= attribute and use it in the building of the rendered widget.
+	iroughley	ok - so it doesn't need to be in ww.static
+	jcarreira	well, the defaults can be
+	Cameron-	doesn't have to be.. however .. defaults may be packaged there
+	iroughley	ok - makes sense
+	jcarreira	ok, so the order of things:
+	jcarreira	1) Cameron, you're going to try to get this stuff into dojo
+	jcarreira	2) we build a profiles of dojo with the widgets
+	jcarreira	3) we edit the JSP templates to use the dojo widgets
+	jcarreira	sound good?
+	jcarreira	anything i'm missing?
+	iroughley	sounds good
+	Cameron-	with the remote div.. why do we need a jsp template ?
+	jcarreira	because we want to wire it to topics
+	Cameron-	why not have a &lt;dojo:topic&gt; widget ?
+	jcarreira	and it can take the body contents as the default content of the div
+	Cameron-	the body content can be done &lt;dojo:remotediv attribs...&gt;&lt;ww:action name='foo'/&gt;&lt;/dojo:remotediv&gt;
+	jcarreira	what would the dojo:topic do?
+	Cameron-	the dojo:topic would 'install' the topic 'bus' into the page
+	jcarreira	well, I'd like to keep things consistent... using ww: tags and auto-wiring them to topics
+	iroughley	can th edojo:topic tag specify the topic to listen to and the topic to publish to when an event ocurrs?
+	iroughley	it's also going to be more code for developers to type
+	jcarreira	&lt;ww:remotediv listenTopic="itemSelected"&gt; creates JS to wire the div to refresh when it gets a message on that topic
+	jcarreira	yeah, we want to make this dead-simple
+	Cameron-	dojo:remotediv listenTopic='itemSelected'&gt; can do the same thing.. without a jsp template
+	jcarreira	...and it doesn't hurt to wrap dojo in case something else comes along and we replace the JS library
+	Cameron-	I think we only need to use a jsp tag when we need to access action context from the tag
+	jcarreira	I don't want to make users know anything about dojo
+	Cameron-	ok.. well. I think we have two different approaches.
+	iroughley	if we don't wrap it, it won't really be a theme - wil it?
+	jcarreira	yeah, the JSP template can just call the dojo stuff, so you can just use the dojo stuff directly, too
+	iroughley	it will be something else to use with ww
+	Cameron-	ok
+	jcarreira	well... maybe we should just make this a ww:div tag
+	iroughley	makes sense
+	jcarreira	and in the Ajax theme it can become a remote div
+	iroughley	then we also need a &lt;ww:a&gt;
+	iroughley	:)
+	jcarreira	yeah... we should do that
+	jcarreira	it can use the URLTag code
+	Cameron-	sounds good
+	jcarreira	ok, Ian, do you want to take those?
+	iroughley	sure
+	jcarreira	cool
+	iroughley	we also need dojo components for the existing elements - remote div, remote a link, tabbed panel - right?
+	jcarreira	yeah... not sure how hard it is to do the tabbed panel... that's a more complicated one
+	iroughley	tonight we also talked about a select list and tree element
+	iroughley	it might be easy - just use &lt;ww:div&gt; and it will just not update - events will be the only issue
+	jcarreira	...and I still want them to build a nice menuing system :-)
+	iroughley	the only other thing I was thinking about is a paginated list
+	jcarreira	let's get the ones we've got now using the new architecture
+	jcarreira	JSP tag -&gt; template -&gt; dojo widget
+	iroughley	cameron - you up for building the dojo components?
+	Cameron-	yeah
+	jcarreira	ok, I'll fill Patrick in with where we're heading and maybe we can schedule another chat to talk about the WebWork message, etc
+	Cameron-	ok
+	iroughley	ok - then I will start on the remote div tag/template from teh dojo component next monday
+	Cameron-	we need a wiki page to list the ajax theme components
+	Cameron-	(so I know what to build)
+	iroughley	let me know as new ones come down the pipe
+	iroughley	the current tutorial list all the ones i've done - localhost/webwork/tutorial/ajax/...
+</pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

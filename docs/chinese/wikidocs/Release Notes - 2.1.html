@@ -1,0 +1,360 @@
+<html>
+    <head>
+        <title>WebWork 2 : Release Notes - 2.1</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : Release Notes - 2.1
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Dec 14, 2004 by <font color="#0050B2">plightbo</font>.
+				    </div>
+
+				    <p class="paragraph"><h3 style="margin: 4px 0px 4px 0px;" class="heading3"><a name="ReleaseNotes-2.1-KeyChanges"> Key Changes</a></h3></p><ul class="star">
+<li> JavaScript client validation support - not totally complete, but basic validators work well. Look at the validators.xml file include in src/example to see how you can configure your validators to do client side validation on top of their normal duties</li>
+<li> The label attribute in UI tags are no longer required</li>
+<li> The themes and templates in UI tags behave like they did in 1.x</li>
+<li> A new theme, in addition to the existing &quot;xhtml&quot; one, called &quot;simple&quot; is included that doesn&#039;t have any of the labels, error reporting, or table rows that the &quot;xhtml&quot; template has. This is more in line with the tags included with Struts.</li>
+<li> New UI tags for CSS styles and classes added: cssStyle and cssClass</li>
+<li> Old action!command URL support works again. This means you can invoke a doCommand() method like in 1.x</li>
+<li> ww:param tag no longer requires the name attribute (for ordered params, like with ww:text). It also evaluates the the body as the value if no value is given.</li>
+<li> UI tags now have access to the FormTag parameter map using the &quot;form&quot; key. This means $parameters.form.name would return the form name, for example. The result is that complex JavaScript-based components can be built.</li>
+</ul>
+<h3 class="heading3"><a name="ReleaseNotes-2.1-MigrationNotes"> Migration Notes</a></h3>
+
+<table class="wikitable">
+<tr>
+<th> Version </th><th> Description </th><th> Old Code </th><th> New Code </th>
+</tr><tr>
+<td> 2.0 </td><td> WebWorkUtil has been refactored into a number of classes, and the constructor has changed. If you were using it for Velocity support before, look at VelocityWebWorkUtil now </td><td> </td><td> </td>
+</tr><tr>
+<td> 2.0 </td><td> The <em class="emphasis">webwork.ui.templateDir</em> configuration property has been broken into <em class="emphasis">webwork.ui.templateDir</em> and <em class="emphasis">webwork.ui.theme</em> </td><td> <div class="code"><div class="codeContent">
+<pre>webwork.ui.templateDir= /webwork/mytheme</pre>
+</div></div> </td><td> <div class="code"><div class="codeContent">
+<pre>webwork.ui.templateDir = /webwork &#10;webwork.ui.theme = mytheme</pre>
+</div></div> </td>
+</tr><tr>
+<td> 2.0 </td><td> &quot;namespace&quot; attribute of  the ww:action tag is now evaluated; those upgrading from 2.0 will need to place single quotes around the attribute value</td><td> &lt;ww:action namespace=&quot;/foo&quot; .../&gt; </td><td> &lt;ww:action namespace=&quot;&#039;/foo&#039;&quot; .../&gt; </td>
+</tr><tr>
+<td> 2.0, but not 1.x </td><td> theme and template attributes in UI tags have changed are now evaluated; those upgrading from 2.0 will need to place single quotes around the attribute value</td><td> &lt;ww:xxxx theme=&quot;/template/foo&quot; template=&quot;bar.vm&quot;/&gt; </td><td> &lt;ww:xxxx theme=&quot;&#039;foo&#039;&quot; template=&quot;&#039;bar.vm&#039;&quot;/&gt; </td>
+</tr><tr>
+<td> 1.x, 2.0 </td><td> label UI tag evaluates the value attribute now instead of the name attribute </td><td> &lt;ww:label name=&quot;&#039;Foo&#039;&quot;/&gt; </td><td> &lt;ww:label value=&quot;&#039;Foo&#039;&quot;/&gt; </td>
+</tr>
+</table>
+<h3 class="heading3"><a name="ReleaseNotes-2.1-Changelog%3Caname%3D%22ReleaseNotes2.1Changelog%22%3E%3C%2Fa%3E"> Changelog <a name="ReleaseNotes-2.1-Changelog"></a></a></h3><p class="paragraph"><p>
+    <table  width="100%" cellspacing="0" class="grid">
+        <tr>
+            <th colspan="3" style="text-align: left;">
+                <a href="http://jira.opensymphony.com/secure/IssueNavigator.jspa?&pid=10030&fixfor=21215&sorter/field=issuekey&sorter/order=DESC&tempMax=25&reset=true&">OpenSymphony JIRA</a>
+                <span class="smalltext">(25 issues)</span>
+            </th>
+        </tr>
+        <tr>
+                        <th style="text-align: left;">
+                T                                                                                                                                                                            </th>
+                        <th style="text-align: left;">
+                                Key                                                                                                                                                            </th>
+                        <th style="text-align: left;">
+                                                Summary                                                                                                                                            </th>
+                    </tr>
+                                            <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-592"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-592">WW-592</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-592">Upgrade commons-logging</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-560"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-560">WW-560</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-560">SessionMap holds on to requests when it doens't need to</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-546"><img src="http://jira.opensymphony.com/images/icons/newfeature.gif" alt="New Feature" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-546">WW-546</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-546">Make the config-browser show validators applied via the XML validation files</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-544"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-544">WW-544</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-544">Velocity result hardcodes contenttype and encoding</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-541"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-541">WW-541</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-541">Webpage link for download</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-537"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-537">WW-537</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-537">Velocity tag outputs to the response, not the velocity writer</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-530"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-530">WW-530</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-530">Config Browser doesn't work after lates ActionConfig refactoring</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-519"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-519">WW-519</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-519">ActionTag should evaluate namespace attribute</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-518"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-518">WW-518</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-518">Label attribute shouldn't be required</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-517"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-517">WW-517</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-517">Themes and templates should behave like 1.x</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-516"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-516">WW-516</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-516">Simple theme that has no tables and xhtml extends from</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-515"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-515">WW-515</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-515">Class attribute is illegal</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-514"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-514">WW-514</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-514">Form tag double evaluates name attribute</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-503"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-503">WW-503</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-503">Fix tag libraries</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-502"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-502">WW-502</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-502">foo!default.action should work</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-501"><img src="http://jira.opensymphony.com/images/icons/newfeature.gif" alt="New Feature" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-501">WW-501</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-501">JavaSript-based client side validation</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-500"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-500">WW-500</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-500">ww:param tag fixes</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-499"><img src="http://jira.opensymphony.com/images/icons/newfeature.gif" alt="New Feature" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-499">WW-499</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-499">UI tags should have access to form</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-488"><img src="http://jira.opensymphony.com/images/icons/task.gif" alt="Task" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-488">WW-488</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-488">Check QuickStart Guide to make sure it works</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-487"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-487">WW-487</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-487">WebWorkConversionErrorInterceptorTest in wrong branch</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-484"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-484">WW-484</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-484">label tag problems</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-478"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-478">WW-478</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-478">URLTag tld entry does not correspond with actual property</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-476"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-476">WW-476</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-476">WebWork needs a simple changelog for each release</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowAlternate">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-475"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-475">WW-475</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-475">Multipart encoding still not fixed</a>
+                                    </td>
+                            </tr>
+                                    <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-474"><img src="http://jira.opensymphony.com/images/icons/bug.gif" alt="Bug" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-474">WW-474</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-474">Ability to dynamically create array of Objects from a given request</a>
+                                    </td>
+                            </tr>
+            </table>
+</p>
+</p>
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

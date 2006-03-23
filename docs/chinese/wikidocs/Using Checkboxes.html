@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <title>WebWork 2 : Using Checkboxes</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : Using Checkboxes
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Nov 30, 2004 by <font color="#0050B2">jcarreira</font>.
+				    </div>
+
+				    <p class="paragraph"><h2 style="margin: 4px 0px 4px 0px;" class="heading2"><a name="UsingCheckboxes-UsingCheckboxes%28General%29"> Using Checkboxes (General)</a></h2>
+The biggest gotcha for newbies is that you must set the &#039;value&#039; attribute in the html &lt;input&gt; field to use Checkboxes with WW.  By default your browser will set this to some value.  Firebird uses &quot;on&quot; - not sure what IE or others use.  You must make this a sensible value for whatever property you are setting.
+<h2 class="heading2"><a name="UsingCheckboxes-UsingCheckboxestosetbooleanfields"> Using Checkboxes to set boolean fields</a></h2>
+HTML:
+<div class="code"><div class="codeContent">
+<pre>&lt;input type=<span class="java&#45;quote">&quot;checkbox&quot;</span> name=<span class="java&#45;quote">&quot;user.lockedOut&quot;</span> value=<span class="java&#45;quote">&quot;<span class="java&#45;keyword">true</span>&quot;</span>/&gt;</pre>
+</div></div></p>If the user checks this box, the browser will send &quot;user.lockedOut=true&quot; in the QueryString and action.getUser().setLockedOut(true) will be called.  If the user does not check the box, the browser will not send anything, so make sure that you have initialised lockedOut to false to start with.<br/>
+
+<div class="code"><div class="codeContent">
+<pre><span class="java&#45;keyword">private</span>&#160;<span class="java&#45;object">boolean</span> m&#95;lockedOut = <span class="java&#45;keyword">false</span>;&#10;&#10;    <span class="java&#45;keyword">public</span> void setLockedOut(<span class="java&#45;object">boolean</span> lockedOut) &#123; m&#95;lockedOut = lockedOut; &#125;</pre>
+</div></div>
+<h2 class="heading2"><a name="UsingCheckboxes-UsingCheckboxestosetacollection"> Using Checkboxes to set a collection</a></h2>
+Our user has a number of priviliges that are stored as a Set of strings.  To use checkboxes for these, we have HTML that looks like:<br/>
+
+<div class="code"><div class="codeContent">
+<pre>&lt;input type=<span class="java&#45;quote">&quot;checkbox&quot;</span> name=<span class="java&#45;quote">&quot;user.priv&quot;</span> value=<span class="java&#45;quote">&quot;boss&quot;</span>/&gt;&#10;&lt;input type=<span class="java&#45;quote">&quot;checkbox&quot;</span> name=<span class="java&#45;quote">&quot;user.priv&quot;</span> value=<span class="java&#45;quote">&quot;admin&quot;</span>/&gt;&#10;&lt;input type=<span class="java&#45;quote">&quot;checkbox&quot;</span> name=<span class="java&#45;quote">&quot;user.priv&quot;</span> value=<span class="java&#45;quote">&quot;manager&quot;</span>/&gt;</pre>
+</div></div><p class="paragraph">Say a user checks the first 2; the browser will send the query string: user.priv=boss&amp;user.priv=admin.</p>OGNL will end up calling <div class="code"><div class="codeContent">
+<pre>action.getUser().setPriv(<span class="java&#45;object">String</span>&#91;&#93; &#123;<span class="java&#45;quote">&quot;boss&quot;</span>, <span class="java&#45;quote">&quot;admin&quot;</span>&#125;)</pre>
+</div></div><p class="paragraph">You can write this method like:
+<div class="code"><div class="codeContent">
+<pre>Set m&#95;privileges = <span class="java&#45;keyword">new</span> HashSet();&#10;&#10;    <span class="java&#45;keyword">public</span> void setPriv(<span class="java&#45;object">String</span>&#91;&#93; privs) &#123;&#10;        <span class="java&#45;keyword">for</span> (<span class="java&#45;object">int</span> i = 0; i &lt; privs.length; i&#43;&#43;) &#123;&#10;            m&#95;privileges.add(privs&#91;i&#93;);&#10;        &#125;&#10;    &#125;</pre>
+</div></div>
+<h2 class="heading2"><a name="UsingCheckboxes-FullDetailedexample%3A"> Full Detailed example:</a></h2>
+This example uses a kind-of <a href="http://wiki.opensymphony.com//display/XW/Interceptors#Interceptors-ModelDriven" title="ModelDriven on Interceptors">XW:Interceptors#ModelDriven</a> Action.  The action returns a single getter for the User object whose values are populated.</p><ul class="star">
+<li> <a href="Using Checkboxes - EditAction.java.html" title="Using Checkboxes - EditAction.java">WW:Using Checkboxes - EditAction.java</a></li>
+<li> <a href="Using Checkboxes - Velocity and HTML.html" title="Using Checkboxes - Velocity and HTML">WW:Using Checkboxes - Velocity and HTML</a></li>
+<li> <a href="Using Checkboxes - User.java.html" title="Using Checkboxes - User.java">WW:Using Checkboxes - User.java</a></li>
+</ul>
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

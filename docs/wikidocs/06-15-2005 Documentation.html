@@ -1,0 +1,418 @@
+<html>
+    <head>
+        <title>WebWork - 
+        06-15-2005 Documentation
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="06-15-2005Documentation-Attendees"></a>Attendees</h1>
+<ul>
+	<li>Erik Beeson</li>
+	<li>Simon Stewart</li>
+	<li>Jason Carriera</li>
+	<li>Patrick Lightbody</li>
+	<li>Jay Bose</li>
+	<li>Vitor Souza</li>
+	<li>Grégory Joseph</li>
+</ul>
+
+
+<h1><a name="06-15-2005Documentation-Outcome"></a>Outcome</h1>
+<ul>
+	<li>Team agrees that the three main guidelines should be:
+	<ul>
+		<li>Documentation and code must be kept in sync</li>
+		<li>Major sections should be focussed on different types of users: tutorials ("getting started"), reference, cookbook, general docs</li>
+		<li>WebWork documentation should be core focus, with XWork documentation being included in the WebWork docs where possible.</li>
+	</ul>
+	</li>
+	<li>Implementation strategies for these guidelines are:
+	<ul>
+		<li>Code/docs sync: utilize the Confluence <a href="http://confluence.atlassian.com/display/CONFEXT/Snippet+Macro+Library" title="Visit page outside Confluence">snippet macro</a>. We may need Atlassian to help get this macro in to shape.</li>
+		<li>Sections: each person in the meeting will write their own TOC and present it next week - see <a href="06-15-2005 TOC Homework.html" title="06-15-2005 TOC Homework">06\-15\-2005 TOC Homework</a></li>
+		<li>Standaline WebWork docs: we will utilize the {include} macro to include whole XWork pages when possible, but we will avoid linking to the XWork docs.</li>
+	</ul>
+	</li>
+</ul>
+
+
+<h1><a name="06-15-2005Documentation-Transcript"></a>Transcript</h1>
+<div class="preformatted"><div class="preformattedContent">
+<pre>	Patrick_	hey
+	shs96c	G;day
+	greg--	hi
+	Patrick_	jason should be on soon i imagine -- just saw him get on AIM
+	shs96c	Fair enough.
+	Patrick_	who do we have here? Rainer, Cameron, and who is Greg?
+	shs96c	I'm Simon
+	greg--	i'm sorry guys I was just passing by; badly need some sleep, it's 3 am here.. just saw the thread and thought i'd drop by
+	greg--	I'm Grégory Joseph
+	--&gt;|	jcarreira (~chatzilla@cpe-66-66-7-68.rochester.res.rr.com) has joined #webwork
+	greg--	being noisy on the lists from time to time
+	shs96c	Not a bad thing :)
+	greg--	sent a couple of patches, and overall happy user of ww ;)
+	Patrick_	ok, cool
+	Patrick_	Greg: get some rest -- we'll post the transcript
+	greg--	thanks ;)
+	Patrick_	unfortunately, I wanted to have a rough TOC for the new docs that we could all start with, but I didn't get around to it
+	greg--	am waiting for a maven build to finish... it's moving at its own pace :/
+	jcarreira	serves you right for using maven :-)
+	Patrick_	Jason: could you maybe take lead on this meeting? I want to finish the build refactoring I've been doing all day. Also, are we waiting for Jay, or do you want to get started?
+	shs96c	I'm happy to wait for Jay
+	jcarreira	let's wait a couple more minutes
+	Patrick_	ok. while we're waiting, i have some good news: the XWork build is the first official project to be based on the OpenSymphony Common Build system
+	Patrick_	WebWork is being updated now. Part of that update involves making sub-projects in WW. The first such subproject will be the example web app
+	shs96c	Patrick: What's the "common build system"?
+	shs96c	Is it in CVS yet?
+	Patrick_	http://ivyrep.opensymphony.com/opensymphony/ is where builds that use the OpenSymphony Common Build drop their artifacts. This allows you to keep up to date if you use Ivy
+	Patrick_	yes, it is
+	Patrick_	let me get you a URL
+	Patrick_	https://xwork.dev.java.net/source/browse/xwork/build.xml?rev=1.30&amp;view=auto&amp;content-type=text/vnd.viewcvs-markup
+	Patrick_	and:
+	Patrick_	https://opensymphony.dev.java.net/source/browse/opensymphony/common/osbuild.xml
+	Patrick_	a couple changes came from this:
+	Patrick_	1) you must have ../opensymphony/common available
+	shs96c	I was just about to ask about that
+	Patrick_	(or you can redefine the location via ${common.build}
+	shs96c	Can it be a jar?
+	shs96c	Or is it the full source tree?
+	Patrick_	it is just an ant build file
+	Patrick_	it can't be a jar
+	Patrick_	2) in XWork, I'm not currently building the editor. I can set this up as a sub project, but I'm not sure if it is even worth it. Is the editor still maintained, or should we focus our energy onConductor/EclipseWork/ etc?
+	--&gt;|	vitorsouz (~vitorsouz@201.29.8.92) has joined #webwork
+	shs96c	I've never used the editor, so not too stressed either way
+	vitorsouz	Hi, there. Sorry I'm late.
+	Patrick_	vitor: no worries, we haven't started yet.
+	shs96c	NP
+	Patrick_	Jason: maybe we should start now w/o Jay?
+	vitorsouz	I wasn't sure if Eastern was DST or not. Is it 9:15 or 10:15 there now?
+	Patrick_	it is 9:15 EST
+	shs96c	11:15AM in Sydney. A very civil time to arrange a meeting on IRC for :)
+	vitorsouz	10:15PM in Brazil. Not that different.
+	Patrick_	ok, well let's start
+	Patrick_	i'd like to start off with a couple thoughts, and then i'll open it up
+	jcarreira	oops, back
+	Patrick_	Recently, Matt Raible pointed me to the WebWork 1.0 Release Announcement on TheServerSide
+	Patrick_	more than a couple comments mentioned how good the documentation was
+	jcarreira	LOL
+	shs96c	:)
+	Patrick_	whether it is just PR or reality, the fact is: WebWork suffers from an image of bad documentation
+	shs96c	Agreed
+	Patrick_	the goal should be to fix that for WebWork 2.2
+	jcarreira	yep
+	Patrick_	in order to do that, I think we should establish some general guidelines, and then once we agree on those, put together a TOC and divvy out the work
+	jcarreira	ok
+	vitorsouz	Ok.
+	Patrick_	guidelines might be, for example, that the WebWork docs are "self contained", meaning they don't refer to the XWork docs. Or, they might mean that all example code must be verified to work and reproduced in the example app. Whatever.
+	shs96c	Sounds reasonable
+
+	Patrick_	I think for this meeting, we should establish those guidelines and put together a rough TOC
+	Patrick_	Jason, anything to add? Otherwise, I'm ready to open it up to discussion of guidelines
+	greg--	(you might want to use the snippet macro for confluence, to make sure sample code in docs matches buildable reality - i.e. extract that code in the doc right out of cvs)
+	jcarreira	well, I'd say another guideline should be that tutorials on the example app should be documented in the doc
+	jcarreira	greg, any idea what happens with that when you export that page?
+	Patrick_	ok, sounds like greg and jason are sort of pointing to the same goal: keep the code and docs in sync
+	jcarreira	will it pull the latest code and include it?
+	greg--	jcarreira: i guess like any macro, it just exports whatever is rendered, i.e. the code as it is on cvs at the moment you export/publish
+	jcarreira	I'd also say I think we need to think about who the audience is and have a couple (at least) sets of docs... like a 5 minute quick start vs. tutorials / example app vs. reference
+	greg--	never verified that myself though
+	shs96c	Jason: the most important docs are those aimed at beginners
+	shs96c	Those are the people who need the most support
+	Patrick_	OK, i'm going to keep a list of ideas being posted here. If I don't summarize it properly, let me know.
+	Patrick_	So far:
+	Patrick_	- Keep docs and code in sync
+	jcarreira	shs96c: well, that's one important set, but a complete and up-to-date reference is important for current users (or even me)
+	Patrick_	- Partition the docs properly: getting started, advanced users, etc
+	shs96c	Agreed, but if there were holes in the docos for advanced users it would be understandable
+	vitorsouz	I think that WW docs should read more like a book, starting with the easy stuff and incrementing gradually, showing examples and explaining. This is the best approach for begginners, I guess.
+	vitorsouz	That's what I tried with the tutorial, a long time ago, and then didn't have the time to improve it (*sigh*).
+	jcarreira	vitor, that's important, but I spend a lot of time on the boards pointing people to the reference on the tags
+	jcarreira	Jay IM'd me and he's having a hard time getting into EFNET
+	vitorsouz	Ok. Reference is also desirable, as well as a cookbook: advanced tasks.
+	vitorsouz	Jason: I got into irc.ca.efnet.info with no problem.
+	shs96c	vitorsouz: sounds like how I'd expect the docs to be structured
+	Patrick_	ok, so i'm hearing needs for: reference, tutorials, getting started, and a cookbook (which is just tips and tricks, right?)
+	vitorsouz	Right. Gettint started and tutorial could be the same thing.
+	Patrick_	what about keeping the docs self-contained by not linking out to XWork?
+	shs96c	A reasonable level of self-containment would be good
+	vitorsouz	Self-contained: I think it's a good idea. Referencing to XWork gives an idea of incompleteness.
+	jcarreira	Well, I agree in general... but maybe we could use the Confluence stuff to pull in parts from XWork?
+	shs96c	Allows people commuting and reading offline to get the most out of it
+	greg--	Patrick_ that's a good point, but on the other you don't want to duplicate stuff.. there's currently some duplication and confusion, for instance with the i18n or validation docs that are both in ww and xw
+	Patrick_	Jason: I agree, if we can find ways to re-use, that is great. But I think the final result should be self-contained
+	shs96c	Perhaps a quick glossing over of some of the important XW topics would be beneficial with links to the official XW docs
+	Patrick_	so, related to that question: do you guys think WebWork docs should get the majority of the focus, with XWork as an afterthought?
+	jcarreira	shs, that doesn't help when we export the docs and include them in the distro
+	vitorsouz	Patrick: yes.
+	shs96c	jcarreira: agreed, but it's enough for someone to keep reading
+	vitorsouz	XWork is more targeted to developers, I guess. They can read the source code. ;)
+	shs96c	Not so sure about that.
+	vitorsouz	(just kidding)
+	shs96c	:P
+	Patrick_	ok, any other guidelines? we have three right now:
+	Patrick_	- Keep docs and code in sync
+	greg--	it would maybe hide xwork even more. as of now, it's not obvious what you do with xw WITHOUT ww, and maybe you guys also want to stress that?
+	Patrick_	- Break up in to main sections: tutorials (getting started, etc), reference, cookbook
+	Patrick_	- WebWork docs core focus, XWork docs not important and kept separate
+	jcarreira	well, I'm not sure about that last one
+	shs96c	I'm with Jason on this one
+	Patrick_	ok, what do you suggest?
+	shs96c	I'd like the XW docs to be "the source of truth" for XW things
+	jcarreira	I think we should look at the ability to keep the XWork docs up to date and use Confluence to include them in WebWork
+	vitorsouz	Here's another option: both XWork and WebWork (and maybe future projects derived from XWork) have the same docs.
+	Patrick_	I agree, but not at the expense of the WebWork documentation experience
+	shs96c	I'd be happy to see some high level discussion of how the XW elements affect WW2 in the WW2 docs
+	--&gt;|	nightfal (~nightfal@c-67-180-134-149.hsd1.ca.comcast.net) has joined #webwork
+	--&gt;|	jaybose (~chatzilla@CPE-65-27-76-47.mn.res.rr.com) has joined #webwork
+	jaybose	sorry i'm late
+	vitorsouz	Welcome Jay and nightfal.
+	Patrick_	Jay, Erik, welcome
+	shs96c	We're talking about documentation
+	jcarreira	ok, guidelines so far:
+	Patrick_	read here to catch up: http://wiki.opensymphony.com/display/WW/Temp+chat
+	Patrick_	let's nail down these three guidelines and then move on the TOC
+	jcarreira	- Keep docs and code in sync
+	jcarreira	to do that let's look at the stuff that pulls from CVS
+	jcarreira	- Break up in to main sections: tutorials (getting started, etc), reference, cookbook
+	jcarreira	I think what we have now is mostly reference, but not so well structured
+	nightfal	I agree
+	greg--	jcarreira : http://confluence.atlassian.com/display/CONFEXT/Snippet+Macro+Library
+	jcarreira	Now the one we're not so much in agreement on: - WebWork docs core focus, XWork docs not important and kept separate
+	shs96c	nod
+	jcarreira	greg, cool.. I'll take a look...
+	shs96c	That's the one I'm feeling a little uncomfortable about
+	Patrick_	well, here's my two concerns:
+	jcarreira	I'd like to keep XWork up to date, and I think Confluence can bring it all together
+	nightfal	obviously it gets tricky because *most* of the use that xwork sees is from webwork, so separating them just confuses new webwork users
+	Patrick_	1) I don't want our focus on XWork docs, since 99% of users will never download XWork
+	shs96c	Except as part of WebWork.
+	shs96c	:)
+	Patrick_	2) I want the WebWork docs to always be correctly "versioned" -- meaning that when you download WebWork 2.2 and the docs point out to XWork, they can't point to the wiki
+	Patrick_	because the wiki would be "latest", not necessarily the docs that we meant to link to at the time 2.2 was released
+	jcarreira	right, agreed
+	shs96c	We could always export the XWork and WebWork spaces together for the WebWork docs
+	jcarreira	greg, do you know the macros to pull in pieces of other pages?
+	jaybose	There are things that would better be explained under the XWork section
+	vitorsouz	What about the idea of both sharing the same docs? I got no comments on the idea (maybe because it's very very bad... :)).
+	Patrick_	I don't want users to get fragemented in to thinking about XWork and WebWork. I want them to download WebWork and just use it. That means I don't want them to have to read an XWork Reference and a WebWork Reference
+	Patrick_	vitor: i don't like that for the reasons above
+	shs96c	Then we're heading towards Vitor's idea....
+	nightfal	I agree that separate is poor
+	nightfal	is exporting both sets of docs for the ww dist an option?
+	Patrick_	I'm open to finding a way to include parts of the XWork docs in the WebWork docs via Confluence. But the end result would be *standalone* WebWork docs when exported
+	jcarreira	yeah, I think what makes sense is to pull in the parts of the xwork docs that are needed and add to them in the corresponding webwork docs page
+	Patrick_	is everyone else cool with that?
+	nightfal	I'm stepping away for a minute, I just wanted to lurk
+	nightfal	lurks
+	shs96c	Standalone is fine by me, because I like to read offline
+	Patrick_	ok, speak now or forever hold your peace :)
+	Patrick_	going once... twice...
+	jaybose	so the plan is to just reference parts of the Xwork docs?
+	vitorsouz	Wait...
+	Patrick_	waiting :)
+	jaybose	but to keep sep?
+	greg--	jcarreira : you mean {include} i believe ?
+	vitorsouz	What about not mentioning XWork in the Getting Started (Tutorial) and referencing it in the reference and cookbook.
+	vitorsouz	That way begginners wouldn't feel confused.
+	jaybose	i like that idea
+	jcarreira	yes, I think that's a good idea
+	shs96c	Beginners often think of WW2 and XW as one and the same thing...
+	Patrick_	vitor: i'm fine with referencing it as long as the _content_ that is exported appears as a standalone document. The way we would do that is by using {include} (I think)
+	vitorsouz	Ok. I'm fine with include.
+	Patrick_	So, just so we're all absolutely clear, an example of this in action might be:
+	vitorsouz	I'm more concerned with the end result for the reader, because I don't know Confluence and its features that well.
+	Patrick_	XWork/Documentation/Interceptors/Overview might talk about interceptors in general
+	greg--	i zlso it's better to mention it right away, than letting users discover the existence of xw once they think they're up to speed with ww
+	Patrick_	WebWork/Documentation/Interceptors/Overview might link to WebWork/Documentation/Interceptors/XWorkOverview
+	Patrick_	and then WebWork/Documentation/Interceptors/XWorkOverview would _include_ XWork/Documentation/Interceptors/Overview
+	greg--	mind that {include} includes a complete page, not portions of it
+	vitorsouz	Greg: we could mention it in the begginning of the tutorial, just to let the reader know, but saying they shouldn't worry about it for now.
+	Patrick_	ok. say "wait" in the next 5 seconds or we're moving on
+	greg--	vitorsouz true :)
+	jcarreira	link?
+	vitorsouz	I'm cool with that last resolution.
+	jcarreira	you mean it links now and now we want to make it include?
+	greg--	jcarreira http://docs.codehaus.org/renderer/notationhelp.action?section=confluence ?
+	Patrick_	ok, great. so now the next step is TOC -- or maybe more specifically, how do we implement these gaols.
+	Patrick_	let's start with the first one:
+	Patrick_	KEEP THE CODE AND DOCS IN SYNC
+	Patrick_	it appears that Simon and Jason are on to something that might help
+	Patrick_	what I've been doing is making the example app an actual tutorial, with the tutorials _in_ the app
+	Patrick_	it hasn't turned out too hot so far though :(
+	jcarreira	yes, we need to use the snippet macro... what do we have to do to enable the snippet macro?
+	shs96c	Sounds hard to do nicely
+	jcarreira	well, it just needs the docs written, I think
+	vitorsouz	Patrick: maybe more thought is to be given to which examples are interesting. But that's not the point right now, I guess. The point is the means of syncing, right?
+	jcarreira	the code can't stand alone for someone trying to learn
+	Patrick_	well, wait -- do we need to do te snippet macro? What about just saying that parts of the docs (say, "tutorials") are in the example app and the reference and cookbook are static?
+	Patrick_	or would that fragment things too much b/c then you wouldn't be authoring all the docs in confluence?
+	jcarreira	Hmm... so just do the tutorials completely in the example app?
+	Patrick_	maybe, i'm just tossing out ideas at this point. i don't feel strongly either way
+	vitorsouz	So the tutorial page in confluence would be just a single one, pointing to the example app in the distribution?
+	Patrick_	possibly. would that work?
+	Patrick_	how does {snippet} work?
+	greg--	jcarreira : enabling the snippet macro = dropping the jar in confluence/WEB-INF/lib and praying it works with your confluence version.
+	shs96c	I'm not keen on that idea
+	jaybose	yes, all tutorials via the example app
+	shs96c	Maybe I've grabbed the wrong end of the stick here
+	vitorsouz	I prefer the automatically syncing idea, but not sure it's feasible or easy.
+	shs96c	If we're talking about including snippets from the example app in the tutorials, that's cool
+	jcarreira	the problem there is that to update the tutorial you'd have to be a webwork developer with CVS write access
+	Patrick_	jason: good point
+	greg--	Patrick_ http://confluence.atlassian.com/display/CONFEXT/Snippet+Macro+Library : it grabs contents of your cvs repo through a cvsview, between given markers (like START SNIPPET FOO, END SNIPPET FOO)
+	Patrick_	though, we could provide "Documentation" access to webwork/tutorial in CVS
+	Patrick_	java.net does support that
+	jaybose	is that really necessary?
+	jcarreira	but that only gives access to the /web directory, doesn't it?
+	Patrick_	hmm, the snippet macro looks like it can pull parts of the content. I like it.
+	greg--	Patrick_ it can indeed
+	jaybose	is copy and paste that error-prone?
+	vitorsouz	About the snippet thing: it guarantees automatically updating existing code, but if I write a new code in the example app I have to write a new page for it and use the snippet-tag, is that correct?
+	Patrick_	jason: well, after tonight, webwork/tutorial will have all the source, libs, etc. it'll be it's own project
+	Patrick_	vitor: yes
+	jcarreira	jay, copy and paste doesn't keep things up to date
+	Patrick_	i actually really like the snippet idea
+	Patrick_	what are potential "gotchas" with it?
+	greg--	xml
+	greg--	maybe there's been a new version but last time i tried
+	greg--	few month agos
+	greg--	an xml snippet wouldn't render corretly
+	vitorsouz	I'm thinking that bugs in the snippet tag are the only concern. If it works well, no worries.
+	greg--	i mean, it was readable, but the xml colouring was messed up
+	Patrick_	we could get Atlassian to fix that I bet
+	Patrick_	or even make a copy for ourselves
+	Patrick_	that works :)
+	greg--	hmm it's not maintained by them
+	Patrick_	any other showstoppers? so far i've heard:
+	Patrick_	- new tutorials in CVS will need to have the wiki get updated
+	Patrick_	- snippet macro could be buggy
+	greg--	(mind that maybe with conf1.4 it'd work, they've rewritten the renderer)
+	Patrick_	we're running on 1.4.1
+	greg--	i can't really tell, we're still on 1.3.x at work
+	Patrick_	ok, anything else to say about? any other suggestions? say "wait" in the next 5 seconds or I'll assume we're agreed to use the snippet tag
+	Patrick_	ok, done. (trying to keep this meeting plodding right along)
+	vitorsouz	Right.
+	Patrick_	next up: sections
+	Patrick_	so we've talked about tutorials, reference, and cookbook
+	Patrick_	where would something like the general description of WW's architecture go?
+	jaybose	what goes in the three
+	Patrick_	three?
+	jaybose	we need guidelines for that
+	jaybose	three sections.
+	Patrick_	i'm not following
+	Patrick_	you mean it would be in the cookbook?
+	jaybose	ok, what would go in the cookbook, and not in the tutorials
+	vitorsouz	I think the docs should start with general information and architecture. Then explain the three sections above: Tutorials for new users, Reference for quick ref and Cookbook for advanced users looking for advanced ideas.
+	Patrick_	well, i see tutorials as things like:
+	jcarreira	the tutorials are really 2 sections: getting started and tutorials
+	shs96c	Things like injecting services into validators using Spring....\
+	Patrick_	- Getting Started, Using Validation, etc
+	Patrick_	the cookbook would b emore like:
+	Patrick_	- How to override the default XHTML templates
+	Patrick_	- Writing your own ServletDispatcher
+	Patrick_	etc
+	vitorsouz	I see the tutorials as something that starts with installation and "Hello, World" and slowly increment things until we have a complete but simple example app.
+	jaybose	getting started should be part of the ref manula
+	shs96c	vitorsouz: I like that idea
+	Patrick_	see, i think we're missing something: general documentation
+	jcarreira	yeah
+	Patrick_	i think we need a "setting up webwork" in the general docs
+	Patrick_	and then in the tutorials, a "getting started"
+	Patrick_	there is a difference:
+	jcarreira	ok docs:
+	Patrick_	in "setting up webwork", you're told what configs are needed, files, etc
+	Patrick_	in "getting started", it is a step by step hand-holding guide
+	vitorsouz	Gettint Started is in the tutorials, Setting up WebWork is in the reference.
+	jcarreira	let's start at the top level and then break each one down
+	jcarreira	we need: Getting started (includes a hello world starter app and tutorials)
+	vitorsouz	Just to further explain my point of view, once the user finishes the tutorial he/she could go to the Cookbook and check random advanced ideas, meaning that cookbook "mini-tutorials" do not depend on one another, but depend on know what's in the tutorial.
+	Patrick_	ok, let's look at a couple things:
+	jcarreira	General Documentation: includes architecture guide, what is MVC, reference
+	Patrick_	WebWork 1.x docs: http://www.opensymphony.com/webwork_old/
+	shs96c	Something like: http://wiki.rubyonrails.com/rails/show/UnderstandingRails
+	shs96c	?
+	Patrick_	WebWork 2.x docs: http://www.opensymphony.com/webwork/wikidocs/Documentation.html
+	[ERROR]	Connection to irc://efnet/ (irc://irc.prison.net/) reset.
+	=-=	User mode for Patrick__ is now +i
+	--&gt;|	YOU (Patrick__) have joined #webwork
+	|&lt;--	Patrick_ has left efnet (Read error 54: Connection reset by peer)
+	Patrick__	sorry, got booted
+	=-=	YOU are now known as Patrick_
+	Patrick_	ok, looking at our existing TOC, i think we're not too far from where we want to be
+	Patrick_	I think the real problem is this:
+	vitorsouz	"Understanding Rails" is nice.
+	Patrick_	http://www.opensymphony.com/webwork/wikidocs/Interceptors.html
+	Patrick_	you click on Interceptors
+	Patrick_	but now you can't get any useful info on the "prepare" interceptor, for example
+	Patrick_	http://www.opensymphony.com/webwork/wikidocs/ExecuteAndWaitInterceptor.html is what we need to aim for for every reference page
+	Patrick_	something more detailed
+	Patrick_	notice that XW has more info on some of the items:
+	Patrick_	http://wiki.opensymphony.com//display/XW/Interceptors
+	Patrick_	ok, it's getting late for everyone, I think we should wrap this up rather than letting this go on for another hour. can someone volunteer to write a new TOC that at least shows examples of drilling down to the details needed in the reference?
+	jcarreira	Yes, some of the WebWork pages for interceptors may ONLY have an include of the XWork page
+	vitorsouz	Sorry to return to the XWork/WebWork docs issue, in this case, we would have a XWork Interceptors section including XWork docs and then a WebWork-specific Interceptors section with WW stuff?
+	greg--	i'll be the 1st to leave - darn .. 4pm :d
+	jcarreira	ok, thanks for the help greg!
+	greg--	ur welcome :)
+	Patrick_	vitor: there would be a page, for example, in WebWork called PrepareInterceptor
+	greg--	bye everyone
+	|&lt;--	greg-- has left efnet ()
+	Patrick_	and it may simply just include XWork's PrepareInterceptor page
+	Patrick_	the key is that it includes it rather than linking to it
+	|&lt;--	jaybose has left efnet (Ping timeout: no data for 247 seconds)
+	vitorsouz	Hmmmm... Ok.
+	Patrick_	we have to be careful about links in the XWork docs though
+	--&gt;|	jaybose_ (~chatzilla@CPE-65-27-76-47.mn.res.rr.com) has joined #webwork
+	=-=	jaybose_ is now known as jaybose
+	Patrick_	however, I think that we can sort of think of these things after the initial docs are there
+	Patrick_	Jay, i'll update the chat log
+	vitorsouz	I'd volunteer to write the TOC, but I'm going out of town tomorrow, only returning Sunday. If you guys don't mind waiting for some time next week...
+	jcarreira	Jay, do you have time to work on the TOC?
+	jaybose	yes
+	jcarreira	Ok, you can put it under the WebWork 2.2 page on the wiki... it doesn't have to link to anything yet
+	Patrick_	http://wiki.opensymphony.com/display/WW/Temp+chat
+	vitorsouz	Seems like some people have different ideas in general for the doc structure, how about we schedule the next meeting and everyone writes a TOC exemplifying his own ideas and sends it to Patrick to put online for discussion?
+	Patrick_	vitor: i like that idea. and those who don't write one don't get as much of a say :)
+	jcarreira	:-)
+	vitorsouz	:)
+	shs96c	:)
+	jcarreira	ok, when are you back from your trip Vitor?
+	vitorsouz	Late saturday night. I could work on this sunday.
+	Patrick_	haha, sounds like we have a winner then. Let's schedule the next meeting time and call it a day
+	shs96c	Same time on Sunday?
+	Patrick_	Sunday is too early
+	shs96c	OK
+	Patrick_	i'd opt for sometime after Tuesday next week.
+	jcarreira	next wed?
+	Patrick_	same time next week?
+	nightfal	Same bat time, same bat channel?
+	shs96c	Fine by me
+	vitorsouz	Alright. Wednesday 9PM Eastern.
+	jcarreira	yep, sounds like a plan
+	nightfal	TOC == Table of Contents, yes?
+	Patrick_	yes
+	vitorsouz	Yes.
+	Patrick_	great! good work guys. this was a perfect meeting too -- 60 minutes and done :)
+	Patrick_	so next week we'll nail down the TOC and divide up responsibilities
+	jcarreira	yep
+	vitorsouz	Okidoki.
+	Patrick_	i'll post the final chat log and send out a note in the forums for people interested
+	Patrick_	see ya. good meeting
+	jcarreira	ok, sounds good
+	|&lt;--	jaybose has left efnet (Chatzilla 0.9.68.5 [Netscape 7.2/20040804])
+	vitorsouz	Good idea. Great work, everyone.
+	jcarreira	later
+</pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

@@ -1,0 +1,19 @@
+<tr>
+<td class="tdLabel"><label for="myId" class="label">myLabel:</label></td>
+<td>
+<script type="text/javascript" src="/webwork/richtexteditor/fckeditor.js"></script>
+<script>
+	var oFCKeditor_myId = new FCKeditor( 'myName' ) ;
+	oFCKeditor_myId.BasePath = '/some/base/path/' ;
+	oFCKeditor_myId.Height	= '100%' ;
+	oFCKeditor_myId.Width = '100%' ;
+	oFCKeditor_myId.ToolbarSet = 'MyToolBarSet' ;
+	oFCKeditor_myId.CheckBrowser = 'true' ;
+	oFCKeditor_myId.DisplayError = 'true' ;
+	oFCKeditor_myId.Value = 'This Is Some Text From The Stack' ;
+	oFCKeditor_myId.Config['AutoDetectLanguage'] = 'false' ;
+	oFCKeditor_myId.Config['DefaultLanguage'] = 'en' ;
+	oFCKeditor_myId.Create() ;
+</script>
+</td>
+</tr>

@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <title>WebWork 2 : 与Struts的比较</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : 与Struts的比较
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Jun 18, 2004 by <font color="#0050B2">plightbo</font>.
+				    </div>
+
+				    <p class="paragraph"><h2 style="margin: 4px 0px 4px 0px;" class="heading2"><a name="ComparisontoStruts-FeatureComparison"> 特性比较</a></h2></p><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th>特性</th><th>Struts</th><th>WebWork 1.x</th><th>WebWork 2.x</th></tr><tr class="table-odd"><td><b class="strong">Action classes</b></td><td><a name="ComparisontoStruts-1"/>Struts要求Action类继承一个抽象类. 这也说明了Struts的一个常见问题: 针对抽象类编程而不是接口.</td><td>Action必需实现webwork.Action接口. 还有其他接口可以实现其他服务, 如保存错误信息, 获取本地化文本等. ActionSupport类实现了其中的一些接口, 也可以用作基类. WebWork全部针对接口编程, 这样很容易插入你自己的实现.</td><td>与WebWork 1.x相同, Action必需实现com.opensymphony.xwork.Action接口, 还有一系列接口用于其他服务. WebWork2提供ActionSupport 实现这些接口.</td></tr><tr class="table-even"><td><b class="strong">线程模型</b></td><td>Struts的Action必须是线程安全的, 因为它仅使用一个示例处理全部请求. 这一限制导致Struts的Action执行过程中使用的任何资源必须是线程安全的或同步访问.</td><td>WebWork的Action每一个请求使用一个实例, 一次就不存在线程安全问题. 实践中, 每一次请求Servlet容器都会生成许多将被丢弃的对象, 多一个或几个对象并没有证明会带来性能问题或垃圾收集问题.</td><td>同上</td></tr><tr class="table-odd"><td><b class="strong">对Servlet的依赖性</b></td><td>Struts的Actions依赖于Servlets, 因为执行时使用(获取)了ServletRequest和ServletResponse(而不是HttpServletRequest和HttpServletResponse). 绑定Servlets(虽然不是HttpServlet)实际上就与Servlet容器绑定了, 而这种依赖关系并不需要. 例如, Servlet可以在Web环境之外运行, 但JMS就不能.</td><td>WebWork的Action没有绑定Web或其他任何容器. WebWork的action可以选择从ActionContext中获取request和response, 但这不是必须的并且仅当绝对必要时才是用, 这并不会与Web容器绑定.</td><td>同上</td></tr><tr class="table-even"><td><b class="strong">可测试性</b></td><td>已经有许多测试Struts应用的策略, 但主要障碍实际是Struts的Action与Web紧密的绑定在一起(获取Request和Response对象). 着导致人们经常在一个容器中测试Sstruts的Action, 这样做既缓慢而又无法进行单元测试. 有一个Junit的扩展包 : Struts TestCase (<a href="http://strutstestcase.sourceforge.net/" title="Visit page outside Confluence">&#104;ttp://strutstestcase.sourceforge.net/</a>)</td><td>WebWork的action可以通过实例化action, 设置属性并执行的方式进行测试</td><td>同上, 但重点在于反转控制(Inversion of Control)让测试变得更简单, 你可以在测试中设置一个实现服务接口的Mock对象进行测试, 而不需要设置服务注册表或使用单件(static singleton)</td></tr><tr class="table-odd"><td><b class="strong">FormBeans</b></td><td>Struts需要为每个表单使用FormBean, 这产生了大量的多余的类或者不得不使用DynaBean, 而这恰恰是这一限制的产物</td><td>WebWork 1.x允许直接使用Action的属性(也就是标准的Javabean属性), 属性可以包含丰富的对象类型甚至可以有自己的属性, 而这些属性都可以从Web页面中访问. WebWork也支持FormBean模式, 在&quot;<a href="http://wiki.opensymphony.com//display/WW1/Populate+Form+Bean+and+access+its+value" title="Populate Form Bean and access its value">WW1:Populate Form Bean and access its value</a>&quot;中有关一这部分的介绍</td><td>WebWork 2支持WebWork 1中的特性, 还加入了ModelDriven的Actions, 它允许使用丰富的对象类型或域对象作为form bean, 可以在Web页面中直接访问它的属性, 这要好于作为活动属性的子属性进行访问.</td></tr><tr class="table-even"><td><b class="strong">表达式语言</b></td><td>Struts 1.1集成了JSTL, 因此它使用JSTL EL. 该语言支持基本的对象图遍历, 但对集合和索引的属性的支持要弱一些.</td><td>WebWork 1.x拥有自己的表达式语言用以访问值栈. 对集合以及索引属性的支持很基本但很好. WebWork也可以直接与JSTL共同使用, 参见<a href="http://wiki.opensymphony.com//display/WW1/Using+JSTL+seamlessly+with+WebWork" title="Using JSTL seamlessly with WebWork">WW1:Using JSTL seamlessly with WebWork</a></td><td>WebWork 2使用<a href="http://wiki.opensymphony.com//display/XW/Ognl" title="Ognl">XW:Ognl</a>, 这是一个非常强大的表达式语言, 也可以访问值栈. Ognl对集合和索引属性的支持非常强大. Ognl还支持一些强大的特性如投射(projections, 对集合的每一个元素调用同一个方法并使用结果创建一个新的集合), 挑选(selections, 使用一个选择表达式过滤集合并返回一个子集), 列表构造和lambda表达式 (简化功能). Ognl还能访问静态方法, 静态字段和构造方法. WebWork2也能使用JSTL, 参见<a href="http://wiki.opensymphony.com//display/WW1/Using+JSTL+seamlessly+with+WebWork" title="Using JSTL seamlessly with WebWork">WW1:Using JSTL seamlessly with WebWork</a></td></tr><tr class="table-odd"><td><b class="strong">将值绑定到视图</b></td><td>Struts使用标准的JSP将对象绑定到pageContext, 这使得视图与formBean紧密耦合</td><td>WebWork设置了值栈, WebWork标签库可以从中十分灵活的动态查找所需的值, 而不需要将视图与数据类型紧密耦合. 这样就可以在很大的范围内复用视图.</td><td>同上</td></tr><tr class="table-even"><td><b class="strong">类型转换</b></td><td>Struts的FormBeans属性通常都是字符串. Struts使用Commons-Beanutils进行类型转换. 每个类使用一个转换器, 但不允许为每个实例配置不同的转换器. 获取一个有意义的类型转换错误并显示给用户也是很难做到的.</td><td>WebWork 1.x使用PropertyEditors进行类型转换. PropertyEditors针对类型而不是Action, 但字段错误信息可以加到活动的字段信息表中并自动显示给用户.</td><td>WebWork2使用Ognl进行类型转换, 并为基本类型提供了转换器. 类型转换缺省情况下使用上述转换器, 但也可以为每个类的每个字段指定转换器. 类型转换错误也有缺省错误信息但可以使用本地化机制设置每个字段的信息, 字段错误信息可以加到活动的字段信息表中并显示给用户.</td></tr><tr class="table-odd"><td><b class="strong">前/后处理模式</b></td><td>必须创建一个继承基类Action的类来作为Action前/后处理的代理, 这将导致类继承层次过深, 也可能因为单继承的限制而无能为力<em class="emphasis"><a href="#ComparisontoStruts-1" title="1 on Comparison to Struts">WW:Comparison to Struts#1</a></em></td><td>类继承</td><td>WebWork 2允许使用截取器模块化前/后处理. 拦截器可以通过配置动态添加, 两者之间没有任何耦合.</td></tr><tr class="table-even"><td><b class="strong">校验</b></td><td>Struts调用FormBean的validate()方法. Struts用户通常使用Commons Validation进行校验. 我对此不太了解, 因此仅提出几个问题: <br clear="all" />&#160;<br clear="all" /> 由于FormBean属性一般都是字符串, 某些校验方法是否会重复或无法做到? <br clear="all" />&#160;<br clear="all" /> Commons Validation是否能为同一个类设置不同的校验环境? (我已被告知可以做到, 这是好事) <br clear="all" />&#160;<br clear="all" /> Commons Validation能否使用为对象属性类定义的校验方式对子对象(sub-objects)进行校验?</td><td>WebWork1.x调用Action的 validate()方法, 你可以编写代码校验, 也可以调用外部校验框架(这显然与Sstruts相同)</td><td>WebWork2可以使用WebWork1.x和Struts的validate()方法, 还可以使用<a href="http://wiki.opensymphony.com//display/XW/Validation+Framework" title="Validation Framework">XW:校验框架</a>, 它由一个XWork截取器激活. Xwork校验框架允许用XML格式编写校验器, 可以为每个类提供一个缺省校验器并在不同的校验环境中使用定制校验器.Xwork校验框架由一个截取器激活因此与Action类完全解藕. 还可以使用VisitorFieldValidator将校验处理连接到子属性(sub-properties, [<i>与上文提到的子对象相同</i>).</td></tr><tr class="table-odd"><td><b class="strong">对Action执行过程的控制</b></td><td>以我的了解, Struts设置一个Action对象, 而你对执行的顺序几乎无法控制. 要改变这一点, 我认为<img class="rendericon" src="./icons/emoticons/help_16.gif" height="16" width="16" align="absmiddle" alt="" border="0"/>需要编写自己的Servlet来自行处理分发(dispatching)</td><td>由ActionFactory链控制Action创建和初始化的过程, 但需要编写一个类</td><td>在这以问题上WebWork 2的截取器栈十分有用. 设置Action的各方面功能都被转移到截取器中实现(如设置参数, 校验等), 因此你可以依据截取器的功能控制每一个Action的执行顺序. 例如你可能希望你的IOC框架在request参数设置之前完成Action配置, 反之亦然 - 也可以使用截取器栈对每个包或每个类进行控制.</td></tr></table><p class="paragraph"><h2 class="heading2"><a name="ComparisontoStruts-References"> 参考资料</a></h2></p><ul class="star">
+<li> <a href="http://www.mail-archive.com/opensymphony-webwork@lists.sourceforge.net/msg00995.html" title="Visit page outside Confluence">&#104;ttp://www.mail-archive.com/opensymphony-webwork@lists.sourceforge.net/msg00995.html</a> - 从开发者如何从Struts切换到WebWork的角度比较了Struts和WebWork 1.x</li>
+<li> <a href="http://www.mail-archive.com/opensymphony-webwork@lists.sourceforge.net/msg04700.html" title="Visit page outside Confluence">&#104;ttp://www.mail-archive.com/opensymphony-webwork@lists.sourceforge.net/msg04700.html</a> - 本文的草稿</li>
+</ul>
+<h2 class="heading2"><a name="ComparisontoStruts-Footnotes"> 脚注</a></h2>
+<ol>
+<li> <a name="ComparisontoStruts-1"></a> Struts用户已经为Struts创建了一个截取器框架的雏形(<a href="http://struts.sourceforge.net/saif/" title="Visit page outside Confluence">&#104;ttp://struts.sourceforge.net/saif/</a>). 它目前有一些严格的限制(不能进行&quot;包围(around)&quot;处理, 子允许前/后处理), 而且也不是Struts项目的一部分</li>
+</ol>
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

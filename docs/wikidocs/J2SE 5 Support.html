@@ -1,0 +1,208 @@
+<html>
+    <head>
+        <title>WebWork - 
+         5 Support
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="J2SE5Support-UsingJ2SE5%28%22Tiger%22%29supportwithWebWork"></a>Using J2SE 5 ("Tiger") support with WebWork</h1>
+<table cellpadding='5' width='85%' cellspacing='8px' class='infoMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/information.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Work in progress</b><br /><br/>
+This is a work in progress and not yet finished&#33; More complex examples will follow. For now, have a look at the unit tests within the xwork-tiger project path.</td></tr></table>
+<p>To use J2SE 5 support with WebWork, you have to add xwork-tiger.jar to your classpath.<br/>
+The xwork-tiger.jar can be obtained via the ivy repository and is located in the lib/tiger directory.</p>
+
+<h1><a name="J2SE5Support-InterceptorAnnotations"></a>Interceptor Annotations</h1>
+
+<p>To use these annotations, you have to specify the <a href="AnnotationWorkflowInterceptor.html" title="AnnotationWorkflowInterceptor">AnnotationWorkflowInterceptor</a> to your interceptor stack.</p>
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'> Annotation </th>
+<th class='confluenceTh'> Description </th>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="After Annotation.html" title="After Annotation">After Annotation</a> </td>
+<td class='confluenceTd'> Marks a action method that needs to be executed before the result. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Before Annotation.html" title="Before Annotation">Before Annotation</a> </td>
+<td class='confluenceTd'> Marks a action method that needs to be executed before the main action method. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="BeforeResult Annotation.html" title="BeforeResult Annotation">BeforeResult Annotation</a> </td>
+<td class='confluenceTd'> Marks a action method that needs to be executed before the result. </td>
+</tr>
+</tbody></table>
+
+<h1><a name="J2SE5Support-ValidationAnnotations"></a>Validation Annotations</h1>
+
+<p>If you want to use annotation based validation, you have to annotate the class or interface with <a href="Validation Annotation.html" title="Validation Annotation">Validation Annotation</a>.</p>
+
+<p>These are the standard validator annotations that come with XWork-tiger:</p>
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'> Annotation </th>
+<th class='confluenceTh'> Description </th>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="ConversionErrorFieldValidator Annotation.html" title="ConversionErrorFieldValidator Annotation">ConversionErrorFieldValidator Annotation</a> </td>
+<td class='confluenceTd'> Checks if there are any conversion errors for a field. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="DateRangeFieldValidator Annotation.html" title="DateRangeFieldValidator Annotation">DateRangeFieldValidator Annotation</a> </td>
+<td class='confluenceTd'> Checks that a date field has a value within a specified range. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="DoubleRangeFieldValidator Annotation.html" title="DoubleRangeFieldValidator Annotation">DoubleRangeFieldValidator Annotation</a> </td>
+<td class='confluenceTd'> Checks that a double field has a value within a specified range. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="EmailValidator Annotation.html" title="EmailValidator Annotation">EmailValidator Annotation</a> </td>
+<td class='confluenceTd'> Checks that a field is a valid e-mail address. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="ExpressionValidator Annotation.html" title="ExpressionValidator Annotation">ExpressionValidator Annotation</a> </td>
+<td class='confluenceTd'> Validates an expression. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="FieldExpressionValidator Annotation.html" title="FieldExpressionValidator Annotation">FieldExpressionValidator Annotation</a> </td>
+<td class='confluenceTd'> Uses an OGNL expression to perform its validator. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="IntRangeFieldValidator Annotation.html" title="IntRangeFieldValidator Annotation">IntRangeFieldValidator Annotation</a> </td>
+<td class='confluenceTd'> Checks that a numeric field has a value within a specified range. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="RegexFieldValidator Annotation.html" title="RegexFieldValidator Annotation">RegexFieldValidator Annotation</a> </td>
+<td class='confluenceTd'> Validates a regular expression for a field. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="RequiredFieldValidator Annotation.html" title="RequiredFieldValidator Annotation">RequiredFieldValidator Annotation</a> </td>
+<td class='confluenceTd'> Checks that a field is non-null. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="RequiredStringValidator Annotation.html" title="RequiredStringValidator Annotation">RequiredStringValidator Annotation</a> </td>
+<td class='confluenceTd'> Checks that a String field is not empty. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="StringLengthFieldValidator Annotation.html" title="StringLengthFieldValidator Annotation">StringLengthFieldValidator Annotation</a> </td>
+<td class='confluenceTd'> Checks that a String field is of the right length. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="StringRegexValidator Annotation.html" title="StringRegexValidator Annotation">StringRegexValidator Annotation</a> </td>
+<td class='confluenceTd'>&nbsp;</td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="UrlValidator Annotation.html" title="UrlValidator Annotation">UrlValidator Annotation</a> </td>
+<td class='confluenceTd'> Checks that a field is a valid URL. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Validation Annotation.html" title="Validation Annotation">Validation Annotation</a> </td>
+<td class='confluenceTd'> Marker annotation for validation at Type level. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Validations Annotation.html" title="Validations Annotation">Validations Annotation</a> </td>
+<td class='confluenceTd'> Used to group validation annotations. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="VisitorFieldValidator Annotation.html" title="VisitorFieldValidator Annotation">VisitorFieldValidator Annotation</a> </td>
+<td class='confluenceTd'>&nbsp;</td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="CustomValidator Annotation.html" title="CustomValidator Annotation">CustomValidator Annotation</a> </td>
+<td class='confluenceTd'> Use this annotation for your custom validator types. </td>
+</tr>
+</tbody></table>
+
+<h1><a name="J2SE5Support-TypeConversionAnnotations"></a>Type Conversion Annotations</h1>
+
+<p>If the xwork-tigerjar is added to the classpath, you will directly have type conversion support for Maps and Collections using generics.</p>
+
+<p>In short, instead of specifying the types found in collections and maps as documented in <a href="Type Conversion.html" title="Type Conversion">Type Conversion</a>, <b>the  collection's generic type is used</b>. This means you most likely don't need any <b>ClassName-conversion.properties</b> files.</p>
+
+<p>If you want to use annotation based type conversion, you have to annotate the class or interface with the <a href="Conversion Annotation.html" title="Conversion Annotation">Conversion Annotation</a>.</p>
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'> Annotation </th>
+<th class='confluenceTh'> Description </th>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Conversion Annotation.html" title="Conversion Annotation">Conversion Annotation</a> </td>
+<td class='confluenceTd'> Marker annotation for type conversions at Type level. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="CreateIfNull Annotation.html" title="CreateIfNull Annotation">CreateIfNull Annotation</a> </td>
+<td class='confluenceTd'> For Collection and Map types: Create the types within the Collection or Map, if null. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Element Annotation.html" title="Element Annotation">Element Annotation</a> </td>
+<td class='confluenceTd'> For Generic types: Specify the element type for Collection types and Map values. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="Key Annotation.html" title="Key Annotation">Key Annotation</a> </td>
+<td class='confluenceTd'> For Generic types: Specify the key type for Map keys. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="KeyProperty Annotation.html" title="KeyProperty Annotation">KeyProperty Annotation</a> </td>
+<td class='confluenceTd'> For Generic types: Specify the key property name value. </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <a href="TypeConversion Annotation.html" title="TypeConversion Annotation">TypeConversion Annotation</a> </td>
+<td class='confluenceTd'> Used for class and application wide conversion rules. </td>
+</tr>
+</tbody></table>
+
+<h1><a name="J2SE5Support-CreateClassNameconversion.propertiesvia%22antapt%22target"></a>Create ClassName-conversion.properties via "<b>ant apt</b>" target</h1>
+
+<p>This is an example for the apt ant target:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;target name=<span class="code-quote">"apt"</span>&gt;</span>
+        <span class="code-tag">&lt;mkdir dir=<span class="code-quote">"${build}/generated"</span>/&gt;</span>
+
+        <span class="code-tag">&lt;path id=<span class="code-quote">"classpath"</span>&gt;</span>
+            <span class="code-tag">&lt;pathelement path=<span class="code-quote">"${basedir}/build/java"</span>/&gt;</span>
+            <span class="code-tag">&lt;pathelement path=<span class="code-quote">"${basedir}/build/test"</span>/&gt;</span>
+            <span class="code-tag"><span class="code-comment">&lt;!-- xwork.jar and xwork-tiger.jar must be in one of the following lib dirs --&gt;</span></span>
+            <span class="code-tag">&lt;fileset dir=<span class="code-quote">"${basedir}/lib/build"</span> includes=<span class="code-quote">"*.jar"</span>/&gt;</span>
+            <span class="code-tag">&lt;fileset dir=<span class="code-quote">"${basedir}/lib/default"</span> includes=<span class="code-quote">"*.jar"</span>/&gt;</span>
+            <span class="code-tag">&lt;fileset dir=<span class="code-quote">"${basedir}/lib/spring"</span> includes=<span class="code-quote">"*.jar"</span>/&gt;</span>
+        <span class="code-tag">&lt;/path&gt;</span>
+
+        <span class="code-tag">&lt;property name=<span class="code-quote">"pclasspath"</span> refid=<span class="code-quote">"classpath"</span>/&gt;</span>
+
+        <span class="code-tag"><span class="code-comment">&lt;!-- Change the includes attribute value to match your annotated java files --&gt;</span></span>
+        <span class="code-tag">&lt;fileset id=<span class="code-quote">"sources"</span> dir=<span class="code-quote">"."</span> includes=<span class="code-quote">"src/test/**/*.java"</span> /&gt;</span>
+
+        <span class="code-tag">&lt;pathconvert pathsep=<span class="code-quote">" "</span> property=<span class="code-quote">"sourcefiles"</span> refid=<span class="code-quote">"sources"</span>/&gt;</span>
+
+        <span class="code-tag">&lt;echo&gt;</span>
+
+            CLASSPATH ${pclasspath}
+
+            SOURCES: ${sourcefiles}
+
+        <span class="code-tag">&lt;/echo&gt;</span>
+
+        <span class="code-tag">&lt;exec executable=<span class="code-quote">"apt"</span> &gt;</span>
+            <span class="code-tag">&lt;arg value=<span class="code-quote">"-s"</span>/&gt;</span>
+            <span class="code-tag">&lt;arg value=<span class="code-quote">"${build}/generated"</span>/&gt;</span>
+            <span class="code-tag">&lt;arg value=<span class="code-quote">"-classpath"</span>/&gt;</span>
+            <span class="code-tag">&lt;arg pathref=<span class="code-quote">"classpath"</span>/&gt;</span>
+            <span class="code-tag">&lt;arg value=<span class="code-quote">"-nocompile"</span>/&gt;</span>
+            <span class="code-tag">&lt;arg value=<span class="code-quote">"-factory"</span>/&gt;</span>
+            <span class="code-tag">&lt;arg value=<span class="code-quote">"com.opensymphony.xwork.apt.XWorkProcessorFactory"</span>/&gt;</span>
+            <span class="code-tag">&lt;arg line=<span class="code-quote">"${sourcefiles}"</span>/&gt;</span>
+        <span class="code-tag">&lt;/exec&gt;</span>
+    <span class="code-tag">&lt;/target&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

@@ -1,0 +1,97 @@
+<html>
+    <head>
+        <title>WebWork 2 : Resources Available to Velocity Views</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : Resources Available to Velocity Views
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Dec 10, 2004 by <font color="#0050B2">sutter2k</font>.
+				    </div>
+
+				    <p class="paragraph"><h3 style="margin: 4px 0px 4px 0px;" class="heading3"><a name="ResourcesAvailabletoVelocityViews-Summary"> Summary</a></h3>
+Here&#039;s the quick summary of the references available to Velocity templates that are kicked-off from WebWork:</p><ul class="star">
+<li> $actionInstanceVariable</li>
+<li> $req - the current HttpServletRequest</li>
+<li> $res - the current HttpServletResponse</li>
+<li> $stack - the current OgnlValueStack</li>
+<li> $ognl - an OgnlTool</li>
+<li> $webwork - an instance of WebWorkUtil</li>
+<li> $action - the current WebWork action</li>
+<li> $taglib (or something like that) - access to the JSP tag library via Velocity macros (!!)</li>
+</ul>
+<h3 class="heading3"><a name="ResourcesAvailabletoVelocityViews-Detail"> Detail</a></h3>
+<br clear="all" />
+<b class="strong">$actionInstanceVariable</b><br/>
+Each of your action class instance variables (for which you&#039;ve written a getter method) are available in your Velocity template as $actionInstanceVariableName.<p class="paragraph">In other words, if you have an instance variable in your Action class:
+<div class="code"><div class="codeContent">
+<pre><span class="java&#45;keyword">public</span> class ProcessEditTableRowAction <span class="java&#45;keyword">extends</span> ActionSupport &#123;&#10;  <span class="java&#45;keyword">private</span>&#160;<span class="java&#45;object">String</span> fooString;</pre>
+</div></div></p>And you have a getter method for that string (in that same ActionClass):<br/>
+
+<div class="code"><div class="codeContent">
+<pre><span class="java&#45;keyword">public</span>&#160;<span class="java&#45;object">String</span> getFooString() &#123; <span class="java&#45;keyword">return</span> fooString; &#125;</pre>
+</div></div><p class="paragraph">Then in your Velocity template you can retrieve the value of that String by simply refering to:
+<div class="code"><div class="codeContent">
+<pre>$fooString</pre>
+</div></div></p>Note: For the most part you don&#039;t have to worry about lettercase.  If your Velocity reference is $fooString (note the lowercase &quot;f&quot; in foo) and your getter method is called getFooString (note uppercase &quot;F&quot; in foo) then WebWork does the &quot;right thing&quot; and uses getFooString() to retrieve the value of $fooString.<p class="paragraph">But things can get weird is some circumstances.  <em class="emphasis">TODO:</em> At least I think they can get weird.  At one point, I remember having a problem with the lettercase of Velocity variable names and the corresponding getter methods that was being used to lookup the value.  But I can&#039;t remember exactly how the problem manifested so can&#039;t provide an example.  Need to do that.</p><em class="emphasis">TODO:</em> I&#039;m curious what takes care of translating the $variableName references to method calls on the Action object&#039;s getters.  Where does that happen?<p class="paragraph"><br clear="all" />
+<b class="strong">$req</b><br/>
+The current HttpServletRequest created and managed by your Servlet environment (Tomcat, Resin, etc.).</p><br clear="all" />
+<b class="strong">$res</b><br/>
+The current HttpServletResponse created and managed by your Servlet environment (Tomcat, Resin, etc.). <p class="paragraph"><br clear="all" />
+<b class="strong">$stack</b><br/>
+The OGNL value stack. (<a href="http://www.opensymphony.com/xwork/api/com/opensymphony/xwork/util/OgnlValueStack.html" title="Visit page outside Confluence">API Docs</a>)</p><em class="emphasis">TODO:</em> Talk about what&#039;s actually <b class="strong">on</b> the stack.  Doesn&#039;t do a whole lot of good to know it&#039;s there without knowing what&#039;s on it.<p class="paragraph"><br clear="all" />
+<b class="strong">$ognl</b><br/>
+A reference to an OGNL tool. (<a href="http://www.opensymphony.com/webwork/api/com/opensymphony/webwork/views/jsp/ui/OgnlTool.html" title="Visit page outside Confluence">API Docs</a>)<br/>
+(<a href="http://wiki.opensymphony.com/display/XW/Ognl" title="Visit page outside Confluence">See OGNL Basics</a>)</p>At the time of this writing, there are no docs for that object, so if you really want to know how it works, be a <a href="http://en.wikipedia.org/wiki/Jedi" title="Visit page outside Confluence">Jedi</a> and &quot;use the source&quot;.  (The CVS repository is browsable here: <a href="https://webwork.dev.java.net/source/browse/webwork/src/java" title="Visit page outside Confluence">&#104;ttps://webwork.dev.java.net/source/browse/webwork/src/java</a>)<p class="paragraph"><br clear="all" />
+<em class="emphasis">Tip:</em><br/>
+Jason/Patrick note that one nifty thing you can do with this tool is to call static class methods. That&#039;s rather handy since Velocity doesn&#039;t offer access to class variables or methods, but only to instantiate objects that have been placed in the Velocity Context.  So you can&#039;t normally do things like Math.random().</p>To call a class method, from within Velocity template, using the OGNL tool, you do this:<br/>
+
+<div class="code"><div class="codeContent">
+<pre>$ognl.findValue(<span class="java&#45;quote">&quot;&#64;com.acme.FooClass&#64;FOO&quot;</span>)</pre>
+</div></div><p class="paragraph"><em class="emphasis">TODO:</em> the original email detailing the above example used $value to refer to the OGNL tool, not $ognl.  But the source indicates it&#039;s &quot;$ognl&quot; that&#039;s shared with the context.  Which is right?</p><br clear="all" />
+<b class="strong">$webwork</b><br/>
+A reference to the VelocityWebWorkUtil class. (<a href="http://www.opensymphony.com/webwork/api/com/opensymphony/webwork/util/WebWorkUtil.html" title="Visit page outside Confluence">API Docs</a>)<p class="paragraph">At the time of this writing, the API docs for this object are effectively blank, so if you really want to know how it works, be a <a href="http://en.wikipedia.org/wiki/Jedi" title="Visit page outside Confluence">Jedi</a> and &quot;use the source&quot;.  (The CVS repository is browsable here: <a href="https://webwork.dev.java.net/source/browse/webwork/src/java" title="Visit page outside Confluence">&#104;ttps://webwork.dev.java.net/source/browse/webwork/src/java</a>)</p><br clear="all" />
+<em class="emphasis">Tip:</em><br/>
+Mathew notes that the VelocityWebWorkUtil class can instantiate other objects for you.  This, too, is very handy since Velocity is normally constrained to only the objects that have been explicitely shared with it&#039;s context (and not something you have control over when using Velocity templates kicked off by WebWork).<p class="paragraph">To instantiate an object from a Velocity page (that&#039;s been kicked off by WebWork, of course) do this:</p><div class="code"><div class="codeContent">
+<pre>#set($object = $webwork.bean(<span class="java&#45;quote">&quot;com.foo.ClassName&quot;</span>))</pre>
+</div></div><p class="paragraph">This technique can be particularly handy for grabbing a reference to one of the <a href="http://jakarta.apache.org/velocity/tools/" title="Visit page outside Confluence">VelocityTools</a> objects. (The VelocityTools are not included with WebWork, you&#039;ll need to go grab the lib and put it in your classpath if you want to use $webwork.bean() to grab references to the tool objects.)</p>(Note: If you&#039;re rumaging through the source, the source-code for the $webwork.bean() method above is really in VelocityWebWorkUtil&#039;s parent class WebWorkUtil.)<p class="paragraph"><br clear="all" />
+<b class="strong">$action</b><br/>
+A reference to the action context that called this template.  <em class="emphasis">TODO:</em> Not really sure what&#039;s in there or what it&#039;s good for.  Should probably note that.</p><br clear="all" />
+<b class="strong">#tag</b> and <b class="strong">#bodytag</b>#<p class="paragraph">Provides a way of using a JSP taglib from velocity.<br/>
+Many, but not all taglibs can be used.</p>ex:
+<div class="code"><div class="codeContent">
+<pre>#tag( Text <span class="java&#45;quote">&quot;name=&#039;title.edit&#039;&quot;</span> )</pre>
+</div></div><br/>
+provides a way to uses the &lt;ww:text name=&quot;title.edit&quot; /&gt; tag from velocity.<p class="paragraph">Note the &lt;ww:text /&gt; is probably not that useful from velocity since 
+<div class="code"><div class="codeContent">
+<pre>$action.getText(&#039;title.edit&#039;)</pre>
+</div></div> would perform the same thing.</p>see <a href="UI tags.html#UITags-WW%2FUI%2BTags" title="WW/UI+Tags on UI Tags">UI tags#WW/UI+Tags</a> for more information about webworks tags.  Many provide equivalent velocity examples.  Usage with other tags could be infered based on examples given. <br/>
+
+
+
+
+
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

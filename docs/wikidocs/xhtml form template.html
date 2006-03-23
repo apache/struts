@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <title>WebWork - 
+        xhtml form template
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>The xhtml form template sets up the wrapping table around all the other <a href="xhtml theme.html" title="xhtml theme">xhtml theme</a> form elements. In addition to creating this wrapping table, the opening and closing templates also, if the <em>validate</em> parameter is set to true, enable <a href="Pure JavaScript Client Side Validation.html" title="Pure JavaScript Client Side Validation">Pure JavaScript Client Side Validation</a>. See the <b>form.ftl</b> contents:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;#include <span class="code-quote">"/${parameters.templateDir}/xhtml/form-validate.ftl"</span> /&gt;</span>
+<span class="code-tag">&lt;#include <span class="code-quote">"/${parameters.templateDir}/simple/form.ftl"</span> /&gt;</span>
+<span class="code-tag">&lt;table class=<span class="code-quote">"${parameters.cssClass?default('wwFormTable')?html}"</span>&lt;#rt/&gt;</span>
+<span class="code-tag">&lt;#if parameters.cssStyle?exists&gt;</span> style=<span class="code-quote">"${parameters.cssStyle?html}"</span><span class="code-tag">&lt;#rt/&gt;</span>
+<span class="code-tag">&lt;/#if&gt;</span>
+&gt;</pre>
+</div></div>
+
+<p>The closing template, <b>form-close.ftl</b>:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;/table&gt;</span>
+<span class="code-tag">&lt;#include <span class="code-quote">"/${parameters.templateDir}/simple/form-close.ftl"</span> /&gt;</span>
+<span class="code-tag">&lt;#include <span class="code-quote">"/${parameters.templateDir}/xhtml/form-close-validate.ftl"</span> /&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

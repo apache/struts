@@ -1,0 +1,78 @@
+<XDtClass:ifHasClassTag tagName="ww:tag">
+
+<html>
+<head>
+<title>&lt;ww:<XDtClass:classTagValue tagName="ww:tag" paramName="name"/> /&gt;</title>
+</head>
+
+<body>
+
+<h1>Tag Name: &lt;ww:<XDtClass:classTagValue tagName="ww:tag" paramName="name"/> /&gt;</h1>
+
+<h2>Description</h2>
+<p>
+
+<XDtClass:ifHasClassTag tagName="ww:tag" paramName="description">
+<XDtClass:classTagValue tagName="ww:tag" paramName="description"/>
+</XDtClass:ifHasClassTag>
+
+<XDtClass:ifDoesntHaveClassTag tagName="ww:tag" paramName="description">
+<b>No Description</b>
+</XDtClass:ifDoesntHaveClassTag>
+
+</p>
+
+<p>
+<XDtClass:classCommentText no-comment-signs="true"/>
+</p>
+
+<h2>Attributes</h2>
+<p>
+
+<!-- START SNIPPET: tagattributes -->
+<table width="100%">
+<tr>
+
+<th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th>
+
+</tr>
+
+<XDtMethod:forAllMethods>
+
+<XDtMethod:ifHasMethodTag tagName="ww:tagattribute">
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top"><XDtMethod:propertyName/></td>
+
+<!-- Required -->
+<td align="left" valign="top"><XDtMethod:ifHasMethodTag tagName="ww:tagattribute" paramName="required"><XDtMethod:ifMethodTagValueEquals tagName="ww:tagattribute" paramName="required" value="true"><b><XDtMethod:methodTagValue tagName="ww:tagattribute" paramName="required"/></b></XDtMethod:ifMethodTagValueEquals><XDtMethod:ifMethodTagValueNotEquals tagName="ww:tagattribute" paramName="required" value="true"><XDtMethod:methodTagValue tagName="ww:tagattribute" paramName="required"/></XDtMethod:ifMethodTagValueNotEquals></XDtMethod:ifHasMethodTag><XDtMethod:ifDoesntHaveMethodTag tagName="ww:tagattribute" paramName="required">false</XDtMethod:ifDoesntHaveMethodTag></td>
+
+<!-- Default -->
+<td align="left" valign="top"><XDtMethod:ifHasMethodTag tagName="ww:tagattribute" paramName="default"><XDtMethod:methodTagValue tagName="ww:tagattribute" paramName="default"/></XDtMethod:ifHasMethodTag><XDtMethod:ifDoesntHaveMethodTag tagName="ww:tagattribute" paramName="default">&nbsp;</XDtMethod:ifDoesntHaveMethodTag></td>
+
+<!-- Type -->
+<td align="left" valign="top"><XDtMethod:ifHasMethodTag tagName="ww:tagattribute" paramName="type"><XDtMethod:methodTagValue tagName="ww:tagattribute" paramName="type"/></XDtMethod:ifHasMethodTag><XDtMethod:ifDoesntHaveMethodTag tagName="ww:tagattribute" paramName="type">Object/String</XDtMethod:ifDoesntHaveMethodTag></td>
+
+<!-- Description -->
+<td align="left" valign="top"><XDtMethod:ifHasMethodTag tagName="ww:tagattribute" paramName="description"><XDtMethod:methodTagValue tagName="ww:tagattribute" paramName="description"/></XDtMethod:ifHasMethodTag><XDtMethod:ifDoesntHaveMethodTag tagName="ww:tagattribute" paramName="description"><XDtMethod:methodComment no-comment-signs="true"/></XDtMethod:ifDoesntHaveMethodTag></td>
+
+</tr>
+</XDtMethod:ifHasMethodTag>
+
+</XDtMethod:forAllMethods>
+
+</table>
+<!-- END SNIPPET: tagattributes -->
+
+</p>
+<p>
+<center><a href="index.html">Back to Taglib Index</a></center>
+</p>
+</body>
+</html>
+
+</XDtClass:ifHasClassTag>

@@ -1,0 +1,519 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Validation
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>WebWork relies on XWork validation framework to enable the application of input validation rules to your Actions before they are executed.  This section only provides the bare minimum to get you started and focuses on WebWork's extension of the XWork validators to support client-side validation.<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><br/>
+There is also an option for Client Side (Javascript and/or AJAX) based validation, please see <a href="Client Side Validation.html" title="Client Side Validation">Client Side Validation</a> for more information.</td></tr></table><br/>
+&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<h2><a name="Validation-Examples"></a>Examples</h2>
+
+<ol>
+	<li><a href="Basic Validation.html" title="Basic Validation">Basic Validation</a></li>
+	<li><a href="Client Validation.html" title="Client Validation">Client Validation</a></li>
+	<li><a href="AJAX Validation.html" title="AJAX Validation">AJAX Validation</a></li>
+	<li><a href="Using Field Validators.html" title="Using Field Validators">Using Field Validators</a></li>
+	<li><a href="Using Non Field Validators.html" title="Using Non Field Validators">Using Non Field Validators</a></li>
+	<li><a href="Using Visitor Field Validator.html" title="Using Visitor Field Validator">Using Visitor Field Validator</a></li>
+</ol>
+
+
+<h2><a name="Validation-ValidatorsavailableinWebWork"></a>Validators available in WebWork</h2>
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Note</b><br /><br/>
+When using a Field Validator, Field Validator Syntax is ALWAYS preferable than using the Plain Validator Syntax as it facilitates grouping of field-validators according to fields. This is very handy especially if a field needs to have many field-validators which is almost always the case. Examples: validatortypes</td></tr></table>
+<p>&nbsp;</p>
+<ol>
+	<li><a href="required validator.html" title="required validator">required validator</a></li>
+	<li><a href="requiredstring validator.html" title="requiredstring validator">requiredstring validator</a></li>
+	<li><a href="int validator.html" title="int validator">int validator</a></li>
+	<li><a href="date validator.html" title="date validator">date validator</a></li>
+	<li><a href="expression validator.html" title="expression validator">expression validator</a></li>
+	<li><a href="fieldexpression validator.html" title="fieldexpression validator">fieldexpression validator</a></li>
+	<li><a href="email validator.html" title="email validator">email validator</a></li>
+	<li><a href="url validator.html" title="url validator">url validator</a></li>
+	<li><a href="visitor validator.html" title="visitor validator">visitor validator</a></li>
+	<li><a href="conversion validator.html" title="conversion validator">conversion validator</a></li>
+	<li><a href="stringlength validator.html" title="stringlength validator">stringlength validator</a></li>
+	<li><a href="regex validator.html" title="regex validator">regex validator</a></li>
+</ol>
+
+
+<h2><a name="Validation-RegisteringValidators"></a>Registering Validators</h2>
+
+<p>Validation rules are handled by validators, which must be registered with 
+the ValidatorFactory (using the registerValidator method). The simplest way to do so is to add a file name 
+validators.xml in the root of the classpath (/WEB-INF/classes) that declares 
+all the validators you intend to use. </p>
+<p>&nbsp;</p>
+
+<p>This list declares all the validators that comes with WebWork.</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;validators&gt;</span>
+    <span class="code-tag">&lt;validator name=<span class="code-quote">"required"</span> class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.RequiredFieldValidator"</span>/&gt;</span>
+    <span class="code-tag">&lt;validator name=<span class="code-quote">"requiredstring"</span> class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.RequiredStringValidator"</span>/&gt;</span>
+    <span class="code-tag">&lt;validator name=<span class="code-quote">"int"</span> class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.IntRangeFieldValidator"</span>/&gt;</span>
+    <span class="code-tag">&lt;validator name=<span class="code-quote">"double"</span> class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.DoubleRangeFieldValidator"</span>/&gt;</span>
+    <span class="code-tag">&lt;validator name=<span class="code-quote">"date"</span> class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.DateRangeFieldValidator"</span>/&gt;</span>
+    <span class="code-tag">&lt;validator name=<span class="code-quote">"expression"</span> class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.ExpressionValidator"</span>/&gt;</span>
+    <span class="code-tag">&lt;validator name=<span class="code-quote">"fieldexpression"</span> class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.FieldExpressionValidator"</span>/&gt;</span>
+    <span class="code-tag">&lt;validator name=<span class="code-quote">"email"</span> class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.EmailValidator"</span>/&gt;</span>
+    <span class="code-tag">&lt;validator name=<span class="code-quote">"url"</span> class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.URLValidator"</span>/&gt;</span>
+    <span class="code-tag">&lt;validator name=<span class="code-quote">"visitor"</span> class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.VisitorFieldValidator"</span>/&gt;</span>
+    <span class="code-tag">&lt;validator name=<span class="code-quote">"conversion"</span> class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.ConversionErrorFieldValidator"</span>/&gt;</span>
+    <span class="code-tag">&lt;validator name=<span class="code-quote">"stringlength"</span> class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.StringLengthFieldValidator"</span>/&gt;</span>
+    <span class="code-tag">&lt;validator name=<span class="code-quote">"regex"</span> class=<span class="code-quote">"com.opensymphony.xwork.validator.validators.RegexFieldValidator"</span>/&gt;</span>
+<span class="code-tag">&lt;/validators&gt;</span></pre>
+</div></div>
+<p>&nbsp;<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Note</b><br />
+<p>validators.xml if being defined should be available in the classpath. However 
+this is not necessary, if no custom validator is needed. Webwork will automatically 
+picked up a predefined sets of validators defined in 
+com/opensymphony/xwork/validator/validators/default.xml packaged together 
+in xwork jar file that comes with webwork distribution. See ValidatorFactory 
+static block for details.</p>
+<p>&nbsp;</p></td></tr></table><br/>
+&nbsp;<table cellpadding='5' width='85%' cellspacing='8px' class='warningMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/forbidden.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Warning</b><br />
+<p>If custom validator is being defined and a validators.xml is created and 
+place in the classpath, do remember to copy all the other pre-defined validators 
+that is needed into the validators.xml as if not they will not be registered. 
+Once a validators.xml is detected in the classpath, the default one 
+(com/opensymphony/xwork/validator/validators/default.xml) will not be loaded. 
+It is only loaded when a custom validators.xml cannot be found in the classpath.
+ Be careful.</p>
+<p>&nbsp;</p></td></tr></table><br/>
+&nbsp;</p>
+
+<h2><a name="Validation-TurningonValidation"></a>Turning on Validation</h2>
+
+<p>The default validationWorkflowStack already includes this.<br/>
+All that is required to enable validation for an Action is to put the 
+ValidationInterceptor in the interceptor refs of the action (see xwork.xml) like so:</p>
+<p>&nbsp;</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;interceptor name=<span class="code-quote">"validator"</span> class=<span class="code-quote">"com.opensymphony.xwork.validator.ValidationInterceptor"</span>/&gt;</span></pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>Note: The default <b>validationWorkflowStack</b> already includes this.</p>
+
+<h2><a name="Validation-ValidatorScopes"></a>Validator Scopes</h2>
+
+<p>Field validators, as the name indicate, act on single fields accessible through an action. 
+A validator, in contrast, is more generic and can do validations in the full action context, 
+involving more than one field (or even no field at all) in validation rule.
+Most validations can be defined on per field basis. This should be preferred over 
+non-field validation whereever possible, as field validator messages are bound to the 
+related field and will be presented next to the corresponding input element in the 
+respecting view.</p>
+<p>&nbsp;</p>
+<p>Non-field validators only add action level messages. Non-field validators 
+are mostly domain specific and therefore often custom implementations. 
+The most important standard non-field validator provided by XWork/WebWork 
+is ExpressionValidator.</p>
+<p>&nbsp;</p>
+
+<h3><a name="Validation-Notes"></a>Notes</h3>
+
+<p>Non-field validators takes precedence over field validators 
+regardless of the order they are defined in *-validation.xml. If a non-field 
+validator is short-circuited, it will causes its non-field validator to not 
+being executed. See validation framework documentation for more info.</p>
+<p>&nbsp;</p>
+
+<h2><a name="Validation-DefiningValidationRules"></a>Defining Validation Rules</h2>
+
+<p>Validation rules can be specified:
+<ol>
+ <li> Per Action class: in a file named ActionName-validation.xml</li>
+ <li> Per Action alias: in a file named ActionName-alias-validation.xml</li>
+ <li> Inheritance hierarchy and interfaces implemented by Action class: 
+ WebWork searches up the inheritance tree of the action to find default 
+ validations for parent classes of the Action and interfaces implemented</li>
+</ol>
+Here is an example for SimpleAction-validation.xml:</p>
+<p>&nbsp;</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml">&lt;!DOCTYPE validators PUBLIC <span class="code-quote">"-//OpenSymphony Group//XWork Validator 1.0.2//EN"</span>
+       <span class="code-quote">"http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd"</span>&gt;
+<span class="code-tag">&lt;validators&gt;</span>
+  <span class="code-tag">&lt;field name=<span class="code-quote">"bar"</span>&gt;</span>
+      <span class="code-tag">&lt;field-validator type=<span class="code-quote">"required"</span>&gt;</span>
+          <span class="code-tag">&lt;message&gt;</span>You must enter a value for bar.<span class="code-tag">&lt;/message&gt;</span>
+      <span class="code-tag">&lt;/field-validator&gt;</span>
+      <span class="code-tag">&lt;field-validator type=<span class="code-quote">"int"</span>&gt;</span>
+          <span class="code-tag">&lt;param name=<span class="code-quote">"min"</span>&gt;</span>6<span class="code-tag">&lt;/param&gt;</span>
+          <span class="code-tag">&lt;param name=<span class="code-quote">"max"</span>&gt;</span>10<span class="code-tag">&lt;/param&gt;</span>
+          <span class="code-tag">&lt;message&gt;</span>bar must be between ${min} and ${max}, current value is ${bar}.<span class="code-tag">&lt;/message&gt;</span>
+      <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;/field&gt;</span>
+  <span class="code-tag">&lt;field name=<span class="code-quote">"bar2"</span>&gt;</span>
+      <span class="code-tag">&lt;field-validator type=<span class="code-quote">"regex"</span>&gt;</span>
+          <span class="code-tag">&lt;param name=<span class="code-quote">"regex"</span>&gt;</span>[0-9],[0-9]<span class="code-tag">&lt;/param&gt;</span>
+          <span class="code-tag">&lt;message&gt;</span>The value of bar2 must be in the format <span class="code-quote">"x, y"</span>, where x and y are between 0 and 9<span class="code-tag">&lt;/message&gt;</span>
+     <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;/field&gt;</span>
+  <span class="code-tag">&lt;field name=<span class="code-quote">"date"</span>&gt;</span>
+      <span class="code-tag">&lt;field-validator type=<span class="code-quote">"date"</span>&gt;</span>
+          <span class="code-tag">&lt;param name=<span class="code-quote">"min"</span>&gt;</span>12/22/2002<span class="code-tag">&lt;/param&gt;</span>
+          <span class="code-tag">&lt;param name=<span class="code-quote">"max"</span>&gt;</span>12/25/2002<span class="code-tag">&lt;/param&gt;</span>
+          <span class="code-tag">&lt;message&gt;</span>The date must be between 12-22-2002 and 12-25-2002.<span class="code-tag">&lt;/message&gt;</span>
+      <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;/field&gt;</span>
+  <span class="code-tag">&lt;field name=<span class="code-quote">"foo"</span>&gt;</span>
+      <span class="code-tag">&lt;field-validator type=<span class="code-quote">"int"</span>&gt;</span>
+          <span class="code-tag">&lt;param name=<span class="code-quote">"min"</span>&gt;</span>0<span class="code-tag">&lt;/param&gt;</span>
+          <span class="code-tag">&lt;param name=<span class="code-quote">"max"</span>&gt;</span>100<span class="code-tag">&lt;/param&gt;</span>
+          <span class="code-tag">&lt;message key=<span class="code-quote">"foo.range"</span>&gt;</span>Could not find foo.range!<span class="code-tag">&lt;/message&gt;</span>
+      <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;/field&gt;</span>
+  <span class="code-tag">&lt;validator type=<span class="code-quote">"expression"</span>&gt;</span>
+      <span class="code-tag">&lt;param name=<span class="code-quote">"expression"</span>&lt;foo &lt; bar&lt;/param&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>Foo must be greater than Bar. Foo = ${foo}, Bar = ${bar}.<span class="code-tag">&lt;/message&gt;</span>
+  <span class="code-tag">&lt;/validator&gt;</span>
+<span class="code-tag">&lt;/validators&gt;</span></pre>
+</div></div>
+<p>&nbsp;</p>
+<p>Here we can see the configuration of validators for the SimpleAction class. 
+Validators (and field-validators) must have a type attribute, which refers 
+to a name of an Validator registered with the ValidatorFactory as above. 
+Validator elements may also have &lt;param&gt; elements with name and value attributes 
+to set arbitrary parameters into the Validator instance. See below for discussion 
+of the message element.</p>
+<p>&nbsp;</p>
+<p><p>Each Validator or Field-Validator element must define one message element inside 
+the validator element body. The message element has 1 attributes, key which is not 
+required. The body of the message tag is taken as the default message which should 
+be added to the Action if the validator fails.Key gives a message key to look up 
+in the Action's ResourceBundles using getText() from LocaleAware if the Action 
+implements that interface (as ActionSupport does). This provides for Localized 
+messages based on the Locale of the user making the request (or whatever Locale 
+you've set into the LocaleAware Action). After either retrieving the message from 
+the ResourceBundle using the Key value, or using the Default message, the current 
+Validator is pushed onto the ValueStack, then the message is parsed for \${...} 
+sections which are replaced with the evaluated value of the string between the 
+\${ and }. This allows you to parameterize your messages with values from the 
+Validator, the Action, or both.</p></p>
+
+
+<p><p>If the validator fails, the validator is pushed onto the ValueStack and the 
+message ��� either the default or the locale-specific one if the key attribute is 
+defined (and such a message exists) ��� is parsed for ${...} sections which are 
+replaced with the evaluated value of the string between the ${ and }. This 
+allows you to parameterize your messages with values from the validator, the 
+Action, or both. </p></p>
+
+<p><p><b>NOTE:</b>Since validation rules are in an XML file, you must make sure 
+you escape special characters. For example, notice that in the expression 
+validator rule above we use "&gt;" instead of ">". Consult a resource on XML 
+for the full list of characters that must be escaped. The most commonly used 
+characters that must be escaped are: & (use &amp;), > (user &gt;), and < (use &lt;).</p></p>
+
+<p><p>Here is an example of a parameterized message:</p>
+<p>This will pull the min and max parameters from the IntRangeFieldValidator and 
+the value of bar from the Action.</p></p>
+<p>&nbsp;</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml">bar must be between ${min} and ${max}, current value is ${bar}.</pre>
+</div></div>
+<p>&nbsp;</p>
+<p><p>To define validation rules for an Action, create a file named ActionName-validation.xml 
+in the same package as the Action. You may also create alias-specific validation rules which 
+add to the default validation rules defined in ActionName-validation.xml by creating 
+another file in the same directory named ActionName-aliasName-validation.xml. In both 
+cases, ActionName is the name of the Action class, and aliasName is the name of the 
+Action alias defined in the xwork.xml configuration for the Action.</p></p>
+
+<p><p>The framework will also search up the inheritance tree of the Action to 
+find validation rules for directly implemented interfaces and parent classes of the Action. 
+This is particularly powerful when combined with ModelDriven Actions and the VisitorFieldValidator. 
+Here's an example of how validation rules are discovered. Given the following class structure:</p></p>
+
+<p><ul>
+  <li>interface Animal;</li>
+  <li>interface Quadraped extends Animal;</li>
+  <li>class AnimalImpl implements Animal;</li>
+  <li>class QuadrapedImpl extends AnimalImpl implements Quadraped;</li>
+  <li>class Dog extends QuadrapedImpl;</li>
+</ul></p>
+
+<p><p>The framework method will look for the following config files if Dog is to be validated:</p></p>
+
+<p><ul>
+  <li>Animal</li>
+  <li>Animal-aliasname</li>
+  <li>AnimalImpl</li>
+	 <li>AnimalImpl-aliasname</li>
+  <li>Quadraped</li>
+  <li>Quadraped-aliasname</li>
+  <li>QuadrapedImpl</li>
+  <li>QuadrapedImpl-aliasname</li>
+  <li>Dog</li>
+  <li>Dog-aliasname</li>
+</ul></p>
+
+<p><p>While this process is similar to what the XW:Localization framework does 
+when finding messages, there are some subtle differences. The most important 
+difference is that validation rules are discovered from the parent downwards.
+</p></p>
+
+<p><p><b>NOTE:</b>Child's *-validation.xml will override parent's *-validation.xml 
+according to the class hierarchi defined above.</p></p>
+<p>&nbsp;</p>
+
+<h2><a name="Validation-ValidatorFlavour"></a>Validator Flavour</h2>
+
+<p><p>The validators supplied by the Xwork distribution (and any validators you 
+might write yourself) come in two different flavors:</p></p>
+
+<p><ol>
+ <li> Plain Validators / Non-Field validators </li>
+ <li> FieldValidators </li>
+</ol></p>
+
+<p><p>Plain Validators (such as the ExpressionValidator) perform validation checks 
+that are not inherently tied to a single specified field. When you declare a 
+plain Validator in your -validation.xml file you do not associate a fieldname 
+attribute with it. (You should avoid using plain Validators within the 
+<field-validator> syntax described below.)</p></p>
+
+<p><p>FieldValidators (such as the EmailValidator) are designed to perform 
+validation checks on a single field. They require that you specify a fieldname 
+attribute in your -validation.xml file. There are two different (but equivalent) 
+XML syntaxes you can use to declare FieldValidators (see "<validator> vs. 
+<field-Validator> syntax" below).</p></p>
+
+<p><p>There are two places where the differences between the two validator flavors 
+are important to keep in mind:</p></p>
+
+<p><ol>
+  <li> when choosing the xml syntax used for declaring a validator 
+      (either <validator> or <field-validator>)</li>
+  <li> when using the short-circuit capability</li>
+</ol></p>
+
+<p><p><b>NOTE:</b>Note that you do not declare what "flavor" of validator you are 
+using in your -validation.xml file, you just declare the name of the validator 
+to use and WebWork will know whether it's a "plain Validator" or a "FieldValidator" 
+by looking at the validation class that the validator's programmer chose 
+to implement.</p></p>
+<p>&nbsp;</p>
+
+<h2><a name="Validation-NonFieldValidatorVsFieldValidator"></a>Non-Field Validator Vs Field-Validator <a name="Validation-validatortypes"></a></h2>
+
+<p><p>There are two ways you can define validators in your -validation.xml file:</p>
+<ol>
+ <li> &lt;validator&gt; </li>
+ <li> &lt;field-validator&gt; </li>
+</ol>
+<p>Keep the following in mind when using either syntax:</p></p>
+
+<p><p><b>Non-Field-Validator</b>
+The &lt;validator&gt; element allows you to declare both types of validators 
+(either a plain Validator a field-specific FieldValidator).</p></p>
+<p>&nbsp;</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag"><span class="code-comment">&lt;!-- Declaring a plain Validator using the &lt;validator&gt;</span> syntax: --&gt;</span>
+
+   <span class="code-tag">&lt;validator type="expression&gt;</span>
+         <span class="code-tag">&lt;param name=<span class="code-quote">"expression"</span>&gt;</span>foo gt bar<span class="code-tag">&lt;/param&gt;</span>
+         <span class="code-tag">&lt;message&gt;</span>foo must be great than bar.<span class="code-tag">&lt;/message&gt;</span>
+   <span class="code-tag">&lt;/validator&gt;</span></pre>
+</div></div>
+<p>&nbsp;</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag"><span class="code-comment">&lt;!-- Declaring a field validator using the &lt;validator&gt;</span> syntax; --&gt;</span>
+
+   <span class="code-tag">&lt;validator type=<span class="code-quote">"required"</span>&gt;</span>
+        <span class="code-tag">&lt;param name=<span class="code-quote">"fieldName"</span>&gt;</span>bar<span class="code-tag">&lt;/param&gt;</span>
+        <span class="code-tag">&lt;message&gt;</span>You must enter a value for bar.<span class="code-tag">&lt;/message&gt;</span>
+   &amp;lt/validator&gt;</pre>
+</div></div>
+<p>&nbsp;</p>
+<p><p><b>field-validator</b>
+The &lt;field-validator&gt; elements are basically the same as the &lt;validator&gt; elements 
+except that they inherit the fieldName attribute from the enclosing &lt;field&gt; element. 
+FieldValidators defined within a &lt;field-validator&gt; element will have their fieldName 
+automatically filled with the value of the parent &lt;field&gt; element's fieldName 
+attribute. The reason for this structure is to conveniently group the validators 
+for a particular field under one element, otherwise the fieldName attribute 
+would have to be repeated, over and over, for each individual &lt;validator&gt;.</p></p>
+
+<p><p><b>HINT:</b>
+It is always better to defined field-validator inside a &lt;field&gt; tag instead of 
+using a &lt;validator&gt; tag and supplying fieldName as its param as the xml code itself 
+is clearer (grouping of field is clearer)</p></p>
+
+<p><p><b>NOTE:</b>
+Note that you should only use FieldValidators (not plain Validators) within a 
+<field-validator> block. A plain Validator inside a &lt;field&gt; will not be 
+allowed and would generate error when parsing the xml, as it is not allowed in 
+the defined dtd (xwork-validator-1.0.2.dtd)</p></p>
+<p>&nbsp;</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml">Declaring a FieldValidator using the <span class="code-tag">&lt;field-validator&gt;</span> syntax:
+
+<span class="code-tag">&lt;field name=<span class="code-quote">"email_address"</span>&gt;</span>
+  <span class="code-tag">&lt;field-validator type=<span class="code-quote">"required"</span>&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>You cannot leave the email address field empty.<span class="code-tag">&lt;/message&gt;</span>
+  <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;field-validator type=<span class="code-quote">"email"</span>&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>The email address you entered is not valid.<span class="code-tag">&lt;/message&gt;</span>
+  <span class="code-tag">&lt;/field-validator&gt;</span>
+<span class="code-tag">&lt;/field&gt;</span></pre>
+</div></div>
+<p>&nbsp;</p>
+<p><p>The choice is yours. It's perfectly legal to only use <validator> elements 
+without the <field> elements and set the fieldName attribute for each of them. 
+The following are effectively equal:</P></p>
+<p>&nbsp;</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;field name=<span class="code-quote">"email_address"</span>&gt;</span>
+  <span class="code-tag">&lt;field-validator type=<span class="code-quote">"required"</span>&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>You cannot leave the email address field empty.<span class="code-tag">&lt;/message&gt;</span>
+  <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;field-validator type=<span class="code-quote">"email"</span>&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>The email address you entered is not valid.<span class="code-tag">&lt;/message&gt;</span>
+  <span class="code-tag">&lt;/field-validator&gt;</span>
+<span class="code-tag">&lt;/field&gt;</span>
+
+
+<span class="code-tag">&lt;validator type=<span class="code-quote">"required"</span>&gt;</span>
+  <span class="code-tag">&lt;param name=<span class="code-quote">"fieldName"</span>&gt;</span>email_address<span class="code-tag">&lt;/param&gt;</span>
+  <span class="code-tag">&lt;message&gt;</span>You cannot leave the email address field empty.<span class="code-tag">&lt;/message&gt;</span>
+<span class="code-tag">&lt;/validator&gt;</span>
+<span class="code-tag">&lt;validator type=<span class="code-quote">"email"</span>&gt;</span>
+  <span class="code-tag">&lt;param name=<span class="code-quote">"fieldName"</span>&gt;</span>email_address<span class="code-tag">&lt;/param&gt;</span>
+  <span class="code-tag">&lt;message&gt;</span>The email address you entered is not valid.<span class="code-tag">&lt;/message&gt;</span>
+<span class="code-tag">&lt;/validator&gt;</span></pre>
+</div></div>
+<p>&nbsp;</p>
+
+<h2><a name="Validation-ShortCurcuitingValidator"></a>Short-Curcuiting Validator</h2>
+
+<p><p>Beginning with XWork 1.0.1 (bundled with WebWork 2.1), it is possible 
+to short-circuit a stack of validators. Here is another sample config file 
+containing validation rules from the Xwork test cases: Notice that some of the 
+&lt;field-validator&gt; and &lt;validator&gt; elements have the short-circuit 
+attribute set to true.</p></p>
+<p>&nbsp;</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml">&lt;!DOCTYPE validators PUBLIC 
+        <span class="code-quote">"-//OpenSymphony Group//XWork Validator 1.0.2//EN"</span> 
+        <span class="code-quote">"http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd"</span>&gt;
+<span class="code-tag">&lt;validators&gt;</span>
+  <span class="code-tag"><span class="code-comment">&lt;!-- Field Validators for email field --&gt;</span></span>
+  <span class="code-tag">&lt;field name=<span class="code-quote">"email"</span>&gt;</span>
+      <span class="code-tag">&lt;field-validator type=<span class="code-quote">"required"</span> short-circuit=<span class="code-quote">"true"</span>&gt;</span>
+          <span class="code-tag">&lt;message&gt;</span>You must enter a value for email.<span class="code-tag">&lt;/message&gt;</span>
+      <span class="code-tag">&lt;/field-validator&gt;</span>
+      <span class="code-tag">&lt;field-validator type=<span class="code-quote">"email"</span> short-circuit=<span class="code-quote">"true"</span>&gt;</span>
+          <span class="code-tag">&lt;message&gt;</span>Not a valid e-mail.<span class="code-tag">&lt;/message&gt;</span>
+      <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;/field&gt;</span>
+  <span class="code-tag"><span class="code-comment">&lt;!-- Field Validators for email2 field --&gt;</span></span>
+  <span class="code-tag">&lt;field name=<span class="code-quote">"email2"</span>&gt;</span>
+     <span class="code-tag">&lt;field-validator type=<span class="code-quote">"required"</span>&gt;</span>
+          <span class="code-tag">&lt;message&gt;</span>You must enter a value for email2.<span class="code-tag">&lt;/message&gt;</span>
+      <span class="code-tag">&lt;/field-validator&gt;</span>
+     <span class="code-tag">&lt;field-validator type=<span class="code-quote">"email"</span>&gt;</span>
+          <span class="code-tag">&lt;message&gt;</span>Not a valid e-mail2.<span class="code-tag">&lt;/message&gt;</span>
+      <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;/field&gt;</span>
+  <span class="code-tag"><span class="code-comment">&lt;!-- Plain Validator 1 --&gt;</span></span>
+  <span class="code-tag">&lt;validator type=<span class="code-quote">"expression"</span>&gt;</span>
+      <span class="code-tag">&lt;param name=<span class="code-quote">"expression"</span>&gt;</span>email.equals(email2)<span class="code-tag">&lt;/param&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>Email not the same as email2<span class="code-tag">&lt;/message&gt;</span>
+  <span class="code-tag">&lt;/validator&gt;</span>
+  <span class="code-tag"><span class="code-comment">&lt;!-- Plain Validator 2 --&gt;</span></span>
+  <span class="code-tag">&lt;validator type=<span class="code-quote">"expression"</span> short-circuit=<span class="code-quote">"true"</span>&gt;</span>
+      <span class="code-tag">&lt;param name=<span class="code-quote">"expression"</span>&gt;</span>email.startsWith('mark')<span class="code-tag">&lt;/param&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>Email does not start with mark<span class="code-tag">&lt;/message&gt;</span>
+  <span class="code-tag">&lt;/validator&gt;</span>
+<span class="code-tag">&lt;/validators&gt;</span></pre>
+</div></div>
+<p>&nbsp;</p>
+<p><p><b>short-circuiting and Validator flavors</b></p>
+<p>Plain validator takes precedence over field-validator. They get validated 
+first in the order they are defined and then the field-validator in the order 
+they are defined. Failure of a particular validator marked as short-circuit 
+will prevent the evaluation of subsequent validators and an error (action 
+error or field error depending on the type of validator) will be added to 
+the ValidationContext of the object being validated.</p></p>
+
+<p><p>In the example above, the actual execution of validator would be as follows:</p></p>
+
+<p><ol>
+ <li> Plain Validator 1</li>
+ <li> Plain Validator 2</li>
+ <li> Field Validators for email field</li>
+ <li> Field Validators for email2 field</li>
+</ol></p>
+
+<p><p>Since Field Validator 2 is short-circuited, if its validation failed, 
+it will causes Field validators for email field and Field validators for email2 
+field to not be validated as well.</p></p>
+
+<p><p><b>Usefull Information:</b>
+More complecated validation should probably be done in the validate() 
+method on the action itself (assuming the action implements Validatable 
+interface which ActionSupport already does).</p></p>
+
+<p><p>
+A plain Validator (non FieldValidator) that gets short-circuited will 
+completely break out of the validation stack ��� no other validators will be 
+evaluated and plain validator takes precedence over field validator meaning 
+that they get evaluated in the order they are defined before field validator 
+gets a chance to be evaludated again according to their order defined.
+</p></p>
+<p>&nbsp;</p>
+<p><p><b>Short cuircuiting and validator flavours</b></p>
+<p>A FieldValidator that gets short-circuited will only prevent other 
+FieldValidators for the same field from being evaluated. Note that this 
+"same field" behavior applies regardless of whether the <validator> or 
+<field-validator> syntax was used to declare the validation rule. 
+By way of example, given this -validation.xml file:</p></p>
+<p>&nbsp;</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;validator type=<span class="code-quote">"required"</span> short-circuit=<span class="code-quote">"true"</span>&gt;</span>
+  <span class="code-tag">&lt;param name=<span class="code-quote">"fieldName"</span>&gt;</span>bar<span class="code-tag">&lt;/param&gt;</span>
+  <span class="code-tag">&lt;message&gt;</span>You must enter a value for bar.<span class="code-tag">&lt;/message&gt;</span>
+<span class="code-tag">&lt;/validator&gt;</span>
+
+<span class="code-tag">&lt;validator type=<span class="code-quote">"expression"</span>&gt;</span>
+  <span class="code-tag">&lt;param name=<span class="code-quote">"expression"</span>&gt;</span>foo gt bar<span class="code-tag">&lt;/param&gt;</span>
+  <span class="code-tag">&lt;message&gt;</span>foo must be great than bar.<span class="code-tag">&lt;/message&gt;</span>
+<span class="code-tag">&lt;/validator&gt;</span></pre>
+</div></div>
+<p>&nbsp;</p>
+<p><p>both validators will be run, even if the "required" validator short-circuits.
+"required" validators are FieldValidator's and will not short-circuit the plain 
+ExpressionValidator because FieldValidators only short-circuit other checks on 
+that same field. Since the plain Validator is not field specific, it is 
+not short-circuited.</p></p>
+<p>&nbsp;</p>
+
+<h2><a name="Validation-HowValidatorsofanActionareFound"></a>How Validators of an Action are Found</h2>
+
+<p><p>As mentioned above, the framework will also search up the inheritance tree 
+of the action to find default validations for interfaces and parent classes of 
+the Action. If you are using the short-circuit attribute and relying on 
+default validators higher up in the inheritance tree, make sure you don't 
+accidentally short-circuit things higher in the tree that you really want!</p></p>
+<p>&nbsp;</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

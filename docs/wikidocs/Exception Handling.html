@@ -1,0 +1,94 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Exception Handling
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h2><a name="ExceptionHandling-Overview"></a>Overview</h2>
+
+<p><b>Exception mappings</b> are a powerful feature for dealing with an Action that throws an exception.  The core idea is that exception throwns during the Action method can be caught and mapped to a result, either global or action scoped results.  This is especially useful for frameworks, like Hibernate and Acegisecurity, that throw RuntimeExceptions.</p>
+
+<p>As with many other parts of WebWork, an interceptor is needed to activate the exception mapping functionality.  Below is a snippet from webwork-default.xml which has exception mapping already activated.</p>
+<div class="code"><div class="codeHeader"><b>snippet of webwork-default.xml</b></div><div class="codeContent">
+<pre class="code-xml">...
+<span class="code-tag">&lt;interceptors&gt;</span>
+    ...
+    <span class="code-tag">&lt;interceptor name=<span class="code-quote">"exception"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.ExceptionMappingInterceptor"</span>/&gt;</span>
+    ...
+<span class="code-tag">&lt;/interceptors&gt;</span>
+
+<span class="code-tag"><span class="code-comment">&lt;!-- Basic stack --&gt;</span></span>
+<span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"basicStack"</span>&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"exception"</span>/&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"servlet-config"</span>/&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"prepare"</span>/&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"static-params"</span>/&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"params"</span>/&gt;</span>
+    <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"conversionError"</span>/&gt;</span>
+<span class="code-tag">&lt;/interceptor-stack&gt;</span>
+...</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>The next step in exception mapping is to actually map exception to specific results.  WebWork provides two ways to declare an exception mapping <tt>&lt;exception-mapping/&gt;</tt> &#45; globally or for a specific action.  The exception mapping element takes two attributes, <tt>exception</tt> and <tt>result</tt>.</p>
+
+<p>When declaring an exception mapping, the interceptor will find the closest class inheritance match between the exception thrown and the exception declared.  The interceptor will examine all declared mappings applicable to the Action, both Action specific and global mappings.  The result (either global or Action scope) is then used.</p>
+
+<p>This follows the same rules as a result returned from an Action.  It first looks for the result in the action, and then if not found, it looks for the result as a global result.</p>
+
+<p>Below is an example of global and Action scoped exception mappings.</p>
+<div class="code"><div class="codeHeader"><b>snippet from xwork.xml</b></div><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;xwork&gt;</span>
+    <span class="code-tag">&lt;package name=<span class="code-quote">"default"</span>&gt;</span>
+        ...
+        <span class="code-tag">&lt;global-results&gt;</span>
+            <span class="code-tag">&lt;result name=<span class="code-quote">"login"</span> type=<span class="code-quote">"redirect"</span>&gt;</span>/login.action<span class="code-tag">&lt;/result&gt;</span>
+            <span class="code-tag">&lt;result name=<span class="code-quote">"rootException"</span> type=<span class="code-quote">"freemarker"</span>&gt;</span>/WEB-INF/views/exception.ftl<span class="code-tag">&lt;/result&gt;</span>
+        <span class="code-tag">&lt;/global-results&gt;</span>
+
+        <span class="code-tag">&lt;global-exception-mappings&gt;</span>
+            <span class="code-tag">&lt;exception-mapping exception=<span class="code-quote">"java.sql.SQLException"</span> result=<span class="code-quote">"sqlException"</span>/&gt;</span>
+            <span class="code-tag">&lt;exception-mapping exception=<span class="code-quote">"java.lang.Exception"</span> result=<span class="code-quote">"rootException"</span>/&gt;</span>
+        <span class="code-tag">&lt;/global-exception-mappings&gt;</span>
+        ...
+        <span class="code-tag">&lt;action name=<span class="code-quote">"myAction"</span> class=<span class="code-quote">"..."</span>&gt;</span>
+            <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"exception"</span> /&gt;</span>
+            <span class="code-tag">&lt;exception-mapping exception=<span class="code-quote">"com.acme.foo.SecurityException"</span> result=<span class="code-quote">"login"</span>/&gt;</span>
+            <span class="code-tag">&lt;result name=<span class="code-quote">"sqlException"</span> type=<span class="code-quote">"chain"</span>&gt;</span>sqlExceptionAction<span class="code-tag">&lt;/result&gt;</span>
+            <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"freemarker"</span>&gt;</span>/WEB-INF/views/acme/success.ftl<span class="code-tag">&lt;/result&gt;</span>
+        <span class="code-tag">&lt;/action&gt;</span>
+        ...
+    <span class="code-tag">&lt;/package&gt;</span>
+<span class="code-tag">&lt;/xwork&gt;</span></pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>In the example above, here is what happens based upon each exception:</p>
+<ul>
+	<li>A <tt>java.sql.SQLException</tt> will chain to the <tt>sqlExceptionAction</tt></li>
+	<li>A <tt>com.acme.foo.SecurityException</tt> will redirect to <tt>/login.action</tt></li>
+	<li>Any other exception that extends <tt>java.lang.Exception</tt> will execute the FreeMarker result rootException for the page <tt>/WEB-INF/views/exception.ftl</tt></li>
+</ul>
+
+
+<h5><a name="ExceptionHandling-ExceptionValuesontheValueStack"></a>Exception Values on the ValueStack</h5>
+
+<p>By default, the ExceptionMappingInterceptor adds the following values to the Value Stack:</p>
+<ul>
+	<li>exception - The exception object itself</li>
+	<li>exceptionStack - the value from the stack trace</li>
+</ul>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

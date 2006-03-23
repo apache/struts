@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <title>WebWork - 
+         do I use messages from within the validator
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;validators&gt;</span>
+    <span class="code-tag">&lt;field name=<span class="code-quote">"name"</span>&gt;</span>
+        <span class="code-tag">&lt;field-validator type=<span class="code-quote">"requiredstring"</span>&gt;</span>
+            <span class="code-tag">&lt;message key=<span class="code-quote">"template.name.errors.required"</span>&gt;</span>A default message in case the key is not found<span class="code-tag">&lt;/message&gt;</span>
+        <span class="code-tag">&lt;/field-validator&gt;</span>
+    <span class="code-tag">&lt;/field&gt;</span>
+<span class="code-tag">&lt;/validators&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

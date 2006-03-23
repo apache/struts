@@ -1,0 +1,139 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Validation Annotation
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="ValidationAnnotation-ValidationAnnotation"></a>Validation Annotation</h1>
+
+<p>If you want to use annotation based validation, you have to annotate the class or interface with Validation Annotation.</p>
+
+<h2><a name="ValidationAnnotation-Usage"></a>Usage</h2>
+
+<p><p/>The Validation annotation must be applied at Type level.</p>
+
+<h2><a name="ValidationAnnotation-Parameters"></a>Parameters</h2>
+
+<p><table class='confluenceTable'>
+<tr>
+<th class='confluenceTh'> Parameter </th>
+<th class='confluenceTh'> Required </th>
+<th class='confluenceTh'> Default </th>
+<th class='confluenceTh'> Notes </th>
+</tr>
+<tr>
+<td class='confluenceTd'>message</td>
+<td class='confluenceTd'>yes</td>
+<td class='confluenceTd'>&nbsp;</td>
+<td class='confluenceTd'>field error message</td>
+</tr>
+<tr>
+<td class='confluenceTd'>key</td>
+<td class='confluenceTd'>no</td>
+<td class='confluenceTd'>&nbsp;</td>
+<td class='confluenceTd'>i18n key from language specific properties file.</td>
+</tr>
+<tr>
+<td class='confluenceTd'>fieldName</td>
+<td class='confluenceTd'>no</td>
+<td class='confluenceTd'>&nbsp;</td>
+<td class='confluenceTd'>&nbsp;</td>
+</tr>
+<tr>
+<td class='confluenceTd'>shortCircuit</td>
+<td class='confluenceTd'>no</td>
+<td class='confluenceTd'>false</td>
+<td class='confluenceTd'>If this validator should be used as shortCircuit.</td>
+</tr>
+<tr>
+<td class='confluenceTd'>type</td>
+<td class='confluenceTd'>yes</td>
+<td class='confluenceTd'>ValidatorType.FIELD</td>
+<td class='confluenceTd'>Enum value from ValidatorType. Either FIELD or SIMPLE can be used here.</td>
+</tr>
+</table></p>
+
+<h2><a name="ValidationAnnotation-Examples"></a>Examples</h2>
+
+<p><b>An Annotated Interface</b></p>
+<ul>
+	<li>Mark the interface with @Validation()</li>
+	<li>Apply standard or custom annoations at method level</li>
+</ul>
+
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">@Validation()
+<span class="code-keyword">public</span> <span class="code-keyword">interface</span> AnnotationDataAware {
+
+    void setBarObj(Bar b);
+
+    Bar getBarObj();
+
+    @RequiredFieldValidator(message = <span class="code-quote">"You must enter a value <span class="code-keyword">for</span> data."</span>)
+    @RequiredStringValidator(message = <span class="code-quote">"You must enter a value <span class="code-keyword">for</span> data."</span>)
+    void setData(<span class="code-object">String</span> data);
+
+    <span class="code-object">String</span> getData();
+}</pre>
+</div></div>
+
+<p><b>An Annotated Class</b></p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">@Validation()
+ <span class="code-keyword">public</span> class SimpleAnnotationAction <span class="code-keyword">extends</span> ActionSupport {
+
+     @RequiredFieldValidator(type = ValidatorType.FIELD, message = <span class="code-quote">"You must enter a value <span class="code-keyword">for</span> bar."</span>)
+     @IntRangeFieldValidator(type = ValidatorType.FIELD, min = <span class="code-quote">"6"</span>, max = <span class="code-quote">"10"</span>, message = <span class="code-quote">"bar must be between ${min} and ${max}, current value is ${bar}."</span>)
+     <span class="code-keyword">public</span> void setBar(<span class="code-object">int</span> bar) {
+         <span class="code-keyword">this</span>.bar = bar;
+     }
+
+     <span class="code-keyword">public</span> <span class="code-object">int</span> getBar() {
+         <span class="code-keyword">return</span> bar;
+     }
+
+     @Validations(
+             requiredFields =
+                     {@RequiredFieldValidator(type = ValidatorType.SIMPLE, fieldName = <span class="code-quote">"customfield"</span>, message = <span class="code-quote">"You must enter a value <span class="code-keyword">for</span> field."</span>)},
+             requiredStrings =
+                     {@RequiredStringValidator(type = ValidatorType.SIMPLE, fieldName = <span class="code-quote">"stringisrequired"</span>, message = <span class="code-quote">"You must enter a value <span class="code-keyword">for</span> string."</span>)},
+             emails =
+                     { @EmailValidator(type = ValidatorType.SIMPLE, fieldName = <span class="code-quote">"emailaddress"</span>, message = <span class="code-quote">"You must enter a value <span class="code-keyword">for</span> email."</span>)},
+             urls =
+                     { @UrlValidator(type = ValidatorType.SIMPLE, fieldName = <span class="code-quote">"hreflocation"</span>, message = <span class="code-quote">"You must enter a value <span class="code-keyword">for</span> email."</span>)},
+             stringLengthFields =
+                     {@StringLengthFieldValidator(type = ValidatorType.SIMPLE, trim = <span class="code-keyword">true</span>, minLength=<span class="code-quote">"10"</span> , maxLength = <span class="code-quote">"12"</span>, fieldName = <span class="code-quote">"needstringlength"</span>, message = <span class="code-quote">"You must enter a stringlength."</span>)},
+             intRangeFields =
+                     { @IntRangeFieldValidator(type = ValidatorType.SIMPLE, fieldName = <span class="code-quote">"intfield"</span>, min = <span class="code-quote">"6"</span>, max = <span class="code-quote">"10"</span>, message = <span class="code-quote">"bar must be between ${min} and ${max}, current value is ${bar}."</span>)},
+             dateRangeFields =
+                     {@DateRangeFieldValidator(type = ValidatorType.SIMPLE, fieldName = <span class="code-quote">"datefield"</span>, min = <span class="code-quote">"-1"</span>, max = <span class="code-quote">"99"</span>, message = <span class="code-quote">"bar must be between ${min} and ${max}, current value is ${bar}."</span>)},
+             expressions = {
+                 @ExpressionValidator(expression = <span class="code-quote">"foo &gt; 1"</span>, message = <span class="code-quote">"Foo must be greater than Bar 1. Foo = ${foo}, Bar = ${bar}."</span>),
+                 @ExpressionValidator(expression = <span class="code-quote">"foo &gt; 2"</span>, message = <span class="code-quote">"Foo must be greater than Bar 2. Foo = ${foo}, Bar = ${bar}."</span>),
+                 @ExpressionValidator(expression = <span class="code-quote">"foo &gt; 3"</span>, message = <span class="code-quote">"Foo must be greater than Bar 3. Foo = ${foo}, Bar = ${bar}."</span>),
+                 @ExpressionValidator(expression = <span class="code-quote">"foo &gt; 4"</span>, message = <span class="code-quote">"Foo must be greater than Bar 4. Foo = ${foo}, Bar = ${bar}."</span>),
+                 @ExpressionValidator(expression = <span class="code-quote">"foo &gt; 5"</span>, message = <span class="code-quote">"Foo must be greater than Bar 5. Foo = ${foo}, Bar = ${bar}."</span>)
+     }
+     )
+     <span class="code-keyword">public</span> <span class="code-object">String</span> execute() <span class="code-keyword">throws</span> Exception {
+         <span class="code-keyword">return</span> SUCCESS;
+     }
+ }</pre>
+</div></div>
+
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

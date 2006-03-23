@@ -1,0 +1,191 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Using WebWork and XWork with JSP 2.0 and JSTL 1.1
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>WW2/WX1 and its taglib is oriented towards OGNL, which is using a value stack <br/>
+for all action properties. These values are not direct available for the<br/>
+expression language of JSP2/JSTL1.1. </p>
+
+<p>However, it's easy to populate the request<br/>
+attribute set, with all gettable properties of an action object. You need to provide<br/>
+an interceptor that does the job, by register a PreResultListener which is <br/>
+invoked after the return of Action.execute() but before the rendering of the result .</p>
+
+<p>The interceptor below is using Jakarta BeanUtils. It first extracts all getters<br/>
+of the current action, invokes them one at the time and stores the values into a map.<br/>
+Then it iterates over the map and populates the request attribute set.<br/>
+<em>The double iteration is not needed, it's just there for clarity.</em></p>
+<h2><a name="UsingWebWorkandXWorkwithJSP2.0andJSTL1.1-classActionPropertyExportInterceptor"></a>class ActionPropertyExportInterceptor</h2>
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> com.whatever.interceptors;
+
+<span class="code-keyword">import</span> com.opensymphony.webwork.WebWorkStatics;
+<span class="code-keyword">import</span> com.opensymphony.xwork.Action;
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionInvocation;
+<span class="code-keyword">import</span> com.opensymphony.xwork.interceptor.AroundInterceptor;
+<span class="code-keyword">import</span> com.opensymphony.xwork.interceptor.PreResultListener;
+<span class="code-keyword">import</span> org.apache.commons.beanutils.PropertyUtils;
+<span class="code-keyword">import</span> javax.servlet.http.HttpServletRequest;
+<span class="code-keyword">import</span> java.beans.PropertyDescriptor;
+<span class="code-keyword">import</span> java.util.*;
+
+/**
+ * Populates HTTP Request Attributes with all gettable properties of the current action.
+ */
+<span class="code-keyword">public</span> class ActionPropertyExportInterceptor <span class="code-keyword">extends</span> AroundInterceptor {
+    <span class="code-keyword">protected</span> void before(ActionInvocation invocation) <span class="code-keyword">throws</span> Exception {
+        invocation.addPreResultListener( <span class="code-keyword">new</span> PropertyExporter() );
+    }
+    <span class="code-keyword">protected</span> void after(ActionInvocation dispatcher, <span class="code-object">String</span> result) <span class="code-keyword">throws</span> Exception { }
+
+    <span class="code-keyword">public</span> <span class="code-keyword">static</span> class PropertyExporter <span class="code-keyword">implements</span> PreResultListener {
+        <span class="code-keyword">private</span> <span class="code-keyword">static</span> <span class="code-keyword">final</span> List   ignore = Arrays.asList(<span class="code-keyword">new</span> <span class="code-object">String</span>[] {<span class="code-quote">"class"</span>, <span class="code-quote">"texts"</span>}); <span class="code-comment">//skip getClass,...
+</span>
+        <span class="code-comment">//Invoked after Action.execute() but before Result
+</span>        <span class="code-comment">//Calls all getters of the action and insert the values into the request
+</span>        <span class="code-keyword">public</span> void beforeResult(ActionInvocation invocation, <span class="code-object">String</span> resultCode) {
+            Map                 props   = extractGetterPropertyValues( invocation.getAction() );
+            HttpServletRequest  request = getRequest(invocation);
+            <span class="code-keyword">for</span> (Iterator it = props.entrySet().iterator(); it.hasNext();) {
+                Map.Entry   e = (Map.Entry) it.next();
+                request.setAttribute((<span class="code-object">String</span>) e.getKey(), e.getValue());
+            }
+        }
+
+        <span class="code-keyword">public</span> Map extractGetterPropertyValues(<span class="code-object">Object</span> bean) {
+            PropertyDescriptor[]  descr = PropertyUtils.getPropertyDescriptors(bean);
+            Map                   props = <span class="code-keyword">new</span> HashMap();
+            <span class="code-keyword">for</span> (<span class="code-object">int</span> i = 0; i &lt; descr.length; i++) {
+                PropertyDescriptor d = descr[i];
+                <span class="code-keyword">if</span> (d.getReadMethod() == <span class="code-keyword">null</span>) <span class="code-keyword">continue</span>;
+                <span class="code-keyword">if</span> (ignore.contains(d.getName())) <span class="code-keyword">continue</span>;
+
+                <span class="code-keyword">try</span> {
+                    props.put(d.getName(), PropertyUtils.getProperty(bean, d.getName()));
+                } <span class="code-keyword">catch</span> (Exception e) { }
+            }
+            <span class="code-keyword">return</span> props;
+        }
+
+        <span class="code-keyword">public</span> HttpServletRequest getRequest(ActionInvocation invocation) {
+            <span class="code-keyword">return</span> (HttpServletRequest) invocation.getInvocationContext().get(WebWorkStatics.HTTP_REQUEST);
+        }
+    }
+}</pre>
+</div></div>
+
+<p>Don't forget to <em>declare</em> the interceptor in your xwork.xml file and <em>insert</em> it <br/>
+into your interceptor stack.</p>
+<h2><a name="UsingWebWorkandXWorkwithJSP2.0andJSTL1.1-xwork.xmlsnippet"></a>xwork.xml snippet</h2>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;interceptor name=<span class="code-quote">"export"</span> class=<span class="code-quote">"com.whatever.interceptors.ActionPropertyExportInterceptor"</span> /&gt;
+. . .
+&lt;interceptor-stack name=<span class="code-quote">"standard-interceptors"</span>&gt;
+    &lt;interceptor-ref name=<span class="code-quote">"timer"</span> /&gt;
+    &lt;interceptor-ref name=<span class="code-quote">"logger"</span> /&gt;
+    &lt;interceptor-ref name=<span class="code-quote">"params"</span> /&gt;
+*    &lt;interceptor-ref name=<span class="code-quote">"export"</span>/&gt;*
+    &lt;interceptor-ref name=<span class="code-quote">"validateParams"</span>/&gt;
+    &lt;interceptor-ref name=<span class="code-quote">"awarePlugger"</span> /&gt;
+&lt;/interceptor-stack&gt;</pre>
+</div></div>
+
+<p>Your action need to provide getters for all properties that should be exported into the <br/>
+request attribute set.</p>
+<h2><a name="UsingWebWorkandXWorkwithJSP2.0andJSTL1.1-classViewUser"></a>class ViewUser</h2>
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> class ViewUser <span class="code-keyword">extends</span> ActionSupport {
+    <span class="code-keyword">private</span> <span class="code-object">int</span>                         id;
+    <span class="code-keyword">private</span> User                        user;
+
+    <span class="code-keyword">public</span> <span class="code-object">String</span> execute() <span class="code-keyword">throws</span> Exception {
+        user = findUser( getId() );
+        <span class="code-keyword">return</span> Action.SUCCESS;
+    }
+
+    <span class="code-keyword">public</span>  <span class="code-object">int</span>   getId()          {<span class="code-keyword">return</span> id;}
+    <span class="code-keyword">public</span>  void  setId(<span class="code-object">int</span> id)    {<span class="code-keyword">this</span>.id = id;}
+*    <span class="code-keyword">public</span>  User  getUser()        {<span class="code-keyword">return</span> user;}*
+
+    <span class="code-keyword">private</span> User  findUser(<span class="code-object">int</span> id) {...}
+}</pre>
+</div></div>
+
+<p>The User class might look like this</p>
+<h2><a name="UsingWebWorkandXWorkwithJSP2.0andJSTL1.1-classUser"></a>class User</h2>
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">import</span> java.util.Date;
+<span class="code-keyword">public</span> class User {
+    <span class="code-keyword">private</span> <span class="code-object">int</span>     id;
+    <span class="code-keyword">private</span> <span class="code-object">String</span>  firstName, lastName, email;
+    <span class="code-keyword">private</span> <span class="code-object">String</span>  street, zip, city;
+    <span class="code-keyword">private</span> Date    date;
+    
+    <span class="code-keyword">public</span> <span class="code-object">String</span>  getFirstName() {<span class="code-keyword">return</span> firstName;}
+    <span class="code-comment">//..._getters and setters_...
+</span>}</pre>
+</div></div>
+
+<p>Finally, using the samples above you can write your JSP2 page like this.</p>
+<h2><a name="UsingWebWorkandXWorkwithJSP2.0andJSTL1.1-ViewUser.jsp"></a>ViewUser.jsp</h2>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;%@ taglib prefix=<span class="code-quote">"c"</span>   uri=<span class="code-quote">"http:<span class="code-comment">//java.sun.com/jsp/jstl/core"</span> %&gt;
+</span>&lt;%@ taglib prefix=<span class="code-quote">"fmt"</span> uri=<span class="code-quote">"http:<span class="code-comment">//java.sun.com/jsp/jstl/fmt"</span> %&gt;
+</span>&lt;%@ taglib prefix=<span class="code-quote">"fn"</span>  uri=<span class="code-quote">"http:<span class="code-comment">//java.sun.com/jsp/jstl/functions"</span> %&gt;
+</span>&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Info about ${user.firstName}&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Info about ${user.firstName} ${user.lastName} [OS:ID=${user.id}]&lt;/h1&gt;
+    &lt;table border=<span class="code-quote">"1"</span> cellspacing=<span class="code-quote">"0"</span> cellpadding=<span class="code-quote">"2"</span> width=<span class="code-quote">"90%"</span> &gt;
+    &lt;tr&gt;
+        &lt;th&gt;Name&lt;/th&gt; &lt;td&gt;${user.firstName} ${user.lastName}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;th&gt;Created&lt;/th&gt; &lt;td&gt;&lt;fmt:formatDate value=<span class="code-quote">"${user.date}"</span> pattern=<span class="code-quote">"yyyy-MM-dd HH:mm"</span>/&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;th&gt;Email&lt;/th&gt; &lt;td&gt;${user.email}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;th&gt;Address&lt;/th&gt; &lt;td&gt;${user.street} ${user.zip} ${fn:toUpperCase(user.city)}&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div></div>
+
+<h2><a name="UsingWebWorkandXWorkwithJSP2.0andJSTL1.1-DisplayingvalidationerrorswithJSTL"></a>Displaying validation errors with JSTL</h2>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;c:<span class="code-keyword">if</span> test=<span class="code-quote">"${!empty fieldErrors || !empty actionErrors}"</span>&gt;
+  &lt;div class=<span class="code-quote">"red"</span>&gt;
+    &lt;ul&gt;
+      &lt;c:forEach items=<span class="code-quote">"${fieldErrors}"</span> <span class="code-keyword">var</span>=<span class="code-quote">"fieldError"</span>&gt;
+        &lt;c:forEach items=<span class="code-quote">"${fieldError.value}"</span> <span class="code-keyword">var</span>=<span class="code-quote">"error"</span>&gt;
+          &lt;li&gt;${error}&lt;/li&gt;
+        &lt;/c:forEach&gt;
+      &lt;/c:forEach&gt;
+      &lt;c:forEach items=<span class="code-quote">"${actionErrors}"</span> <span class="code-keyword">var</span>=<span class="code-quote">"actionError"</span>&gt;
+        &lt;li&gt;${actionError}&lt;/li&gt;
+      &lt;/c:forEach&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/c:<span class="code-keyword">if</span>&gt;</pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

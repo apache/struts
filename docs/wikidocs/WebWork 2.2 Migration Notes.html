@@ -1,0 +1,145 @@
+<html>
+    <head>
+        <title>WebWork - 
+        WebWork 2.2 Migration Notes
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>This document covers a step-by-step guide for upgrading to WebWork 2.2 from 2.1.x, as well as a list of the key individual changes for reference.</p>
+
+<h1><a name="WebWork2.2MigrationNotes-UpgradeGuide"></a>Upgrade Guide</h1>
+
+<ol>
+	<li>Get the <a href="https://webwork.dev.java.net/servlets/ProjectDocumentList?folderID=4007&amp;expandFolder=4007&amp;folderID=0" title="Visit page outside Confluence">latest 2.2 release</a></li>
+	<li>Check out the <a href="http://www.opensymphony.com/webwork/dependencies/opensymphony-webwork-default.html" title="Visit page outside Confluence">dependencies</a> to see what the required libraries are. One change of note is the dependency on Rife-Continuations. Click through the tabs for the dependencies for different usage profiles. If you use FreeMarker for instance, click on that tab to see those dependencies. Note that if you use the JSP tags you are now using FreeMarker by default for the UI component templates.</li>
+	<li>Check the <b>Individual Changes</b> section below to see if any of those changes affect your code</li>
+	<li>Update to use the <b>FilterDispatcher</b> instead of the <b>ServletDispatcher</b>. Check out the <a href="web.xml 2.1.x compatibility.html" title="web.xml 2.1.x compatibility">web.xml 2.1.x compatibility</a> page for some compatibility discussions, and see <a href="web.xml.html" title="web.xml">web.xml</a> for what needs to go in the <em>web.xml</em> file.</li>
+</ol>
+
+
+<h1><a name="WebWork2.2MigrationNotes-DeprecatedItems"></a>Deprecated Items</h1>
+
+<ul>
+	<li>The ServletDispatcher is now deprecated, please use the FilterDispatcher if possible. See <a href="web.xml 2.1.x compatibility.html" title="web.xml 2.1.x compatibility">web.xml 2.1.x compatibility</a> for more information about potential problems you might have when switching to FilterDispatcher.</li>
+	<li>The Velocity and FreeMarker servlets are no longer supported. We highly recommend you don't use these  servlets but rather the <a href="FreeMarker Result.html" title="FreeMarker Result">FreeMarker Result</a> or <a href="Velocity Result.html" title="Velocity Result">Velocity Result</a> directly.</li>
+	<li>If you were using JSP tags within Velocity, this is no longer supported and will soon be removed. You can use the instructions explained in <a href="web.xml 2.1.x compatibility.html" title="web.xml 2.1.x compatibility">web.xml 2.1.x compatibility</a> to get along for now, but we highly recommend using the new native Velocity tag support provided by WebWork.</li>
+	<li>The table tag is now considered deprecated. We may undeprecate it in the future if more time can be invested, but we recommend that you look at alternative options such as <a href="http://displaytag.sourceforge.net/" title="Visit page outside Confluence">Display Tag</a>.</li>
+	<li>All support for including actions (using the <a href="include.html" title="include">include</a> tag or jsp:include) is no longer available when using the FilterDispatcher. We recommend you use the <a href="action.html" title="action">action</a> tag instead.</li>
+	<li>The cos and pell file upload parsers are no longer actively maintained and will be deleted soon. We highly recommend you use the Jakarta file upload parser, which is now the default parser.</li>
+</ul>
+
+
+<h1><a name="WebWork2.2MigrationNotes-DeletedItems"></a>Deleted Items</h1>
+
+<ul>
+	<li>All VoiceXML tags have been removed from WebWork.</li>
+	<li>The Velocity-based <a href="Tags.html" title="Tags">Tags</a> have been removed. If you were using or extending these tags (advanced users typically),  you can copy them from the /template/archive directory in the webwork jar.</li>
+</ul>
+
+
+<h1><a name="WebWork2.2MigrationNotes-IndividualChanges"></a>Individual Changes</h1>
+
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'> Version </th>
+<th class='confluenceTh'> Description </th>
+<th class='confluenceTh'> Old Code </th>
+<th class='confluenceTh'> New Code </th>
+</tr>
+<tr>
+<td class='confluenceTd'>2.1.x</td>
+<td class='confluenceTd'> If you implemented your own <b>ObjectFactory</b> or <b>ActionInvocation</b> classes, you will notice that there have been some minor changes to make an "extraContext" Map available for the build&#42; methods. This allows, for instance, access to the Session map during object creation, even before the <b>ActionContext ThreadLocal</b> has been set.</td>
+<td class='confluenceTd'> ObjectFactory.getObjectFactory().buildBean(clazz); </td>
+<td class='confluenceTd'> ObjectFactory.getObjectFactory().buildBean(clazz, extraContext); </td>
+</tr>
+<tr>
+<td class='confluenceTd'>2.0+</td>
+<td class='confluenceTd'> If you've used the WebWork base classes for building templated tags, you'll run into the refactoring of the UI tags to use common <b>Component</b> classes as the templated back-end. The tags now use these <b>Component</b> classes, as do Velocity and FreeMarker. This allows Velocity and FreeMarker to use the same UI components directly, without pretending to be a JSP page, but it also means you need to refactor your custom tags to use the new API's</td>
+<td class='confluenceTd'> ...your code.. </td>
+<td class='confluenceTd'> See the existing UI tags in the 2.2 source</td>
+</tr>
+<tr>
+<td class='confluenceTd'>2.1.x</td>
+<td class='confluenceTd'> If you were <em>not</em> using the <a href="Alt Syntax.html" title="Alt Syntax">Alt Syntax</a>, it is now enabled by default. You can either upgrade or change the <a href="Tag Syntax.html" title="Tag Syntax">Tag Syntax</a></td>
+<td class='confluenceTd'> &lt;ww:url value="'http://www.yahoo.com'"/&gt; </td>
+<td class='confluenceTd'> &lt;ww:url value="http://www.yahoo.com"/&gt; </td>
+</tr>
+<tr>
+<td class='confluenceTd'>2.1.x</td>
+<td class='confluenceTd'> If you are using FreeMarker and your code uses psuedo properties on collections and maps, you need to modify the code to call methods instead. </td>
+<td class='confluenceTd'> ${parameters?size} / ${parameters.size?html} </td>
+<td class='confluenceTd'> ${parameters.size()} / ${parameters.get("size")?html} </td>
+</tr>
+<tr>
+<td class='confluenceTd'>2.1.x</td>
+<td class='confluenceTd'> The defaultStack has been renamed to the basicStack. </td>
+<td class='confluenceTd'> &lt;interceptor-ref name="defaultStack"/&gt; </td>
+<td class='confluenceTd'> &lt;interceptor-ref name="basicStack"/&gt; </td>
+</tr>
+<tr>
+<td class='confluenceTd'>2.1.x</td>
+<td class='confluenceTd'> The completeStack has been renamed to the defaultStack. </td>
+<td class='confluenceTd'> &lt;interceptor-ref name="completeStack"/&gt; </td>
+<td class='confluenceTd'> &lt;interceptor-ref name="defaultStack"/&gt; </td>
+</tr>
+<tr>
+<td class='confluenceTd'>2.1.x</td>
+<td class='confluenceTd'> The defaultStack (previously the completeStack) is now the default interceptor stack in webwork-default.xml. In addition, this stack now configures the <a href="Workflow Interceptor.html" title="Workflow Interceptor">Workflow Interceptor</a> and the <a href="Validation Interceptor.html" title="Validation Interceptor">Validation Interceptor</a> to not run if the method names are <em>input</em>, <em>back</em>, or <em>cancel</em> </td>
+<td class='confluenceTd'> N/A </td>
+<td class='confluenceTd'> N/A </td>
+</tr>
+<tr>
+<td class='confluenceTd'>2.1.x</td>
+<td class='confluenceTd'> The component interceptor has been deprecated (along with all WebWork IOC features) and has been removed from the basicStack and completeStack. You'll need to add it back by hand if you wish to use this deprecated feature. </td>
+<td class='confluenceTd'> N/A </td>
+<td class='confluenceTd'> N/A </td>
+</tr>
+<tr>
+<td class='confluenceTd'>2.0+ </td>
+<td class='confluenceTd'> The include tag's page attribute has been deprecated since 1.x and is now removed from 2.2. Please use the value attribute. </td>
+<td class='confluenceTd'> &lt;ww:include page="..."/&gt; </td>
+<td class='confluenceTd'> &lt;ww:include value="..."/&gt; </td>
+</tr>
+<tr>
+<td class='confluenceTd'>2.0+ </td>
+<td class='confluenceTd'> The text tag's value0, value1, value2, and value 3attributes have been deprecated since 1.x and are now removed from 2.2. Please use the param tag instead. </td>
+<td class='confluenceTd'> &lt;ww:text value0="...""/&gt; </td>
+<td class='confluenceTd'> &lt;ww:text&gt;&lt;ww:param value="someValue"&gt;...&lt;/ww:param&gt;&lt;/ww:text&gt; </td>
+</tr>
+<tr>
+<td class='confluenceTd'> 2.0+ </td>
+<td class='confluenceTd'> The session map wrapper (found in ActionContext) has been changed to no longer create sessions for every request. If your application depends on sessions being automatically created, WebWork 2.2 no longer does that. Instead, you must create the session yourself or the session will be created as soon as a value is put in the session Map. </td>
+<td class='confluenceTd'> N/A </td>
+<td class='confluenceTd'> N/A </td>
+</tr>
+<tr>
+<td class='confluenceTd'>2.0+ </td>
+<td class='confluenceTd'> The VUI tags have been removed from WebWork. They haven't been actively worked on in over 4 years and are not used in the community. </td>
+<td class='confluenceTd'> N/A </td>
+<td class='confluenceTd'> N/A </td>
+</tr>
+<tr>
+<td class='confluenceTd'>2.0+ </td>
+<td class='confluenceTd'> The URI of the WebWork TLD was change from <em>webwork</em> to <em>/webwork</em>. If you were already using the packaged TLD from webwork.jar, you will have to adjust URI in your JSPs</td>
+<td class='confluenceTd'> &lt;%@ taglib uri="webwork" prefix="ww" %&gt; </td>
+<td class='confluenceTd'> &lt;%@ taglib uri="/webwork" prefix="ww" %&gt; </td>
+</tr>
+<tr>
+<td class='confluenceTd'> 2.0+ </td>
+<td class='confluenceTd'> The default encoding has changed from <b>ISO-8859-1</b> to <b>UTF-8</b>. If you wish to continue to use ISO-8859-1, you must change your <a href="webwork.properties.html" title="webwork.properties">webwork.properties</a>. </td>
+<td class='confluenceTd'> N/A </td>
+<td class='confluenceTd'> webwork.i18n.encoding=ISO-8859-1 </td>
+</tr>
+</tbody></table>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

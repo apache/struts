@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <title>WebWork - 
+         Syntax
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>The <em>altSyntax</em> is an option that can be defined in <a href="webwork.properties.html" title="webwork.properties">webwork.properties</a>. By default it is set to true and it is <b>strongly</b> recommend you do not change that unless you are upgrading from WebWork 2.1.7 or previous versions.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='tipMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/check.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Migration tip</b><br />You can also turn on the altSyntax on a per-page basis by using the <a href="set.html" title="set">set</a> tag. Simply set the name <em>useAltSyntax</em> to the value <em>true</em>. From this point on, all tags will use the altSyntax for the rest of the request.</td></tr></table>
+
+<p>The altSyntax changes the behavior of how tags are interpreted. Instead of evaluating each tag parameter against the value stack and needing single quotes to mark string literals, only marked expressions are evaluated.</p>
+
+<p>Example:</p>
+
+<p>the following code uses the <a href="Tag Syntax.html" title="Tag Syntax">Tag Syntax</a>:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;ww:iterator value=<span class="code-quote">"cart.items"</span>&gt;
+   ...
+   &lt;ww:textfield label=<span class="code-quote">"'Cart item No.' + #rowstatus.index + ' note'"</span> 
+                 name=<span class="code-quote">"'cart.items[' + #rowstatus.index + '].note'"</span> 
+                 value=<span class="code-quote">"note"</span> /&gt;
+&lt;/ww:iterator&gt;</pre>
+</div></div>
+
+<p>this is somewhat counter intuitive to normal HTML tag behaviour, and you get loads of single quotes. Now the same example in altSyntax:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;ww:iterator value=<span class="code-quote">"cart.items"</span>&gt;
+   ...
+   &lt;ww:textfield label=<span class="code-quote">"Cart item No. %{#rowstatus.index} note"</span> 
+                 name=<span class="code-quote">"cart.items[%{#rowstatus.index}].note"</span> 
+                 value=<span class="code-quote">"%{note}"</span> /&gt;
+&lt;/ww:iterator&gt;</pre>
+</div></div>
+
+<p>Only expressions enclosed with %{} are evaluated. The code is shorter and clearer, very similar to JSTL EL usage. Quoting problems, eg. with javascript function calls, are avoided.</p>
+
+<p>In order to fully understand why this option exists and what the differences are, it is best to get a bit of history about WebWork.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>If you are <em>not</em> upgrading from WebWork 2.1.7 or previous versions and you don't care about the history of WebWork's evolution, you can skip this section. See the <a href="Tag Syntax.html" title="Tag Syntax">Tag Syntax</a> section for more information on the standard tag syntax support</td></tr></table>
+
+<h1><a name="AltSyntax-History"></a>History</h1>
+
+<p>In WebWork 2.1.4, the altSyntax option was introduced. The book, WebWork in Action, while based around WebWork 2.1.7, was entirely written with the assumption that the altSyntax was enabled. As of WebWork 2.2, the altSyntax is turned on by default and eventually the old syntax will no longer be supported and will be removed from the code.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

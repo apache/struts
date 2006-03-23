@@ -1,0 +1,26 @@
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+
+<xwork>
+    <include file="webwork-default.xml"/>
+
+    <package name="default" extends="webwork-default">
+
+        <default-action-ref name="home" />
+
+        <action name="home" class="com.foo.example.HomeAction">
+            <result>/WEB-INF/pages/home.jsp</result>
+        </action>
+
+        <action name="helloMatrix" class="com.foo.example.HelloMatrixAction">
+            <result name="success">/WEB-INF/pages/hellomatrix.jsp</result>
+        </action>
+
+        <action name="helloMatrixSubmit" class="com.foo.example.HelloMatrixAction" method="sayHello">
+            <interceptor-ref name="validationWorkflowStack"/>
+            <result name="input">/WEB-INF/pages/hellomatrix.jsp</result>
+            <result name="error">/WEB-INF/pages/hellomatrix.jsp</result>
+            <result name="success" type="freemarker">/WEB-INF/pages/hellomatrix-success.ftl</result>
+        </action>
+
+    </package>
+</xwork>

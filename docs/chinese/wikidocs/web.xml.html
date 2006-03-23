@@ -1,0 +1,74 @@
+<html>
+    <head>
+        <title>WebWork 2 : web.xml</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : web.xml
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on May 23, 2004 by <font color="#0050B2">ctran</font>.
+				    </div>
+
+				    <p class="paragraph"><a name="web.xml-top"></a></p>web.xml文件简单明了, 易于配置. <p class="paragraph"><h2 class="heading2"><a name="web.xml-ConfiguringtheServletDispatcher"> 配置ServletDispatcher</a></h2></p>应用中最常用的活动调用入口点是直接访问一个URL或使用表单向活动提交数据. 下例展示了如何配置ServletDispatcher来处理活动.<br/>
+
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; This entry is required to have the framework process calls to WebWork actions &#45;&#45;&gt;</span></span>&#10;<span class="xml&#45;tag">&lt;servlet&gt;</span>&#10;  <span class="xml&#45;tag">&lt;servlet&#45;name&gt;</span>webworkDispatcher<span class="xml&#45;tag">&lt;/servlet&#45;name&gt;</span>&#10;  <span class="xml&#45;tag">&lt;servlet&#45;class&gt;</span>com.opensymphony.webwork.dispatcher.ServletDispatcher<span class="xml&#45;tag">&lt;/servlet&#45;class&gt;</span>&#10;  <span class="xml&#45;tag">&lt;load&#45;on&#45;startup&gt;</span>1<span class="xml&#45;tag">&lt;/load&#45;on&#45;startup&gt;</span> &#10;<span class="xml&#45;tag">&lt;/servlet&gt;</span>&#10;<span class="xml&#45;tag">&lt;servlet&#45;mapping&gt;</span>&#10;  <span class="xml&#45;tag">&lt;servlet&#45;name&gt;</span>webworkDispatcher<span class="xml&#45;tag">&lt;/servlet&#45;name&gt;</span>&#10;  <span class="xml&#45;tag">&lt;url&#45;pattern&gt;</span>&#42;.action<span class="xml&#45;tag">&lt;/url&#45;pattern&gt;</span>&#10;<span class="xml&#45;tag">&lt;/servlet&#45;mapping&gt;</span></pre>
+</div></div><p class="paragraph">注意: 上面的例子假定活动使用&quot;.action&quot;扩展名. 如果你向使用不同的扩展名, 将url-pattern元素改为你需要的扩展名并使用该扩展名修改调用代码.</p><h2 class="heading2"><a name="web.xml-ConfiguringCoolUriServletDispatcher%28optional%29"> 配置CoolUriServletDispatcher(可选)</a></h2><p class="paragraph">一个定制的servlet分发器, 可以把servlet路径映射为活动. 可以用来代替上面的ServletDispatcher.  格式如下:
+<div class="preformatted"><div class="preformattedContent">
+<pre>&#104;ttp://HOST/ACTION&#95;NAME/PARAM&#95;NAME1/PARAM&#95;VALUE1/PARAM&#95;NAME2/PARAM&#95;VALUE2</pre>
+</div></div><br/>
+你可以使用任意多的参数. URL也可以像下文那样简写:
+<div class="preformatted"><div class="preformattedContent">
+<pre>&#104;ttp://HOST/ACTION&#95;NAME/PARAM&#95;VALUE1/PARAM&#95;NAME2/PARAM&#95;VALUE2</pre>
+</div></div><br/>
+这样写也是相同的:
+<div class="preformatted"><div class="preformattedContent">
+<pre>&#104;ttp://HOST/ACTION&#95;NAME/ACTION&#95;NAME/PARAM&#95;VALUE1/PARAM&#95;NAME2/PARAM&#95;VALUE2</pre>
+</div></div><br/>
+假定根据ID显示文章内容的URL使用下面的模式:
+<div class="preformatted"><div class="preformattedContent">
+<pre>&#104;ttp://HOST/article/ID</pre>
+</div></div><br/>
+我们需要做的就是将/article/*映射到该servlet并声明一个名为article的WebWork活动. 该活动会设置参数ID:
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;servlet&gt;</span>&#10;  <span class="xml&#45;tag">&lt;servlet&#45;name&gt;</span>coolDispatcher<span class="xml&#45;tag">&lt;/servlet&#45;name&gt;</span>&#10;  <span class="xml&#45;tag">&lt;servlet&#45;class&gt;</span>com.opensymphony.webwork.dispatcher.CoolUriServletDispatcher<span class="xml&#45;tag">&lt;/servlet&#45;class&gt;</span>&#10;<span class="xml&#45;tag">&lt;/servlet&gt;</span>&#10;<span class="xml&#45;tag">&lt;servlet&#45;mapping&gt;</span>&#10;  <span class="xml&#45;tag">&lt;servlet&#45;name&gt;</span>coolDispatcher<span class="xml&#45;tag">&lt;/servlet&#45;name&gt;</span>&#10;  <span class="xml&#45;tag">&lt;url&#45;pattern&gt;</span>/article/&#42;<span class="xml&#45;tag">&lt;/url&#45;pattern&gt;</span>&#10;<span class="xml&#45;tag">&lt;/servlet&#45;mapping&gt;</span></pre>
+</div></div></p><h2 class="heading2"><a name="web.xml-ConfiguringVelocitySupport%28optional%29"> 配置支持Velocity(可选)</a></h2><p class="paragraph">WebWork使用Velocity作为定制JSP标签库的底层模版系统.   除非你需要直接(或使用&quot;dispatcher&quot;中的结果类型)调用velocity模版, 否则不需要配置WebWorkVelocityServlet. 配置它需要加入下列内容:</p><div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;servlet&gt;</span>&#10;  <span class="xml&#45;tag">&lt;servlet&#45;name&gt;</span>velocity<span class="xml&#45;tag">&lt;/servlet&#45;name&gt;</span> &#10;  <span class="xml&#45;tag">&lt;servlet&#45;class&gt;</span>com.opensymphony.webwork.views.velocity.WebWorkVelocityServlet<span class="xml&#45;tag">&lt;/servlet&#45;class&gt;</span> &#10;  <span class="xml&#45;tag">&lt;load&#45;on&#45;startup&gt;</span>10<span class="xml&#45;tag">&lt;/load&#45;on&#45;startup&gt;</span> &#10;<span class="xml&#45;tag">&lt;/servlet&gt;</span>&#10;<span class="xml&#45;tag">&lt;servlet&#45;mapping&gt;</span>&#10;  <span class="xml&#45;tag">&lt;servlet&#45;name&gt;</span>velocity<span class="xml&#45;tag">&lt;/servlet&#45;name&gt;</span> &#10;  <span class="xml&#45;tag">&lt;url&#45;pattern&gt;</span>&#42;.vm<span class="xml&#45;tag">&lt;/url&#45;pattern&gt;</span> &#10;<span class="xml&#45;tag">&lt;/servlet&#45;mapping&gt;</span></pre>
+</div></div><p class="paragraph"><h2 class="heading2"><a name="web.xml-Configuringtaglibraries%28optional%29"> 配置标签库(可选)</a></h2></p>标签库是框架的可选部分, 在使用表单和活动时可以提供一些好处.  参见<a href="JSP Tags.html" title="JSP Tags">JSP标签</a>了解更多信息.  使用时需要指定tld(Tag Library Descriptor)文件的位置:<br/>
+
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;taglib&gt;</span>&#10;  <span class="xml&#45;tag">&lt;taglib&#45;uri&gt;</span>webwork<span class="xml&#45;tag">&lt;/taglib&#45;uri&gt;</span> &#10;  <span class="xml&#45;tag">&lt;taglib&#45;location&gt;</span>/WEB&#45;INF/lib/webwork&#45;2.1.jar<span class="xml&#45;tag">&lt;/taglib&#45;location&gt;</span> &#10;<span class="xml&#45;tag">&lt;/taglib&gt;</span></pre>
+</div></div><p class="paragraph">如果应用服务器不支持jar文件中的标记库描述文件, 你需要解出webwork.tld并复制到/WEB-INF目录中并修改配置为:</p><div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;taglib&gt;</span>&#10;  <span class="xml&#45;tag">&lt;taglib&#45;uri&gt;</span>webwork<span class="xml&#45;tag">&lt;/taglib&#45;uri&gt;</span> &#10;  <span class="xml&#45;tag">&lt;taglib&#45;location&gt;</span>/WEB&#45;INF/webwork.tld<span class="xml&#45;tag">&lt;/taglib&#45;location&gt;</span> &#10;<span class="xml&#45;tag">&lt;/taglib&gt;</span></pre>
+</div></div><p class="paragraph">注意: webwork.tld可以放置在应用的任何目录中.</p><h2 class="heading2"><a name="web.xml-ConfiguringFreemarkersupport%28optional%29"> 配置支持Freemarker(可选)</a></h2><p class="paragraph">加入下列内容:
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;servlet&gt;</span>&#10;  <span class="xml&#45;tag">&lt;servlet&#45;name&gt;</span>freemarker<span class="xml&#45;tag">&lt;/servlet&#45;name&gt;</span>&#10;  <span class="xml&#45;tag">&lt;servlet&#45;class&gt;</span>com.opensymphony.webwork.views.freemarker.FreemarkerServlet<span class="xml&#45;tag">&lt;/servlet&#45;class&gt;</span>&#10;  <span class="xml&#45;tag">&lt;load&#45;on&#45;startup&gt;</span>10<span class="xml&#45;tag">&lt;/load&#45;on&#45;startup&gt;</span>&#10;<span class="xml&#45;tag">&lt;/servlet&gt;</span></pre>
+</div></div></p>以及<br/>
+
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;servlet&#45;mapping&gt;</span>&#10;  <span class="xml&#45;tag">&lt;servlet&#45;name&gt;</span>freemarker<span class="xml&#45;tag">&lt;/servlet&#45;name&gt;</span>&#10;  <span class="xml&#45;tag">&lt;url&#45;pattern&gt;</span>&#42;.ftl<span class="xml&#45;tag">&lt;/url&#45;pattern&gt;</span>&#10;<span class="xml&#45;tag">&lt;/servlet&#45;mapping&gt;</span></pre>
+</div></div><p class="paragraph"><h2 class="heading2"><a name="web.xml-ConfiguringIoC%2FLifeCycle%28optional%29">  配置IoC/生命周期管理LifeCycle(可选)</a></h2></p>参见<a href="IoC Configuration.html" title="IoC Configuration">IoC配置</a>
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:37</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

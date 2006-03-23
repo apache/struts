@@ -1,0 +1,118 @@
+
+<html>
+<head>
+<title>&lt;ww:set /&gt;</title>
+</head>
+
+<body>
+
+<h1>Tag Name: &lt;ww:set /&gt;</h1>
+
+<h2>Description</h2>
+<p>
+
+Assigns a value to a variable in a specified scope
+
+</p>
+
+<p>
+<!-- START SNIPPET: javadoc --> <p>The set tag assigns a value to a variable in a specified scope. It is useful when you wish to assign a variable to a complex expression and then simply reference that variable each time rather than the complex expression. This is useful in both cases: when the complex expression takes time (performance improvement) or is hard to read (code readability improvement).</P> <!-- END SNIPPET: javadoc --> <p/> <b>Parameters</b> <!-- START SNIPPET: params --> <ul> <li>name* (String): The name of the new variable that is assigned the value of <i>value</i></li> <li>value (Object): The value that is assigned to the variable named <i>name</i></li> <li>scope (String): The scope in which to assign the variable. Can be <b>application</b>, <b>session</b>, <b>request</b>, <b>page</b>, or <b>action</b>. By default it is <b>action</b>.</li> </ul> <!-- END SNIPPET: params --> <p/> <b>Examples</b> <pre> <!-- START SNIPPET: example --> &lt;ww:set name="personName" value="person.name"/&gt; Hello, &lt;ww:property value="#personName"/&gt;. How are you? <!-- END SNIPPET: example --> </pre>
+</p>
+
+<h2>Attributes</h2>
+<p>
+
+<!-- START SNIPPET: tagattributes -->
+<table width="100%">
+<tr>
+
+<th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">name</td>
+
+<!-- Required -->
+<td align="left" valign="top"><b>true</b></td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The name of the new variable that is assigned the value of <i>value</i></td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">scope</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">action</td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The scope in which to assign the variable. Can be <b>application</b>, <b>session</b>, <b>request</b>, <b>page</b>, or <b>action</b>.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">value</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The value that is assigned to the variable named <i>name</i></td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">id for referencing element. For UI and form tags it will be used as HTML id attribute</td>
+
+</tr>
+
+</table>
+<!-- END SNIPPET: tagattributes -->
+
+</p>
+<p>
+<center><a href="index.html">Back to Taglib Index</a></center>
+</p>
+</body>
+</html>
+

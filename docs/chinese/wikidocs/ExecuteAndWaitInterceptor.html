@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <title>WebWork 2 : ExecuteAndWaitInterceptor</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : ExecuteAndWaitInterceptor
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Nov 01, 2004 by <font color="#0050B2">mbogaert</font>.
+				    </div>
+
+				    <p class="paragraph">The ExecuteAndWaitInterceptor is great for running long-lived actions in the background while showing the user a nice progress meter. This also prevents the HTTP request from timing out when the action takes more than 5 or 10 minutes.</p>Using this interceptor is pretty straight forward. Assuming that you are including <a href="webwork-default.xml.html" title="webwork-default.xml">webwork-default.xml</a>, this interceptor is already configured but is not part of any of the default stacks. Because of the nature of this interceptor, it must be the <b class="strong">last</b> interceptor in the stack. A typical configuration looks like:<br/>
+
+<div class="code"><div class="codeHeader"><b>xwork.xml</b></div><div class="codeContent">
+<pre>...&#10;<span class="xml&#45;tag">&lt;action name=<span class="xml&#45;quote">&quot;myLongRunningAction&quot;</span> class=<span class="xml&#45;quote">&quot;...&quot;</span>&gt;</span>&#10;    <span class="xml&#45;tag">&lt;interceptor&#45;ref name=<span class="xml&#45;quote">&quot;defaultStack&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;interceptor&#45;ref name=<span class="xml&#45;quote">&quot;execAndWait&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;result name=<span class="xml&#45;quote">&quot;wait&quot;</span>&gt;</span>longRunningAction&#45;wait.jsp<span class="xml&#45;tag">&lt;/result&gt;</span>&#10;    <span class="xml&#45;tag">&lt;result name=<span class="xml&#45;quote">&quot;success&quot;</span>&gt;</span>longRunningAction&#45;success.jsp<span class="xml&#45;tag">&lt;/result&gt;</span>&#10;<span class="xml&#45;tag">&lt;/action&gt;</span>&#10;...</pre>
+</div></div><p class="paragraph">This interceptor works on a per-session basis. That means that the same action name (<em class="emphasis">myLongRunningAction</em>, in the above example) cannot be run more than once at a time in a given session. On the initial request or any subsequent requests (before the action has completed), the <b class="strong">wait</b> result will be returned. The wait result <b class="strong">is responsible for issuing a subsequent request back to the action, giving the effect of a self-updating progress meter</b>.</p>An example of a simple wait JSP is:<br/>
+
+<div class="code"><div class="codeHeader"><b>longRunningAction-wait.jsp</b></div><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;html&gt;</span>&#10;    <span class="xml&#45;tag">&lt;head&gt;</span>&#10;        <span class="xml&#45;tag">&lt;title&gt;</span>Please wait<span class="xml&#45;tag">&lt;/title&gt;</span>&#10;        <span class="xml&#45;tag">&lt;meta http&#45;equiv=<span class="xml&#45;quote">&quot;refresh&quot;</span> content=<span class="xml&#45;quote">&quot;5;url=&lt;ww:url includeParams=&quot;</span>&#039;all&#039;<span class="xml&#45;quote">&quot; /&gt;</span>&quot;</span>/&gt;&#10;    <span class="xml&#45;tag">&lt;/head&gt;</span>&#10;    <span class="xml&#45;tag">&lt;body&gt;</span>&#10;        Please wait while we process your request. &#10;        Click <span class="xml&#45;tag">&lt;a href=<span class="xml&#45;quote">&quot;&lt;ww:url includeParams=&quot;</span>&#039;all&#039;<span class="xml&#45;quote">&quot; /&gt;</span>&quot;</span>&gt;<span class="xml&#45;tag">&lt;/a&gt;</span> if this page does not reload automatically.&#10;    <span class="xml&#45;tag">&lt;/body&gt;</span></pre>
+</div></div><p class="paragraph">Whenever the wait result is returned, the <b class="strong">action that is currently running in the background will be placed on top of the stack</b>. This allow you to display progress data, such as a count, in the wait page. By making the wait page automatically reload the request to the action (which will be short-circuited by the interceptor), you can give the appearance of an automatic progress meter.</p>To set the Thread priority, add the parameter <em class="emphasis">threadPriority</em> (defaults to Thread.NORM_PRIORITY):<br/>
+
+<div class="code"><div class="codeHeader"><b>xwork.xml</b></div><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;interceptor name=<span class="xml&#45;quote">&quot;execAndWait&quot;</span> class=<span class="xml&#45;quote">&quot;com.opensymphony.webwork.interceptor.ExecuteAndWaitInterceptor&quot;</span>/&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;interceptor&#45;stack name=<span class="xml&#45;quote">&quot;defaultStack&quot;</span>&gt;</span>&#10;    ...&#10;    <span class="xml&#45;tag">&lt;interceptor&#45;ref name=<span class="xml&#45;quote">&quot;execAndWait&quot;</span>&gt;</span>&#10;        <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;threadPriority&quot;</span>&gt;</span>10<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/interceptor&#45;ref&gt;</span>&#10;<span class="xml&#45;tag">&lt;/interceptor&#45;stack&gt;</span></pre>
+</div></div><p class="paragraph">The thread will receive the name of the action with &#039;BackgroundThread&#039; appended.</p>
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

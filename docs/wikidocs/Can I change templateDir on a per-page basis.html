@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <title>WebWork - 
+         I change templateDir on a per-page basis
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>Yes, by using the <tt>&lt;ww:set name="templateDir" value="myTemplateDir" scope="page" /&gt;</tt>. </p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>This will set the attribute 'templateDir' in the page scope, with the value of what that is returned by 'myTemplateDir' in the stack, eg. the action class might have a getMyTheme method that return a String called template, to indicate what the template directory is within the classpath.</td></tr></table>
+
+<p>Another way would be <tt>&lt;ww:set name="templateDir" value="'template'" scope="page" /&gt;</tt></p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>This will set the attribute 'templateDir' in the page scope with the value 'template' to indicate what the template directory is within the classpath.</td></tr></table>
+
+<p>See <a href="Template Loading.html" title="Template Loading">Template Loading</a></p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

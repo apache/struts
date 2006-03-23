@@ -1,0 +1,80 @@
+<html>
+    <head>
+        <title>WebWork 2 : WebWork Freemarker Support</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : WebWork Freemarker Support
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Nov 30, 2004 by <font color="#0050B2">jcarreira</font>.
+				    </div>
+
+				    <p class="paragraph"><h1 style="margin: 4px 0px 4px 0px;" class="heading1"><a name="WebWorkFreemarkerSupport-FreemarkerSupportinWebWork"> Freemarker Support in WebWork</a></h1></p>Freemarker views can be rendered either via the webwork result type <tt class="monospaced">freemarker</tt>, or by using the <tt class="monospaced">dispatcher</tt> result type in conjunction Webwork&#039;s FreemarkerServlet.<p class="paragraph">This document will focus on using the <tt class="monospaced">freemarker</tt> result since it is the recommended approach.  An section follows to show how to use the FreemarkerServlet.</p><h3 class="heading3"><a name="WebWorkFreemarkerSupport-Configureyouractiontousethe%7B%7Bfreemarker%7D%7Dresulttype"> Configure your action to use the <tt class="monospaced">freemarker</tt> result type</a></h3><p class="paragraph">The <tt class="monospaced">freemarker</tt> result type is defined in <tt class="monospaced">webwork-default.xml</tt>, so normally you just include it, and define your resutls to use <tt class="monospaced">type=&quot;freemarker&quot;</tt>.</p><div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;include file=<span class="xml&#45;quote">&quot;webwork&#45;default.xml&quot;</span>/&gt;</span>&#10;...&#10;<span class="xml&#45;tag">&lt;action name=<span class="xml&#45;quote">&quot;test&quot;</span> class=<span class="xml&#45;quote">&quot;package.Test&quot;</span>&gt;</span>&#10;  <span class="xml&#45;tag">&lt;result name=<span class="xml&#45;quote">&quot;success&quot;</span> type=<span class="xml&#45;quote">&quot;freemarker&quot;</span>&gt;</span>/WEB&#45;INF/views/testView.ftl<span class="xml&#45;tag">&lt;/result&gt;</span>&#10;<span class="xml&#45;tag">&lt;/action&gt;</span>&#10;...</pre>
+</div></div><br/>
+
+<p class="paragraph"><h3 class="heading3"><a name="WebWorkFreemarkerSupport-PropertyResoloution"> Property Resoloution</a></h3></p>Your action properties are automatically resolved - just like in a velocity view. <p class="paragraph"><b class="strong">for example</b>&#160;<tt class="monospaced">$&#123;name&#125;</tt> will result in <tt class="monospaced">stack.findValue(&quot;name&quot;)</tt>, which <em class="emphasis">generaly</em> results in <tt class="monospaced">action.getName()</tt> being executed.</p>A search process is used to resolve the variable, searching the following scopes in order, until a value is found :
+<ul class="star">
+<li> freemarker variables</li>
+<li> value stack</li>
+<li> request attributes</li>
+<li> session attributes</li>
+<li> servlet context attributes</li>
+</ul>
+<h3 class="heading3"><a name="WebWorkFreemarkerSupport-ObjectsintheContext"> Objects in the Context</a></h3><p class="paragraph">The following variables exist in the freemarer views</p><ul class="star">
+<li> <tt class="monospaced">req</tt> - the current HttpServletRequest</li>
+<li> <tt class="monospaced">res</tt> - the current HttpServletResponse</li>
+<li> <tt class="monospaced">stack</tt> - the current OgnlValueStack</li>
+<li> <tt class="monospaced">ognl</tt> - the OgnlTool instance<ul class="star">
+<li> This class contains useful methods to execute OGNL expressions against arbitary objects, and a method to generate a select list using the &lt;ww:select&gt; pattern. (i.e. taking the name of the list property, a listKey and listValue)</li>
+</ul></li>
+<li> <tt class="monospaced">webwork</tt> - an instance of FreemarkerWebWorkUtil</li>
+<li> <tt class="monospaced">action</tt> - the current WebWork action</li>
+<li> <tt class="monospaced">exception</tt> - <em class="emphasis">optional</em> the Exception instance, if the view is a JSP exception or Servlet exception view</li>
+</ul>
+<p class="paragraph"><h3 class="heading3"><a name="WebWorkFreemarkerSupport-FreeMarkerconfigurationwithrecent%28post2.1%29releases"> FreeMarker configuration with recent (post 2.1) releases</a></h3></p>To configure the freemarker engine that webwork uses, just add a file <tt class="monospaced">freemarker.properties</tt> to the classpath.  The supported properties are those that the freemarker Configuration object expects - see the freemarker documentation for these.  These properties are used for both the <tt class="monospaced">freemarker</tt> result type, and the webwork provided FreemarkerServlet.<br/>
+
+<div class="code"><div class="codeContent">
+<pre>default&#95;encoding=ISO&#45;8859&#45;1&#10;template&#95;update&#95;delay=5&#10;locale=no&#95;NO</pre>
+</div></div>
+<p class="paragraph"><h3 class="heading3"><a name="WebWorkFreemarkerSupport-UsingwebworkUItagsoranyJSPTagLibrary"> Using webwork UI tags - or any JSP Tag Library</a></h3></p>Freemarker has builtin support for using any JSP taglib. You can use JSP taglibs in FreeMarker even if<br/>
+a) your servlet container has no support for JSP, or <br/>
+b) you didn&#039;t specify the taglib in your web.xml - note how in the example below we refer to the taglib by its webapp-absolute URL, so no configuration in web.xml is needed.<br/>
+
+<div class="code"><div class="codeContent">
+<pre>&lt;#assign ww=JspTaglibs&#91;<span class="java&#45;quote">&quot;/WEB&#45;INF/webwork.tld&quot;</span>&#93; /&gt;&#10;&#10;&lt;&#64;ww.form method=<span class="java&#45;quote">&quot;&#039;post&#039;&quot;</span> name=<span class="java&#45;quote">&quot;&#039;inputform&#039;&quot;</span> action=<span class="java&#45;quote">&quot;&#039;save.action&#039;&quot;</span> &gt;&#10;    &lt;&#64;ww.hidden name=<span class="java&#45;quote">&quot;&#039;id&#039;&quot;</span> /&gt;&#10;    &lt;&#64;ww.textarea label=<span class="java&#45;quote">&quot;&#039;Details&#039;&quot;</span> name=<span class="java&#45;quote">&quot;&#039;details&#039;&quot;</span> rows=5 cols=40 /&gt;&#10;    &lt;&#64;ww.submit value=<span class="java&#45;quote">&quot;&#039;Save&#039;&quot;</span> align=<span class="java&#45;quote">&quot;center&quot;</span> /&gt;&#10;&lt;/&#64;ww.form&gt;</pre>
+</div></div><p class="paragraph">NOTE : numeric properties for tags MUST be numbers, not strings.  as in the rows and cols properties above.  if  you use cols=&quot;40&quot; you will receive an exception.  Other than that, the freemarker tag container behaves as you would expect.</p><h2 class="heading2"><a name="WebWorkFreemarkerSupport-UsingtheFreemarkerServlet"> Using the FreemarkerServlet</a></h2><p class="paragraph">The FreemarkerServlet provided in the freemarker.jar will work out of the box <b class="strong">however</b> it won&#039;t provide any webwork specific functionality such as the context variables, property resoloution etc.  Therefore webwork provides its own servlet to provide this integration.</p><h3 class="heading3"><a name="WebWorkFreemarkerSupport-RegistertheFreemarkerServletinweb.xml"> Register the FreemarkerServlet in web.xml</a></h3><p class="paragraph">To use freemarker as a view engine, the webwork2 FreemarkerServlet needs to be configured, and mapped to the file extension that you use for your templates.</p><div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;servlet&gt;</span>&#10;  <span class="xml&#45;tag">&lt;servlet&#45;name&gt;</span>freemarker<span class="xml&#45;tag">&lt;/servlet&#45;name&gt;</span>&#10;  <span class="xml&#45;tag">&lt;servlet&#45;class&gt;</span>com.opensymphony.webwork.views.freemarker.FreemarkerServlet<span class="xml&#45;tag">&lt;/servlet&#45;class&gt;</span>&#10;<span class="xml&#45;tag">&lt;/servlet&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;servlet&#45;mapping&gt;</span>&#10;  <span class="xml&#45;tag">&lt;servlet&#45;name&gt;</span>freemarker<span class="xml&#45;tag">&lt;/servlet&#45;name&gt;</span>&#10;  <span class="xml&#45;tag">&lt;url&#45;pattern&gt;</span>&#42;.ftl<span class="xml&#45;tag">&lt;/url&#45;pattern&gt;</span>&#10;<span class="xml&#45;tag">&lt;/servlet&#45;mapping&gt;</span></pre>
+</div></div><p class="paragraph"><h3 class="heading3"><a name="WebWorkFreemarkerSupport-ConfigureActionstousethisservlet%28xwork.xmlconfiguration%29"> Configure Actions to use this servlet (xwork.xml configuration)</a></h3></p>To use the freemarker view, just use the <tt class="monospaced">dispatcher</tt> result type, and specify the location to the template file. <br/>
+
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;action name=<span class="xml&#45;quote">&quot;test&quot;</span> class=<span class="xml&#45;quote">&quot;package.Test&quot;</span>&gt;</span>&#10;  <span class="xml&#45;tag">&lt;result name=<span class="xml&#45;quote">&quot;success&quot;</span> type=<span class="xml&#45;quote">&quot;dispatcher&quot;</span>&gt;</span>/WEB&#45;INF/views/testView.ftl<span class="xml&#45;tag">&lt;/result&gt;</span>&#10;<span class="xml&#45;tag">&lt;/action&gt;</span></pre>
+</div></div><p class="paragraph"><h3 class="heading3"><a name="WebWorkFreemarkerSupport-Extendingtheservlet"> Extending the servlet</a></h3></p>NOTE: these docs need to be revised, since the FreemarkerServlet has changed since they were written.<p class="paragraph">Please refer to the freemarker site for details about the base freemarker servlet.</p>Be carfeul when subclassing com.opensymphony.webwork.views.freemarker.FreemarkerServlet when overriding <br/>
+
+<div class="code"><div class="codeContent">
+<pre><span class="java&#45;keyword">protected</span> TemplateModel createModel(&#10;    ObjectWrapper wrapper, &#10;    ServletContext servletContext, &#10;    HttpServletRequest request, &#10;    HttpServletResponse response)</pre>
+</div></div><p class="paragraph">Please call super.createModel(...) and wrap it with a new model to avoid problems with action property resoloution.</p>
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:37</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

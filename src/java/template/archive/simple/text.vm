@@ -1,0 +1,14 @@
+<input type="text"
+                                   name="$!webwork.htmlEncode($parameters.name)"
+#if ($parameters.size)             size="$!webwork.htmlEncode($parameters.size)"            #end
+#if ($parameters.maxlength)        maxlength="$!webwork.htmlEncode($parameters.maxlength)"  #end
+#if ($parameters.nameValue)        value="$!webwork.htmlEncode($parameters.nameValue)"      #end
+#if ($parameters.disabled && $parameters.disabled == true)
+                                   disabled="disabled"                                      #end
+#if ($parameters.readonly)         readonly="readonly"                                      #end
+#if ($parameters.tabindex)         tabindex="$!webwork.htmlEncode($parameters.tabindex)"    #end
+#if ($parameters.id)               id="$!webwork.htmlEncode($parameters.id)"                #end
+#if ($parameters.cssClass)         class="$!webwork.htmlEncode($parameters.cssClass)"       #end
+#if ($parameters.cssStyle)         style="$!webwork.htmlEncode($parameters.cssStyle)"       #end
+#parse("/$parameters.templateDir/simple/scripting-events.vm")
+/>

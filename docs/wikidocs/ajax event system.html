@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <title>WebWork - 
+         event system
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>As you may have seen with the <a href="ajax div template.html" title="ajax div template">ajax div template</a> and <a href="ajax a template.html" title="ajax a template">ajax a template</a>, WebWork and Dojo provide a nice way to subscribe and notify of topics from within the browser. A benifit of using Dojo as the basis of many of these components is being able to loosely couple UI components.  There are two attributes of importance: <em>listenTopics</em> and <em>notifyTopics</em>.</p>
+
+<ul>
+	<li>If a component has a <em>notifyTopics</em> attribute, then after the processing has been completed a message with be published to the topic names supplied as a value (comma delimited).</li>
+	<li>If a component has a <em>listenTopics</em> attribute, then when a message is published to the topic names supplied as a value (comma delimited), the component will perform custom tag-specific logic ( i.e a DIV tag will re-fresh its content).</li>
+</ul>
+
+
+<p>As well as this, you can publish and subscribe to topic names with javascript code.  To publish to the <em>topic_name</em> topic: </p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">dojo.event.topic.publish(<span class="code-quote">"topic_name"</span>, <span class="code-quote">"content"</span>);</pre>
+</div></div>
+
+<p>The topic_name attribute is required, the content attribute is not and most elements are triggered without having this attribute. See the <a href="ajax div template.html" title="ajax div template">ajax div template</a> for an example of this type of interaction.</p>
+
+<p>To subscribe to the <em>topic_name</em> topic:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">function doSomethingWithEvent(data) {
+...
+}
+
+dojo.event.topic.getTopic(<span class="code-quote">"topic_name"</span>).subscribe(<span class="code-keyword">null</span>, <span class="code-quote">"doSomethingWithEvent"</span>);</pre>
+</div></div>
+
+<p>The <em>subscribe</em> method takes 2 parameters, the first is the JavaScript object variable (or null if the function is not from an object) and the second is the name of the function to call when an event is recieved on the topic.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

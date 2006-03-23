@@ -1,0 +1,106 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Developing WW Ajax Widgets
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>This page is intended for WW developer not for WW users.  If your a user of WW hopefully you dont need to know these details, but certainly more knowledge is better, so if your hungry eat up!</p>
+
+<p>The WW ajax/dhtml components use the DOJO Toolkit for both javascript event handling and AJAX calls.</p>
+
+<p>To understand the widget framework this page is a must read:<br/>
+<a href="http://dojotoolkit.org/docs/fast_widget_authoring.html" title="Visit page outside Confluence">&#104;ttp://dojotoolkit.org/docs/fast_widget_authoring.html</a></p>
+
+<p>To understand the dojo event framework which is used extensively by the widget framework read this:<br/>
+<a href="http://dojotoolkit.org/docs/dojo_event_system.html" title="Visit page outside Confluence">&#104;ttp://dojotoolkit.org/docs/dojo_event_system.html</a></p>
+
+<p>OK Great so your smart on DOJO Widgets and DOJO Events lets see how WW uses these.</p>
+<h3><a name="DevelopingWWAjaxWidgets-WWTagCode"></a>WW Tag Code</h3>
+<p>Lets start with looking at what a user of WW would include in their page, a JSP in this case:</p>
+<div class="code"><div class="codeHeader"><b>SomeFile.jsp</b></div><div class="codeContent">
+<pre class="code-java">&lt;ww:a
+        id=<span class="code-quote">"link1"</span>
+        theme=<span class="code-quote">"ajax"</span>
+        href=<span class="code-quote">"/AjaxRemoteLink.action"</span>
+        showErrorTransportText=<span class="code-quote">"<span class="code-keyword">true</span>"</span>
+        errorText=<span class="code-quote">"An Error ocurred"</span>&gt;Update&lt;/ww:a&gt;</pre>
+</div></div>
+<p>This is just a standard WW component. All the attributes defined here must map to a component class thats defined in the taglib.tld.  Were not going to go into how the WW componets work in this discussion, just be assured that nothing different happens here.  </p>
+
+<h3><a name="DevelopingWWAjaxWidgets-WWComponentTemplateCode"></a>WW Component Template Code</h3>
+<p>WW via the component system will read in the ajax/a.ftl file to determine how to generate the following html file. Again this is standard WW Component processing so well breeze over this.</p>
+
+<h3><a name="DevelopingWWAjaxWidgets-WWGeneratedCode"></a>WW Generated Code</h3>
+<p>Now lets look at what this snippet of code would generate for us in html:</p>
+<div class="code"><div class="codeHeader"><b>_Generated_SomeFile.html</b></div><div class="codeContent">
+<pre class="code-java">&lt;a dojoType=<span class="code-quote">"BindAnchor"</span> evalResult=<span class="code-quote">"<span class="code-keyword">true</span>"</span> id=<span class="code-quote">"link1"</span> href=<span class="code-quote">"/ajax/AjaxRemoteLink.action"</span> errorHtml=<span class="code-quote">"An Error ocurred"</span> showTransportError=<span class="code-quote">"<span class="code-keyword">true</span>"</span>&gt;Update&lt;/a&gt;</pre>
+</div></div>
+<p>Lets review this file. The dojoType type tells the dojo parser what to do with this tag.  This is going to need to correspont to a call in our widge file like:<br/>
+dojo.widget.tags.addParseTreeHandler("dojo:BindAnchor");<br/>
+All the other attributes are basically passthrough from our component code to our widget code. No real magic happening w/ them.</p>
+
+<h3><a name="DevelopingWWAjaxWidgets-DojoWidgetFile"></a>Dojo Widget File</h3>
+<p>Next up lets look at some snippets of the widget file:</p>
+<div class="code"><div class="codeHeader"><b>BindAnchor.js</b></div><div class="codeContent">
+<pre class="code-java">webwork.widgets.HTMLBindAnchor = function() {
+<span class="code-comment">//lots removed <span class="code-keyword">for</span> clarity
+</span>	<span class="code-keyword">this</span>.widgetType = <span class="code-quote">"BindAnchor"</span>;
+	<span class="code-keyword">this</span>.templatePath = dojo.uri.dojoUri(<span class="code-quote">"webwork/widgets/BindAnchor.html"</span>);
+
+	<span class="code-comment">// the template anchor instance
+</span>	<span class="code-keyword">this</span>.anchor = <span class="code-keyword">null</span>;
+<span class="code-comment">//lots removed
+</span>		self.anchor.href = <span class="code-quote">"javascript:{}"</span>;
+
+		dojo.event.kwConnect({
+			srcObj: self.anchor,
+			srcFunc: <span class="code-quote">"onclick"</span>,
+			adviceObj: self,
+			adviceFunc: <span class="code-quote">"bind"</span>,
+			adviceType: 'before'
+		});
+		
+<span class="code-comment">//snippet removed		
+</span>    }
+
+}
+
+
+<span class="code-comment">// make it a tag
+</span>dojo.widget.tags.addParseTreeHandler(<span class="code-quote">"dojo:BindAnchor"</span>);</pre>
+</div></div>
+
+<p>There are three aspects in this code snippet that are worth review. The declaration of the templatePath. This defines to DOJO where the prototype for its component lives. DOJO is going to read this component to determine what event binding needs to happen (TODO: a better description here).  Were going to look at this template file in a moment, this file is where the real magic happens. The second aspect of this file is the kwConnect call... this is the ajax call to the remote source.  I removed the snippet that happens afterwards but its not important here.  And the final aspect worth understanding now is the last line. This tells dojo that this widget is registered as the name BindAchor... recall the dojoType="BindAnchor" in the above HTML snippet.</p>
+
+<h3><a name="DevelopingWWAjaxWidgets-DojoTemplateFile"></a>Dojo Template File</h3>
+<p>Now lets review the template file... BindAnchor.html... Understanding the template files were the big realization moment for me.</p>
+<div class="code"><div class="codeHeader"><b>BindAnchor.html</b></div><div class="codeContent">
+<pre class="code-java">&lt;a dojoAttachPoint=<span class="code-quote">"anchor"</span>&gt;&lt;/a&gt;</pre>
+</div></div>
+<p>This template simply tells dojo one thing. the dojoAttachPoint. This attribute dojoAttachPoint is the javascript variable in the widget file to attach thid DOM object to.  If you review the above widget code you will see a variable declaration called this.anchor = null;  Dojo will plug this DOM object into that variable so its availabe in the widget JS. COOL.  </p>
+
+<p>OK... lets look at a more complex template file.</p>
+
+<div class="code"><div class="codeHeader"><b>BindButton.html</b></div><div class="codeContent">
+<pre class="code-java">&lt;input dojoAttachPoint=<span class="code-quote">"attachBtn"</span> dojoAttachEvent=<span class="code-quote">"onClick: bind"</span> type=<span class="code-quote">"submit"</span> /&gt;</pre>
+</div></div>
+<p>This is the code for the button template.  Again its got the dojoAttachPoint attribute, but its also got dojoAttachEvent. This is based on the DOJO event system.  the dojoAttachEvent  property gives us a mapping between what the DOM Node's event name is (onClick) and what logical action to take as a result (bind).  This is how the the dojo widget code <em>itercepts</em> the button click code and calls the bind function.  </p>
+
+<p>Ok so now you can see how dojo intercepts calls to the real button click, and calls the bind funciton in your widget code. You could do most anything in this method. But in this case the bind function is defined in Bind.js which is the super JS inherited file to BindButton.js.</p>
+
+
+<p>Hopefully this combined with the DOJO references is enough to get you up to speed.</p>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

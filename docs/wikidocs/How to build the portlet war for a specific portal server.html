@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <title>WebWork - 
+         to build the portlet war for a specific portal server
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h2><a name="Howtobuildtheportletwarforaspecificportalserver-Buildingtheportletsamplewebappforaspecificcontainer"></a>Building the portlet sample webapp for a specific container</h2>
+
+<div class="panel"><div class="panelHeader"><b>Build instructions</b></div><div class="panelContent">
+<p>Some text with a title </p>
+<ul>
+	<li>run 'ant' from the webapp project dir</li>
+	<li>cd to webapps directory</li>
+	<li>To build a portlet webapp, simply run: ant build-portlet</li>
+</ul>
+
+
+<ul>
+	<li>You can use the 'container' system property to target a specific container, e.g. '-Dcontainer=exo'.<br/>
+     Supported containers are exo, gridsphere, liferay-3.6.1, jboss-portal-2.0, jboss-portal-2.2 and jetspeed2.<br/>
+     For IBM WebSphere Portal 5.1, no container property is required.     <br/>
+     For example:<br/>
+     ant build-portlet -Dcontainer=jboss-portal-2.2</li>
+	<li>Check the etc/yourcontainer directory for a Readme. If available, check for further instructions.</li>
+	<li>deploy the war to your portal server</li>
+</ul>
+</div></div>
+
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

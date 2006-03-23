@@ -1,0 +1,111 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Result Types
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>See <a href="Result Configuration.html" title="Result Configuration">Result Configuration</a> for basic information about how results are configuration.</p>
+
+<h2><a name="ResultTypes-Overview"></a>Overview</h2>
+
+<p><b>Result Types</b> are classes that determine what happens after an Action executes and a Result is returned. Developers are free to create their own Result Types according to the needs of their application or environment. In WebWork 2 for example, Servlet and Velocity Result Types have been created to handle rendering views in web applications.</p>
+
+<p><u>Note:</u> All built in webwork result types implement the <tt>com.opensymphony.xwork.Result</tt> interface, which represents a generic interface for all action execution results, whether that be displaying a webpage, generating an email, sending a JMS message, etc.</p>
+
+<p>Result types define classes and map them to names to be referred in the action configuration results. This serves as a shorthand name-value pair for these classes. </p>
+<div class="code"><div class="codeHeader"><b>snippet of webwork-default.xml</b></div><div class="codeContent">
+<pre class="code-xml">...
+<span class="code-tag">&lt;result-types&gt;</span>
+    <span class="code-tag">&lt;result-type name=<span class="code-quote">"dispatcher"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.ServletDispatcherResult"</span> default=<span class="code-quote">"true"</span>/&gt;</span>
+    <span class="code-tag">&lt;result-type name=<span class="code-quote">"redirect"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.ServletRedirectResult"</span>/&gt;</span>
+    <span class="code-tag">&lt;result-type name=<span class="code-quote">"velocity"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.VelocityResult"</span>/&gt;</span>
+    <span class="code-tag">&lt;result-type name=<span class="code-quote">"chain"</span> class=<span class="code-quote">"com.opensymphony.xwork.ActionChainResult"</span>/&gt;</span>
+    <span class="code-tag">&lt;result-type name=<span class="code-quote">"xslt"</span> class=<span class="code-quote">"com.opensymphony.webwork.views.xslt.XSLTResult"</span>/&gt;</span>
+    <span class="code-tag">&lt;result-type name=<span class="code-quote">"jasper"</span> class=<span class="code-quote">"com.opensymphony.webwork.views.jasperreports.JasperReportsResult"</span>/&gt;</span>
+    <span class="code-tag">&lt;result-type name=<span class="code-quote">"freemarker"</span> class=<span class="code-quote">"com.opensymphony.webwork.views.freemarker.FreemarkerResult"</span>/&gt;</span>
+    <span class="code-tag">&lt;result-type name=<span class="code-quote">"httpheader"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.HttpHeaderResult"</span>/&gt;</span>
+    <span class="code-tag">&lt;result-type name=<span class="code-quote">"stream"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.StreamResult"</span>/&gt;</span>
+    <span class="code-tag">&lt;result-type name=<span class="code-quote">"plaintext"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.PlainTextResult"</span> /&gt;</span>
+<span class="code-tag">&lt;/result-types&gt;</span>
+...</pre>
+</div></div>
+
+<div class="code"><div class="codeHeader"><b>snippet of your xwork.xml</b></div><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;include file=<span class="code-quote">"webwork-default.xml"</span>/&gt;</span>
+
+<span class="code-tag">&lt;package name=<span class="code-quote">"myPackage"</span> extends=<span class="code-quote">"default"</span>&gt;</span>
+  <span class="code-tag">&lt;action name=<span class="code-quote">"bar"</span> class=<span class="code-quote">"myPackage.barAction"</span>&gt;</span>
+    <span class="code-tag"><span class="code-comment">&lt;!-- default result type is <span class="code-quote">"dispatcher"</span> --&gt;</span></span>
+    <span class="code-tag"><span class="code-comment">&lt;!-- default result name is <span class="code-quote">"success"</span> --&gt;</span></span>
+    <span class="code-tag">&lt;result&gt;</span>foo.jsp<span class="code-tag">&lt;/result&gt;</span>
+    <span class="code-tag">&lt;result name=<span class="code-quote">"error"</span>&gt;</span>error.jsp<span class="code-tag">&lt;/result&gt;</span>
+    <span class="code-tag">&lt;/result&gt;</span>
+  <span class="code-tag">&lt;/action&gt;</span>
+<span class="code-tag">&lt;/package&gt;</span></pre>
+</div></div>
+
+<h2><a name="ResultTypes-ResultTypes"></a>Result Types</h2>
+
+<p>Webwork provides several implementations of the <tt>com.opensymphony.xwork.Result</tt> interface to make web-based interactions with your actions simple.  These result types include:</p>
+
+<ul>
+	<li><a href="Chain Result.html" title="Chain Result">Chain Result</a> - used for <a href="Action Chaining.html" title="Action Chaining">Action Chaining</a></li>
+	<li><a href="Dispatcher Result.html" title="Dispatcher Result">Dispatcher Result</a> - used for <a href="JSP.html" title="JSP">JSP</a> integration</li>
+	<li><a href="FreeMarker Result.html" title="FreeMarker Result">FreeMarker Result</a> - used for <a href="FreeMarker.html" title="FreeMarker">FreeMarker</a> integration</li>
+	<li><a href="HttpHeader Result.html" title="HttpHeader Result">HttpHeader Result</a> - used to control special HTTP behaviors</li>
+	<li><a href="JasperReports Result.html" title="JasperReports Result">JasperReports Result</a> - used for <a href="JasperReports.html" title="JasperReports">JasperReports</a> integration</li>
+	<li><a href="Redirect Result.html" title="Redirect Result">Redirect Result</a> - used to redirect to another URL</li>
+	<li><a href="Redirect Action Result.html" title="Redirect Action Result">Redirect Action Result</a> - used to redirect to another action</li>
+	<li><a href="Stream Result.html" title="Stream Result">Stream Result</a> - used to stream an InputStream back to the browser (usually for file downloads)</li>
+	<li><a href="Velocity Result.html" title="Velocity Result">Velocity Result</a> - used for <a href="Velocity.html" title="Velocity">Velocity</a> integration</li>
+	<li><a href="XSL Result.html" title="XSL Result">XSL Result</a> - used for XML/XSLT integration</li>
+	<li><a href="PlainText Result.html" title="PlainText Result">PlainText Result</a> - used to display the raw content of a particular page (eg. jsp, html etc)</li>
+</ul>
+
+
+<p>Results are specified in a xwork xml config file(xwork.xml) nested inside &lt;action&gt;.  If the <tt>location</tt> param is the only param being specified in the result tag, you can simplify it as follows:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;action name=<span class="code-quote">"bar"</span> class=<span class="code-quote">"myPackage.barAction"</span>&gt;</span>
+  <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>
+    <span class="code-tag">&lt;param name=<span class="code-quote">"location"</span>&gt;</span>foo.jsp<span class="code-tag">&lt;/param&gt;</span>
+  <span class="code-tag">&lt;/result&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span></pre>
+</div></div>
+
+<p>or simplified</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;action name=<span class="code-quote">"bar"</span> class=<span class="code-quote">"myPackage.barAction"</span>&gt;</span>
+  <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>foo.jsp<span class="code-tag">&lt;/result&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span></pre>
+</div></div>
+
+<p>if you are extending webwork-default.xml, then the default result type is "dispatcher". Also, if you don't specify the name of a result, it is assumed to be "success". This means you can simply the result down to</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;action name=<span class="code-quote">"bar"</span> class=<span class="code-quote">"myPackage.barAction"</span>&gt;</span>
+  <span class="code-tag">&lt;result&gt;</span>foo.jsp<span class="code-tag">&lt;/result&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span></pre>
+</div></div>
+
+<p><u>NOTE:</u> The Parse attribute enables the location element to be parsed for expressions.  An example of how this could be useful:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"redirect"</span>&gt;</span>/displayCart.action?userId=${userId}<span class="code-tag">&lt;/result&gt;</span></pre>
+</div></div>
+
+<p><u>NOTE:</u> You can also specify global-results to use with multiple actions.  This can save time from having to add the same result to many different actions. For more information on result tags and global-results, see <a href="Result Configuration.html" title="Result Configuration">Result Configuration</a> section.</p>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

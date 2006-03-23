@@ -1,0 +1,118 @@
+
+<html>
+<head>
+<title>&lt;ww:property /&gt;</title>
+</head>
+
+<body>
+
+<h1>Tag Name: &lt;ww:property /&gt;</h1>
+
+<h2>Description</h2>
+<p>
+
+Print out expression which evaluates against the stack
+
+</p>
+
+<p>
+<!-- START SNIPPET: javadoc --> Used to get the property of a <i>value</i>, which will default to the top of the stack if none is specified. <!-- END SNIPPET: javadoc --> <p/> <!-- START SNIPPET: params --> <ul> <li>default (String) - The default value to be used if <u>value</u> attribute is null</li> <li>escape (Boolean) - Escape HTML. Default to true</li> <li>value (Object) - value to be displayed</li> </ul> <!-- END SNIPPET: params --> <pre> <!-- START SNIPPET: example --> <ww:push value="myBean"> <!-- Example 1: --> <ww:property value="myBeanProperty" /> <!-- Example 2: --> <ww:property value="myBeanProperty" default="a default value" /> </ww:push> <!-- END SNIPPET: example --> </pre> <pre> <!-- START SNIPPET: exampledescription --> Example 1 prints the result of myBean's getMyBeanProperty() method. Example 2 prints the result of myBean's getMyBeanProperty() method and if it is null, print 'a default value' instead. <!-- END SNIPPET: exampledescription --> </pre> <pre> <!-- START SNIPPET: i18nExample --> &lt;ww:property value="getText('some.key')" /&gt; <!-- END SNIPPET: i18nExample --> </pre>
+</p>
+
+<h2>Attributes</h2>
+<p>
+
+<!-- START SNIPPET: tagattributes -->
+<table width="100%">
+<tr>
+
+<th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">default</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The default value to be used if <u>value</u> attribute is null</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">escape</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">true</td>
+
+<!-- Type -->
+<td align="left" valign="top">Boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">Whether to escape HTML</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">value</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&lt;top of stack&gt;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object</td>
+
+<!-- Description -->
+<td align="left" valign="top">value to be displayed</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">id for referencing element. For UI and form tags it will be used as HTML id attribute</td>
+
+</tr>
+
+</table>
+<!-- END SNIPPET: tagattributes -->
+
+</p>
+<p>
+<center><a href="index.html">Back to Taglib Index</a></center>
+</p>
+</body>
+</html>
+

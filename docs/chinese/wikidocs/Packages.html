@@ -1,0 +1,54 @@
+<html>
+    <head>
+        <title>WebWork 2 : 包</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : 包
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Dec 13, 2004 by <font color="#0050B2">casey</font>.
+				    </div>
+
+				    <p class="paragraph"><h3 style="margin: 4px 0px 4px 0px;" class="heading3"><a name="Packages-Overview"> 综述</a></h3></p>使用包可以将活动, 结果, 结果类型, 截取器和栈组合为一个逻辑单元的并使它们共享通用配置. 包和对象类似, 子包也可以扩展并覆盖父包的某些部分.<p class="paragraph"><h4 class="heading4"><a name="Packages-Packages"> 包</a></h4></p>package元素有一个必需属性&quot;name&quot;, 它作为后面引用该包的键值. &quot;extends&quot;属性是可选的, 允许一个包继承前一个或几个包的配置信息, 包括所有的截取器, 截取器栈, 和活动. 需要注意的是, 配置文件是从上到下顺序进行处理的, 因此被其他包引用的包应当定义在前面. &quot;abstract&quot;可选属性用来创建一个抽象包, 扩展该包时不包含其中的活动配置.<br/>
+
+<table class="wikitable">
+<tr>
+<th> 属性 </th><th> 必需 </th><th> 描述 </th>
+</tr><tr>
+<td> name </td><td> <b class="strong">是</b> </td><td> 其他包引用时的键值 </td>
+</tr><tr>
+<td> extends </td><td> 否 </td><td> 从扩展的包中继承 </td>
+</tr><tr>
+<td> namespace </td><td> 否 </td><td> 参见<a href="Namespaces.html" title="Namespaces">名空间</a> </td>
+</tr><tr>
+<td> abstract </td><td> 否 </td><td> 声明为抽象包(包中不需要活动配置) </td>
+</tr>
+</table>
+<h5 class="heading5"><a name="Packages-Sampleusageofpackagesinxwork.xml"> xwork.xml中的使用示例</a></h5>
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;package name=<span class="xml&#45;quote">&quot;bar&quot;</span> extends=<span class="xml&#45;quote">&quot;webwork&#45;default&quot;</span> namespace=<span class="xml&#45;quote">&quot;/foo/bar&quot;</span>&gt;</span>&#10;        <span class="xml&#45;tag">&lt;interceptors&gt;</span>&#10;            <span class="xml&#45;tag">&lt;interceptor&#45;stack name=<span class="xml&#45;quote">&quot;barDefaultStack&quot;</span>&gt;</span>&#10;                <span class="xml&#45;tag">&lt;interceptor&#45;ref name=<span class="xml&#45;quote">&quot;debugStack&quot;</span>/&gt;</span>&#10;                <span class="xml&#45;tag">&lt;interceptor&#45;ref name=<span class="xml&#45;quote">&quot;defaultStack&quot;</span>/&gt;</span>&#10;            <span class="xml&#45;tag">&lt;/interceptor&#45;stack&gt;</span>&#10;        <span class="xml&#45;tag">&lt;/interceptors&gt;</span>&#10;&#10;        <span class="xml&#45;tag">&lt;action name=<span class="xml&#45;quote">&quot;Bar&quot;</span> class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.SimpleAction&quot;</span>&gt;</span>&#10;            <span class="xml&#45;tag">&lt;interceptor&#45;ref name=<span class="xml&#45;quote">&quot;barDefaultStack&quot;</span>/&gt;</span>&#10;        <span class="xml&#45;tag">&lt;/action&gt;</span>&#10;&#10;        <span class="xml&#45;tag">&lt;action name=<span class="xml&#45;quote">&quot;TestInterceptorParamInheritance&quot;</span> class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.SimpleAction&quot;</span>&gt;</span>&#10;            <span class="xml&#45;tag">&lt;interceptor&#45;ref name=<span class="xml&#45;quote">&quot;test&quot;</span>&gt;</span>&#10;                <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;expectedFoo&quot;</span>&gt;</span>expectedFoo<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;            <span class="xml&#45;tag">&lt;/interceptor&#45;ref&gt;</span>&#10;        <span class="xml&#45;tag">&lt;/action&gt;</span>&#10;&#10;        <span class="xml&#45;tag">&lt;action name=<span class="xml&#45;quote">&quot;TestInterceptorParamInehritanceOverride&quot;</span> class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.SimpleAction&quot;</span>&gt;</span>&#10;            <span class="xml&#45;tag">&lt;interceptor&#45;ref name=<span class="xml&#45;quote">&quot;test&quot;</span>&gt;</span>&#10;                <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;foo&quot;</span>&gt;</span>foo123<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;                <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;expectedFoo&quot;</span>&gt;</span>foo123<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;            <span class="xml&#45;tag">&lt;/interceptor&#45;ref&gt;</span>&#10;        <span class="xml&#45;tag">&lt;/action&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/package&gt;</span>&#10;&#10;    <span class="xml&#45;tag">&lt;package name=<span class="xml&#45;quote">&quot;abstractPackage&quot;</span> namespace=<span class="xml&#45;quote">&quot;/abstract&quot;</span> abstract=<span class="xml&#45;quote">&quot;true&quot;</span>&gt;</span>&#10;        <span class="xml&#45;tag">&lt;action name=<span class="xml&#45;quote">&quot;test&quot;</span> class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.SimpleAction&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/package&gt;</span>&#10;&#10;    <span class="xml&#45;tag">&lt;package name=<span class="xml&#45;quote">&quot;nonAbstractPackage&quot;</span> extends=<span class="xml&#45;quote">&quot;abstractPackage&quot;</span> namespace=<span class="xml&#45;quote">&quot;/nonAbstract&quot;</span>/&gt;</span>&#10;&#10;    <span class="xml&#45;tag">&lt;package name=<span class="xml&#45;quote">&quot;baz&quot;</span> extends=<span class="xml&#45;quote">&quot;default&quot;</span> namespace=<span class="xml&#45;quote">&quot;baz&quot;</span>&gt;</span>&#10;        <span class="xml&#45;tag">&lt;action name=<span class="xml&#45;quote">&quot;commandTest&quot;</span> class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.SimpleAction&quot;</span>&gt;</span>&#10;            <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;foo&quot;</span>&gt;</span>123<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;            <span class="xml&#45;tag">&lt;result name=<span class="xml&#45;quote">&quot;error&quot;</span> type=<span class="xml&#45;quote">&quot;chain&quot;</span>&gt;</span>&#10;                <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;actionName&quot;</span>&gt;</span>bar<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;            <span class="xml&#45;tag">&lt;/result&gt;</span>&#10;            <span class="xml&#45;tag">&lt;interceptor&#45;ref name=<span class="xml&#45;quote">&quot;static&#45;params&quot;</span>/&gt;</span>&#10;        <span class="xml&#45;tag">&lt;/action&gt;</span>&#10;        <span class="xml&#45;tag">&lt;action name=<span class="xml&#45;quote">&quot;myCommand&quot;</span> class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.SimpleAction&quot;</span> method=<span class="xml&#45;quote">&quot;commandMethod&quot;</span>&gt;</span>&#10;            <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;bar&quot;</span>&gt;</span>456<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;            <span class="xml&#45;tag">&lt;result name=<span class="xml&#45;quote">&quot;success&quot;</span> type=<span class="xml&#45;quote">&quot;chain&quot;</span>&gt;</span>&#10;                <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;actionName&quot;</span>&gt;</span>foo<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;            <span class="xml&#45;tag">&lt;/result&gt;</span>&#10;            <span class="xml&#45;tag">&lt;interceptor&#45;ref name=<span class="xml&#45;quote">&quot;logger&quot;</span>/&gt;</span>&#10;        <span class="xml&#45;tag">&lt;/action&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/package&gt;</span>&#10;&#10;    <span class="xml&#45;tag">&lt;package name=<span class="xml&#45;quote">&quot;multipleInheritance&quot;</span> extends=<span class="xml&#45;quote">&quot;default,abstractPackage,bar&quot;</span> namespace=<span class="xml&#45;quote">&quot;multipleInheritance&quot;</span>&gt;</span>&#10;        <span class="xml&#45;tag">&lt;action name=<span class="xml&#45;quote">&quot;testMultipleInheritance&quot;</span> class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.SimpleAction&quot;</span>&gt;</span>&#10;            <span class="xml&#45;tag">&lt;result name=<span class="xml&#45;quote">&quot;success&quot;</span> type=<span class="xml&#45;quote">&quot;chain&quot;</span>&gt;</span>&#10;                <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;actionName&quot;</span>&gt;</span>foo<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;            <span class="xml&#45;tag">&lt;/result&gt;</span>&#10;            <span class="xml&#45;tag">&lt;interceptor&#45;ref name=<span class="xml&#45;quote">&quot;barDefaultStack&quot;</span>/&gt;</span>&#10;        <span class="xml&#45;tag">&lt;/action&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/package&gt;</span></pre>
+</div></div>
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

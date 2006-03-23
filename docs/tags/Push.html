@@ -1,0 +1,82 @@
+
+<html>
+<head>
+<title>&lt;ww:push /&gt;</title>
+</head>
+
+<body>
+
+<h1>Tag Name: &lt;ww:push /&gt;</h1>
+
+<h2>Description</h2>
+<p>
+
+Push value on stack for simplified usage.
+
+</p>
+
+<p>
+<!-- START SNIPPET: javadoc --> <p>Push value on stack for simplified usage.</p> <!-- END SNIPPET: javadoc --> <!-- START SNIPPET: params --> <ul> <li>value* (Object) - value to be pushed into the top of the stack</li> </ul> <!-- END SNIPPET: params --> <p/> <b>Examples</b> <pre> <!-- START SNIPPET: example1 --> &lt;ww:push value="user"&gt; &lt;ww:propery value="firstName" /&gt; &lt;ww:propery value="lastName" /&gt; &lt;/ww:push&gt; <!-- END SNIPPET: example1 --> </pre> <!-- START SNIPPET: example1description --> Pushed user into the stack, and hence property tag could access user's properties (firstName, lastName etc) since user is not at the top of the stack <!-- END SNIPPET: example1description --> <pre> <!-- START SNIPPET: example2 --> &lt;ww:push value="myObject"&gt; ----- (1) &lt;ww:bean name="jp.SomeBean" id="myBean"/&gt; ----- (2) &lt;ww:param name="myParam" value="top"/&gt; ----- (3) &lt;/ww:bean&gt; &lt;/ww:push&gt; <!-- END SNIPPET: example2 --> </pre> <pre> <!-- START SNIPPET: example2description --> when in (1), myObject is at the top of the stack when in (2), jp.SomeBean is in the top of stack, also in stack's context with key myBean when in (3), top will get the jp.SomeBean instance <!-- END SNIPPET: example2description --> </pre> <pre> <!-- START SNIPPET: example3 --> &lt;ww:push value="myObject"&gt; ---(A) &lt;ww:bean name="jp.SomeBean" id="myBean"/&gt; ---(B) &lt;ww:param name="myParam" value="top.mySomeOtherValue"/&gt; ---(C) &lt;/ww:bean&gt; &lt;/ww:push&gt; <!-- END SNIPPET: example3 --> </pre> <pre> <!-- START SNIPPET: example3description --> when in (A), myObject is at the top of the stack when in (B), jp.SomeBean is at the top of the stack, also in context with key myBean when in (C), top refers to jp.SomeBean instance. so top.mySomeOtherValue would invoke SomeBean's mySomeOtherValue() method <!-- END SNIPPET: example3description --> </pre> <pre> <!-- START SNIPPET: example4 --> &lt;ww:push value="myObject"&gt; ---- (i) &lt;ww:bean name="jp.SomeBean" id="myBean"/&gt; ---- (ii) &lt;ww:param name="myParam" value="[1].top"/&gt; -----(iii) &lt;/ww:bean&gt; &lt;/ww:push&gt; <!-- END SNIPPET: example4 --> </pre> <pre> <!-- START SNIPPET: example4description --> when in (i), myObject is at the top of the stack when in (ii), jp.SomeBean is at the top of the stack, followed by myObject when in (iii), [1].top will returned top of the cut of stack starting from myObject, namely myObject itself <!-- END SNIPPET: example4description --> </pre>
+</p>
+
+<h2>Attributes</h2>
+<p>
+
+<!-- START SNIPPET: tagattributes -->
+<table width="100%">
+<tr>
+
+<th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">value</td>
+
+<!-- Required -->
+<td align="left" valign="top"><b>true</b></td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Value to push on stack</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">id for referencing element. For UI and form tags it will be used as HTML id attribute</td>
+
+</tr>
+
+</table>
+<!-- END SNIPPET: tagattributes -->
+
+</p>
+<p>
+<center><a href="index.html">Back to Taglib Index</a></center>
+</p>
+</body>
+</html>
+

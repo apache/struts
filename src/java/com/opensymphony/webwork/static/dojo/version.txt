@@ -1,0 +1,4 @@
+Current Dojo Version : 0.2.1 Kitchen Sink Profile Build
+
+http://download.dojotoolkit.org/release-0.2.1/dojo-0.2.1-kitchen_sink.zip
+

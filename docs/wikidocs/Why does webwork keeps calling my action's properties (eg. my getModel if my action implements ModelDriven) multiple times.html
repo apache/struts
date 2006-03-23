@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <title>WebWork - 
+         does webwork keeps calling my action's properties (eg. my getModel if my action implements ModelDriven) multiple times
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>This is due to OGNL's accessor calls. One possible improvement would be to have the action do some caching if possible. Say if getModel is called multiple times it might be worthwhile considering the possibilities of caching the returned model itself.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

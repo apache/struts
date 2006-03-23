@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <title>WebWork 2 : Iterator tag examples</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : Iterator tag examples
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Nov 30, 2004 by <font color="#0050B2">jcarreira</font>.
+				    </div>
+
+				    <p class="paragraph">This follows on from <a href="Iteration Tags.html" title="Iteration Tags">WW:Iteration Tags</a> which you should read first, but beware of references to &#039;[0]&#039; and &#039;that&#039;; what you really want in WW2 is &#039;top&#039;, as illustrated below. (I finally worked this out from the source code - hopefully this page means you won&#039;t have to.)</p><h4 class="heading4"><a name="Iteratortagexamples-Referencingthecurrentvalue"> Referencing the current value</a></h4><p class="paragraph">The simple examples print out values from the list using the property tag, which uses the value at the top of the stack by default:</p><div class="preformatted"><div class="preformattedContent">
+<pre>Days:&#10;&lt;ul&gt;&#10;&lt;ww:iterator value=&quot;days&quot;&gt;&#10;    &lt;li&gt;&lt;ww:property/&gt;&#10;&lt;/ww:iterator&gt;&#10;&lt;/ul&gt;</pre>
+</div></div><p class="paragraph">But if you&#039;re doing anything other than print the value, you probably need to refer to it specifically. Do this:</p><div class="preformatted"><div class="preformattedContent">
+<pre>Most days:&#10;&lt;ul&gt;&#10;&lt;ww:iterator value=&quot;days&quot;&gt;&#10;    &lt;ww:if test=&quot;top &#33;= &#039;Monday&#039;&quot;&gt;&#10;        &lt;li&gt;&lt;ww:property/&gt;&#10;    &lt;/ww:if&gt;&#10;&lt;/ww:iterator&gt;&#10;&lt;/ul&gt;</pre>
+</div></div><p class="paragraph"><h4 class="heading4"><a name="Iteratortagexamples-Iteratingoveralistofobjects"> Iterating over a list of objects</a></h4></p><div class="preformatted"><div class="preformattedContent">
+<pre>&lt;ww:iterator value=&quot;employees&quot;&gt;&#10;    &lt;ww:property value=&quot;name&quot;/&gt; is the &lt;ww:property value=&quot;jobTitle&quot;/&gt;&lt;br&gt;&#10;&lt;/ww:iterator&gt;</pre>
+</div></div><p class="paragraph">For &#039;name&#039; and &#039;jobTitle&#039; you could be more explicit and write &#039;top.name&#039; and &#039;top.jobTitle&#039;, as &#039;top&#039; refers to the object on the top of the stack. It&#039;s not necessary here, but it is in the next example.</p><h4 class="heading4"><a name="Iteratortagexamples-Iteratingoveralistoflists"> Iterating over a list of lists</a></h4>
+
+<div class="preformatted"><div class="preformattedContent">
+<pre>&lt;table&gt;&#10;    &lt;ww:iterator value=&quot;grid&quot;&gt;&#10;        &lt;tr&gt;&#10;        &lt;ww:iterator value=&quot;top&quot;&gt;&#10;            &lt;td&gt;&lt;ww:property/&gt;&lt;/td&gt;&#10;        &lt;/ww:iterator&gt;&#10;        &lt;/tr&gt;&#10;    &lt;/ww:iterator&gt;&#10;&lt;/table&gt;</pre>
+</div></div><p class="paragraph">The trick here is to use &#039;top&#039; as the value for the inner iterator. This example probably uses a two-dimensional array, but you can use the pattern for any list of lists.</p><h4 class="heading4"><a name="Iteratortagexamples-Amorecomplexexample"> A more complex example</a></h4><p class="paragraph">In this example, &#039;countries&#039; is a list of country objects, each of which has a name and a list of cities. Each city has a name.</p><div class="preformatted"><div class="preformattedContent">
+<pre>&lt;ww:iterator value=&quot;countries&quot;&gt;&#10;    &lt;ww:iterator value=&quot;cities&quot;&gt;&#10;        &lt;ww:property value=&quot;name&quot;/&gt;, &lt;ww:property value=&quot;&#91;1&#93;.name&quot;/&gt;&lt;br&gt;&#10;    &lt;/ww:iterator&gt;&#10;&lt;/ww:iterator&gt;</pre>
+</div></div><p class="paragraph">The output looks like</p><div class="preformatted"><div class="preformattedContent">
+<pre>Wellington, New Zealand&#10;Auckland, New Zealand&#10;Moscow, Russia&#10;Glasgow, Scotland&#10;Edinburgh, Scotland&#10;Stockholm, Sweden</pre>
+</div></div><p class="paragraph">Both the country and city objects have a &#039;name&#039; property. As you&#039;d expect, the reference to &#039;name&#039; on its own gives you the city name. To access the country name - effectively &quot;hidden&quot; by the city name - we refer to a specific position on the stack: &#039;[1]&#039;. The top of the stack, position 0, contains the current city, pushed on by the inner iterator; position 1 contains the current country, pushed there by the outer iterator.</p>Actually, as Patrick points out in his comment on <a href="Iteration Tags.html" title="Iteration Tags">WW:Iteration Tags</a>, the &#039;[n]&#039; notation refers to a sub-stack beginning at position n, not just the object at position n. Thus &#039;[0]&#039; is the whole stack and &#039;[1]&#039; is everything except the top object. In our example, we could have been more specific about getting the country name and said &#039;[1].top.name&#039;.
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

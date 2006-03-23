@@ -1,0 +1,61 @@
+<html>
+    <head>
+        <title>WebWork 2 : Xwork组件架构</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : Xwork组件架构
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Jun 18, 2004 by <font color="#0050B2">plightbo</font>.
+				    </div>
+
+				    <p class="paragraph"><h2 style="margin: 4px 0px 4px 0px;" class="heading2"><a name="Xwork%27sComponentArchitecture-WritingComponentClasses"> 编写组件类</a></h2></p>在<a href="http://wiki.opensymphony.com//display/XW/XWork" title="XWork">XWork</a>中, 组件类可以是你希望的任何事物. 唯一的约束是必须有一个具体(concrete)类, 它有一个缺省构造函数, 这样XWork才能创建实例. 组件可以实现Initializable和Disposable接口这样在创建后核销会前可以接受到生命周期事件. 这很简单:<br/>
+
+<div class="code"><div class="codeContent">
+<pre><span class="java&#45;keyword">public</span> class MyComponent <span class="java&#45;keyword">implements</span> Intializable, Disposable &#123;&#10;    <span class="java&#45;keyword">public</span> void init () &#123;&#10;         <span class="java&#45;comment">//<span class="java&#45;keyword">do</span> initialization here</span>&#10;    &#125;&#10;&#10;    <span class="java&#45;keyword">public</span> void dispose() &#123;&#10;         <span class="java&#45;comment">//<span class="java&#45;keyword">do</span> any clean up necessary before garbage collection of <span class="java&#45;keyword">this</span> component</span>&#10;    &#125;&#10;&#125;</pre>
+</div></div><p class="paragraph"><h2 class="heading2"><a name="Xwork%27sComponentArchitecture-ComponentDependencies"> 组件依赖</a></h2></p>一个不那么明显的特性是组件可以依赖于其他组件. 例如: 如果ExchangeRateService依赖于Configuration组件, XWork将在ExchangeRateService初始化后向它传递Configuration组件实例. 注意, XWork自动以正确的顺序初始化组件, 如果A是一个依赖于B和C的组件或活动, B依赖于C, 如果A, B, C之前没有被初始化, ComponentManager将使用下面的顺序:<br/>
+
+<ol>
+<li> 初始化C, 如果C实现了Initializable就调用init()方法.</li>
+<li> 初始化B, 并使用enabler方法设置C.</li>
+<li> 如果B实现了Initializable就调用init()方法.</li>
+<li> 调用B的enabler方法将B设置到A.</li>
+</ol><br/>
+当然, 如果B或C的实例已经存在则将在本例中复用, 示例将直接传递到A中
+.<p class="paragraph"><h2 class="heading2"><a name="Xwork%27sComponentArchitecture-WritingEnablers"> 编写Enabler</a></h2></p>Enabler只能有一个方法, 方法只接受一个参数. 参数类型应当是所需的组件的类型或者组件的父类型. XWork不关心enabler方法名称.<p class="paragraph">下列展示ExchangeRateAware可能使用的代码:</p><div class="code"><div class="codeContent">
+<pre><span class="java&#45;keyword">public</span>&#160;<span class="java&#45;keyword">interface</span> ExchangeRateAware &#123;&#10;    <span class="java&#45;keyword">public</span> void setExchangeRateService(ExchangeRateService exchangeRateService);&#10;&#125;</pre>
+</div></div><p class="paragraph">注意enabler通常是一个接口, 当然也没有阻止你选择使用类.</p><h2 class="heading2"><a name="Xwork%27sComponentArchitecture-Writing%26quot%3BEnableraware%26quot%3BActions"> 编写&quot;Enabler-aware&quot;的活动</a></h2><p class="paragraph">活动类需要做的是实现相应的enabler接口. XWork随后将在活动执行前调用它的enabler方法. 下面是一个简单的例子:</p><div class="code"><div class="codeContent">
+<pre><span class="java&#45;keyword">public</span> class MyAction <span class="java&#45;keyword">extends</span> ActionSupport <span class="java&#45;keyword">implements</span> ExchangeRateAware &#123;&#10;    ExchangeRateService ers;&#10;    &#10;    <span class="java&#45;keyword">public</span> void setExchangeRateService(ExchangeRateService exchangeRateService) &#123;&#10;        ers = exchangeRateService;&#10;    &#125;&#10;    &#10;    <span class="java&#45;keyword">public</span>&#160;<span class="java&#45;object">String</span> execute() <span class="java&#45;keyword">throws</span> Exception &#123;&#10;        <span class="java&#45;object">System</span>.out.println(<span class="java&#45;quote">&quot;The base currency is &quot;</span> &#43; ers.getBaseCurrency());&#10;    &#125;&#10;&#125;</pre>
+</div></div><p class="paragraph">如果一个对象既不是活动也不是组件, 你必须显示调用componentManager.initializeObject(enabledObject)通知XWork为该对象提供所需的组件;</p><h2 class="heading2"><a name="Xwork%27sComponentArchitecture-Usinganexternalreferenceresolver"> 使用外部引用处理器(resolver)</a></h2><p class="paragraph">在XWork也可以使用外部引用处理器, 也就是说, 不由XWork自己处理引用. 一个例子是使用外部引用处理器将XWork和<a href="http://www.springframework.org" title="Visit page outside Confluence">Spring Framework</a>集成起来.</p>只需要编写一个外部引用处理器并在package声明中告诉XWork去使用它:
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;package&#10;    name=<span class="xml&#45;quote">&quot;default&quot;</span>&#10;    externalReferenceResolver=<span class="xml&#45;quote">&quot;com.atlassian.xwork.ext.SpringServletContextReferenceResolver&quot;</span>&gt;</span></pre>
+</div></div><br/>
+现在, 为了使用外部引用你需要使用类似下面的方法:
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;external&#45;ref name=<span class="xml&#45;quote">&quot;foo&quot;</span>&gt;</span>Foo<span class="xml&#45;tag">&lt;/external&#45;ref&gt;</span></pre>
+</div></div><br/>
+在这里, name属性是setter方法的名称, Foo是需要查找的引用名称.<p class="paragraph">关于集成的更多细节和样例代码, 请查看com.opensymphony.xwork.config.ExternalReferenceResolver类的JavaDoc(不幸的是没有在线信息)以及<a href="http://jira.opensymphony.com/secure/ViewIssue.jspa?key=XW-122" title="Visit page outside Confluence">XW-122</a></p>-Chris
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:37</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

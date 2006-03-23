@@ -1,0 +1,358 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Understanding interceptors
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <table cellpadding='5' width='85%' cellspacing='8px' class='infoMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/information.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">TODO</b><br /><br/>
+ Update the info about the new interceptors </td></tr></table>
+<p>&nbsp;</p>
+
+<h1><a name="Understandinginterceptors-Interceptors"></a>Interceptors</h1>
+
+<p>Interceptors allow arbitrary code to be included in the call stack for your action before and/or after processing the action, which can vastly simplify your code itself and provide excellent opportunities for code reuse. Many of the features of XWork and WebWork are implemented as interceptors and can be applied via external configuration along with your own Interceptors in whatever order you specify for any set of actions you define.</p>
+
+<p>In other words, when you access a <tt>&#42;.action</tt> URL, WebWork's <tt>ServletDispatcher</tt> proceeds to the invocation of the an action object. Before it is executed, however, the invocation can be intercepted by another object, that is hence called interceptor. To have an interceptor executed before (or after) a given action,</p>
+
+<p> !overview.png!<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Be Careful</b><br /><br/>
+Note that some interceptors will interrupt the stack/chain/flow... so the order is very important.</td></tr></table><br/>
+&nbsp;</p>
+
+<h3><a name="Understandinginterceptors-Interceptorconfiguration%3A"></a>Interceptor configuration:</h3>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;package name=<span class="code-quote">"default"</span> extends=<span class="code-quote">"webwork-default"</span>&gt;</span>
+   <span class="code-tag">&lt;interceptors&gt;</span>
+       <span class="code-tag">&lt;interceptor name=<span class="code-quote">"timer"</span> class=<span class="code-quote">".."</span>/&gt;</span>
+       <span class="code-tag">&lt;interceptor name=<span class="code-quote">"logger"</span> class=<span class="code-quote">".."</span>/&gt;</span>
+   <span class="code-tag">&lt;/interceptors&gt;</span>
+
+   &lt;action name=<span class="code-quote">"login"</span>
+      class=<span class="code-quote">"org.hibernate.auction.web.actions.users.Login"</span>&gt;
+        <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"timer"</span>/&gt;</span>
+        <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"logger"</span>/&gt;</span>
+         <span class="code-tag">&lt;result name=<span class="code-quote">"input"</span>&gt;</span>login.jsp<span class="code-tag">&lt;/result&gt;</span>
+         &lt;result name=<span class="code-quote">"success"</span>
+            type=<span class="code-quote">"redirect"</span>&gt;/secure/dashboard.action<span class="code-tag">&lt;/result&gt;</span>
+   <span class="code-tag">&lt;/action&gt;</span>
+<span class="code-tag">&lt;/package&gt;</span></pre>
+</div></div>
+<p>&nbsp;</p>
+
+<h4><a name="Understandinginterceptors-Groupinginterceptorsasstacks"></a>Grouping interceptors as stacks</h4>
+
+<p>With most web applications, you'll find yourself wanting to apply the same interceptors over and over. Rather than declare numerous interceptor-refs for each action, you can bundle these interceptors together using an interceptor stack.</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;package name=<span class="code-quote">"default"</span> extends=<span class="code-quote">"webwork-default"</span>&gt;</span>
+   <span class="code-tag">&lt;interceptors&gt;</span>
+        <span class="code-tag">&lt;interceptor name=<span class="code-quote">"timer"</span> class=<span class="code-quote">".."</span>/&gt;</span>
+        <span class="code-tag">&lt;interceptor name=<span class="code-quote">"logger"</span> class=<span class="code-quote">".."</span>/&gt;</span>
+        <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"myStack"</span>&gt;</span>
+           <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"timer"</span>/&gt;</span>
+           <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"logger"</span>/&gt;</span>
+        <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+    <span class="code-tag">&lt;/interceptors&gt;</span>
+
+&lt;action name=<span class="code-quote">"login"</span>
+     class=<span class="code-quote">"org.hibernate.auction.web.actions.users.Login"</span>&gt;
+         <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"myStack"</span>/&gt;</span>
+         <span class="code-tag">&lt;result name=<span class="code-quote">"input"</span>&gt;</span>login.jsp<span class="code-tag">&lt;/result&gt;</span>
+         &lt;result name=<span class="code-quote">"success"</span>
+             type=<span class="code-quote">"redirect"</span>&gt;/secure/dashboard.action<span class="code-tag">&lt;/result&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span>
+<span class="code-tag">&lt;/package&gt;</span></pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>Looking inside <tt>webwork-default.xml</tt> we can see how it's done:</p>
+
+<h3><a name="Understandinginterceptors-webworkdefault.xml%3A"></a>webwork-default.xml:</h3>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;!DOCTYPE xwork PUBLIC <span class="code-quote">"-//OpenSymphony Group//XWork 1.0//EN"</span> <span class="code-quote">"http://www.opensymphony.com/xwork/xwork-1.1.dtd"</span>&gt;</span>
+
+<span class="code-tag"><span class="code-comment">&lt;!-- // START SNIPPET: webwork-default --&gt;</span></span>
+<span class="code-tag">&lt;xwork&gt;</span>
+    <span class="code-tag">&lt;package name=<span class="code-quote">"webwork-default"</span>&gt;</span>
+        <span class="code-tag">&lt;result-types&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"chain"</span> class=<span class="code-quote">"com.opensymphony.xwork.ActionChainResult"</span>/&gt;</span>
+            &lt;result-type name=<span class="code-quote">"dispatcher"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.ServletDispatcherResult"</span>
+                         default=<span class="code-quote">"true"</span>/&gt;
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"freemarker"</span> class=<span class="code-quote">"com.opensymphony.webwork.views.freemarker.FreemarkerResult"</span>/&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"httpheader"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.HttpHeaderResult"</span>/&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"jasper"</span> class=<span class="code-quote">"com.opensymphony.webwork.views.jasperreports.JasperReportsResult"</span>/&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"redirect"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.ServletRedirectResult"</span>/&gt;</span>
+            &lt;result-type name=<span class="code-quote">"redirect-action"</span>
+                         class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.ServletActionRedirectResult"</span>/&gt;
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"stream"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.StreamResult"</span>/&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"velocity"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.VelocityResult"</span>/&gt;</span>
+            <span class="code-tag">&lt;result-type name=<span class="code-quote">"xslt"</span> class=<span class="code-quote">"com.opensymphony.webwork.views.xslt.XSLTResult"</span>/&gt;</span>
+        <span class="code-tag">&lt;/result-types&gt;</span>
+
+        <span class="code-tag">&lt;interceptors&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"alias"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.AliasInterceptor"</span>/&gt;</span>
+            &lt;interceptor name=<span class="code-quote">"autowiring"</span>
+                         class=<span class="code-quote">"com.opensymphony.xwork.spring.interceptor.ActionAutowiringInterceptor"</span>/&gt;
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"chain"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.ChainingInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"component"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.component.ComponentInterceptor"</span>/&gt;</span>
+            &lt;interceptor name=<span class="code-quote">"conversionError"</span>
+                         class=<span class="code-quote">"com.opensymphony.webwork.interceptor.WebWorkConversionErrorInterceptor"</span>/&gt;
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"external-ref"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.ExternalReferencesInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"execAndWait"</span> class=<span class="code-quote">"com.opensymphony.webwork.interceptor.ExecuteAndWaitInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"exception"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.ExceptionMappingInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"fileUpload"</span> class=<span class="code-quote">"com.opensymphony.webwork.interceptor.FileUploadInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"i18n"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.I18nInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"logger"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.LoggingInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"model-driven"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.ModelDrivenInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"params"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.ParametersInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"prepare"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.PrepareInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"static-params"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.StaticParametersInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"servlet-config"</span> class=<span class="code-quote">"com.opensymphony.webwork.interceptor.ServletConfigInterceptor"</span>/&gt;</span>
+            &lt;interceptor name=<span class="code-quote">"sessionAutowiring"</span>
+                         class=<span class="code-quote">"com.opensymphony.webwork.spring.interceptor.SessionContextAutowiringInterceptor"</span>/&gt;
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"timer"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.TimerInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"token"</span> class=<span class="code-quote">"com.opensymphony.webwork.interceptor.TokenInterceptor"</span>/&gt;</span>
+            &lt;interceptor name=<span class="code-quote">"token-session"</span>
+                         class=<span class="code-quote">"com.opensymphony.webwork.interceptor.TokenSessionStoreInterceptor"</span>/&gt;
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"validation"</span> class=<span class="code-quote">"com.opensymphony.xwork.validator.ValidationInterceptor"</span>/&gt;</span>
+            <span class="code-tag">&lt;interceptor name=<span class="code-quote">"workflow"</span> class=<span class="code-quote">"com.opensymphony.xwork.interceptor.DefaultWorkflowInterceptor"</span>/&gt;</span>
+
+            <span class="code-tag"><span class="code-comment">&lt;!-- Basic stack --&gt;</span></span>
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"basicStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"exception"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"servlet-config"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"prepare"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"static-params"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"params"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"conversionError"</span>/&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+
+            <span class="code-tag"><span class="code-comment">&lt;!-- Sample validation and workflow stack --&gt;</span></span>
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"validationWorkflowStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"validation"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"workflow"</span>/&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+
+            <span class="code-tag"><span class="code-comment">&lt;!-- Sample file upload stack --&gt;</span></span>
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"fileUploadStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"fileUpload"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+
+            &lt;!-- Sample WebWork Inversion of Control stack
+                 Note: WebWork's IoC is deprecated - please
+                 look at alternatives such as Sprint --&gt;
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"componentStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"component"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+
+            <span class="code-tag"><span class="code-comment">&lt;!-- Sample model-driven stack  --&gt;</span></span>
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"modelDrivenStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"model-driven"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+
+            <span class="code-tag"><span class="code-comment">&lt;!-- Sample action chaining stack --&gt;</span></span>
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"chainStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"chain"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+
+            <span class="code-tag"><span class="code-comment">&lt;!-- Sample i18n stack --&gt;</span></span>
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"chainStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"i18n"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+
+            &lt;!-- Sample execute and wait stack.
+                 Note: execAndWait should always be the *last* interceptor. --&gt;
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"executeAndWaitStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"execAndWait"</span>/&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+
+            &lt;!-- A complete stack with all the common interceptors in place.
+                 Generally, this stack should be the one you use, though it
+                 may process additional stuff you don't need, which could
+                 lead to some performance problems. Also, the ordering can be
+                 switched around (ex: if you wish to have your components
+                 before prepare() is called, you'd need to move the component
+                 interceptor up --&gt;
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"defaultStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"exception"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"alias"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"prepare"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"servlet-config"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"i18n"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"chain"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"model-driven"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"fileUpload"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"static-params"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"params"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"conversionError"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"validation"</span>/&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"workflow"</span>/&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+
+            &lt;!-- The completeStack is here for backwards compatibility for
+                 applications that still refer to the defaultStack by the
+                 old name --&gt;
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"completeStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"defaultStack"</span>/&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+        <span class="code-tag">&lt;/interceptors&gt;</span>
+
+        <span class="code-tag">&lt;default-interceptor-ref name=<span class="code-quote">"defaultStack"</span>/&gt;</span>
+    <span class="code-tag">&lt;/package&gt;</span>
+<span class="code-tag">&lt;/xwork&gt;</span>
+<span class="code-tag"><span class="code-comment">&lt;!-- // END SNIPPET: webwork-default --&gt;</span></span></pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>Since we included <tt>webwork-default.xml</tt> in our <tt>xwork.xml</tt>, all the interceptors and stacks above are available for us to use in our actions. Here's what these interceptors do:</p>
+<ul>
+	<li><b>timer</b>: clocks how long the action (including nested interceptors and view) takes to execute;</li>
+	<li><b>logger</b>: logs the action being executed;</li>
+	<li><b>chain</b>: makes the previous action's properties available to the current action. Used to make action chaining (reference: <a href="Result Types.html" title="Result Types">Result Types</a>);</li>
+	<li><b>static-params</b>: sets the parameters defined in <tt>xwork.xml</tt> onto the action. These are the <tt>&lt;param /&gt;</tt> tags that are direct children of the <tt>&lt;action /&gt;</tt> tag;</li>
+	<li><b>params</b>: sets the request (POST and GET) parameters onto the action class. We have seen an example of this in <b>TODO</b>;</li>
+	<li><b>model-driven</b>: if the action implements <tt>ModelDriven</tt>, pushes the <tt>getModel()</tt> result onto the Value Stack;</li>
+	<li><b>component</b>: enables and makes registered components available to the actions. (reference: IoC & Components);</li>
+	<li><b>token</b>: checks for valid token presence in action, prevents duplicate form submission;</li>
+	<li><b>token-session</b>: same as above, but storing the submitted data in session when handed an invalid token;</li>
+	<li><b>validation</b>: performs validation using the validators defined in {<tt>Action}-validation.xml</tt> (reference: <a href="Validation.html" title="Validation">Validation</a>).;</li>
+	<li><b>workflow</b>: calls the validate method in your action class. If action errors created then it returns the <tt>INPUT</tt> view. Good to use together with the validation interceptor (reference: <a href="Validation.html" title="Validation">Validation</a>);</li>
+	<li><b>servlet-config</b>: give access to <tt>HttpServletRequest</tt> and <tt>HttpServletResponse</tt> (think twice before using this since this ties you to the Servlet API);</li>
+	<li><b>prepare</b>: allows you to programmatic access to your Action class before the parameters are set on it.;</li>
+	<li><b>conversionError</b>: Adds field errors if any type-conversion errors occurred.</li>
+	<li><b>execAndWait</b>: Spawns a separate thread to execute the action</li>
+	<li><b>fileUpload</b>: Sets uploaded files as action files (File objects)</li>
+</ul>
+
+
+<p>In addition to the prepackaged interceptors, webwork-default.xml includes prepackaged<br/>
+combinations of these interceptors in named interceptor stacks.</p>
+
+<h2><a name="Understandinginterceptors-BuildingyourownInterceptor"></a>Building your own Interceptor</h2>
+
+<p>If none of the above interceptors suit your particular need, you will have to implement your own interceptor. Fortunately, this is an easy task to accomplish. Suppose we need an interceptor that places a greeting in the Session according to the time of the day (morning, afternoon or evening). Here's how we could implement it:</p>
+<ol>
+	<li>Create an interceptor class, which is a class that implements the <tt>com.opensymphony.xwork.interceptor.Interceptor</tt> interface (bundled in <tt>xwork-1.1.jar</tt>);</li>
+	<li>Declare the class in your XML configuration file (<tt>xwork.xml</tt>) using the element <tt>&lt;interceptor /&gt;</tt> nested within <tt>&lt;interceptors /&gt;</tt>;</li>
+	<li>Create stacks of interceptors, using the <tt>&lt;interceptor-stack /&gt;</tt> element (<em>optional</em>);</li>
+	<li>Determine which interceptors are used by which action, using <tt>&lt;interceptor-ref /&gt;</tt> or <tt>&lt;default-interceptor-ref /&gt;</tt>. The former defines the interceptors to be used in a specific action, while the latter determines the default interceptor stack to be used by all actions that do not specify their own <tt>&lt;interceptor-ref /&gt;</tt>.</li>
+</ol>
+
+
+<h3><a name="Understandinginterceptors-GreetingInterceptor.java%3A"></a>GreetingInterceptor.java:</h3>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> lesson05;
+
+<span class="code-keyword">import</span> java.util.Calendar;
+<span class="code-keyword">import</span> com.opensymphony.xwork.interceptor.Interceptor;
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionInvocation;
+
+<span class="code-keyword">public</span> class GreetingInterceptor <span class="code-keyword">implements</span> Interceptor {
+	<span class="code-keyword">public</span> void init() { }
+	<span class="code-keyword">public</span> void destroy() { }
+	<span class="code-keyword">public</span> <span class="code-object">String</span> intercept(ActionInvocation invocation) <span class="code-keyword">throws</span> Exception {
+		Calendar calendar = Calendar.getInstance();
+		<span class="code-object">int</span> hour = calendar.get(Calendar.HOUR_OF_DAY);
+		<span class="code-object">String</span> greeting = (hour &lt; 6) ? <span class="code-quote">"Good evening"</span> :
+			((hour &lt; 12) ? <span class="code-quote">"Good morning"</span>:
+			((hour &lt; 18) ? <span class="code-quote">"Good afternoon"</span>: <span class="code-quote">"Good evening"</span>));
+
+		invocation.getInvocationContext().getSession().put(<span class="code-quote">"greeting"</span>, greeting);
+
+		<span class="code-object">String</span> result = invocation.invoke();
+
+		<span class="code-keyword">return</span> result;
+	}
+}</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<h3><a name="Understandinginterceptors-xwork.xml%3A"></a>xwork.xml:</h3>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml">&lt;!DOCTYPE xwork PUBLIC <span class="code-quote">"-//OpenSymphony Group//XWork 1.0//EN"</span>
+<span class="code-quote">"http://www.opensymphony.com/xwork/xwork-1.0.dtd"</span>&gt;
+
+<span class="code-tag">&lt;xwork&gt;</span>
+	<span class="code-tag"><span class="code-comment">&lt;!-- Include webwork defaults (from WebWork JAR). --&gt;</span></span>
+	<span class="code-tag">&lt;include file=<span class="code-quote">"webwork-default.xml"</span> /&gt;</span>
+
+	<span class="code-tag"><span class="code-comment">&lt;!-- Configuration for the default package. --&gt;</span></span>
+	<span class="code-tag">&lt;package name=<span class="code-quote">"default"</span> extends=<span class="code-quote">"webwork-default"</span>&gt;</span>
+		<span class="code-tag">&lt;interceptors&gt;</span>
+			<span class="code-tag">&lt;interceptor name=<span class="code-quote">"greeting"</span> class=<span class="code-quote">"section02.lesson05.GreetingInterceptor"</span> /&gt;</span>
+		<span class="code-tag">&lt;/interceptors&gt;</span>
+
+		<span class="code-tag"><span class="code-comment">&lt;!-- Action: Lesson 5: GreetingInterceptor. --&gt;</span></span>
+		<span class="code-tag">&lt;action name=<span class="code-quote">"greetingAction"</span> class=<span class="code-quote">"lesson05.GreetingAction"</span>&gt;</span>
+			<span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"velocity"</span>&gt;</span>ex01-result.vm<span class="code-tag">&lt;/result&gt;</span>
+			<span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"greeting"</span> /&gt;</span>
+		<span class="code-tag">&lt;/action&gt;</span>
+	<span class="code-tag">&lt;/package&gt;</span>
+<span class="code-tag">&lt;/xwork&gt;</span></pre>
+</div></div>
+<p>&nbsp;</p>
+
+<h3><a name="Understandinginterceptors-GreetingAction.java%3A"></a>GreetingAction.java:</h3>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> lesson05;
+
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionSupport;
+
+<span class="code-keyword">public</span> class GreetingAction <span class="code-keyword">extends</span> ActionSupport {
+	<span class="code-keyword">public</span> <span class="code-object">String</span> execute() <span class="code-keyword">throws</span> Exception {
+		<span class="code-keyword">return</span> SUCCESS;
+	}
+}</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<h3><a name="Understandinginterceptors-ex01result.vm%3A"></a>ex01-result.vm:</h3>
+
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;html&gt;</span>
+<span class="code-tag">&lt;head&gt;</span>
+<span class="code-tag">&lt;title&gt;</span>WebWork Tutorial - Lesson 5 - Example 1<span class="code-tag">&lt;/title&gt;</span>
+<span class="code-tag">&lt;/head&gt;</span>
+<span class="code-tag">&lt;body&gt;</span>
+
+#set ($ses = $req.getSession())
+<span class="code-tag">&lt;p&gt;</span><span class="code-tag">&lt;b&gt;</span>${ses.getAttribute('greeting')}!<span class="code-tag">&lt;/b&gt;</span><span class="code-tag">&lt;/p&gt;</span>
+
+<span class="code-tag">&lt;/body&gt;</span>
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>Let's take a look at our interceptor class first. As explained before, the interceptor must implement <tt>com.opensymphony.xwork.interceptor.Interceptor</tt>'s methods: <tt>init()</tt>, called during interceptor initialization, <tt>destroy()</tt>, called during destruction, and most importantly, <tt>intercept(ActionInvocation invocation)</tt>, which is where we place the code that does the work.</p>
+
+<p>Notice that our interceptor returns the result from <tt>invocation.invoke()</tt> which is the method responsible for executing the next interceptor in the stack or, if this is the last one, the action. This means that the interceptor has the power of short-circuiting the action invocation and return a result string without executing the action at all&#33; Use this with caution, though.</p>
+
+<p>One other thing that interceptors can do is execute code after the action has executed. To do that, just place code after the invocation.invoke() call. WebWork provides an abstract class that already implements this kind of behaviour: <tt>com.opensymphony.xwork.interceptor.AroundInterceptor</tt>. Just extend it and implement the methods <tt>before(ActionInvocation invocation)</tt> and <tt>after(ActionInvocation dispatcher, String result)</tt>.</p>
+
+<p>The <tt>xwork.xml</tt> configuration, the action class and the result page are pretty straightforward and require no further explanation.</p>
+<blockquote><p>Try the example\!</p></blockquote>
+
+<hr />
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

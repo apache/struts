@@ -1,0 +1,128 @@
+<html>
+    <head>
+        <title>WebWork - 
+        ActionMapper
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="ActionMapper-ActionMapper"></a>ActionMapper</h1>
+
+<p> The ActionMapper is responsible for providing a mapping between HTTP requests and action invocation requests and
+ vice-versa. When given an HttpServletRequest, the ActionMapper may return null if no action invocation request maps,
+ or it may return an ActionMapping that describes an action invocation that WebWork should attempt to try. The
+ ActionMapper is not required to guarantee that the ActionMapping returned be a real action or otherwise
+ ensure a valid request. This means that most ActionMappers do not need to consult WebWork's configuration to
+ determine if a request should be mapped.</p>
+
+<p> <p/> Just as requests can be mapped from HTTP to an action invocation, the opposite is true as well. However, because
+ HTTP requests (when shown in HTTP responses) must be in String form, a String is returned rather than an actual
+ request object.</p>
+
+
+
+<h2><a name="ActionMapper-DefaultActionMapper"></a>DefaultActionMapper</h2>
+<p>By default, the DefaultActionMapper is used:</p>
+
+
+<p> Default action mapper implementation, using the standard *.[ext] (where ext usually "action") pattern. The extension
+ is looked up from the WebWork configuration key <b>webwork.action.exection</b>.</p>
+
+<p> <p/> To help with dealing with buttons and other related requirements, this mapper (and other ActionMappers,
+ we hope) has the ability to name a button with some predefined prefix and have that button name alter the execution
+ behaviour. The four prefixes are:</p>
+
+<p> <ul></p>
+
+<p> <li>Method prefix - <i>method:default</i></li></p>
+
+<p> <li>Action prefix - <i>action:dashboard</i></li></p>
+
+<p> <li>Redirect prefix - <i>redirect:cancel.jsp</i></li></p>
+
+<p> <li>Redirect-action prefix - <i>redirect-action:cancel</i></li></p>
+
+<p> </ul></p>
+
+<p> <p/> In addition to these four prefixes, this mapper also understands the action naming pattern of <i>foo!bar</i> in
+ either the extension form (eg: foo!bar.action) or in the prefix form (eg: action:foo!bar). This syntax tells this mapper
+ to map to the action named <i>foo</i> and the method <i>bar</i>.</p>
+
+
+<h3><a name="ActionMapper-Methodprefix"></a>Method prefix</h3>
+
+<p> With method-prefix, instead of calling baz action's execute() method (by default if it isn't overriden in xwork.xml
+ to be something else), the baz action's anotherMethod() will be called. A very elegant way determine which button is
+ clicked. Alternatively, one would have submit button set a particular value on the action when clicked, and the
+ execute() method decides on what to do with the setted value depending on which button is clicked.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:form name=<span class="code-quote">"baz"</span>&gt;</span>
+    <span class="code-tag">&lt;ww:textfield label=<span class="code-quote">"Enter your name"</span> name=<span class="code-quote">"person.name"</span>/&gt;</span>
+    <span class="code-tag">&lt;ww:submit value=<span class="code-quote">"Create person"</span>/&gt;</span>
+    <span class="code-tag">&lt;ww:submit name=<span class="code-quote">"method:anotherMethod"</span> value=<span class="code-quote">"Cancel"</span>/&gt;</span>
+<span class="code-tag">&lt;/ww:form&gt;</span></pre>
+</div></div>
+
+<h3><a name="ActionMapper-Actionprefix"></a>Action prefix</h3>
+
+<p> With action-prefix, instead of executing baz action's execute() method (by default if it isn't overriden in xwork.xml
+ to be something else), the anotherAction action's execute() method (assuming again if it isn't overriden with
+ something else in xwork.xml) will be executed.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:form name=<span class="code-quote">"baz"</span>&gt;</span>
+    <span class="code-tag">&lt;ww:textfield label=<span class="code-quote">"Enter your name"</span> name=<span class="code-quote">"person.name"</span>/&gt;</span>
+    <span class="code-tag">&lt;ww:submit value=<span class="code-quote">"Create person"</span>/&gt;</span>
+    <span class="code-tag">&lt;ww:submit name=<span class="code-quote">"action:anotherAction"</span> value=<span class="code-quote">"Cancel"</span>/&gt;</span>
+<span class="code-tag">&lt;/ww:form&gt;</span></pre>
+</div></div>
+
+<h3><a name="ActionMapper-Redirectprefix"></a>Redirect prefix</h3>
+
+<p> With redirect-prefix, instead of executing baz action's execute() method (by default it isn't overriden in xwork.xml
+ to be something else), it will get redirected to, in this case to www.google.com. Internally it uses
+ ServletRedirectResult to do the task.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:form name=<span class="code-quote">"baz"</span>&gt;</span>
+    <span class="code-tag">&lt;ww:textfield label=<span class="code-quote">"Enter your name"</span> name=<span class="code-quote">"person.name"</span>/&gt;</span>
+    <span class="code-tag">&lt;ww:submit value=<span class="code-quote">"Create person"</span>/&gt;</span>
+    <span class="code-tag">&lt;ww:submit name=<span class="code-quote">"redirect:www.google.com"</span> value=<span class="code-quote">"Cancel"</span>/&gt;</span>
+<span class="code-tag">&lt;/ww:form&gt;</span></pre>
+</div></div>
+
+<h3><a name="ActionMapper-Redirectactionprefix"></a>Redirect-action prefix</h3>
+
+<p> With redirect-action-prefix, instead of executing baz action's execute() method (by default it isn't overriden in
+ xwork.xml to be something else), it will get redirected to, in this case 'dashboard.action'. Internally it uses
+ ServletRedirectResult to do the task and read off the extension from the webwork.properties.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:form name=<span class="code-quote">"baz"</span>&gt;</span>
+    <span class="code-tag">&lt;ww:textfield label=<span class="code-quote">"Enter your name"</span> name=<span class="code-quote">"person.name"</span>/&gt;</span>
+    <span class="code-tag">&lt;ww:submit value=<span class="code-quote">"Create person"</span>/&gt;</span>
+    <span class="code-tag">&lt;ww:submit name=<span class="code-quote">"redirect-action:dashboard"</span> value=<span class="code-quote">"Cancel"</span>/&gt;</span>
+<span class="code-tag">&lt;/ww:form&gt;</span></pre>
+</div></div>
+
+<h1><a name="ActionMapper-ActionMapperFactory"></a>ActionMapperFactory</h1>
+<p>You can define your own ActionMapper by configuring the ActionMapperFactory:</p>
+
+
+<p> Factory that creates ActionMappers. This factory looks up the class name of the ActionMapper from
+ WebWork's configuration using the key <b>webwork.mapper.class</b>.</p>
+
+
+<p>Possible uses of the ActionMapper include defining your own, cleaner namespaces, such as URLs like <b>/person/1</b>, which would be similar to a request to <b>/getPerson.action?personID=1</b> using the DefaultActionMapper.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

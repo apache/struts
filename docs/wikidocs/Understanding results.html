@@ -1,0 +1,72 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Understanding results
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>A result is a piece of code that is executed after your action has already completed and returned a value such as success or error. But WebWork comes with most of the result you'll need, for example: such as "servlet dispatcher," used for JSPs, and Velocity as well as alternative results such as FreeMarker and Jasper Reports (in PDF, XML, and HTML).</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;action name=<span class="code-quote">"form03"</span> class=<span class="code-quote">"lessons.Form03Action"</span>&gt;
+      &lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;page03-success.jsp&lt;/result&gt;
+      &lt;result name=<span class="code-quote">"error"</span> type=<span class="code-quote">"dispatcher"</span>&gt;page03-error.jsp&lt;/result&gt;
+&lt;/action&gt;</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>As you can see, that result configuration is made up of two parts: result mappings, which you've already seen associated with an action mapping, and result types.</p>
+
+<h2><a name="Understandingresults-Configuringresulttypes"></a>Configuring result types</h2>
+
+<p>Every package in WebWork can be associated with one or more result types.</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;xwork&gt;
+   &lt;include name=<span class="code-quote">"webwork-<span class="code-keyword">default</span>.xml"</span>/&gt;
+   &lt;<span class="code-keyword">package</span> name=<span class="code-quote">"<span class="code-keyword">default</span>"</span> <span class="code-keyword">extends</span>=<span class="code-quote">"webwork-<span class="code-keyword">default</span>"</span>&gt;
+
+      &lt;result-types&gt;
+        &lt;result-type name=<span class="code-quote">"dispatcher"</span> class=<span class="code-quote">"..."</span> <span class="code-keyword">default</span>=<span class="code-quote">"<span class="code-keyword">true</span>"</span>/&gt;
+        &lt;result-type name=<span class="code-quote">"redirect"</span> class=<span class="code-quote">"..."</span>/&gt;
+      &lt;/result-types&gt;
+
+      &lt;<span class="code-keyword">default</span>-interceptor-ref name=<span class="code-quote">"defaultStack"</span>/&gt;
+
+      &lt;action name=<span class="code-quote">"login"</span>
+           class=<span class="code-quote">"org.hibernate.auction.web.actions.users.Login"</span>&gt;
+        &lt;result name=<span class="code-quote">"input"</span>&gt;login.jsp&lt;/result&gt;
+        &lt;result name=<span class="code-quote">"success"</span>
+           type=<span class="code-quote">"redirect"</span>&gt;/secure/dashboard.action&lt;/result&gt;
+     &lt;/action&gt;
+   &lt;/<span class="code-keyword">package</span>&gt;
+&lt;/xwork&gt;</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<h2><a name="Understandingresults-Reducingconfigurationduplicationwithglobalresultmappings"></a>Reducing configuration duplication with global result mappings</h2>
+
+<p>Another way to reduce the amount of configuration in xwork.xml is through the use of global result mappings. Web applications often have a common set of results that are used across many actions. Common results include redirects to login actions and permission-denied pages. Rather than define each of these results in every action mapping, WebWork lets you centralize the definitions for the common pages.</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;<span class="code-keyword">package</span> name=<span class="code-quote">"<span class="code-keyword">default</span>"</span> <span class="code-keyword">extends</span>=<span class="code-quote">"webwork-<span class="code-keyword">default</span>"</span>&gt;
+   &lt;global-results&gt;
+      &lt;result name=<span class="code-quote">"login"</span>
+         type=<span class="code-quote">"redirect"</span>&gt;/login!<span class="code-keyword">default</span>.action&lt;/result&gt;
+      &lt;result name=<span class="code-quote">"unauthorized"</span>&gt;/unauthorized.jsp&lt;/result&gt;
+   &lt;/global-results&gt;
+   &lt;!-- other <span class="code-keyword">package</span> declarations --&gt;
+&lt;/<span class="code-keyword">package</span>&gt;</pre>
+</div></div>
+<p>&nbsp;<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Be Careful</b><br /><br/>
+Because global reseults are searched after local results, you can override any global result mapping by creating a local result mapping for a specific action. Recall that results can point to locations using relative or absolute paths. Because you may not know the context in which they're being invoked, it's best to use absolute paths for global results.</td></tr></table><br/>
+&nbsp;</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Views
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="Views-Description"></a>Description</h1>
+
+<p>WebWork supports JSP and Velocity for your application presentation layer. For this example we will use a JSP file. Webwork comes packaged with a tag library (taglibs). You can use these taglibs as components in your JSP file. Here is an section of our form.jsp page: </p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;%@ taglib prefix=<span class="code-quote">"ww"</span> uri=<span class="code-quote">"webwork"</span> %&gt;</span>
+<span class="code-tag">&lt;html&gt;</span>
+<span class="code-tag">&lt;head&gt;</span><span class="code-tag">&lt;title&gt;</span>Webwork Form Example<span class="code-tag">&lt;/title&gt;</span><span class="code-tag">&lt;/head&gt;</span>
+<span class="code-tag">&lt;body&gt;</span>
+   <span class="code-tag">&lt;ww:form name=<span class="code-quote">"myForm"</span> action=<span class="code-quote">"'formTest'"</span> namespace=<span class="code-quote">"/"</span> method=<span class="code-quote">"POST"</span>&gt;</span>
+  <span class="code-tag">&lt;table&gt;</span>
+    <span class="code-tag">&lt;ww:textfield label=<span class="code-quote">"First Name"</span> name=<span class="code-quote">"'formBean.firstName'"</span> value=<span class="code-quote">"formBean.firstName"</span>/&gt;</span>
+    <span class="code-tag">&lt;ww:textfield label=<span class="code-quote">"Last Name"</span> name=<span class="code-quote">"'formBean.lastName'"</span> value=<span class="code-quote">"formBean.lastName"</span>/&gt;</span>
+    <span class="code-tag">&lt;ww:submit value=<span class="code-quote">"Save Form"</span>/&gt;</span>
+  <span class="code-tag">&lt;/table&gt;</span>
+<span class="code-tag">&lt;/ww:form&gt;</span>
+<span class="code-tag">&lt;/body&gt;</span></pre>
+</div></div>
+
+<p>The process of events will go as follows: </p>
+
+<ol>
+	<li>WebWork will take notice since the URI ends in <b>.action</b> (defined in <b>web.xml</b> files)</li>
+	<li>WebWork will look up the action <b>formTest</b> in its action hierarchy and call any Interceptors that might have been defined.</li>
+	<li>WebWork will translate <b>formTest</b> and decide to call the method <b>processForm</b> in the class <b>com.opensymphony.webwork.example.FormAction</b> as defined in <b>xwork.xml</b> file.</li>
+	<li>The method will process successfully and give WebWork the <b>SUCCESS</b> return parameter.</li>
+	<li>WebWork will translate the <b>SUCCESS</b> return parameter into the location <b>formSuccess.jsp</b> (as defined in <b>xwork.xml</b>) and redirect accordingly.</li>
+</ol>
+
+
+<p>Most of the content here provided by Matt Dowell &lt;matt.dowell@notiva.com&gt;</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

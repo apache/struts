@@ -1,0 +1,400 @@
+<html>
+    <head>
+        <title>WebWork - 
+        TutorialLesson04-02
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="TutorialLesson04-02-Lesson4.2%3AUsingVelocitywithWebWork"></a>Lesson 4.2: Using Velocity with WebWork</h1>
+
+<p>There are two ways of using Velocity as the view.</p>
+
+<ul>
+	<li>Using the <tt>velocity</tt> result-type to render velocity templates;</li>
+	<li>Registering <tt>WebWorkVelocityServlet</tt> in your <tt>web.xml</tt> file to render Velocity templates accessed directly through browser requests.</li>
+</ul>
+
+
+<p>To use the second approach, we have to modify <tt>web.xml</tt> and add a servlet and a servlet mapping for <tt>WebWorkVelocityServlet</tt>, as demonstrated below:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;servlet&gt;</span> 
+	<span class="code-tag">&lt;servlet-name&gt;</span>velocity<span class="code-tag">&lt;/servlet-name&gt;</span> 
+	<span class="code-tag">&lt;servlet-class&gt;</span>com.opensymphony.webwork.views.velocity.WebWorkVelocityServlet<span class="code-tag">&lt;/servlet-class&gt;</span> 
+	<span class="code-tag">&lt;load-on-startup&gt;</span>1<span class="code-tag">&lt;/load-on-startup&gt;</span> 
+<span class="code-tag">&lt;/servlet&gt;</span> 
+
+<span class="code-tag">&lt;servlet-mapping&gt;</span> 
+	<span class="code-tag">&lt;servlet-name&gt;</span>velocity<span class="code-tag">&lt;/servlet-name&gt;</span> 
+	<span class="code-tag">&lt;url-pattern&gt;</span>*.vm<span class="code-tag">&lt;/url-pattern&gt;</span> 
+<span class="code-tag">&lt;/servlet-mapping&gt;</span></pre>
+</div></div>
+
+<blockquote><p>Read more: <a href="xwork.xml.html" title="xwork.xml">xwork.xml</a></p></blockquote>
+
+<p>Using <tt>velocity</tt> result-type means that Velocity templates can only be rendered through an action, i.e., request to <tt>.vm</tt> pages will not render the file and it will be returned as plain text. If you choose this approach, it's recommended that you place your Velocity files under <tt>WEB-INF</tt> so they become unaccessible.</p>
+
+<p>Using <tt>WebWorkVelocityServlet</tt> means that Velocity templates can be rendered through requests to <tt>.vm</tt> pages. That also means that you should implement security checks in your templates so an user doesn't access it directly witout going through an action first (if that is required). </p>
+
+<p>No matter which approach you choose (and you can choose to use both at the same time), not only all the features from Velocity are available to you when you're writing templates, but also some other functionalities, specific of WebWork, are available. It is supposed that you are already familiar with Velocity, so we will focus only in the WebWork-specific features. If that's not the case, please <a href="http://jakarta.apache.org/velocity/getting-started.html" title="Visit page outside Confluence">get started with Velocity</a> before continuing.</p>
+
+<p>The main feature of it is to provide easy access to objects that are on the Value Stack, which contains some things that WebWork provides to you automatically, because you may find them useful at some point. These are some of the things that are available in the value stack:</p>
+
+<ul>
+	<li>The current <tt>HttpServletRequest</tt>;</li>
+	<li>The current <tt>HttpServletResponse</tt>;</li>
+	<li>The current <tt>OgnlValueStack</tt>;</li>
+	<li>An instance of <tt>OgnlTool</tt>;</li>
+	<li>All the properties of the current action class.</li>
+</ul>
+
+
+<p>To access the objects in the value stack, all you have to do is use appropriate Velocity references:</p>
+
+<ul>
+	<li><b><tt>$req</tt></b> = <tt>HttpServletRequest</tt>;</li>
+	<li><b><tt>$res</tt></b> = <tt>HttpServletResponse</tt>;</li>
+	<li><b><tt>$stack</tt></b> = <tt>OgnlValueStack</tt>;</li>
+	<li><b><tt>$ognl</tt></b> = <tt>OgnlTool</tt>;</li>
+	<li><b><tt>$name-of-property</tt></b> = property of the current action class.</li>
+</ul>
+
+
+<p>The example below does the same thing as the Hello example from <a href="Lesson 3 - An html form with data.html" title="Lesson 3 - An html form with data">lesson 3</a>, but now, using a Velocity template as the result. Notice that the <tt>&lt;property value="person" /&gt;</tt> tag was replaced by the <tt>$person</tt> reference, which returns the same thing: a property from the action class. In this example we chose to use the <em><tt>velocity</tt> result-type</em> approach.</p>
+
+<h3><a name="TutorialLesson04-02-xwork.xml%3A"></a>xwork.xml:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-xml">&lt;!DOCTYPE xwork PUBLIC <span class="code-quote">"-//OpenSymphony Group//XWork 1.0//EN"</span> 
+<span class="code-quote">"http://www.opensymphony.com/xwork/xwork-1.0.dtd"</span>&gt;
+
+<span class="code-tag">&lt;xwork&gt;</span>
+	<span class="code-tag"><span class="code-comment">&lt;!-- Include webwork defaults (from WebWork JAR). --&gt;</span></span>
+	<span class="code-tag">&lt;include file=<span class="code-quote">"webwork-default.xml"</span> /&gt;</span>
+	
+	<span class="code-tag"><span class="code-comment">&lt;!-- Configuration for the default package. --&gt;</span></span>
+	<span class="code-tag">&lt;package name=<span class="code-quote">"default"</span> extends=<span class="code-quote">"webwork-default"</span>&gt;</span>
+		<span class="code-tag"><span class="code-comment">&lt;!-- Default interceptor stack. --&gt;</span></span> 
+		<span class="code-tag">&lt;default-interceptor-ref name=<span class="code-quote">"defaultStack"</span> /&gt;</span> 
+		
+		<span class="code-tag"><span class="code-comment">&lt;!-- Action: Lesson 4.2: HelloAction using Velocity as result. --&gt;</span></span>
+		<span class="code-tag">&lt;action name=<span class="code-quote">"helloVelocity"</span> class=<span class="code-quote">"lesson03.HelloAction"</span>&gt;</span>
+			<span class="code-tag">&lt;result name=<span class="code-quote">"error"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>ex01-index.jsp<span class="code-tag">&lt;/result&gt;</span>
+			<span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"velocity"</span>&gt;</span>ex01-success.vm<span class="code-tag">&lt;/result&gt;</span>
+		<span class="code-tag">&lt;/action&gt;</span>
+	<span class="code-tag">&lt;/package&gt;</span>
+<span class="code-tag">&lt;/xwork&gt;</span></pre>
+</div></div>
+
+<h3><a name="TutorialLesson04-02-HelloAction.java%28sameaslesson3%29%3A"></a>HelloAction.java (same as lesson 3):</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> lesson03;
+
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionSupport;
+
+<span class="code-keyword">public</span> class HelloAction <span class="code-keyword">extends</span> ActionSupport {
+	<span class="code-object">String</span> person;
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getPerson() {
+		<span class="code-keyword">return</span> person;
+	}
+	<span class="code-keyword">public</span> void setPerson(<span class="code-object">String</span> person) {
+		<span class="code-keyword">this</span>.person = person;
+	}
+	<span class="code-keyword">public</span> <span class="code-object">String</span> execute() <span class="code-keyword">throws</span> Exception {
+		<span class="code-keyword">if</span> ((person == <span class="code-keyword">null</span>) || (person.length() == 0)) <span class="code-keyword">return</span> ERROR;
+		<span class="code-keyword">else</span> <span class="code-keyword">return</span> SUCCESS;
+	}
+}</pre>
+</div></div>
+
+<h3><a name="TutorialLesson04-02-ex01index.jsp%28sameaslesson3%29%3A"></a>ex01-index.jsp (same as lesson 3):</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;html&gt;</span>
+<span class="code-tag">&lt;head&gt;</span>
+<span class="code-tag">&lt;title&gt;</span>WebWork Tutorial - Lesson 3 - Example 2<span class="code-tag">&lt;/title&gt;</span>
+<span class="code-tag">&lt;/head&gt;</span>
+
+<span class="code-tag">&lt;body&gt;</span>
+
+<span class="code-tag">&lt;p&gt;</span>What's your name?<span class="code-tag">&lt;/p&gt;</span>
+
+<span class="code-tag">&lt;form action=<span class="code-quote">"helloVelocity.action"</span> method=<span class="code-quote">"post"</span>&gt;</span>
+<span class="code-tag">&lt;p&gt;</span><span class="code-tag">&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"person"</span> /&gt;</span><span class="code-tag">&lt;input type=<span class="code-quote">"submit"</span> /&gt;</span><span class="code-tag">&lt;/p&gt;</span>
+<span class="code-tag">&lt;/form&gt;</span>
+
+<span class="code-tag">&lt;/body&gt;</span>
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+
+<h3><a name="TutorialLesson04-02-ex01success.vm%3A"></a>ex01-success.vm:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;html&gt;</span> 
+<span class="code-tag">&lt;head&gt;</span> 
+<span class="code-tag">&lt;title&gt;</span>WebWork Tutorial - Lesson 4.2 - Example 1<span class="code-tag">&lt;/title&gt;</span> 
+<span class="code-tag">&lt;/head&gt;</span> 
+<span class="code-tag">&lt;body&gt;</span> 
+
+Hello, $person 
+
+<span class="code-tag">&lt;/body&gt;</span> 
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+
+<blockquote><p>Try the example!</p></blockquote>
+
+
+<h2><a name="TutorialLesson04-02-UsingWebWorkTagsfromVelocity%3A"></a>Using WebWork Tags from Velocity:</h2>
+
+<p>As you already know, when you switch from JSP to Velocity you lose the ability of using JSP Tags. But WebWork's Velocity Servlet provides a way of doing this through the use of <tt>#tag</tt>, <tt>#bodytag</tt> and <tt>#param</tt> velocimacros. The general syntax is:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">#tag (name-of-tag list-of-attributes)</pre>
+</div></div>
+
+<p>&#8211; or &#8211;</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">#bodytag (name-of-tag list-of-attributes)
+	#param (key value)
+	#param (key value)
+...
+#end</pre>
+</div></div>
+
+<p>Let's revisit <a href="TutorialLesson04-01-01.html" title="TutorialLesson04-01-01">lesson 4.1.1</a>'s form example to demonstrate the usage of the UI tags from velocity:</p>
+
+<h3><a name="TutorialLesson04-02-xwork.xml%3A"></a>xwork.xml:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-xml">&lt;!DOCTYPE xwork PUBLIC <span class="code-quote">"-//OpenSymphony Group//XWork 1.0//EN"</span> 
+<span class="code-quote">"http://www.opensymphony.com/xwork/xwork-1.0.dtd"</span>&gt;
+
+<span class="code-tag">&lt;xwork&gt;</span>
+	<span class="code-tag"><span class="code-comment">&lt;!-- Include webwork defaults (from WebWork JAR). --&gt;</span></span>
+	<span class="code-tag">&lt;include file=<span class="code-quote">"webwork-default.xml"</span> /&gt;</span>
+	
+	<span class="code-tag"><span class="code-comment">&lt;!-- Configuration for the default package. --&gt;</span></span>
+	<span class="code-tag">&lt;package name=<span class="code-quote">"default"</span> extends=<span class="code-quote">"webwork-default"</span>&gt;</span>
+		<span class="code-tag"><span class="code-comment">&lt;!-- Default interceptor stack. --&gt;</span></span> 
+		<span class="code-tag">&lt;default-interceptor-ref name=<span class="code-quote">"defaultStack"</span> /&gt;</span> 
+		
+		<span class="code-tag"><span class="code-comment">&lt;!-- Actions: Lesson 4.2: FormProcessingAction using Velocity. --&gt;</span></span> 
+		<span class="code-tag">&lt;action name=<span class="code-quote">"formProcessingVelocityIndex"</span> class=<span class="code-quote">"lesson04_02.FormProcessingIndexAction"</span>&gt;</span>
+			<span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"velocity"</span>&gt;</span>ex02-index.vm<span class="code-tag">&lt;/result&gt;</span>
+		<span class="code-tag">&lt;/action&gt;</span>
+		<span class="code-tag">&lt;action name=<span class="code-quote">"formProcessingVelocity"</span> class=<span class="code-quote">"lesson04_01_01.FormProcessingAction"</span>&gt;</span> 
+			<span class="code-tag">&lt;result name=<span class="code-quote">"input"</span> type=<span class="code-quote">"velocity"</span>&gt;</span>ex02-index.vm<span class="code-tag">&lt;/result&gt;</span> 
+			<span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"velocity"</span>&gt;</span>ex02-success.vm<span class="code-tag">&lt;/result&gt;</span> 
+			<span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"validationWorkflowStack"</span> /&gt;</span> 
+		<span class="code-tag">&lt;/action&gt;</span> 
+	<span class="code-tag">&lt;/package&gt;</span>
+<span class="code-tag">&lt;/xwork&gt;</span></pre>
+</div></div>
+
+<h3><a name="TutorialLesson04-02-ex02index.vm%3A"></a>ex02-index.vm:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;html&gt;</span> 
+<span class="code-tag">&lt;head&gt;</span> 
+<span class="code-tag">&lt;title&gt;</span>WebWork Tutorial - Lesson 4.2 - Example 2<span class="code-tag">&lt;/title&gt;</span> 
+<span class="code-tag">&lt;style type=<span class="code-quote">"text/css"</span>&gt;</span> 
+  .errorMessage { color: red; } 
+<span class="code-tag">&lt;/style&gt;</span>   
+<span class="code-tag">&lt;/head&gt;</span> 
+
+<span class="code-tag">&lt;body&gt;</span> 
+
+<span class="code-tag">&lt;p&gt;</span>UI Form Tags Example using Velocity:<span class="code-tag">&lt;/p&gt;</span> 
+
+#bodytag (Form <span class="code-quote">"action='formProcessingVelocity.action'"</span> <span class="code-quote">"method='post'"</span>) 
+	#tag (Checkbox <span class="code-quote">"name='checkbox'"</span> <span class="code-quote">"label='A checkbox'"</span> <span class="code-quote">"fieldValue='checkbox_value'"</span>) 
+	#tag (File <span class="code-quote">"name='file'"</span> <span class="code-quote">"label='A file field'"</span>) 
+	#tag (Hidden <span class="code-quote">"name='hidden'"</span> <span class="code-quote">"value='hidden_value'"</span>) 
+	#tag (Label <span class="code-quote">"label='A label'"</span>) 
+	#tag (Password <span class="code-quote">"name='password'"</span> <span class="code-quote">"label='A password field'"</span>) 
+	#tag (Radio <span class="code-quote">"name='radio'"</span> <span class="code-quote">"label='Radio buttons'"</span> <span class="code-quote">"list={'One', 'Two', 'Three'}"</span>) 
+	#tag (Select <span class="code-quote">"name='select'"</span> <span class="code-quote">"label='A select list'"</span> <span class="code-quote">"list={'One', 'Two', 'Three'}"</span> 
+		<span class="code-quote">"emptyOption=true"</span>) 
+	#tag (Textarea <span class="code-quote">"name='textarea'"</span> <span class="code-quote">"label='A text area'"</span> <span class="code-quote">"rows='3'"</span> <span class="code-quote">"cols='40'"</span>) 
+	#tag (TextField <span class="code-quote">"name='textfield'"</span> <span class="code-quote">"label='A text field'"</span>) 
+	#tag (Submit <span class="code-quote">"value='Send Form'"</span>) 
+#end 
+
+<span class="code-tag">&lt;/body&gt;</span> 
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+
+<h3><a name="TutorialLesson04-02-ex02success.vm%3A"></a>ex02-success.vm:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;html&gt;</span> 
+<span class="code-tag">&lt;head&gt;</span> 
+<span class="code-tag">&lt;title&gt;</span>WebWork Tutorial Lesson 4.2 - Example 2<span class="code-tag">&lt;/title&gt;</span> 
+<span class="code-tag">&lt;/head&gt;</span> 
+
+<span class="code-tag">&lt;body&gt;</span> 
+
+<span class="code-tag">&lt;p&gt;</span>UI Form Tags Example result using Velocity:<span class="code-tag">&lt;/p&gt;</span> 
+
+<span class="code-tag">&lt;ul&gt;</span> 
+	<span class="code-tag">&lt;li&gt;</span>checkbox: $!checkbox<span class="code-tag">&lt;/li&gt;</span> 
+	<span class="code-tag">&lt;li&gt;</span>file: $!file<span class="code-tag">&lt;/li&gt;</span> 
+	<span class="code-tag">&lt;li&gt;</span>hidden: $!hidden<span class="code-tag">&lt;/li&gt;</span> 
+	<span class="code-tag">&lt;li&gt;</span>password: $!password<span class="code-tag">&lt;/li&gt;</span> 
+	<span class="code-tag">&lt;li&gt;</span>radio: $!radio<span class="code-tag">&lt;/li&gt;</span> 
+	<span class="code-tag">&lt;li&gt;</span>select: $!select<span class="code-tag">&lt;/li&gt;</span> 
+	<span class="code-tag">&lt;li&gt;</span>textarea: $!textarea<span class="code-tag">&lt;/li&gt;</span> 
+	<span class="code-tag">&lt;li&gt;</span>textfield: $!textfield<span class="code-tag">&lt;/li&gt;</span> 
+<span class="code-tag">&lt;/ul&gt;</span> 
+
+<span class="code-tag">&lt;/body&gt;</span> 
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+
+<h3><a name="TutorialLesson04-02-FormProcessingAction.java%28sameaslesson4.1.1%29%3A"></a>FormProcessingAction.java (same as lesson 4.1.1):</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> lesson04_01_01;
+
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionSupport;
+
+<span class="code-keyword">public</span> class FormProcessingAction <span class="code-keyword">extends</span> ActionSupport {
+	<span class="code-keyword">private</span> <span class="code-object">String</span> checkbox;
+	<span class="code-keyword">private</span> <span class="code-object">String</span> file;
+	<span class="code-keyword">private</span> <span class="code-object">String</span> hidden;
+	<span class="code-keyword">private</span> <span class="code-object">String</span> password;
+	<span class="code-keyword">private</span> <span class="code-object">String</span> radio;
+	<span class="code-keyword">private</span> <span class="code-object">String</span> select;
+	<span class="code-keyword">private</span> <span class="code-object">String</span> textarea;
+	<span class="code-keyword">private</span> <span class="code-object">String</span> textfield;
+	
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getCheckbox() { <span class="code-keyword">return</span> checkbox; }
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getFile() { <span class="code-keyword">return</span> file; }
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getHidden() { <span class="code-keyword">return</span> hidden; }
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getPassword() { <span class="code-keyword">return</span> password; }
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getRadio() { <span class="code-keyword">return</span> radio; }
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getSelect() { <span class="code-keyword">return</span> select; }
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getTextarea() { <span class="code-keyword">return</span> textarea; }
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getTextfield() { <span class="code-keyword">return</span> textfield; }
+	
+	<span class="code-keyword">public</span> void setCheckbox(<span class="code-object">String</span> checkbox) { <span class="code-keyword">this</span>.checkbox = checkbox; }
+	<span class="code-keyword">public</span> void setFile(<span class="code-object">String</span> file) { <span class="code-keyword">this</span>.file = file; }
+	<span class="code-keyword">public</span> void setHidden(<span class="code-object">String</span> hidden) { <span class="code-keyword">this</span>.hidden = hidden; }
+	<span class="code-keyword">public</span> void setPassword(<span class="code-object">String</span> password) { <span class="code-keyword">this</span>.password = password; }
+	<span class="code-keyword">public</span> void setRadio(<span class="code-object">String</span> radio) { <span class="code-keyword">this</span>.radio = radio; }
+	<span class="code-keyword">public</span> void setSelect(<span class="code-object">String</span> select) { <span class="code-keyword">this</span>.select = select; }
+	<span class="code-keyword">public</span> void setTextarea(<span class="code-object">String</span> textarea) { <span class="code-keyword">this</span>.textarea = textarea; }
+	<span class="code-keyword">public</span> void setTextfield(<span class="code-object">String</span> textfield) { <span class="code-keyword">this</span>.textfield = textfield; }
+	
+	<span class="code-keyword">public</span> <span class="code-object">String</span> execute() <span class="code-keyword">throws</span> Exception {
+		<span class="code-keyword">return</span> SUCCESS;
+	}
+}</pre>
+</div></div>
+
+<h3><a name="TutorialLesson04-02-FormProcessingActionvalidation.xml%28sameaslesson4.1.1%29%3A"></a>FormProcessingAction-validation.xml (same as lesson 4.1.1):</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-xml">&lt;!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 
+1.0//EN<span class="code-quote">" "</span>http://www.opensymphony.com/xwork/xwork-validator-1.0.dtd"&gt;
+
+<span class="code-tag">&lt;validators&gt;</span>
+  <span class="code-tag">&lt;field name=<span class="code-quote">"checkbox"</span>&gt;</span>
+    <span class="code-tag">&lt;field-validator type=<span class="code-quote">"requiredstring"</span>&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>Please, check the checkbox.<span class="code-tag">&lt;/message&gt;</span>
+    <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;/field&gt;</span>
+
+  <span class="code-tag">&lt;field name=<span class="code-quote">"file"</span>&gt;</span>
+    <span class="code-tag">&lt;field-validator type=<span class="code-quote">"requiredstring"</span>&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>Please select a file.<span class="code-tag">&lt;/message&gt;</span>
+    <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;/field&gt;</span>
+
+  <span class="code-tag">&lt;field name=<span class="code-quote">"password"</span>&gt;</span>
+    <span class="code-tag">&lt;field-validator type=<span class="code-quote">"requiredstring"</span>&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>Please type something in the password field.<span class="code-tag">&lt;/message&gt;</span>
+    <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;/field&gt;</span>
+
+  <span class="code-tag">&lt;field name=<span class="code-quote">"radio"</span>&gt;</span>
+    <span class="code-tag">&lt;field-validator type=<span class="code-quote">"requiredstring"</span>&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>Please select a radio button.<span class="code-tag">&lt;/message&gt;</span>
+    <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;/field&gt;</span>
+
+  <span class="code-tag">&lt;field name=<span class="code-quote">"select"</span>&gt;</span>
+    <span class="code-tag">&lt;field-validator type=<span class="code-quote">"requiredstring"</span>&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>Please select an option from the list.<span class="code-tag">&lt;/message&gt;</span>
+    <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;/field&gt;</span>
+
+  <span class="code-tag">&lt;field name=<span class="code-quote">"textarea"</span>&gt;</span>
+    <span class="code-tag">&lt;field-validator type=<span class="code-quote">"requiredstring"</span>&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>Please type something in the text area.<span class="code-tag">&lt;/message&gt;</span>
+    <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;/field&gt;</span>
+
+  <span class="code-tag">&lt;field name=<span class="code-quote">"textfield"</span>&gt;</span>
+    <span class="code-tag">&lt;field-validator type=<span class="code-quote">"requiredstring"</span>&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>Please type something in the text field.<span class="code-tag">&lt;/message&gt;</span>
+    <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;/field&gt;</span>
+<span class="code-tag">&lt;/validators&gt;</span></pre>
+</div></div>
+
+<blockquote><p>Try the example!</p></blockquote>
+
+<p>&#8212; </p>
+
+<p>The example above does not use the <tt>#param</tt> tag. So, let's revisit another example from <a href="TutorialLesson04-01-01.html" title="TutorialLesson04-01-01">lesson 4.1.1</a> - custom components:</p>
+
+<h3><a name="TutorialLesson04-02-ex03.vm%3A"></a>ex03.vm:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;html&gt;</span> 
+<span class="code-tag">&lt;head&gt;</span> 
+<span class="code-tag">&lt;title&gt;</span>WebWork Tutorial - Lesson 4.2 - Example 3<span class="code-tag">&lt;/title&gt;</span> 
+<span class="code-tag">&lt;/head&gt;</span> 
+
+<span class="code-tag">&lt;body&gt;</span> 
+
+<span class="code-tag">&lt;p&gt;</span>Custom Component Example:<span class="code-tag">&lt;/p&gt;</span> 
+
+<span class="code-tag">&lt;p&gt;</span> 
+#bodytag (Component <span class="code-quote">"template=datefield.vm"</span>) 
+	#param (<span class="code-quote">"label"</span> <span class="code-quote">"Date"</span>) 
+	#param (<span class="code-quote">"name"</span> <span class="code-quote">"mydatefield"</span>) 
+	#param (<span class="code-quote">"size"</span> <span class="code-quote">"3"</span>) 
+#end 
+<span class="code-tag">&lt;/p&gt;</span> 
+
+<span class="code-tag">&lt;/body&gt;</span> 
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+
+<h3><a name="TutorialLesson04-02-%2Ftemplate%2Fxhtml%2Fdatefield.vm%28sameaslesson4.1.1%29%3A"></a>/template/xhtml/datefield.vm (same as lesson 4.1.1):</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-html">#set ($name = $parameters.get('name')) 
+#set ($size = $parameters.get('size')) 
+#set ($yearSize = $size * 2) 
+
+$parameters.get('label'): 
+<span class="code-tag">&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"${name}.day"</span> size=<span class="code-quote">"$size"</span> /&gt;</span> / 
+<span class="code-tag">&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"${name}.month"</span> size=<span class="code-quote">"$size"</span> /&gt;</span> / 
+<span class="code-tag">&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"${name}.year"</span> size=<span class="code-quote">"$yearSize"</span> /&gt;</span> (dd/mm/yyyy)</pre>
+</div></div>
+
+<p>Notice that, this time, we did not enclose <tt>Date</tt> and <tt>mydatefield</tt> with single quotes, as we had to do when we used the JSP tag.</p>
+
+<blockquote><p>Try the example!</p></blockquote>
+
+<hr />
+
+<p><a href="TutorialLesson04-01.html" title="TutorialLesson04-01">Previous Lesson</a> | <a href="TutorialLesson04-03.html" title="TutorialLesson04-03">Next Lesson</a></p>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

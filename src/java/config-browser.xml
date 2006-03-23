@@ -1,0 +1,42 @@
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+
+<xwork>
+    <include file="webwork-default.xml"/>
+
+    <package name="config" extends="webwork-default" namespace="/config-browser">
+        <interceptors>
+            <interceptor-stack name="config-browser-default">
+                <interceptor-ref name="component"/>
+                <interceptor-ref name="validationWorkflowStack"/>
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="config-browser-default"/>
+
+        <global-results>
+            <result name="error" type="freemarker">/config-browser/error.ftl</result>
+            <result name="input" type="freemarker">/config-browser/error.ftl</result>
+        </global-results>
+
+        <action name="index">
+            <result type="redirect-action">actionNames</result>
+        </action>
+
+        <action name="actionNames" class="com.opensymphony.webwork.config_browser.ActionNamesAction">
+            <result type="freemarker" name="success">/config-browser/actionNames.ftl</result>
+        </action>
+
+        <action name="showConfig" class="com.opensymphony.webwork.config_browser.ShowConfigAction">
+            <result type="freemarker" name="success">/config-browser/showConfig.ftl</result>
+        </action>
+
+        <action name="showValidators" class="com.opensymphony.webwork.config_browser.ListValidatorsAction">
+            <result name="error" type="freemarker">/config-browser/simple-error.ftl</result>
+            <result name="input" type="freemarker">/config-browser/simple-error.ftl</result>
+            <result type="freemarker" name="success">/config-browser/showValidators.ftl</result>
+        </action>
+
+        <action name="validatorDetails" class="com.opensymphony.webwork.config_browser.ShowValidatorAction">
+            <result type="freemarker" name="success">/config-browser/validatorDetails.ftl</result>
+        </action>
+    </package>
+</xwork>

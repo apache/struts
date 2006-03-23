@@ -1,0 +1,136 @@
+
+<html>
+<head>
+<title>&lt;ww:subset /&gt;</title>
+</head>
+
+<body>
+
+<h1>Tag Name: &lt;ww:subset /&gt;</h1>
+
+<h2>Description</h2>
+<p>
+
+Takes an iterator and outputs a subset of it
+
+</p>
+
+<p>
+<!-- START SNIPPET: javadoc --> <b>NOTE: JSP-TAG</b> <p>A tag that takes an iterator and outputs a subset of it. It delegates to {@link com.opensymphony.webwork.util.SubsetIteratorFilter} internally to perform the subset functionality.</p> <!-- END SNIPPET: javadoc --> <!-- START SNIPPET: params --> <ul> <li>count (Object) - Indicate the number of entries to be in the resulting subset iterator</li> <li>source* (Object) - Indicate the source of which the resulting subset iterator is to be derived base on</li> <li>start (Object) - Indicate the starting index (eg. first entry is 0) of entries in the source to be available as the first entry in the resulting subset iterator</li> <li>decider (Object) - Extension to plug-in a decider to determine if that particular entry is to be included in the resulting subset iterator</li> <li>id (String) - Indicate the pageContext attribute id to store the resultant subset iterator in</li> </ul> <!-- END SNIPPET: params --> <pre> <!-- START SNIPPET: action --> public class MySubsetTagAction extends ActionSupport { public String execute() throws Exception { l = new ArrayList(); l.add(new Integer(1)); l.add(new Integer(2)); l.add(new Integer(3)); l.add(new Integer(4)); l.add(new Integer(5)); return "done"; } public Integer[] getMyArray() { return a; } public List getMyList() { return l; } public Decider getMyDecider() { return new Decider() { public boolean decide(Object element) throws Exception { int i = ((Integer)element).intValue(); return (((i % 2) == 0)?true:false); } }; } } <!-- END SNIPPET: action --> </pre> <pre> <!-- START SNIPPET: example1 --> &lt;!-- A: List basic --&gt; &lt;ww:subset source="myList"&gt; &lt;ww:iterator&gt; &lt;ww:property /&gt; &lt;/ww:iterator&gt; &lt;/ww:subset&gt; <!-- END SNIPPET: example1 --> </pre> <pre> <!-- START SNIPPET: example2 --> &lt;!-- B: List with count --&gt; &lt;ww:subset source="myList" count="3"&gt; &lt;ww:iterator&gt; &lt;ww:property /&gt; &lt;/ww:iterator&gt; &lt;/ww:subset&gt; <!-- END SNIPPET: example2 --> </pre> <pre> <!-- START SNIPPET: example3 --> &lt;!-- C: List with start --> &lt;ww:subset source="myList" count="13" start="3"&gt; &lt;ww:iterator&gt; &lt;ww:property /&gt; &lt;/ww:iterator&gt; &lt;/ww:subset&gt; <!-- END SNIPPET: example3 --> </pre> <pre> <!-- START SNIPPET: example4 --> &lt;!-- D: List with id --&gt; &lt;ww:subset id="mySubset" source="myList" count="13" start="3" /&gt; &lt;% Iterator i = (Iterator) pageContext.getAttribute("mySubset"); while(i.hasNext()) { %&gt; &lt;%=i.next() %&gt; &lt;% } %&gt; <!-- END SNIPPET: example4 --> </pre> <pre> <!-- START SNIPPET: example5 --> &lt;!-- D: List with Decider --&gt; &lt;ww:subset source="myList" decider="myDecider"&gt; &lt;ww:iterator&gt; &lt;ww:property /&gt; &lt;/ww:iterator&gt; &lt;/ww:subset&gt; <!-- END SNIPPET: example5 --> </pre>
+</p>
+
+<h2>Attributes</h2>
+<p>
+
+<!-- START SNIPPET: tagattributes -->
+<table width="100%">
+<tr>
+
+<th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">count</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Integer</td>
+
+<!-- Description -->
+<td align="left" valign="top">Indicate the number of entries to be in the resulting subset iterator</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">source</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Indicate the source of which the resulting subset iterator is to be derived base on</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">start</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Integer</td>
+
+<!-- Description -->
+<td align="left" valign="top">Indicate the starting index (eg. first entry is 0) of entries in the source to be available as the first entry in the resulting subset iterator</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">decider</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">com.opensymphony.webwork.util.SubsetIteratorFilter.Decider</td>
+
+<!-- Description -->
+<td align="left" valign="top">Extension to plug-in a decider to determine if that particular entry is to be included in the resulting subset iterator</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">The id of the tag element.</td>
+
+</tr>
+
+</table>
+<!-- END SNIPPET: tagattributes -->
+
+</p>
+<p>
+<center><a href="index.html">Back to Taglib Index</a></center>
+</p>
+</body>
+</html>
+

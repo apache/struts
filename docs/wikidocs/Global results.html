@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Global results
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="Globalresults-Description"></a>Description</h1>
+
+<p>Global results allows you to define result mappings which will be used as defaults for all action configurations and will be automatically inherited by all action configurations in this package and all packages which extend this package.  In other words, if you have the same result specified within multiple actions, then you can define it as a global result.</p>
+
+
+<h1><a name="Globalresults-Example"></a>Example</h1>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;package name=<span class="code-quote">"default"</span>&gt;</span>
+....
+<span class="code-tag">&lt;global-results&gt;</span> 
+    <span class="code-tag">&lt;result name=<span class="code-quote">"login"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span> 
+        <span class="code-tag">&lt;param name=<span class="code-quote">"location"</span>&gt;</span>login.jsp<span class="code-tag">&lt;/param&gt;</span> 
+    <span class="code-tag">&lt;/result&gt;</span> 
+<span class="code-tag">&lt;/global-results&gt;</span> 
+<span class="code-tag">&lt;action name=<span class="code-quote">"foo"</span>  class=<span class="code-quote">"mypackage.fooAction"</span>&gt;</span>
+    <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>bar.jsp<span class="code-tag">&lt;/result&gt;</span> 
+<span class="code-tag">&lt;/action&gt;</span>
+<span class="code-tag">&lt;action name=<span class="code-quote">"submitForm"</span>  class=<span class="code-quote">"mypackage.submitFormAction"</span>&gt;</span>
+    <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>submitSuccess.jsp<span class="code-tag">&lt;/result&gt;</span> 
+<span class="code-tag">&lt;/action&gt;</span>
+...
+<span class="code-tag">&lt;/package&gt;</span></pre>
+</div></div>
+<p>Same thing</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;package name=<span class="code-quote">"default"</span>&gt;</span>
+....
+<span class="code-tag">&lt;action name=<span class="code-quote">"foo"</span>  class=<span class="code-quote">"mypackage.fooAction"</span>&gt;</span>
+    <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>bar.jsp<span class="code-tag">&lt;/result&gt;</span> 
+    <span class="code-tag">&lt;result name=<span class="code-quote">"login"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>login.jsp<span class="code-tag">&lt;/result&gt;</span> 
+<span class="code-tag">&lt;/action&gt;</span>
+<span class="code-tag">&lt;action name=<span class="code-quote">"submitForm"</span>  class=<span class="code-quote">"mypackage.submitFormAction"</span>&gt;</span>
+    <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>submitSuccess.jsp<span class="code-tag">&lt;/result&gt;</span>
+    <span class="code-tag">&lt;result name=<span class="code-quote">"login"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>login.jsp<span class="code-tag">&lt;/result&gt;</span>  
+<span class="code-tag">&lt;/action&gt;</span>
+...
+<span class="code-tag">&lt;/package&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

@@ -1,0 +1,203 @@
+<html>
+    <head>
+        <title>WebWork - 
+        generator
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="generator-Description"></a>Description</h1>
+<p><b>NOTE: JSP-TAG</b></p>
+
+<p><p>Generate an iterator based on the val attribute supplied.</P></p>
+
+<p><b>NOTE:</b> The generated iterator will <b>ALWAYS</b> be pushed into the top of the stack, and poped
+at the end of the tag.</p>
+
+
+<h1><a name="generator-Parameters"></a>Parameters</h1>
+<p><table width="100%">
+<tr></p>
+
+<p><th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">count</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Integer</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">the max number entries to be in the iterator</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">separator</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top"><b>true</b></td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">the separator to be used in separating the <i>val</i> into entries of the iterator</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">val</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top"><b>true</b></td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Object/String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">the source to be parsed into an iterator</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">converter</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">com.opensymphony.webwork.util.IteratorGenerator.Converter</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">the converter to convert the String entry parsed from <i>val</i> into an object</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">the id to store the resultant iterator into page context, if such id is supplied</td></p>
+
+<p></tr></p>
+
+<p></table></p>
+
+
+<h1><a name="generator-Examples"></a>Examples</h1>
+<div class="code"><div class="codeContent">
+<pre class="code-xml">Example One:
+<span class="code-tag">&lt;pre&gt;</span>
+Generate a simple iterator
+<span class="code-tag">&lt;ww:generator val=<span class="code-quote">"%{'aaa,bbb,ccc,ddd,eee'}"</span>&gt;</span>
+<span class="code-tag">&lt;ww:iterator&gt;</span>
+	<span class="code-tag">&lt;ww:property /&gt;</span><span class="code-tag">&lt;br/&gt;</span>
+<span class="code-tag">&lt;/ww:iterator&gt;</span>
+<span class="code-tag">&lt;/ww:generator&gt;</span>
+<span class="code-tag">&lt;/pre&gt;</span>
+This generates an iterator and print it out using the iterator tag.
+
+Example Two:
+<span class="code-tag">&lt;pre&gt;</span>
+Generate an iterator with count attribute
+<span class="code-tag">&lt;ww:generator val=<span class="code-quote">"%{'aaa,bbb,ccc,ddd,eee'}"</span> count=<span class="code-quote">"3"</span>&gt;</span>
+<span class="code-tag">&lt;ww:iterator&gt;</span>
+	<span class="code-tag">&lt;ww:property /&gt;</span><span class="code-tag">&lt;br/&gt;</span>
+<span class="code-tag">&lt;/ww:iterator&gt;</span>
+<span class="code-tag">&lt;/ww:generator&gt;</span>
+<span class="code-tag">&lt;/pre&gt;</span>
+This generates an iterator, but only 3 entries will be available in the iterator
+generated, namely aaa, bbb and ccc respectively because count attribute is set to 3
+
+Example Three:
+<span class="code-tag">&lt;pre&gt;</span>
+Generate an iterator with id attribute
+<span class="code-tag">&lt;ww:generator val=<span class="code-quote">"%{'aaa,bbb,ccc,ddd,eee'}"</span> count=<span class="code-quote">"4"</span> separator=<span class="code-quote">","</span> id=<span class="code-quote">"myAtt"</span> /&gt;</span>
+&lt;%
+	Iterator i = (Iterator) pageContext.getAttribute(<span class="code-quote">"myAtt"</span>);
+	while(i.hasNext()) {
+		String s = (String) i.next(); %&gt;
+		<span class="code-tag">&lt;%=s%&gt;</span> <span class="code-tag">&lt;br/&gt;</span>
+&lt;% 	}
+%&gt;
+<span class="code-tag">&lt;/pre&gt;</span>
+This generates an iterator and put it in the PageContext under the key as specified
+by the id attribute.
+
+
+Example Four:
+<span class="code-tag">&lt;pre&gt;</span>
+Generate an iterator with comparator attribute
+<span class="code-tag">&lt;ww:generator val=<span class="code-quote">"%{'aaa,bbb,ccc,ddd,eee'}"</span> converter=<span class="code-quote">"%{myConverter}"</span>&gt;</span>
+<span class="code-tag">&lt;ww:iterator&gt;</span>
+		<span class="code-tag">&lt;ww:property /&gt;</span><span class="code-tag">&lt;br/&gt;</span>
+	<span class="code-tag">&lt;/ww:iterator&gt;</span>
+<span class="code-tag">&lt;/ww:generator&gt;</span>
+
+
+public class GeneratorTagAction extends ActionSupport {
+
+  ....
+
+ public Converter getMyConverter() {
+	return new Converter() {
+		public Object convert(String value) throws Exception {
+			return <span class="code-quote">"converter-"</span>+value;
+		}
+	};
+ }
+
+  ...
+
+}
+<span class="code-tag">&lt;/pre&gt;</span>
+This will generate an iterator with each entries decided by the converter supplied. With
+this converter, it simply add <span class="code-quote">"converter-"</span> to each entries.</pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

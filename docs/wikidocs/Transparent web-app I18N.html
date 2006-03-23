@@ -1,0 +1,173 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Transparent web-app I18N
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>As of WebWork 2.2, this interceptor is included with the normal distribution as the <a href="I18n Interceptor.html" title="I18n Interceptor">I18n Interceptor</a></td></tr></table>
+
+<p>Consider adding transparent i18 with simple on-the-fly locale switching to your appliction via I18NInterceptor.</p>
+
+<p>The main idea:<br/>
+Interceptor could track locale switch requests, persist selection in current session and set locale for all (or appropriate) actions invoked.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> neuro.util.xwork;
+
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionSupport;
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionInvocation;
+<span class="code-keyword">import</span> com.opensymphony.xwork.interceptor.Interceptor;
+
+<span class="code-keyword">import</span> java.util.Locale;
+
+<span class="code-keyword">import</span> org.apache.commons.logging.Log;
+<span class="code-keyword">import</span> org.apache.commons.logging.LogFactory;
+
+/**
+ * I18nInterceptor
+ * @author Aleksei Gopachenko
+ */
+<span class="code-keyword">public</span> class I18nInterceptor <span class="code-keyword">implements</span> Interceptor
+{
+    <span class="code-keyword">protected</span> <span class="code-keyword">static</span> <span class="code-keyword">final</span> Log log = LogFactory.getLog(I18nInterceptor.class);
+
+    <span class="code-keyword">public</span> <span class="code-keyword">static</span> <span class="code-keyword">final</span> <span class="code-object">String</span> DEFAULT_SESSION_ATTRIBUTE = <span class="code-quote">"WW_TRANS_I18N_LOCALE"</span>;
+    <span class="code-keyword">public</span> <span class="code-keyword">static</span> <span class="code-keyword">final</span> <span class="code-object">String</span> DEFAULT_PARAMETER = <span class="code-quote">"request_locale"</span>;
+
+    <span class="code-keyword">protected</span> <span class="code-object">String</span> parameterName = DEFAULT_PARAMETER;
+    <span class="code-keyword">protected</span> <span class="code-object">String</span> attributeName = DEFAULT_SESSION_ATTRIBUTE;
+
+    /**
+     */
+    <span class="code-keyword">public</span> I18nInterceptor()
+    {
+        <span class="code-keyword">if</span>(log.isDebugEnabled()) log.debug(<span class="code-quote">"<span class="code-keyword">new</span> I18nInterceptor()"</span>);
+    }
+
+    <span class="code-keyword">public</span> void setParameterName(<span class="code-object">String</span> parameterName) {
+        <span class="code-keyword">this</span>.parameterName = parameterName;
+    }
+
+    <span class="code-keyword">public</span> void setAttributeName(<span class="code-object">String</span> attributeName) {
+        <span class="code-keyword">this</span>.attributeName = attributeName;
+    }
+
+    /**
+     */
+    <span class="code-keyword">public</span> void init() {
+        <span class="code-keyword">if</span>(log.isDebugEnabled()) log.debug(<span class="code-quote">"init()"</span>);
+    }
+
+    /**
+     */
+    <span class="code-keyword">public</span> void destroy() {
+        <span class="code-keyword">if</span>(log.isDebugEnabled()) log.debug(<span class="code-quote">"destroy()"</span>);
+    }
+
+    /**
+     */
+    <span class="code-keyword">public</span> <span class="code-object">String</span> intercept(ActionInvocation invocation) <span class="code-keyword">throws</span> Exception {
+        <span class="code-keyword">if</span>(log.isDebugEnabled()) log.debug(<span class="code-quote">"intercept '"</span>
+            +invocation.getProxy().getNamespace()+<span class="code-quote">"/"</span>
+            +invocation.getProxy().getActionName()+<span class="code-quote">"' { "</span>);
+
+        <span class="code-comment">//get requested locale
+</span>        <span class="code-object">Object</span> requested_locale = invocation.getInvocationContext().getParameters().get(parameterName);
+        <span class="code-keyword">if</span>(requested_locale!=<span class="code-keyword">null</span> &amp;&amp; requested_locale.getClass().isArray() &amp;&amp; ((<span class="code-object">Object</span>[])requested_locale).length==1) {
+            requested_locale=((<span class="code-object">Object</span>[])requested_locale)[0];
+        }
+        <span class="code-keyword">if</span>(log.isDebugEnabled()) log.debug(<span class="code-quote">"requested_locale="</span>+requested_locale);
+        <span class="code-comment">//save it in session
+</span>        <span class="code-keyword">if</span> (requested_locale!=<span class="code-keyword">null</span>) {
+            Locale locale = (requested_locale <span class="code-keyword">instanceof</span> Locale)? 
+              (Locale) requested_locale : localeFromString(requested_locale.toString());
+            <span class="code-keyword">if</span>(log.isDebugEnabled()) log.debug(<span class="code-quote">"store locale="</span>+locale);
+            <span class="code-keyword">if</span>(locale!=<span class="code-keyword">null</span>)invocation.getInvocationContext().getSession().put(attributeName,locale);
+        }
+        <span class="code-comment">//set locale <span class="code-keyword">for</span> action
+</span>        <span class="code-object">Object</span> locale = invocation.getInvocationContext().getSession().get(attributeName);
+        <span class="code-keyword">if</span> (locale!=<span class="code-keyword">null</span> &amp;&amp; locale <span class="code-keyword">instanceof</span> Locale) {
+            <span class="code-keyword">if</span>(log.isDebugEnabled()) log.debug(<span class="code-quote">"apply locale="</span>+locale);
+            invocation.getInvocationContext().setLocale((Locale)locale);
+        }
+
+        <span class="code-keyword">if</span>(log.isDebugEnabled()) log.debug(<span class="code-quote">"before Locale="</span>+((ActionSupport)invocation.getAction()).getLocale());
+        <span class="code-keyword">final</span> <span class="code-object">String</span> result = invocation.invoke();
+        <span class="code-keyword">if</span>(log.isDebugEnabled()) log.debug(<span class="code-quote">"after Locale="</span>+((ActionSupport)invocation.getAction()).getLocale());
+
+        <span class="code-keyword">if</span>(log.isDebugEnabled()) log.debug(<span class="code-quote">"intercept } "</span>);
+        <span class="code-keyword">return</span> result;
+    }
+
+    Locale localeFromString(<span class="code-object">String</span> localeStr) {
+        <span class="code-keyword">if</span> ((localeStr == <span class="code-keyword">null</span>) || (localeStr.trim().length() == 0) || (localeStr.equals(<span class="code-quote">"_"</span>))) {
+            <span class="code-keyword">return</span> Locale.getDefault();
+        }
+        <span class="code-object">int</span> index = localeStr.indexOf('_');
+        <span class="code-keyword">if</span> (index &lt; 0) {
+            <span class="code-keyword">return</span> <span class="code-keyword">new</span> Locale(localeStr);
+        }
+        <span class="code-object">String</span> language = localeStr.substring(0,index);
+        <span class="code-keyword">if</span> (index == localeStr.length()) {
+            <span class="code-keyword">return</span> <span class="code-keyword">new</span> Locale(language);
+        }
+        localeStr = localeStr.substring(index +1);
+        index = localeStr.indexOf('_');
+        <span class="code-keyword">if</span> (index &lt; 0) {
+            <span class="code-keyword">return</span> <span class="code-keyword">new</span> Locale(language,localeStr);
+        }
+        <span class="code-object">String</span> country = localeStr.substring(0,index);
+        <span class="code-keyword">if</span> (index == localeStr.length()) {
+            <span class="code-keyword">return</span> <span class="code-keyword">new</span> Locale(language,country);
+        }
+        localeStr = localeStr.substring(index +1);
+        <span class="code-keyword">return</span> <span class="code-keyword">new</span> Locale(language,country,localeStr);
+    }
+
+}</pre>
+</div></div>
+<p>Can be enabled for whole package via something like:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;interceptor name=<span class="code-quote">"i18n"</span> class=<span class="code-quote">"neuro.util.xwork.I18nInterceptor"</span>&gt;
+    &lt;!-- on which request parameter we should react, optional, defaults to <span class="code-quote">"request_locale"</span> -&gt;
+    &lt;param name=<span class="code-quote">"parameterName"</span>&gt;set_locale&lt;/param&gt;
+    &lt;!- under which session attribute locale should be stored, optional, defaults to <span class="code-quote">"WW_TRANS_I18N_LOCALE"</span> -&gt;
+    &lt;param name=<span class="code-quote">"attributeName"</span>&gt;ww_locale&lt;/param&gt;
+&lt;/interceptor&gt;
+
+&lt;interceptor-stack name=<span class="code-quote">"i18nStack"</span>&gt;
+    &lt;interceptor-ref name=<span class="code-quote">"i18n"</span>/&gt;
+    &lt;interceptor-ref name=<span class="code-quote">"defaultStack"</span>/&gt;
+&lt;/interceptor-stack&gt;
+
+&lt;<span class="code-keyword">default</span>-interceptor-ref name=<span class="code-quote">"i18nStack"</span>/&gt;</pre>
+</div></div>
+<p>...and invoked in web-app just by adding few links to menu:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;a href=<span class="code-quote">"?set_locale=en"</span>&gt;EN&lt;/a&gt;
+&lt;a href=<span class="code-quote">"?set_locale=ru"</span>&gt;RU&lt;/a&gt;
+&lt;!- etc --&gt;</pre>
+</div></div>
+<p>Of course you still need to move all explisitly defined messages or labels to appropriate ResourceBundles and make translations. Be sure to check out your</p>
+<ul>
+	<li>Actions - to use getText(...)</li>
+	<li>*-validation.xml files - to use &lt;message <em>key</em>=...&gt;</li>
+	<li>results/views - to use WW i18n services by &lt;webwork:text ...&gt; tag, or directly by evaluating getText(...) OGNL expression on current stack.</li>
+</ul>
+
+
+
+<p><em>If this Interceptor is generally useful, may be it should go into codebase?</em></p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

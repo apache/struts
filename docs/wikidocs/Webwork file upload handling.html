@@ -1,0 +1,127 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Webwork file upload handling
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h2><a name="Webworkfileuploadhandling-FileuploadusingWebWork"></a>File upload using WebWork</h2>
+
+<p>Webwork comes with built in file upload support. Uploading a file is simple. When ServletDispatcher begins it checks to see if the request contains multipart content. If it does the dispatcher creates a MultipartWrapperRequest. This wrapper handles receiving the file and saving to disk. It is important for the action programmer to check to see if any errors occured during processing. Three properties can be set that effect file uploading. </p>
+<h3><a name="Webworkfileuploadhandling-Properties"></a>Properties</h3>
+
+<p>Webwork properties can be set by putting a file 'webwork.properties' in WEB-INF/classes. Any property found there will override the default value.</p>
+<ol>
+	<li>webwork.multipart.parser - This should be set to a class that extends MultiPartRequest. Currently WebWork ships with two implementations. "com.opensymphony.webwork.dispatcher.multipart.PellMultiPartRequest" and "com.opensymphony.webwork.dispatcher.multipart.CosMultiPartRequest" If the property is not found the Pell parser is used.</li>
+	<li>webwork.multipart.saveDir - The directory where the uploaded files will be placed. If this property is not set it defaults to javax.servlet.context.tempdir.</li>
+	<li>webwork.multipart.maxSize - The maximum file size in bytes to allow for upload. This helps prevent system abuse by someone uploading lots of large files. The default value is 2 Megabytes and can be set as high as 2 Gigabytes (higher if you want to edit the Pell multipart source but you really need to rethink things if you need to upload files larger then 2 Gigabytes!) If you are uploading more than one file on a form the maxSize applies to the combined total, not the individual file sizes.</li>
+</ol>
+
+
+<p>If you're happy with the defaults there is no need to put any of the properties in webwork.properties. Here is my current webwork.properties</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java"># don't really need to set <span class="code-keyword">this</span> but I put it here <span class="code-keyword">for</span> testing
+# various values
+webwork.multipart.parser=com.opensymphony.webwork.dispatcher.multipart.PellMultiPartRequest
+
+# put the uploaded files in /tmp. My application will move them to their
+# <span class="code-keyword">final</span> destination
+webwork.multipart.saveDir=/tmp</pre>
+</div></div>
+
+<p>Note, while you can set these properties to new values at runtime the MultiPartRequestWrapper is created and the file handled before your action code is called. So if you want to change values you must do so before this action.</p>
+<h3><a name="Webworkfileuploadhandling-Sampleform"></a>Sample form</h3>
+
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;%@ taglib uri=<span class="code-quote">"webwork"</span> prefix=<span class="code-quote">"ww"</span> %&gt;</span>
+
+<span class="code-tag">&lt;html&gt;</span>
+  <span class="code-tag">&lt;head&gt;</span>
+   <span class="code-tag">&lt;title&gt;</span>File Upload Test<span class="code-tag">&lt;/title&gt;</span>
+  <span class="code-tag">&lt;/head&gt;</span>
+  <span class="code-tag">&lt;body&gt;</span>
+    <span class="code-tag">&lt;h1&gt;</span>File Upload<span class="code-tag">&lt;/h1&gt;</span>
+
+    <span class="code-tag">&lt;form action=<span class="code-quote">"FileUpload.action"</span> method=<span class="code-quote">"POST"</span> enctype=<span class="code-quote">"multipart/form-data"</span>&gt;</span>
+
+    <span class="code-tag">&lt;center&gt;</span>
+      <span class="code-tag">&lt;table width=<span class="code-quote">"350"</span> border=<span class="code-quote">"0"</span> cellpadding=<span class="code-quote">"3"</span> cellspacing=<span class="code-quote">"0"</span>&gt;</span>
+      <span class="code-tag">&lt;tr&gt;</span>
+        <span class="code-tag">&lt;td colspan=<span class="code-quote">"2"</span>&gt;</span><span class="code-tag">&lt;input type=<span class="code-quote">"file"</span> name=<span class="code-quote">"FileName"</span> value=<span class="code-quote">"Browse..."</span> size=<span class="code-quote">"50"</span>/&gt;</span><span class="code-tag">&lt;/td&gt;</span>
+      <span class="code-tag">&lt;/tr&gt;</span>
+      <span class="code-tag">&lt;tr&gt;</span>
+        <span class="code-tag">&lt;td colspan=<span class="code-quote">"2"</span> align=<span class="code-quote">"center"</span>&gt;</span>
+          <span class="code-tag">&lt;input type=<span class="code-quote">"submit"</span> value=<span class="code-quote">"Submit"</span>&gt;</span>
+        <span class="code-tag">&lt;/td&gt;</span>
+      <span class="code-tag">&lt;/tr&gt;</span>
+      <span class="code-tag">&lt;/table&gt;</span>
+    <span class="code-tag">&lt;/center&gt;</span>
+  <span class="code-tag">&lt;/form&gt;</span>
+
+<span class="code-tag">&lt;/body&gt;</span>
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+
+<p>That's all you have to do to upload a file. No coding required, the file will be placed in the default directory. However, that leaves us with no error checking among other things. So let's add some code to the Action.</p>
+<h3><a name="Webworkfileuploadhandling-FileUploadAction.java"></a>FileUploadAction.java</h3>
+
+<p>Before the action method is called the dispatcher will upload the file. Then we can get access to information about the file from MultiPartRequestWrapper.</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">MultiPartRequestWrapper multiWrapper = 
+		(MultiPartRequestWrapper) ServletActionContext.getRequest();</pre>
+</div></div>
+
+<p>The first thing you should always do is check for errors. If there were any there's no point in continuing, most methods will return null. Unfortunately, currently there is no easy way to distinguish what error occured making it more difficult to route to different error pages. (I have improving error handling for file uploads on my stack of things I'd like to do sometime).</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">if</span> (multiWrapper.hasErrors()) {
+  Collection errors = multiWrapper.getErrors();
+  Iterator i = errors.iterator();
+  <span class="code-keyword">while</span> (i.hasNext()) {
+    addActionError((<span class="code-object">String</span>) i.next());
+  }
+  <span class="code-keyword">return</span> ERROR;
+}</pre>
+</div></div>
+
+
+<p>Now get the input tag name for the uploaded file and use that to get information on the transfer. Since you can upload multiple files (just add multiple input tags) at a time getFileNames returns an Enumeration of the names.</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">Enumeration e = multiWrapper.getFileNames();
+
+<span class="code-keyword">while</span> (e.hasMoreElements()) {
+   <span class="code-comment">// get the value of <span class="code-keyword">this</span> input tag
+</span>   <span class="code-object">String</span> inputValue = (<span class="code-object">String</span>) e.nextElement();
+
+   <span class="code-comment">// get the content type
+</span>   <span class="code-object">String</span> contentType = multiWrapper.getContentType(inputValue);
+
+   <span class="code-comment">// get the name of the file from the input tag
+</span>   <span class="code-object">String</span> fileName = multiWrapper.getFilesystemName(inputValue);
+
+   <span class="code-comment">// Get a File object <span class="code-keyword">for</span> the uploaded File
+</span>   File file = multiWrapper.getFile(inputValue);
+
+   <span class="code-comment">// If it's <span class="code-keyword">null</span> the upload failed
+</span>   <span class="code-keyword">if</span> (file == <span class="code-keyword">null</span>) {
+      addActionError(<span class="code-quote">"Error uploading: "</span> + multiWrapper.getFilesystemName(inputValue));
+   }
+
+   <span class="code-comment">// Do additional processing/logging...
+</span>}</pre>
+</div></div>
+<h3><a name="Webworkfileuploadhandling-Furtherimprovements."></a>Further improvements.</h3>
+
+<p>Code above may be packed into one nice reusable component (Interceptor) that handles 90% of all typical file upload tasks. And Action does not know anything about web-app and just gets its files. Neat. See <a href="File Upload Interceptor.html" title="File Upload Interceptor">WW:File Upload Interceptor</a></p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

@@ -1,0 +1,69 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Webwork 2 skinning
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>Skinning in Webwork 2 can be done more than one way.  We will show how to use two skins called "html" and "wml", and we'll be working with the following directory structure:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">/WEB-INF
+   /web.xml
+/html
+   /index.jsp
+   /Register.jsp
+/wml
+   /index.jsp
+   /Register.jsp
+/index.jsp</pre>
+</div></div>
+<h3><a name="Webwork2skinning-ClassicApproach"></a>Classic Approach</h3>
+<p>If you want to go the Webwork 1.3 route, simply place all actions in the default namespace so that they are accessible from any URL path.  When you create your views, place them in the sub-directory that corresponds with the skin's identifier.  </p>
+
+
+<p>Your action configuration would look like this (simplified, without defined interceptors):</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;<span class="code-keyword">package</span> name=<span class="code-quote">"<span class="code-keyword">default</span>"</span>&gt;
+   &lt;action name=<span class="code-quote">"registration"</span> class=<span class="code-quote">"x.actionset.Register"</span>&gt;
+      &lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;
+         &lt;param name=<span class="code-quote">"location"</span>&gt;Register.jsp&lt;/param&gt;
+      &lt;/result&gt;
+      &lt;interceptor-ref name=<span class="code-quote">"defaultStack"</span>/&gt;
+   &lt;/action&gt;
+&lt;/<span class="code-keyword">package</span>&gt;</pre>
+</div></div>
+
+<p>If a user requested <a href="http://yoursite/html/register.action" title="Visit page outside Confluence">&#104;ttp://yoursite/html/register.action</a>, he would see the JSP located at /html/Register.jsp.</p>
+<h3><a name="Webwork2skinning-NamespaceDefined"></a>Namespace Defined</h3>
+<p>If you require the use of namespaces, you can do the following:</p>
+
+<p>Simplified configuration example:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;<span class="code-keyword">package</span> name=<span class="code-quote">"user"</span> <span class="code-keyword">extends</span>=<span class="code-quote">"<span class="code-keyword">default</span>"</span>&gt;
+   &lt;action name=<span class="code-quote">"register"</span> class=<span class="code-quote">"x.x.actionset.Register"</span>&gt;
+      &lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;
+         &lt;param name=<span class="code-quote">"location"</span>&gt;Register.jsp&lt;/param&gt;
+      &lt;/result&gt;
+
+      &lt;interceptor-ref name=<span class="code-quote">"defaultStack"</span>/&gt;
+  &lt;/action&gt;
+&lt;/<span class="code-keyword">package</span>&gt;
+
+&lt;<span class="code-keyword">package</span> name=<span class="code-quote">"user-html"</span> <span class="code-keyword">extends</span>=<span class="code-quote">"user"</span> namespace=<span class="code-quote">"/user/html"</span> /&gt;
+&lt;<span class="code-keyword">package</span> name=<span class="code-quote">"user-wml"</span> <span class="code-keyword">extends</span>=<span class="code-quote">"user"</span> namespace=<span class="code-quote">"/user/wml"</span> /&gt;</pre>
+</div></div>
+
+<p>The last two package definitions extend the first package, changing only the namespace.  The view result defined in the "register" action has a relative path.  Because of this, you'll get the same behavior as the Classic Approach, but with the security of knowing that ONLY those two paths can be accessed for the action, instead of ANY path.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

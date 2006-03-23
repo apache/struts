@@ -1,0 +1,141 @@
+<html>
+    <head>
+        <title>WebWork - 
+         div template
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>The ajax <a href="div.html" title="div">div</a> template provides a much more interesting div rendering option that the other themes do. Rather than simply rendering a <tt>&lt;div&gt;</tt> tag, this template relies on advanced AJAX features provided by the <a href="http://dojotoolkit.org" title="Visit page outside Confluence">Dojo Toolkit</a>. While the <a href="div.html" title="div">div</a> tag could be used outside of the <a href="ajax theme.html" title="ajax theme">ajax theme</a>, it is usually not very useful. See the <a href="div.html" title="div">div</a> tag for more information on what features are provided.</p>
+
+<h1><a name="ajaxdivtemplate-Features"></a>Features</h1>
+
+<p>The remote div has a few features, some of which can be combined with the <a href="a.html" title="a">a</a> tag and the <a href="ajax a template.html" title="ajax a template">ajax a template</a>. These uses are:</p>
+<ul>
+	<li>Retrieve remote data</li>
+	<li>Initialize the div with content before the remote data is retrieved</li>
+	<li>Display appropriate error and loading messages</li>
+	<li>Refresh data on a timed cycle</li>
+	<li>Listen for events and refresh data</li>
+	<li>JavaScript control support</li>
+</ul>
+
+
+<h2><a name="ajaxdivtemplate-RetrieveRemoteData"></a>Retrieve Remote Data</h2>
+
+<p>The simplest way to use the div tag is to provide an <em>href</em> attribute. For example:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:div theme=<span class="code-quote">"ajax"</span> id=<span class="code-quote">"weather"</span> href=<span class="code-quote">"http://www.weather.com/weather?zip=97239"</span>/&gt;</span></pre>
+</div></div>
+<p>What this does after the HTML page is completely loaded, the specified URL will be retrieved asynchronously in the browser. The entire contents returned by that URL will be injected in to the div.</p>
+
+<h2><a name="ajaxdivtemplate-InitializingtheDiv"></a>Initializing the Div</h2>
+
+<p>Because the remote data isn't loaded immediately, it is sometimes useful to have some placeholder content that exists before the remote data is retrieved. The content is essentially just the body of the div element. For example:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:div theme=<span class="code-quote">"ajax"</span> id=<span class="code-quote">"weather"</span> href=<span class="code-quote">"http://www.weather.com/weather?zip=97239"</span>&gt;</span>
+    Placeholder...
+<span class="code-tag">&lt;/ww:div&gt;</span></pre>
+</div></div>
+<p>If you wish to load more complex initial data, you can use the <a href="action.html" title="action">action</a> tag and the <em>executeResult</em> attribute:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:div theme=<span class="code-quote">"ajax"</span> id=<span class="code-quote">"weather"</span> href=<span class="code-quote">"http://www.weather.com/weather?zip=97239"</span>&gt;</span>
+    <span class="code-tag">&lt;ww:action id=<span class="code-quote">"weather"</span> name=<span class="code-quote">"weatherBean"</span> executeResult=<span class="code-quote">"true"</span>&gt;</span>
+        <span class="code-tag">&lt;ww:param name=<span class="code-quote">"zip"</span> value=<span class="code-quote">"97239"</span>/&gt;</span>
+    <span class="code-tag">&lt;/ww:action&gt;</span>
+<span class="code-tag">&lt;/ww:div&gt;</span></pre>
+</div></div>
+
+<h2><a name="ajaxdivtemplate-LoadingandErrorMessages"></a>Loading and Error Messages</h2>
+
+<p>If you'd like to display special messages when the data is being retrieved or when the data cannot be retrieved, you can use the <em>errorText</em> and <em>loadingText</em> attributes:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml">&lt;ww:div theme=<span class="code-quote">"ajax"</span> id=<span class="code-quote">"weather"</span> href=<span class="code-quote">"http://www.weather.com/weather?zip=97239"</span>
+        loadingText=<span class="code-quote">"Loading weather information..."</span>
+        errorText=<span class="code-quote">"Unable to contact weather server"</span>&gt;
+    Placeholder...
+<span class="code-tag">&lt;/ww:div&gt;</span></pre>
+</div></div>
+
+<h2><a name="ajaxdivtemplate-RefreshTimers"></a>Refresh Timers</h2>
+
+<p>Another feature this div template provides is the ability to refresh data on a timed basis. Using the <em>updateFreq</em> and the <em>delay</em>attributes, you can specify how often the timer goes off and when the timer starts (times in milliseconds). For example, the following will update every minute after a two second delay:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml">&lt;ww:div theme=<span class="code-quote">"ajax"</span> id=<span class="code-quote">"weather"</span> href=<span class="code-quote">"http://www.weather.com/weather?zip=97239"</span>
+        loadingText=<span class="code-quote">"Loading weather information..."</span>
+        errorText=<span class="code-quote">"Unable to contact weather server"</span>&gt;
+        delay=<span class="code-quote">"2000"</span>
+        updateFreq=<span class="code-quote">"60000"</span>
+    Placeholder...
+<span class="code-tag">&lt;/ww:div&gt;</span></pre>
+</div></div>
+
+<h2><a name="ajaxdivtemplate-ListeningforEvents"></a>Listening for Events</h2>
+
+<p>The <a href="a.html" title="a">a</a> tag (specifically the <a href="ajax a template.html" title="ajax a template">ajax a template</a>) and the div tag support an <a href="ajax event system.html" title="ajax event system">ajax event system</a>, providing the ability to broadcast events to topics. You can specify the <b>topics</b> to listen to using a comma separated list in the <em>listenTopics</em> attribute. What this means is that when a topic is published, usually through the <a href="ajax a template.html" title="ajax a template">ajax a template</a>, the URL specified in the <em>href</em> attribute will be re-requested.</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml">&lt;ww:div theme=<span class="code-quote">"ajax"</span> id=<span class="code-quote">"weather"</span> href=<span class="code-quote">"http://www.weather.com/weather?zip=97239"</span>
+        loadingText=<span class="code-quote">"Loading weather information..."</span>
+        errorText=<span class="code-quote">"Unable to contact weather server"</span>
+        listenTopics=<span class="code-quote">"weather_topic,some_topic"</span>&gt;
+    Placeholder...
+<span class="code-tag">&lt;/ww:div&gt;</span>
+&lt;ww:a id=<span class="code-quote">"link1"</span>
+      theme=<span class="code-quote">"ajax"</span>
+      href=<span class="code-quote">"refreshWeather.action"</span>
+      notifyTopics=<span class="code-quote">"weather_topic,other_topic"</span>
+      errorText=<span class="code-quote">"An Error ocurred"</span>&gt;Refresh<span class="code-tag">&lt;/ww:a&gt;</span></pre>
+</div></div>
+
+<h2><a name="ajaxdivtemplate-JavaScriptSupport"></a>JavaScript Support</h2>
+
+<p>There are also javascript functions to refresh the content and stop/start the refreshing of the component. For the remote div with the component id "remotediv1":</p>
+
+<p>To start refreshing use the javascript:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">remotediv1.start();</pre>
+</div></div>
+<p>To stop refreshing use the javascript:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">remotediv1.stop();</pre>
+</div></div>
+<p>To refresh the content use the javascript:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">remotediv1.bind();</pre>
+</div></div>
+
+<h3><a name="ajaxdivtemplate-JavaScriptExamples%3A"></a>JavaScript Examples:</h3>
+<p>To further illustrate these concepts here is an example. Say you want to change the url of a div at runtime via javascript. Here is what you need to do:<br/>
+What you will need to do is add a JS function that listens to a JS event that publishes the id from the select box that was selected.  It will modify the URL for the div (adding the id so the correct data is obtained) and then bind() the AJAX div so it refreshes.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;ww:head theme=<span class="code-quote">"ajax"</span> /&gt;
+
+&lt;script type=<span class="code-quote">"text/javascript"</span>&gt;
+    function updateReports(id) {
+       <span class="code-keyword">var</span> reportDiv= window['reportDivId'];
+       reportDiv.href = '/../reportListRemote.action?selectedId='+id;
+       reportDiv.bind();
+    }
+    dojo.event.topic.getTopic(<span class="code-quote">"updateReportsListTopic"</span>).subscribe(<span class="code-keyword">null</span>, <span class="code-quote">"updateReports"</span>);
+&lt;/script&gt;
+
+&lt;form ... &gt;
+&lt;ww:select .... onchange=<span class="code-quote">"javascript: dojo.event.topic.publish("</span>updateReportsListTopic<span class="code-quote">", <span class="code-keyword">this</span>.value); "</span> /&gt;
+
+&lt;ww:div id=<span class="code-quote">"reportDivId"</span> theme=<span class="code-quote">"ajax"</span> href=<span class="code-quote">"/.../reportListRemote.action"</span> &gt;
+  Loading reports...
+&lt;/ww:div&gt;
+&lt;/form&gt;</pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

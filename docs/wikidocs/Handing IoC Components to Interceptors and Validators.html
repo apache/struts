@@ -1,0 +1,195 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Handing IoC Components to Interceptors and Validators
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="HandingIoCComponentstoInterceptorsandValidators-Reasonforuse"></a>Reason for use</h1>
+
+<p>I have recently found the need for my Interceptors and Validators to be able to access Components - such as a Validators which is UserAware and checks the UserManager to see if the user exists. Or a Interceptor which is ApplicationAware and asks the ApplicationManager if it is setup yet - if not, then redirecting to a setup action instead.</p>
+
+<p>Currently WebWork (at version 2.1.7) only supports component management of Action, but this can be changed quite easily - if you know where to look.</p>
+
+<h1><a name="HandingIoCComponentstoInterceptorsandValidators-ExtendingtheObjectFactorys"></a>Extending the Object Factorys</h1>
+
+<p>WebWork uses a <b>com.opensymphony.xwork.ObjectFactory</b> object instance to generate the various objects that WebWork utilises - Validators, Interceptors, Actions, and Results for example. This is the object we are going to extend to add some of this functionality.</p>
+
+<p>The methods <b>buildInterceptor</b> and <b>buildValidator</b> do what they say on the tin. I have overriden them to do the following:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> Interceptor buildInterceptor(InterceptorConfig ic, Map map) <span class="code-keyword">throws</span> ConfigurationException {
+        Interceptor i = <span class="code-keyword">super</span>.buildInterceptor(ic, map);
+        cm.initializeObject(i);
+        <span class="code-keyword">return</span> i;
+    }
+
+    <span class="code-keyword">public</span> Validator buildValidator(<span class="code-object">String</span> string, Map map) <span class="code-keyword">throws</span> Exception {
+        Validator v = <span class="code-keyword">super</span>.buildValidator(string, map);
+        cm.initializeObject(v);
+        <span class="code-keyword">return</span> v;
+    }</pre>
+</div></div>
+
+<h1><a name="HandingIoCComponentstoInterceptorsandValidators-CreatingaComponentMananger"></a>Creating a Component Mananger</h1>
+
+<p>The variable <b>cm</b> is a <b>ComponentManager</b>. As I am unsure of how to access the ComponentManager that is used in the ComponentInterceptor (or used when initalizing Action objects), we have to create our own. As the ObjectFactory is a singleton the overhead of this is relatively minor, even though not ideal.</p>
+
+<p>The ComponentManager is created in the constructor like this:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">private</span> <span class="code-keyword">static</span> <span class="code-keyword">final</span> Log log = LogFactory.getLog(ObjectFactory.class);
+
+    <span class="code-keyword">private</span> ComponentConfiguration cc;
+    <span class="code-keyword">private</span> ComponentManager cm;
+
+    <span class="code-keyword">public</span> ObjectFactory() {
+        <span class="code-keyword">super</span>();
+        cm = (ComponentManager) ActionContext.getContext().get( ComponentInterceptor.COMPONENT_MANAGER );
+
+        <span class="code-keyword">if</span> (cm == <span class="code-keyword">null</span>) {
+            cc = <span class="code-keyword">new</span> ComponentConfiguration();
+            InputStream configXml = <span class="code-object">Thread</span>.currentThread().getContextClassLoader().getResourceAsStream(<span class="code-quote">"components.xml"</span>);
+            <span class="code-keyword">try</span> {
+                cc.loadFromXml(configXml);
+            } <span class="code-keyword">catch</span> (Exception e) {
+                log.info(<span class="code-quote">"No component.xml found. They test will <span class="code-keyword">continue</span> without initializing components."</span>);
+                cc = <span class="code-keyword">null</span>;
+            }
+
+            cm = <span class="code-keyword">new</span> DefaultComponentManager();
+            <span class="code-keyword">if</span> (cc != <span class="code-keyword">null</span>) {
+                cc.configure(cm, <span class="code-quote">"session"</span>);
+                cc.configure(cm, <span class="code-quote">"application"</span>);
+                cc.configure(cm, <span class="code-quote">"request"</span>);
+            }
+        }
+    }</pre>
+</div></div>
+
+<h1><a name="HandingIoCComponentstoInterceptorsandValidators-UsingournewObjectFactory"></a>Using our new ObjectFactory</h1>
+
+<p>The ObjectFactory is a singleton which allows you to set the object it hands out. To do this I have chosen to override the <b>init</b> method of the <b>com.opensymphony.webwork.dispatcher.ServletDispatcher</b> class. The method looks something like this:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> void init(ServletConfig servletConfig) <span class="code-keyword">throws</span> ServletException {
+        ObjectFactory.setObjectFactory( <span class="code-keyword">new</span> planb.jobsite.xwork.ObjectFactory() );
+        <span class="code-keyword">super</span>.init(servletConfig);
+    }</pre>
+</div></div>
+
+<h1><a name="HandingIoCComponentstoInterceptorsandValidators-CodeResults"></a>Code Results</h1>
+
+<p>The following full files result from this article.</p>
+
+<h3><a name="HandingIoCComponentstoInterceptorsandValidators-ObjectFactory"></a>Object Factory</h3>
+
+<div class="code"><div class="codeHeader"><b>ObjectFactory.java</b></div><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">import</span> com.opensymphony.xwork.interceptor.Interceptor;
+<span class="code-keyword">import</span> com.opensymphony.xwork.interceptor.component.ComponentManager;
+<span class="code-keyword">import</span> com.opensymphony.xwork.interceptor.component.DefaultComponentManager;
+<span class="code-keyword">import</span> com.opensymphony.xwork.interceptor.component.ComponentInterceptor;
+<span class="code-keyword">import</span> com.opensymphony.xwork.interceptor.component.ComponentConfiguration;
+<span class="code-keyword">import</span> com.opensymphony.xwork.config.entities.InterceptorConfig;
+<span class="code-keyword">import</span> com.opensymphony.xwork.config.ConfigurationException;
+<span class="code-keyword">import</span> com.opensymphony.xwork.validator.Validator;
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionContext;
+
+<span class="code-keyword">import</span> java.util.Map;
+<span class="code-keyword">import</span> java.io.InputStream;
+
+<span class="code-keyword">import</span> org.apache.commons.logging.Log;
+<span class="code-keyword">import</span> org.apache.commons.logging.LogFactory;
+
+<span class="code-keyword">public</span> class ObjectFactory <span class="code-keyword">extends</span> com.opensymphony.xwork.ObjectFactory {
+
+    <span class="code-keyword">private</span> <span class="code-keyword">static</span> <span class="code-keyword">final</span> Log log = LogFactory.getLog(ObjectFactory.class);
+
+    <span class="code-keyword">private</span> ComponentConfiguration cc;
+    <span class="code-keyword">private</span> ComponentManager cm;
+
+    <span class="code-keyword">public</span> ObjectFactory() {
+        <span class="code-keyword">super</span>();
+        cm = (ComponentManager) ActionContext.getContext().get( ComponentInterceptor.COMPONENT_MANAGER );
+
+        <span class="code-keyword">if</span> (cm == <span class="code-keyword">null</span>) {
+            cc = <span class="code-keyword">new</span> ComponentConfiguration();
+            InputStream configXml = <span class="code-object">Thread</span>.currentThread().getContextClassLoader().getResourceAsStream(<span class="code-quote">"components.xml"</span>);
+            <span class="code-keyword">try</span> {
+                cc.loadFromXml(configXml);
+            } <span class="code-keyword">catch</span> (Exception e) {
+                log.info(<span class="code-quote">"No component.xml found. They test will <span class="code-keyword">continue</span> without initializing components."</span>);
+                cc = <span class="code-keyword">null</span>;
+            }
+
+            cm = <span class="code-keyword">new</span> DefaultComponentManager();
+            <span class="code-keyword">if</span> (cc != <span class="code-keyword">null</span>) {
+                cc.configure(cm, <span class="code-quote">"session"</span>);
+                cc.configure(cm, <span class="code-quote">"application"</span>);
+                cc.configure(cm, <span class="code-quote">"request"</span>);
+            }
+        }
+    }
+
+    <span class="code-keyword">public</span> Interceptor buildInterceptor(InterceptorConfig ic, Map map) <span class="code-keyword">throws</span> ConfigurationException {
+        Interceptor i = <span class="code-keyword">super</span>.buildInterceptor(ic, map);
+        cm.initializeObject(i);
+        <span class="code-keyword">return</span> i;
+    }
+
+    <span class="code-keyword">public</span> Validator buildValidator(<span class="code-object">String</span> string, Map map) <span class="code-keyword">throws</span> Exception {
+        Validator v = <span class="code-keyword">super</span>.buildValidator(string, map);
+        cm.initializeObject(v);
+        <span class="code-keyword">return</span> v;
+    }
+
+}</pre>
+</div></div>
+
+<h3><a name="HandingIoCComponentstoInterceptorsandValidators-ServletDispatcher"></a>Servlet Dispatcher</h3>
+
+<div class="code"><div class="codeHeader"><b>ServletDispatcher.java</b></div><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">import</span> com.opensymphony.xwork.ObjectFactory;
+
+<span class="code-keyword">import</span> javax.servlet.ServletConfig;
+<span class="code-keyword">import</span> javax.servlet.ServletException;
+
+<span class="code-keyword">public</span> class ServletDispatcher <span class="code-keyword">extends</span> com.opensymphony.webwork.dispatcher.ServletDispatcher {
+
+    <span class="code-keyword">public</span> void init(ServletConfig servletConfig) <span class="code-keyword">throws</span> ServletException {
+        ObjectFactory.setObjectFactory( <span class="code-keyword">new</span> planb.jobsite.xwork.ObjectFactory() );
+        <span class="code-keyword">super</span>.init(servletConfig);
+    }
+
+}</pre>
+</div></div>
+
+<h3><a name="HandingIoCComponentstoInterceptorsandValidators-web.xml"></a>web.xml</h3>
+
+<p>Replace the reference to the webwork ServletDispatcher to point to the above ServletDispatcher class.</p>
+
+<h1><a name="HandingIoCComponentstoInterceptorsandValidators-ImportantNotes"></a>Important Notes</h1>
+
+<p>You should find your Interceptors and Validators are now componentized just like Actions, however there are some important notes to be made.</p>
+
+<h3><a name="HandingIoCComponentstoInterceptorsandValidators-LifecycleIssues"></a>Lifecycle Issues</h3>
+
+<p>Interceptors and Validators are both cached by webwork and reused instead of being reinstanciated - this will mean that you may experiance issues with components outside of the application scope. As all of my Interceptor / Validator required components are in this scope, this isn't an issue to me.</p>
+
+<p>One solution to this constraint would be to investigate how webwork caches its Interceptors and Validators, then check to see if the objects use session / request scoped components and cache accordingly. Maybe a thought for the guys planning the next release of webwork!</p>
+
+<h3><a name="HandingIoCComponentstoInterceptorsandValidators-Conclusion"></a>Conclusion</h3>
+
+<p>For now this concludes this article - feel free to add your ideas!</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

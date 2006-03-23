@@ -1,0 +1,8 @@
+<tr>
+	<td valign="top" align="right">
+	</td>
+    <td valign="top" align="left">
+        <input type="checkbox" name="foo" value="baz" id="foo" title="mytitle"/>
+        <label for="foo" class="checkboxLabel">mylabel</label>
+    </td>
+</tr>

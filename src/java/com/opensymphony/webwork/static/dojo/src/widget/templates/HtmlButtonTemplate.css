@@ -1,0 +1,83 @@
+/* ---- button --- */
+.dojoButton {
+	padding: 0 0 0 0;
+	margin: 0 0 0 0;
+	font-size: 8pt;
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.dojoButton.dojoDisabled {
+	cursor: default;
+}
+
+.dojoButton a {
+	color: black;
+	text-decoration: none;
+}
+.dojoButton.dojoDisabled a {
+	color: #999;
+}
+
+.dojoButton .label {
+	padding-right: 5px;
+	text-align: center;		/* if icon and label are split across two lines, center icon */
+}
+
+.dojoButton img {
+	vertical-align: middle;	/* if icon and label are on same line, center them */
+}
+
+.dojoButton td, .dojoButtonWrapper td {
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+	position: relative;
+}
+.dojoButton table {
+	padding: 0 0 0 0;
+	cell-spacing: 0px;
+	cell-padding: 0px;
+}
+
+/* -------- colors ------------ */
+.dojoButtonNoHover  {
+}
+
+.dojoButtonHover {
+}
+
+.dojoButton.disabled, .dojoButton.disabled * {
+	color : #999;
+	cursor : default;
+	background-color : #f4f4f4;
+}
+
+/** ----- container for the button and stub to attach the menu below it ----- **/
+.dojoButtonWrapper {
+	border-spacing: 0px;
+	cell-spacing: 0px;
+	cell-padding: 0px;
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+	display: inline;
+	margin-right: 10px;
+	text-decoration: none;
+}
+
+/* ---------- drop down button specific ---------- */
+
+/* border between label and arrow (for drop down buttons */
+.dojoButton .border {
+	width: 1px;
+	background: gray;
+}
+
+/* button arrow */
+.dojoButton .downArrow {
+	padding-left: 10px;
+	text-align: center;
+}
+
+.dojoButton.disabled .downArrow {
+	cursor : default;
+}

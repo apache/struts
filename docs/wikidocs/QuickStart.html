@@ -1,0 +1,221 @@
+<html>
+    <head>
+        <title>WebWork - 
+        QuickStart
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>WebWork provides a quick way to get started called QuickStart. QuickStart is essentially a combination of a few technologies and some general conventions for developing web applications. What it lets you do is write applications without the need to even compile your sources, let alone have to deploy and redeploy them after every change. Instead, you can now develop your web applications just like if you were writing perl or PHP - on the fly and as quickly as you can think.</p>
+
+<h1><a name="QuickStart-HowtoUseIt"></a>How to Use It</h1>
+
+<p>QuickStart is included in the WebWork distribution and can be launched by simply running <b>java &#45;jar webwork.jar quickstart:mywebapp</b>. At this point you can access <a href="http://localhost:8080/mywebapp" title="Visit page outside Confluence">&#104;ttp://localhost:8080/mywebapp</a> and begin developing your application. <b>At this time, QuickStart requires Java 1.5</b>.<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Is Port 8080 really free for use?</b><br />
+<p>If you face problems while starting applications via quickstart mechanism, leading to output like</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">java.net.BindException: Address already in use</pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>you already have a running container at IP port 8080. This may be the case if you installed a tomcat server distribution for your operating system, with autostart enabled. Please be sure to stop the application bound to port 8080 before trying to use quickstart.</p></td></tr></table><br/>
+&nbsp;</p>
+
+<p>OK, it's a little more work than that, but not much more. QuickStart assumes the following directory structure:</p>
+<ul>
+	<li>webwork
+	<ul>
+		<li>lib - all your required libs, usually the ones you would put in WEB-INF/lib</li>
+		<li>webapps
+		<ul>
+			<li>mywebapp
+			<ul>
+				<li>src
+				<ul>
+					<li>java - your java sources that would normally be compiled to WEB-INF/classes</li>
+					<li>webapp
+					<ul>
+						<li>WEB-INF
+						<ul>
+							<li>classes - any additional configuration if you'd like</li>
+							<li>web.xml</li>
+						</ul>
+						</li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+			</ul>
+			</li>
+		</ul>
+		</li>
+		<li>webwork.jar</li>
+		<li>launcher.jar</li>
+	</ul>
+	</li>
+</ul>
+
+
+<p>You can quickly get started by copying one of the existing webapps in the WebWork distribution.</p>
+
+<p>Once you have it up and running, you are free to change your classes, JSPs, template files, and other files on the fly - all without compiling or redeploying. Some files, such as web.xml, will require that you restart QuickStart for the changes to take affect. Similarly, some frameworks, such as Hibernate, do not offer the full class-reloading support that WebWork does. Your mileage may vary, but we think no matter what you'll love developing in QuickStart.</p>
+
+<h1><a name="QuickStart-AdvancedDeployment"></a>Advanced Deployment</h1>
+
+<p>Don't have a directory structure like the one laid out? Want to use a port other than 8080? No problem&#33; There are two options for you:</p>
+<ul>
+	<li>Apply additional command-line options</li>
+	<li>Use a <b>quickstart.xml</b> configuration file</li>
+</ul>
+
+
+<h2><a name="QuickStart-AdditionalCommandlineOptions"></a>Additional Command-line Options</h2>
+
+<p>While the <em>quickstart:xxx</em> shorthand is nice, it often doesn't work for many people beyond the initial WebWork distribution packaging. So QuickStart allows you to specify three options from the command line:</p>
+<ul>
+	<li>Context</li>
+	<li>Webapp directory</li>
+	<li>Source directory</li>
+</ul>
+
+
+<p>Suppose your project layout is the following:</p>
+<ul>
+	<li>project
+	<ul>
+		<li>lib - all your required libs, usually the ones you would put in WEB-INF/lib
+		<ul>
+			<li>src
+			<ul>
+				<li>java - your java sources that would normally be compiled to WEB-INF/classes</li>
+				<li>webapp
+				<ul>
+					<li>WEB-INF
+					<ul>
+						<li>classes - any additional configuration if you'd like</li>
+						<li>web.xml</li>
+					</ul>
+					</li>
+				</ul>
+				</li>
+			</ul>
+			</li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+</ul>
+
+
+<p>You could launch your application using QuickStart by executing the command:</p>
+
+<p><b>java &#45;jar lib/webwork.jar quickstart /project src/webapp src/java</b></p>
+
+<h2><a name="QuickStart-Usingthequickstart.xmlFile"></a>Using the quickstart.xml File</h2>
+
+<p>Sometimes the command line options still aren't enough. For whatever reasons, port 8080 might not be enough, or you may need to extend other configurations. Or perhaps your libs are not in your project but instead are in some other directory (very common if you use Maven to build your project). To help out, QuickStart provides a configuration file that let's you tweak how the deployment happens and how it is configured as much as you'd like. Consider the sample quickstart.xml file:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;configuration&gt;</span>
+    &lt;!--
+    QuickStart can be used to extend other QuickStart configurations.
+    This is great for applications that have multiple <span class="code-quote">"editions"</span> and
+    extend upon a base webapp or evven just a base set of classes.
+    --&gt;
+    <span class="code-tag"><span class="code-comment">&lt;!--&lt;extendsConfig&gt;</span>../path/to/quickstart.xml<span class="code-tag">&lt;/extendsConfig&gt;</span>--&gt;</span>
+
+    &lt;!--
+    QuickStart supports reading your IDEA module configuration and
+    using the libraries there. This is especially useful for maven
+    users who don't have a single directory in their project that
+    contains all the libraries they need.
+    --&gt;
+    <span class="code-tag"><span class="code-comment">&lt;!--&lt;ideaConfig&gt;</span>ShowCase.iml<span class="code-tag">&lt;/ideaConfig&gt;</span>--&gt;</span>
+
+    <span class="code-tag"><span class="code-comment">&lt;!-- The context in which to deploy the web application --&gt;</span></span>
+    <span class="code-tag">&lt;context&gt;</span>/showcase<span class="code-tag">&lt;/context&gt;</span>
+
+    <span class="code-tag"><span class="code-comment">&lt;!-- The port in which to deploy the web application --&gt;</span></span>
+    <span class="code-tag">&lt;port&gt;</span>8080<span class="code-tag">&lt;/port&gt;</span>
+
+    &lt;!--
+    The libs directories can be a jar, a directory of jars, or even
+    a directory of directories (searched recursively)
+    --&gt;
+    <span class="code-tag">&lt;libs&gt;</span>
+        <span class="code-tag">&lt;dir&gt;</span>../../lib<span class="code-tag">&lt;/dir&gt;</span>
+    <span class="code-tag">&lt;/libs&gt;</span>
+
+    &lt;!--
+    Optional: the location where your source files are. If this is
+    not included, the auto-recompiling feature of QuickStart will
+    not be enabled. You may wish to do this anyway, as this feature
+    has been known to cause strange side effects. If you don't
+    specify your sources, you must specify where your classes are by
+    using the classDirs and libs elements
+    --&gt;
+    <span class="code-tag">&lt;sources&gt;</span>
+        <span class="code-tag">&lt;dir&gt;</span>src/java<span class="code-tag">&lt;/dir&gt;</span>
+    <span class="code-tag">&lt;/sources&gt;</span>
+
+    &lt;!--
+    The classDirs directories can be a jar or a directory of classes
+    --&gt;
+    <span class="code-tag">&lt;classDirs&gt;</span>
+        <span class="code-tag">&lt;dir&gt;</span>src/webapp/WEB-INF/classes<span class="code-tag">&lt;/dir&gt;</span>
+    <span class="code-tag">&lt;/classDirs&gt;</span>
+
+    &lt;!--
+    You can specify one or more directories where your webapp files
+    are located. This is useful if you have your project split up in
+    unique ways. You can also specify the path that the directory is
+    mapped to, relative to the context.
+    --&gt;
+    <span class="code-tag">&lt;webDirs&gt;</span>
+        <span class="code-tag">&lt;webDir&gt;</span>
+            <span class="code-tag">&lt;path&gt;</span>/<span class="code-tag">&lt;/path&gt;</span>
+            <span class="code-tag">&lt;dir&gt;</span>src/webapp<span class="code-tag">&lt;/dir&gt;</span>
+        <span class="code-tag">&lt;/webDir&gt;</span>
+    <span class="code-tag">&lt;/webDirs&gt;</span>
+<span class="code-tag">&lt;/configuration&gt;</span></pre>
+</div></div>
+<p>&nbsp;</p>
+
+<p>If you use this deployment technique, <b>you must remember</b> that quickstart.xml must be in the same working directory in which you execute the <b>java &#45;jar webwork.jar quickstart</b> command. You don't need to pass any additional command line arguments to QuickStart, but you must have this file in your working directory.</p>
+
+<h1><a name="QuickStart-HowItWorks"></a>How It Works</h1>
+
+<p>QuickStart works by using the combination of WebWork's "share nothing" (or rather, "share very little") architecture, an embedded Jetty server, some advanced class loading, and the Eclipse Java compiler (don't worry, the Eclipse IDE is not required&#33;)</p>
+
+<p>Running webwork.jar bootstraps the classpath and includes every jar found in the <b>lib</b> directory. It also includes webwork.jar, of course. It then invokes the QuickStart application. This, in turn, starts a Jetty server that is configured to the webapp specified in the <b>quickstart:xxx</b> argument.</p>
+
+<p>The Jetty server's context ClassLoader is specified as a custom ClassLoader that looks at the source files in <b>webapps/xxx/src/java</b> and compiles them on the fly. These classes are also reloaded whenever a change is detected.</p>
+
+<p>Because WebWork creates a new action on every request, reloading the classes works great. You are free to change the entire class schema (methods, fields, inheritance, etc). Because none of the objects are cached or stored in long-term storage, you usually won't run into any problems here.</p>
+
+<h1><a name="QuickStart-RunninginYourIDE"></a>Running in Your IDE</h1>
+
+<p>Running QuickStart from your IDE is no different than running it from the command line. The only difference is that you need to set up the structure and classpath in your IDE properly. It doesn't really matter what is in the <b>classpath</b> as long the WebWork jar is included. Pay close attention to your <b>working directory</b>.</p>
+
+<p>An example of what IntelliJ IDEA looks like when launching QuickStart from within the WebWork project is included for reference (click for a larger view):</p>
+
+<p><a href='http://wiki.opensymphony.com/download/attachments/5392/idea.png' target='idea.png' onClick='window.open("http://wiki.opensymphony.com/download/attachments/5392/idea.png", "idea.png", "height=755,width=830,menubar=no,status=no,toolbar=no"); return false;'><img src='/download/thumbnails/5392/idea.png' align="absmiddle" border="0" /></a></p>
+
+<h1><a name="QuickStart-CommonPitfalls"></a>Common Pitfalls</h1>
+
+<p>While WebWork is pretty good about making class reloading in QuickStart easy, other libraries and code are not. As a general rule of thumb, if any objects have long term state (singleton, session scope, etc), they will <em>not</em> be reloaded. The reloaded classes will <em>only</em> take affect after a new instance has been created with the <em>new</em> keyword or through reflection.</p>
+
+<p>For example, Hibernate has been found to store references to the objects it persists for long periods of time because of it's caching mechanism. It also happens to hold a reference to the Class instance itself. This makes it very difficult, if not impossible, to allow you to change your models on the fly.<table cellpadding='5' width='85%' cellspacing='8px' class='warningMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/forbidden.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><br/>
+Most problems will manifest themselves through a ClassCastException, or some other weird class-related error. You may even find yourself banging your head against the wall because some Foo instance can't be cast to the Foo class. This is the biggest challenge with using QuickStart and can best be mitigated by using libraries and code that share very little state.</td></tr></table><br/>
+&nbsp;</p>
+
+<p>A final word of warning: QuickStart is not meant for production use, or even to be used as the sole environment for application development. Rather, it is meant to help you quickly develop proof-of-concepts and see results quickly. We recommend you always at least test in other applications servers, such as Tomcat, Resin, or even standalone Jetty.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

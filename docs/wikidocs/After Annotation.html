@@ -1,0 +1,52 @@
+<html>
+    <head>
+        <title>WebWork - 
+        After Annotation
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="AfterAnnotation-AfterAnnotation"></a>After Annotation</h1>
+
+<p>Marks a action method that needs to be called after the main action method and the result was
+executed. Return value is ignored.</p>
+
+<h2><a name="AfterAnnotation-Usage"></a>Usage</h2>
+
+<p> The After annotation can be applied at method level.</p>
+
+
+<h2><a name="AfterAnnotation-Parameters"></a>Parameters</h2>
+
+
+<p> no parameters</p>
+
+
+<h2><a name="AfterAnnotation-Examples"></a>Examples</h2>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> class SampleAction <span class="code-keyword">extends</span> ActionSupport {
+
+ @After
+ <span class="code-keyword">public</span> void isValid() <span class="code-keyword">throws</span> ValidationException {
+   <span class="code-comment">// validate model object, <span class="code-keyword">throw</span> exception <span class="code-keyword">if</span> failed
+</span> }
+
+ <span class="code-keyword">public</span> <span class="code-object">String</span> execute() {
+    <span class="code-comment">// perform action
+</span>    <span class="code-keyword">return</span> SUCCESS;
+ }
+}</pre>
+</div></div>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

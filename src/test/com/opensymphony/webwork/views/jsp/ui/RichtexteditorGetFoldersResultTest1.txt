@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8"?> <Connector command="GetFolders" resourceType="Image"><CurrentFolder path="/path/" url="/server/path/"/><Folders><Folder name="folder1"/><Folder name="folder2"/><Folder name="folder3"/></Folders></Connector>

@@ -1,0 +1,151 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Package Configuration
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="PackageConfiguration-Overview"></a>Overview</h1>
+
+<p>Packages are a way to group Actions, Results, Result Types, Interceptors and Stacks into a logical unit that shares a common configuration. Packages are similiar to objects in that they can be extended and have individual parts overridden by "sub" packages.</p>
+
+<h1><a name="PackageConfiguration-Packages"></a>Packages</h1>
+
+<p>The package element has one required attribute, "name", which acts as the key for later reference to this package. The "extends" attribute is optional and allows one package to inherit the configuration of one or more previous packages including all interceptor, interceptor-stack, and action configurations. Note that the configuration file is processed sequentially down the document, so the package referenced by an "extends" should be defined above the package which extends it. The "abstract" optional attribute allows you to make a package abstract, which will allow you to extend from it without the action configurations defined in the abstract package actually being available at runtime.</p>
+
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'> Attribute </th>
+<th class='confluenceTh'> Required </th>
+<th class='confluenceTh'> Description </th>
+</tr>
+<tr>
+<td class='confluenceTd'> name </td>
+<td class='confluenceTd'> <b>yes</b> </td>
+<td class='confluenceTd'> key to for other packages to reference </td>
+</tr>
+<tr>
+<td class='confluenceTd'> extends </td>
+<td class='confluenceTd'> no </td>
+<td class='confluenceTd'> inherits package behavior of the package it extends </td>
+</tr>
+<tr>
+<td class='confluenceTd'> namespace </td>
+<td class='confluenceTd'> no </td>
+<td class='confluenceTd'> see <a href="Namespace Configuration.html" title="Namespace Configuration">Namespace Configuration</a> </td>
+</tr>
+<tr>
+<td class='confluenceTd'> abstract </td>
+<td class='confluenceTd'> no </td>
+<td class='confluenceTd'> declares package to be abstract (no action configurations required in package) </td>
+</tr>
+</tbody></table>
+
+<h1><a name="PackageConfiguration-Sampleusageofpackagesinxwork.xml"></a>Sample usage of packages in xwork.xml</h1>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;xwork&gt;</span>
+
+    <span class="code-tag">&lt;include file=<span class="code-quote">"webwork-default.xml"</span>/&gt;</span>
+
+    <span class="code-tag">&lt;include file=<span class="code-quote">"config-browser.xml"</span>/&gt;</span>
+
+    <span class="code-tag">&lt;include file=<span class="code-quote">"xwork-continuations.xml"</span>/&gt;</span>
+
+    <span class="code-tag">&lt;include file=<span class="code-quote">"xwork-tags.xml"</span>/&gt;</span>
+    
+    <span class="code-tag">&lt;include file=<span class="code-quote">"xwork-validation.xml"</span> /&gt;</span>
+    
+    <span class="code-tag">&lt;include file=<span class="code-quote">"xwork-actionchaining.xml"</span> /&gt;</span>
+
+    <span class="code-tag">&lt;include file=<span class="code-quote">"xwork-ajax.xml"</span> /&gt;</span>
+
+    <span class="code-tag">&lt;include file=<span class="code-quote">"xwork-fileupload.xml"</span> /&gt;</span>
+
+    <span class="code-tag">&lt;include file=<span class="code-quote">"xwork-person.xml"</span> /&gt;</span>
+
+    <span class="code-tag">&lt;include file=<span class="code-quote">"xwork-wait.xml"</span> /&gt;</span>
+
+    <span class="code-tag">&lt;include file=<span class="code-quote">"xwork-token.xml"</span> /&gt;</span>
+    
+    <span class="code-tag">&lt;include file=<span class="code-quote">"xwork-model-driven.xml"</span> /&gt;</span>
+    
+    <span class="code-tag">&lt;include file=<span class="code-quote">"xwork-filedownload.xml"</span> /&gt;</span>
+
+    <span class="code-tag">&lt;package name=<span class="code-quote">"default"</span> extends=<span class="code-quote">"webwork-default"</span>&gt;</span>
+        <span class="code-tag">&lt;interceptors&gt;</span>
+            <span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"crudStack"</span>&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"params"</span> /&gt;</span>
+                <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"defaultStack"</span> /&gt;</span>
+            <span class="code-tag">&lt;/interceptor-stack&gt;</span>
+        <span class="code-tag">&lt;/interceptors&gt;</span>
+		
+		<span class="code-tag">&lt;default-action-ref name=<span class="code-quote">"showcase"</span>/&gt;</span>
+		
+        <span class="code-tag">&lt;action name=<span class="code-quote">"showcase"</span>&gt;</span>
+            <span class="code-tag">&lt;result&gt;</span>showcase.jsp<span class="code-tag">&lt;/result&gt;</span>
+        <span class="code-tag">&lt;/action&gt;</span>
+
+        <span class="code-tag">&lt;action name=<span class="code-quote">"date"</span> class=<span class="code-quote">"com.opensymphony.webwork.showcase.DateAction"</span>&gt;</span>
+            <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span>&gt;</span>/date.jsp<span class="code-tag">&lt;/result&gt;</span>
+        <span class="code-tag">&lt;/action&gt;</span>
+
+    <span class="code-tag">&lt;/package&gt;</span>
+
+    <span class="code-tag">&lt;package name=<span class="code-quote">"skill"</span> extends=<span class="code-quote">"default"</span> namespace=<span class="code-quote">"/skill"</span>&gt;</span>
+        <span class="code-tag">&lt;default-interceptor-ref name=<span class="code-quote">"crudStack"</span>/&gt;</span>
+
+        <span class="code-tag">&lt;action name=<span class="code-quote">"list"</span> class=<span class="code-quote">"com.opensymphony.webwork.showcase.action.SkillAction"</span> method=<span class="code-quote">"list"</span>&gt;</span>
+            <span class="code-tag">&lt;result&gt;</span>/empmanager/listSkills.jsp<span class="code-tag">&lt;/result&gt;</span>
+            <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+        <span class="code-tag">&lt;/action&gt;</span>
+        <span class="code-tag">&lt;action name=<span class="code-quote">"edit"</span> class=<span class="code-quote">"com.opensymphony.webwork.showcase.action.SkillAction"</span>&gt;</span>
+            <span class="code-tag">&lt;result&gt;</span>/empmanager/editSkill.jsp<span class="code-tag">&lt;/result&gt;</span>
+            <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"params"</span> /&gt;</span>
+            <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+        <span class="code-tag">&lt;/action&gt;</span>
+        <span class="code-tag">&lt;action name=<span class="code-quote">"save"</span> class=<span class="code-quote">"com.opensymphony.webwork.showcase.action.SkillAction"</span> method=<span class="code-quote">"save"</span>&gt;</span>
+            <span class="code-tag">&lt;result name=<span class="code-quote">"input"</span>&gt;</span>/empmanager/editSkill.jsp<span class="code-tag">&lt;/result&gt;</span>
+            <span class="code-tag">&lt;result type=<span class="code-quote">"redirect"</span>&gt;</span>edit.action?skillName=${currentSkill.name}<span class="code-tag">&lt;/result&gt;</span>
+        <span class="code-tag">&lt;/action&gt;</span>
+        <span class="code-tag">&lt;action name=<span class="code-quote">"delete"</span> class=<span class="code-quote">"com.opensymphony.webwork.showcase.action.SkillAction"</span> method=<span class="code-quote">"delete"</span>&gt;</span>
+            <span class="code-tag">&lt;result name=<span class="code-quote">"error"</span>&gt;</span>/empmanager/editSkill.jsp<span class="code-tag">&lt;/result&gt;</span>
+            <span class="code-tag">&lt;result type=<span class="code-quote">"redirect"</span>&gt;</span>edit.action?skillName=${currentSkill.name}<span class="code-tag">&lt;/result&gt;</span>
+        <span class="code-tag">&lt;/action&gt;</span>
+    <span class="code-tag">&lt;/package&gt;</span>
+
+    <span class="code-tag">&lt;package name=<span class="code-quote">"employee"</span> extends=<span class="code-quote">"default"</span> namespace=<span class="code-quote">"/employee"</span>&gt;</span>
+        <span class="code-tag">&lt;default-interceptor-ref name=<span class="code-quote">"crudStack"</span>/&gt;</span>
+
+        <span class="code-tag">&lt;action name=<span class="code-quote">"list"</span> class=<span class="code-quote">"com.opensymphony.webwork.showcase.action.EmployeeAction"</span> method=<span class="code-quote">"list"</span>&gt;</span>
+            <span class="code-tag">&lt;result&gt;</span>/empmanager/listEmployees.jsp<span class="code-tag">&lt;/result&gt;</span>
+            <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"basicStack"</span>/&gt;</span>
+        <span class="code-tag">&lt;/action&gt;</span>
+        <span class="code-tag">&lt;action name=<span class="code-quote">"edit"</span> class=<span class="code-quote">"com.opensymphony.webwork.showcase.action.EmployeeAction"</span>&gt;</span>
+            <span class="code-tag">&lt;result&gt;</span>/empmanager/editEmployee.jsp<span class="code-tag">&lt;/result&gt;</span>
+            <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"crudStack"</span>&gt;</span><span class="code-tag">&lt;param name=<span class="code-quote">"validation.excludeMethods"</span>&gt;</span>execute<span class="code-tag">&lt;/param&gt;</span><span class="code-tag">&lt;/interceptor-ref&gt;</span>
+        <span class="code-tag">&lt;/action&gt;</span>
+        <span class="code-tag">&lt;action name=<span class="code-quote">"save"</span> class=<span class="code-quote">"com.opensymphony.webwork.showcase.action.EmployeeAction"</span> method=<span class="code-quote">"save"</span>&gt;</span>
+            <span class="code-tag">&lt;result name=<span class="code-quote">"input"</span>&gt;</span>/empmanager/editEmployee.jsp<span class="code-tag">&lt;/result&gt;</span>
+            <span class="code-tag">&lt;result type=<span class="code-quote">"redirect"</span>&gt;</span>edit.action?empId=${currentEmployee.empId}<span class="code-tag">&lt;/result&gt;</span>
+        <span class="code-tag">&lt;/action&gt;</span>
+        <span class="code-tag">&lt;action name=<span class="code-quote">"delete"</span> class=<span class="code-quote">"com.opensymphony.webwork.showcase.action.EmployeeAction"</span> method=<span class="code-quote">"delete"</span>&gt;</span>
+            <span class="code-tag">&lt;result name=<span class="code-quote">"error"</span>&gt;</span>/empmanager/editEmployee.jsp<span class="code-tag">&lt;/result&gt;</span>
+            <span class="code-tag">&lt;result type=<span class="code-quote">"redirect"</span>&gt;</span>edit.action?empId=${currentEmployee.empId}<span class="code-tag">&lt;/result&gt;</span>
+        <span class="code-tag">&lt;/action&gt;</span>
+    <span class="code-tag">&lt;/package&gt;</span>
+
+<span class="code-tag">&lt;/xwork&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

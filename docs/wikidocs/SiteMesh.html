@@ -1,0 +1,119 @@
+<html>
+    <head>
+        <title>WebWork - 
+        SiteMesh
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h2><a name="SiteMesh-Overview"></a>Overview</h2>
+
+<p><a href="http://www.opensymphony.com/sitemesh" title="Visit page outside Confluence">SiteMesh</a> is a web-page layout and decoration framework and web- application integration framework to aid in creating large sites consisting of many pages for which a consistent look/feel, navigation and layout scheme is required.</p>
+
+<p>Integrating WebWork with SiteMesh is amazingly simple: you don't have to do anything in fact. WebWork stores all its value stack information in the request attributes, meaning that if you wish to display data that is in the stack (or even the ActionContext) you can do so by using the normal tag libraries that come with WebWork. That's it!</p>
+
+<h2><a name="SiteMesh-ActionContextCleanUp"></a>ActionContextCleanUp</h2>
+
+<p>In WebWork's <a href="Architecture.html" title="Architecture">Architecture</a>, the standard filter-chain optionally starts with the <b>ActionContextCleanUp</b> filter, followed by other desired filters. Lastly, the <b>FilterDispatcher</b> handles the request, usually passing it on to the ActionMapper. The primary purpose of the <b>ActionContextCleanUp</b> is for SiteMesh integration. This tells the FilterDispatcher when exactly, to clean-up the request. Otherwise, the ActionContext may be removed before the decorator attempts to access it.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='warningMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/forbidden.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Warning</b><br /><em>If</em> ActionContext access is required within the decorators, the <b>ActionContextCleanUp</b> filter <em>must</em> be placed at the beginning of the filter-chain. </td></tr></table>
+
+<p>For more information, see the javadocs of the ActionContextCleanUp filter:</p>
+
+<p>Special filter designed to work with the FilterDispatcher and allow
+for easier integration with SiteMesh. Normally, ordering your filters to have
+SiteMesh go first, and then FilterDispatcher go second is perfectly fine.
+However, sometimes you may wish to access WebWork-features, including the
+value stack, from within your SiteMesh decorators. Because FilterDispatcher
+cleans up the ActionContext, your decorator won't have access to the
+date you want.
+<p/>
+<p/>
+By adding this filter, the FilterDispatcher will know to not clean up and
+instead defer cleanup to this filter. The ordering of the filters should then be:
+<p/>
+<ul>
+<li>this filter</li>
+<li>SiteMesh filter</li>
+<li>FilterDispatcher</li>
+</ul></p>
+
+<h2><a name="SiteMesh-VelocityandFreeMarkerDecorators"></a>Velocity and FreeMarker Decorators</h2>
+
+<p>WebWork provides extension of the SiteMesh PageFilter that assist with integration with <a href="Velocity.html" title="Velocity">Velocity</a> and <a href="FreeMarker.html" title="FreeMarker">FreeMarker</a>. We strongly recommend using these filters, instead of the support provided by SiteMesh, because they also will provide the standard variables and <a href="Tags.html" title="Tags">Tags</a> that you are used to when created views in your favoriate template language.</p>
+
+<h3><a name="SiteMesh-Velocity"></a>Velocity</h3>
+
+<p>If you are using Velocity for your SiteMesh decorators, we recommend using the VelocityPageFilter. This is an extension of the SiteMesh PageFilter, which should be placed in the web.xml in between the <b>ActionContextCleanUp</b> and the <b>FilterDispatcher</b>. Now the Velocity decorators will have access to WebWork variables such as $stack and $request.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;filter&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>webwork-cleanup<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;filter-class&gt;</span>com.opensymphony.webwork.dispatcher.ActionContextCleanUp<span class="code-tag">&lt;/filter-class&gt;</span>
+<span class="code-tag">&lt;/filter&gt;</span>
+<span class="code-tag">&lt;filter&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>sitemesh<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;filter-class&gt;</span>com.opensymphony.webwork.sitemesh.VelocityPageFilter<span class="code-tag">&lt;/filter-class&gt;</span>
+<span class="code-tag">&lt;/filter&gt;</span>
+<span class="code-tag">&lt;filter&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>webwork<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;filter-class&gt;</span>com.opensymphony.webwork.dispatcher.FilterDispatcher<span class="code-tag">&lt;/filter-class&gt;</span>
+<span class="code-tag">&lt;/filter&gt;</span>
+
+<span class="code-tag">&lt;filter-mapping&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>webwork-cleanup<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;url-pattern&gt;</span>/*<span class="code-tag">&lt;/url-pattern&gt;</span>
+<span class="code-tag">&lt;/filter-mapping&gt;</span>
+<span class="code-tag">&lt;filter-mapping&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>sitemesh<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;url-pattern&gt;</span>/*<span class="code-tag">&lt;/url-pattern&gt;</span>
+<span class="code-tag">&lt;/filter-mapping&gt;</span>
+<span class="code-tag">&lt;filter-mapping&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>webwork<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;url-pattern&gt;</span>/*<span class="code-tag">&lt;/url-pattern&gt;</span>
+<span class="code-tag">&lt;/filter-mapping&gt;</span></pre>
+</div></div>
+
+
+<h3><a name="SiteMesh-FreeMarker"></a>FreeMarker </h3>
+
+<p>If you are using FreeMarker for your SiteMesh decorators, we recommend using the FreeMarkerPageFilter. This is an extension of the SiteMesh PageFilter, which should be placed in the web.xml in between the <b>ActionContextCleanUp</b> and the <b>FilterDispatcher</b>. Now the FreeMarker decorators will have access to WebWork variables such as ${stack} and ${request}.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;filter&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>webwork-cleanup<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;filter-class&gt;</span>com.opensymphony.webwork.dispatcher.ActionContextCleanUp<span class="code-tag">&lt;/filter-class&gt;</span>
+<span class="code-tag">&lt;/filter&gt;</span>
+<span class="code-tag">&lt;filter&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>sitemesh<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;filter-class&gt;</span>com.opensymphony.webwork.sitemesh.FreeMarkerPageFilter<span class="code-tag">&lt;/filter-class&gt;</span>
+<span class="code-tag">&lt;/filter&gt;</span>
+<span class="code-tag">&lt;filter&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>webwork<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;filter-class&gt;</span>com.opensymphony.webwork.dispatcher.FilterDispatcher<span class="code-tag">&lt;/filter-class&gt;</span>
+<span class="code-tag">&lt;/filter&gt;</span>
+
+<span class="code-tag">&lt;filter-mapping&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>webwork-cleanup<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;url-pattern&gt;</span>/*<span class="code-tag">&lt;/url-pattern&gt;</span>
+<span class="code-tag">&lt;/filter-mapping&gt;</span>
+<span class="code-tag">&lt;filter-mapping&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>sitemesh<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;url-pattern&gt;</span>/*<span class="code-tag">&lt;/url-pattern&gt;</span>
+<span class="code-tag">&lt;/filter-mapping&gt;</span>
+<span class="code-tag">&lt;filter-mapping&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>webwork<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;url-pattern&gt;</span>/*<span class="code-tag">&lt;/url-pattern&gt;</span>
+<span class="code-tag">&lt;/filter-mapping&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

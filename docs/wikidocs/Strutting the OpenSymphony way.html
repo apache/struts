@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Strutting the OpenSymphony way
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p><b>WebWork: Strutting the OpenSymphony way</b> - Mike Cannon-Brookes</p>
+
+<ul>
+	<li><a href="http://blogs.atlassian.com/rebelutionary/archives/000200.html" title="Visit page outside Confluence">An overview of Mike's thoughts from the conference</a></li>
+	<li><a href="http://blogs.atlassian.com/rebelutionary/misc/TSS-WebWork2.ppt" title="Visit page outside Confluence">Mike's original PPT</a></li>
+</ul>
+
+
+<p><a href="WebWork.html" title="WebWork">WebWork</a> is a pull-based MVC framework focused on componentization and code reuse. It is currently in beta, but is being used by several opensource projects and a few commercial projects in development. This is the second generation of WebWork, which was originally developed by Rickard Oberg, and in this release, what was WebWork has been broken into two projects, <a href="http://wiki.opensymphony.com/display/XW/XWork" title="XWork">XW:XWork</a> and <a href="WebWork.html" title="WebWork">WebWork</a>.  </p>
+
+<p>XWork is a generic command pattern implementation with absolutely NO ties to the web. XWork provides many core services, including interceptors, meta-data based validation, type conversion, a very powerful expression language (OGNL - the Object Graph Notation Language) and an Inversion of Control (IoC) container implementation. </p>
+
+<p>WebWork provides a layer on top of XWork to do HTTP request / response handling. It includes a ServletDispatcher to turn HTTP requests into calls to an Action, session and application scope mapping, request parameter mapping, view integration with various web view technologies (JSP, Velocity, FreeMarker, JasperReports), and user interface components in the form of JSP tags and Velocity macros wrapped around reusable UI components. </p>
+
+<p>An Action is the basic unit of work in WebWork. It is a simple command object that implements the Action Interface, which has only one method: execute(). Action implementers can extend the ActionSupport class, which provides i18n localization of messages (with one ResourceBundle per Action class and searching up the inheritance tree) and error message handling including class level and field level messages.  </p>
+
+<p>Actions can be developed in one of two styles: Model driven or field driven. Model driven Actions expose a model class via a get method, and the form fields refer directly to the model properties using expressions like "pet.name". XWork uses Ognl (the Object Graph Notation Language) as its expression language, and when rendering the page, this expression will translate to getPet().getName(). When setting properties, this will translate to getPet().setName(). This style of development allows for a great deal of model reuse and can allow you to directly edit your domain objects in your web pages, rather than needing a translation layer to form beans. Field driven Actions have their own properties which are used in the view. The action's execute() method collates the properties and interacts with the model. This can be very useful when your form and model are not parallel. Even in this case, the powerful expression language in WebWork can allow you to compose your form fields into aggregate beans, such as an address bean, which you can reuse to simplify your action classes.</p>
+
+<p>WebWork allows you to build your own reusable UI components by simply defining a Velocity template. This is how the pre-built components of WebWork are built for common components such as text fields, buttons, forms, etc. and made available from any view type (either JSP or Velocity at the moment). These components are skinnable by defining multiple templates for the same component in different paths. If your components include the default header and footer templates that are used in the pre-built templates, then they will inherit the ability to automatically handle displaying error messages beside the problem form field. These custom UI components are especially handy for reusing templates which handle your custom model types or for things like date pickers, which Mike showed as an example. </p>
+
+<p>Interceptors in XWork allow common code to be applied around (before and/or after) action execution. This is what Mike calls "Practical AOP". Interceptors help to decouple and componentized your code. Interceptors can be organized into stacks, which are lists of interceptors to be applied in sequence, and can be applied to actions or whole packages. Much of the core functionality of XWork and WebWork is implemented as Interceptors. The common basic examples of Interceptors are timing and logging, and these are built in with XWork. Mike went through an example of an interceptor to identify users of events via email. This interceptor has its own external configuration file which specifies which users are interested in which events, and it compares this configuration with the action invocations passing through it to determine if any messages should be sent. </p>
+
+<p>XWork's validation framework allows for decoupled validation of action properties. It is implemented as an Interceptor and reads external XML files which define the validations to be applied to the Action. Error messages are loaded from the Action's localized messages and flow through to the UI. Validator classes can be plugged in to add to the set of bundled validators. The bundled validators include required field and required String validators, range validators for Dates and numbers, and email and URL validators. XWork also includes expression validators at both the Action and field level which allow you to use any Ognl expression as the validation. </p>
+
+<p>Inversion of Control (IoC) removes the burden of managing components from your code and puts it on the container. The container takes care of managing component lifecycle and dependencies. EJB is an example of IoC, but with limited services. IoC promotes simplicity and decoupling of your components and encourages your classes to be smaller and more focused. Unit testing is also simplified, as you can just supply MockObject instances of the services your code depends upon during testing. XWork and WebWork provide a web-native IoC container which manages component dependencies. In WebWork IoC is implemented as lifecycle managers (SessionLifecycleListener, etc) and an Interceptor. There are 4 component scopes in WebWork IoC: Application, HTTP Session, HTTP Request, and Action invocation. IoC in XWork / WebWork is purely optional, so you can use it if you want it. </p>
+
+<p>XWork / WebWork allows for sets of Actions and their views to be bundled as a jar file and reused. Your main xwork.xml file can include the xml configuration file of the jar file because they are included from the classpath. Similarly, if your views are <a href="http://jakarta.apache.org/velocity/" title="Visit page outside Confluence">Velocity</a> templates, you can bundle your views in the jar file and they will be loaded from the classpath when rendering. This allows for componentization of your application and reuse of bundled Actions across applications. </p>
+
+<p>I have to admit, when Mike mentioned this feature, I thought he was crazy. I didn't say anything at the session, but asked him about it later, and he said "didn't you write the package include stuff?" I'll take it as a good sign that things can be used in a different way than was imagined. <img class="emoticon" src="./icons/emoticons/smile.gif" height="20" width="20" align="absmiddle" alt="" border="0"/></p>
+
+<p>Mike finished up with a comparison of WebWork vs. <a href="http://jakarta.apache.org/struts/" title="Visit page outside Confluence">Struts</a> . Struts is obviously the 500 lb gorilla in the web MVC space, so why use WebWork? WebWork's pros include being a smaller, simpler framework, not having to build ActionForm beans, making it very simple to test your Actions, having multiple well-supported view technologies, simpler views with less JSP tags and a more powerful expression language, not having to make your Actions thread-safe, not having your Actions tied to the web, and not being part of <a href="http://jakarta.apache.org" title="Visit page outside Confluence">Jakarta</a> . WebWork also adds many new features such as Interceptors, packages, IoC, etc. WebWork's cons include being a smaller project with fewer books and less tool support, having less standards support for specs like JSTL and JSF, and not being part of <a href="http://jakarta.apache.org" title="Visit page outside Confluence">Jakarta</a> .</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

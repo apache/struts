@@ -1,0 +1,125 @@
+<html>
+    <head>
+        <title>WebWork 2 : 常见问题解答</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : 常见问题解答
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    本页由<font color="#0050B2">lagcisco</font>最后修改2005-3-2于2004年10月18日.
+				    </div>
+
+				    <p class="paragraph"><b class="strong">值栈中的缺省值是什么? (使用#foo访问)</b><br/>
+attr (按照顺序扫描request, session和application属性)<br/>
+request (request attributes)<br/>
+session (session attributes)<br/>
+application (application attributes)<br/>
+parameters (request params)</p><b class="strong">How do I get the latest version of Webwork and XWork from CVS?</b><br/>
+cvs -d :pserver:guest@cvs.dev.java.net:/cvs login<br/>
+(Use an empty password, just hit enter..)<br/>
+cvs -d :pserver:guest@cvs.dev.java.net:/cvs checkout webwork<br/>
+cvs -d :pserver:guest@cvs.dev.java.net:/cvs checkout xwork<p class="paragraph">Note: WebWork from the CVS does not compile with the latest 1.5 J2sdk. Use the stable J2sdk 1.4.2.</p><b class="strong">How do I build the latest versions XWork and Webwork?</b><br/>
+Just go into the XWork or WebWork directories and run &#039;ant&#039; (you must have ant installed and have the jars of junit and clover inside $ANT_HOME/lib)<p class="paragraph">Once you have built the xwork.jar copy it into the webwork/lib/core folder, and delete the old one.</p><b class="strong">How do I use messages from within the validator?</b>
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;validators&gt;</span>&#10;    <span class="xml&#45;tag">&lt;field name=<span class="xml&#45;quote">&quot;name&quot;</span>&gt;</span>&#10;        <span class="xml&#45;tag">&lt;field&#45;validator type=<span class="xml&#45;quote">&quot;requiredstring&quot;</span>&gt;</span>&#10;            <span class="xml&#45;tag">&lt;message key=<span class="xml&#45;quote">&quot;template.name.errors.required&quot;</span>&gt;</span>A default message in case the key is not found<span class="xml&#45;tag">&lt;/message&gt;</span>&#10;        <span class="xml&#45;tag">&lt;/field&#45;validator&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/field&gt;</span>&#10;<span class="xml&#45;tag">&lt;/validators&gt;</span></pre>
+</div></div><p class="paragraph"><b class="strong">How do I set a global resource bundle?</b></p>In webwork.properties(as of Webwork 2.1.1), <br/>
+you can now use:
+<div class="code"><div class="codeContent">
+<pre>webwork.custom.i18n.resources=global&#45;messages</pre>
+</div></div><br/>
+Serveral resource bundles can be specified by comma separating them.<br/>
+for example see webwork.properties :<br/>
+<a href="http://wiki.opensymphony.com/display/WW/webwork.properties" title="Visit page outside Confluence">&#104;ttp://wiki.opensymphony.com/display/WW/webwork.properties</a><p class="paragraph">Java class (thanks Drew McAuliffe):
+<div class="code"><div class="codeContent">
+<pre><span class="java&#45;keyword">public</span> class WebworkGlobalMessagesListener <span class="java&#45;keyword">implements</span> ServletContextListener &#123;&#10;    <span class="java&#45;keyword">private</span>&#160;<span class="java&#45;keyword">static</span> Logger log = Logger.getLogger(WebworkGlobalMessagesListener.class);&#10;    <span class="java&#45;keyword">private</span>&#160;<span class="java&#45;keyword">static</span>&#160;<span class="java&#45;keyword">final</span>&#160;<span class="java&#45;object">String</span> DEFAULT&#95;RESOURCE = <span class="java&#45;quote">&quot;global&#45;messages&quot;</span>;&#10;&#10;    /&#42;&#42;&#10;     &#42; Uses the LocalizedTextUtil to load messages from the global&#10;     message bundle.&#10;     &#42; &#64;see&#10;     javax.servlet.ServletContextListener#contextInitialized(javax.servlet.Servle&#10;     tContextEvent)&#10;     &#42;/&#10;    <span class="java&#45;keyword">public</span> void contextInitialized(ServletContextEvent arg0) &#123;&#10;        log.info(<span class="java&#45;quote">&quot;Loading global messages from &quot;</span> &#43; DEFAULT&#95;RESOURCE);&#10;        LocalizedTextUtil.addDefaultResourceBundle(DEFAULT&#95;RESOURCE);&#10;        log.info(<span class="java&#45;quote">&quot;Global messages loaded.&quot;</span>);&#10;    &#125;&#10;&#10;    /&#42;&#42;&#10;     &#42; &#64;see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)&#10;     &#42;/&#10;    <span class="java&#45;keyword">public</span> void contextDestroyed(ServletContextEvent arg0) &#123;&#10;&#10;        <span class="java&#45;comment">// <span class="java&#45;keyword">do</span> nothing</span>&#10;    &#125;&#10;&#10;&#125;</pre>
+</div></div><br/>
+web.xml:<br/>
+(under listeners section)
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;listener&gt;</span>&#10;<span class="xml&#45;tag">&lt;listener&#45;class&gt;</span>mypackagename.WebworkGlobalMessagesListener<span class="xml&#45;tag">&lt;/listener&#45;class&gt;</span>&#10;<span class="xml&#45;tag">&lt;/listener&gt;</span></pre>
+</div></div></p><b class="strong">How do I change the error message for invalid inputted fields?</b><br/>
+You need to create a message for that field, for example if you have a user.dob field you would use this in your messages file (see above for example on setting a global messages file): <br/>
+invalid.fieldvalue.user.dob=Please enter Date of Birth in the correct format.<p class="paragraph"><b class="strong">How do I get access to the Session?</b><br/>
+ActionContext.getContext().getSession() (returns Map, works internally using a ThreadLocal)</p><b class="strong">How can I see all parameters passed into the Action?</b><br/>
+ActionContext.getParameters() (returns Map, works internally using a ThreadLocal)<p class="paragraph"><b class="strong">How can I get the HttpServletRequest?</b><br/>
+ServletActionContext.getRequest() (works internally using a ThreadLocal)</p><b class="strong">How can I use the IOC container to initialize a component in another object that isnt an action?</b><br/>
+Obtain the ComponentManager from the request: ComponentManager cm = (ComponentManager) ServletActionContext.getRequest().getAttribute(&quot;DefaultComponentManager&quot;);<br/>
+then you need to initialize it using: cm.initializeObject(Object)<p class="paragraph"><b class="strong">How do I decouple XWork LocalizedTextUtil global resource bundle loading from serlvets (ServletContextListener)?</b><br/>
+If you&#039;re using XWork outside a Web context, then use whatever startup hooks you have in that context (i.e. application start for a desktop app) to add the global resource bundle. This is a startup activity, so use whatever mechanisms are provided in the context you&#039;re running in.</p><b class="strong">What i need to do to put values in a combobox. If I am using webwork2?</b><br/>
+If i have :
+<div class="code"><div class="codeContent">
+<pre>#tag(Select <span class="java&#45;quote">&quot;label=&#039;xxx &#039;&quot;</span>&#160;<span class="java&#45;quote">&quot;name=&#039;xxx&#039;&quot;</span>&#160;<span class="java&#45;quote">&quot;list=&#63;&quot;</span>)&#10;or &#10;#tag(combobox <span class="java&#45;quote">&quot;label=&#039;Prioridade&#039;&quot;</span>&#160;<span class="java&#45;quote">&quot;name=&#039;inavis.avisTpPrioridade&#039;&quot;</span>&#160;<span class="java&#45;quote">&quot;list=&#63;&quot;</span>)</pre>
+</div></div><br/>
+the values in this combobox, what i need to do?<br/>
+Exemple:
+<div class="code"><div class="codeContent">
+<pre>html tag i use to <span class="java&#45;keyword">do</span>:&#10;&#10;&lt;select..&gt;&#10;  &lt;otpion value=&quot;&quot; selected&gt;XXX&lt;/option&gt;&#10;&lt;/selct&gt;</pre>
+</div></div><br/>
+so...i need to do this using Webwork tags from Velocity...how can i do this??<p class="paragraph"><b class="strong">How do I add I18N to a UI tag, like ww:textfield?</b>
+<div class="code"><div class="codeContent">
+<pre>&lt;ww:textfield label=<span class="java&#45;quote">&quot;&#039;i18n.label&#039;&quot;</span> name=<span class="java&#45;quote">&quot;&#039;label1&#039;&quot;</span> value=<span class="java&#45;quote">&quot;&#039;&#039;&quot;</span>&gt;</pre>
+</div></div><br/>
+This will get the localized text message for the key &quot;i18n.label&quot; and put it in the label.
+<div class="code"><div class="codeContent">
+<pre>&lt;ww:textfield label=<span class="java&#45;quote">&quot;getText(&#039;i18n.label&#039;)&quot;</span> name=<span class="java&#45;quote">&quot;&#039;label1&#039;&quot;</span> value=<span class="java&#45;quote">&quot;&#039;&#039;&quot;</span>&gt;</pre>
+</div></div></p>Alternatively, you could modify controlheader.vm and copy it to /template/xhtml. There you could make it so that it automatically does a call to $stack.findValue(&quot;getText($parameters.label)&quot;), making the first example actually work for i18n.<p class="paragraph"><b class="strong">Can I add I18N outside the Action&#039;s context? i.e. adding i18n to some JSP using the ww taglib?</b><br/>
+Yes, use the &lt;ww:i18n&gt; tag to push a resource bundle on to the stack. Now calls with &lt;ww:text/&gt; or &lt;ww:property value=&quot;getText(...)&quot;/&gt; will read from that resource bundle.</p><b class="strong">Can I break up my large XWork.xml file into smaller pieces?</b><br/>
+Sure, that&#039;s what the &lt;include&gt; element is for. Most xwork.xml files<br/>
+already have one: <br/>
+
+<div class="code"><div class="codeContent">
+<pre>&lt;xwork&gt;&#10;    &lt;include file=<span class="java&#45;quote">&quot;webwork&#45;<span class="java&#45;keyword">default</span>.xml&quot;</span>/&gt;&#10;    &lt;include file=<span class="java&#45;quote">&quot;config&#45;browser.xml&quot;</span>/&gt;&#10;    &lt;<span class="java&#45;keyword">package</span> name=<span class="java&#45;quote">&quot;<span class="java&#45;keyword">default</span>&quot;</span>&#160;<span class="java&#45;keyword">extends</span>=<span class="java&#45;quote">&quot;webwork&#45;<span class="java&#45;keyword">default</span>&quot;</span>&gt;&#10;....&#10;    &lt;/<span class="java&#45;keyword">package</span>&gt;&#10;    &lt;include file=<span class="java&#45;quote">&quot;other.xml&quot;</span>/&gt;&#10;&lt;/xwork&gt;</pre>
+</div></div><p class="paragraph">This tells it to load the webwork-default.xml from the webwork jar file<br/>
+to get all of those interceptor and result definitions.</p>You can put your own &lt;include&gt; in your xwork.xml interchangeably with<br/>
+&lt;package&gt; elements&#8230; They will be loaded in the same order as it reads<br/>
+from top to bottom and adds things as it reads them.<p class="paragraph"><b class="strong">How can I put a String literal in a Javascript call, for instance in an onChange attribute?</b></p>The problem is in escaping quotes and getting the double quotes around the final value, like we expect  in HTML attributes. Here&#039;s an example of the right way to do this (thanks to John Brad):<br/>
+
+<div class="code"><div class="codeContent">
+<pre>onchange=&#039;<span class="java&#45;quote">&quot;someFunc(<span class="java&#45;keyword">this</span>.form, &#92;&#039;abc&#92;&#039;)&quot;</span>&#039;</pre>
+</div></div><p class="paragraph">Notice here that there are single quotes surrounding the double quotes, and then the single quotes inline in the Javascript are escaped. This produces this result:</p><div class="code"><div class="codeContent">
+<pre>onchange=<span class="java&#45;quote">&quot;someFunc(<span class="java&#45;keyword">this</span>.form, &#039;abc&#039;)&quot;</span></pre>
+</div></div><p class="paragraph"><b class="strong">Why won&#039;t the &#039;if&#039; tag evaluate a one char string?</b>
+<div class="code"><div class="codeContent">
+<pre>&lt;ww:<span class="java&#45;keyword">if</span> test=<span class="java&#45;quote">&quot;#myObj.myString == &#039;A&#039;&quot;</span>&gt;&#10;Why doesn&#039;t <span class="java&#45;keyword">this</span> work when myString is equal to A&#63;&#10;&lt;/ww:<span class="java&#45;keyword">if</span>&gt;</pre>
+</div></div></p>OGNL will interpret &#039;A&#039; as a char type and not a string.  Simple solution - flip the double and single quotes.
+<div class="code"><div class="codeContent">
+<pre>&lt;ww:<span class="java&#45;keyword">if</span> test=&#039;#myObj.myString == <span class="java&#45;quote">&quot;A&quot;</span>&#039;&gt;&#10;This works&#33;&#10;&lt;/ww:<span class="java&#45;keyword">if</span>&gt;</pre>
+</div></div><p class="paragraph">Alternatively, you can escape the double quotes in the String:</p><div class="code"><div class="codeContent">
+<pre>&lt;ww:<span class="java&#45;keyword">if</span> test=<span class="java&#45;quote">&quot;#myObj.myString == &#92;&quot;</span>A&#92;&quot;&quot;&gt;&#10;This works&#33;&#10;&lt;/ww:<span class="java&#45;keyword">if</span>&gt;</pre>
+</div></div><p class="paragraph"><b class="strong">I&#039;m trying to run the webwork example in the tutorial on Tomcat, and it can&#039;t instantiate the VelocityEngine</b></p>Tomcat says:<p class="paragraph">javax.servlet.ServletException: Servlet.init() for servlet webwork threw exception at <br/>
+org.apache.catalina.core.StandardWrapper.loadServlet(StandardWrapper.java:963)<br/>
+&#8230;<br/>
+root cause</p>java.lang.RuntimeException: Unable to instantiate VelocityEngine!<br/>
+	at <br/>
+com.opensymphony.webwork.views.velocity.VelocityManager.newVelocityEngine(VelocityManager.java:333)<br/>
+	at <br/>
+com.opensymphony.webwork.views.velocity.VelocityManager.init(VelocityManager.java:146)<br/>
+	at <br/>
+com.opensymphony.webwork.dispatcher.ServletDispatcher.init(ServletDispatcher.java:177)<br/>
+	at <br/>
+org.apache.catalina.core.StandardWrapper.loadServlet(StandardWrapper.java:935)
+<p class="paragraph"><em class="emphasis">Solution:</em>&#160;<b class="strong">(thanks to Keith Lea)</b></p>It turns out Velocity&#039;s Avalon logging system was trying to write to my tomcat folder.<p class="paragraph">So that it&#039;s on file somewhere for other people, I will describe the solution:</p>I created a file &quot;velocity.properties&quot; and placed it in my WEB-INF/classes folder. Inside the file I wrote:<p class="paragraph">runtime.log.logsystem.class=org.apache.velocity.runtime.log.NullLogSystem</p>This stops velocity from logging, and makes webwork work again.
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

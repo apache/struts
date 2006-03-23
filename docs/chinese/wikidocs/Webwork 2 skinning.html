@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <title>WebWork 2 : Webwork 2 skinning</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : Webwork 2 skinning
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Nov 30, 2004 by <font color="#0050B2">jcarreira</font>.
+				    </div>
+
+				    <p class="paragraph">Skinning in Webwork 2 can be done more than one way.  We will show how to use two skins called &quot;html&quot; and &quot;wml&quot;, and we&#039;ll be working with the following directory structure:</p><div class="code"><div class="codeContent">
+<pre>/WEB&#45;INF&#10;   /web.xml&#10;/html&#10;   /index.jsp&#10;   /Register.jsp&#10;/wml&#10;   /index.jsp&#10;   /Register.jsp&#10;/index.jsp</pre>
+</div></div>
+<h3 class="heading3"><a name="Webwork2skinning-ClassicApproach"> Classic Approach</a></h3>
+If you want to go the Webwork 1.3 route, simply place all actions in the default namespace so that they are accessible from any URL path.  When you create your views, place them in the sub-directory that corresponds with the skin&#039;s identifier.  
+<p class="paragraph">Your action configuration would look like this (simplified, without defined interceptors):
+<div class="code"><div class="codeContent">
+<pre>&lt;<span class="java&#45;keyword">package</span> name=<span class="java&#45;quote">&quot;<span class="java&#45;keyword">default</span>&quot;</span>&gt;&#10;   &lt;action name=<span class="java&#45;quote">&quot;registration&quot;</span> class=<span class="java&#45;quote">&quot;x.actionset.Register&quot;</span>&gt;&#10;      &lt;result name=<span class="java&#45;quote">&quot;success&quot;</span> type=<span class="java&#45;quote">&quot;dispatcher&quot;</span>&gt;&#10;         &lt;param name=<span class="java&#45;quote">&quot;location&quot;</span>&gt;Register.jsp&lt;/param&gt;&#10;      &lt;/result&gt;&#10;      &lt;interceptor&#45;ref name=<span class="java&#45;quote">&quot;defaultStack&quot;</span>/&gt;&#10;   &lt;/action&gt;&#10;&lt;/<span class="java&#45;keyword">package</span>&gt;</pre>
+</div></div></p>If a user requested <a href="http://yoursite/html/register.action," title="Visit page outside Confluence">&#104;ttp://yoursite/html/register.action,</a> he would see the JSP located at /html/Register.jsp.
+<h3 class="heading3"><a name="Webwork2skinning-NamespaceDefined"> Namespace Defined</a></h3>
+If you require the use of namespaces, you can do the following:<p class="paragraph">Simplified configuration example:
+<div class="code"><div class="codeContent">
+<pre>&lt;<span class="java&#45;keyword">package</span> name=<span class="java&#45;quote">&quot;user&quot;</span>&#160;<span class="java&#45;keyword">extends</span>=<span class="java&#45;quote">&quot;<span class="java&#45;keyword">default</span>&quot;</span>&gt;&#10;   &lt;action name=<span class="java&#45;quote">&quot;register&quot;</span> class=<span class="java&#45;quote">&quot;x.x.actionset.Register&quot;</span>&gt;&#10;      &lt;result name=<span class="java&#45;quote">&quot;success&quot;</span> type=<span class="java&#45;quote">&quot;dispatcher&quot;</span>&gt;&#10;         &lt;param name=<span class="java&#45;quote">&quot;location&quot;</span>&gt;Register.jsp&lt;/param&gt;&#10;      &lt;/result&gt;&#10;&#10;      &lt;interceptor&#45;ref name=<span class="java&#45;quote">&quot;defaultStack&quot;</span>/&gt;&#10;  &lt;/action&gt;&#10;&lt;/<span class="java&#45;keyword">package</span>&gt;&#10;&#10;&lt;<span class="java&#45;keyword">package</span> name=<span class="java&#45;quote">&quot;user&#45;html&quot;</span>&#160;<span class="java&#45;keyword">extends</span>=<span class="java&#45;quote">&quot;user&quot;</span> namespace=<span class="java&#45;quote">&quot;/user/html&quot;</span> /&gt;&#10;&lt;<span class="java&#45;keyword">package</span> name=<span class="java&#45;quote">&quot;user&#45;wml&quot;</span>&#160;<span class="java&#45;keyword">extends</span>=<span class="java&#45;quote">&quot;user&quot;</span> namespace=<span class="java&#45;quote">&quot;/user/wml&quot;</span> /&gt;</pre>
+</div></div></p>The last two package definitions extend the first package, changing only the namespace.  The view result defined in the &quot;register&quot; action has a relative path.  Because of this, you&#039;ll get the same behavior as the Classic Approach, but with the security of knowing that ONLY those two paths can be accessed for the action, instead of ANY path.
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:37</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Default results
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="Defaultresults-Description"></a>Description</h1>
+
+<p>Webwork has the ability to define a default result type for your actions.  Thus, you don't have to specify the result-type for results using the default.  If a package extends another  package and you don't specify a new default result type for the child package, then the parent package default type will be used when the type attribute is not specified in the result tag.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag"><span class="code-comment">&lt;!-- parts of xwork.xml  --&gt;</span></span>
+....
+
+<span class="code-tag">&lt;result-types&gt;</span>
+ <span class="code-tag">&lt;result-type name=<span class="code-quote">"dispatcher"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.ServletDispatcherResult"</span> default=<span class="code-quote">"true"</span>/&gt;</span>
+ <span class="code-tag">&lt;result-type name=<span class="code-quote">"redirect"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.ServletRedirectResult"</span>/&gt;</span>
+ <span class="code-tag">&lt;result-type name=<span class="code-quote">"velocity"</span> class=<span class="code-quote">"com.opensymphony.webwork.dispatcher.VelocityResult"</span>/&gt;</span>
+<span class="code-tag">&lt;/result-types&gt;</span>
+
+....
+
+<span class="code-tag">&lt;action name=<span class="code-quote">"bar"</span> class=<span class="code-quote">"myPackage.barAction"</span>&gt;</span>
+
+<span class="code-tag"><span class="code-comment">&lt;!-- this result uses dispatcher, so you can omit the type=<span class="code-quote">"dispatcher"</span> if you want --&gt;</span></span>
+  <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span>&gt;</span>foo.jsp<span class="code-tag">&lt;/result&gt;</span>
+
+<span class="code-tag"><span class="code-comment">&lt;!-- this result uses velocity result, so the type needs to be specified --&gt;</span></span>
+  <span class="code-tag">&lt;result name=<span class="code-quote">"error"</span> type=<span class="code-quote">"velocity"</span>&gt;</span>error.vm<span class="code-tag">&lt;/result&gt;</span>
+
+<span class="code-tag">&lt;/action&gt;</span>
+
+....</pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

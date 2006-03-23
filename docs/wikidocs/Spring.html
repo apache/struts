@@ -1,0 +1,152 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Spring
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>Spring is, among other things, an Inversion of Control framework. As of WebWork 2.2, it is the recommended IoC container. You can find out more about Spring at <a href="http://www.springframework.org" title="Visit page outside Confluence">&#104;ttp://www.springframework.org</a>.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>This section covers the only <em>supported</em> Spring integration technique. However, there are many other ways to tie in to Spring with WebWork. Please see <a href="Other Spring Integration.html" title="Other Spring Integration">Other Spring Integration</a> for more info. Note that <em>none</em> of the other methods are currently supported and could change at any time!</td></tr></table>
+
+<h1><a name="Spring-EnablingSpringIntegration"></a>Enabling Spring Integration</h1>
+
+<p>Turning on Spring support in WebWork is simply a matter of installing the latest Spring jars in to your classpath and then adding the following entry to <a href="webwork.properties.html" title="webwork.properties">webwork.properties</a>:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">webwork.objectFactory = spring</pre>
+</div></div>
+
+<p>If you want to change from the default autowiring mode, which is to auto-wire by name (i.e. to look for beans defined in Spring with the same name as your bean property), then you'll also need a setting for this in your <a href="webwork.properties.html" title="webwork.properties">webwork.properties</a>:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">webwork.objectFactory.spring.autoWire = type</pre>
+</div></div>
+
+<p>Options for this setting are:</p>
+
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd'> name </td>
+<td class='confluenceTd'> Auto-wire by matching the name of the bean in Spring with the name of the property in your action. <b>This is the default</b> </td>
+</tr>
+<tr>
+<td class='confluenceTd'> type </td>
+<td class='confluenceTd'> Auto-wire by looking for a bean registered with Spring of the same type as the property in your action. This requires you to have only one bean of this type registered with Spring </td>
+</tr>
+<tr>
+<td class='confluenceTd'> auto </td>
+<td class='confluenceTd'> Spring will attempt to auto-detect the best method for auto-wiring your action </td>
+</tr>
+<tr>
+<td class='confluenceTd'> constructor </td>
+<td class='confluenceTd'> Spring will auto-wire the parameters of the bean's constructor </td>
+</tr>
+</tbody></table>
+
+<p>At this point, all objects will at least try to get created by Spring. If they cannot be created by Spring, then WebWork will create the object itself. Next, you'll need to turn on the Spring listener in web.xml:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;listener&gt;</span>
+    <span class="code-tag">&lt;listener-class&gt;</span>org.springframework.web.context.ContextLoaderListener<span class="code-tag">&lt;/listener-class&gt;</span>
+<span class="code-tag">&lt;/listener&gt;</span></pre>
+</div></div>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='tipMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/check.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">More ApplicationContext configuration files needed?</b><br />
+<p>Since the Spring integration uses a standard Listener, it can be configured to support configuration files other than applicationContext.xml.<br/>
+Adding the following to your web.xml will cause Spring's ApplicationContext to be inititalized from all files matching the given pattern:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag"><span class="code-comment">&lt;!-- Context Configuration locations for Spring XML files --&gt;</span></span>
+<span class="code-tag">&lt;context-param&gt;</span>
+    <span class="code-tag">&lt;param-name&gt;</span>contextConfigLocation<span class="code-tag">&lt;/param-name&gt;</span>
+    <span class="code-tag">&lt;param-value&gt;</span>/WEB-INF/applicationContext-*.xml,classpath*:applicationContext-*.xml<span class="code-tag">&lt;/param-value&gt;</span>
+<span class="code-tag">&lt;/context-param&gt;</span></pre>
+</div></div>
+<p>See the Spring documentation for a full description of this parameter.</p>
+</td></tr></table>
+
+<h1><a name="Spring-SampleSpringConfiguration"></a>Sample Spring Configuration</h1>
+
+<p>At this point, you can add the standard Spring configuration at <b>WEB-INF/applicationContext.xml</b>. An example of this configuration is:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;?xml version=<span class="code-quote">"1.0"</span> encoding=<span class="code-quote">"UTF-8"</span>?&gt;</span>
+<span class="code-tag">&lt;!DOCTYPE beans PUBLIC <span class="code-quote">"-//SPRING//DTD BEAN//EN"</span> <span class="code-quote">"http://www.springframework.org/dtd/spring-beans.dtd"</span>&gt;</span>
+<span class="code-tag">&lt;beans default-autowire=<span class="code-quote">"autodetect"</span>&gt;</span>
+    <span class="code-tag">&lt;bean id=<span class="code-quote">"personManager"</span> class=<span class="code-quote">"com.acme.PersonManager"</span>/&gt;</span>
+    ...
+<span class="code-tag">&lt;/beans&gt;</span></pre>
+</div></div>
+
+<h1><a name="Spring-SwitchingfromBuiltinIoCtoSpring"></a>Switching from Builtin IoC to Spring</h1>
+
+<p>Switching is quite easy. Spring setup is done as described above. To complete migration, you will have to</p>
+<ol>
+	<li>transfer your configured components from components.xml to applicationContext.xml appropriately. You can safely delete components.xml afterwards.</li>
+	<li>remove the <a href="Component Interceptor.html" title="Component Interceptor">Component Interceptor</a> from your interceptor stack in <a href="xwork.xml.html" title="xwork.xml">xwork.xml</a>. Although it does not hurt to leave it there, it is simply redundant from now on.</li>
+</ol>
+
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Session Scope &amp; Spring</b><br />
+<p>Spring &lt;= 1.3 does not support session scoped components. Spring 2.0 release will add support for this, and tests with Spring 2.0M3 (beta) are reported to work quite well. Please refer to <a href="Spring Session Components Workarounds.html" title="Spring Session Components Workarounds">Spring Session Components Workarounds</a> to read more about this topic.</p></td></tr></table>
+
+<h1><a name="Spring-InitializingActionsfromSpring"></a>Initializing Actions from Spring</h1>
+
+<p>Normally, in xwork.xml you specify the class for each action. When using the SpringObjectFactory (configured as shown above) WebWork will ask Spring to create the action and wire up dependencies as specified by the default auto-wire behavior. The SpringObjectFactory will also apply all bean post processors to do things like proxy your action for transactions, security, etc. which Spring can automatically determine without explicit configuration. For most usages, this should be all you need for configuring your actions to have services and dependencies applied. </p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='tipMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/check.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>We <b>strongly</b> recommend that you find declarative ways of letting Spring know what to provide for your actions. This includes making your beans able to be autowired by either naming your dependent properties on your action the same as the bean defined in Spring which should be provided (to allow for name-based autowiring), or using autowire-by-type and only having one of the required type registered with Spring. It also can include using JDK5 annotations to declare transactional and security requirements rather than having to explicitly set up proxies in your Spring configuration. If you can find ways to let Spring know what it needs to do for your action without needing any explicit configuration in the Spring <em>applicationContext.xml</em>, then you won't have to maintain this configuration in both places.</td></tr></table>
+
+<p>However, sometimes you might want the bean to be completely managed by Spring. This is useful, for example, if you wish to apply more complex AOP or Spring-enabled technologies, such as Acegi, to your beans. To do this, all you have to do is configure the bean in your Spring <b>applicationContext.xml</b> and then <em>change</em> the class attribute from your WebWork action in the <em>xwork.xml</em> to use the bean name defined in Spring instead of the class name. </p>
+
+<p>Your xwork.xml file would then have the action class attributes changed, leaving it like this:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;!DOCTYPE xwork PUBLIC <span class="code-quote">"-//OpenSymphony Group//XWork 1.0//EN"</span> <span class="code-quote">"http://www.opensymphony.com/xwork/xwork-1.1.dtd"</span>&gt;</span>
+
+<span class="code-tag">&lt;xwork&gt;</span>
+    <span class="code-tag">&lt;include file=<span class="code-quote">"webwork-default.xml"</span>/&gt;</span>
+
+    <span class="code-tag">&lt;package name=<span class="code-quote">"default"</span> extends=<span class="code-quote">"webwork-default"</span>&gt;</span>
+        <span class="code-tag">&lt;action name=<span class="code-quote">"foo"</span> class=<span class="code-quote">"com.acme.Foo"</span>&gt;</span>
+            <span class="code-tag">&lt;result&gt;</span>foo.ftl<span class="code-tag">&lt;/result&gt;</span>
+        <span class="code-tag">&lt;/action&gt;</span>
+    <span class="code-tag">&lt;/package&gt;</span>
+
+    <span class="code-tag">&lt;package name=<span class="code-quote">"secure"</span> namespace=<span class="code-quote">"/secure"</span> extends=<span class="code-quote">"default"</span>&gt;</span>
+        <span class="code-tag">&lt;action name=<span class="code-quote">"bar"</span> class=<span class="code-quote">"bar"</span>&gt;</span>
+            <span class="code-tag">&lt;result&gt;</span>bar.ftl<span class="code-tag">&lt;/result&gt;</span>
+        <span class="code-tag">&lt;/action&gt;</span>
+    <span class="code-tag">&lt;/package&gt;</span>
+<span class="code-tag">&lt;/xwork&gt;</span></pre>
+</div></div>
+
+<p>Where you have a Spring bean defined in your <b>applicationContext.xml</b> named "bar". Note that the <em>com.acme.Foo</em> action did not need to be changed, because it can be autowired. </p>
+
+<p>A typical spring configuration for bar could look as following.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;?xml version=<span class="code-quote">"1.0"</span> encoding=<span class="code-quote">"UTF-8"</span>?&gt;</span>
+<span class="code-tag">&lt;!DOCTYPE beans PUBLIC <span class="code-quote">"-//SPRING//DTD BEAN//EN"</span> <span class="code-quote">"http://www.springframework.org/dtd/spring-beans.dtd"</span>&gt;</span>
+<span class="code-tag">&lt;beans default-autowire=<span class="code-quote">"autodetect"</span>&gt;</span>
+    <span class="code-tag">&lt;bean id=<span class="code-quote">"bar"</span> class=<span class="code-quote">"com.my.BarClass"</span> singleton=<span class="code-quote">"false"</span>/&gt;</span>
+    ...
+<span class="code-tag">&lt;/beans&gt;</span></pre>
+</div></div>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>
+<p>Note the id attribute in the spring configuration corresponds to the class attribute in the xwork configuration. Also note that in the spring configuration, the singleton attribute is set to false. This would generally be the case that is desired as Webwork creates a new action class upon each request. Hence when Spring integration is used, this would be the desired behaviour. Making Springs singleton attribute false would allow this.</p></td></tr></table>
+
+
+<p>Remember: <b>this is not required</b>. This is only needed if you wish to override the default behavior when the action is created in WebWork by decorating it with Spring-enabled interceptors and IoC that cannot be automatically determined by Spring. Keep in mind that WebWork's Spring integration will do standard IoC, using whatever auto-wiring you specify, even if you don't explicitely map each action in Spring. So typically you don't need to do this, but it is good to know how this can be done if you need to.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

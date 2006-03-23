@@ -1,0 +1,8 @@
+<form id="testNamespaceAction" name="myForm" onsubmit="customOnsubmit(); return true;" action="/testNamespace/testNamespaceAction.action" method="POST">
+<table class="wwFormTable">
+</table>
+</form>
+
+<script>
+	function customOnsubmit() {}
+</script>

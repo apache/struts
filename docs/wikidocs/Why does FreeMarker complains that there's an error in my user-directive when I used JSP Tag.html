@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <title>WebWork - 
+         does FreeMarker complains that there's an error in my user-directive when I used JSP Tag
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>To use JSP Tags in FreeMarker template, the following needs to be included in the web.xml</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;servlet&gt;</span>
+    <span class="code-tag">&lt;servlet-name&gt;</span>jspSupportServlet<span class="code-tag">&lt;/servlet-name&gt;</span>
+    <span class="code-tag">&lt;servlet-class&gt;</span>com.opensymphony.webwork.views.JspSupportServlet.JspSupportServlet<span class="code-tag">&lt;/servlet-class&gt;</span>
+    <span class="code-tag">&lt;load-on-startup&gt;</span>10<span class="code-tag">&lt;/load-on-startup&gt;</span>
+<span class="code-tag">&lt;/servlet&gt;</span></pre>
+</div></div>
+
+<p>The snippets above, register a JspSupportServlet with the webapp, and requires that the container load it upon startup. It provides access to the servlet instance itself where valuable information like ServletContext could be obtained. This is needed for FreeMarker template rendering that contains JSP tags.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

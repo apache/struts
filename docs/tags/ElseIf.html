@@ -1,0 +1,82 @@
+
+<html>
+<head>
+<title>&lt;ww:elseif /&gt;</title>
+</head>
+
+<body>
+
+<h1>Tag Name: &lt;ww:elseif /&gt;</h1>
+
+<h2>Description</h2>
+<p>
+
+Elseif tag
+
+</p>
+
+<p>
+<!-- START SNIPPET: javadoc --> <p>Perform basic condition flow. 'If' tag could be used by itself or with 'Else If' Tag and/or single/multiple 'Else' Tag.</p> <!-- END SNIPPET: javadoc --> <!-- START SNIPPET: params --> <ul> <li>test* (Boolean) - Logic to determined if body of tag is to be displayed</li> </ul> <!-- END SNIPPET: params --> <pre> <!-- START SNIPPET: example --> &lt;ww:if test="%{false}"&gt; &lt;div&gt;Will Not Be Executed&lt;/div&gt; &lt;/ww:if&gt; &lt;ww:elseif test="%{true}"&gt; &lt;div&gt;Will Be Executed&lt;/div&gt; &lt;/ww:elseif&gt; &lt;ww:else&gt; &lt;div&gt;Will Not Be Executed&lt;/div&gt; &lt;/ww:else&gt; <!-- END SNIPPET: example --> </pre>
+</p>
+
+<h2>Attributes</h2>
+<p>
+
+<!-- START SNIPPET: tagattributes -->
+<table width="100%">
+<tr>
+
+<th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">test</td>
+
+<!-- Required -->
+<td align="left" valign="top"><b>true</b></td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">Expression to determine if body of tag is to be displayed</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">id for referencing element. For UI and form tags it will be used as HTML id attribute</td>
+
+</tr>
+
+</table>
+<!-- END SNIPPET: tagattributes -->
+
+</p>
+<p>
+<center><a href="index.html">Back to Taglib Index</a></center>
+</p>
+</body>
+</html>
+

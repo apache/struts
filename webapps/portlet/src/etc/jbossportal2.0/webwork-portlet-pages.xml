@@ -1,0 +1,22 @@
+<pages>
+<!--
+  ~ Copyright (c) 2002-2006 by OpenSymphony
+  ~ All rights reserved.
+  -->
+   <portal-name>default</portal-name>
+   <page>
+      <page-name>webwork-portlet</page-name>
+      <window>
+         <window-name>WebWorkPortletWindow</window-name>
+         <instance-ref>webwork-portlet.WebWorkPortlet.WebWorkPortletInstance</instance-ref>
+         <region>left</region>
+         <height>0</height>
+      </window>
+      <window>
+         <window-name>WebWorkPortletWindow2</window-name>
+         <instance-ref>webwork-portlet.WebWorkPortlet2.WebWorkPortlet2Instance</instance-ref>
+         <region>right</region>
+         <height>0</height>
+      </window>
+   </page>
+</pages>

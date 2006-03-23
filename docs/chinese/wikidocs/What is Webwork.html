@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <title>WebWork 2 : 什么是WebWork</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : 什么是WebWork
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    本页由<font color="#0050B2">casey</font>最后修改于2004年12月24日.
+				    </div>
+
+				    <p class="paragraph"><h2 style="margin: 4px 0px 4px 0px;" class="heading2"><a name="WhatisWebWork-WelcometoWebWork%21"> 欢迎使用WebWork!</a></h2></p>WebWork是一个强大的基于Web的MVC框架, 它构建在一个命令模式框架XWork之上.  WebWork的特性包括用于处理或代理请求的分发器(Dispatcher), 支持多种视图技术(JSP, Velocity, JasperReports, XML, FreeMarker)的结果类型, 一个小而强大的JSP标签库和Velocity宏定义.  分发器调用XWork活动来访问和操作模型(Model)并为视图显示模型数据提供方便的途径.  WebWork真正的优势在于它强调简洁和协作能力的根本理念.  使用WebWork将有助于最小化代码并允许开发人员更多的关注业务逻辑(business logic)和建模(modeling)而不是诸如编写Servlet之类的事情.
+					<p class="paragraph"><h4 class="heading4"><a name="WhatisWebWork-Features%3Caname%3D%22WhatisWebWorkFeatures%22%3E%3C%2Fa%3E"> 特性 <a name="WhatisWebWork-Features"></a></a></h4></p><ul type="square" class="minus">
+<li> 灵活的<b class="strong">校验(validation)</b>框架, 允许使用XML文件定义校验并通过截取器(Interceptor)在运行时自动应用到活动类(Action class), 从而达到校验与活动类之间的完全解藕(decoupled).  新版本还支持客户端校验.</li>
+<li> <b class="strong">类型转化(Type conversion)</b>可以很容易的将对象从一个类转换成另一个类</li>
+<li> 强大的<b class="strong">表达式语言(Expression Language, EL)</b>建立在OGNL基础之上, 允许遍历动态对象图, 执行对象方法以及使用值栈(ValueStack)实现对多个JavaBean属性的透明访问.  Webwork也可以使用JSTL.</li>
+<li> 使用<b class="strong">反转控制(Inversion of Control, IoC)</b>管理组件(component)生命周期和依赖关系, 不需要编写注册类创建组件, 组件客户也不需要主动获取组件实例(instance).</li>
+<li> <b class="strong">Velocity模版</b>, 使得开发人员可以很容易的定制Web页面的外观(look &amp; feel).</li>
+<li> <b class="strong">截取器(Interceptors)</b>可以动态截取活动(Action)执行前后的处理过程, 这简化了活动的代码并提高了代码复用能力.</li>
+<li> 支持<b class="strong">国际化(I18n)</b>.</li>
+<li> 可以方便的与其他第三方软件集成, 包括<b class="strong">Hibernate</b>, <b class="strong">Spring</b>, <b class="strong">Pico</b>, <b class="strong">Sitemesh</b>.</li>
+<li> 支持多种视图技术如: <b class="strong">JSP</b>, <b class="strong">Velocity</b>, <b class="strong">FreeMarker</b>, <b class="strong">JasperReports</b>, <b class="strong">XML</b>.</li>
+<li> 使用<b class="strong">包(Packages)</b>和<b class="strong">名空间(Namespaces)</b>管理数以百计的活动.</li>
+</ul>
+<h4 class="heading4"><a name="WhatisWebWork-BackgroundandPurpose%3Caname%3D%22WhatisWebWorkBackground%22%3E%3C%2Fa%3E"> 背景与目的 <a name="WhatisWebWork-Background"></a></a></h4><p class="paragraph">WebWork是一个开放源代码项目, 目标是为在短时间内构建复杂网站提供易于理解和维护的工具及开发框架. Java是一个平台以及基于该平台的语言, 尽管他支持although it supports many others as the language in which systems are built, such as JavaScript and XML.</p>WebWork在构架上基于最佳实践和那些已被证实有价值的设计模式. 它还基于一个强烈的动机: 尽可能的简单, 并具有维护上的灵活性(这实际上是一个困难的平衡).<p class="paragraph">它也鼓励用户使用恰当的, 符合需要的方式工作. [<i>It also encourages you, as a user, to do things the way you seem fit for your needs.</i>] WebWork能以多种方式配置和使用, 哪种方式更适合于你依赖于使用环境. 下面是一个例子, WebWork支持多种不同的HTML生成技术如JSP, Velocity模版引擎和XSLT. 它们之间在理念上和技术上都存在很大的差别, 但都能为WebWork所用, 同时, 不同的用户确实需要这些不同的方式. &quot;你不能那么做&quot;是我们尽可能避免的一句话, 而"我们不能"往往是因为有另一个更好, 更适合的工具.</p><h4 class="heading4"><a name="WhatisWebWork-WebWork%26%23039%3BsModel1andModel2Support%3Caname%3D%22WhatisWebWorkMVC%22%3E%3C%2Fa%3E"> WebWork对MVC Model-1和Model-2的支持 <a name="WhatisWebWork-MVC"></a></a></h4><p class="paragraph">Web应用开发框架的最重要的一个任务是支持逻辑, 内容, 表现相分离的理念. 如果没有做到这一点, 通常会导致维护上的问题, 如果开发团队结构复杂(因为每一个团队成员通常只负责应用的某一方面(aspect)), 还会使应用的开发变得更加困难. 达到分离目的的一般方法是采用MVC(Model-View-Controller)设计模式. 该模式鼓励使用分离的代码来处理模型(model, 即&quot;业务逻辑&quot;), 控制器(controller, 即&quot;应用逻辑&quot;)和视图(view). 这样分离之后, 下一个问题是: 控制器的代码与表现部分如何交互. 有两种常用的设计模型可以做到这一点, 它们分别被称为Model-1和Model-2. 这两种模型将在下文描述.</p><h5 class="heading5"><a name="WhatisWebWork-Model1"> Model-1</a></h5><p class="paragraph">Model-1方式的基本想法是在表示层(presentation layer)如JSP或模版中调用控制器代码. 如果你正在使用JSP, 这意味着你可以通过两种方式执行你的WebWork活动： 使用&quot;webwork:action&quot;标签调用执行; 或使用&quot;webwork:bean&quot;标签像调用JavaBeans一样执行活动.</p><h5 class="heading5"><a name="WhatisWebWork-Model2"> Model-2</a></h5><p class="paragraph">在Model-2方式中, 哪些代码调用控制器以及哪些视图进行展示由第三方决定, 通常是一个servlet分发器. 分发器解码HTTP请求中的URL, 然后决定执行哪些代码. 一个包含控制器代码的Java对象被获取并执行, 从而完成对某个应用逻辑和业务逻辑的处理. 当执行结束后, 分发器将请求转交(forward)给一个视图处理器(如一个JSP), 它使用前一个处理的数据绘制结果视图.</p><h5 class="heading5"><a name="WhatisWebWork-Whentousewhat%3F"> 如何选择使用?</a></h5><p class="paragraph">由于控制器逻辑与表现生成完全解藕, 使得根据执行情况来显示不同结果页面成为可能. 例如, 如果处理出现错误就可以显示一个错误页面而不显示正常的结果页面.</p>Model-1方式的优点如下.<br/>
+
+<ul type="square" class="minus">
+<li> 不需要建立代码与表示之间的映射关系.</li>
+<li> 易于察看JSP或模版中执行了哪些代码.</li>
+<li> 如果页面中的一部分要求某个处理过程只允许成功(否则系统失灵), 那么这些代码调用和表现部分的代码(如JSP标签库和HTML)不必分离到新的活动和JSP页面中处理过程. 这样可以提高性能和可读性.</li>
+</ul><br/>
+Model-2方式的优点如下.<br/>
+
+<ul type="square" class="minus">
+<li> 代码和表现彻底分离. 同一个表现页面可以被多个不同的活动复用, 这些活动可以访问不同的数据但使用相同的方式展示.</li>
+<li> 如果一个活动可能导致多种状态, 如&quot;成功&quot;, &quot;需要重新输入&quot;, 或&quot;出现错误&quot;, 那么使用Model-2方式可以很容易的将这些状态映射到不同的页面.</li>
+</ul><br/>
+选择使用的首要原则是: 当代码仅仅是获取并显示数据(这被称为read-type code)时使用Model-1, 只要当模型是由活动或一个处理流程所改变时就应当使用Model-2. 
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:37</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

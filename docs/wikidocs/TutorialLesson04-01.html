@@ -1,0 +1,221 @@
+<html>
+    <head>
+        <title>WebWork - 
+        TutorialLesson04-01
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="TutorialLesson04-01-Lesson4.1%3AUsingJSPastheView"></a>Lesson 4.1: Using JSP as the View</h1>
+
+<p>When using JSP to render the views, you can choose to access the action's data using scriptlets or tags. Tags are the recommended approach.</p>
+
+
+<h2><a name="TutorialLesson04-01-AccessingActionDatathroughScriplets%3A"></a>Accessing Action Data through Scriplets:</h2>
+
+<p>Action data can be accessed through an object called <em>Value Stack</em>. The example below does the same thing as the result page of <a href="Lesson 3 - An html form with data.html" title="Lesson 3 - An html form with data">lesson 3</a>'s second example (<em>Supplying Data to the Action</em>), but using scriptlets:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;%@ page import=<span class="code-quote">"com.opensymphony.xwork.util.OgnlValueStack"</span> %&gt;</span>
+<span class="code-tag">&lt;html&gt;</span>
+<span class="code-tag">&lt;head&gt;</span>
+<span class="code-tag">&lt;title&gt;</span>WebWork Tutorial - Lesson 4.1 - Lesson 3's example modified<span class="code-tag">&lt;/title&gt;</span>
+<span class="code-tag">&lt;/head&gt;</span>
+<span class="code-tag">&lt;body&gt;</span>
+
+&lt;%
+OgnlValueStack stack = (OgnlValueStack)request.getAttribute(<span class="code-quote">"webwork.valueStack"</span>);
+out.write(<span class="code-quote">"Hello, "</span> + stack.findValue(<span class="code-quote">"person"</span>));
+%&gt;
+
+<span class="code-tag">&lt;/body&gt;</span>
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+
+<p>WebWork tags, however, are recommended over scriptlets. For instance, <tt>&lt;ww:property /&gt;</tt> tags do exactly what the scriptlet above does, with a cleaner syntax and also handles the case where the Value Stack doesn't exist.</p>
+
+
+<h2><a name="TutorialLesson04-01-WebWorkTagLibrary%3A"></a>WebWork Tag Library:</h2>
+
+<p>We've already showed in <a href="Lesson 3 - An html form with data.html" title="Lesson 3 - An html form with data">lesson 3</a>'s example how to access an action's property using tags. This section describes and exemplifies the use of the WebWork Tag Library, which can be divided in seven categories:</p>
+
+<ul>
+	<li><b>Common tags</b>: the most frequently used, basic tags;</li>
+	<li><b>Componentisation tags</b>: foster componentisation within your views;</li>
+	<li><b>Flow control tags</b>: govern the flow of control within the JSP page;</li>
+	<li><b>Iteration tags</b>: iterate over elements and manipulate iterable objects;</li>
+	<li><b>UI tags</b>: generate HTML form fields and controls;</li>
+	<li><b>VUI tags</b>: <font color="red"><em>volunteers needed to write this part</em></font>;</li>
+	<li><b>Internationalisation tags</b>: internationalise your views.</li>
+</ul>
+
+
+
+<h3><a name="TutorialLesson04-01-Commontags"></a>Common tags</h3>
+
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:property /&gt;</tt></b></td>
+<td class='confluenceTd'>Gets the value of a result attribute. If the value isn't given, the top of the stack will be returned.</td>
+</tr>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:push /&gt;</tt></b></td>
+<td class='confluenceTd'>Pushes a value onto the Value Stack.</td>
+</tr>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:param /&gt;</tt></b></td>
+<td class='confluenceTd'>Sets a parent tag's parameter. This tag is used only inside another tag to set the value of some property of the parent tag.</td>
+</tr>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:set /&gt;</tt></b></td>
+<td class='confluenceTd'>Sets the value of an object in the Value Stack to a scope (page, stack, application, session). If the value is not given, the top of the stack is used. If the scope is not given, the default scope of "webwork" is used.</td>
+</tr>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:url /&gt;</tt></b></td>
+<td class='confluenceTd'>Builds an encoded URL.</td>
+</tr>
+</tbody></table>
+
+<div class="code"><div class="codeContent">
+<pre class="code-html">EXAMPLE NEEDED.</pre>
+</div></div>
+
+<h3><a name="TutorialLesson04-01-Componentisationtags"></a>Componentisation tags</h3>
+
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:action /&gt;</tt></b></td>
+<td class='confluenceTd'>Executes an Action from within the context of a taglib. The body of the tag is used to display the results of the action invocation.</td>
+</tr>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:bean /&gt;</tt></b></td>
+<td class='confluenceTd'>Creates a JavaBean, instantiate its properties and place it in the ActionContext for later use.</td>
+</tr>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:include /&gt;</tt></b></td>
+<td class='confluenceTd'>Includes another page or action.</td>
+</tr>
+</tbody></table>
+
+<div class="code"><div class="codeContent">
+<pre class="code-html">EXAMPLE NEEDED.</pre>
+</div></div>
+
+
+<h3><a name="TutorialLesson04-01-Flowcontroltags"></a>Flow control tags</h3>
+
+<p>This if-else set of tags works just like if-else scriptlets.</p>
+
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:if /&gt;</tt></b></td>
+<td class='confluenceTd'>Conditional execution path. That is, evaluates the tag body if a boolean expression is true.</td>
+</tr>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:else /&gt;</tt></b></td>
+<td class='confluenceTd'>Negative execution path for the if tag. That is, if the preceeding conditional tag's boolean expression evaluated to false, then evaluate this tag's body.</td>
+</tr>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:elseif /&gt;</tt></b></td>
+<td class='confluenceTd'>Negative conditional execution path for the if tag. That is, if the preceeding conditional tag's boolean expression evaluated to false and if this tag's boolean expression evaluates to true, then evaluate this tag's body.</td>
+</tr>
+</tbody></table>
+
+<div class="code"><div class="codeContent">
+<pre class="code-html">EXAMPLE NEEDED.</pre>
+</div></div>
+
+
+<h3><a name="TutorialLesson04-01-Iterationtags"></a>Iteration tags</h3>
+
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:iterator /&gt;</tt></b></td>
+<td class='confluenceTd'>Iterates over a collection.</td>
+</tr>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:generator /&gt;</tt></b></td>
+<td class='confluenceTd'>Generates iterators.</td>
+</tr>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:append /&gt;</tt></b></td>
+<td class='confluenceTd'>Appends several iterators.</td>
+</tr>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:subset /&gt;</tt></b></td>
+<td class='confluenceTd'>Gets a subset of an iterator.</td>
+</tr>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:merge /&gt;</tt></b></td>
+<td class='confluenceTd'>Merges several iterators into one.</td>
+</tr>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:sort /&gt;</tt></b></td>
+<td class='confluenceTd'>Sorts an iterator.</td>
+</tr>
+</tbody></table>
+
+<div class="code"><div class="codeContent">
+<pre class="code-html">EXAMPLE NEEDED.</pre>
+</div></div>
+
+<h3><a name="TutorialLesson04-01-UItags"></a>UI tags</h3>
+
+<p>The UI tags wrap generic HTML controls while providing tight integration with the core framework. The tags have been designed to minimize the amount of logic in compiled code and delegate the actual rendering of HTML to a template system. The UI tags attempt to cover the most common scenarios, while providing a Component Tag for creating custom components. The UI tags also provide built-in support for displaying inline error messages.</p>
+
+<p>There is a separate lesson about WebWork UI Tags which explains in detail how they work, how you could cusomize their appearance through the use of templates, how to create custom components, etc.</p>
+
+<p><a href="TutorialLesson04-01-01.html" title="TutorialLesson04-01-01">Go to WebWork UI Tags Lesson</a>.</p>
+
+
+<h3><a name="TutorialLesson04-01-VUI%28VoiceUI%29tags"></a>VUI(Voice UI) tags</h3>
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:audio /&gt;</tt></b></td>
+<td class='confluenceTd'>???</td>
+</tr>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:prompt /&gt;</tt></b></td>
+<td class='confluenceTd'>???</td>
+</tr>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:filled /&gt;</tt></b></td>
+<td class='confluenceTd'>???</td>
+</tr>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:log /&gt;</tt></b></td>
+<td class='confluenceTd'>???</td>
+</tr>
+</tbody></table>
+
+<p><font color="red"><em>Volunteers needed to write this part.</em></font></p>
+
+
+<h3><a name="TutorialLesson04-01-Internationalisationtags"></a>Internationalisation tags</h3>
+
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:text /&gt;</tt></b></td>
+<td class='confluenceTd'>Prints out an internationalized string.</td>
+</tr>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:i18n /&gt;</tt></b></td>
+<td class='confluenceTd'>Places a resource bundle on the Value Stack, for access by the text tag.</td>
+</tr>
+</tbody></table>
+
+<hr />
+
+<p><a href="TutorialLesson05.html" title="TutorialLesson05">Previous Lesson</a> | <a href="TutorialLesson04-02.html" title="TutorialLesson04-02">Next Lesson</a></p>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

@@ -1,0 +1,109 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Iterator tag examples
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>This follows on from <a href="Control Tags.html#ControlTags-ControlTagsIterationTags" title="ControlTags-IterationTags on Control Tags">Iteration Tags</a> which you should read first, but beware of references to '0' and 'that'; what you really want in WW2 is 'top', as illustrated below. (I finally worked this out from the source code - hopefully this page means you won't have to.)</p>
+
+<h4><a name="Iteratortagexamples-Referencingthecurrentvalue"></a>Referencing the current value</h4>
+
+<p>The simple examples print out values from the list using the property tag, which uses the value at the top of the stack by default:</p>
+
+<div class="preformatted"><div class="preformattedContent">
+<pre>Days:
+&lt;ul&gt;
+&lt;ww:iterator value="days"&gt;
+    &lt;li&gt;&lt;ww:property/&gt;
+&lt;/ww:iterator&gt;
+&lt;/ul&gt;
+</pre>
+</div></div>
+
+<p>But if you're doing anything other than print the value, you probably need to refer to it specifically. Do this:</p>
+
+<div class="preformatted"><div class="preformattedContent">
+<pre>Most days:
+&lt;ul&gt;
+&lt;ww:iterator value="days"&gt;
+    &lt;ww:if test="top != 'Monday'"&gt;
+        &lt;li&gt;&lt;ww:property/&gt;
+    &lt;/ww:if&gt;
+&lt;/ww:iterator&gt;
+&lt;/ul&gt;
+</pre>
+</div></div>
+
+<h4><a name="Iteratortagexamples-Iteratingoveralistofobjects"></a>Iterating over a list of objects</h4>
+
+<div class="preformatted"><div class="preformattedContent">
+<pre>&lt;ww:iterator value="employees"&gt;
+    &lt;ww:property value="name"/&gt; is the &lt;ww:property value="jobTitle"/&gt;&lt;br&gt;
+&lt;/ww:iterator&gt;
+</pre>
+</div></div>
+
+<p>For 'name' and 'jobTitle' you could be more explicit and write 'top.name' and 'top.jobTitle', as 'top' refers to the object on the top of the stack. It's not necessary here, but it is in the next example.</p>
+
+<h4><a name="Iteratortagexamples-Iteratingoveralistoflists"></a>Iterating over a list of lists</h4>
+
+<div class="preformatted"><div class="preformattedContent">
+<pre>&lt;table&gt;
+    &lt;ww:iterator value="grid"&gt;
+        &lt;tr&gt;
+        &lt;ww:iterator value="top"&gt;
+            &lt;td&gt;&lt;ww:property/&gt;&lt;/td&gt;
+        &lt;/ww:iterator&gt;
+        &lt;/tr&gt;
+    &lt;/ww:iterator&gt;
+&lt;/table&gt;
+</pre>
+</div></div>
+
+<p>The trick here is to use 'top' as the value for the inner iterator. This example probably uses a two-dimensional array, but you can use the pattern for any list of lists.</p>
+
+<h4><a name="Iteratortagexamples-Amorecomplexexample"></a>A more complex example</h4>
+
+<p>In this example, 'countries' is a list of country objects, each of which has a name and a list of cities. Each city has a name.</p>
+
+<div class="preformatted"><div class="preformattedContent">
+<pre>&lt;ww:iterator value="countries"&gt;
+    &lt;ww:iterator value="cities"&gt;
+        &lt;ww:property value="name"/&gt;, &lt;ww:property value="[1].name"/&gt;&lt;br&gt;
+    &lt;/ww:iterator&gt;
+&lt;/ww:iterator&gt;
+</pre>
+</div></div>
+
+<p>The output looks like</p>
+
+<div class="preformatted"><div class="preformattedContent">
+<pre>Wellington, New Zealand
+Auckland, New Zealand
+Moscow, Russia
+Glasgow, Scotland
+Edinburgh, Scotland
+Stockholm, Sweden
+</pre>
+</div></div>
+
+<p>Both the country and city objects have a 'name' property. As you'd expect, the reference to 'name' on its own gives you the city name. To access the country name - effectively "hidden" by the city name - we refer to a specific position on the stack: '1'. The top of the stack, position 0, contains the current city, pushed on by the inner iterator; position 1 contains the current country, pushed there by the outer iterator.</p>
+
+<p>Actually, as Patrick points out in his comment on <a href="Control Tags.html#ControlTags-ControlTagsIterationTags" title="ControlTags-IterationTags on Control Tags">Iteration Tags</a>, the 'n' notation refers to a sub-stack beginning at position n, not just the object at position n. Thus '0' is the whole stack and '1' is everything except the top object. In our example, we could have been more specific about getting the country name and said '1.top.name'.</p>
+
+
+<h4><a name="Iteratortagexamples-Misc"></a>Misc</h4>
+<p>If no value is specified, iterator will try to grap object from the 'top' of the stack. If it is not iterable, ClassCastException will be thrown in the process. @see com.opensymphony.webwork.views.jsp.IteratorTag#doStartTag</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

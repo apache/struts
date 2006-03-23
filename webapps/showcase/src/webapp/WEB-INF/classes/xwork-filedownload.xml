@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE xwork PUBLIC
+	"-//OpenSymphony Group//XWork 1.1.1//EN"
+	"http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+
+<xwork>
+	<include file="webwork-default.xml" />
+
+	<package name="filedownload" extends="webwork-default" namespace="/filedownload">
+
+        <default-action-ref name="download"/>
+
+        <action name="download" class="com.opensymphony.webwork.showcase.filedownload.FileDownloadAction">
+			<result name="success" type="stream">
+                <param name="contentType">image/jpeg</param>
+                <param name="inputName">imageStream</param>
+                <param name="contentDisposition">filename="logo.png"</param>
+                <param name="bufferSize">4096</param>
+            </result>
+        </action>
+
+    </package>
+</xwork>
+
+

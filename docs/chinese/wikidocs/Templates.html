@@ -1,0 +1,171 @@
+<html>
+    <head>
+        <title>WebWork 2 : 模版</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : 模版
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Dec 14, 2004 by <font color="#0050B2">casey</font>.
+				    </div>
+
+				    <p class="paragraph"><h3 style="margin: 4px 0px 4px 0px;" class="heading3"><a name="Templates-Overview"> 综述</a></h3></p>在WebWork中, UI标签包装了常用的HTML控件以便与核心框架紧密集成. 这些标签设计为最小化逻辑代码并将最终HTML绘制工作转交给模版系统. 模版可以组织起来分成不同的<a href="Themes.html" title="Themes">主题</a>.  UI标签试图覆盖最常见的情景, 还提供了component标签用以创建定制组件. UI标签内部支持显示错误信息.
+<h4 class="heading4"><a name="Templates-Templates"> 模版</a></h4><p class="paragraph">WebWork使用Velocity模版系统为所有UI标签(jsp和velocity)绘制最终的HTML输出. 全部模版的缺省实现包含在核心发布包中允许用户直接使用WebWork的UI标签. 模版可以单独编辑也可以全部替换, 这允许定制全部HTML输出结果. 另外, 缺省模版可以在很精细的控制级别下对每个标签进行覆盖.</p>模版存放在发行包webwork-x.x.jar的<tt class="monospaced">src/java</tt>目录下的<tt class="monospaced">template</tt>目录中. 要使用定制模版, 可以将<tt class="monospaced">template</tt>目录复制到应用的根目录或类路径中.  Webwork首先从上述两个地方加载模版. 否则, 将从webwork.jar中加载.
+<div class="code"><div class="codeContent">
+<pre>/myApp&#10;      /META&#45;INF&#10;      /WEB&#45;INF&#10;      /template</pre>
+</div></div><p class="paragraph">在<tt class="monospaced">template</tt>目录中, 可以找到两个称作<a href="Themes.html" title="Themes">主题</a>的模版集合(xhtml和simple).  UI标签缺省使用的模版是&#039;xhtml&#039;, 除非在UI标签中指定theme属性或在<a href="webwork.properties.html" title="webwork.properties">webwork.properties</a>中指定webwork.ui.theme.  你可以修改已有模版或创建自己的模版.</p>类AbstractUI是其他UI标签的基类. 它提供一组UI组件常用的属性. 类AbstractUI定义了一个抽象方法:<br/>
+
+<div class="code"><div class="codeContent">
+<pre><span class="java&#45;keyword">protected</span>&#160;<span class="java&#45;keyword">abstract</span>&#160;<span class="java&#45;object">String</span> getTemplateName();</pre>
+</div></div><p class="paragraph">类AbstractUI将加载子类指定的或用户使用template属性指定的模版.  下列代码中textfield标签将使用myOwnTextTemplate.vm而不是内建模版text.vm</p><ins class="inserted">注意:</ins> 你必须创建一个模版文件myOwnTextTemplate.vm并把它保存在xhtml目录中.
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; loads /template/xhtml/myOwnTextTemplate.vm &#45;&#45;&gt;</span></span>&#10;&#10;<span class="xml&#45;tag">&lt;ww:ui textfield label=<span class="xml&#45;quote">&quot;&#039;mylabel&#039;&quot;</span> name=<span class="xml&#45;quote">&quot;&#039;myname&#039;&quot;</span> template=<span class="xml&#45;quote">&quot;&#039;myOwnTextTemplate.vm&#039;&quot;</span> /&gt;</span></pre>
+</div></div><br/>
+否则
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; loads default /template/xhtml/text.vm &#45;&#45;&gt;</span></span>&#10;<span class="xml&#45;tag">&lt;ww:ui textfield label=<span class="xml&#45;quote">&quot;&#039;mylabel&#039;&quot;</span> name=<span class="xml&#45;quote">&quot;&#039;myname&#039;&quot;</span> /&gt;</span></pre>
+</div></div><p class="paragraph"><h4 class="heading4"><a name="Templates-Builtintemplates"> 内建模版</a></h4></p>每个UI标签的缺省模版如下:
+<table class="wikitable">
+<tr>
+<th> UI标签  </th><th> 缺省模版 </th>
+</tr><tr>
+<td> checkboxList </td><td> checkboxlist.vm </td>
+</tr><tr>
+<td> checkbox </td><td> checbox.vm </td>
+</tr><tr>
+<td> combobox </td><td> combobox.vm </td>
+</tr><tr>
+<td> component </td><td> empty.vm </td>
+</tr><tr>
+<td> doubleSelect </td><td> doubleselect.vm </td>
+</tr><tr>
+<td> file </td><td> file.vm </td>
+</tr><tr>
+<td> form </td><td>	form.vm(to open) <br clear="all" />
+form-close.vm(to close) </td>
+</tr><tr>
+<td> hidden </td><td> hidden.vm </td>
+</tr><tr>
+<td> label </td><td> label.vm </td>
+</tr><tr>
+<td> password </td><td> password.vm </td>
+</tr><tr>
+<td> radio </td><td> radiomap.vm </td>
+</tr><tr>
+<td> select </td><td> select.vm </td>
+</tr><tr>
+<td> submit </td><td> submit.vm </td>
+</tr><tr>
+<td> tabbedpane </td><td> tabbedpane.vm </td>
+</tr><tr>
+<td> textarea </td><td> textarea.vm </td>
+</tr><tr>
+<td> textfield </td><td> text.vm </td>
+</tr><tr>
+<td> token </td><td> token.vm </td>
+</tr>
+</table>
+<h4 class="heading4"><a name="Templates-Accessingvariables"> 访问变量</a></h4><p class="paragraph">WebWork使用下列上下文变量创建VelocityContext对象用于全部velocity视图:</p><ul class="star">
+<li> tag - 标签对象</li>
+<li> stack - 当前的OgnlValueStack</li>
+<li> ognl - 工具类OgnlTool</li>
+<li> req - HttpServletRequest对象</li>
+<li> res - HttpServletResponse对象</li>
+<li> webwork - WebWorkUtil实例</li>
+<li> action - 当前活动</li>
+<li> parameters - 当前参数表</li>
+</ul><br/>
+在模版中可以使用$TAG_NAME访问上述变量(TAG_NAME可以是tag, stack, ognl, req中的一个). 模版文件随后介绍.  一些例子:<br/>
+<ins class="inserted">注意:</ins> 感叹号(&#33;)将输出定义的值, 否则输出&quot;&quot;
+<div class="code"><div class="codeContent">
+<pre>$&#33;req.requestURI&#10;$&#33;req.method</pre>
+</div></div><br/>
+
+<div class="code"><div class="codeContent">
+<pre>$&#33;tag.templateDir&#10;$&#33;tag.theme</pre>
+</div></div><br/>
+
+<div class="code"><div class="codeContent">
+<pre>$&#33;parameters.name&#10;$&#33;parameters</pre>
+</div></div><p class="paragraph"><h4 class="heading4"><a name="Templates-UnderstandingtheWebworkTemplateSystem"> 理解Webwork模版系统</a></h4></p>看看模版是如何被找到并加载的.  AbstractUITag展示了使用字符串构建模版的方法:
+<div class="code"><div class="codeContent">
+<pre><span class="java&#45;keyword">protected</span>&#160;<span class="java&#45;object">String</span> buildTemplateName(<span class="java&#45;object">String</span> myTemplate, <span class="java&#45;object">String</span> myDefaultTemplate) &#123;&#10;        ...&#10;        <span class="java&#45;keyword">return</span>&#160;<span class="java&#45;quote">&quot;/&quot;</span> &#43; getTemplateDir() &#43; <span class="java&#45;quote">&quot;/&quot;</span> &#43; getTheme() &#43; <span class="java&#45;quote">&quot;/&quot;</span> &#43; template;&#10;&#125;</pre>
+</div></div><br/>
+缺省情况下textfield标签的返回值为
+<div class="code"><div class="codeContent">
+<pre>/template/xhtml/text.vm</pre>
+</div></div><br/>
+Webwork将在使用缺省值之前尝试查找该值.  如果你愿意, 你可以不修改任何值就可以修改内建模版(请自行选择).  Webwork将使用下列顺序进行搜索:
+<ul class="star">
+<li> getTemplateDir()<ul class="star">
+<li> webwork.properties中的webwork.ui.templateDir</li>
+<li> 否则, 返回&quot;template&quot;</li>
+</ul></li>
+<li> getTheme()<ul class="star">
+<li> UI标签的theme属性</li>
+<li> webwork.properties中的webwork.ui.theme</li>
+<li> 否则, 返回&quot;xhtml&quot;</li>
+</ul></li>
+<li> template<ul class="star">
+<li> UI标签的template属性</li>
+<li> 否则, 使用缺省指定的模版</li>
+</ul></li>
+</ul><p class="paragraph"><h4 class="heading4"><a name="Templates-TemplateswithCSS"> 模版中使用CSS</a></h4></p>缺省模版在输出HTML时使用了几个CSS属性.   这些属性在/template/xhtml目录中的<tt class="monospaced">styles.css</tt>样式单中.  你可以将该样式单作为你的应用的样板也可以在创建你自己的样式单, 但要记得在JSP或velocity页面中包含该样式单的链接.<br/>
+styles.css:
+<div class="code"><div class="codeContent">
+<pre>.label &#123;font&#45;style:italic; &#125;&#10;.errorLabel &#123;font&#45;style:italic; color:red; &#125;&#10;.errorMessage &#123;font&#45;weight:bold; text&#45;align: center; color:red; &#125;&#10;.checkboxLabel &#123;&#125;&#10;.checkboxErrorLabel &#123;color:red; &#125;&#10;.required &#123;color:red;&#125;&#10;.requiredLabel &#123;font&#45;weight:bold; font&#45;style:italic; &#125;</pre>
+</div></div><br/>
+在你的页面中使用LINK引用该文件(可以使用相对路径或绝对路径):
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;link rel =<span class="xml&#45;quote">&quot;stylesheet&quot;</span> type=<span class="xml&#45;quote">&quot;text/css&quot;</span> href=<span class="xml&#45;quote">&quot;/webwork&#45;example/template/xhtml/styles.css&quot;</span> title=<span class="xml&#45;quote">&quot;Style&quot;</span>&gt;</span></pre>
+</div></div><p class="paragraph"><ins class="inserted">注意:</ins> 现在Webwork在UI标签中增加了新的属性以便更全面的支持HTML的style和class, 可以更灵活的实现外观. 这些属性分别定义为cssStyle和cssClass.
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;ui:textfield label=<span class="xml&#45;quote">&quot;&#039;lebal&#039;&quot;</span> name=<span class="xml&#45;quote">&quot;&#039;nmae&#039;&quot;</span> cssStyle=<span class="xml&#45;quote">&quot;&#039;float:left; color:red&#039;&quot;</span> cssClass=<span class="xml&#45;quote">&quot;&#039;myclass&#039;&quot;</span>   /&gt;</span></pre>
+</div></div></p><h4 class="heading4"><a name="Templates-CreatingCustomComponents"> 创建定制组件</a></h4><p class="paragraph">对component标签的最初介绍并没有给人深刻的印象. 只能指定一个模版, 使用一些预先定义的属性看起来能力有限. 但该标签为开发者提供了许多好处.</p>在深入到定制组件之前, 首先明确使用component标签创建定制组件的几个优点. 然后将详细介绍WebWork 2中的两种错误信息以及定制组件如何(显示其中一种)适应. 最后, 将为我们的组件提供一个简单的活动类, jsp文件和模版文件. 结束时, 你将能够把新组件应用到你的应用中.<p class="paragraph">为什么使用component标签?
+<ul class="star">
+<li> 不需要开发你自己的标签库</li>
+<li> 集成对值栈的访问</li>
+<li> 利用XWork的国际化, 本地化和错误处理能力</li>
+<li> 使用模版(可编辑文本文件)而不是编译代码可以更快的建立原型</li>
+<li> 复用并组合已有模版</li>
+</ul><br/>
+对错误消息的支持:</p>在WebWork 2中, 有两类错误消息: 字段错误消息和活动错误消息. 字段错误消息代表某一控件的问题并显示在控件中. 许多标签支持显示这种消息. 另一方面活动错误消息代表活动执行的问题. 在Web应用中很多事物会导致错误, 尤其是在依赖于外部资源的应用中如数据库, 远程Web服务, 或其他在活动执行期间可能不可用的资源. 能否优雅的处理错误并向用户提供有用的消息通常是用户体验好与坏的区别. <p class="paragraph">当这种错误发生时, 把消息从表单控件中分离出来单独显示更为合适. 下例中, 我们将创建一个可以用列表现活动错误消息的定制组件. 该组件可以用于全部显示这类错误消息的表单中.</p>下面的活动将处理网站上的广告: 免费的电子证书. 它将尝试发送证书邮件, 但会抛出异常.<p class="paragraph">活动类:</p><div class="code"><div class="codeContent">
+<pre><span class="java&#45;keyword">package</span> example;&#10;&#10;<span class="java&#45;keyword">import</span> com.opensymphony.xwork.ActionSupport;&#10;&#10;<span class="java&#45;keyword">public</span> class AddUser <span class="java&#45;keyword">extends</span> ActionSupport &#123;&#10;&#10;    <span class="java&#45;keyword">private</span>&#160;<span class="java&#45;object">String</span> fullname;&#10;    <span class="java&#45;keyword">private</span>&#160;<span class="java&#45;object">String</span> email;&#10;&#10;    <span class="java&#45;keyword">public</span>&#160;<span class="java&#45;object">String</span> execute() <span class="java&#45;keyword">throws</span> Exception &#123;&#10;        <span class="java&#45;comment">// we are ignoring field validation in <span class="java&#45;keyword">this</span> example</span>&#10;&#10;        <span class="java&#45;keyword">try</span> &#123;&#10;            MailUtil.sendCertificate(email, fullname);&#10;        &#125; <span class="java&#45;keyword">catch</span> (Exception ex) &#123;&#10;            <span class="java&#45;comment">// there was a problem sending the email</span>&#10;            <span class="java&#45;comment">// in a real application, we would also</span>&#10;            <span class="java&#45;comment">// log the exception</span>&#10;            addActionError(<span class="java&#45;quote">&quot;We are experiencing a technical problem and have contacted our support staff. &quot;</span> &#43;&#10;                           <span class="java&#45;quote">&quot;Please <span class="java&#45;keyword">try</span> again later.&quot;</span>);&#10;        &#125;&#10;&#10;        <span class="java&#45;keyword">if</span> (hasErrors()) &#123;&#10;            <span class="java&#45;keyword">return</span> ERROR;&#10;        &#125; <span class="java&#45;keyword">else</span> &#123;&#10;            <span class="java&#45;keyword">return</span> SUCCESS;&#10;        &#125;&#10;    &#125;&#10;&#10;    <span class="java&#45;keyword">public</span>&#160;<span class="java&#45;object">String</span> getFullname() &#123;&#10;        <span class="java&#45;keyword">return</span> fullname;&#10;    &#125;&#10;&#10;    <span class="java&#45;keyword">public</span> void setFullname(<span class="java&#45;object">String</span> fullname) &#123;&#10;        <span class="java&#45;keyword">this</span>.fullname = fullname;&#10;    &#125;&#10;&#10;    <span class="java&#45;keyword">public</span>&#160;<span class="java&#45;object">String</span> getEmail() &#123;&#10;        <span class="java&#45;keyword">return</span> email;&#10;    &#125;&#10;&#10;    <span class="java&#45;keyword">public</span> void setEmail(<span class="java&#45;object">String</span> email) &#123;&#10;        <span class="java&#45;keyword">this</span>.email = email;&#10;    &#125;&#10;&#10;&#125;</pre>
+</div></div><p class="paragraph">Jsp页面:</p><div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;&#37;&#64; taglib uri=<span class="xml&#45;quote">&quot;webwork&quot;</span> prefix=<span class="xml&#45;quote">&quot;ui&quot;</span> &#37;&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;html&gt;</span>&#10;<span class="xml&#45;tag">&lt;head&gt;</span><span class="xml&#45;tag">&lt;title&gt;</span>custom component example<span class="xml&#45;tag">&lt;/title&gt;</span><span class="xml&#45;tag">&lt;/head&gt;</span>&#10;&#10;<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; don&#039;t forget this &#45;&#45;&gt;</span></span>&#10;<span class="xml&#45;tag">&lt;link rel =<span class="xml&#45;quote">&quot;stylesheet&quot;</span> type=<span class="xml&#45;quote">&quot;text/css&quot;</span> href=<span class="xml&#45;quote">&quot;/webwork&#45;example/template/xhtml/styles.css&quot;</span> title=<span class="xml&#45;quote">&quot;Style&quot;</span>&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;body&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;ui:form action=<span class="xml&#45;quote">&quot;AddUser.action&quot;</span> method=<span class="xml&#45;quote">&quot;POST&quot;</span>&gt;</span>&#10;<span class="xml&#45;tag">&lt;table&gt;</span>&#10;    <span class="xml&#45;tag">&lt;ui:component template=<span class="xml&#45;quote">&quot;action&#45;errors.vm&quot;</span> /&gt;</span>&#10;    <span class="xml&#45;tag">&lt;ui:textfield label=<span class="xml&#45;quote">&quot;Full Name&quot;</span> name=<span class="xml&#45;quote">&quot;fullname&quot;</span> /&gt;</span>&#10;    <span class="xml&#45;tag">&lt;ui:textfield label=<span class="xml&#45;quote">&quot;Email&quot;</span> name=<span class="xml&#45;quote">&quot;email&quot;</span> /&gt;</span>&#10;    <span class="xml&#45;tag">&lt;ui:submit name=<span class="xml&#45;quote">&quot;submit&quot;</span> value=<span class="xml&#45;quote">&quot;Send me a free E&#45;Certificate&#33;&quot;</span> /&gt;</span>&#10;<span class="xml&#45;tag">&lt;/table&gt;</span>&#10;<span class="xml&#45;tag">&lt;/ui:form&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;/body&gt;</span>&#10;<span class="xml&#45;tag">&lt;/html&gt;</span></pre>
+</div></div><p class="paragraph">HTML输出(提交前):</p><div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;html&gt;</span>&#10;<span class="xml&#45;tag">&lt;head&gt;</span><span class="xml&#45;tag">&lt;title&gt;</span>custom component example<span class="xml&#45;tag">&lt;/title&gt;</span><span class="xml&#45;tag">&lt;/head&gt;</span>&#10;<span class="xml&#45;tag">&lt;link rel =<span class="xml&#45;quote">&quot;stylesheet&quot;</span> type=<span class="xml&#45;quote">&quot;text/css&quot;</span> href=<span class="xml&#45;quote">&quot;/webwork&#45;example/template/xhtml/styles.css&quot;</span> title=<span class="xml&#45;quote">&quot;Style&quot;</span>&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;body&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;form  action=<span class="xml&#45;quote">&quot;AddUser.action&quot;</span> method=<span class="xml&#45;quote">&quot;POST&quot;</span> /&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;table&gt;</span>&#10;    &#10;&#10;    <span class="xml&#45;tag">&lt;tr&gt;</span>&#10;  <span class="xml&#45;tag">&lt;td align=<span class="xml&#45;quote">&quot;right&quot;</span> valign=<span class="xml&#45;quote">&quot;top&quot;</span>&gt;</span><span class="xml&#45;tag">&lt;span class=<span class="xml&#45;quote">&quot;label&quot;</span>&gt;</span>Full Name:<span class="xml&#45;tag">&lt;/span&gt;</span><span class="xml&#45;tag">&lt;/td&gt;</span>&#10;  <span class="xml&#45;tag">&lt;td&gt;</span>&#10;<span class="xml&#45;tag">&lt;input type=<span class="xml&#45;quote">&quot;text&quot;</span> name=<span class="xml&#45;quote">&quot;fullname&quot;</span> value=<span class="xml&#45;quote">&quot;&quot; /&gt;</span>&#10;  <span class="xml&#45;tag">&lt;/td&gt;</span>&#10;<span class="xml&#45;tag">&lt;/tr&gt;</span>&#10;    <span class="xml&#45;tag">&lt;tr&gt;</span>&#10;  <span class="xml&#45;tag">&lt;td align=&quot;</span>right<span class="xml&#45;quote">&quot; valign=&quot;</span>top<span class="xml&#45;quote">&quot;&gt;</span><span class="xml&#45;tag">&lt;span class=&quot;</span>label<span class="xml&#45;quote">&quot;&gt;</span>Email:<span class="xml&#45;tag">&lt;/span&gt;</span><span class="xml&#45;tag">&lt;/td&gt;</span>&#10;  <span class="xml&#45;tag">&lt;td&gt;</span>&#10;<span class="xml&#45;tag">&lt;input type=&quot;</span>text<span class="xml&#45;quote">&quot; name=&quot;</span>email<span class="xml&#45;quote">&quot; value=&quot;</span><span class="xml&#45;quote">&quot; /&gt;</span>&#10;  <span class="xml&#45;tag">&lt;/td&gt;</span>&#10;<span class="xml&#45;tag">&lt;/tr&gt;</span>&#10;    &#10;<span class="xml&#45;tag">&lt;tr&gt;</span>&#10;  <span class="xml&#45;tag">&lt;td colspan=&quot;</span>2<span class="xml&#45;quote">&quot;&gt;</span>&#10;    <span class="xml&#45;tag">&lt;div align=&quot;</span>right<span class="xml&#45;quote">&quot;&gt;</span>&#10;      <span class="xml&#45;tag">&lt;input type=&quot;</span>submit<span class="xml&#45;quote">&quot; name=&quot;</span>submit<span class="xml&#45;quote">&quot; value=&quot;</span>Send me a free E&#45;Certificate&#33;&quot;/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/div&gt;</span>&#10;  <span class="xml&#45;tag">&lt;/td&gt;</span>&#10;<span class="xml&#45;tag">&lt;/tr&gt;</span>&#10;&#10;&#10;<span class="xml&#45;tag">&lt;/table&gt;</span>&#10;<span class="xml&#45;tag">&lt;/form&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;/body&gt;</span>&#10;<span class="xml&#45;tag">&lt;/html&gt;</span></pre>
+</div></div><p class="paragraph">下面的模版将循环全部活动错误并显示在列表中.</p>模版(action-errors.vm)<br/>
+
+<div class="code"><div class="codeContent">
+<pre>#set ($actionErrors = $stack.findValue(<span class="xml&#45;quote">&quot;actionErrors&quot;</span>))&#10;&#10;#if ($actionErrors)&#10;<span class="xml&#45;tag">&lt;tr&gt;</span>&#10;    <span class="xml&#45;tag">&lt;td colspan=<span class="xml&#45;quote">&quot;2&quot;</span>&gt;</span>&#10;        <span class="xml&#45;tag">&lt;span class=<span class="xml&#45;quote">&quot;errorMessage&quot;</span>&gt;</span>The following errors occurred:<span class="xml&#45;tag">&lt;/span&gt;</span>&#10;        <span class="xml&#45;tag">&lt;ul&gt;</span>&#10;            #foreach ($actionError in $actionErrors)&#10;            <span class="xml&#45;tag">&lt;li&gt;</span><span class="xml&#45;tag">&lt;span class=<span class="xml&#45;quote">&quot;errorMessage&quot;</span>&gt;</span>$actionError<span class="xml&#45;tag">&lt;/span&gt;</span><span class="xml&#45;tag">&lt;/li&gt;</span>&#10;            #end&#10;        <span class="xml&#45;tag">&lt;/ul&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/td&gt;</span>&#10;<span class="xml&#45;tag">&lt;/tr&gt;</span>&#10;#end</pre>
+</div></div><p class="paragraph">HTML输出(提交之后):</p><div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;html&gt;</span>&#10;<span class="xml&#45;tag">&lt;head&gt;</span><span class="xml&#45;tag">&lt;title&gt;</span>custom component example<span class="xml&#45;tag">&lt;/title&gt;</span><span class="xml&#45;tag">&lt;/head&gt;</span>&#10;<span class="xml&#45;tag">&lt;link rel =<span class="xml&#45;quote">&quot;stylesheet&quot;</span> type=<span class="xml&#45;quote">&quot;text/css&quot;</span> href=<span class="xml&#45;quote">&quot;/webwork&#45;example/template/xhtml/styles.css&quot;</span> title=<span class="xml&#45;quote">&quot;Style&quot;</span>&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;body&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;form  action=<span class="xml&#45;quote">&quot;AddUser.action&quot;</span> method=<span class="xml&#45;quote">&quot;POST&quot;</span> /&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;table&gt;</span>&#10;    &#10;<span class="xml&#45;tag">&lt;tr&gt;</span>&#10;    <span class="xml&#45;tag">&lt;td colspan=<span class="xml&#45;quote">&quot;2&quot;</span>&gt;</span>&#10;        <span class="xml&#45;tag">&lt;span class=<span class="xml&#45;quote">&quot;errorMessage&quot;</span>&gt;</span>The following errors occurred:<span class="xml&#45;tag">&lt;/span&gt;</span>&#10;        <span class="xml&#45;tag">&lt;ul&gt;</span>&#10;            <span class="xml&#45;tag">&lt;li class=<span class="xml&#45;quote">&quot;errorMessage&quot;</span>&gt;</span>&#10;                We are experiencing a technical problem and have contacted our &#10;                support staff. Please try again later.&#10;            <span class="xml&#45;tag">&lt;/li&gt;</span>&#10;        <span class="xml&#45;tag">&lt;/ul&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/td&gt;</span>&#10;<span class="xml&#45;tag">&lt;/tr&gt;</span>&#10;&#10;    <span class="xml&#45;tag">&lt;tr&gt;</span>&#10;  <span class="xml&#45;tag">&lt;td align=<span class="xml&#45;quote">&quot;right&quot;</span> valign=<span class="xml&#45;quote">&quot;top&quot;</span>&gt;</span><span class="xml&#45;tag">&lt;span class=<span class="xml&#45;quote">&quot;label&quot;</span>&gt;</span>Full Name:<span class="xml&#45;tag">&lt;/span&gt;</span><span class="xml&#45;tag">&lt;/td&gt;</span>&#10;  <span class="xml&#45;tag">&lt;td&gt;</span>&#10;<span class="xml&#45;tag">&lt;input type=<span class="xml&#45;quote">&quot;text&quot;</span> name=<span class="xml&#45;quote">&quot;fullname&quot;</span> value=<span class="xml&#45;quote">&quot;Sample User&quot;</span> /&gt;</span>&#10;  <span class="xml&#45;tag">&lt;/td&gt;</span>&#10;<span class="xml&#45;tag">&lt;/tr&gt;</span>&#10;    <span class="xml&#45;tag">&lt;tr&gt;</span>&#10;  <span class="xml&#45;tag">&lt;td align=<span class="xml&#45;quote">&quot;right&quot;</span> valign=<span class="xml&#45;quote">&quot;top&quot;</span>&gt;</span><span class="xml&#45;tag">&lt;span class=<span class="xml&#45;quote">&quot;label&quot;</span>&gt;</span>Email:<span class="xml&#45;tag">&lt;/span&gt;</span><span class="xml&#45;tag">&lt;/td&gt;</span>&#10;  <span class="xml&#45;tag">&lt;td&gt;</span>&#10;<span class="xml&#45;tag">&lt;input type=<span class="xml&#45;quote">&quot;text&quot;</span> name=<span class="xml&#45;quote">&quot;email&quot;</span> value=<span class="xml&#45;quote">&quot;user&#64;example.com&quot;</span> /&gt;</span>&#10;  <span class="xml&#45;tag">&lt;/td&gt;</span>&#10;<span class="xml&#45;tag">&lt;/tr&gt;</span>&#10;    &#10;<span class="xml&#45;tag">&lt;tr&gt;</span>&#10;  <span class="xml&#45;tag">&lt;td colspan=<span class="xml&#45;quote">&quot;2&quot;</span>&gt;</span>&#10;    <span class="xml&#45;tag">&lt;div align=<span class="xml&#45;quote">&quot;right&quot;</span>&gt;</span>&#10;      <span class="xml&#45;tag">&lt;input type=<span class="xml&#45;quote">&quot;submit&quot;</span> name=<span class="xml&#45;quote">&quot;submit&quot;</span> value=<span class="xml&#45;quote">&quot;Send me a free E&#45;Certificate&#33;&quot;</span>/&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/div&gt;</span>&#10;  <span class="xml&#45;tag">&lt;/td&gt;</span>&#10;<span class="xml&#45;tag">&lt;/tr&gt;</span>&#10;&#10;&#10;<span class="xml&#45;tag">&lt;/table&gt;</span>&#10;<span class="xml&#45;tag">&lt;/form&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;/body&gt;</span>&#10;<span class="xml&#45;tag">&lt;/html&gt;</span></pre>
+</div></div><br/>
+
+
+
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

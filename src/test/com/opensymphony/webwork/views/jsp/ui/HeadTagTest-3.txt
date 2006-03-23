@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="/webwork/xhtml/styles.css" type="text/css"/>
+<link rel="stylesheet" href="/webwork/jscalendar/calendar-blue.css" type="text/css"/>
+<script language="JavaScript" type="text/javascript">
+    // Dojo configuration
+    djConfig = {
+        baseRelativePath: "/webwork/dojo/",
+        isDebug: true,
+        bindEncoding: "ISO-8859-1",
+        debugAtAllCosts: true // not needed, but allows the Venkman debugger to work with the includes
+    };
+</script>
+<script language="JavaScript" type="text/javascript"
+        src="/webwork/dojo/dojo.js"></script>
+<script language="JavaScript" type="text/javascript"
+        src="/webwork/ajax/dojoRequire.js"></script>
+<script language="JavaScript" type="text/javascript"
+        src="/webwork/CommonFunctions.js"></script>

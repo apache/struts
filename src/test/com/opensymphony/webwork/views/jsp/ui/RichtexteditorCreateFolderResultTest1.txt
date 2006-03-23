@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8"?> <Connector command="CreateFolder" resourceType="Image"><CurrentFolder path="/folder/path/" url="/server/path/"/><Error number="0"/></Connector>

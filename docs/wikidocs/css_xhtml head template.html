@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <title>WebWork - 
+        css_xhtml head template
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>The css_xhtml <a href="head.html" title="head">head</a> template is very similar to the <a href="xhtml head template.html" title="xhtml head template">xhtml head template</a>. The only difference is that CSS that is included is specifically designed to provide the layout for the <a href="css_xhtml theme.html" title="css_xhtml theme">css\_xhtml theme</a>. The contents of <b>head.ftl</b> are:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;link rel=<span class="code-quote">"stylesheet"</span> href=<span class="code-quote">"&lt;@ww.url value='/webwork/css_xhtml/styles.css' encode='false' /&gt;</span>"</span> type=<span class="code-quote">"text/css"</span>/&gt;
+<span class="code-tag">&lt;#include <span class="code-quote">"/${parameters.templateDir}/simple/head.ftl"</span> /&gt;</span></pre>
+</div></div>
+
+<p>The contents of <b>styles.css</b> are:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml">.wwFormTable {}
+.label {
+    font-style:italic;
+    float:left;
+    width:30%
+}
+.errorLabel {font-style:italic; color:red; }
+.errorMessage {font-weight:bold; text-align: center; color:red; }
+.checkboxLabel {}
+.checkboxErrorLabel {color:red; }
+.required {color:red;}</pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

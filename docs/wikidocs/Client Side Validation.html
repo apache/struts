@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Client Side Validation
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="ClientSideValidation-Description"></a>Description</h1>
+
+<p>WebWork adds support for client-side validation on top of XWork's standard validation framework.  It can be enabled on a per-form basis by specifying <b>validate="true"</b> in the <a href="form.html" title="form">form</a> tag:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;ww:form name=<span class="code-quote">"test"</span> action=<span class="code-quote">"javascriptValidation"</span> validate=<span class="code-quote">"true"</span>&gt;</span>
+  ...
+<span class="code-tag">&lt;/ww:form&gt;</span></pre>
+</div></div>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>A <em>name</em> for the form can be supplied, else the action name will be used as the form name.</td></tr></table>
+
+
+<p>A correct <em>action</em> and <em>namespace</em> attributes must be provided to the &lt;ww:form&gt; tag.  For example, the Action named "submitProfile" is used  in the "/user" namespace, the following must be used.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;ww:form namespace=<span class="code-quote">"/user"</span> action=<span class="code-quote">"submitProfile"</span> validate=<span class="code-quote">"true"</span>&gt;</span>
+  ...
+<span class="code-tag">&lt;/ww:form&gt;</span></pre>
+</div></div>
+
+<p>While the following will "work" in the sense that the form will function correctly, client-side validation will not. That is because WebWork must know the exact namespace and action (rather than a URL) to properly support validation.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;ww:form action=<span class="code-quote">"/user/submitProfile.action"</span> validate=<span class="code-quote">"true"</span>&gt;</span>
+  ...
+<span class="code-tag">&lt;/ww:form&gt;</span></pre>
+</div></div>
+
+
+<p>All the standard <a href="Validation.html" title="Validation">validation configuration</a> steps still apply.  Client-side validation uses the same validation rules as server-side validation.  If server-side validation doesn't work, then client-side validation won't work either.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>
+<p><img class="emoticon" src="./icons/emoticons/information.gif" height="16" width="16" align="absmiddle" alt="" border="0"/> Note that the <em>required</em> attribute on many WebWork <a href="Tags.html" title="Tags">Tags</a> has nothing to do with client-side validation. It is just used by certain theme (like xhtml) to put a '*' on the field marked as required.</p></td></tr></table>
+
+<h1><a name="ClientSideValidation-ClientSideValidationTypes"></a>Client Side Validation Types</h1>
+
+<p>There are two styles of client side validation:</p>
+
+<ul>
+	<li><a href="Pure JavaScript Client Side Validation.html" title="Pure JavaScript Client Side Validation">Pure JavaScript Client Side Validation</a> - used by the <a href="xhtml theme.html" title="xhtml theme">xhtml theme</a> and <a href="css_xhtml theme.html" title="css_xhtml theme">css\_xhtml theme</a></li>
+	<li><a href="AJAX Client Side Validation.html" title="AJAX Client Side Validation">AJAX Client Side Validation</a> - used by the <a href="ajax theme.html" title="ajax theme">ajax theme</a></li>
+</ul>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

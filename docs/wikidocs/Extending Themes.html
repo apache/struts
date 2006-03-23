@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Extending Themes
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>Sometimes you may want to simply override a template (see <a href="Template Loading.html" title="Template Loading">Template Loading</a>) or create an alternative template in an existing theme. However, other times you might want to create your own entire theme, especially if you are planning to build a rich set of unique and reusable templates for your organization.</p>
+
+<p>There are three ways to create new themes:</p>
+
+<ul>
+	<li>Create a new theme from scratch (<b>hard!</b>)</li>
+	<li>Extend an existing theme</li>
+	<li>Wrap an existing theme</li>
+</ul>
+
+
+<p>We don't ever recommend creating a new theme from scratch. Rather, we believe that the <a href="simple theme.html" title="simple theme">simple theme</a> provides enough of the basics for you to either extend or wrap, thereby creating your own unique theme. No matter which method your choose (often you end up using a bit of both methods, as they aren't mutually exclusive), we <b>strongly</b> you unpack the WebWork jar and look at the source templates for all the provided themes. This will give you a good understanding of how to make your own templates and themes.</p>
+
+<h1><a name="ExtendingThemes-WrappinganExistingTheme"></a>Wrapping an Existing Theme</h1>
+
+<p>Taking a look at the <a href="xhtml theme.html" title="xhtml theme">xhtml theme</a>, we can see that the templates there make extensive use of a <b>wrapping</b> technique. For example, a template might look like:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;#include <span class="code-quote">"/${parameters.templateDir}/xhtml/controlheader.ftl"</span> /&gt;</span>
+<span class="code-tag">&lt;#include <span class="code-quote">"/${parameters.templateDir}/simple/xxx.ftl"</span> /&gt;</span>
+<span class="code-tag">&lt;#include <span class="code-quote">"/${parameters.templateDir}/xhtml/controlfooter.ftl"</span> /&gt;</span></pre>
+</div></div>
+
+<p>This template is simply wrapping the <a href="simple theme.html" title="simple theme">simple theme</a>'s existing template with a header and a footer. This is a great way to add additional behavior around the basic HTML elements provided by the <a href="simple theme.html" title="simple theme">simple theme</a>.</p>
+
+<h1><a name="ExtendingThemes-ExtendinganExistingTheme"></a>Extending an Existing Theme</h1>
+
+<p>The theme infrastructure provided by WebWork also allows themes to <b>extend</b> an existing theme. What this means is that  a theme may contain a <b>theme.properties</b> with a <b>parent</b> entry that contains the name of the theme that you would like to extend. For example, the <a href="ajax theme.html" title="ajax theme">ajax theme</a> extends the <a href="xhtml theme.html" title="xhtml theme">xhtml theme</a> in this way.</p>
+
+<p>By extending a theme, you are not required to implement every single template that the <a href="Tags.html" title="Tags">Tags</a> use. Rather, you only need to implement templates that you wish to override. All other templates will be loaded from the parent template.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

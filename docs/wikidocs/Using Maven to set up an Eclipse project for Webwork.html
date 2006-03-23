@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Using Maven to set up an Eclipse project for Webwork
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>Because WebWork is under active development, these instructions are likely to be out-of-date in specifics.&nbsp; Hopefully the basic strategies will still apply.</p>
+
+<p>First, if xwork is not available from a Maven repo (for example, if it has moved to a SNAPSHOT dependency), then check it out from the CVS repository and run "mvn install" - this gives you the snapshot of XWork as well as the POM for resolving transitive dependencies like oscore.&nbsp; This may apply to other dependencies which are not on ibiblio, but when I first tried this, xwork was the one with enough transitive dependencies to be hard to manage any other way.</p>
+
+<p>For other dependencies which are not on ibiblio, from the webwork CVS checkout (sandbox), run "ant common.jar".  This will cause Ivy to fetch the other dependencies you need.</p>
+
+<p>Then, for each of the missing dependencies, install using "mvn install:install-file"  Below are examples, but of course the path to your ".ivy-cache" directory will differ, and the versions are likely to change for lots of reason, but especially if the dependency is a SNAPSHOT with a timestamp in the filename.</p>
+<div class="code"><div class="codeContent">
+<pre class="code-none">mvn install:install-file -DartifactId=dwr -DgroupId=dwr -Dpackaging=jar -Dversion=1.1.3-beta \
+    -Dfile=/Users/germuska/.ivy-cache/dwr/dwr/jars/dwr-1.1-beta-3.jar
+
+mvn install:install-file -DartifactId=plexus-container-default -DgroupId=org.codehaus.plexus \
+    -Dpackaging=jar -Dversion=1.0-alpha-10-SNAPSHOT \
+    -Dfile=/Users/germuska/.ivy-cache/org.codehaus.plexus/plexus-container-default/jars/plexus-container-default-1.0-alpha-10-20060215.222714-5.jar</pre>
+</div></div>
+<p>If you, like me, are not running Java 5.0, then you will also need to install the dom3 APIs.&nbsp; As far as I can tell, the compiled JAR is not on any Maven repository. the source for dom3 can be found here: <a href="http://ibiblio.org/maven2/xerces/dom3-xml-apis/1.0/dom3-xml-apis-1.0-sources.jar&amp;nbsp" title="Visit page outside Confluence">&#104;ttp://ibiblio.org/maven2/xerces/dom3-xml-apis/1.0/dom3-xml-apis-1.0-sources.jar&amp;nbsp</a>; You can build a jar from it and then put it in your own repository.&nbsp; After that, I had to edit webwork's pom.xml to point to the dependency &#45;&#45; webwork has a comment in the &lt;profiles&gt; section acknowledging the need for this, but presumably it will not be changed until dom3 gets officially loaded as a compiled JAR to some maven repository.&nbsp; I believe there should be a way to use Maven2's <em>settings.xml</em> file to do this locally without editing pom.xml, but I have not had a chance to investigate this yet.</p>
+
+
+<p>These steps worked for me a week or so ago; the pom has changed since then and I haven't yet had time to rebuild, but this kind of approach should work.&nbsp; </p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

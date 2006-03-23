@@ -1,0 +1,76 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Tiles Use
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>Here is a simple example of tiles use with spring's TilesConfigurer. There is really no need for spring but tiles definitions must somehow be initialized. If you do not use Spring you could use the following context listener that is exatcly how Spring configures tiles definitions:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> com.opensymphony.webwork.views.tiles;
+
+<span class="code-keyword">import</span> javax.servlet.ServletContextEvent;
+<span class="code-keyword">import</span> javax.servlet.ServletContextListener;
+
+<span class="code-keyword">import</span> org.apache.struts.tiles.DefinitionsFactoryConfig;
+<span class="code-keyword">import</span> org.apache.struts.tiles.DefinitionsFactoryException;
+<span class="code-keyword">import</span> org.apache.struts.tiles.TilesUtil;
+<span class="code-keyword">import</span> org.apache.struts.tiles.xmlDefinition.I18nFactorySet;
+
+/*
+* Modified from spring's source
+*
+* here's how a smaple web xml should look like:
+* &lt;web-app&gt;
+*   &lt;context-param&gt;
+*     &lt;param-name&gt;tilesDefinitions&lt;/param-name&gt;
+*     &lt;param-value&gt;/WEB-INF/tiles.xml&lt;/param-value&gt;
+*   &lt;/context-param&gt;
+*  
+*   &lt;listener&gt;
+*      &lt;listener-class&gt;com.opensymphony.webwork.views.tiles.TilesConfigurer&lt;/listener-class&gt;
+*   &lt;/listener&gt;
+* &lt;/web-app&gt;
+*
+* To use the definitions specified you would use a dispatcher result (since
+* tiles jsp is just another jsp) to render tiles view.
+*/
+<span class="code-keyword">public</span> class TilesConfigurer <span class="code-keyword">implements</span> ServletContextListener {
+
+    <span class="code-keyword">private</span> <span class="code-object">boolean</span> initialized = <span class="code-keyword">false</span>;
+   
+    <span class="code-keyword">public</span> void contextInitialized (ServletContextEvent evt) {
+       
+        <span class="code-keyword">if</span> (!initialized) {
+            DefinitionsFactoryConfig factoryConfig = <span class="code-keyword">new</span> DefinitionsFactoryConfig();
+            factoryConfig.setFactoryClassname(I18nFactorySet.class.getName());
+            factoryConfig.setParserValidate(<span class="code-keyword">true</span>);
+            factoryConfig.setDefinitionConfigFiles(evt.getServletContext().getInitParameter(<span class="code-quote">"tilesDefinitions"</span>));
+            <span class="code-keyword">try</span> {
+                TilesUtil.createDefinitionsFactory(evt.getServletContext(), factoryConfig);
+            } <span class="code-keyword">catch</span> (DefinitionsFactoryException e) {
+                e.printStackTrace();
+            }
+            initialized = <span class="code-keyword">true</span>;
+        }
+       
+    }
+
+    <span class="code-keyword">public</span> void contextDestroyed (ServletContextEvent evt) {
+    }
+   
+}</pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

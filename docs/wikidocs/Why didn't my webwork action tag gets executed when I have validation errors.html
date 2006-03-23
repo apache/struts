@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <title>WebWork - 
+         didn't my webwork action tag gets executed when I have validation errors
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>WebWork action tag will not get executed when there's a validation error with ValidationInterceptor and DefaultWorkflowInterceptor in place.</p>
+
+<p>One way to make the action gets executed if to have the action's execution method specified in ValidationInterceptor's excludeMethods parameter as show in the following snippet.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"validation"</span>&gt;</span>
+  <span class="code-tag">&lt;param name=<span class="code-quote">"excludeMethods"</span>&gt;</span>input,back,cancel,browse<span class="code-tag">&lt;/param&gt;</span>
+<span class="code-tag">&lt;/interceptor-ref&gt;</span></pre>
+</div></div>
+
+<p>and defined the method on the action to be executed as one of those excludedMethods, eg. </p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:action name=<span class="code-quote">"myActionAlias!input"</span> executeResult=<span class="code-quote">"false"</span> /&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

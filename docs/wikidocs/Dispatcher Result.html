@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Dispatcher Result
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    
+<p>Includes or forwards to a view (usually a jsp). Behind the scenes WebWork
+will use a RequestDispatcher, where the target servlet/JSP receives the same
+request/response objects as the original servlet/JSP. Therefore, you can pass
+data between them using request.setAttribute() - the WebWork action is
+available.
+<p/>
+There are three possible ways the result can be executed:</p>
+
+<p><ul></p>
+
+<p><li>If we are in the scope of a JSP (a PageContext is available), PageContext's
+{@link PageContext#include(String) include} method is called.</li></p>
+
+<p><li>If there is no PageContext and we're not in any sort of include (there is no
+"javax.servlet.include.servlet_path" in the request attributes), then a call to
+{@link RequestDispatcher#forward(javax.servlet.ServletRequest, javax.servlet.ServletResponse) forward}
+is made.</li></p>
+
+<p><li>Otherwise, {@link RequestDispatcher#include(javax.servlet.ServletRequest, javax.servlet.ServletResponse) include}
+is called.</li></p>
+
+<p></ul></p>
+
+<h1><a name="DispatcherResult-Parameters"></a>Parameters</h1>
+
+
+<p> <ul></p>
+
+<p> <li><b>location (default)</b> - the location to go to after execution (ex. jsp).</li></p>
+
+<p> <li><b>parse</b> - true by default. If set to false, the location param will not be parsed for Ognl expressions.</li></p>
+
+<p> </ul></p>
+
+
+<h1><a name="DispatcherResult-Examples"></a>Examples</h1>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>
+  <span class="code-tag">&lt;param name=<span class="code-quote">"location"</span>&gt;</span>foo.jsp<span class="code-tag">&lt;/param&gt;</span>
+<span class="code-tag">&lt;/result&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

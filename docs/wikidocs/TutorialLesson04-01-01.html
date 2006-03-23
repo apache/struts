@@ -1,0 +1,691 @@
+<html>
+    <head>
+        <title>WebWork - 
+        TutorialLesson04-01-01
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="TutorialLesson04-01-01-Lesson4.1.1%3AWebWorkUITags"></a>Lesson 4.1.1: WebWork UI Tags</h1>
+
+<p>In WebWork, the UI tags wrap generic HTML controls while providing tight integration with the core framework. The tags have been designed to minimize the amount of logic in compiled code and delegate the actual rendering of HTML to a template system. The UI tags attempt to cover the most common scenarios, while providing a Component Tag for creating custom components. The UI tags also provide built-in support for displaying inline error messages.</p>
+
+<p>This lesson tries to explain how to take advantage of the UI tags to build forms and other graphical controls and, by explaining how the template system works, teaches you how to change the look of existing components and create your own UI components.</p>
+
+
+<h2><a name="TutorialLesson04-01-01-Buildingforms%3A"></a>Building forms:</h2>
+
+<p>WebWork comes with ready-to-use tags to construct forms. Some of these tags relate directly to HTML tags that are used to make forms and you probably can figure them out by their names: <tt>&lt;ww:checkbox /&gt;</tt>, <tt>&lt;ww:file /&gt;</tt>, <tt>&lt;ww:form /&gt;</tt>, <tt>&lt;ww:hidden /&gt;</tt>, <tt>&lt;ww:label /&gt;</tt>, <tt>&lt;ww:password /&gt;</tt>, <tt>&lt;ww:radio /&gt;</tt>, <tt>&lt;ww:select /&gt;</tt>, <tt>&lt;ww:submit /&gt;</tt>, <tt>&lt;ww:textarea /&gt;</tt> and <tt>&lt;ww:textfield /&gt;</tt>.</p>
+
+<p>To build forms with these tags, place them in your page as you would do with the HTML tags. The only difference is that the parameters should be enclosed in double quotes and single quotes (<tt>key="'value'"</tt>). That's because names that are not single-quoted are evaluated against the Value Stack.</p>
+
+<p>Let's check out an example:</p>
+
+<h3><a name="TutorialLesson04-01-01-ex01index.jsp%3A"></a>ex01-index.jsp:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;%@ taglib uri=<span class="code-quote">"webwork"</span> prefix=<span class="code-quote">"ww"</span> %&gt;</span>
+<span class="code-tag">&lt;html&gt;</span>
+<span class="code-tag">&lt;head&gt;</span>
+<span class="code-tag">&lt;title&gt;</span>WebWork Tutorial - Lesson 4.1.1 - Example 1<span class="code-tag">&lt;/title&gt;</span>
+<span class="code-tag">&lt;meta http-equiv=<span class="code-quote">"Content-Type"</span> content=<span class="code-quote">"text/html; charset=iso-8859-1"</span>&gt;</span>
+<span class="code-tag">&lt;style type=<span class="code-quote">"text/css"</span>&gt;</span>
+	.errorMessage { color: red; }
+<span class="code-tag">&lt;/style&gt;</span>
+<span class="code-tag">&lt;/head&gt;</span>
+
+<span class="code-tag">&lt;body&gt;</span>
+
+<span class="code-tag">&lt;p&gt;</span>UI Form Tags Example:<span class="code-tag">&lt;/p&gt;</span>
+
+<span class="code-tag">&lt;ww:form action=<span class="code-quote">"'formProcessing.action'"</span> method=<span class="code-quote">"'post'"</span>&gt;</span>
+	<span class="code-tag">&lt;ww:checkbox name=<span class="code-quote">"'checkbox'"</span> label=<span class="code-quote">"'A checkbox'"</span> fieldValue=<span class="code-quote">"'checkbox_value'"</span> /&gt;</span>
+	<span class="code-tag">&lt;ww:file name=<span class="code-quote">"'file'"</span> label=<span class="code-quote">"'A file field'"</span> /&gt;</span>
+	<span class="code-tag">&lt;ww:hidden name=<span class="code-quote">"'hidden'"</span> value=<span class="code-quote">"'hidden_value'"</span> /&gt;</span>
+	<span class="code-tag">&lt;ww:label label=<span class="code-quote">"'A label'"</span> /&gt;</span>
+	<span class="code-tag">&lt;ww:password name=<span class="code-quote">"'password'"</span> label=<span class="code-quote">"'A password field'"</span> /&gt;</span>
+	<span class="code-tag">&lt;ww:radio name=<span class="code-quote">"'radio'"</span> label=<span class="code-quote">"'Radio buttons'"</span> list=<span class="code-quote">"{'One', 'Two', 'Three'}"</span> /&gt;</span>
+	&lt;ww:select name=<span class="code-quote">"'select'"</span> label=<span class="code-quote">"'A select list'"</span> list=<span class="code-quote">"{'One', 'Two', 'Three'}"</span> 
+		emptyOption=<span class="code-quote">"true"</span> /&gt;
+	<span class="code-tag">&lt;ww:textarea name=<span class="code-quote">"'textarea'"</span> label=<span class="code-quote">"'A text area'"</span> rows=<span class="code-quote">"'3'"</span> cols=<span class="code-quote">"'40'"</span> /&gt;</span>
+	<span class="code-tag">&lt;ww:textfield name=<span class="code-quote">"'textfield'"</span> label=<span class="code-quote">"'A text field'"</span> /&gt;</span>
+	<span class="code-tag">&lt;ww:submit value=<span class="code-quote">"'Send Form'"</span> /&gt;</span>
+<span class="code-tag">&lt;/ww:form&gt;</span>
+
+<span class="code-tag">&lt;/body&gt;</span>
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+
+<h3><a name="TutorialLesson04-01-01-HTMLresultafterprocessingex01index.jsp%3A"></a>HTML result after processing ex01-index.jsp:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;html&gt;</span> 
+<span class="code-tag">&lt;head&gt;</span> 
+<span class="code-tag">&lt;title&gt;</span>WebWork Tutorial - Lesson 4.1.1 - Example 1<span class="code-tag">&lt;/title&gt;</span>
+<span class="code-tag">&lt;style type=<span class="code-quote">"text/css"</span>&gt;</span> 
+  .errorMessage { color: red; } 
+<span class="code-tag">&lt;/style&gt;</span>   
+<span class="code-tag">&lt;/head&gt;</span> 
+
+<span class="code-tag">&lt;body&gt;</span> 
+
+<span class="code-tag">&lt;p&gt;</span>UI Form Tags Example:<span class="code-tag">&lt;/p&gt;</span> 
+
+<span class="code-tag">&lt;table&gt;</span> 
+&lt;form 
+action=<span class="code-quote">"formProcessing.action"</span> method=<span class="code-quote">"post"</span> &gt; 
+
+   
+
+
+<span class="code-tag">&lt;tr&gt;</span> 
+<span class="code-tag">&lt;td valign=<span class="code-quote">"top"</span> colspan=<span class="code-quote">"2"</span>&gt;</span> 
+
+<span class="code-tag">&lt;table width=<span class="code-quote">"100%"</span> border=<span class="code-quote">"0"</span> cellpadding=<span class="code-quote">"0"</span> cellspacing=<span class="code-quote">"0"</span>&gt;</span> 
+<span class="code-tag">&lt;tr&gt;</span><span class="code-tag">&lt;td valign=<span class="code-quote">"top"</span>&gt;</span> 
+&lt;input type=<span class="code-quote">"checkbox"</span> 
+name=<span class="code-quote">"checkbox"</span> 
+value=<span class="code-quote">"checkbox_value"</span> 
+/&gt; 
+<span class="code-tag">&lt;/td&gt;</span> 
+<span class="code-tag">&lt;td width=<span class="code-quote">"100%"</span> valign=<span class="code-quote">"top"</span>&gt;</span> 
+<span class="code-tag">&lt;span class=<span class="code-quote">"checkboxLabel"</span>&gt;</span> 
+A checkbox 
+<span class="code-tag">&lt;/span&gt;</span> 
+<span class="code-tag">&lt;/td&gt;</span> 
+<span class="code-tag">&lt;/tr&gt;</span> 
+<span class="code-tag">&lt;/table&gt;</span> 
+<span class="code-tag">&lt;/td&gt;</span> 
+<span class="code-tag">&lt;/tr&gt;</span> 
+
+   
+
+
+
+<span class="code-tag">&lt;tr&gt;</span> 
+<span class="code-tag">&lt;td align=<span class="code-quote">"right"</span> valign=<span class="code-quote">"top"</span>&gt;</span> 
+
+<span class="code-tag">&lt;span class=<span class="code-quote">"label"</span>&gt;</span> 
+
+A file field: 
+<span class="code-tag">&lt;/span&gt;</span> 
+<span class="code-tag">&lt;/td&gt;</span> 
+
+<span class="code-tag">&lt;td&gt;</span> 
+
+&lt;input type=<span class="code-quote">"file"</span> 
+name=<span class="code-quote">"file"</span> 
+/&gt; 
+
+<span class="code-tag">&lt;/td&gt;</span> 
+<span class="code-tag">&lt;/tr&gt;</span> 
+
+  &lt;input 
+type=<span class="code-quote">"hidden"</span> 
+name=<span class="code-quote">"hidden"</span> value=<span class="code-quote">"hidden_value"</span> /&gt; 
+   
+
+
+
+<span class="code-tag">&lt;tr&gt;</span> 
+<span class="code-tag">&lt;td align=<span class="code-quote">"right"</span> valign=<span class="code-quote">"top"</span>&gt;</span> 
+
+<span class="code-tag">&lt;span class=<span class="code-quote">"label"</span>&gt;</span> 
+
+A label: 
+<span class="code-tag">&lt;/span&gt;</span> 
+<span class="code-tag">&lt;/td&gt;</span> 
+
+<span class="code-tag">&lt;td&gt;</span> 
+<span class="code-tag">&lt;label&gt;</span> <span class="code-tag">&lt;/label&gt;</span> 
+<span class="code-tag">&lt;/td&gt;</span> 
+<span class="code-tag">&lt;/tr&gt;</span> 
+
+   
+
+
+
+
+<span class="code-tag">&lt;tr&gt;</span> 
+<span class="code-tag">&lt;td align=<span class="code-quote">"right"</span> valign=<span class="code-quote">"top"</span>&gt;</span> 
+
+<span class="code-tag">&lt;span class=<span class="code-quote">"label"</span>&gt;</span> 
+
+A password field: 
+<span class="code-tag">&lt;/span&gt;</span> 
+<span class="code-tag">&lt;/td&gt;</span> 
+
+<span class="code-tag">&lt;td&gt;</span> 
+
+&lt;input type=<span class="code-quote">"password"</span> 
+name=<span class="code-quote">"password"</span> 
+
+
+/&gt; 
+
+<span class="code-tag">&lt;/td&gt;</span> 
+<span class="code-tag">&lt;/tr&gt;</span> 
+
+   
+
+
+
+<span class="code-tag">&lt;tr&gt;</span> 
+<span class="code-tag">&lt;td align=<span class="code-quote">"right"</span> valign=<span class="code-quote">"top"</span>&gt;</span> 
+
+<span class="code-tag">&lt;span class=<span class="code-quote">"label"</span>&gt;</span> 
+
+Radio buttons: 
+<span class="code-tag">&lt;/span&gt;</span> 
+<span class="code-tag">&lt;/td&gt;</span> 
+
+<span class="code-tag">&lt;td&gt;</span> 
+
+
+
+
+
+&lt;input 
+type=<span class="code-quote">"radio"</span> 
+name=<span class="code-quote">"radio"</span> 
+id=<span class="code-quote">"radioOne"</span> 
+value=<span class="code-quote">"One"</span> /&gt; 
+<span class="code-tag">&lt;label for=<span class="code-quote">"radioOne"</span>&gt;</span>One<span class="code-tag">&lt;/label&gt;</span> 
+
+
+
+
+
+&lt;input 
+type=<span class="code-quote">"radio"</span> 
+name=<span class="code-quote">"radio"</span> 
+id=<span class="code-quote">"radioTwo"</span> 
+value=<span class="code-quote">"Two"</span> /&gt; 
+<span class="code-tag">&lt;label for=<span class="code-quote">"radioTwo"</span>&gt;</span>Two<span class="code-tag">&lt;/label&gt;</span> 
+
+
+
+
+
+&lt;input 
+type=<span class="code-quote">"radio"</span> 
+name=<span class="code-quote">"radio"</span> 
+id=<span class="code-quote">"radioThree"</span> 
+value=<span class="code-quote">"Three"</span> /&gt; 
+<span class="code-tag">&lt;label for=<span class="code-quote">"radioThree"</span>&gt;</span>Three<span class="code-tag">&lt;/label&gt;</span> 
+
+
+<span class="code-tag">&lt;/td&gt;</span> 
+<span class="code-tag">&lt;/tr&gt;</span> 
+
+   
+
+
+
+<span class="code-tag">&lt;tr&gt;</span> 
+<span class="code-tag">&lt;td align=<span class="code-quote">"right"</span> valign=<span class="code-quote">"top"</span>&gt;</span> 
+
+<span class="code-tag">&lt;span class=<span class="code-quote">"label"</span>&gt;</span> 
+
+A select list: 
+<span class="code-tag">&lt;/span&gt;</span> 
+<span class="code-tag">&lt;/td&gt;</span> 
+
+<span class="code-tag">&lt;td&gt;</span> 
+
+&lt;select name=<span class="code-quote">"select"</span> 
+&gt; 
+
+
+<span class="code-tag">&lt;option value=""&gt;</span><span class="code-tag">&lt;/option&gt;</span> 
+
+
+
+
+
+&lt;option value=<span class="code-quote">"One"</span> 
+&gt;One<span class="code-tag">&lt;/option&gt;</span> 
+
+
+
+
+
+&lt;option value=<span class="code-quote">"Two"</span> 
+&gt;Two<span class="code-tag">&lt;/option&gt;</span> 
+
+
+
+
+
+&lt;option value=<span class="code-quote">"Three"</span> 
+&gt;Three<span class="code-tag">&lt;/option&gt;</span> 
+
+
+<span class="code-tag">&lt;/select&gt;</span> 
+
+<span class="code-tag">&lt;/td&gt;</span> 
+<span class="code-tag">&lt;/tr&gt;</span> 
+
+   
+
+
+
+<span class="code-tag">&lt;tr&gt;</span> 
+<span class="code-tag">&lt;td align=<span class="code-quote">"right"</span> valign=<span class="code-quote">"top"</span>&gt;</span> 
+
+<span class="code-tag">&lt;span class=<span class="code-quote">"label"</span>&gt;</span> 
+
+A text area: 
+<span class="code-tag">&lt;/span&gt;</span> 
+<span class="code-tag">&lt;/td&gt;</span> 
+
+<span class="code-tag">&lt;td&gt;</span> 
+
+&lt;textarea name=<span class="code-quote">"textarea"</span> 
+cols=<span class="code-quote">"40"</span> 
+rows=<span class="code-quote">"3"</span> 
+&gt;<span class="code-tag">&lt;/textarea&gt;</span> 
+
+<span class="code-tag">&lt;/td&gt;</span> 
+<span class="code-tag">&lt;/tr&gt;</span> 
+
+   
+
+
+
+<span class="code-tag">&lt;tr&gt;</span> 
+<span class="code-tag">&lt;td align=<span class="code-quote">"right"</span> valign=<span class="code-quote">"top"</span>&gt;</span> 
+
+<span class="code-tag">&lt;span class=<span class="code-quote">"label"</span>&gt;</span> 
+
+A text field: 
+<span class="code-tag">&lt;/span&gt;</span> 
+<span class="code-tag">&lt;/td&gt;</span> 
+
+<span class="code-tag">&lt;td&gt;</span> 
+
+&lt;input type=<span class="code-quote">"text"</span> 
+name=<span class="code-quote">"textfield"</span> 
+/&gt; 
+
+<span class="code-tag">&lt;/td&gt;</span> 
+<span class="code-tag">&lt;/tr&gt;</span> 
+
+  <span class="code-tag">&lt;tr&gt;</span> 
+<span class="code-tag">&lt;td colspan=<span class="code-quote">"2"</span>&gt;</span>&lt;div 
+align=<span class="code-quote">"right"</span> &gt;&lt;input 
+type=<span class="code-quote">"submit"</span> 
+value=<span class="code-quote">"Send Form"</span> /&gt;<span class="code-tag">&lt;/div&gt;</span> 
+<span class="code-tag">&lt;/td&gt;</span> 
+<span class="code-tag">&lt;/tr&gt;</span> 
+
+<span class="code-tag">&lt;/form&gt;</span> 
+<span class="code-tag">&lt;/table&gt;</span> 
+
+
+<span class="code-tag">&lt;/body&gt;</span> 
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+
+<h3><a name="TutorialLesson04-01-01-xwork.xml%3A"></a>xwork.xml:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-xml">&lt;!DOCTYPE xwork PUBLIC <span class="code-quote">"-//OpenSymphony Group//XWork 1.0//EN"</span> 
+<span class="code-quote">"http://www.opensymphony.com/xwork/xwork-1.0.dtd"</span>&gt;
+
+<span class="code-tag">&lt;xwork&gt;</span>
+	<span class="code-tag"><span class="code-comment">&lt;!-- Include webwork defaults (from WebWork JAR). --&gt;</span></span>
+	<span class="code-tag">&lt;include file=<span class="code-quote">"webwork-default.xml"</span> /&gt;</span>
+	
+	<span class="code-tag"><span class="code-comment">&lt;!-- Configuration for the default package. --&gt;</span></span>
+	<span class="code-tag">&lt;package name=<span class="code-quote">"default"</span> extends=<span class="code-quote">"webwork-default"</span>&gt;</span>
+		<span class="code-tag">&lt;action name=<span class="code-quote">"formProcessing"</span> class=<span class="code-quote">"lesson04_01_01.FormProcessingAction"</span>&gt;</span>
+			<span class="code-tag">&lt;result name=<span class="code-quote">"input"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>ex01-index.jsp<span class="code-tag">&lt;/result&gt;</span>
+			<span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>ex01-success.jsp<span class="code-tag">&lt;/result&gt;</span>
+			<span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"validationWorkflowStack"</span> /&gt;</span>
+		<span class="code-tag">&lt;/action&gt;</span>
+	<span class="code-tag">&lt;/package&gt;</span>
+<span class="code-tag">&lt;/xwork&gt;</span></pre>
+</div></div>
+
+<h3><a name="TutorialLesson04-01-01-FormProcessingAction.java%3A"></a>FormProcessingAction.java:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> lesson04_01_01;
+
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionSupport;
+
+<span class="code-keyword">public</span> class FormProcessingAction <span class="code-keyword">extends</span> ActionSupport {
+	<span class="code-keyword">private</span> <span class="code-object">String</span> checkbox;
+	<span class="code-keyword">private</span> <span class="code-object">String</span> file;
+	<span class="code-keyword">private</span> <span class="code-object">String</span> hidden;
+	<span class="code-keyword">private</span> <span class="code-object">String</span> password;
+	<span class="code-keyword">private</span> <span class="code-object">String</span> radio;
+	<span class="code-keyword">private</span> <span class="code-object">String</span> select;
+	<span class="code-keyword">private</span> <span class="code-object">String</span> textarea;
+	<span class="code-keyword">private</span> <span class="code-object">String</span> textfield;
+	
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getCheckbox() { <span class="code-keyword">return</span> checkbox; }
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getFile() { <span class="code-keyword">return</span> file; }
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getHidden() { <span class="code-keyword">return</span> hidden; }
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getPassword() { <span class="code-keyword">return</span> password; }
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getRadio() { <span class="code-keyword">return</span> radio; }
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getSelect() { <span class="code-keyword">return</span> select; }
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getTextarea() { <span class="code-keyword">return</span> textarea; }
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getTextfield() { <span class="code-keyword">return</span> textfield; }
+	
+	<span class="code-keyword">public</span> void setCheckbox(<span class="code-object">String</span> checkbox) { <span class="code-keyword">this</span>.checkbox = checkbox; }
+	<span class="code-keyword">public</span> void setFile(<span class="code-object">String</span> file) { <span class="code-keyword">this</span>.file = file; }
+	<span class="code-keyword">public</span> void setHidden(<span class="code-object">String</span> hidden) { <span class="code-keyword">this</span>.hidden = hidden; }
+	<span class="code-keyword">public</span> void setPassword(<span class="code-object">String</span> password) { <span class="code-keyword">this</span>.password = password; }
+	<span class="code-keyword">public</span> void setRadio(<span class="code-object">String</span> radio) { <span class="code-keyword">this</span>.radio = radio; }
+	<span class="code-keyword">public</span> void setSelect(<span class="code-object">String</span> select) { <span class="code-keyword">this</span>.select = select; }
+	<span class="code-keyword">public</span> void setTextarea(<span class="code-object">String</span> textarea) { <span class="code-keyword">this</span>.textarea = textarea; }
+	<span class="code-keyword">public</span> void setTextfield(<span class="code-object">String</span> textfield) { <span class="code-keyword">this</span>.textfield = textfield; }
+	
+	<span class="code-keyword">public</span> <span class="code-object">String</span> execute() <span class="code-keyword">throws</span> Exception {
+		<span class="code-keyword">return</span> SUCCESS;
+	}
+}</pre>
+</div></div>
+
+<h3><a name="TutorialLesson04-01-01-FormProcessingActionvalidation.xml%3A"></a>FormProcessingAction-validation.xml:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-xml">&lt;!DOCTYPE validators PUBLIC <span class="code-quote">"-//OpenSymphony Group//XWork Validator 1.0//EN"</span>
+<span class="code-quote">"http://www.opensymphony.com/xwork/xwork-validator-1.0.dtd"</span>&gt;
+
+<span class="code-tag">&lt;validators&gt;</span>
+  <span class="code-tag">&lt;field name=<span class="code-quote">"checkbox"</span>&gt;</span>
+    <span class="code-tag">&lt;field-validator type=<span class="code-quote">"requiredstring"</span>&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>Please, check the checkbox.<span class="code-tag">&lt;/message&gt;</span>
+    <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;/field&gt;</span>
+
+  <span class="code-tag">&lt;field name=<span class="code-quote">"file"</span>&gt;</span>
+    <span class="code-tag">&lt;field-validator type=<span class="code-quote">"requiredstring"</span>&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>Please select a file.<span class="code-tag">&lt;/message&gt;</span>
+    <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;/field&gt;</span>
+
+  <span class="code-tag">&lt;field name=<span class="code-quote">"password"</span>&gt;</span>
+    <span class="code-tag">&lt;field-validator type=<span class="code-quote">"requiredstring"</span>&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>Please type something in the password field.<span class="code-tag">&lt;/message&gt;</span>
+    <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;/field&gt;</span>
+
+  <span class="code-tag">&lt;field name=<span class="code-quote">"radio"</span>&gt;</span>
+    <span class="code-tag">&lt;field-validator type=<span class="code-quote">"requiredstring"</span>&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>Please select a radio button.<span class="code-tag">&lt;/message&gt;</span>
+    <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;/field&gt;</span>
+
+  <span class="code-tag">&lt;field name=<span class="code-quote">"select"</span>&gt;</span>
+    <span class="code-tag">&lt;field-validator type=<span class="code-quote">"requiredstring"</span>&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>Please select an option from the list.<span class="code-tag">&lt;/message&gt;</span>
+    <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;/field&gt;</span>
+
+  <span class="code-tag">&lt;field name=<span class="code-quote">"textarea"</span>&gt;</span>
+    <span class="code-tag">&lt;field-validator type=<span class="code-quote">"requiredstring"</span>&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>Please type something in the text area.<span class="code-tag">&lt;/message&gt;</span>
+    <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;/field&gt;</span>
+
+  <span class="code-tag">&lt;field name=<span class="code-quote">"textfield"</span>&gt;</span>
+    <span class="code-tag">&lt;field-validator type=<span class="code-quote">"requiredstring"</span>&gt;</span>
+      <span class="code-tag">&lt;message&gt;</span>Please type something in the text field.<span class="code-tag">&lt;/message&gt;</span>
+    <span class="code-tag">&lt;/field-validator&gt;</span>
+  <span class="code-tag">&lt;/field&gt;</span>
+<span class="code-tag">&lt;/validators&gt;</span></pre>
+</div></div>
+
+<h3><a name="TutorialLesson04-01-01-ex01success.jsp%3A"></a>ex01-success.jsp:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;%@ taglib uri=<span class="code-quote">"webwork"</span> prefix=<span class="code-quote">"ww"</span> %&gt;</span>
+<span class="code-tag">&lt;html&gt;</span>
+<span class="code-tag">&lt;head&gt;</span>
+<span class="code-tag">&lt;title&gt;</span>WebWork Tutorial - Lesson 4.1.1 - Example 1<span class="code-tag">&lt;/title&gt;</span>
+<span class="code-tag">&lt;/head&gt;</span>
+
+<span class="code-tag">&lt;body&gt;</span>
+
+<span class="code-tag">&lt;p&gt;</span>UI Form Tags Example result:<span class="code-tag">&lt;/p&gt;</span>
+
+<span class="code-tag">&lt;ul&gt;</span>
+  <span class="code-tag">&lt;li&gt;</span>checkbox: <span class="code-tag">&lt;ww:property value=<span class="code-quote">"checkbox"</span> /&gt;</span><span class="code-tag">&lt;/li&gt;</span>
+  <span class="code-tag">&lt;li&gt;</span>file: <span class="code-tag">&lt;ww:property value=<span class="code-quote">"file"</span> /&gt;</span><span class="code-tag">&lt;/li&gt;</span>
+  <span class="code-tag">&lt;li&gt;</span>hidden: <span class="code-tag">&lt;ww:property value=<span class="code-quote">"hidden"</span> /&gt;</span><span class="code-tag">&lt;/li&gt;</span>
+  <span class="code-tag">&lt;li&gt;</span>password: <span class="code-tag">&lt;ww:property value=<span class="code-quote">"password"</span> /&gt;</span><span class="code-tag">&lt;/li&gt;</span>
+  <span class="code-tag">&lt;li&gt;</span>radio: <span class="code-tag">&lt;ww:property value=<span class="code-quote">"radio"</span> /&gt;</span><span class="code-tag">&lt;/li&gt;</span>
+  <span class="code-tag">&lt;li&gt;</span>select: <span class="code-tag">&lt;ww:property value=<span class="code-quote">"select"</span> /&gt;</span><span class="code-tag">&lt;/li&gt;</span>
+  <span class="code-tag">&lt;li&gt;</span>textarea: <span class="code-tag">&lt;ww:property value=<span class="code-quote">"textarea"</span> /&gt;</span><span class="code-tag">&lt;/li&gt;</span>
+  <span class="code-tag">&lt;li&gt;</span>textfield: <span class="code-tag">&lt;ww:property value=<span class="code-quote">"textfield"</span> /&gt;</span><span class="code-tag">&lt;/li&gt;</span>
+<span class="code-tag">&lt;/ul&gt;</span>
+
+<span class="code-tag">&lt;/body&gt;</span>
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+
+<p>Notice how much cleaner <tt>ex01-index.jsp</tt> is, compared to its HTML result. The default layout of the form components is a table layout, with the label on the left column and the field to the right. You can learn how to create your own layouts when we explain the template system, below.</p>
+
+<p>Another thing to notice is the reference to the <tt>validationWorkflowStack</tt> in the action's configuration. This makes WebWork validate the parameters that are sent to our actions according to a configuration file we place in the same location as the action class &#8211; in our case, <tt>FormProcessingAction-validation.xml</tt> (see <a href="Validation.html" title="Validation">Validation</a>). In case something is not valid, it prevents the action from executing and dispatches the request to the input result with error messages attached to each field (using the method <tt>addFieldError(String fieldName, String errorMessage)</tt>).</p>
+
+<p>But don't worry about how the validation framework works for now. Run the example and try leaving some fields blank. You will see that the UI tags provide error messages that integrate with the validation framework and that's what we want do demonstrate here. This separation of concerns can help programmers and designers concentrate more on their part of the work.</p>
+
+<blockquote><p>Try the example!</p></blockquote>
+
+
+<h2><a name="TutorialLesson04-01-01-OtherUIControls%3A"></a>Other UI Controls:</h2>
+
+<p>Besides the standard form controls that HTML designers are already familiar with, WebWork provides some other controls and also the ability to create a custom control. Let's take a look at the custom controls that are already provided by WebWork: </p>
+
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:checkboxlist /&gt;</tt></b></td>
+<td class='confluenceTd'>Works just like the <tt>&lt;ww:radio /&gt;</tt> tag, but with check boxes instead of radio buttons. It gets the keys and values from a collection and creates a list of checkboxes, all with the same name.</td>
+</tr>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:combobox /&gt;</tt></b></td>
+<td class='confluenceTd'>Simulates a combo box, which is a control that mixes a selection list with a text field. It does this by placing a text field with a <tt>&lt;select /&gt;</tt> list right below it and a JavaScript code that fills the text field with the selection of the list every time it changes.</td>
+</tr>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:tabbedpane /&gt;</tt></b></td>
+<td class='confluenceTd'><em>Help needed here.</em></td>
+</tr>
+<tr>
+<td class='confluenceTd'><b><tt>&lt;ww:token /&gt;</tt></b></td>
+<td class='confluenceTd'><em>Help needed here.</em></td>
+</tr>
+</tbody></table>
+
+<h2><a name="TutorialLesson04-01-01-TheTemplateSystem%3A"></a>The Template System:</h2>
+
+<p>WebWork uses the Velocity template system to render the actual HTML output for all UI tags. A default implementation of all templates has been included with the core distribution allowing users to use WebWork's UI tags "out of the box". Templates can be edited individually or replaced entirely allowing for complete customization of the resulting HTML output. In addition, the default template can be overridden on a per tag basis allowing for a very fine level of control. The default templates are located in the <tt>webwork-2.1.1.jar</tt> file under <tt>/template/xhtml</tt>.</p>
+
+<p>If you unpack <tt>webwork-2.1.1.jar</tt> and look under the <tt>/template/xhtml</tt> directory you will see a bunch of velocity templates. Most of them correspond to a specific UI Tag, and those have the name of the tag they render. If you're familiar with Velocity, I recommend you analyse the template files to see what you're capable of doing with them. Since version 2.1, there's also a <tt>/template/simple</tt> directory, which is a simpler version of the HTML form controls (just the control, no table or label).</p>
+
+<p>If you want do display your UI components in a different layout than the one that comes with WebWork, you can:</p>
+
+<ul>
+	<li>Edit and replace the files in <tt>/template/xhtml</tt> (repack the JAR or create the same directory structure somewhere else and make sure your container looks that path before the JAR);</li>
+</ul>
+
+
+<ul>
+	<li>Change the location of the templates by editing the <tt>webwork.ui.theme</tt> property in <tt>webwork.properties</tt> (file that should be placed in the root of your classpath);</li>
+</ul>
+
+
+<ul>
+	<li>Specifying the location of the templates for each tag individually using the theme or the template property. The former allows you to specify the directory where all templates are (thus, WebWork looks for templates with the same name as the ones in <tt>/template/xhtml</tt>), while the latter allows you to indicate the exact template to be used for that component.</li>
+</ul>
+
+
+<blockquote><p>Read more: <a href="Themes and Templates.html" title="Themes and Templates">Themes and Templates</a></p></blockquote>
+
+<p>The third approach is demonstrated in the example below. Note that, by default, the specified theme directory should be under <tt>/template</tt> and the specified template file should be under <tt>/template/xhtml</tt>.</p>
+
+<h3><a name="TutorialLesson04-01-01-ex02.jsp%3A"></a>ex02.jsp:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;%@ taglib uri=<span class="code-quote">"webwork"</span> prefix=<span class="code-quote">"ww"</span> %&gt;</span> 
+<span class="code-tag">&lt;html&gt;</span> 
+<span class="code-tag">&lt;head&gt;</span> 
+<span class="code-tag">&lt;title&gt;</span>WebWork Tutorial - Lesson 4.1.1 - Example 2<span class="code-tag">&lt;/title&gt;</span> 
+<span class="code-tag">&lt;/head&gt;</span> 
+
+<span class="code-tag">&lt;body&gt;</span> 
+
+<span class="code-tag">&lt;p&gt;</span>Template Change Example:<span class="code-tag">&lt;/p&gt;</span> 
+
+<span class="code-tag">&lt;p&gt;</span><span class="code-tag">&lt;ww:checkbox name=<span class="code-quote">"'checkbox'"</span> label=<span class="code-quote">"'A checkbox'"</span> fieldValue=<span class="code-quote">"'checkbox_value'"</span> theme=<span class="code-quote">"'mytheme'"</span> /&gt;</span><span class="code-tag">&lt;/p&gt;</span> 
+
+<span class="code-tag">&lt;p&gt;</span><span class="code-tag">&lt;ww:textfield name=<span class="code-quote">"'textfield'"</span> label=<span class="code-quote">"'A text field'"</span> template=<span class="code-quote">"mytextfield.vm"</span> /&gt;</span><span class="code-tag">&lt;/p&gt;</span> 
+
+<span class="code-tag">&lt;/body&gt;</span> 
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+
+<h3><a name="TutorialLesson04-01-01-%2Ftemplate%2Fmytheme%2Fcheckbox.vm%3A"></a>/template/mytheme/checkbox.vm:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;div align=<span class="code-quote">"center"</span>&gt;</span> 
+	&lt;input type=<span class="code-quote">"checkbox"</span> 
+		name=<span class="code-quote">"$!webwork.htmlEncode($parameters.name)"</span> 
+		value=<span class="code-quote">"$!webwork.htmlEncode($parameters.fieldValue)"</span> 
+	#if ($parameters.nameValue) checked=<span class="code-quote">"checked"</span> #end 
+	#if ($parameters.disabled == true) disabled=<span class="code-quote">"disabled"</span> #end 
+	#if ($parameters.tabindex) tabindex=<span class="code-quote">"$!webwork.htmlEncode($parameters.tabindex)"</span> #end 
+	#if ($parameters.onchange) onchange=<span class="code-quote">"$!webwork.htmlEncode($parameters.onchange)"</span> #end 
+	#if ($parameters.id) id=<span class="code-quote">"$!webwork.htmlEncode($parameters.id)"</span> #end 
+	/&gt;<span class="code-tag">&lt;br /&gt;</span> 
+	$!webwork.htmlEncode($parameters.label) 
+<span class="code-tag">&lt;/div&gt;</span></pre>
+</div></div>
+
+<h3><a name="TutorialLesson04-01-01-%2Ftemplate%2Fxhtml%2Fmytextfield.vm%3A"></a>/template/xhtml/mytextfield.vm:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;div align=<span class="code-quote">"center"</span>&gt;</span> 
+	&lt;input type=<span class="code-quote">"text"</span> 
+		name=<span class="code-quote">"$!webwork.htmlEncode($parameters.name)"</span> 
+	#if ($parameters.size) size=<span class="code-quote">"$!webwork.htmlEncode($parameters.size)"</span> #end 
+	#if ($parameters.maxlength) maxlength=<span class="code-quote">"$!webwork.htmlEncode($parameters.maxlength)"</span> #end 
+	#if ($parameters.nameValue) value=<span class="code-quote">"$!webwork.htmlEncode($parameters.nameValue)"</span> #end 
+	#if ($parameters.disabled == true) disabled=<span class="code-quote">"disabled"</span> #end 
+	#if ($parameters.readonly) readonly=<span class="code-quote">"readonly"</span> #end 
+	#if ($parameters.onkeyup) onkeyup=<span class="code-quote">"$!webwork.htmlEncode($parameters.onkeyup)"</span> #end 
+	#if ($parameters.tabindex) tabindex=<span class="code-quote">"$!webwork.htmlEncode($parameters.tabindex)"</span> #end 
+	#if ($parameters.onchange) onchange=<span class="code-quote">"$!webwork.htmlEncode($parameters.onchange)"</span> #end 
+	#if ($parameters.id) id=<span class="code-quote">"$!webwork.htmlEncode($parameters.id)"</span> #end 
+	/&gt;<span class="code-tag">&lt;br /&gt;</span> 
+	$!webwork.htmlEncode($parameters.label) 
+<span class="code-tag">&lt;/div&gt;</span></pre>
+</div></div>
+
+<h3><a name="TutorialLesson04-01-01-HTMLresultafterprocessingex02.jsp%3A"></a>HTML result after processing ex02.jsp:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;html&gt;</span> 
+<span class="code-tag">&lt;head&gt;</span> 
+<span class="code-tag">&lt;title&gt;</span>WebWork Tutorial - Lesson 4.1.1 - Example 2<span class="code-tag">&lt;/title&gt;</span> 
+<span class="code-tag">&lt;/head&gt;</span> 
+
+<span class="code-tag">&lt;body&gt;</span> 
+
+<span class="code-tag">&lt;p&gt;</span>Template Change Example:<span class="code-tag">&lt;/p&gt;</span> 
+
+<span class="code-tag">&lt;p&gt;</span><span class="code-tag">&lt;div align=<span class="code-quote">"center"</span>&gt;</span> 
+  &lt;input type=<span class="code-quote">"checkbox"</span> 
+         name=<span class="code-quote">"checkbox"</span> 
+         value=<span class="code-quote">"checkbox_value"</span> 
+            /&gt;<span class="code-tag">&lt;br /&gt;</span> 
+  A checkbox 
+<span class="code-tag">&lt;/div&gt;</span><span class="code-tag">&lt;/p&gt;</span> 
+
+<span class="code-tag">&lt;p&gt;</span><span class="code-tag">&lt;div align=<span class="code-quote">"center"</span>&gt;</span> 
+  &lt;input type=<span class="code-quote">"text"</span> 
+                                     name=<span class="code-quote">"textfield"</span> 
+                    /&gt;<span class="code-tag">&lt;br /&gt;</span> 
+  A text field 
+<span class="code-tag">&lt;/div&gt;</span><span class="code-tag">&lt;/p&gt;</span> 
+
+<span class="code-tag">&lt;/body&gt;</span> 
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+
+<blockquote><p>Try the example!</p></blockquote>
+
+
+<h2><a name="TutorialLesson04-01-01-BuildingCustomizedUIComponents%3A"></a>Building Customized UI Components:</h2>
+
+<p>There are some situations in which none of the UI Components that come bundled with WebWork fit your requirements. In this case, the recommended approach would be to create your own custom component. In this way, you keep your web page clean of layout and error-checking issues and also promote component reuse.</p>
+
+<p>To create a custom component, just create a Velocity template for it, just like the ones that already exist. To place it in a web page, use the <tt>&lt;ww:component /&gt;</tt> tag and specify the location of the template in its <tt>template</tt> parameter.</p>
+
+<p>To pass parameters to be used by your template, use the <tt>&lt;ww:param /&gt;</tt> tag (see <a href="TutorialLesson04-01.html" title="TutorialLesson04-01">lesson 4.1</a>). The example below demonstrates the creation of a custom date field.</p>
+
+<h3><a name="TutorialLesson04-01-01-ex03.jsp%3A"></a>ex03.jsp:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;%@ taglib uri=<span class="code-quote">"webwork"</span> prefix=<span class="code-quote">"ww"</span> %&gt;</span> 
+<span class="code-tag">&lt;html&gt;</span> 
+<span class="code-tag">&lt;head&gt;</span> 
+<span class="code-tag">&lt;title&gt;</span>WebWork Tutorial - Lesson 4.1.1 - Example 3<span class="code-tag">&lt;/title&gt;</span> 
+<span class="code-tag">&lt;/head&gt;</span> 
+
+<span class="code-tag">&lt;body&gt;</span> 
+<span class="code-tag">&lt;p&gt;</span>Custom Component Example:<span class="code-tag">&lt;/p&gt;</span> 
+
+<span class="code-tag">&lt;p&gt;</span> 
+<span class="code-tag">&lt;ww:component template=<span class="code-quote">"datefield.vm"</span>&gt;</span> 
+	<span class="code-tag">&lt;ww:param name=<span class="code-quote">"'label'"</span> value=<span class="code-quote">"'Date'"</span> /&gt;</span> 
+	<span class="code-tag">&lt;ww:param name=<span class="code-quote">"'name'"</span> value=<span class="code-quote">"'mydatefield'"</span> /&gt;</span> 
+	<span class="code-tag">&lt;ww:param name=<span class="code-quote">"'size'"</span> value=<span class="code-quote">"3"</span> /&gt;</span> 
+<span class="code-tag">&lt;/ww:component&gt;</span> 
+<span class="code-tag">&lt;/p&gt;</span> 
+
+<span class="code-tag">&lt;/body&gt;</span> 
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+
+<h3><a name="TutorialLesson04-01-01-%2Ftemplate%2Fxhtml%2Fdatefield.vm%3A"></a>/template/xhtml/datefield.vm:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-html">#set ($name = $parameters.get('name')) 
+#set ($size = $parameters.get('size')) 
+#set ($yearSize = $size * 2) 
+
+$parameters.get('label'): 
+<span class="code-tag">&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"${name}.day"</span> size=<span class="code-quote">"$size"</span> /&gt;</span> / 
+<span class="code-tag">&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"${name}.month"</span> size=<span class="code-quote">"$size"</span> /&gt;</span> / 
+<span class="code-tag">&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"${name}.year"</span> size=<span class="code-quote">"$yearSize"</span> /&gt;</span> (dd/mm/yyyy)</pre>
+</div></div>
+
+<h3><a name="TutorialLesson04-01-01-HTMLresultafterprocessingex03.jsp%3A"></a>HTML result after processing ex03.jsp:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;html&gt;</span> 
+<span class="code-tag">&lt;head&gt;</span> 
+<span class="code-tag">&lt;title&gt;</span>WebWork Tutorial - Lesson 4.1.1 - Example 3<span class="code-tag">&lt;/title&gt;</span> 
+<span class="code-tag">&lt;/head&gt;</span> 
+<span class="code-tag">&lt;body&gt;</span> 
+<span class="code-tag">&lt;p&gt;</span>Custom Component Example:<span class="code-tag">&lt;/p&gt;</span> 
+
+<span class="code-tag">&lt;p&gt;</span> 
+Date: 
+<span class="code-tag">&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"mydatefield.day"</span> size=<span class="code-quote">"3"</span> /&gt;</span> / 
+<span class="code-tag">&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"mydatefield.month"</span> size=<span class="code-quote">"3"</span> /&gt;</span> / 
+<span class="code-tag">&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"mydatefield.year"</span> size=<span class="code-quote">"6"</span> /&gt;</span> (dd/mm/yyyy) 
+<span class="code-tag">&lt;/p&gt;</span> 
+
+<span class="code-tag">&lt;/body&gt;</span> 
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+
+<blockquote><p>Try the example!</p></blockquote>
+
+<hr />
+
+<p><a href="TutorialLesson04-01.html" title="TutorialLesson04-01">Previous Lesson</a> | <a href="TutorialLesson04-02.html" title="TutorialLesson04-02">Next Lesson</a></p>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

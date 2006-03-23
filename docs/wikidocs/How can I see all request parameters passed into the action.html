@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <title>WebWork - 
+         can I see all request parameters passed into the action
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p><b><u>Method A:</u></b><br/>
+ActionContext.getContext().getParameters() (returns Map, works internally using a ThreadLocal)</p>
+
+<p><b><u>Method B:</u></b><br/>
+Have the action implements ParameterAware interface and the parameters will be set through the setParameters(Map) method. This requires that the 'servlet-config' interceptor being added to that particular action.</p>
+
+<p>@see <a href="webwork-default.xml.html" title="webwork-default.xml">webwork\-default.xml</a><br/>
+@see com.opensymphony.webwork.interceptor.ParameterAware<br/>
+@see com.opensymphony.webwork.interceptor.<a href="Servlet Config Interceptor.html" title="Servlet Config Interceptor">Servlet Config Interceptor</a></p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

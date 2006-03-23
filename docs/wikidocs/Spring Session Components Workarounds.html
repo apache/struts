@@ -1,0 +1,487 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Spring Session Components Workarounds
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="SpringSessionComponentsWorkarounds-Motivation"></a>Motivation</h1>
+
+<p>Spring currently does not support session scoped beans/components out of the box. You can decide between singleton or prototype lifecycle, but you cannot have your beans bound to the session lifecycle of web applications. There are plans for integrating such a feature in the Spring 2.0 release.<br/>
+We will try to point out some possible workarounds for your WebWork based applications. First we look at the general solutions found among the Spring community, dealing with HTTPSession and all that. After that we will discuss the special conditions and requirements found in XWork/WebWork and how that might affect possible solutions. We will show some XWork/WebWork specific solutions for the given problem.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='infoMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/information.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>
+<p>The first milestone of Spring 2.0 (formerly 1.3) will be released the second week of December 2005.  It is confirmed that it does contain Session Scope components using the Proxy (CGLIB or JDK) approach.</p></td></tr></table>
+
+<h1><a name="SpringSessionComponentsWorkarounds-GeneralSolutionsforWebapplications"></a>General Solutions for Webapplications</h1>
+
+<h2><a name="SpringSessionComponentsWorkarounds-TheSpring2.0Way"></a>The Spring 2.0 Way</h2>
+<p>Interface21 added support for session (and request) scoped beans in Spring 2.0.  This approach creates a CGLIB or JDK Dynamic proxy of the session scoped bean using the org.springframework.aop.target.scope.ScopedProxyFactoryBean and setting the scopeMap to org.springframework.web.context.scope.SessionScopeMap.</p>
+
+<p>Since the jars are backwards compatible simply build Spring and replace the jars shipped with WebWork. (Spring 2.0 M1 should be out by the time you read this.).</p>
+
+<p>There are 2 ways to set this up depending upon whether or not XML simplification is used.  The first method uses the traditional bean definitions and is useful to understand what is happening under the covers.</p>
+
+<p>A modified applicationContext.xml for the shopping cart example using the traditional XML DTD is below.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;?xml version=<span class="code-quote">"1.0"</span> encoding=<span class="code-quote">"UTF-8"</span>?&gt;</span>
+<span class="code-tag">&lt;!DOCTYPE beans PUBLIC <span class="code-quote">"-//SPRING//DTD BEAN//EN"</span> <span class="code-quote">"http://www.springframework.org/dtd/spring-beans.dtd"</span>&gt;</span>
+
+<span class="code-tag">&lt;beans&gt;</span>
+    &lt;bean id=<span class="code-quote">"shoppingCart"</span> class=<span class="code-quote">"org.springframework.aop.target.scope.ScopedProxyFactoryBean"</span>
+            singleton=<span class="code-quote">"false"</span>&gt;
+        <span class="code-tag">&lt;property name=<span class="code-quote">"scopeKey"</span> value=<span class="code-quote">"shoppingCart"</span>/&gt;</span>
+        <span class="code-tag">&lt;property name=<span class="code-quote">"targetBeanName"</span> value=<span class="code-quote">"__shoppingCart"</span>/&gt;</span>
+        <span class="code-tag">&lt;property name=<span class="code-quote">"scopeMap"</span>&gt;</span>
+            <span class="code-tag">&lt;bean class=<span class="code-quote">"org.springframework.web.context.scope.SessionScopeMap"</span>/&gt;</span>
+        <span class="code-tag">&lt;/property&gt;</span>
+    <span class="code-tag">&lt;/bean&gt;</span>
+
+    &lt;bean id=<span class="code-quote">"__shoppingCart"</span> class=<span class="code-quote">"com.opensymphony.webwork.example.ajax.cart.DefaultCart"</span>
+            singleton=<span class="code-quote">"false"</span>/&gt;
+
+<span class="code-tag">&lt;/beans&gt;</span></pre>
+</div></div>
+
+<p>A modified applicationContext.xml for the shopping cart example using the XML simplification is below.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;?xml version=<span class="code-quote">"1.0"</span> encoding=<span class="code-quote">"UTF-8"</span>?&gt;</span>
+&lt;beans xmlns=<span class="code-quote">"http://www.springframework.org/schema/beans"</span>
+       <span class="code-keyword">xmlns:xsi</span>=<span class="code-quote">"http://www.w3.org/2001/XMLSchema-instance"</span>
+       <span class="code-keyword">xmlns:aop</span>=<span class="code-quote">"http://www.springframework.org/schema/aop"</span>
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"&gt;
+
+    &lt;bean id=<span class="code-quote">"catalog"</span> class=<span class="code-quote">"com.opensymphony.webwork.example.ajax.catalog.TestCatalog"</span>
+          singleton=<span class="code-quote">"true"</span>/&gt;
+
+    &lt;bean id=<span class="code-quote">"shoppingCart"</span> class=<span class="code-quote">"com.opensymphony.webwork.example.ajax.cart.DefaultCart"</span>
+          singleton=<span class="code-quote">"true"</span>&gt;
+        <span class="code-tag">&lt;aop:scope type=<span class="code-quote">"session"</span>/&gt;</span>
+    <span class="code-tag">&lt;/bean&gt;</span>
+
+<span class="code-tag">&lt;/beans&gt;</span></pre>
+</div></div>
+
+<p>You will also need to modify the web.xml to include the following filter.</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;filter&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>springFilter<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;filter-class&gt;</span>org.springframework.web.filter.RequestContextFilter<span class="code-tag">&lt;/filter-class&gt;</span>
+<span class="code-tag">&lt;/filter&gt;</span>
+<span class="code-tag">&lt;filter-mapping&gt;</span>
+    <span class="code-tag">&lt;filter-name&gt;</span>springFilter<span class="code-tag">&lt;/filter-name&gt;</span>
+    <span class="code-tag">&lt;url-pattern&gt;</span>/*<span class="code-tag">&lt;/url-pattern&gt;</span>
+<span class="code-tag">&lt;/filter-mapping&gt;</span></pre>
+</div></div>
+
+<h2><a name="SpringSessionComponentsWorkarounds-CustomTargetSourcewithaServletFilter"></a>Custom TargetSource with a ServletFilter</h2>
+<p>A quite "clean" solution for web applications in general can be found at <a href="http://ja-sig.org/" title="Visit page outside Confluence">JA-SIG</a>. The solution is well documented and can be found <a href="https://clearinghouse.ja-sig.org/wiki/display/UPC/Session+Scoped+Beans" title="Visit page outside Confluence">here</a>. Below you will find a WebWork adoption of this solution.</p>
+
+
+
+<h1><a name="SpringSessionComponentsWorkarounds-XWork%2FWebWorkspecificsolutions"></a>XWork/WebWork specific solutions</h1>
+
+<h2><a name="SpringSessionComponentsWorkarounds-Preface"></a>Preface</h2>
+<p>WebWork is based on XWork, and XWork is not tied to the web layer. So when dealing with session scoped objects, WW users might want to use XWork's session abstraction features to keep their application independent from the web context. This is why we will discuss some XW/WW specific solutions below.</p>
+
+
+<h2><a name="SpringSessionComponentsWorkarounds-CustomTargetSource%2CtheWebWorkway"></a>Custom TargetSource, the WebWork way</h2>
+
+<p>Here is a modified version of the TargetSource solution pointed out above that integrates with the existing WebWork session and doesn't require an additional filter or listener. Usage is pretty much the same, create an interface for your object and make sure that you always use that interface and not the underlying implementation or autowiring will fail. You can find more information on how to make this work by looking at the <a href="WebWorkTargetSource Shopping Cart Example.html" title="WebWorkTargetSource Shopping Cart Example">WebWorkTargetSource Shopping Cart Example</a>.</p>
+
+<div class="code" style="border-style: solid; "><div class="codeHeader" style="border-bottom-style: solid; "><b>WebWorkTargetSource.java</b></div><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> org.tuxbot.webwork.spring;
+
+/* Portions Copyright 2005 The JA-SIG Collaborative.  All rights reserved.
+ *  See license distributed with <span class="code-keyword">this</span> file and
+ *  available online at http:<span class="code-comment">//www.uportal.org/license.html
+</span> */
+
+<span class="code-keyword">import</span> org.apache.commons.logging.Log;
+<span class="code-keyword">import</span> org.apache.commons.logging.LogFactory;
+<span class="code-keyword">import</span> org.springframework.aop.target.AbstractPrototypeBasedTargetSource;
+<span class="code-keyword">import</span> org.springframework.beans.factory.DisposableBean;
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionContext;
+
+<span class="code-keyword">import</span> java.util.Map;
+
+/**
+ * This target source is to be used in collaberation with WebWork.
+ * The target source binds the target bean to the Session retrieved from
+ * WebWork. By <span class="code-keyword">default</span> the bean is bound to the session
+ * using the name of the target bean as part of the key. This can be overridden by setting
+ * the &lt;code&gt;sessionKey&lt;/code&gt; property to a not <span class="code-keyword">null</span> value.
+ *
+ * @author Eric Dalquist &lt;a href=<span class="code-quote">"mailto:edalquist@unicon.net"</span>&gt;edalquist@unicon.net&lt;/a&gt;
+ * @author Eric Molitor &lt;a href=<span class="code-quote">"mailto:eric@tuxbot.com"</span>&gt;eric@tuxbot.com&lt;/a&gt;
+ * @version 1.0
+ */
+<span class="code-keyword">public</span> class WebWorkTargetSource <span class="code-keyword">extends</span> AbstractPrototypeBasedTargetSource <span class="code-keyword">implements</span> DisposableBean {
+    <span class="code-keyword">private</span> <span class="code-keyword">final</span> <span class="code-keyword">static</span> Log LOG = LogFactory.getLog(WebWorkTargetSource.class);
+
+    <span class="code-keyword">private</span> <span class="code-keyword">transient</span> <span class="code-object">Object</span> noSessionInstance = <span class="code-keyword">null</span>;
+    <span class="code-keyword">private</span> <span class="code-object">String</span> sessionKey = <span class="code-keyword">null</span>;
+    <span class="code-keyword">private</span> <span class="code-object">String</span> compiledSessionKey = <span class="code-keyword">null</span>;
+
+    <span class="code-keyword">public</span> WebWorkTargetSource() {
+        <span class="code-keyword">this</span>.updateBeanKey();
+    }
+
+    /**
+     * @<span class="code-keyword">return</span> Returns the sessionKey.
+     */
+    <span class="code-keyword">public</span> <span class="code-object">String</span> getSessionKey() {
+        <span class="code-keyword">return</span> <span class="code-keyword">this</span>.sessionKey;
+    }
+    /**
+     * @param sessionKey The sessionKey to set.
+     */
+    <span class="code-keyword">public</span> void setSessionKey(<span class="code-object">String</span> sessionKey) {
+        <span class="code-keyword">this</span>.sessionKey = sessionKey;
+        <span class="code-keyword">this</span>.updateBeanKey();
+    }
+    /**
+     * @see org.springframework.aop.target.AbstractBeanFactoryBasedTargetSource#setTargetBeanName(java.lang.<span class="code-object">String</span>)
+     */
+    <span class="code-keyword">public</span> void setTargetBeanName(<span class="code-object">String</span> targetBeanName) {
+        <span class="code-keyword">super</span>.setTargetBeanName(targetBeanName);
+        <span class="code-keyword">this</span>.updateBeanKey();
+    }
+
+    /**
+     * @see org.springframework.aop.TargetSource#getTarget()
+     */
+    <span class="code-keyword">public</span> <span class="code-object">Object</span> getTarget() <span class="code-keyword">throws</span> Exception {
+        <span class="code-keyword">final</span> Map session = ActionContext.getContext().getSession();
+
+        <span class="code-keyword">if</span> (session == <span class="code-keyword">null</span>) {
+            LOG.warn(<span class="code-quote">"No Session found <span class="code-keyword">for</span> thread '"</span> + <span class="code-object">Thread</span>.currentThread().getName() + <span class="code-quote">"'"</span>);
+
+            <span class="code-keyword">if</span> (<span class="code-keyword">this</span>.noSessionInstance == <span class="code-keyword">null</span>) {
+                <span class="code-keyword">this</span>.noSessionInstance = <span class="code-keyword">this</span>.newPrototypeInstance();
+
+                <span class="code-keyword">if</span> (LOG.isDebugEnabled()) {
+                    LOG.debug(<span class="code-quote">"Created instance of '"</span> + <span class="code-keyword">this</span>.getTargetBeanName() + <span class="code-quote">"', not bound to any webWorkSession."</span>);
+                }
+            }
+            <span class="code-keyword">else</span> {
+                <span class="code-keyword">if</span> (LOG.isDebugEnabled()) {
+                    LOG.debug(<span class="code-quote">"Found instance of '"</span> + <span class="code-keyword">this</span>.getTargetBeanName() + <span class="code-quote">"', not bound to any webWorkSession."</span>);
+                }
+            }
+
+            <span class="code-keyword">return</span> <span class="code-keyword">this</span>.noSessionInstance;
+        }
+        <span class="code-keyword">else</span> {
+            <span class="code-object">String</span> beanKey = <span class="code-keyword">this</span>.compiledSessionKey;
+
+            <span class="code-object">Object</span> instance = session.get(beanKey);
+            <span class="code-keyword">if</span> (instance == <span class="code-keyword">null</span>) {
+                instance = <span class="code-keyword">this</span>.newPrototypeInstance();
+                session.put(beanKey, instance);
+
+                <span class="code-keyword">if</span> (LOG.isDebugEnabled()) {
+                    LOG.debug(<span class="code-quote">"Created instance of '"</span> + <span class="code-keyword">this</span>.getTargetBeanName() + <span class="code-quote">"', bound to webWorkSession <span class="code-keyword">for</span> '"</span> 
+                       + <span class="code-object">Thread</span>.currentThread().getName() + <span class="code-quote">"' using key '"</span> + beanKey + <span class="code-quote">"'."</span>);
+                }
+            }
+            <span class="code-keyword">else</span> <span class="code-keyword">if</span> (LOG.isDebugEnabled()) {
+                LOG.debug(<span class="code-quote">"Found instance of '"</span> + <span class="code-keyword">this</span>.getTargetBeanName() + <span class="code-quote">"', bound to webWorkSession <span class="code-keyword">for</span> '"</span> 
+                       + <span class="code-object">Thread</span>.currentThread().getName() + <span class="code-quote">"' using key '"</span> + beanKey + <span class="code-quote">"'."</span>);
+            }
+
+            <span class="code-keyword">return</span> instance;
+        }
+    }
+
+    /**
+     * @see org.springframework.beans.factory.DisposableBean#destroy()
+     */
+    <span class="code-keyword">public</span> void destroy() <span class="code-keyword">throws</span> Exception {
+        <span class="code-keyword">if</span> (<span class="code-keyword">this</span>.noSessionInstance != <span class="code-keyword">null</span> &amp;&amp; <span class="code-keyword">this</span>.noSessionInstance <span class="code-keyword">instanceof</span> DisposableBean) {
+            <span class="code-keyword">if</span> (LOG.isDebugEnabled()) {
+                LOG.debug(<span class="code-quote">"Destroying sessionless bean instance '"</span> + <span class="code-keyword">this</span>.noSessionInstance + <span class="code-quote">"'"</span>);
+            }
+
+            ((DisposableBean)<span class="code-keyword">this</span>.noSessionInstance).destroy();
+        }
+    }
+
+    /**
+     * Generates the key to store the bean in the session with.
+     */
+    <span class="code-keyword">private</span> void updateBeanKey() {
+        <span class="code-keyword">if</span> (<span class="code-keyword">this</span>.sessionKey == <span class="code-keyword">null</span>) {
+            <span class="code-keyword">final</span> <span class="code-object">StringBuffer</span> buff = <span class="code-keyword">new</span> <span class="code-object">StringBuffer</span>();
+
+            buff.append(<span class="code-keyword">this</span>.getClass().getName());
+            buff.append(<span class="code-quote">"_"</span>);
+            buff.append(<span class="code-keyword">this</span>.getTargetBeanName());
+
+            <span class="code-keyword">this</span>.compiledSessionKey = buff.toString();
+        }
+        <span class="code-keyword">else</span> {
+            <span class="code-keyword">this</span>.compiledSessionKey = <span class="code-keyword">this</span>.sessionKey;
+        }
+    }
+}</pre>
+</div></div>
+
+
+<h2><a name="SpringSessionComponentsWorkarounds-CustomizedApplicationContextImplementation"></a>Customized ApplicationContext Implementation</h2>
+<p><b>TODO: Document</b></p>
+
+<h2><a name="SpringSessionComponentsWorkarounds-CustomizedWW%2FXWObjectFactory"></a>Customized WW/XW ObjectFactory</h2>
+<p><b>TODO: Document</b></p>
+
+<h2><a name="SpringSessionComponentsWorkarounds-SessionbackedBeanFactory"></a>Session backed Bean Factory</h2>
+<p>The idea is to simply create a retrieve-or-create bean factory:</p>
+
+<div class="code" style="border-style: solid; "><div class="codeHeader" style="border-bottom-style: solid; "><b>SessionBackedBeanFactory.java</b></div><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> net.itneering.core.spring.session;
+
+<span class="code-keyword">import</span> org.springframework.beans.BeansException;
+<span class="code-keyword">import</span> org.springframework.beans.factory.BeanFactory;
+<span class="code-keyword">import</span> org.springframework.beans.factory.BeanFactoryAware;
+
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionContext;
+
+<span class="code-keyword">import</span> java.util.Map;
+<span class="code-keyword">import</span> java.io.Serializable;
+
+/**
+ * SessionBackedBeanFactory tries to lookup beans by name in XWork session. If not found,
+ * it tries to instantiate <span class="code-keyword">new</span> bean and attaches it to said session.
+ *
+ * @author &lt;a href=<span class="code-quote">"mailto:gielen@it-neering.net"</span>&gt;Rene Gielen&lt;/a&gt;
+ */
+
+<span class="code-keyword">public</span> class SessionBackedBeanFactory <span class="code-keyword">implements</span> Serializable, BeanFactoryAware {
+
+    BeanFactory beanFactory = <span class="code-keyword">null</span>;
+
+    /**
+     * Find a component by name in session scoped storage implementation. If not found, <span class="code-keyword">try</span> to instantiate <span class="code-keyword">new</span> one by
+     * {@link org.springframework.beans.factory.BeanFactory#getBean(<span class="code-object">String</span>)}. Then found component will be attached
+     * to session store implementation.
+     *
+     * @param componentName
+     * @<span class="code-keyword">return</span> The requested component, <span class="code-keyword">if</span> found.
+     */
+    <span class="code-keyword">public</span> <span class="code-object">Object</span> getSessionComponent( <span class="code-object">String</span> componentName ) {
+        <span class="code-object">Object</span> result = getSession().get(componentName);
+        <span class="code-keyword">if</span> ( result == <span class="code-keyword">null</span> ) {
+            result = beanFactory.getBean(componentName);
+            storeComponent(componentName, result);
+        }
+        <span class="code-keyword">return</span> result;
+    }
+
+    <span class="code-keyword">public</span> void storeComponent(<span class="code-object">String</span> componentName, <span class="code-object">Object</span> component ) {
+        getSession().put(componentName, component);
+    }
+
+    /**
+     * Actual implementation of the session scoped storage Map.
+     * Lookup {@link com.opensymphony.xwork.ActionContext#getSession()}.
+     *
+     * @<span class="code-keyword">return</span> The Map <span class="code-keyword">for</span> keeping session objects.
+     */
+    <span class="code-keyword">public</span> Map getSession() {
+        <span class="code-keyword">return</span> ActionContext.getContext().getSession();
+    }
+
+    /**
+     * Callback that supplies the owning factory to a bean instance.
+     * &lt;p&gt;Invoked after population of normal bean properties but before an init
+     * callback like InitializingBean's afterPropertiesSet or a custom init-method.
+     *
+     * @param beanFactory owning BeanFactory (may not be <span class="code-keyword">null</span>).
+     *                    The bean can immediately call methods on the factory.
+     *
+     * @<span class="code-keyword">throws</span> org.springframework.beans.BeansException
+     *          in <span class="code-keyword">case</span> of initialization errors
+     * @see org.springframework.beans.factory.BeanInitializationException
+     */
+    <span class="code-keyword">public</span> void setBeanFactory( BeanFactory beanFactory ) <span class="code-keyword">throws</span> BeansException {
+        <span class="code-keyword">this</span>.beanFactory = beanFactory;
+    }
+}</pre>
+</div></div>
+
+<p>Example applicationContext setup (note that the session scoped bean has to be setup with singleton="false"):</p>
+<div class="code" style="border-style: solid; "><div class="codeHeader" style="border-bottom-style: solid; "><b>applicationContext.xml</b></div><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;?xml version=<span class="code-quote">"1.0"</span> encoding=<span class="code-quote">"UTF-8"</span>?&gt;</span>
+<span class="code-tag">&lt;!DOCTYPE beans PUBLIC <span class="code-quote">"-//SPRING//DTD BEAN//EN"</span> <span class="code-quote">"http://www.springframework.org/dtd/spring-beans.dtd"</span>&gt;</span>
+<span class="code-tag">&lt;beans default-autowire=<span class="code-quote">"byName"</span>&gt;</span>
+    <span class="code-tag">&lt;bean id=<span class="code-quote">"sessionBeanProxy"</span> class=<span class="code-quote">"net.itneering.core.spring.session.SessionBackedBeanFactory"</span> singleton=<span class="code-quote">"true"</span>/&gt;</span>
+    <span class="code-tag">&lt;bean id=<span class="code-quote">"securityContextComponent"</span> class=<span class="code-quote">"net.itneering.security.component.DefaultSecurityContextComponent"</span> singleton=<span class="code-quote">"false"</span> /&gt;</span>
+<span class="code-tag">&lt;/beans&gt;</span></pre>
+</div></div>
+
+<p>Example action use:</p>
+<div class="code" style="border-style: solid; "><div class="codeHeader" style="border-bottom-style: solid; "><b>SecurityAwareAction.java</b></div><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> net.itneering.xwork.action;
+
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionSupport;
+<span class="code-keyword">import</span> net.itneering.core.spring.session.SessionBackedBeanFactory;
+<span class="code-keyword">import</span> net.itneering.security.component.DefaultSecurityContextComponent;
+
+/**
+ * Simple sessionBeanProxy aware action.
+ *
+ * @author &lt;a href=<span class="code-quote">"mailto:gielen@it-neering.net"</span>&gt;Rene Gielen&lt;/a&gt;
+ * @version $Revision: 1.10 $
+ */
+
+<span class="code-keyword">public</span> class SecurityAwareAction <span class="code-keyword">extends</span> ActionSupport <span class="code-keyword">implements</span> PrincipalAware {
+
+    <span class="code-keyword">private</span> <span class="code-keyword">static</span> <span class="code-keyword">final</span> Logger log = Logger.getLogger(SecurityAwareAction.class);
+
+    <span class="code-keyword">protected</span> SessionBackedBeanFactory sessionBeanProxy;
+
+    /**
+     * For Spring wiring usage.
+     *
+     * @param sessionBeanProxy The sessionBeanProxyto use.
+     */
+    <span class="code-keyword">public</span> void setSessionBeanProxy( SessionBackedBeanFactory sessionBeanProxy ) {
+        <span class="code-keyword">this</span>.sessionBeanProxy = sessionBeanProxy;
+    }
+
+    /**
+     * Getter <span class="code-keyword">for</span> actions security context.
+     *
+     * @<span class="code-keyword">return</span> The securityContextComponent set by IoC.
+     */
+    <span class="code-keyword">public</span> SecurityContextComponent getSecurityContextComponent() {
+        <span class="code-keyword">return</span> sessionBeanProxy!= <span class="code-keyword">null</span> ? sessionBeanProxy.getSessionComponent(<span class="code-quote">"securityContextComponent"</span>) : <span class="code-keyword">null</span>;
+    }
+
+    /**
+     * Get the current User Principal <span class="code-keyword">for</span> <span class="code-keyword">this</span> session.
+     *
+     * @<span class="code-keyword">return</span> The User Principal.
+     */
+    <span class="code-keyword">public</span> UserEntity getPrincipal() {
+        <span class="code-keyword">try</span> {
+            <span class="code-keyword">return</span> getSecurityContextComponent().getPrincipal();
+        } <span class="code-keyword">catch</span> ( NullPointerException e ) {
+            <span class="code-keyword">return</span> <span class="code-keyword">null</span>;
+        }
+    }
+    ...
+}</pre>
+</div></div>
+
+<p>For well known session scoped components, you might get more convenience by subclassing SessionBackedBeanFactory:</p>
+<div class="code" style="border-style: solid; "><div class="codeHeader" style="border-bottom-style: solid; "><b>SecurityAwareSessionBeanProxy.java</b></div><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> net.itneering.security.component;
+
+<span class="code-keyword">import</span> net.itneering.core.spring.session.SessionBackedBeanFactory;
+
+/**
+ * SecurityAwareSessionBeanProxy.
+ *
+ * @author &lt;a href=<span class="code-quote">"mailto:gielen@it-neering.net"</span>&gt;Rene Gielen&lt;/a&gt;
+ */
+
+<span class="code-keyword">public</span> class SecurityAwareSessionBeanProxy <span class="code-keyword">extends</span> SessionBackedBeanFactory {
+
+    <span class="code-object">String</span> securityContextComponentName = <span class="code-quote">"securityContextComponent"</span>;
+
+    /**
+     * Make component name configurable by spring setup
+     */
+    <span class="code-keyword">public</span> void setSecurityContextComponentName( <span class="code-object">String</span> securityContextComponentName ) {
+        <span class="code-keyword">this</span>.securityContextComponentName = securityContextComponentName;
+    }
+
+    <span class="code-keyword">public</span> SecurityContextComponent getSecurityContextComponent() {
+        <span class="code-keyword">return</span> (SecurityContextComponent) getSessionComponent(securityContextComponentName);
+    }
+
+}</pre>
+</div></div>
+
+<p>Again example applicationContext setup:</p>
+<div class="code" style="border-style: solid; "><div class="codeHeader" style="border-bottom-style: solid; "><b>applicationContext2.xml</b></div><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;?xml version=<span class="code-quote">"1.0"</span> encoding=<span class="code-quote">"UTF-8"</span>?&gt;</span>
+<span class="code-tag">&lt;!DOCTYPE beans PUBLIC <span class="code-quote">"-//SPRING//DTD BEAN//EN"</span> <span class="code-quote">"http://www.springframework.org/dtd/spring-beans.dtd"</span>&gt;</span>
+<span class="code-tag">&lt;beans default-autowire=<span class="code-quote">"byName"</span>&gt;</span>
+    <span class="code-tag">&lt;bean id=<span class="code-quote">"mySecurityContextComponent"</span> class=<span class="code-quote">"net.itneering.security.component.DefaultSecurityContextComponent"</span> singleton=<span class="code-quote">"false"</span> /&gt;</span>
+    <span class="code-tag">&lt;bean id=<span class="code-quote">"sessionBeanProxy"</span> class=<span class="code-quote">"net.itneering.security.component.SecurityAwareSessionBeanProxy"</span> singleton=<span class="code-quote">"true"</span>&gt;</span>
+        <span class="code-tag">&lt;property name=<span class="code-quote">"securityContextComponentName"</span> value=<span class="code-quote">"mySecurityContextComponent"</span> /&gt;</span>
+    <span class="code-tag">&lt;/bean&gt;</span>
+<span class="code-tag">&lt;/beans&gt;</span></pre>
+</div></div>
+
+<p>Example action use:</p>
+<div class="code" style="border-style: solid; "><div class="codeHeader" style="border-bottom-style: solid; "><b>SecurityAwareAction2.java</b></div><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> net.itneering.xwork.action;
+
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionSupport;
+<span class="code-keyword">import</span> net.itneering.security.component.SecurityAwareSessionBeanProxy;
+<span class="code-keyword">import</span> net.itneering.security.component.DefaultSecurityContextComponent;
+
+/**
+ * Simple sessionBeanProxy aware action.
+ *
+ * @author &lt;a href=<span class="code-quote">"mailto:gielen@it-neering.net"</span>&gt;Rene Gielen&lt;/a&gt;
+ * @version $Revision: 1.10 $
+ */
+
+<span class="code-keyword">public</span> class SecurityAwareAction <span class="code-keyword">extends</span> ActionSupport <span class="code-keyword">implements</span> PrincipalAware {
+
+    <span class="code-keyword">private</span> <span class="code-keyword">static</span> <span class="code-keyword">final</span> Logger log = Logger.getLogger(SecurityAwareAction.class);
+
+    <span class="code-keyword">protected</span> SecurityAwareSessionBeanProxy sessionBeanProxy;
+
+    /**
+     * For Spring wiring usage.
+     *
+     * @param sessionBeanProxy The sessionBeanProxy to use.
+     */
+    <span class="code-keyword">public</span> void setSessionBeanProxy( SecurityAwareSessionBeanProxy sessionBeanProxy ) {
+        <span class="code-keyword">this</span>.sessionBeanProxy = sessionBeanProxy;
+    }
+
+    /**
+     * Get the current User Principal <span class="code-keyword">for</span> <span class="code-keyword">this</span> session.
+     *
+     * @<span class="code-keyword">return</span> The User Principal.
+     */
+    <span class="code-keyword">public</span> UserEntity getPrincipal() {
+        <span class="code-keyword">try</span> {
+            <span class="code-keyword">return</span> sessionBeanProxy.getSecurityContextComponent().getPrincipal();
+        } <span class="code-keyword">catch</span> ( NullPointerException e ) {
+            <span class="code-keyword">return</span> <span class="code-keyword">null</span>;
+        }
+    }
+    ...
+}</pre>
+</div></div>
+
+<p>As said, the solution is very simple. You will get no ties to web layer, and the configuration is really simple, there is no need for proxy definitions in applicationContext.xml etc.<br/>
+The main disadvantage is that you will not be able to wire session scoped beans directly into your actions, you will have to use the indirection via the session backed bean factory. And, as always when dealing with XWork session abstraction, you have to take care for a action context to be setup.</p>
+
+<h2><a name="SpringSessionComponentsWorkarounds-AutoproxiedSessionbackedComponentFactory"></a>Auto proxied Session backed Component Factory</h2>
+<p>Does anyone have an implementation of this? (Eric Molitor)<br/>
+The intention was a bit different for this one, so I tried to clarify headings. Nice idea, though ... (Rene Gielen).<br/>
+The theory here is to create a custom Pointcut class that utilizes the ComponentConfiguration retrieved from the DefaultComponentManager (which loads the Component list from components.xml). The getClassFilter() matches anything that implements one of the Components in the ComponentConfiguration. The Pointcut is then registered as an advisor for all beans (AutoProxy via Springs DefaultAdvisorAutoProxyCreator). The Advice implementation looks at which Component is implmented and fetches the apporiate value out of the Session and calls the Components setter method. <br/>
+<b>TODO: Document, create example</b></p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

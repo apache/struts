@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Tags
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>Webwork provides a tag library decoupled from the view technology. In this section, we describe each tag in general terms, such as the attributes it supports, what the behaviors are, etc. Most tags are supported in all template languages (see <a href="JSP Tags.html" title="JSP Tags">JSP Tags</a>, <a href="Velocity Tags.html" title="Velocity Tags">Velocity Tags</a>, and <a href="FreeMarker Tags.html" title="FreeMarker Tags">FreeMarker Tags</a>), but some are currently only specific to one language. Whenever a tag doesn't have complete support for every langauge, it will be noted in the reference documents.</p>
+
+<p>The types of tags can be broken in to two types: general and HTML. Besides function and responsibility, the biggest difference between the general tags and the HTML tags is the fact that the HTML tags support <em>templates</em> and <em>themes</em>. In addition to the general tag reference, we also provide examples for using these generic tags in each of the support languages.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>Please make sure you have read the <a href="Tag Syntax.html" title="Tag Syntax">Tag Syntax</a> document and understand how tag attribute syntax works.</td></tr></table>
+
+<h1><a name="Tags-GeneralTags"></a>General Tags</h1>
+<p>General tags are used for controlling the execution flow when your pages render. They also allow for data extraction from places other than your action or the value stack, such as <a href="Internationalization.html" title="Internationalization">Internationalization</a>, JavaBeans, and including additional URLs or action executions.</p>
+
+<ol>
+	<li><a href="Control Tags.html" title="Control Tags">Control Tags</a> provide control flow, such as <em>if</em>, <em>else</em>, and <em>iterator</em>.</li>
+	<li><a href="Data Tags.html" title="Data Tags">Data Tags</a> allow for data manipulation or creation, such as <em>bean</em>, <em>push</em>, and <em>i18n</em>.</li>
+</ol>
+
+
+<h1><a name="Tags-HTMLTags"></a>HTML Tags</h1>
+<p>Unlike the general tags, the HTML tags do not provide much control structure or logic. Rather, they are focussed on using  data, either from your action/value stack or from the <a href="Data Tags.html" title="Data Tags">Data Tags</a>, and displaying it in rich and reusable HTML. All HTML tags have a unique behavior that they are driven by <em>templates</em> and <em>themes</em>. While the general tags simply output some content directly from the tag (if there is any content to output), the HTML tags defer to a template, often grouped together as a theme, to do the actual rendering.</p>
+
+<p>This unique template support allows for you to use the HTML tags to build a rich set of reusable UI components that fit your exact requirements. Please read the <a href="Themes and Templates.html" title="Themes and Templates">Themes and Templates</a> guide for more information on this powerful feature.</p>
+
+<ol>
+	<li><a href="Themes and Templates.html" title="Themes and Templates">Themes and Templates</a>: a must-read explanation of how themes and templates are uses when rendering HTML tags.</li>
+	<li><a href="Form Tags.html" title="Form Tags">Form Tags</a> provide all form-related HTML output, such as <em>form</em>, <em>textfield</em>, and <em>select</em>.</li>
+	<li><a href="Non Form Tags.html" title="Non Form Tags">Non Form Tags</a> provide all non-form-related HTML output, such as <em>a</em>, <em>div</em>, and <em>tabbedPanel</em>.</li>
+</ol>
+
+
+<h1><a name="Tags-LanguageSpecificTagSupport"></a>Language Specific Tag Support</h1>
+<p>WebWork strives to support whatever environment you are most comfortable working in. That is why WebWork does not require a single template language, but instead allows for almost any common language to be used and even provides hooks for new languages. By default, almost every single tag is supported in JSP, Velocity, and FreeMarker. In each of these sections, you'll find examples and techniques for applying the generic tag reference toward your specific language or template choice.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>As of WebWork 2.2, FreeMarker has become the "standard" template language recommended by the WebWork team. There are many reasons for this decision, which can be found in various forums archives, but it pretty much boils down to this: FreeMarker provides a richer set of features than Velocity and is also more developer-friendly when errors occur (ie: the error reports are more accurate). JSP, while still used, is much more difficult for applications that demand a more modular approach, such as changing the templates at runtime or uploading packaged "modules" of WebWork actions and template files.</td></tr></table>
+
+<ol>
+	<li><a href="JSP Tags.html" title="JSP Tags">JSP Tags</a></li>
+	<li><a href="Velocity Tags.html" title="Velocity Tags">Velocity Tags</a></li>
+	<li><a href="FreeMarker Tags.html" title="FreeMarker Tags">FreeMarker Tags</a></li>
+</ol>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

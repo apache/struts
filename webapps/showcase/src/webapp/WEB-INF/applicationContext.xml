@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans default-autowire="byName">
+
+    <bean id="storage" class="com.opensymphony.webwork.showcase.application.MemoryStorage" singleton="true"/>
+
+    <bean id="testDataProvider" class="com.opensymphony.webwork.showcase.application.TestDataProvider" singleton="true" lazy-init="false"/>
+
+    <bean id="skillDao" class="com.opensymphony.webwork.showcase.dao.SkillDao"/>
+    <bean id="employeeDao" class="com.opensymphony.webwork.showcase.dao.EmployeeDao"/>
+
+    <bean id="personManager" class="com.opensymphony.webwork.showcase.person.PersonManager" singleton="true"/>
+    
+</beans>

@@ -1,0 +1,83 @@
+<html>
+    <head>
+        <title>WebWork 2 : OGNL</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : OGNL
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Dec 14, 2004 by <font color="#0050B2">casey</font>.
+				    </div>
+
+				    <p class="paragraph"><h2 style="margin: 4px 0px 4px 0px;" class="heading2"><a name="OGNL-Overview"> 综述</a></h2></p>OGNL就是Object Graph Navigation Language - 请访问<a href="http://www.ognl.org" title="Visit page outside Confluence">&#104;ttp://www.ognl.org</a>查看OGNL完整文档. 本文中我们仅展示几个与WebWork共存的OGNL特性. 
+<ul class="star">
+<li> 要回顾基本概念, 参考<a href="OGNL Basics.html" title="OGNL Basics">OGNL基础</a></li>
+</ul>
+<h4 class="heading4"><a name="OGNL-WebworkwithOGNL"> Webwork和OGNL</a></h4><p class="paragraph">Webwork使用标准命名上下文(namming context)运算OGNL表达式.  OGNL处理的定级对象是一个map(通常被称为context map). OGNL有一个根对象的概念 (在webwork术语中, 就是OGNLValueStack). 其他对象和根对象一起放置在context map(简称context)中, 包括session/application/request属性. 这些对象和根对象没有关系, 只是顺序存在于context map中. 因此, 为访问这些对象需要 使用#告诉ognl不要在根对象中查找, 而应当在其他context中查找
+<div class="code"><div class="codeContent">
+<pre>|             &#10;&#10;                     |&#45;&#45;request&#10;                     |&#10;                     |&#45;&#45;application&#10;                     |&#10;       context map&#45;&#45;&#45;|&#45;&#45;OgnlValueStack(root)&#10;                     |&#10;                     |&#45;&#45;session&#10;                     |&#10;                     |&#45;&#45;attr&#10;                     |&#10;                     |&#45;&#45;parameters</pre>
+</div></div></p>N注意context map中还有其他对象, 本例中仅引用了一部分. 现在, 活动对象被放入OGNLValueStack因此可以不使用#访问它的属性.
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;ww: property value=<span class="xml&#45;quote">&quot;myBean.myProperty&quot;</span>/&gt;</span></pre>
+</div></div><p class="paragraph">要访问session, request和其他对象:
+<div class="code"><div class="codeContent">
+<pre>ActionContext.getContext().getSession().put(<span class="java&#45;quote">&quot;mySessionPropKey&quot;</span>, mySessionObject);</pre>
+</div></div>
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;ww: property value=<span class="xml&#45;quote">&quot;#session.mySessionPropKey&quot;</span>/&gt;</span> or&#10;<span class="xml&#45;tag">&lt;ww: property value=<span class="xml&#45;quote">&quot;#session&#91;&#039;mySessionPropKey&#039;&#93;&quot;</span>/&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;ww: property value=<span class="xml&#45;quote">&quot;#attr.mySessionPropKey&quot;</span>/&gt;</span></pre>
+</div></div></p><h4 class="heading4"><a name="OGNL-Collections%28Maps%2CLists%2CSets%29"> 集合 (Maps, Lists, Sets) </a></h4>
+在WebWork中经常要处理集合(maps, lists, sets), 因此下面是几个使用select标签的例子:<br/>
+list的语法:  &#123;e1,e2&#125;. 它创建一个List, 包含字符串&quot;name1&quot;和&quot;name2&quot;.
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;webwork:select label=<span class="xml&#45;quote">&quot;&#039;lebal&#039;&quot;</span> name=<span class="xml&#45;quote">&quot;&#039;nmae&#039;&quot;</span> list=<span class="xml&#45;quote">&quot;&#123;&#039;name1&#039;,&#039;name2&#039;&#125;&quot;</span> /&gt;</span></pre>
+</div></div><br/>
+map的语法: #&#123;key1:value1,key2:value2&#125;. 它创建一个Map, 将&quot;foo&quot;映射到&quot;foovalue&quot;, &quot;bar&quot;映射到&quot;barvalue&quot;:
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;webwork:select label=<span class="xml&#45;quote">&quot;&#039;lebal&#039;&quot;</span> name=<span class="xml&#45;quote">&quot;&#039;nmae&#039;&quot;</span> list=<span class="xml&#45;quote">&quot;#&#123;&#039;foo&#039;:&#039;foovalue&#039;, &#039;bar&#039;:&#039;barvalue&#039;&#125;&quot;</span> /&gt;</span></pre>
+</div></div><p class="paragraph">有时需要判断一个元素是否包含在集合中.  可以使用下面的操作<tt class="monospaced">in</tt>和<tt class="monospaced">not in</tt>
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;ui:if test=<span class="xml&#45;quote">&quot;&#039;foo&#039; in &#123;&#039;foo&#039;,&#039;bar&#039;&#125;&quot;</span>&gt;</span>&#10;   muhahaha&#10;<span class="xml&#45;tag">&lt;/ui:if&gt;</span>&#10;<span class="xml&#45;tag">&lt;ui:else&gt;</span>&#10;   boo&#10;<span class="xml&#45;tag">&lt;/ui:else&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;ui:if test=<span class="xml&#45;quote">&quot;&#039;foo&#039; not in &#123;&#039;foo&#039;,&#039;bar&#039;&#125;&quot;</span>&gt;</span>&#10;   muhahaha&#10;<span class="xml&#45;tag">&lt;/ui:if&gt;</span>&#10;<span class="xml&#45;tag">&lt;ui:else&gt;</span>&#10;   boo&#10;<span class="xml&#45;tag">&lt;/ui:else&gt;</span></pre>
+</div></div></p>选择集合的一个子集(称为投影), 可以在集合中使用通佩符(wildcard).
+<ul type="square" class="minus">
+<li> ? - 所有匹配选择逻辑的元素</li>
+<li> ^ - 第一个匹配选择逻辑的元素</li>
+<li> $ - 最后一个匹配选择逻辑的元素</li>
+</ul><br/>
+从对象Person中获取男性亲属的子集:
+<div class="code"><div class="codeContent">
+<pre>person.relatives.&#123;&#63; #this.gender == &#039;male&#039;&#125;</pre>
+</div></div><p class="paragraph"><h4 class="heading4"><a name="OGNL-LambdaExpressions"> Lambda表达式 </a></h4>
+OGNL支持基本的lamba表达式语法可以用来编写简单的函数.</p>例如:<p class="paragraph">你可能不会想到会在数学课外在见到这个.<br/>
+菲波纳切(Fibonacci)数列: if n==0 return 0; elseif n==1 return 1; else return fib(n-2)+fib(n-1);<br/>
+fib(0) = 0<br/>
+fib(1) = 1<br/>
+fib(11) = 89</p>Lambda表达式的任何内容都包括在括号中. #this变量保存表达式的参数, 它的初始值是11.<br/>
+
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;ww:property value=<span class="xml&#45;quote">&quot;#fib =:&#91;#this==0 &#63; 0 : #this==1 &#63; 1 : #fib(#this&#45;2)&#43;#fib(#this&#45;1)&#93;, #fib(11)&quot;</span> /&gt;</span></pre>
+</div></div>
+
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

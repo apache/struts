@@ -1,0 +1,66 @@
+<html>
+    <head>
+        <title>WebWork 2 : Release Notes - 2.1.4</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : Release Notes - 2.1.4
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Dec 14, 2004 by <font color="#0050B2">plightbo</font>.
+				    </div>
+
+				    <p class="paragraph"><h2 style="margin: 4px 0px 4px 0px;" class="heading2"><a name="ReleaseNotes-2.1.4-WebWork2.1.4ReleaseNotes"> WebWork 2.1.4 Release Notes</a></h2></p><h3 class="heading3"><a name="ReleaseNotes-2.1.4-KeyChanges"> Key Changes</a></h3>
+This release is the first release to include the re-vamped JSP tag support. Specifically, there is an option (off by default) that now lets you use an alternative syntax for JSP tags.<p class="paragraph">When <b class="strong">webwork.tag.altSyntax</b> is set to true in webwork.properties, all attributes in the JSP tags (both UI and non-UI) that evaluate to a String (as opposed to a Boolean, Integer, Collection, or anything else) shall not be evaluated like it normally is.</p>Rather, the string will be parsed for the pattern &quot;%&#123;...&#125;&quot; and only the text between those braces shall be evaluated. This should make using all the tags, but especially the UI tags, much easier. <p class="paragraph">The only exception to this rule of parsing String attributes is for the &lt;ww:property/&gt; tag. That is because the usage for &lt;ww:property/&gt; is so commonly used for pulling values from the stack, enforcing the &quot;%&#123;..}&quot; syntax on it would be overly tedious.</p><h3 class="heading3"><a name="ReleaseNotes-2.1.4-MigrationNotes"> Migration Notes</a></h3><p class="paragraph">There is nothing to migrate for now. Because this new syntax is optional and turned off by default, you don&#039;t need to do anything to migrate as long as you don&#039;t plan to use this new syntax. If you DO plan to use this new syntax, you must modify all your tag attributes that previously had the pattern of &quot;&#039;...&#039;&quot; to just be &quot;...&quot;. Basically, you must remove single quotes where they once were.</p>Also, any place where an attribute did not have single quotes, you must check to see if the attribute is expected to be a String attribute. If so, you should replace the pattern of &quot;...&quot; with &quot;%&#123;...}&quot; so that the expression is still being evaluated.<p class="paragraph">Note that attributes such as disabled, maxlength, etc do not need the new syntax. <b class="strong">That is becaus the syntax is only applied to attributes that are expected to be strings</b>. This is very important to remember!</p><b class="strong">Finally, please note that this release is a preview release for the new syntax. The new syntax will not be finalized and turned on by default until 2.2.0. You are free to use it, but it is not guaranteed to be stable and may change in the coming releases</b>.<p class="paragraph"><h3 class="heading3"><a name="ReleaseNotes-2.1.4-Changelog"> Changelog</a></h3></p><p>
+    <table  width="100%" cellspacing="0" class="grid">
+        <tr>
+            <th colspan="3" style="text-align: left;">
+                <a href="http://jira.opensymphony.com/secure/IssueNavigator.jspa?&pid=10030&fixfor=21393&sorter/field=issuekey&sorter/order=DESC&tempMax=25&reset=true&">OpenSymphony JIRA</a>
+                <span class="smalltext">(1 issues)</span>
+            </th>
+        </tr>
+        <tr>
+                        <th style="text-align: left;">
+                T                                                                                                                                                                            </th>
+                        <th style="text-align: left;">
+                                Key                                                                                                                                                            </th>
+                        <th style="text-align: left;">
+                                                Summary                                                                                                                                            </th>
+                    </tr>
+                                            <tr class="rowNormal">
+                                                            <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-581"><img src="http://jira.opensymphony.com/images/icons/improvement.gif" alt="Improvement" border="0" /></a>
+                                    </td>
+                                <td nowrap="true">
+                                            <a href="http://jira.opensymphony.com/browse/WW-581">WW-581</a>
+                                    </td>
+                                <td >
+                                            <a href="http://jira.opensymphony.com/browse/WW-581">JSP Tags should support better syntax</a>
+                                    </td>
+                            </tr>
+            </table>
+</p>
+
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

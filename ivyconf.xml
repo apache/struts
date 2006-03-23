@@ -1,0 +1,30 @@
+<ivyconf>
+    <properties file="ivyconf.properties"/>
+    <conf defaultResolver="default" checkUpToDate="true"/>
+    <resolvers>
+        <chain name="default">
+            <filesystem name="integration" checkmodified="true">
+                <ivy pattern="${integration.repository}/[organisation]/[module]/ivy-[revision].xml"/>
+                <artifact pattern="${integration.repository}/[organisation]/[module]/[artifact]-[revision].[ext]"/>
+            </filesystem>
+            <url name="opensymphony" checkmodified="true">
+                <ivy pattern="http://ivyrep.opensymphony.com/[organisation]/[module]/ivy-[revision].xml"/>
+                <artifact
+                        pattern="http://ivyrep.opensymphony.com/[organisation]/[module]/[artifact]-[revision].[type]"/>
+            </url>
+            <url name="contegix">
+                <ivy pattern="http://repository.contegix.com/ivyrep/[organisation]/[module]/ivy-[revision].xml"/>
+                <artifact
+                        pattern="http://repository.contegix.com/ivyrep/[organisation]/[module]/[artifact]-[revision].[type]"/>
+            </url>
+            <ivyrep name="ivyrep"/>
+            <ibiblio name="contegix-maven" root="http://repository.contegix.com/maven"/>
+            <url name="maven">
+                <artifact pattern="http://www.ibiblio.org/maven/[organisation]/jars/[module]-[revision].[type]"/>
+            </url>
+            <!--url name="maven-mirror">
+                <artifact pattern="http://ibiblio.lsu.edu/main/pub/packages/maven/[organisation]/jars/[module]-[revision].[type]"/>
+            </url-->
+        </chain>
+    </resolvers>
+</ivyconf>

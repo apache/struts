@@ -1,0 +1,30 @@
+<form namespace="" id="myAction" name="myForm" onsubmit="submitMe(); customOnsubmit(); return true;" action="myAction" method="POST" enctype="myEncType" title="mytitle">
+<table class="wwFormTable"> <tr>
+    <td class="tdLabel"></td>
+    <td>	<script language="javascript" src="/webwork/optiontransferselect/optiontransferselect.js"></script>
+<table>
+<tr><td>
+<select name="myUpDownSelectTag" size="5" id="myAction_myUpDownSelectTag" multiple="multiple">
+</select></td></tr>
+<tr><td>
+		&nbsp;<input type="button" value="^" onclick="moveOptionUp(document.getElementById('myAction_myUpDownSelectTag'));" />&nbsp;
+		&nbsp;<input type="button" value="v" onclick="moveOptionDown(document.getElementById('myAction_myUpDownSelectTag'));" />&nbsp;
+		&nbsp;<input type="button" value="*" onclick="selectAllOptions(document.getElementById('myAction_myUpDownSelectTag'));" />&nbsp;
+</td></tr>
+</table>
+</td>
+</tr>
+</table>
+</form>
+
+
+<script>
+	function customOnsubmit() {
+
+		// Code that will auto select updownselect elements upon its containing form submission
+			var updownselectObj = document.getElementById("myAction_myUpDownSelectTag");
+			selectAllOptions(updownselectObj);
+			selectUnselectMatchingOptions(updownselectObj, null, "unselect", false, "key");
+	}
+</script>
+

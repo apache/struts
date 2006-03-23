@@ -1,0 +1,118 @@
+<portlet-app version="1.0" xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" id="webwork-portlet">
+  <portlet id="WebWorkPortlet">
+    <description xml:lang="EN">WebWork2 Test Portlet</description>
+    <portlet-name>WebWorkPortlet</portlet-name>
+    <display-name xml:lang="EN">WebWork2 Test Portlet</display-name>
+    
+    <portlet-class>com.opensymphony.webwork.portlet.dispatcher.Jsr168Dispatcher</portlet-class>
+
+    <init-param>
+		<!-- The view mode namespace. Maps to a namespace in the xwork config file -->
+		<name>viewNamespace</name>
+		<value>/view</value>
+	</init-param>
+    <init-param>
+		<!-- The default action to invoke in view mode -->
+		<name>defaultViewAction</name>
+		<value>index</value>
+	</init-param>
+	<init-param>
+		<!-- The view mode namespace. Maps to a namespace in the xwork config file -->
+		<name>editNamespace</name>
+		<value>/edit</value>
+	</init-param>
+    <init-param>
+		<!-- The default action to invoke in view mode -->
+		<name>defaultEditAction</name>
+		<value>index</value>
+	</init-param>
+	<init-param>
+		<!-- The view mode namespace. Maps to a namespace in the xwork config file -->
+		<name>helpNamespace</name>
+		<value>/help</value>
+	</init-param>
+    <init-param>
+		<!-- The default action to invoke in view mode -->
+		<name>defaultHelpAction</name>
+		<value>index</value>
+	</init-param>
+    
+
+    
+    <expiration-cache>0</expiration-cache>
+
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>edit</portlet-mode>
+      <portlet-mode>help</portlet-mode>
+    </supports>
+
+    <supported-locale>en</supported-locale>
+
+    <portlet-info>
+      <title>My PortletWork portlet</title>
+      <short-title>PW</short-title>
+      <keywords>webwork,portletwork</keywords>
+    </portlet-info>
+  </portlet>
+  
+  <portlet id="WebWorkPortlet2">
+    <description xml:lang="EN">WebWork2 Test Portlet2</description>
+    <portlet-name>WebWorkPortlet2</portlet-name>
+    <display-name xml:lang="EN">WebWork2 Test Portlet2</display-name>
+    
+    <portlet-class>com.opensymphony.webwork.portlet.dispatcher.Jsr168Dispatcher</portlet-class>
+
+    <init-param>
+		<!-- The view mode namespace. Maps to a namespace in the xwork config file -->
+		<name>viewNamespace</name>
+		<value>/view</value>
+	</init-param>
+    <init-param>
+		<!-- The default action to invoke in view mode -->
+		<name>defaultViewAction</name>
+		<value>index</value>
+	</init-param>
+	<init-param>
+		<!-- The view mode namespace. Maps to a namespace in the xwork config file -->
+		<name>editNamespace</name>
+		<value>/edit</value>
+	</init-param>
+    <init-param>
+		<!-- The default action to invoke in view mode -->
+		<name>defaultEditAction</name>
+		<value>index</value>
+	</init-param>
+	<init-param>
+		<!-- The view mode namespace. Maps to a namespace in the xwork config file -->
+		<name>helpNamespace</name>
+		<value>/help</value>
+	</init-param>
+    <init-param>
+		<!-- The default action to invoke in view mode -->
+		<name>defaultHelpAction</name>
+		<value>index</value>
+	</init-param>
+    
+
+    
+    <expiration-cache>0</expiration-cache>
+
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>edit</portlet-mode>
+      <portlet-mode>help</portlet-mode>
+    </supports>
+
+    <supported-locale>en</supported-locale>
+
+    <portlet-info>
+      <title>My PortletWork portlet2</title>
+      <short-title>PW2</short-title>
+      <keywords>webwork,portletwork</keywords>
+    </portlet-info>
+  </portlet>
+
+</portlet-app>

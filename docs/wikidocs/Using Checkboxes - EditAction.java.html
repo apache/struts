@@ -1,0 +1,77 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Using Checkboxes - EditAction.java
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> cash.action;
+
+<span class="code-keyword">import</span> org.apache.log4j.Logger;
+
+<span class="code-keyword">import</span> cash.config.ConfigManager;
+<span class="code-keyword">import</span> cash.model.User;
+<span class="code-keyword">import</span> cash.util.HibernateUtil;
+<span class="code-keyword">import</span> cash.validator.PasswordFormatValidator;
+
+<span class="code-keyword">import</span> net.sf.hibernate.LockMode;
+
+/**
+ * Edit a user
+ * @author Joel Hockey
+ * @version $Id: Using\040Checkboxes\040-\040EditAction.java.html,v 1.14 2006/03/23 21:05:25 rgielen Exp $
+ */
+<span class="code-keyword">public</span> class EditAction <span class="code-keyword">extends</span> HibernateAction {
+    <span class="code-keyword">private</span> <span class="code-keyword">static</span> <span class="code-keyword">final</span> Logger LOG = Logger.getLogger(EditAction.class);
+
+    <span class="code-keyword">private</span> User m_user = <span class="code-keyword">new</span> User();
+    <span class="code-keyword">private</span> <span class="code-object">String</span> m_repeatPassword;
+
+    /** <span class="code-keyword">return</span> user to be edited. */
+    <span class="code-keyword">public</span> User getUser() { <span class="code-keyword">return</span> m_user; }
+
+    /** @param pwd repeat of password */
+    <span class="code-keyword">public</span> void setRepeatPassword(<span class="code-object">String</span> pwd) { m_repeatPassword = pwd; }
+    /** @<span class="code-keyword">return</span> repeat password */
+    <span class="code-keyword">public</span> <span class="code-object">String</span> getRepeatPassword() { <span class="code-keyword">return</span> m_repeatPassword; }
+
+    /** override <span class="code-keyword">super</span> */
+    <span class="code-keyword">public</span> <span class="code-object">String</span> execute() <span class="code-keyword">throws</span> Exception {
+        LOG.debug(<span class="code-quote">"EditAction started"</span>);
+
+        <span class="code-comment">// get original user from session, check that password is valid, update and save.
+</span>        User u = (User)get(<span class="code-quote">"user"</span>);
+        HibernateUtil.currentSession().lock(u, LockMode.NONE);
+
+        <span class="code-comment">// check that password has actually changed before updating
+</span>        <span class="code-keyword">if</span> (!PasswordFormatValidator.PASSWORD_MASK.equals(m_user.getPassword())) {
+            <span class="code-keyword">if</span> (!u.changePassword(m_user.getPassword())) {
+                addFieldError(<span class="code-quote">"user.password"</span>, <span class="code-quote">"password must be different to previous "</span>
+                    + ConfigManager.getConfig().getUser().getNoRepeatHistory() + <span class="code-quote">" passwords"</span>);
+                <span class="code-keyword">return</span> INPUT;
+            }
+        }
+
+        m_user.copy(u);
+        HibernateUtil.currentSession().save(u);
+        User loginUser = (User)get(LoginAction.LOGIN_USER);
+        <span class="code-keyword">if</span> (u.getId() == loginUser.getId()) {
+            set(LoginAction.LOGIN_USER, u);
+        }
+        <span class="code-keyword">return</span> SUCCESS;
+    }
+}</pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

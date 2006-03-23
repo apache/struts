@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <title>WebWork - 
+        RomeResult
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h2><a name="RomeResult-Introduction"></a>Introduction</h2>
+
+<p>A couple of days ago I quickly had to create a WW result type that would transform a Rome (<a href="https://rome.dev.java.net/" title="Visit page outside Confluence">&#104;ttps://rome.dev.java.net/</a>) SyndFeed to several news feeds. WW makes this very, very easy. </p>
+<table cellpadding='5' width='85%' cellspacing='8px' class='infoMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/information.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td><b class="strong">Used versions</b><br />
+<p>WebWork 2.2 beta 4<br/>
+Rome 0.7 beta</p></td></tr></table>
+
+<h2><a name="RomeResult-Thecode"></a>The code</h2>
+
+<div class="code"><div class="codeHeader"><b>com.acme.result.RomeResult.java</b></div><div class="codeContent">
+<pre class="code-java">/**
+ * 
+ */
+<span class="code-keyword">package</span> com.acme.result;
+
+<span class="code-keyword">import</span> java.io.Writer;
+
+<span class="code-keyword">import</span> org.apache.log4j.Logger;
+
+<span class="code-keyword">import</span> com.opensymphony.webwork.ServletActionContext;
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionInvocation;
+<span class="code-keyword">import</span> com.opensymphony.xwork.Result;
+<span class="code-keyword">import</span> com.sun.syndication.feed.synd.SyndFeed;
+<span class="code-keyword">import</span> com.sun.syndication.io.SyndFeedOutput;
+
+/**
+ * A simple Result to output a Rome SyndFeed object into a newsfeed.
+ * @author Philip Luppens
+ * 
+ */
+<span class="code-keyword">public</span> class RomeResult <span class="code-keyword">implements</span> Result {
+
+	<span class="code-keyword">private</span> <span class="code-object">String</span> feedName;
+
+	<span class="code-keyword">private</span> <span class="code-object">String</span> feedType;
+
+	<span class="code-keyword">private</span> <span class="code-keyword">final</span> <span class="code-keyword">static</span> Logger logger = Logger.getLogger(RomeResult.class);
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.opensymphony.xwork.Result#execute(com.opensymphony.xwork.ActionInvocation)
+	 */
+	<span class="code-keyword">public</span> void execute(ActionInvocation ai) <span class="code-keyword">throws</span> Exception {
+		<span class="code-keyword">if</span> (feedName == <span class="code-keyword">null</span>) {
+			<span class="code-comment">// ack, we need <span class="code-keyword">this</span> to find the feed on the stack
+</span>			logger
+					.error(<span class="code-quote">"Required parameter 'feedName' not found. "</span>
+							+ <span class="code-quote">"Make sure you have the param tag set and "</span>
+							+ <span class="code-quote">"the <span class="code-keyword">static</span>-parameters interceptor enabled in your interceptor stack."</span>);
+			<span class="code-comment">// no point in continuing ..
+</span>			<span class="code-keyword">return</span>;
+		}
+
+		<span class="code-comment">// don't forget to set the content to the correct mimetype
+</span>		ServletActionContext.getResponse().setContentType(<span class="code-quote">"text/xml"</span>);
+		<span class="code-comment">// get the feed from the stack that can be found by the feedName
+</span>		SyndFeed feed = (SyndFeed) ai.getStack().findValue(feedName);
+
+		<span class="code-keyword">if</span> (logger.isDebugEnabled()) {
+			logger.debug(<span class="code-quote">"Found object on stack with name '"</span> + feedName + <span class="code-quote">"': "</span>
+					+ feed);
+		}
+		<span class="code-keyword">if</span> (feed != <span class="code-keyword">null</span>) {
+
+			<span class="code-keyword">if</span> (feedType != <span class="code-keyword">null</span>) {
+				<span class="code-comment">// Accepted types are: rss_0.90 - rss_2.0 and atom_0.3
+</span>				<span class="code-comment">// There is a bug though in the rss 2.0 generator when it checks
+</span>				<span class="code-comment">// <span class="code-keyword">for</span> the type attribute in the description element. It's has a
+</span>				<span class="code-comment">// big 'FIXME' next to it (v. 0.7beta).
+</span>				feed.setFeedType(feedType);
+			}
+			SyndFeedOutput output = <span class="code-keyword">new</span> SyndFeedOutput();
+			<span class="code-comment">//we'll need the writer since Rome doesn't support writing to an outputStream yet
+</span>			Writer out = <span class="code-keyword">null</span>;
+			<span class="code-keyword">try</span> {
+				out = ServletActionContext.getResponse().getWriter();
+				output.output(feed, out);
+			} <span class="code-keyword">catch</span> (Exception e) {
+				<span class="code-comment">// Woops, couldn't write the feed ?
+</span>				logger.error(<span class="code-quote">"Could not write the feed"</span>, e);
+			} <span class="code-keyword">finally</span> {
+				<span class="code-comment">//close the output writer (will flush automatically)
+</span>				<span class="code-keyword">if</span> (out != <span class="code-keyword">null</span>) {
+					out.close();
+				}
+			}
+
+		} <span class="code-keyword">else</span> {
+			<span class="code-comment">// woops .. no object found on the stack with that name ?
+</span>			logger.error(<span class="code-quote">"Did not find object on stack with name '"</span> + feedName
+					+ <span class="code-quote">"'"</span>);
+		}
+	}
+
+	<span class="code-keyword">public</span> void setFeedName(<span class="code-object">String</span> feedName) {
+		<span class="code-keyword">this</span>.feedName = feedName;
+	}
+
+	<span class="code-keyword">public</span> void setFeedType(<span class="code-object">String</span> feedType) {
+		<span class="code-keyword">this</span>.feedType = feedType;
+	}
+
+}</pre>
+</div></div>
+
+<h2><a name="RomeResult-CodeExplanation"></a>Code Explanation</h2>
+
+<p>Easy enough. We try to find the SyndFeed object on the WW stack. If we can find it, we will set the feed type (rss v0.9 +, atom 0.3) if it has been specified in the result parameters (see below). Then we use a SyndFeedOutput to write our newsfeed to our PrintWriter from our response.</p>
+
+<h2><a name="RomeResult-XWorkconfiguration"></a>XWork configuration</h2>
+
+<p>Before you can use this result, you will need to register it in your xwork.xml:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;package name=<span class="code-quote">"default"</span> extends=<span class="code-quote">"webwork-default"</span>&gt;</span>
+	<span class="code-tag">&lt;result-types&gt;</span>
+		<span class="code-tag">&lt;result-type name=<span class="code-quote">"feed"</span> class=<span class="code-quote">"com.acme.result.RomeResult"</span>/&gt;</span>
+	<span class="code-tag">&lt;/result-types&gt;</span>
+	<span class="code-tag">&lt;interceptors&gt;</span>
+..</pre>
+</div></div>
+
+<p>You can now use this result type. So, create an Action that will create and populate the Rome SyndFeed, and make sure you provide a getter for your populated SyndFeed. The actual creation of your feed is beyond this recipe, but you can find plenty of examples in the Rome Wiki (<a href="http://wiki.java.net/bin/view/Javawsxml/Rome05Tutorials" title="Visit page outside Confluence">&#104;ttp://wiki.java.net/bin/view/Javawsxml/Rome05Tutorials</a>).</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;action name=<span class="code-quote">"feed"</span> class=<span class="code-quote">"com.acme.action.CreateFeedAction"</span>&gt;</span>
+	<span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"feed"</span>&gt;</span>
+		<span class="code-tag">&lt;param name=<span class="code-quote">"feedName"</span>&gt;</span>feed<span class="code-tag">&lt;/param&gt;</span>
+		<span class="code-tag">&lt;param name=<span class="code-quote">"feedType"</span>&gt;</span>rss_1.0<span class="code-tag">&lt;/param&gt;</span>
+	<span class="code-tag">&lt;/result&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span></pre>
+</div></div>
+
+<h2><a name="RomeResult-Concludingthoughts"></a>Concluding thoughts</h2>
+
+<p>This is a simple feed result using Rome as a news feed generator. You might want to make sure you don't generate your feed on every request, but there are lots of ways to deal with such problems. You can also provide additional setters in the Result to set your feed title, url, etc, but this should suffice for a quickstart.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

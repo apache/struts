@@ -1,0 +1,40 @@
+<html>
+<head>
+<title>WebWork <XDtConfig:configParameterValue paramName="Taglibversion"/> Taglib Index</title>
+</head>
+
+<body>
+
+<h1>WebWork <XDtConfig:configParameterValue paramName="Taglibversion"/> Taglib Index</h1>
+<p>
+<table width="100%">
+
+
+<XDtClass:forAllClasses>
+
+<XDtClass:ifHasClassTag tagName="ww:tag">
+
+<tr>
+<td align="left" valign="top" width="20%">
+<a href="<XDtClass:className/>.html">&lt;<XDtClass:classTagValue tagName="ww:tag" paramName="name"/> /&gt;</a>
+</td>
+<td align="left" valign="top" width="*">
+<XDtClass:ifHasClassTag tagName="ww:tag" paramName="description">
+<XDtClass:classTagValue tagName="ww:tag" paramName="description"/>
+</XDtClass:ifHasClassTag>
+<XDtClass:ifDoesntHaveClassTag tagName="ww:tag" paramName="description">
+<b>No Description</b>
+</XDtClass:ifDoesntHaveClassTag>
+</td>
+</tr>
+
+</XDtClass:ifHasClassTag>
+
+</XDtClass:forAllClasses>
+
+</table>
+
+</p>
+
+</body>
+</html>

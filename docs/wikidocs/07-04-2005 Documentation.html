@@ -1,0 +1,431 @@
+<html>
+    <head>
+        <title>WebWork - 
+        07-04-2005 Documentation
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="07-04-2005Documentation-Attendees"></a>Attendees</h1>
+<ul>
+	<li>Vitor Souza</li>
+	<li>Jay Bose</li>
+	<li>Alexandru</li>
+</ul>
+
+
+<h1><a name="07-04-2005Documentation-Outcome"></a>Outcome</h1>
+<p>Look to this updated page: <a href="http://wiki.opensymphony.com/pages/viewpage.action?pageId=4795" title="Visit page outside Confluence">&#104;ttp://wiki.opensymphony.com/pages/viewpage.action?pageId=4795</a></p>
+
+<h1><a name="07-04-2005Documentation-Transcript"></a>Transcript</h1>
+<div class="preformatted"><div class="preformattedContent">
+<pre>[7/4/2005 5:17 PM] &lt;jaybose&gt; forget it, i am.
+[7/4/2005 5:17 PM] &lt;the_mind&gt; what do you mean by recording?
+[7/4/2005 5:17 PM] &lt;jaybose&gt; logging
+[7/4/2005 5:17 PM] &lt;jaybose&gt; so others can view it lat4er
+[7/4/2005 5:18 PM] &lt;the_mind&gt; i thought i can copy and paste it :"&gt;
+[7/4/2005 5:18 PM] &lt;jaybose&gt; you can do that too
+[7/4/2005 5:18 PM] &lt;jaybose&gt; :-)
+[7/4/2005 5:18 PM] &lt;jaybose&gt; hey, did you read his page?
+[7/4/2005 5:18 PM] &lt;the_mind&gt; sorry to ask: who are you nightfal?
+[7/4/2005 5:18 PM] &lt;the_mind&gt; whose page?
+[7/4/2005 5:20 PM] &lt;jaybose&gt; Vitor made a page: http://wiki.opensymphony.com/pages/viewpage.action?pageId=4795
+[7/4/2005 5:20 PM] &lt;jaybose&gt; that's what we'll be working off of
+[7/4/2005 5:20 PM] &lt;jaybose&gt; the main purpose of this meeting is to nail down a TOC
+[7/4/2005 5:20 PM] &lt;the_mind&gt; yep... i just wanted to see if anything else comes out
+[7/4/2005 5:20 PM] &lt;jaybose&gt; and then get the dev team in general to clear it
+[7/4/2005 5:21 PM] &lt;jaybose&gt; dev team really meaning Patrick and Jason
+[7/4/2005 5:21 PM] --&gt;| vitor (c91d085c@chat.efnet.org) has joined #webwork
+[7/4/2005 5:21 PM] &lt;jaybose&gt; hey Vitor
+[7/4/2005 5:21 PM] &lt;jaybose&gt; ready to go?
+[7/4/2005 5:22 PM] &lt;the_mind&gt; from my pov yes (... almost falling asleep :-( )
+[7/4/2005 5:22 PM] &lt;jaybose&gt; haha
+[7/4/2005 5:22 PM] &lt;vitor&gt; Hey. Sorry, I'm struggling with this webchat.
+[7/4/2005 5:22 PM] &lt;jaybose&gt; np
+[7/4/2005 5:23 PM] --&gt;| vitorsouz (~vircuser@201.29.8.92) has joined #webwork
+[7/4/2005 5:23 PM] &lt;vitorsouz&gt; This is much better. Using vIRC now.
+[7/4/2005 5:23 PM] |&lt;-- vitor has left efnet (Remote host closed the connection)
+[7/4/2005 5:23 PM] &lt;vitorsouz&gt; Don't know what happened. mIRC couldn't connect. I even got a D-Lined message! ouch!
+[7/4/2005 5:23 PM] &lt;jaybose&gt; hmm
+[7/4/2005 5:23 PM] &lt;vitorsouz&gt; Sorry for this big mess... Ready to go now.
+[7/4/2005 5:24 PM] &lt;jaybose&gt; ok, cool
+[7/4/2005 5:24 PM] &lt;jaybose&gt; umm forst off
+[7/4/2005 5:24 PM] &lt;jaybose&gt; looking at your page
+[7/4/2005 5:24 PM] &lt;jaybose&gt; we want an overview
+[7/4/2005 5:24 PM] &lt;vitorsouz&gt;  Ok. Let me open it here too
+[7/4/2005 5:25 PM] &lt;vitorsouz&gt; Meaning you want me to explain what I'm thinking?
+[7/4/2005 5:25 PM] &lt;jaybose&gt; kind of, what should the overview way about WW?
+[7/4/2005 5:25 PM] &lt;jaybose&gt; say*
+[7/4/2005 5:26 PM] &lt;jaybose&gt; I noted what WW is, and what it is not
+[7/4/2005 5:26 PM] &lt;vitorsouz&gt; Ok.
+[7/4/2005 5:26 PM] &lt;jaybose&gt; so that would mean a MVS web framework built on XWork
+[7/4/2005 5:26 PM] &lt;jaybose&gt; maybe say waht XWork is brielfy
+[7/4/2005 5:26 PM] &lt;jaybose&gt; MVC*
+[7/4/2005 5:27 PM] &lt;vitorsouz&gt; Good.
+[7/4/2005 5:28 PM] &lt;vitorsouz&gt; I think the overview should briefly describe the software and bring other information that's interesting to people that are thinking of evaluating it.
+[7/4/2005 5:28 PM] &lt;jaybose&gt; like?
+[7/4/2005 5:28 PM] &lt;the_mind&gt; i think that articles and press and testimonials is a very good way to introduce WW
+[7/4/2005 5:28 PM] &lt;vitorsouz&gt; So I placed: what is WebWork (could include what it is not), comparison to Struts and others, something about the community, articles and testimonials.
+[7/4/2005 5:29 PM] &lt;jaybose&gt; ok
+[7/4/2005 5:29 PM] &lt;the_mind&gt; a comparison to other solution cannot be very detailed so the user may be lost already
+[7/4/2005 5:29 PM] &lt;vitorsouz&gt; It should not teach WW to anyone. That's the reference and the tutorial's jobs.
+[7/4/2005 5:29 PM] &lt;jaybose&gt; great.
+[7/4/2005 5:29 PM] &lt;vitorsouz&gt; themind: I think the reference is for experienced users only.
+[7/4/2005 5:29 PM] &lt;vitorsouz&gt; I mean, comparison.
+[7/4/2005 5:29 PM] &lt;vitorsouz&gt; The comparison is for experienced users. People that know another framework.
+[7/4/2005 5:30 PM] &lt;the_mind&gt; yep but you want this put into the overview
+[7/4/2005 5:30 PM] &lt;jaybose&gt; evaluators will find a comparison helpful
+[7/4/2005 5:30 PM] &lt;vitorsouz&gt; It's a section of the overview. I don't think the overview is meant for sequential reading.
+[7/4/2005 5:30 PM] &lt;the_mind&gt; if i am a new user i would like to read this from an independent way... so pointing to articles
+[7/4/2005 5:30 PM] &lt;jaybose&gt; and they will definitely look in the overview.
+[7/4/2005 5:31 PM] &lt;vitorsouz&gt; We could call it an "Appendix" of the overview, to stress that it's not essential for the newbie. But I'm not sure this is really needed.
+[7/4/2005 5:32 PM] &lt;the_mind&gt; moreover spending time to do a full cycle comparison - when these are already available is no use... just my 2c
+[7/4/2005 5:32 PM] &lt;vitorsouz&gt; You're right about that: it should be mostly pointers to other people's evaluations, eg. Matt Raible's.
+[7/4/2005 5:32 PM] &lt;jaybose&gt; we already have one
+[7/4/2005 5:32 PM] &lt;jaybose&gt; it
+[7/4/2005 5:32 PM] &lt;jaybose&gt; it's a matter of placement
+[7/4/2005 5:33 PM] &lt;the_mind&gt; excellent vitor
+[7/4/2005 5:33 PM] &lt;vitorsouz&gt; That's another thing: the developers already wrote technical differences between WW and Struts.
+[7/4/2005 5:33 PM] &lt;vitorsouz&gt; So we would place that there and pointers to other articles.
+[7/4/2005 5:33 PM] &lt;the_mind&gt; exactly
+[7/4/2005 5:33 PM] &lt;the_mind&gt; or it can be a part of the FAQ
+[7/4/2005 5:33 PM] &lt;the_mind&gt; i usually see this comparison included in FAQs
+[7/4/2005 5:34 PM] &lt;vitorsouz&gt; Ok. Just so I'm not completely lost in the process here. Are we starting from my suggestions? From Jay's suggestions? How is this discussion working?
+[7/4/2005 5:34 PM] &lt;the_mind&gt; but this is not important for me (the placement)
+[7/4/2005 5:34 PM] &lt;jaybose&gt; I am pulling things from your suggestions
+[7/4/2005 5:34 PM] &lt;vitorsouz&gt; Okay.
+[7/4/2005 5:34 PM] &lt;the_mind&gt; i was reading this http://wiki.opensymphony.com/pages/viewpage.action?pageId=4795
+[7/4/2005 5:35 PM] &lt;the_mind&gt; and commenting around - nothing more :-(
+[7/4/2005 5:35 PM] &lt;vitorsouz&gt; That's alright. Sounds good to me. :)
+[7/4/2005 5:35 PM] &lt;jaybose&gt; Ok, anymore on Overview, or move on to Project Information?
+[7/4/2005 5:35 PM] &lt;vitorsouz&gt; That would be my question, exactly.
+[7/4/2005 5:35 PM] &lt;the_mind&gt; from my pov i can move on
+[7/4/2005 5:36 PM] &lt;jaybose&gt; ok so Prj Info, what do we want in here?
+[7/4/2005 5:36 PM] &lt;vitorsouz&gt; Just to wrap up, then: I'll add "(What WW is not)" to the side of "What is WebWork", just to emphasize.
+[7/4/2005 5:36 PM] &lt;the_mind&gt; quite clear and complete imo
+[7/4/2005 5:37 PM] &lt;jaybose&gt; ehhh
+[7/4/2005 5:37 PM] &lt;jaybose&gt; i'm not for that
+[7/4/2005 5:37 PM] &lt;jaybose&gt; anymore
+[7/4/2005 5:37 PM] &lt;the_mind&gt; go on
+[7/4/2005 5:37 PM] &lt;the_mind&gt; hit it
+[7/4/2005 5:37 PM] &lt;jaybose&gt; let the reader figure it out
+[7/4/2005 5:37 PM] &lt;vitorsouz&gt; Sorry. I'm lost again.
+[7/4/2005 5:37 PM] &lt;vitorsouz&gt; You're not for "What WW is not"?
+[7/4/2005 5:38 PM] &lt;jaybose&gt; by saying it's a web based MVC, that should be enough
+[7/4/2005 5:38 PM] &lt;jaybose&gt; yeah.
+[7/4/2005 5:38 PM] &lt;vitorsouz&gt; Ok.
+[7/4/2005 5:38 PM] &lt;the_mind&gt; i would say about WW what is already said
+[7/4/2005 5:38 PM] &lt;vitorsouz&gt; I'll add a note saying that.
+[7/4/2005 5:38 PM] &lt;the_mind&gt; a MVC based on XWork (a command .... ) and that's it
+[7/4/2005 5:39 PM] &lt;jaybose&gt; I'm taking a bunch of notes, i can add them to the page after the meeting
+[7/4/2005 5:39 PM] &lt;vitorsouz&gt; Ok. That's better than. I won't bother doing it too.
+[7/4/2005 5:39 PM] &lt;jaybose&gt; Project Information: ...
+[7/4/2005 5:39 PM] &lt;vitorsouz&gt; Ok. What would you guys add or remove?
+[7/4/2005 5:39 PM] &lt;jaybose&gt; I'd keep.
+[7/4/2005 5:40 PM] &lt;the_mind&gt; for me it is perfect... already said it
+[7/4/2005 5:40 PM] &lt;jaybose&gt; I assume this is Team members, mailing lists, etc
+[7/4/2005 5:40 PM] &lt;vitorsouz&gt; Mailing lists is included in "WebWork Community" under Overview.
+[7/4/2005 5:40 PM] &lt;the_mind&gt; these are included already in overview
+[7/4/2005 5:40 PM] &lt;vitorsouz&gt; Team is not explicit in the Project Information sections. You could add it there later.
+[7/4/2005 5:41 PM] &lt;jaybose&gt; so what did you think for that section?
+[7/4/2005 5:41 PM] &lt;the_mind&gt; vitor i think it is a good idea to move everything related to ml, team, etc to project information
+[7/4/2005 5:41 PM] &lt;vitorsouz&gt; 1. License; 2. Deployment notes; 3. Versions; 4. Dependencies; 5. WebWork Team.
+[7/4/2005 5:41 PM] &lt;vitorsouz&gt; Do you think it should be removed from Overview, then?
+[7/4/2005 5:41 PM] &lt;the_mind&gt; and leave the Overview as a simple intro to the project
+[7/4/2005 5:41 PM] &lt;jaybose&gt; I agree w/ the_mind, all that should leave Overview and go to Prj Info
+[7/4/2005 5:41 PM] &lt;the_mind&gt; yes that's it
+[7/4/2005 5:41 PM] &lt;vitorsouz&gt; Ok. SO the whole "WebWork Community" section would move to P.Info?
+[7/4/2005 5:42 PM] &lt;the_mind&gt; oke with me +1
+[7/4/2005 5:42 PM] &lt;jaybose&gt; yes
+[7/4/2005 5:42 PM] &lt;vitorsouz&gt; Ok. I agree too. Then it's License, Deployment notes, Versions, Dependencies, WebWork Team and Community.
+[7/4/2005 5:43 PM] &lt;vitorsouz&gt; Not necessarily in this order.
+[7/4/2005 5:43 PM] &lt;jaybose&gt; License, Deployment notes, Versions, Dependencies, WebWork Team, Mailing Lists, Forum
+[7/4/2005 5:43 PM] &lt;the_mind&gt; License, versions, dependencies, www and community, deployment
+[7/4/2005 5:43 PM] &lt;jaybose&gt; When you say community, what does that currently mean?
+[7/4/2005 5:43 PM] &lt;the_mind&gt; i see if license is good for me
+[7/4/2005 5:44 PM] &lt;the_mind&gt; than i choose the version for which i see dependencies
+[7/4/2005 5:44 PM] &lt;the_mind&gt; than i look for community stuff
+[7/4/2005 5:44 PM] &lt;the_mind&gt; and if needed i will go to deployment tricks
+[7/4/2005 5:44 PM] &lt;vitorsouz&gt; It's item number 3 under Overview: Mailing Lists/Forum, Bug Tracker, Wiki, How to Contribute.
+[7/4/2005 5:44 PM] &lt;vitorsouz&gt; The idea now is to move it to Prj. Info
+[7/4/2005 5:44 PM] &lt;the_mind&gt; do not forget team members
+[7/4/2005 5:45 PM] &lt;jaybose&gt; yep
+[7/4/2005 5:45 PM] &lt;the_mind&gt; so let's see the order and move on
+[7/4/2005 5:45 PM] &lt;the_mind&gt; :D
+[7/4/2005 5:45 PM] &lt;jaybose&gt; ok, so Overview should be very light in comparison to what is it now.
+[7/4/2005 5:46 PM] &lt;jaybose&gt; We could hash out the order a little later.
+[7/4/2005 5:46 PM] &lt;vitorsouz&gt; Yes. I'm updating the page so we close this issue...
+[7/4/2005 5:46 PM] &lt;the_mind&gt; oke
+[7/4/2005 5:46 PM] &lt;vitorsouz&gt; Ok. Refresh it and check if it's correct now.
+[7/4/2005 5:46 PM] &lt;the_mind&gt; i will miss the important part :((
+[7/4/2005 5:47 PM] &lt;the_mind&gt; good
+[7/4/2005 5:47 PM] &lt;jaybose&gt; Overview looks great
+[7/4/2005 5:47 PM] &lt;jaybose&gt; FAQ or more on Prj Info?
+[7/4/2005 5:48 PM] &lt;vitorsouz&gt; I think FAQ could have it's own section because we could create subsections, such as "Questions about the project", "Questions on Validators", "Questions on Velocity/Freemarker", etc...
+[7/4/2005 5:48 PM] &lt;the_mind&gt; tutorial or cookbook
+[7/4/2005 5:48 PM] &lt;vitorsouz&gt; Hmmm... I got it now, Jay
+[7/4/2005 5:48 PM] &lt;vitorsouz&gt; Nevermind what I said.
+[7/4/2005 5:48 PM] &lt;vitorsouz&gt; I misunderstood your question :)
+[7/4/2005 5:48 PM] &lt;jaybose&gt; yes, like Caucho does for Resin
+[7/4/2005 5:48 PM] &lt;jaybose&gt; no you did not.
+[7/4/2005 5:49 PM] &lt;the_mind&gt; i would let last the faq as passing through the other stuff it will get more clear what should be in the faq
+[7/4/2005 5:49 PM] &lt;vitorsouz&gt; I thought you meant putting FAQ under Prj. Info. 
+[7/4/2005 5:49 PM] &lt;vitorsouz&gt; Was that what you meant?
+[7/4/2005 5:49 PM] &lt;jaybose&gt; haha, no. I agree on your structure idea
+[7/4/2005 5:49 PM] &lt;vitorsouz&gt; Ok. So are we closed on Overview and Prj. Info?
+[7/4/2005 5:49 PM] &lt;jaybose&gt; yep. 
+[7/4/2005 5:49 PM] &lt;the_mind&gt; yep
+[7/4/2005 5:50 PM] &lt;vitorsouz&gt; All raise your hands. \o_ :P
+[7/4/2005 5:50 PM] &lt;vitorsouz&gt; Just kidding. Moving on to FAQ, then.
+[7/4/2005 5:50 PM] &lt;the_mind&gt; \^/
+[7/4/2005 5:50 PM] &lt;jaybose&gt; :-)
+[7/4/2005 5:50 PM] &lt;jaybose&gt; In terms of FAQ content, does WW have one now?
+[7/4/2005 5:50 PM] &lt;the_mind&gt; i don't think so
+[7/4/2005 5:50 PM] &lt;vitorsouz&gt; Not sure. Let me check.
+[7/4/2005 5:50 PM] &lt;the_mind&gt; that's why i would let the faq be the last
+[7/4/2005 5:51 PM] &lt;jaybose&gt; http://wiki.opensymphony.com/display/WW/FAQ
+[7/4/2005 5:51 PM] &lt;vitorsouz&gt; That's it.
+[7/4/2005 5:51 PM] &lt;jaybose&gt; ok, so first off, we need to order this better, and make it into sections.
+[7/4/2005 5:51 PM] &lt;vitorsouz&gt; Should we bother creating the FAQ sections now?
+[7/4/2005 5:52 PM] &lt;vitorsouz&gt; Maybe we could think about it later.
+[7/4/2005 5:52 PM] &lt;jaybose&gt; i agree, we'll tackle later
+[7/4/2005 5:52 PM] &lt;jaybose&gt; I say skip Tutorial
+[7/4/2005 5:53 PM] &lt;jaybose&gt; that should come based on Patrick's example app
+[7/4/2005 5:53 PM] &lt;vitorsouz&gt; I haven't seen Patrick's example app.
+[7/4/2005 5:53 PM] &lt;jaybose&gt; neither have I, that's why it should wait.
+[7/4/2005 5:53 PM] &lt;the_mind&gt; i have only one comment
+[7/4/2005 5:54 PM] &lt;the_mind&gt; i should not provide an example with scriptlets
+[7/4/2005 5:54 PM] &lt;the_mind&gt; otherwise in terms of evolution of the tutorial it seems oke to me
+[7/4/2005 5:54 PM] &lt;jaybose&gt; scriplets?
+[7/4/2005 5:54 PM] &lt;vitorsouz&gt; Ok. I'll talk to Patrick, then.
+[7/4/2005 5:54 PM] &lt;the_mind&gt; Understanding actions (includes note on displaying data using Scriptlets)
+[7/4/2005 5:54 PM] &lt;jaybose&gt; ok
+[7/4/2005 5:55 PM] &lt;the_mind&gt; let's wait the example app and than we will fix this one
+[7/4/2005 5:55 PM] &lt;jaybose&gt; Moving to Cookbook: what type of docs should go in here?
+[7/4/2005 5:55 PM] &lt;the_mind&gt; is Patrick working on it?
+[7/4/2005 5:55 PM] &lt;the_mind&gt; or should we?
+[7/4/2005 5:55 PM] &lt;jaybose&gt; he is, or is done.
+[7/4/2005 5:55 PM] &lt;the_mind&gt; i have noticed something in cvs but not sure yet
+[7/4/2005 5:56 PM] &lt;vitorsouz&gt; I'll talk to him. If he likes any of my suggestions on the tutorial, I'll help him develop the example app to conform with the tutorial.
+[7/4/2005 5:56 PM] &lt;vitorsouz&gt; And vice-versa.
+[7/4/2005 5:56 PM] &lt;jaybose&gt; Ok. So far you have the following for Cookbook:
+Tips and tricks on Application Servers (this was in "Overview") 
+Accessing application, session and request objects; 
+How to format dates and numbers; 
+Other stuff from the revised Cookbook... 
+[7/4/2005 5:56 PM] &lt;the_mind&gt; yes there is something in cvs
+[7/4/2005 5:57 PM] &lt;the_mind&gt; see webwork-example dir
+[7/4/2005 5:57 PM] &lt;vitorsouz&gt; Yeah, my suggestions on the Cookbook were detailed in the paragraph and table that follows the bulleted list.
+[7/4/2005 5:57 PM] &lt;vitorsouz&gt; I think the lessons in the current cookbook should be revised.
+[7/4/2005 5:58 PM] &lt;vitorsouz&gt; Basic ones should be moved to tutorial.
+[7/4/2005 5:58 PM] &lt;the_mind&gt; i would include in cookbook: alt syntax
+[7/4/2005 5:58 PM] &lt;jaybose&gt; Ok, saw it.
+[7/4/2005 5:58 PM] &lt;the_mind&gt; extensive validation
+[7/4/2005 5:58 PM] &lt;the_mind&gt; custom interceptors
+[7/4/2005 5:58 PM] &lt;jaybose&gt; he's a Q: what should go into the FAQ?
+[7/4/2005 5:58 PM] &lt;the_mind&gt; we should extract teh faq from the ML
+[7/4/2005 5:59 PM] &lt;the_mind&gt; browse a little the forum and identify the most asked questions
+[7/4/2005 5:59 PM] &lt;the_mind&gt; that's what i would like to see in a faq
+[7/4/2005 5:59 PM] &lt;jaybose&gt; I see the diff b/w cookbook and tutorial; but what's the diff b/w these and the FAQ?
+[7/4/2005 5:59 PM] &lt;the_mind&gt; shortcuts
+[7/4/2005 5:59 PM] &lt;jaybose&gt; Maybe level of complexity?
+[7/4/2005 5:59 PM] &lt;vitorsouz&gt; Maybe.
+[7/4/2005 5:59 PM] &lt;jaybose&gt; shortcuts?
+[7/4/2005 5:59 PM] &lt;the_mind&gt; the faq should be a shortcut to forum questions
+[7/4/2005 5:59 PM] &lt;the_mind&gt; and to tricky parts
+[7/4/2005 5:59 PM] &lt;vitorsouz&gt; A cookbook is more detailed than the FAQ.
+[7/4/2005 6:00 PM] &lt;the_mind&gt; absolutely
+[7/4/2005 6:00 PM] &lt;the_mind&gt; a cookbook is offering internals
+[7/4/2005 6:00 PM] &lt;the_mind&gt; a faq: as the name says: frequently asked questions... this is why i would look in the ML for the FAQ points
+[7/4/2005 6:01 PM] &lt;jaybose&gt; Yeah, but we'd enter the Faq questions. They'd be entered after a bunch of ppl as the same question.
+[7/4/2005 6:02 PM] &lt;jaybose&gt; ok, I guess the Faq could also point to Cookbook answers
+[7/4/2005 6:02 PM] &lt;vitorsouz&gt; I think what Jay is trying to say is: "How do I integrate WW with Spring" is a FAQ. A lot of people ask it.
+[7/4/2005 6:02 PM] &lt;the_mind&gt; yes
+[7/4/2005 6:02 PM] &lt;vitorsouz&gt; Exactly: link from the FAQ to the cookbook.
+[7/4/2005 6:02 PM] &lt;the_mind&gt; how do i pass parameters in xwork.xml
+[7/4/2005 6:02 PM] &lt;the_mind&gt; and so on... this can be links to the cookbook or tutorial
+[7/4/2005 6:03 PM] &lt;the_mind&gt; these*
+[7/4/2005 6:03 PM] &lt;vitorsouz&gt; Alright.
+[7/4/2005 6:03 PM] &lt;jaybose&gt; Related Projects: ...
+[7/4/2005 6:03 PM] &lt;vitorsouz&gt; So, do we think about what the Cookbook should have now or just leave the suggestion as it is?
+[7/4/2005 6:03 PM] &lt;jaybose&gt; (skipping ref for a sec)
+[7/4/2005 6:03 PM] &lt;jaybose&gt; the suggestion seems good enough
+[7/4/2005 6:04 PM] &lt;jaybose&gt; it's clear what needs to be done
+[7/4/2005 6:04 PM] &lt;vitorsouz&gt; Ok. Related Projects then.
+[7/4/2005 6:04 PM] &lt;jaybose&gt; the person who takes that section will have to figure it out
+[7/4/2005 6:04 PM] &lt;the_mind&gt; i think the info in cookbook should include almost everything in the wiki right now that will not be covered in the tutorial
+[7/4/2005 6:05 PM] &lt;the_mind&gt; it will be by far the toughest job
+[7/4/2005 6:05 PM] &lt;vitorsouz&gt; Certainly.
+[7/4/2005 6:05 PM] &lt;the_mind&gt; i don't think one single guy can do it
+[7/4/2005 6:05 PM] &lt;vitorsouz&gt; Related Projects include information on other projects, like WebFlow, Plugins, Optional modules, etc.
+[7/4/2005 6:05 PM] &lt;jaybose&gt; Vitor has:
+WebFlow (graphical chart tool) 
+EclipseWork (Eclipse Plugin) 
+IDEA Plugin 
+WebWork Optional
+[7/4/2005 6:05 PM] &lt;the_mind&gt; i think at least 2 should work on it
+[7/4/2005 6:05 PM] &lt;the_mind&gt; even in parallel
+[7/4/2005 6:05 PM] &lt;jaybose&gt; the_mind: that will probably happen.
+[7/4/2005 6:05 PM] &lt;the_mind&gt; why are you orange?
+[7/4/2005 6:06 PM] &lt;the_mind&gt; :-/
+[7/4/2005 6:06 PM] &lt;vitorsouz&gt; So, anything to add or change in the "Related Projects"?
+[7/4/2005 6:06 PM] &lt;jaybose&gt; No, these seem pretty self-explanatory
+[7/4/2005 6:07 PM] &lt;vitorsouz&gt; Ok. Can we start the discussion about the Reference, then?
+[7/4/2005 6:07 PM] &lt;jaybose&gt; yep.
+[7/4/2005 6:07 PM] &lt;jaybose&gt; this is what i had:
+[7/4/2005 6:07 PM] &lt;vitorsouz&gt; Ok. There's your suggestion and there's my comments on it.
+[7/4/2005 6:07 PM] &lt;jaybose&gt; What is Webwork - also explain what Webwork is not. 
+Architecture 
+Getting Started/Deployment Notes 
+Configuration 
+Interceptors 
+Action Chaining 
+IOC 
+JSP &amp; Velocity Tags - this would be the current tag information, combined with the current "JSP Expression Language Comparison with Webwork 1.x" pages 
+Webwork Freemarker Support 
+Result Types 
+Type Conversion 
+Validation 
+OGNL 
+Internationalization 
+Webflow 
+3rd Party Integration 
+[7/4/2005 6:07 PM] &lt;jaybose&gt; I like Jay Bose's reference TOC (below). On top of it, I'd suggest:
+
+ Remove "What is WebWork" and "Getting Started/Deployment Notes";
+
+ Replace them with "Introduction", in which there would be instructions to read the Overview first and proceed to the tutorial if the reader wants to get started;
+
+ Append "/ Dependency Injection" to "IoC", because some people may know it only by the name "Dependency Injection";
+
+ Group "JSP &amp; Velocity Tags" with "WebWork Freemarker Support" to create a single section that contains everything related to user interface (in subsections);
+
+ "JSP Expression Language Comparison with WebWork 1.x" should be in "Migrating from WebWork 1.x", in the "Project Information" section;
+
+ Add to that same UI topic: JavaScript validation and DWR support (is this in 2.2?);
+
+ WebFlow would be in "Related Projects";
+
+ Have "3rd Party Integration" be links to Cookbook pages that explain how to integrate with SiteMesh, Spring, Pico, Hibernate, JUnit, Quartz, etc.
+
+
+[7/4/2005 6:07 PM] &lt;the_mind&gt; i must go to sleep now... sorry 2am
+[7/4/2005 6:08 PM] &lt;jaybose&gt; goodnight
+[7/4/2005 6:08 PM] &lt;vitorsouz&gt; Ok, the_mind: good night. Thanks for your opinions.
+[7/4/2005 6:08 PM] &lt;the_mind&gt; jay pls send me the log 
+[7/4/2005 6:08 PM] &lt;jaybose&gt; it will be on the forum, i'll send an email
+[7/4/2005 6:08 PM] &lt;the_mind&gt; i will comment on it... but as far as can say you are moving pretty well without me
+[7/4/2005 6:08 PM] &lt;the_mind&gt; :)
+[7/4/2005 6:08 PM] &lt;the_mind&gt; good nite
+[7/4/2005 6:08 PM] &lt;vitorsouz&gt; Night
+[7/4/2005 6:09 PM] &lt;jaybose&gt; Vitor: give me a minute, i'll give a hybrid of your comments on it
+[7/4/2005 6:09 PM] |&lt;-- the_mind has left efnet (http://chat.efnet.org)
+[7/4/2005 6:09 PM] &lt;vitorsouz&gt; Ok. I will hold.
+[7/4/2005 6:10 PM] &lt;vitorsouz&gt; But since I'm not a native english speaker, I don't know what you meant by "give a hybrid of my comments" :)
+[7/4/2005 6:14 PM] &lt;jaybose&gt; i am made changes to my suggestions, based on your comments
+[7/4/2005 6:15 PM] &lt;jaybose&gt; Introduction - which will have parts of Overview in it, rather than forwarding them to Overview altogether.
+Architecture 
+Configuration 
+Interceptors 
+Action Chaining 
+IOC / Dependency Injection
+UI Components - JSP, Velocity, Freemarker, JavaScript validation and DWR support
+Result Types 
+Type Conversion 
+Validation 
+OGNL 
+Internationalization 
+3rd Party Integration - SiteMesh, Spring, Pico, Hibernate, JUnit, Quartz, etc.
+[7/4/2005 6:15 PM] &lt;vitorsouz&gt; Did you update the wiki page?
+[7/4/2005 6:15 PM] &lt;jaybose&gt; now, i did not really chg the 3rd party, and i am trying to add parts of Overview to the Intro
+[7/4/2005 6:15 PM] &lt;jaybose&gt; not yet
+[7/4/2005 6:15 PM] &lt;vitorsouz&gt; Ok, let me take a look at it here then.
+[7/4/2005 6:16 PM] &lt;jaybose&gt; the reason for this is i believe the ref should be a doc that ppl could print on it's own and pass around the office
+[7/4/2005 6:16 PM] &lt;jaybose&gt; wiki is great, but not as simple to handle as a complete product doc in PDF manual
+[7/4/2005 6:16 PM] &lt;jaybose&gt; similar to Spring and Hibernate
+[7/4/2005 6:17 PM] &lt;jaybose&gt; i think WW should move in that direction
+[7/4/2005 6:17 PM] &lt;vitorsouz&gt; Ok. Agreed.
+[7/4/2005 6:17 PM] &lt;vitorsouz&gt; I think the merge is good.
+[7/4/2005 6:18 PM] &lt;vitorsouz&gt; About 3rd party info: it would not be links to the cookbook, then?
+[7/4/2005 6:18 PM] &lt;jaybose&gt; So there could be links to things within the ref, but it should a standalone document. If a user needs more info on a subject, then they should look to the tutorial or cookbook.
+[7/4/2005 6:18 PM] &lt;vitorsouz&gt; Ok.
+[7/4/2005 6:18 PM] &lt;jaybose&gt; no, b/c that is something ppl use a lot
+[7/4/2005 6:19 PM] &lt;vitorsouz&gt; Should we define, then, that the Reference doesn't link to anyone, people link to the reference?
+[7/4/2005 6:19 PM] &lt;jaybose&gt; i know when i was adding Spring to my app, i looked at it's Hibnernate support section constantly
+[7/4/2005 6:19 PM] &lt;jaybose&gt; hmm, maybe
+[7/4/2005 6:19 PM] &lt;vitorsouz&gt; So if "Spring integration in WebWork" is a FAQ and a Cookbook, they all link to the reference, which will be written book-style.
+[7/4/2005 6:19 PM] &lt;jaybose&gt; i think the reference could tell ppl where to find more information: cookbook, tutorial
+[7/4/2005 6:19 PM] &lt;vitorsouz&gt; If not book-style, hibernate-reference-style.
+[7/4/2005 6:19 PM] &lt;jaybose&gt; yes.
+[7/4/2005 6:20 PM] &lt;vitorsouz&gt; But would Confluence convert links to other pages to full URLs?
+[7/4/2005 6:20 PM] &lt;vitorsouz&gt; When generating PDF?
+[7/4/2005 6:21 PM] &lt;vitorsouz&gt; Can we ask Confluence to generate only the Reference as PDF and all of its links to outside be converted?
+[7/4/2005 6:21 PM] &lt;jaybose&gt; Why would not want the links to stay as is?
+[7/4/2005 6:21 PM] &lt;jaybose&gt; Should the links change?
+[7/4/2005 6:21 PM] &lt;vitorsouz&gt; Because if the Cookbook is not generated as PDF to be printed and passed around, we need to change the links to the cookbook to their complete URL.
+[7/4/2005 6:22 PM] &lt;vitorsouz&gt; Or am I missing something?
+[7/4/2005 6:22 PM] &lt;jaybose&gt; ahhhh
+[7/4/2005 6:22 PM] &lt;jaybose&gt; now i understand
+[7/4/2005 6:22 PM] &lt;jaybose&gt; so the links are relative now?
+[7/4/2005 6:23 PM] &lt;jaybose&gt; or you mean, you only see the name w/ an underline
+[7/4/2005 6:23 PM] &lt;vitorsouz&gt; Yes.
+[7/4/2005 6:23 PM] &lt;vitorsouz&gt; But not only that.
+[7/4/2005 6:23 PM] &lt;vitorsouz&gt; When you link from one page to another in Confluence you just have to write the page's name.
+[7/4/2005 6:23 PM] &lt;vitorsouz&gt; For example, the TOC Homework page references my suggestions on syle.
+[7/4/2005 6:24 PM] &lt;vitorsouz&gt; Like this: [Click here|Style Guide]
+[7/4/2005 6:24 PM] &lt;vitorsouz&gt; Click here is the text that will be underlined.
+[7/4/2005 6:24 PM] &lt;vitorsouz&gt; The rest is the name of the page, which serves as URL.
+[7/4/2005 6:24 PM] &lt;jaybose&gt; We can't control that, most references do that. If they need to see what a link would lead to, they have to go back to the pdf and click on the link.
+[7/4/2005 6:24 PM] &lt;jaybose&gt; we need to ask patrick if we can make the links full url's under the name
+[7/4/2005 6:24 PM] &lt;jaybose&gt; i bet not. crap.
+[7/4/2005 6:25 PM] &lt;vitorsouz&gt; Ok. Also we have to ask him how do we organize the sections in a way that we can choose to generate PDF only for the Reference, not the other pages.
+[7/4/2005 6:25 PM] &lt;jaybose&gt; By the way, i hate confluence.
+[7/4/2005 6:25 PM] &lt;jaybose&gt; ok, so we'll need to see what he has to say about this.
+[7/4/2005 6:25 PM] &lt;vitorsouz&gt; Are you going to cross that phrase from the log before publsihing it? haha :)
+[7/4/2005 6:26 PM] &lt;jaybose&gt; haha
+[7/4/2005 6:26 PM] &lt;jaybose&gt; maybe i should... :-J
+[7/4/2005 6:26 PM] &lt;vitorsouz&gt; ;)
+[7/4/2005 6:26 PM] &lt;jaybose&gt; ok, so any other ideas, if we can't convert links?
+[7/4/2005 6:26 PM] &lt;jaybose&gt; just in case?
+[7/4/2005 6:26 PM] &lt;vitorsouz&gt; Not reference anything.
+[7/4/2005 6:27 PM] &lt;vitorsouz&gt; Invesion of Control... Everybody references the Ref, the Ref references no one. :P
+[7/4/2005 6:27 PM] &lt;jaybose&gt; hmm, ok. Maybe just reference sections by name.
+[7/4/2005 6:27 PM] &lt;jaybose&gt; right.
+[7/4/2005 6:27 PM] &lt;vitorsouz&gt; Or that.
+[7/4/2005 6:27 PM] &lt;jaybose&gt; haha
+[7/4/2005 6:27 PM] &lt;jaybose&gt; ok, i think we've made some progress
+[7/4/2005 6:28 PM] &lt;vitorsouz&gt; Definetly.
+[7/4/2005 6:28 PM] &lt;jaybose&gt; I'll the notes i made to the bottom of that Page you made
+[7/4/2005 6:28 PM] &lt;vitorsouz&gt; Ok. Are you doing that now?
+[7/4/2005 6:28 PM] &lt;jaybose&gt; and publish this conversation, and then send out a note
+[7/4/2005 6:28 PM] &lt;jaybose&gt; yep
+[7/4/2005 6:28 PM] &lt;vitorsouz&gt; We could change this "Someone's Suggestions" page to Doc Team Suggestions.
+[7/4/2005 6:29 PM] &lt;jaybose&gt; will do
+[7/4/2005 6:29 PM] &lt;vitorsouz&gt; Move your Reference section instead of mine and add the other notes.
+[7/4/2005 6:29 PM] &lt;jaybose&gt; oh you want me to chg the entire page?
+[7/4/2005 6:29 PM] &lt;jaybose&gt; i was going to append
+[7/4/2005 6:29 PM] &lt;vitorsouz&gt; Yes.
+[7/4/2005 6:30 PM] &lt;vitorsouz&gt; If you want to append I can reorganize it later.
+[7/4/2005 6:30 PM] &lt;vitorsouz&gt; Just let me know when you're done.
+[7/4/2005 6:30 PM] &lt;vitorsouz&gt; Confluence should have support for simultaneous work! :) haha
+[7/4/2005 6:30 PM] &lt;jaybose&gt; :)
+[7/4/2005 6:30 PM] &lt;jaybose&gt; agreed
+[7/4/2005 6:36 PM] &lt;jaybose&gt; Done. Check it out and update as needed. Thanks for the patience.
+[7/4/2005 6:37 PM] &lt;vitorsouz&gt; Ok, checking it now.
+[7/4/2005 6:37 PM] &lt;vitorsouz&gt; This new IRC client that I got (VIRC) doesn't notify on channel messages...
+[7/4/2005 6:38 PM] &lt;vitorsouz&gt; Ok. I will reorganize the page, if you don't mind. Alright?
+[7/4/2005 6:39 PM] &lt;jaybose&gt; Catch you on the forums; see ya.
+[7/4/2005 6:39 PM] &lt;jaybose&gt; np.
+</pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

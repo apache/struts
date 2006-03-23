@@ -1,0 +1,200 @@
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+<xwork>
+    <package name="webwork-default">
+        <result-types>
+            <result-type name="chain" class="com.opensymphony.xwork.ActionChainResult"/>
+            <result-type name="dispatcher" class="com.opensymphony.webwork.dispatcher.ServletDispatcherResult" default="true"/>
+            <result-type name="freemarker" class="com.opensymphony.webwork.views.freemarker.FreemarkerResult"/>
+            <result-type name="httpheader" class="com.opensymphony.webwork.dispatcher.HttpHeaderResult"/>
+            <result-type name="jasper" class="com.opensymphony.webwork.views.jasperreports.JasperReportsResult"/>
+            <result-type name="redirect" class="com.opensymphony.webwork.dispatcher.ServletRedirectResult"/>
+            <result-type name="redirect-action" class="com.opensymphony.webwork.dispatcher.ServletActionRedirectResult"/>
+            <result-type name="stream" class="com.opensymphony.webwork.dispatcher.StreamResult"/>
+            <result-type name="tiles" class="com.opensymphony.webwork.views.tiles.TilesResult"/>
+            <result-type name="velocity" class="com.opensymphony.webwork.dispatcher.VelocityResult"/>
+            <result-type name="xslt" class="com.opensymphony.webwork.views.xslt.XSLTResult"/>
+            <result-type name="plaintext" class="com.opensymphony.webwork.dispatcher.PlainTextResult" />
+            
+            <!-- Results necessary when using 'browse server' and 'upload' feature of Richtexteditor -->
+            <result-type name="richtexteditorGetFolders" class="com.opensymphony.webwork.views.jsp.ui.RichtexteditorGetFoldersResult" />
+            <result-type name="richtexteditorGetFoldersAndFiles" class="com.opensymphony.webwork.views.jsp.ui.RichtexteditorGetFoldersAndFilesResult" />
+            <result-type name="richtexteditorCreateFolder" class="com.opensymphony.webwork.views.jsp.ui.RichtexteditorCreateFolderResult" />
+            <result-type name="richtexteditorFileUpload" class="com.opensymphony.webwork.views.jsp.ui.RichtexteditorFileUploadResult" />
+            
+        </result-types>
+
+        <interceptors>
+            <interceptor name="alias" class="com.opensymphony.xwork.interceptor.AliasInterceptor"/>
+            <interceptor name="autowiring" class="com.opensymphony.xwork.spring.interceptor.ActionAutowiringInterceptor"/>
+            <interceptor name="chain" class="com.opensymphony.xwork.interceptor.ChainingInterceptor"/>
+            <interceptor name="component" class="com.opensymphony.xwork.interceptor.component.ComponentInterceptor"/>
+            <interceptor name="conversionError" class="com.opensymphony.webwork.interceptor.WebWorkConversionErrorInterceptor"/>
+            <interceptor name="createSession" class="com.opensymphony.webwork.interceptor.CreateSessionInterceptor" />
+            <interceptor name="external-ref" class="com.opensymphony.xwork.interceptor.ExternalReferencesInterceptor"/>
+            <interceptor name="execAndWait" class="com.opensymphony.webwork.interceptor.ExecuteAndWaitInterceptor"/>
+            <interceptor name="exception" class="com.opensymphony.xwork.interceptor.ExceptionMappingInterceptor"/>
+            <interceptor name="fileUpload" class="com.opensymphony.webwork.interceptor.FileUploadInterceptor"/>
+            <interceptor name="i18n" class="com.opensymphony.xwork.interceptor.I18nInterceptor"/>
+            <interceptor name="logger" class="com.opensymphony.xwork.interceptor.LoggingInterceptor"/>
+            <interceptor name="model-driven" class="com.opensymphony.xwork.interceptor.ModelDrivenInterceptor"/>
+            <interceptor name="params" class="com.opensymphony.xwork.interceptor.ParametersInterceptor"/>
+            <interceptor name="prepare" class="com.opensymphony.xwork.interceptor.PrepareInterceptor"/>
+            <interceptor name="static-params" class="com.opensymphony.xwork.interceptor.StaticParametersInterceptor"/>
+            <interceptor name="scope" class="com.opensymphony.webwork.interceptor.ScopeInterceptor"/>
+            <interceptor name="servlet-config" class="com.opensymphony.webwork.interceptor.ServletConfigInterceptor"/>
+            <interceptor name="sessionAutowiring" class="com.opensymphony.webwork.spring.interceptor.SessionContextAutowiringInterceptor"/>
+            <interceptor name="timer" class="com.opensymphony.xwork.interceptor.TimerInterceptor"/>
+            <interceptor name="token" class="com.opensymphony.webwork.interceptor.TokenInterceptor"/>
+            <interceptor name="token-session" class="com.opensymphony.webwork.interceptor.TokenSessionStoreInterceptor"/>
+            <interceptor name="validation" class="com.opensymphony.xwork.validator.ValidationInterceptor"/>
+            <interceptor name="workflow" class="com.opensymphony.xwork.interceptor.DefaultWorkflowInterceptor"/>
+
+            <!-- Basic stack -->
+            <interceptor-stack name="basicStack">
+                <interceptor-ref name="exception"/>
+                <interceptor-ref name="servlet-config"/>
+                <interceptor-ref name="prepare"/>
+                <interceptor-ref name="static-params"/>
+                <interceptor-ref name="params"/>
+                <interceptor-ref name="conversionError"/>
+            </interceptor-stack>
+
+            <!-- Sample validation and workflow stack -->
+            <interceptor-stack name="validationWorkflowStack">
+                <interceptor-ref name="basicStack"/>
+                <interceptor-ref name="validation"/>
+                <interceptor-ref name="workflow"/>
+            </interceptor-stack>
+
+            <!-- Sample file upload stack -->
+            <interceptor-stack name="fileUploadStack">
+                <interceptor-ref name="fileUpload"/>
+                <interceptor-ref name="basicStack"/>
+            </interceptor-stack>
+
+            <!-- Sample WebWork Inversion of Control stack
+                 Note: WebWork's IoC is deprecated - please
+                 look at alternatives such as Spring -->
+            <interceptor-stack name="componentStack">
+                <interceptor-ref name="component"/>
+                <interceptor-ref name="basicStack"/>
+            </interceptor-stack>
+
+            <!-- Sample model-driven stack  -->
+            <interceptor-stack name="modelDrivenStack">
+                <interceptor-ref name="model-driven"/>
+                <interceptor-ref name="basicStack"/>
+            </interceptor-stack>
+
+            <!-- Sample action chaining stack -->
+            <interceptor-stack name="chainStack">
+                <interceptor-ref name="chain"/>
+                <interceptor-ref name="basicStack"/>
+            </interceptor-stack>
+
+            <!-- Sample i18n stack -->
+            <interceptor-stack name="i18nStack">
+                <interceptor-ref name="i18n"/>
+                <interceptor-ref name="basicStack"/>
+            </interceptor-stack>
+
+            <!-- Sample execute and wait stack.
+                 Note: execAndWait should always be the *last* interceptor. -->
+            <interceptor-stack name="executeAndWaitStack">
+                <interceptor-ref name="basicStack"/>
+                <interceptor-ref name="execAndWait"/>
+            </interceptor-stack>
+
+            <!-- An example of the params-prepare-params trick. This stack
+                 is exactly the same as the defaultStack, except that it
+                 includes one extra interceptor before the prepare interceptor:
+                 the params interceptor.
+
+                 This is useful for when you wish to apply parameters directly
+                 to an object that you wish to load externally (such as a DAO
+                 or database or service layer), but can't load that object
+                 until at least the ID parameter has been loaded. By loading
+                 the parameters twice, you can retrieve the object in the
+                 prepare() method, allowing the second params interceptor to
+                 apply the values on the object. -->
+            <interceptor-stack name="paramsPrepareParamsStack">
+                <interceptor-ref name="exception"/>
+                <interceptor-ref name="alias"/>
+                <interceptor-ref name="params"/>
+                <interceptor-ref name="servlet-config"/>
+                <interceptor-ref name="prepare"/>
+                <interceptor-ref name="i18n"/>
+                <interceptor-ref name="chain"/>
+                <interceptor-ref name="model-driven"/>
+                <interceptor-ref name="fileUpload"/>
+                <interceptor-ref name="static-params"/>
+                <interceptor-ref name="params"/>
+                <interceptor-ref name="conversionError"/>
+                <interceptor-ref name="validation">
+                    <param name="excludeMethods">input,back,cancel</param>
+                </interceptor-ref>
+                <interceptor-ref name="workflow">
+                    <param name="excludeMethods">input,back,cancel</param>
+                </interceptor-ref>
+            </interceptor-stack>
+
+            <!-- A complete stack with all the common interceptors in place.
+                 Generally, this stack should be the one you use, though it
+                 may do more than you need. Also, the ordering can be
+                 switched around (ex: if you wish to have your servlet-related
+                 objects applied before prepare() is called, you'd need to move
+                 servlet-config interceptor up.
+
+                 This stack also excludes from the normal validation and workflow
+                 the method names input, back, and cancel. These typically are
+                 associated with requests that should not be validated.
+                 -->
+            <interceptor-stack name="defaultStack">
+                <interceptor-ref name="exception"/>
+                <interceptor-ref name="alias"/>
+                <interceptor-ref name="servlet-config"/>
+                <interceptor-ref name="prepare"/>
+                <interceptor-ref name="i18n"/>
+                <interceptor-ref name="chain"/>
+                <interceptor-ref name="model-driven"/>
+                <interceptor-ref name="fileUpload"/>
+                <interceptor-ref name="static-params"/>
+                <interceptor-ref name="params"/>
+                <interceptor-ref name="conversionError"/>
+                <interceptor-ref name="validation">
+                    <param name="excludeMethods">input,back,cancel,browse</param>
+                </interceptor-ref>
+                <interceptor-ref name="workflow">
+                    <param name="excludeMethods">input,back,cancel,browse</param>
+                </interceptor-ref>
+            </interceptor-stack>
+
+            <!-- The completeStack is here for backwards compatibility for
+                 applications that still refer to the defaultStack by the
+                 old name -->
+            <interceptor-stack name="completeStack">
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+        </interceptors>
+
+        <default-interceptor-ref name="defaultStack"/>
+    </package>
+    <package name="webwork-portlet-default" extends="webwork-default">
+
+	   <result-types>
+			<result-type name="dispatcher" class="com.opensymphony.webwork.portlet.result.PortletResult" default="true"/>
+			<result-type name="freemarker" class="com.opensymphony.webwork.views.freemarker.PortletFreemarkerResult"/>
+			<result-type name="velocity" class="com.opensymphony.webwork.portlet.result.PortletVelocityResult"/>
+	   </result-types>
+
+	   <action name="renderDirect" class="com.opensymphony.webwork.portlet.dispatcher.DirectRenderFromEventAction">
+	   		<result name="success">${location}</result>
+	   </action>
+	   <action name="freemarkerDirect" class="com.opensymphony.webwork.portlet.dispatcher.DirectRenderFromEventAction">
+	   		<result type="freemarker" name="success">${location}</result>
+	   </action>
+	   <action name="velocityDirect" class="com.opensymphony.webwork.portlet.dispatcher.DirectRenderFromEventAction">
+	   		<result type="velocity" name="success">${location}</result>
+	   </action>
+	</package>
+</xwork>

@@ -1,0 +1,96 @@
+<html>
+    <head>
+        <title>WebWork - 
+        StringLengthFieldValidator Annotation
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="StringLengthFieldValidatorAnnotation-StringLengthFieldValidatorAnnotation"></a>StringLengthFieldValidator Annotation</h1>
+
+<p>This validator checks that a String field is of the right length. It assumes that the field is a String.
+If neither minLength nor maxLength is set, nothing will be done.</p>
+
+<h2><a name="StringLengthFieldValidatorAnnotation-Usage"></a>Usage</h2>
+
+<p><p/>The annotation must be applied at method level.</p>
+
+<h2><a name="StringLengthFieldValidatorAnnotation-Parameters"></a>Parameters</h2>
+
+<p> <table class='confluenceTable'>
+ <tr>
+ <th class='confluenceTh'> Parameter </th>
+ <th class='confluenceTh'> Required </th>
+ <th class='confluenceTh'> Default </th>
+ <th class='confluenceTh'> Notes </th>
+ </tr>
+ <tr>
+ <td class='confluenceTd'>message</td>
+ <td class='confluenceTd'>yes</td>
+ <td class='confluenceTd'>&nbsp;</td>
+ <td class='confluenceTd'>field error message</td>
+ </tr>
+ <tr>
+ <td class='confluenceTd'>key</td>
+ <td class='confluenceTd'>no</td>
+ <td class='confluenceTd'>&nbsp;</td>
+ <td class='confluenceTd'>i18n key from language specific properties file.</td>
+ </tr>
+ <tr>
+ <td class='confluenceTd'>fieldName</td>
+ <td class='confluenceTd'>no</td>
+ <td class='confluenceTd'>&nbsp;</td>
+ <td class='confluenceTd'>&nbsp;</td>
+ </tr>
+ <tr>
+ <td class='confluenceTd'>shortCircuit</td>
+ <td class='confluenceTd'>no</td>
+ <td class='confluenceTd'>false</td>
+ <td class='confluenceTd'>If this validator should be used as shortCircuit.</td>
+ </tr>
+ <tr>
+ <td class='confluenceTd'>type</td>
+ <td class='confluenceTd'>yes</td>
+ <td class='confluenceTd'>ValidatorType.FIELD</td>
+ <td class='confluenceTd'>Enum value from ValidatorType. Either FIELD or SIMPLE can be used here.</td>
+ </tr>
+ <tr>
+ <td class='confluenceTd'> trim </td>
+ <td class='confluenceTd'> no </td>
+ <td class='confluenceTd'> true </td>
+ <td class='confluenceTd'> Boolean property.  Determines whether the String is trimmed before performing the length check.  </td>
+ </tr>
+ <tr>
+ <td class='confluenceTd'> minLength </td>
+ <td class='confluenceTd'> no </td>
+ <td class='confluenceTd'>&nbsp;</td>
+ <td class='confluenceTd'> Integer property.  The minimum length the String must be. </td>
+ </tr>
+ <tr>
+ <td class='confluenceTd'> maxLength </td>
+ <td class='confluenceTd'> no </td>
+ <td class='confluenceTd'>&nbsp;</td>
+ <td class='confluenceTd'> Integer property.  The maximum length the String can be. </td>
+ </tr>
+ </table></p>
+
+<p> <p>If neither <em>minLength</em> nor <em>maxLength</em> is set, nothing will be done.</p></p>
+
+
+<h2><a name="StringLengthFieldValidatorAnnotation-Examples"></a>Examples</h2>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">@StringLengthFieldValidator(message = <span class="code-quote">"Default message"</span>, key = <span class="code-quote">"i18n.key"</span>, shortCircuit = <span class="code-keyword">true</span>, trim = <span class="code-keyword">true</span>, minLength = <span class="code-quote">"5"</span>,  maxLength = <span class="code-quote">"12"</span>)</pre>
+</div></div>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

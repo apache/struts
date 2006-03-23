@@ -1,0 +1,87 @@
+<html>
+    <head>
+        <title>WebWork 2 : 简单校验器</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : 简单校验器
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Jul 10, 2004 by <font color="#0050B2">unkyaku</font>.
+				    </div>
+
+				    <p class="paragraph"><a name="Simplevalidators-top"></a></p>下列校验器包含在缺省的validators.xml中:<br/>
+
+<table class="wikitable">
+<tr>
+<th>名称</th><th nowrap>使用JavaScript</th><th>描述</th>
+</tr><tr>
+<td><a href="#Simplevalidators-required" title="required on Simple validators">#required</a></td><td> </td><td>字段必须有值(非空)</td>
+</tr><tr>
+<td><a href="#Simplevalidators-requiredstring" title="requiredstring on Simple validators">#requiredstring</a></td><td>x</td><td>字段值必须非空且长度 &gt; 0</td>
+</tr><tr>
+<td><a href="#Simplevalidators-int" title="int on Simple validators">#int</a></td><td>x</td><td>字段值必须是整数并在一定范围内</td>
+</tr><tr>
+<td><a href="#Simplevalidators-date" title="date on Simple validators">#date</a></td><td> </td><td>字段值必须是日期(日期格式依赖于区域设置)并在一定范围内</td>
+</tr><tr>
+<td><a href="#Simplevalidators-expression" title="expression on Simple validators">#expression</a></td><td> </td><td>给定一个OGNL表达使并使用值栈进行运算, 返回值必须是true.  可用于跨字段校验.  错误将作为活动错误</td>
+</tr><tr>
+<td><a href="#Simplevalidators-fieldexpression" title="fieldexpression on Simple validators">#fieldexpression</a></td><td> </td><td>给定一个OGNL表达使并使用值栈进行运算, 返回值必须是true. 类似于<b class="strong">expression</b>但错误将作为字段错误</td>
+</tr><tr>
+<td><a href="#Simplevalidators-email" title="email on Simple validators">#email</a></td><td>x</td><td>字段值必须是合法的电子邮件地址</td>
+</tr><tr>
+<td><a href="#Simplevalidators-url" title="url on Simple validators">#url</a></td><td>x</td><td>字段值必须是合法的URL</td>
+</tr><tr>
+<td><a href="http://wiki.opensymphony.com//display/XW/Standard+Validators#StandardValidators-VisitorFieldValidator" title="VisitorFieldValidator on Standard Validators">visitor</a></td><td> </td><td>允许将校验转移给活动的属性并使用它自己的校验文件</td>
+</tr><tr>
+<td>conversion</td><td> </td><td>把ActionContext中的类型转换错误作为活动的字段错误.  与<a href="Interceptors.html" title="Interceptors">WebWorkConversionErrorInterceptor</a>的功能相同</td>
+</tr>
+</table><br/>
+注意: 如果你使用自己的validators.xml文件, 上述名字可以修改.<p class="paragraph"><h2 class="heading2"><a name="Simplevalidators-required%3Caname%3D%22Simplevalidatorsrequired%22%3E%3C%2Fa%3E"> required <a name="Simplevalidators-required"></a></a></h2></p>SimpleAction-validation.xml:<br/>
+
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;validators&gt;</span>&#10;    <span class="xml&#45;tag">&lt;field name=<span class="xml&#45;quote">&quot;bar&quot;</span>&gt;</span>&#10;        <span class="xml&#45;tag">&lt;field&#45;validator type=<span class="xml&#45;quote">&quot;required&quot;</span>&gt;</span>&#10;            <span class="xml&#45;tag">&lt;message&gt;</span>You must enter a value for bar.<span class="xml&#45;tag">&lt;/message&gt;</span>&#10;        <span class="xml&#45;tag">&lt;/field&#45;validator&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/field&gt;</span>&#10;<span class="xml&#45;tag">&lt;/validators&gt;</span></pre>
+</div></div><p class="paragraph"><a href="#Simplevalidators-top" title="top on Simple validators">#top</a></p><h2 class="heading2"><a name="Simplevalidators-requiredstring%3Caname%3D%22Simplevalidatorsrequiredstring%22%3E%3C%2Fa%3E"> requiredstring <a name="Simplevalidators-requiredstring"></a></a></h2><p class="paragraph">LoginAction-validation.xml:</p><div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;validators&gt;</span>&#10;    <span class="xml&#45;tag">&lt;field name=<span class="xml&#45;quote">&quot;userName&quot;</span>&gt;</span>&#10;        <span class="xml&#45;tag">&lt;field&#45;validator type=<span class="xml&#45;quote">&quot;requiredstring&quot;</span>&gt;</span>&#10;            <span class="xml&#45;tag">&lt;message&gt;</span>You must enter an username.<span class="xml&#45;tag">&lt;/message&gt;</span>&#10;        <span class="xml&#45;tag">&lt;/field&#45;validator&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/field&gt;</span>&#10;<span class="xml&#45;tag">&lt;/validators&gt;</span></pre>
+</div></div><p class="paragraph">The error is shown if request parameter <b class="strong">userName</b> is missing or an empty string</p><a href="#Simplevalidators-top" title="top on Simple validators">#top</a><p class="paragraph"><h2 class="heading2"><a name="Simplevalidators-int%3Caname%3D%22Simplevalidatorsint%22%3E%3C%2Fa%3E"> int <a name="Simplevalidators-int"></a></a></h2></p><div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;validators&gt;</span>&#10;    <span class="xml&#45;tag">&lt;field name=<span class="xml&#45;quote">&quot;foo&quot;</span>&gt;</span>&#10;        <span class="xml&#45;tag">&lt;field&#45;validator type=<span class="xml&#45;quote">&quot;int&quot;</span>&gt;</span>&#10;            <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;min&quot;</span>&gt;</span>0<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;            <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;max&quot;</span>&gt;</span>100<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;            <span class="xml&#45;tag">&lt;message key=<span class="xml&#45;quote">&quot;foo.range&quot;</span>&gt;</span>Could not find foo.range&#33;<span class="xml&#45;tag">&lt;/message&gt;</span>&#10;        <span class="xml&#45;tag">&lt;/field&#45;validator&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/field&gt;</span>&#10;<span class="xml&#45;tag">&lt;/validators&gt;</span></pre>
+</div></div><p class="paragraph"><a href="#Simplevalidators-top" title="top on Simple validators">#top</a></p><h2 class="heading2"><a name="Simplevalidators-date%3Caname%3D%22Simplevalidatorsdate%22%3E%3C%2Fa%3E"> date <a name="Simplevalidators-date"></a></a></h2>
+
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;validators&gt;</span>&#10;    <span class="xml&#45;tag">&lt;field name=<span class="xml&#45;quote">&quot;startDate&quot;</span>&gt;</span>&#10;        <span class="xml&#45;tag">&lt;field&#45;validator type=<span class="xml&#45;quote">&quot;date&quot;</span>&gt;</span>&#10;            <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;min&quot;</span>&gt;</span>12/22/2002<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;            <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;max&quot;</span>&gt;</span>12/25/2002<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;            <span class="xml&#45;tag">&lt;message&gt;</span>The date must be between 12&#45;22&#45;2002 and 12&#45;25&#45;2002.<span class="xml&#45;tag">&lt;/message&gt;</span>&#10;        <span class="xml&#45;tag">&lt;/field&#45;validator&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/field&gt;</span>&#10;<span class="xml&#45;tag">&lt;/validators&gt;</span></pre>
+</div></div><p class="paragraph"><a href="#Simplevalidators-top" title="top on Simple validators">#top</a></p><h2 class="heading2"><a name="Simplevalidators-expression%3Caname%3D%22Simplevalidatorsexpression%22%3E%3C%2Fa%3E"> expression <a name="Simplevalidators-expression"></a></a></h2>
+
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;validators&gt;</span>&#10;    <span class="xml&#45;tag">&lt;validator type=<span class="xml&#45;quote">&quot;expression&quot;</span>&gt;</span>&#10;        <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;expression&quot;</span>&gt;</span>foo &gt; bar<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;        <span class="xml&#45;tag">&lt;message&gt;</span>Foo must be greater than Bar. Foo = $&#123;foo&#125;, Bar = $&#123;bar&#125;.<span class="xml&#45;tag">&lt;/message&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/validator&gt;</span>&#10;<span class="xml&#45;tag">&lt;/validators&gt;</span></pre>
+</div></div><p class="paragraph">校验器不仅检查一个字段.  如果表达式中包含xml字符, 可以使用CDATA.</p><a href="#Simplevalidators-top" title="top on Simple validators">#top</a><p class="paragraph"><h2 class="heading2"><a name="Simplevalidators-fieldexpression%3Caname%3D%22Simplevalidatorsfieldexpression%22%3E%3C%2Fa%3E"> fieldexpression <a name="Simplevalidators-fieldexpression"></a></a></h2></p><div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;validators&gt;</span>&#10;     <span class="xml&#45;tag">&lt;field name=<span class="xml&#45;quote">&quot;productCode&quot;</span>&gt;</span>&#10;        <span class="xml&#45;tag">&lt;field&#45;validator type=<span class="xml&#45;quote">&quot;fieldexpression&quot;</span>&gt;</span>&#10;            <span class="xml&#45;tag">&lt;param name=<span class="xml&#45;quote">&quot;expression&quot;</span>&gt;</span>name.length() == 5<span class="xml&#45;tag">&lt;/param&gt;</span>&#10;            <span class="xml&#45;tag">&lt;message&gt;</span>Product code must be 5 characters, it is currently &#039;$&#123;productCode&#125;&#039;<span class="xml&#45;tag">&lt;/message&gt;</span>&#10;        <span class="xml&#45;tag">&lt;/field&#45;validator&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/field&gt;</span>&#10;<span class="xml&#45;tag">&lt;/validators&gt;</span></pre>
+</div></div><p class="paragraph"><a href="#Simplevalidators-top" title="top on Simple validators">#top</a></p><h2 class="heading2"><a name="Simplevalidators-email%3Caname%3D%22Simplevalidatorsemail%22%3E%3C%2Fa%3E"> email <a name="Simplevalidators-email"></a></a></h2>
+
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;validators&gt;</span>&#10;    <span class="xml&#45;tag">&lt;field name=<span class="xml&#45;quote">&quot;email&quot;</span>&gt;</span>&#10;        <span class="xml&#45;tag">&lt;field&#45;validator type=<span class="xml&#45;quote">&quot;email&quot;</span>&gt;</span>&#10;            <span class="xml&#45;tag">&lt;message&gt;</span>You must enter a valid email address.<span class="xml&#45;tag">&lt;/message&gt;</span>&#10;        <span class="xml&#45;tag">&lt;/field&#45;validator&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/field&gt;</span>&#10;<span class="xml&#45;tag">&lt;/validators&gt;</span></pre>
+</div></div><p class="paragraph">address必须符合格式xxx@yyy.com|net|gov|org|edu|info|mil|biz|tv|&#8230;</p><a href="#Simplevalidators-top" title="top on Simple validators">#top</a><p class="paragraph"><h2 class="heading2"><a name="Simplevalidators-url%3Caname%3D%22Simplevalidatorsurl%22%3E%3C%2Fa%3E"> url  <a name="Simplevalidators-url"></a></a></h2></p><div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;validators&gt;</span>&#10;     <span class="xml&#45;tag">&lt;field name=<span class="xml&#45;quote">&quot;companyUrl&quot;</span>&gt;</span>&#10;        <span class="xml&#45;tag">&lt;field&#45;validator type=<span class="xml&#45;quote">&quot;url&quot;</span>&gt;</span>&#10;            <span class="xml&#45;tag">&lt;message&gt;</span>You must enter a valid URL.<span class="xml&#45;tag">&lt;/message&gt;</span>            &#10;        <span class="xml&#45;tag">&lt;/field&#45;validator&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/field&gt;</span>&#10;<span class="xml&#45;tag">&lt;/validators&gt;</span></pre>
+</div></div><p class="paragraph"><a href="#Simplevalidators-top" title="top on Simple validators">#top</a></p>
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

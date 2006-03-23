@@ -1,0 +1,119 @@
+<html>
+    <head>
+        <title>WebWork - 
+        sort
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>Please make sure you have read the <a href="Tag Syntax.html" title="Tag Syntax">Tag Syntax</a> document and understand how tag attribute syntax works.</td></tr></table>
+
+<h1><a name="sort-Description"></a>Description</h1>
+
+<p> <b>NOTE: JSP-TAG</b></p>
+
+<p> <p>A Tag that sorts a List using a Comparator both passed in as the tag attribute.
+ If 'id' attribute is specified, the sorted list will be placed into the PageContext
+ attribute using the key specified by 'id'. The sorted list will ALWAYS be
+ pushed into the stack and poped at the end of this tag.</p></p>
+
+
+<h1><a name="sort-Parameters"></a>Parameters</h1>
+<p><table width="100%">
+<tr></p>
+
+<p><th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">comparator</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top"><b>true</b></td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">java.util.Comparator</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">The comparator to use</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">source</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">Object/String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">The iterable source to sort</td></p>
+
+<p></tr></p>
+
+<p><tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td></p>
+
+<p><!-- Required -->
+<td align="left" valign="top">false</td></p>
+
+<p><!-- Default -->
+<td align="left" valign="top">&nbsp;</td></p>
+
+<p><!-- Type -->
+<td align="left" valign="top">String</td></p>
+
+<p><!-- Description -->
+<td align="left" valign="top">The id of the tag element.</td></p>
+
+<p></tr></p>
+
+<p></table></p>
+
+<h1><a name="sort-Examples"></a>Examples</h1>
+<div class="code"><div class="codeContent">
+<pre class="code-xml">USAGE 1:
+ <span class="code-tag">&lt;ww:sort comparator=<span class="code-quote">"myComparator"</span> source=<span class="code-quote">"myList"</span>&gt;</span>
+      <span class="code-tag">&lt;ww:iterator&gt;</span>
+ 		<span class="code-tag"><span class="code-comment">&lt;!-- do something with each sorted elements --&gt;</span></span>
+ 		<span class="code-tag">&lt;ww:property value=<span class="code-quote">"..."</span> /&gt;</span>
+      <span class="code-tag">&lt;/ww:iterator&gt;</span>
+ <span class="code-tag">&lt;/ww:sort&gt;</span>
+
+ USAGE 2:
+ <span class="code-tag">&lt;ww:sort id=<span class="code-quote">"mySortedList"</span> comparator=<span class="code-quote">"myComparator"</span> source=<span class="code-quote">"myList"</span> /&gt;</span>
+
+ &lt;%
+    Iterator sortedIterator = (Iterator) pageContext.getAttribute(<span class="code-quote">"mySortedList"</span>);
+    for (Iterator i = sortedIterator; i.hasNext(); ) {
+    	// do something with each of the sorted elements
+    }
+ %&gt;</pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

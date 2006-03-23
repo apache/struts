@@ -1,0 +1,203 @@
+<html>
+    <head>
+        <title>WebWork - 
+        TutorialLesson04-03
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="TutorialLesson04-03-Lesson4.3%3AUsingFreemarkerwithWebWork"></a>Lesson 4.3: Using Freemarker with WebWork</h1>
+
+<p>Freemarker is a powerfull template engine that competes with Velocity. You can learn more about it in the project's homepage: <a href="http://freemarker.sourceforge.net" title="Visit page outside Confluence">&#104;ttp://freemarker.sourceforge.net</a>.</p>
+
+<p>First of all, to use Freemarker with Webwork, you have to place the freemarker.jar in your <tt>WEB-INF\lib</tt> folder. You can download the distribution <a href="http://freemarker.sourceforge.net/freemarkerdownload.html" title="Visit page outside Confluence">here</a>.</p>
+
+<p>After that, just configure <tt>web.xml</tt> and start writing your templates, as explained below.</p>
+
+
+<h3><a name="TutorialLesson04-03-web.xml%3A"></a>web.xml:</h3>
+
+<p>To use Freemarker as the view, you need to modify <tt>web.xml</tt> and add a servlet and a servlet mapping for <tt>FreemarkerServlet</tt>, as demonstrated below:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;servlet&gt;</span>
+	<span class="code-tag">&lt;servlet-name&gt;</span>freemarker<span class="code-tag">&lt;/servlet-name&gt;</span>
+	<span class="code-tag">&lt;servlet-class&gt;</span>com.opensymphony.webwork.views.freemarker.FreemarkerServlet<span class="code-tag">&lt;/servlet-class&gt;</span>
+		<span class="code-tag"><span class="code-comment">&lt;!-- FreemarkerServlet settings: --&gt;</span></span>
+		<span class="code-tag">&lt;init-param&gt;</span>
+			<span class="code-tag">&lt;param-name&gt;</span>TemplatePath<span class="code-tag">&lt;/param-name&gt;</span>
+			<span class="code-tag">&lt;param-value&gt;</span>/<span class="code-tag">&lt;/param-value&gt;</span>
+		<span class="code-tag">&lt;/init-param&gt;</span>
+		<span class="code-tag">&lt;init-param&gt;</span>
+			<span class="code-tag">&lt;param-name&gt;</span>NoCache<span class="code-tag">&lt;/param-name&gt;</span>
+			<span class="code-tag">&lt;param-value&gt;</span>true<span class="code-tag">&lt;/param-value&gt;</span>
+		<span class="code-tag">&lt;/init-param&gt;</span>
+		<span class="code-tag">&lt;init-param&gt;</span>
+			<span class="code-tag">&lt;param-name&gt;</span>ContentType<span class="code-tag">&lt;/param-name&gt;</span>
+			<span class="code-tag">&lt;param-value&gt;</span>text/html<span class="code-tag">&lt;/param-value&gt;</span>
+		<span class="code-tag">&lt;/init-param&gt;</span>
+		<span class="code-tag">&lt;init-param&gt;</span>
+			<span class="code-tag">&lt;param-name&gt;</span>default_encoding<span class="code-tag">&lt;/param-name&gt;</span>
+			<span class="code-tag">&lt;param-value&gt;</span>ISO-8859-1<span class="code-tag">&lt;/param-value&gt;</span>
+		<span class="code-tag">&lt;/init-param&gt;</span>
+		<span class="code-tag">&lt;init-param&gt;</span>
+			<span class="code-tag">&lt;param-name&gt;</span>number_format<span class="code-tag">&lt;/param-name&gt;</span>
+			<span class="code-tag">&lt;param-value&gt;</span>0.##########<span class="code-tag">&lt;/param-value&gt;</span>
+		<span class="code-tag">&lt;/init-param&gt;</span>
+	<span class="code-tag">&lt;load-on-startup&gt;</span>1<span class="code-tag">&lt;/load-on-startup&gt;</span>
+<span class="code-tag">&lt;/servlet&gt;</span>
+
+<span class="code-tag">&lt;servlet-mapping&gt;</span> 
+	<span class="code-tag">&lt;servlet-name&gt;</span>freemarker<span class="code-tag">&lt;/servlet-name&gt;</span> 
+	<span class="code-tag">&lt;url-pattern&gt;</span>*.ftl<span class="code-tag">&lt;/url-pattern&gt;</span> 
+<span class="code-tag">&lt;/servlet-mapping&gt;</span></pre>
+</div></div>
+
+<p>The configuration above means that Freemarker templates can be rendered through requests to <tt>.ftl</tt> pages. That also means that you should implement security checks in your templates so an user doesn't access it directly without going through an action first (if that is required). But you can always place your Freemarker files under WEB-INF so they become unaccessible to direct requests. We will use the latter approach in our examples.</p>
+
+<p>Inside a Freemarker template, you will have access to every object managed by WebWork with the following syntax:</p>
+
+<ul>
+	<li><b><tt>$stack</tt></b> = <tt>OgnlValueStack</tt>;</li>
+	<li><b><tt>$webwork</tt></b> = <tt>FreemarkerWebWorkUtil</tt>, a toolbox providing services like formatting url, accessing the value stack, etc;</li>
+	<li><b><tt>$name-of-property</tt></b> = property retrieved from the value stack. If that fails, it looks up an attribute with that name in the <tt>HttpServletRequest</tt>, <tt>HttpSession</tt> and <tt>ServletContext</tt>, in that order;</li>
+	<li><b><tt>$Request</tt></b> = <tt>HttpServletRequest</tt>;</li>
+	<li><b><tt>$Session</tt></b> = <tt>HttpServletResponse</tt>;</li>
+	<li><b><tt>$Application</tt></b> = <tt>OgnlValueStack</tt>.</li>
+</ul>
+
+
+<p>The example below does the same thing as example 2 from <a href="Lesson 3 - An html form with data.html" title="Lesson 3 - An html form with data">lesson 3</a>, but now, using Freemarker templates.</p>
+
+
+<h3><a name="TutorialLesson04-03-xwork.xml%3A"></a>xwork.xml:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-xml">&lt;!DOCTYPE xwork PUBLIC <span class="code-quote">"-//OpenSymphony Group//XWork 1.0//EN"</span> 
+<span class="code-quote">"http://www.opensymphony.com/xwork/xwork-1.0.dtd"</span>&gt;
+
+<span class="code-tag">&lt;xwork&gt;</span>
+	<span class="code-tag"><span class="code-comment">&lt;!-- Include webwork defaults (from WebWork JAR). --&gt;</span></span>
+	<span class="code-tag">&lt;include file=<span class="code-quote">"webwork-default.xml"</span> /&gt;</span>
+	
+	<span class="code-tag"><span class="code-comment">&lt;!-- Configuration for the default package. --&gt;</span></span>
+	<span class="code-tag">&lt;package name=<span class="code-quote">"default"</span> extends=<span class="code-quote">"webwork-default"</span>&gt;</span>
+		<span class="code-tag"><span class="code-comment">&lt;!-- Default interceptor stack. --&gt;</span></span> 
+		<span class="code-tag">&lt;default-interceptor-ref name=<span class="code-quote">"defaultStack"</span> /&gt;</span> 
+		
+		<span class="code-tag"><span class="code-comment">&lt;!-- Action: Lesson 4.3: HelloAction. --&gt;</span></span>
+		<span class="code-tag">&lt;action name=<span class="code-quote">"indexFreemarker"</span> class=<span class="code-quote">"com.opensymphony.xwork.ActionSupport"</span>&gt;</span>
+			<span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>/WEB-INF/ftl/lesson3/index.ftl<span class="code-tag">&lt;/result&gt;</span>
+		<span class="code-tag">&lt;/action&gt;</span>
+
+		<span class="code-tag">&lt;action name=<span class="code-quote">"helloFreemarker"</span> class=<span class="code-quote">"lesson03.HelloAction"</span>&gt;</span>
+			<span class="code-tag">&lt;result name=<span class="code-quote">"error"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>/WEB-INF/ftl/lesson3/index.ftl<span class="code-tag">&lt;/result&gt;</span>
+			<span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"dispatcher"</span>&gt;</span>/WEB-INF/ftl/lesson3/success.ftl<span class="code-tag">&lt;/result&gt;</span>
+		<span class="code-tag">&lt;/action&gt;</span>
+	<span class="code-tag">&lt;/package&gt;</span>
+<span class="code-tag">&lt;/xwork&gt;</span></pre>
+</div></div>
+
+
+<h3><a name="TutorialLesson04-03-HelloAction.java%28sameaslesson3%29%3A"></a>HelloAction.java (same as lesson 3):</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> lesson03;
+
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionSupport;
+
+<span class="code-keyword">public</span> class HelloAction <span class="code-keyword">extends</span> ActionSupport {
+	<span class="code-object">String</span> person;
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getPerson() {
+		<span class="code-keyword">return</span> person;
+	}
+	<span class="code-keyword">public</span> void setPerson(<span class="code-object">String</span> person) {
+		<span class="code-keyword">this</span>.person = person;
+	}
+	<span class="code-keyword">public</span> <span class="code-object">String</span> execute() <span class="code-keyword">throws</span> Exception {
+		<span class="code-keyword">if</span> ((person == <span class="code-keyword">null</span>) || (person.length() == 0)) <span class="code-keyword">return</span> ERROR;
+		<span class="code-keyword">else</span> <span class="code-keyword">return</span> SUCCESS;
+	}
+}</pre>
+</div></div>
+
+
+<h3><a name="TutorialLesson04-03-ex02index.ftl"></a>ex02-index.ftl</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;#assign ww=JspTaglibs[<span class="code-quote">"/WEB-INF/lib/webwork.tld"</span>] /&gt;</span>
+
+<span class="code-tag">&lt;html&gt;</span>
+<span class="code-tag">&lt;head&gt;</span>
+<span class="code-tag">&lt;title&gt;</span>WebWork Tutorial - Lesson 4.3 - Example 1<span class="code-tag">&lt;/title&gt;</span>
+<span class="code-tag">&lt;/head&gt;</span>
+
+<span class="code-tag">&lt;body&gt;</span>
+
+<span class="code-tag">&lt;p&gt;</span>Click <span class="code-tag">&lt;a href=<span class="code-quote">"${wwUtil.buildUrl('indexFreemarker.action')}"</span>&gt;</span>here<span class="code-tag">&lt;/a&gt;</span> to reload this page.<span class="code-tag">&lt;/p&gt;</span>
+
+<span class="code-tag">&lt;@ww.form name=<span class="code-quote">"'nameForm'"</span> action=<span class="code-quote">"'helloFreemarker.action'"</span> method=<span class="code-quote">"'POST'"</span>&gt;</span>
+	<span class="code-tag">&lt;@ww.textfield label=<span class="code-quote">"'What is your name ?'"</span> name=<span class="code-quote">"'person'"</span> value=<span class="code-quote">"person"</span> size=<span class="code-quote">"20"</span>/&gt;</span>
+	<span class="code-tag">&lt;@ww.submit name=<span class="code-quote">"'submit'"</span> value=<span class="code-quote">"'Submit'"</span>/&gt;</span>
+<span class="code-tag">&lt;/@ww.form&gt;</span>
+
+<span class="code-tag">&lt;/body&gt;</span>
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+
+<p>If you don't want to use WebWork's UI Tags, you could do it like this:</p>
+
+<h3><a name="TutorialLesson04-03-ex02indexnotags.ftl"></a>ex02-index-notags.ftl</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;html&gt;</span>
+<span class="code-tag">&lt;head&gt;</span>
+<span class="code-tag">&lt;title&gt;</span>WebWork Tutorial - Lesson 4.3 - Example 1<span class="code-tag">&lt;/title&gt;</span>
+<span class="code-tag">&lt;/head&gt;</span>
+
+<span class="code-tag">&lt;body&gt;</span>
+
+<span class="code-tag">&lt;p&gt;</span>Click <span class="code-tag">&lt;a href=<span class="code-quote">"${wwUtil.buildUrl('indexFreemarker.action')}"</span>&gt;</span>here<span class="code-tag">&lt;/a&gt;</span> to reload this page.<span class="code-tag">&lt;/p&gt;</span>
+
+<span class="code-tag">&lt;form name=<span class="code-quote">"nameForm"</span> action=<span class="code-quote">"${wwUtil.buildUrl('helloFreemarker.action')}"</span> method=<span class="code-quote">"POST"</span>&gt;</span>
+	What is your name ? 
+	<span class="code-tag">&lt;input type=<span class="code-quote">"text"</span> name=<span class="code-quote">"person"</span> value=<span class="code-quote">"${person}"</span> size=<span class="code-quote">"20"</span>&gt;</span>
+	<span class="code-tag">&lt;input type=<span class="code-quote">"submit"</span> name=<span class="code-quote">"submit"</span> value=<span class="code-quote">"Submit"</span>&gt;</span>
+<span class="code-tag">&lt;/form&gt;</span>
+<span class="code-tag">&lt;/body&gt;</span>
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+
+<p>However, if you choose no to use tags, it's recommended that you use Freemarker Macros to write the form elements.</p>
+
+
+<h3><a name="TutorialLesson04-03-ex02success.ftl%3A"></a>ex02-success.ftl:</h3>
+<div class="code"><div class="codeContent">
+<pre class="code-html"><span class="code-tag">&lt;#assign ww=JspTaglibs[<span class="code-quote">"/WEB-INF/lib/webwork.tld"</span>] /&gt;</span>
+
+<span class="code-tag">&lt;html&gt;</span> 
+<span class="code-tag">&lt;head&gt;</span> 
+<span class="code-tag">&lt;title&gt;</span>WebWork Tutorial - Lesson 4.3 - Example 1<span class="code-tag">&lt;/title&gt;</span> 
+<span class="code-tag">&lt;/head&gt;</span> 
+<span class="code-tag">&lt;body&gt;</span> 
+
+Come from the property WW tag (taglibs support) : <span class="code-tag">&lt;@ww.property value=<span class="code-quote">"person"</span>/&gt;</span> <span class="code-tag">&lt;br&gt;</span>
+Come from the Freemarker lookup in the WW stack : ${person}
+
+<span class="code-tag">&lt;/body&gt;</span> 
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+
+<p>You can use either WebWork <tt>property</tt> tag or the Freemarker <tt>$person</tt> reference. Both of them return the same thing: a property from the action class.</p>
+
+<hr />
+
+<p><a href="TutorialLesson04-02.html" title="TutorialLesson04-02">Previous Lesson</a> | <a href="TutorialLesson06.html" title="TutorialLesson06">Next Lesson</a></p>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

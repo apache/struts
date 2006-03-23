@@ -1,0 +1,68 @@
+<tr>
+<td class="tdLabel"><label for="myId" class="label">myLabel:</label></td>
+<td>
+<script type="text/javascript" src="/webwork/richtexteditor/fckeditor.js"></script>
+<script>
+	var oFCKeditor_myId = new FCKeditor( 'myName' ) ;
+	oFCKeditor_myId.BasePath = '/some/base/path/' ;
+	oFCKeditor_myId.Height	= '100%' ;
+	oFCKeditor_myId.Width = '100%' ;
+	oFCKeditor_myId.ToolbarSet = 'MyToolBarSet' ;
+	oFCKeditor_myId.CheckBrowser = 'true' ;
+	oFCKeditor_myId.DisplayError = 'true' ;
+	oFCKeditor_myId.Value = 'some text to be displayed' ;
+	oFCKeditor_myId.Config['CustomConfigurationsPath'] = 'myCustom/Configuration/Path' ;
+	oFCKeditor_myId.Config['EditorAreaCSS'] = '/some/editor/area/css' ;
+	oFCKeditor_myId.Config['BaseHref'] = '/base/href' ;
+	oFCKeditor_myId.Config['SkinPath'] = '/skin/path' ;
+	oFCKeditor_myId.Config['PluginsPath'] = '/plugins/path' ;
+	oFCKeditor_myId.Config['FullPage'] = 'true' ;
+	oFCKeditor_myId.Config['Debug'] = 'true' ;
+	oFCKeditor_myId.Config['AutoDetectLanguage'] = 'true' ;
+	oFCKeditor_myId.Config['DefaultLanguage'] = 'en' ;
+	oFCKeditor_myId.Config['ContentLangDirection'] = 'ltr' ;
+	oFCKeditor_myId.Config['EnableXHTML'] = 'true' ;
+	oFCKeditor_myId.Config['EnableSourceXHTML'] = 'true' ;
+	oFCKeditor_myId.Config['FillEmptyBlocks'] = 'true' ;
+	oFCKeditor_myId.Config['FormatSource'] = 'true' ;
+	oFCKeditor_myId.Config['FormatOutput'] = 'true' ;
+	oFCKeditor_myId.Config['FormatIndentator'] = '\t\t' ;
+	oFCKeditor_myId.Config['GeckoUseSPAN'] = 'true' ;
+	oFCKeditor_myId.Config['StartupFocus'] = 'false' ;
+	oFCKeditor_myId.Config['ForcePasteAsPlainText'] = 'true' ;
+	oFCKeditor_myId.Config['ForceSimpleAmpersand'] = 'true' ;
+	oFCKeditor_myId.Config['TabSpaces'] = '\t' ;
+	oFCKeditor_myId.Config['UseBROnCarriageReturn'] = 'true' ;
+	oFCKeditor_myId.Config['ToolbarStartExpanded'] = 'true' ;
+	oFCKeditor_myId.Config['ToolbarCanCollapse'] = 'true' ;
+	oFCKeditor_myId.Config['FontColors'] = '000000,993300,333300' ;
+	oFCKeditor_myId.Config['FontNames'] = 'Arial;Comic Sans MS' ;
+	oFCKeditor_myId.Config['FontSizes'] = '1/xx-small;2/x-small' ;
+	oFCKeditor_myId.Config['FontFormats'] = 'p;div;pre;address' ;
+	oFCKeditor_myId.Config['StylesXmlPath'] = '/styles/xml/path' ;
+	oFCKeditor_myId.Config['TemplatesXmlPath'] = '/templates/xml/path' ;
+	oFCKeditor_myId.Config['LinkBrowserURL'] = '/link/browser/url' ;
+	oFCKeditor_myId.Config['ImageBrowserURL'] = '/image/browser/url' ;
+	oFCKeditor_myId.Config['FlashBrowserURL'] = '/flash/browser/url' ;
+	oFCKeditor_myId.Config['LinkUploadURL'] = '/link/upload/url' ;
+	oFCKeditor_myId.Config['ImageUploadURL'] = '/image/upload/url' ;
+	oFCKeditor_myId.Config['FlashUploadURL'] = '/flash/upload/url' ;
+	oFCKeditor_myId.Config['ImageBrowser'] = 'true' ;
+	oFCKeditor_myId.Config['LinkBrowser'] = 'true' ;
+	oFCKeditor_myId.Config['FlashBrowser'] = 'true' ;
+	oFCKeditor_myId.Config['ImageUpload'] = 'false' ;
+	oFCKeditor_myId.Config['LinkUpload'] = 'false' ;
+	oFCKeditor_myId.Config['FlashUpload'] = 'false' ;
+	oFCKeditor_myId.Config['LinkUploadAllowedExtensions'] = '*.*' ;
+	oFCKeditor_myId.Config['LinkUploadDeniedExtensions'] = '*.*' ;
+	oFCKeditor_myId.Config['ImageUploadAllowedExtensions'] = '.(jpg|gif|jpeg|png)$' ;
+	oFCKeditor_myId.Config['ImageUploadDeniedExtensions'] = '.(jpg|gif|jpeg|png)$' ;
+	oFCKeditor_myId.Config['FlashUploadAllowedExtensions'] = '.(swf|fla)$' ;
+	oFCKeditor_myId.Config['FlashUploadDeniedExtensions'] = '.(swf|fla)$' ;
+	oFCKeditor_myId.Config['SmileyPath'] = '/smiley/path' ;
+	oFCKeditor_myId.Config['SmileyImages'] = "['regular_smile.gif','sad_smile.gif']" ;
+	
+	oFCKeditor_myId.Create() ;
+</script>
+</td>
+</tr>

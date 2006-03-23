@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <title>WebWork 2 : OGNL基础</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : OGNL基础
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Nov 17, 2004 by <font color="#0050B2">casey</font>.
+				    </div>
+
+				    <p class="paragraph"><h2 style="margin: 4px 0px 4px 0px;" class="heading2"><a name="OGNLBasics-XWorkspecificlanguagefeatures"> XWork特殊语言特性</a></h2>
+XWork基于OGNL并增加的最大功能是支持值栈. OGNL假定只有一个&quot;根(root)&quot;, 而XWork值栈的概念支持多个&quot;根&quot;.</p>例如, 假设我们使用标准OGNL(不用XWork), 在OgnlContext表中有两个对象: &quot;foo&quot; -&gt; foo和&quot;bar&quot; -&gt; bar, 并且foo被设置为<b class="strong">根</b>对象. 下列代码描述OGNL如何处理下列三种情况:<br/>
+
+<div class="code"><div class="codeContent">
+<pre>#foo.blah // returns foo.getBlah()&#10;#bar.blah // returns bar.getBlah()&#10;blah      // returns foo.getBlah() because foo is the root</pre>
+</div></div><p class="paragraph">这意味着OGNL允许上下文中包含多个对象, 但除非你要访问的对象是根, 其他访问必须加上名空间如, @bar. 现在我们来讨论XWork的一点区别&#8230;</p>在XWork中, 整个值栈是上下文中的根对象. 但如果你向从栈中获取对象或是用它们的属性, 你并不需要针对值栈编写表达式(如: peek().blah), XWork有一个特殊的OGNL PropertyAccessor它将自动搜索整个值栈(自上而下)知道找到具有你要查找的属性的对象为止.<p class="paragraph">例如, 假设栈中有两个对象: Animal和Person. 来个对象都有&quot;name&quot;属性, Animal有一个&quot;species&quot;属性, Person有一个&quot;salary&quot;属性. Animal在栈顶, Person在它下面. 下面的代码片断有助于你了解会发生什么:</p><div class="code"><div class="codeContent">
+<pre>species    // call to animal.getSpecies()&#10;salary     // call to person.getSalary()&#10;name       // call to animal.getName() because animal is on the top</pre>
+</div></div><p class="paragraph">在最后一个例子中, 两个对象都有name属性, 因此返回了animal的name. 通常这就是期望的效果, 但有时你需要使用低层对象的属性. 为此, XWork支持值栈索引. 你仅需要编写:</p><div class="code"><div class="codeContent">
+<pre>&#91;0&#93;.name   // call to animal.getName()&#10;&#91;1&#93;.name   // call to person.getName()</pre>
+</div></div><p class="paragraph"><h2 class="heading2"><a name="OGNLBasics-Accessingstaticproperties"> 访问静态属性</a></h2></p>OGNL支持对静态方法和属性的访问. 正如OGNL文档指出的, 可以使用下列代码显式调用静态内容:<br/>
+
+<div class="code"><div class="codeContent">
+<pre>&#64;some.package.ClassName&#64;FOO&#95;PROPERTY&#10;&#64;some.package.ClassName&#64;someMethod()</pre>
+</div></div><p class="paragraph">然而, XWork不需要指定活动类的完整包名而是用&quot;vs&quot;前缀:</p><div class="code"><div class="codeContent">
+<pre>&#64;vs&#64;FOO&#95;PROPERTY&#10;&#64;vs&#64;someMethod()&#10;&#10;&#64;vs1&#64;FOO&#95;PROPERTY&#10;&#64;vs1&#64;someMethod()&#10;&#10;&#64;vs2&#64;BAR&#95;PROPERTY&#10;&#64;vs2&#64;someOtherMethod()</pre>
+</div></div><p class="paragraph">&quot;vs&quot;就是&quot;value stack&quot;.  需要注意的是如果你使用&quot;vs&quot;而不指定类名, 将使用栈顶对象类. 如果你在&quot;vs&quot;后增加数字, 将使用栈中更低层的对象.</p><h2 class="heading2"><a name="OGNLBasics-DifferencesfromtheWebWork1.xEL"> 与WebWork 1.x表达式语言的区别</a></h2>
+除了上面的例子和描述以外, 还有几个主要区别. 最大的区别是属性不再使用'/'访问而是用'.'. 另外, 不再使用&quot;..&quot;向下遍历值栈, 目前使用&quot;&#91;n&#93;&quot;, n是一个数字. 最后, 在WebWork 1.x中可以使用&quot;@foo&quot;访问特殊命名对象, 但现在特殊变量使用&quot;#foo&quot;访问. 无论如何, 最重要的是&quot;#foo&quot;不能访问请求属性. 因为XWork不仅是为Web而创建, 因此没有&quot;请求属性&quot;的概念, 因此&quot;#foo&quot;仅仅是请求OgnlContext中非根对象的表达式.<br/>
+
+<table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th>Old Expression</th><th>New Expression</th></tr><tr class="table-odd"><td>foo/blah</td><td>foo.blah</td></tr><tr class="table-even"><td>foo/someMethod()</td><td>foo.someMethod()</td></tr><tr class="table-odd"><td>../bar/blah</td><td>&#91;1&#93;.bar.blah</td></tr><tr class="table-even"><td>@baz</td><td>不直接支持1, 但#baz与之类似</td></tr><tr class="table-odd"><td>.</td><td>top or &#91;0&#93;</td></tr></table>
+<h2 class="heading2"><a name="OGNLBasics-WebWorkspecificnamedobjects"> WebWork的特殊命名对象</a></h2>
+<table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th>名字</th><th>值</th></tr><tr class="table-odd"><td>#parameters&#91;&#039;foo&#039;&#93; or #parameters.foo</td><td>request parameter &#91;&#039;foo&#039;&#93; (request.getParameter())</td></tr><tr class="table-even"><td>#request&#91;&#039;foo&#039;&#93; or #request.foo</td><td>request attribute &#91;&#039;foo&#039;&#93;  (request.getAttribute())</td></tr><tr class="table-odd"><td>#session&#91;&#039;foo&#039;&#93; or #session.foo</td><td>session attribute &#039;foo&#039;</td></tr><tr class="table-even"><td>#application&#91;&#039;foo&#039;&#93; or #application.foo</td><td>ServletContext attributes &#039;foo&#039;</td></tr><tr class="table-odd"><td>#attr&#91;&#039;foo&#039;&#93; or #attr.foo</td><td>Access to PageContext if available, otherwise searches request/session/application respectively</td></tr></table>
+
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

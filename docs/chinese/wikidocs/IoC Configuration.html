@@ -1,0 +1,52 @@
+<html>
+    <head>
+        <title>WebWork 2 : IoC配置</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : IoC配置
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Dec 13, 2004 by <font color="#0050B2">mcampbell</font>.
+				    </div>
+
+				    <p class="paragraph"><h2 style="margin: 4px 0px 4px 0px;" class="heading2"><a name="IoCConfiguration-Configurationweb.xml">配置 - web.xml</a></h2></p>为配置WebWork的组件管理, 必须在web.xml的适当位置加入下列内容:<br/>
+
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;filter&gt;</span>&#10;    <span class="xml&#45;tag">&lt;filter&#45;name&gt;</span>container<span class="xml&#45;tag">&lt;/filter&#45;name&gt;</span>&#10;    <span class="xml&#45;tag">&lt;filter&#45;class&gt;</span>com.opensymphony.webwork.lifecycle.RequestLifecycleFilter<span class="xml&#45;tag">&lt;/filter&#45;class&gt;</span>&#10;<span class="xml&#45;tag">&lt;/filter&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;filter&#45;mapping&gt;</span>&#10;   <span class="xml&#45;tag">&lt;filter&#45;name&gt;</span>container<span class="xml&#45;tag">&lt;/filter&#45;name&gt;</span>&#10;   <span class="xml&#45;tag">&lt;url&#45;pattern&gt;</span>&#42;.action<span class="xml&#45;tag">&lt;/url&#45;pattern&gt;</span>&#160;<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; modify appropriately &#45;&#45;&gt;</span></span>&#10;<span class="xml&#45;tag">&lt;/filter&#45;mapping&gt;</span>&#10;&#10;<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; 你也可以选择将filter对应到任一URI而不仅是&#42;.action.  &#45;&#45;&gt;</span></span> &#10;<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45;下面这种情况就需要这么做:  &#45;&#45;&gt;</span></span>&#10;<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; &#42; 在接到请求后直接调用JSP(因为仅使用了&#42;.action) &#45;&#45;&gt;</span></span>&#10;<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; &#42; JSP中包含一个活动并通过ww:action标签运行&#45;&#45;&gt;</span></span>&#10;<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; &#42; 活动实现了一些enabler接口一获取组件为其服务 &#45;&#45;&gt;</span></span>&#10;<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; 这样做的理由: (Per Patrick Lightbody) &#45;&#45;&gt;</span></span>&#10;<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; <span class="xml&#45;quote">&quot;组件通过在request的属性中查找ComponentManager进行工作. &#45;&#45;&gt;</span></span>&#10;<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; 它通过filter发生作用. 如果在整个过程中没有一个#42;.action, &#45;&#45;&gt;</span></span>&#10;<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; filter不会起作用, 组件也绝不会工作.&quot; &#45;&#45;&gt;</span></span>&#10;<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; 这么做的代价很小, 因此不要过度担心  &#45;&#45;&gt;</span></span>&#10;<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; 这样做的性能. &#45;&#45;&gt;</span></span>&#10;<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; &lt;filter&#45;mapping&gt;</span> &#45;&#45;&gt;</span>&#10;<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45;    &lt;filter&#45;name&gt;</span>container<span class="xml&#45;tag">&lt;/filter&#45;name&gt;</span> &#45;&#45;&gt;</span>&#10;<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45;    &lt;url&#45;pattern&gt;</span>&#42;<span class="xml&#45;tag">&lt;/url&#45;pattern&gt;</span>  &#45;&#45;&gt;</span>&#10;<span class="xml&#45;tag"><span class="xml&#45;comment">&lt;&#33;&#45;&#45; &lt;/filter&#45;mapping&gt;</span> &#45;&#45;&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;listener&gt;</span>&#10;    <span class="xml&#45;tag">&lt;listener&#45;class&gt;</span>com.opensymphony.webwork.lifecycle.SessionLifecycleListener<span class="xml&#45;tag">&lt;/listener&#45;class&gt;</span>&#10;<span class="xml&#45;tag">&lt;/listener&gt;</span>&#10;&#10;<span class="xml&#45;tag">&lt;listener&gt;</span>&#10;    <span class="xml&#45;tag">&lt;listener&#45;class&gt;</span>com.opensymphony.webwork.lifecycle.ApplicationLifecycleListener<span class="xml&#45;tag">&lt;/listener&#45;class&gt;</span>&#10;<span class="xml&#45;tag">&lt;/listener&gt;</span></pre>
+</div></div><p class="paragraph">这些设置允许WebWork在application, session和request范围中管理组件. 注意即使你的应用中不使用全部scope, 上述三个scope也必须在web.xml中指定, 这样WebWork的组件管理才能正确工作.</p><h2 class="heading2"><a name="IoCConfiguration-Configurationxwork.xml">配置 - xwork.xml</a></h2><p class="paragraph">ComponentInterceptor用于对XWork的活动进行反转控制(也就是说, 为活动提供组件). ComponentInterceptor应当声明在xwork.xml的&lt;interceptors&gt;部分:</p><div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;interceptor name=<span class="xml&#45;quote">&quot;component&quot;</span>&#10;        class=<span class="xml&#45;quote">&quot;com.opensymphony.xwork.interceptor.component.ComponentInterceptor&quot;</span>/&gt;</span></pre>
+</div></div><p class="paragraph">应当确保所有需要组件的活动都应用了这个截取器. (关于如何将截取器应用到活动上, 参见OS:XWork Interceptors.)<br/>
+如果你向对活动和组件之外的对象使用反转控制, 你需要直接使用ComponentManager.</p>还需要注意, ComponentInterceptor是WebWork的缺省截取器栈的一部分. 因此, 如果活动使用了defaultStack, 就已经包括了ComponentInterceptor.<p class="paragraph"><h2 class="heading2"><a name="IoCConfiguration-Configurationcomponents.xml">配置 - components.xml</a></h2></p>文件components.xml用于定义可用组件. 这里指定的组件将被加载到XWork的ComponentManager可以被任何活动使用. components.xml必须放在根类路径中(也就是WEB-INF/classes目录).<br/>
+这里有一个components.xml样例, 它配置了一个Counter组件. Counter将生存在session对象中, 将被传递到任何实现CounterAware接口的活动中:<br/>
+
+<div class="code"><div class="codeContent">
+<pre><span class="xml&#45;tag">&lt;components&gt;</span>&#10;    <span class="xml&#45;tag">&lt;component&gt;</span>&#10;        <span class="xml&#45;tag">&lt;scope&gt;</span>session<span class="xml&#45;tag">&lt;/scope&gt;</span>&#10;        <span class="xml&#45;tag">&lt;class&gt;</span>com.opensymphony.webwork.example.counter.Counter<span class="xml&#45;tag">&lt;/class&gt;</span>&#10;        <span class="xml&#45;tag">&lt;enabler&gt;</span>com.opensymphony.webwork.example.counter.CounterAware<span class="xml&#45;tag">&lt;/enabler&gt;</span>&#10;    <span class="xml&#45;tag">&lt;/component&gt;</span>&#10;<span class="xml&#45;tag">&lt;/components&gt;</span></pre>
+</div></div><p class="paragraph">每一个组件元素必需包含下列属性:</p><ul class="star">
+<li> <em class="emphasis">scope</em>: 有效值为<em class="emphasis">application</em>, <em class="emphasis">session</em>和<em class="emphasis">request</em>. 它决定组件的生存时间. Application组件在应用启动时创建, 将在整个应用的生存期间一直存在. Session组件存在于一个用户会话过程中, request组件仅存在于一个客户请求期间.</li>
+<li> <em class="emphasis">class</em>: 组件的类名. 该对象的一个实例将存在于scope指定的周期中, 可以用于任何活动(或其他代码). 注意组件时延迟加载(lazy-loaded)的, 因此如果没有对象使用该组件, 它将不会真正被实例化. 该组件必须有一个无参构造函数.</li>
+<li> <em class="emphasis">enabler</em>: 任何实现或集成该类(或接口)的活动都将被设置该组件.</li>
+</ul><p class="paragraph">注意虽然组件可以依赖于其他组件, 但不能依赖于更小范围的组件. 因此, 一个session范围的组件不能依赖于一个请求范围的组件. 因此, 一个session范围的组件不能依赖于一个请求范围的组件.</p>
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

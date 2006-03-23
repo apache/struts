@@ -1,0 +1,95 @@
+<html>
+    <head>
+        <title>WebWork - 
+        AnnotationWorkflowInterceptor
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="AnnotationWorkflowInterceptor-AnnotationWorkflowInterceptorInterceptor"></a>AnnotationWorkflowInterceptor Interceptor</h1>
+
+<p><p>Invokes any annotated methods on the action. Specifically, it supports the following
+annotations:
+<ul>
+<li> &#64;Before - will be invoked before the action method. If the returned value is not null, it is
+returned as the action result code</li>
+<li> &#64;BeforeResult - will be invoked after the action method but before the result execution</li>
+<li> &#64;After - will be invoked after the action method and result execution</li>
+</ul>
+</p>
+<p/>
+<p>There can be multiple methods marked with the same annotations, but the order of their execution
+is not guaranteed. However, the annotated methods on the superclass chain are guaranteed to be invoked before the
+annotated method in the current class in the case of a Before annotations and after, if the annotations is
+After.</p></p>
+
+<h2><a name="AnnotationWorkflowInterceptor-Examples"></a>Examples</h2>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> class BaseAnnotatedAction {
+ 	<span class="code-keyword">protected</span> <span class="code-object">String</span> log = "";
+
+ 	@Before
+ 	<span class="code-keyword">public</span> <span class="code-object">String</span> baseBefore() {
+ 		log = log + <span class="code-quote">"baseBefore-"</span>;
+ 		<span class="code-keyword">return</span> <span class="code-keyword">null</span>;
+ 	}
+ }
+
+ <span class="code-keyword">public</span> class AnnotatedAction <span class="code-keyword">extends</span> BaseAnnotatedAction {
+ 	@Before
+ 	<span class="code-keyword">public</span> <span class="code-object">String</span> before() {
+ 		log = log + <span class="code-quote">"before"</span>;
+ 		<span class="code-keyword">return</span> <span class="code-keyword">null</span>;
+ 	}
+
+ 	<span class="code-keyword">public</span> <span class="code-object">String</span> execute() {
+ 		log = log + <span class="code-quote">"-execute"</span>;
+ 		<span class="code-keyword">return</span> Action.SUCCESS;
+ 	}
+
+ 	@BeforeResult
+ 	<span class="code-keyword">public</span> void beforeResult() <span class="code-keyword">throws</span> Exception {
+ 		log = log +<span class="code-quote">"-beforeResult"</span>;
+ 	}
+
+ 	@After
+ 	<span class="code-keyword">public</span> void after() {
+ 		log = log + <span class="code-quote">"-after"</span>;
+ 	}
+ }</pre>
+</div></div>
+
+<p>Configure a stack in xwork.xml that replaces the PrepareInterceptor with the AnnotationWorkflowInterceptor:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;interceptor-stack name=<span class="code-quote">"annotatedStack"</span>&gt;</span>
+<span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"static-params"</span>/&gt;</span>
+<span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"params"</span>/&gt;</span>
+<span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"conversionError"</span>/&gt;</span>
+<span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"annotationInterceptor"</span>/&gt;</span>
+<span class="code-tag">&lt;/interceptor-stack&gt;</span></pre>
+</div></div>
+
+<p>Given an Action, AnnotatedAction, add a reference to the AnnotationWorkflowInterceptor interceptor.</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;action name=<span class="code-quote">"AnnotatedAction"</span> class=<span class="code-quote">"com.examples.AnnotatedAction"</span>&gt;</span>
+   <span class="code-tag">&lt;interceptor-ref name=<span class="code-quote">"annotationInterceptor"</span>/&gt;</span>
+   <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"freemarker"</span>&gt;</span>good_result.ftl<span class="code-tag">&lt;/result&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span></pre>
+</div></div>
+
+<p><p>With the interceptor applied and the action executed on <code>AnnotatedAction</code> the log
+instance variable will contain <code>baseBefore-before-execute-beforeResult-after</code>.</p></p>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

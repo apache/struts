@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <title>WebWork - 
+        simple head template
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>The <a href="simple theme.html" title="simple theme">simple theme</a> <a href="head.html" title="head">head</a> template only does one thing: it prints out an HTML <tt>&lt;link/&gt;</tt> to the CSS required for the <a href="datepicker.html" title="datepicker">datepicker</a> tag to render properly.</p>
+
+<p>The source of the simple head.ftl template is:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;#if parameters.calendarcss?exists&gt;</span>
+<span class="code-tag">&lt;link rel=<span class="code-quote">"stylesheet"</span> href=<span class="code-quote">"&lt;@ww.url value='/webwork/jscalendar/${parameters.calendarcss?html}' /&gt;</span>"</span> type=<span class="code-quote">"text/css"</span>/&gt;
+<span class="code-tag">&lt;/#if&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

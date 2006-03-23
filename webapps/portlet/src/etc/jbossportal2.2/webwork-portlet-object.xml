@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2002-2006 by OpenSymphony
+  ~ All rights reserved.
+  -->
+<deployments>
+	<deployment>
+		<if-exists>overwrite</if-exists>
+		<parent-ref>default</parent-ref>
+		<properties />
+		<page>
+			<page-name>WebWorkPortlet Example</page-name>
+			<properties />
+			<window>
+				<window-name>WebWorkWindow</window-name>
+				<instance-ref>WebWorkPortletInstance</instance-ref>
+				<region>center</region>
+				<height>0</height>
+			</window>
+		</page>
+	</deployment>
+	<deployment>
+		<if-exists>overwrite</if-exists>
+		<instance>
+			<instance-name>WebWorkPortletInstance</instance-name>
+			<component-ref>webwork-portlet.WebWorkPortlet</component-ref>
+		</instance>
+	</deployment>
+</deployments>

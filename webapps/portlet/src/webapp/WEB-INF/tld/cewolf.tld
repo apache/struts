@@ -1,0 +1,1202 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN" "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+
+<taglib>
+<tlib-version>0.9.3</tlib-version>
+<jsp-version>1.2</jsp-version>
+<short-name>Cewolf Tag Library</short-name>
+<uri>http://cewolf.sourceforge.net/taglib/cewolf.tld</uri>
+<display-name>Cewolf Tag Library</display-name>
+<description>This tag library is designed to describe charts of all kinds.</description>
+<tag>
+    <name>plot</name>
+    <tag-class>de.laures.cewolf.taglib.tags.PlotTag</tag-class>
+    <body-content>JSP</body-content>
+    <description>
+    	The plot tag is nested inside a complex chart to define a nested or layerd plot instance.
+        @required-child data
+    </description>
+    <attribute>
+        <name>type</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+        	The type  of the plot. One of xyarea, xyline, xyshapesandlines ,
+			scatter, xyverticalbar, step, candlestick, highlow, signal,
+			verticlebar, area, line, shapesandlines
+	    </description>
+    </attribute>
+    <attribute>
+        <name>xaxislabel</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Title of the plot's x-axis. This attributes is
+            only used for horizontally combined charts.
+        </description>
+    </attribute>
+    <attribute>
+        <name>yaxislabel</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Title of the plot's y-axis. This attributes is
+            only used for vertically combined charts.
+        </description>
+    </attribute>
+</tag>
+<tag>
+    <name>img</name>
+    <tag-class>de.laures.cewolf.taglib.tags.ChartImgTag</tag-class>
+    <body-content>JSP</body-content>
+    <description>
+    	This tag is a specialized HTML img tag. It renders the chart
+    	which has been specified by a &lt;chart&gt; tag in the same page.
+      @optional-child map
+    </description>
+    <attribute>
+        <name>renderer</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Path to rendering servlet. Any path that starts with a '/' is assumed to refer to a resource relative to web application root. Otherwise, the path is assumed to refer to resource relative to the current page directory.
+        </description>
+    </attribute>
+    <attribute>
+        <name>chartid</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+        	The id of the chart to render.
+        </description>
+    </attribute>
+    <attribute>
+        <name>width</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Width of the rendered chart image in pixel.
+        </description>
+    </attribute>
+    <attribute>
+        <name>height</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Height of the rendered chart image in pixel.
+        </description>
+    </attribute>
+    <attribute>
+        <name>mime</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            The MIME type of the image. Currently image/png (default) and image/svg are supported.
+            @default image/png
+        </description>
+    </attribute>
+    <attribute>
+        <name>alt</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+        <attribute>
+        <name>timeout</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Sets the timeout value used in the LongTermSessionStorage obj. Value is in seconds.
+        </description>
+    </attribute>
+    <attribute>
+        <name>hspace</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>vspace</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>align</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>border</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>ismap</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>longdesc</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>usemap</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>class</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>dir</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>lang</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>onclick</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>ondbclick</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>onkeydown</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>onkeypress</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>onkeyup</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>onmousedown</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>onmousemove</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>onmouseout</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>onmouseover</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>onmouseup</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>style</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>htmltitle</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; title attribute.
+        </description>
+    </attribute>
+</tag>
+<tag>
+    <name>imgurl</name>
+    <tag-class>de.laures.cewolf.taglib.tags.ChartImgURLTag</tag-class>
+    <tei-class>de.laures.cewolf.taglib.tags.ChartImgURLTagEI</tei-class>
+    <description>
+    	This tag can be used as the src attribute of a HTML img tag. E.g.: 
+    	&lt;img src='&lt;imgurl chartid="foobar" renderer="cewolf" width="100" height="100"/&gt;'&gt;
+    	If the var attribute is used the URL is exposed as a page attribute of type String.
+        @extends img
+    </description>
+    <attribute>
+        <name>var</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Name of the page scope attribute to hold the URL. If not specified the URL is printed to the page outstream.
+        </description>
+    </attribute>
+    <attribute>
+        <name>renderer</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Path to rendering servlet. Any path that starts with a '/' is assumed to refer to a resource relative to web application root. Otherwise, the path is assumed to refer to resource relative to the current page directory.
+        </description>
+    </attribute>
+    <attribute>
+        <name>chartid</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+        	The id of the chart to render.
+        </description>
+    </attribute>
+    <attribute>
+        <name>width</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Width of the rendered chart image in pixel.
+        </description>
+    </attribute>
+    <attribute>
+        <name>height</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Height of the rendered chart image in pixel.
+        </description>
+    </attribute>
+    <attribute>
+        <name>mime</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            The MIME type of the image. Currently image/png (default) and image/svg are supported.
+            @default image/png
+        </description>
+    </attribute>
+</tag>
+<tag>
+    <name>chart</name>
+    <tag-class>de.laures.cewolf.taglib.tags.SimpleChartTag</tag-class>
+    <description>
+        Root tag of a chart description.
+        @root
+        @required-child data
+        @optional-child chartpostprocessor
+    </description>
+    <attribute>
+        <name>id</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            ID under which the chart description bean will be stored in the
+            page to be found by the img tag. Beware of using an
+            ID which is not yet used for other beans in the page to avoid
+            compile errors.
+        </description>
+    </attribute>
+    <attribute>
+        <name>type</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Type of the chart. One of area, areaxy, horizontalbar, horizontalbar3d,
+            line, pie, scatter, stackedarea, stackedhorizontalbar, stackedverticalbar, 
+            stackedverticalbar3d, timeseries, verticalbar, verticalbar3d, xy,
+            candlestick, highlow, gantt, wind, signal, verticalxybar, pie3d, meter
+        </description>
+    </attribute>
+    <attribute>
+        <name>title</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Title of the chart which is displayed on the chart panel
+            above the plot pane.
+        </description>
+    </attribute>
+    <attribute>
+        <name>xaxislabel</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Title of the chart's x-axis. This attributes is
+            ignored if the type attribute of the parent chart tag is one
+            of pie3d or pie.
+        </description>
+    </attribute>
+    <attribute>
+        <name>yaxislabel</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Title of the chart's y-axis. This attributes is
+            ignored if the type attribute of the parent chart tag is one
+            of pie3d or pie.
+        </description>
+    </attribute>
+    <attribute>
+        <name>background</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Background image of the chart panel. The value of this 
+            attribute is the filename of a graphics file relative to the web
+            application's root directory (e.g. /WEB-INF/img/bg.jpg).
+            The image must be loadable by the default java.awt.Toolkit of the
+            servlet container's JVM.
+        </description>
+    </attribute>
+    <attribute>
+        <name>backgroundimagealpha</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <type>java.lang.Float</type>
+        <description>
+            Chart's backgound alpha blending value as a float. Value ranges
+            from 0.0 to 1.0.
+            @default 0.0
+            @overrides /chart[backgroundimagealpha]
+        </description>
+    </attribute>
+    <attribute>
+        <name>antialias</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Antialiased rendering of the chart.
+            @default true
+            @overrides /chart[backgroundimagealpha]
+        </description>
+    </attribute>
+    <attribute>
+        <name>showlegend</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Boolean value to switch on or off the legend display inside of this panel.
+           @default true
+        </description>
+    </attribute>
+    <attribute>
+        <name>legendanchor</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Sets the anchor of the legend inside of the panel. Possible values
+            are 'north', 'south', 'west', 'east'.
+            Ignored if showlegned is 'false'.
+            @default 'south'
+        </description>
+    </attribute>
+</tag>
+<tag>
+    <name>overlaidchart</name>
+    <tag-class>de.laures.cewolf.taglib.tags.OverlaidChartTag</tag-class>
+    <description>
+        Root tag of a overlaid-chart description.
+        @root
+        @required-child data
+        @optional-child chartpostprocessor
+    </description>
+    <attribute>
+        <name>id</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            ID under which the chart description bean will be stored in the
+            page to be found by the img tag. Beware of using an
+            ID which is not yet used for other beans in the page to avoid
+            compile errors.
+        </description>
+    </attribute>
+    <attribute>
+        <name>type</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Type of the chart. In this version only overlaidxy is supported.
+        </description>
+    </attribute>
+    <attribute>
+        <name>title</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Title of the chart which is displayed on the chart panel
+            above the plot pane.
+        </description>
+    </attribute>
+    <attribute>
+        <name>xaxistype</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+        	Type of the domain axis. Possible values: date, number
+        </description>
+    </attribute>
+    <attribute>
+        <name>xaxislabel</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Title of the chart's x-axis. This attributes is
+            ignored if the type attribute of the parent chart tag is one
+            of pie3d or pie.
+        </description>
+    </attribute>
+    <attribute>
+        <name>yaxistype</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+        	Type of the range axis. Possible values: date, number
+        </description>
+    </attribute>
+    <attribute>
+        <name>yaxislabel</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Title of the chart's y-axis. This attributes is
+            ignored if the type attribute of the parent chart tag is one
+            of pie3d or pie.
+        </description>
+    </attribute>
+    <attribute>
+        <name>background</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Background image of the chart panel. The value of this 
+            attribute is the filename of a graphics file relative to the web
+            application's root directory (e.g. /WEB-INF/img/bg.jpg).
+            The image must be loadable by the default java.awt.Toolkit of the
+            servlet container's JVM.
+        </description>
+    </attribute>
+    <attribute>
+        <name>backgroundimagealpha</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <type>java.lang.Float</type>
+        <description>
+            Chart's backgound alpha blending value as a float. Value ranges
+            from 0.0 to 1.0.
+            @default 0.0
+            @overrides /chart[backgroundimagealpha]
+        </description>
+    </attribute>
+    <attribute>
+        <name>antialias</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Antialiased rendering of the chart.
+            @default true
+            @overrides /chart[backgroundimagealpha]
+        </description>
+    </attribute>
+    <attribute>
+        <name>showlegend</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Boolean value to switch on or off the legend display inside of this panel.
+           @default true
+        </description>
+    </attribute>
+    <attribute>
+        <name>legendanchor</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Sets the anchor of the legend inside of the panel. Possible values
+            are 'north', 'south', 'west', 'east'.
+            Ignored if showlegned is 'false'.
+            @default 'south'
+        </description>
+    </attribute>
+</tag>
+<tag>
+    <name>combinedchart</name>
+    <tag-class>de.laures.cewolf.taglib.tags.CombinedChartTag</tag-class>
+    <description>
+        Root tag of a combined-chart description.
+        @root
+        @required-child plot
+        @optional-child chartpostprocessor
+    </description>
+    <attribute>
+        <name>id</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            ID under which the chart description bean will be stored in the
+            page to be found by the img tag. Beware of using an
+            ID which is not yet used for other beans in the page to avoid
+            compile errors.
+        </description>
+    </attribute>
+    <attribute>
+        <name>type</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Type of the chart. One of combinedxy
+        </description>
+    </attribute>
+    <attribute>
+        <name>layout</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Layout of the chart. Either vertical or horizontal
+        </description>
+    </attribute>
+    <attribute>
+        <name>title</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Title of the chart which is displayed on the chart panel
+            above the plot pane.
+        </description>
+    </attribute>
+    <attribute>
+        <name>xaxislabel</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Title of the chart's x-axis. This attributes is
+            ignored if the type attribute of the parent chart tag is one
+            of pie3d or pie.
+        </description>
+    </attribute>
+    <attribute>
+        <name>yaxislabel</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Title of the chart's y-axis. This attributes is
+            ignored if the type attribute of the parent chart tag is one
+            of pie3d or pie.
+        </description>
+    </attribute>
+    <attribute>
+        <name>background</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Background image of the chart panel. The value of this
+            attribute is the filename of a graphics file relative to the web
+            application's root directory (e.g. /WEB-INF/img/bg.jpg).
+            The image must be loadable by the default java.awt.Toolkit of the
+            servlet container's JVM.
+        </description>
+    </attribute>
+    <attribute>
+        <name>backgroundimagealpha</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <type>java.lang.Float</type>
+        <description>
+            Chart's backgound alpha blending value as a float. Value ranges
+            from 0.0 to 1.0.
+            @default 0.0
+            @overrides /chart[backgroundimagealpha]
+        </description>
+    </attribute>
+    <attribute>
+        <name>antialias</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Antialiased rendering of the chart.
+            @default true
+            @overrides /chart[backgroundimagealpha]
+        </description>
+    </attribute>
+    <attribute>
+        <name>showlegend</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Boolean value to switch on or off the legend display inside of this panel.
+           @default true
+        </description>
+    </attribute>
+    <attribute>
+        <name>legendanchor</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Sets the anchor of the legend inside of the panel. Possible values
+            are 'north', 'south', 'west', 'east'.
+            Ignored if showlegned is 'false'.
+            @default 'south'
+        </description>
+    </attribute>
+</tag>
+<tag>
+    <name>legend</name>
+    <tag-class>de.laures.cewolf.taglib.tags.LegendTag</tag-class>
+    <description>
+       This tag is used to render the legend of a chart in a separate image.
+       It assumes that somewhere else in the JSP a chart tag defines a chart
+       with the same ID as this legend tag.
+    </description>
+    <attribute>
+        <name>renderer</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Path to rendering servlet relative to web apps root URL
+            (e.g. servlet/cewolf).
+        </description>
+    </attribute>
+    <attribute>
+        <name>id</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            ID under which the chart description bean will be stored in the
+            session to be found by the rendering servlet. Beware of using an
+            ID which is not yet used for other beans in the session to avoid
+            overriding.
+        </description>
+    </attribute>
+    <attribute>
+        <name>timeout</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Sets the timeout value used in the LongTermSessionStorage obj. Value is in seconds.
+        </description>
+    </attribute>
+    <attribute>
+        <name>width</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>height</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>mime</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            The MIME type of the image. Currently image/png (default) and image/svg are supported.
+            @default image/png
+        </description>
+    </attribute>
+    <attribute>
+        <name>alt</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>hspace</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>vspace</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>align</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>border</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>ismap</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>longdesc</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>usemap</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>class</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>dir</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>lang</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>onclick</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>ondbclick</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>onkeydown</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>onkeypress</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>onkeyup</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>onmousedown</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>onmousemove</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>onmouseout</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>onmouseover</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>onmouseup</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>style</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; attribute.
+        </description>
+    </attribute>
+    <attribute>
+        <name>htmltitle</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+           Corresponds to appropriate HMTL &lt;img&gt; title attribute.
+        </description>
+    </attribute>
+</tag>
+<tag>
+    <name>data</name>
+    <tag-class>de.laures.cewolf.taglib.tags.DataTag</tag-class>
+    <description>
+        A data tag provides all information needed to retrieve the data which are
+        needed by the chart. Current version only supports data provided by a
+        DatasetProducer. In future versions there will be tags to provide data
+        from a datasource (e.g. via SQL).
+        @optional-child producer
+    </description>
+</tag>
+<tag>
+    <name>producer</name>
+    <tag-class>de.laures.cewolf.taglib.tags.ProducerTag</tag-class>
+    <description>
+        A data tag provides all information needed to retrieve the data which are
+        needed by the chart. Current version only supports data provided by a
+        DatasetProducer. In future versions there will be tags to provide data
+        from a datasource (e.g. via SQL).
+        @optional-child param
+    </description>
+    <attribute>
+        <name>id</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            ID under which an object of type DatasetProducer can be found in
+            pageContext. This object is used to retrieve the dataset of the chart.
+        </description>
+    </attribute>
+    <attribute>
+        <name>usecache</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Determines if formally produced data should be reused if possible.
+            @default true
+        </description>
+    </attribute>
+</tag>
+<tag>
+    <name>chartpostprocessor</name>
+    <tag-class>de.laures.cewolf.taglib.tags.ChartPostProcessorTag</tag-class>
+    <description>
+        A chart postprocessor tag references an object of type ChartProstProcessor
+        which must be defined in pageContext under the provided ID. This object
+        is called back after chart generation to post process the chart in any
+        manner.
+        @optional-child param
+    </description>
+    <attribute>
+        <name>id</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            ID under which an object of type ChartPostProcessor can be found in
+            pageContext. This object is used to postprocess the rendered chart.
+        </description>
+    </attribute>
+</tag>
+<tag>
+    <name>param</name>
+    <tag-class>de.laures.cewolf.taglib.tags.ParamTag</tag-class>
+    <description>
+        Name/value-pair to paramterize a surrounding tag whose handler must 
+        implement the Parameterized interface.
+    </description>
+    <attribute>
+        <name>name</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Name of the param
+        </description>
+    </attribute>
+    <attribute>
+        <name>value</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <type>java.io.Serializable</type>
+        <description>
+            Value of the param. Must be serializable.
+        </description>
+    </attribute>
+</tag>
+<tag>
+    <name>gradientpaint</name>
+    <tag-class>de.laures.cewolf.taglib.tags.GradientTag</tag-class>
+    <description>
+        The gradientpaint tag provides a way to fill a shape with a linear 
+        color gradient pattern. If Point P1 with Color C1 and Point P2 with 
+        Color C2 are specified in user space, the Color on the P1, P2 
+        connecting line is proportionally changed from C1 to C2. Any point 
+        P not on the extended P1, P2 connecting line has the color of the 
+        point P' that is the perpendicular projection of P on the extended P1,
+        P2 connecting line. Points on the extended line outside of the P1,
+        P2 segment can be colored in one of two ways.
+        &lt;ul&gt;
+        &lt;li&gt;If the gradient is cyclic then the points on the extended 
+        P1, P2 connecting line cycle back and forth between the colors C1 
+        and C2.
+        &lt;li&gt;If the gradient is acyclic then points on the P1 side of 
+        the segment have the constant Color C1 while points on the P2 side 
+        have the constant Color C2.
+        The two colors are defined in a nested point tag of this tag. 
+        @required-child point
+    </description>
+    <attribute>
+        <name>cyclic</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Does the gradient cycle repeatedly between the two colors C1 and C2.
+            @default false
+        </description>
+    </attribute>
+</tag>
+<tag>
+    <name>point</name>
+    <tag-class>de.laures.cewolf.taglib.tags.PointTag</tag-class>
+    <description>
+        Defines a point with x and y coordinates and a color.
+        @extends colorpaint
+    </description>
+    <attribute>
+        <name>x</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            The x coordinate of the point.
+        </description>
+    </attribute>
+    <attribute>
+        <name>y</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            The y coordinate of the point.
+        </description>
+    </attribute>
+    <attribute>
+        <name>color</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            @copy
+        </description>
+    </attribute>
+</tag>
+<tag>
+    <name>colorpaint</name>
+    <tag-class>de.laures.cewolf.taglib.tags.ColorTag</tag-class>
+    <description>
+        Fills the area defined by the parent tag with a color. 
+    </description>
+    <attribute>
+        <name>color</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            The color to be used to fill the parent tag's area.
+            The color definition is compatible with the
+            HTML one. E.g. black is '#000000' and red is '#FF0000'. However it
+            is possible to append two hex numbers for the alpha channel. Thus
+            '#FF000080' is red with alpha blending of 50%.
+        </description>
+    </attribute>
+</tag>
+<tag>
+    <name>texturepaint</name>
+    <tag-class>de.laures.cewolf.taglib.tags.TextureTag</tag-class>
+    <description>
+        The texturepaint tag provides a way to fill the area of the parent tag
+        with a texture that is specified as an image. The texture is anchored to 
+        the upper left corner of the parent tags area.
+    </description>
+    <attribute>
+        <name>image</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            Image fo the texture. The value of this 
+            attribute is the filename of a graphics file relative to the web
+            application's root directory (e.g. /WEB-INF/img/bg.jpg).
+            The image must be loadable by the default java.awt.Toolkit of the
+            servlet container's JVM.
+        </description>
+    </attribute>
+    <attribute>
+        <name>width</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            The width of the texture.
+        </description>
+    </attribute>
+    <attribute>
+        <name>height</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            The height of the texture.
+        </description>  
+    </attribute>
+</tag>
+<tag>
+    <name>map</name>
+    <tag-class>de.laures.cewolf.taglib.tags.ChartMapTag</tag-class>
+    <description>
+      This tag defines an image and tooltip map for the parent img tag.
+      @parent img
+    </description>
+    <attribute>
+        <name>linkgeneratorid</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+          The ID of the class which implements the appropriate de.laures.cewolf.LinkGenerator.
+        </description>
+    </attribute>
+    <attribute>
+        <name>tooltipgeneratorid</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+          The ID of the class which implements the appropriate com.jrefinery.chart.tooltips.ToolTipGenerator.
+        </description>
+    </attribute>
+	<attribute>
+		<name>useJFreeChartLinkGenerator</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+		<description>If the links provided by the JFreeChart renderer should be used.</description>
+	</attribute>
+	<attribute>
+		<name>useJFreeChartTooltipGenerator</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+		<description>If the tooltips provided by the JFreeChart renderer should be used.</description>		
+	</attribute>	
+	
+</tag>
+</taglib>

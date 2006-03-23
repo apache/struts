@@ -1,0 +1,62 @@
+<configuration>
+    <!--
+    QuickStart can be used to extend other QuickStart configurations.
+    This is great for applications that have multiple "editions" and
+    extend upon a base webapp or evven just a base set of classes.
+    -->
+    <!--<extendsConfig>../path/to/quickstart.xml</extendsConfig>-->
+
+    <!--
+    QuickStart supports reading your IDEA module configuration and
+    using the libraries there. This is especially useful for maven
+    users who don't have a single directory in their project that
+    contains all the libraries they need.
+    -->
+    <!--<ideaConfig>ShowCase.iml</ideaConfig>-->
+
+    <!-- The context in which to deploy the web application -->
+    <context>/showcase</context>
+
+    <!-- The port in which to deploy the web application -->
+    <port>8080</port>
+
+    <!--
+    The libs directories can be a jar, a directory of jars, or even
+    a directory of directories (searched recursively)
+    -->
+    <libs>
+        <dir>../../lib</dir>
+    </libs>
+
+    <!--
+    Optional: the location where your source files are. If this is
+    not included, the auto-recompiling feature of QuickStart will
+    not be enabled. You may wish to do this anyway, as this feature
+    has been known to cause strange side effects. If you don't
+    specify your sources, you must specify where your classes are by
+    using the classDirs and libs elements
+    -->
+    <sources>
+        <dir>src/java</dir>
+    </sources>
+
+    <!--
+    The classDirs directories can be a jar or a directory of classes
+    -->
+    <classDirs>
+        <dir>src/webapp/WEB-INF/classes</dir>
+    </classDirs>
+
+    <!--
+    You can specify one or more directories where your webapp files
+    are located. This is useful if you have your project split up in
+    unique ways. You can also specify the path that the directory is
+    mapped to, relative to the context.
+    -->
+    <webDirs>
+        <webDir>
+            <path>/</path>
+            <dir>src/webapp</dir>
+        </webDir>
+    </webDirs>
+</configuration>

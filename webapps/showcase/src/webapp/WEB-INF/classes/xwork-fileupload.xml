@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE xwork PUBLIC
+	"-//OpenSymphony Group//XWork 1.1.1//EN"
+	"http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+
+<xwork>
+	<include file="webwork-default.xml" />
+
+	<package name="fileupload" extends="webwork-default" namespace="/fileupload">
+        
+        <default-action-ref name="upload"/>
+
+        <action name="upload" class="com.opensymphony.webwork.showcase.fileupload.FileUploadAction" method="input">
+			<result>upload.jsp</result>
+		</action>
+
+        <action name="doUpload" class="com.opensymphony.webwork.showcase.fileupload.FileUploadAction" method="upload">
+			<result>upload-success.jsp</result>
+		</action>
+
+    </package>
+</xwork>
+
+

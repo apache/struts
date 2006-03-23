@@ -1,0 +1,152 @@
+<html>
+    <head>
+        <title>WebWork - 
+         Validation
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="AJAXValidation-Description"></a>Description</h1>
+<p>The following is describes how to do simple ajax validation in webwork.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>This requires DWR servlet being setup, dojo and the ajax theme being used.</td></tr></table>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>In the Ajax theme, dwr is used for normal validation while dojo everything else (widgets, XHR, browser JS events etc.)</td></tr></table>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>In order for validation to function properly it is advised to used standard WebWork Tags.</td></tr></table>
+
+<h1><a name="AJAXValidation-SetupDWR"></a>Setup DWR</h1>
+<p>DWR could be setup by having the following dwr configuration (dwr.xml) at /WEB-INF/ directory. If it needs to be in other places, refer to <a href="http://getahead.ltd.uk/dwr/" title="Visit page outside Confluence">&#104;ttp://getahead.ltd.uk/dwr/</a> for more information.</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml">&lt;!DOCTYPE dwr PUBLIC 
+	<span class="code-quote">"-//GetAhead Limited//DTD Direct Web Remoting 1.0//EN"</span> 
+	<span class="code-quote">"http://www.getahead.ltd.uk/dwr/dwr10.dtd"</span>&gt;
+
+<span class="code-tag">&lt;dwr&gt;</span>
+    <span class="code-tag">&lt;allow&gt;</span>
+        <span class="code-tag">&lt;create creator=<span class="code-quote">"new"</span> javascript=<span class="code-quote">"validator"</span>&gt;</span>
+            <span class="code-tag">&lt;param name=<span class="code-quote">"class"</span> value=<span class="code-quote">"com.opensymphony.webwork.validators.DWRValidator"</span>/&gt;</span>
+        <span class="code-tag">&lt;/create&gt;</span>
+        <span class="code-tag">&lt;convert converter=<span class="code-quote">"bean"</span> match=<span class="code-quote">"com.opensymphony.xwork.ValidationAwareSupport"</span>/&gt;</span>
+    <span class="code-tag">&lt;/allow&gt;</span>
+
+    <span class="code-tag">&lt;signatures&gt;</span>
+        &lt;![CDATA[
+        import java.util.Map;
+        import com.opensymphony.webwork.validators.DWRValidator;
+
+        DWRValidator.doPost(String, String, Map<span class="code-tag">&lt;String, String&gt;</span>);
+        ]]&gt;
+    <span class="code-tag">&lt;/signatures&gt;</span>
+<span class="code-tag">&lt;/dwr&gt;</span></pre>
+</div></div>
+
+<p>A DWRServlet need to be registered with the web application as well. The following shows a typical web.xml with DWRSerlvet.</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;servlet&gt;</span>
+    <span class="code-tag">&lt;servlet-name&gt;</span>dwr<span class="code-tag">&lt;/servlet-name&gt;</span>
+    <span class="code-tag">&lt;servlet-class&gt;</span>uk.ltd.getahead.dwr.DWRServlet<span class="code-tag">&lt;/servlet-class&gt;</span>
+    <span class="code-tag">&lt;init-param&gt;</span>
+        <span class="code-tag">&lt;param-name&gt;</span>debug<span class="code-tag">&lt;/param-name&gt;</span>
+        <span class="code-tag">&lt;param-value&gt;</span>true<span class="code-tag">&lt;/param-value&gt;</span>
+    <span class="code-tag">&lt;/init-param&gt;</span>
+<span class="code-tag">&lt;/servlet&gt;</span>
+
+<span class="code-tag">&lt;servlet-mapping&gt;</span>
+    <span class="code-tag">&lt;servlet-name&gt;</span>dwr<span class="code-tag">&lt;/servlet-name&gt;</span>
+    <span class="code-tag">&lt;url-pattern&gt;</span>/dwr/*<span class="code-tag">&lt;/url-pattern&gt;</span>
+<span class="code-tag">&lt;/servlet-mapping&gt;</span></pre>
+</div></div>
+
+
+<h1><a name="AJAXValidation-Step1"></a>Step 1</h1>
+<p>Create the jsp page. Note the &lt;ww:head ...&gt; tag is used to set the theme which will put in necesary dojo sripts etc. See ajax's theme head.ftl for more information.</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;html&gt;</span>
+<span class="code-tag">&lt;head&gt;</span>
+    <span class="code-tag">&lt;title&gt;</span>Validation - Basic<span class="code-tag">&lt;/title&gt;</span>
+    <span class="code-tag">&lt;ww:head theme=<span class="code-quote">"ajax"</span>/&gt;</span>
+<span class="code-tag">&lt;/head&gt;</span>
+
+<span class="code-tag">&lt;body&gt;</span>
+
+<span class="code-tag">&lt;ww:form method=<span class="code-quote">"post"</span> validate=<span class="code-quote">"true"</span> theme=<span class="code-quote">"ajax"</span>&gt;</span>
+    <span class="code-tag">&lt;ww:textfield label=<span class="code-quote">"Name"</span> name=<span class="code-quote">"name"</span>/&gt;</span>
+    <span class="code-tag">&lt;ww:textfield label=<span class="code-quote">"Age"</span> name=<span class="code-quote">"age"</span>/&gt;</span>
+    <span class="code-tag">&lt;ww:textfield label=<span class="code-quote">"Favorite color"</span> name=<span class="code-quote">"answer"</span>/&gt;</span>
+    <span class="code-tag">&lt;ww:submit/&gt;</span>
+<span class="code-tag">&lt;/ww:form&gt;</span>
+
+<span class="code-tag">&lt;/body&gt;</span>
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+
+
+<h1><a name="AJAXValidation-Step2"></a>Step 2</h1>
+<p>Create the action class</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> class QuizAction <span class="code-keyword">extends</span> ActionSupport {
+    <span class="code-object">String</span> name;
+    <span class="code-object">int</span> age;
+    <span class="code-object">String</span> answer;
+
+    <span class="code-keyword">public</span> <span class="code-object">String</span> getName() {
+        <span class="code-keyword">return</span> name;
+    }
+
+    <span class="code-keyword">public</span> void setName(<span class="code-object">String</span> name) {
+        <span class="code-keyword">this</span>.name = name;
+    }
+
+    <span class="code-keyword">public</span> <span class="code-object">int</span> getAge() {
+        <span class="code-keyword">return</span> age;
+    }
+
+    <span class="code-keyword">public</span> void setAge(<span class="code-object">int</span> age) {
+        <span class="code-keyword">this</span>.age = age;
+    }
+
+    <span class="code-keyword">public</span> <span class="code-object">String</span> getAnswer() {
+        <span class="code-keyword">return</span> answer;
+    }
+
+    <span class="code-keyword">public</span> void setAnswer(<span class="code-object">String</span> answer) {
+        <span class="code-keyword">this</span>.answer = answer;
+    }
+}</pre>
+</div></div>
+
+
+<h1><a name="AJAXValidation-Step3"></a>Step 3</h1>
+<p>Create the validation.xml</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml">&lt;!--
+    Add the following DOCTYPE declaration as first line of your XXX-validation.xml file:
+    <span class="code-tag">&lt;!DOCTYPE validators PUBLIC <span class="code-quote">"-//OpenSymphony Group//XWork Validator 1.0.2//EN"</span> <span class="code-quote">"http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd"</span>&gt;</span>
+--&gt;
+<span class="code-tag">&lt;validators&gt;</span>
+    <span class="code-tag">&lt;field name=<span class="code-quote">"name"</span>&gt;</span>
+        <span class="code-tag">&lt;field-validator type=<span class="code-quote">"requiredstring"</span>&gt;</span>
+            <span class="code-tag">&lt;message&gt;</span>You must enter a name<span class="code-tag">&lt;/message&gt;</span>
+        <span class="code-tag">&lt;/field-validator&gt;</span>
+    <span class="code-tag">&lt;/field&gt;</span>
+    <span class="code-tag">&lt;field name=<span class="code-quote">"age"</span>&gt;</span>
+        <span class="code-tag">&lt;field-validator type=<span class="code-quote">"int"</span>&gt;</span>
+            <span class="code-tag">&lt;param name=<span class="code-quote">"min"</span>&gt;</span>13<span class="code-tag">&lt;/param&gt;</span>
+            <span class="code-tag">&lt;param name=<span class="code-quote">"max"</span>&gt;</span>19<span class="code-tag">&lt;/param&gt;</span>
+            <span class="code-tag">&lt;message&gt;</span>Only people ages 13 to 19 may take this quiz<span class="code-tag">&lt;/message&gt;</span>
+        <span class="code-tag">&lt;/field-validator&gt;</span>
+    <span class="code-tag">&lt;/field&gt;</span>
+<span class="code-tag">&lt;/validators&gt;</span></pre>
+</div></div>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

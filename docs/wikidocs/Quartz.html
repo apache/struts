@@ -1,0 +1,91 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Quartz
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>The following class performs the glue between Quartz and WebWork:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">package</span> com.trantek.sit.action;
+
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionProxy;
+<span class="code-keyword">import</span> com.opensymphony.xwork.ActionProxyFactory;
+<span class="code-keyword">import</span> com.opensymphony.xwork.interceptor.component.ComponentInterceptor;
+<span class="code-keyword">import</span> org.quartz.Job;
+<span class="code-keyword">import</span> org.quartz.JobExecutionContext;
+<span class="code-keyword">import</span> org.quartz.JobExecutionException;
+<span class="code-keyword">import</span> java.util.HashMap;
+
+<span class="code-keyword">public</span> class WebWorkJob <span class="code-keyword">implements</span> Job
+{
+    <span class="code-keyword">public</span> void execute(JobExecutionContext context) <span class="code-keyword">throws</span> JobExecutionException
+    {
+        <span class="code-keyword">try</span>
+        {
+            HashMap ctx = <span class="code-keyword">new</span> HashMap();
+            ctx.put(ActionContext.PARAMETERS, context.getJobDetail().getJobDataMap());
+            ctx.put(ComponentInterceptor.COMPONENT_MANAGER, ???);
+            ctx.put(???, ???)
+            ServletDispatcher.createContextMap()
+            ActionProxy proxy = ActionProxyFactory.getFactory().
+                    createActionProxy("", context.getJobDetail().getName(), ctx);
+
+            proxy.execute();
+        }
+        <span class="code-keyword">catch</span> (Exception e)
+        {
+            <span class="code-keyword">throw</span> <span class="code-keyword">new</span> JobExecutionException(e);
+        }
+    }
+}</pre>
+</div></div>
+
+<p>To schedule webwork actions you simply create a job where</p>
+
+<ul>
+	<li>the name of your job is the name of the WW action to execute (no ".action" suffix).</li>
+	<li>all the parameters you want to send to the WW action is contained in the JobDataMap of the JobDetail</li>
+</ul>
+
+
+
+<p>(the Quartz scheduler is setup as a servlet according to the javadocs of org.quartz.ee.servlet.QuartzInitializerServlet.)</p>
+
+<p>The following code schedules an e-mail action:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+
+JobDetail jobDetail = <span class="code-keyword">new</span> JobDetail(<span class="code-quote">"email.send"</span>, 
+                                     scheduler.DEFAULT_GROUP, WebWorkJob.class);
+
+Map m = jobDetail.getJobDataMap();
+m.put(<span class="code-quote">"to"</span>, <span class="code-quote">"me@bogusdomain.com"</span>);
+m.put(<span class="code-quote">"subject"</span>, <span class="code-quote">"quartz test"</span>);
+m.put(<span class="code-quote">"body"</span>, <span class="code-quote">"This is a quartz test, Hey ho"</span>);
+m.put(<span class="code-quote">"smtpServer"</span>, <span class="code-quote">"smtp.bogusdomain.com"</span>);
+m.put(<span class="code-quote">"from"</span>, <span class="code-quote">"quartz@bogusdomain.com"</span>);
+
+SimpleTrigger trigger = <span class="code-keyword">new</span> SimpleTrigger(<span class="code-quote">"myTrigger"</span>, 
+                                          scheduler.DEFAULT_GROUP, 
+                                          <span class="code-keyword">new</span> Date(), <span class="code-keyword">null</span>, 0, 0L);
+
+scheduler.deleteJob(<span class="code-quote">"email.send"</span>, scheduler.DEFAULT_GROUP);
+scheduler.scheduleJob(jobDetail, trigger);</pre>
+</div></div>
+
+<p>This example is based on <a href="http://wiki.opensymphony.com/display/WW1/Integrating+Webwork+and+Quartz" title="Integrating Webwork and Quartz">WW1:Integrating Webwork and Quartz</a></p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

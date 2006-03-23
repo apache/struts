@@ -1,0 +1,145 @@
+<html>
+    <head>
+        <title>WebWork 2 : TutorialLesson04-01</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=GBK">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            WebWork 2 : TutorialLesson04-01
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Oct 04, 2004 by <font color="#0050B2">kousuke</font>.
+				    </div>
+
+				    <p class="paragraph"><h1 style="margin: 4px 0px 4px 0px;" class="heading1"><a name="TutorialLesson04-01-Lesson4.1%3AUsingJSPastheView"> 4.1: 利用JSP作为视图</a></h1></p>在使用JSP绘制视图时, 你可以选择使用脚本(Scriplet)或标签访问活动(action)的数据. 标签是推荐使用的方式.
+<p class="paragraph"><h2 class="heading2"><a name="TutorialLesson04-01-AccessingActionDatathroughScriplets%3A"> 使用脚本访问活动数据</a></h2></p>活动数据可以通过对象<em class="emphasis">值栈(Value Stack)</em>进行访问. 先面的例子完成了与<a href="TutorialLesson03.html" title="TutorialLesson03">第三课</a>第二个例子(<em class="emphasis">Supplying Data to the Action</em>)中的结果页面相同的工作, 但使用了脚本:<br/>
+
+<div class="code"><div class="codeContent">
+<pre>&lt;&#37;&#64; page <span class="java&#45;keyword">import</span>=<span class="java&#45;quote">&quot;com.opensymphony.xwork.util.OgnlValueStack&quot;</span> &#37;&gt;&#10;&lt;html&gt;&#10;&lt;head&gt;&#10;&lt;title&gt;WebWork Tutorial &#45; Lesson 4.1 &#45; Lesson 3&#039;s example modified&lt;/title&gt;&#10;&lt;/head&gt;&#10;&lt;body&gt;&#10;&#10;&lt;&#37;&#10;OgnlValueStack stack = (OgnlValueStack)request.getAttribute(<span class="java&#45;quote">&quot;webwork.valueStack&quot;</span>);&#10;out.write(<span class="java&#45;quote">&quot;Hello, &quot;</span> &#43; stack.findValue(<span class="java&#45;quote">&quot;person&quot;</span>));&#10;&#37;&gt;&#10;&#10;&lt;/body&gt;&#10;&lt;/html&gt;</pre>
+</div></div><p class="paragraph">无论如何, 推荐使用WebWork标签而不是脚本. 例如, <tt class="monospaced">&lt;ww:property /&gt;</tt>标签准确的完成了上面脚本的工作, 同时具有更清晰的语法并处理了当值栈不存在的情况.</p><h2 class="heading2"><a name="TutorialLesson04-01-WebWorkTagLibrary%3A"> WebWork标签库:</a></h2><p class="paragraph">我们已经在<a href="TutorialLesson03.html" title="TutorialLesson03">第三课</a>的例子中展示了如何使用标签访问活动的属性. 本节介绍并举例说明WebWork标签库的用途, 它分为七大类:</p><ul class="star">
+<li> <b class="strong">通用标签</b>: 最常用, 最基本的标签;</li>
+<li> <b class="strong">组件化标签</b>: 鼓励视图的组件化;</li>
+<li> <b class="strong">流程控制标签</b>: 在JSP页面中管理控制流程;</li>
+<li> <b class="strong">迭代标签</b>: 迭代元素并操作可迭代(iterable)的对象;</li>
+<li> <b class="strong">UI标签</b>: 生成HTML表单字段和控件;</li>
+<li> <b class="strong">VUI标签</b>: <font color="red"><em class="emphasis">需要自愿者来编写这部分</em></font>;</li>
+<li> <b class="strong">国际化支持标签</b>: 提供国际化视图支持.</li>
+</ul><br/>
+ 
+<h3 class="heading3"><a name="TutorialLesson04-01-Commontags"> 通用标签</a></h3>
+
+<table class="wikitable">
+<tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:property /&gt;</tt></b></td><td>获取结果的属性值. 如果值未指定, 将返回栈顶值.</td>
+</tr><tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:push /&gt;</tt></b></td><td>将一个值压入值栈.</td>
+</tr><tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:param /&gt;</tt></b></td><td>设置父标签的参数. 仅用于其他标签内部, 用于设置父标签某些属性的值.</td>
+</tr><tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:set /&gt;</tt></b></td><td>将值栈中的某个对象的值设置到一个scope(page, stack, application, session)中. 如果值未给定, 将使用栈顶值. 如果scope未给定, 使用&quot;webwork&quot;的缺省scope.</td>
+</tr><tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:url /&gt;</tt></b></td><td>构建一个编码的URL.</td>
+</tr>
+</table>
+<div class="code"><div class="codeContent">
+<pre>此处需要实例.</pre>
+</div></div><br/>
+
+<blockquote class="blockquote"> 进一步阅读: <a href="Non-UI Tags.html" title="Non-UI Tags">非UI类标签</a></blockquote>
+<p class="paragraph"><h3 class="heading3"><a name="TutorialLesson04-01-Componentisationtags"> 组件化标签</a></h3></p><table class="wikitable">
+<tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:action /&gt;</tt></b></td><td>在标签库的上下文环境中执行一个活动. 标签的主体用来显示活动执行的结果.</td>
+</tr><tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:bean /&gt;</tt></b></td><td>创建一个JavaBean, 初始化它的属性并放入ActionContext以便后续使用.</td>
+</tr><tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:include /&gt;</tt></b></td><td>包含另一个页面或活动.</td>
+</tr>
+</table>
+<div class="code"><div class="codeContent">
+<pre>此处需要实例.</pre>
+</div></div><br/>
+
+<blockquote class="blockquote"> 进一步阅读: <a href="Non-UI Tags.html" title="Non-UI Tags">非UI类标签</a></blockquote>
+<p class="paragraph"><h3 class="heading3"><a name="TutorialLesson04-01-Flowcontroltags"> 流程控制标签</a></h3></p>这个if-else的标签集合就像if-else脚本一样.<br/>
+
+<table class="wikitable">
+<tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:if /&gt;</tt></b></td><td>有条件执行路径. 换言之, 如果布尔条件是true的话, 就运算标签主体内容.</td>
+</tr><tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:else /&gt;</tt></b></td><td>if标签的反向执行路径. 换言之, 如果前一个if标签的布尔条件是false的话, 就运算标签主体内容.</td>
+</tr><tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:elseif /&gt;</tt></b></td><td>if标签的反向执行路径. 换言之, 如果前一个if标签的布尔条件是false且本标签的布尔条件是true的话, 就运算标签主体内容.</td>
+</tr>
+</table>
+<div class="code"><div class="codeContent">
+<pre>此处需要实例.</pre>
+</div></div><br/>
+
+<blockquote class="blockquote">进一步阅读: <a href="Non-UI Tags.html" title="Non-UI Tags">非UI类标签</a></blockquote>
+<p class="paragraph"><h3 class="heading3"><a name="TutorialLesson04-01-Iterationtags"> 迭代标签</a></h3></p><table class="wikitable">
+<tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:iterator /&gt;</tt></b></td><td>在一个集合(collection)上迭代.</td>
+</tr><tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:generator /&gt;</tt></b></td><td>生成迭代器(Iterator).</td>
+</tr><tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:append /&gt;</tt></b></td><td>添加几个迭代器.</td>
+</tr><tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:subset /&gt;</tt></b></td><td>获取一个迭代器的子集.</td>
+</tr><tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:merge /&gt;</tt></b></td><td>合并几个迭代器.</td>
+</tr><tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:sort /&gt;</tt></b></td><td>对迭代器进行排序.</td>
+</tr>
+</table>
+<div class="code"><div class="codeContent">
+<pre>此处需要实例.</pre>
+</div></div><br/>
+
+<blockquote class="blockquote"> 进一步阅读: <a href="Non-UI Tags.html" title="Non-UI Tags">非UI类标签</a></blockquote>
+<p class="paragraph"><h3 class="heading3"><a name="TutorialLesson04-01-UItags"> UI标签</a></h3></p>UI标签包装了HTML控件以便与核心框架紧密集成. 这些标签设计目标是最小化代码中的逻辑部分, 并用一个模版系统代理最终的HTML绘制. UI标签试图覆盖最普遍的情景(scenario), 并提供了一个component标签以创建定制组件. UI标签还内建支持显示内嵌的[inline, 参考C++ 中的inline定义]错误信息.<p class="paragraph">对UI标签的一些细节内容的描述如它们如何工作, 如何利用模版定制它们的外观, 如何创建定制组件等等, 将在另一课中介绍.</p><a href="TutorialLesson04-01-01.html" title="TutorialLesson04-01-01">跳转到WebWork的UI标签教程</a>.
+<p class="paragraph"><h3 class="heading3"><a name="TutorialLesson04-01-VUI%28VoiceUI%29tags"> VUI(Voice UI)标签</a></h3>
+<table class="wikitable">
+<tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:audio /&gt;</tt></b></td><td>???</td>
+</tr><tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:prompt /&gt;</tt></b></td><td>???</td>
+</tr><tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:filled /&gt;</tt></b></td><td>???</td>
+</tr><tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:log /&gt;</tt></b></td><td>???</td>
+</tr>
+</table><br/>
+<font color="red"><em class="emphasis">需要自愿者编写这一部分.</em></font></p><h3 class="heading3"><a name="TutorialLesson04-01-Internationalisationtags"> 国际化标签</a></h3>
+
+<table class="wikitable">
+<tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:text /&gt;</tt></b></td><td>输出一个经过国际化处理的字符串.</td>
+</tr><tr>
+<td><b class="strong"><tt class="monospaced">&lt;ww:i18n /&gt;</tt></b></td><td>将国际化资源包(resource bundle)放入值栈中, 为text标签使用.</td>
+</tr>
+</table><br/>
+<blockquote class="blockquote"> 进一步阅读: <a href="UI Tags.html" title="UI Tags">UI标签</a></blockquote><p class="paragraph"><hr class="line"/></p><a href="TutorialLesson04.html" title="TutorialLesson04">上一课</a> | <a href="TutorialLesson04-02.html" title="TutorialLesson04-02">下一课</a><br/>
+
+
+
+				    
+                    			    </td>
+		    </tr>
+	    </table>
+	    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td height="12" background="border/border_bottom.gif"><img src="border/spacer.gif" width="1" height="1" border="0"/></td>
+			</tr>
+		    <tr>
+			    <td align="center"><font color="grey">Document generated by Confluence on Dec 14, 2004 16:36</font></td>
+		    </tr>
+	    </table>
+    </body>
+</html>

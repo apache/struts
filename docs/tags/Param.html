@@ -1,0 +1,100 @@
+
+<html>
+<head>
+<title>&lt;ww:param /&gt;</title>
+</head>
+
+<body>
+
+<h1>Tag Name: &lt;ww:param /&gt;</h1>
+
+<h2>Description</h2>
+<p>
+
+Parametrize other tags
+
+</p>
+
+<p>
+<!-- START SNIPPET: javadoc --> <p>This tag can be used to parameterize other tags.</p> The include tag and bean tag are examples of such tags. <p/> The parameters can be added with or without a name as key. If the tag provides a name attribute the parameters are added using the {@link Component#addParameter(String, Object) addParamter} method. For unnamed parameters the Tag must implement the {@link UnnamedParametric} interface defined in this class (e.g. The TextTag does this). <p/> This tag has the following two paramters. <!-- START SNIPPET: params --> <ul> <li>name (String) - the name of the parameter</li> <li>value (Object) - the value of the parameter</li> </ul> <!-- END SNIPPET: params --> <p/> <b>Note:</b> When you declare the param tag, the value can be defined in either a <tt>value</tt> attribute or as text between the start and end tag. WebWork behaves a bit different according to these two situations. This is best illustrated using an example: <br/>&lt;param name="color"&gt;blue&lt;/param&gt; &lt;-- (A) --&gt; <br/>&lt;param name="color" value="blue"/&gt; &lt;-- (B) --&gt; <br/>In the first situation (A) the value would be evaluated to the stack as a <tt>java.lang.String</tt> object. And in situation (B) the value would be evaluated to the stack as a <tt>java.lang.Object</tt> object. <br/>For more information see <a href="http://jira.opensymphony.com/browse/WW-808">WW-808</a>. <!-- END SNIPPET: javadoc --> <p/> <b>Examples</b> <!-- START SNIPPET: example --> <pre> &lt;ui:component&gt; &lt;ui:param name="key" value="[0]"/&gt; &lt;ui:param name="value" value="[1]"/&gt; &lt;ui:param name="context" value="[2]"/&gt; &lt;/ui:component&gt; </pre> <!-- END SNIPPET: example --> <p/> <!-- START SNIPPET: exampledescription --> where the key will be the identifier and the value the result of an OGNL expression run against the current OgnlValueStack. <!-- END SNIPPET: exampledescription --> <p/> This second example demonstrates how the text tag can use parameters from this param tag. <!-- START SNIPPET: example2 --> <pre> &lt;ww:text name="cart.total.cost"&gt; &lt;ww:param value="#session.cartTotal"/&gt; &lt;/ww:text&gt; </pre> <!-- END SNIPPET: example2 --> <p/>
+</p>
+
+<h2>Attributes</h2>
+<p>
+
+<!-- START SNIPPET: tagattributes -->
+<table width="100%">
+<tr>
+
+<th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">name</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Name of Parameter to set</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">value</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">The value of evaluating provided name against stack</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Value expression for Parameter to set</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">id for referencing element. For UI and form tags it will be used as HTML id attribute</td>
+
+</tr>
+
+</table>
+<!-- END SNIPPET: tagattributes -->
+
+</p>
+<p>
+<center><a href="index.html">Back to Taglib Index</a></center>
+</p>
+</body>
+</html>
+

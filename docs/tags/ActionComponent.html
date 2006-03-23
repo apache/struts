@@ -1,0 +1,136 @@
+
+<html>
+<head>
+<title>&lt;ww:action /&gt;</title>
+</head>
+
+<body>
+
+<h1>Tag Name: &lt;ww:action /&gt;</h1>
+
+<h2>Description</h2>
+<p>
+
+Execute an action from within a view
+
+</p>
+
+<p>
+<!-- START SNIPPET: javadoc --> <p>This tag enables developers to call actions directly from a JSP page by specifying the action name and an optional namespace. The body content of the tag is used to render the results from the Action. Any result processor defined for this action in xwork.xml will be ignored, <i>unless</i> the executeResult parameter is specified.</p> <!-- END SNIPPET: javadoc --> <!-- START SNIPPET: params --> <ul> <li>id (String) - the id (if specified) to put the action under stack's context. <li>name* (String) - name of the action to be executed (without the extension suffix eg. .action)</li> <li>namespace (String) - default to the namespace where this action tag is invoked</li> <li>executeResult (Boolean) - default is false. Decides wheather the result of this action is to be executed or not</li> <li>ignoreContextParams (Boolean) - default to false. Decides wheather the request parameters are to be included when the action is invoked</li> </ul> <!-- END SNIPPET: params --> <pre> <!-- START SNIPPET: javacode --> public class ActionTagAction extends ActionSupport { public String execute() throws Exception { return "done"; } public String doDefault() throws Exception { ServletActionContext.getRequest().setAttribute("stringByAction", "This is a String put in by the action's doDefault()"); return "done"; } } <!-- END SNIPPET: javacode --> </pre> <pre> <!-- START SNIPPET: webworkxml --> <xwork> .... <action name="actionTagAction1" class="tmjee.testing.ActionTagAction"> <result name="done">success.jsp</result> </action> <action name="actionTagAction2" class="tmjee.testing.ActionTagAction" method="default"> <result name="done">success.jsp</result> </action> .... </xwork> <!-- END SNIPPET: webworkxml --> </pre> <pre> <!-- START SNIPPET: example --> <div>The following action tag will execute result and include it in this page</div> <br /> <ww:action name="actionTagAction" executeResult="true" /> <br /> <div>The following action tag will do the same as above, but invokes method specialMethod in action</div> <br /> <ww:action name="actionTagAction!specialMethod" executeResult="true" /> <br /> <div>The following action tag will not execute result, but put a String in request scope under an id "stringByAction" which will be retrieved using property tag</div> <ww:action name="actionTagAction!default" executeResult="false" /> <ww:property value="#attr.stringByAction" /> <!-- END SNIPPET: example --> </pre>
+</p>
+
+<h2>Attributes</h2>
+<p>
+
+<!-- START SNIPPET: tagattributes -->
+<table width="100%">
+<tr>
+
+<th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">the id (if speficied) to put the action under stack's context.</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">name</td>
+
+<!-- Required -->
+<td align="left" valign="top"><b>true</b></td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">name of the action to be executed (without the extension suffix eg. .action)</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">namespace</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">namespace from where tag is used</td>
+
+<!-- Type -->
+<td align="left" valign="top">String</td>
+
+<!-- Description -->
+<td align="left" valign="top">namespace for action to call</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">executeResult</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">false</td>
+
+<!-- Type -->
+<td align="left" valign="top">Boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">whether the result of this action (probably a view) should be executed/rendered</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">ignoreContextParams</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">false</td>
+
+<!-- Type -->
+<td align="left" valign="top">Boolean</td>
+
+<!-- Description -->
+<td align="left" valign="top">whether the request parameters are to be included when the action is invoked</td>
+
+</tr>
+
+</table>
+<!-- END SNIPPET: tagattributes -->
+
+</p>
+<p>
+<center><a href="index.html">Back to Taglib Index</a></center>
+</p>
+</body>
+</html>
+

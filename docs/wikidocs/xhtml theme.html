@@ -1,0 +1,134 @@
+<html>
+    <head>
+        <title>WebWork - 
+        xhtml theme
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>The xhtml theme is the default theme in WebWork. It provides all the basics that the <a href="simple theme.html" title="simple theme">simple theme</a> provides, plus these additional features:</p>
+
+<ul>
+	<li>Standard two-column table layout for the HTML <a href="Tags.html" title="Tags">Tags</a> (<a href="form.html" title="form">form</a>, <a href="textfield.html" title="textfield">textfield</a>, <a href="select.html" title="select">select</a>, etc)</li>
+	<li>Labels for each of the HTML <a href="Tags.html" title="Tags">Tags</a> on the left hand side (or top, depending on the <tt>labelposition</tt> attribute)</li>
+	<li><a href="Validation.html" title="Validation">Validation</a> error reporting</li>
+	<li><a href="Pure JavaScript Client Side Validation.html" title="Pure JavaScript Client Side Validation">Pure JavaScript Client Side Validation</a> using 100% JavaScript on the browser</li>
+</ul>
+
+
+<h1><a name="xhtmltheme-WrappingtheSimpleTheme"></a>Wrapping the Simple Theme</h1>
+
+<p>The xhtml theme uses the <b>wrapping</b> technique mentioned in <a href="Extending Themes.html" title="Extending Themes">Extending Themes</a>. As such, it is important to understand how the HTML tags are wrapped by a standard header and footer. For example, take a look at the <a href="textfield.html" title="textfield">textfield</a> template, <b>text.ftl</b>:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;#include <span class="code-quote">"/${parameters.templateDir}/${parameters.theme}/controlheader.ftl"</span> /&gt;</span>
+<span class="code-tag">&lt;#include <span class="code-quote">"/${parameters.templateDir}/simple/text.ftl"</span> /&gt;</span>
+<span class="code-tag">&lt;#include <span class="code-quote">"/${parameters.templateDir}/xhtml/controlfooter.ftl"</span> /&gt;</span></pre>
+</div></div>
+
+<p>As you can see, the <b>controlheader.ftl</b> and <b>controlfooter.ftl</b> templates are wrapped around the simple template. In case you are wondering, the reason the controlheader.ftl is refered using ${parameters.theme} is to assist with code re-use for the <a href="ajax theme.html" title="ajax theme">ajax theme</a>. For now, assume that the xhtml theme is used there as well.</p>
+
+<h2><a name="xhtmltheme-XHTMLThemeHeader"></a>XHTML Theme Header</h2>
+
+<p>Now let's look at the controlheader.ftl and controlheader-core.ftl (again, these are split up for easy re-use with the <a href="ajax theme.html" title="ajax theme">ajax theme</a>) contents:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;#include <span class="code-quote">"/${parameters.templateDir}/xhtml/controlheader-core.ftl"</span> /&gt;</span>
+    <span class="code-tag">&lt;td&gt;</span></pre>
+</div></div>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml">&lt;#--
+	Only show message if errors are available.
+	This will be done if ActionSupport is used.
+--&gt;
+<span class="code-tag">&lt;#assign hasFieldErrors = parameters.name?exists &amp;&amp; fieldErrors?exists &amp;&amp; fieldErrors[parameters.name]?exists/&gt;</span>
+<span class="code-tag">&lt;#if hasFieldErrors&gt;</span>
+<span class="code-tag">&lt;#list fieldErrors[parameters.name] as error&gt;</span>
+<span class="code-tag">&lt;tr errorFor=<span class="code-quote">"${parameters.id}"</span>&gt;</span>
+<span class="code-tag">&lt;#if parameters.labelposition?default("") == 'top'&gt;</span>
+    <span class="code-tag">&lt;td align=<span class="code-quote">"left"</span> valign=<span class="code-quote">"top"</span> colspan=<span class="code-quote">"2"</span>&gt;</span><span class="code-tag">&lt;#rt/&gt;</span>
+<span class="code-tag">&lt;#else&gt;</span>
+    <span class="code-tag">&lt;td align=<span class="code-quote">"center"</span> valign=<span class="code-quote">"top"</span> colspan=<span class="code-quote">"2"</span>&gt;</span><span class="code-tag">&lt;#rt/&gt;</span>
+<span class="code-tag">&lt;/#if&gt;</span>
+        <span class="code-tag">&lt;span class=<span class="code-quote">"errorMessage"</span>&gt;</span>${error?html}<span class="code-tag">&lt;/span&gt;</span><span class="code-tag">&lt;#t/&gt;</span>
+    <span class="code-tag">&lt;/td&gt;</span><span class="code-tag">&lt;#lt/&gt;</span>
+<span class="code-tag">&lt;/tr&gt;</span>
+<span class="code-tag">&lt;/#list&gt;</span>
+<span class="code-tag">&lt;/#if&gt;</span>
+&lt;#--
+	if the label position is top,
+	then give the label it's own row in the table
+--&gt;
+<span class="code-tag">&lt;tr&gt;</span>
+<span class="code-tag">&lt;#if parameters.labelposition?default("") == 'top'&gt;</span>
+    <span class="code-tag">&lt;td align=<span class="code-quote">"left"</span> valign=<span class="code-quote">"top"</span> colspan=<span class="code-quote">"2"</span>&gt;</span><span class="code-tag">&lt;#rt/&gt;</span>
+<span class="code-tag">&lt;#else&gt;</span>
+    <span class="code-tag">&lt;td class=<span class="code-quote">"tdLabel"</span>&gt;</span><span class="code-tag">&lt;#rt/&gt;</span>
+<span class="code-tag">&lt;/#if&gt;</span>
+<span class="code-tag">&lt;#if parameters.label?exists&gt;</span>
+    <span class="code-tag">&lt;label &lt;#t/&gt;</span>
+<span class="code-tag">&lt;#if parameters.id?exists&gt;</span>
+        for=<span class="code-quote">"${parameters.id?html}"</span> <span class="code-tag">&lt;#t/&gt;</span>
+<span class="code-tag">&lt;/#if&gt;</span>
+<span class="code-tag">&lt;#if hasFieldErrors&gt;</span>
+        class=<span class="code-quote">"errorLabel"</span><span class="code-tag">&lt;#t/&gt;</span>
+<span class="code-tag">&lt;#else&gt;</span>
+        class=<span class="code-quote">"label"</span><span class="code-tag">&lt;#t/&gt;</span>
+<span class="code-tag">&lt;/#if&gt;</span>
+    &gt;<span class="code-tag">&lt;#t/&gt;</span>
+<span class="code-tag">&lt;#if parameters.required?default(false) &amp;&amp; parameters.requiredposition?default(<span class="code-quote">"right"</span>) != 'right'&gt;</span>
+        <span class="code-tag">&lt;span class=<span class="code-quote">"required"</span>&gt;</span>*<span class="code-tag">&lt;/span&gt;</span><span class="code-tag">&lt;#t/&gt;</span>
+<span class="code-tag">&lt;/#if&gt;</span>
+${parameters.label?html}<span class="code-tag">&lt;#t/&gt;</span>
+<span class="code-tag">&lt;#if parameters.required?default(false) &amp;&amp; parameters.requiredposition?default(<span class="code-quote">"right"</span>) == 'right'&gt;</span>
+ <span class="code-tag">&lt;span class=<span class="code-quote">"required"</span>&gt;</span>*<span class="code-tag">&lt;/span&gt;</span><span class="code-tag">&lt;#t/&gt;</span>
+<span class="code-tag">&lt;/#if&gt;</span>
+:<span class="code-tag">&lt;#t/&gt;</span>
+<span class="code-tag">&lt;#include <span class="code-quote">"/${parameters.templateDir}/xhtml/tooltip.ftl"</span> /&gt;</span> 
+<span class="code-tag">&lt;/label&gt;</span><span class="code-tag">&lt;#t/&gt;</span>
+<span class="code-tag">&lt;/#if&gt;</span>
+    <span class="code-tag">&lt;/td&gt;</span><span class="code-tag">&lt;#lt/&gt;</span>
+<span class="code-tag">&lt;#-- add the extra row --&gt;</span>
+<span class="code-tag">&lt;#if parameters.labelposition?default("") == 'top'&gt;</span>
+<span class="code-tag">&lt;/tr&gt;</span>
+<span class="code-tag">&lt;tr&gt;</span>
+<span class="code-tag">&lt;/#if&gt;</span></pre>
+</div></div>
+
+<p>The header used by the HTML tags in the xhtml theme is somewhat complex. However, if you look closely you will see that the logic produces two behaviors: either a two-column format or a two-row format. Generally the two-column approach is what you want, so that is the default option. However, you can use the two-row approach by changing the <em>labelposition</em> parameter to "top".</p>
+
+<p>Also note that the <b>fieldErrors</b>, usually caused by <a href="Validation.html" title="Validation">Validation</a>, are printed out as a row above the HTML form element. Some people prefer these errors elsewhere, such as in a third column. If you wish to place these elsehwere, overriding the headers is easy, allowing you to continue to use the other features provided by this theme. See <a href="Template Loading.html" title="Template Loading">Template Loading</a> for more information on how to do this.</p>
+
+<h2><a name="xhtmltheme-XHTMLThemeFooter"></a>XHTML Theme Footer</h2>
+
+<p>And the controlfooter.ftl contents:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml">${parameters.after?if_exists}<span class="code-tag">&lt;#t/&gt;</span>
+    <span class="code-tag">&lt;/td&gt;</span><span class="code-tag">&lt;#lt/&gt;</span>
+<span class="code-tag">&lt;/tr&gt;</span></pre>
+</div></div>
+
+<p>The important thing to note here is that the table cell and row is closed. Before that, however, note that a special <em>after</em> parameter is checked for. While this isn't an official attribute suppotred by any of the <a href="Tags.html" title="Tags">Tags</a>, if you are using <a href="FreeMarker Tags.html" title="FreeMarker Tags">FreeMarker Tags</a>, <a href="Velocity Tags.html" title="Velocity Tags">Velocity Tags</a>, or the <a href="param.html" title="param">param</a> tag in any template language, you can add an <em>after</em> parameter to place any content you like after the <a href="simple theme.html" title="simple theme">simple theme</a> template renders. This makes it easier to fine-tune your HTML forms as you please. </p>
+
+<h1><a name="xhtmltheme-SpecialNotes"></a>Special Notes</h1>
+
+<p>While most of the templates in this theme are self explanatory, there are some templates that should be called out and explained in detail:</p>
+
+<ul>
+	<li><a href="xhtml head template.html" title="xhtml head template">xhtml head template</a></li>
+	<li><a href="xhtml form template.html" title="xhtml form template">xhtml form template</a></li>
+</ul>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

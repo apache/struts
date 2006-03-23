@@ -1,0 +1,82 @@
+
+<html>
+<head>
+<title>&lt;ww:i18n /&gt;</title>
+</head>
+
+<body>
+
+<h1>Tag Name: &lt;ww:i18n /&gt;</h1>
+
+<h2>Description</h2>
+<p>
+
+Get a resource bundle and place it on the value stack
+
+</p>
+
+<p>
+<!-- START SNIPPET: javadoc --> Gets a resource bundle and place it on the value stack. This allows the text tag to access messages from any bundle, and not just the bundle associated with the current action. <!-- END SNIPPET: javadoc --> <p/> <!-- START SNIPPET: params--> <ul> <li>name* - the resource bundle's name (eg foo/bar/customBundle)</li> </ul> <!-- END SNIPPET: params --> <p/> Example: <pre> <!-- START SNIPPET: example --> &lt;ww:i18n name="myCustomBundle"&gt; The i18n value for key aaa.bbb.ccc in myCustomBundle is &lt;ww:property value="text('aaa.bbb.ccc')" /&gt; &lt;/ww:i18n&gt; <!-- END SNIPPET: example --> </pre> <pre> <!-- START SNIPPET: i18nExample --> &lt;ww:i18n name="some.package.bundle" &gt; &lt;ww:text name="some.key" /&gt; &lt;/ww:i18n&gt; <!-- END SNIPPET: i18nExample --> </pre>
+</p>
+
+<h2>Attributes</h2>
+<p>
+
+<!-- START SNIPPET: tagattributes -->
+<table width="100%">
+<tr>
+
+<th align="left" valign="top"><h4>Name</h4></th>
+<th align="left" valign="top"><h4>Required</h4></th>
+<th align="left" valign="top"><h4>Default</h4></th>
+<th align="left" valign="top"><h4>Type</h4></th>
+<th align="left" valign="top"><h4>Description</h4></th>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">name</td>
+
+<!-- Required -->
+<td align="left" valign="top"><b>true</b></td>
+
+<!-- Default -->
+<td align="left" valign="top">String</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Name of ressource bundle to use (eg foo/bar/customBundle)</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">id</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">id for referencing element. For UI and form tags it will be used as HTML id attribute</td>
+
+</tr>
+
+</table>
+<!-- END SNIPPET: tagattributes -->
+
+</p>
+<p>
+<center><a href="index.html">Back to Taglib Index</a></center>
+</p>
+</body>
+</html>
+

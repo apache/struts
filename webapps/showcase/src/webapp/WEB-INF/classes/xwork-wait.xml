@@ -1,0 +1,35 @@
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+<xwork>
+    <include file="webwork-default.xml"/>
+
+    <package name="wait" extends="webwork-default" namespace="/wait">
+
+        <action name="longProcess1" class="com.opensymphony.webwork.showcase.wait.LongProcessAction">
+            <interceptor-ref name="defaultStack"/>
+            <interceptor-ref name="execAndWait"/>
+            <result name="wait">wait.jsp</result>
+            <result name="success">complete.jsp</result>
+        </action>
+
+        <action name="longProcess2" class="com.opensymphony.webwork.showcase.wait.LongProcessAction">
+            <interceptor-ref name="defaultStack"/>
+            <interceptor-ref name="execAndWait">
+                <param name="delay">2000</param>
+            </interceptor-ref>
+            <result name="wait">wait.jsp</result>
+            <result name="success">complete.jsp</result>
+        </action>
+
+        <action name="longProcess3" class="com.opensymphony.webwork.showcase.wait.LongProcessAction">
+            <interceptor-ref name="defaultStack"/>
+            <interceptor-ref name="execAndWait">
+                <param name="delay">3000</param>
+                <param name="delaySleepInterval">1000</param>
+            </interceptor-ref>
+            <result name="wait">wait.jsp</result>
+            <result name="success">complete.jsp</result>
+        </action>
+
+    </package>
+
+</xwork>

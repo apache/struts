@@ -1,0 +1,76 @@
+<html>
+    <head>
+        <title>WebWork - 
+         do I handle files upload
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p><b><u>Method A</u></b><br/>
+MultipartRequestWrapper multipartRequest = ((MultipartRequestWrapper)ServletActionContext.getRequest())</p>
+
+<p>With multipartRequest, one could access methods such as getFiles(...), getFile(...), getContentType(...), hasErrors(), getErrors() etc to handle the file uploaded.</p>
+
+<p><b><u>Method B (Recommended)</u></b><br/>
+Add a 'fileUpload' interceptor to the action. For example, in the following case:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;form name=<span class="code-quote">"myForm"</span> enctype=<span class="code-quote">"multipart/form-data"</span>&gt;</span>
+     <span class="code-tag">&lt;input type=<span class="code-quote">"file"</span> name=<span class="code-quote">"myDoc"</span> value=<span class="code-quote">"Browse ..."</span> /&gt;</span>
+     <span class="code-tag">&lt;input type=<span class="code-quote">"submit"</span> /&gt;</span>
+  <span class="code-tag">&lt;/form&gt;</span></pre>
+</div></div>
+
+<p>The action class would requires any (or none, but if none what is the point?) of three methods being defined, in order for the interceptor to populate it with uploaded file information</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> void setMyDoc(File myDoc) { ...}
+<span class="code-keyword">public</span> void setMyDocContentType(<span class="code-object">String</span> contentType) { .... }
+<span class="code-keyword">public</span> void setMyDocFileName(<span class="code-object">String</span> filename) { .... }</pre>
+</div></div>
+
+<p>with these methods, one could do whatever is needed with the uploaded file. If multiple files are uploaded as in following:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;form name=<span class="code-quote">"myForm"</span> enctype=<span class="code-quote">"multipart/form-data"</span>&gt;</span>
+      <span class="code-tag">&lt;input type=<span class="code-quote">"file"</span> name=<span class="code-quote">"myDoc"</span> value=<span class="code-quote">"Browse File A ..."</span> /&gt;</span>
+      <span class="code-tag">&lt;input type=<span class="code-quote">"file"</span> name=<span class="code-quote">"myDoc"</span> value=<span class="code-quote">"Browse File B ..."</span> /&gt;</span>
+      <span class="code-tag">&lt;input type=<span class="code-quote">"file"</span> name=<span class="code-quote">"myDoc"</span> value=<span class="code-quote">"Browse File C ..."</span> /&gt;</span>
+      <span class="code-tag">&lt;input type=<span class="code-quote">"submit"</span> /&gt;</span>
+   <span class="code-tag">&lt;/form&gt;</span></pre>
+</div></div>
+
+<p>The action class needs only make the corresponding method an array, orders followed such that getMyDoc()0 will have its content type as getMyDoc()0 and its file name as getMyDoc()1.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> void setMyDoc(File[] myDocs) { ... }
+<span class="code-keyword">public</span> void setMyDocContentType(<span class="code-object">String</span>[] contentTypes) { ... }
+<span class="code-keyword">public</span> void setMyDocFileName(<span class="code-object">String</span>[] fileNames) { ... }</pre>
+</div></div>
+
+
+<p><b><u>Extra Information:</u></b><br/>
+The following properties in webwork.properties affect the file upload.</p>
+
+<p>webwork.multipart.parser (as of WW2.2 its jakarta by default)<br/>
+webwork.multipart.saveDir (default to javax.servlet.context.tempdir defined by container)<br/>
+webwork.multipart.maxSize (approximately 2M by default)</p>
+
+
+<p>@see webwork.properties<br/>
+@see com.opensymphony.webwork.dispatcher.FilterDispatcher#doFilter(SerlvetRequest, ServletRepsonse, FilterChain)<br/>
+@see com.opensymphony.webwork.dispatcher.DispatcherUtil#wrapRequest(HttpServletRequest, SerlvetContext)<br/>
+@see com.opensymphony.webwork.dispatcher.multipart.MultipartRequestWrapper<br/>
+@see com.opensymphony.webwork.interceptor.FileUploadInterceptor</p>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

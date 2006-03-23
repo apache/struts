@@ -1,0 +1,68 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Using Checkboxes
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h2><a name="UsingCheckboxes-UsingCheckboxes%28General%29"></a>Using Checkboxes (General)</h2>
+<p>The biggest gotcha for newbies is that you must set the 'value' attribute in the html &lt;input&gt; field to use Checkboxes with WW.  By default your browser will set this to some value.  Firefox uses "on" - not sure what IE or others use.  You must make this a sensible value for whatever property you are setting.</p>
+<h2><a name="UsingCheckboxes-UsingCheckboxestosetbooleanfields"></a>Using Checkboxes to set boolean fields</h2>
+<p>HTML:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;input type=<span class="code-quote">"checkbox"</span> name=<span class="code-quote">"user.lockedOut"</span> value=<span class="code-quote">"<span class="code-keyword">true</span>"</span>/&gt;</pre>
+</div></div>
+
+<p>If the user checks this box, the browser will send "user.lockedOut=true" in the QueryString and action.getUser().setLockedOut(true) will be called.  If the user does not check the box, the browser will not send anything, so make sure that you have initialised lockedOut to false to start with.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">private</span> <span class="code-object">boolean</span> m_lockedOut = <span class="code-keyword">false</span>;
+
+    <span class="code-keyword">public</span> void setLockedOut(<span class="code-object">boolean</span> lockedOut) { m_lockedOut = lockedOut; }</pre>
+</div></div>
+<h2><a name="UsingCheckboxes-UsingCheckboxestosetacollection"></a>Using Checkboxes to set a collection</h2>
+<p>Our user has a number of priviliges that are stored as a Set of strings.  To use checkboxes for these, we have HTML that looks like:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-java">&lt;input type=<span class="code-quote">"checkbox"</span> name=<span class="code-quote">"user.priv"</span> value=<span class="code-quote">"boss"</span>/&gt;
+&lt;input type=<span class="code-quote">"checkbox"</span> name=<span class="code-quote">"user.priv"</span> value=<span class="code-quote">"admin"</span>/&gt;
+&lt;input type=<span class="code-quote">"checkbox"</span> name=<span class="code-quote">"user.priv"</span> value=<span class="code-quote">"manager"</span>/&gt;</pre>
+</div></div>
+
+<p>Say a user checks the first 2; the browser will send the query string: user.priv=boss&amp;user.priv=admin.</p>
+
+<p>OGNL will end up calling <div class="code"><div class="codeContent">
+<pre class="code-java">action.getUser().setPriv(<span class="code-object">String</span>[] {<span class="code-quote">"boss"</span>, <span class="code-quote">"admin"</span>})</pre>
+</div></div></p>
+
+<p>You can write this method like:</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java">Set m_privileges = <span class="code-keyword">new</span> HashSet();
+
+    <span class="code-keyword">public</span> void setPriv(<span class="code-object">String</span>[] privs) {
+        <span class="code-keyword">for</span> (<span class="code-object">int</span> i = 0; i &lt; privs.length; i++) {
+            m_privileges.add(privs[i]);
+        }
+    }</pre>
+</div></div>
+<h2><a name="UsingCheckboxes-FullDetailedexample%3A"></a>Full Detailed example:</h2>
+<p>This example uses a kind-of model-driven action (see <a href="Model Driven Interceptor.html" title="Model Driven Interceptor">Model Driven Interceptor</a>). The action returns a single getter for the User object whose values are populated.</p>
+
+<ul>
+	<li><a href="Using Checkboxes - EditAction.java.html" title="Using Checkboxes - EditAction.java">Using Checkboxes \- EditAction.java</a></li>
+	<li><a href="Using Checkboxes - Velocity and HTML.html" title="Using Checkboxes - Velocity and HTML">Using Checkboxes \- Velocity and HTML</a></li>
+	<li><a href="Using Checkboxes - User.java.html" title="Using Checkboxes - User.java">Using Checkboxes \- User.java</a></li>
+</ul>
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

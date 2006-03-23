@@ -1,0 +1,79 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Using Non Field Validators
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <h1><a name="UsingNonFieldValidators-Description"></a>Description</h1>
+<p>The followings show a simple example using Webwork's Non Field Validators</p>
+
+<h2><a name="UsingNonFieldValidators-Step1"></a>Step 1</h2>
+<p>Create the jsp page</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:actionerror /&gt;</span>
+	
+<span class="code-tag">&lt;ww:form method=<span class="code-quote">"POST"</span> action=<span class="code-quote">"submitNonFieldValidatorsExamples"</span> namespace=<span class="code-quote">"/validation"</span>&gt;</span>
+	<span class="code-tag">&lt;ww:textfield name=<span class="code-quote">"someText"</span> label=<span class="code-quote">"Some Text"</span> /&gt;</span>
+	<span class="code-tag">&lt;ww:textfield name=<span class="code-quote">"someTextRetype"</span> label=<span class="code-quote">"Retype Some Text"</span> /&gt;</span>  
+	<span class="code-tag">&lt;ww:textfield name=<span class="code-quote">"someTextRetypeAgain"</span> label=<span class="code-quote">"Retype Some Text Again"</span> /&gt;</span>
+	<span class="code-tag">&lt;ww:submit label=<span class="code-quote">"Submit"</span> /&gt;</span>
+<span class="code-tag">&lt;/ww:form&gt;</span></pre>
+</div></div>
+
+
+<h2><a name="UsingNonFieldValidators-Step2"></a>Step 2</h2>
+<p>Create the action class</p>
+<div class="code"><div class="codeContent">
+<pre class="code-java"><span class="code-keyword">public</span> class NonFieldValidatorsExampleAction <span class="code-keyword">extends</span> AbstractValidationActionSupport {
+	
+	<span class="code-keyword">private</span> <span class="code-object">String</span> someText;
+	<span class="code-keyword">private</span> <span class="code-object">String</span> someTextRetype;
+	<span class="code-keyword">private</span> <span class="code-object">String</span> someTextRetypeAgain;
+	
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getSomeText() {
+		<span class="code-keyword">return</span> someText;
+	}
+	<span class="code-keyword">public</span> void setSomeText(<span class="code-object">String</span> someText) {
+		<span class="code-keyword">this</span>.someText = someText;
+	}
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getSomeTextRetype() {
+		<span class="code-keyword">return</span> someTextRetype;
+	}
+	<span class="code-keyword">public</span> void setSomeTextRetype(<span class="code-object">String</span> someTextRetype) {
+		<span class="code-keyword">this</span>.someTextRetype = someTextRetype;
+	}
+	<span class="code-keyword">public</span> <span class="code-object">String</span> getSomeTextRetypeAgain() {
+		<span class="code-keyword">return</span> someTextRetypeAgain;
+	}
+	<span class="code-keyword">public</span> void setSomeTextRetypeAgain(<span class="code-object">String</span> someTextRetypeAgain) {
+		<span class="code-keyword">this</span>.someTextRetypeAgain = someTextRetypeAgain;
+	}
+}</pre>
+</div></div>
+
+
+<h2><a name="UsingNonFieldValidators-Step3"></a>Step 3</h2>
+<p>Create the validator.xml.</p>
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;validators&gt;</span>
+	<span class="code-tag">&lt;validator type=<span class="code-quote">"expression"</span>&gt;</span>
+		<span class="code-tag">&lt;param name=<span class="code-quote">"expression"</span>&gt;</span><span class="code-tag">&lt;![CDATA[ ( (someText == someTextRetype) &amp;&amp; (someTextRetype == someTextRetypeAgain) ) ]]&gt;</span><span class="code-tag">&lt;/param&gt;</span>
+		<span class="code-tag">&lt;message&gt;</span><span class="code-tag">&lt;![CDATA[ all three text must be exactly the same ]]&gt;</span><span class="code-tag">&lt;/message&gt;</span>
+	<span class="code-tag">&lt;/validator&gt;</span>
+<span class="code-tag">&lt;/validators&gt;</span></pre>
+</div></div>
+
+
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

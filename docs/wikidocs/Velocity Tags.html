@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Velocity Tags
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>Velocity tags are extensions of the generic <a href="Tags.html" title="Tags">Tags</a> provided by WebWork. You can get started almost immediately by simply knowing the structure in which the tags can be accessed: <b>#ww<font color="blue">xxx</font> (...) ... #end</b>, where <font color="blue"><b>xxx</b></font> is any of the <a href="Tags.html" title="Tags">Tags</a> supported by WebWork.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>As of WebWork 2.2, the use of Velocity for templating internal WebWork UI Tags have been removed. The new and legacy 2.2 UI tags have been implemented in FreeMarker. However, support for the Velocity result type as well as the Velocity directives shown below will continue to be supported and developed.  By default, WebWork's TemplateEngine will call the FreeMarker UI Tags using the Velocity syntax noted below (through Velocity directives). See <a href="Template Loading.html" title="Template Loading">Template Loading</a> for more information.</td></tr></table>
+
+<h1><a name="VelocityTags-Syntax"></a>Syntax</h1>
+
+<p>For example, in JSP you might create a form like so:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;ww:form action=<span class="code-quote">"updatePerson"</span>&gt;</span>
+    <span class="code-tag">&lt;ww:textfield label=<span class="code-quote">"First name"</span> name=<span class="code-quote">"firstName"</span>/&gt;</span>
+    <span class="code-tag">&lt;ww:submit value=<span class="code-quote">"Update"</span>/&gt;</span>
+<span class="code-tag">&lt;/ww:form&gt;</span></pre>
+</div></div>
+
+<p>In Velocity the same form is built like so:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml">#wwform (<span class="code-quote">"action=updatePerson"</span>)
+    #wwtextfield (<span class="code-quote">"label=First name"</span> <span class="code-quote">"name=firstName"</span>)
+    #wwsubmit (<span class="code-quote">"value=Update"</span>)
+#end</pre>
+</div></div>
+
+<h2><a name="VelocityTags-BlockandInlineTags"></a>Block and Inline Tags</h2>
+
+<p>You may notice that some tags require an #end statement, while others do not. Due to a limitation in Velocity, tags must declare if they are a <em>block</em> or <em>inline</em> tag up front. As such, by default all tags are <em>inline</em> except for a few key ones, such as the <a href="form.html" title="form">form</a> tag. We <b>strongly</b> encourage you to look at FreeMarker, which provides much better flexibility in this area as well as others.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

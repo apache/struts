@@ -1,0 +1,17 @@
+#macro(bean $bean_name $name)
+   #set ($name = $webwork.bean($bean_name))
+#end
+
+#macro(includeservlet $name)
+  $webwork.include($name,$req,$res)
+#end
+
+#macro(url $name)
+   #set ($name = $webwork.bean("com.opensymphony.webwork.util.URLBean"))
+   $name.setRequest($req)
+   $name.setResponse($res)
+#end
+
+#macro(property $object $property)
+$!{ognl.findValue($property, $object)}
+#end

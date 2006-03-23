@@ -1,0 +1,148 @@
+<html>
+    <head>
+        <title>WebWork - 
+        Velocity
+         </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <p>Velocity is a template Java template language.</p>
+
+<p>For more information on Velocity itself, please visit the <a href="http://jakarta.apache.org/velocity/" title="Visit page outside Confluence">Velocity website</a>.</p>
+
+<table cellpadding='5' width='85%' cellspacing='8px' class='noteMacro' border="0" align='center'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="icons/emoticons/warning.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>Velocity is very similar to <a href="FreeMarker.html" title="FreeMarker">FreeMarker</a>, as both are template languages that can be used outside of a Servlet container. The WebWork team recommends FreeMarker over Velocity simply because FreeMarker has better error reporting, support for JSP tags, and slightly better features. However, both are good alternatives to JSP.</td></tr></table>
+
+<h1><a name="Velocity-GettingStarted"></a>Getting Started</h1>
+
+<p>Getting started with Velocity is as simple as ensuring all the <a href="dependencies.html" title="Dependencies">dependencies</a> are included in your project's classpath. Other than that, <a href="webwork-default.xml.html" title="webwork-default.xml">webwork\-default.xml</a> already configures the <a href="Velocity Result.html" title="Velocity Result">Velocity Result</a> needed to map your actions to your templates. You may now try out the following <b>xwork.xml</b> configuration:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;action name=<span class="code-quote">"test"</span> class=<span class="code-quote">"com.acme.TestAction"</span>&gt;</span>
+    <span class="code-tag">&lt;result name=<span class="code-quote">"success"</span> type=<span class="code-quote">"velocity"</span>&gt;</span>test-success.vm<span class="code-tag">&lt;/result&gt;</span>
+<span class="code-tag">&lt;/action&gt;</span></pre>
+</div></div>
+
+<p>Then in <b>test-success.vm</b>:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml"><span class="code-tag">&lt;html&gt;</span>
+<span class="code-tag">&lt;head&gt;</span>
+    <span class="code-tag">&lt;title&gt;</span>Hello<span class="code-tag">&lt;/title&gt;</span>
+<span class="code-tag">&lt;/head&gt;</span>
+<span class="code-tag">&lt;body&gt;</span>
+
+Hello, ${name}
+
+<span class="code-tag">&lt;/body&gt;</span>
+<span class="code-tag">&lt;/html&gt;</span></pre>
+</div></div>
+
+<p>Where <b>name</b> is a property on your action. That's it! Read the rest of this document for details on how templates are loaded, variables are resolved, and tags can be used.</p>
+
+<h1><a name="Velocity-TemplateLoading"></a>Template Loading</h1>
+
+<p>WebWork looks for Velocity templates in two locations (in this order):</p>
+
+<ol>
+	<li>Web application</li>
+	<li>Class path</li>
+</ol>
+
+
+<p>This ordering makes it ideal for providing templates inside a fully built jar, but allowing for overrides of those templates to be defined in your web application. In fact, this is how you can override the default UI tags and <a href="Form Tags.html" title="Form Tags">Form Tags</a> included with WebWork.</p>
+
+<h1><a name="Velocity-VariableResolution"></a>Variable Resolution</h1>
+
+<p>In Velocity, variables are looked up in several different places, in this order:</p>
+
+<ol>
+	<li>The value stack</li>
+	<li>The action context</li>
+	<li>Built-in variables</li>
+</ol>
+
+
+<p>Note that the action context is looked up after the value stack. This means that you can reference the variable without the typical preceding has marker (#) like you would have to when using the JSP ww:property tag. This is a nice convenience, though be careful because there is a small chance it could trip you up.</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-xml">#wwurl <span class="code-quote">"id=url "</span>value=http://www.yahoo.com"
+Click <span class="code-tag">&lt;a href=<span class="code-quote">"${url}"</span>&gt;</span>here<span class="code-tag">&lt;/a&gt;</span>!</pre>
+</div></div>
+
+<p>The built-in variables that WebWork-Velocity integration provides are:</p>
+
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'> Name </th>
+<th class='confluenceTh'> Description </th>
+</tr>
+<tr>
+<td class='confluenceTd'> stack </td>
+<td class='confluenceTd'> The value stack itself, useful for calls like ${stack.findString('ognl expr')} </td>
+</tr>
+<tr>
+<td class='confluenceTd'> action </td>
+<td class='confluenceTd'> The action most recently executed </td>
+</tr>
+<tr>
+<td class='confluenceTd'> response </td>
+<td class='confluenceTd'> The HttpServletResponse </td>
+</tr>
+<tr>
+<td class='confluenceTd'> res </td>
+<td class='confluenceTd'> Same as response </td>
+</tr>
+<tr>
+<td class='confluenceTd'> request </td>
+<td class='confluenceTd'> The HttpServletRequest </td>
+</tr>
+<tr>
+<td class='confluenceTd'> req </td>
+<td class='confluenceTd'> Same as request </td>
+</tr>
+<tr>
+<td class='confluenceTd'> session </td>
+<td class='confluenceTd'> The HttpSession </td>
+</tr>
+<tr>
+<td class='confluenceTd'> application </td>
+<td class='confluenceTd'> The ServletContext </td>
+</tr>
+<tr>
+<td class='confluenceTd'> base </td>
+<td class='confluenceTd'> The request's context path </td>
+</tr>
+</tbody></table>
+
+<h1><a name="Velocity-TagSupport"></a>Tag Support</h1>
+
+<p>See the <a href="Velocity Tags.html" title="Velocity Tags">Velocity Tags</a> documentation for information on how to use the generic <a href="Tags.html" title="Tags">Tags</a> provided by WebWork.</p>
+
+<h1><a name="Velocity-TipsandTricks"></a>Tips and Tricks</h1>
+
+<p>There are some advanced features that may be useful when building WebWork applications with Velocity. </p>
+
+<h2><a name="Velocity-Extending"></a>Extending</h2>
+
+<p>Sometimes you may with to extend the Velocity support provided with WebWork. The most common reason for doing this is that you wish to include your own <a href="Tags.html" title="Tags">Tags</a>, such as those that you have extended from the built in WebWork <a href="Tags.html" title="Tags">Tags</a>. </p>
+
+<p>To do so, write a new class that extends <b>com.opensymphony.webwork.views.velocity.VelocityManager</b> and overrides it as needed. Then add the following to <a href="webwork.properties.html" title="webwork.properties">webwork.properties</a>:</p>
+
+<div class="code"><div class="codeContent">
+<pre class="code-none">webwork.velocity.manager.classname = com.yourcompany.YourVelocityManager</pre>
+</div></div>
+
+<h2><a name="Velocity-Configuring"></a>Configuring</h2>
+
+<p>You can configure Velocity by placing configuration items in <a href="velocity.properties.html" title="velocity.properties">velocity.properties</a>.</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

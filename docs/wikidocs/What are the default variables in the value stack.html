@@ -1,0 +1,104 @@
+<html>
+    <head>
+        <title>WebWork - 
+         are the default variables in the value stack
+        </title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td valign="top" class="pagebody">
+				    <table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'>Variables</th>
+<th class='confluenceTh'>Description</th>
+</tr>
+<tr>
+<td class='confluenceTd'>attr</td>
+<td class='confluenceTd'>scans the request, session, and application attributes, in that order</td>
+</tr>
+<tr>
+<td class='confluenceTd'>request</td>
+<td class='confluenceTd'>request attributes</td>
+</tr>
+<tr>
+<td class='confluenceTd'>session</td>
+<td class='confluenceTd'>session attributes</td>
+</tr>
+<tr>
+<td class='confluenceTd'>application</td>
+<td class='confluenceTd'>application attributes</td>
+</tr>
+<tr>
+<td class='confluenceTd'>parameters</td>
+<td class='confluenceTd'>request params</td>
+</tr>
+</tbody></table>
+
+
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'>Defining Java Constant</th>
+<th class='confluenceTh'>Variables</th>
+<th class='confluenceTh'>Description</th>
+</tr>
+<tr>
+<td class='confluenceTd'>ActionContext.PARAMETERS</td>
+<td class='confluenceTd'>com.opensymphony.xwork.ActionContext.parameters</td>
+<td class='confluenceTd'>Same as 'parameters' above</td>
+</tr>
+<tr>
+<td class='confluenceTd'>ActionContext.SESSION</td>
+<td class='confluenceTd'>com.opensymphony.xwork.ActionContext.session</td>
+<td class='confluenceTd'>Same as 'session' above</td>
+</tr>
+<tr>
+<td class='confluenceTd'>ActionContext.APPLICATION</td>
+<td class='confluenceTd'>com.opensymphony.xwork.ActionContext.application</td>
+<td class='confluenceTd'>Same as 'application' above</td>
+</tr>
+<tr>
+<td class='confluenceTd'>ActionContext.LOCALE</td>
+<td class='confluenceTd'>com.opensymphony.xwork.ActionContext.locale</td>
+<td class='confluenceTd'>From locale defined in webwork.properties else from the request object</td>
+</tr>
+<tr>
+<td class='confluenceTd'>ActionContext.DEV_MODE</td>
+<td class='confluenceTd'>__devMode</td>
+<td class='confluenceTd'>true or false if in development mode or otherwise whereby resource bundle webwork.properties, xwork.xml, converters, validators will be refreshed when changes</td>
+</tr>
+<tr>
+<td class='confluenceTd'>ActionContext.HTTP_REQUEST</td>
+<td class='confluenceTd'>com.opensymphony.xwork.dispatcher.HttpServletRequest</td>
+<td class='confluenceTd'>Same as 'request' above</td>
+</tr>
+<tr>
+<td class='confluenceTd'>ActionContext.HTTP_RESPONSE</td>
+<td class='confluenceTd'>com.opensymphony.xwork.dispatcher.HttpServletResponse</td>
+<td class='confluenceTd'>Same as 'response' above</td>
+</tr>
+<tr>
+<td class='confluenceTd'>ActionContext.SERVLET_CONTEXT</td>
+<td class='confluenceTd'>com.opensymphony.xwork.dispatcher.ServletContext</td>
+<td class='confluenceTd'>Servlet's spec's ServletContext object</td>
+</tr>
+<tr>
+<td class='confluenceTd'>ActionContext.COMPONENT_MANAGER</td>
+<td class='confluenceTd'>com.opensymphony.xwork.interceptor.component.ComponentManager</td>
+<td class='confluenceTd'>Webwork's IOC component manager</td>
+</tr>
+</tbody></table>
+
+<p>For further information <br/>
+@see com.opensymphony.webwork.dispatcher.DispatcherUtils#createContextMap<br/>
+@see com.opensymphony.xwork.interceptor.component.ComponentInterceptor<br/>
+@see com.opensymphony.webwork.WebWorkStatics</p>
+
+                    			    </td>
+		    </tr>
+	    </table>
+    </body>
+</html>

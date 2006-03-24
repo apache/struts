@@ -246,18 +246,10 @@
       <module fileurl="file://$PROJECT_DIR$/webapps/showcase/Showcase.iml" filepath="$PROJECT_DIR$/webapps/showcase/Showcase.iml" />
       <module fileurl="file://$PROJECT_DIR$/webapps/starter/Starter.iml" filepath="$PROJECT_DIR$/webapps/starter/Starter.iml" />
       <module fileurl="file://$PROJECT_DIR$/WebWork.iml" filepath="$PROJECT_DIR$/WebWork.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../xwork/XWork.iml" filepath="$xwork$/XWork.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../xwork/XWork.iml" filepath="$PROJECT_DIR$/../xwork/XWork.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="false" project-jdk-name="1.4" />
-  <component name="Regex">
-    <option name="pos1" value="218" />
-    <option name="pos2" value="218" />
-    <option name="pos3" value="263" />
-    <option name="pos4" value="444" />
-    <option name="pos5" value="263" />
-    <option name="pos6" value="1092" />
-  </component>
   <component name="RmicSettings">
     <option name="IS_EANABLED" value="false" />
     <option name="DEBUGGING_INFO" value="true" />
@@ -271,6 +263,11 @@
   </component>
   <component name="WebRootContainer">
     <root url="file://$PROJECT_DIR$/src/webapp" name="example" validate="false" />
+  </component>
+  <component name="WebServicesPlugin" />
+  <component name="com.yanaware.intellij.ideaspring.PluginConfigurable">
+    <option name="autoscrolling" value="false" />
+    <option name="autoscrollingFromSource" value="false" />
   </component>
   <component name="libraryTable" />
   <component name="org.tmatesoft.tmate.projectComponent" />

@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.interceptor;
+package org.apache.struts.action2.interceptor;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
@@ -11,7 +11,7 @@ import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.ActionSupport;
 import com.opensymphony.xwork.util.OgnlValueStack;
-import com.opensymphony.webwork.WebWorkTestCase;
+import org.apache.struts.action2.WebWorkTestCase;
 import junit.framework.TestCase;
 
 import java.util.HashMap;

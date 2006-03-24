@@ -7,7 +7,7 @@
 #end
 
 #macro(url $name)
-   #set ($name = $webwork.bean("com.opensymphony.webwork.util.URLBean"))
+   #set ($name = $webwork.bean("org.apache.struts.action2.util.URLBean"))
    $name.setRequest($req)
    $name.setResponse($res)
 #end

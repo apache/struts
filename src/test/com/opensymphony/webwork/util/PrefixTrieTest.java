@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.util;
+package org.apache.struts.action2.util;
 
 import junit.framework.TestCase;
 

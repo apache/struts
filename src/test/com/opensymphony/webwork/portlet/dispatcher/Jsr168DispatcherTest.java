@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.portlet.dispatcher;
+package org.apache.struts.action2.portlet.dispatcher;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,8 +29,8 @@ import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import org.jmock.core.Constraint;
 
-import com.opensymphony.webwork.portlet.PortletActionConstants;
-import com.opensymphony.webwork.portlet.context.ServletContextHolderListener;
+import org.apache.struts.action2.portlet.PortletActionConstants;
+import org.apache.struts.action2.portlet.context.ServletContextHolderListener;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.ActionProxy;

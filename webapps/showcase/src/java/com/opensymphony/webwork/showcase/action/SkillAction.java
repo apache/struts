@@ -48,11 +48,11 @@
  * SUCH DAMAGE.
  * ====================================================================
  */
-package com.opensymphony.webwork.showcase.action;
+package org.apache.struts.action2.showcase.action;
 
-import com.opensymphony.webwork.showcase.dao.Dao;
-import com.opensymphony.webwork.showcase.dao.SkillDao;
-import com.opensymphony.webwork.showcase.model.Skill;
+import org.apache.struts.action2.showcase.dao.Dao;
+import org.apache.struts.action2.showcase.dao.SkillDao;
+import org.apache.struts.action2.showcase.model.Skill;
 import com.opensymphony.xwork.Preparable;
 import org.apache.log4j.Logger;
 

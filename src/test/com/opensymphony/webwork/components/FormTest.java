@@ -2,10 +2,10 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
-import com.opensymphony.webwork.views.jsp.AbstractUITagTest;
-import com.opensymphony.webwork.TestAction;
+import org.apache.struts.action2.views.jsp.AbstractUITagTest;
+import org.apache.struts.action2.TestAction;
 import com.opensymphony.xwork.validator.validators.RequiredFieldValidator;
 
 import java.util.List;

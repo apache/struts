@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import java.util.Iterator;
 import java.util.Locale;
@@ -11,25 +11,25 @@ import java.util.Stack;
 
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.opensymphony.webwork.TestConfigurationProvider;
-import com.opensymphony.webwork.views.jsp.AbstractTagTest;
-import com.opensymphony.webwork.views.jsp.ActionTag;
-import com.opensymphony.webwork.views.jsp.BeanTag;
-import com.opensymphony.webwork.views.jsp.ElseIfTag;
-import com.opensymphony.webwork.views.jsp.ElseTag;
-import com.opensymphony.webwork.views.jsp.I18nTag;
-import com.opensymphony.webwork.views.jsp.IfTag;
-import com.opensymphony.webwork.views.jsp.IteratorTag;
-import com.opensymphony.webwork.views.jsp.PropertyTag;
-import com.opensymphony.webwork.views.jsp.PushTag;
-import com.opensymphony.webwork.views.jsp.SetTag;
-import com.opensymphony.webwork.views.jsp.TextTag;
-import com.opensymphony.webwork.views.jsp.URLTag;
-import com.opensymphony.webwork.views.jsp.iterator.AppendIteratorTag;
-import com.opensymphony.webwork.views.jsp.iterator.MergeIteratorTag;
-import com.opensymphony.webwork.views.jsp.ui.RichTextEditorTag;
-import com.opensymphony.webwork.views.jsp.ui.TextFieldTag;
-import com.opensymphony.webwork.views.jsp.ui.UpDownSelectTag;
+import org.apache.struts.action2.TestConfigurationProvider;
+import org.apache.struts.action2.views.jsp.AbstractTagTest;
+import org.apache.struts.action2.views.jsp.ActionTag;
+import org.apache.struts.action2.views.jsp.BeanTag;
+import org.apache.struts.action2.views.jsp.ElseIfTag;
+import org.apache.struts.action2.views.jsp.ElseTag;
+import org.apache.struts.action2.views.jsp.I18nTag;
+import org.apache.struts.action2.views.jsp.IfTag;
+import org.apache.struts.action2.views.jsp.IteratorTag;
+import org.apache.struts.action2.views.jsp.PropertyTag;
+import org.apache.struts.action2.views.jsp.PushTag;
+import org.apache.struts.action2.views.jsp.SetTag;
+import org.apache.struts.action2.views.jsp.TextTag;
+import org.apache.struts.action2.views.jsp.URLTag;
+import org.apache.struts.action2.views.jsp.iterator.AppendIteratorTag;
+import org.apache.struts.action2.views.jsp.iterator.MergeIteratorTag;
+import org.apache.struts.action2.views.jsp.ui.RichTextEditorTag;
+import org.apache.struts.action2.views.jsp.ui.TextFieldTag;
+import org.apache.struts.action2.views.jsp.ui.UpDownSelectTag;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.config.ConfigurationManager;
 import com.opensymphony.xwork.util.LocalizedTextUtil;
@@ -175,7 +175,7 @@ public class ComponentTest extends AbstractTagTest {
 		t.setName("textFieldName");
 		
 		BeanTag tag = new BeanTag();
-		tag.setName("com.opensymphony.webwork.util.Counter");
+		tag.setName("org.apache.struts.action2.util.Counter");
 		tag.setPageContext(pageContext);
 		
 		try {
@@ -427,11 +427,11 @@ public class ComponentTest extends AbstractTagTest {
 		t.setPageContext(pageContext);
 		t.setName("textFieldName");
 		
-		ResourceBundle bundle = ResourceBundle.getBundle("com.opensymphony.webwork.components.tempo");
-		LocalizedTextUtil.addDefaultResourceBundle("com.opensymphony.webwork.components.temp");
+		ResourceBundle bundle = ResourceBundle.getBundle("org.apache.struts.action2.components.tempo");
+		LocalizedTextUtil.addDefaultResourceBundle("org.apache.struts.action2.components.temp");
 		
 		I18nTag tag = new I18nTag();
-		tag.setName("com.opensymphony.webwork.components.tempo");
+		tag.setName("org.apache.struts.action2.components.tempo");
 		tag.setPageContext(pageContext);
 		
 		try {

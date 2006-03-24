@@ -2,10 +2,10 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp.ui;
+package org.apache.struts.action2.views.jsp.ui;
 
-import com.opensymphony.webwork.views.jsp.AbstractTagTest;
-import com.opensymphony.webwork.views.jsp.DateTag;
+import org.apache.struts.action2.views.jsp.AbstractTagTest;
+import org.apache.struts.action2.views.jsp.DateTag;
 import com.opensymphony.xwork.ActionContext;
 
 import java.text.DateFormat;
@@ -14,7 +14,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Unit test for {@link com.opensymphony.webwork.components.Date}.
+ * Unit test for {@link org.apache.struts.action2.components.Date}.
  *
  * @author Claus Ibsen
  */
@@ -62,7 +62,7 @@ public class DateTagTest extends AbstractTagTest {
         tag.doStartTag();
 
         // component test must be done between start and end tag
-        com.opensymphony.webwork.components.Date component = (com.opensymphony.webwork.components.Date) tag.getComponent();
+        org.apache.struts.action2.components.Date component = (org.apache.struts.action2.components.Date) tag.getComponent();
         assertEquals("myDate", component.getName());
         assertEquals(format, component.getFormat());
         assertEquals(false, component.isNice());

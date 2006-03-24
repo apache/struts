@@ -2,12 +2,12 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
-import com.opensymphony.webwork.components.AbstractRichtexteditorConnector.CreateFolderResult;
-import com.opensymphony.webwork.components.AbstractRichtexteditorConnector.FileUploadResult;
-import com.opensymphony.webwork.components.AbstractRichtexteditorConnector.Folder;
-import com.opensymphony.webwork.components.AbstractRichtexteditorConnector.FoldersAndFiles;
+import org.apache.struts.action2.components.AbstractRichtexteditorConnector.CreateFolderResult;
+import org.apache.struts.action2.components.AbstractRichtexteditorConnector.FileUploadResult;
+import org.apache.struts.action2.components.AbstractRichtexteditorConnector.Folder;
+import org.apache.struts.action2.components.AbstractRichtexteditorConnector.FoldersAndFiles;
 
 /**
  * 

@@ -2,9 +2,9 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork;
+package org.apache.struts.action2;
 
-import com.opensymphony.webwork.views.jsp.ui.User;
+import org.apache.struts.action2.views.jsp.ui.User;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 

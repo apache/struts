@@ -1,7 +1,7 @@
-package com.opensymphony.webwork.views;
+package org.apache.struts.action2.views;
 
-import com.opensymphony.webwork.components.template.*;
-import com.opensymphony.webwork.config.Configuration;
+import org.apache.struts.action2.components.template.*;
+import org.apache.struts.action2.config.Configuration;
 import junit.framework.TestCase;
 
 /**

@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.dispatcher;
+package org.apache.struts.action2.dispatcher;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,11 +12,11 @@ import javax.servlet.ServletContext;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockServletContext;
 
-import com.opensymphony.webwork.WebWorkConstants;
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.util.ObjectFactoryDestroyable;
-import com.opensymphony.webwork.util.ObjectFactoryInitializable;
-import com.opensymphony.webwork.util.ObjectFactoryLifecycle;
+import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.util.ObjectFactoryDestroyable;
+import org.apache.struts.action2.util.ObjectFactoryInitializable;
+import org.apache.struts.action2.util.ObjectFactoryLifecycle;
 import com.opensymphony.xwork.ObjectFactory;
 
 import junit.framework.TestCase;
@@ -76,7 +76,7 @@ public class FilterDispatcherTest extends TestCase {
 		DispatcherUtils.setInstance(null);
 		
 		Map configMap = new HashMap();
-		configMap.put(WebWorkConstants.WEBWORK_OBJECTFACTORY, "com.opensymphony.webwork.dispatcher.FilterDispatcherTest$InnerInitializableObjectFactory");
+		configMap.put(WebWorkConstants.WEBWORK_OBJECTFACTORY, "org.apache.struts.action2.dispatcher.FilterDispatcherTest$InnerInitializableObjectFactory");
 		configMap.put(WebWorkConstants.WEBWORK_CONFIGURATION_XML_RELOAD, "false");
 		Configuration.setConfiguration(new InnerConfiguration(configMap));
 		
@@ -96,7 +96,7 @@ public class FilterDispatcherTest extends TestCase {
 		DispatcherUtils.setInstance(null);
 		
 		Map configMap = new HashMap();
-		configMap.put(WebWorkConstants.WEBWORK_OBJECTFACTORY, "com.opensymphony.webwork.dispatcher.FilterDispatcherTest$InnerInitailizableDestroyableObjectFactory");
+		configMap.put(WebWorkConstants.WEBWORK_OBJECTFACTORY, "org.apache.struts.action2.dispatcher.FilterDispatcherTest$InnerInitailizableDestroyableObjectFactory");
 		configMap.put(WebWorkConstants.WEBWORK_CONFIGURATION_XML_RELOAD, "false");
 		Configuration.setConfiguration(new InnerConfiguration(configMap));
 		

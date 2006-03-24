@@ -2,9 +2,9 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.showcase.filedownload;
+package org.apache.struts.action2.showcase.filedownload;
 
-import com.opensymphony.webwork.ServletActionContext;
+import org.apache.struts.action2.ServletActionContext;
 import com.opensymphony.xwork.Action;
 
 import java.io.InputStream;

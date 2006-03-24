@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.util;
+package org.apache.struts.action2.views.util;
 
 import junit.framework.TestCase;
 

@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.showcase.wait;
+package org.apache.struts.action2.showcase.wait;
 
 import com.opensymphony.xwork.ActionSupport;
 

@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.opensymphony.webwork.example.ajax.cart;
+package org.apache.struts.action2.example.ajax.cart;
 
-import com.opensymphony.webwork.example.ajax.catalog.Product;
+import org.apache.struts.action2.example.ajax.catalog.Product;
 
 import java.util.HashMap;
 import java.util.HashSet;

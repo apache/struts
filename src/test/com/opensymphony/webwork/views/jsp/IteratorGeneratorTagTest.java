@@ -2,12 +2,12 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp;
+package org.apache.struts.action2.views.jsp;
 
 import java.util.Iterator;
 
-import com.opensymphony.webwork.util.IteratorGenerator.Converter;
-import com.opensymphony.webwork.views.jsp.iterator.IteratorGeneratorTag;
+import org.apache.struts.action2.util.IteratorGenerator.Converter;
+import org.apache.struts.action2.views.jsp.iterator.IteratorGeneratorTag;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 

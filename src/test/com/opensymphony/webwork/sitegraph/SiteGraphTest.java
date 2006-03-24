@@ -1,7 +1,7 @@
-package com.opensymphony.webwork.sitegraph;
+package org.apache.struts.action2.sitegraph;
 
 import com.opensymphony.util.FileUtils;
-import com.opensymphony.webwork.WebWorkTestCase;
+import org.apache.struts.action2.WebWorkTestCase;
 
 import java.io.File;
 import java.io.StringWriter;

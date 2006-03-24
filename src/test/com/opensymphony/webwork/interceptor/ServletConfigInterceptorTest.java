@@ -2,11 +2,11 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.interceptor;
+package org.apache.struts.action2.interceptor;
 
-import com.opensymphony.webwork.WebWorkStatics;
-import com.opensymphony.webwork.WebWorkTestCase;
-import com.opensymphony.webwork.util.ServletContextAware;
+import org.apache.struts.action2.WebWorkStatics;
+import org.apache.struts.action2.WebWorkTestCase;
+import org.apache.struts.action2.util.ServletContextAware;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.mock.MockActionInvocation;

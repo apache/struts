@@ -2,13 +2,13 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp;
+package org.apache.struts.action2.views.jsp;
 
 import com.mockobjects.servlet.MockJspWriter;
 import com.mockobjects.servlet.MockPageContext;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.util.OgnlValueStack;
-import com.opensymphony.webwork.ServletActionContext;
+import org.apache.struts.action2.ServletActionContext;
 import junit.framework.TestCase;
 
 import javax.servlet.jsp.JspException;

@@ -2,9 +2,9 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp;
+package org.apache.struts.action2.views.jsp;
 
-import com.opensymphony.webwork.views.jsp.iterator.SortIteratorTag;
+import org.apache.struts.action2.views.jsp.iterator.SortIteratorTag;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 

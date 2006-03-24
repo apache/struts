@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp;
+package org.apache.struts.action2.views.jsp;
 
 import javax.servlet.jsp.JspException;
 
@@ -18,7 +18,7 @@ public class BeanTagTest extends AbstractUITagTest {
     public void testSimple() {
         BeanTag tag = new BeanTag();
         tag.setPageContext(pageContext);
-        tag.setName("com.opensymphony.webwork.TestAction");
+        tag.setName("org.apache.struts.action2.TestAction");
 
         try {
             tag.doStartTag();

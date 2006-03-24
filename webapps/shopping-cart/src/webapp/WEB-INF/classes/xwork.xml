@@ -21,30 +21,30 @@
 
         <default-interceptor-ref name="catalogStack"/>
 
-        <action name="catalog" class="com.opensymphony.webwork.example.ajax.actions.ShowCatalog">
+        <action name="catalog" class="org.apache.struts.action2.example.ajax.actions.ShowCatalog">
             <result name="success">/category.jsp</result>
         </action>
 
-        <action name="cart" class="com.opensymphony.webwork.example.ajax.actions.ShowCart">
+        <action name="cart" class="org.apache.struts.action2.example.ajax.actions.ShowCart">
             <result name="success">/cart.jsp</result>
         </action>
 
-        <action name="main" class="com.opensymphony.webwork.example.ajax.actions.ActiveCategory">
+        <action name="main" class="org.apache.struts.action2.example.ajax.actions.ActiveCategory">
             <result name="success">/category-main.jsp</result>
         </action>
 
 
     </package>
     <package name="catalog-remote" namespace="/catalog/remote" extends="catalog">
-        <action name="activeCategory" class="com.opensymphony.webwork.example.ajax.actions.ActiveCategory">
+        <action name="activeCategory" class="org.apache.struts.action2.example.ajax.actions.ActiveCategory">
             <result name="success">/category.jsp</result>
         </action>
 
-        <action name="setActiveCategory" class="com.opensymphony.webwork.example.ajax.actions.SetActiveCategory">
+        <action name="setActiveCategory" class="org.apache.struts.action2.example.ajax.actions.SetActiveCategory">
             <result name="success" type="chain">activeCategory</result>
         </action>
 
-        <action name="updateQuantity" class="com.opensymphony.webwork.example.ajax.actions.UpdateQuantityInCart"/>
+        <action name="updateQuantity" class="org.apache.struts.action2.example.ajax.actions.UpdateQuantityInCart"/>
 
     </package>
 </xwork>

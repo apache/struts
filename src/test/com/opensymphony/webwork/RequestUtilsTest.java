@@ -3,7 +3,7 @@
  * All rights reserved.
  */
 
-package com.opensymphony.webwork;
+package org.apache.struts.action2;
 
 /**
  * <code>RequestUtilsTest</code>

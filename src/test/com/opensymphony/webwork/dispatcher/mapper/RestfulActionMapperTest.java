@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.dispatcher.mapper;
+package org.apache.struts.action2.dispatcher.mapper;
 
 import junit.framework.TestCase;
 
@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Collections;
 import java.util.HashMap;
 
-import com.opensymphony.webwork.views.jsp.WebWorkMockHttpServletRequest;
+import org.apache.struts.action2.views.jsp.WebWorkMockHttpServletRequest;
 
 /**
  * Unit test for {@link RestfulActionMapper}.

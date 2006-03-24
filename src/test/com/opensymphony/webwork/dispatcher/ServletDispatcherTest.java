@@ -6,7 +6,7 @@
  * Created on 2/10/2003
  *
  */
-package com.opensymphony.webwork.dispatcher;
+package org.apache.struts.action2.dispatcher;
 
 import java.util.HashMap;
 import java.util.Map;

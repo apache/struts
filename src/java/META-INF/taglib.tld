@@ -15,7 +15,7 @@
    <tag>
 
       <name>head</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.HeadTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.HeadTag</tag-class>
       <body-content>empty</body-content>
       <description><![CDATA[Render a chunk of HEAD for your HTML file]]></description>
 
@@ -288,7 +288,7 @@
    <tag>
 
       <name>push</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.PushTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.PushTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Push value on stack for simplified usage.]]></description>
 
@@ -313,7 +313,7 @@
    <tag>
 
       <name>table</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.table.WebTableTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.table.WebTableTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Instantiate a JavaBean and place it in the context.]]></description>
 
@@ -346,7 +346,7 @@
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
 
-           <description><![CDATA[Whether the table should be sortable. Requires that model implements com.opensymphony.webwork.components.table.SortableTableModel if set to true.]]></description>
+           <description><![CDATA[Whether the table should be sortable. Requires that model implements org.apache.struts.action2.components.table.SortableTableModel if set to true.]]></description>
 
       </attribute>
       <attribute>
@@ -602,7 +602,7 @@
    <tag>
 
       <name>component</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.ComponentTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.ComponentTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render a custom ui widget]]></description>
 
@@ -859,7 +859,7 @@
    <tag>
 
       <name>token</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.TokenTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.TokenTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Stop double-submission of forms]]></description>
 
@@ -1116,7 +1116,7 @@
    <tag>
 
       <name>set</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.SetTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.SetTag</tag-class>
       <body-content>empty</body-content>
       <description><![CDATA[Assigns a value to a variable in a specified scope]]></description>
 
@@ -1157,7 +1157,7 @@
    <tag>
 
       <name>i18n</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.I18nTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.I18nTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Get a resource bundle and place it on the value stack]]></description>
 
@@ -1182,7 +1182,7 @@
    <tag>
 
       <name>merge</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.iterator.MergeIteratorTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.iterator.MergeIteratorTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Merge the values of a list of iterators into one iterator]]></description>
 
@@ -1199,7 +1199,7 @@
    <tag>
 
       <name>password</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.PasswordTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.PasswordTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render an HTML input tag of type password]]></description>
 
@@ -1504,7 +1504,7 @@
    <tag>
 
       <name>submit</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.SubmitTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.SubmitTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render a submit button]]></description>
 
@@ -1841,7 +1841,7 @@
    <tag>
 
       <name>form</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.FormTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.FormTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Renders an input form]]></description>
 
@@ -2178,7 +2178,7 @@
    <tag>
 
       <name>include</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.IncludeTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.IncludeTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Include a servlet's output (result of servlet or a JSP page)]]></description>
 
@@ -2203,7 +2203,7 @@
    <tag>
 
       <name>div</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.DivTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.DivTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render HTML div providing content from remote call via AJAX]]></description>
 
@@ -2532,7 +2532,7 @@
    <tag>
 
       <name>label</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.LabelTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.LabelTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render a label that displays read-only information]]></description>
 
@@ -2797,7 +2797,7 @@
    <tag>
 
       <name>action</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ActionTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ActionTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Execute an action from within a view]]></description>
 
@@ -2846,7 +2846,7 @@
    <tag>
 
       <name>bean</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.BeanTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.BeanTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Instantiate a JavaBean and place it in the context.]]></description>
 
@@ -2871,7 +2871,7 @@
    <tag>
 
       <name>sort</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.iterator.SortIteratorTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.iterator.SortIteratorTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Sort a List using a Comparator both passed in as the tag attribute.]]></description>
 
@@ -2904,7 +2904,7 @@
    <tag>
 
       <name>hidden</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.HiddenTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.HiddenTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render a hidden input field]]></description>
 
@@ -3161,7 +3161,7 @@
    <tag>
 
       <name>iterator</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.IteratorTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.IteratorTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Iterate over a iterable value]]></description>
 
@@ -3194,7 +3194,7 @@
    <tag>
 
       <name>actionerror</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.ActionErrorTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.ActionErrorTag</tag-class>
       <body-content>empty</body-content>
       <description><![CDATA[Render action errors if they exists]]></description>
 
@@ -3451,7 +3451,7 @@
    <tag>
 
       <name>if</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.IfTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.IfTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[If tag]]></description>
 
@@ -3476,7 +3476,7 @@
    <tag>
 
       <name>select</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.SelectTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.SelectTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render a select element]]></description>
 
@@ -3797,7 +3797,7 @@
    <tag>
 
       <name>reset</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.ResetTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.ResetTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render a reset button]]></description>
 
@@ -4086,7 +4086,7 @@
    <tag>
 
       <name>append</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.iterator.AppendIteratorTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.iterator.AppendIteratorTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Append the values of a list of iterators to one iterator]]></description>
 
@@ -4103,7 +4103,7 @@
    <tag>
 
       <name>updownselect</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.UpDownSelectTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.UpDownSelectTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render a up down select element]]></description>
 
@@ -4472,7 +4472,7 @@
    <tag>
 
       <name>else</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ElseTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ElseTag</tag-class>
       <description><![CDATA[Else tag]]></description>
 
       <attribute>
@@ -4488,7 +4488,7 @@
    <tag>
 
       <name>debug</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.DebugTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.DebugTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render debug tag]]></description>
 
@@ -4745,7 +4745,7 @@
    <tag>
 
       <name>param</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ParamTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ParamTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Parametrize other tags]]></description>
 
@@ -4778,7 +4778,7 @@
    <tag>
 
       <name>optiontransferselect</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.OptionTransferSelectTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.OptionTransferSelectTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Renders an input form]]></description>
 
@@ -5451,7 +5451,7 @@
    <tag>
 
       <name>textfield</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.TextFieldTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.TextFieldTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render an HTML input field of type text]]></description>
 
@@ -5740,7 +5740,7 @@
    <tag>
 
       <name>doubleselect</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.DoubleSelectTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.DoubleSelectTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Renders two HTML select elements with second one changing displayed values depending on selected entry of first one.]]></description>
 
@@ -6301,7 +6301,7 @@
    <tag>
 
       <name>textarea</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.TextareaTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.TextareaTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render HTML textarea tag.]]></description>
 
@@ -6590,7 +6590,7 @@
    <tag>
 
       <name>generator</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.iterator.IteratorGeneratorTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.iterator.IteratorGeneratorTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Generate an iterator for a iterable source.]]></description>
 
@@ -6639,7 +6639,7 @@
    <tag>
 
       <name>checkbox</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.CheckboxTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.CheckboxTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render a checkbox input field]]></description>
 
@@ -6904,7 +6904,7 @@
    <tag>
 
       <name>date</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.DateTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.DateTag</tag-class>
       <body-content>empty</body-content>
       <description><![CDATA[Render a formatted date.]]></description>
 
@@ -6945,7 +6945,7 @@
    <tag>
 
       <name>a</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.AnchorTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.AnchorTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render a HTML href element that when clicked calls a URL via remote XMLHttpRequest]]></description>
 
@@ -7258,7 +7258,7 @@
    <tag>
 
       <name>file</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.FileTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.FileTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render a file input field]]></description>
 
@@ -7531,7 +7531,7 @@
    <tag>
 
       <name>url</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.URLTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.URLTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[This tag is used to create a URL]]></description>
 
@@ -7644,7 +7644,7 @@
    <tag>
 
       <name>radio</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.RadioTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.RadioTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Renders a radio button input field]]></description>
 
@@ -7925,7 +7925,7 @@
    <tag>
 
       <name>combobox</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.ComboBoxTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.ComboBoxTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Widget that fills a text box from a select]]></description>
 
@@ -8222,7 +8222,7 @@
    <tag>
 
       <name>checkboxlist</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.CheckboxListTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.CheckboxListTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render a list of checkboxes]]></description>
 
@@ -8503,7 +8503,7 @@
    <tag>
 
       <name>panel</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.PanelTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.PanelTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render a panel for tabbedPanel]]></description>
 
@@ -8856,7 +8856,7 @@
    <tag>
 
       <name>actionmessage</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.ActionMessageTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.ActionMessageTag</tag-class>
       <body-content>empty</body-content>
       <description><![CDATA[Render action messages if they exists]]></description>
 
@@ -9113,7 +9113,7 @@
    <tag>
 
       <name>tree</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.TreeTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.TreeTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render a tree widget.]]></description>
 
@@ -9450,7 +9450,7 @@
    <tag>
 
       <name>property</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.PropertyTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.PropertyTag</tag-class>
       <body-content>empty</body-content>
       <description><![CDATA[Print out expression which evaluates against the stack]]></description>
 
@@ -9491,7 +9491,7 @@
    <tag>
 
       <name>tabbedpane</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.TabbedPaneTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.TabbedPaneTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[This tag is deprecated. Use tabbed panel instead.]]></description>
 
@@ -9516,7 +9516,7 @@
    <tag>
 
       <name>tabbedPanel</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.TabbedPanelTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.TabbedPanelTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render a tabbedPanel widget.]]></description>
 
@@ -9781,7 +9781,7 @@
    <tag>
 
       <name>treenode</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.TreeNodeTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.TreeNodeTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render a tree node within a tree widget.]]></description>
 
@@ -10046,7 +10046,7 @@
    <tag>
 
       <name>fielderror</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.FieldErrorTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.FieldErrorTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render field error (all or partial depending on param tag nested)if they exists]]></description>
 
@@ -10303,7 +10303,7 @@
    <tag>
 
       <name>subset</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.iterator.SubsetIteratorTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.iterator.SubsetIteratorTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Takes an iterator and outputs a subset of it]]></description>
 
@@ -10352,7 +10352,7 @@
    <tag>
 
       <name>elseif</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ElseIfTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ElseIfTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Elseif tag]]></description>
 
@@ -10377,7 +10377,7 @@
    <tag>
 
       <name>text</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.TextTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.TextTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render a I18n text message.]]></description>
 
@@ -10402,7 +10402,7 @@
    <tag>
 
       <name>datepicker</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.DatePickerTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.DatePickerTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render datepicker]]></description>
 
@@ -10723,7 +10723,7 @@
    <tag>
 
       <name>richtexteditor</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.RichTextEditorTag</tag-class>
+      <tag-class>org.apache.struts.action2.views.jsp.ui.RichTextEditorTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Render a rich text editor element]]></description>
 

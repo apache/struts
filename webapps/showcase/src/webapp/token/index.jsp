@@ -14,8 +14,8 @@
     from time to time. This token is then validated with the HttpSession that it is the first time
     it is submitted, if not we have a double post and therefore can prevent the second submit action.
     <p/>
-    For more information check out javadoc for com.opensymphony.webwork.interceptor.TokenInterceptor
-    and com.opensymphony.webwork.interceptor.TokenSessionStoreInterceptor.
+    For more information check out javadoc for org.apache.struts.action2.interceptor.TokenInterceptor
+    and org.apache.struts.action2.interceptor.TokenSessionStoreInterceptor.
 
     <br/>
     <br/><a href="tokenPrepare!input.action">Example 1 (token based .jsp example)</a>

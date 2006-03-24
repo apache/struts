@@ -6,7 +6,7 @@
  * Created on 2/10/2003
  *
  */
-package com.opensymphony.webwork.dispatcher;
+package org.apache.struts.action2.dispatcher;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
@@ -14,9 +14,9 @@ import com.mockobjects.servlet.MockHttpServletResponse;
 import com.mockobjects.servlet.MockHttpSession;
 import com.mockobjects.servlet.MockServletConfig;
 import com.mockobjects.servlet.MockServletOutputStream;
-import com.opensymphony.webwork.WebWorkTestCase;
-import com.opensymphony.webwork.views.jsp.WebWorkMockHttpServletRequest;
-import com.opensymphony.webwork.views.jsp.WebWorkMockHttpServletResponse;
+import org.apache.struts.action2.WebWorkTestCase;
+import org.apache.struts.action2.views.jsp.WebWorkMockHttpServletRequest;
+import org.apache.struts.action2.views.jsp.WebWorkMockHttpServletResponse;
 import com.opensymphony.xwork.config.ConfigurationManager;
 import com.opensymphony.xwork.config.providers.XmlConfigurationProvider;
 

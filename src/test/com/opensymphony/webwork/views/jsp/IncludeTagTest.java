@@ -2,10 +2,10 @@
  *  Copyright (c) 2002-2006 by OpenSymphony
  *  All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp;
+package org.apache.struts.action2.views.jsp;
 
 import com.mockobjects.servlet.MockRequestDispatcher;
-import com.opensymphony.webwork.components.Include;
+import org.apache.struts.action2.components.Include;
 import org.easymock.MockControl;
 
 import javax.servlet.RequestDispatcher;

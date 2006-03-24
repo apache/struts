@@ -2,11 +2,11 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp.ui;
+package org.apache.struts.action2.views.jsp.ui;
 
 import java.util.Locale;
 
-import com.opensymphony.webwork.views.jsp.AbstractUITagTest;
+import org.apache.struts.action2.views.jsp.AbstractUITagTest;
 import com.opensymphony.xwork.ActionContext;
 
 /**

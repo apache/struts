@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.showcase.validation;
+package org.apache.struts.action2.showcase.validation;
 
 import java.sql.Date;
 

@@ -1,9 +1,9 @@
-package com.opensymphony.webwork.views.jsp.ui;
+package org.apache.struts.action2.views.jsp.ui;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.webwork.TestAction;
-import com.opensymphony.webwork.views.jsp.AbstractUITagTest;
+import org.apache.struts.action2.TestAction;
+import org.apache.struts.action2.views.jsp.AbstractUITagTest;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;

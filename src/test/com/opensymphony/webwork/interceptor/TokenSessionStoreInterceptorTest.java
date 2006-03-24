@@ -2,11 +2,11 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.interceptor;
+package org.apache.struts.action2.interceptor;
 
 import com.opensymphony.xwork.ActionProxy;
 import com.opensymphony.xwork.Action;
-import com.opensymphony.webwork.TestConfigurationProvider;
+import org.apache.struts.action2.TestConfigurationProvider;
 
 /**
  * Unit test for {@link TokenSessionStoreInterceptor}.

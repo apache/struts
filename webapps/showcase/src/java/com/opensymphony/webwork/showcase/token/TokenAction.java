@@ -3,7 +3,7 @@
  * All rights reserved.
  */
 
-package com.opensymphony.webwork.showcase.token;
+package org.apache.struts.action2.showcase.token;
 
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionSupport;

@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.config;
+package org.apache.struts.action2.config;
 
 import java.util.ArrayList;
 import java.util.Iterator;

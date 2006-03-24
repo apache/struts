@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package com.opensymphony.webwork.portlet.util;
+package org.apache.struts.action2.portlet.util;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 
 import org.easymock.MockControl;
 
-import com.opensymphony.webwork.portlet.context.PortletActionContext;
+import org.apache.struts.action2.portlet.context.PortletActionContext;
 import com.opensymphony.xwork.ActionContext;
 
 /**

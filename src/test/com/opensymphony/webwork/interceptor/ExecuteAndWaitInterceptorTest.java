@@ -3,12 +3,12 @@
  * All rights reserved.
 */
 
-package com.opensymphony.webwork.interceptor;
+package org.apache.struts.action2.interceptor;
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.WebWorkTestCase;
-import com.opensymphony.webwork.views.jsp.WebWorkMockHttpServletRequest;
-import com.opensymphony.webwork.views.jsp.WebWorkMockHttpSession;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.WebWorkTestCase;
+import org.apache.struts.action2.views.jsp.WebWorkMockHttpServletRequest;
+import org.apache.struts.action2.views.jsp.WebWorkMockHttpSession;
 import com.opensymphony.xwork.*;
 import com.opensymphony.xwork.mock.MockResult;
 import com.opensymphony.xwork.config.Configuration;

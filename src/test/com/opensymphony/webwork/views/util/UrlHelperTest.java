@@ -2,12 +2,12 @@
  * Copyright (c) 2002-2005 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.util;
+package org.apache.struts.action2.views.util;
 
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.webwork.WebWorkTestCase;
-import com.opensymphony.webwork.WebWorkConstants;
-import com.opensymphony.webwork.config.Configuration;
+import org.apache.struts.action2.WebWorkTestCase;
+import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.config.Configuration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

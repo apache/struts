@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.showcase.exception;
+package org.apache.struts.action2.showcase.exception;
 
 import org.apache.log4j.Logger;
 

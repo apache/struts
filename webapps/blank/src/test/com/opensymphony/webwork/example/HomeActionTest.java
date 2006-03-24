@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2006, Your Corporation. All Rights Reserved.
  */
-package com.opensymphony.webwork.example;
+package org.apache.struts.action2.example;
 
 import com.opensymphony.xwork.ActionSupport;
 

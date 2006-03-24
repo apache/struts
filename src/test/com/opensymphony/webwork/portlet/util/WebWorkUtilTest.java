@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.portlet.util;
+package org.apache.struts.action2.portlet.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +15,9 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockRequestDispatcher;
 
-import com.opensymphony.webwork.TestAction;
-import com.opensymphony.webwork.util.ListEntry;
-import com.opensymphony.webwork.util.WebWorkUtil;
+import org.apache.struts.action2.TestAction;
+import org.apache.struts.action2.util.ListEntry;
+import org.apache.struts.action2.util.WebWorkUtil;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 import junit.framework.TestCase;
@@ -36,7 +36,7 @@ public class WebWorkUtilTest extends TestCase {
 	protected WebWorkUtil webWorkUtil = null;
 	
 	public void testBeanMethod() throws Exception {
-		Object o = webWorkUtil.bean("com.opensymphony.webwork.TestAction");
+		Object o = webWorkUtil.bean("org.apache.struts.action2.TestAction");
 		assertNotNull(o);
 		assertTrue(o instanceof TestAction);
 	}

@@ -2,12 +2,12 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.dispatcher;
+package org.apache.struts.action2.dispatcher;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapper;
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapping;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapper;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapping;
 
 /**
  * ActionMapper for testing FilterDispatcher (used in FilterDispaatcherTest)

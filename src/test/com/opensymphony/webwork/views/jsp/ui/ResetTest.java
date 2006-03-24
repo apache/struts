@@ -2,10 +2,10 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp.ui;
+package org.apache.struts.action2.views.jsp.ui;
 
-import com.opensymphony.webwork.TestAction;
-import com.opensymphony.webwork.views.jsp.AbstractUITagTest;
+import org.apache.struts.action2.TestAction;
+import org.apache.struts.action2.views.jsp.AbstractUITagTest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -85,11 +85,11 @@ public class ResetTest extends AbstractUITagTest {
     }
 
     /**
-     * Initialize a map of {@link com.opensymphony.webwork.views.jsp.AbstractUITagTest.PropertyHolder} for generic tag
+     * Initialize a map of {@link org.apache.struts.action2.views.jsp.AbstractUITagTest.PropertyHolder} for generic tag
      * property testing. Will be used when calling {@link #verifyGenericProperties(AbstractUITag,
      * String, String[])} as properties to verify.<p/> This implementation extends testdata from AbstractUITag.
      *
-     * @return A Map of PropertyHolders values bound to {@link com.opensymphony.webwork.views.jsp.AbstractUITagTest.PropertyHolder#getName()}
+     * @return A Map of PropertyHolders values bound to {@link org.apache.struts.action2.views.jsp.AbstractUITagTest.PropertyHolder#getName()}
      *         as key.
      */
     protected Map initializedGenericTagTestProperties() {

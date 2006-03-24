@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.showcase.ajax;
+package org.apache.struts.action2.showcase.ajax;
 
 import com.opensymphony.xwork.Action;
 

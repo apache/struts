@@ -4,15 +4,15 @@
     <include file="webwork-default.xml"/>
 
     <package name="ajax" extends="webwork-default">
-        <action name="AjaxTest" class="com.opensymphony.webwork.showcase.ajax.AjaxTestAction">
+        <action name="AjaxTest" class="org.apache.struts.action2.showcase.ajax.AjaxTestAction">
             <result name="success">/ajax/AjaxResult.jsp</result>
         </action>
 
-        <action name="AjaxRemoteLink" class="com.opensymphony.webwork.showcase.ajax.AjaxTestAction">
+        <action name="AjaxRemoteLink" class="org.apache.struts.action2.showcase.ajax.AjaxTestAction">
             <result name="success">/ajax/AjaxResult2.js</result>
         </action>
 
-        <action name="AjaxRemoteForm" class="com.opensymphony.webwork.showcase.ajax.AjaxTestAction">
+        <action name="AjaxRemoteForm" class="org.apache.struts.action2.showcase.ajax.AjaxTestAction">
             <result name="success">/ajax/AjaxResult3.jsp</result>
         </action>
 

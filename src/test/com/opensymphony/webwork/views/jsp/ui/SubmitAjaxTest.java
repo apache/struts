@@ -2,9 +2,9 @@
  * Copyright:	Copyright (c) From Down & Around, Inc.
  */
 
-package com.opensymphony.webwork.views.jsp.ui;
+package org.apache.struts.action2.views.jsp.ui;
 
-import com.opensymphony.webwork.views.jsp.AbstractUITagTest;
+import org.apache.struts.action2.views.jsp.AbstractUITagTest;
 
 /**
  * @author Ian Roughley

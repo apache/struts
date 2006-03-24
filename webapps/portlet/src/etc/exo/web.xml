@@ -14,7 +14,7 @@
 	<filter>
 		<filter-name>webwork</filter-name>
 		<filter-class>
-			com.opensymphony.webwork.dispatcher.FilterDispatcher
+			org.apache.struts.action2.dispatcher.FilterDispatcher
 		</filter-class>
 	</filter>
 
@@ -29,7 +29,7 @@
 	</listener>
 	<listener>
 		<listener-class>
-			com.opensymphony.webwork.portlet.context.ServletContextHolderListener
+			org.apache.struts.action2.portlet.context.ServletContextHolderListener
 		</listener-class>
 	</listener>
 	<listener>
@@ -41,7 +41,7 @@
 	<servlet>
 		<servlet-name>preparator</servlet-name>
 		<servlet-class>
-			com.opensymphony.webwork.portlet.context.PreparatorServlet
+			org.apache.struts.action2.portlet.context.PreparatorServlet
 		</servlet-class>
 	</servlet>
 	<servlet>

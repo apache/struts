@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.opensymphony.webwork.example.ajax.actions;
+package org.apache.struts.action2.example.ajax.actions;
 
-import com.opensymphony.webwork.example.ajax.catalog.Catalog;
-import com.opensymphony.webwork.example.ajax.catalog.Product;
+import org.apache.struts.action2.example.ajax.catalog.Catalog;
+import org.apache.struts.action2.example.ajax.catalog.Product;
 
 /**
  * AbstractModifyCartAction

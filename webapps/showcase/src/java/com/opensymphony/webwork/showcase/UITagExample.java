@@ -1,7 +1,7 @@
-package com.opensymphony.webwork.showcase;
+package org.apache.struts.action2.showcase;
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.interceptor.ServletRequestAware;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.interceptor.ServletRequestAware;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionSupport;
 import com.opensymphony.xwork.Validateable;

@@ -6,12 +6,12 @@
 
     <filter>
         <filter-name>webwork-cleanup</filter-name>
-        <filter-class>com.opensymphony.webwork.dispatcher.ActionContextCleanUp</filter-class>
+        <filter-class>org.apache.struts.action2.dispatcher.ActionContextCleanUp</filter-class>
     </filter>
 
     <filter>
         <filter-name>webwork</filter-name>
-        <filter-class>com.opensymphony.webwork.dispatcher.FilterDispatcher</filter-class>
+        <filter-class>org.apache.struts.action2.dispatcher.FilterDispatcher</filter-class>
     </filter>
 
     <filter>
@@ -61,15 +61,15 @@
     <!-- SNIPPET START: example.velocity.filter.chain
         <filter>
             <filter-name>webwork-cleanup</filter-name>
-            <filter-class>com.opensymphony.webwork.dispatcher.ActionContextCleanUp</filter-class>
+            <filter-class>org.apache.struts.action2.dispatcher.ActionContextCleanUp</filter-class>
         </filter>
         <filter>
             <filter-name>sitemesh</filter-name>
-            <filter-class>com.opensymphony.webwork.sitemesh.VelocityPageFilter</filter-class>
+            <filter-class>org.apache.struts.action2.sitemesh.VelocityPageFilter</filter-class>
         </filter>
         <filter>
             <filter-name>webwork</filter-name>
-            <filter-class>com.opensymphony.webwork.dispatcher.FilterDispatcher</filter-class>
+            <filter-class>org.apache.struts.action2.dispatcher.FilterDispatcher</filter-class>
         </filter>
 
         <filter-mapping>
@@ -89,15 +89,15 @@
     <!-- SNIPPET START: example.freemarker.filter.chain
     <filter>
         <filter-name>webwork-cleanup</filter-name>
-        <filter-class>com.opensymphony.webwork.dispatcher.ActionContextCleanUp</filter-class>
+        <filter-class>org.apache.struts.action2.dispatcher.ActionContextCleanUp</filter-class>
     </filter>
     <filter>
         <filter-name>sitemesh</filter-name>
-        <filter-class>com.opensymphony.webwork.sitemesh.FreeMarkerPageFilter</filter-class>
+        <filter-class>org.apache.struts.action2.sitemesh.FreeMarkerPageFilter</filter-class>
     </filter>
     <filter>
         <filter-name>webwork</filter-name>
-        <filter-class>com.opensymphony.webwork.dispatcher.FilterDispatcher</filter-class>
+        <filter-class>org.apache.struts.action2.dispatcher.FilterDispatcher</filter-class>
     </filter>
 
     <filter-mapping>

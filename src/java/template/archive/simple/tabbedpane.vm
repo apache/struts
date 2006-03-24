@@ -16,7 +16,7 @@
   --
   *#
 
-#bean ("com.opensymphony.webwork.util.Counter" $tabIndex)
+#bean ("org.apache.struts.action2.util.Counter" $tabIndex)
 #set ($tabIndex.first = 0)
 #set ($tabIndex.last = $tag.content.size())
 

@@ -5,11 +5,11 @@
 
     <bean id="catalog"
           singleton="true"
-          class="com.opensymphony.webwork.example.ajax.catalog.TestCatalog" />
+          class="org.apache.struts.action2.example.ajax.catalog.TestCatalog" />
 
     <bean id="shoppingCart"
           singleton="true"
-          class="com.opensymphony.webwork.example.ajax.cart.DefaultCart" />
+          class="org.apache.struts.action2.example.ajax.cart.DefaultCart" />
 
 
 </beans>

@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.portlet.context;
+package org.apache.struts.action2.portlet.context;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.easymock.MockControl;
 
-import com.opensymphony.webwork.ServletActionContext;
+import org.apache.struts.action2.ServletActionContext;
 import com.opensymphony.xwork.ActionContext;
 
 import junit.framework.TestCase;

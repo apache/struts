@@ -6,7 +6,7 @@
  * Created on 1/10/2003
  *
  */
-package com.opensymphony.webwork.views.freemarker;
+package org.apache.struts.action2.views.freemarker;
 
 
 /**

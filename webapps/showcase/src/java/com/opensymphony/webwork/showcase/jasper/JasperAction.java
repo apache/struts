@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2005 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.showcase.jasper;
+package org.apache.struts.action2.showcase.jasper;
 
 import java.util.Set;
 import java.io.File;
@@ -10,8 +10,8 @@ import java.io.File;
 import net.sf.jasperreports.engine.JasperCompileManager;
 
 import com.opensymphony.xwork.ActionSupport;
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.showcase.person.PersonManager;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.showcase.person.PersonManager;
 
 /**
  * @author Philip Luppens

@@ -16,19 +16,19 @@
 			<result name="success">/WEB-INF/view/index.jsp</result>
 		</action>
 
-		<action name="chartExample" class="com.opensymphony.webwork.portlet.example.ChartExampleAction">
+		<action name="chartExample" class="org.apache.struts.action2.portlet.example.ChartExampleAction">
 			<result name="success">/WEB-INF/view/chartExample.jsp</result>
 		</action>
 
 		<action name="formExample"
-			class="com.opensymphony.webwork.portlet.example.FormExample" method="input">
+			class="org.apache.struts.action2.portlet.example.FormExample" method="input">
 			<result name="input">
 				/WEB-INF/view/formExampleInput.jsp
 			</result>
 		</action>
 
 		<action name="processFormExample"
-			class="com.opensymphony.webwork.portlet.example.FormExample">
+			class="org.apache.struts.action2.portlet.example.FormExample">
 			<result name="input">
 				/WEB-INF/view/formExampleInput.jsp
 			</result>
@@ -38,14 +38,14 @@
 		</action>
 
 		<action name="validationExample"
-			class="com.opensymphony.webwork.portlet.example.FormExample" method="input">
+			class="org.apache.struts.action2.portlet.example.FormExample" method="input">
 			<result name="input">
 				/WEB-INF/view/formExampleInputValidation.jsp
 			</result>
 		</action>
 
 		<action name="processValidationExample"
-			class="com.opensymphony.webwork.portlet.example.FormExample">
+			class="org.apache.struts.action2.portlet.example.FormExample">
 			<result name="success">
 				/WEB-INF/view/formExample.jsp
 			</result>
@@ -103,11 +103,11 @@
 		</action>
 
 		<action name="processFreeMarkerExample"
-			class="com.opensymphony.webwork.portlet.example.FormExample">
+			class="org.apache.struts.action2.portlet.example.FormExample">
 			<result name="success">/view/processFreeMarkerView.action?firstName=${firstName}&amp;lastName=${lastName}</result>
 		</action>
 		
-		<action name="processFreeMarkerView" class="com.opensymphony.webwork.portlet.example.FormExample">
+		<action name="processFreeMarkerView" class="org.apache.struts.action2.portlet.example.FormExample">
 			<result type="freemarker" name="success">/WEB-INF/view/freeMarkerExample.ftl</result>
 		</action>
 		
@@ -128,14 +128,14 @@
 			<result name="success">/WEB-INF/edit/test.jsp</result>
 		</action>
 		<action name="formExampleEdit"
-			class="com.opensymphony.webwork.portlet.example.FormExample" method="input">
+			class="org.apache.struts.action2.portlet.example.FormExample" method="input">
 			<result name="input">
 				/WEB-INF/edit/formExampleInput.jsp
 			</result>
 		</action>
 
 		<action name="processFormExampleEdit"
-			class="com.opensymphony.webwork.portlet.example.FormExample">
+			class="org.apache.struts.action2.portlet.example.FormExample">
 			<result name="input">
 				/WEB-INF/edtt/formExampleInput.jsp
 			</result>
@@ -145,7 +145,7 @@
 		</action>
 
 		<action name="processFormExampleForward"
-			class="com.opensymphony.webwork.portlet.example.FormExample">
+			class="org.apache.struts.action2.portlet.example.FormExample">
 			<result name="success">
 				/WEB-INF/edit/formExample.jsp
 			</result>

@@ -6,10 +6,10 @@
  * Created on 1/10/2003
  *
  */
-package com.opensymphony.webwork.views.freemarker;
+package org.apache.struts.action2.views.freemarker;
 
-import com.opensymphony.webwork.util.ListEntry;
-import com.opensymphony.webwork.util.WebWorkUtil;
+import org.apache.struts.action2.util.ListEntry;
+import org.apache.struts.action2.util.WebWorkUtil;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.util.OgnlValueStack;
 import freemarker.ext.beans.CollectionModel;

@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.interceptor;
+package org.apache.struts.action2.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,8 +10,8 @@ import org.jmock.Mock;
 import org.jmock.core.constraint.IsEqual;
 import org.jmock.core.matcher.InvokeOnceMatcher;
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.WebWorkTestCase;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.WebWorkTestCase;
 import com.opensymphony.xwork.mock.MockActionInvocation;
 
 /**

@@ -2,10 +2,10 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp;
+package org.apache.struts.action2.views.jsp;
 
-import com.opensymphony.webwork.views.jsp.ui.AnchorTag;
-import com.opensymphony.webwork.views.jsp.ui.WebWorkBodyContent;
+import org.apache.struts.action2.views.jsp.ui.AnchorTag;
+import org.apache.struts.action2.views.jsp.ui.WebWorkBodyContent;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;

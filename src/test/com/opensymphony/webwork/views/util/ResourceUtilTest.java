@@ -3,7 +3,7 @@
  * All rights reserved.
  */
 
-package com.opensymphony.webwork.views.util;
+package org.apache.struts.action2.views.util;
 /**
  * <code>ResourceUtilTest</code>
  *

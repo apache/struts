@@ -13,7 +13,7 @@
     <package name="tutorial" namespace="/tutorial" extends="webwork-default">
         <result-types>
             <result-type name="freemarker" default="true"
-                         class="com.opensymphony.webwork.views.freemarker.FreemarkerResult"/>
+                         class="org.apache.struts.action2.views.freemarker.FreemarkerResult"/>
         </result-types>
 
         <action name="test" class="com.opensymphony.xwork.ActionSupport">
@@ -24,7 +24,7 @@
     <package name="sitegraph" namespace="/tutorial/sitegraph" extends="webwork-default">
         <result-types>
             <result-type name="freemarker" default="true"
-                         class="com.opensymphony.webwork.views.freemarker.FreemarkerResult"/>
+                         class="org.apache.struts.action2.views.freemarker.FreemarkerResult"/>
         </result-types>
 
         <action name="guess" class="com.opensymphony.xwork.ActionSupport">

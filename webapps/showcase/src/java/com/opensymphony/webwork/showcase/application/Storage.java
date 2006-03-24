@@ -48,12 +48,12 @@
  * SUCH DAMAGE.
  * ====================================================================
  */
-package com.opensymphony.webwork.showcase.application;
+package org.apache.struts.action2.showcase.application;
 
-import com.opensymphony.webwork.showcase.model.IdEntity;
-import com.opensymphony.webwork.showcase.exception.CreateException;
-import com.opensymphony.webwork.showcase.exception.UpdateException;
-import com.opensymphony.webwork.showcase.exception.StorageException;
+import org.apache.struts.action2.showcase.model.IdEntity;
+import org.apache.struts.action2.showcase.exception.CreateException;
+import org.apache.struts.action2.showcase.exception.UpdateException;
+import org.apache.struts.action2.showcase.exception.StorageException;
 
 import java.io.Serializable;
 import java.util.Collection;

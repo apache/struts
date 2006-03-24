@@ -2,10 +2,10 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.config;
+package org.apache.struts.action2.config;
 
-import com.opensymphony.webwork.WebWorkTestCase;
-import com.opensymphony.webwork.WebWorkConstants;
+import org.apache.struts.action2.WebWorkTestCase;
+import org.apache.struts.action2.WebWorkConstants;
 import com.opensymphony.xwork.util.LocalizedTextUtil;
 
 import java.util.Iterator;

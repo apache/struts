@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.showcase.person;
+package org.apache.struts.action2.showcase.person;
 
 /**
  * User: plightbo

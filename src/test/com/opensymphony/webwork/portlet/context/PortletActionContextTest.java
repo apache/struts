@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.portlet.context;
+package org.apache.struts.action2.portlet.context;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +18,7 @@ import junit.textui.TestRunner;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
 
-import com.opensymphony.webwork.portlet.PortletActionConstants;
+import org.apache.struts.action2.portlet.PortletActionConstants;
 import com.opensymphony.xwork.ActionContext;
 
 /**

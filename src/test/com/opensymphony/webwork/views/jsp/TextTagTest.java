@@ -2,13 +2,13 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp;
+package org.apache.struts.action2.views.jsp;
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.TestAction;
-import com.opensymphony.webwork.components.Text;
-import com.opensymphony.webwork.views.jsp.ui.TestAction1;
-import com.opensymphony.webwork.views.jsp.ui.WebWorkBodyContent;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.TestAction;
+import org.apache.struts.action2.components.Text;
+import org.apache.struts.action2.views.jsp.ui.TestAction1;
+import org.apache.struts.action2.views.jsp.ui.WebWorkBodyContent;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.util.OgnlValueStack;
@@ -29,7 +29,7 @@ import java.util.Locale;
  */
 public class TextTagTest extends AbstractTagTest {
 
-    private String fooValue = "com.opensymphony.webwork.views.jsp.TextTagTest.fooValue";
+    private String fooValue = "org.apache.struts.action2.views.jsp.TextTagTest.fooValue";
     private TextTag tag;
 
 

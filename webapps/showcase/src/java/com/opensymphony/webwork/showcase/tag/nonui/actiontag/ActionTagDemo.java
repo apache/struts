@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.showcase.tag.nonui.actiontag;
+package org.apache.struts.action2.showcase.tag.nonui.actiontag;
 
 import com.opensymphony.xwork.ActionSupport;
 

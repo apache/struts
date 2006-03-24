@@ -168,7 +168,7 @@
 
         <jar basedir="${build.java}" jarfile="${build}/${name}-${version}.jar">
             <manifest>
-                <attribute name="Main-Class" value="com.opensymphony.webwork.Main"/>
+                <attribute name="Main-Class" value="org.apache.struts.action2.Main"/>
                 <attribute name="Implementation-Title" value="${fullname}"/>
                 <attribute name="Implementation-Version" value="${version}"/>
             </manifest>
@@ -185,7 +185,7 @@
                 <exclude name="com/opensymphony/webwork/static/**/*" />
             </fileset>
             <manifest>
-                <attribute name="Main-Class" value="com.opensymphony.webwork.Main"/>
+                <attribute name="Main-Class" value="org.apache.struts.action2.Main"/>
                 <attribute name="Implementation-Title" value="${fullname}"/>
                 <attribute name="Implementation-Version" value="${version}"/>
             </manifest>

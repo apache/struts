@@ -2,14 +2,14 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp.ui;
+package org.apache.struts.action2.views.jsp.ui;
 
-import com.opensymphony.webwork.TestAction;
-import com.opensymphony.webwork.TestConfigurationProvider;
-import com.opensymphony.webwork.WebWorkConstants;
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.views.jsp.AbstractUITagTest;
-import com.opensymphony.webwork.views.jsp.ActionTag;
+import org.apache.struts.action2.TestAction;
+import org.apache.struts.action2.TestConfigurationProvider;
+import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.views.jsp.AbstractUITagTest;
+import org.apache.struts.action2.views.jsp.ActionTag;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.config.ConfigurationManager;
 

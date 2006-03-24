@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.opensymphony.webwork.example.ajax.actions;
+package org.apache.struts.action2.example.ajax.actions;
 
-import com.opensymphony.webwork.interceptor.SessionAware;
+import org.apache.struts.action2.interceptor.SessionAware;
 import com.opensymphony.xwork.ActionSupport;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

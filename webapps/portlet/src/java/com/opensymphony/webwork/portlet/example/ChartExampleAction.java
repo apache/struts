@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package com.opensymphony.webwork.portlet.example;
+package org.apache.struts.action2.portlet.example;
 
 import java.util.Date;
 import java.util.Map;

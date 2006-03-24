@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.showcase.tag.nonui.iteratortag;
+package org.apache.struts.action2.showcase.tag.nonui.iteratortag;
 
 import com.opensymphony.xwork.ActionSupport;
 import com.opensymphony.xwork.Validateable;

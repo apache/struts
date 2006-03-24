@@ -3,33 +3,33 @@
     <include file="webwork-default.xml"/>
 
     <package name="ui-tags" extends="webwork-default" namespace="/tags/ui">
-        <action name="example" class="com.opensymphony.webwork.showcase.UITagExample">
+        <action name="example" class="org.apache.struts.action2.showcase.UITagExample">
             <result>example.jsp</result>
             <result name="input">example.jsp</result>
         </action>
-        <action name="exampleSubmit" class="com.opensymphony.webwork.showcase.UITagExample" method="doSubmit">
+        <action name="exampleSubmit" class="org.apache.struts.action2.showcase.UITagExample" method="doSubmit">
         	<result>exampleSubmited.jsp</result>
         	<result name="input">example.jsp</result>
         </action>
-        <action name="exampleVelocity" class="com.opensymphony.webwork.showcase.UITagExample">
+        <action name="exampleVelocity" class="org.apache.struts.action2.showcase.UITagExample">
             <result type="velocity">example.vm</result>
             <result name="input" type="velocity">example.vm</result>
         </action>
-        <action name="exampleSubmitVelocity" class="com.opensymphony.webwork.showcase.UITagExample" method="doSubmit">
+        <action name="exampleSubmitVelocity" class="org.apache.struts.action2.showcase.UITagExample" method="doSubmit">
         	<result type="velocity">exampleSubmited.vm</result>
         	<result name="input" type="velocity">example.vm</result>
         </action>
-        <action name="lotsOfOptiontransferselect" class="com.opensymphony.webwork.showcase.LotsOfOptiontransferselectAction" method="input">
+        <action name="lotsOfOptiontransferselect" class="org.apache.struts.action2.showcase.LotsOfOptiontransferselectAction" method="input">
         	<result>lotsOfOptiontransferselect.jsp</result>
         </action>
-        <action name="lotsOfOptiontransferselectSubmit" class="com.opensymphony.webwork.showcase.LotsOfOptiontransferselectAction" method="submit">
+        <action name="lotsOfOptiontransferselectSubmit" class="org.apache.struts.action2.showcase.LotsOfOptiontransferselectAction" method="submit">
         	<result name="input">lotsOfOptiontransferselect.jsp</result>
         	<result>lotsOfOptiontransferselectSubmit.jsp</result>
         </action>
-        <action name="lotsOfRichtexteditor" class="com.opensymphony.webwork.showcase.LotsOfRichtexteditorAction" method="input">
+        <action name="lotsOfRichtexteditor" class="org.apache.struts.action2.showcase.LotsOfRichtexteditorAction" method="input">
         	<result>lotsOfRichtexteditor.jsp</result>
         </action>
-        <action name="lotsOfRichtexteditorSubmit" class="com.opensymphony.webwork.showcase.LotsOfRichtexteditorAction" method="submit">
+        <action name="lotsOfRichtexteditorSubmit" class="org.apache.struts.action2.showcase.LotsOfRichtexteditorAction" method="submit">
         	<result name="input">lotsOfRichtexteditor.jsp</result>
 			<result>lotsOfRichtexteditorSubmit.jsp</result>        
         </action>
@@ -41,7 +41,7 @@
     
     
     <package name="richtexteditor-browse" extends="webwork-default" namespace="/webwork/richtexteditor/editor/filemanager/browser/default/connectors/jsp">
-    	<action name="connector" class="com.opensymphony.webwork.components.DefaultRichtexteditorConnector" method="browse">
+    	<action name="connector" class="org.apache.struts.action2.components.DefaultRichtexteditorConnector" method="browse">
     		<result name="getFolders" type="richtexteditorGetFolders" />
     		<result name="getFoldersAndFiles" type="richtexteditorGetFoldersAndFiles" />
     		<result name="createFolder" type="richtexteditorCreateFolder" />
@@ -50,7 +50,7 @@
     </package>
     
     <package name="richtexteditor-upload" extends="webwork-default" namespace="/webwork/richtexteditor/editor/filemanager/upload">
-		<action name="uploader" class="com.opensymphony.webwork.components.DefaultRichtexteditorConnector" method="upload">
+		<action name="uploader" class="org.apache.struts.action2.components.DefaultRichtexteditorConnector" method="upload">
 			<result name="richtexteditorFileUpload" />
 		</action>    
     </package>

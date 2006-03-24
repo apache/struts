@@ -1,4 +1,4 @@
-package com.opensymphony.webwork;
+package org.apache.struts.action2;
 
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.Result;

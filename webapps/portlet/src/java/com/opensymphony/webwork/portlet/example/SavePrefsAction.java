@@ -2,12 +2,12 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.portlet.example;
+package org.apache.struts.action2.portlet.example;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletPreferences;
 
-import com.opensymphony.webwork.portlet.context.PortletActionContext;
+import org.apache.struts.action2.portlet.context.PortletActionContext;
 import com.opensymphony.xwork.ActionSupport;
 
 /**

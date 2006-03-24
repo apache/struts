@@ -6,10 +6,10 @@
     <package name="default" extends="webwork-default">
 
         <interceptors>
-            <interceptor name="assert" class="com.opensymphony.webwork.dispatcher.ServletDispatchedTestAssertInterceptor"/>
+            <interceptor name="assert" class="org.apache.struts.action2.dispatcher.ServletDispatchedTestAssertInterceptor"/>
         </interceptors>
 
-        <action name="Test" class="com.opensymphony.webwork.TestAction">
+        <action name="Test" class="org.apache.struts.action2.TestAction">
             <interceptor-ref name="params"/>
             <interceptor-ref name="assert"/>
         </action>

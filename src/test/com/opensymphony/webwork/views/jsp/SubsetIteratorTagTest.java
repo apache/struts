@@ -2,14 +2,14 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp;
+package org.apache.struts.action2.views.jsp;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.opensymphony.webwork.util.SubsetIteratorFilter.Decider;
-import com.opensymphony.webwork.views.jsp.iterator.SubsetIteratorTag;
+import org.apache.struts.action2.util.SubsetIteratorFilter.Decider;
+import org.apache.struts.action2.views.jsp.iterator.SubsetIteratorTag;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 

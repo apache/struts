@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package com.opensymphony.webwork.portlet;
+package org.apache.struts.action2.portlet;
 
 import java.util.ArrayList;
 import java.util.Arrays;

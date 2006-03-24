@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.portlet.example.spring;
+package org.apache.struts.action2.portlet.example.spring;
 
 import java.util.ArrayList;
 import java.util.List;

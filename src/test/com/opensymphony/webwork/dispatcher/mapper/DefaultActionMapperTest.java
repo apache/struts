@@ -2,13 +2,13 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.dispatcher.mapper;
+package org.apache.struts.action2.dispatcher.mapper;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.opensymphony.webwork.dispatcher.ServletRedirectResult;
-import com.opensymphony.webwork.views.jsp.WebWorkMockHttpServletRequest;
+import org.apache.struts.action2.dispatcher.ServletRedirectResult;
+import org.apache.struts.action2.views.jsp.WebWorkMockHttpServletRequest;
 import com.opensymphony.xwork.Result;
 
 import junit.framework.TestCase;

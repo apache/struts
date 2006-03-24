@@ -48,13 +48,13 @@
  * SUCH DAMAGE.
  * ====================================================================
  */
-package com.opensymphony.webwork.showcase.application;
+package org.apache.struts.action2.showcase.application;
 
-import com.opensymphony.webwork.showcase.dao.EmployeeDao;
-import com.opensymphony.webwork.showcase.dao.SkillDao;
-import com.opensymphony.webwork.showcase.exception.StorageException;
-import com.opensymphony.webwork.showcase.model.Employee;
-import com.opensymphony.webwork.showcase.model.Skill;
+import org.apache.struts.action2.showcase.dao.EmployeeDao;
+import org.apache.struts.action2.showcase.dao.SkillDao;
+import org.apache.struts.action2.showcase.exception.StorageException;
+import org.apache.struts.action2.showcase.model.Employee;
+import org.apache.struts.action2.showcase.model.Skill;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 

@@ -6,13 +6,13 @@
     <include file="webwork-default.xml"/>
 
     <package name="person" extends="webwork-default" namespace="/person">
-        <action name="listPeople" class="com.opensymphony.webwork.showcase.person.ListPeople">
+        <action name="listPeople" class="org.apache.struts.action2.showcase.person.ListPeople">
             <interceptor-ref name="validationWorkflowStack"/>
             <result type="freemarker">listPeople.ftl</result>
         </action>
 
         <!-- our JasperReports example -->
-        <action name="jasperList" class="com.opensymphony.webwork.showcase.jasper.JasperAction">
+        <action name="jasperList" class="org.apache.struts.action2.showcase.jasper.JasperAction">
             <result name="success" type="jasper">
                 <param name="location">/jasper/sample_report.jasper</param>
                 <param name="dataSource">people</param>
@@ -21,16 +21,16 @@
         </action>
 
 
-        <action name="newPerson" class="com.opensymphony.webwork.showcase.person.CreatePerson">
+        <action name="newPerson" class="org.apache.struts.action2.showcase.person.CreatePerson">
             <result type="redirect">listPeople.action</result>
             <result name="input" type="freemarker">newPerson.ftl</result>
         </action>
 
-        <action name="editPerson" class="com.opensymphony.webwork.showcase.person.EditPerson">
+        <action name="editPerson" class="org.apache.struts.action2.showcase.person.EditPerson">
             <result>editPeople.jsp</result>
         </action>
 
-        <action name="doEditPerson" class="com.opensymphony.webwork.showcase.person.EditPerson" method="save">
+        <action name="doEditPerson" class="org.apache.struts.action2.showcase.person.EditPerson" method="save">
             <result name="error">editPeople.jsp</result>
             <result type="redirect">listPeople.action</result>
         </action>

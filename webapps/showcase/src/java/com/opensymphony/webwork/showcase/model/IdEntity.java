@@ -48,7 +48,7 @@
  * SUCH DAMAGE.
  * ====================================================================
  */
-package com.opensymphony.webwork.showcase.model;
+package org.apache.struts.action2.showcase.model;
 
 import java.io.Serializable;
 

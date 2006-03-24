@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp.ui;
+package org.apache.struts.action2.views.jsp.ui;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,8 +10,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.opensymphony.webwork.views.jsp.AbstractUITagTest;
-import com.opensymphony.webwork.views.jsp.ParamTag;
+import org.apache.struts.action2.views.jsp.AbstractUITagTest;
+import org.apache.struts.action2.views.jsp.ParamTag;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 

@@ -2,15 +2,15 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp.ui;
+package org.apache.struts.action2.views.jsp.ui;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import com.opensymphony.webwork.views.jsp.AbstractUITagTest;
-import com.opensymphony.webwork.views.jsp.ui.ActionErrorTag;
+import org.apache.struts.action2.views.jsp.AbstractUITagTest;
+import org.apache.struts.action2.views.jsp.ui.ActionErrorTag;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionSupport;
 

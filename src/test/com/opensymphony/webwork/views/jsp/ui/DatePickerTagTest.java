@@ -2,9 +2,9 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp.ui;
+package org.apache.struts.action2.views.jsp.ui;
 
-import com.opensymphony.webwork.views.jsp.AbstractUITagTest;
+import org.apache.struts.action2.views.jsp.AbstractUITagTest;
 import com.opensymphony.xwork.ActionContext;
 
 import java.util.Locale;

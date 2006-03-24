@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.opensymphony.webwork.views.jsp;
+package org.apache.struts.action2.views.jsp;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -41,11 +41,11 @@ import org.jmock.cglib.MockObjectTestCase;
 import org.jmock.core.Constraint;
 
 import com.mockobjects.servlet.MockJspWriter;
-import com.opensymphony.webwork.components.URL;
-import com.opensymphony.webwork.portlet.PortletActionConstants;
-import com.opensymphony.webwork.portlet.util.PortletUrlHelper;
-import com.opensymphony.webwork.views.jsp.ParamTag;
-import com.opensymphony.webwork.dispatcher.DispatcherUtils;
+import org.apache.struts.action2.components.URL;
+import org.apache.struts.action2.portlet.PortletActionConstants;
+import org.apache.struts.action2.portlet.util.PortletUrlHelper;
+import org.apache.struts.action2.views.jsp.ParamTag;
+import org.apache.struts.action2.dispatcher.DispatcherUtils;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.util.OgnlValueStack;
 

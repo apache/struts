@@ -6,14 +6,14 @@
  * Created on 2/10/2003
  *
  */
-package com.opensymphony.webwork.dispatcher;
+package org.apache.struts.action2.dispatcher;
 
 import com.mockobjects.servlet.MockHttpServletRequest;
-import com.opensymphony.webwork.WebWorkTestCase;
-import com.opensymphony.webwork.WebWorkConstants;
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapping;
-import com.opensymphony.webwork.dispatcher.mapper.DefaultActionMapper;
+import org.apache.struts.action2.WebWorkTestCase;
+import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapping;
+import org.apache.struts.action2.dispatcher.mapper.DefaultActionMapper;
 
 import java.util.HashMap;
 

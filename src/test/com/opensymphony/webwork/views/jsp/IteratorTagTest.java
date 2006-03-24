@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp;
+package org.apache.struts.action2.views.jsp;
 
 import com.mockobjects.servlet.MockBodyContent;
 import com.mockobjects.servlet.MockJspWriter;

@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.showcase.validation;
+package org.apache.struts.action2.showcase.validation;
 
 import com.opensymphony.xwork.ActionSupport;
 

@@ -2,35 +2,35 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import java.util.Iterator;
 import java.util.Stack;
 
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.opensymphony.webwork.TestConfigurationProvider;
-import com.opensymphony.webwork.views.jsp.AbstractUITagTest;
-import com.opensymphony.webwork.views.jsp.ui.ActionErrorTag;
-import com.opensymphony.webwork.views.jsp.ui.ActionMessageTag;
-import com.opensymphony.webwork.views.jsp.ui.AnchorTag;
-import com.opensymphony.webwork.views.jsp.ui.CheckboxTag;
-import com.opensymphony.webwork.views.jsp.ui.ComboBoxTag;
-import com.opensymphony.webwork.views.jsp.ui.DivTag;
-import com.opensymphony.webwork.views.jsp.ui.DoubleSelectTag;
-import com.opensymphony.webwork.views.jsp.ui.FieldErrorTag;
-import com.opensymphony.webwork.views.jsp.ui.FileTag;
-import com.opensymphony.webwork.views.jsp.ui.FormTag;
-import com.opensymphony.webwork.views.jsp.ui.HiddenTag;
-import com.opensymphony.webwork.views.jsp.ui.LabelTag;
-import com.opensymphony.webwork.views.jsp.ui.OptionTransferSelectTag;
-import com.opensymphony.webwork.views.jsp.ui.PasswordTag;
-import com.opensymphony.webwork.views.jsp.ui.RadioTag;
-import com.opensymphony.webwork.views.jsp.ui.SelectTag;
-import com.opensymphony.webwork.views.jsp.ui.SubmitTag;
-import com.opensymphony.webwork.views.jsp.ui.TextFieldTag;
-import com.opensymphony.webwork.views.jsp.ui.TextareaTag;
-import com.opensymphony.webwork.views.jsp.ui.TokenTag;
+import org.apache.struts.action2.TestConfigurationProvider;
+import org.apache.struts.action2.views.jsp.AbstractUITagTest;
+import org.apache.struts.action2.views.jsp.ui.ActionErrorTag;
+import org.apache.struts.action2.views.jsp.ui.ActionMessageTag;
+import org.apache.struts.action2.views.jsp.ui.AnchorTag;
+import org.apache.struts.action2.views.jsp.ui.CheckboxTag;
+import org.apache.struts.action2.views.jsp.ui.ComboBoxTag;
+import org.apache.struts.action2.views.jsp.ui.DivTag;
+import org.apache.struts.action2.views.jsp.ui.DoubleSelectTag;
+import org.apache.struts.action2.views.jsp.ui.FieldErrorTag;
+import org.apache.struts.action2.views.jsp.ui.FileTag;
+import org.apache.struts.action2.views.jsp.ui.FormTag;
+import org.apache.struts.action2.views.jsp.ui.HiddenTag;
+import org.apache.struts.action2.views.jsp.ui.LabelTag;
+import org.apache.struts.action2.views.jsp.ui.OptionTransferSelectTag;
+import org.apache.struts.action2.views.jsp.ui.PasswordTag;
+import org.apache.struts.action2.views.jsp.ui.RadioTag;
+import org.apache.struts.action2.views.jsp.ui.SelectTag;
+import org.apache.struts.action2.views.jsp.ui.SubmitTag;
+import org.apache.struts.action2.views.jsp.ui.TextFieldTag;
+import org.apache.struts.action2.views.jsp.ui.TextareaTag;
+import org.apache.struts.action2.views.jsp.ui.TokenTag;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.config.ConfigurationManager;
 

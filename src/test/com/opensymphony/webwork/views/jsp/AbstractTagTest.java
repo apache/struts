@@ -2,16 +2,16 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp;
+package org.apache.struts.action2.views.jsp;
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.TestAction;
-import com.opensymphony.webwork.WebWorkTestCase;
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.dispatcher.ApplicationMap;
-import com.opensymphony.webwork.dispatcher.DispatcherUtils;
-import com.opensymphony.webwork.dispatcher.RequestMap;
-import com.opensymphony.webwork.dispatcher.SessionMap;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.TestAction;
+import org.apache.struts.action2.WebWorkTestCase;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.dispatcher.ApplicationMap;
+import org.apache.struts.action2.dispatcher.DispatcherUtils;
+import org.apache.struts.action2.dispatcher.RequestMap;
+import org.apache.struts.action2.dispatcher.SessionMap;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.util.OgnlValueStack;

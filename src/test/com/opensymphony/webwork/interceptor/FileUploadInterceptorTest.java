@@ -2,12 +2,12 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.interceptor;
+package org.apache.struts.action2.interceptor;
 
 import com.opensymphony.util.ClassLoaderUtil;
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.WebWorkTestCase;
-import com.opensymphony.webwork.dispatcher.multipart.MultiPartRequestWrapper;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.WebWorkTestCase;
+import org.apache.struts.action2.dispatcher.multipart.MultiPartRequestWrapper;
 import com.opensymphony.xwork.*;
 import com.opensymphony.xwork.mock.MockActionInvocation;
 import org.springframework.mock.web.MockHttpServletRequest;

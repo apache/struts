@@ -2,10 +2,10 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp;
+package org.apache.struts.action2.views.jsp;
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.views.jsp.ui.AbstractUITag;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.views.jsp.ui.AbstractUITag;
 import com.opensymphony.xwork.ActionContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -132,11 +132,11 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
 
     /**
      * Initialize a map of {@link PropertyHolder} for generic tag property testing. Will be used when calling {@link
-     * #verifyGenericProperties(com.opensymphony.webwork.views.jsp.ui.AbstractUITag, String, String[])} as properties to
+     * #verifyGenericProperties(org.apache.struts.action2.views.jsp.ui.AbstractUITag, String, String[])} as properties to
      * verify.<p/> This implementation defines testdata for all common AbstractUITag properties and may be overridden in
      * subclasses.
      *
-     * @return A Map of PropertyHolders values bound to {@link com.opensymphony.webwork.views.jsp.AbstractUITagTest.PropertyHolder#getName()}
+     * @return A Map of PropertyHolders values bound to {@link org.apache.struts.action2.views.jsp.AbstractUITagTest.PropertyHolder#getName()}
      *         as key.
      */
     protected Map initializedGenericTagTestProperties() {
@@ -171,7 +171,7 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
     /**
      * Do a generic verification that setting certain properties on a tag causes expected output regarding this
      * property. In most cases you would not call this directly, instead use {@link
-     * #verifyGenericProperties(com.opensymphony.webwork.views.jsp.ui.AbstractUITag, String, String[])}.
+     * #verifyGenericProperties(org.apache.struts.action2.views.jsp.ui.AbstractUITag, String, String[])}.
      *
      * @param tag              The fresh created tag instance to test.
      * @param theme            The theme to use. If <tt>null</tt>, use configured default theme.

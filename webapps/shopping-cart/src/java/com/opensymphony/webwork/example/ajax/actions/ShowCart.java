@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.opensymphony.webwork.example.ajax.actions;
+package org.apache.struts.action2.example.ajax.actions;
 
-import com.opensymphony.webwork.example.ajax.cart.ShoppingCart;
+import org.apache.struts.action2.example.ajax.cart.ShoppingCart;
 import com.opensymphony.xwork.ActionSupport;
 
 import java.util.Iterator;

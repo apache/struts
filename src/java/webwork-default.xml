@@ -3,23 +3,23 @@
     <package name="webwork-default">
         <result-types>
             <result-type name="chain" class="com.opensymphony.xwork.ActionChainResult"/>
-            <result-type name="dispatcher" class="com.opensymphony.webwork.dispatcher.ServletDispatcherResult" default="true"/>
-            <result-type name="freemarker" class="com.opensymphony.webwork.views.freemarker.FreemarkerResult"/>
-            <result-type name="httpheader" class="com.opensymphony.webwork.dispatcher.HttpHeaderResult"/>
-            <result-type name="jasper" class="com.opensymphony.webwork.views.jasperreports.JasperReportsResult"/>
-            <result-type name="redirect" class="com.opensymphony.webwork.dispatcher.ServletRedirectResult"/>
-            <result-type name="redirect-action" class="com.opensymphony.webwork.dispatcher.ServletActionRedirectResult"/>
-            <result-type name="stream" class="com.opensymphony.webwork.dispatcher.StreamResult"/>
-            <result-type name="tiles" class="com.opensymphony.webwork.views.tiles.TilesResult"/>
-            <result-type name="velocity" class="com.opensymphony.webwork.dispatcher.VelocityResult"/>
-            <result-type name="xslt" class="com.opensymphony.webwork.views.xslt.XSLTResult"/>
-            <result-type name="plaintext" class="com.opensymphony.webwork.dispatcher.PlainTextResult" />
+            <result-type name="dispatcher" class="org.apache.struts.action2.dispatcher.ServletDispatcherResult" default="true"/>
+            <result-type name="freemarker" class="org.apache.struts.action2.views.freemarker.FreemarkerResult"/>
+            <result-type name="httpheader" class="org.apache.struts.action2.dispatcher.HttpHeaderResult"/>
+            <result-type name="jasper" class="org.apache.struts.action2.views.jasperreports.JasperReportsResult"/>
+            <result-type name="redirect" class="org.apache.struts.action2.dispatcher.ServletRedirectResult"/>
+            <result-type name="redirect-action" class="org.apache.struts.action2.dispatcher.ServletActionRedirectResult"/>
+            <result-type name="stream" class="org.apache.struts.action2.dispatcher.StreamResult"/>
+            <result-type name="tiles" class="org.apache.struts.action2.views.tiles.TilesResult"/>
+            <result-type name="velocity" class="org.apache.struts.action2.dispatcher.VelocityResult"/>
+            <result-type name="xslt" class="org.apache.struts.action2.views.xslt.XSLTResult"/>
+            <result-type name="plaintext" class="org.apache.struts.action2.dispatcher.PlainTextResult" />
             
             <!-- Results necessary when using 'browse server' and 'upload' feature of Richtexteditor -->
-            <result-type name="richtexteditorGetFolders" class="com.opensymphony.webwork.views.jsp.ui.RichtexteditorGetFoldersResult" />
-            <result-type name="richtexteditorGetFoldersAndFiles" class="com.opensymphony.webwork.views.jsp.ui.RichtexteditorGetFoldersAndFilesResult" />
-            <result-type name="richtexteditorCreateFolder" class="com.opensymphony.webwork.views.jsp.ui.RichtexteditorCreateFolderResult" />
-            <result-type name="richtexteditorFileUpload" class="com.opensymphony.webwork.views.jsp.ui.RichtexteditorFileUploadResult" />
+            <result-type name="richtexteditorGetFolders" class="org.apache.struts.action2.views.jsp.ui.RichtexteditorGetFoldersResult" />
+            <result-type name="richtexteditorGetFoldersAndFiles" class="org.apache.struts.action2.views.jsp.ui.RichtexteditorGetFoldersAndFilesResult" />
+            <result-type name="richtexteditorCreateFolder" class="org.apache.struts.action2.views.jsp.ui.RichtexteditorCreateFolderResult" />
+            <result-type name="richtexteditorFileUpload" class="org.apache.struts.action2.views.jsp.ui.RichtexteditorFileUploadResult" />
             
         </result-types>
 
@@ -28,24 +28,24 @@
             <interceptor name="autowiring" class="com.opensymphony.xwork.spring.interceptor.ActionAutowiringInterceptor"/>
             <interceptor name="chain" class="com.opensymphony.xwork.interceptor.ChainingInterceptor"/>
             <interceptor name="component" class="com.opensymphony.xwork.interceptor.component.ComponentInterceptor"/>
-            <interceptor name="conversionError" class="com.opensymphony.webwork.interceptor.WebWorkConversionErrorInterceptor"/>
-            <interceptor name="createSession" class="com.opensymphony.webwork.interceptor.CreateSessionInterceptor" />
+            <interceptor name="conversionError" class="org.apache.struts.action2.interceptor.WebWorkConversionErrorInterceptor"/>
+            <interceptor name="createSession" class="org.apache.struts.action2.interceptor.CreateSessionInterceptor" />
             <interceptor name="external-ref" class="com.opensymphony.xwork.interceptor.ExternalReferencesInterceptor"/>
-            <interceptor name="execAndWait" class="com.opensymphony.webwork.interceptor.ExecuteAndWaitInterceptor"/>
+            <interceptor name="execAndWait" class="org.apache.struts.action2.interceptor.ExecuteAndWaitInterceptor"/>
             <interceptor name="exception" class="com.opensymphony.xwork.interceptor.ExceptionMappingInterceptor"/>
-            <interceptor name="fileUpload" class="com.opensymphony.webwork.interceptor.FileUploadInterceptor"/>
+            <interceptor name="fileUpload" class="org.apache.struts.action2.interceptor.FileUploadInterceptor"/>
             <interceptor name="i18n" class="com.opensymphony.xwork.interceptor.I18nInterceptor"/>
             <interceptor name="logger" class="com.opensymphony.xwork.interceptor.LoggingInterceptor"/>
             <interceptor name="model-driven" class="com.opensymphony.xwork.interceptor.ModelDrivenInterceptor"/>
             <interceptor name="params" class="com.opensymphony.xwork.interceptor.ParametersInterceptor"/>
             <interceptor name="prepare" class="com.opensymphony.xwork.interceptor.PrepareInterceptor"/>
             <interceptor name="static-params" class="com.opensymphony.xwork.interceptor.StaticParametersInterceptor"/>
-            <interceptor name="scope" class="com.opensymphony.webwork.interceptor.ScopeInterceptor"/>
-            <interceptor name="servlet-config" class="com.opensymphony.webwork.interceptor.ServletConfigInterceptor"/>
-            <interceptor name="sessionAutowiring" class="com.opensymphony.webwork.spring.interceptor.SessionContextAutowiringInterceptor"/>
+            <interceptor name="scope" class="org.apache.struts.action2.interceptor.ScopeInterceptor"/>
+            <interceptor name="servlet-config" class="org.apache.struts.action2.interceptor.ServletConfigInterceptor"/>
+            <interceptor name="sessionAutowiring" class="org.apache.struts.action2.spring.interceptor.SessionContextAutowiringInterceptor"/>
             <interceptor name="timer" class="com.opensymphony.xwork.interceptor.TimerInterceptor"/>
-            <interceptor name="token" class="com.opensymphony.webwork.interceptor.TokenInterceptor"/>
-            <interceptor name="token-session" class="com.opensymphony.webwork.interceptor.TokenSessionStoreInterceptor"/>
+            <interceptor name="token" class="org.apache.struts.action2.interceptor.TokenInterceptor"/>
+            <interceptor name="token-session" class="org.apache.struts.action2.interceptor.TokenSessionStoreInterceptor"/>
             <interceptor name="validation" class="com.opensymphony.xwork.validator.ValidationInterceptor"/>
             <interceptor name="workflow" class="com.opensymphony.xwork.interceptor.DefaultWorkflowInterceptor"/>
 
@@ -182,18 +182,18 @@
     <package name="webwork-portlet-default" extends="webwork-default">
 
 	   <result-types>
-			<result-type name="dispatcher" class="com.opensymphony.webwork.portlet.result.PortletResult" default="true"/>
-			<result-type name="freemarker" class="com.opensymphony.webwork.views.freemarker.PortletFreemarkerResult"/>
-			<result-type name="velocity" class="com.opensymphony.webwork.portlet.result.PortletVelocityResult"/>
+			<result-type name="dispatcher" class="org.apache.struts.action2.portlet.result.PortletResult" default="true"/>
+			<result-type name="freemarker" class="org.apache.struts.action2.views.freemarker.PortletFreemarkerResult"/>
+			<result-type name="velocity" class="org.apache.struts.action2.portlet.result.PortletVelocityResult"/>
 	   </result-types>
 
-	   <action name="renderDirect" class="com.opensymphony.webwork.portlet.dispatcher.DirectRenderFromEventAction">
+	   <action name="renderDirect" class="org.apache.struts.action2.portlet.dispatcher.DirectRenderFromEventAction">
 	   		<result name="success">${location}</result>
 	   </action>
-	   <action name="freemarkerDirect" class="com.opensymphony.webwork.portlet.dispatcher.DirectRenderFromEventAction">
+	   <action name="freemarkerDirect" class="org.apache.struts.action2.portlet.dispatcher.DirectRenderFromEventAction">
 	   		<result type="freemarker" name="success">${location}</result>
 	   </action>
-	   <action name="velocityDirect" class="com.opensymphony.webwork.portlet.dispatcher.DirectRenderFromEventAction">
+	   <action name="velocityDirect" class="org.apache.struts.action2.portlet.dispatcher.DirectRenderFromEventAction">
 	   		<result type="velocity" name="success">${location}</result>
 	   </action>
 	</package>

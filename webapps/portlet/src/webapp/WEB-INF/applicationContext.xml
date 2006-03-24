@@ -11,10 +11,10 @@
 
 <beans default-autowire="autodetect">
 	<bean id="thingManager"
-		class="com.opensymphony.webwork.portlet.example.spring.ThingManager">
+		class="org.apache.struts.action2.portlet.example.spring.ThingManager">
 	</bean>
 	<bean id="springAction"
-		class="com.opensymphony.webwork.portlet.example.spring.SpringAction" singleton="false">
+		class="org.apache.struts.action2.portlet.example.spring.SpringAction" singleton="false">
 		<property name="thingManager">
 			<ref bean="thingManager" />
 		</property>

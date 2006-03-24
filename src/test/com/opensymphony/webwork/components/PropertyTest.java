@@ -1,7 +1,7 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
-import com.opensymphony.webwork.components.Property;
-import com.opensymphony.webwork.util.WebWorkTypeConverter;
+import org.apache.struts.action2.components.Property;
+import org.apache.struts.action2.util.WebWorkTypeConverter;
 import com.opensymphony.xwork.util.OgnlValueStack;
 import com.opensymphony.xwork.util.XWorkConverter;
 import junit.framework.TestCase;
@@ -121,7 +121,7 @@ public class PropertyTest extends TestCase {
     private final class TestDefaultConverter extends XWorkConverter {
         protected TestDefaultConverter() {
             super();
-            registerConverter("com.opensymphony.webwork.components.PropertyTest$FooBar", new FooBarConverter());
+            registerConverter("org.apache.struts.action2.components.PropertyTest$FooBar", new FooBarConverter());
         }
     }
 }

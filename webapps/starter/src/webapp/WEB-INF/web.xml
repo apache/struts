@@ -7,7 +7,7 @@
     <!-- START SNIPPET: example -->
     <filter>
         <filter-name>webwork</filter-name>
-        <filter-class>com.opensymphony.webwork.dispatcher.FilterDispatcher</filter-class>
+        <filter-class>org.apache.struts.action2.dispatcher.FilterDispatcher</filter-class>
     </filter>
 
     <filter-mapping>
@@ -23,13 +23,13 @@
     <!-- START SNIPPET: compatibility
     <servlet>
         <servlet-name>JspSupportServlet</servlet-name>
-        <servlet-class>com.opensymphony.webwork.views.JspSupportServlet</servlet-class>
+        <servlet-class>org.apache.struts.action2.views.JspSupportServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet>
         <servlet-name>action</servlet-name>
-        <servlet-class>com.opensymphony.webwork.dispatcher.ServletDispatcher</servlet-class>
+        <servlet-class>org.apache.struts.action2.dispatcher.ServletDispatcher</servlet-class>
     </servlet>
 
     <servlet-mapping>

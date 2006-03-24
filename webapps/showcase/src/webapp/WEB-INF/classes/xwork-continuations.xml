@@ -3,7 +3,7 @@
     <include file="webwork-default.xml"/>
 
     <package name="continuations" extends="webwork-default" namespace="/continuations">
-        <action name="guess" class="com.opensymphony.webwork.showcase.Guess">
+        <action name="guess" class="org.apache.struts.action2.showcase.Guess">
             <result type="freemarker">guess.ftl</result>
         </action>
     </package>

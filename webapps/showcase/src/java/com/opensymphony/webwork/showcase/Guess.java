@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.showcase;
+package org.apache.struts.action2.showcase;
 
 import com.opensymphony.xwork.ActionSupport;
 import com.opensymphony.xwork.Action;

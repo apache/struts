@@ -2,10 +2,10 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.util;
+package org.apache.struts.action2.util;
 
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.webwork.WebWorkTestCase;
+import org.apache.struts.action2.WebWorkTestCase;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.ActionProxy;
@@ -22,8 +22,8 @@ import java.util.Map;
  */
 public class InvocationSessionStoreTest extends WebWorkTestCase {
 
-    private static final String INVOCATION_KEY = "com.opensymphony.webwork.util.InvocationSessionStoreTest.invocation";
-    private static final String TOKEN_VALUE = "com.opensymphony.webwork.util.InvocationSessionStoreTest.token";
+    private static final String INVOCATION_KEY = "org.apache.struts.action2.util.InvocationSessionStoreTest.invocation";
+    private static final String TOKEN_VALUE = "org.apache.struts.action2.util.InvocationSessionStoreTest.token";
 
 
     private ActionInvocation invocation;

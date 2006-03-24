@@ -6,9 +6,9 @@
  * Created on 2/10/2003
  *
  */
-package com.opensymphony.webwork.dispatcher;
+package org.apache.struts.action2.dispatcher;
 
-import com.opensymphony.webwork.TestAction;
+import org.apache.struts.action2.TestAction;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.interceptor.Interceptor;
 import junit.framework.Assert;

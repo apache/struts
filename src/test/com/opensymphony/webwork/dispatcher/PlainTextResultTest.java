@@ -2,17 +2,17 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.dispatcher;
+package org.apache.struts.action2.dispatcher;
 
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import com.opensymphony.util.ClassLoaderUtil;
-import com.opensymphony.webwork.WebWorkStatics;
-import com.opensymphony.webwork.views.jsp.AbstractUITagTest;
-import com.opensymphony.webwork.views.jsp.WebWorkMockHttpServletResponse;
-import com.opensymphony.webwork.views.jsp.WebWorkMockServletContext;
+import org.apache.struts.action2.WebWorkStatics;
+import org.apache.struts.action2.views.jsp.AbstractUITagTest;
+import org.apache.struts.action2.views.jsp.WebWorkMockHttpServletResponse;
+import org.apache.struts.action2.views.jsp.WebWorkMockServletContext;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.mock.MockActionInvocation;
 import com.opensymphony.xwork.util.OgnlValueStack;

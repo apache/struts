@@ -74,72 +74,72 @@
   </XDtMerge:merge>
   </XDtConfig:ifConfigParamGreaterOrEquals>
 
-  <XDtClass:forAllClasses type="javax.servlet.jsp.tagext.Tag,javax.servlet.jsp.tagext.TagSupport,javax.servlet.jsp.tagext.SimpleTagSupport,com.opensymphony.webwork.components.Component" abstract="false">
-   <XDtClass:ifHasClassTag tagName="ww:tag">
+  <XDtClass:forAllClasses type="javax.servlet.jsp.tagext.Tag,javax.servlet.jsp.tagext.TagSupport,javax.servlet.jsp.tagext.SimpleTagSupport,org.apache.struts.action2.components.Component" abstract="false">
+   <XDtClass:ifHasClassTag tagName="a2:tag">
    <tag>
 
     <XDtConfig:ifConfigParamEquals paramName="Jspversion" value="1.1">
-      <name><XDtClass:classTagValue tagName="ww:tag" paramName="name"/></name>
+      <name><XDtClass:classTagValue tagName="a2:tag" paramName="name"/></name>
       <tagclass><XDtClass:fullClassName/></tagclass>
-     <XDtClass:ifHasClassTag tagName="ww:tag" paramName="tei-class">
-      <teiclass><XDtClass:classTagValue tagName="ww:tag" paramName="tei-class"/></teiclass>
+     <XDtClass:ifHasClassTag tagName="a2:tag" paramName="tei-class">
+      <teiclass><XDtClass:classTagValue tagName="a2:tag" paramName="tei-class"/></teiclass>
      </XDtClass:ifHasClassTag>
-     <XDtClass:ifHasClassTag tagName="ww:tag" paramName="tld-body-content" values="JSP,empty,tagdependent">
-      <bodycontent><XDtClass:classTagValue tagName="ww:tag" paramName="tld-body-content"/></bodycontent>
+     <XDtClass:ifHasClassTag tagName="a2:tag" paramName="tld-body-content" values="JSP,empty,tagdependent">
+      <bodycontent><XDtClass:classTagValue tagName="a2:tag" paramName="tld-body-content"/></bodycontent>
      </XDtClass:ifHasClassTag>
-     <XDtClass:ifHasClassTag tagName="ww:tag" paramName="description">
-      <info><![CDATA[<XDtClass:classTagValue tagName="ww:tag" paramName="description"/>]]></info>
+     <XDtClass:ifHasClassTag tagName="a2:tag" paramName="description">
+      <info><![CDATA[<XDtClass:classTagValue tagName="a2:tag" paramName="description"/>]]></info>
      </XDtClass:ifHasClassTag>
     </XDtConfig:ifConfigParamEquals>
     <XDtConfig:ifConfigParamEquals paramName="Jspversion" value="1.2">
-      <name><XDtClass:classTagValue tagName="ww:tag" paramName="name"/></name>
-     <XDtClass:ifHasClassTag tagName="ww:tag" paramName="tld-tag-class">
-      <tag-class><XDtClass:classTagValue tagName="ww:tag" paramName="tld-tag-class"/></tag-class>
+      <name><XDtClass:classTagValue tagName="a2:tag" paramName="name"/></name>
+     <XDtClass:ifHasClassTag tagName="a2:tag" paramName="tld-tag-class">
+      <tag-class><XDtClass:classTagValue tagName="a2:tag" paramName="tld-tag-class"/></tag-class>
      </XDtClass:ifHasClassTag>
-     <XDtClass:ifDoesntHaveClassTag  tagName="ww:tag" paramName="tld-tag-class">
+     <XDtClass:ifDoesntHaveClassTag  tagName="a2:tag" paramName="tld-tag-class">
       <tag-class><XDtClass:fullClassName/></tag-class>
-     </XDtClass:ifDoesntHaveClassTag >
-     <XDtClass:ifHasClassTag tagName="ww:tag" paramName="tei-class">
-      <tei-class><XDtClass:classTagValue tagName="ww:tag" paramName="tei-class"/></tei-class>
+     </XDtClass:ifDoesntHaveClassTag>
+     <XDtClass:ifHasClassTag tagName="a2:tag" paramName="tei-class">
+      <tei-class><XDtClass:classTagValue tagName="a2:tag" paramName="tei-class"/></tei-class>
      </XDtClass:ifHasClassTag>
-     <XDtClass:ifHasClassTag tagName="ww:tag" paramName="tld-body-content" values="JSP,empty,tagdependent">
-      <body-content><XDtClass:classTagValue tagName="ww:tag" paramName="tld-body-content"/></body-content>
+     <XDtClass:ifHasClassTag tagName="a2:tag" paramName="tld-body-content" values="JSP,empty,tagdependent">
+      <body-content><XDtClass:classTagValue tagName="a2:tag" paramName="tld-body-content"/></body-content>
      </XDtClass:ifHasClassTag>
-     <XDtClass:ifHasClassTag tagName="ww:tag" paramName="display-name">
-      <display-name><XDtClass:classTagValue tagName="ww:tag" paramName="display-name"/></display-name>
+     <XDtClass:ifHasClassTag tagName="a2:tag" paramName="display-name">
+      <display-name><XDtClass:classTagValue tagName="a2:tag" paramName="display-name"/></display-name>
      </XDtClass:ifHasClassTag>
-     <XDtClass:ifHasClassTag tagName="ww:tag" paramName="small-icon">
-      <small-icon><XDtClass:classTagValue tagName="ww:tag" paramName="small-icon"/></small-icon>
+     <XDtClass:ifHasClassTag tagName="a2:tag" paramName="small-icon">
+      <small-icon><XDtClass:classTagValue tagName="a2:tag" paramName="small-icon"/></small-icon>
      </XDtClass:ifHasClassTag>
-     <XDtClass:ifHasClassTag tagName="ww:tag" paramName="large-icon">
-      <large-icon><XDtClass:classTagValue tagName="ww:tag" paramName="large-icon"/></large-icon>
+     <XDtClass:ifHasClassTag tagName="a2:tag" paramName="large-icon">
+      <large-icon><XDtClass:classTagValue tagName="a2:tag" paramName="large-icon"/></large-icon>
      </XDtClass:ifHasClassTag>
-     <XDtClass:ifHasClassTag tagName="ww:tag" paramName="description">
-      <description><![CDATA[<XDtClass:classTagValue tagName="ww:tag" paramName="description"/>]]></description>
+     <XDtClass:ifHasClassTag tagName="a2:tag" paramName="description">
+      <description><![CDATA[<XDtClass:classTagValue tagName="a2:tag" paramName="description"/>]]></description>
      </XDtClass:ifHasClassTag>
     </XDtConfig:ifConfigParamEquals>
     <XDtConfig:ifConfigParamGreaterOrEquals paramName="Jspversion" value="2.0">
-     <XDtClass:ifHasClassTag tagName="ww:tag" paramName="description">
-      <description><XDtClass:classTagValue tagName="ww:tag" paramName="description"/></description>
+     <XDtClass:ifHasClassTag tagName="a2:tag" paramName="description">
+      <description><XDtClass:classTagValue tagName="a2:tag" paramName="description"/></description>
      </XDtClass:ifHasClassTag>
-     <XDtClass:ifHasClassTag tagName="ww:tag" paramName="display-name">
-      <display-name><XDtClass:classTagValue tagName="ww:tag" paramName="display-name"/></display-name>
+     <XDtClass:ifHasClassTag tagName="a2:tag" paramName="display-name">
+      <display-name><XDtClass:classTagValue tagName="a2:tag" paramName="display-name"/></display-name>
      </XDtClass:ifHasClassTag>   
       <icon>    
-        <XDtClass:ifHasClassTag tagName="ww:tag" paramName="small-icon">
-         <small-icon><XDtClass:classTagValue tagName="ww:tag" paramName="small-icon"/></small-icon>
+        <XDtClass:ifHasClassTag tagName="a2:tag" paramName="small-icon">
+         <small-icon><XDtClass:classTagValue tagName="a2:tag" paramName="small-icon"/></small-icon>
         </XDtClass:ifHasClassTag>
-        <XDtClass:ifHasClassTag tagName="ww:tag" paramName="large-icon">
-         <large-icon><XDtClass:classTagValue tagName="ww:tag" paramName="large-icon"/></large-icon>
+        <XDtClass:ifHasClassTag tagName="a2:tag" paramName="large-icon">
+         <large-icon><XDtClass:classTagValue tagName="a2:tag" paramName="large-icon"/></large-icon>
         </XDtClass:ifHasClassTag>
       </icon>
-      <name><XDtClass:classTagValue tagName="ww:tag" paramName="name"/></name>
+      <name><XDtClass:classTagValue tagName="a2:tag" paramName="name"/></name>
       <tag-class><XDtClass:fullClassName/></tag-class>
-     <XDtClass:ifHasClassTag tagName="ww:tag" paramName="tei-class">
-      <tei-class><XDtClass:classTagValue tagName="ww:tag" paramName="tei-class"/></tei-class>
+     <XDtClass:ifHasClassTag tagName="a2:tag" paramName="tei-class">
+      <tei-class><XDtClass:classTagValue tagName="a2:tag" paramName="tei-class"/></tei-class>
      </XDtClass:ifHasClassTag>
-     <XDtClass:ifHasClassTag tagName="ww:tag" paramName="tld-body-content" values="JSP,empty,tagdependent,scriptless" error="ERROR: Paramete 'tld-body-content' is mandatory">
-      <body-content><XDtClass:classTagValue tagName="ww:tag" paramName="tld-body-content"/></body-content>
+     <XDtClass:ifHasClassTag tagName="a2:tag" paramName="tld-body-content" values="JSP,empty,tagdependent,scriptless" error="ERROR: Paramete 'tld-body-content' is mandatory">
+      <body-content><XDtClass:classTagValue tagName="a2:tag" paramName="tld-body-content"/></body-content>
      </XDtClass:ifHasClassTag>     
     </XDtConfig:ifConfigParamGreaterOrEquals>
 
@@ -149,8 +149,8 @@
      <XDtClass:forAllClassTags tagName="jsp:variable">
       <variable>
        <XDtConfig:ifConfigParamGreaterOrEquals paramName="Jspversion" value="2.0">
-        <XDtClass:ifHasClassTag tagName="ww:tag" paramName="description">
-         <description><XDtClass:classTagValue tagName="ww:tag" paramName="description"/></description>
+        <XDtClass:ifHasClassTag tagName="a2:tag" paramName="description">
+         <description><XDtClass:classTagValue tagName="a2:tag" paramName="description"/></description>
         </XDtClass:ifHasClassTag>
        </XDtConfig:ifConfigParamGreaterOrEquals>  
        <XDtClass:ifHasClassTag tagName="jsp:variable" paramName="name-given">
@@ -180,52 +180,52 @@
    </XDtConfig:ifConfigParamGreaterOrEquals>
 
     <XDtMethod:forAllMethods>
-     <XDtMethod:ifHasMethodTag tagName="ww:tagattribute">
+     <XDtMethod:ifHasMethodTag tagName="a2:tagattribute">
       <attribute>
         <XDtConfig:ifConfigParamGreaterOrEquals paramName="Jspversion" value="2.0">
-        <XDtMethod:ifHasMethodTag tagName="ww.tagattribute" paramName="description">
-         <description><![CDATA[<XDtMethod:methodTagValue tagName="ww.tagattribute" paramName="description"/>]]></description>
+        <XDtMethod:ifHasMethodTag tagName="a2.tagattribute" paramName="description">
+         <description><![CDATA[<XDtMethod:methodTagValue tagName="a2.tagattribute" paramName="description"/>]]></description>
         </XDtMethod:ifHasMethodTag>
-        <XDtMethod:ifDoesntHaveMethodTag tagName="ww.tagattribute" paramName="description">
+        <XDtMethod:ifDoesntHaveMethodTag tagName="a2.tagattribute" paramName="description">
          <description><![CDATA[<XDtMethod:methodComment no-comment-signs="true"/>]]></description>
         </XDtMethod:ifDoesntHaveMethodTag>
         </XDtConfig:ifConfigParamGreaterOrEquals>
          <name><XDtMethod:propertyName/></name>
-        <XDtMethod:ifHasMethodTag tagName="ww:tagattribute" paramName="required">
-         <required><XDtMethod:methodTagValue tagName="ww:tagattribute" paramName="required" values="true,false,yes,no"/></required>
+        <XDtMethod:ifHasMethodTag tagName="a2:tagattribute" paramName="required">
+         <required><XDtMethod:methodTagValue tagName="a2:tagattribute" paramName="required" values="true,false,yes,no"/></required>
         </XDtMethod:ifHasMethodTag>
         <XDtConfig:ifConfigParamNotGreaterOrEquals paramName="Jspversion" value="2.0">
-        <XDtMethod:ifHasMethodTag tagName="ww:tagattribute" paramName="rtexprvalue">
-         <rtexprvalue><XDtMethod:methodTagValue tagName="ww:tagattribute" paramName="rtexprvalue" values="true,false,yes,no"/></rtexprvalue>
+        <XDtMethod:ifHasMethodTag tagName="a2:tagattribute" paramName="rtexprvalue">
+         <rtexprvalue><XDtMethod:methodTagValue tagName="a2:tagattribute" paramName="rtexprvalue" values="true,false,yes,no"/></rtexprvalue>
         </XDtMethod:ifHasMethodTag>
-        <XDtMethod:ifDoesntHaveMethodTag tagName="ww:tagattribute" paramName="rtexprvalue">
+        <XDtMethod:ifDoesntHaveMethodTag tagName="a2:tagattribute" paramName="rtexprvalue">
          <rtexprvalue>true</rtexprvalue>
         </XDtMethod:ifDoesntHaveMethodTag>
         </XDtConfig:ifConfigParamNotGreaterOrEquals>
 
         <XDtConfig:ifConfigParamEquals paramName="Jspversion" value="1.2">
-          <XDtMethod:ifHasMethodTag tagName="ww:tagattribute" paramName="tld-type">
-           <type><XDtMethod:methodTagValue tagName="ww:tagattribute" paramName="type"/></type>
+          <XDtMethod:ifHasMethodTag tagName="a2:tagattribute" paramName="tld-type">
+           <type><XDtMethod:methodTagValue tagName="a2:tagattribute" paramName="type"/></type>
           </XDtMethod:ifHasMethodTag>
-          <XDtMethod:ifHasMethodTag tagName="ww:tagattribute" paramName="description">
-           <description><![CDATA[<XDtMethod:methodTagValue tagName="ww:tagattribute" paramName="description"/>]]></description>
+          <XDtMethod:ifHasMethodTag tagName="a2:tagattribute" paramName="description">
+           <description><![CDATA[<XDtMethod:methodTagValue tagName="a2:tagattribute" paramName="description"/>]]></description>
           </XDtMethod:ifHasMethodTag>
-          <XDtMethod:ifDoesntHaveMethodTag tagName="ww.tagattribute" paramName="description">
+          <XDtMethod:ifDoesntHaveMethodTag tagName="a2.tagattribute" paramName="description">
            <description><![CDATA[<XDtMethod:methodComment no-comment-signs="true"/>]]></description>
           </XDtMethod:ifDoesntHaveMethodTag>
         </XDtConfig:ifConfigParamEquals>
 
         <XDtConfig:ifConfigParamGreaterOrEquals paramName="Jspversion" value="2.0">
-          <XDtMethod:ifDoesntHaveMethodTag tagName="ww:tagattribute" paramName="fragment">
-          <XDtMethod:ifHasMethodTag tagName="ww:tagattribute" paramName="rtexprvalue">
-           <rtexprvalue><XDtMethod:methodTagValue tagName="ww:tagattribute" paramName="rtexprvalue" values="true,false,yes,no"/></rtexprvalue>
+          <XDtMethod:ifDoesntHaveMethodTag tagName="a2:tagattribute" paramName="fragment">
+          <XDtMethod:ifHasMethodTag tagName="a2:tagattribute" paramName="rtexprvalue">
+           <rtexprvalue><XDtMethod:methodTagValue tagName="a2:tagattribute" paramName="rtexprvalue" values="true,false,yes,no"/></rtexprvalue>
           </XDtMethod:ifHasMethodTag>
-          <XDtMethod:ifHasMethodTag tagName="ww:tagattribute" paramName="type">
-           <type><XDtMethod:methodTagValue tagName="ww:tagattribute" paramName="type"/></type>
+          <XDtMethod:ifHasMethodTag tagName="a2:tagattribute" paramName="type">
+           <type><XDtMethod:methodTagValue tagName="a2:tagattribute" paramName="type"/></type>
           </XDtMethod:ifHasMethodTag>
           </XDtMethod:ifDoesntHaveMethodTag>
-          <XDtMethod:ifHasMethodTag tagName="ww:tagattribute" paramName="fragment">
-           <rtexprvalue><XDtMethod:methodTagValue tagName="ww:tagattribute" paramName="fragment" values="true,false,yes,no"/></rtexprvalue>
+          <XDtMethod:ifHasMethodTag tagName="a2:tagattribute" paramName="fragment">
+           <rtexprvalue><XDtMethod:methodTagValue tagName="a2:tagattribute" paramName="fragment" values="true,false,yes,no"/></rtexprvalue>
           </XDtMethod:ifHasMethodTag>
         </XDtConfig:ifConfigParamGreaterOrEquals>
 
@@ -234,17 +234,17 @@
     </XDtMethod:forAllMethods>
 
     <XDtConfig:ifConfigParamGreaterOrEquals paramName="Jspversion" value="2.0">
-     <XDtClass:ifHasClassTag tagName="ww:tag" paramName="dynamic-attributes">
-      <dynamic-attributes><XDtClass:classTagValue tagName="ww:tag" paramName="dynamic-attributes" values="true,false,yes,no"/></dynamic-attributes>
+     <XDtClass:ifHasClassTag tagName="a2:tag" paramName="dynamic-attributes">
+      <dynamic-attributes><XDtClass:classTagValue tagName="a2:tag" paramName="dynamic-attributes" values="true,false,yes,no"/></dynamic-attributes>
      </XDtClass:ifHasClassTag>
     </XDtConfig:ifConfigParamGreaterOrEquals>
     <XDtConfig:ifConfigParamGreaterOrEquals paramName="Jspversion" value="1.2">
-     <XDtClass:ifHasClassTag tagName="ww.tag" paramName="example">
-      <example><![CDATA[<XDtClass:classTagValue tagName="ww.tag" paramName="example"/>]]></example>
+     <XDtClass:ifHasClassTag tagName="a2.tag" paramName="example">
+      <example><![CDATA[<XDtClass:classTagValue tagName="a2.tag" paramName="example"/>]]></example>
      </XDtClass:ifHasClassTag>
     </XDtConfig:ifConfigParamGreaterOrEquals>
     <XDtConfig:ifConfigParamGreaterOrEquals paramName="Jspversion" value="2.0">
-     <XDtClass:ifHasClassTag tagName="ww:tag" paramName="tag-extension">
+     <XDtClass:ifHasClassTag tagName="a2:tag" paramName="tag-extension">
       <!-- Sorry! This template does not support the 'tag-extension' element at the moment -->
      </XDtClass:ifHasClassTag>
     </XDtConfig:ifConfigParamGreaterOrEquals>

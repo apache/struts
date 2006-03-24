@@ -23,7 +23,7 @@ public class ConfigurationTest extends WebWorkTestCase {
         assertEquals("12345", Configuration.getString(WebWorkConstants.WEBWORK_MULTIPART_MAXSIZE));
         assertEquals("\temp", Configuration.getString(WebWorkConstants.WEBWORK_MULTIPART_SAVEDIR));
 
-        assertEquals("test,com/opensymphony/webwork/othertest", Configuration.getString( WebWorkConstants.WEBWORK_CUSTOM_PROPERTIES));
+        assertEquals("test,org/apache/struts/action2/othertest", Configuration.getString( WebWorkConstants.WEBWORK_CUSTOM_PROPERTIES));
         assertEquals("testvalue", Configuration.getString("testkey"));
         assertEquals("othertestvalue", Configuration.getString("othertestkey"));
 
@@ -44,7 +44,7 @@ public class ConfigurationTest extends WebWorkTestCase {
         Locale.setDefault(Locale.US); // force to US locale as we also have _de and _da properties
         
         LocalizedTextUtil.clearDefaultResourceBundles();
-        LocalizedTextUtil.addDefaultResourceBundle("com/opensymphony/webwork/webwork-messages");
+        LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts/action2/webwork-messages");
         assertEquals("The form has already been processed or no token was supplied, please try again.", LocalizedTextUtil.findDefaultText("webwork.messages.invalid.token", Locale.getDefault()));
         Configuration.reset();
 

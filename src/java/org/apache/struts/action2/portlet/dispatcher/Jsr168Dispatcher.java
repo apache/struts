@@ -183,7 +183,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements WebWorkStatics,
             portletNamespace = "";
         }
         LocalizedTextUtil
-                .addDefaultResourceBundle("com/opensymphony/webwork/webwork-messages");
+                .addDefaultResourceBundle("org/apache/struts/action2/webwork-messages");
 
         //check for configuration reloading
         if ("true".equalsIgnoreCase(Configuration

@@ -189,7 +189,7 @@ public class ExecuteAndWaitInterceptor implements Interceptor {
                             "'! This requires FreeMarker support and won't work if you don't have it installed");
                     // no wait result? hmm -- let's try to do dynamically put it in for you!
                     ResultConfig rc = new ResultConfig(WAIT, "org.apache.struts.action2.views.freemarker.FreemarkerResult",
-                            Collections.singletonMap("location", "com/opensymphony/webwork/interceptor/wait.ftl"));
+                            Collections.singletonMap("location", "org/apache/struts/action2/interceptor/wait.ftl"));
                     results.put(WAIT, rc);
                 }
 

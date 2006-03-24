@@ -13,13 +13,13 @@ import java.io.StringWriter;
  */
 public class SiteGraphTest extends WebWorkTestCase {
     public void testWebFlow() {
-        String dir = "src/test/com/opensymphony/webwork/sitegraph";
+        String dir = "src/test/org/apache/struts/action2/sitegraph";
         SiteGraph siteGraph = new SiteGraph(dir, dir, dir, "");
         StringWriter writer = new StringWriter();
         siteGraph.setWriter(writer);
         siteGraph.prepare();
 
-        String out = "src/test/com/opensymphony/webwork/sitegraph/out.txt";
+        String out = "src/test/org/apache/struts/action2/sitegraph/out.txt";
         assertEquals(FileUtils.readFile(new File(out)), writer.toString());
     }
 }

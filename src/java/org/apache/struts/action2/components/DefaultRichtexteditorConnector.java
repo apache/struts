@@ -34,7 +34,7 @@ public class DefaultRichtexteditorConnector extends AbstractRichtexteditorConnec
 	
 	private static final long serialVersionUID = -3792445192115623052L;
 	
-	protected String _actualServerPath = "/com/opensymphony/webwork/static/richtexteditor/data/";
+	protected String _actualServerPath = "/org/apache/struts/action2/static/richtexteditor/data/";
 	
 	
 	public String getActualServerPath() { return _actualServerPath; }

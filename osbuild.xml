@@ -44,7 +44,7 @@
     <property name="dist" location="dist"/>
 
     <property name="docs" location="docs"/>
-    <property name="docs.packages" value="com.opensymphony.*"/>
+    <property name="docs.packages" value="org.apache.struts.action2.*"/>
 
     <property name="jar.manifest" value="${common.dir}/EMPTY.MF"/>
     <property name="jar.excludes" value=""/>

@@ -105,8 +105,8 @@
                  mergedir="src/etc"
             -->
             <fileset dir="${src.java}">
-                <include name="com/opensymphony/webwork/views/**/*.java"/>
-                <include name="com/opensymphony/webwork/components/**/*.java"/>
+                <include name="org/apache/struts/action2/views/**/*.java"/>
+                <include name="org/apache/struts/action2/components/**/*.java"/>
             </fileset>
             <configParam name="Jspversion" value="1.2"/>
             <configParam name="Taglibversion" value="${version}"/>
@@ -129,8 +129,8 @@
                 force="true"
             >
             <fileset dir="${src.java}">
-                <include name="com/opensymphony/webwork/views/**/*.java"/>
-                <include name="com/opensymphony/webwork/components/**/*.java"/>
+                <include name="org/apache/struts/action2/views/**/*.java"/>
+                <include name="org/apache/struts/action2/components/**/*.java"/>
             </fileset>
             <xmlTemplate templateFile="${src.xdt}/tagdoc.xdt" destinationfile="{0}.html"/>
         </xdoclet>
@@ -140,8 +140,8 @@
                 force="true"
             >
             <fileset dir="${src.java}">
-                <include name="com/opensymphony/webwork/views/**/*.java"/>
-                <include name="com/opensymphony/webwork/components/**/*.java"/>
+                <include name="org/apache/struts/action2/views/**/*.java"/>
+                <include name="org/apache/struts/action2/components/**/*.java"/>
             </fileset>
             <configParam name="Taglibversion" value="${version}"/>
             <template templateFile="${src.xdt}/tagdoc-toc.xdt" destinationfile="index.html"/>
@@ -182,7 +182,7 @@
         </jar>
         <jar jarfile="${build}/${name}-nostatic-${version}.jar">
             <fileset dir="${build.java}">
-                <exclude name="com/opensymphony/webwork/static/**/*" />
+                <exclude name="org/apache/struts/action2/static/**/*" />
             </fileset>
             <manifest>
                 <attribute name="Main-Class" value="org.apache.struts.action2.Main"/>
@@ -191,7 +191,7 @@
             </manifest>
         </jar>        
         <zip destfile="${build}/${name}-static-${version}.zip">
-            <zipfileset dir="${build.java}/com/opensymphony/webwork/static" prefix="webwork" />
+            <zipfileset dir="${build.java}/org/apache/struts/action2/static" prefix="webwork" />
         </zip>
     </target>
 

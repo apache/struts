@@ -44,7 +44,7 @@ public class PlainTextResultTest extends TestCase {
 		response.setExpectedHeader("Content-Disposition", "inline");
 		InputStream jspResourceInputStream = 
 			ClassLoaderUtil.getResourceAsStream(
-				"com/opensymphony/webwork/dispatcher/someJspFile.jsp", 
+				"org/apache/struts/action2/dispatcher/someJspFile.jsp", 
 				PlainTextResultTest.class);
 		
 		
@@ -54,7 +54,7 @@ public class PlainTextResultTest extends TestCase {
 			
 			String r = AbstractUITagTest.normalize(stringWriter.getBuffer().toString(), true);
 			String e = AbstractUITagTest.normalize(
-					readAsString("com/opensymphony/webwork/dispatcher/someJspFile.jsp"), true);
+					readAsString("org/apache/struts/action2/dispatcher/someJspFile.jsp"), true);
 			assertEquals(r, e);
 		}
 		finally {
@@ -71,7 +71,7 @@ public class PlainTextResultTest extends TestCase {
 		response.setExpectedHeader("Content-Disposition", "inline");
 		InputStream jspResourceInputStream = 
 			ClassLoaderUtil.getResourceAsStream(
-				"com/opensymphony/webwork/dispatcher/someJspFile.jsp", 
+				"org/apache/struts/action2/dispatcher/someJspFile.jsp", 
 				PlainTextResultTest.class);
 		
 		
@@ -81,7 +81,7 @@ public class PlainTextResultTest extends TestCase {
 			
 			String r = AbstractUITagTest.normalize(stringWriter.getBuffer().toString(), true);
 			String e = AbstractUITagTest.normalize(
-					readAsString("com/opensymphony/webwork/dispatcher/someJspFile.jsp"), true);
+					readAsString("org/apache/struts/action2/dispatcher/someJspFile.jsp"), true);
 			assertEquals(r, e);
 		}
 		finally {

@@ -42,7 +42,7 @@ public class WebWorkSpringObjectFactoryTest extends TestCase {
         ServletContext msc = (ServletContext) new MockServletContext();
         msc.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, ac);
         ac.setServletContext(msc);
-        ac.setConfigLocations(new String[] {"/com/opensymphony/webwork/spring/WebWorkSpringObjectFactoryTest-applicationContext.xml"});
+        ac.setConfigLocations(new String[] {"/org/apache/struts/action2/spring/WebWorkSpringObjectFactoryTest-applicationContext.xml"});
         ac.refresh();
 
         fac.init(msc);

@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class ServletDispatcherTest extends AbstractServletDispatcherTestCase {
     public String getConfigFilename() {
-        return "com/opensymphony/webwork/dispatcher/ServletDispatcherTest-xwork.xml";
+        return "org/apache/struts/action2/dispatcher/ServletDispatcherTest-xwork.xml";
     }
 
     public ServletDispatcher getServletDispatcher() {

@@ -45,9 +45,9 @@ public class DefaultConfiguration extends Configuration {
         }
 
         try {
-            list.add(new PropertiesConfiguration("com/opensymphony/webwork/default"));
+            list.add(new PropertiesConfiguration("org/apache/struts/action2/default"));
         } catch (Exception e) {
-            log.error("Could not find com/opensymphony/webwork/default.properties", e);
+            log.error("Could not find org/apache/struts/action2/default.properties", e);
         }
 
         Configuration[] configList = new Configuration[list.size()];
@@ -75,7 +75,7 @@ public class DefaultConfiguration extends Configuration {
         // Add addtional list of i18n global resource bundles
         try {
 
-            LocalizedTextUtil.addDefaultResourceBundle("com/opensymphony/webwork/webwork-messages");
+            LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts/action2/webwork-messages");
             StringTokenizer bundleFiles = new StringTokenizer((String) config.getImpl(WebWorkConstants.WEBWORK_CUSTOM_I18N_RESOURCES), ", ");
 
             while (bundleFiles.hasMoreTokens()) {

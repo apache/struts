@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.webwork.util.classloader;
+package org.apache.struts.action2.util.classloader;
 
-import com.opensymphony.webwork.util.classloader.listeners.ReloadingListener;
-import com.opensymphony.webwork.util.classloader.listeners.CompilingListener;
-import com.opensymphony.webwork.util.classloader.monitor.FilesystemAlterationMonitor;
-import com.opensymphony.webwork.util.classloader.readers.FileResourceReader;
-import com.opensymphony.webwork.util.classloader.readers.ResourceReader;
-import com.opensymphony.webwork.util.classloader.stores.MemoryResourceStore;
-import com.opensymphony.webwork.util.classloader.stores.ResourceStore;
-import com.opensymphony.webwork.util.classloader.stores.ResourceStoreClassLoader;
+import org.apache.struts.action2.util.classloader.listeners.ReloadingListener;
+import org.apache.struts.action2.util.classloader.listeners.CompilingListener;
+import org.apache.struts.action2.util.classloader.monitor.FilesystemAlterationMonitor;
+import org.apache.struts.action2.util.classloader.readers.FileResourceReader;
+import org.apache.struts.action2.util.classloader.readers.ResourceReader;
+import org.apache.struts.action2.util.classloader.stores.MemoryResourceStore;
+import org.apache.struts.action2.util.classloader.stores.ResourceStore;
+import org.apache.struts.action2.util.classloader.stores.ResourceStoreClassLoader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

@@ -2,10 +2,10 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp;
+package org.apache.struts.action2.views.jsp;
 
-import com.opensymphony.webwork.util.FastByteArrayOutputStream;
-import com.opensymphony.webwork.views.util.ContextUtil;
+import org.apache.struts.action2.util.FastByteArrayOutputStream;
+import org.apache.struts.action2.views.util.ContextUtil;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 import javax.servlet.jsp.tagext.BodyTagSupport;

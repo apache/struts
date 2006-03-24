@@ -2,9 +2,9 @@
  *  Copyright (c) 2002-2006 by OpenSymphony
  *  All rights reserved.
  */
-package com.opensymphony.webwork.components.template;
+package org.apache.struts.action2.components.template;
 
-import com.opensymphony.webwork.components.UIBean;
+import org.apache.struts.action2.components.UIBean;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 import java.io.Writer;

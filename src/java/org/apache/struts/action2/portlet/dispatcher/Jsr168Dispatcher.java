@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.portlet.dispatcher;
+package org.apache.struts.action2.portlet.dispatcher;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -26,21 +26,21 @@ import org.apache.commons.logging.LogFactory;
 
 import com.opensymphony.util.ClassLoaderUtil;
 import com.opensymphony.util.FileManager;
-import com.opensymphony.webwork.WebWorkStatics;
-import com.opensymphony.webwork.WebWorkConstants;
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.dispatcher.ApplicationMap;
-import com.opensymphony.webwork.dispatcher.RequestMap;
-import com.opensymphony.webwork.dispatcher.SessionMap;
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapping;
-import com.opensymphony.webwork.portlet.PortletActionConstants;
-import com.opensymphony.webwork.portlet.PortletApplicationMap;
-import com.opensymphony.webwork.portlet.PortletRequestMap;
-import com.opensymphony.webwork.portlet.PortletSessionMap;
-import com.opensymphony.webwork.portlet.context.PortletActionContext;
-import com.opensymphony.webwork.portlet.context.ServletContextHolderListener;
-import com.opensymphony.webwork.util.AttributeMap;
-import com.opensymphony.webwork.util.ObjectFactoryInitializable;
+import org.apache.struts.action2.WebWorkStatics;
+import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.dispatcher.ApplicationMap;
+import org.apache.struts.action2.dispatcher.RequestMap;
+import org.apache.struts.action2.dispatcher.SessionMap;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapping;
+import org.apache.struts.action2.portlet.PortletActionConstants;
+import org.apache.struts.action2.portlet.PortletApplicationMap;
+import org.apache.struts.action2.portlet.PortletRequestMap;
+import org.apache.struts.action2.portlet.PortletSessionMap;
+import org.apache.struts.action2.portlet.context.PortletActionContext;
+import org.apache.struts.action2.portlet.context.ServletContextHolderListener;
+import org.apache.struts.action2.util.AttributeMap;
+import org.apache.struts.action2.util.ObjectFactoryInitializable;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionProxy;
 import com.opensymphony.xwork.ActionProxyFactory;
@@ -197,11 +197,11 @@ public class Jsr168Dispatcher extends GenericPortlet implements WebWorkStatics,
             if (className.equals("spring")) {
                 // note: this class name needs to be in string form so we don't put hard
                 //       dependencies on spring, since it isn't technically required.
-                className = "com.opensymphony.webwork.spring.WebWorkSpringObjectFactory";
+                className = "org.apache.struts.action2.spring.WebWorkSpringObjectFactory";
             } else if (className.equals("plexus")) {
                 // note: this class name needs to be in string form so we don't put hard
                 //       dependencies on spring, since it isn't technically required.
-                className = "com.opensymphony.webwork.plexus.PlexusObjectFactory";
+                className = "org.apache.struts.action2.plexus.PlexusObjectFactory";
             }
 
             try {

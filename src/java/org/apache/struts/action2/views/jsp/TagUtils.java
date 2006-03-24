@@ -2,18 +2,18 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp;
+package org.apache.struts.action2.views.jsp;
 
-import com.opensymphony.webwork.RequestUtils;
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.dispatcher.ApplicationMap;
-import com.opensymphony.webwork.dispatcher.DispatcherUtils;
-import com.opensymphony.webwork.dispatcher.RequestMap;
-import com.opensymphony.webwork.dispatcher.SessionMap;
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapper;
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapperFactory;
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapping;
-import com.opensymphony.webwork.util.AttributeMap;
+import org.apache.struts.action2.RequestUtils;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.dispatcher.ApplicationMap;
+import org.apache.struts.action2.dispatcher.DispatcherUtils;
+import org.apache.struts.action2.dispatcher.RequestMap;
+import org.apache.struts.action2.dispatcher.SessionMap;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapper;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapperFactory;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapping;
+import org.apache.struts.action2.util.AttributeMap;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.util.OgnlValueStack;

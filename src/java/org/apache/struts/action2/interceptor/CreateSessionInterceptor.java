@@ -2,12 +2,12 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.interceptor;
+package org.apache.struts.action2.interceptor;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.opensymphony.webwork.ServletActionContext;
+import org.apache.struts.action2.ServletActionContext;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.interceptor.AroundInterceptor;
 

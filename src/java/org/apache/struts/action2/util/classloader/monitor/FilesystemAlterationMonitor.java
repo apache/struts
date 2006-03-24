@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.webwork.util.classloader.monitor;
+package org.apache.struts.action2.util.classloader.monitor;
 
-import com.opensymphony.webwork.util.classloader.utils.ThreadUtils;
+import org.apache.struts.action2.util.classloader.utils.ThreadUtils;
 import org.apache.commons.collections.MultiHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

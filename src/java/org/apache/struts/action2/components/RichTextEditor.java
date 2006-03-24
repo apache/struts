@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.util.OgnlValueStack;
@@ -47,7 +47,7 @@ import java.util.Locale;
  *   &lt;package name="richtexteditor-browse" extends="webwork-default" 
  *   namespace="/webwork/richtexteditor/editor/filemanager/browser/default/connectors/jsp"&gt;
  *   	&lt;action name="connector" 
- *      class="com.opensymphony.webwork.components.DefaultRichtexteditorConnector" 
+ *      class="org.apache.struts.action2.components.DefaultRichtexteditorConnector" 
  *      method="browse">
  *   		&lt;result name="getFolders" type="richtexteditorGetFolders" /&gt;
  *   		&lt;result name="getFoldersAndFiles" type="richtexteditorGetFoldersAndFiles" /&gt;
@@ -108,7 +108,7 @@ import java.util.Locale;
  *   &lt;package name="richtexteditor-upload" extends="webwork-default" 
  *   namespace="/webwork/richtexteditor/editor/filemanager/upload"&gt;
  *		&lt;action name="uploader" 
- *       class="com.opensymphony.webwork.components.DefaultRichtexteditorConnector" 
+ *       class="org.apache.struts.action2.components.DefaultRichtexteditorConnector" 
  *       method="upload"&gt;
  *			&lt;result name="richtexteditorFileUpload" /&gt;
  *		&lt;/action&gt;    
@@ -180,7 +180,7 @@ import java.util.Locale;
  * @version $Date: 2006/03/18 15:45:33 $ $Id: RichTextEditor.java,v 1.9 2006/03/18 15:45:33 rgielen Exp $
  * @see AbstractRichtexteditorConnector
  * 
- * @ww.tag name="richtexteditor" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.RichTextEditorTag"
+ * @ww.tag name="richtexteditor" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.RichTextEditorTag"
  * description="Render a rich text editor element"
  */
 public class RichTextEditor extends UIBean {

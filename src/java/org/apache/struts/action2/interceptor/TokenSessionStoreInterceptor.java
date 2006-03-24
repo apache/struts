@@ -2,11 +2,11 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.interceptor;
+package org.apache.struts.action2.interceptor;
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.util.InvocationSessionStore;
-import com.opensymphony.webwork.util.TokenHelper;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.util.InvocationSessionStore;
+import org.apache.struts.action2.util.TokenHelper;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.Result;

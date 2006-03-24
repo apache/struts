@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.portlet.util;
+package org.apache.struts.action2.portlet.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -19,8 +19,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.opensymphony.webwork.portlet.PortletActionConstants;
-import com.opensymphony.webwork.portlet.context.PortletActionContext;
+import org.apache.struts.action2.portlet.PortletActionConstants;
+import org.apache.struts.action2.portlet.context.PortletActionContext;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.util.OgnlValueStack;
 import com.opensymphony.xwork.util.TextParseUtil;

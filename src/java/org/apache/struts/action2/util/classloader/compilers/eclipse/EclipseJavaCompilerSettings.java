@@ -1,6 +1,6 @@
-package com.opensymphony.webwork.util.classloader.compilers.eclipse;
+package org.apache.struts.action2.util.classloader.compilers.eclipse;
 
-import com.opensymphony.webwork.util.classloader.compilers.JavaCompilerSettings;
+import org.apache.struts.action2.util.classloader.compilers.JavaCompilerSettings;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 
 import java.util.HashMap;

@@ -1,8 +1,8 @@
-package com.opensymphony.webwork.dispatcher;
+package org.apache.struts.action2.dispatcher;
 
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapper;
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapperFactory;
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapping;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapper;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapperFactory;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapping;
 import com.opensymphony.xwork.ActionInvocation;
 
 /**

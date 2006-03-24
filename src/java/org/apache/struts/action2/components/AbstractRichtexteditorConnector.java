@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import java.io.Serializable;
 
@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.opensymphony.webwork.interceptor.ServletRequestAware;
-import com.opensymphony.webwork.interceptor.ServletResponseAware;
+import org.apache.struts.action2.interceptor.ServletRequestAware;
+import org.apache.struts.action2.interceptor.ServletResponseAware;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionSupport;
 
@@ -29,7 +29,7 @@ import com.opensymphony.xwork.ActionSupport;
  * <!-- START SNIPPET: example -->
  * 
  *   &lt;package name="richtexteditor-browse" extends="webwork-default" namespace="/webwork/richtexteditor/editor/filemanager/browser/default/connectors/jsp"&gt;
- *   	&lt;action name="connector" class="com.opensymphony.webwork.components.DefaultRichtexteditorConnector" method="browse">
+ *   	&lt;action name="connector" class="org.apache.struts.action2.components.DefaultRichtexteditorConnector" method="browse">
  *   		&lt;result name="getFolders" type="richtexteditorGetFolders" /&gt;
  *   		&lt;result name="getFoldersAndFiles" type="richtexteditorGetFoldersAndFiles" /&gt;
  *   		&lt;result name="createFolder" type="richtexteditorCreateFolder" /&gt;
@@ -38,7 +38,7 @@ import com.opensymphony.xwork.ActionSupport;
  *   &lt;/package&gt;
  * 
  *   &lt;package name="richtexteditor-upload" extends="webwork-default" namespace="/webwork/richtexteditor/editor/filemanager/upload"&gt;
- *		&lt;action name="uploader" class="com.opensymphony.webwork.components.DefaultRichtexteditorConnector" method="upload"&gt;
+ *		&lt;action name="uploader" class="org.apache.struts.action2.components.DefaultRichtexteditorConnector" method="upload"&gt;
  *			&lt;result name="richtexteditorFileUpload" /&gt;
  *		&lt;/action&gt;    
  *   &lt;/package&gt;
@@ -49,7 +49,7 @@ import com.opensymphony.xwork.ActionSupport;
  * 
  * @author tm_jee
  * @version $Date: 2006/03/08 20:22:33 $ $Id: AbstractRichtexteditorConnector.java,v 1.4 2006/03/08 20:22:33 rainerh Exp $
- * @see com.opensymphony.webwork.components.DefaultRichtexteditorConnector
+ * @see org.apache.struts.action2.components.DefaultRichtexteditorConnector
  */
 public abstract class AbstractRichtexteditorConnector extends ActionSupport implements ServletRequestAware, ServletResponseAware {
 	

@@ -2,9 +2,9 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jasperreports;
+package org.apache.struts.action2.views.jasperreports;
 
-import com.opensymphony.webwork.util.MakeIterator;
+import org.apache.struts.action2.util.MakeIterator;
 import com.opensymphony.xwork.util.OgnlValueStack;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;

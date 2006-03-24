@@ -1,9 +1,9 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.util.FastByteArrayOutputStream;
-import com.opensymphony.webwork.RequestUtils;
-import com.opensymphony.webwork.WebWorkConstants;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.util.FastByteArrayOutputStream;
+import org.apache.struts.action2.RequestUtils;
+import org.apache.struts.action2.WebWorkConstants;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 import org.apache.commons.logging.Log;
@@ -69,7 +69,7 @@ import java.util.*;
  * @version $Revision: 1.20 $
  * @since 2.2
  *
- * @ww.tag name="include" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.IncludeTag"
+ * @ww.tag name="include" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.IncludeTag"
  * description="Include a servlet's output (result of servlet or a JSP page)"
  */
 public class Include extends Component {

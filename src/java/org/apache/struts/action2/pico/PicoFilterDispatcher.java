@@ -1,6 +1,6 @@
-package com.opensymphony.webwork.pico;
+package org.apache.struts.action2.pico;
 
-import com.opensymphony.webwork.dispatcher.FilterDispatcher;
+import org.apache.struts.action2.dispatcher.FilterDispatcher;
 import com.opensymphony.xwork.ObjectFactory;
 import org.nanocontainer.nanowar.ServletRequestContainerLauncher;
 import org.picocontainer.defaults.ObjectReference;

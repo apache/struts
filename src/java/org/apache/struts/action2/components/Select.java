@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -59,7 +59,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision: 1.9 $
  * @since 2.2
  *
- * @ww.tag name="select" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.SelectTag"
+ * @ww.tag name="select" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.SelectTag"
  * description="Render a select element"
  */
 public class Select extends ListUIBean {

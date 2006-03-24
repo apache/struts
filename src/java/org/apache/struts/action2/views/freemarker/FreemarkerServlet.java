@@ -6,10 +6,10 @@
  * Created on 27/08/2003
  *
  */
-package com.opensymphony.webwork.views.freemarker;
+package org.apache.struts.action2.views.freemarker;
 
-import com.opensymphony.webwork.RequestUtils;
-import com.opensymphony.webwork.ServletActionContext;
+import org.apache.struts.action2.RequestUtils;
+import org.apache.struts.action2.ServletActionContext;
 import com.opensymphony.xwork.util.OgnlValueStack;
 import freemarker.template.*;
 

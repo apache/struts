@@ -2,11 +2,11 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.util;
+package org.apache.struts.action2.util;
 
 import com.opensymphony.util.TextUtils;
-import com.opensymphony.webwork.views.jsp.ui.OgnlTool;
-import com.opensymphony.webwork.views.util.UrlHelper;
+import org.apache.struts.action2.views.jsp.ui.OgnlTool;
+import org.apache.struts.action2.views.util.UrlHelper;
 import com.opensymphony.xwork.ObjectFactory;
 import com.opensymphony.xwork.util.OgnlValueStack;
 import org.apache.commons.logging.Log;

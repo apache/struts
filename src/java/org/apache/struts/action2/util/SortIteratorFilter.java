@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.util;
+package org.apache.struts.action2.util;
 
 import com.opensymphony.xwork.Action;
 import org.apache.commons.logging.LogFactory;
@@ -17,7 +17,7 @@ import java.util.*;
  * @author Rickard �berg (rickard@middleware-company.com)
  * @author tm_jee ( tm_jee(at)yahoo.co.uk )
  * @version $Revision: 1.9 $
- * @see com.opensymphony.webwork.views.jsp.iterator.SortIteratorTag
+ * @see org.apache.struts.action2.views.jsp.iterator.SortIteratorTag
  */
 public class SortIteratorFilter extends IteratorFilterSupport implements Iterator, Action {
 

@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -20,8 +20,8 @@ import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.opensymphony.webwork.util.ServletContextAware;
-import com.opensymphony.webwork.views.util.UrlHelper;
+import org.apache.struts.action2.util.ServletContextAware;
+import org.apache.struts.action2.views.util.UrlHelper;
 
 /**
  * 

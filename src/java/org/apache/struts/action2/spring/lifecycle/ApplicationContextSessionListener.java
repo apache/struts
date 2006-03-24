@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2005 Opensymphony. All Rights Reserved.
  */
-package com.opensymphony.webwork.spring.lifecycle;
+package org.apache.struts.action2.spring.lifecycle;
 
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.context.support.XmlWebApplicationContext;
@@ -48,7 +48,7 @@ public class ApplicationContextSessionListener implements HttpSessionListener, S
     /**
      * Key to map the session-scoped application context into the session attributes.
      */
-    public static final String APP_CONTEXT_SESSION_KEY = "com.opensymphony.webwork.spring.ApplicationContextSessionListener_APP_CONTEXT";
+    public static final String APP_CONTEXT_SESSION_KEY = "org.apache.struts.action2.spring.ApplicationContextSessionListener_APP_CONTEXT";
 
     /**
      * The default session context configuration string:"classpath:session.xml"

@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 

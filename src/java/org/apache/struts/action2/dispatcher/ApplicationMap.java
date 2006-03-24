@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.dispatcher;
+package org.apache.struts.action2.dispatcher;
 
 import javax.servlet.ServletContext;
 import java.io.Serializable;
@@ -15,7 +15,7 @@ import java.util.*;
  * enumerates over all servlet context attributes and init parameters and returns a collection of both.
  * Note, this will occur lazily - only when the entry set is asked for.
  *
- * @author <a href="mailto:rickard@middleware-company.com">Rickard Öberg</a>
+ * @author <a href="mailto:rickard@middleware-company.com">Rickard ï¿½berg</a>
  * @author Bill Lynch (docs)
  */
 public class ApplicationMap extends AbstractMap implements Serializable {

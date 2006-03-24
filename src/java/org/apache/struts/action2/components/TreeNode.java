@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2005 Opensymphony. All Rights Reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Jason Carreira <jcarreira@eplus.com>
  *
- * @ww.tag name="treenode" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.TreeNodeTag"
+ * @ww.tag name="treenode" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TreeNodeTag"
  * description="Render a tree node within a tree widget."
  */
 public class TreeNode extends ClosingUIBean {

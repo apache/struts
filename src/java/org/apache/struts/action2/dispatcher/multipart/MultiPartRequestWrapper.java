@@ -2,12 +2,12 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.dispatcher.multipart;
+package org.apache.struts.action2.dispatcher.multipart;
 
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.dispatcher.WebWorkRequestWrapper;
-import com.opensymphony.webwork.WebWorkConstants;
-import com.opensymphony.webwork.util.ClassLoaderUtils;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.dispatcher.WebWorkRequestWrapper;
+import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.util.ClassLoaderUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -21,12 +21,12 @@ import java.util.*;
 /**
  * Parses a multipart request and provides a wrapper around the request. The parsing implementation used
  * depends on the <tt>webwork.multipart.parser</tt> setting. It should be set to a class which
- * extends {@link com.opensymphony.webwork.dispatcher.multipart.MultiPartRequest}. <p>
+ * extends {@link org.apache.struts.action2.dispatcher.multipart.MultiPartRequest}. <p>
  * <p/>
  * Webwork ships with three implementations,
- * {@link com.opensymphony.webwork.dispatcher.multipart.PellMultiPartRequest}, and
- * {@link com.opensymphony.webwork.dispatcher.multipart.CosMultiPartRequest} and
- * {@link com.opensymphony.webwork.dispatcher.multipart.JakartaMultiPartRequest}. The Jakarta implementation
+ * {@link org.apache.struts.action2.dispatcher.multipart.PellMultiPartRequest}, and
+ * {@link org.apache.struts.action2.dispatcher.multipart.CosMultiPartRequest} and
+ * {@link org.apache.struts.action2.dispatcher.multipart.JakartaMultiPartRequest}. The Jakarta implementation
  * is the default. The <tt>webwork.multipart.parser</tt> property should be set to <tt>jakarta</tt> for the
  * Jakarta implementation, <tt>pell</tt> for the Pell implementation and <tt>cos</tt> for the Jason Hunter
  * implementation. <p>
@@ -61,20 +61,20 @@ public class MultiPartRequestWrapper extends WebWorkRequestWrapper {
             // If it's not set, use Jakarta
             if (parser.equals("")) {
                 log.warn("Property webwork.multipart.parser not set." +
-                        " Using com.opensymphony.webwork.dispatcher.multipart.JakartaMultiPartRequest");
-                parser = "com.opensymphony.webwork.dispatcher.multipart.JakartaMultiPartRequest";
+                        " Using org.apache.struts.action2.dispatcher.multipart.JakartaMultiPartRequest");
+                parser = "org.apache.struts.action2.dispatcher.multipart.JakartaMultiPartRequest";
             }
             // legacy support for old style property values
             else if (parser.equals("pell")) {
-                parser = "com.opensymphony.webwork.dispatcher.multipart.PellMultiPartRequest";
+                parser = "org.apache.struts.action2.dispatcher.multipart.PellMultiPartRequest";
             } else if (parser.equals("cos")) {
-                parser = "com.opensymphony.webwork.dispatcher.multipart.CosMultiPartRequest";
+                parser = "org.apache.struts.action2.dispatcher.multipart.CosMultiPartRequest";
             } else if (parser.equals("jakarta")) {
-                parser = "com.opensymphony.webwork.dispatcher.multipart.JakartaMultiPartRequest";
+                parser = "org.apache.struts.action2.dispatcher.multipart.JakartaMultiPartRequest";
             }
 
             try {
-                Class baseClazz = com.opensymphony.webwork.dispatcher.multipart.MultiPartRequest.class;
+                Class baseClazz = org.apache.struts.action2.dispatcher.multipart.MultiPartRequest.class;
 
                 Class clazz = ClassLoaderUtils.loadClass(parser, MultiPartRequestWrapper.class);
 

@@ -2,11 +2,11 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp.iterator;
+package org.apache.struts.action2.views.jsp.iterator;
 
-import com.opensymphony.webwork.components.AppendIterator;
-import com.opensymphony.webwork.components.Component;
-import com.opensymphony.webwork.views.jsp.ComponentTagSupport;
+import org.apache.struts.action2.components.AppendIterator;
+import org.apache.struts.action2.components.Component;
+import org.apache.struts.action2.views.jsp.ComponentTagSupport;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 import javax.servlet.http.HttpServletRequest;

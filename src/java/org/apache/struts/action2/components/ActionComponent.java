@@ -1,9 +1,9 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.dispatcher.DispatcherUtils;
-import com.opensymphony.webwork.dispatcher.RequestMap;
-import com.opensymphony.webwork.views.jsp.TagUtils;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.dispatcher.DispatcherUtils;
+import org.apache.struts.action2.dispatcher.RequestMap;
+import org.apache.struts.action2.views.jsp.TagUtils;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionProxy;
 import com.opensymphony.xwork.ActionProxyFactory;
@@ -90,7 +90,7 @@ import java.util.Map;
  * @version $Revision: 1.22 $
  * @since 2.2
  *
- * @ww.tag name="action" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ActionTag"
+ * @ww.tag name="action" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ActionTag"
  * description="Execute an action from within a view"
  */
 public class ActionComponent extends Component {
@@ -169,7 +169,7 @@ public class ActionComponent extends Component {
      * and the namespace will be saved into the instance variables proxy and
      * namespace respectively.
      *
-     * @see com.opensymphony.webwork.views.jsp.TagUtils#buildNamespace
+     * @see org.apache.struts.action2.views.jsp.TagUtils#buildNamespace
      */
     private void executeAction() {
         String actualName = findString(name, "name", "Action name is required. Example: updatePerson");

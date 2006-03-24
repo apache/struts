@@ -1,7 +1,7 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
-import com.opensymphony.webwork.util.ContainUtil;
-import com.opensymphony.webwork.util.MakeIterator;
+import org.apache.struts.action2.util.ContainUtil;
+import org.apache.struts.action2.util.MakeIterator;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 import javax.servlet.http.HttpServletRequest;

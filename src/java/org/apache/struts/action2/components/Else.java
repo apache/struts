@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -36,7 +36,7 @@ import java.util.Map;
  *
  * @author Rick Salsa (rsal@mb.sympatico.ca)
  * @author tmjee
- * @ww.tag name="else" bodycontent="JSP" description="Else tag"  tld-tag-class="com.opensymphony.webwork.views.jsp.ElseTag"
+ * @ww.tag name="else" bodycontent="JSP" description="Else tag"  tld-tag-class="org.apache.struts.action2.views.jsp.ElseTag"
  */
 public class Else extends Component {
     public Else(OgnlValueStack stack) {

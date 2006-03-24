@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.util;
+package org.apache.struts.action2.util;
 
 import com.opensymphony.util.GUID;
 import com.opensymphony.xwork.ActionContext;

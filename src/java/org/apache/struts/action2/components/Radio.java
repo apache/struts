@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision: 1.6 $
  * @since 2.2
  *
- * @ww.tag name="radio" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.RadioTag"
+ * @ww.tag name="radio" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.RadioTag"
  * description="Renders a radio button input field"
  */
 public class Radio extends ListUIBean {

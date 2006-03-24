@@ -1,7 +1,7 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
-import com.opensymphony.webwork.util.MakeIterator;
-import com.opensymphony.webwork.views.jsp.IteratorStatus;
+import org.apache.struts.action2.util.MakeIterator;
+import org.apache.struts.action2.views.jsp.IteratorStatus;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 import java.io.Writer;
@@ -58,7 +58,7 @@ import java.util.Iterator;
  * <pre>
  * <!-- START SNIPPET: example2code -->
  * 
- * &lt;ww:bean name="com.opensymphony.webwork.example.IteratorExample" id="it"&gt;
+ * &lt;ww:bean name="org.apache.struts.action2.example.IteratorExample" id="it"&gt;
  *   &lt;ww:param name="day" value="'foo'"/&gt;
  *   &lt;ww:param name="day" value="'bar'"/&gt;
  * &lt;/ww:bean&gt;
@@ -140,7 +140,7 @@ import java.util.Iterator;
  * @author Rick Salsa (rsal@mb.sympatico.ca)
  * @author tm_jee ( tm_jee(at)yahoo.co.uk )
  * @version $Revision: 1.11 $
- * @ww.tag name="iterator" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.IteratorTag"
+ * @ww.tag name="iterator" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.IteratorTag"
  * description="Iterate over a iterable value"
  */
 public class IteratorComponent extends Component {

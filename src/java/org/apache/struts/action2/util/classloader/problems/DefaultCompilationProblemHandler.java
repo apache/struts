@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.util.classloader.problems;
+package org.apache.struts.action2.util.classloader.problems;
 
 import java.util.ArrayList;
 import java.util.Collection;

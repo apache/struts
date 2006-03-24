@@ -1,8 +1,8 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 import com.opensymphony.util.TextUtils;
-import com.opensymphony.webwork.views.util.UrlHelper;
+import org.apache.struts.action2.views.util.UrlHelper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
  * @version $Revision: 1.11 $
  * @since 2.2
  *
- * @ww.tag name="div" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.DivTag"
+ * @ww.tag name="div" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.DivTag"
  * description="Render HTML div providing content from remote call via AJAX"
   */
 public class Div extends RemoteCallUIBean {

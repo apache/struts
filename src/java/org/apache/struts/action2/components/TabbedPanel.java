@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -76,7 +76,7 @@ import java.util.List;
  *
  * @see Panel
  *
- * @ww.tag name="tabbedPanel" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.TabbedPanelTag"
+ * @ww.tag name="tabbedPanel" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TabbedPanelTag"
  * description="Render a tabbedPanel widget."
  */
 public class TabbedPanel extends ClosingUIBean {

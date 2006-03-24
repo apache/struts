@@ -2,10 +2,10 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp.ui;
+package org.apache.struts.action2.views.jsp.ui;
 
-import com.opensymphony.webwork.components.Component;
-import com.opensymphony.webwork.components.Head;
+import org.apache.struts.action2.components.Component;
+import org.apache.struts.action2.components.Head;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 import javax.servlet.http.HttpServletRequest;

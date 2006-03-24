@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.lifecycle;
+package org.apache.struts.action2.lifecycle;
 
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSessionListener;
  * @author Patrick Lightbody
  * @see ApplicationLifecycleListener
  * @see SessionLifecycleListener
- * @see com.opensymphony.webwork.dispatcher.FilterDispatcher
+ * @see org.apache.struts.action2.dispatcher.FilterDispatcher
  * @since 2.2
  * @deprecated XWork IoC has been deprecated in favor of Spring.
  *             Please refer to the Spring-WebWork integration documentation for more info.

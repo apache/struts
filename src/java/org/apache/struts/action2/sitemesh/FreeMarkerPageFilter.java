@@ -3,13 +3,13 @@
  * All rights reserved.
  */
 
-package com.opensymphony.webwork.sitemesh;
+package org.apache.struts.action2.sitemesh;
 
 import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.filter.PageFilter;
-import com.opensymphony.webwork.views.freemarker.FreemarkerManager;
+import org.apache.struts.action2.views.freemarker.FreemarkerManager;
 import com.opensymphony.xwork.*;
 import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;

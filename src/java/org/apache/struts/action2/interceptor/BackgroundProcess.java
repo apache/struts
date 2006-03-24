@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.interceptor;
+package org.apache.struts.action2.interceptor;
 
 import com.opensymphony.xwork.ActionInvocation;
 

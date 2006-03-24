@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.interceptor;
+package org.apache.struts.action2.interceptor;
 
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.interceptor.ConversionErrorInterceptor;

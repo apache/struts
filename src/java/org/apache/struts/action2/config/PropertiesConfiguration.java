@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.config;
+package org.apache.struts.action2.config;
 
 import java.io.IOException;
 import java.net.URL;
@@ -13,7 +13,7 @@ import java.util.Properties;
 /**
  * A class to handle configuration via a properties file.
  *
- * @author Rickard Öberg
+ * @author Rickard ï¿½berg
  * @author Jason Carreira
  * @author Bill Lynch (docs)
  */

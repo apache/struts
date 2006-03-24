@@ -2,16 +2,16 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.dispatcher;
+package org.apache.struts.action2.dispatcher;
 
 import com.opensymphony.util.ClassLoaderUtil;
-import com.opensymphony.webwork.RequestUtils;
-import com.opensymphony.webwork.WebWorkConstants;
-import com.opensymphony.webwork.WebWorkStatics;
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapper;
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapperFactory;
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapping;
+import org.apache.struts.action2.RequestUtils;
+import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.WebWorkStatics;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapper;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapperFactory;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapping;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.interceptor.component.ComponentConfiguration;
 import com.opensymphony.xwork.interceptor.component.ComponentManager;
@@ -71,7 +71,7 @@ import java.text.SimpleDateFormat;
  *
  * <ul>
  *
- * <li>com.opensymphony.webwork.static</li>
+ * <li>org.apache.struts.action2.static</li>
  *
  * <li>template</li>
  *
@@ -79,7 +79,7 @@ import java.text.SimpleDateFormat;
  *
  * <p/> This means that you can simply request /webwork/xhtml/styles.css and the XHTML UI theme's default stylesheet
  * will be returned. Likewise, many of the AJAX UI components require various JavaScript files, which are found in the
- * com.opensymphony.webwork.static package. If you wish to add additional packages to be searched, you can add a comma
+ * org.apache.struts.action2.static package. If you wish to add additional packages to be searched, you can add a comma
  * separated (space, tab and new line will do as well) list in the filter init parameter named "packages". <b>Be
  * careful</b>, however, to expose any packages that may have sensitive information, such as properties file with
  * database access credentials.
@@ -88,10 +88,10 @@ import java.text.SimpleDateFormat;
  *
  * <p/> This filter also kicks off the XWork IoC request scope, provided that you are using XWork's IoC. All you have to
  * do to get started with XWork's IoC is add a components.xml file to WEB-INF/classes and properly set up the {@link
- * com.opensymphony.webwork.lifecycle.LifecycleListener} in web.xml. See the IoC docs for more information. <p/>
+ * org.apache.struts.action2.lifecycle.LifecycleListener} in web.xml. See the IoC docs for more information. <p/>
  *
  * @author Patrick Lightbody
- * @see com.opensymphony.webwork.lifecycle.LifecycleListener
+ * @see org.apache.struts.action2.lifecycle.LifecycleListener
  * @see ActionMapper
  * @see ActionContextCleanUp
  * @since 2.2
@@ -121,7 +121,7 @@ public class FilterDispatcher implements Filter, WebWorkStatics {
     public void init(FilterConfig filterConfig) throws ServletException {
         this.filterConfig = filterConfig;
         String param = filterConfig.getInitParameter("packages");
-        String packages = "com.opensymphony.webwork.static template";
+        String packages = "org.apache.struts.action2.static template";
         if (param != null) {
             packages = param + " " + packages;
         }

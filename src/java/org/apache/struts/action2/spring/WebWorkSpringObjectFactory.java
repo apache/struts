@@ -2,11 +2,11 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.spring;
+package org.apache.struts.action2.spring;
 
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.util.ObjectFactoryInitializable;
-import com.opensymphony.webwork.WebWorkConstants;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.util.ObjectFactoryInitializable;
+import org.apache.struts.action2.WebWorkConstants;
 import com.opensymphony.xwork.spring.SpringObjectFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.config_browser;
+package org.apache.struts.action2.config_browser;
 
 import com.opensymphony.xwork.config.ConfigurationManager;
 import com.opensymphony.xwork.config.entities.ActionConfig;

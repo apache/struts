@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork;
+package org.apache.struts.action2;
 
 /**
  * This class provides a central location for framework constants related to

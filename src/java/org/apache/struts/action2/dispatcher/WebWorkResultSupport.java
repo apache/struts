@@ -2,9 +2,9 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.dispatcher;
+package org.apache.struts.action2.dispatcher;
 
-import com.opensymphony.webwork.WebWorkStatics;
+import org.apache.struts.action2.WebWorkStatics;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.Result;
 import com.opensymphony.xwork.util.TextParseUtil;

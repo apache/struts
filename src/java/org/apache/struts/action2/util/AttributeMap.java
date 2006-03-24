@@ -2,9 +2,9 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.util;
+package org.apache.struts.action2.util;
 
-import com.opensymphony.webwork.ServletActionContext;
+import org.apache.struts.action2.ServletActionContext;
 
 import javax.servlet.jsp.PageContext;
 import java.util.Collection;

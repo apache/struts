@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import java.io.Writer;
 import java.util.ArrayList;
@@ -12,9 +12,9 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.opensymphony.webwork.components.Param.UnnamedParametric;
-import com.opensymphony.webwork.util.AppendIteratorFilter;
-import com.opensymphony.webwork.util.MakeIterator;
+import org.apache.struts.action2.components.Param.UnnamedParametric;
+import org.apache.struts.action2.util.AppendIteratorFilter;
+import org.apache.struts.action2.util.MakeIterator;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 /**
@@ -95,10 +95,10 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  *
  * @author tm_jee ( tm_jee (at) yahoo.co.uk )
  * @version $Date: 2006/03/18 15:57:09 $ $Id: AppendIterator.java,v 1.10 2006/03/18 15:57:09 rgielen Exp $
- * @see com.opensymphony.webwork.util.AppendIteratorFilter
- * @see com.opensymphony.webwork.views.jsp.iterator.AppendIteratorTag
+ * @see org.apache.struts.action2.util.AppendIteratorFilter
+ * @see org.apache.struts.action2.views.jsp.iterator.AppendIteratorTag
  *
- * @ww.tag name="append" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.iterator.AppendIteratorTag"
+ * @ww.tag name="append" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.iterator.AppendIteratorTag"
  * description="Append the values of a list of iterators to one iterator"
  */
 public class AppendIterator extends Component implements UnnamedParametric {

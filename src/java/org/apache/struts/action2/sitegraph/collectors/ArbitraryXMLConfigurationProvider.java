@@ -1,7 +1,7 @@
 /*
  * Created on Aug 12, 2004 by mgreer
  */
-package com.opensymphony.webwork.sitegraph.collectors;
+package org.apache.struts.action2.sitegraph.collectors;
 
 import com.opensymphony.util.FileManager;
 import com.opensymphony.xwork.config.providers.XmlConfigurationProvider;

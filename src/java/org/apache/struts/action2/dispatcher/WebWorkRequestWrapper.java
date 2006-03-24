@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.dispatcher;
+package org.apache.struts.action2.dispatcher;
 
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.util.OgnlValueStack;

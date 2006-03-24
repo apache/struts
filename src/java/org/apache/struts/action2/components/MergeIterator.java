@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import java.io.Writer;
 import java.util.ArrayList;
@@ -12,9 +12,9 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.opensymphony.webwork.components.Param.UnnamedParametric;
-import com.opensymphony.webwork.util.MakeIterator;
-import com.opensymphony.webwork.util.MergeIteratorFilter;
+import org.apache.struts.action2.components.Param.UnnamedParametric;
+import org.apache.struts.action2.util.MakeIterator;
+import org.apache.struts.action2.util.MergeIteratorFilter;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 /**
@@ -108,10 +108,10 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  *
  * @author tm_jee (tm_jee (at) yahoo.co.uk)
  * @version $Date: 2006/03/18 16:14:40 $ $Id: MergeIterator.java,v 1.10 2006/03/18 16:14:40 rgielen Exp $
- * @see com.opensymphony.webwork.util.MergeIteratorFilter
- * @see com.opensymphony.webwork.views.jsp.iterator.MergeIteratorTag
+ * @see org.apache.struts.action2.util.MergeIteratorFilter
+ * @see org.apache.struts.action2.views.jsp.iterator.MergeIteratorTag
  *
- * @ww.tag name="merge" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.iterator.MergeIteratorTag"
+ * @ww.tag name="merge" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.iterator.MergeIteratorTag"
  * description="Merge the values of a list of iterators into one iterator"
  */
 public class MergeIterator extends Component implements UnnamedParametric {

@@ -1,12 +1,12 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
-import com.opensymphony.webwork.util.FastByteArrayOutputStream;
-import com.opensymphony.webwork.views.jsp.TagUtils;
-import com.opensymphony.webwork.views.util.ContextUtil;
-import com.opensymphony.webwork.views.util.UrlHelper;
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapping;
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapper;
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapperFactory;
+import org.apache.struts.action2.util.FastByteArrayOutputStream;
+import org.apache.struts.action2.views.jsp.TagUtils;
+import org.apache.struts.action2.views.util.ContextUtil;
+import org.apache.struts.action2.views.util.UrlHelper;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapping;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapper;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapperFactory;
 import com.opensymphony.xwork.util.OgnlValueStack;
 import com.opensymphony.xwork.util.TextParseUtil;
 import org.apache.commons.logging.Log;
@@ -297,7 +297,7 @@ public class Component {
     }
 
     /**
-     * Renders an action URL by consulting the {@link com.opensymphony.webwork.dispatcher.mapper.ActionMapper}.
+     * Renders an action URL by consulting the {@link org.apache.struts.action2.dispatcher.mapper.ActionMapper}.
      * @param action      the action
      * @param namespace   the namespace
      * @param method      the method

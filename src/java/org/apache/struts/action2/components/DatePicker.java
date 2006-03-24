@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.util.OgnlValueStack;
@@ -83,7 +83,7 @@ import java.util.Locale;
  * @author Patrick Lightbody
  * @author Rene Gielen
  * @version $Revision: 1.12 $
- * @ww.tag name="datepicker" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.DatePickerTag"
+ * @ww.tag name="datepicker" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.DatePickerTag"
  * description="Render datepicker"
  * @since 2.2
  */

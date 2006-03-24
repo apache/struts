@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2005 ePlus Corporation. All Rights Reserved.
  */
-package com.opensymphony.webwork.spring.interceptor;
+package org.apache.struts.action2.spring.interceptor;
 
 import com.opensymphony.xwork.interceptor.AroundInterceptor;
 import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.webwork.spring.lifecycle.ApplicationContextSessionListener;
+import org.apache.struts.action2.spring.lifecycle.ApplicationContextSessionListener;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;

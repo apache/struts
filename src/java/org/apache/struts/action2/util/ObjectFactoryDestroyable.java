@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.util;
+package org.apache.struts.action2.util;
 
 /**
  * An interface to be implemented by any ObjectFactory implementation 
@@ -12,8 +12,8 @@ package com.opensymphony.webwork.util;
  * @author tm_jee
  * @version $Date: 2006/03/16 14:44:01 $ $Id: ObjectFactoryDestroyable.java,v 1.1 2006/03/16 14:44:01 tmjee Exp $
  * 
- * @see com.opensymphony.webwork.dispatcher.FilterDispatcher
- * @see com.opensymphony.webwork.dispatcher.DispatcherUtils
+ * @see org.apache.struts.action2.dispatcher.FilterDispatcher
+ * @see org.apache.struts.action2.dispatcher.DispatcherUtils
  */
 public interface ObjectFactoryDestroyable {
 	void destroy();

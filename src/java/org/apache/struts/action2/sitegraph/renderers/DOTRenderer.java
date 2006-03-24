@@ -1,14 +1,14 @@
 /*
  * Created on Aug 12, 2004 by mgreer
  */
-package com.opensymphony.webwork.sitegraph.renderers;
+package org.apache.struts.action2.sitegraph.renderers;
 
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.sitegraph.XWorkConfigRetriever;
-import com.opensymphony.webwork.sitegraph.entities.Target;
-import com.opensymphony.webwork.sitegraph.entities.View;
-import com.opensymphony.webwork.sitegraph.model.*;
-import com.opensymphony.webwork.WebWorkConstants;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.sitegraph.XWorkConfigRetriever;
+import org.apache.struts.action2.sitegraph.entities.Target;
+import org.apache.struts.action2.sitegraph.entities.View;
+import org.apache.struts.action2.sitegraph.model.*;
+import org.apache.struts.action2.WebWorkConstants;
 import com.opensymphony.xwork.ActionChainResult;
 import com.opensymphony.xwork.config.entities.ActionConfig;
 import com.opensymphony.xwork.config.entities.ResultConfig;

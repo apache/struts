@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.webwork.util.classloader.listeners;
+package org.apache.struts.action2.util.classloader.listeners;
 
-import com.opensymphony.webwork.util.classloader.monitor.FilesystemAlterationListener;
-import com.opensymphony.webwork.util.classloader.stores.ResourceStore;
+import org.apache.struts.action2.util.classloader.monitor.FilesystemAlterationListener;
+import org.apache.struts.action2.util.classloader.stores.ResourceStore;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -58,7 +58,7 @@ public class ReloadingListener implements FilesystemAlterationListener {
         if (deleted.size() > 0) {
             for (Iterator it = deleted.iterator(); it.hasNext();) {
                 final File file = (File) it.next();
-                store.remove(com.opensymphony.webwork.util.classloader.ReloadingClassLoader.clazzName(pRepository, file));
+                store.remove(org.apache.struts.action2.util.classloader.ReloadingClassLoader.clazzName(pRepository, file));
             }
             reload = true;
         }
@@ -68,7 +68,7 @@ public class ReloadingListener implements FilesystemAlterationListener {
                 final File file = (File) it.next();
                 try {
                     final byte[] bytes = IOUtils.toByteArray(new FileReader(file));
-                    store.write(com.opensymphony.webwork.util.classloader.ReloadingClassLoader.clazzName(pRepository, file), bytes);
+                    store.write(org.apache.struts.action2.util.classloader.ReloadingClassLoader.clazzName(pRepository, file), bytes);
                 } catch (final Exception e) {
                     log.error("could not load " + file, e);
                 }
@@ -80,7 +80,7 @@ public class ReloadingListener implements FilesystemAlterationListener {
                 final File file = (File) it.next();
                 try {
                     final byte[] bytes = IOUtils.toByteArray(new FileReader(file));
-                    store.write(com.opensymphony.webwork.util.classloader.ReloadingClassLoader.clazzName(pRepository, file), bytes);
+                    store.write(org.apache.struts.action2.util.classloader.ReloadingClassLoader.clazzName(pRepository, file), bytes);
                 } catch (final Exception e) {
                     log.error("could not load " + file, e);
                 }

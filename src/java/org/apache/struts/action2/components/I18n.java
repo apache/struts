@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.LocaleProvider;
@@ -63,7 +63,7 @@ import java.util.ResourceBundle;
  * @version $Revision: 1.13 $
  * @since 2.2
  *
- * @ww.tag name="i18n" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.I18nTag"
+ * @ww.tag name="i18n" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.I18nTag"
  * description="Get a resource bundle and place it on the value stack"
  */
 public class I18n extends Component {

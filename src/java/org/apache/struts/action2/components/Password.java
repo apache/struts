@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision: 1.8 $
  * @since 2.2
  *
- * @ww.tag name="password" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.PasswordTag"
+ * @ww.tag name="password" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.PasswordTag"
  * description="Render an HTML input tag of type password"
  */
 public class Password extends TextField {

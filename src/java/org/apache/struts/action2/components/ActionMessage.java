@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author tm_jee
  * @version $Date: 2006/01/07 20:43:28 $ $Id: ActionMessage.java,v 1.6 2006/01/07 20:43:28 plightbo Exp $
- * @ww.tag name="actionmessage" tld-body-content="empty" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.ActionMessageTag"
+ * @ww.tag name="actionmessage" tld-body-content="empty" tld-tag-class="org.apache.struts.action2.views.jsp.ui.ActionMessageTag"
  * description="Render action messages if they exists"
  * @since 2.2
  */

@@ -2,13 +2,13 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.velocity.components;
+package org.apache.struts.action2.views.velocity.components;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.opensymphony.webwork.components.Component;
-import com.opensymphony.webwork.components.RichTextEditor;
+import org.apache.struts.action2.components.Component;
+import org.apache.struts.action2.components.RichTextEditor;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 /**

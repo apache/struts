@@ -2,10 +2,10 @@
  *  Copyright (c) 2002-2006 by OpenSymphony
  *  All rights reserved.
  */
-package com.opensymphony.webwork.components.template;
+package org.apache.struts.action2.components.template;
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.views.freemarker.FreemarkerManager;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.views.freemarker.FreemarkerManager;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.util.OgnlValueStack;

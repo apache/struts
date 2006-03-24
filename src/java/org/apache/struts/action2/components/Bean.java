@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.util.ClassLoaderUtil;
 import com.opensymphony.xwork.ObjectFactory;
@@ -33,13 +33,13 @@ import java.io.Writer;
  * <pre>
  * <!-- START SNIPPET: examples -->
  * &lt;-- in freemarker form --&gt;
- * [ww.bean name="com.opensymphony.webwork.example.counter.SimpleCounter" id="counter"]
+ * [ww.bean name="org.apache.struts.action2.example.counter.SimpleCounter" id="counter"]
  *   [ww:param name="foo" value="BAR"/]
  *   The value of foo is : [ww:property value="foo"/], when inside the bean tag.<br />
  * [/ww:bean]
  *
  * &lt;-- in jsp form --&gt;
- * &lt;ww:bean name="com.opensymphony.webwork.example.counter.SimpleCounter" id="counter"&gt;
+ * &lt;ww:bean name="org.apache.struts.action2.example.counter.SimpleCounter" id="counter"&gt;
  * 	 &lt;ww:param name="foo" value="BAR" /&gt;
  *   The value of foot is : &lt;ww:property value="foo"/&gt;, when inside the bean tag &lt;br /&gt;
  * &lt;/ww:bean&gt;
@@ -76,7 +76,7 @@ import java.io.Writer;
  *
  * @see Param
  *
- * @ww.tag name="bean" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.BeanTag"
+ * @ww.tag name="bean" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.BeanTag"
  * description="Instantiate a JavaBean and place it in the context."
  */
 public class Bean extends Component {

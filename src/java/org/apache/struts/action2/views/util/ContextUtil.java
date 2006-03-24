@@ -2,15 +2,15 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.util;
+package org.apache.struts.action2.views.util;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.webwork.views.jsp.ui.OgnlTool;
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.util.WebWorkUtil;
-import com.opensymphony.webwork.WebWorkConstants;
+import org.apache.struts.action2.views.jsp.ui.OgnlTool;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.util.WebWorkUtil;
+import org.apache.struts.action2.WebWorkConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -74,7 +74,7 @@ import java.io.Writer;
  * @see Bean
  * @see Text
  *
- * @ww.tag name="param" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ParamTag"
+ * @ww.tag name="param" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ParamTag"
  * description="Parametrize other tags"
  */
 public class Param extends Component {

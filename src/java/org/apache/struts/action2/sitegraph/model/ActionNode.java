@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.sitegraph.model;
+package org.apache.struts.action2.sitegraph.model;
 
 /**
  * User: plightbo

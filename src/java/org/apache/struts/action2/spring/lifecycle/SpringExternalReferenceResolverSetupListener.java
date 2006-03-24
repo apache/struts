@@ -1,7 +1,7 @@
 /*
  * Created on Jun 14, 2004
  */
-package com.opensymphony.webwork.spring.lifecycle;
+package org.apache.struts.action2.spring.lifecycle;
 
 import com.opensymphony.xwork.config.Configuration;
 import com.opensymphony.xwork.config.ConfigurationManager;

@@ -1,4 +1,4 @@
-package com.opensymphony.webwork;
+package org.apache.struts.action2;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -127,7 +127,7 @@ public class Main {
                 return;
             }
 
-            launch("com.opensymphony.webwork.quickstart.QuickStart", programArgs, urls);
+            launch("org.apache.struts.action2.quickstart.QuickStart", programArgs, urls);
             return;
         }
 
@@ -140,7 +140,7 @@ public class Main {
         }
 
         if ("sitegraph".equals(command)) {
-            launch("com.opensymphony.webwork.sitegraph.SiteGraph", programArgs, urls);
+            launch("org.apache.struts.action2.sitegraph.SiteGraph", programArgs, urls);
         }
     }
 

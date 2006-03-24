@@ -2,9 +2,9 @@
  * Copyright (c) 2002-2005 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp.ui;
+package org.apache.struts.action2.views.jsp.ui;
 
-import com.opensymphony.webwork.components.ListUIBean;
+import org.apache.struts.action2.components.ListUIBean;
 
 /**
  * @author Matt Ho <a href="mailto:matt@enginegreen.com">&lt;matt@enginegreen.com&gt;</a>

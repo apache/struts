@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.webwork.util.classloader.problems;
+package org.apache.struts.action2.util.classloader.problems;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

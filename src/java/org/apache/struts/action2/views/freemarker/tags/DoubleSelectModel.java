@@ -1,7 +1,7 @@
-package com.opensymphony.webwork.views.freemarker.tags;
+package org.apache.struts.action2.views.freemarker.tags;
 
-import com.opensymphony.webwork.components.Component;
-import com.opensymphony.webwork.components.DoubleSelect;
+import org.apache.struts.action2.components.Component;
+import org.apache.struts.action2.components.DoubleSelect;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 import javax.servlet.http.HttpServletRequest;

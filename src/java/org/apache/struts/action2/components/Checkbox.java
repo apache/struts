@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision: 1.9 $
  * @since 2.2
  *
- * @ww.tag name="checkbox" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.CheckboxTag"
+ * @ww.tag name="checkbox" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.CheckboxTag"
  * description="Render a checkbox input field"
   */
 public class Checkbox extends UIBean {

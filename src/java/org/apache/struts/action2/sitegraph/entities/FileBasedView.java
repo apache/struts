@@ -1,9 +1,9 @@
-package com.opensymphony.webwork.sitegraph.entities;
+package org.apache.struts.action2.sitegraph.entities;
 
 import com.opensymphony.util.FileUtils;
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.sitegraph.model.Link;
-import com.opensymphony.webwork.WebWorkConstants;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.sitegraph.model.Link;
+import org.apache.struts.action2.WebWorkConstants;
 
 import java.io.File;
 import java.util.Set;

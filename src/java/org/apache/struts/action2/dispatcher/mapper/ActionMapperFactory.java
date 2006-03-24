@@ -1,7 +1,7 @@
-package com.opensymphony.webwork.dispatcher.mapper;
+package org.apache.struts.action2.dispatcher.mapper;
 
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.WebWorkConstants;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.WebWorkConstants;
 import com.opensymphony.xwork.ObjectFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

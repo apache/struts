@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.portlet.dispatcher;
+package org.apache.struts.action2.portlet.dispatcher;
 
 import com.opensymphony.xwork.ActionSupport;
 
@@ -15,7 +15,7 @@ import com.opensymphony.xwork.ActionSupport;
  * immediately be executed. The portlet needs to "wait" to the render phase to do the 
  * rendering. 
  * 
- * When the {@link com.opensymphony.webwork.portlet.result.PortletResult} detects such a 
+ * When the {@link org.apache.struts.action2.portlet.result.PortletResult} detects such a 
  * scenario, instead of executing the actual view, it prepares a couple of render parameters
  * specifying this action and the location of the view, which then will be executed in the 
  * following render request.

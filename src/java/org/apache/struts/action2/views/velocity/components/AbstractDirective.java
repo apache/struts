@@ -1,7 +1,7 @@
-package com.opensymphony.webwork.views.velocity.components;
+package org.apache.struts.action2.views.velocity.components;
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.components.Component;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.components.Component;
 import com.opensymphony.xwork.util.OgnlValueStack;
 import org.apache.velocity.context.InternalContextAdapter;
 import org.apache.velocity.exception.MethodInvocationException;

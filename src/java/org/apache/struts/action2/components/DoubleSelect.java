@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision: 1.11 $
  * @since 2.2
  *
- * @ww.tag name="doubleselect" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.DoubleSelectTag"
+ * @ww.tag name="doubleselect" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.DoubleSelectTag"
  * description="Renders two HTML select elements with second one changing displayed values depending on selected entry of first one."
  */
 public class DoubleSelect extends DoubleListUIBean {

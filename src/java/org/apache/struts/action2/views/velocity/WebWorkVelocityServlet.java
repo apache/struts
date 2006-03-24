@@ -2,13 +2,13 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.velocity;
+package org.apache.struts.action2.views.velocity;
 
-import com.opensymphony.webwork.RequestUtils;
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.WebWorkConstants;
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.views.util.ContextUtil;
+import org.apache.struts.action2.RequestUtils;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.views.util.ContextUtil;
 import com.opensymphony.xwork.ActionContext;
 import org.apache.velocity.Template;
 import org.apache.velocity.context.Context;
@@ -34,7 +34,7 @@ import java.util.Properties;
 /**
  * @author $Author: the_mindstorm $
  * @version $Revision: 1.20 $
- * @deprecated please use {@link com.opensymphony.webwork.dispatcher.VelocityResult} instead of direct access
+ * @deprecated please use {@link org.apache.struts.action2.dispatcher.VelocityResult} instead of direct access
  */
 public class WebWorkVelocityServlet extends VelocityServlet {
     private VelocityManager velocityManager;

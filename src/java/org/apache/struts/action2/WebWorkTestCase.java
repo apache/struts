@@ -1,6 +1,6 @@
-package com.opensymphony.webwork;
+package org.apache.struts.action2;
 
-import com.opensymphony.webwork.config.Configuration;
+import org.apache.struts.action2.config.Configuration;
 import com.opensymphony.xwork.XWorkTestCase;
 
 /**

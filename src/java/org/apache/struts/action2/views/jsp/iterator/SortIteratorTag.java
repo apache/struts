@@ -2,11 +2,11 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp.iterator;
+package org.apache.struts.action2.views.jsp.iterator;
 
-import com.opensymphony.webwork.util.MakeIterator;
-import com.opensymphony.webwork.util.SortIteratorFilter;
-import com.opensymphony.webwork.views.jsp.WebWorkBodyTagSupport;
+import org.apache.struts.action2.util.MakeIterator;
+import org.apache.struts.action2.util.SortIteratorFilter;
+import org.apache.struts.action2.views.jsp.WebWorkBodyTagSupport;
 
 import javax.servlet.jsp.JspException;
 
@@ -63,7 +63,7 @@ import java.util.Comparator;
  * </pre>
  *
  *
- * @see com.opensymphony.webwork.util.SortIteratorFilter
+ * @see org.apache.struts.action2.util.SortIteratorFilter
  * @author Rickard Oberg (rickard@dreambean.com)
  * @author tm_jee (tm_jee(at)yahoo.co.uk)
  *

@@ -2,10 +2,10 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.tiles;
+package org.apache.struts.action2.views.tiles;
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.dispatcher.ServletDispatcherResult;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.dispatcher.ServletDispatcherResult;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.LocaleProvider;
 import org.apache.commons.logging.Log;
@@ -52,7 +52,7 @@ import java.util.Locale;
  * Making this result type the default for the current package.
  *
  * <result-types>
- *      <result-type name="tiles" class="com.opensymphony.webwork.views.tiles.TilesResult" default="true" />
+ *      <result-type name="tiles" class="org.apache.struts.action2.views.tiles.TilesResult" default="true" />
  * </result-types>
  * <!-- END SNIPPET: packageconfig -->
  *

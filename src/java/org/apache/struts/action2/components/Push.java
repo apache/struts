@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -92,7 +92,7 @@ import java.io.Writer;
  * @version $Revision: 1.15 $
  * @since 2.2
  *
- * @ww.tag name="push" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.PushTag"
+ * @ww.tag name="push" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.PushTag"
  * description="Push value on stack for simplified usage."
  */
 public class Push extends Component {

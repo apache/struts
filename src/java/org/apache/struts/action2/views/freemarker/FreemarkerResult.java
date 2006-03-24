@@ -5,11 +5,11 @@
 /*
  * Created on 15/04/2004
  */
-package com.opensymphony.webwork.views.freemarker;
+package org.apache.struts.action2.views.freemarker;
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.dispatcher.WebWorkResultSupport;
-import com.opensymphony.webwork.views.util.ResourceUtil;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.dispatcher.WebWorkResultSupport;
+import org.apache.struts.action2.views.util.ResourceUtil;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.LocaleProvider;
@@ -28,7 +28,7 @@ import java.util.Locale;
  * <!-- START SNIPPET: description -->
  *
  * Renders a view using the Freemarker template engine.  Alternatively, the
- * {@link com.opensymphony.webwork.dispatcher.ServletDispatcherResult
+ * {@link org.apache.struts.action2.dispatcher.ServletDispatcherResult
  * dispatcher} result type can be used in conjunction Webwork's {@link
  * FreemarkerServlet}.
  * <p>

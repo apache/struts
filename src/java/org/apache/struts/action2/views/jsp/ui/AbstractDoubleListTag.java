@@ -2,10 +2,10 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp.ui;
+package org.apache.struts.action2.views.jsp.ui;
 
-import com.opensymphony.webwork.components.DoubleListUIBean;
-import com.opensymphony.webwork.components.DoubleSelect;
+import org.apache.struts.action2.components.DoubleListUIBean;
+import org.apache.struts.action2.components.DoubleSelect;
 
 
 /**

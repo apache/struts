@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.interceptor;
+package org.apache.struts.action2.interceptor;
 
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
@@ -6,8 +6,8 @@ import com.opensymphony.xwork.ActionProxy;
 import com.opensymphony.xwork.interceptor.Interceptor;
 import com.opensymphony.xwork.interceptor.PreResultListener;
 import com.opensymphony.xwork.util.OgnlValueStack;
-import com.opensymphony.webwork.dispatcher.SessionMap;
-import com.opensymphony.webwork.ServletActionContext;
+import org.apache.struts.action2.dispatcher.SessionMap;
+import org.apache.struts.action2.ServletActionContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

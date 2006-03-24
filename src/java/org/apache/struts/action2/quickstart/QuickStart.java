@@ -2,9 +2,9 @@
  *  Copyright (c) 2002-2006 by OpenSymphony
  *  All rights reserved.
  */
-package com.opensymphony.webwork.quickstart;
+package org.apache.struts.action2.quickstart;
 
-import com.opensymphony.webwork.util.classloader.CompilingClassLoader;
+import org.apache.struts.action2.util.classloader.CompilingClassLoader;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
@@ -134,7 +134,7 @@ public class QuickStart {
         URLClassLoader url = new MyURLClassLoader(parent);
         Thread.currentThread().setContextClassLoader(url);
 
-        Class clazz = url.loadClass("com.opensymphony.webwork.quickstart.JettyServer");
+        Class clazz = url.loadClass("org.apache.struts.action2.quickstart.JettyServer");
         Method method = clazz.getDeclaredMethod("startServer",
                 new Class[]{int.class, String.class, List.class, Map.class, String.class});
         method.invoke(null, new Object[]{c.port, c.getContext(), c.getPathPriority(), c.getMappings(), c.getResolver()});

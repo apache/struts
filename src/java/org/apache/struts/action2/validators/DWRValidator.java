@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2005 Opensymphony. All Rights Reserved.
  */
-package com.opensymphony.webwork.validators;
+package org.apache.struts.action2.validators;
 
-import com.opensymphony.webwork.dispatcher.ApplicationMap;
-import com.opensymphony.webwork.dispatcher.DispatcherUtils;
-import com.opensymphony.webwork.dispatcher.RequestMap;
-import com.opensymphony.webwork.dispatcher.SessionMap;
+import org.apache.struts.action2.dispatcher.ApplicationMap;
+import org.apache.struts.action2.dispatcher.DispatcherUtils;
+import org.apache.struts.action2.dispatcher.RequestMap;
+import org.apache.struts.action2.dispatcher.SessionMap;
 import com.opensymphony.xwork.*;
 import com.opensymphony.xwork.config.entities.ActionConfig;
 import org.apache.commons.logging.Log;
@@ -26,7 +26,7 @@ import java.util.Map;
  * <p/>
  * <dwr>
  * <allow>
- * <create creator="new" javascript="validator" class="com.opensymphony.webwork.validators.DWRValidator"/>
+ * <create creator="new" javascript="validator" class="org.apache.struts.action2.validators.DWRValidator"/>
  * <convert converter="bean" match="com.opensymphony.xwork.ValidationAwareSupport"/>
  * </allow>
  * </dwr>

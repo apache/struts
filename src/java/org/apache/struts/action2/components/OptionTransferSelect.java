@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -78,7 +78,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * 
  * @author tm_jee
  * @version $Date: 2006/03/18 16:14:42 $ $Id: OptionTransferSelect.java,v 1.9 2006/03/18 16:14:42 rgielen Exp $
- * @ww.tag name="optiontransferselect" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.OptionTransferSelectTag"
+ * @ww.tag name="optiontransferselect" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.OptionTransferSelectTag"
  * description="Renders an input form"
  */
 public class OptionTransferSelect extends DoubleListUIBean {

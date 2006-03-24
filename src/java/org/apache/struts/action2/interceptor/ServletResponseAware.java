@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.interceptor;
+package org.apache.struts.action2.interceptor;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  * Note that using this interface makes the Action tied to a servlet environment, so it should be
  * avoided if possible since things like unit testing will become more difficult.
  *
- * @author <a href="mailto:rickard@middleware-company.com">Rickard Öberg</a>
+ * @author <a href="mailto:rickard@middleware-company.com">Rickard ï¿½berg</a>
  */
 public interface ServletResponseAware {
 

@@ -1,7 +1,7 @@
 /*
  * Created on Aug 13, 2004 by mgreer
  */
-package com.opensymphony.webwork.sitegraph.entities;
+package org.apache.struts.action2.sitegraph.entities;
 
 import java.util.Set;
 

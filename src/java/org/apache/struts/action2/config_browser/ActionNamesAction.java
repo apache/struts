@@ -1,9 +1,9 @@
-package com.opensymphony.webwork.config_browser;
+package org.apache.struts.action2.config_browser;
 
 import com.opensymphony.xwork.ActionSupport;
 import com.opensymphony.xwork.config.entities.ActionConfig;
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.WebWorkConstants;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.WebWorkConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

@@ -2,9 +2,9 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.velocity;
+package org.apache.struts.action2.views.velocity;
 
-import com.opensymphony.webwork.util.ClassLoaderUtils;
+import org.apache.struts.action2.util.ClassLoaderUtils;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 

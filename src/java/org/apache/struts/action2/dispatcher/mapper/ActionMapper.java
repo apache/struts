@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.dispatcher.mapper;
+package org.apache.struts.action2.dispatcher.mapper;
 
 import javax.servlet.http.HttpServletRequest;
 

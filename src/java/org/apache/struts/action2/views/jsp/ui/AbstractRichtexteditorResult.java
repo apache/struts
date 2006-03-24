@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp.ui;
+package org.apache.struts.action2.views.jsp.ui;
 
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -20,10 +20,10 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.opensymphony.webwork.components.AbstractRichtexteditorConnector.CreateFolderResult;
-import com.opensymphony.webwork.components.AbstractRichtexteditorConnector.FileUploadResult;
-import com.opensymphony.webwork.components.AbstractRichtexteditorConnector.Folder;
-import com.opensymphony.webwork.components.AbstractRichtexteditorConnector.FoldersAndFiles;
+import org.apache.struts.action2.components.AbstractRichtexteditorConnector.CreateFolderResult;
+import org.apache.struts.action2.components.AbstractRichtexteditorConnector.FileUploadResult;
+import org.apache.struts.action2.components.AbstractRichtexteditorConnector.Folder;
+import org.apache.struts.action2.components.AbstractRichtexteditorConnector.FoldersAndFiles;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.Result;
 
@@ -39,13 +39,13 @@ import com.opensymphony.xwork.Result;
  * <pre>
  *  &lt;!-- Results necessary when using 'browse server' and 'upload' feature of Richtexteditor --&gt;
  *  &lt;result-type name="richtexteditorGetFolders" 
- *                  class="com.opensymphony.webwork.views.jsp.ui.RichtexteditorGetFoldersResult" /&gt;
+ *                  class="org.apache.struts.action2.views.jsp.ui.RichtexteditorGetFoldersResult" /&gt;
  *  &lt;result-type name="richtexteditorGetFoldersAndFiles" 
- *                  class="com.opensymphony.webwork.views.jsp.ui.RichtexteditorGetFoldersAndFilesResult" /&gt;
+ *                  class="org.apache.struts.action2.views.jsp.ui.RichtexteditorGetFoldersAndFilesResult" /&gt;
  *  &lt;result-type name="richtexteditorCreateFolder" 
- *                  class="com.opensymphony.webwork.views.jsp.ui.RichtexteditorCreateFolderResult" /&gt;
+ *                  class="org.apache.struts.action2.views.jsp.ui.RichtexteditorCreateFolderResult" /&gt;
  *  &lt;result-type name="richtexteditorFileUpload" 
- *                  class="com.opensymphony.webwork.views.jsp.ui.RichtexteditorFileUploadResult" /&gt;
+ *                  class="org.apache.struts.action2.views.jsp.ui.RichtexteditorFileUploadResult" /&gt;
  * </pre>
  * 
  * <!-- END SNIPPET: javadoc -->
@@ -200,7 +200,7 @@ public abstract class AbstractRichtexteditorResult implements Result {
 	 * 
 	 * @param invocation
 	 * @return The server path calculated from AbstractRichtexteditoConnector
-	 * @see com.opensymphony.webwork.components.AbstractRichtexteditorConnector#calculateServerPath(String, String, String)
+	 * @see org.apache.struts.action2.components.AbstractRichtexteditorConnector#calculateServerPath(String, String, String)
 	 */
 	protected String getServerPath(ActionInvocation invocation) {
 		return (String) invocation.getStack().getContext().get("__richtexteditorServerPath");
@@ -213,7 +213,7 @@ public abstract class AbstractRichtexteditorResult implements Result {
 	 * 
 	 * @param invocation
 	 * @return The <code>Folder[]</code> computed from AbstractRichtexteditorConnector
-	 * @see com.opensymphony.webwork.components.AbstractRichtexteditorConnector#getFolders(String, String)
+	 * @see org.apache.struts.action2.components.AbstractRichtexteditorConnector#getFolders(String, String)
 	 */
 	protected Folder[] richtexteditorFolders(ActionInvocation invocation) {
 		return (Folder[]) invocation.getStack().getContext().get("__richtexteditorGetFolders");
@@ -226,7 +226,7 @@ public abstract class AbstractRichtexteditorResult implements Result {
 	 * 
 	 * @param invocation
 	 * @return The <code>FoldersAndFiles</code> computed from AbstractRichtexteditorConnector
-	 * @see com.opensymphony.webwork.components.AbstractRichtexteditorConnector#getFoldersAndFiles(String, String)
+	 * @see org.apache.struts.action2.components.AbstractRichtexteditorConnector#getFoldersAndFiles(String, String)
 	 */
 	protected FoldersAndFiles richtexteditorFoldersAndFiles(ActionInvocation invocation) {
 		return (FoldersAndFiles) invocation.getStack().getContext().get("__richtexteditorGetFoldersAndFiles");
@@ -240,7 +240,7 @@ public abstract class AbstractRichtexteditorResult implements Result {
 	 * 
 	 * @param invocation
 	 * @return The <code>CreateFolderResult</code> computed from AbstractRichtexteditorConnector
-	 * @see com.opensymphony.webwork.components.AbstractRichtexteditorConnector#createFolder(String, String, String)
+	 * @see org.apache.struts.action2.components.AbstractRichtexteditorConnector#createFolder(String, String, String)
 	 */
 	protected CreateFolderResult richtexteditorCreateFolderResult(ActionInvocation invocation) {
 		return (CreateFolderResult) invocation.getStack().getContext().get("__richtexteditorCreateFolder");
@@ -253,7 +253,7 @@ public abstract class AbstractRichtexteditorResult implements Result {
 	 * 
 	 * @param invocation
 	 * @return The <code>FileUploadResult</code> computed from AbstractRichtexteditorConnector
-	 * @see com.opensymphony.webwork.components.AbstractRichtexteditorConnector#fileUpload(String, String, String, String, java.io.File)
+	 * @see org.apache.struts.action2.components.AbstractRichtexteditorConnector#fileUpload(String, String, String, String, java.io.File)
 	 */
 	protected FileUploadResult richtexteditorFileUploadResult(ActionInvocation invocation) {
 		return (FileUploadResult) invocation.getStack().getContext().get("__richtexteditorFileUpload");

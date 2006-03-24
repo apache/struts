@@ -6,9 +6,9 @@
  * the LICENSE.txt file.                                                     *
  *                                                                           *
  *****************************************************************************/
-package com.opensymphony.webwork.pico;
+package org.apache.struts.action2.pico;
 
-import com.opensymphony.webwork.dispatcher.ServletDispatcher;
+import org.apache.struts.action2.dispatcher.ServletDispatcher;
 import com.opensymphony.xwork.ActionProxyFactory;
 import org.nanocontainer.nanowar.ServletRequestContainerLauncher;
 

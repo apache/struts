@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.util;
+package org.apache.struts.action2.util;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,7 +17,7 @@ import java.util.LinkedList;
  * does not copy buffers when it's expanded. There's also no copying of the internal buffer
  * if it's contents is extracted with the writeTo(stream) method.
  *
- * @author Rickard Öberg
+ * @author Rickard ï¿½berg
  * @version $Revision: 1.11 $
  */
 public class FastByteArrayOutputStream extends OutputStream {

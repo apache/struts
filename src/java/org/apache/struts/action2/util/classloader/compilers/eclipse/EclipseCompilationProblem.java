@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.webwork.util.classloader.compilers.eclipse;
+package org.apache.struts.action2.util.classloader.compilers.eclipse;
 
-import com.opensymphony.webwork.util.classloader.problems.CompilationProblem;
+import org.apache.struts.action2.util.classloader.problems.CompilationProblem;
 import org.eclipse.jdt.core.compiler.IProblem;
 
 public class EclipseCompilationProblem implements CompilationProblem {

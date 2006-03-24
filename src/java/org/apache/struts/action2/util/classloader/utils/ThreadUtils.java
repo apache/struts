@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.util.classloader.utils;
+package org.apache.struts.action2.util.classloader.utils;
 
 
 public final class ThreadUtils {

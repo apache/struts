@@ -2,9 +2,9 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
-import com.opensymphony.webwork.components.Param.UnnamedParametric;
+import org.apache.struts.action2.components.Param.UnnamedParametric;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,7 +65,7 @@ import java.util.List;
  *
  * @author tm_jee
  * @version $Date: 2006/01/01 15:16:03 $ $Id: FieldError.java,v 1.7 2006/01/01 15:16:03 tmjee Exp $
- * @ww.tag name="fielderror" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.FieldErrorTag"
+ * @ww.tag name="fielderror" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.FieldErrorTag"
  * description="Render field error (all or partial depending on param tag nested)if they exists"
  */
 public class FieldError extends UIBean implements UnnamedParametric {

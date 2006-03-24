@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.views.freemarker;
+package org.apache.struts.action2.views.freemarker;
 
 import freemarker.core.CollectionAndSequence;
 import freemarker.ext.beans.BeansWrapper;
@@ -26,7 +26,7 @@ import java.util.Set;
  */
 public class WebWorkBeanWrapper extends BeansWrapper {
     private static final boolean altMapWrapper
-            = "true".equals(com.opensymphony.webwork.config.Configuration.get("webwork.freemarker.wrapper.altMap"));
+            = "true".equals(org.apache.struts.action2.config.Configuration.get("webwork.freemarker.wrapper.altMap"));
 
     public TemplateModel wrap(Object object) throws TemplateModelException {
         if (object instanceof TemplateBooleanModel) {

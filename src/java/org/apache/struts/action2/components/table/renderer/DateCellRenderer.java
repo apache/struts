@@ -2,9 +2,9 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components.table.renderer;
+package org.apache.struts.action2.components.table.renderer;
 
-import com.opensymphony.webwork.components.table.WebTable;
+import org.apache.struts.action2.components.table.WebTable;
 
 import java.text.SimpleDateFormat;
 

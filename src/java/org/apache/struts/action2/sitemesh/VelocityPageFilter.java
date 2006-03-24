@@ -1,10 +1,10 @@
-package com.opensymphony.webwork.sitemesh;
+package org.apache.struts.action2.sitemesh;
 
 import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.filter.PageFilter;
-import com.opensymphony.webwork.views.velocity.VelocityManager;
+import org.apache.struts.action2.views.velocity.VelocityManager;
 import com.opensymphony.xwork.ActionContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

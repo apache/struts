@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.webwork.util.classloader;
+package org.apache.struts.action2.util.classloader;
 
-import com.opensymphony.webwork.util.classloader.compilers.JavaCompiler;
-import com.opensymphony.webwork.util.classloader.compilers.eclipse.EclipseJavaCompiler;
-import com.opensymphony.webwork.util.classloader.listeners.CompilingListener;
-import com.opensymphony.webwork.util.classloader.monitor.FilesystemAlterationMonitor;
-import com.opensymphony.webwork.util.classloader.stores.MemoryResourceStore;
-import com.opensymphony.webwork.util.classloader.stores.TransactionalResourceStore;
+import org.apache.struts.action2.util.classloader.compilers.JavaCompiler;
+import org.apache.struts.action2.util.classloader.compilers.eclipse.EclipseJavaCompiler;
+import org.apache.struts.action2.util.classloader.listeners.CompilingListener;
+import org.apache.struts.action2.util.classloader.monitor.FilesystemAlterationMonitor;
+import org.apache.struts.action2.util.classloader.stores.MemoryResourceStore;
+import org.apache.struts.action2.util.classloader.stores.TransactionalResourceStore;
 import com.uwyn.rife.continuations.ClassByteAware;
 
 import java.io.File;

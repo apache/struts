@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.util;
+package org.apache.struts.action2.util;
 
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class InvocationSessionStore {
 
-    private static final String INVOCATION_MAP_KEY = "com.opensymphony.webwork.util.InvocationSessionStore.invocationMap";
+    private static final String INVOCATION_MAP_KEY = "org.apache.struts.action2.util.InvocationSessionStore.invocationMap";
 
 
     private InvocationSessionStore() {

@@ -2,13 +2,13 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp.ui;
+package org.apache.struts.action2.views.jsp.ui;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.opensymphony.webwork.components.ActionError;
-import com.opensymphony.webwork.components.Component;
+import org.apache.struts.action2.components.ActionError;
+import org.apache.struts.action2.components.Component;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 /**

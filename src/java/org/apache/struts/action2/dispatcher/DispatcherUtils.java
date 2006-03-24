@@ -2,20 +2,20 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.dispatcher;
+package org.apache.struts.action2.dispatcher;
 
 import com.opensymphony.util.ClassLoaderUtil;
 import com.opensymphony.util.FileManager;
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.WebWorkStatics;
-import com.opensymphony.webwork.WebWorkConstants;
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapping;
-import com.opensymphony.webwork.dispatcher.multipart.MultiPartRequest;
-import com.opensymphony.webwork.dispatcher.multipart.MultiPartRequestWrapper;
-import com.opensymphony.webwork.util.AttributeMap;
-import com.opensymphony.webwork.util.ObjectFactoryDestroyable;
-import com.opensymphony.webwork.util.ObjectFactoryInitializable;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.WebWorkStatics;
+import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapping;
+import org.apache.struts.action2.dispatcher.multipart.MultiPartRequest;
+import org.apache.struts.action2.dispatcher.multipart.MultiPartRequestWrapper;
+import org.apache.struts.action2.util.AttributeMap;
+import org.apache.struts.action2.util.ObjectFactoryDestroyable;
+import org.apache.struts.action2.util.ObjectFactoryInitializable;
 import com.opensymphony.xwork.*;
 import com.opensymphony.xwork.config.ConfigurationException;
 import com.opensymphony.xwork.interceptor.component.ComponentInterceptor;
@@ -45,7 +45,7 @@ import java.util.Map;
  * @author tm_jee
  * @version $Date: 2006/03/20 20:36:40 $ $Id: DispatcherUtils.java,v 1.48 2006/03/20 20:36:40 rainerh Exp $
  *
- * @see com.opensymphony.webwork.dispatcher.FilterDispatcher
+ * @see org.apache.struts.action2.dispatcher.FilterDispatcher
  */
 public class DispatcherUtils {
     private static final Log LOG = LogFactory.getLog(DispatcherUtils.class);
@@ -104,11 +104,11 @@ public class DispatcherUtils {
             if (className.equals("spring")) {
                 // note: this class name needs to be in string form so we don't put hard
                 //       dependencies on spring, since it isn't technically required.
-                className = "com.opensymphony.webwork.spring.WebWorkSpringObjectFactory";
+                className = "org.apache.struts.action2.spring.WebWorkSpringObjectFactory";
             } else if (className.equals("plexus")) {
                 // note: this class name needs to be in string form so we don't put hard
                 //       dependencies on spring, since it isn't technically required.
-                className = "com.opensymphony.webwork.plexus.PlexusObjectFactory";
+                className = "org.apache.struts.action2.plexus.PlexusObjectFactory";
             }
 
             try {
@@ -415,12 +415,12 @@ public class DispatcherUtils {
     /**
      * Wraps and returns the given response or returns the original response object. This is used to transparently
      * handle multipart data as a wrapped class around the given request. Override this method to handle multipart
-     * requests in a special way or to handle other types of requests. Note, {@link com.opensymphony.webwork.dispatcher.multipart.MultiPartRequestWrapper} is
+     * requests in a special way or to handle other types of requests. Note, {@link org.apache.struts.action2.dispatcher.multipart.MultiPartRequestWrapper} is
      * flexible - you should look to that first before overriding this method to handle multipart data.
      *
      * @param request the HttpServletRequest object.
      * @return a wrapped request or original request.
-     * @see com.opensymphony.webwork.dispatcher.multipart.MultiPartRequestWrapper
+     * @see org.apache.struts.action2.dispatcher.multipart.MultiPartRequestWrapper
      */
     public HttpServletRequest wrapRequest(HttpServletRequest request, ServletContext servletContext) throws IOException {
         // don't wrap more than once

@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -44,7 +44,7 @@ import java.io.Writer;
  * @version $Revision: 1.12 $
  * @since 2.2
  *
- * @ww.tag name="set" tld-body-content="empty" tld-tag-class="com.opensymphony.webwork.views.jsp.SetTag"
+ * @ww.tag name="set" tld-body-content="empty" tld-tag-class="org.apache.struts.action2.views.jsp.SetTag"
  * description="Assigns a value to a variable in a specified scope"
  */
 public class Set extends Component {

@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.interceptor;
+package org.apache.struts.action2.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;

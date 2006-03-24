@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.sitegraph.entities;
+package org.apache.struts.action2.sitegraph.entities;
 
 
 /**

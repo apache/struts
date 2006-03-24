@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @see TabbedPanel
  *
- * @ww.tag name="textarea" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.TextareaTag"
+ * @ww.tag name="textarea" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TextareaTag"
  * description="Render HTML textarea tag."
  */
 public class TextArea extends UIBean {

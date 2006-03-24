@@ -1,9 +1,9 @@
 /*
  * Created on Aug 12, 2004 by mgreer
  */
-package com.opensymphony.webwork.sitegraph;
+package org.apache.struts.action2.sitegraph;
 
-import com.opensymphony.webwork.sitegraph.renderers.DOTRenderer;
+import org.apache.struts.action2.sitegraph.renderers.DOTRenderer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

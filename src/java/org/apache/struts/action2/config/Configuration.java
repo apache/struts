@@ -2,10 +2,10 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.config;
+package org.apache.struts.action2.config;
 
 import com.opensymphony.xwork.ObjectFactory;
-import com.opensymphony.webwork.WebWorkConstants;
+import org.apache.struts.action2.WebWorkConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

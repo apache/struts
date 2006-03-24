@@ -1,7 +1,7 @@
-package com.opensymphony.webwork.views.freemarker.tags;
+package org.apache.struts.action2.views.freemarker.tags;
 
-import com.opensymphony.webwork.components.Checkbox;
-import com.opensymphony.webwork.components.Component;
+import org.apache.struts.action2.components.Checkbox;
+import org.apache.struts.action2.components.Component;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 import javax.servlet.http.HttpServletRequest;

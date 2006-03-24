@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlUtil;
 import com.opensymphony.xwork.util.OgnlValueStack;
@@ -40,7 +40,7 @@ import java.util.Map;
  * @version $Revision: 1.2 $
  * @since 2.2
  *
- * @ww.tag name="debug" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.DebugTag"
+ * @ww.tag name="debug" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.DebugTag"
  * description="Render debug tag"
   */
 public class Debug extends UIBean {

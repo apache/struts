@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -63,7 +63,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Ian Roughley
  * @author Rene Gielen
  * @version $Revision: 1.5 $
- * @ww.tag name="a" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.AnchorTag"
+ * @ww.tag name="a" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.AnchorTag"
  * description="Render a HTML href element that when clicked calls a URL via remote XMLHttpRequest"
  * @since 2.2
  */

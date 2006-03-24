@@ -2,9 +2,9 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
-import com.opensymphony.webwork.util.TokenHelper;
+import org.apache.struts.action2.util.TokenHelper;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,10 +34,10 @@ import java.util.Map;
  * @version $Date: 2006/03/18 16:24:46 $ $Id: Token.java,v 1.8 2006/03/18 16:24:46 rgielen Exp $
  * @since 2.2
  *
- * @see com.opensymphony.webwork.interceptor.TokenInterceptor
- * @see com.opensymphony.webwork.interceptor.TokenSessionStoreInterceptor
+ * @see org.apache.struts.action2.interceptor.TokenInterceptor
+ * @see org.apache.struts.action2.interceptor.TokenSessionStoreInterceptor
  *
- * @ww.tag name="token" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.TokenTag"
+ * @ww.tag name="token" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TokenTag"
  * description="Stop double-submission of forms"
  */
 public class Token extends UIBean {
@@ -53,7 +53,7 @@ public class Token extends UIBean {
     }
 
     /**
-     * First looks for the token in the PageContext using the supplied name (or {@link com.opensymphony.webwork.util.TokenHelper#DEFAULT_TOKEN_NAME}
+     * First looks for the token in the PageContext using the supplied name (or {@link org.apache.struts.action2.util.TokenHelper#DEFAULT_TOKEN_NAME}
      * if no name is provided) so that the same token can be re-used for the scope of a request for the same name. If
      * the token is not in the PageContext, a new Token is created and set into the Session and the PageContext with
      * the name.

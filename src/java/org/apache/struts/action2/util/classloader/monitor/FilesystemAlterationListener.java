@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.webwork.util.classloader.monitor;
+package org.apache.struts.action2.util.classloader.monitor;
 
 import java.io.File;
 

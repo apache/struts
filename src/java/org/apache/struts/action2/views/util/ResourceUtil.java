@@ -1,8 +1,8 @@
-package com.opensymphony.webwork.views.util;
+package org.apache.struts.action2.views.util;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.opensymphony.webwork.RequestUtils;
+import org.apache.struts.action2.RequestUtils;
 
 /**
  * User: plightbo

@@ -1,8 +1,8 @@
-package com.opensymphony.webwork.views.util;
+package org.apache.struts.action2.views.util;
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.WebWorkConstants;
-import com.opensymphony.webwork.config.Configuration;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.config.Configuration;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.util.OgnlValueStack;
 import com.opensymphony.xwork.util.TextParseUtil;

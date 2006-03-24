@@ -6,7 +6,7 @@
  * the LICENSE.txt file.                                                     *
  *                                                                           *
  *****************************************************************************/
-package com.opensymphony.webwork.pico;
+package org.apache.struts.action2.pico;
 
 import java.util.Map;
 

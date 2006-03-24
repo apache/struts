@@ -1,6 +1,6 @@
-package com.opensymphony.webwork.views.freemarker.tags;
+package org.apache.struts.action2.views.freemarker.tags;
 
-import com.opensymphony.webwork.components.Component;
+import org.apache.struts.action2.components.Component;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TransformControl;
 

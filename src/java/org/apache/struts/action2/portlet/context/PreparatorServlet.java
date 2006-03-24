@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.portlet.context;
+package org.apache.struts.action2.portlet.context;
 
 import java.io.IOException;
 
@@ -15,14 +15,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.opensymphony.webwork.WebWorkStatics;
+import org.apache.struts.action2.WebWorkStatics;
 import com.opensymphony.xwork.ActionContext;
 
 /**
  * Since a portlet is not dispatched the same way as a servlet, the 
- * {@link com.opensymphony.webwork.ServletActionContext} is not immediately available, as it 
+ * {@link org.apache.struts.action2.ServletActionContext} is not immediately available, as it 
  * depends on objects from the servlet API. However, the WW2 view implementations require access
- * to the objects in the {@link com.opensymphony.webwork.ServletActionContext}, and this servlet
+ * to the objects in the {@link org.apache.struts.action2.ServletActionContext}, and this servlet
  * makes sure that these are available when the portlet actions are executing the render results.
  * 
  * @author Nils-Helge Garli
@@ -32,7 +32,7 @@ public class PreparatorServlet extends HttpServlet implements WebWorkStatics {
     private final static Log LOG = LogFactory.getLog(PreparatorServlet.class);
 
     /**
-     * Prepares the {@link com.opensymphony.webwork.ServletActionContext} with the
+     * Prepares the {@link org.apache.struts.action2.ServletActionContext} with the
      * {@link ServletContext}, {@link HttpServletRequest} and {@link HttpServletResponse}.
      */
     public void service(HttpServletRequest servletRequest,

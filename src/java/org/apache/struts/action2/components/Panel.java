@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 import org.apache.commons.logging.Log;
@@ -25,7 +25,7 @@ import java.io.Writer;
  *
  * @see TabbedPanel
  *
- * @ww.tag name="panel" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.PanelTag"
+ * @ww.tag name="panel" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.PanelTag"
  * description="Render a panel for tabbedPanel"
  */
 public class Panel extends Div {

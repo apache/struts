@@ -1,8 +1,8 @@
-package com.opensymphony.webwork.views.jsp.ui;
+package org.apache.struts.action2.views.jsp.ui;
 
-import com.opensymphony.webwork.components.Component;
-import com.opensymphony.webwork.components.Panel;
-import com.opensymphony.webwork.components.TabbedPanel;
+import org.apache.struts.action2.components.Component;
+import org.apache.struts.action2.components.Panel;
+import org.apache.struts.action2.components.TabbedPanel;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 import javax.servlet.http.HttpServletRequest;

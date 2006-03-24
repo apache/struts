@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.freemarker;
+package org.apache.struts.action2.views.freemarker;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -15,11 +15,11 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.dispatcher.WebWorkResultSupport;
-import com.opensymphony.webwork.portlet.PortletActionConstants;
-import com.opensymphony.webwork.portlet.context.PortletActionContext;
-import com.opensymphony.webwork.views.util.ResourceUtil;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.dispatcher.WebWorkResultSupport;
+import org.apache.struts.action2.portlet.PortletActionConstants;
+import org.apache.struts.action2.portlet.context.PortletActionContext;
+import org.apache.struts.action2.views.util.ResourceUtil;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.util.OgnlValueStack;

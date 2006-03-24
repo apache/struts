@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.util;
+package org.apache.struts.action2.util;
 
 import java.io.Serializable;
 
@@ -12,7 +12,7 @@ import java.io.Serializable;
  * <p/>
  * Since it is an Iterator it can be used by the iterator tag
  *
- * @author Rickard Öberg (rickard@middleware-company.com)
+ * @author Rickard ï¿½berg (rickard@middleware-company.com)
  * @version $Revision: 1.4 $
  * @see <related>
  */

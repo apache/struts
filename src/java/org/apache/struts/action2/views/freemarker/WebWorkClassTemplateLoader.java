@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.views.freemarker;
+package org.apache.struts.action2.views.freemarker;
 
 import com.opensymphony.util.ClassLoaderUtil;
 import freemarker.cache.URLTemplateLoader;

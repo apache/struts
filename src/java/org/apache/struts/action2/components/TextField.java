@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision: 1.10 $
  * @since 2.2
  *
- * @ww.tag name="textfield" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.TextFieldTag"
+ * @ww.tag name="textfield" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TextFieldTag"
  * description="Render an HTML input field of type text"
  */
 public class TextField extends UIBean {

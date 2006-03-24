@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.util;
+package org.apache.struts.action2.util;
 
 import com.opensymphony.xwork.Action;
 
@@ -17,8 +17,8 @@ import java.util.List;
  *
  * @author Rickard Öberg (rickard@middleware-company.com)
  * @version $Revision: 1.7 $
- * @see com.opensymphony.webwork.views.jsp.iterator.MergeIteratorTag
- * @see com.opensymphony.webwork.components.MergeIterator
+ * @see org.apache.struts.action2.views.jsp.iterator.MergeIteratorTag
+ * @see org.apache.struts.action2.components.MergeIterator
  */
 public class MergeIteratorFilter extends IteratorFilterSupport implements Iterator, Action {
 

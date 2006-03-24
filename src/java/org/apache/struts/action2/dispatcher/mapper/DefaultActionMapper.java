@@ -1,10 +1,10 @@
-package com.opensymphony.webwork.dispatcher.mapper;
+package org.apache.struts.action2.dispatcher.mapper;
 
-import com.opensymphony.webwork.RequestUtils;
-import com.opensymphony.webwork.WebWorkConstants;
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.dispatcher.ServletRedirectResult;
-import com.opensymphony.webwork.util.PrefixTrie;
+import org.apache.struts.action2.RequestUtils;
+import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.dispatcher.ServletRedirectResult;
+import org.apache.struts.action2.util.PrefixTrie;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;

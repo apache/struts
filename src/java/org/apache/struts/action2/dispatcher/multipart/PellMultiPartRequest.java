@@ -2,10 +2,10 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.dispatcher.multipart;
+package org.apache.struts.action2.dispatcher.multipart;
 
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.WebWorkConstants;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.WebWorkConstants;
 import http.utils.multipartrequest.ServletMultipartRequest;
 
 import javax.servlet.http.HttpServletRequest;

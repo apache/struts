@@ -1,6 +1,6 @@
-package com.opensymphony.webwork.dispatcher;
+package org.apache.struts.action2.dispatcher;
 
-import com.opensymphony.webwork.config.ServletContextSingleton;
+import org.apache.struts.action2.config.ServletContextSingleton;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -39,7 +39,7 @@ public class FilterDispatcherCompatWeblogic61
 
     /**
      * dummy setter for {@link #filterConfig}; this method
-     * sets up the {@link com.opensymphony.webwork.config.ServletContextSingleton} with
+     * sets up the {@link org.apache.struts.action2.config.ServletContextSingleton} with
      * the servlet context from the filter configuration.
      * <p/>
      * This is needed by Weblogic Server 6.1 because it

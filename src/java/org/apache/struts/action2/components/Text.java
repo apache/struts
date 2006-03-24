@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -87,7 +87,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  *
  * @see Param
  *
- * @ww.tag name="text" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.TextTag"
+ * @ww.tag name="text" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.TextTag"
  * description="Render a I18n text message."
  */
 public class Text extends Component implements Param.UnnamedParametric {

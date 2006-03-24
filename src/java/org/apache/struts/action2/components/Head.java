@@ -2,11 +2,11 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.WebWorkConstants;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.WebWorkConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -60,7 +60,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Patrick Lightbody
  * @author Rainer Hermanns
  * @author Rene Gielen
- * @ww.tag name="head" tld-body-content="empty" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.HeadTag"
+ * @ww.tag name="head" tld-body-content="empty" tld-tag-class="org.apache.struts.action2.views.jsp.ui.HeadTag"
  * description="Render a chunk of HEAD for your HTML file"
  * @since 2.2
  */

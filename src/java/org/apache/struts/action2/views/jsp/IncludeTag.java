@@ -8,10 +8,10 @@
  * Distributable under Apache license.
  * See terms of license at opensource.org
  */
-package com.opensymphony.webwork.views.jsp;
+package org.apache.struts.action2.views.jsp;
 
-import com.opensymphony.webwork.components.Component;
-import com.opensymphony.webwork.components.Include;
+import org.apache.struts.action2.components.Component;
+import org.apache.struts.action2.components.Include;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 import javax.servlet.http.HttpServletRequest;

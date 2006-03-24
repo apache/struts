@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.interceptor;
+package org.apache.struts.action2.interceptor;
 
 /**
  * Actions that want access to the Principal information from HttpServletRequest object

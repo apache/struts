@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2005 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jasperreports;
+package org.apache.struts.action2.views.jasperreports;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -29,8 +29,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.opensymphony.util.TextUtils;
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.dispatcher.WebWorkResultSupport;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.dispatcher.WebWorkResultSupport;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.util.OgnlValueStack;
 

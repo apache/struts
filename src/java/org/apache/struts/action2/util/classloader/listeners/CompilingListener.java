@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.opensymphony.webwork.util.classloader.listeners;
+package org.apache.struts.action2.util.classloader.listeners;
 
-import com.opensymphony.webwork.util.classloader.ReloadingClassLoader;
-import com.opensymphony.webwork.util.classloader.compilers.JavaCompiler;
-import com.opensymphony.webwork.util.classloader.monitor.FilesystemAlterationListener;
-import com.opensymphony.webwork.util.classloader.problems.CompilationProblem;
-import com.opensymphony.webwork.util.classloader.problems.DefaultCompilationProblemHandler;
-import com.opensymphony.webwork.util.classloader.problems.ConsoleCompilationProblemHandler;
-import com.opensymphony.webwork.util.classloader.readers.ResourceReader;
-import com.opensymphony.webwork.util.classloader.stores.TransactionalResourceStore;
+import org.apache.struts.action2.util.classloader.ReloadingClassLoader;
+import org.apache.struts.action2.util.classloader.compilers.JavaCompiler;
+import org.apache.struts.action2.util.classloader.monitor.FilesystemAlterationListener;
+import org.apache.struts.action2.util.classloader.problems.CompilationProblem;
+import org.apache.struts.action2.util.classloader.problems.DefaultCompilationProblemHandler;
+import org.apache.struts.action2.util.classloader.problems.ConsoleCompilationProblemHandler;
+import org.apache.struts.action2.util.classloader.readers.ResourceReader;
+import org.apache.struts.action2.util.classloader.stores.TransactionalResourceStore;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

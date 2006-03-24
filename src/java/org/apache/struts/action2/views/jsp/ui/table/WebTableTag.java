@@ -2,11 +2,11 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp.ui.table;
+package org.apache.struts.action2.views.jsp.ui.table;
 
-import com.opensymphony.webwork.components.Component;
-import com.opensymphony.webwork.components.table.WebTable;
-import com.opensymphony.webwork.views.jsp.ui.ComponentTag;
+import org.apache.struts.action2.components.Component;
+import org.apache.struts.action2.components.table.WebTable;
+import org.apache.struts.action2.views.jsp.ui.ComponentTag;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 import javax.servlet.http.HttpServletRequest;

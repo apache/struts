@@ -2,15 +2,15 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.velocity;
+package org.apache.struts.action2.views.velocity;
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.WebWorkConstants;
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.util.VelocityWebWorkUtil;
-import com.opensymphony.webwork.views.jsp.ui.OgnlTool;
-import com.opensymphony.webwork.views.util.ContextUtil;
-import com.opensymphony.webwork.views.velocity.components.*;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.util.VelocityWebWorkUtil;
+import org.apache.struts.action2.views.jsp.ui.OgnlTool;
+import org.apache.struts.action2.views.util.ContextUtil;
+import org.apache.struts.action2.views.velocity.components.*;
 import com.opensymphony.xwork.ObjectFactory;
 import com.opensymphony.xwork.util.OgnlValueStack;
 import org.apache.commons.logging.Log;
@@ -118,7 +118,7 @@ public class VelocityManager {
      * <li><strong>res</strong> - the current HttpServletResponse</li>
      * <li><strong>stack</strong> - the current {@link OgnlValueStack}</li>
      * <li><strong>ognl</strong> - an {@link OgnlTool}</li>
-     * <li><strong>webwork</strong> - an instance of {@link com.opensymphony.webwork.util.WebWorkUtil}</li>
+     * <li><strong>webwork</strong> - an instance of {@link org.apache.struts.action2.util.WebWorkUtil}</li>
      * <li><strong>action</strong> - the current WebWork action</li>
      * </ul>
      *
@@ -403,7 +403,7 @@ public class VelocityManager {
      *  resource.loader = file, class
      *  file.resource.loader.path = real path of webapp
      *  class.resource.loader.description = Velocity Classpath Resource Loader
-     *  class.resource.loader.class = com.opensymphony.webwork.views.velocity.WebWorkResourceLoader
+     *  class.resource.loader.class = org.apache.struts.action2.views.velocity.WebWorkResourceLoader
      * </pre>
      * <p/>
      * this default configuration can be overridden by specifying a webwork.velocity.configfile property in the
@@ -499,7 +499,7 @@ public class VelocityManager {
          * Matt Ho - Mon Mar 17 00:21:46 PST 2003
          */
         p.setProperty("wwclass.resource.loader.description", "Velocity Classpath Resource Loader");
-        p.setProperty("wwclass.resource.loader.class", "com.opensymphony.webwork.views.velocity.WebWorkResourceLoader");
+        p.setProperty("wwclass.resource.loader.class", "org.apache.struts.action2.views.velocity.WebWorkResourceLoader");
         p.setProperty("wwclass.resource.loader.modificationCheckInterval", "2");
         p.setProperty("wwclass.resource.loader.cache", "true");
 

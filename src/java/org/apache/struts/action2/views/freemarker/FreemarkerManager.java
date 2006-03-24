@@ -2,14 +2,14 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.freemarker;
+package org.apache.struts.action2.views.freemarker;
 
 import com.opensymphony.util.FileManager;
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.views.JspSupportServlet;
-import com.opensymphony.webwork.views.freemarker.tags.WebWorkModels;
-import com.opensymphony.webwork.views.util.ContextUtil;
-import com.opensymphony.webwork.WebWorkConstants;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.views.JspSupportServlet;
+import org.apache.struts.action2.views.freemarker.tags.WebWorkModels;
+import org.apache.struts.action2.views.util.ContextUtil;
+import org.apache.struts.action2.WebWorkConstants;
 import com.opensymphony.xwork.ObjectFactory;
 import com.opensymphony.xwork.util.OgnlValueStack;
 import freemarker.cache.FileTemplateLoader;

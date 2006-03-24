@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author tm_jee
  * @version $Date: 2006/01/01 15:16:03 $ $Id: ActionError.java,v 1.5 2006/01/01 15:16:03 tmjee Exp $
- * @ww.tag name="actionerror" tld-body-content="empty" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.ActionErrorTag"
+ * @ww.tag name="actionerror" tld-body-content="empty" tld-tag-class="org.apache.struts.action2.views.jsp.ui.ActionErrorTag"
  * description="Render action errors if they exists"
  * @since 2.2
  */

@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.interceptor;
+package org.apache.struts.action2.interceptor;
 
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
@@ -188,7 +188,7 @@ public class ExecuteAndWaitInterceptor implements Interceptor {
                             "provide an action-specific or global result named '" + WAIT +
                             "'! This requires FreeMarker support and won't work if you don't have it installed");
                     // no wait result? hmm -- let's try to do dynamically put it in for you!
-                    ResultConfig rc = new ResultConfig(WAIT, "com.opensymphony.webwork.views.freemarker.FreemarkerResult",
+                    ResultConfig rc = new ResultConfig(WAIT, "org.apache.struts.action2.views.freemarker.FreemarkerResult",
                             Collections.singletonMap("location", "com/opensymphony/webwork/interceptor/wait.ftl"));
                     results.put(WAIT, rc);
                 }

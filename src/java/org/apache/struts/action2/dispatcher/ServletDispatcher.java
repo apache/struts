@@ -2,11 +2,11 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.dispatcher;
+package org.apache.struts.action2.dispatcher;
 
-import com.opensymphony.webwork.WebWorkStatics;
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapperFactory;
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapping;
+import org.apache.struts.action2.WebWorkStatics;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapperFactory;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapping;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

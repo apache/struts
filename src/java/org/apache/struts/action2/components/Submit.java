@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -145,7 +145,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision: 1.16 $
  * @since 2.2
  *
- * @ww.tag name="submit" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.SubmitTag"
+ * @ww.tag name="submit" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.SubmitTag"
  * description="Render a submit button"
  */
 public class Submit extends FormButton {

@@ -1,11 +1,11 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapperFactory;
-import com.opensymphony.webwork.dispatcher.mapper.ActionMapping;
-import com.opensymphony.webwork.dispatcher.DispatcherUtils;
-import com.opensymphony.webwork.portlet.context.PortletActionContext;
-import com.opensymphony.webwork.portlet.util.PortletUrlHelper;
-import com.opensymphony.webwork.views.util.UrlHelper;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapperFactory;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapping;
+import org.apache.struts.action2.dispatcher.DispatcherUtils;
+import org.apache.struts.action2.portlet.context.PortletActionContext;
+import org.apache.struts.action2.portlet.util.PortletUrlHelper;
+import org.apache.struts.action2.views.util.UrlHelper;
 import com.opensymphony.xwork.config.ConfigurationManager;
 import com.opensymphony.xwork.config.entities.ActionConfig;
 import com.opensymphony.xwork.util.OgnlValueStack;
@@ -53,7 +53,7 @@ import java.util.Iterator;
  * @version $Date: 2006/03/18 15:49:26 $ $Id: Form.java,v 1.29 2006/03/18 15:49:26 rgielen Exp $
  * @since 2.2
  *
- * @ww.tag name="form" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.FormTag"
+ * @ww.tag name="form" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.FormTag"
  * description="Renders an input form"
   */
 public class Form extends ClosingUIBean {

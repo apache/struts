@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.views;
+package org.apache.struts.action2.views;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

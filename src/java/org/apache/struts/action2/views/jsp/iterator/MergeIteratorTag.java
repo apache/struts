@@ -2,11 +2,11 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp.iterator;
+package org.apache.struts.action2.views.jsp.iterator;
 
-import com.opensymphony.webwork.components.Component;
-import com.opensymphony.webwork.components.MergeIterator;
-import com.opensymphony.webwork.views.jsp.ComponentTagSupport;
+import org.apache.struts.action2.components.Component;
+import org.apache.struts.action2.components.MergeIterator;
+import org.apache.struts.action2.views.jsp.ComponentTagSupport;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Rickard �berg (rickard@dreambean.com)
  * @author tm_jee ( tm_jee (at) yahoo.co.uk )
  * @see MergeIterator
- * @see com.opensymphony.webwork.util.MergeIteratorFilter
+ * @see org.apache.struts.action2.util.MergeIteratorFilter
  */
 public class MergeIteratorTag extends ComponentTagSupport {
 

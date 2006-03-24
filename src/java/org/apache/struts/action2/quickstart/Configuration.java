@@ -2,7 +2,7 @@
  *  Copyright (c) 2002-2006 by OpenSymphony
  *  All rights reserved.
  */
-package com.opensymphony.webwork.quickstart;
+package org.apache.struts.action2.quickstart;
 
 import com.thoughtworks.xstream.XStream;
 import org.apache.commons.collections.MultiHashMap;

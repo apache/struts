@@ -2,15 +2,15 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
-import com.opensymphony.webwork.WebWorkConstants;
-import com.opensymphony.webwork.components.template.Template;
-import com.opensymphony.webwork.components.template.TemplateEngine;
-import com.opensymphony.webwork.components.template.TemplateEngineManager;
-import com.opensymphony.webwork.components.template.TemplateRenderingContext;
-import com.opensymphony.webwork.config.Configuration;
-import com.opensymphony.webwork.views.util.ContextUtil;
+import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.components.template.Template;
+import org.apache.struts.action2.components.template.TemplateEngine;
+import org.apache.struts.action2.components.template.TemplateEngineManager;
+import org.apache.struts.action2.components.template.TemplateRenderingContext;
+import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.views.util.ContextUtil;
 import com.opensymphony.xwork.config.ConfigurationException;
 import com.opensymphony.xwork.util.OgnlValueStack;
 import org.apache.commons.logging.Log;

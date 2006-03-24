@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2005 Opensymphony. All Rights Reserved.
  */
-package com.opensymphony.webwork.spring;
+package org.apache.struts.action2.spring;
 
-import com.opensymphony.webwork.spring.lifecycle.ApplicationContextSessionListener;
+import org.apache.struts.action2.spring.lifecycle.ApplicationContextSessionListener;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.spring.SpringProxyableObjectFactory;
 import org.apache.commons.logging.Log;

@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.util;
+package org.apache.struts.action2.util;
 
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -11,7 +11,7 @@ import java.util.Iterator;
 /**
  * A base class for iterator filters
  *
- * @author Rickard Öberg (rickard@middleware-company.com)
+ * @author Rickard ï¿½berg (rickard@middleware-company.com)
  * @version $Revision: 1.5 $
  */
 public abstract class IteratorFilterSupport {

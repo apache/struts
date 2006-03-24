@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.util;
+package org.apache.struts.action2.util;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -13,7 +13,7 @@ import java.util.Date;
 /**
  * A bean that can be used to format dates
  *
- * @author Rickard Öberg (rickard@middleware-company.com)
+ * @author Rickard ï¿½berg (rickard@middleware-company.com)
  * @version $Revision: 1.6 $
  */
 public class DateFormatter {

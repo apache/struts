@@ -1,6 +1,6 @@
-package com.opensymphony.webwork.lifecycle;
+package org.apache.struts.action2.lifecycle;
 
-import com.opensymphony.webwork.config.ServletContextSingleton;
+import org.apache.struts.action2.config.ServletContextSingleton;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;

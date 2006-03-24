@@ -2,9 +2,9 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp.ui;
+package org.apache.struts.action2.views.jsp.ui;
 
-import com.opensymphony.webwork.util.TabbedPane;
+import org.apache.struts.action2.util.TabbedPane;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;

@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp.ui;
+package org.apache.struts.action2.views.jsp.ui;
 
 import java.io.PrintWriter;
 
@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.opensymphony.webwork.ServletActionContext;
-import com.opensymphony.webwork.components.AbstractRichtexteditorConnector.FileUploadResult;
+import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.components.AbstractRichtexteditorConnector.FileUploadResult;
 import com.opensymphony.xwork.ActionInvocation;
 
 /**

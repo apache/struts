@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.freemarker;
+package org.apache.struts.action2.views.freemarker;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 import freemarker.template.ObjectWrapper;

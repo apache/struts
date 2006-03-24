@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision: 1.5 $
  * @since 2.2
  *
- * @ww.tag name="hidden" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.HiddenTag"
+ * @ww.tag name="hidden" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.HiddenTag"
  * description="Render a hidden input field"
   */
 public class Hidden extends UIBean {

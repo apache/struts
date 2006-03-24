@@ -2,7 +2,7 @@
  *  Copyright (c) 2002-2006 by OpenSymphony
  *  All rights reserved.
  */
-package com.opensymphony.webwork.quickstart;
+package org.apache.struts.action2.quickstart;
 
 import org.mortbay.util.Resource;
 

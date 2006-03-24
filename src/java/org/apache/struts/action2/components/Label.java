@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision: 1.11 $
  * @since 2.2
  *
- * @ww.tag name="label" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.LabelTag"
+ * @ww.tag name="label" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.LabelTag"
  * description="Render a label that displays read-only information"
   */
 public class Label extends UIBean {

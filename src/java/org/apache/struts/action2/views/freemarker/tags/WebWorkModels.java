@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.views.freemarker.tags;
+package org.apache.struts.action2.views.freemarker.tags;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 

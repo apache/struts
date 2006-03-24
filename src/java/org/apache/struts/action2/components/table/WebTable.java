@@ -1,7 +1,7 @@
-package com.opensymphony.webwork.components.table;
+package org.apache.struts.action2.components.table;
 
-import com.opensymphony.webwork.components.GenericUIBean;
-import com.opensymphony.webwork.components.table.renderer.CellRenderer;
+import org.apache.struts.action2.components.GenericUIBean;
+import org.apache.struts.action2.components.table.renderer.CellRenderer;
 import com.opensymphony.xwork.util.OgnlValueStack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @ww.tag name="table" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.table.WebTableTag"
+ * @ww.tag name="table" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.table.WebTableTag"
  * description="Instantiate a JavaBean and place it in the context."
  */
 public class WebTable extends GenericUIBean {
@@ -274,7 +274,7 @@ public class WebTable extends GenericUIBean {
     }
 
     /**
-     * Whether the table should be sortable. Requires that model implements com.opensymphony.webwork.components.table.SortableTableModel if set to true.
+     * Whether the table should be sortable. Requires that model implements org.apache.struts.action2.components.table.SortableTableModel if set to true.
      * @ww.tagattribute required="false" type="Boolean" default="false"
      */
     public void setSortable(boolean sortable) {

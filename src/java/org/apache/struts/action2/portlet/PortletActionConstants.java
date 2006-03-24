@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.portlet;
+package org.apache.struts.action2.portlet;
 
 /**
  * Interface defining some constants used in the WebWork2 portlet implementation
@@ -74,19 +74,19 @@ public interface PortletActionConstants {
 
     /**
      * Key for the portlet namespace stored in the 
-     * {@link com.opensymphony.webwork.portlet.context.PortletActionContext}.
+     * {@link org.apache.struts.action2.portlet.context.PortletActionContext}.
      */
     String PORTLET_NAMESPACE = "webwork.portlet.portletNamespace";
     
     /**
      * Key for the mode-to-namespace map stored in the 
-     * {@link com.opensymphony.webwork.portlet.context.PortletActionContext}.
+     * {@link org.apache.struts.action2.portlet.context.PortletActionContext}.
      */
     String MODE_NAMESPACE_MAP = "webwork.portlet.modeNamespaceMap";
     
     /**
      * Key for the default action name for the portlet, stored in the 
-     * {@link com.opensymphony.webwork.portlet.context.PortletActionContext}.
+     * {@link org.apache.struts.action2.portlet.context.PortletActionContext}.
      */
     String DEFAULT_ACTION_FOR_MODE = "webwork.portlet.defaultActionForMode";
 }

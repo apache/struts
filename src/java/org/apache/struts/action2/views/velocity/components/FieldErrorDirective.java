@@ -1,7 +1,7 @@
-package com.opensymphony.webwork.views.velocity.components;
+package org.apache.struts.action2.views.velocity.components;
 
-import com.opensymphony.webwork.components.Component;
-import com.opensymphony.webwork.components.FieldError;
+import org.apache.struts.action2.components.Component;
+import org.apache.struts.action2.components.FieldError;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 import javax.servlet.http.HttpServletRequest;

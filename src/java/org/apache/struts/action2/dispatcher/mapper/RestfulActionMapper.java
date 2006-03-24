@@ -1,9 +1,9 @@
-package com.opensymphony.webwork.dispatcher.mapper;
+package org.apache.struts.action2.dispatcher.mapper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.opensymphony.webwork.RequestUtils;
+import org.apache.struts.action2.RequestUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URLDecoder;

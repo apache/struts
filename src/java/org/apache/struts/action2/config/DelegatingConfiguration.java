@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.config;
+package org.apache.struts.action2.config;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -14,7 +14,7 @@ import java.util.Set;
  * a config method is called (get, set, list, etc..) this class will go through the list of configurations
  * and call the method until successful.
  *
- * @author Rickard Öberg
+ * @author Rickard ï¿½berg
  * @author Jason Carreira
  * @author Bill Lynch (docs)
  */

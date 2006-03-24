@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.plexus;
+package org.apache.struts.action2.plexus;
 
 import org.codehaus.plexus.PlexusContainer;
 

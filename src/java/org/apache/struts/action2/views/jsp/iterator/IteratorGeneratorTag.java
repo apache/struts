@@ -2,11 +2,11 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp.iterator;
+package org.apache.struts.action2.views.jsp.iterator;
 
-import com.opensymphony.webwork.util.IteratorGenerator;
-import com.opensymphony.webwork.util.IteratorGenerator.Converter;
-import com.opensymphony.webwork.views.jsp.WebWorkBodyTagSupport;
+import org.apache.struts.action2.util.IteratorGenerator;
+import org.apache.struts.action2.util.IteratorGenerator.Converter;
+import org.apache.struts.action2.views.jsp.WebWorkBodyTagSupport;
 
 import javax.servlet.jsp.JspException;
 
@@ -105,7 +105,7 @@ import org.apache.commons.logging.LogFactory;
  * this converter, it simply add "converter-" to each entries.
  * <!-- END SNIPPET: example -->
  *
- * @see com.opensymphony.webwork.util.IteratorGenerator
+ * @see org.apache.struts.action2.util.IteratorGenerator
  * @author Rickard �berg (rickard@dreambean.com)
  * @author tm_jee ( tm_jee(at)yahoo.co.uk )
  * @version $Revision: 1.14 $
@@ -153,7 +153,7 @@ public class IteratorGeneratorTag extends WebWorkBodyTagSupport {
     }
 
     /**
-     * @ww.tagattribute required="false" type="com.opensymphony.webwork.util.IteratorGenerator.Converter"
+     * @ww.tagattribute required="false" type="org.apache.struts.action2.util.IteratorGenerator.Converter"
      * description="the converter to convert the String entry parsed from <i>val</i> into an object"
      */
     public void setConverter(String aConverter) {

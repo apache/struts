@@ -1,12 +1,12 @@
 /**
  * 
  */
-package com.opensymphony.webwork.dispatcher;
+package org.apache.struts.action2.dispatcher;
 
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.opensymphony.webwork.ServletActionContext;
+import org.apache.struts.action2.ServletActionContext;
 import com.opensymphony.xwork.ActionSupport;
 
 /**

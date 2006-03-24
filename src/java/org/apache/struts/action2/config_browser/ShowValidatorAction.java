@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.config_browser;
+package org.apache.struts.action2.config_browser;
 
 import com.opensymphony.xwork.util.OgnlUtil;
 import com.opensymphony.xwork.validator.Validator;

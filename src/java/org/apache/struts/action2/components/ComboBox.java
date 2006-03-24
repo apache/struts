@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision: 1.8 $
  * @since 2.2
  *
- * @ww.tag name="combobox" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.ComboBoxTag"
+ * @ww.tag name="combobox" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.ComboBoxTag"
  * description="Widget that fills a text box from a select"
   */
 public class ComboBox extends TextField {

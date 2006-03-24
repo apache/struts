@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2005 ePlus Corporation. All Rights Reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -28,7 +28,7 @@ import java.io.Writer;
  *
  * @author Jason Carreira <jcarreira@eplus.com>
  *
- * @ww.tag name="tree" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.TreeTag"
+ * @ww.tag name="tree" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TreeTag"
  * description="Render a tree widget."
  */
 public class Tree extends ClosingUIBean {

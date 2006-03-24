@@ -1,4 +1,4 @@
-package com.opensymphony.webwork.util;
+package org.apache.struts.action2.util;
 
 /**
  * Quickly matches a prefix to an object.

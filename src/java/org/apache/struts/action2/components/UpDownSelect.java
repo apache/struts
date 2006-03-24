@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -58,7 +58,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * @author tm_jee
  * @version $Date: 2006/03/18 15:50:12 $ $Id: UpDownSelect.java,v 1.7 2006/03/18 15:50:12 rgielen Exp $
  * 
- * @ww.tag name="updownselect" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.UpDownSelectTag"
+ * @ww.tag name="updownselect" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.UpDownSelectTag"
  * description="Render a up down select element"
  */
 public class UpDownSelect extends Select {

@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.util;
+package org.apache.struts.action2.util;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -12,9 +12,9 @@ import java.util.Comparator;
 /**
  * Sorters. Utility sorters for use with the "sort" tag.
  *
- * @author Rickard Öberg (rickard@middleware-company.com)
+ * @author Rickard ï¿½berg (rickard@middleware-company.com)
  * @version $Revision: 1.9 $
- * @see com.opensymphony.webwork.views.jsp.iterator.SortIteratorTag
+ * @see org.apache.struts.action2.views.jsp.iterator.SortIteratorTag
  * @see SortIteratorFilter
  */
 public class Sorter {

@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.util;
+package org.apache.struts.action2.util;
 
 import com.opensymphony.xwork.Action;
 
@@ -16,8 +16,8 @@ import java.util.List;
  *
  * @author Rickard Öberg (rickard@middleware-company.com)
  * @version $Revision: 1.7 $
- * @see com.opensymphony.webwork.components.AppendIterator
- * @see com.opensymphony.webwork.views.jsp.iterator.AppendIteratorTag
+ * @see org.apache.struts.action2.components.AppendIterator
+ * @see org.apache.struts.action2.views.jsp.iterator.AppendIteratorTag
  */
 public class AppendIteratorFilter extends IteratorFilterSupport implements Iterator, Action {
 

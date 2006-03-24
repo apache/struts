@@ -1,6 +1,6 @@
-package com.opensymphony.webwork.plexus;
+package org.apache.struts.action2.plexus;
 
-import com.opensymphony.webwork.util.ObjectFactoryInitializable;
+import org.apache.struts.action2.util.ObjectFactoryInitializable;
 import com.opensymphony.xwork.ObjectFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -51,7 +51,7 @@ public class PlexusObjectFactory extends ObjectFactory implements ObjectFactoryI
                     "    <!-- this should be before the webwork filter -->\n" +
                     "    <filter>\n" +
                     "        <filter-name>plexus</filter-name>\n" +
-                    "        <filter-class>com.opensymphony.webwork.plexus.PlexusFilter</filter-class>\n" +
+                    "        <filter-class>org.apache.struts.action2.plexus.PlexusFilter</filter-class>\n" +
                     "    </filter>\n" +
                     "\n" +
                     "...\n" +
@@ -65,7 +65,7 @@ public class PlexusObjectFactory extends ObjectFactory implements ObjectFactoryI
                     "...\n" +
                     "\n" +
                     "    <listener>\n" +
-                    "        <listener-class>com.opensymphony.webwork.plexus.PlexusLifecycleListener</listener-class>\n" +
+                    "        <listener-class>org.apache.struts.action2.plexus.PlexusLifecycleListener</listener-class>\n" +
                     "    </listener>";
             log.fatal(message);
             return;

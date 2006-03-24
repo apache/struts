@@ -8,7 +8,7 @@
 * Distributable under Apache license.
 * See terms of license at opensource.org
 */
-package com.opensymphony.webwork.views.util;
+package org.apache.struts.action2.views.util;
 
 
 /**
@@ -154,18 +154,18 @@ public class TextUtil {
         addMapping(0xa1, "&iexcl;", strings); //
         addMapping(0xa2, "&cent;", strings); //
         addMapping(0xa3, "&pound;", strings); //
-        addMapping(0xa9, "&copy;", strings); // ©
-        addMapping(0xae, "&reg;", strings); // ®
+        addMapping(0xa9, "&copy;", strings); // ï¿½
+        addMapping(0xae, "&reg;", strings); // ï¿½
         addMapping(0xbf, "&iquest;", strings); //
 
-        addMapping(0xc0, "&Agrave;", strings); // À
-        addMapping(0xc1, "&Aacute;", strings); // Á
-        addMapping(0xc2, "&Acirc;", strings); // Â
-        addMapping(0xc3, "&Atilde;", strings); // Â
-        addMapping(0xc4, "&Auml;", strings); // Ä
-        addMapping(0xc5, "&Aring;", strings); // Å
-        addMapping(0xc6, "&AElig;", strings); // Æ
-        addMapping(0xc7, "&Ccedil;", strings); // Ç
+        addMapping(0xc0, "&Agrave;", strings); // ï¿½
+        addMapping(0xc1, "&Aacute;", strings); // ï¿½
+        addMapping(0xc2, "&Acirc;", strings); // ï¿½
+        addMapping(0xc3, "&Atilde;", strings); // ï¿½
+        addMapping(0xc4, "&Auml;", strings); // ï¿½
+        addMapping(0xc5, "&Aring;", strings); // ï¿½
+        addMapping(0xc6, "&AElig;", strings); // ï¿½
+        addMapping(0xc7, "&Ccedil;", strings); // ï¿½
         addMapping(0xc8, "&Egrave;", strings); //
         addMapping(0xc9, "&Eacute;", strings); //
         addMapping(0xca, "&Ecirc;", strings); //
@@ -181,7 +181,7 @@ public class TextUtil {
         addMapping(0xd3, "&Oacute;", strings); //
         addMapping(0xd4, "&Ocirc;", strings); //
         addMapping(0xd5, "&Otilde;", strings); //
-        addMapping(0xd6, "&Ouml;", strings); // Ö
+        addMapping(0xd6, "&Ouml;", strings); // ï¿½
         addMapping(0xd7, "&times;", strings); //
         addMapping(0xd8, "&Oslash;", strings); //
         addMapping(0xd9, "&Ugrave;", strings); //
@@ -196,8 +196,8 @@ public class TextUtil {
         addMapping(0xe1, "&aacute;", strings); //
         addMapping(0xe2, "&acirc;", strings); //
         addMapping(0xe3, "&atilde;", strings); //
-        addMapping(0xe4, "&auml;", strings); // ä
-        addMapping(0xe5, "&aring;", strings); // å
+        addMapping(0xe4, "&auml;", strings); // ï¿½
+        addMapping(0xe5, "&aring;", strings); // ï¿½
         addMapping(0xe6, "&aelig;", strings); //
         addMapping(0xe7, "&ccedil;", strings); //
         addMapping(0xe8, "&egrave;", strings); //
@@ -215,7 +215,7 @@ public class TextUtil {
         addMapping(0xf3, "&oacute;", strings); //
         addMapping(0xf4, "&ocirc;", strings); //
         addMapping(0xf5, "&otilde;", strings); //
-        addMapping(0xf6, "&ouml;", strings); // ö
+        addMapping(0xf6, "&ouml;", strings); // ï¿½
         addMapping(0xf7, "&divide;", strings); //
         addMapping(0xf8, "&oslash;", strings); //
         addMapping(0xf9, "&ugrave;", strings); //

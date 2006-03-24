@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.views.jsp;
+package org.apache.struts.action2.views.jsp;
 
 
 /**
@@ -10,7 +10,7 @@ package com.opensymphony.webwork.views.jsp;
  * one can get information about the status of the iteration, such as
  * the size, current index, and whether any more items are available.
  *
- * @author Rickard Öberg (rickard@dreambean.com)
+ * @author Rickard ï¿½berg (rickard@dreambean.com)
  */
 public class IteratorStatus {
     protected StatusState state;

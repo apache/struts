@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2006 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.components;
+package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.TextProvider;
@@ -124,7 +124,7 @@ import java.util.List;
  *
  *
  * @ww.tag name="date" tld-body-content="empty"
- *         tld-tag-class="com.opensymphony.webwork.views.jsp.DateTag"
+ *         tld-tag-class="org.apache.struts.action2.views.jsp.DateTag"
  *         description="Render a formatted date."
  */
 public class Date extends Component {

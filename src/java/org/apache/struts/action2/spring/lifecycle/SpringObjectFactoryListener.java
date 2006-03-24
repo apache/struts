@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2005 Opensymphony. All Rights Reserved.
  */
-package com.opensymphony.webwork.spring.lifecycle;
+package org.apache.struts.action2.spring.lifecycle;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,7 +16,7 @@ import javax.servlet.ServletContextListener;
  * called first.
  *
  * @author sms
- * @deprecated Please configure webwork.property to use {@link com.opensymphony.webwork.spring.WebWorkSpringObjectFactory}
+ * @deprecated Please configure webwork.property to use {@link org.apache.struts.action2.spring.WebWorkSpringObjectFactory}
  */
 public class SpringObjectFactoryListener implements ServletContextListener {
     private static final Log log = LogFactory.getLog(SpringObjectFactoryListener.class);

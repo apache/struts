@@ -1,6 +1,6 @@
-package com.opensymphony.webwork.views.jsp.ui;
+package org.apache.struts.action2.views.jsp.ui;
 
-import com.opensymphony.webwork.components.ClosingUIBean;
+import org.apache.struts.action2.components.ClosingUIBean;
 
 /**
  * @author Patrick Lightbody (plightbo at gmail dot com)

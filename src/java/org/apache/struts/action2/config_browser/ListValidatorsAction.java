@@ -1,9 +1,9 @@
-package com.opensymphony.webwork.config_browser;
+package org.apache.struts.action2.config_browser;
 
 import com.opensymphony.xwork.ActionSupport;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.validator.ActionValidatorManagerFactory;
-import com.opensymphony.webwork.util.ClassLoaderUtils;
+import org.apache.struts.action2.util.ClassLoaderUtils;
 
 import java.util.Collections;
 import java.util.List;

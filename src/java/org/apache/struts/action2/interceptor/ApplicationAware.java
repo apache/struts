@@ -2,7 +2,7 @@
  * Copyright (c) 2002-2003 by OpenSymphony
  * All rights reserved.
  */
-package com.opensymphony.webwork.interceptor;
+package org.apache.struts.action2.interceptor;
 
 import java.util.Map;
 
@@ -14,7 +14,7 @@ import java.util.Map;
  * <p/>
  * Typical uses are configuration objects and caches.
  *
- * @author <a href="mailto:rickard@middleware-company.com">Rickard Öberg</a>
+ * @author <a href="mailto:rickard@middleware-company.com">Rickard ï¿½berg</a>
  */
 public interface ApplicationAware {
 

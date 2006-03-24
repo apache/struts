@@ -1,13 +1,13 @@
 /*
  * Created on Aug 14, 2004 by mgreer
  */
-package com.opensymphony.webwork.sitegraph;
+package org.apache.struts.action2.sitegraph;
 
-import com.opensymphony.webwork.sitegraph.collectors.ArbitraryXMLConfigurationProvider;
-import com.opensymphony.webwork.sitegraph.entities.FreeMarkerView;
-import com.opensymphony.webwork.sitegraph.entities.JspView;
-import com.opensymphony.webwork.sitegraph.entities.VelocityView;
-import com.opensymphony.webwork.sitegraph.entities.View;
+import org.apache.struts.action2.sitegraph.collectors.ArbitraryXMLConfigurationProvider;
+import org.apache.struts.action2.sitegraph.entities.FreeMarkerView;
+import org.apache.struts.action2.sitegraph.entities.JspView;
+import org.apache.struts.action2.sitegraph.entities.VelocityView;
+import org.apache.struts.action2.sitegraph.entities.View;
 import com.opensymphony.xwork.config.ConfigurationManager;
 import com.opensymphony.xwork.config.ConfigurationProvider;
 import com.opensymphony.xwork.config.entities.ActionConfig;

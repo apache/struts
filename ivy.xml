@@ -88,6 +88,9 @@
         <!-- fileupload -->
         <dependency org="apache" name="commons-fileupload" rev="1.1" conf="fileupload->default"/>
 
+        <!-- fileupload-pell -->
+        <dependency org="pell" name="multipartrequest" rev="1.19" conf="fileupload-pell->default"/>
+
         <!-- sitemesh -->
         <dependency org="opensymphony" name="sitemesh" rev="2.2.1" conf="sitemesh->default"/>
 

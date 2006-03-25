@@ -5,8 +5,14 @@
     <property name="compile.version" value="1.4"/>
     <property name="test.compile.version" value="1.4"/>
 
-    <import file="osbuild.xml"/>
+    <property name="optional.sources" value="org/apache/struts/action2/views/jasperreports/**, 
+                                             org/apache/struts/action2/dispatcher/multipart/PellMultiPartRequest.java,
+                                             org/apache/struts/action2/dispatcher/ChartResult.java
+                                             " />
+    <property name="optional.test.sources" value="org/apache/struts/action2/dispatcher/ChartResultTest.java" />
     
+    <import file="osbuild.xml"/>
+
     <!-- overriding the one found in osbuild.xml to exclude xwork-tiger,
          which breaks the unit tests currently -->
     <path id="cp">
@@ -28,6 +34,12 @@
     <property name="docs.tags" value="${docs}/tags"/>
 
     <target name="init" depends="common.init" unless="skip.ivy">
+        <echo>
+            The default build only retrieves dependencies that released under a license compatible
+            with the Apache Software Foundation.  To optionally download the optional LGPL dependencies
+            and compile the dependent Action 2 code, run the 'compile-optional' task.
+        </echo>    
+        
         <taskdef name="ivy-configure" classname="fr.jayasoft.ivy.ant.IvyConfigure" classpathref="cp"/>
         <taskdef name="ivy-resolve" classname="fr.jayasoft.ivy.ant.IvyResolve" classpathref="cp"/>
         <taskdef name="ivy-retrieve" classname="fr.jayasoft.ivy.ant.IvyRetrieve" classpathref="cp"/>
@@ -35,7 +47,7 @@
         <taskdef name="ivy-report" classname="fr.jayasoft.ivy.ant.IvyReport" classpathref="cp"/>
         <taskdef name="ivy-deliver" classname="fr.jayasoft.ivy.ant.IvyDeliver" classpathref="cp"/>
 
-        <ivy-retrieve/>
+        <ivy-retrieve conf="build,default,source,ajax,freemarker,velocity,fileupload,sitemesh,quickstart,xslt,portlet,spring,pico,plexus,tiger,tiles" />
     </target>
 
     <target name="javadocs" depends="common.init">
@@ -212,6 +224,21 @@
 <!--
         <delete dir="webapps/wwia/build"/>
 -->
+    </target>
+
+    <target name="init-optional" depends="init" unless="skip.ivy">
+        <echo>
+            This task retrieves optional dependencies that are released under licenses that are
+            not endorsed by the Apache Software Foundation.  In particular, these dependencies
+            use the LGPL license - http://opensource.org/licenses/lgpl-license.php
+        </echo>    
+        <taskdef name="ivy-retrieve" classname="fr.jayasoft.ivy.ant.IvyRetrieve" classpathref="cp"/>
+
+        <ivy-retrieve conf="fileupload-pell,jasperreports,jfree,cewolf,hibernate" />
+    </target>
+
+    <target name="compile-optional" depends="compile, init-optional" description="compile optional files">
+        <compile srcdir="${src.java}" destdir="${build.java}" includes="${optional.sources}" />
     </target>
 
 </project>

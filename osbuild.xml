@@ -54,6 +54,7 @@
         <exclude name="**/Abstract*.java"/>
         <include name="**/${testcase}Test.java"/>
         <include name="**/${testcase}TestCase.java"/>
+
     </patternset>
 
     <path id="cp">
@@ -111,13 +112,14 @@
         <attribute name="destdir"/>
         <attribute name="classpath" default=""/>
         <attribute name="classpathref" default="cp"/>
+        <attribute name="includes" default="**/*.java"/>
         <attribute name="excludes" default=""/>
         <attribute name="source" default="${compile.version}"/>
         <attribute name="target" default="${compile.version}"/>
         <sequential>
             <mkdir dir="@{destdir}"/>
             <javac srcdir="@{srcdir}" destdir="@{destdir}" classpath="@{classpath}" classpathref="@{classpathref}"
-                   debug="on" source="@{source}" target="@{target}"/>
+                   debug="on" source="@{source}" target="@{target}" excludes="@{excludes}" />
             <copy filtering="no" todir="@{destdir}">
                 <fileset dir="@{srcdir}">
                     <exclude name="**/*.java"/>
@@ -128,7 +130,7 @@
     </macrodef>
 
     <target name="compile" depends="init,precompile" description="compile project">
-        <compile srcdir="${src.java}" destdir="${build.java}"/>
+        <compile srcdir="${src.java}" destdir="${build.java}" excludes="${optional.sources}" />
     </target>
 
     <target name="jar" depends="compile" description="build the project jar file">
@@ -163,7 +165,7 @@
 
     <target name="test-compile" unless="skip.tests">
         <compile srcdir="${src.test}" destdir="${build.test}" classpath="${build.java}"
-                 source="${test.compile.version}" target="${test.compile.version}"/>
+                 source="${test.compile.version}" target="${test.compile.version}" />
 
         <taskdef resource="clovertasks"/>
         <taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
@@ -177,7 +179,7 @@
             </files>
         </clover-setup>
 
-        <compile srcdir="${src.java}" destdir="${build.java-test}"/>
+        <compile srcdir="${src.java}" destdir="${build.java-test}" />
     </target>
 
     <target name="test" depends="junit-check, clover-check, compile, test-compile" description="run tests"
@@ -187,6 +189,8 @@
 
     <macrodef name="run-junit">
         <attribute name="classpathref" default="junit.cp" />
+        <attribute name="includes" default="**/*Test.java"/>
+        <attribute name="excludes" default=""/>
         <sequential>
           <mkdir dir="${dist.docs}/junit"/>
           <junit haltonfailure="no" haltonerror="yes" fork="yes" forkmode="once" failureproperty="test.failure">
@@ -198,10 +202,13 @@
 
               <formatter type="plain" useFile="false"/>
               <formatter type="xml"/>
-
+                
+                
               <batchtest todir="${dist.docs}/junit">
                   <fileset dir="${src.test}">
+                      <exclude name="@{excludes}" />
                       <patternset refid="src.test.pattern"/>
+                      <include name="@{includes}" />
                   </fileset>
               </batchtest>
           </junit>

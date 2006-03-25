@@ -28,7 +28,6 @@
         <conf name="freemarker" deprecated="20060303000000"/>
         <conf name="velocity"/>
         <conf name="fileupload"/>
-        <conf name="fileupload-cos" deprecated="20050831000000"/>
         <conf name="fileupload-pell" deprecated="20050831000000"/>
         <conf name="sitemesh"/>
         <conf name="quickstart"/>
@@ -88,9 +87,6 @@
 
         <!-- fileupload -->
         <dependency org="apache" name="commons-fileupload" rev="1.1" conf="fileupload->default"/>
-
-        <!-- fileupload-cos -->
-        <dependency org="cos" name="cos" rev="20021105" conf="fileupload-cos->default"/>
 
         <!-- fileupload-pell -->
         <dependency org="pell" name="multipartrequest" rev="1.19" conf="fileupload-pell->default"/>

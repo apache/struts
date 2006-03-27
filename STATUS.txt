@@ -29,6 +29,10 @@ Walter Zorns tooltip library for all UI Tags
 tabbedpane.vm Archived UI template
 * Is this a server-side compoonent, or is there a Dojo equivalent?
 
+JasperReports
+* Can we do a bridge API for this? Or must be it be separate extension?
+* Would DataVision be an alternative (http://datavision.sourceforge.net/)?
+
 ----
 
 DISTRIBUTION RIGHTS - COPYRIGHT HOLDERS
@@ -42,13 +46,11 @@ Has "ePlus Corporation" filed a software grant or CCLA for Jason?
 NAMING CONVENTIONS
 
 Option 1:
-
  - com.opensymphony.webwork package -> org.apache.struts.ti
  - WebWork* classes -> Struts*
  - WebWork in comments, documentation -> Struts Action 2
  - webwork. as the configuration properties prefix -> struts.
  - ww: tag prefix -> a:
-
 +1 Martin Cooper (binding)
 +0 Don Brown (binding)
 +1 Frank Zammetti  (non-binding)
@@ -59,28 +61,30 @@ Option 2:
  - WebWork in comments, documentation -> Struts Action 2
  - webwork. as the configuration properties prefix -> struts.
  - ww: tag prefix -> a:/saf:
-
 +1 Rainer Hermanns, Ted Husted, Alexandru Popescu, Rene Gielen, Don
-Brown (binding)
+Brown, James Mitchell (James is +1 for ui prefix) (binding)
 +0 Toby Jee, Hubert Rabago, Craig McClanahan (binding)
 +1 Paul Benedict, Michael Jouravlev (non-binding)
+
+Option 2b: 
+ - com.opensymphony.webwork package -> org.apache.[struts.]webwork
+ - otherwise same as option 2
++1 Niall Pemberton, Alexandru Popescu (Alexandru is +1 for ww: prefix)
++0 Joe Germuska, Ted Husted
 
 Option 3:
  - com.opensymphony.webwork package -> org.apache.web
  - WebWork in comments, documentation -> Struts Action 2
  - webwork. as the configuration properties prefix -> web
  - ww: tag prefix -> html: (Michael Jouravlev = +1 for html)
-
-+0 Joe Germuska, Ted Husted (binding) (both would not object to org.apache.webwork)
-+1 Gabed (non-binding)
++0 Joe Germuska, Ted Husted (binding)
++1 Gabe (non-binding)
 
 Option 4:
  - com.opensymphony.webwork package -> org.apache.webwork
  - WebWork in comments, documentation -> Struts Action 2
  - else, same as o.c.webwork
-
 +1 Scud (non-binding)
-
 
 ----
 

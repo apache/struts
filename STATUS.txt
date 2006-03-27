@@ -69,7 +69,7 @@ Option 3:
  - com.opensymphony.webwork package -> org.apache.web
  - WebWork in comments, documentation -> Struts Action 2
  - webwork. as the configuration properties prefix -> web
- - ww: tag prefix -> html:
+ - ww: tag prefix -> html: (Michael Jouravlev = +1 for html)
 
 +0 Joe Germuska, Ted Husted (binding) (both would not object to org.apache.webwork)
 +1 Gabed (non-binding)

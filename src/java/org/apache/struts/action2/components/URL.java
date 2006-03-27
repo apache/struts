@@ -171,9 +171,11 @@ public class URL extends Component {
     }
 
     private void includeGetParameters() {
-        String query = extractQueryString();
-        if (query != null) {
-            mergeRequestParameters(parameters, HttpUtils.parseQueryString(query));
+        if(!(DispatcherUtils.isPortletSupportActive() && PortletActionContext.isPortletRequest())) {
+            String query = extractQueryString();
+            if (query != null) {
+                mergeRequestParameters(parameters, HttpUtils.parseQueryString(query));
+            }
         }
     }
 

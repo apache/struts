@@ -71,7 +71,7 @@ Option 3:
  - else, remains the same
 
 +0 Joe Germuska, Ted Husted (binding)
-+1 Gabe (non-binding)
++1 Gabe, Scud (non-binding)
 
 ----
 

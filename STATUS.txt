@@ -65,13 +65,21 @@ Brown (binding)
 +1 Paul Benedict, Michael Jouravlev (non-binding)
 
 Option 3:
- - com.opensymphony.webwork package -> org.apache.web or .webwork
+ - com.opensymphony.webwork package -> org.apache.web
  - WebWork in comments, documentation -> Struts Action 2
- - webwork. as the configuration properties prefix -> web or webwork
- - else, remains the same
+ - webwork. as the configuration properties prefix -> web
+ - ww: tag prefix -> html:
 
-+0 Joe Germuska, Ted Husted (binding)
-+1 Gabe, Scud (non-binding)
++0 Joe Germuska, Ted Husted (binding) (both would not object to org.apache.webwork)
++1 Gabed (non-binding)
+
+Option 4:
+ - com.opensymphony.webwork package -> org.apache.webwork
+ - WebWork in comments, documentation -> Struts Action 2
+ - else, same as o.c.webwork
+
++1 Scud (non-binding)
+
 
 ----
 

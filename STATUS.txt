@@ -20,7 +20,8 @@ JSCalendar for the DatePicker tag
 * There may also be a Dojo equivalent
 
 FCKEditor for the Richtexteditor tag
-* Is there a Dojo equivalent?
+* Toby will contact author about license change
+* There may also be a Dojo equivalent
 
 Walter Zorns tooltip library for all UI Tags
 * Is there a Dojo equivalent?

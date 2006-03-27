@@ -234,7 +234,7 @@
         </echo>    
         <taskdef name="ivy-retrieve" classname="fr.jayasoft.ivy.ant.IvyRetrieve" classpathref="cp"/>
 
-        <ivy-retrieve conf="fileupload-pell,jasperreports,jfree,cewolf,hibernate" />
+        <ivy-retrieve conf="fileupload-pell,jasperreports,jfree,cewolf" />
     </target>
 
     <target name="compile-optional" depends="compile, init-optional" description="compile optional files">

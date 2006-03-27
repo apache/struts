@@ -127,7 +127,7 @@
     <dependencies>
         <!-- unreferenced dependencies:
              * clover, mockobjects, xdoclet : only needed for build
-             * hibernate, cewolf : only used in demos
+             * cewolf : only used in demos
              * quickstart : because i'm lazy, and because it's unlikely to be needed to build a
                             project using ww
              * w3c.dom : needed for the xslt : this is all included in jdk1.5

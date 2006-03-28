@@ -30,8 +30,9 @@ tabbedpane.vm Archived UI template
 * Is this a server-side compoonent, or is there a Dojo equivalent?
 
 JasperReports
-* Can we do a bridge API for this? Or must be it be separate extension?
-* Would DataVision be an alternative (http://datavision.sourceforge.net/)?
+* Martin will contact Jasper software about license change
+** Alternatively, can we do a bridge API for this? Or must be it be separate extension?
+** Would DataVision be an alternative (http://datavision.sourceforge.net/)?
 
 ----
 

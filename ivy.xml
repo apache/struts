@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <?xml-stylesheet type="text/xsl" href="http://www.jayasoft.fr/org/ivyrep/ivy-doc.xsl"?>
 <ivy-module version="1.0">
-    <info organisation="opensymphony" module="webwork"
-          revision="2.3"
+    <info organisation="apache" module="struts-action"
+          revision="2.0"
           status="integration"
           publication="20060323000000">
         <license name="Apache" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
-        <ivyauthor name="opensymphony" url="http://www.opensymphony.com/"/>
+        <ivyauthor name="apache" url="http://www.apache.org/"/>
 
         <description homepage="http://www.opensymphony.com/webwork/">
             WebWork is a Java web-application development framework. It is built specifically with developer
@@ -44,7 +44,7 @@
         <conf name="tiles"/>
     </configurations>
     <publications>
-        <artifact name="webwork" type="jar" conf="default"/>
+        <artifact name="struts-action" type="jar" conf="default"/>
     </publications>
     <dependencies>
         <!-- build -->

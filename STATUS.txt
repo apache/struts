@@ -10,8 +10,15 @@ This file supplements the formal incubator checkist at:
 
 As items are resolved here, they should be removed and noted on the formal checklist.
 
-----
+Other resources: 
 
+* Webwork2/Action2 incubator repository - http://svn.apache.org/viewcvs.cgi/incubator/webwork2/
+
+* StrutsAction2 wiki area - http://wiki.apache.org/struts/StrutsAction2
+
+* New Action2 sandbox code - https://svn.apache.org/repos/asf/struts/sandbox/trunk/action2/
+
+----
 
 DISTRIBUTION RIGHTS - LICENSING
 
@@ -48,6 +55,46 @@ MIGRATE XWORK NOW (see "[Struts Tt] Xwork?")
 
 +1 Gabe
 
+MIGRATING FROM ACTION 1 TO ACTION 2 
+
+An area on the wiki is devoted to migrating from Action 1 to Action 2 
+
+* http://wiki.apache.org/struts/StrutsAction2
+
+There is an Apps area in the sandbox for new Action2 code, starting with 
+example applications.
+
+* https://svn.apache.org/repos/asf/struts/sandbox/trunk/action2/
+
+** The MailReader application has been ported. Comments and fixes 
+welcome. The "Tour" is next.
+
+** A new Cookbook application has been started. The suggestion is 
+that we combine the WW Showcase examples and the various Struts 
+Examples into a unified cookbook. The cookbook application can 
+display the code used to create the "recipes", like the Tomcat 
+Example application.
+
+** The design of the cookbook makes it easy to add new recipes. 
+Please feel free to jump in and contribute!
+
 ----
+
+WORKING ACTION2 BUILD 
+
+* The WebWork2 Incubator code now builds struts-action-2.0-dev.jar
+
+** This JAR can be placed into your sandboxes for runtime testing
+
+* The initial renaming is complete,and the repository seems stable 
+enough to make further changes.  
+
+* The WebWork 2 project had a continuous integration server for automated
+builds and testing.It would be valuable to have that service, even while 
+in the Incubator. 
+
+** What about setting up a temporary build server either in an 
+Apache zone or on a developer's computer?
+
 
 ####

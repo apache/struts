@@ -7,8 +7,8 @@ package org.apache.struts.action2.views.jsp;
 import com.mockobjects.servlet.MockJspWriter;
 import com.mockobjects.servlet.MockPageContext;
 import org.apache.struts.action2.ServletActionContext;
-import org.apache.struts.action2.WebWorkTestCase;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsTestCase;
+import org.apache.struts.action2.StrutsConstants;
 import org.apache.struts.action2.config.Configuration;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.util.OgnlValueStack;
@@ -22,9 +22,9 @@ import javax.servlet.jsp.JspException;
  * @author $Author: plightbo $
  * @version $Revision: 1.13 $
  */
-public class PropertyTagTest extends WebWorkTestCase {
+public class PropertyTagTest extends StrutsTestCase {
 
-    WebWorkMockHttpServletRequest request = new WebWorkMockHttpServletRequest();
+    StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
     OgnlValueStack stack = new OgnlValueStack();
 
 
@@ -149,8 +149,8 @@ public class PropertyTagTest extends WebWorkTestCase {
 
     public void testWithAltSyntax1() throws Exception {
         // setups
-        Configuration.set(WebWorkConstants.WEBWORK_TAG_ALTSYNTAX, "true");
-        assertEquals(Configuration.get(WebWorkConstants.WEBWORK_TAG_ALTSYNTAX), "true");
+        Configuration.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");
+        assertEquals(Configuration.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "true");
 
         Foo foo = new Foo();
         foo.setTitle("tm_jee");
@@ -178,8 +178,8 @@ public class PropertyTagTest extends WebWorkTestCase {
 
     public void testWithAltSyntax2() throws Exception {
         // setups
-        Configuration.set(WebWorkConstants.WEBWORK_TAG_ALTSYNTAX, "true");
-        assertEquals(Configuration.get(WebWorkConstants.WEBWORK_TAG_ALTSYNTAX), "true");
+        Configuration.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");
+        assertEquals(Configuration.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "true");
 
         Foo foo = new Foo();
         foo.setTitle("tm_jee");
@@ -207,8 +207,8 @@ public class PropertyTagTest extends WebWorkTestCase {
 
     public void testWithoutAltSyntax1() throws Exception {
         //      setups
-        Configuration.set(WebWorkConstants.WEBWORK_TAG_ALTSYNTAX, "false");
-        assertEquals(Configuration.get(WebWorkConstants.WEBWORK_TAG_ALTSYNTAX), "false");
+        Configuration.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");
+        assertEquals(Configuration.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "false");
 
         Foo foo = new Foo();
         foo.setTitle("tm_jee");
@@ -237,8 +237,8 @@ public class PropertyTagTest extends WebWorkTestCase {
 
     public void testWithoutAltSyntax2() throws Exception {
         //      setups
-        Configuration.set(WebWorkConstants.WEBWORK_TAG_ALTSYNTAX, "false");
-        assertEquals(Configuration.get(WebWorkConstants.WEBWORK_TAG_ALTSYNTAX), "false");
+        Configuration.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");
+        assertEquals(Configuration.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "false");
 
         Foo foo = new Foo();
         foo.setTitle("tm_jee");
@@ -267,7 +267,7 @@ public class PropertyTagTest extends WebWorkTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         ActionContext.getContext().setValueStack(stack);
-        request.setAttribute(ServletActionContext.WEBWORK_VALUESTACK_KEY, stack);
+        request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
     }
 
 

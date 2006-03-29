@@ -7,8 +7,8 @@ package org.apache.struts.action2.dispatcher;
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 import org.apache.struts.action2.ServletActionContext;
-import org.apache.struts.action2.WebWorkStatics;
-import org.apache.struts.action2.WebWorkTestCase;
+import org.apache.struts.action2.StrutsStatics;
+import org.apache.struts.action2.StrutsTestCase;
 import com.opensymphony.xwork.ActionContext;
 import ognl.Ognl;
 
@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author $author$
  * @version $Revision: 1.7 $
  */
-public class ServletDispatcherResultTest extends WebWorkTestCase implements WebWorkStatics {
+public class ServletDispatcherResultTest extends StrutsTestCase implements StrutsStatics {
 
     public void testInclude() {
         ServletDispatcherResult view = new ServletDispatcherResult();

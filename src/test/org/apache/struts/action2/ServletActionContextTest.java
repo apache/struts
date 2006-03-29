@@ -22,7 +22,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:nightfal@etherlands.net">Erik Beeson</a>
  */
-public class ServletActionContextTest extends TestCase implements WebWorkStatics {
+public class ServletActionContextTest extends TestCase implements StrutsStatics {
 
     ActionContext actionContext;
     ServletActionContext servletActionContext;

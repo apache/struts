@@ -5,7 +5,7 @@
 package org.apache.struts.action2.util;
 
 import com.mockobjects.dynamic.Mock;
-import org.apache.struts.action2.WebWorkTestCase;
+import org.apache.struts.action2.StrutsTestCase;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.ActionProxy;
@@ -20,7 +20,7 @@ import java.util.Map;
  *
  * @author Jason Carreira Created Apr 12, 2003 10:34:53 PM
  */
-public class InvocationSessionStoreTest extends WebWorkTestCase {
+public class InvocationSessionStoreTest extends StrutsTestCase {
 
     private static final String INVOCATION_KEY = "org.apache.struts.action2.util.InvocationSessionStoreTest.invocation";
     private static final String TOKEN_VALUE = "org.apache.struts.action2.util.InvocationSessionStoreTest.token";

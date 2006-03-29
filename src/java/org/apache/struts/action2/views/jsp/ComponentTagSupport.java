@@ -12,7 +12,7 @@ import javax.servlet.jsp.JspException;
  * Date: Sep 1, 2005
  * Time: 8:44:53 PM
  */
-public abstract class ComponentTagSupport extends WebWorkBodyTagSupport {
+public abstract class ComponentTagSupport extends StrutsBodyTagSupport {
     protected Component component;
 
     public abstract Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res);

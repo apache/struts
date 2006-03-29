@@ -8,7 +8,7 @@
 package org.apache.struts.action2.views.freemarker;
 
 import org.apache.struts.action2.ServletActionContext;
-import org.apache.struts.action2.dispatcher.WebWorkResultSupport;
+import org.apache.struts.action2.dispatcher.StrutsResultSupport;
 import org.apache.struts.action2.views.util.ResourceUtil;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
@@ -71,7 +71,7 @@ import java.util.Locale;
  * <!-- END SNIPPET: example --></pre>
  * @author CameronBraid
  */
-public class FreemarkerResult extends WebWorkResultSupport {
+public class FreemarkerResult extends StrutsResultSupport {
 
     protected ActionInvocation invocation;
     protected Configuration configuration;
@@ -185,7 +185,7 @@ public class FreemarkerResult extends WebWorkResultSupport {
      * <li>ognl - the instance of the OgnlTool
      * <li>action - the action itself
      * <li>exception - optional : the JSP or Servlet exception as per the servlet spec (for JSP Exception pages)
-     * <li>webwork - instance of the WebWorkUtil class
+     * <li>webwork - instance of the StrutsUtil class
      * </ul>
      */
     protected TemplateModel createModel() throws TemplateModelException {

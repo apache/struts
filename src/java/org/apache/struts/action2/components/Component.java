@@ -233,7 +233,7 @@ public class Component {
     /**
      * Is the altSyntax enabled?
      * <p/>
-     * See <code>webwork.properties</code> where the altSyntax flag is defined.
+     * See <code>struts.properties</code> where the altSyntax flag is defined.
      * <b>Note:</b> Since WebWork 2.17 the altSyntax is default <tt>true</tt>.
      * @return true if the altSyntax is enabled.
      */

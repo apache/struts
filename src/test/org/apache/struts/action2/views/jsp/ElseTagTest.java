@@ -79,17 +79,17 @@ public class ElseTagTest extends TestCase {
         stack = new OgnlValueStack();
 
         // create the mock http servlet request
-        WebWorkMockHttpServletRequest request = new WebWorkMockHttpServletRequest();
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         
         // NOTE: in WW Tag library, TagUtil gets stack from request, which will be set
         //       when request going through the FilterDispatcher --> DispatcherUtil etc. route
-        request.setAttribute(ServletActionContext.WEBWORK_VALUESTACK_KEY, stack);
+        request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
 
-        WebWorkMockServletContext servletContext = new WebWorkMockServletContext();
+        StrutsMockServletContext servletContext = new StrutsMockServletContext();
         servletContext.setServletInfo("not-weblogic");
         
         // create the mock page context
-        pageContext = new WebWorkMockPageContext();
+        pageContext = new StrutsMockPageContext();
         pageContext.setRequest(request);
         pageContext.setServletContext(servletContext);
         pageContext.setJspWriter(new MockJspWriter());

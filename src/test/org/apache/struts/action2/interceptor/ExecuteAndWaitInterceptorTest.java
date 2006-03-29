@@ -6,9 +6,9 @@
 package org.apache.struts.action2.interceptor;
 
 import org.apache.struts.action2.ServletActionContext;
-import org.apache.struts.action2.WebWorkTestCase;
-import org.apache.struts.action2.views.jsp.WebWorkMockHttpServletRequest;
-import org.apache.struts.action2.views.jsp.WebWorkMockHttpSession;
+import org.apache.struts.action2.StrutsTestCase;
+import org.apache.struts.action2.views.jsp.StrutsMockHttpServletRequest;
+import org.apache.struts.action2.views.jsp.StrutsMockHttpSession;
 import com.opensymphony.xwork.*;
 import com.opensymphony.xwork.mock.MockResult;
 import com.opensymphony.xwork.config.Configuration;
@@ -32,9 +32,9 @@ import java.util.Map;
  *
  * @author Claus Ibsen
  */
-public class ExecuteAndWaitInterceptorTest extends WebWorkTestCase {
+public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
 
-    private WebWorkMockHttpServletRequest request;
+    private StrutsMockHttpServletRequest request;
     private HttpSession httpSession;
     private Map context;
     private Map params;
@@ -161,8 +161,8 @@ public class ExecuteAndWaitInterceptorTest extends WebWorkTestCase {
         context.put(ActionContext.SESSION, session);
         context.put(ActionContext.PARAMETERS, params);
 
-        request = new WebWorkMockHttpServletRequest();
-        httpSession = new WebWorkMockHttpSession();
+        request = new StrutsMockHttpServletRequest();
+        httpSession = new StrutsMockHttpSession();
         request.setSession(httpSession);
         request.setParameterMap(params);
         context.put(ServletActionContext.HTTP_REQUEST, request);

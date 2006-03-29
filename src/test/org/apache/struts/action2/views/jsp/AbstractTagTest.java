@@ -6,7 +6,7 @@ package org.apache.struts.action2.views.jsp;
 
 import org.apache.struts.action2.ServletActionContext;
 import org.apache.struts.action2.TestAction;
-import org.apache.struts.action2.WebWorkTestCase;
+import org.apache.struts.action2.StrutsTestCase;
 import org.apache.struts.action2.config.Configuration;
 import org.apache.struts.action2.dispatcher.ApplicationMap;
 import org.apache.struts.action2.dispatcher.DispatcherUtils;
@@ -28,7 +28,7 @@ import java.util.Map;
  *
  * @author jcarreira
  */
-public abstract class AbstractTagTest extends WebWorkTestCase {
+public abstract class AbstractTagTest extends StrutsTestCase {
     protected Action action;
     protected Map context;
     protected Map session;
@@ -38,10 +38,10 @@ public abstract class AbstractTagTest extends WebWorkTestCase {
      * contains the buffer that our unit test will write to.  we can later verify this buffer for correctness.
      */
     protected StringWriter writer;
-    protected WebWorkMockHttpServletRequest request;
-    protected WebWorkMockPageContext pageContext;
+    protected StrutsMockHttpServletRequest request;
+    protected StrutsMockPageContext pageContext;
     protected HttpServletResponse response;
-    protected WebWorkMockServletContext servletContext;
+    protected StrutsMockServletContext servletContext;
 
     /**
      * Constructs the action that we're going to test against.  For most UI tests, this default action should be enough.
@@ -64,21 +64,21 @@ public abstract class AbstractTagTest extends WebWorkTestCase {
         context = stack.getContext();
         stack.push(action);
 
-        request = new WebWorkMockHttpServletRequest();
-        request.setAttribute(ServletActionContext.WEBWORK_VALUESTACK_KEY, stack);
-        response = new WebWorkMockHttpServletResponse();
-        request.setSession(new WebWorkMockHttpSession());
+        request = new StrutsMockHttpServletRequest();
+        request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
+        response = new StrutsMockHttpServletResponse();
+        request.setSession(new StrutsMockHttpSession());
         request.setupGetServletPath("/");
 
         writer = new StringWriter();
 
-        JspWriter jspWriter = new WebWorkMockJspWriter(writer);
+        JspWriter jspWriter = new StrutsMockJspWriter(writer);
 
-        servletContext = new WebWorkMockServletContext();
+        servletContext = new StrutsMockServletContext();
         servletContext.setRealPath(new File("nosuchfile.properties").getAbsolutePath());
         servletContext.setServletInfo("Resin");
 
-        pageContext = new WebWorkMockPageContext();
+        pageContext = new StrutsMockPageContext();
         pageContext.setRequest(request);
         pageContext.setResponse(response);
         pageContext.setJspWriter(jspWriter);

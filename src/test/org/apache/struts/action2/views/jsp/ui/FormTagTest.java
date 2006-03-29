@@ -6,7 +6,7 @@ package org.apache.struts.action2.views.jsp.ui;
 
 import org.apache.struts.action2.TestAction;
 import org.apache.struts.action2.TestConfigurationProvider;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsConstants;
 import org.apache.struts.action2.config.Configuration;
 import org.apache.struts.action2.views.jsp.AbstractUITagTest;
 import org.apache.struts.action2.views.jsp.ActionTag;
@@ -108,13 +108,13 @@ public class FormTagTest extends AbstractUITagTest {
      * Testing that this: <p>
      * &lt;ww:form name=&quot;'myForm'&quot; namespace=&quot;'/testNamespace'&quot; action=&quot;'testNamespaceAction'&quot; method=&quot;'POST'&quot;&gt;
      * <p/>
-     * doesn't create an action of &quot;/testNamespace/testNamespaceAction.action&quot; when the &quot;webwork.action.extension&quot;
+     * doesn't create an action of &quot;/testNamespace/testNamespaceAction.action&quot; when the &quot;struts.action.extension&quot;
      * config property is set to &quot;jspa&quot;.
      */
     public void testFormTagWithDifferentActionExtension() throws Exception {
         request.setupGetServletPath("/testNamespace/testNamespaceAction");
-        String oldConfiguration = (String) Configuration.get(WebWorkConstants.WEBWORK_ACTION_EXTENSION);
-        Configuration.set(WebWorkConstants.WEBWORK_ACTION_EXTENSION, "jspa");
+        String oldConfiguration = (String) Configuration.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
+        Configuration.set(StrutsConstants.STRUTS_ACTION_EXTENSION, "jspa");
 
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
@@ -126,12 +126,12 @@ public class FormTagTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        Configuration.set(WebWorkConstants.WEBWORK_ACTION_EXTENSION, oldConfiguration);
+        Configuration.set(StrutsConstants.STRUTS_ACTION_EXTENSION, oldConfiguration);
 
         verify(FormTag.class.getResource("Formtag-5.txt"));
 
         // set it back to the default
-        Configuration.set(WebWorkConstants.WEBWORK_ACTION_EXTENSION, "action");
+        Configuration.set(StrutsConstants.STRUTS_ACTION_EXTENSION, "action");
     }
 
     /**
@@ -324,8 +324,8 @@ public class FormTagTest extends AbstractUITagTest {
 
     public void testFormWithActionAndExtension() throws Exception {
         request.setupGetServletPath("/BLA");
-        String oldConfiguration = (String) Configuration.get(WebWorkConstants.WEBWORK_ACTION_EXTENSION);
-        Configuration.set(WebWorkConstants.WEBWORK_ACTION_EXTENSION, "jspa");
+        String oldConfiguration = (String) Configuration.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
+        Configuration.set(StrutsConstants.STRUTS_ACTION_EXTENSION, "jspa");
 
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
@@ -335,12 +335,12 @@ public class FormTagTest extends AbstractUITagTest {
 
         tag.doStartTag();
         tag.doEndTag();
-        Configuration.set(WebWorkConstants.WEBWORK_ACTION_EXTENSION, oldConfiguration);
+        Configuration.set(StrutsConstants.STRUTS_ACTION_EXTENSION, oldConfiguration);
 
         verify(FormTag.class.getResource("Formtag-8.txt"));
 
         // set it back to the default
-        Configuration.set(WebWorkConstants.WEBWORK_ACTION_EXTENSION, "action");
+        Configuration.set(StrutsConstants.STRUTS_ACTION_EXTENSION, "action");
 
     }
 

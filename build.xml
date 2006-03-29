@@ -1,4 +1,4 @@
-<project name="webwork" default="jar" basedir=".">
+<project name="action" default="jar" basedir=".">
     <!-- overridden properties (must be before the import!) -->
     <property name="src.test" value="src/test"/>
     <property name="src.xdt" value="src/xdt"/>
@@ -37,7 +37,7 @@
         <echo>
             The default build only retrieves dependencies that released under a license compatible
             with the Apache Software Foundation.  To optionally download the optional LGPL dependencies
-            and compile the dependent Action 2 code, run the 'compile-optional' task.
+            and compile the dependent Struts Action 2 code, run the 'compile-optional' task.
         </echo>    
         
         <taskdef name="ivy-configure" classname="fr.jayasoft.ivy.ant.IvyConfigure" classpathref="cp"/>
@@ -122,12 +122,12 @@
             </fileset>
             <configParam name="Jspversion" value="1.2"/>
             <configParam name="Taglibversion" value="${version}"/>
-            <configParam name="Description" value="WebWork JSP Taglib"/>
-            <configParam name="Shortname" value="WebWork Taglib"/>
-            <configParam name="Displayname" value="WebWork Taglib"/>
+            <configParam name="Description" value="Struts Action 2  JSP Taglib"/>
+            <configParam name="Shortname" value="Struts Action 2  Taglib"/>
+            <configParam name="Displayname" value="Struts Action 2  Taglib"/>
             <configParam name="Smallicon" value=""/>
             <configParam name="Largeicon" value=""/>
-            <configParam name="Uri" value="/webwork"/>
+            <configParam name="Uri" value="/struts-action"/>
             <xmlTemplate templateFile="${src.xdt}/taglib_tld.xdt" destinationfile="taglib.tld"/>
         </xdoclet>
     </target>
@@ -232,7 +232,9 @@
             not endorsed by the Apache Software Foundation.  In particular, these dependencies
             use the LGPL license - http://opensource.org/licenses/lgpl-license.php
         </echo>    
+    <!--
         <taskdef name="ivy-retrieve" classname="fr.jayasoft.ivy.ant.IvyRetrieve" classpathref="cp"/>
+    -->
 
         <ivy-retrieve conf="fileupload-pell,jasperreports,jfree,cewolf" />
     </target>

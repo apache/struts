@@ -5,9 +5,9 @@
 package org.apache.struts.action2.views.freemarker;
 
 import com.mockobjects.servlet.MockServletContext;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsConstants;
 import org.apache.struts.action2.config.Configuration;
-import org.apache.struts.action2.views.jsp.WebWorkMockServletContext;
+import org.apache.struts.action2.views.jsp.StrutsMockServletContext;
 
 import junit.framework.TestCase;
 
@@ -20,8 +20,8 @@ import junit.framework.TestCase;
 public class FreemarkerManagerTest extends TestCase {
 	
 	public void testIfWebworkEncodingIsSetProperty() throws Exception {
-		Configuration.set(WebWorkConstants.WEBWORK_I18N_ENCODING, "UTF-8");
-		WebWorkMockServletContext servletContext = new WebWorkMockServletContext();
+		Configuration.set(StrutsConstants.STRUTS_I18N_ENCODING, "UTF-8");
+		StrutsMockServletContext servletContext = new StrutsMockServletContext();
 		servletContext.setAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY, null);
 		freemarker.template.Configuration conf = FreemarkerManager.getInstance().getConfiguration(servletContext);
 		assertEquals(conf.getDefaultEncoding(), "UTF-8");

@@ -1,7 +1,7 @@
 package org.apache.struts.action2.components;
 
 import org.apache.struts.action2.components.Property;
-import org.apache.struts.action2.util.WebWorkTypeConverter;
+import org.apache.struts.action2.util.StrutsTypeConverter;
 import com.opensymphony.xwork.util.OgnlValueStack;
 import com.opensymphony.xwork.util.XWorkConverter;
 import junit.framework.TestCase;
@@ -102,7 +102,7 @@ public class PropertyTest extends TestCase {
         }
     }
  
-    private final class FooBarConverter extends WebWorkTypeConverter {
+    private final class FooBarConverter extends StrutsTypeConverter {
         public Object convertFromString(Map context, String[] values, Class toClass) {
             return null;
         }

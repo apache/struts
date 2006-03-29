@@ -14,8 +14,8 @@ import java.util.List;
  * <!-- START SNIPPET: javadoc -->
  *
  * WebWork comes with various related tools included in the webwork jar file. You can access these tools by simply
- * unpacking the WebWork distribution and running <b>java -jar webwork.jar</b>. WebWork will automatically include all
- * jars in the same directory as the webwork.jar file as well as all jars in the <i>lib</i> directory. This means you
+ * unpacking the WebWork distribution and running <b>java -jar struts.jar</b>. WebWork will automatically include all
+ * jars in the same directory as the struts.jar file as well as all jars in the <i>lib</i> directory. This means you
  * can invoke these tools either from within the standard directory structure found in the WebWork distribution, or from
  * within your WEB-INF/lib directory.
  *
@@ -27,7 +27,7 @@ public class Main {
     public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("Usage:");
-            System.out.println("  java -jar webwork.jar [command] (optional command args)");
+            System.out.println("  java -jar struts.jar [command] (optional command args)");
             System.out.println("");
             System.out.println("Where [command] is one of the following:");
             System.out.println("  quickstart");
@@ -65,7 +65,7 @@ public class Main {
             }
 
             // ... but there might not be any (ie: we're in development in IDEA), so use this as backup
-            urls.add(new File(System.getProperty("webwork.classes", "build/java")).toURL());
+            urls.add(new File(System.getProperty("struts.classes", "build/java")).toURL());
             urls.add(new File(System.getProperty("xwork.classes", "../xwork/build/java/")).toURL());
 
             // load tools.jar from JAVA_HOME
@@ -157,7 +157,7 @@ public class Main {
             System.out.println("       to deploy. The webapp name must be the");
             System.out.println("       name of the directory found in webapps/.");
             System.out.println("");
-            System.out.println("Example: java -jar webwork.jar quickstart:sandbox");
+            System.out.println("Example: java -jar struts.jar quickstart:sandbox");
             System.exit(1);
         }
 
@@ -202,8 +202,8 @@ public class Main {
 
     /**
      * Reverses the typical order of classloading to defer only to the parent if the current class loader can't be
-     * found. This is required to allow for the launcher to be embedded within webwork.jar (otherwise the dependencies
-     * wouldn't be found by the system ClassLoader when invoking using "java -jar webwork.jar ...").
+     * found. This is required to allow for the launcher to be embedded within struts.jar (otherwise the dependencies
+     * wouldn't be found by the system ClassLoader when invoking using "java -jar struts.jar ...").
      */
     public static class MainClassLoader extends URLClassLoader {
         public MainClassLoader(URL[] urls) {

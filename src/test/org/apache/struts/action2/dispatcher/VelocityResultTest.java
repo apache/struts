@@ -100,7 +100,7 @@ public class VelocityResultTest extends TestCase {
         }
     }
 
-    class TestResult extends WebWorkResultSupport {
+    class TestResult extends StrutsResultSupport {
         public String finalLocation;
 
         protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {

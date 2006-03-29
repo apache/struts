@@ -6,8 +6,8 @@ package org.apache.struts.action2.dispatcher;
 
 import com.opensymphony.util.ClassLoaderUtil;
 import org.apache.struts.action2.RequestUtils;
-import org.apache.struts.action2.WebWorkConstants;
-import org.apache.struts.action2.WebWorkStatics;
+import org.apache.struts.action2.StrutsConstants;
+import org.apache.struts.action2.StrutsStatics;
 import org.apache.struts.action2.config.Configuration;
 import org.apache.struts.action2.dispatcher.mapper.ActionMapper;
 import org.apache.struts.action2.dispatcher.mapper.ActionMapperFactory;
@@ -96,7 +96,7 @@ import java.text.SimpleDateFormat;
  * @see ActionContextCleanUp
  * @since 2.2
  */
-public class FilterDispatcher implements Filter, WebWorkStatics {
+public class FilterDispatcher implements Filter, StrutsStatics {
     private static final Log LOG = LogFactory.getLog(FilterDispatcher.class);
 
     protected FilterConfig filterConfig;
@@ -168,7 +168,7 @@ public class FilterDispatcher implements Filter, WebWorkStatics {
                 resourcePath = request.getPathInfo();
             }
 
-            if ("true".equals(Configuration.get(WebWorkConstants.WEBWORK_SERVE_STATIC_CONTENT)) 
+            if ("true".equals(Configuration.get(StrutsConstants.STRUTS_SERVE_STATIC_CONTENT)) 
                     && resourcePath.startsWith("/webwork")) {
                 String name = resourcePath.substring("/webwork".length());
                 findStaticResource(name, response);
@@ -323,7 +323,7 @@ public class FilterDispatcher implements Filter, WebWorkStatics {
             resourcePath = packagePrefix + name;
         }
 
-        String enc = (String) Configuration.get(WebWorkConstants.WEBWORK_I18N_ENCODING);
+        String enc = (String) Configuration.get(StrutsConstants.STRUTS_I18N_ENCODING);
         resourcePath = URLDecoder.decode(resourcePath, enc);
 
         return ClassLoaderUtil.getResourceAsStream(resourcePath, getClass());

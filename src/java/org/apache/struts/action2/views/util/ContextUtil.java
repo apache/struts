@@ -9,8 +9,8 @@ import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.ActionContext;
 import org.apache.struts.action2.views.jsp.ui.OgnlTool;
 import org.apache.struts.action2.config.Configuration;
-import org.apache.struts.action2.util.WebWorkUtil;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.util.StrutsUtil;
+import org.apache.struts.action2.StrutsConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,7 +33,7 @@ public class ContextUtil {
     public static final String BASE = "base";
     public static final String STACK = "stack";
     public static final String OGNL = "ognl";
-    public static final String WEBWORK = "webwork";
+    public static final String STRUTS = "webwork";
     public static final String ACTION = "action";
 
     public static Map getStandardContext(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
@@ -46,7 +46,7 @@ public class ContextUtil {
         map.put(BASE, req.getContextPath());
         map.put(STACK, stack);
         map.put(OGNL, OgnlTool.getInstance());
-        map.put(WEBWORK, new WebWorkUtil(stack, req, res));
+        map.put(STRUTS, new StrutsUtil(stack, req, res));
 
         ActionInvocation invocation = (ActionInvocation) stack.getContext().get(ActionContext.ACTION_INVOCATION);
         if (invocation != null) {
@@ -61,10 +61,10 @@ public class ContextUtil {
      * @return boolean
      */
     public static boolean isUseAltSyntax(Map context) {
-        // We didn't make altSyntax static cause, if so, webwork.configuration.xml.reload will not work
+        // We didn't make altSyntax static cause, if so, struts.configuration.xml.reload will not work
         // plus the Configuration implementation should cache the properties, which WW's
         // configuration implementation does
-        boolean altSyntax = "true".equals(Configuration.getString(WebWorkConstants.WEBWORK_TAG_ALTSYNTAX));
+        boolean altSyntax = "true".equals(Configuration.getString(StrutsConstants.STRUTS_TAG_ALTSYNTAX));
         return altSyntax ||(
                 (context.containsKey("useAltSyntax") &&
                         context.get("useAltSyntax") != null &&

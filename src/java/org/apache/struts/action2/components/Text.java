@@ -58,7 +58,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * <!-- START SNIPPET: example -->
  * 
  * &lt;!-- First Example --&gt;
- * &lt;ww:i18n name="webwork.action.test.i18n.Shop"&gt;
+ * &lt;ww:i18n name="struts.action.test.i18n.Shop"&gt;
  *     &lt;ww:text name="main.title"/&gt;
  * &lt;/ww:i18n&gt;
  *

@@ -5,9 +5,9 @@
 package org.apache.struts.action2.views.velocity;
 
 import org.apache.struts.action2.ServletActionContext;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsConstants;
 import org.apache.struts.action2.config.Configuration;
-import org.apache.struts.action2.util.VelocityWebWorkUtil;
+import org.apache.struts.action2.util.VelocityStrutsUtil;
 import org.apache.struts.action2.views.jsp.ui.OgnlTool;
 import org.apache.struts.action2.views.util.ContextUtil;
 import org.apache.struts.action2.views.velocity.components.*;
@@ -41,7 +41,7 @@ import java.util.*;
 public class VelocityManager {
     private static final Log log = LogFactory.getLog(VelocityManager.class);
     private static VelocityManager instance;
-    public static final String WEBWORK = "webwork";
+    public static final String STRUTS = "webwork";
 
     /**
      * the parent JSP tag
@@ -80,8 +80,8 @@ public class VelocityManager {
         if (instance == null) {
             String classname = VelocityManager.class.getName();
 
-            if (Configuration.isSet(WebWorkConstants.WEBWORK_VELOCITY_MANAGER_CLASSNAME)) {
-                classname = Configuration.getString(WebWorkConstants.WEBWORK_VELOCITY_MANAGER_CLASSNAME).trim();
+            if (Configuration.isSet(StrutsConstants.STRUTS_VELOCITY_MANAGER_CLASSNAME)) {
+                classname = Configuration.getString(StrutsConstants.STRUTS_VELOCITY_MANAGER_CLASSNAME).trim();
             }
 
             if (!classname.equals(VelocityManager.class.getName())) {
@@ -118,21 +118,21 @@ public class VelocityManager {
      * <li><strong>res</strong> - the current HttpServletResponse</li>
      * <li><strong>stack</strong> - the current {@link OgnlValueStack}</li>
      * <li><strong>ognl</strong> - an {@link OgnlTool}</li>
-     * <li><strong>webwork</strong> - an instance of {@link org.apache.struts.action2.util.WebWorkUtil}</li>
-     * <li><strong>action</strong> - the current WebWork action</li>
+     * <li><strong>webwork</strong> - an instance of {@link org.apache.struts.action2.util.StrutsUtil}</li>
+     * <li><strong>action</strong> - the current Struts action</li>
      * </ul>
      *
-     * @return a new WebWorkVelocityContext
+     * @return a new StrutsVelocityContext
      */
     public Context createContext(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         VelocityContext[] chainedContexts = prepareChainedContexts(req, res, stack.getContext());
-        WebWorkVelocityContext context = new WebWorkVelocityContext(chainedContexts, stack);
+        StrutsVelocityContext context = new StrutsVelocityContext(chainedContexts, stack);
         Map standardMap = ContextUtil.getStandardContext(stack, req, res);
         for (Iterator iterator = standardMap.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
             context.put((String) entry.getKey(), entry.getValue());
         }
-        context.put(WEBWORK, new VelocityWebWorkUtil(context, stack, req, res));
+        context.put(STRUTS, new VelocityStrutsUtil(context, stack, req, res));
 
 
         ServletContext ctx = null;
@@ -208,7 +208,7 @@ public class VelocityManager {
      * </ul>
      *
      * @param context the current ServletContext.  may <b>not</b> be null
-     * @return the optional properties if webwork.velocity.configfile was specified, an empty Properties file otherwise
+     * @return the optional properties if struts.velocity.configfile was specified, an empty Properties file otherwise
      */
     public Properties loadConfiguration(ServletContext context) {
         if (context == null) {
@@ -235,8 +235,8 @@ public class VelocityManager {
          */
         String configfile;
 
-        if (Configuration.isSet(WebWorkConstants.WEBWORK_VELOCITY_CONFIGFILE)) {
-            configfile = Configuration.getString(WebWorkConstants.WEBWORK_VELOCITY_CONFIGFILE);
+        if (Configuration.isSet(StrutsConstants.STRUTS_VELOCITY_CONFIGFILE)) {
+            configfile = Configuration.getString(StrutsConstants.STRUTS_VELOCITY_CONFIGFILE);
         } else {
             configfile = "velocity.properties";
         }
@@ -342,8 +342,8 @@ public class VelocityManager {
         initChainedContexts();
 
 
-        if (Configuration.isSet(WebWorkConstants.WEBWORK_VELOCITY_TOOLBOXLOCATION)) {
-            toolBoxLocation = Configuration.get(WebWorkConstants.WEBWORK_VELOCITY_TOOLBOXLOCATION).toString();
+        if (Configuration.isSet(StrutsConstants.STRUTS_VELOCITY_TOOLBOXLOCATION)) {
+            toolBoxLocation = Configuration.get(StrutsConstants.STRUTS_VELOCITY_TOOLBOXLOCATION).toString();
         }
 
     }
@@ -364,16 +364,16 @@ public class VelocityManager {
 
 
     /**
-     * allow users to specify via the webwork.properties file a set of additional VelocityContexts to chain to the
-     * the WebWorkVelocityContext.  The intent is to allow these contexts to store helper objects that the ui
+     * allow users to specify via the struts.properties file a set of additional VelocityContexts to chain to the
+     * the StrutsVelocityContext.  The intent is to allow these contexts to store helper objects that the ui
      * developer may want access to.  Examples of reasonable VelocityContexts would be an IoCVelocityContext, a
      * SpringReferenceVelocityContext, and a ToolboxVelocityContext
      */
     protected void initChainedContexts() {
 
-        if (Configuration.isSet(WebWorkConstants.WEBWORK_VELOCITY_CONTEXTS)) {
+        if (Configuration.isSet(StrutsConstants.STRUTS_VELOCITY_CONTEXTS)) {
             // we expect contexts to be a comma separated list of classnames
-            String contexts = Configuration.get(WebWorkConstants.WEBWORK_VELOCITY_CONTEXTS).toString();
+            String contexts = Configuration.get(StrutsConstants.STRUTS_VELOCITY_CONTEXTS).toString();
             StringTokenizer st = new StringTokenizer(contexts, ",");
             List contextList = new ArrayList();
 
@@ -403,11 +403,11 @@ public class VelocityManager {
      *  resource.loader = file, class
      *  file.resource.loader.path = real path of webapp
      *  class.resource.loader.description = Velocity Classpath Resource Loader
-     *  class.resource.loader.class = org.apache.struts.action2.views.velocity.WebWorkResourceLoader
+     *  class.resource.loader.class = org.apache.struts.action2.views.velocity.StrutsResourceLoader
      * </pre>
      * <p/>
-     * this default configuration can be overridden by specifying a webwork.velocity.configfile property in the
-     * webwork.properties file.  the specified config file will be searched for in the following order:
+     * this default configuration can be overridden by specifying a struts.velocity.configfile property in the
+     * struts.properties file.  the specified config file will be searched for in the following order:
      * </p>
      * <ul>
      * <li>relative to the servlet context path</li>
@@ -445,11 +445,11 @@ public class VelocityManager {
     }
 
     /**
-     * once we've loaded up the user defined configurations, we will want to apply WebWork specification configurations.
+     * once we've loaded up the user defined configurations, we will want to apply Struts specification configurations.
      * <ul>
      * <li>if Velocity.RESOURCE_LOADER has not been defined, then we will use the defaults which is a joined file,
      * class loader for unpackaed wars and a straight class loader otherwise</li>
-     * <li>we need to define the various WebWork custom user directives such as #param, #tag, and #bodytag</li>
+     * <li>we need to define the various Struts custom user directives such as #param, #tag, and #bodytag</li>
      * </ul>
      *
      * @param context
@@ -493,13 +493,13 @@ public class VelocityManager {
         }
 
         /**
-         * Refactored the Velocity templates for the WebWork taglib into the classpath from the web path.  This will
-         * enable WebWork projects to have access to the templates by simply including the WebWork jar file.
+         * Refactored the Velocity templates for the Struts taglib into the classpath from the web path.  This will
+         * enable Struts projects to have access to the templates by simply including the Struts jar file.
          * Unfortunately, there does not appear to be a macro for the class loader keywords
          * Matt Ho - Mon Mar 17 00:21:46 PST 2003
          */
         p.setProperty("wwclass.resource.loader.description", "Velocity Classpath Resource Loader");
-        p.setProperty("wwclass.resource.loader.class", "org.apache.struts.action2.views.velocity.WebWorkResourceLoader");
+        p.setProperty("wwclass.resource.loader.class", "org.apache.struts.action2.views.velocity.StrutsResourceLoader");
         p.setProperty("wwclass.resource.loader.modificationCheckInterval", "2");
         p.setProperty("wwclass.resource.loader.cache", "true");
 

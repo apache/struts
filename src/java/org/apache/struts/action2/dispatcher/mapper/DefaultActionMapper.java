@@ -1,7 +1,7 @@
 package org.apache.struts.action2.dispatcher.mapper;
 
 import org.apache.struts.action2.RequestUtils;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsConstants;
 import org.apache.struts.action2.config.Configuration;
 import org.apache.struts.action2.dispatcher.ServletRedirectResult;
 import org.apache.struts.action2.util.PrefixTrie;
@@ -16,7 +16,7 @@ import java.util.Map;
  * <!-- START SNIPPET: javadoc -->
  *
  * Default action mapper implementation, using the standard *.[ext] (where ext usually "action") pattern. The extension
- * is looked up from the WebWork configuration key <b>webwork.action.exection</b>.
+ * is looked up from the WebWork configuration key <b>struts.action.exection</b>.
  *
  * <p/> To help with dealing with buttons and other related requirements, this mapper (and other {@link ActionMapper}s,
  * we hope) has the ability to name a button with some predefined prefix and have that button name alter the execution
@@ -107,7 +107,7 @@ import java.util.Map;
  *
  * With redirect-action-prefix, instead of executing baz action's execute() method (by default it isn't overriden in
  * xwork.xml to be something else), it will get redirected to, in this case 'dashboard.action'. Internally it uses
- * ServletRedirectResult to do the task and read off the extension from the webwork.properties.
+ * ServletRedirectResult to do the task and read off the extension from the struts.properties.
  *
  * <!-- END SNIPPET: redirect-action -->
  *
@@ -262,7 +262,7 @@ public class DefaultActionMapper implements ActionMapper {
      * Returns null if no extension is specified.
      */
     static List getExtensions() {
-        String extensions = (String) Configuration.get(WebWorkConstants.WEBWORK_ACTION_EXTENSION);
+        String extensions = (String) Configuration.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
        
         if (extensions.equals("")) {
         	return null;

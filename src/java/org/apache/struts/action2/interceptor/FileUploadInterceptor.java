@@ -47,11 +47,11 @@ import java.util.*;
  *
  * <ul>
  *
- * <li>webwork.messages.error.uploading - a general error that occurs when the file could not be uploaded</li>
+ * <li>struts.messages.error.uploading - a general error that occurs when the file could not be uploaded</li>
  *
- * <li>webwork.messages.error.file.too.large - occurs when the uploaded file is too large</li>
+ * <li>struts.messages.error.file.too.large - occurs when the uploaded file is too large</li>
  *
- * <li>webwork.messages.error.content.type.not.allowed - occurs when the uploaded file does not match the expected
+ * <li>struts.messages.error.content.type.not.allowed - occurs when the uploaded file does not match the expected
  * content types specified</li>
  *
  * </ul>
@@ -65,7 +65,7 @@ import java.util.*;
  * <ul>
  *
  * <li>maximumSize (optional) - the maximum size (in bytes) that the interceptor will allow a file reference to be set
- * on the action. Note, this is <b>not</b> related to the various properties found in webwork.properties.
+ * on the action. Note, this is <b>not</b> related to the various properties found in struts.properties.
  * Default to approximately 2MB.</li>
  *
  * <li>allowedTypes (optional) - a comma separated list of content types (ie: text/html) that the interceptor will allow
@@ -165,7 +165,7 @@ public class FileUploadInterceptor implements Interceptor {
         if (!(request instanceof MultiPartRequestWrapper)) {
             if (log.isDebugEnabled()) {
                 ActionProxy proxy = invocation.getProxy();
-                log.debug(getTextMessage("webwork.messages.bypass.request", new Object[]{proxy.getNamespace(), proxy.getActionName()}, ActionContext.getContext().getLocale()));
+                log.debug(getTextMessage("struts.messages.bypass.request", new Object[]{proxy.getNamespace(), proxy.getActionName()}, ActionContext.getContext().getLocale()));
             }
 
             return invocation.invoke();
@@ -212,7 +212,7 @@ public class FileUploadInterceptor implements Interceptor {
                     File[] files = multiWrapper.getFiles(inputName);
                     if (files != null) {
                         for (int index = 0; index < files.length; index++) {
-                            getTextMessage("webwork.messages.current.file", new Object[]{inputName, contentType[index], fileName[index], files[index]}, ActionContext.getContext().getLocale());
+                            getTextMessage("struts.messages.current.file", new Object[]{inputName, contentType[index], fileName[index], files[index]}, ActionContext.getContext().getLocale());
 
                             if (acceptFile(files[0], contentType[0], inputName, validation, ac.getLocale())) {
                                 parameters.put(inputName, files);
@@ -222,10 +222,10 @@ public class FileUploadInterceptor implements Interceptor {
                         }
                     }
                 } else {
-                    log.error(getTextMessage("webwork.messages.invalid.file", new Object[]{inputName}, ActionContext.getContext().getLocale()));
+                    log.error(getTextMessage("struts.messages.invalid.file", new Object[]{inputName}, ActionContext.getContext().getLocale()));
                 }
             } else {
-                log.error(getTextMessage("webwork.messages.invalid.content.type", new Object[]{inputName}, ActionContext.getContext().getLocale()));
+                log.error(getTextMessage("struts.messages.invalid.content.type", new Object[]{inputName}, ActionContext.getContext().getLocale()));
             }
         }
 
@@ -239,7 +239,7 @@ public class FileUploadInterceptor implements Interceptor {
             File[] file = multiWrapper.getFiles(inputValue);
             for (int index = 0; index < file.length; index++) {
                 File currentFile = file[index];
-                log.info(getTextMessage("webwork.messages.removing.file", new Object[]{inputValue, currentFile}, ActionContext.getContext().getLocale()));
+                log.info(getTextMessage("struts.messages.removing.file", new Object[]{inputValue, currentFile}, ActionContext.getContext().getLocale()));
 
                 if ((currentFile != null) && currentFile.isFile()) {
                     currentFile.delete();
@@ -266,21 +266,21 @@ public class FileUploadInterceptor implements Interceptor {
 
         // If it's null the upload failed
         if (file == null) {
-            String errMsg = getTextMessage("webwork.messages.error.uploading", new Object[]{inputName}, locale);
+            String errMsg = getTextMessage("struts.messages.error.uploading", new Object[]{inputName}, locale);
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
 
             log.error(errMsg);
         } else if (maximumSize != null && maximumSize.longValue() < file.length()) {
-            String errMsg = getTextMessage("webwork.messages.error.file.too.large", new Object[]{inputName, file.getName(), "" + file.length()}, locale);
+            String errMsg = getTextMessage("struts.messages.error.file.too.large", new Object[]{inputName, file.getName(), "" + file.length()}, locale);
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
 
             log.error(errMsg);
         } else if ((! allowedTypesSet.isEmpty()) && (!containsItem(allowedTypesSet, contentType))) {
-            String errMsg = getTextMessage("webwork.messages.error.content.type.not.allowed", new Object[]{inputName, file.getName(), contentType}, locale);
+            String errMsg = getTextMessage("struts.messages.error.content.type.not.allowed", new Object[]{inputName, file.getName(), contentType}, locale);
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }

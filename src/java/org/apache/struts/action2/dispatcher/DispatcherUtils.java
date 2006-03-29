@@ -7,8 +7,8 @@ package org.apache.struts.action2.dispatcher;
 import com.opensymphony.util.ClassLoaderUtil;
 import com.opensymphony.util.FileManager;
 import org.apache.struts.action2.ServletActionContext;
-import org.apache.struts.action2.WebWorkStatics;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsStatics;
+import org.apache.struts.action2.StrutsConstants;
 import org.apache.struts.action2.config.Configuration;
 import org.apache.struts.action2.dispatcher.mapper.ActionMapping;
 import org.apache.struts.action2.dispatcher.multipart.MultiPartRequest;
@@ -96,11 +96,11 @@ public class DispatcherUtils {
     }
 
     protected void init(ServletContext servletContext) {
-    	boolean reloadi18n = Boolean.valueOf((String) Configuration.get(WebWorkConstants.WEBWORK_I18N_RELOAD)).booleanValue();
+    	boolean reloadi18n = Boolean.valueOf((String) Configuration.get(StrutsConstants.STRUTS_I18N_RELOAD)).booleanValue();
         LocalizedTextUtil.setReloadBundles(reloadi18n);
 
-        if (Configuration.isSet(WebWorkConstants.WEBWORK_OBJECTFACTORY)) {
-            String className = (String) Configuration.get(WebWorkConstants.WEBWORK_OBJECTFACTORY);
+        if (Configuration.isSet(StrutsConstants.STRUTS_OBJECTFACTORY)) {
+            String className = (String) Configuration.get(StrutsConstants.STRUTS_OBJECTFACTORY);
             if (className.equals("spring")) {
                 // note: this class name needs to be in string form so we don't put hard
                 //       dependencies on spring, since it isn't technically required.
@@ -123,8 +123,8 @@ public class DispatcherUtils {
             }
         }
 
-        if (Configuration.isSet(WebWorkConstants.WEBWORK_OBJECTTYPEDETERMINER)) {
-            String className = (String) Configuration.get(WebWorkConstants.WEBWORK_OBJECTTYPEDETERMINER);
+        if (Configuration.isSet(StrutsConstants.STRUTS_OBJECTTYPEDETERMINER)) {
+            String className = (String) Configuration.get(StrutsConstants.STRUTS_OBJECTTYPEDETERMINER);
             if (className.equals("tiger")) {
                 // note: this class name needs to be in string form so we don't put hard
                 //       dependencies on xwork-tiger, since it isn't technically required.
@@ -143,19 +143,19 @@ public class DispatcherUtils {
             }
         }
 
-        if ("true".equals(Configuration.get(WebWorkConstants.WEBWORK_DEVMODE))) {
+        if ("true".equals(Configuration.get(StrutsConstants.STRUTS_DEVMODE))) {
             devMode = true;
-            Configuration.set(WebWorkConstants.WEBWORK_I18N_RELOAD, "true");
-            Configuration.set(WebWorkConstants.WEBWORK_CONFIGURATION_XML_RELOAD, "true");
+            Configuration.set(StrutsConstants.STRUTS_I18N_RELOAD, "true");
+            Configuration.set(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "true");
         }
 
         //check for configuration reloading
-        if ("true".equalsIgnoreCase(Configuration.getString(WebWorkConstants.WEBWORK_CONFIGURATION_XML_RELOAD))) {
+        if ("true".equalsIgnoreCase(Configuration.getString(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD))) {
             FileManager.setReloadingConfigs(true);
         }
 
-        if (Configuration.isSet(WebWorkConstants.WEBWORK_CONTINUATIONS_PACKAGE)) {
-            String pkg = Configuration.getString(WebWorkConstants.WEBWORK_CONTINUATIONS_PACKAGE);
+        if (Configuration.isSet(StrutsConstants.STRUTS_CONTINUATIONS_PACKAGE)) {
+            String pkg = Configuration.getString(StrutsConstants.STRUTS_CONTINUATIONS_PACKAGE);
             ObjectFactory.setContinuationPackage(pkg);
         }
 
@@ -163,8 +163,8 @@ public class DispatcherUtils {
         if (servletContext.getServerInfo().indexOf("WebLogic") >= 0) {
             LOG.info("WebLogic server detected. Enabling WebWork parameter access work-around.");
             paramsWorkaroundEnabled = true;
-        } else if (Configuration.isSet(WebWorkConstants.WEBWORK_DISPATCHER_PARAMETERSWORKAROUND)) {
-            paramsWorkaroundEnabled = "true".equals(Configuration.get(WebWorkConstants.WEBWORK_DISPATCHER_PARAMETERSWORKAROUND));
+        } else if (Configuration.isSet(StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND)) {
+            paramsWorkaroundEnabled = "true".equals(Configuration.get(StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND));
         } else {
             LOG.debug("Parameter access work-around disabled.");
         }
@@ -200,7 +200,7 @@ public class DispatcherUtils {
         Map extraContext = createContextMap(request, response, mapping, context);
 
         // If there was a previous value stack, then create a new copy and pass it in to be used by the new Action
-        OgnlValueStack stack = (OgnlValueStack) request.getAttribute(ServletActionContext.WEBWORK_VALUESTACK_KEY);
+        OgnlValueStack stack = (OgnlValueStack) request.getAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY);
         if (stack != null) {
             extraContext.put(ActionContext.VALUE_STACK, new OgnlValueStack(stack));
         }
@@ -223,7 +223,7 @@ public class DispatcherUtils {
 
             ActionProxy proxy = ActionProxyFactory.getFactory().createActionProxy(namespace, name, extraContext, true, false);
             proxy.setMethod(method);
-            request.setAttribute(ServletActionContext.WEBWORK_VALUESTACK_KEY, proxy.getInvocation().getStack());
+            request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, proxy.getInvocation().getStack());
 
             // if the ActionMapping says to go straight to a result, do it!
             if (mapping.getResult() != null) {
@@ -235,7 +235,7 @@ public class DispatcherUtils {
 
             // If there was a previous value stack then set it back onto the request
             if (stack != null) {
-                request.setAttribute(ServletActionContext.WEBWORK_VALUESTACK_KEY, stack);
+                request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
             }
         } catch (ConfigurationException e) {
             LOG.error("Could not find action", e);
@@ -298,8 +298,8 @@ public class DispatcherUtils {
         extraContext.put(ActionContext.APPLICATION, applicationMap);
 
         Locale locale = null;
-        if (Configuration.isSet(WebWorkConstants.WEBWORK_LOCALE)) {
-            locale = LocalizedTextUtil.localeFromString(Configuration.getString(WebWorkConstants.WEBWORK_LOCALE), request.getLocale());
+        if (Configuration.isSet(StrutsConstants.STRUTS_LOCALE)) {
+            locale = LocalizedTextUtil.localeFromString(Configuration.getString(StrutsConstants.STRUTS_LOCALE), request.getLocale());
         } else {
             locale = request.getLocale();
         }
@@ -307,9 +307,9 @@ public class DispatcherUtils {
         extraContext.put(ActionContext.LOCALE, locale);
         extraContext.put(ActionContext.DEV_MODE, Boolean.valueOf(devMode));
 
-        extraContext.put(WebWorkStatics.HTTP_REQUEST, request);
-        extraContext.put(WebWorkStatics.HTTP_RESPONSE, response);
-        extraContext.put(WebWorkStatics.SERVLET_CONTEXT, servletContext);
+        extraContext.put(StrutsStatics.HTTP_REQUEST, request);
+        extraContext.put(StrutsStatics.HTTP_RESPONSE, response);
+        extraContext.put(StrutsStatics.SERVLET_CONTEXT, servletContext);
         extraContext.put(ComponentInterceptor.COMPONENT_MANAGER, request.getAttribute(ComponentManager.COMPONENT_MANAGER_KEY));
 
         // helpers to get access to request/session/application scope
@@ -332,19 +332,19 @@ public class DispatcherUtils {
     public static int getMaxSize() {
         Integer maxSize = new Integer(Integer.MAX_VALUE);
         try {
-            String maxSizeStr = Configuration.getString(WebWorkConstants.WEBWORK_MULTIPART_MAXSIZE);
+            String maxSizeStr = Configuration.getString(StrutsConstants.STRUTS_MULTIPART_MAXSIZE);
 
             if (maxSizeStr != null) {
                 try {
                     maxSize = new Integer(maxSizeStr);
                 } catch (NumberFormatException e) {
-                    LOG.warn("Unable to format 'webwork.multipart.maxSize' property setting. Defaulting to Integer.MAX_VALUE");
+                    LOG.warn("Unable to format 'struts.multipart.maxSize' property setting. Defaulting to Integer.MAX_VALUE");
                 }
             } else {
-                LOG.warn("Unable to format 'webwork.multipart.maxSize' property setting. Defaulting to Integer.MAX_VALUE");
+                LOG.warn("Unable to format 'struts.multipart.maxSize' property setting. Defaulting to Integer.MAX_VALUE");
             }
         } catch (IllegalArgumentException e1) {
-            LOG.warn("Unable to format 'webwork.multipart.maxSize' property setting. Defaulting to Integer.MAX_VALUE");
+            LOG.warn("Unable to format 'struts.multipart.maxSize' property setting. Defaulting to Integer.MAX_VALUE");
         }
 
         if (LOG.isDebugEnabled()) {
@@ -360,11 +360,11 @@ public class DispatcherUtils {
      * @return the path to save uploaded files to
      */
     public String getSaveDir(ServletContext servletContext) {
-        String saveDir = Configuration.getString(WebWorkConstants.WEBWORK_MULTIPART_SAVEDIR).trim();
+        String saveDir = Configuration.getString(StrutsConstants.STRUTS_MULTIPART_SAVEDIR).trim();
 
         if (saveDir.equals("")) {
             File tempdir = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
-            LOG.info("Unable to find 'webwork.multipart.saveDir' property setting. Defaulting to javax.servlet.context.tempdir");
+            LOG.info("Unable to find 'struts.multipart.saveDir' property setting. Defaulting to javax.servlet.context.tempdir");
 
             if (tempdir != null) {
                 saveDir = tempdir.toString();
@@ -386,13 +386,13 @@ public class DispatcherUtils {
 
     public void prepare(HttpServletRequest request, HttpServletResponse response) {
         String encoding = null;
-        if (Configuration.isSet(WebWorkConstants.WEBWORK_I18N_ENCODING)) {
-            encoding = Configuration.getString(WebWorkConstants.WEBWORK_I18N_ENCODING);
+        if (Configuration.isSet(StrutsConstants.STRUTS_I18N_ENCODING)) {
+            encoding = Configuration.getString(StrutsConstants.STRUTS_I18N_ENCODING);
         }
 
         Locale locale = null;
-        if (Configuration.isSet(WebWorkConstants.WEBWORK_LOCALE)) {
-            locale = LocalizedTextUtil.localeFromString(Configuration.getString(WebWorkConstants.WEBWORK_LOCALE), request.getLocale());
+        if (Configuration.isSet(StrutsConstants.STRUTS_LOCALE)) {
+            locale = LocalizedTextUtil.localeFromString(Configuration.getString(StrutsConstants.STRUTS_LOCALE), request.getLocale());
         }
 
         if (encoding != null && !MultiPartRequest.isMultiPart(request)) {
@@ -424,14 +424,14 @@ public class DispatcherUtils {
      */
     public HttpServletRequest wrapRequest(HttpServletRequest request, ServletContext servletContext) throws IOException {
         // don't wrap more than once
-        if (request instanceof WebWorkRequestWrapper) {
+        if (request instanceof StrutsRequestWrapper) {
             return request;
         }
 
         if (MultiPartRequest.isMultiPart(request)) {
             request = new MultiPartRequestWrapper(request, getSaveDir(servletContext), getMaxSize());
         } else {
-            request = new WebWorkRequestWrapper(request);
+            request = new StrutsRequestWrapper(request);
         }
 
         return request;

@@ -10,7 +10,7 @@ import org.apache.struts.action2.components.Head;
 /**
  * Unit test for {@link HeadTag}.
  * <p/>
- * Note: If unit test fails with encoding difference check the src/test/webwork.properties
+ * Note: If unit test fails with encoding difference check the src/test/struts.properties
  * and adjust the .txt files accordingly
  *
  * @author Claus Ibsen

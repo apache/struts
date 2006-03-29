@@ -9,8 +9,8 @@
 package org.apache.struts.action2.dispatcher;
 
 import com.mockobjects.servlet.MockHttpServletRequest;
-import org.apache.struts.action2.WebWorkTestCase;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsTestCase;
+import org.apache.struts.action2.StrutsConstants;
 import org.apache.struts.action2.config.Configuration;
 import org.apache.struts.action2.dispatcher.mapper.ActionMapping;
 import org.apache.struts.action2.dispatcher.mapper.DefaultActionMapper;
@@ -21,7 +21,7 @@ import java.util.HashMap;
 /**
  * @author roughley
  */
-public class DefautActionMapperTest extends WebWorkTestCase {
+public class DefautActionMapperTest extends StrutsTestCase {
     private MockHttpServletRequest req;
 
     protected void setUp() throws Exception {
@@ -87,8 +87,8 @@ public class DefautActionMapperTest extends WebWorkTestCase {
     }
 
     public void testGetMappingWithNoExtension() throws Exception {
-        Object old = Configuration.get(WebWorkConstants.WEBWORK_ACTION_EXTENSION);
-        Configuration.set(WebWorkConstants.WEBWORK_ACTION_EXTENSION, "");
+        Object old = Configuration.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
+        Configuration.set(StrutsConstants.STRUTS_ACTION_EXTENSION, "");
         try {
             req.setupGetParameterMap(new HashMap());
             req.setupGetRequestURI("/my/namespace/actionName");
@@ -104,7 +104,7 @@ public class DefautActionMapperTest extends WebWorkTestCase {
             assertNull(mapping.getMethod());
         }
         finally {
-            Configuration.set(WebWorkConstants.WEBWORK_ACTION_EXTENSION, old);
+            Configuration.set(StrutsConstants.STRUTS_ACTION_EXTENSION, old);
         }
     }
 }

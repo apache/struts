@@ -5,7 +5,7 @@
 package org.apache.struts.action2.interceptor;
 
 import org.apache.struts.action2.ServletActionContext;
-import org.apache.struts.action2.WebWorkStatics;
+import org.apache.struts.action2.StrutsStatics;
 import org.apache.struts.action2.util.ServletContextAware;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
@@ -89,7 +89,7 @@ import javax.servlet.ServletContext;
  * @see ApplicationAware
  * @see PrincipalAware
  */
-public class ServletConfigInterceptor extends AroundInterceptor implements WebWorkStatics {
+public class ServletConfigInterceptor extends AroundInterceptor implements StrutsStatics {
     protected void after(ActionInvocation dispatcher, String result) throws Exception {
     }
 

@@ -4,8 +4,8 @@
  */
 package org.apache.struts.action2.interceptor;
 
-import org.apache.struts.action2.WebWorkStatics;
-import org.apache.struts.action2.WebWorkTestCase;
+import org.apache.struts.action2.StrutsStatics;
+import org.apache.struts.action2.StrutsTestCase;
 import org.apache.struts.action2.util.ServletContextAware;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.Action;
@@ -26,7 +26,7 @@ import java.util.Map;
  *
  * @author Claus Ibsen
  */
-public class ServletConfigInterceptorTest extends WebWorkTestCase {
+public class ServletConfigInterceptorTest extends StrutsTestCase {
 
     private ServletConfigInterceptor interceptor;
 
@@ -37,7 +37,7 @@ public class ServletConfigInterceptorTest extends WebWorkTestCase {
         MockHttpServletRequest req = new MockHttpServletRequest();
 
         MockActionInvocation mai = createActionInvocation(mock);
-        mai.getInvocationContext().put(WebWorkStatics.HTTP_REQUEST, req);
+        mai.getInvocationContext().put(StrutsStatics.HTTP_REQUEST, req);
 
         mock.setServletRequest((HttpServletRequest) req);
         control.setVoidCallable();
@@ -54,7 +54,7 @@ public class ServletConfigInterceptorTest extends WebWorkTestCase {
         MockHttpServletResponse res = new MockHttpServletResponse();
 
         MockActionInvocation mai = createActionInvocation(mock);
-        mai.getInvocationContext().put(WebWorkStatics.HTTP_RESPONSE, res);
+        mai.getInvocationContext().put(StrutsStatics.HTTP_RESPONSE, res);
 
         mock.setServletResponse((HttpServletResponse) res);
         control.setVoidCallable();
@@ -123,7 +123,7 @@ public class ServletConfigInterceptorTest extends WebWorkTestCase {
         MockActionInvocation mai = createActionInvocation(mock);
 
         MockServletContext ctx = new MockServletContext();
-        mai.getInvocationContext().put(WebWorkStatics.SERVLET_CONTEXT, ctx);
+        mai.getInvocationContext().put(StrutsStatics.SERVLET_CONTEXT, ctx);
 
         mock.setPrincipalProxy(null); // we can do this because of ALWAYS_MATCHER
         control.setVoidCallable();
@@ -141,7 +141,7 @@ public class ServletConfigInterceptorTest extends WebWorkTestCase {
 
         MyPrincipalAction action = new MyPrincipalAction();
         MockActionInvocation mai = createActionInvocation(action);
-        mai.getInvocationContext().put(WebWorkStatics.HTTP_REQUEST, req);
+        mai.getInvocationContext().put(StrutsStatics.HTTP_REQUEST, req);
 
         assertNull(action.getProxy());
         interceptor.intercept(mai);
@@ -163,7 +163,7 @@ public class ServletConfigInterceptorTest extends WebWorkTestCase {
         MockActionInvocation mai = createActionInvocation(mock);
 
         MockServletContext ctx = new MockServletContext();
-        mai.getInvocationContext().put(WebWorkStatics.SERVLET_CONTEXT, ctx);
+        mai.getInvocationContext().put(StrutsStatics.SERVLET_CONTEXT, ctx);
 
         mock.setServletContext((ServletContext) ctx);
         control.setVoidCallable();

@@ -44,7 +44,7 @@ public class PlexusObjectFactory extends ObjectFactory implements ObjectFactoryI
     public void init(ServletContext servletContext) {
         if (!PlexusLifecycleListener.loaded || !PlexusFilter.loaded) {
             // uh oh! looks like the lifecycle listener wasn't installed. Let's inform the user
-            String message = "********** FATAL ERROR STARTING UP PLEXUS-WEBWORK INTEGRATION **********\n" +
+            String message = "********** FATAL ERROR STARTING UP PLEXUS-STRUTS INTEGRATION **********\n" +
                     "Looks like the Plexus listener was not configured for your web app! \n" +
                     "You need to add the following to web.xml: \n" +
                     "\n" +

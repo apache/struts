@@ -5,7 +5,7 @@
 package org.apache.struts.action2.dispatcher;
 
 import org.apache.struts.action2.ServletActionContext;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsConstants;
 import org.apache.struts.action2.config.Configuration;
 import org.apache.struts.action2.views.JspSupportServlet;
 import org.apache.struts.action2.views.velocity.VelocityManager;
@@ -50,7 +50,7 @@ import java.io.Writer;
  *
  * </ul>
  * <p>
- * This result follows the same rules from {@link WebWorkResultSupport}.
+ * This result follows the same rules from {@link StrutsResultSupport}.
  * </p>
  *
  * <!-- END SNIPPET: params -->
@@ -65,7 +65,7 @@ import java.io.Writer;
  *
  * @author <a href="mailto:matt@indigoegg.com">Matt Ho</a>
  */
-public class VelocityResult extends WebWorkResultSupport {
+public class VelocityResult extends StrutsResultSupport {
 
     private static final Log log = LogFactory.getLog(VelocityResult.class);
 
@@ -150,10 +150,10 @@ public class VelocityResult extends WebWorkResultSupport {
      * <p/>
      * People can override this method if they want to provide specific encodings for specific templates.
      *
-     * @return The encoding associated with this template (defaults to the value of 'webwork.i18n.encoding' property)
+     * @return The encoding associated with this template (defaults to the value of 'struts.i18n.encoding' property)
      */
     protected String getEncoding(String templateLocation) {
-        String encoding = (String) Configuration.get(WebWorkConstants.WEBWORK_I18N_ENCODING);
+        String encoding = (String) Configuration.get(StrutsConstants.STRUTS_I18N_ENCODING);
         if (encoding == null) {
             encoding = System.getProperty("file.encoding");
         }

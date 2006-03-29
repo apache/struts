@@ -151,9 +151,9 @@ public class ScopeInterceptor implements Interceptor, PreResultListener {
     private String getKey(ActionInvocation invocation) {
         ActionProxy proxy = invocation.getProxy();
         if (key == null || "CLASS".equals(key)) {
-            key = "webwork.ScopeInterceptor:" + proxy.getAction().getClass();
+            key = "struts.ScopeInterceptor:" + proxy.getAction().getClass();
         } else if ("ACTION".equals(key)) {
-            key = "webwork.ScopeInterceptor:" + proxy.getNamespace() + ":" + proxy.getActionName();
+            key = "struts.ScopeInterceptor:" + proxy.getNamespace() + ":" + proxy.getActionName();
         }
         return key;
     }

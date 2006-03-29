@@ -31,7 +31,7 @@ public class DispatcherUtilsTest extends TestCase {
 		
 		// some i18n messages from webwork-messages.properties
 		assertEquals(
-				LocalizedTextUtil.findDefaultText("webwork.messages.error.uploading", Locale.US, 
+				LocalizedTextUtil.findDefaultText("struts.messages.error.uploading", Locale.US, 
 						new Object[] { "some error messages" }), 
 				"Error uploading: some error messages");
 	}

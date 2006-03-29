@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
  * <pre>
  * <!-- START SNIPPET: example -->
  * JSP:
- * &lt;ww:bean name="webwork.util.Counter" id="year"&gt;
+ * &lt;ww:bean name="struts.util.Counter" id="year"&gt;
  *   &lt;ww:param name="first" value="text('firstBirthYear')"/&gt;
  *   &lt;ww:param name="last" value="2000"/&gt;
  *

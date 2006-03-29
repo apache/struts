@@ -68,7 +68,7 @@ public class BeanAdapter extends DefaultElementAdapter {
                 Object propertyValue = null;
 
                 /** 999 white magic hack start 999 **
-                 * some property accessors will throw exceptions, e.g. getLocale() in webwork.ActionSupport *grrr*
+                 * some property accessors will throw exceptions, e.g. getLocale() in struts.ActionSupport *grrr*
                  * IMHO property accessors should not have those side effects - meier@meisterbohne.de
                  */
                 try {

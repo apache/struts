@@ -6,7 +6,7 @@ package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 import org.apache.struts.action2.config.Configuration;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -92,7 +92,7 @@ public class Head extends UIBean {
             }
         }
 
-        addParameter("encoding", Configuration.get(WebWorkConstants.WEBWORK_I18N_ENCODING));
+        addParameter("encoding", Configuration.get(StrutsConstants.STRUTS_I18N_ENCODING));
         addParameter("debug", Boolean.valueOf(debug).toString());
     }
 

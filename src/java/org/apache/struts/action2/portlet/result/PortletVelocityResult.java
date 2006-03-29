@@ -5,9 +5,9 @@
 package org.apache.struts.action2.portlet.result;
 
 import org.apache.struts.action2.ServletActionContext;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsConstants;
 import org.apache.struts.action2.config.Configuration;
-import org.apache.struts.action2.dispatcher.WebWorkResultSupport;
+import org.apache.struts.action2.dispatcher.StrutsResultSupport;
 import org.apache.struts.action2.portlet.PortletActionConstants;
 import org.apache.struts.action2.portlet.context.PortletActionContext;
 import org.apache.struts.action2.views.JspSupportServlet;
@@ -60,7 +60,7 @@ import java.io.Writer;
  * 
  * </ul>
  * <p>
- * This result follows the same rules from {@link WebWorkResultSupport}.
+ * This result follows the same rules from {@link StrutsResultSupport}.
  * </p>
  * 
  * <!-- END SNIPPET: params -->
@@ -77,7 +77,7 @@ import java.io.Writer;
  * 
  * @author <a href="mailto:matt@indigoegg.com">Matt Ho </a>
  */
-public class PortletVelocityResult extends WebWorkResultSupport {
+public class PortletVelocityResult extends StrutsResultSupport {
 
     private static final Log log = LogFactory
             .getLog(PortletVelocityResult.class);
@@ -201,11 +201,11 @@ public class PortletVelocityResult extends WebWorkResultSupport {
      * method if they want to provide specific encodings for specific templates.
      * 
      * @return The encoding associated with this template (defaults to the value
-     *         of 'webwork.i18n.encoding' property)
+     *         of 'struts.i18n.encoding' property)
      */
     protected String getEncoding(String templateLocation) {
         String encoding = (String) Configuration
-                .get(WebWorkConstants.WEBWORK_I18N_ENCODING);
+                .get(StrutsConstants.STRUTS_I18N_ENCODING);
         if (encoding == null) {
             encoding = System.getProperty("file.encoding");
         }

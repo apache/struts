@@ -1,9 +1,9 @@
 <!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
 
 <xwork>
-    <include file="webwork-default.xml"/>
+    <include file="struts-default.xml"/>
 
-    <package name="config" extends="webwork-default" namespace="/config-browser">
+    <package name="config" extends="struts-default" namespace="/config-browser">
         <interceptors>
             <interceptor-stack name="config-browser-default">
                 <interceptor-ref name="component"/>

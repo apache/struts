@@ -26,8 +26,8 @@ import org.apache.commons.logging.LogFactory;
 
 import com.opensymphony.util.ClassLoaderUtil;
 import com.opensymphony.util.FileManager;
-import org.apache.struts.action2.WebWorkStatics;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsStatics;
+import org.apache.struts.action2.StrutsConstants;
 import org.apache.struts.action2.config.Configuration;
 import org.apache.struts.action2.dispatcher.ApplicationMap;
 import org.apache.struts.action2.dispatcher.RequestMap;
@@ -138,7 +138,7 @@ import com.opensymphony.xwork.util.LocalizedTextUtil;
  * <!-- END SNIPPET: example -->
  * </pre>
  */
-public class Jsr168Dispatcher extends GenericPortlet implements WebWorkStatics,
+public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         PortletActionConstants {
 
     private static final Log LOG = LogFactory.getLog(Jsr168Dispatcher.class);
@@ -187,13 +187,13 @@ public class Jsr168Dispatcher extends GenericPortlet implements WebWorkStatics,
 
         //check for configuration reloading
         if ("true".equalsIgnoreCase(Configuration
-                .getString(WebWorkConstants.WEBWORK_CONFIGURATION_XML_RELOAD))) {
+                .getString(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD))) {
             FileManager.setReloadingConfigs(true);
         }
 
-        if (Configuration.isSet(WebWorkConstants.WEBWORK_OBJECTFACTORY)) {
+        if (Configuration.isSet(StrutsConstants.STRUTS_OBJECTFACTORY)) {
             String className = (String) Configuration
-                    .get(WebWorkConstants.WEBWORK_OBJECTFACTORY);
+                    .get(StrutsConstants.STRUTS_OBJECTFACTORY);
             if (className.equals("spring")) {
                 // note: this class name needs to be in string form so we don't put hard
                 //       dependencies on spring, since it isn't technically required.
@@ -337,14 +337,14 @@ public class Jsr168Dispatcher extends GenericPortlet implements WebWorkStatics,
         extraContext.put(ActionContext.APPLICATION, applicationMap);
 
         Locale locale = null;
-        if (Configuration.isSet(WebWorkConstants.WEBWORK_LOCALE)) {
-            locale = LocalizedTextUtil.localeFromString(Configuration.getString(WebWorkConstants.WEBWORK_LOCALE), request.getLocale());
+        if (Configuration.isSet(StrutsConstants.STRUTS_LOCALE)) {
+            locale = LocalizedTextUtil.localeFromString(Configuration.getString(StrutsConstants.STRUTS_LOCALE), request.getLocale());
         } else {
             locale = request.getLocale(); 
         }
         extraContext.put(ActionContext.LOCALE, locale);
 
-        extraContext.put(WebWorkConstants.WEBWORK_PORTLET_CONTEXT, getPortletContext());
+        extraContext.put(StrutsConstants.STRUTS_PORTLET_CONTEXT, getPortletContext());
         extraContext.put(REQUEST, request);
         extraContext.put(RESPONSE, response);
         extraContext.put(PORTLET_CONFIG, portletConfig);
@@ -398,7 +398,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements WebWorkStatics,
                     + ", namespace = " + namespace);
             ActionProxy proxy = factory.createActionProxy(namespace,
                     actionName, extraContext);
-            request.setAttribute("webwork.valueStack", proxy.getInvocation()
+            request.setAttribute("struts.valueStack", proxy.getInvocation()
                     .getStack());
             if (PortletActionConstants.RENDER_PHASE.equals(phase)
                     && StringUtils.isNotEmpty(request

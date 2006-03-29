@@ -6,7 +6,7 @@ package org.apache.struts.action2.views.jsp.iterator;
 
 import org.apache.struts.action2.util.IteratorGenerator;
 import org.apache.struts.action2.util.IteratorGenerator.Converter;
-import org.apache.struts.action2.views.jsp.WebWorkBodyTagSupport;
+import org.apache.struts.action2.views.jsp.StrutsBodyTagSupport;
 
 import javax.servlet.jsp.JspException;
 
@@ -113,7 +113,7 @@ import org.apache.commons.logging.LogFactory;
  * @ww.tag name="generator" tld-body-content="JSP"
  * description="Generate an iterator for a iterable source."
  */
-public class IteratorGeneratorTag extends WebWorkBodyTagSupport {
+public class IteratorGeneratorTag extends StrutsBodyTagSupport {
 
 	private static final long serialVersionUID = 2968037295463973936L;
 

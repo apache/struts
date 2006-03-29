@@ -56,7 +56,7 @@ public class SetTagTest extends AbstractUITagTest {
         assertEquals("chewie", session.get("foo"));
     }
 
-    public void testWebWorkScope() throws JspException {
+    public void testStrutsScope() throws JspException {
         tag.setName("foo");
         tag.setValue("name");
         tag.doStartTag();
@@ -64,7 +64,7 @@ public class SetTagTest extends AbstractUITagTest {
         assertEquals("chewie", context.get("foo"));
     }
 
-    public void testWebWorkScope2() throws JspException {
+    public void testStrutsScope2() throws JspException {
         tag.setName("chewie");
         tag.doStartTag();
         tag.doEndTag();

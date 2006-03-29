@@ -64,12 +64,12 @@ import javax.servlet.jsp.PageContext;
  * &lt;/result&gt;
  * <!-- END SNIPPET: example --></pre>
  *
- * This result follows the same rules from {@link WebWorkResultSupport}.
+ * This result follows the same rules from {@link StrutsResultSupport}.
  *
  * @author Patrick Lightbody
  * @see javax.servlet.RequestDispatcher
  */
-public class ServletDispatcherResult extends WebWorkResultSupport {
+public class ServletDispatcherResult extends StrutsResultSupport {
 
     private static final Log log = LogFactory.getLog(ServletDispatcherResult.class);
 
@@ -108,8 +108,8 @@ public class ServletDispatcherResult extends WebWorkResultSupport {
             // Otherwise do forward 
             // This allow the page to, for example, set content type 
             if (!response.isCommitted() && (request.getAttribute("javax.servlet.include.servlet_path") == null)) {
-                request.setAttribute("webwork.view_uri", finalLocation);
-                request.setAttribute("webwork.request_uri", request.getRequestURI());
+                request.setAttribute("struts.view_uri", finalLocation);
+                request.setAttribute("struts.request_uri", request.getRequestURI());
 
                 dispatcher.forward(request, response);
             } else {

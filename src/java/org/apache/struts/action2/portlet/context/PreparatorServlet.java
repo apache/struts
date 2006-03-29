@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.apache.struts.action2.WebWorkStatics;
+import org.apache.struts.action2.StrutsStatics;
 import com.opensymphony.xwork.ActionContext;
 
 /**
@@ -27,7 +27,7 @@ import com.opensymphony.xwork.ActionContext;
  * 
  * @author Nils-Helge Garli
  */
-public class PreparatorServlet extends HttpServlet implements WebWorkStatics {
+public class PreparatorServlet extends HttpServlet implements StrutsStatics {
 
     private final static Log LOG = LogFactory.getLog(PreparatorServlet.class);
 

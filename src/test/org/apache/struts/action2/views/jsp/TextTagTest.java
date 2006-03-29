@@ -8,7 +8,7 @@ import org.apache.struts.action2.ServletActionContext;
 import org.apache.struts.action2.TestAction;
 import org.apache.struts.action2.components.Text;
 import org.apache.struts.action2.views.jsp.ui.TestAction1;
-import org.apache.struts.action2.views.jsp.ui.WebWorkBodyContent;
+import org.apache.struts.action2.views.jsp.ui.StrutsBodyContent;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.util.OgnlValueStack;
@@ -139,7 +139,7 @@ public class TextTagTest extends AbstractTagTest {
         OgnlValueStack newStack = new OgnlValueStack();
         newStack.getContext().put(ActionContext.LOCALE, foreignLocale);
         newStack.push(new TestAction1());
-        request.setAttribute(ServletActionContext.WEBWORK_VALUESTACK_KEY, newStack);
+        request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, newStack);
         assertNotSame(ActionContext.getContext().getValueStack().peek(), newStack.peek());
 
         tag.doStartTag();
@@ -170,7 +170,7 @@ public class TextTagTest extends AbstractTagTest {
         OgnlValueStack newStack = new OgnlValueStack(stack);
         newStack.getContext().put(ActionContext.LOCALE, foreignLocale);
         assertNotSame(newStack.getContext().get(ActionContext.LOCALE), ActionContext.getContext().getLocale());
-        request.setAttribute(ServletActionContext.WEBWORK_VALUESTACK_KEY, newStack);
+        request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, newStack);
         assertEquals(ActionContext.getContext().getValueStack().peek(), newStack.peek());
         tag.doStartTag();
         tag.doEndTag();
@@ -182,7 +182,7 @@ public class TextTagTest extends AbstractTagTest {
         final String bodyText = "body text";
         tag.setName(key);
 
-        WebWorkBodyContent bodyContent = new WebWorkBodyContent(null);
+        StrutsBodyContent bodyContent = new StrutsBodyContent(null);
         bodyContent.print(bodyText);
         tag.setBodyContent(bodyContent);
         tag.doStartTag();

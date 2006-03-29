@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Collections;
 import java.util.HashMap;
 
-import org.apache.struts.action2.views.jsp.WebWorkMockHttpServletRequest;
+import org.apache.struts.action2.views.jsp.StrutsMockHttpServletRequest;
 
 /**
  * Unit test for {@link RestfulActionMapper}.
@@ -54,14 +54,14 @@ public class RestfulActionMapperTest extends TestCase {
     }
 
     public void testGetMappingNoSlash() throws Exception {
-        WebWorkMockHttpServletRequest request = new WebWorkMockHttpServletRequest();
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setupGetServletPath("noslash");
 
         assertNull(mapper.getMapping(request));
     }
 
     public void testGetMapping() throws Exception {
-        WebWorkMockHttpServletRequest request = new WebWorkMockHttpServletRequest();
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setupGetServletPath("/myapp/view/12");
 
         ActionMapping am = mapper.getMapping(request);
@@ -71,7 +71,7 @@ public class RestfulActionMapperTest extends TestCase {
     }
 
     public void testGetMapping2() throws Exception {
-        WebWorkMockHttpServletRequest request = new WebWorkMockHttpServletRequest();
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setupGetServletPath("/myapp/12/region/europe");
 
         ActionMapping am = mapper.getMapping(request);
@@ -82,7 +82,7 @@ public class RestfulActionMapperTest extends TestCase {
     }
 
     public void testGetMapping3() throws Exception {
-        WebWorkMockHttpServletRequest request = new WebWorkMockHttpServletRequest();
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setupGetServletPath("/myapp/view/12/region/europe");
 
         ActionMapping am = mapper.getMapping(request);

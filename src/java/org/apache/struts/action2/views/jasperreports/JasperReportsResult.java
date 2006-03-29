@@ -30,7 +30,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.opensymphony.util.TextUtils;
 import org.apache.struts.action2.ServletActionContext;
-import org.apache.struts.action2.dispatcher.WebWorkResultSupport;
+import org.apache.struts.action2.dispatcher.StrutsResultSupport;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -76,7 +76,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * </ul>
  *
  * <p>
- * This result follows the same rules from {@link WebWorkResultSupport}.
+ * This result follows the same rules from {@link StrutsResultSupport}.
  * Specifically, all parameters will be parsed if the "parse" parameter is not 
  * set to false.
  * </p>
@@ -102,7 +102,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * @author Patrick Lightbody
  * @author Rainer Hermanns
  */
-public class JasperReportsResult extends WebWorkResultSupport implements JasperReportConstants {
+public class JasperReportsResult extends StrutsResultSupport implements JasperReportConstants {
     private final static Log LOG = LogFactory.getLog(JasperReportsResult.class);
 
 

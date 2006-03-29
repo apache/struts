@@ -3,7 +3,7 @@ package org.apache.struts.action2.components;
 import org.apache.struts.action2.config.Configuration;
 import org.apache.struts.action2.util.FastByteArrayOutputStream;
 import org.apache.struts.action2.RequestUtils;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsConstants;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 import org.apache.commons.logging.Log;
@@ -236,7 +236,7 @@ public class Include extends Component {
     }
 
     /**
-     * Get the encoding specified by the property 'webwork.i18n.encoding' in webwork.properties,
+     * Get the encoding specified by the property 'struts.i18n.encoding' in struts.properties,
      * or return the default platform encoding if not specified.
      * <p/>
      * Note that if the property is not initially defined, this will return the system default,
@@ -254,7 +254,7 @@ public class Include extends Component {
     private static String getEncoding() {
         if (encodingDefined) {
             try {
-                encoding = Configuration.getString(WebWorkConstants.WEBWORK_I18N_ENCODING);
+                encoding = Configuration.getString(StrutsConstants.STRUTS_I18N_ENCODING);
             } catch (IllegalArgumentException e) {
                 encoding = System.getProperty("file.encoding");
                 encodingDefined = false;

@@ -1,7 +1,7 @@
 package org.apache.struts.action2.dispatcher.mapper;
 
 import org.apache.struts.action2.config.Configuration;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsConstants;
 import com.opensymphony.xwork.ObjectFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,7 +12,7 @@ import java.util.HashMap;
  * <!-- START SNIPPET: javadoc -->
  *
  * Factory that creates {@link ActionMapper}s. This factory looks up the class name of the {@link ActionMapper} from
- * WebWork's configuration using the key <b>webwork.mapper.class</b>.
+ * WebWork's configuration using the key <b>struts.mapper.class</b>.
  *
  * <!-- END SNIPPET: javadoc -->
  *
@@ -25,7 +25,7 @@ public class ActionMapperFactory {
 
     public static ActionMapper getMapper() {
         synchronized (classMap) {
-            String clazz = (String) Configuration.get(WebWorkConstants.WEBWORK_MAPPER_CLASS);
+            String clazz = (String) Configuration.get(StrutsConstants.STRUTS_MAPPER_CLASS);
             try {
                 ActionMapper mapper = (ActionMapper) classMap.get(clazz);
                 if (mapper == null) {

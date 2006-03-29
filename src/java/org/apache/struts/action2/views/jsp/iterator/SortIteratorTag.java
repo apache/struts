@@ -6,7 +6,7 @@ package org.apache.struts.action2.views.jsp.iterator;
 
 import org.apache.struts.action2.util.MakeIterator;
 import org.apache.struts.action2.util.SortIteratorFilter;
-import org.apache.struts.action2.views.jsp.WebWorkBodyTagSupport;
+import org.apache.struts.action2.views.jsp.StrutsBodyTagSupport;
 
 import javax.servlet.jsp.JspException;
 
@@ -70,7 +70,7 @@ import java.util.Comparator;
  * @ww.tag name="sort" tld-body-content="JSP"
  * description="Sort a List using a Comparator both passed in as the tag attribute."
  */
-public class SortIteratorTag extends WebWorkBodyTagSupport {
+public class SortIteratorTag extends StrutsBodyTagSupport {
 
 	private static final long serialVersionUID = -7835719609764092235L;
 

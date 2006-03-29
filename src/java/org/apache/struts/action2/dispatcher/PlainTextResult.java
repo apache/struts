@@ -58,7 +58,7 @@ import com.opensymphony.xwork.ActionInvocation;
  * @author tm_jee
  * @version $Date: 2006/03/12 05:41:05 $ $Id: PlainTextResult.java,v 1.5 2006/03/12 05:41:05 tmjee Exp $
  */
-public class PlainTextResult extends WebWorkResultSupport {
+public class PlainTextResult extends StrutsResultSupport {
 	
 	private static final Log _log = LogFactory.getLog(PlainTextResult.class);
 

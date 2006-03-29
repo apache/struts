@@ -97,7 +97,7 @@ public class XSLTResultTest extends TestCase {
         assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
         assertTrue(out.indexOf("<html xmlns=\"http://www.w3.org/TR/xhtml1/strict\"") > -1);
         assertTrue(out.indexOf("Hello Santa Claus how are you?") > -1);
-        assertTrue(out.indexOf("WebWork in Action by Patrick and Jason") > -1);*/
+        assertTrue(out.indexOf("Struts in Action by Patrick and Jason") > -1);*/
         // TODO: There is a bug in XSLTResult and having collections
         //assertTrue(out.indexOf("XWork not in Action by Superman") > -1);
     }
@@ -149,7 +149,7 @@ public class XSLTResultTest extends TestCase {
 
         public List getBooks() {
             List list = new ArrayList();
-            list.add(new Book("WebWork in Action", "Patrick and Jason"));
+            list.add(new Book("Struts in Action", "Patrick and Jason"));
             list.add(new Book("XWork not in Action", "Superman"));
             return list;
         }

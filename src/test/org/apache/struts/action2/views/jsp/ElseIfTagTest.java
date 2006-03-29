@@ -87,9 +87,9 @@ public class ElseIfTagTest extends TestCase {
 		
 		jspWriter = new MockJspWriter();
 		
-		WebWorkMockHttpServletRequest request = new WebWorkMockHttpServletRequest();
+		StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
 		
-		WebWorkMockServletContext servletContext = new WebWorkMockServletContext();
+		StrutsMockServletContext servletContext = new StrutsMockServletContext();
 		servletContext.setServletInfo("not-weblogic");
 		
 		pageContext = new MockPageContext();
@@ -97,7 +97,7 @@ public class ElseIfTagTest extends TestCase {
 		pageContext.setRequest(request);
 		pageContext.setServletContext(servletContext);
 		
-		request.setAttribute(ServletActionContext.WEBWORK_VALUESTACK_KEY, stack);
+		request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
 	}
 	
 	

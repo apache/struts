@@ -17,7 +17,7 @@ public class PlexusLifecycleListener implements ServletContextListener, HttpSess
     private static final Log log = LogFactory.getLog(PlexusObjectFactory.class);
 
     public static boolean loaded = false;
-    public static final String KEY = "webwork.plexus.container";
+    public static final String KEY = "struts.plexus.container";
 
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         loaded = true;

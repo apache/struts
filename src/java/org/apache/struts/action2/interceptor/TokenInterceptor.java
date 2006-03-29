@@ -38,7 +38,7 @@ import org.apache.commons.logging.LogFactory;
  * by this token interceptor
  * 
  * <ul>
- *    <li>webwork.messages.invalid.token</li>
+ *    <li>struts.messages.invalid.token</li>
  * </ul>
  * 
  * <p/>
@@ -137,7 +137,7 @@ public class TokenInterceptor extends MethodFilterInterceptor {
      */
     protected String handleInvalidToken(ActionInvocation invocation) throws Exception {
         Object action = invocation.getAction();
-        String errorMessage = LocalizedTextUtil.findText(this.getClass(), "webwork.messages.invalid.token",
+        String errorMessage = LocalizedTextUtil.findText(this.getClass(), "struts.messages.invalid.token",
                 invocation.getInvocationContext().getLocale(),
                 "The form has already been processed or no token was supplied, please try again.", new Object[0]);
 

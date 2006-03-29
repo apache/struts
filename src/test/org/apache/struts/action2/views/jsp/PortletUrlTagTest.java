@@ -103,7 +103,7 @@ public class PortletUrlTagTest extends MockObjectTestCase {
 		
 		mockHttpReq.stubs().method("getScheme").will(returnValue("http"));
 		mockHttpReq.stubs().method("getAttribute").with(
-				eq("webwork.valueStack")).will(returnValue(stack));
+				eq("struts.valueStack")).will(returnValue(stack));
 		mockHttpReq.stubs().method("getAttribute").with(
 				eq("javax.portlet.response")).will(
 				returnValue((PortletResponse) mockPortletRes.proxy()));

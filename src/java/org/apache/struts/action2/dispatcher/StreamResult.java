@@ -61,7 +61,7 @@ import org.apache.commons.logging.LogFactory;
  * @author mcrawford
  * @author Rainer Hermanns
  */
-public class StreamResult extends WebWorkResultSupport {
+public class StreamResult extends StrutsResultSupport {
     protected static final Log log = LogFactory.getLog(StreamResult.class);
 
     protected String contentType = "text/plain";

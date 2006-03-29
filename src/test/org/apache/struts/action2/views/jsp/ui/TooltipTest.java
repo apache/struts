@@ -9,7 +9,7 @@ import com.mockobjects.servlet.MockJspWriter;
 import org.apache.struts.action2.TestConfigurationProvider;
 import org.apache.struts.action2.views.jsp.AbstractUITagTest;
 import org.apache.struts.action2.views.jsp.ParamTag;
-import org.apache.struts.action2.views.jsp.WebWorkMockBodyContent;
+import org.apache.struts.action2.views.jsp.StrutsMockBodyContent;
 import com.opensymphony.xwork.config.ConfigurationManager;
 
 /**
@@ -300,7 +300,7 @@ public class TooltipTest extends AbstractUITagTest {
 		ParamTag formParamTag = new ParamTag();
 		formParamTag.setPageContext(pageContext);
 		formParamTag.setName("tooltipConfig");
-		WebWorkMockBodyContent bodyContent = new WebWorkMockBodyContent(new MockJspWriter());
+		StrutsMockBodyContent bodyContent = new StrutsMockBodyContent(new MockJspWriter());
 		bodyContent.setString(
 				"tooltipIcon = /webwork/tooltip/formMyTooltip.gif | " +
 				"tooltipAboveMousePointer = false | " +
@@ -342,7 +342,7 @@ public class TooltipTest extends AbstractUITagTest {
 		ParamTag textFieldParamTag = new ParamTag();
 		textFieldParamTag.setPageContext(pageContext);
 		textFieldParamTag.setName("tooltipConfig");
-		WebWorkMockBodyContent bodyContent2 = new WebWorkMockBodyContent(new MockJspWriter());
+		StrutsMockBodyContent bodyContent2 = new StrutsMockBodyContent(new MockJspWriter());
 		bodyContent2.setString(
 				"tooltipIcon = /webwork/tooltip/myTooltip.gif | " +
 				"tooltipAboveMousePointer = true | " +

@@ -28,9 +28,9 @@ public class URLTagTest extends AbstractUITagTest {
     }
 
     public void testAddParameters() throws Exception {
-        request.setAttribute("webwork.request_uri", "/Test.action");
+        request.setAttribute("struts.request_uri", "/Test.action");
 
-        request.setAttribute("webwork.request_uri", "/TestAction.action");
+        request.setAttribute("struts.request_uri", "/TestAction.action");
         request.setQueryString("param0=value0");
 
         tag.doStartTag();
@@ -272,7 +272,7 @@ public class URLTagTest extends AbstractUITagTest {
 
         tag = new URLTag();
         tag.setPageContext(pageContext);
-        JspWriter jspWriter = new WebWorkMockJspWriter(writer);
+        JspWriter jspWriter = new StrutsMockJspWriter(writer);
         pageContext.setJspWriter(jspWriter);
     }
 

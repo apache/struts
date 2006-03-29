@@ -12,7 +12,7 @@ import javax.servlet.ServletContext;
 import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockServletContext;
 
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsConstants;
 import org.apache.struts.action2.config.Configuration;
 import org.apache.struts.action2.util.ObjectFactoryDestroyable;
 import org.apache.struts.action2.util.ObjectFactoryInitializable;
@@ -76,8 +76,8 @@ public class FilterDispatcherTest extends TestCase {
 		DispatcherUtils.setInstance(null);
 		
 		Map configMap = new HashMap();
-		configMap.put(WebWorkConstants.WEBWORK_OBJECTFACTORY, "org.apache.struts.action2.dispatcher.FilterDispatcherTest$InnerInitializableObjectFactory");
-		configMap.put(WebWorkConstants.WEBWORK_CONFIGURATION_XML_RELOAD, "false");
+		configMap.put(StrutsConstants.STRUTS_OBJECTFACTORY, "org.apache.struts.action2.dispatcher.FilterDispatcherTest$InnerInitializableObjectFactory");
+		configMap.put(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "false");
 		Configuration.setConfiguration(new InnerConfiguration(configMap));
 		
 		MockServletContext servletContext = new MockServletContext();
@@ -96,8 +96,8 @@ public class FilterDispatcherTest extends TestCase {
 		DispatcherUtils.setInstance(null);
 		
 		Map configMap = new HashMap();
-		configMap.put(WebWorkConstants.WEBWORK_OBJECTFACTORY, "org.apache.struts.action2.dispatcher.FilterDispatcherTest$InnerInitailizableDestroyableObjectFactory");
-		configMap.put(WebWorkConstants.WEBWORK_CONFIGURATION_XML_RELOAD, "false");
+		configMap.put(StrutsConstants.STRUTS_OBJECTFACTORY, "org.apache.struts.action2.dispatcher.FilterDispatcherTest$InnerInitailizableDestroyableObjectFactory");
+		configMap.put(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "false");
 		Configuration.setConfiguration(new InnerConfiguration(configMap));
 		
 		MockServletContext servletContext = new MockServletContext();

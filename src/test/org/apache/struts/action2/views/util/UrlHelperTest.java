@@ -5,8 +5,8 @@
 package org.apache.struts.action2.views.util;
 
 import com.mockobjects.dynamic.Mock;
-import org.apache.struts.action2.WebWorkTestCase;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsTestCase;
+import org.apache.struts.action2.StrutsConstants;
 import org.apache.struts.action2.config.Configuration;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +25,7 @@ import java.util.HashMap;
  * @author tm_jee
  * @version $Date: 2006/03/08 18:09:28 $ $Id: UrlHelperTest.java,v 1.18 2006/03/08 18:09:28 rainerh Exp $
  */
-public class UrlHelperTest extends WebWorkTestCase {
+public class UrlHelperTest extends StrutsTestCase {
 	
 	
 	
@@ -186,8 +186,8 @@ public class UrlHelperTest extends WebWorkTestCase {
 
         String expectedString = "https://www.mydomain.com:7002/mywebapp/MyAction.action?foo=bar&amp;hello=earth&amp;hello=mars";
 
-        Configuration.set(WebWorkConstants.WEBWORK_URL_HTTP_PORT, "7001");
-        Configuration.set(WebWorkConstants.WEBWORK_URL_HTTPS_PORT, "7002");
+        Configuration.set(StrutsConstants.STRUTS_URL_HTTP_PORT, "7001");
+        Configuration.set(StrutsConstants.STRUTS_URL_HTTPS_PORT, "7002");
 
         Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
         mockHttpServletRequest.expectAndReturn("getServerName", "www.mydomain.com");
@@ -215,8 +215,8 @@ public class UrlHelperTest extends WebWorkTestCase {
 
         String expectedString = "http://www.mydomain.com:7001/mywebapp/MyAction.action?foo=bar&amp;hello=earth&amp;hello=mars";
 
-        Configuration.set(WebWorkConstants.WEBWORK_URL_HTTP_PORT, "7001");
-        Configuration.set(WebWorkConstants.WEBWORK_URL_HTTPS_PORT, "7002");
+        Configuration.set(StrutsConstants.STRUTS_URL_HTTP_PORT, "7001");
+        Configuration.set(StrutsConstants.STRUTS_URL_HTTPS_PORT, "7002");
 
         Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
         mockHttpServletRequest.expectAndReturn("getServerName", "www.mydomain.com");

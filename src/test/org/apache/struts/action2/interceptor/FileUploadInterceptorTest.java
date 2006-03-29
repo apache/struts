@@ -6,7 +6,7 @@ package org.apache.struts.action2.interceptor;
 
 import com.opensymphony.util.ClassLoaderUtil;
 import org.apache.struts.action2.ServletActionContext;
-import org.apache.struts.action2.WebWorkTestCase;
+import org.apache.struts.action2.StrutsTestCase;
 import org.apache.struts.action2.dispatcher.multipart.MultiPartRequestWrapper;
 import com.opensymphony.xwork.*;
 import com.opensymphony.xwork.mock.MockActionInvocation;
@@ -30,7 +30,7 @@ import java.util.Map;
  * @author Claus Ibsen
  * @version $Date: 2006/03/17 22:46:24 $ $Id: FileUploadInterceptorTest.java,v 1.8 2006/03/17 22:46:24 mrdon Exp $
  */
-public class FileUploadInterceptorTest extends WebWorkTestCase {
+public class FileUploadInterceptorTest extends StrutsTestCase {
 
     private FileUploadInterceptor interceptor;
 

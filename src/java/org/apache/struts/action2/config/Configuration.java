@@ -5,7 +5,7 @@
 package org.apache.struts.action2.config;
 
 import com.opensymphony.xwork.ObjectFactory;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -67,7 +67,7 @@ public class Configuration {
     }
 
     /**
-     * Returns the WebWork2 locale. Keys off the property <tt>webwork.locale</tt> which should be set
+     * Returns the WebWork2 locale. Keys off the property <tt>struts.locale</tt> which should be set
      * as the Java {@link java.util.Locale#toString() toString()} representation of a Locale object (i.e.,
      * "en", "de_DE", "_GB", "en_US_WIN", "de__POSIX", "fr_MAC", etc). <p>
      * <p/>
@@ -78,7 +78,7 @@ public class Configuration {
     public static Locale getLocale() {
         if (locale == null) {
             try {
-                StringTokenizer localeTokens = new StringTokenizer(getString(WebWorkConstants.WEBWORK_LOCALE), "_");
+                StringTokenizer localeTokens = new StringTokenizer(getString(StrutsConstants.STRUTS_LOCALE), "_");
                 String lang = null;
                 String country = null;
 
@@ -207,7 +207,7 @@ public class Configuration {
 
             // Create default implementation
             try {
-                String className = getString(WebWorkConstants.WEBWORK_CONFIGURATION);
+                String className = getString(StrutsConstants.STRUTS_CONFIGURATION);
 
                 if (!className.equals(defaultImpl.getClass().getName())) {
                     try {

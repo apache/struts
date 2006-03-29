@@ -210,7 +210,7 @@ public class ActionComponent extends Component {
                 proxy.setMethod(methodName);
             }
             // set the new stack into the request for the taglib to use
-            req.setAttribute(ServletActionContext.WEBWORK_VALUESTACK_KEY, proxy.getInvocation().getStack());
+            req.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, proxy.getInvocation().getStack());
             proxy.execute();
 
         } catch (Exception e) {
@@ -218,7 +218,7 @@ public class ActionComponent extends Component {
             LOG.error(message, e);
         } finally {
             // set the old stack back on the request
-            req.setAttribute(ServletActionContext.WEBWORK_VALUESTACK_KEY, stack);
+            req.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
         }
 
         if ((getId() != null) && (proxy != null)) {

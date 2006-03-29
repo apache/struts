@@ -22,8 +22,8 @@ import java.util.Map;
  * @author <a href="mailto:nightfal@etherlands.net">Erik Beeson</a>
  * @author Bill Lynch (docs)
  */
-public class ServletActionContext extends ActionContext implements WebWorkStatics {
-    public static final String WEBWORK_VALUESTACK_KEY = "webwork.valueStack";
+public class ServletActionContext extends ActionContext implements StrutsStatics {
+    public static final String STRUTS_VALUESTACK_KEY = "struts.valueStack";
 
     private ServletActionContext(Map context) {
         super(context);
@@ -40,7 +40,7 @@ public class ServletActionContext extends ActionContext implements WebWorkStatic
     }
 
     public static OgnlValueStack getValueStack(HttpServletRequest req) {
-        return (OgnlValueStack) req.getAttribute(WEBWORK_VALUESTACK_KEY);
+        return (OgnlValueStack) req.getAttribute(STRUTS_VALUESTACK_KEY);
     }
 
     /**

@@ -41,12 +41,12 @@ public class FreemarkerServlet extends HttpServlet {
 
 
     final public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("webwork.freemarker.servlet", this);
+        request.setAttribute("struts.freemarker.servlet", this);
         process(request, response);
     }
 
     final public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("webwork.freemarker.servlet", this);
+        request.setAttribute("struts.freemarker.servlet", this);
         process(request, response);
     }
 

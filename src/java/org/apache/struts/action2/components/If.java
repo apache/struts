@@ -46,7 +46,7 @@ import java.io.Writer;
  * @ww.tag name="if" tld-body-content="JSP" description="If tag" tld-tag-class="org.apache.struts.action2.views.jsp.IfTag"
  */
 public class If extends Component {
-    public static final String ANSWER = "webwork.if.answer";
+    public static final String ANSWER = "struts.if.answer";
 
     Boolean answer;
     String test;

@@ -9,10 +9,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import com.opensymphony.util.ClassLoaderUtil;
-import org.apache.struts.action2.WebWorkStatics;
+import org.apache.struts.action2.StrutsStatics;
 import org.apache.struts.action2.views.jsp.AbstractUITagTest;
-import org.apache.struts.action2.views.jsp.WebWorkMockHttpServletResponse;
-import org.apache.struts.action2.views.jsp.WebWorkMockServletContext;
+import org.apache.struts.action2.views.jsp.StrutsMockHttpServletResponse;
+import org.apache.struts.action2.views.jsp.StrutsMockServletContext;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.mock.MockActionInvocation;
 import com.opensymphony.xwork.util.OgnlValueStack;
@@ -30,10 +30,10 @@ public class PlainTextResultTest extends TestCase {
 	OgnlValueStack stack;
 	MockActionInvocation invocation;
 	ActionContext context;
-	WebWorkMockHttpServletResponse response;
+	StrutsMockHttpServletResponse response;
 	PrintWriter writer;
 	StringWriter stringWriter;
-	WebWorkMockServletContext servletContext;
+	StrutsMockServletContext servletContext;
 	
 
 	public void testPlainText() throws Exception {
@@ -114,13 +114,13 @@ public class PlainTextResultTest extends TestCase {
 		
 		stringWriter = new StringWriter();
 		writer = new PrintWriter(stringWriter);
-		response = new WebWorkMockHttpServletResponse();
+		response = new StrutsMockHttpServletResponse();
 		response.setWriter(writer);
-		servletContext = new WebWorkMockServletContext();
+		servletContext = new StrutsMockServletContext();
 		stack = new OgnlValueStack();
 		context = new ActionContext(stack.getContext());
-		context.put(WebWorkStatics.HTTP_RESPONSE, response);
-		context.put(WebWorkStatics.SERVLET_CONTEXT, servletContext);
+		context.put(StrutsStatics.HTTP_RESPONSE, response);
+		context.put(StrutsStatics.SERVLET_CONTEXT, servletContext);
 		invocation = new MockActionInvocation();
 		invocation.setStack(stack);
 		invocation.setInvocationContext(context);

@@ -5,7 +5,7 @@
 package org.apache.struts.action2.views.jsp;
 
 import org.apache.struts.action2.views.jsp.ui.AnchorTag;
-import org.apache.struts.action2.views.jsp.ui.WebWorkBodyContent;
+import org.apache.struts.action2.views.jsp.ui.StrutsBodyContent;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -37,7 +37,7 @@ public class AnchorTagTest extends AbstractUITagTest {
         tag.setHref("/TestAction.action");
         String bodyText = "<img src=\"#\"/>";
         try {
-            WebWorkBodyContent bodyContent = new WebWorkBodyContent(null);
+            StrutsBodyContent bodyContent = new StrutsBodyContent(null);
             bodyContent.print(bodyText);
             tag.setBodyContent(bodyContent);
 
@@ -59,7 +59,7 @@ public class AnchorTagTest extends AbstractUITagTest {
 
         tag = new AnchorTag();
         tag.setPageContext(pageContext);
-        JspWriter jspWriter = new WebWorkMockJspWriter(writer);
+        JspWriter jspWriter = new StrutsMockJspWriter(writer);
         pageContext.setJspWriter(jspWriter);
     }
 

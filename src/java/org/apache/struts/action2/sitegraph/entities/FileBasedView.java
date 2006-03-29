@@ -3,7 +3,7 @@ package org.apache.struts.action2.sitegraph.entities;
 import com.opensymphony.util.FileUtils;
 import org.apache.struts.action2.config.Configuration;
 import org.apache.struts.action2.sitegraph.model.Link;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsConstants;
 
 import java.io.File;
 import java.util.Set;
@@ -46,7 +46,7 @@ public abstract class FileBasedView implements View {
     }
 
     protected Pattern getLinkPattern() {
-        Object ext = Configuration.get(WebWorkConstants.WEBWORK_ACTION_EXTENSION);
+        Object ext = Configuration.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
         String actionRegex = "([A-Za-z0-9\\._\\-\\!]+\\." + ext + ")";
         return Pattern.compile(actionRegex);
     }

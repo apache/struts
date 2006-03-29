@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletResponse;
  * </ul>
  *
  * <p>
- * This result follows the same rules from {@link WebWorkResultSupport}.
+ * This result follows the same rules from {@link StrutsResultSupport}.
  * </p>
  *
  * <!-- END SNIPPET: params -->
@@ -59,7 +59,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Patrick Lightbody
  */
-public class ServletRedirectResult extends WebWorkResultSupport {
+public class ServletRedirectResult extends StrutsResultSupport {
     private static final Log log = LogFactory.getLog(ServletRedirectResult.class);
 
     protected boolean prependServletContext = true;

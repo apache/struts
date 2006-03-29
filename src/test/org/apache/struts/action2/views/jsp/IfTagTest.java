@@ -145,9 +145,9 @@ public class IfTagTest extends TestCase {
         stack = new OgnlValueStack();
 
         // create the mock http servlet request
-        WebWorkMockHttpServletRequest request = new WebWorkMockHttpServletRequest();
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         ActionContext.getContext().setValueStack(stack);
-        request.setAttribute(ServletActionContext.WEBWORK_VALUESTACK_KEY, stack);
+        request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
 
         // create the mock page context
         pageContext = new MockPageContext();

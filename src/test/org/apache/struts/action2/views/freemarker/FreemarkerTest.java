@@ -9,7 +9,7 @@
 package org.apache.struts.action2.views.freemarker;
 
 import org.apache.struts.action2.util.ListEntry;
-import org.apache.struts.action2.util.WebWorkUtil;
+import org.apache.struts.action2.util.StrutsUtil;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.util.OgnlValueStack;
 import freemarker.ext.beans.CollectionModel;
@@ -36,7 +36,7 @@ public class FreemarkerTest extends TestCase {
 
 
     public void testSelectHelper() {
-        WebWorkUtil wwUtil = new WebWorkUtil(ActionContext.getContext().getValueStack(), null, null);
+        StrutsUtil wwUtil = new StrutsUtil(ActionContext.getContext().getValueStack(), null, null);
 
         List selectList = null;
 

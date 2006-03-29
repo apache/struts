@@ -5,7 +5,7 @@
 package org.apache.struts.action2.views.xslt;
 
 import org.apache.struts.action2.ServletActionContext;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsConstants;
 import org.apache.struts.action2.config.Configuration;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
@@ -148,11 +148,11 @@ import java.util.regex.Pattern;
  * </ul>
  *
  * <p>
- * <code>webwork.properties</code> related configuration:
+ * <code>struts.properties</code> related configuration:
  * </p>
  * <ul>
  *
- * <li><b>webwork.xslt.nocache</b> - Defaults to false. If set to true, disables
+ * <li><b>struts.xslt.nocache</b> - Defaults to false. If set to true, disables
  * stylesheet caching. Good for development, bad for production.</li>
  *
  * </ul>
@@ -185,7 +185,7 @@ public class XSLTResult implements Result {
 
     public XSLTResult() {
         templatesCache = new HashMap();
-        noCache = Configuration.getString(WebWorkConstants.WEBWORK_XSLT_NOCACHE).trim().equalsIgnoreCase("true");
+        noCache = Configuration.getString(StrutsConstants.STRUTS_XSLT_NOCACHE).trim().equalsIgnoreCase("true");
     }
 
     public void setLocation(String location) {

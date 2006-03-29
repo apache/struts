@@ -5,7 +5,7 @@
 package org.apache.struts.action2.config;
 
 import com.opensymphony.xwork.util.LocalizedTextUtil;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -35,13 +35,13 @@ public class DefaultConfiguration extends Configuration {
      */
     public DefaultConfiguration() {
         // Create default implementations 
-        // Use default properties and webwork.properties
+        // Use default properties and struts.properties
         ArrayList list = new ArrayList();
 
         try {
-            list.add(new PropertiesConfiguration("webwork"));
+            list.add(new PropertiesConfiguration("struts"));
         } catch (Exception e) {
-            log.warn("Could not find webwork.properties");
+            log.warn("Could not find struts.properties");
         }
 
         try {
@@ -55,7 +55,7 @@ public class DefaultConfiguration extends Configuration {
 
         // Add list of additional properties configurations
         try {
-            StringTokenizer configFiles = new StringTokenizer((String) config.getImpl(WebWorkConstants.WEBWORK_CUSTOM_PROPERTIES), ",");
+            StringTokenizer configFiles = new StringTokenizer((String) config.getImpl(StrutsConstants.STRUTS_CUSTOM_PROPERTIES), ",");
 
             while (configFiles.hasMoreTokens()) {
                 String name = configFiles.nextToken();
@@ -75,8 +75,8 @@ public class DefaultConfiguration extends Configuration {
         // Add addtional list of i18n global resource bundles
         try {
 
-            LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts/action2/webwork-messages");
-            StringTokenizer bundleFiles = new StringTokenizer((String) config.getImpl(WebWorkConstants.WEBWORK_CUSTOM_I18N_RESOURCES), ", ");
+            LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts/action2/struts-messages");
+            StringTokenizer bundleFiles = new StringTokenizer((String) config.getImpl(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES), ", ");
 
             while (bundleFiles.hasMoreTokens()) {
                 String name = bundleFiles.nextToken();
@@ -89,7 +89,7 @@ public class DefaultConfiguration extends Configuration {
                 }
             }
         } catch (IllegalArgumentException e) {
-            // webwork.custom.i18n.resources wasn't provided
+            // struts.custom.i18n.resources wasn't provided
         }
     }
 

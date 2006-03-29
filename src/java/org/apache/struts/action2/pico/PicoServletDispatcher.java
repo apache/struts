@@ -10,8 +10,8 @@ package org.apache.struts.action2.pico;
 
 
 /**
- * @deprecated Use PicoWebWork2ServletDispatcher
+ * @deprecated Use PicoStrutsServletDispatcher
  */
-public class PicoServletDispatcher extends PicoWebWork2ServletDispatcher {
+public class PicoServletDispatcher extends PicoStrutsServletDispatcher {
     
 }

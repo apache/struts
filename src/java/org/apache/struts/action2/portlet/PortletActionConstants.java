@@ -20,17 +20,17 @@ public interface PortletActionConstants {
 	/**
 	 * Action name parameter name
 	 */
-	String ACTION_PARAM = "webwork.portlet.action"; 
+	String ACTION_PARAM = "struts.portlet.action"; 
 	
 	/**
 	 * Key for parameter holding the last executed portlet mode.
 	 */
-	String MODE_PARAM = "webwork.portlet.mode";
+	String MODE_PARAM = "struts.portlet.mode";
 	
 	/**
      * Key used for looking up and storing the portlet phase
      */
-    String PHASE = "webwork.portlet.phase";
+    String PHASE = "struts.portlet.phase";
 
     /**
      * Constant used for the render phase (
@@ -48,24 +48,24 @@ public interface PortletActionConstants {
      * Key used for looking up and storing the
      * {@link javax.portlet.PortletRequest}
      */
-    String REQUEST = "webwork.portlet.request";
+    String REQUEST = "struts.portlet.request";
 
     /**
      * Key used for looking up and storing the
      * {@link javax.portlet.PortletResponse}
      */
-    String RESPONSE = "webwork.portlet.response";
+    String RESPONSE = "struts.portlet.response";
     
     /**
      * Key used for looking up and storing the action that was invoked in the event phase.
      */
-    String EVENT_ACTION = "webwork.portlet.eventAction";
+    String EVENT_ACTION = "struts.portlet.eventAction";
 
     /**
      * Key used for looking up and storing the
      * {@link javax.portlet.PortletConfig}
      */
-    String PORTLET_CONFIG = "webwork.portlet.config";
+    String PORTLET_CONFIG = "struts.portlet.config";
 
     /**
      * Name of the action used as error handler
@@ -76,17 +76,17 @@ public interface PortletActionConstants {
      * Key for the portlet namespace stored in the 
      * {@link org.apache.struts.action2.portlet.context.PortletActionContext}.
      */
-    String PORTLET_NAMESPACE = "webwork.portlet.portletNamespace";
+    String PORTLET_NAMESPACE = "struts.portlet.portletNamespace";
     
     /**
      * Key for the mode-to-namespace map stored in the 
      * {@link org.apache.struts.action2.portlet.context.PortletActionContext}.
      */
-    String MODE_NAMESPACE_MAP = "webwork.portlet.modeNamespaceMap";
+    String MODE_NAMESPACE_MAP = "struts.portlet.modeNamespaceMap";
     
     /**
      * Key for the default action name for the portlet, stored in the 
      * {@link org.apache.struts.action2.portlet.context.PortletActionContext}.
      */
-    String DEFAULT_ACTION_FOR_MODE = "webwork.portlet.defaultActionForMode";
+    String DEFAULT_ACTION_FOR_MODE = "struts.portlet.defaultActionForMode";
 }

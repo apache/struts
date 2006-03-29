@@ -4,7 +4,7 @@
  */
 package org.apache.struts.action2.dispatcher;
 
-import org.apache.struts.action2.WebWorkStatics;
+import org.apache.struts.action2.StrutsStatics;
 import org.apache.struts.action2.dispatcher.mapper.ActionMapperFactory;
 import org.apache.struts.action2.dispatcher.mapper.ActionMapping;
 import org.apache.commons.logging.Log;
@@ -37,12 +37,12 @@ import java.io.IOException;
  * Instead of traditional servlet init params this servlet will initialize itself using WebWork2 properties.
  * The following properties are used upon initialization: <ul>
  * <p/>
- * <li><tt>webwork.configuration.xml.reload</tt>: if and only if set to <tt>true</tt> then the xml configuration
+ * <li><tt>struts.configuration.xml.reload</tt>: if and only if set to <tt>true</tt> then the xml configuration
  * files (action definitions, interceptor definitions, etc) will be reloaded for each request. This is
  * useful for development but should be disabled for production deployment.</li>
- * <li><tt>webwork.multipart.saveDir</tt>: The path used for temporarily uploaded files. Defaults to the
+ * <li><tt>struts.multipart.saveDir</tt>: The path used for temporarily uploaded files. Defaults to the
  * temp path specified by the app server.</li>
- * <li><tt>webwork.multipart.maxSize</tt>: sets the maximum allowable multipart request size
+ * <li><tt>struts.multipart.maxSize</tt>: sets the maximum allowable multipart request size
  * in bytes. If the size was not specified then {@link java.lang.Integer#MAX_VALUE} will be used
  * (essentially unlimited so be careful).</li></ul>
  * <p/>
@@ -55,7 +55,7 @@ import java.io.IOException;
  * @see ServletDispatcherResult
  * @deprecated use {@link FilterDispatcher} instead
  */
-public class ServletDispatcher extends HttpServlet implements WebWorkStatics {
+public class ServletDispatcher extends HttpServlet implements StrutsStatics {
 
     /**
      * Logger for this class.

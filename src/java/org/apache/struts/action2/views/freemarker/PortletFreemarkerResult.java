@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action2.ServletActionContext;
-import org.apache.struts.action2.dispatcher.WebWorkResultSupport;
+import org.apache.struts.action2.dispatcher.StrutsResultSupport;
 import org.apache.struts.action2.portlet.PortletActionConstants;
 import org.apache.struts.action2.portlet.context.PortletActionContext;
 import org.apache.struts.action2.views.util.ResourceUtil;
@@ -35,7 +35,7 @@ import freemarker.template.TemplateModelException;
 /**
  * @author CameronBraid
  */
-public class PortletFreemarkerResult extends WebWorkResultSupport {
+public class PortletFreemarkerResult extends StrutsResultSupport {
 
     protected ActionInvocation invocation;
 
@@ -192,7 +192,7 @@ public class PortletFreemarkerResult extends WebWorkResultSupport {
      * <li>action - the action itself
      * <li>exception - optional : the JSP or Servlet exception as per the
      * servlet spec (for JSP Exception pages)
-     * <li>webwork - instance of the WebWorkUtil class
+     * <li>webwork - instance of the StrutsUtil class
      * </ul>
      */
     protected TemplateModel createModel() throws TemplateModelException {

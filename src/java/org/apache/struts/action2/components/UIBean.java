@@ -4,7 +4,7 @@
  */
 package org.apache.struts.action2.components;
 
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsConstants;
 import org.apache.struts.action2.components.template.Template;
 import org.apache.struts.action2.components.template.TemplateEngine;
 import org.apache.struts.action2.components.template.TemplateEngineManager;
@@ -652,7 +652,7 @@ public abstract class UIBean extends Component {
 
         // Default template set
         if ((templateDir == null) || (templateDir.equals(""))) {
-            templateDir = Configuration.getString(WebWorkConstants.WEBWORK_UI_TEMPLATEDIR);
+            templateDir = Configuration.getString(StrutsConstants.STRUTS_UI_TEMPLATEDIR);
         }
 
         // Defaults to 'template'
@@ -685,7 +685,7 @@ public abstract class UIBean extends Component {
 
         // Default theme set
         if ((theme == null) || (theme.equals(""))) {
-            theme = Configuration.getString(WebWorkConstants.WEBWORK_UI_THEME);
+            theme = Configuration.getString(StrutsConstants.STRUTS_UI_THEME);
         }
 
         return theme;

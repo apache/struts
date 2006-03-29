@@ -1,7 +1,7 @@
 package org.apache.struts.action2.views.util;
 
 import org.apache.struts.action2.ServletActionContext;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsConstants;
 import org.apache.struts.action2.config.Configuration;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.util.OgnlValueStack;
@@ -55,14 +55,14 @@ public class UrlHelper {
         int httpPort = DEFAULT_HTTP_PORT;
 
         try {
-            httpPort = Integer.parseInt((String) Configuration.get(WebWorkConstants.WEBWORK_URL_HTTP_PORT));
+            httpPort = Integer.parseInt((String) Configuration.get(StrutsConstants.STRUTS_URL_HTTP_PORT));
         } catch (Exception ex) {
         }
 
         int httpsPort = DEFAULT_HTTPS_PORT;
 
         try {
-            httpsPort = Integer.parseInt((String) Configuration.get(WebWorkConstants.WEBWORK_URL_HTTPS_PORT));
+            httpsPort = Integer.parseInt((String) Configuration.get(StrutsConstants.STRUTS_URL_HTTPS_PORT));
         } catch (Exception ex) {
         }
 
@@ -112,7 +112,7 @@ public class UrlHelper {
             link.append(action);
         } else {
             // Go to "same page"
-            String requestURI = (String) request.getAttribute("webwork.request_uri");
+            String requestURI = (String) request.getAttribute("struts.request_uri");
 
             if (requestURI == null) {
                 requestURI = request.getRequestURI();
@@ -205,8 +205,8 @@ public class UrlHelper {
         String output = TextParseUtil.translateVariables(input, valueStack);
 
         final String encoding;
-        if (Configuration.isSet(WebWorkConstants.WEBWORK_I18N_ENCODING)) {
-            encoding = Configuration.getString(WebWorkConstants.WEBWORK_I18N_ENCODING);
+        if (Configuration.isSet(StrutsConstants.STRUTS_I18N_ENCODING)) {
+            encoding = Configuration.getString(StrutsConstants.STRUTS_I18N_ENCODING);
         } else {
             encoding = "UTF-8";
         }

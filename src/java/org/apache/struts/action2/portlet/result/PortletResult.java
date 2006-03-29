@@ -23,7 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.apache.struts.action2.ServletActionContext;
-import org.apache.struts.action2.dispatcher.WebWorkResultSupport;
+import org.apache.struts.action2.dispatcher.StrutsResultSupport;
 import org.apache.struts.action2.portlet.PortletActionConstants;
 import org.apache.struts.action2.portlet.context.PortletActionContext;
 import com.opensymphony.xwork.ActionInvocation;
@@ -35,7 +35,7 @@ import com.opensymphony.xwork.ActionInvocation;
  * @author Rainer Hermanns
  * @version $Revision: 1.5 $
  */
-public class PortletResult extends WebWorkResultSupport {
+public class PortletResult extends StrutsResultSupport {
 
     /**
      * Logger instance.

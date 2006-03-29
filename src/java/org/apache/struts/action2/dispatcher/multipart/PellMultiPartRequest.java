@@ -5,7 +5,7 @@
 package org.apache.struts.action2.dispatcher.multipart;
 
 import org.apache.struts.action2.config.Configuration;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsConstants;
 import http.utils.multipartrequest.ServletMultipartRequest;
 
 import javax.servlet.http.HttpServletRequest;
@@ -103,14 +103,14 @@ public class PellMultiPartRequest extends MultiPartRequest {
      * Sets the encoding for the uploaded params.  This needs to be set if you are using character sets other than
      * ASCII.
      * <p/>
-     * The encoding is looked up from the configuration setting 'webwork.i18n.encoding'.  This is usually set in
-     * default.properties & webwork.properties.
+     * The encoding is looked up from the configuration setting 'struts.i18n.encoding'.  This is usually set in
+     * default.properties & struts.properties.
      */
     private static void setEncoding() {
         String encoding = null;
 
         try {
-            encoding = Configuration.getString(WebWorkConstants.WEBWORK_I18N_ENCODING);
+            encoding = Configuration.getString(StrutsConstants.STRUTS_I18N_ENCODING);
 
             if (encoding != null) {
                 //NB: This should never be called at the same time as the constructor for
@@ -121,9 +121,9 @@ public class PellMultiPartRequest extends MultiPartRequest {
                 http.utils.multipartrequest.MultipartRequest.setEncoding("UTF-8");
             }
         } catch (IllegalArgumentException e) {
-            log.info("Could not get encoding property 'webwork.i18n.encoding' for file upload.  Using system default");
+            log.info("Could not get encoding property 'struts.i18n.encoding' for file upload.  Using system default");
         } catch (UnsupportedEncodingException e) {
-            log.error("Encoding " + encoding + " is not a valid encoding.  Please check your webwork.properties file.");
+            log.error("Encoding " + encoding + " is not a valid encoding.  Please check your struts.properties file.");
         }
     }
 }

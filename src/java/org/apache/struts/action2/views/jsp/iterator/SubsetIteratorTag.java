@@ -6,7 +6,7 @@ package org.apache.struts.action2.views.jsp.iterator;
 
 import org.apache.struts.action2.util.SubsetIteratorFilter;
 import org.apache.struts.action2.util.SubsetIteratorFilter.Decider;
-import org.apache.struts.action2.views.jsp.WebWorkBodyTagSupport;
+import org.apache.struts.action2.views.jsp.StrutsBodyTagSupport;
 
 import javax.servlet.jsp.JspException;
 
@@ -132,7 +132,7 @@ import org.apache.commons.logging.LogFactory;
  * @ww.tag name="subset" tld-body-content="JSP"
  * description="Takes an iterator and outputs a subset of it"
  */
-public class SubsetIteratorTag extends WebWorkBodyTagSupport {
+public class SubsetIteratorTag extends StrutsBodyTagSupport {
 
 	private static final long serialVersionUID = -6252696081713080102L;
 

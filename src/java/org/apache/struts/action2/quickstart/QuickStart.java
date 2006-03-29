@@ -29,12 +29,12 @@ public class QuickStart {
             System.err.println("QuickStart must be either invoked with three arguments or no arguments:");
             System.err.println("[contextPath] [webapp] [sources]");
             System.err.println("");
-            System.err.println("Ex: java -jar webwork.jar \\");
+            System.err.println("Ex: java -jar struts.jar \\");
             System.err.println("    quickstart /sandbox sandbox/src/webapp sandbox/src/java");
             System.err.println("");
             System.err.println("OR");
             System.err.println("");
-            System.err.println("Ex: java -jar webwork.jar quickstart");
+            System.err.println("Ex: java -jar struts.jar quickstart");
             System.err.println(" Where a 'quickstart.xml' file exists in your working directory");
             return;
         }

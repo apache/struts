@@ -7,9 +7,9 @@ package org.apache.struts.action2.views.freemarker;
 import com.opensymphony.util.FileManager;
 import org.apache.struts.action2.config.Configuration;
 import org.apache.struts.action2.views.JspSupportServlet;
-import org.apache.struts.action2.views.freemarker.tags.WebWorkModels;
+import org.apache.struts.action2.views.freemarker.tags.StrutsModels;
 import org.apache.struts.action2.views.util.ContextUtil;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsConstants;
 import com.opensymphony.xwork.ObjectFactory;
 import com.opensymphony.xwork.util.OgnlValueStack;
 import freemarker.cache.FileTemplateLoader;
@@ -66,7 +66,7 @@ public class FreemarkerManager {
     /**
      * To allow for custom configuration of freemarker, sublcass this class "ConfigManager" and
      * set the webwork configuration property
-     * <b>webwork.freemarker.configmanager.classname</b> to the fully qualified classname.
+     * <b>struts.freemarker.configmanager.classname</b> to the fully qualified classname.
      * <p/>
      * This allows you to override the protected methods in the ConfigMangaer
      * to programatically create your own Configuration instance
@@ -75,8 +75,8 @@ public class FreemarkerManager {
         if (instance == null) {
             String classname = FreemarkerManager.class.getName();
 
-            if (Configuration.isSet(WebWorkConstants.WEBWORK_FREEMARKER_MANAGER_CLASSNAME)) {
-                classname = Configuration.getString(WebWorkConstants.WEBWORK_FREEMARKER_MANAGER_CLASSNAME).trim();
+            if (Configuration.isSet(StrutsConstants.STRUTS_FREEMARKER_MANAGER_CLASSNAME)) {
+                classname = Configuration.getString(StrutsConstants.STRUTS_FREEMARKER_MANAGER_CLASSNAME).trim();
             }
 
             try {
@@ -179,7 +179,7 @@ public class FreemarkerManager {
     }
 
     protected BeansWrapper getObjectWrapper() {
-        return new WebWorkBeanWrapper();
+        return new StrutsBeanWrapper();
     }
 
     /**
@@ -215,11 +215,11 @@ public class FreemarkerManager {
                 new MultiTemplateLoader(new TemplateLoader[]{
                         templatePathLoader,
                         new WebappTemplateLoader(servletContext),
-                        new WebWorkClassTemplateLoader()
+                        new StrutsClassTemplateLoader()
                 })
                 : new MultiTemplateLoader(new TemplateLoader[]{
                 new WebappTemplateLoader(servletContext),
-                new WebWorkClassTemplateLoader()
+                new StrutsClassTemplateLoader()
         });
     }
 
@@ -245,8 +245,8 @@ public class FreemarkerManager {
 
         configuration.setObjectWrapper(getObjectWrapper());
         
-        if (Configuration.isSet(WebWorkConstants.WEBWORK_I18N_ENCODING)) {
-        	configuration.setDefaultEncoding(Configuration.getString(WebWorkConstants.WEBWORK_I18N_ENCODING));
+        if (Configuration.isSet(StrutsConstants.STRUTS_I18N_ENCODING)) {
+        	configuration.setDefaultEncoding(Configuration.getString(StrutsConstants.STRUTS_I18N_ENCODING));
         }
 
         loadSettings(servletContext, configuration);
@@ -278,7 +278,7 @@ public class FreemarkerManager {
     public SimpleHash buildTemplateModel(OgnlValueStack stack, Object action, ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, ObjectWrapper wrapper) {
         ScopesHashModel model = buildScopesHashModel(servletContext, request, response, wrapper, stack);
         populateContext(model, stack, action, request, response);
-        model.put("ww", new WebWorkModels(stack, request, response));
+        model.put("ww", new StrutsModels(stack, request, response));
         return model;
     }
 }

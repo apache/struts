@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.struts.action2.dispatcher.ServletRedirectResult;
-import org.apache.struts.action2.views.jsp.WebWorkMockHttpServletRequest;
+import org.apache.struts.action2.views.jsp.StrutsMockHttpServletRequest;
 import com.opensymphony.xwork.Result;
 
 import junit.framework.TestCase;
@@ -63,7 +63,7 @@ public class DefaultActionMapperTest extends TestCase {
 		Map parameterMap = new HashMap();
 		parameterMap.put(DefaultActionMapper.METHOD_PREFIX+"myMethod", "");
 		
-		WebWorkMockHttpServletRequest request = new WebWorkMockHttpServletRequest();
+		StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
 		request.setParameterMap(parameterMap);
 		request.setupGetServletPath("/someServletPath.action");
 		
@@ -77,7 +77,7 @@ public class DefaultActionMapperTest extends TestCase {
 		Map parameterMap = new HashMap();
 		parameterMap.put(DefaultActionMapper.ACTION_PREFIX+"myAction", "");
 		
-		WebWorkMockHttpServletRequest request = new WebWorkMockHttpServletRequest();
+		StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
 		request.setParameterMap(parameterMap);
 		request.setupGetServletPath("/someServletPath.action");
 		
@@ -91,7 +91,7 @@ public class DefaultActionMapperTest extends TestCase {
 		Map parameterMap = new HashMap();
 		parameterMap.put(DefaultActionMapper.REDIRECT_PREFIX+"www.google.com", "");
 		
-		WebWorkMockHttpServletRequest request = new WebWorkMockHttpServletRequest();
+		StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
 		request.setupGetServletPath("/someServletPath.action");
 		request.setParameterMap(parameterMap);
 		
@@ -109,7 +109,7 @@ public class DefaultActionMapperTest extends TestCase {
 		Map parameterMap = new HashMap();
 		parameterMap.put(DefaultActionMapper.REDIRECT_ACTION_PREFIX+"myAction", "");
 		
-		WebWorkMockHttpServletRequest request = new WebWorkMockHttpServletRequest();
+		StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
 		request.setupGetServletPath("/someServletPath.action");
 		request.setParameterMap(parameterMap);
 		
@@ -130,7 +130,7 @@ public class DefaultActionMapperTest extends TestCase {
 	// ==========================
 	public void testActionBangMethod() throws Exception {
 		
-		WebWorkMockHttpServletRequest request = new WebWorkMockHttpServletRequest();
+		StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
 		request.setupGetServletPath("/someName!someMethod.action");
 		
 		DefaultActionMapper defaultActionMapper = new DefaultActionMapper();

@@ -14,9 +14,9 @@ import com.mockobjects.servlet.MockHttpServletResponse;
 import com.mockobjects.servlet.MockHttpSession;
 import com.mockobjects.servlet.MockServletConfig;
 import com.mockobjects.servlet.MockServletOutputStream;
-import org.apache.struts.action2.WebWorkTestCase;
-import org.apache.struts.action2.views.jsp.WebWorkMockHttpServletRequest;
-import org.apache.struts.action2.views.jsp.WebWorkMockHttpServletResponse;
+import org.apache.struts.action2.StrutsTestCase;
+import org.apache.struts.action2.views.jsp.StrutsMockHttpServletRequest;
+import org.apache.struts.action2.views.jsp.StrutsMockHttpServletResponse;
 import com.opensymphony.xwork.config.ConfigurationManager;
 import com.opensymphony.xwork.config.providers.XmlConfigurationProvider;
 
@@ -32,7 +32,7 @@ import java.util.Map;
 /**
  * @author CameronBraid
  */
-public abstract class AbstractServletDispatcherTestCase extends WebWorkTestCase {
+public abstract class AbstractServletDispatcherTestCase extends StrutsTestCase {
 
     public String getConfigFilename() {
         return "xwork.xml";
@@ -74,7 +74,7 @@ public abstract class AbstractServletDispatcherTestCase extends WebWorkTestCase 
 
         MockHttpSession session = new MockHttpSession();
 
-        WebWorkMockHttpServletRequest request = new WebWorkMockHttpServletRequest();
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setSession(session);
         request.setupAddHeader("Content-Type", "dunno what this should be... just not multipart !");
         request.setParameterMap(getParameterMap());
@@ -82,7 +82,7 @@ public abstract class AbstractServletDispatcherTestCase extends WebWorkTestCase 
         request.setupGetPathInfo(getServletPath());
         request.setupGetContentType("text/plain");
 
-        MockHttpServletResponse response = new WebWorkMockHttpServletResponse();
+        MockHttpServletResponse response = new StrutsMockHttpServletResponse();
         response.setupOutputStream(new MockServletOutputStream());
 
         Mock servletContextDMock = new Mock(ServletContext.class);

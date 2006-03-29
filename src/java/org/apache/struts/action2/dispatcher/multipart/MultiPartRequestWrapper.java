@@ -5,8 +5,8 @@
 package org.apache.struts.action2.dispatcher.multipart;
 
 import org.apache.struts.action2.config.Configuration;
-import org.apache.struts.action2.dispatcher.WebWorkRequestWrapper;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.dispatcher.StrutsRequestWrapper;
+import org.apache.struts.action2.StrutsConstants;
 import org.apache.struts.action2.util.ClassLoaderUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,14 +20,14 @@ import java.util.*;
 
 /**
  * Parses a multipart request and provides a wrapper around the request. The parsing implementation used
- * depends on the <tt>webwork.multipart.parser</tt> setting. It should be set to a class which
+ * depends on the <tt>struts.multipart.parser</tt> setting. It should be set to a class which
  * extends {@link org.apache.struts.action2.dispatcher.multipart.MultiPartRequest}. <p>
  * <p/>
  * Webwork ships with three implementations,
  * {@link org.apache.struts.action2.dispatcher.multipart.PellMultiPartRequest}, and
  * {@link org.apache.struts.action2.dispatcher.multipart.CosMultiPartRequest} and
  * {@link org.apache.struts.action2.dispatcher.multipart.JakartaMultiPartRequest}. The Jakarta implementation
- * is the default. The <tt>webwork.multipart.parser</tt> property should be set to <tt>jakarta</tt> for the
+ * is the default. The <tt>struts.multipart.parser</tt> property should be set to <tt>jakarta</tt> for the
  * Jakarta implementation, <tt>pell</tt> for the Pell implementation and <tt>cos</tt> for the Jason Hunter
  * implementation. <p>
  * <p/>
@@ -37,7 +37,7 @@ import java.util.*;
  *
  * @author Matt Baldree
  */
-public class MultiPartRequestWrapper extends WebWorkRequestWrapper {
+public class MultiPartRequestWrapper extends StrutsRequestWrapper {
     protected static final Log log = LogFactory.getLog(MultiPartRequestWrapper.class);
 
     Collection errors;
@@ -56,11 +56,11 @@ public class MultiPartRequestWrapper extends WebWorkRequestWrapper {
         if (request instanceof MultiPartRequest) {
             multi = (MultiPartRequest) request;
         } else {
-            String parser = Configuration.getString(WebWorkConstants.WEBWORK_MULTIPART_PARSER);
+            String parser = Configuration.getString(StrutsConstants.STRUTS_MULTIPART_PARSER);
 
             // If it's not set, use Jakarta
             if (parser.equals("")) {
-                log.warn("Property webwork.multipart.parser not set." +
+                log.warn("Property struts.multipart.parser not set." +
                         " Using org.apache.struts.action2.dispatcher.multipart.JakartaMultiPartRequest");
                 parser = "org.apache.struts.action2.dispatcher.multipart.JakartaMultiPartRequest";
             }

@@ -7,8 +7,8 @@ package org.apache.struts.action2.dispatcher;
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 import org.apache.struts.action2.ServletActionContext;
-import org.apache.struts.action2.WebWorkStatics;
-import org.apache.struts.action2.WebWorkTestCase;
+import org.apache.struts.action2.StrutsStatics;
+import org.apache.struts.action2.StrutsTestCase;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.mock.MockActionInvocation;
@@ -26,7 +26,7 @@ import java.util.HashMap;
  * @author $author$
  * @version $Revision: 1.15 $
  */
-public class ServletRedirectResultTest extends WebWorkTestCase implements WebWorkStatics {
+public class ServletRedirectResultTest extends StrutsTestCase implements StrutsStatics {
 
     protected ServletRedirectResult view;
     private ActionContext oldContext;

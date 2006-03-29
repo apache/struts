@@ -26,7 +26,7 @@ import java.util.List;
  * The date tag will allow you to format a Date in a quick and easy way.
  * You can specify a <b>custom format</b> (eg. "dd/MM/yyyy hh:mm"), you can generate
  * <b>easy readable notations</b> (like "in 2 hours, 14 minutes"), or you can just fall back
- * on a <b>predefined format</b> with key 'webwork.date.format' in your properties file.
+ * on a <b>predefined format</b> with key 'struts.date.format' in your properties file.
  *
  * If that key is not defined, it will finally fall back to the default DateFormat.MEDIUM
  * formatting.
@@ -55,31 +55,31 @@ import java.util.List;
  *      <td>default</td>
  *   </tr>	
  *   <tr>
- *   	<td>webwork.date.format.past</td>
+ *   	<td>struts.date.format.past</td>
  *   	<td>{0} ago</td>
  *   </tr>
  *   <tr>
- *   	<td>webwork.date.format.future</td>
+ *   	<td>struts.date.format.future</td>
  *      <td>in {0}</td>
  *   </tr>
  *   <tr>
- *   	<td>webwork.date.format.seconds</td>
+ *   	<td>struts.date.format.seconds</td>
  *      <td>an instant</td>
  *   </tr>
  *   <tr>
- *   	<td>webwork.date.format.minutes</td>
+ *   	<td>struts.date.format.minutes</td>
  *      <td>{0,choice,1#one minute|1<{0} minutes}</td>
  *   </tr>
  *   <tr>
- *   	<td>webwork.date.format.hours</td>
+ *   	<td>struts.date.format.hours</td>
  *   	<td>{0,choice,1#one hour|1<{0} hours}{1,choice,0#|1#, one minute|1<, {1} minutes}</td>
  *   </tr>
  *   <tr>
- *   	<td>webwork.date.format.days</td>
+ *   	<td>struts.date.format.days</td>
  *   	<td>{0,choice,1#one day|1<{0} days}{1,choice,0#|1#, one hour|1<, {1} hours}</td>
  *   </tr>
  *   <tr>
- *   	<td>webwork.date.format.years</td>
+ *   	<td>struts.date.format.years</td>
  *   	<td>{0,choice,1#one year|1<{0} years}{1,choice,0#|1#, one day|1<, {1} days}</td>
  *   </tr>
  * </table>
@@ -98,7 +98,7 @@ import java.util.List;
  *      <td>default</td>
  *   </tr>	
  *   <tr>
- *   	<td>webwork.date.format</td>
+ *   	<td>struts.date.format</td>
  *      <td>if one is not found DateFormat.MEDIUM format will be used</td>
  *   </tr>
  * </table>
@@ -133,44 +133,44 @@ public class Date extends Component {
     /**
      * Property name to fall back when no format is specified
      */
-    public static final String DATETAG_PROPERTY = "webwork.date.format";
+    public static final String DATETAG_PROPERTY = "struts.date.format";
     /**
      * Property name that defines the past notation (default: {0} ago)
      */
-    public static final String DATETAG_PROPERTY_PAST = "webwork.date.format.past";
+    public static final String DATETAG_PROPERTY_PAST = "struts.date.format.past";
     private static final String DATETAG_DEFAULT_PAST = "{0} ago";
     /**
      * Property name that defines the future notation (default: in {0})
      */
-    public static final String DATETAG_PROPERTY_FUTURE = "webwork.date.format.future";
+    public static final String DATETAG_PROPERTY_FUTURE = "struts.date.format.future";
     private static final String DATETAG_DEFAULT_FUTURE = "in {0}";
     /**
      * Property name that defines the seconds notation (default: in instant)
      */
-    public static final String DATETAG_PROPERTY_SECONDS = "webwork.date.format.seconds";
+    public static final String DATETAG_PROPERTY_SECONDS = "struts.date.format.seconds";
     private static final String DATETAG_DEFAULT_SECONDS = "an instant";
     /**
      * Property name that defines the minutes notation (default: {0,choice,1#one minute|1<{0} minutes})
      */
-    public static final String DATETAG_PROPERTY_MINUTES = "webwork.date.format.minutes";
+    public static final String DATETAG_PROPERTY_MINUTES = "struts.date.format.minutes";
     private static final String DATETAG_DEFAULT_MINUTES = "{0,choice,1#one minute|1<{0} minutes}";
     /**
      * Property name that defines the hours notation (default: {0,choice,1#one hour|1<{0} hours}{1,choice,0#|1#, one
      * minute|1<, {1} minutes})
      */
-    public static final String DATETAG_PROPERTY_HOURS = "webwork.date.format.hours";
+    public static final String DATETAG_PROPERTY_HOURS = "struts.date.format.hours";
     private static final String DATETAG_DEFAULT_HOURS = "{0,choice,1#one hour|1<{0} hours}{1,choice,0#|1#, one minute|1<, {1} minutes}";
     /**
      * Property name that defines the days notation (default: {0,choice,1#one day|1<{0} days}{1,choice,0#|1#, one hour|1<,
      * {1} hours})
      */
-    public static final String DATETAG_PROPERTY_DAYS = "webwork.date.format.days";
+    public static final String DATETAG_PROPERTY_DAYS = "struts.date.format.days";
     private static final String DATETAG_DEFAULT_DAYS = "{0,choice,1#one day|1<{0} days}{1,choice,0#|1#, one hour|1<, {1} hours}";
     /**
      * Property name that defines the years notation (default: {0,choice,1#one year|1<{0} years}{1,choice,0#|1#, one
      * day|1<, {1} days})
      */
-    public static final String DATETAG_PROPERTY_YEARS = "webwork.date.format.years";
+    public static final String DATETAG_PROPERTY_YEARS = "struts.date.format.years";
     private static final String DATETAG_DEFAULT_YEARS = "{0,choice,1#one year|1<{0} years}{1,choice,0#|1#, one day|1<, {1} days}";
 
     private String name;

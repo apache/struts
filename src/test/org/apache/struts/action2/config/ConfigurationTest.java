@@ -4,8 +4,8 @@
  */
 package org.apache.struts.action2.config;
 
-import org.apache.struts.action2.WebWorkTestCase;
-import org.apache.struts.action2.WebWorkConstants;
+import org.apache.struts.action2.StrutsTestCase;
+import org.apache.struts.action2.StrutsConstants;
 import com.opensymphony.xwork.util.LocalizedTextUtil;
 
 import java.util.Iterator;
@@ -17,13 +17,13 @@ import java.util.Locale;
  *
  * @author Jason Carreira
  */
-public class ConfigurationTest extends WebWorkTestCase {
+public class ConfigurationTest extends StrutsTestCase {
 
     public void testConfiguration() {
-        assertEquals("12345", Configuration.getString(WebWorkConstants.WEBWORK_MULTIPART_MAXSIZE));
-        assertEquals("\temp", Configuration.getString(WebWorkConstants.WEBWORK_MULTIPART_SAVEDIR));
+        assertEquals("12345", Configuration.getString(StrutsConstants.STRUTS_MULTIPART_MAXSIZE));
+        assertEquals("\temp", Configuration.getString(StrutsConstants.STRUTS_MULTIPART_SAVEDIR));
 
-        assertEquals("test,org/apache/struts/action2/othertest", Configuration.getString( WebWorkConstants.WEBWORK_CUSTOM_PROPERTIES));
+        assertEquals("test,org/apache/struts/action2/othertest", Configuration.getString( StrutsConstants.STRUTS_CUSTOM_PROPERTIES));
         assertEquals("testvalue", Configuration.getString("testkey"));
         assertEquals("othertestvalue", Configuration.getString("othertestkey"));
 
@@ -35,7 +35,7 @@ public class ConfigurationTest extends WebWorkTestCase {
     }
 
     public void testDefaultResourceBundlesLoaded() {
-        assertEquals("testmessages,testmessages2", Configuration.getString(WebWorkConstants.WEBWORK_CUSTOM_I18N_RESOURCES));
+        assertEquals("testmessages,testmessages2", Configuration.getString(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES));
         assertEquals("This is a test message", LocalizedTextUtil.findDefaultText("default.testmessage", Locale.getDefault()));
         assertEquals("This is another test message", LocalizedTextUtil.findDefaultText("default.testmessage2", Locale.getDefault()));
     }
@@ -44,12 +44,12 @@ public class ConfigurationTest extends WebWorkTestCase {
         Locale.setDefault(Locale.US); // force to US locale as we also have _de and _da properties
         
         LocalizedTextUtil.clearDefaultResourceBundles();
-        LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts/action2/webwork-messages");
-        assertEquals("The form has already been processed or no token was supplied, please try again.", LocalizedTextUtil.findDefaultText("webwork.messages.invalid.token", Locale.getDefault()));
+        LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts/action2/struts-messages");
+        assertEquals("The form has already been processed or no token was supplied, please try again.", LocalizedTextUtil.findDefaultText("struts.messages.invalid.token", Locale.getDefault()));
         Configuration.reset();
 
-        assertEquals("testmessages,testmessages2", Configuration.getString(WebWorkConstants.WEBWORK_CUSTOM_I18N_RESOURCES));
-        assertEquals("Replaced message for token tag", LocalizedTextUtil.findDefaultText("webwork.messages.invalid.token", Locale.getDefault()));
+        assertEquals("testmessages,testmessages2", Configuration.getString(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES));
+        assertEquals("Replaced message for token tag", LocalizedTextUtil.findDefaultText("struts.messages.invalid.token", Locale.getDefault()));
     }
 
     public void testSetConfiguration() {

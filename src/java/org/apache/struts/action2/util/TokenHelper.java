@@ -25,12 +25,12 @@ public class TokenHelper {
     /**
      * The default name to map the token value
      */
-    public static final String DEFAULT_TOKEN_NAME = "webwork.token";
+    public static final String DEFAULT_TOKEN_NAME = "struts.token";
 
     /**
      * The name of the field which will hold the token name
      */
-    public static final String TOKEN_NAME_FIELD = "webwork.token.name";
+    public static final String TOKEN_NAME_FIELD = "struts.token.name";
     private static final Log LOG = LogFactory.getLog(TokenHelper.class);
 
 
@@ -152,7 +152,7 @@ public class TokenHelper {
         String sessionToken = (String) session.get(tokenName);
 
         if (!token.equals(sessionToken)) {
-            LOG.warn(LocalizedTextUtil.findText(TokenHelper.class, "webwork.internal.invalid.token", ActionContext.getContext().getLocale(), "Form token {0} does not match the session token {1}.", new Object[]{
+            LOG.warn(LocalizedTextUtil.findText(TokenHelper.class, "struts.internal.invalid.token", ActionContext.getContext().getLocale(), "Form token {0} does not match the session token {1}.", new Object[]{
                     token, sessionToken
             }));
 

@@ -1,16 +1,16 @@
 <!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
 
 <xwork>
-    <include file="webwork-default.xml"/>
+    <include file="struts-default.xml"/>
 
-    <package name="default" extends="webwork-default">
+    <package name="default" extends="struts-default">
         <action name="hello" class="com.opensymphony.xwork.ActionSupport">
             <result name="success">hello.jsp</result>
             <result name="tutorial" type="redirect">/tutorial/test.action</result>
         </action>
     </package>
 
-    <package name="tutorial" namespace="/tutorial" extends="webwork-default">
+    <package name="tutorial" namespace="/tutorial" extends="struts-default">
         <result-types>
             <result-type name="freemarker" default="true"
                          class="org.apache.struts.action2.views.freemarker.FreemarkerResult"/>
@@ -21,7 +21,7 @@
         </action>
     </package>
 
-    <package name="sitegraph" namespace="/tutorial/sitegraph" extends="webwork-default">
+    <package name="sitegraph" namespace="/tutorial/sitegraph" extends="struts-default">
         <result-types>
             <result-type name="freemarker" default="true"
                          class="org.apache.struts.action2.views.freemarker.FreemarkerResult"/>

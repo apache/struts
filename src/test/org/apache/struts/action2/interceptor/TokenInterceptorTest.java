@@ -7,8 +7,8 @@ package org.apache.struts.action2.interceptor;
 import org.apache.struts.action2.ServletActionContext;
 import org.apache.struts.action2.TestConfigurationProvider;
 import org.apache.struts.action2.util.TokenHelper;
-import org.apache.struts.action2.views.jsp.WebWorkMockHttpServletRequest;
-import org.apache.struts.action2.views.jsp.WebWorkMockHttpSession;
+import org.apache.struts.action2.views.jsp.StrutsMockHttpServletRequest;
+import org.apache.struts.action2.views.jsp.StrutsMockHttpSession;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionProxy;
@@ -36,7 +36,7 @@ public class TokenInterceptorTest extends TestCase {
     Map extraContext;
     Map params;
     Map session;
-    WebWorkMockHttpServletRequest request;
+    StrutsMockHttpServletRequest request;
 
 
     public void testNoTokenInParams() throws Exception {
@@ -101,8 +101,8 @@ public class TokenInterceptorTest extends TestCase {
         extraContext.put(ActionContext.SESSION, session);
         extraContext.put(ActionContext.PARAMETERS, params);
 
-        request = new WebWorkMockHttpServletRequest();
-        httpSession = new WebWorkMockHttpSession();
+        request = new StrutsMockHttpServletRequest();
+        httpSession = new StrutsMockHttpSession();
         request.setSession(httpSession);
         request.setParameterMap(params);
         extraContext.put(ServletActionContext.HTTP_REQUEST, request);

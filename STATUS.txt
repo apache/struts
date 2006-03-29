@@ -44,51 +44,6 @@ Has "ePlus Corporation" filed a software grant or CCLA for Jason?
 
 ----
 
-NAMING CONVENTIONS
-
-Option 1:
- - com.opensymphony.webwork package -> org.apache.struts.ti
- - WebWork* classes -> Struts*
- - WebWork in comments, documentation -> Struts Action 2
- - webwork. as the configuration properties prefix -> struts.
- - ww: tag prefix -> a:
-+1 Martin Cooper (binding)
-+0 Don Brown (binding)
-+1 Frank Zammetti  (non-binding)
-
-Option 2:
- - com.opensymphony.webwork package -> org.apache.struts.action2
- - WebWork* classes -> Struts*
- - WebWork in comments, documentation -> Struts Action 2
- - webwork. as the configuration properties prefix -> struts.
- - ww: tag prefix -> a:/saf:
-+1 Rainer Hermanns, Ted Husted, Alexandru Popescu, Rene Gielen, Don
-Brown, James Mitchell (James is +1 for ui prefix) (binding)
-+0 Toby Jee, Hubert Rabago, Craig McClanahan (binding)
-+1 Paul Benedict, Michael Jouravlev (non-binding)
-
-Option 2b: 
- - com.opensymphony.webwork package -> org.apache.[struts.]webwork
- - otherwise same as option 2
-+1 Niall Pemberton, Alexandru Popescu (Alexandru is +1 for ww: prefix)
-+0 Joe Germuska, Ted Husted
-
-Option 3:
- - com.opensymphony.webwork package -> org.apache.web
- - WebWork in comments, documentation -> Struts Action 2
- - webwork. as the configuration properties prefix -> web
- - ww: tag prefix -> html: (Michael Jouravlev = +1 for html)
-+0 Joe Germuska, Ted Husted (binding)
-+1 Gabe (non-binding)
-
-Option 4:
- - com.opensymphony.webwork package -> org.apache.webwork
- - WebWork in comments, documentation -> Struts Action 2
- - else, same as o.c.webwork
-+1 Scud (non-binding)
-
-----
-
 MIGRATE XWORK NOW (see "[Struts Tt] Xwork?")
 
 +1 Gabe

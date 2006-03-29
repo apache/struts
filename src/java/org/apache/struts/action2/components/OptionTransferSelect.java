@@ -45,7 +45,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * <!-- START SNIPPET: example -->
  * 
  * &lt;-- minimum configuration --&gt;
- * &lt;ww:optiontransferselect 
+ * &lt;a:optiontransferselect 
  *   	label="Favourite Cartoons Characters"
  *		name="leftSideCartoonCharacters" 
  *		list="{'Popeye', 'He-Man', 'Spiderman'}" 
@@ -54,7 +54,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  *	/&gt;
  *
  *  &lt;-- possible configuration --&gt;
- *  &lt;ww:optiontransferselect 
+ *  &lt;a:optiontransferselect 
  *   	label="Favourite Cartoons Characters"
  *		name="leftSideCartoonCharacters" 
  *		leftTitle="Left Title"

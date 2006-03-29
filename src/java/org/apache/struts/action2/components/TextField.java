@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- END SNIPPET: exdescription -->
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;ww:textfield label="%{text('user_name')}" name="user" /&gt;
+ * &lt;a:textfield label="%{text('user_name')}" name="user" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *

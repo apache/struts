@@ -17,7 +17,7 @@ import java.util.Locale;
  * applications. Be sure to include proper stylesheet as described below if you don't want the calender widget to look
  * transparent.</p>
  *
- * <b>Important:</b> Be sure to set the id attributs if not used within a &lt;ww:form /&gt; tag, as it takes care of
+ * <b>Important:</b> Be sure to set the id attributs if not used within a &lt;a:form /&gt; tag, as it takes care of
  * setting the id for you, being required to copy selected date to text input element.</p>
  *
  * Following a reference for the format parameter (copied from jscalendar documentation):
@@ -57,11 +57,11 @@ import java.util.Locale;
  * <pre>
  * <!-- START SNIPPET: expl1 -->
  * Date in application's locale format:
- *     &lt;ww:datepicker name="order.date" id="order.date" /&gt;
+ *     &lt;a:datepicker name="order.date" id="order.date" /&gt;
  * Date in german locale, with german texts:
- *     &lt;ww:datepicker name="delivery.date" id="delivery.date" template="datepicker_js.ftl" language="de" /&gt;
+ *     &lt;a:datepicker name="delivery.date" id="delivery.date" template="datepicker_js.ftl" language="de" /&gt;
  * Date in german locale, with german texts and custom date format, including time:
- *     &lt;ww:datepicker name="invoice.date" id="invoice.date" template="datepicker_js.ftl" language="de" format="%d. %b &Y %H:%M" showstime="true" /&gt;
+ *     &lt;a:datepicker name="invoice.date" id="invoice.date" template="datepicker_js.ftl" language="de" format="%d. %b &Y %H:%M" showstime="true" /&gt;
  * <!-- END SNIPPET: expl1 -->
  * </pre>
  * <p/>
@@ -70,13 +70,13 @@ import java.util.Locale;
  *
  * If you use this jscalendar based datepicker widget, you might want to use one of the standard stylesheets provided
  * with jscalendar (all distribution stylesheets are included in webwork jar). The easiest way to do so is to place the
- * &lt;ww:head/&gt; tag in the head of your html page, as it takes care of including calendar css.
+ * &lt;a:head/&gt; tag in the head of your html page, as it takes care of including calendar css.
  * Otherwise, to manually activate the calendar-blue style, include the following in your stylesheet definition:
  *
  * <!-- END SNIPPET: expldesc2 -->
  * <pre>
  * <!-- START SNIPPET: expl2 -->
- * &lt;link href="&lt;ww:url value="/webwork/jscalendar/calendar-blue.css" /&gt;" rel="stylesheet" type="text/css" media="all"/&gt;
+ * &lt;link href="&lt;a:url value="/webwork/jscalendar/calendar-blue.css" /&gt;" rel="stylesheet" type="text/css" media="all"/&gt;
  * <!-- END SNIPPET: expl2 -->
  * </pre>
  *

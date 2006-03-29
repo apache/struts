@@ -60,7 +60,7 @@ function TabContent( htmlId, remote ) {
             var rel = window['tab_contents_update_'+self.elementId];
             // If the first tab is a remote tab, rel is null on initial loading...
             //  so don't try to call a method that doesn't exist.  This is only
-            //  for IE, and the workaround is to use a <ww:action name="" executeResults="true" />
+            //  for IE, and the workaround is to use a <a:action name="" executeResults="true" />
             //  as the content of the DIV.
             if (rel.bind)
                 rel.bind();

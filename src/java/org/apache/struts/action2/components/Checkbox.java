@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  * <pre>
  * <!-- START SNIPPET: example -->
  * JSP:
- * &lt;ww:checkbox label="checkbox test" name="checkboxField1" value="aBoolean" fieldValue="true"/&gt;
+ * &lt;a:checkbox label="checkbox test" name="checkboxField1" value="aBoolean" fieldValue="true"/&gt;
  *
  * Velocity:
  * #tag( Checkbox "label=checkbox test" "name=checkboxField1" "value=aBoolean" )

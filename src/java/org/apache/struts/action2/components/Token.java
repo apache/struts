@@ -16,7 +16,7 @@ import java.util.Map;
  * Stop double-submission of forms.</p>
  *
  * The token tag is used to help with the "double click" submission problem. It is needed if you are using the
- * TokenInterceptor or the TokenSessionInterceptor. The ww:token tag merely places a hidden element that contains
+ * TokenInterceptor or the TokenSessionInterceptor. The a:token tag merely places a hidden element that contains
  * the unique token.</p>
  * <!-- END SNIPPET: javadoc -->
  *
@@ -24,7 +24,7 @@ import java.util.Map;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;ww:token /&gt;
+ * &lt;a:token /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *

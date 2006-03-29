@@ -30,7 +30,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * <!-- START SNIPPET: example -->
  * 
  * &lt;!-- Example 1: simple example --&gt;
- * &lt;ww:updownselect 
+ * &lt;a:updownselect 
  * list="#{'england':'England', 'america':'America', 'germany':'Germany'}" 
  * name="prioritisedFavouriteCountries" 
  * headerKey="-1" 
@@ -38,7 +38,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * emptyOption="true" /&gt;
  *
  * &lt;!-- Example 2: more complex example --&gt;
- * &lt;ww:updownselect 
+ * &lt;a:updownselect 
  * list="defaultFavouriteCartoonCharacters" 
  * name="prioritisedFavouriteCartoonCharacters" 
  * headerKey="-1" 

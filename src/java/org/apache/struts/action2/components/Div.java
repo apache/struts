@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;ww:div ... /&gt;
+ * &lt;a:div ... /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *

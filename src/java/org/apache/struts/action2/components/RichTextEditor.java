@@ -24,7 +24,7 @@ import java.util.Locale;
  * <pre>
  * <!-- START SNIPPET: example -->
  * 
- * &lt;ww:richtexteditor 
+ * &lt;a:richtexteditor 
  *			toolbarCanCollapse="false"
  *			width="700"
  *			label="Description 1" 

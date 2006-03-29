@@ -463,53 +463,53 @@ import java.util.Map;
  * <!-- START SNIPPET: tooltipexample -->
  *
  * &lt;!-- Example 1: --&gt;
- * &lt;ww:form
+ * &lt;a:form
  * 			tooltipConfig="#{'tooltipAboveMousePointer':'true',
  *                           'tooltipBgColor='#eeeeee'}" .... &gt;
  *   ....
- *     &lt;ww:textfield label="Customer Name" tooltip="Enter the customer name" .... /&gt;
+ *     &lt;a:textfield label="Customer Name" tooltip="Enter the customer name" .... /&gt;
  *   ....
- * &lt;/ww:form&gt;
+ * &lt;/a:form&gt;
  *
  * &lt;!-- Example 2: --&gt;
- * &lt;ww:form
+ * &lt;a:form
  *         tooltipConfig="#{'tooltipAboveMousePointer':'true',
  *          				 'tooltipLeftOfMousePointer':'true'}" ... &gt;
  *   ....
- *     &lt;ww:textfield label="Address"
+ *     &lt;a:textfield label="Address"
  *          tooltip="Enter your address"
  *          tooltipConfig="#{'tooltipLeftOfMousePointer':'false'}" /&gt;
  *   ....
- * &lt;/ww:form&gt;
+ * &lt;/a:form&gt;
  *
  *
  * &lt;-- Example 3: --&gt;
- * &lt;ww:textfield
+ * &lt;a:textfield
  *        label="Customer Name"
  *	      tooltip="One of our customer Details'"&gt;
- *        &lt;ww:param name="tooltipConfig"&gt;
+ *        &lt;a:param name="tooltipConfig"&gt;
  *             tooltipWidth = 150 |
  *             tooltipAboveMousePointer = false |
  *             tooltipLeftOfMousePointer = false
- *        &lt;/ww:param&gt;
- * &lt;/ww:textfield&gt;
+ *        &lt;/a:param&gt;
+ * &lt;/a:textfield&gt;
  *
  *
  * &lt;-- Example 4: --&gt;
- * &lt;ww:textfield
+ * &lt;a:textfield
  *	        label="Customer Address"
  *	        tooltip="Enter The Customer Address" &gt;
- *	        &lt;ww:param
+ *	        &lt;a:param
  *              name="tooltipConfig"
  *              value="#{'tooltipStatic':'true',
  *                       'tooltipSticky':'true',
  *                       'tooltipAboveMousePointer':'false',
  *                       'tooltipLeftOfMousePointer':'false'}"  /&gt;
- * &lt;/ww:textfield&gt;
+ * &lt;/a:textfield&gt;
  *
  *
  * &lt;-- Example 5: --&gt;
- * &lt;ww:textfield
+ * &lt;a:textfield
  *          label="Customer Telephone Number"
  *          tooltip="Enter customer Telephone Number"
  *          tooltipConfig="#{'tooltipBgColor':'#cccccc',

@@ -19,10 +19,10 @@ import java.io.Writer;
  * <p/> <b>Examples</b>
  * <pre>
  * <!-- START SNIPPET: example1 -->
- * &lt;ww:push value="user"&gt;
- *     &lt;ww:propery value="firstName" /&gt;
- *     &lt;ww:propery value="lastName" /&gt;
- * &lt;/ww:push&gt;
+ * &lt;a:push value="user"&gt;
+ *     &lt;a:propery value="firstName" /&gt;
+ *     &lt;a:propery value="lastName" /&gt;
+ * &lt;/a:push&gt;
  * <!-- END SNIPPET: example1 -->
  * </pre>
  * 
@@ -33,11 +33,11 @@ import java.io.Writer;
  * 
  * <pre>
  * <!-- START SNIPPET: example2 -->
- *  &lt;ww:push value="myObject"&gt;                              ----- (1)
- *       &lt;ww:bean name="jp.SomeBean" id="myBean"/&gt;        ----- (2)
- * 		    &lt;ww:param name="myParam" value="top"/&gt;        ----- (3)
- *       &lt;/ww:bean&gt;
- *   &lt;/ww:push&gt;
+ *  &lt;a:push value="myObject"&gt;                              ----- (1)
+ *       &lt;a:bean name="jp.SomeBean" id="myBean"/&gt;        ----- (2)
+ * 		    &lt;a:param name="myParam" value="top"/&gt;        ----- (3)
+ *       &lt;/a:bean&gt;
+ *   &lt;/a:push&gt;
  * <!-- END SNIPPET: example2 -->
  * </pre>
  * 
@@ -51,11 +51,11 @@ import java.io.Writer;
  * 
  * <pre>
  * <!-- START SNIPPET: example3 -->
- * &lt;ww:push value="myObject"&gt;                                       ---(A)
- *    &lt;ww:bean name="jp.SomeBean" id="myBean"/&gt;                   ---(B)
- *       &lt;ww:param name="myParam" value="top.mySomeOtherValue"/&gt;  ---(C)
- *    &lt;/ww:bean&gt;
- * &lt;/ww:push&gt;
+ * &lt;a:push value="myObject"&gt;                                       ---(A)
+ *    &lt;a:bean name="jp.SomeBean" id="myBean"/&gt;                   ---(B)
+ *       &lt;a:param name="myParam" value="top.mySomeOtherValue"/&gt;  ---(C)
+ *    &lt;/a:bean&gt;
+ * &lt;/a:push&gt;
  * <!-- END SNIPPET: example3 -->
  * </pre>
  * 
@@ -69,11 +69,11 @@ import java.io.Writer;
  * 
  * <pre>
  * <!-- START SNIPPET: example4 -->       
- * &lt;ww:push value="myObject"&gt;                                 ---- (i)
- *    &lt;ww:bean name="jp.SomeBean" id="myBean"/&gt;             ---- (ii)
- *       &lt;ww:param name="myParam" value="[1].top"/&gt;         -----(iii)
- *    &lt;/ww:bean&gt;
- * &lt;/ww:push&gt;
+ * &lt;a:push value="myObject"&gt;                                 ---- (i)
+ *    &lt;a:bean name="jp.SomeBean" id="myBean"/&gt;             ---- (ii)
+ *       &lt;a:param name="myParam" value="[1].top"/&gt;         -----(iii)
+ *    &lt;/a:bean&gt;
+ * &lt;/a:push&gt;
  * <!-- END SNIPPET: example4 -->
  * </pre>
  * 

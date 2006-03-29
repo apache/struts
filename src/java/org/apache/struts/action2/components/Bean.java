@@ -34,15 +34,15 @@ import java.io.Writer;
  * <!-- START SNIPPET: examples -->
  * &lt;-- in freemarker form --&gt;
  * [ww.bean name="org.apache.struts.action2.example.counter.SimpleCounter" id="counter"]
- *   [ww:param name="foo" value="BAR"/]
- *   The value of foo is : [ww:property value="foo"/], when inside the bean tag.<br />
- * [/ww:bean]
+ *   [a:param name="foo" value="BAR"/]
+ *   The value of foo is : [a:property value="foo"/], when inside the bean tag.<br />
+ * [/a:bean]
  *
  * &lt;-- in jsp form --&gt;
- * &lt;ww:bean name="org.apache.struts.action2.example.counter.SimpleCounter" id="counter"&gt;
- * 	 &lt;ww:param name="foo" value="BAR" /&gt;
- *   The value of foot is : &lt;ww:property value="foo"/&gt;, when inside the bean tag &lt;br /&gt;
- * &lt;/ww:bean&gt;
+ * &lt;a:bean name="org.apache.struts.action2.example.counter.SimpleCounter" id="counter"&gt;
+ * 	 &lt;a:param name="foo" value="BAR" /&gt;
+ *   The value of foot is : &lt;a:property value="foo"/&gt;, when inside the bean tag &lt;br /&gt;
+ * &lt;/a:bean&gt;
  * <!-- END SNIPPET: examples -->
  * </pre>
  * <p/>
@@ -57,10 +57,10 @@ import java.io.Writer;
  * <p/>
  * <pre>
  * &lt;-- jsp form --&gt;
- * &lt;ww:property value="#counter" /&gt;
+ * &lt;a:property value="#counter" /&gt;
  *
  * &lt;-- freemarker form --&gt;
- * [ww:property value="#counter.foo"/]
+ * [a:property value="#counter.foo"/]
  * </pre>
  * <p/>
  * <p>In the property tag example, the <i>#</i> tells Ognl to search the context for the SimpleCounter class which has

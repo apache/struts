@@ -21,8 +21,8 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- END SNIPPET: exdescription -->
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;ww:action name="GenderMap" id="genders"/&gt;
- * &lt;ww:radio label="Gender" name="male" list="#genders.genders"/&gt;
+ * &lt;a:action name="GenderMap" id="genders"/&gt;
+ * &lt;a:radio label="Gender" name="male" list="#genders.genders"/&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *

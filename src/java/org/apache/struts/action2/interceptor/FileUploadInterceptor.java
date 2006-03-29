@@ -99,10 +99,10 @@ import java.util.*;
  *
  * And then you need to set encoding <code>multipart/form-data</code> in the form where the user selects the file to upload.
  * <pre>
- *   &lt;ww:form action="doUpload" method="post" enctype="multipart/form-data"&gt;
- *       &lt;ww:file name="upload" label="File"/&gt;
- *       &lt;ww:submit/&gt;
- *   &lt;/ww:form&gt;
+ *   &lt;a:form action="doUpload" method="post" enctype="multipart/form-data"&gt;
+ *       &lt;a:file name="upload" label="File"/&gt;
+ *       &lt;a:submit/&gt;
+ *   &lt;/a:form&gt;
  * </pre>
  *
  * And then in your action code you'll have access to the File object if you provide setters according to the

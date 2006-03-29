@@ -58,12 +58,12 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * <!-- START SNIPPET: example -->
  * 
  * &lt;!-- First Example --&gt;
- * &lt;ww:i18n name="struts.action.test.i18n.Shop"&gt;
- *     &lt;ww:text name="main.title"/&gt;
- * &lt;/ww:i18n&gt;
+ * &lt;a:i18n name="struts.action.test.i18n.Shop"&gt;
+ *     &lt;a:text name="main.title"/&gt;
+ * &lt;/a:i18n&gt;
  *
  * &lt;!-- Second Example --&gt;
- * &lt;ww:text name="main.title" /&gt;
+ * &lt;a:text name="main.title" /&gt;
  * 
  * <!-- END SNIPPET: example -->
  * </pre>
@@ -72,7 +72,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * <pre>
  * <!-- START SNIPPET: i18nExample -->
  * 
- * &lt;ww:text name="some.key" /&gt;
+ * &lt;a:text name="some.key" /&gt;
  * 
  * <!-- END SNIPPET: i18nExample -->
  * </pre>

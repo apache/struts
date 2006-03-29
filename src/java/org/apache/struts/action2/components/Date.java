@@ -109,10 +109,10 @@ import java.util.List;
  * <p/> <b>Examples</b>
  * <pre>
  *  <!-- START SNIPPET: example -->
- *  &lt;ww:date name="person.birthday" format="dd/MM/yyyy" /&gt;
- *  &lt;ww:date name="person.birthday" format="%{getText('some.i18n.key')}" /&gt;
- *  &lt;ww:date name="person.birthday" nice="true" /&gt;
- *  &lt;ww:date name="person.birthday" /&gt;
+ *  &lt;a:date name="person.birthday" format="dd/MM/yyyy" /&gt;
+ *  &lt;a:date name="person.birthday" format="%{getText('some.i18n.key')}" /&gt;
+ *  &lt;a:date name="person.birthday" nice="true" /&gt;
+ *  &lt;a:date name="person.birthday" /&gt;
  *  <!-- END SNIPPET: example -->
  * </pre>
  *

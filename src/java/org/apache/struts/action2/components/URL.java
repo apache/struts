@@ -66,19 +66,19 @@ import java.util.Map;
  * <!-- START SNIPPET: example -->
  * 
  * &lt;-- Example 1 --&gt;
- * &lt;ww:url value="editGadget.action"&gt;
- *     &lt;ww:param name="id" value="%{selected}" /&gt;
- * &lt;/ww:url&gt;
+ * &lt;a:url value="editGadget.action"&gt;
+ *     &lt;a:param name="id" value="%{selected}" /&gt;
+ * &lt;/a:url&gt;
  *
  * &lt;-- Example 2 --&gt;
- * &lt;ww:url action="editGadget"&gt;
- *     &lt;ww:param name="id" value="%{selected}" /&gt;
- * &lt;/ww:url&gt;
+ * &lt;a:url action="editGadget"&gt;
+ *     &lt;a:param name="id" value="%{selected}" /&gt;
+ * &lt;/a:url&gt;
  * 
  * &lt;-- Example 3--&gt;
- * &lt;ww:url includeParams="get"  &gt;
+ * &lt;a:url includeParams="get"  &gt;
  *     &lt:param name="id" value="%{'22'}" /&gt;
- * &lt;/ww:url&gt;
+ * &lt;/a:url&gt;
  * 
  * <!-- END SNIPPET: example -->
  * </pre>

@@ -41,7 +41,7 @@ import java.util.Iterator;
  * <pre>
  * <!-- START SNIPPET: example -->
  *
- * &lt;ww:form ... /&gt;
+ * &lt;a:form ... /&gt;
  *
  * <!-- END SNIPPET: example -->
  * </pre>

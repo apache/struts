@@ -100,11 +100,11 @@ import java.util.Map;
  * &lt;html&gt;
  *   &lt;head&gt;
  *     &lt;title&gt;Please wait&lt;/title&gt;
- *     &lt;meta http-equiv="refresh" content="5;url=&lt;ww:url includeParams="all" /&gt;"/&gt;
+ *     &lt;meta http-equiv="refresh" content="5;url=&lt;a:url includeParams="all" /&gt;"/&gt;
  *   &lt;/head&gt;
  *   &lt;body&gt;
  *     Please wait while we process your request.
- *     Click &lt;a href="&lt;ww:url includeParams="all" /&gt;">&lt;/a&gt; if this page does not reload automatically.
+ *     Click &lt;a href="&lt;a:url includeParams="all" /&gt;">&lt;/a&gt; if this page does not reload automatically.
  *   &lt;/body&gt;
  * &lt;/html&gt;
  * </pre>

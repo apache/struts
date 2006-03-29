@@ -18,10 +18,10 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <pre>
  * <!-- START SNIPPET: example1 -->
- * &lt;ww:a id="link1" theme="ajax" href="/DoIt.action" errorText="An error ocurred" showErrorTransportText="true"&gt;
+ * &lt;a:a id="link1" theme="ajax" href="/DoIt.action" errorText="An error ocurred" showErrorTransportText="true"&gt;
  *     &lt;img border="none" src="&lt;%=request.getContextPath()%&gt;/images/delete.gif"/&gt;
- *     &lt;ww:param name="id" value="1"/&gt;
- * &lt;/ww:a&gt;
+ *     &lt;a:param name="id" value="1"/&gt;
+ * &lt;/a:a&gt;
  * <!-- END SNIPPET: example1 -->
  * </pre>
  *
@@ -54,9 +54,9 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <pre>
  * <!-- START SNIPPET: example3 -->
- * &lt;ww:a id="test" theme="ajax" href="/simpeResult.action" preInvokeJS="confirm(\'You sure\')"&gt;
+ * &lt;a:a id="test" theme="ajax" href="/simpeResult.action" preInvokeJS="confirm(\'You sure\')"&gt;
  * 	A
- * &lt;/ww:a&gt;
+ * &lt;/a:a&gt;
  * <!-- END SNIPPET: example3 -->
  * </pre>
  *

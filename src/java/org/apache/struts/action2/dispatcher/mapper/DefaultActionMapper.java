@@ -53,11 +53,11 @@ import java.util.Map;
  *
  * <pre>
  * <!-- START SNIPPET: method-example -->
- * &lt;ww:form name="baz"&gt;
- *     &lt;ww:textfield label="Enter your name" name="person.name"/&gt;
- *     &lt;ww:submit value="Create person"/&gt;
- *     &lt;ww:submit name="method:anotherMethod" value="Cancel"/&gt;
- * &lt;/ww:form&gt;
+ * &lt;a:form name="baz"&gt;
+ *     &lt;a:textfield label="Enter your name" name="person.name"/&gt;
+ *     &lt;a:submit value="Create person"/&gt;
+ *     &lt;a:submit name="method:anotherMethod" value="Cancel"/&gt;
+ * &lt;/a:form&gt;
  * <!-- END SNIPPET: method-example -->
  * </pre>
  *
@@ -73,11 +73,11 @@ import java.util.Map;
  *
  * <pre>
  * <!-- START SNIPPET: action-example -->
- * &lt;ww:form name="baz"&gt;
- *     &lt;ww:textfield label="Enter your name" name="person.name"/&gt;
- *     &lt;ww:submit value="Create person"/&gt;
- *     &lt;ww:submit name="action:anotherAction" value="Cancel"/&gt;
- * &lt;/ww:form&gt;
+ * &lt;a:form name="baz"&gt;
+ *     &lt;a:textfield label="Enter your name" name="person.name"/&gt;
+ *     &lt;a:submit value="Create person"/&gt;
+ *     &lt;a:submit name="action:anotherAction" value="Cancel"/&gt;
+ * &lt;/a:form&gt;
  * <!-- END SNIPPET: action-example -->
  * </pre>
  *
@@ -93,11 +93,11 @@ import java.util.Map;
  *
  * <pre>
  * <!-- START SNIPPET: redirect-example -->
- * &lt;ww:form name="baz"&gt;
- *     &lt;ww:textfield label="Enter your name" name="person.name"/&gt;
- *     &lt;ww:submit value="Create person"/&gt;
- *     &lt;ww:submit name="redirect:www.google.com" value="Cancel"/&gt;
- * &lt;/ww:form&gt;
+ * &lt;a:form name="baz"&gt;
+ *     &lt;a:textfield label="Enter your name" name="person.name"/&gt;
+ *     &lt;a:submit value="Create person"/&gt;
+ *     &lt;a:submit name="redirect:www.google.com" value="Cancel"/&gt;
+ * &lt;/a:form&gt;
  * <!-- END SNIPPET: redirect-example -->
  * </pre>
  *
@@ -113,11 +113,11 @@ import java.util.Map;
  *
  * <pre>
  * <!-- START SNIPPET: redirect-action-example -->
- * &lt;ww:form name="baz"&gt;
- *     &lt;ww:textfield label="Enter your name" name="person.name"/&gt;
- *     &lt;ww:submit value="Create person"/&gt;
- *     &lt;ww:submit name="redirect-action:dashboard" value="Cancel"/&gt;
- * &lt;/ww:form&gt;
+ * &lt;a:form name="baz"&gt;
+ *     &lt;a:textfield label="Enter your name" name="person.name"/&gt;
+ *     &lt;a:submit value="Create person"/&gt;
+ *     &lt;a:submit name="redirect-action:dashboard" value="Cancel"/&gt;
+ * &lt;/a:form&gt;
  * <!-- END SNIPPET: redirect-action-example -->
  * </pre>
  *

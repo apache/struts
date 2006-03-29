@@ -30,7 +30,7 @@ import java.util.Map;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;ww:debug/&gt;
+ * &lt;a:debug/&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *

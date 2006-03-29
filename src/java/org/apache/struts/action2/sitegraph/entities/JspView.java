@@ -14,10 +14,10 @@ public class JspView extends FileBasedView {
     }
 
     protected Pattern getActionPattern() {
-        return Pattern.compile("<ww:action [^>]*name=\"([^\"]+)\"[^>]*>");
+        return Pattern.compile("<a:action [^>]*name=\"([^\"]+)\"[^>]*>");
     }
 
     protected Pattern getFormPattern() {
-        return Pattern.compile("<ww:form [^>]*action=\"([^\"]+)\"[^>]*>");
+        return Pattern.compile("<a:form [^>]*action=\"([^\"]+)\"[^>]*>");
     }
 }

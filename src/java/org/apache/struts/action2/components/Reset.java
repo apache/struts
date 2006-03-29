@@ -25,14 +25,14 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;ww:reset value="%{'Reset'}" /&gt;
+ * &lt;a:reset value="%{'Reset'}" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
  * <pre>
  * <!-- START SNIPPET: example2 -->
  * Render an button reset:
- * &lt;ww:reset type="button" value="%{'Reset'}" label="Reset the form"/&gt;
+ * &lt;a:reset type="button" value="%{'Reset'}" label="Reset the form"/&gt;
  * <!-- END SNIPPET: example2 -->
  * </pre>
  *

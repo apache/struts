@@ -34,13 +34,13 @@ import org.apache.commons.logging.LogFactory;
  * <pre>
  * <!-- START SNIPPET: example -->
  * 
- * <ww:push value="myBean">
+ * <a:push value="myBean">
  *     <!-- Example 1: -->
- *     <ww:property value="myBeanProperty" />
+ *     <a:property value="myBeanProperty" />
  *
  *     <!-- Example 2: -->
- *     <ww:property value="myBeanProperty" default="a default value" />
- * </ww:push>
+ *     <a:property value="myBeanProperty" default="a default value" />
+ * </a:push>
  * 
  * <!-- END SNIPPET: example -->
  * </pre>
@@ -58,7 +58,7 @@ import org.apache.commons.logging.LogFactory;
  * <pre>
  * <!-- START SNIPPET: i18nExample -->
  * 
- * &lt;ww:property value="getText('some.key')" /&gt;
+ * &lt;a:property value="getText('some.key')" /&gt;
  * 
  * <!-- END SNIPPET: i18nExample -->
  * </pre>

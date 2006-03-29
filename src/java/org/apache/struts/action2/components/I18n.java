@@ -38,9 +38,9 @@ import java.util.ResourceBundle;
  * <pre>
  * <!-- START SNIPPET: example -->
  * 
- * &lt;ww:i18n name="myCustomBundle"&gt;
- *    The i18n value for key aaa.bbb.ccc in myCustomBundle is &lt;ww:property value="text('aaa.bbb.ccc')" /&gt;
- * &lt;/ww:i18n&gt;
+ * &lt;a:i18n name="myCustomBundle"&gt;
+ *    The i18n value for key aaa.bbb.ccc in myCustomBundle is &lt;a:property value="text('aaa.bbb.ccc')" /&gt;
+ * &lt;/a:i18n&gt;
  * 
  * <!-- END SNIPPET: example -->
  * </pre>
@@ -49,9 +49,9 @@ import java.util.ResourceBundle;
  * <pre>
  * <!-- START SNIPPET: i18nExample -->
  * 
- * &lt;ww:i18n name="some.package.bundle" &gt;
- *      &lt;ww:text name="some.key" /&gt;
- * &lt;/ww:i18n&gt;
+ * &lt;a:i18n name="some.package.bundle" &gt;
+ *      &lt;a:text name="some.key" /&gt;
+ * &lt;/a:i18n&gt;
  * 
  * <!-- END SNIPPET: i18nExample -->
  * </pre>

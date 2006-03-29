@@ -22,10 +22,10 @@ import javax.servlet.http.HttpServletResponse;
  * <pre>
  * <!-- START SNIPPET: example -->
  * 
- *    &lt;ww:actionerror /&gt;
- *    &lt;ww:form .... &gt;>
+ *    &lt;a:actionerror /&gt;
+ *    &lt;a:form .... &gt;>
  *       ....
- *    &lt;/ww:form&gt;
+ *    &lt;/a:form&gt;
  *    
  * <!-- END SNIPPET: example -->
  * </pre>

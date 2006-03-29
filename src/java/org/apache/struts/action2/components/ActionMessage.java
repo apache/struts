@@ -21,10 +21,10 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- *    &lt;ww:actionmessage /&gt;
- *    &lt;ww:form .... &gt;
+ *    &lt;a:actionmessage /&gt;
+ *    &lt;a:form .... &gt;
  *       ....
- *    &lt;/ww:form&gt;
+ *    &lt;/a:form&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *

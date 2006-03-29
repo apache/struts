@@ -82,14 +82,14 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * <!-- END SNIPPET: code -->
  *
  * <!-- START SNIPPET: example -->
- * &lt;ww:append id="myAppendIterator"&gt;
- *		&lt;ww:param value="%{myList1}" /&gt;
- *		&lt;ww:param value="%{myList2}" /&gt;
- *		&lt;ww:param value="%{myList3}" /&gt;
- * &lt;/ww:append&gt;
- * &lt;ww:iterator value="%{#myAppendIterator}"&gt;
- *		&lt;ww:property /&gt;
- * &lt;/ww:iterator&gt;
+ * &lt;a:append id="myAppendIterator"&gt;
+ *		&lt;a:param value="%{myList1}" /&gt;
+ *		&lt;a:param value="%{myList2}" /&gt;
+ *		&lt;a:param value="%{myList3}" /&gt;
+ * &lt;/a:append&gt;
+ * &lt;a:iterator value="%{#myAppendIterator}"&gt;
+ *		&lt;a:property /&gt;
+ * &lt;/a:iterator&gt;
  * <!-- END SNIPPET: example -->
  *
  *

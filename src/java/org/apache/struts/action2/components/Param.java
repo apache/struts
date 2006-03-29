@@ -57,9 +57,9 @@ import java.io.Writer;
  * This second example demonstrates how the text tag can use parameters from this param tag.
  * <!-- START SNIPPET: example2 -->
  * <pre>
- * &lt;ww:text name="cart.total.cost"&gt;
- *     &lt;ww:param value="#session.cartTotal"/&gt;
- * &lt;/ww:text&gt;
+ * &lt;a:text name="cart.total.cost"&gt;
+ *     &lt;a:param value="#session.cartTotal"/&gt;
+ * &lt;/a:text&gt;
  * </pre>
  * <!-- END SNIPPET: example2 -->
  * <p/>

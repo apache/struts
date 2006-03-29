@@ -15,9 +15,9 @@ import javax.servlet.http.HttpServletResponse;
  * <pre>
  * <!-- START SNIPPET: example -->
  * &lt;-- example one --&gt;
- * &lt;ww:hidden name="foo" /&gt;
+ * &lt;a:hidden name="foo" /&gt;
  * &lt;-- example two --&gt;
- * &lt;ww:hidden name="foo" value="bar" /&gt;
+ * &lt;a:hidden name="foo" value="bar" /&gt;
  *
  * Example One Resulting HTML (if foo evaluates to bar):
  * &lt;input type="hidden" name="foo" value="bar" /&gt;

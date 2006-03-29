@@ -20,24 +20,24 @@ import java.util.List;
  * <!-- END SNIPPET: exdesc -->
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;ww:tabbedPanel id="test2" theme="simple" &gt;
- *     &lt;ww:panel id="left" tabName="left" theme="ajax"&gt;
+ * &lt;a:tabbedPanel id="test2" theme="simple" &gt;
+ *     &lt;a:panel id="left" tabName="left" theme="ajax"&gt;
  *         This is the left pane&lt;br/&gt;
- *         &lt;ww:form &gt;
- *             &lt;ww:textfield name="tt" label="Test Text" /&gt;  &lt;br/&gt;
- *             &lt;ww:textfield name="tt2" label="Test Text2" /&gt;
- *         &lt;/ww:form&gt;
- *     &lt;/ww:panel&gt;
- *     &lt;ww:panel remote="true" href="/AjaxTest.action" id="ryh1" theme="ajax" tabName="remote one" /&gt;
- *     &lt;ww:panel id="middle" tabName="middle" theme="ajax"&gt;
+ *         &lt;a:form &gt;
+ *             &lt;a:textfield name="tt" label="Test Text" /&gt;  &lt;br/&gt;
+ *             &lt;a:textfield name="tt2" label="Test Text2" /&gt;
+ *         &lt;/a:form&gt;
+ *     &lt;/a:panel&gt;
+ *     &lt;a:panel remote="true" href="/AjaxTest.action" id="ryh1" theme="ajax" tabName="remote one" /&gt;
+ *     &lt;a:panel id="middle" tabName="middle" theme="ajax"&gt;
  *         middle tab&lt;br/&gt;
- *         &lt;ww:form &gt;
- *             &lt;ww:textfield name="tt" label="Test Text44" /&gt;  &lt;br/&gt;
- *             &lt;ww:textfield name="tt2" label="Test Text442" /&gt;
- *         &lt;/ww:form&gt;
- *     &lt;/ww:panel&gt;
- *     &lt;ww:panel remote="true" href="/AjaxTest.action"  id="ryh21" theme="ajax" tabName="remote right" /&gt;
- * &lt;/ww:tabbedPanel&gt;
+ *         &lt;a:form &gt;
+ *             &lt;a:textfield name="tt" label="Test Text44" /&gt;  &lt;br/&gt;
+ *             &lt;a:textfield name="tt2" label="Test Text442" /&gt;
+ *         &lt;/a:form&gt;
+ *     &lt;/a:panel&gt;
+ *     &lt;a:panel remote="true" href="/AjaxTest.action"  id="ryh21" theme="ajax" tabName="remote right" /&gt;
+ * &lt;/a:tabbedPanel&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
@@ -51,10 +51,10 @@ import java.util.List;
  *
  * <pre>
  * <!-- START SNIPPET: example2 -->
- * &lt;link rel="stylesheet" type="text/css" href="&lt;ww:url value="/webwork/tabs.css"/&gt;"&gt;
- * &lt;link rel="stylesheet" type="text/css" href="&lt;ww:url value="/webwork/niftycorners/niftyCorners.css"/&gt;"&gt;
- * &lt;link rel="stylesheet" type="text/css" href="&lt;ww:url value="/webwork/niftycorners/niftyPrint.css"/&gt;" media="print"&gt;
- * &lt;script type="text/javascript" src="&lt;ww:url value="/webwork/niftycorners/nifty.js"/&gt;"&gt;&lt;/script&gt;
+ * &lt;link rel="stylesheet" type="text/css" href="&lt;a:url value="/webwork/tabs.css"/&gt;"&gt;
+ * &lt;link rel="stylesheet" type="text/css" href="&lt;a:url value="/webwork/niftycorners/niftyCorners.css"/&gt;"&gt;
+ * &lt;link rel="stylesheet" type="text/css" href="&lt;a:url value="/webwork/niftycorners/niftyPrint.css"/&gt;" media="print"&gt;
+ * &lt;script type="text/javascript" src="&lt;a:url value="/webwork/niftycorners/nifty.js"/&gt;"&gt;&lt;/script&gt;
  * &lt;script type="text/javascript"&gt;
  *     dojo.event.connect(window, "onload", function() {
  *         if (!NiftyCheck())

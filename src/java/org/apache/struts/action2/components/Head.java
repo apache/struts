@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- START SNIPPET: example1 -->
  * &lt;head&gt;
  *   &lt;title&gt;My page&lt;/title&gt;
- *   &lt;ww:head/&gt;
+ *   &lt;a:head/&gt;
  * &lt;/head&gt;
  * <!-- END SNIPPET: example1 -->
  * </pre>
@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- START SNIPPET: example2 -->
  * &lt;head&gt;
  *   &lt;title&gt;My page&lt;/title&gt;
- *   &lt;ww:head theme="ajax" calendarcss="calendar-green"/&gt;
+ *   &lt;a:head theme="ajax" calendarcss="calendar-green"/&gt;
  * &lt;/head&gt;
  * <!-- END SNIPPET: example2 -->
  * </pre>
@@ -52,7 +52,7 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- START SNIPPET: example3 -->
  * &lt;head&gt;
  *   &lt;title&gt;My page&lt;/title&gt;
- *   &lt;ww:head theme="ajax" debug="true"/&gt;
+ *   &lt;a:head theme="ajax" debug="true"/&gt;
  * &lt;/head&gt;
  * <!-- END SNIPPET: example3 -->
  * </pre>

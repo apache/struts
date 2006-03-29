@@ -26,15 +26,15 @@ import java.io.Writer;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- *  &lt;ww:if test="%{false}"&gt;
+ *  &lt;a:if test="%{false}"&gt;
  * 	    &lt;div&gt;Will Not Be Executed&lt;/div&gt;
- *  &lt;/ww:if&gt;
- * 	&lt;ww:elseif test="%{true}"&gt;
+ *  &lt;/a:if&gt;
+ * 	&lt;a:elseif test="%{true}"&gt;
  * 	    &lt;div&gt;Will Be Executed&lt;/div&gt;
- *  &lt;/ww:elseif&gt;
- *  &lt;ww:else&gt;
+ *  &lt;/a:elseif&gt;
+ *  &lt;a:else&gt;
  * 	    &lt;div&gt;Will Not Be Executed&lt;/div&gt;
- *  &lt;/ww:else&gt;
+ *  &lt;/a:else&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *

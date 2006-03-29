@@ -22,21 +22,21 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;ww:submit value="%{'Submit'}" /&gt;
+ * &lt;a:submit value="%{'Submit'}" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  * 
  * <pre>
  * <!-- START SNIPPET: example2 -->
  * Render an image submit:
- * &lt;ww:submit type="image" value="%{'Submit'}" label="Submit the form" src="submit.gif"/&gt;
+ * &lt;a:submit type="image" value="%{'Submit'}" label="Submit the form" src="submit.gif"/&gt;
  * <!-- END SNIPPET: example2 -->
  * </pre>
  *
  * <pre>
  * <!-- START SNIPPET: example3 -->
  * Render an button submit:
- * &lt;ww:submit type="button" value="%{'Submit'}" label="Submit the form"/&gt;
+ * &lt;a:submit type="button" value="%{'Submit'}" label="Submit the form"/&gt;
  * <!-- END SNIPPET: example3 -->
  * </pre>
  *
@@ -65,7 +65,7 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- START SNIPPET: ajxExample1 -->
  * Remote form replacing another div:
  * &lt;div id='two' style="border: 1px solid yellow;"&gt;Initial content&lt;/div&gt;
- * &lt;ww:form
+ * &lt;a:form
  *       id='theForm2'
  *       cssStyle="border: 1px solid green;"
  *       action='/AjaxRemoteForm.action'
@@ -73,9 +73,9 @@ import javax.servlet.http.HttpServletResponse;
  *       theme="ajax"&gt;
  *
  *   &lt;input type='text' name='data' value='WebWork User' /&gt;
- *   &lt;ww:submit value="GO2" theme="ajax" resultDivId="two" /&gt;
+ *   &lt;a:submit value="GO2" theme="ajax" resultDivId="two" /&gt;
  *
- * &lt;/ww:form &gt;
+ * &lt;/a:form &gt;
  * <!-- END SNIPPET: ajxExample1 -->
  * </pre>
  * 
@@ -91,15 +91,15 @@ import javax.servlet.http.HttpServletResponse;
  * 
  * <pre>
  * <!-- START SNIPPET: ajxExample2 -->
- * &lt;ww:form id="frm1" action="newPersonWithXMLResult" theme="ajax"  &gt;
- *     &lt;ww:textfield label="Name" name="person.name" value="person.name" size="20" required="true" /&gt;
- *     &lt;ww:submit id="submitBtn" value="Save" theme="ajax"  cssClass="primary"  notifyTopics="personUpdated, systemWorking" /&gt;
- * &lt;/ww:form &gt;
+ * &lt;a:form id="frm1" action="newPersonWithXMLResult" theme="ajax"  &gt;
+ *     &lt;a:textfield label="Name" name="person.name" value="person.name" size="20" required="true" /&gt;
+ *     &lt;a:submit id="submitBtn" value="Save" theme="ajax"  cssClass="primary"  notifyTopics="personUpdated, systemWorking" /&gt;
+ * &lt;/a:form &gt;
  * 
- * &lt;ww:div href="/listPeople.action" theme="ajax" errorText="error opps"
+ * &lt;a:div href="/listPeople.action" theme="ajax" errorText="error opps"
  *         loadingText="loading..." id="cart-body" &gt;
- *     &lt;ww:action namespace="" name="listPeople" executeResult="true" /&gt;
- * &lt;/ww:div&gt;
+ *     &lt;a:action namespace="" name="listPeople" executeResult="true" /&gt;
+ * &lt;/a:div&gt;
  * <!-- END SNIPPET: ajxExample2 -->
  * </pre>
  *
@@ -133,10 +133,10 @@ import javax.servlet.http.HttpServletResponse;
  *     }
  * &lt;/script&gt;
  *
- * &lt;ww:form id="frm1" action="newPersonWithXMLResult" theme="ajax"  &gt;
- *     &lt;ww:textfield label="Name" name="person.name" value="person.name" size="20" required="true" /&gt;
- *     &lt;ww:submit id="submitBtn" value="Save" theme="ajax"  cssClass="primary"  onLoadJS="doGreatThings(data, type)" /&gt; 
- * &lt;/ww:form&gt;
+ * &lt;a:form id="frm1" action="newPersonWithXMLResult" theme="ajax"  &gt;
+ *     &lt;a:textfield label="Name" name="person.name" value="person.name" size="20" required="true" /&gt;
+ *     &lt;a:submit id="submitBtn" value="Save" theme="ajax"  cssClass="primary"  onLoadJS="doGreatThings(data, type)" /&gt; 
+ * &lt;/a:form&gt;
  * <!-- END SNIPPET: ajxExample3 -->
  * </pre>
  *

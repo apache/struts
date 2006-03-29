@@ -32,15 +32,15 @@ import java.util.Iterator;
  * <!-- START SNIPPET: example1description -->
  *
  * <p>The following example retrieves the value of the getDays() method of the current object on the value stack and
- * uses it to iterate over. The &lt;ww:property/&gt; tag prints out the current value of the iterator.</p>
+ * uses it to iterate over. The &lt;a:property/&gt; tag prints out the current value of the iterator.</p>
  *
  * <!-- END SNIPPET: example1description -->
  *
  * <pre>
  * <!-- START SNIPPET: example1code -->
- * &lt;ww:iterator value="days"&gt;
- *   &lt;p&gt;day is: &lt;ww:property/&gt;&lt;/p&gt;
- * &lt;/ww:iterator&gt;
+ * &lt;a:iterator value="days"&gt;
+ *   &lt;p&gt;day is: &lt;a:property/&gt;&lt;/p&gt;
+ * &lt;/a:iterator&gt;
  * <!-- END SNIPPET: example1code -->
  * </pre>
  *
@@ -58,26 +58,26 @@ import java.util.Iterator;
  * <pre>
  * <!-- START SNIPPET: example2code -->
  * 
- * &lt;ww:bean name="org.apache.struts.action2.example.IteratorExample" id="it"&gt;
- *   &lt;ww:param name="day" value="'foo'"/&gt;
- *   &lt;ww:param name="day" value="'bar'"/&gt;
- * &lt;/ww:bean&gt;
+ * &lt;a:bean name="org.apache.struts.action2.example.IteratorExample" id="it"&gt;
+ *   &lt;a:param name="day" value="'foo'"/&gt;
+ *   &lt;a:param name="day" value="'bar'"/&gt;
+ * &lt;/a:bean&gt;
  * <p/>
  * &lt;table border="0" cellspacing="0" cellpadding="1"&gt;
  * &lt;tr&gt;
  *   &lt;th&gt;Days of the week&lt;/th&gt;
  * &lt;/tr&gt;
  * <p/>
- * &lt;ww:iterator value="#it.days" status="rowstatus"&gt;
+ * &lt;a:iterator value="#it.days" status="rowstatus"&gt;
  *   &lt;tr&gt;
- *     &lt;ww:if test="#rowstatus.odd == true"&gt;
- *       &lt;td style="background: grey"&gt;&lt;ww:property/&gt;&lt;/td&gt;
- *     &lt;/ww:if&gt;
- *     &lt;ww:else&gt;
- *       &lt;td&gt;&lt;ww:property/&gt;&lt;/td&gt;
- *     &lt;/ww:else&gt;
+ *     &lt;a:if test="#rowstatus.odd == true"&gt;
+ *       &lt;td style="background: grey"&gt;&lt;a:property/&gt;&lt;/td&gt;
+ *     &lt;/a:if&gt;
+ *     &lt;a:else&gt;
+ *       &lt;td&gt;&lt;a:property/&gt;&lt;/td&gt;
+ *     &lt;/a:else&gt;
  *   &lt;/tr&gt;
- * &lt;/ww:iterator&gt;
+ * &lt;/a:iterator&gt;
  * &lt;/table&gt;
  * 
  * <!-- END SNIPPET: example2code -->
@@ -114,7 +114,7 @@ import java.util.Iterator;
  *
  * </p> The next example iterates over a an action collection and passes every iterator value to another action. The
  * trick here lies in the use of the '[0]' operator. It takes the current iterator value and passes it on to the edit
- * action. Using the '[0]' operator has the same effect as using &gt;ww:property /&gt;. (The latter, however, does not
+ * action. Using the '[0]' operator has the same effect as using &gt;a:property /&gt;. (The latter, however, does not
  * work from inside the param tag). </p>
  *
  * <!-- END SNIPPET: example4description -->
@@ -122,16 +122,16 @@ import java.util.Iterator;
  * <pre>
  * <!-- START SNIPPET: example4code -->
  * 
- * 		&lt;ww:action name="entries" id="entries"/&gt;
- * 		&lt;ww:iterator value="#entries.entries" &gt;
- * 			&lt;ww:property value="name" /&gt;
- * 			&lt;ww:property /&gt;
- * 			&lt;ww:push value="..."&gt;
- * 				&lt;ww:action name="edit" id="edit" &gt;
- * 					&lt;ww:param name="entry" value="[0]" /&gt;
- * 				&lt;/ww:action&gt;
+ * 		&lt;a:action name="entries" id="entries"/&gt;
+ * 		&lt;a:iterator value="#entries.entries" &gt;
+ * 			&lt;a:property value="name" /&gt;
+ * 			&lt;a:property /&gt;
+ * 			&lt;a:push value="..."&gt;
+ * 				&lt;a:action name="edit" id="edit" &gt;
+ * 					&lt;a:param name="entry" value="[0]" /&gt;
+ * 				&lt;/a:action&gt;
  * 			&lt;/push&gt;
- * 		&lt;/ww:iterator&gt;
+ * 		&lt;/a:iterator&gt;
  * 
  * <!-- END SNIPPET: example4code -->
  * </pre>

@@ -42,15 +42,15 @@ import java.util.Comparator;
  * <!-- START SNIPPET: example -->
  *
  * USAGE 1:
- * &lt;ww:sort comparator="myComparator" source="myList"&gt;
- *      &lt;ww:iterator&gt;
+ * &lt;a:sort comparator="myComparator" source="myList"&gt;
+ *      &lt;a:iterator&gt;
  * 		&lt;!-- do something with each sorted elements --&gt;
- * 		&lt;ww:property value="..." /&gt;
- *      &lt;/ww:iterator&gt;
- * &lt;/ww:sort&gt;
+ * 		&lt;a:property value="..." /&gt;
+ *      &lt;/a:iterator&gt;
+ * &lt;/a:sort&gt;
  *
  * USAGE 2:
- * &lt;ww:sort id="mySortedList" comparator="myComparator" source="myList" /&gt;
+ * &lt;a:sort id="mySortedList" comparator="myComparator" source="myList" /&gt;
  *
  * &lt;%
  *    Iterator sortedIterator = (Iterator) pageContext.getAttribute("mySortedList");

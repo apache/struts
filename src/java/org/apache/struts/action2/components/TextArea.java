@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;ww:textarea label="Comments" name="comments" cols="30" rows="8"/&gt;
+ * &lt;a:textarea label="Comments" name="comments" cols="30" rows="8"/&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *

@@ -34,8 +34,8 @@ import java.io.Writer;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;ww:set name="personName" value="person.name"/&gt;
- * Hello, &lt;ww:property value="#personName"/&gt;. How are you?
+ * &lt;a:set name="personName" value="person.name"/&gt;
+ * Hello, &lt;a:property value="#personName"/&gt;. How are you?
  * <!-- END SNIPPET: example -->
  * </pre>
  *

@@ -39,22 +39,22 @@ import org.apache.commons.logging.LogFactory;
  * Example One:
  * <pre>
  * Generate a simple iterator
- * &lt;ww:generator val="%{'aaa,bbb,ccc,ddd,eee'}"&gt;
- *	&lt;ww:iterator&gt;
- *		&lt;ww:property /&gt;&lt;br/&gt;
- *	&lt;/ww:iterator&gt;
- * &lt;/ww:generator&gt;
+ * &lt;a:generator val="%{'aaa,bbb,ccc,ddd,eee'}"&gt;
+ *	&lt;a:iterator&gt;
+ *		&lt;a:property /&gt;&lt;br/&gt;
+ *	&lt;/a:iterator&gt;
+ * &lt;/a:generator&gt;
  * </pre>
  * This generates an iterator and print it out using the iterator tag.
  *
  * Example Two:
  * <pre>
  * Generate an iterator with count attribute
- * &lt;ww:generator val="%{'aaa,bbb,ccc,ddd,eee'}" count="3"&gt;
- *	&lt;ww:iterator&gt;
- *		&lt;ww:property /&gt;&lt;br/&gt;
- *	&lt;/ww:iterator&gt;
- * &lt;/ww:generator&gt;
+ * &lt;a:generator val="%{'aaa,bbb,ccc,ddd,eee'}" count="3"&gt;
+ *	&lt;a:iterator&gt;
+ *		&lt;a:property /&gt;&lt;br/&gt;
+ *	&lt;/a:iterator&gt;
+ * &lt;/a:generator&gt;
  * </pre>
  * This generates an iterator, but only 3 entries will be available in the iterator
  * generated, namely aaa, bbb and ccc respectively because count attribute is set to 3
@@ -62,7 +62,7 @@ import org.apache.commons.logging.LogFactory;
  * Example Three:
  * <pre>
  * Generate an iterator with id attribute
- * &lt;ww:generator val="%{'aaa,bbb,ccc,ddd,eee'}" count="4" separator="," id="myAtt" /&gt;
+ * &lt;a:generator val="%{'aaa,bbb,ccc,ddd,eee'}" count="4" separator="," id="myAtt" /&gt;
  * &lt;%
  * 	Iterator i = (Iterator) pageContext.getAttribute("myAtt");
  * 	while(i.hasNext()) {
@@ -78,11 +78,11 @@ import org.apache.commons.logging.LogFactory;
  * Example Four:
  * <pre>
  * Generate an iterator with comparator attribute
- * &lt;ww:generator val="%{'aaa,bbb,ccc,ddd,eee'}" converter="%{myConverter}"&gt;
- *	&lt;ww:iterator&gt;
- * 		&lt;ww:property /&gt;&lt;br/&gt;
- * 	&lt;/ww:iterator&gt;
- * &lt;/ww:generator&gt;
+ * &lt;a:generator val="%{'aaa,bbb,ccc,ddd,eee'}" converter="%{myConverter}"&gt;
+ *	&lt;a:iterator&gt;
+ * 		&lt;a:property /&gt;&lt;br/&gt;
+ * 	&lt;/a:iterator&gt;
+ * &lt;/a:generator&gt;
  *
  *
  * public class GeneratorTagAction extends ActionSupport {

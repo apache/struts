@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- END SNIPPET: exdescription -->
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;ww:label label="%{text('user_name')}" name="userName" /&gt;
+ * &lt;a:label label="%{text('user_name')}" name="userName" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *

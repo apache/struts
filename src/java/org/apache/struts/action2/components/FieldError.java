@@ -25,26 +25,26 @@ import java.util.List;
  * <!-- START SNIPPET: example -->
  * 
  *    &lt;!-- example 1 --&gt;
- *    &lt;ww:fielderror /&gt;
+ *    &lt;a:fielderror /&gt;
  *
  *    &lt;!-- example 2 --&gt;
- *    &lt;ww:fielderror&gt;
- *         &lt;ww:param&gt;field1&lt;/ww:param&gt;
- *         &lt;ww:param&gt;field2&lt;/ww:param&gt;
- *    &lt;/ww:fielderror&gt;
- *    &lt;ww:form .... &gt;>
+ *    &lt;a:fielderror&gt;
+ *         &lt;a:param&gt;field1&lt;/a:param&gt;
+ *         &lt;a:param&gt;field2&lt;/a:param&gt;
+ *    &lt;/a:fielderror&gt;
+ *    &lt;a:form .... &gt;>
  *       ....
- *    &lt;/ww:form&gt;
+ *    &lt;/a:form&gt;
  *
  *    OR
  *
- *    &lt;ww:fielderror&gt;
- *    		&lt;ww:param value="%{'field1'}" /&gt;
- *    		&lt;ww:param value="%{'field2'}" /&gt;
- *    &lt;/ww:fielderror&gt;
- *    &lt;ww:form .... &gt;>
+ *    &lt;a:fielderror&gt;
+ *    		&lt;a:param value="%{'field1'}" /&gt;
+ *    		&lt;a:param value="%{'field2'}" /&gt;
+ *    &lt;/a:fielderror&gt;
+ *    &lt;a:form .... &gt;>
  *       ....
- *    &lt;/ww:form&gt;
+ *    &lt;/a:form&gt;
  *    
  * <!-- END SNIPPET: example -->
  * </pre>

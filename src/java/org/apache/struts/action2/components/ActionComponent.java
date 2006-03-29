@@ -71,16 +71,16 @@ import java.util.Map;
  * <!-- START SNIPPET: example -->
  *  <div>The following action tag will execute result and include it in this page</div>
  *	<br />
- *	<ww:action name="actionTagAction" executeResult="true" />
+ *	<a:action name="actionTagAction" executeResult="true" />
  *  <br />
  *  <div>The following action tag will do the same as above, but invokes method specialMethod in action</div>
  *	<br />
- *	<ww:action name="actionTagAction!specialMethod" executeResult="true" />
+ *	<a:action name="actionTagAction!specialMethod" executeResult="true" />
  *  <br />
  *  <div>The following action tag will not execute result, but put a String in request scope
  *       under an id "stringByAction" which will be retrieved using property tag</div>
- *  <ww:action name="actionTagAction!default" executeResult="false" />
- *  <ww:property value="#attr.stringByAction" />
+ *  <a:action name="actionTagAction!default" executeResult="false" />
+ *  <a:property value="#attr.stringByAction" />
  * <!-- END SNIPPET: example -->
  * </pre>
  *

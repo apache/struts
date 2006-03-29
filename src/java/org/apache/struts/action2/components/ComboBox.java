@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  * span from first to last. The population is done via javascript, and requires that this tag be surrounded by a
  * &lt;form&gt;.<p/>
  *
- * Note that unlike the &lt;ww:select/&gt; tag, there is no ability to define the individual &lt;option&gt; tags' id attribute
+ * Note that unlike the &lt;a:select/&gt; tag, there is no ability to define the individual &lt;option&gt; tags' id attribute
  * or content separately. Each of these is simply populated from the toString() method of the list item. Presumably
  * this is because the select box isn't intended to actually submit useful data, but to assist the user in filling
  * out the text field.<p/>
@@ -26,12 +26,12 @@ import javax.servlet.http.HttpServletResponse;
  * <pre>
  * <!-- START SNIPPET: example -->
  * JSP:
- * &lt;ww:bean name="struts.util.Counter" id="year"&gt;
- *   &lt;ww:param name="first" value="text('firstBirthYear')"/&gt;
- *   &lt;ww:param name="last" value="2000"/&gt;
+ * &lt;a:bean name="struts.util.Counter" id="year"&gt;
+ *   &lt;a:param name="first" value="text('firstBirthYear')"/&gt;
+ *   &lt;a:param name="last" value="2000"/&gt;
  *
- *   &lt;ww:combobox label="Birth year" size="6" maxlength="4" name="birthYear" list="#year"/&gt;
- * &lt;/ww:bean&gt;
+ *   &lt;a:combobox label="Birth year" size="6" maxlength="4" name="birthYear" list="#year"/&gt;
+ * &lt;/a:bean&gt;
  *
  * Velocity:
  * #tag( ComboBox "label=Birth year" "size=6" "maxlength=4" "name=birthYear" "list=#year" )

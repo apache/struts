@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- END SNIPPET: exdescription -->
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;ww:password label="%{text('password')}" name="password" size="10" maxlength="15" /&gt;
+ * &lt;a:password label="%{text('password')}" name="password" size="10" maxlength="15" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *

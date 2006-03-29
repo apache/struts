@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  * <pre>
  * <!-- START SNIPPET: example -->
  * 
- * &lt;ww:select label="Pets"
+ * &lt;a:select label="Pets"
  *        name="petIds"
  *        list="petDao.pets"
  *        listKey="id"
@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
  *        required="true"
  * /&gt;
  *
- * &lt;ww:select label="Months"
+ * &lt;a:select label="Months"
  *        name="months"
  *        headerKey="-1" headerValue="Select Month"
  *        list="#{'01':'Jan', '02':'Feb', [...]}"

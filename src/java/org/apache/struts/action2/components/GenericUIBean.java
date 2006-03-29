@@ -29,13 +29,13 @@ import javax.servlet.http.HttpServletResponse;
  * <pre>
  * <!-- START SNIPPET: example -->
  * JSP
- *     &lt;ww:component template="/my/custom/component.vm"/&gt;
+ *     &lt;a:component template="/my/custom/component.vm"/&gt;
  *       or
  *
- *     &lt;ww:component template="/my/custom/component.vm"&gt;
- *       &lt;ww:param name="key1" value="value1"/&gt;
- *       &lt;ww:param name="key2" value="value2"/&gt;
- *     &lt;/ww:component&gt;
+ *     &lt;a:component template="/my/custom/component.vm"&gt;
+ *       &lt;a:param name="key1" value="value1"/&gt;
+ *       &lt;a:param name="key2" value="value2"/&gt;
+ *     &lt;/a:component&gt;
  *
  * Velocity
  *     #tag( Component "template=/my/custom/component.vm" )

@@ -40,19 +40,19 @@ import java.util.*;
  * <pre>
  * <!-- START SNIPPET: example -->
  * &lt;-- One: --&gt;
- * &lt;ww:include value="myJsp.jsp" /&gt;
+ * &lt;a:include value="myJsp.jsp" /&gt;
  *
  * &lt;-- Two: --&gt;
- * &lt;ww:include value="myJsp.jsp"&gt;
- *    &lt;ww:param name="param1" value="value2" /&gt;
- *    &lt;ww:param name="param2" value="value2" /&gt;
- * &lt;/ww:include&gt;
+ * &lt;a:include value="myJsp.jsp"&gt;
+ *    &lt;a:param name="param1" value="value2" /&gt;
+ *    &lt;a:param name="param2" value="value2" /&gt;
+ * &lt;/a:include&gt;
  *
  * &lt;-- Three: --&gt;
- * &lt;ww:include value="myJsp.jsp"&gt;
- *    &lt;ww:param name="param1"&gt;value1&lt;/ww:param&gt;
- *    &lt;ww:param name="param2"&gt;value2&lt;ww:param&gt;
- * &lt;/ww:include&gt;
+ * &lt;a:include value="myJsp.jsp"&gt;
+ *    &lt;a:param name="param1"&gt;value1&lt;/a:param&gt;
+ *    &lt;a:param name="param2"&gt;value2&lt;a:param&gt;
+ * &lt;/a:include&gt;
  * <!-- END SNIPPET: example -->
  *
  * <!-- START SNIPPET: exampledescription -->

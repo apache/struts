@@ -92,14 +92,14 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * <!-- END SNIPPET: javacode -->
  *
  * <!-- START SNIPPET: example -->
- * &lt;ww:merge id="myMergedIterator1"&gt;
- *		&lt;ww:param value="%{myList1}" /&gt;
- *		&lt;ww:param value="%{myList2}" /&gt;
- *		&lt;ww:param value="%{myList3}" /&gt;
- * &lt;/ww:merge&gt;
- * &lt;ww:iterator value="%{#myMergedIterator1}"&gt;
- *		&lt;ww:property /&gt;
- * &lt;/ww:iterator&gt;
+ * &lt;a:merge id="myMergedIterator1"&gt;
+ *		&lt;a:param value="%{myList1}" /&gt;
+ *		&lt;a:param value="%{myList2}" /&gt;
+ *		&lt;a:param value="%{myList3}" /&gt;
+ * &lt;/a:merge&gt;
+ * &lt;a:iterator value="%{#myMergedIterator1}"&gt;
+ *		&lt;a:property /&gt;
+ * &lt;/a:iterator&gt;
  * <!-- END SNIPPET: example -->
  *
  * <!-- START SNIPPET: description -->

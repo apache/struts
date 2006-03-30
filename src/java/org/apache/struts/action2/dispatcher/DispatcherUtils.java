@@ -104,7 +104,7 @@ public class DispatcherUtils {
             if (className.equals("spring")) {
                 // note: this class name needs to be in string form so we don't put hard
                 //       dependencies on spring, since it isn't technically required.
-                className = "org.apache.struts.action2.spring.WebWorkSpringObjectFactory";
+                className = "org.apache.struts.action2.spring.StrutsSpringObjectFactory";
             } else if (className.equals("plexus")) {
                 // note: this class name needs to be in string form so we don't put hard
                 //       dependencies on spring, since it isn't technically required.

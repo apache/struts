@@ -88,6 +88,20 @@ PACKAGE NAMING
 * tag prefix: saf
 * property and configuration files: action
 
+--
+
+* The Dojo component package was previously 'webwork'.  
+** It is temporarily renamed it to 'struts', but that might conflict 
+   with Shale if they create new Dojo components.
+*** Or perhaps that might be a good thing?
+
+<< Ted: I'd say rename this component to "action". Apache Struts is 
+   the *project* name, like "Open Symphony", not the *product* name, 
+   like XWork or Sitemesh. If we name anything new "Struts", 
+   it should be because it's something that is being used by multiple 
+   Apache Struts products. 
+>>
+
 ----
 
 WORKING ACTION2 BUILD 
@@ -105,6 +119,24 @@ in the Incubator.
 
 ** What about setting up a temporary build server either in an 
 Apache zone or on a developer's computer?
+
+----
+
+WIKI DOCUMENTATION
+
+What do we need to do to register the Snippet macro the ASF SVN?
+
+* http://forums.opensymphony.com/thread.jspa?threadID=24290&tstart=0
+
+For an ongoing Confluence instance, worse case, there's another 
+Confluence installation that we can use, hosted by Contegrix.
+
+* http://opensource.atlassian.com/confluence/oss/dashboard.action
+
+But,Jeff Turner may be working on getting us a Confluence instance on an ASF machine. 
+
+
+----
 
 
 ####

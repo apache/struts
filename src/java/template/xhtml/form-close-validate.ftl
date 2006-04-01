@@ -68,7 +68,8 @@ END SNIPPET: supported-validators
                 errors = true;
             }
             <#elseif validator.validatorType = "url">
-            if (field.value != null && field.value.length > 0 && field.value.match(/^((file:\/\/\S+)|(ftp|http|https):\/\/\S+\.(com|net|org|info|edu|mil|gov|biz|ws|us|tv|cc|aero|arpa|coop|int|jobs|museum|name|pro|travel|nato|.{2,2}))$/ig) == null) {
+            <#--if (field.value != null && field.value.length > 0 && field.value.match(/^\S+@\S+\.(com|net|org|info|edu|mil|gov|biz|ws|us|tv|cc|aero|arpa|coop|int|jobs|museum|name|pro|travel|nato|.{2,2})$/gi) == null) { -->
+            if (field.value != null && field.value.length > 0 && field.value.match(/(^[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@([A-Za-z0-9-])+(\.[A-Za-z0-9-]+)*((\.com)|(\.net)|(\.org)|(\.info)|(\.edu)|(\.mil)|(\.gov)|(\.biz)|(\.ws)|(\.us)|(\.tv)|(\.cc)|(\.aero)|(\.arpa)|(\.coop)|(\.int)|(\.jobs)|(\.museum)|(\.name)|(\.pro)|(\.travel)|(\.nato)|(\.[A-Za-z0-9]{2,3})|(\.[A-Za-z0-9]{2,3}\.[A-Za-z0-9]{2,3}))$)/gi) == null) { 
                 addError(field, error);
                 errors = true;
             }

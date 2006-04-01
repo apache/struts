@@ -80,6 +80,16 @@ Please feel free to jump in and contribute!
 
 ----
 
+PACKAGE NAMING
+
+* org.opensyphony -> org.apache.struts
+* webwork -> action2
+
+* tag prefix: saf
+* property and configuration files: action
+
+----
+
 WORKING ACTION2 BUILD 
 
 * The WebWork2 Incubator code now builds struts-action-2.0-dev.jar

@@ -161,7 +161,7 @@ public class DispatcherUtils {
 
         // test wether param-access workaround needs to be enabled
         if (servletContext.getServerInfo().indexOf("WebLogic") >= 0) {
-            LOG.info("WebLogic server detected. Enabling WebWork parameter access work-around.");
+            LOG.info("WebLogic server detected. Enabling Struts parameter access work-around.");
             paramsWorkaroundEnabled = true;
         } else if (Configuration.isSet(StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND)) {
             paramsWorkaroundEnabled = "true".equals(Configuration.get(StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND));

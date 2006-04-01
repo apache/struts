@@ -30,6 +30,7 @@
             <interceptor name="component" class="com.opensymphony.xwork.interceptor.component.ComponentInterceptor"/>
             <interceptor name="conversionError" class="org.apache.struts.action2.interceptor.StrutsConversionErrorInterceptor"/>
             <interceptor name="createSession" class="org.apache.struts.action2.interceptor.CreateSessionInterceptor" />
+            <interceptor name="debugging" class="org.apache.struts.action2.interceptor.debugging.DebuggingInterceptor" />
             <interceptor name="external-ref" class="com.opensymphony.xwork.interceptor.ExternalReferencesInterceptor"/>
             <interceptor name="execAndWait" class="org.apache.struts.action2.interceptor.ExecuteAndWaitInterceptor"/>
             <interceptor name="exception" class="com.opensymphony.xwork.interceptor.ExceptionMappingInterceptor"/>
@@ -156,6 +157,7 @@
                 <interceptor-ref name="prepare"/>
                 <interceptor-ref name="i18n"/>
                 <interceptor-ref name="chain"/>
+                <interceptor-ref name="debugging"/>
                 <interceptor-ref name="model-driven"/>
                 <interceptor-ref name="fileUpload"/>
                 <interceptor-ref name="static-params"/>

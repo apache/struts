@@ -121,7 +121,7 @@ public class FilterDispatcher implements Filter, StrutsStatics {
     public void init(FilterConfig filterConfig) throws ServletException {
         this.filterConfig = filterConfig;
         String param = filterConfig.getInitParameter("packages");
-        String packages = "org.apache.struts.action2.static template";
+        String packages = "org.apache.struts.action2.static template org.apache.struts.action2.interceptor.debugging";
         if (param != null) {
             packages = param + " " + packages;
         }

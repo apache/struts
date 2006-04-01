@@ -8,6 +8,7 @@ import org.apache.struts.action2.ServletActionContext;
 
 import javax.servlet.jsp.PageContext;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -56,7 +57,7 @@ public class AttributeMap implements Map {
     }
 
     public Set entrySet() {
-        throw new UnsupportedOperationException(UNSUPPORTED);
+        return Collections.EMPTY_SET;
     }
 
     public Object get(Object key) {
@@ -86,7 +87,7 @@ public class AttributeMap implements Map {
     }
 
     public Set keySet() {
-        throw new UnsupportedOperationException(UNSUPPORTED);
+        return Collections.EMPTY_SET;
     }
 
     public Object put(Object key, Object value) {
@@ -111,7 +112,7 @@ public class AttributeMap implements Map {
     }
 
     public Collection values() {
-        throw new UnsupportedOperationException(UNSUPPORTED);
+        return Collections.EMPTY_SET;
     }
 
     private PageContext getPageContext() {

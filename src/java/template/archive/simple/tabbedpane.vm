@@ -20,9 +20,9 @@
 #set ($tabIndex.first = 0)
 #set ($tabIndex.last = $tag.content.size())
 
-<table border="1" cellspacing="0" cellpadding="5" id="$!webwork.htmlEncode($tag.id)">
+<table border="1" cellspacing="0" cellpadding="5" id="$!struts.htmlEncode($tag.id)">
 
-	<tr valign="bottom" align="$!webwork.htmlEncode($tag.tabAlign)">
+	<tr valign="bottom" align="$!struts.htmlEncode($tag.tabAlign)">
 
 	#if ($tabAlign == 'CENTER' || $tabAlign == 'RIGHT')
         <th colspan ="1" width="*"></th>
@@ -47,7 +47,7 @@
         #if ($isCur == 'true')
             <em>
         #end
-        $!webwork.htmlEncode($key)
+        $!struts.htmlEncode($key)
         #if ($isCur == 'true')
             </em>
         #end

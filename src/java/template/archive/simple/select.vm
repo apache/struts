@@ -1,16 +1,16 @@
-<select name="$!webwork.htmlEncode($parameters.name)"
-    #if ($parameters.size)             size="$!webwork.htmlEncode($parameters.size)"         #end
+<select name="$!struts.htmlEncode($parameters.name)"
+    #if ($parameters.size)             size="$!struts.htmlEncode($parameters.size)"         #end
     #if ($parameters.disabled)         disabled="disabled"                                   #end
-    #if ($parameters.tabindex)         tabindex="$!webwork.htmlEncode($parameters.tabindex)" #end
-    #if ($parameters.id)               id="$!webwork.htmlEncode($parameters.id)"             #end
+    #if ($parameters.tabindex)         tabindex="$!struts.htmlEncode($parameters.tabindex)" #end
+    #if ($parameters.id)               id="$!struts.htmlEncode($parameters.id)"             #end
     #if ($parameters.multiple)         multiple="multiple"                                   #end
-    #if ($parameters.cssClass)         class="$!webwork.htmlEncode($parameters.cssClass)"    #end
-    #if ($parameters.cssStyle)         style="$!webwork.htmlEncode($parameters.cssStyle)"    #end
+    #if ($parameters.cssClass)         class="$!struts.htmlEncode($parameters.cssClass)"    #end
+    #if ($parameters.cssStyle)         style="$!struts.htmlEncode($parameters.cssStyle)"    #end
     #parse("/$parameters.templateDir/simple/scripting-events.vm")
 >
 
 #if ($parameters.headerKey && $parameters.headerValue)
-    <option value="$!webwork.htmlEncode($parameters.headerKey)">$!webwork.htmlEncode($parameters.headerValue)</option>
+    <option value="$!struts.htmlEncode($parameters.headerKey)">$!struts.htmlEncode($parameters.headerValue)</option>
 #end
 
 #if ($parameters.emptyOption)
@@ -34,7 +34,7 @@
             #set( $itemValue = $item )
         #end
 
-        <option value="$!webwork.htmlEncode($itemKey)"#if( $tag.contains($parameters.nameValue, $itemKey) ) selected="selected"#end>$!webwork.htmlEncode($itemValue)</option>
+        <option value="$!struts.htmlEncode($itemKey)"#if( $tag.contains($parameters.nameValue, $itemKey) ) selected="selected"#end>$!struts.htmlEncode($itemValue)</option>
 
         #set ($trash = $stack.pop())
     #end

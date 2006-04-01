@@ -1,5 +1,5 @@
 <#if parameters.validate?default(false) == true>
-	<script src="${base}/webwork/xhtml/validation.js"></script>
+	<script src="${base}/struts/xhtml/validation.js"></script>
 	<#if parameters.onsubmit?exists>
 		${tag.addParameter('onsubmit', "${parameters.onsubmit}; customOnsubmit(); return validateForm_${parameters.id}();")}
 	<#else>

@@ -1,5 +1,5 @@
 <#if !stack.findValue('#richtexteditor_js_included')?exists><#t/>
-	<script type="text/javascript" src="<@ww.url value='/webwork/richtexteditor/fckeditor.js' encode='false' />"></script>
+	<script type="text/javascript" src="<@ww.url value='/struts/richtexteditor/fckeditor.js' encode='false' />"></script>
 	<#assign tmpVariable = stack.setValue('#richtexteditor_js_included', 'true') /><#t/>
 </#if><#t/>
 <script>
@@ -8,7 +8,7 @@
 	<#if parameters.basePath?exists><#t/>
 		oFCKeditor_${parameters.id}.BasePath = '${parameters.basePath}' ;
 	<#else><#t/>
-		oFCKeditor_${parameters.id}.BasePath = '<@ww.url value="/webwork/richtexteditor/" />' ;
+		oFCKeditor_${parameters.id}.BasePath = '<@ww.url value="/struts/richtexteditor/" />' ;
 	</#if><#t/>
 	<#-- height --><#t/>
 	<#if parameters.height?exists><#t/>

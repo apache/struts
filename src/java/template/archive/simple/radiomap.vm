@@ -19,16 +19,16 @@
             type="radio"
             #if( $tag.contains($parameters.nameValue, $itemKey) )checked="checked"#end
             #if ($parameters.name)
-                                        name="$!webwork.htmlEncode($parameters.name)"
-                                        id="$!webwork.htmlEncode($parameters.name)$!webwork.htmlEncode($itemKey)"
+                                        name="$!struts.htmlEncode($parameters.name)"
+                                        id="$!struts.htmlEncode($parameters.name)$!struts.htmlEncode($itemKey)"
             #end
-            #if ($itemKey)              value="$!webwork.htmlEncode($itemKey)"                #end
+            #if ($itemKey)              value="$!struts.htmlEncode($itemKey)"                #end
             #if ($parameters.disabled)  disabled="disabled"                                   #end
-            #if ($parameters.tabindex)  tabindex="$!webwork.htmlEncode($parameters.tabindex)" #end
-            #if ($parameters.cssClass)  class="$!webwork.htmlEncode($parameters.cssClass)"    #end
-            #if ($parameters.cssStyle)  style="$!webwork.htmlEncode($parameters.cssStyle)"    #end
+            #if ($parameters.tabindex)  tabindex="$!struts.htmlEncode($parameters.tabindex)" #end
+            #if ($parameters.cssClass)  class="$!struts.htmlEncode($parameters.cssClass)"    #end
+            #if ($parameters.cssStyle)  style="$!struts.htmlEncode($parameters.cssStyle)"    #end
             #parse("/$parameters.templateDir/simple/scripting-events.vm")
-        /><label for="$!webwork.htmlEncode($parameters.name)$!webwork.htmlEncode($itemKey)">$!itemValue</label>
+        /><label for="$!struts.htmlEncode($parameters.name)$!struts.htmlEncode($itemKey)">$!itemValue</label>
 
         #set ($trash = $stack.pop())
     #end

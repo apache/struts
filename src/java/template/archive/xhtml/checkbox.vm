@@ -13,7 +13,7 @@
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <td valign="middle">#parse("$!{tag.templateDir}/simple/checkbox.vm")</td>
-        <td width="100%" valign="middle"><label #if ($parameters.id) for="$!webwork.htmlEncode($parameters.id)"#end#if ($hasFieldErrors) class="checkboxErrorLabel"#else class="checkboxLabel"#end>$!webwork.htmlEncode($parameters.label)</label></td>
+        <td width="100%" valign="middle"><label #if ($parameters.id) for="$!struts.htmlEncode($parameters.id)"#end#if ($hasFieldErrors) class="checkboxErrorLabel"#else class="checkboxLabel"#end>$!struts.htmlEncode($parameters.label)</label></td>
     </tr>
 </table>
 #parse("/$parameters.templateDir/xhtml/controlfooter.vm")

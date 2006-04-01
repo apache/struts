@@ -1,13 +1,13 @@
-<textarea name="$!webwork.htmlEncode($parameters.name)"
-          cols="$!webwork.htmlEncode($parameters.cols)"
-          rows="$!webwork.htmlEncode($parameters.rows)"
-#if ($parameters.wrap)             wrap="$!webwork.htmlEncode($parameters.wrap)"            #end
+<textarea name="$!struts.htmlEncode($parameters.name)"
+          cols="$!struts.htmlEncode($parameters.cols)"
+          rows="$!struts.htmlEncode($parameters.rows)"
+#if ($parameters.wrap)             wrap="$!struts.htmlEncode($parameters.wrap)"            #end
 #if ($parameters.disabled && $parameters.disabled== true)
                                    disabled="disabled"                                      #end
 #if ($parameters.readonly)         readonly="readonly"                                      #end
-#if ($parameters.tabindex)         tabindex="$!webwork.htmlEncode($parameters.tabindex)"    #end
-#if ($parameters.id)               id="$!webwork.htmlEncode($parameters.id)"                #end
-#if ($parameters.cssClass)         class="$!webwork.htmlEncode($parameters.cssClass)"       #end
-#if ($parameters.cssStyle)         style="$!webwork.htmlEncode($parameters.cssStyle)"       #end
+#if ($parameters.tabindex)         tabindex="$!struts.htmlEncode($parameters.tabindex)"    #end
+#if ($parameters.id)               id="$!struts.htmlEncode($parameters.id)"                #end
+#if ($parameters.cssClass)         class="$!struts.htmlEncode($parameters.cssClass)"       #end
+#if ($parameters.cssStyle)         style="$!struts.htmlEncode($parameters.cssStyle)"       #end
 #parse("/$parameters.templateDir/simple/scripting-events.vm")
->#if ($parameters.nameValue)$!webwork.htmlEncode($parameters.nameValue)#end</textarea>
+>#if ($parameters.nameValue)$!struts.htmlEncode($parameters.nameValue)#end</textarea>

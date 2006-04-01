@@ -3,11 +3,11 @@ dojo.require("dojo.event.topic");
 
 dojo.hostenv.setModulePrefix('webwork', 'webwork');
 dojo.require('dojo.widget.*');
-dojo.widget.manager.registerWidgetPackage('webwork.widgets');
+dojo.widget.manager.registerWidgetPackage('struts.widgets');
 
-dojo.require("webwork.widgets.Bind");
-dojo.require("webwork.widgets.BindDiv");
-dojo.require("webwork.widgets.BindButton");
-dojo.require("webwork.widgets.BindAnchor");
+dojo.require("struts.widgets.Bind");
+dojo.require("struts.widgets.BindDiv");
+dojo.require("struts.widgets.BindButton");
+dojo.require("struts.widgets.BindAnchor");
 dojo.require("dojo.widget.Editor");
 dojo.hostenv.writeIncludes(); // not needed, but allows the Venkman debugger to work with the includes

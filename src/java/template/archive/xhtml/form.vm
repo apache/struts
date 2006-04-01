@@ -1,8 +1,8 @@
 #if ($parameters.validate && $parameters.validate == true)
-<script src="${base}/webwork/validationClient.js"></script>
+<script src="${base}/struts/validationClient.js"></script>
 <script src="${base}/dwr/interface/validator.js"></script>
 <script src="${base}/dwr/engine.js"></script>
-<script src="${base}/webwork/template/xhtml/validation.js"></script>
+<script src="${base}/struts/template/xhtml/validation.js"></script>
 #end
 #parse("/$parameters.templateDir/simple/form.vm")
 <table class="wwFormTable">

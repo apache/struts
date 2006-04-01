@@ -8,20 +8,20 @@
 #end
 
 <br/>
-<select name="$!webwork.htmlEncode($parameters.doubleName)"
+<select name="$!struts.htmlEncode($parameters.doubleName)"
     #if ($parameters.disabled)         disabled="disabled"                                         #end
-    #if ($parameters.doubleTabindex)   tabindex="$!webwork.htmlEncode($parameters.doubleTabindex)" #end
-    #if ($parameters.doubleId)         id="$!webwork.htmlEncode($parameters.doubleId)"             #end
+    #if ($parameters.doubleTabindex)   tabindex="$!struts.htmlEncode($parameters.doubleTabindex)" #end
+    #if ($parameters.doubleId)         id="$!struts.htmlEncode($parameters.doubleId)"             #end
     #if ($parameters.multiple)         multiple="multiple"                                         #end
-    #if ($parameters.cssClass)         class="$!webwork.htmlEncode($parameters.cssClass)"          #end
-    #if ($parameters.cssStyle)         style="$!webwork.htmlEncode($parameters.cssStyle)"          #end
+    #if ($parameters.cssClass)         class="$!struts.htmlEncode($parameters.cssClass)"          #end
+    #if ($parameters.cssStyle)         style="$!struts.htmlEncode($parameters.cssStyle)"          #end
 >
 </select>
 <script type="text/javascript">
 #set( $itemCount = $startCount )
-var $!webwork.htmlEncode($parameters.name)Group = new Array($!{parameters.listSize} + $startCount);
+var $!struts.htmlEncode($parameters.name)Group = new Array($!{parameters.listSize} + $startCount);
 for (i = 0; i < ($!{parameters.listSize} + $startCount); i++)
-$!webwork.htmlEncode($parameters.name)Group[i] = new Array();
+$!struts.htmlEncode($parameters.name)Group[i] = new Array();
 #foreach( $item in $items )
     $stack.push($item)
     #if( $parameters.listKey )
@@ -49,7 +49,7 @@ $!webwork.htmlEncode($parameters.name)Group[i] = new Array();
             #else
                 #set( $doubleItemValue = $doubleItem )
             #end
-            $!webwork.htmlEncode($parameters.name)Group[$itemCount][$doubleItemCount] = new Option("$doubleItemKey", "$doubleItemValue");
+            $!struts.htmlEncode($parameters.name)Group[$itemCount][$doubleItemCount] = new Option("$doubleItemKey", "$doubleItemValue");
             #set( $doubleItemCount = $doubleItemCount + 1 )
             #set ($trash = $stack.pop())
         #end
@@ -57,7 +57,7 @@ $!webwork.htmlEncode($parameters.name)Group[i] = new Array();
     #end
     #set ($trash = $stack.pop())
 #end
-var $!webwork.htmlEncode($parameters.name)Temp = document.$!webwork.htmlEncode(${parameters.formName}).$!webwork.htmlEncode(${parameters.doubleName});
+var $!struts.htmlEncode($parameters.name)Temp = document.$!struts.htmlEncode(${parameters.formName}).$!struts.htmlEncode(${parameters.doubleName});
 #set( $itemCount = $startCount )
 #set( $redirectTo = 0 )
 #foreach( $item in $items )
@@ -73,16 +73,16 @@ var $!webwork.htmlEncode($parameters.name)Temp = document.$!webwork.htmlEncode($
     #set( $itemCount = $itemCount + 1 )
     #set ($trash = $stack.pop())
 #end
-$!{webwork.htmlEncode($parameters.name)}Redirect($redirectTo);
-function $!{webwork.htmlEncode($parameters.name)}Redirect(x) {
-    for (m = $!{webwork.htmlEncode($parameters.name)}Temp.options.length - 1; m >= 0; m--)
-        $!{webwork.htmlEncode($parameters.name)}Temp.options[m] = null;
+$!{struts.htmlEncode($parameters.name)}Redirect($redirectTo);
+function $!{struts.htmlEncode($parameters.name)}Redirect(x) {
+    for (m = $!{struts.htmlEncode($parameters.name)}Temp.options.length - 1; m >= 0; m--)
+        $!{struts.htmlEncode($parameters.name)}Temp.options[m] = null;
 
     for (i = 0; i < $!{parameters.name}Group[x].length; i++) {
-        $!{webwork.htmlEncode($parameters.name)}Temp.options[i] = new Option($!{webwork.htmlEncode($parameters.name)}Group[x][i].text, $!{webwork.htmlEncode($parameters.name)}Group[x][i].value);
+        $!{struts.htmlEncode($parameters.name)}Temp.options[i] = new Option($!{struts.htmlEncode($parameters.name)}Group[x][i].text, $!{struts.htmlEncode($parameters.name)}Group[x][i].value);
     }
 
     if ($!{parameters.name}Temp.options.length > 0)
-        $!{webwork.htmlEncode($parameters.name)}Temp.options[0].selected = true;
+        $!{struts.htmlEncode($parameters.name)}Temp.options[0].selected = true;
 }
 </script>

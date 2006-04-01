@@ -1,9 +1,9 @@
 <#if parameters.validate?exists>
-<script src="${base}/webwork/validationClient.js"></script>
+<script src="${base}/struts/validationClient.js"></script>
 <script src="${base}/dwr/interface/validator.js"></script>
 <script src="${base}/dwr/engine.js"></script>
-<script src="${base}/webwork/ajax/validation.js"></script>
-<script src="${base}/webwork/xhtml/validation.js"></script>
+<script src="${base}/struts/ajax/validation.js"></script>
+<script src="${base}/struts/xhtml/validation.js"></script>
 </#if>
 <form<#rt/>
 <#if parameters.namespace?exists>

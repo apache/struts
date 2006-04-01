@@ -3,7 +3,7 @@
       <#if parameters.tooltipIcon?exists><#t/>
       	src='<@ww.url value="${parameters.tooltipIcon}" />' 
       <#else><#t/>
-      	src='<@ww.url value="/webwork/tooltip/tooltip.gif" />'
+      	src='<@ww.url value="/struts/tooltip/tooltip.gif" />'
       </#if><#t/>
       	alt="${parameters.tooltip?html}" 
       	title="${parameters.tooltip?html}" 

@@ -3,15 +3,15 @@
          id="tab_contents_update_${parameters.id}"
 	 #if ($parameters.remote)
 	      dojoType='BindDiv'
-	      #if ($parameters.href) href="$!webwork.htmlEncode($parameters.href)" #end
-	      #if ($parameters.loadingText) loadingHtml="$!webwork.htmlEncode($parameters.loadingText)" #end
-	      #if ($parameters.errorText) errorHtml="$!webwork.htmlEncode($parameters.errorText)" #end
+	      #if ($parameters.href) href="$!struts.htmlEncode($parameters.href)" #end
+	      #if ($parameters.loadingText) loadingHtml="$!struts.htmlEncode($parameters.loadingText)" #end
+	      #if ($parameters.errorText) errorHtml="$!struts.htmlEncode($parameters.errorText)" #end
 	      #if ($parameters.showErrorTransportText) showTransportError="true" #end
 	      #if ($parameters.delay) delay="$!parameters.delay" #end
 	      #if ($parameters.updateFreq) refresh="$!parameters.updateFreq" #end
-	      #if ($parameters.listenTopics) listenTopics="$!webwork.htmlEncode($parameters.listenTopics)" #end
-	      #if ($parameters.afterLoading) onLoad="$!webwork.htmlEncode($parameters.afterLoading)" #end
+	      #if ($parameters.listenTopics) listenTopics="$!struts.htmlEncode($parameters.listenTopics)" #end
+	      #if ($parameters.afterLoading) onLoad="$!struts.htmlEncode($parameters.afterLoading)" #end
      #end
- 	 #if ($parameters.cssClass) class="$!webwork.htmlEncode($parameters.cssClass)" #end
-	 #if ($parameters.cssStyle) style="$!webwork.htmlEncode($parameters.cssStyle)" #end
+ 	 #if ($parameters.cssClass) class="$!struts.htmlEncode($parameters.cssClass)" #end
+	 #if ($parameters.cssStyle) style="$!struts.htmlEncode($parameters.cssStyle)" #end
       >

@@ -13,6 +13,16 @@ import java.util.Map;
 /**
  * DoubleListUIBean is the standard superclass of all webwork list handling components.
  *
+ * <p/>
+ * 
+ * <!-- START SNIPPET: javadoc -->
+ * 
+ * Note that the listkey and listvalue attribute will default to "key" and "value"
+ * respectively only when the list attribute is evaluated to a Map or its decendant.
+ * Other thing else, will result in listkey and listvalue to be null and not used.
+ * 
+ * <!-- END SNIPPET: javadoc -->
+ *
  * @author Patrick Lightbody
  * @author Rene Gielen
  * @version $Revision: 1.10 $

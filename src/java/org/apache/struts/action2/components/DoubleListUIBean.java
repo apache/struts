@@ -10,6 +10,16 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * DoubleListUIBean is the standard superclass of all webwork double list handling components.
  *
+ * <p/>
+ *
+ * <!-- START SNIPPET: javadoc -->
+ * 
+ * Note that the doublelistkey and doublelistvalue attribute will default to "key" and "value"
+ * respectively only when the doublelist attribute is evaluated to a Map or its decendant.
+ * Other thing else, will result in doublelistkey and doublelistvalue to be null and not used.
+ * 
+ * <!-- END SNIPPET: javadoc -->
+ *
  * @author Patrick Lightbody
  * @author Rene Gielen
  * @author tm_jee

@@ -65,7 +65,7 @@ import java.text.SimpleDateFormat;
  * <p/> <b>Serving static content</b>
  *
  * <p/> This filter also serves common static content needed when using various parts of WebWork, such as JavaScript
- * files, CSS files, etc. It works by looking for requests to /webwork/*, and then mapping the value after "/webwork/"
+ * files, CSS files, etc. It works by looking for requests to /struts/*, and then mapping the value after "/struts/"
  * to common packages in WebWork and, optionally, in your class path. By default, the following packages are
  * automatically searched:
  *
@@ -77,7 +77,7 @@ import java.text.SimpleDateFormat;
  *
  * </ul>
  *
- * <p/> This means that you can simply request /webwork/xhtml/styles.css and the XHTML UI theme's default stylesheet
+ * <p/> This means that you can simply request /struts/xhtml/styles.css and the XHTML UI theme's default stylesheet
  * will be returned. Likewise, many of the AJAX UI components require various JavaScript files, which are found in the
  * org.apache.struts.action2.static package. If you wish to add additional packages to be searched, you can add a comma
  * separated (space, tab and new line will do as well) list in the filter init parameter named "packages". <b>Be
@@ -169,8 +169,8 @@ public class FilterDispatcher implements Filter, StrutsStatics {
             }
 
             if ("true".equals(Configuration.get(StrutsConstants.STRUTS_SERVE_STATIC_CONTENT)) 
-                    && resourcePath.startsWith("/webwork")) {
-                String name = resourcePath.substring("/webwork".length());
+                    && resourcePath.startsWith("/struts")) {
+                String name = resourcePath.substring("/struts".length());
                 findStaticResource(name, response);
             } else {
                 // this is a normal request, let it pass through

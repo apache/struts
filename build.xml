@@ -122,9 +122,9 @@
             </fileset>
             <configParam name="Jspversion" value="1.2"/>
             <configParam name="Taglibversion" value="${version}"/>
-            <configParam name="Description" value="Struts Action 2  JSP Taglib"/>
-            <configParam name="Shortname" value="Struts Action 2  Taglib"/>
-            <configParam name="Displayname" value="Struts Action 2  Taglib"/>
+            <configParam name="Description" value="Struts Action 2 JSP Taglib"/>
+            <configParam name="Shortname" value="Struts Action 2 Taglib"/>
+            <configParam name="Displayname" value="Struts Action 2 Taglib"/>
             <configParam name="Smallicon" value=""/>
             <configParam name="Largeicon" value=""/>
             <configParam name="Uri" value="/struts-action"/>

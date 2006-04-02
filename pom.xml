@@ -53,8 +53,9 @@
         </mailingList>
     </mailingLists>
     <scm>
-        <connection>:pserver:[username]@cvs.dev.java.net:/cvs/webwork</connection>
-        <url>https://webwork.dev.java.net/source/browse/webwork/</url>
+        <connection>scm:svn:http://svn.apache.org/repos/asf/incubator/webwork2/trunk/</connection>
+        <developerConnection>scm:svn:http://svn.apache.org/repos/asf/incubator/webwork2/trunk/</developerConnection>
+        <url>http://svn.apache.org/repos/asf/incubator/webwork2/trunk/</url>
     </scm>
     <licenses>
         <license>
@@ -134,6 +135,25 @@
             </testResource>
         </testResources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-idea-plugin</artifactId>
+                <configuration>
+                    <jdkName>1.5</jdkName>
+                    <exclude>target,test-output,.clover</exclude>
+                    <useShortDependencyNames>true</useShortDependencyNames>
+                    <libraries>
+                        <library>
+                            <name>xwork</name>
+                            <sources>file://$xwork$/src/java</sources>
+                        </library>
+                        <library>
+                            <name>xwork-tiger</name>
+                            <sources>file://$xwork$/tiger/src/java</sources>
+                        </library>
+                    </libraries>
+                </configuration>
+            </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>

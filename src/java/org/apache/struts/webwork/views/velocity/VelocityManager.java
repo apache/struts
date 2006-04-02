@@ -10,7 +10,7 @@ import org.apache.struts.webwork.config.Configuration;
 import org.apache.struts.webwork.util.VelocityStrutsUtil;
 import org.apache.struts.webwork.views.jsp.ui.OgnlTool;
 import org.apache.struts.webwork.views.util.ContextUtil;
-import org.apache.struts.action2.views.velocity.components.*;
+import org.apache.struts.webwork.views.velocity.components.*;
 
 import com.opensymphony.xwork.ObjectFactory;
 import com.opensymphony.xwork.util.OgnlValueStack;

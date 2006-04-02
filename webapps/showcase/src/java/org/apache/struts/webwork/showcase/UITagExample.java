@@ -1,8 +1,6 @@
 package org.apache.struts.webwork.showcase;
 
-import org.apache.struts.action2.ServletActionContext;
-import org.apache.struts.action2.interceptor.ServletRequestAware;
-import com.opensymphony.xwork.ActionContext;
+import org.apache.struts.webwork.ServletActionContext;
 import com.opensymphony.xwork.ActionSupport;
 import com.opensymphony.xwork.Validateable;
 import com.opensymphony.xwork.util.OgnlValueStack;
@@ -10,19 +8,19 @@ import com.opensymphony.xwork.util.OgnlValueStack;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.io.File;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Patrick Lightbody (plightbo at gmail dot com)
  */
 public class UITagExample extends ActionSupport implements Validateable {
 	
-    String name;
+	private static final long serialVersionUID = -94044809860988047L;
+	
+	
+	String name;
     Date birthday;
     String bio;
     String favoriteColor;

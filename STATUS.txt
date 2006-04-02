@@ -18,6 +18,8 @@ Other resources:
 
 * New Action2 sandbox code - https://svn.apache.org/repos/asf/struts/sandbox/trunk/action2/
 
+* JIRA instance - http://issues.apache.org/struts
+
 ----
 
 DISTRIBUTION RIGHTS - LICENSING

@@ -23,7 +23,7 @@ Other resources:
 DISTRIBUTION RIGHTS - LICENSING
 
 JSCalendar for the DatePicker tag
-* Rene will contact author about license change
+* Rene has contacted dynarch.com about license change, waiting for response
 * There may also be a Dojo equivalent
 
 FCKEditor for the Richtexteditor tag

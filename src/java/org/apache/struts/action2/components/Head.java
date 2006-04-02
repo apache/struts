@@ -60,7 +60,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Patrick Lightbody
  * @author Rainer Hermanns
  * @author Rene Gielen
- * @ww.tag name="head" tld-body-content="empty" tld-tag-class="org.apache.struts.action2.views.jsp.ui.HeadTag"
+ * @a2.tag name="head" tld-body-content="empty" tld-tag-class="org.apache.struts.action2.views.jsp.ui.HeadTag"
  * description="Render a chunk of HEAD for your HTML file"
  * @since 2.2
  */
@@ -102,7 +102,7 @@ public class Head extends UIBean {
 
     /**
      * The jscalendar css theme to use" default="calendar-blue.css
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setCalendarcss(String calendarcss) {
         this.calendarcss = calendarcss;
@@ -114,7 +114,7 @@ public class Head extends UIBean {
 
     /**
      * Set to true to enable debugging mode for AJAX themes
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setDebug(boolean debug) {
         this.debug = debug;

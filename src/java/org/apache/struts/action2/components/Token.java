@@ -37,7 +37,7 @@ import java.util.Map;
  * @see org.apache.struts.action2.interceptor.TokenInterceptor
  * @see org.apache.struts.action2.interceptor.TokenSessionStoreInterceptor
  *
- * @ww.tag name="token" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TokenTag"
+ * @a2.tag name="token" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TokenTag"
  * description="Stop double-submission of forms"
  */
 public class Token extends UIBean {

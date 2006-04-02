@@ -123,7 +123,7 @@ import java.util.List;
  * @version $Id: Date.java,v 1.7 2006/03/21 17:26:19 rainerh Exp $
  *
  *
- * @ww.tag name="date" tld-body-content="empty"
+ * @a2.tag name="date" tld-body-content="empty"
  *         tld-tag-class="org.apache.struts.action2.views.jsp.DateTag"
  *         description="Render a formatted date."
  */
@@ -327,7 +327,7 @@ public class Date extends Component {
     /**
      * Date or DateTime format pattern
      *
-     * @ww.tagattribute required="false" rtexprvalue="false"
+     * @a2.tagattribute required="false" rtexprvalue="false"
      */
     public void setFormat(String format) {
         this.format = format;
@@ -336,7 +336,7 @@ public class Date extends Component {
     /**
      * Whether to print out the date nicely
      *
-     * @ww.tagattribute required="false" type="Boolean" default="false"
+     * @a2.tagattribute required="false" type="Boolean" default="false"
      */
     public void setNice(boolean nice) {
         this.nice = nice;
@@ -352,7 +352,7 @@ public class Date extends Component {
     /**
      * The date value to format
      *
-     * @ww.tagattribute required="true" type="String"
+     * @a2.tagattribute required="true" type="String"
      */
     public void setName(String name) {
         this.name = name;

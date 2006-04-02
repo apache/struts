@@ -25,7 +25,7 @@ import java.io.Writer;
  *
  * @see TabbedPanel
  *
- * @ww.tag name="panel" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.PanelTag"
+ * @a2.tag name="panel" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.PanelTag"
  * description="Render a panel for tabbedPanel"
  */
 public class Panel extends Div {
@@ -87,7 +87,7 @@ public class Panel extends Div {
 
     /**
      * The text of the tab to display in the header tab list
-     * @ww.tagattribute required="true"
+     * @a2.tagattribute required="true"
      */
     public void setTabName(String tabName) {
         this.tabName = tabName;
@@ -95,7 +95,7 @@ public class Panel extends Div {
 
     /**
      * Set subscribeTopicName attribute
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setSubscribeTopicName(String subscribeTopicName) {
         this.subscribeTopicName = subscribeTopicName;
@@ -103,7 +103,7 @@ public class Panel extends Div {
 
     /**
      * determines whether this is a remote panel (ajax) or a local panel (content loaded into visible/hidden containers)
-     * @ww.tagattribute required="false" type="Boolean" default="false"
+     * @a2.tagattribute required="false" type="Boolean" default="false"
      */
     public void setRemote(String remote) {
         this.remote = remote;

@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision: 1.11 $
  * @since 2.2
  *
- * @ww.tag name="doubleselect" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.DoubleSelectTag"
+ * @a2.tag name="doubleselect" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.DoubleSelectTag"
  * description="Renders two HTML select elements with second one changing displayed values depending on selected entry of first one."
  */
 public class DoubleSelect extends DoubleListUIBean {

@@ -87,7 +87,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  *
  * @see Param
  *
- * @ww.tag name="text" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.TextTag"
+ * @a2.tag name="text" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.TextTag"
  * description="Render a I18n text message."
  */
 public class Text extends Component implements Param.UnnamedParametric {
@@ -103,7 +103,7 @@ public class Text extends Component implements Param.UnnamedParametric {
 
     /**
      *  Name of resource property to fetch
-     * @ww.tagattribute required="true"
+     * @a2.tagattribute required="true"
      */
     public void setName(String name) {
         this.name = name;

@@ -65,7 +65,7 @@ import java.util.List;
  *
  * @author tm_jee
  * @version $Date: 2006/01/01 15:16:03 $ $Id: FieldError.java,v 1.7 2006/01/01 15:16:03 tmjee Exp $
- * @ww.tag name="fielderror" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.FieldErrorTag"
+ * @a2.tag name="fielderror" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.FieldErrorTag"
  * description="Render field error (all or partial depending on param tag nested)if they exists"
  */
 public class FieldError extends UIBean implements UnnamedParametric {

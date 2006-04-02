@@ -79,7 +79,7 @@ public abstract class FormButton extends UIBean {
     /**
      * Set action attribute.
      *
-     * @ww.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setAction(String action) {
         this.action = action;
@@ -88,7 +88,7 @@ public abstract class FormButton extends UIBean {
     /**
      * Set method attribute.
      *
-     * @ww.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setMethod(String method) {
         this.method = method;
@@ -97,7 +97,7 @@ public abstract class FormButton extends UIBean {
     /**
      * HTML align attribute.
      *
-     * @ww.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setAlign(String align) {
         this.align = align;
@@ -106,7 +106,7 @@ public abstract class FormButton extends UIBean {
     /**
      * The type of submit to use. Valid values are <i>input</i>, <i>button</i> and <i>image</i>.
      *
-     * @ww.tagattribute required="false" type="String" default="input"
+     * @a2.tagattribute required="false" type="String" default="input"
      */
     public void setType(String type) {
         this.type = type;

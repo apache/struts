@@ -53,7 +53,7 @@ import java.util.Iterator;
  * @version $Date: 2006/03/18 15:49:26 $ $Id: Form.java,v 1.29 2006/03/18 15:49:26 rgielen Exp $
  * @since 2.2
  *
- * @ww.tag name="form" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.FormTag"
+ * @a2.tag name="form" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.FormTag"
  * description="Renders an input form"
   */
 public class Form extends ClosingUIBean {
@@ -289,7 +289,7 @@ public class Form extends ClosingUIBean {
 
     /**
      * HTML onsubmit attribute
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setOnsubmit(String onsubmit) {
         this.onsubmit = onsubmit;
@@ -297,7 +297,7 @@ public class Form extends ClosingUIBean {
 
     /**
      * Set action nane to submit to, without .action suffix
-     * @ww.tagattribute required="false" default="current action"
+     * @a2.tagattribute required="false" default="current action"
      */
     public void setAction(String action) {
         this.action = action;
@@ -305,7 +305,7 @@ public class Form extends ClosingUIBean {
 
     /**
      * HTML form target attribute
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setTarget(String target) {
         this.target = target;
@@ -313,7 +313,7 @@ public class Form extends ClosingUIBean {
 
     /**
      * HTML form enctype attribute
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setEnctype(String enctype) {
         this.enctype = enctype;
@@ -321,7 +321,7 @@ public class Form extends ClosingUIBean {
 
     /**
      * HTML form method attribute
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setMethod(String method) {
         this.method = method;
@@ -329,7 +329,7 @@ public class Form extends ClosingUIBean {
 
     /**
      * namespace for action to submit to
-     * @ww.tagattribute required="false" default="current namespace"
+     * @a2.tagattribute required="false" default="current namespace"
      */
     public void setNamespace(String namespace) {
         this.namespace = namespace;
@@ -337,7 +337,7 @@ public class Form extends ClosingUIBean {
 
     /**
      * Whether client side/remote validation should be performed. Only useful with theme xhtml/ajax
-     * @ww.tagattribute required="false" type="Boolean" default="false"
+     * @a2.tagattribute required="false" type="Boolean" default="false"
      */
     public void setValidate(String validate) {
         this.validate = validate;
@@ -345,7 +345,7 @@ public class Form extends ClosingUIBean {
 
     /**
      * The portlet mode to display after the form submit
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setPortletMode(String portletMode) {
         this.portletMode = portletMode;
@@ -353,7 +353,7 @@ public class Form extends ClosingUIBean {
 
     /**
      * The window state to display after the form submit
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setWindowState(String windowState) {
         this.windowState = windowState;

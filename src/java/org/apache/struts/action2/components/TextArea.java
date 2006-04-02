@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @see TabbedPanel
  *
- * @ww.tag name="textarea" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TextareaTag"
+ * @a2.tag name="textarea" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TextareaTag"
  * description="Render HTML textarea tag."
  */
 public class TextArea extends UIBean {
@@ -66,7 +66,7 @@ public class TextArea extends UIBean {
 
     /**
      * HTML cols attribute
-     * @ww.tagattribute required="false" type="Integer"
+     * @a2.tagattribute required="false" type="Integer"
      */
     public void setCols(String cols) {
         this.cols = cols;
@@ -74,7 +74,7 @@ public class TextArea extends UIBean {
 
     /**
      * Whether the textarea is readonly
-     * @ww.tagattribute required="false" type="Boolean" default="false"
+     * @a2.tagattribute required="false" type="Boolean" default="false"
      */
     public void setReadonly(String readonly) {
         this.readonly = readonly;
@@ -82,7 +82,7 @@ public class TextArea extends UIBean {
 
     /**
      * HTML rows attribute
-     * @ww.tagattribute required="false" type="Integer"
+     * @a2.tagattribute required="false" type="Integer"
      */
     public void setRows(String rows) {
         this.rows = rows;
@@ -90,7 +90,7 @@ public class TextArea extends UIBean {
 
     /**
      * HTML wrap attribute
-     * @ww.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setWrap(String wrap) {
         this.wrap = wrap;

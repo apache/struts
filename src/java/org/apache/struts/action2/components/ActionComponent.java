@@ -90,7 +90,7 @@ import java.util.Map;
  * @version $Revision: 1.22 $
  * @since 2.2
  *
- * @ww.tag name="action" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ActionTag"
+ * @a2.tag name="action" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ActionTag"
  * description="Execute an action from within a view"
  */
 public class ActionComponent extends Component {
@@ -229,7 +229,7 @@ public class ActionComponent extends Component {
 
     /**
      * the id (if speficied) to put the action under stack's context.
-     * @ww.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setId(String id) {
         super.setId(id);
@@ -237,7 +237,7 @@ public class ActionComponent extends Component {
 
     /**
      * name of the action to be executed (without the extension suffix eg. .action)
-     * @ww.tagattribute required="true" type="String"
+     * @a2.tagattribute required="true" type="String"
      */
     public void setName(String name) {
         this.name = name;
@@ -245,7 +245,7 @@ public class ActionComponent extends Component {
 
     /**
      * namespace for action to call
-     * @ww.tagattribute required="false" type="String" default="namespace from where tag is used"
+     * @a2.tagattribute required="false" type="String" default="namespace from where tag is used"
      */
     public void setNamespace(String namespace) {
         this.namespace = namespace;
@@ -253,7 +253,7 @@ public class ActionComponent extends Component {
 
     /**
      * whether the result of this action (probably a view) should be executed/rendered
-     * @ww.tagattribute required="false" type="Boolean" default="false"
+     * @a2.tagattribute required="false" type="Boolean" default="false"
      */
     public void setExecuteResult(boolean executeResult) {
         this.executeResult = executeResult;
@@ -261,7 +261,7 @@ public class ActionComponent extends Component {
 
     /**
      * whether the request parameters are to be included when the action is invoked
-     * @ww.tagattribute required="false" type="Boolean" default="false"
+     * @a2.tagattribute required="false" type="Boolean" default="false"
      */
     public void setIgnoreContextParams(boolean ignoreContextParams) {
         this.ignoreContextParams = ignoreContextParams;

@@ -98,7 +98,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * @see org.apache.struts.action2.util.AppendIteratorFilter
  * @see org.apache.struts.action2.views.jsp.iterator.AppendIteratorTag
  *
- * @ww.tag name="append" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.iterator.AppendIteratorTag"
+ * @a2.tag name="append" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.iterator.AppendIteratorTag"
  * description="Append the values of a list of iterators to one iterator"
  */
 public class AppendIterator extends Component implements UnnamedParametric {
@@ -149,7 +149,7 @@ public class AppendIterator extends Component implements UnnamedParametric {
 
     /**
      * the id of which if supplied will have the resultant appended iterator stored under in the stack's context
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setId(String id) {
         super.setId(id);

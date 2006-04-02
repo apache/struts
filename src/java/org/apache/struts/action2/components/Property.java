@@ -71,7 +71,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Rene Gielen
  * @version $Revision: 1.4 $
  *
- * @ww.tag name="property" tld-body-content="empty" tld-tag-class="org.apache.struts.action2.views.jsp.PropertyTag"
+ * @a2.tag name="property" tld-body-content="empty" tld-tag-class="org.apache.struts.action2.views.jsp.PropertyTag"
  * description="Print out expression which evaluates against the stack"
  */
 public class Property extends Component {
@@ -87,7 +87,7 @@ public class Property extends Component {
 
     /**
      * The default value to be used if <u>value</u> attribute is null
-     * @ww.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setDefault(String defaultValue) {
         this.defaultValue = defaultValue;
@@ -95,7 +95,7 @@ public class Property extends Component {
 
     /**
      * Whether to escape HTML
-     * @ww.tagattribute required="false" type="Boolean" default="true"
+     * @a2.tagattribute required="false" type="Boolean" default="true"
      */
     public void setEscape(boolean escape) {
         this.escape = escape;
@@ -103,7 +103,7 @@ public class Property extends Component {
 
     /**
      * value to be displayed
-     * @ww.tagattribute required="false" type="Object" default="&lt;top of stack&gt;"
+     * @a2.tagattribute required="false" type="Object" default="&lt;top of stack&gt;"
      */
     public void setValue(String value) {
         this.value = value;

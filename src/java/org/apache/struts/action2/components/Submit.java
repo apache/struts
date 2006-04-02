@@ -145,7 +145,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision: 1.16 $
  * @since 2.2
  *
- * @ww.tag name="submit" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.SubmitTag"
+ * @a2.tag name="submit" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.SubmitTag"
  * description="Render a submit button"
  */
 public class Submit extends FormButton {
@@ -211,7 +211,7 @@ public class Submit extends FormButton {
 
     /**
      * The id of the HTML element to place the result (this can the the form's id or any id on the page.
-     * @ww.tagattribute required="false"  type="String"
+     * @a2.tagattribute required="false"  type="String"
      */
     public void setResultDivId(String resultDivId) {
         this.resultDivId = resultDivId;
@@ -219,7 +219,7 @@ public class Submit extends FormButton {
 
     /**
      * Javascript code that will be executed after the form has been submitted. The format is onLoadJS='yourMethodName(data,type)'. NOTE: the words data and type must be left like that if you want the event type and the returned data.
-     * @ww.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setOnLoadJS(String onLoadJS) {
         this.onLoadJS = onLoadJS;
@@ -227,7 +227,7 @@ public class Submit extends FormButton {
 
     /**
      * Topic names to post an event to after the form has been submitted.
-     * @ww.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setNotifyTopics(String notifyTopics) {
         this.notifyTopics = notifyTopics;
@@ -235,7 +235,7 @@ public class Submit extends FormButton {
 
     /**
      * Set listenTopics attribute.
-     * @ww.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setListenTopics(String listenTopics) {
         this.listenTopics = listenTopics;
@@ -243,7 +243,7 @@ public class Submit extends FormButton {
 
     /**
      * Javascript code that will be executed before invokation. The format is preInvokeJS='yourMethodName(data,type)'.
-     * @ww.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setPreInvokeJS(String preInvokeJS) {
         this.preInvokeJS = preInvokeJS;
@@ -251,7 +251,7 @@ public class Submit extends FormButton {
 
     /**
      * Supply a submit button text apart from submit value. Will have no effect for <i>input</i> type submit, since button text will always be the value parameter. For the type <i>image</i>, alt parameter will be set to this value.
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setLabel(String label) {
         super.setLabel(label);
@@ -259,7 +259,7 @@ public class Submit extends FormButton {
 
     /**
      * Supply an image src for <i>image</i> type submit button. Will have no effect for types <i>input</i> and <i>button</i>.
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setSrc(String src) {
         this.src = src;

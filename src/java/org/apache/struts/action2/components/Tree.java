@@ -28,7 +28,7 @@ import java.io.Writer;
  *
  * @author Jason Carreira <jcarreira@eplus.com>
  *
- * @ww.tag name="tree" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TreeTag"
+ * @a2.tag name="tree" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TreeTag"
  * description="Render a tree widget."
  */
 public class Tree extends ClosingUIBean {
@@ -115,7 +115,7 @@ public class Tree extends ClosingUIBean {
 
     /**
      * The toggle property.
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setToggle(String toggle) {
         this.toggle = toggle;
@@ -127,7 +127,7 @@ public class Tree extends ClosingUIBean {
 
     /**
      * The treeSelectedTopic property.
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setTreeSelectedTopic(String treeSelectedTopic) {
         this.treeSelectedTopic = treeSelectedTopic;
@@ -139,7 +139,7 @@ public class Tree extends ClosingUIBean {
 
     /**
      * The treeExpandedTopic property.
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setTreeExpandedTopic(String treeExpandedTopic) {
         this.treeExpandedTopic = treeExpandedTopic;
@@ -151,7 +151,7 @@ public class Tree extends ClosingUIBean {
 
     /**
      * The treeCollapsedTopic property.
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setTreeCollapsedTopic(String treeCollapsedTopic) {
         this.treeCollapsedTopic = treeCollapsedTopic;
@@ -163,7 +163,7 @@ public class Tree extends ClosingUIBean {
 
     /**
      * The openAll property.
-     * @ww.tagattribute required="false" type="boolean" default="false"
+     * @a2.tagattribute required="false" type="boolean" default="false"
      */
     public void setOpenAll(String openAll) {
         this.openAll = openAll;
@@ -175,7 +175,7 @@ public class Tree extends ClosingUIBean {
 
     /**
      * The rootNode property.
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setRootNode(String rootNode) {
         this.rootNodeAttr = rootNode;
@@ -187,7 +187,7 @@ public class Tree extends ClosingUIBean {
 
     /**
      * The childCollectionProperty property.
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setChildCollectionProperty(String childCollectionProperty) {
         this.childCollectionProperty = childCollectionProperty;
@@ -199,7 +199,7 @@ public class Tree extends ClosingUIBean {
 
     /**
      * The nodeTitleProperty property.
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setNodeTitleProperty(String nodeTitleProperty) {
         this.nodeTitleProperty = nodeTitleProperty;
@@ -211,7 +211,7 @@ public class Tree extends ClosingUIBean {
 
     /**
      * The nodeIdProperty property.
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setNodeIdProperty(String nodeIdProperty) {
         this.nodeIdProperty = nodeIdProperty;

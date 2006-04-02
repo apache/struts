@@ -83,7 +83,7 @@ import java.util.Locale;
  * @author Patrick Lightbody
  * @author Rene Gielen
  * @version $Revision: 1.12 $
- * @ww.tag name="datepicker" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.DatePickerTag"
+ * @a2.tag name="datepicker" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.DatePickerTag"
  * description="Render datepicker"
  * @since 2.2
  */
@@ -135,7 +135,7 @@ public class DatePicker extends TextField {
 
     /**
      * The language to use for the widget texts and localization presets.
-     * @ww.tagattribute required="false" type="String" default="The language of the current Locale"
+     * @a2.tagattribute required="false" type="String" default="The language of the current Locale"
      */
     public void setLanguage(String language) {
         this.language = language;
@@ -143,7 +143,7 @@ public class DatePicker extends TextField {
 
     /**
      * The format to use for date field.
-     * @ww.tagattribute required="false" type="String" default="Dateformat specified by language preset (%Y/%m/%d for en)"
+     * @a2.tagattribute required="false" type="String" default="Dateformat specified by language preset (%Y/%m/%d for en)"
      */
     public void setFormat(String format) {
         this.format = format;
@@ -151,7 +151,7 @@ public class DatePicker extends TextField {
 
     /**
      * Whether time selector is to be shown. Valid values are &quot;true&quot;, &quot;false&quot;, &quot;24&quot; and &quot;12&quot;.
-     * @ww.tagattribute required="false" type="String" default="false"
+     * @a2.tagattribute required="false" type="String" default="false"
      */
     public void setShowstime(String showstime) {
         this.showstime = showstime;
@@ -159,7 +159,7 @@ public class DatePicker extends TextField {
 
     /**
      * Whether to use selected value after single or double click.
-     * @ww.tagattribute required="false" type="Boolean" default="true"
+     * @a2.tagattribute required="false" type="Boolean" default="true"
      */
     public void setSingleclick(String singleclick) {
         this.singleclick = singleclick;

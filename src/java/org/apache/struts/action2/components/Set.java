@@ -44,7 +44,7 @@ import java.io.Writer;
  * @version $Revision: 1.12 $
  * @since 2.2
  *
- * @ww.tag name="set" tld-body-content="empty" tld-tag-class="org.apache.struts.action2.views.jsp.SetTag"
+ * @a2.tag name="set" tld-body-content="empty" tld-tag-class="org.apache.struts.action2.views.jsp.SetTag"
  * description="Assigns a value to a variable in a specified scope"
  */
 public class Set extends Component {
@@ -93,7 +93,7 @@ public class Set extends Component {
 
     /**
      * The name of the new variable that is assigned the value of <i>value</i>
-     * @ww.tagattribute required="true" type="String"
+     * @a2.tagattribute required="true" type="String"
      */
     public void setName(String name) {
         this.name = name;
@@ -101,7 +101,7 @@ public class Set extends Component {
 
     /**
      * The scope in which to assign the variable. Can be <b>application</b>, <b>session</b>, <b>request</b>, <b>page</b>, or <b>action</b>.
-     * @ww.tagattribute required="false" type="String" default="action"
+     * @a2.tagattribute required="false" type="String" default="action"
      */
     public void setScope(String scope) {
         this.scope = scope;
@@ -109,7 +109,7 @@ public class Set extends Component {
 
     /**
      * The value that is assigned to the variable named <i>name</i>
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setValue(String value) {
         this.value = value;

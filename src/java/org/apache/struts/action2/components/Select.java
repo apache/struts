@@ -59,7 +59,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision: 1.9 $
  * @since 2.2
  *
- * @ww.tag name="select" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.SelectTag"
+ * @a2.tag name="select" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.SelectTag"
  * description="Render a select element"
  */
 public class Select extends ListUIBean {
@@ -102,7 +102,7 @@ public class Select extends ListUIBean {
 
     /**
      * Whether or not to add an empty (--) option after the header option
-     * @ww.tagattribute required="false" type="Boolean" default="false"
+     * @a2.tagattribute required="false" type="Boolean" default="false"
      */
     public void setEmptyOption(String emptyOption) {
         this.emptyOption = emptyOption;
@@ -110,7 +110,7 @@ public class Select extends ListUIBean {
 
     /**
      * Key for first item in list. Must not be empty! "'-1'" and "''" is correct, "" is bad.
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setHeaderKey(String headerKey) {
         this.headerKey = headerKey;
@@ -118,7 +118,7 @@ public class Select extends ListUIBean {
 
     /**
      * Value expression for first item in list
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setHeaderValue(String headerValue) {
         this.headerValue = headerValue;
@@ -126,7 +126,7 @@ public class Select extends ListUIBean {
 
     /**
      * Creates a multiple select. The tag will pre-select multiple values if the values are passed as an Array (of appropriate types) via the value attribute. Passing a Collection may work too? Haven't tested this.
-     * @ww.tagattribute required="false"  type="Boolean" default="false"
+     * @a2.tagattribute required="false"  type="Boolean" default="false"
      */
     public void setMultiple(String multiple) {
         this.multiple = multiple;
@@ -134,7 +134,7 @@ public class Select extends ListUIBean {
 
     /**
      * Size of the element box (# of elements to show)
-     * @ww.tagattribute required="false" type="Integer"
+     * @a2.tagattribute required="false" type="Integer"
      */
     public void setSize(String size) {
         this.size = size;

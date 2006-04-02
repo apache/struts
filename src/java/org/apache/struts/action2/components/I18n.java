@@ -63,7 +63,7 @@ import java.util.ResourceBundle;
  * @version $Revision: 1.13 $
  * @since 2.2
  *
- * @ww.tag name="i18n" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.I18nTag"
+ * @a2.tag name="i18n" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.I18nTag"
  * description="Get a resource bundle and place it on the value stack"
  */
 public class I18n extends Component {
@@ -115,7 +115,7 @@ public class I18n extends Component {
 
     /**
      * Name of ressource bundle to use (eg foo/bar/customBundle)
-     * @ww.tagattribute required="true" default="String"
+     * @a2.tagattribute required="true" default="String"
      */
     public void setName(String name) {
         this.name = name;

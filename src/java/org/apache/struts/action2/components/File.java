@@ -27,7 +27,7 @@ import org.apache.commons.logging.LogFactory;
  * @version $Revision: 1.11 $
  * @since 2.2
  *
- * @ww.tag name="file" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.FileTag"
+ * @a2.tag name="file" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.FileTag"
  * description="Render a file input field"
   */
 public class File extends UIBean {
@@ -75,7 +75,7 @@ public class File extends UIBean {
 
     /**
      * HTML accept attribute to indicate accepted file mimetypes
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setAccept(String accept) {
         this.accept = accept;
@@ -83,7 +83,7 @@ public class File extends UIBean {
 
     /**
      * HTML size attribute
-     * @ww.tagattribute required="false" type="Integer"
+     * @a2.tagattribute required="false" type="Integer"
      */
     public void setSize(String size) {
         this.size = size;

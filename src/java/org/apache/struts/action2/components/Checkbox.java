@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision: 1.9 $
  * @since 2.2
  *
- * @ww.tag name="checkbox" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.CheckboxTag"
+ * @a2.tag name="checkbox" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.CheckboxTag"
  * description="Render a checkbox input field"
   */
 public class Checkbox extends UIBean {
@@ -61,7 +61,7 @@ public class Checkbox extends UIBean {
 
     /**
      * The actual HTML value attribute of the checkbox.
-     * @ww.tagattribute required="false" default="'true'"
+     * @a2.tagattribute required="false" default="'true'"
      */
     public void setFieldValue(String fieldValue) {
         this.fieldValue = fieldValue;

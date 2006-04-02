@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision: 1.6 $
  * @since 2.2
  *
- * @ww.tag name="radio" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.RadioTag"
+ * @a2.tag name="radio" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.RadioTag"
  * description="Renders a radio button input field"
  */
 public class Radio extends ListUIBean {

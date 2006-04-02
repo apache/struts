@@ -140,7 +140,7 @@ import java.util.Iterator;
  * @author Rick Salsa (rsal@mb.sympatico.ca)
  * @author tm_jee ( tm_jee(at)yahoo.co.uk )
  * @version $Revision: 1.11 $
- * @ww.tag name="iterator" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.IteratorTag"
+ * @a2.tag name="iterator" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.IteratorTag"
  * description="Iterate over a iterable value"
  */
 public class IteratorComponent extends Component {
@@ -237,7 +237,7 @@ public class IteratorComponent extends Component {
 
     /**
      * if specified, an instanceof IteratorStatus will be pushed into stack upon each iteration
-     * @ww.tagattribute required="false" type="Boolean" default="false"
+     * @a2.tagattribute required="false" type="Boolean" default="false"
      */
     public void setStatus(String status) {
         this.statusAttr = status;
@@ -245,7 +245,7 @@ public class IteratorComponent extends Component {
 
     /**
      * the iteratable source to iterate over, else an the object itself will be put into a newly created List
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setValue(String value) {
         this.value = value;

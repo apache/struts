@@ -111,7 +111,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * @see org.apache.struts.action2.util.MergeIteratorFilter
  * @see org.apache.struts.action2.views.jsp.iterator.MergeIteratorTag
  *
- * @ww.tag name="merge" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.iterator.MergeIteratorTag"
+ * @a2.tag name="merge" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.iterator.MergeIteratorTag"
  * description="Merge the values of a list of iterators into one iterator"
  */
 public class MergeIterator extends Component implements UnnamedParametric {
@@ -158,7 +158,7 @@ public class MergeIterator extends Component implements UnnamedParametric {
 
     /**
      * the id where the resultant merged iterator will be stored in the stack's context
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setId(String id) {
         super.setId(id);

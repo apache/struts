@@ -43,7 +43,7 @@ import java.io.Writer;
  * @see Else
  * @see ElseIf
  *
- * @ww.tag name="if" tld-body-content="JSP" description="If tag" tld-tag-class="org.apache.struts.action2.views.jsp.IfTag"
+ * @a2.tag name="if" tld-body-content="JSP" description="If tag" tld-tag-class="org.apache.struts.action2.views.jsp.IfTag"
  */
 public class If extends Component {
     public static final String ANSWER = "struts.if.answer";
@@ -53,7 +53,7 @@ public class If extends Component {
 
     /**
      * Expression to determine if body of tag is to be displayed
-     * @ww.tagattribute required="true" type="Boolean"
+     * @a2.tagattribute required="true" type="Boolean"
      */
     public void setTest(String test) {
         this.test = test;

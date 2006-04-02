@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision: 1.8 $
  * @since 2.2
  *
- * @ww.tag name="password" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.PasswordTag"
+ * @a2.tag name="password" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.PasswordTag"
  * description="Render an HTML input tag of type password"
  */
 public class Password extends TextField {
@@ -53,7 +53,7 @@ public class Password extends TextField {
 
     /**
      * Whether to show input
-     * @ww.tagattribute required="false" type="Boolean" default="false"
+     * @a2.tagattribute required="false" type="Boolean" default="false"
      */
     public void setShowPassword(String showPassword) {
         this.showPassword = showPassword;
@@ -61,7 +61,7 @@ public class Password extends TextField {
 
     /**
      * Deprecated. Use showPassword instead.
-     * @ww.tagattribute required="false" rtexprvalue="true"
+     * @a2.tagattribute required="false" rtexprvalue="true"
      * @deprecated use {@link #setShowPassword(String)}
      */
     public void setShow(String showPassword) {

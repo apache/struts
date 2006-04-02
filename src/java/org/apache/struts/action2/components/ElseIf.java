@@ -40,7 +40,7 @@ import java.io.Writer;
  *
  * @author Rick Salsa (rsal@mb.sympatico.ca)
  * @author tmjee
- * @ww.tag name="elseif" tld-body-content="JSP" description="Elseif tag"  tld-tag-class="org.apache.struts.action2.views.jsp.ElseIfTag"
+ * @a2.tag name="elseif" tld-body-content="JSP" description="Elseif tag"  tld-tag-class="org.apache.struts.action2.views.jsp.ElseIfTag"
  */
 public class ElseIf extends Component {
     public ElseIf(OgnlValueStack stack) {
@@ -77,7 +77,7 @@ public class ElseIf extends Component {
 
     /**
      * Expression to determine if body of tag is to be displayed
-     * @ww.tagattribute required="true" type="Boolean"
+     * @a2.tagattribute required="true" type="Boolean"
      */
     public void setTest(String test) {
         this.test = test;

@@ -63,7 +63,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Ian Roughley
  * @author Rene Gielen
  * @version $Revision: 1.5 $
- * @ww.tag name="a" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.AnchorTag"
+ * @a2.tag name="a" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.AnchorTag"
  * description="Render a HTML href element that when clicked calls a URL via remote XMLHttpRequest"
  * @since 2.2
  */
@@ -101,7 +101,7 @@ public class Anchor extends RemoteCallUIBean {
 
     /**
      * The id to assign the component
-     * @ww.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setId(String id) {
         super.setId(id);
@@ -109,7 +109,7 @@ public class Anchor extends RemoteCallUIBean {
 
     /**
      * Topic names to post an event to after the remote call has been made
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setNotifyTopics(String notifyTopics) {
         this.notifyTopics = notifyTopics;
@@ -117,7 +117,7 @@ public class Anchor extends RemoteCallUIBean {
 
     /**
      * A javascript snippet that will be invoked prior to the execution of the target href. If provided must return true or false. True indicates to continue executing target, false says do not execute link target. Possible uses are for confirm dialogs.
-     * @ww.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setPreInvokeJS(String preInvokeJS) {
         this.preInvokeJS = preInvokeJS;

@@ -76,7 +76,7 @@ import java.util.List;
  *
  * @see Panel
  *
- * @ww.tag name="tabbedPanel" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TabbedPanelTag"
+ * @a2.tag name="tabbedPanel" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TabbedPanelTag"
  * description="Render a tabbedPanel widget."
  */
 public class TabbedPanel extends ClosingUIBean {
@@ -134,7 +134,7 @@ public class TabbedPanel extends ClosingUIBean {
 
     /**
      * The id to assign to the component.
-     * @ww.tagattribute required="true" type="String"
+     * @a2.tagattribute required="true" type="String"
      */
     public void setId(String id) {
         // This is required to override tld generation attributes to required=true

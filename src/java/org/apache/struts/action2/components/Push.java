@@ -92,7 +92,7 @@ import java.io.Writer;
  * @version $Revision: 1.15 $
  * @since 2.2
  *
- * @ww.tag name="push" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.PushTag"
+ * @a2.tag name="push" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.PushTag"
  * description="Push value on stack for simplified usage."
  */
 public class Push extends Component {
@@ -130,7 +130,7 @@ public class Push extends Component {
 
     /**
      * Value to push on stack
-     * @ww.tagattribute required="true"
+     * @a2.tagattribute required="true"
      */
     public void setValue(String value) {
         this.value = value;

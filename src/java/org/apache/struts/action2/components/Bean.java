@@ -76,7 +76,7 @@ import java.io.Writer;
  *
  * @see Param
  *
- * @ww.tag name="bean" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.BeanTag"
+ * @a2.tag name="bean" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.BeanTag"
  * description="Instantiate a JavaBean and place it in the context."
  */
 public class Bean extends Component {
@@ -127,7 +127,7 @@ public class Bean extends Component {
 
     /**
      * the class name of the bean to be instantiated (must respect JavaBean specification)
-     * @ww.tagattribute required="true" type="String"
+     * @a2.tagattribute required="true" type="String"
      */
     public void setName(String name) {
         this.name = name;

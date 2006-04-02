@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision: 1.10 $
  * @since 2.2
  *
- * @ww.tag name="textfield" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TextFieldTag"
+ * @a2.tag name="textfield" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TextFieldTag"
  * description="Render an HTML input field of type text"
  */
 public class TextField extends UIBean {
@@ -67,7 +67,7 @@ public class TextField extends UIBean {
 
     /**
      * HTML maxlength attribute
-     * @ww.tagattribute required="false" type="Integer"
+     * @a2.tagattribute required="false" type="Integer"
      */
     public void setMaxlength(String maxlength) {
         this.maxlength = maxlength;
@@ -75,7 +75,7 @@ public class TextField extends UIBean {
 
     /**
      * Deprecated. Use maxlength instead.
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setMaxLength(String maxlength) {
         this.maxlength = maxlength;
@@ -83,7 +83,7 @@ public class TextField extends UIBean {
 
     /**
      * Whether the input is readonly
-     * @ww.tagattribute required="false" type="Boolean" default="false"
+     * @a2.tagattribute required="false" type="Boolean" default="false"
      */
     public void setReadonly(String readonly) {
         this.readonly = readonly;
@@ -91,7 +91,7 @@ public class TextField extends UIBean {
 
     /**
      * HTML size attribute
-     * @ww.tagattribute required="false" type="Integer"
+     * @a2.tagattribute required="false" type="Integer"
      */
     public void setSize(String size) {
         this.size = size;

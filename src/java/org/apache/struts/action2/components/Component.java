@@ -427,7 +427,7 @@ public class Component {
 
     /**
      * id for referencing element. For UI and form tags it will be used as HTML id attribute
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setId(String id) {
         this.id = id;

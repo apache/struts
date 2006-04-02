@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Jason Carreira <jcarreira@eplus.com>
  *
- * @ww.tag name="treenode" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TreeNodeTag"
+ * @a2.tag name="treenode" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TreeNodeTag"
  * description="Render a tree node within a tree widget."
  */
 public class TreeNode extends ClosingUIBean {
@@ -48,7 +48,7 @@ public class TreeNode extends ClosingUIBean {
 
     /**
      * Label expression used for rendering tree node label.
-     * @ww.tagattribute required="true"
+     * @a2.tagattribute required="true"
      */
     public void setLabel(String label) {
         super.setLabel(label);

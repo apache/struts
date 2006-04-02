@@ -69,7 +69,7 @@ import java.util.*;
  * @version $Revision: 1.20 $
  * @since 2.2
  *
- * @ww.tag name="include" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.IncludeTag"
+ * @a2.tag name="include" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.IncludeTag"
  * description="Include a servlet's output (result of servlet or a JSP page)"
  */
 public class Include extends Component {
@@ -140,7 +140,7 @@ public class Include extends Component {
 
     /**
      * The jsp/servlet output to include
-     * @ww.tagattribute required="true" type="String"
+     * @a2.tagattribute required="true" type="String"
      */
     public void setValue(String value) {
         this.value = value;

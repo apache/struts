@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author tm_jee
  * @version $Date: 2006/01/07 20:43:28 $ $Id: ActionMessage.java,v 1.6 2006/01/07 20:43:28 plightbo Exp $
- * @ww.tag name="actionmessage" tld-body-content="empty" tld-tag-class="org.apache.struts.action2.views.jsp.ui.ActionMessageTag"
+ * @a2.tag name="actionmessage" tld-body-content="empty" tld-tag-class="org.apache.struts.action2.views.jsp.ui.ActionMessageTag"
  * description="Render action messages if they exists"
  * @since 2.2
  */

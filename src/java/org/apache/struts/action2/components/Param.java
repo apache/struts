@@ -74,7 +74,7 @@ import java.io.Writer;
  * @see Bean
  * @see Text
  *
- * @ww.tag name="param" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ParamTag"
+ * @a2.tag name="param" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ParamTag"
  * description="Parametrize other tags"
  */
 public class Param extends Component {
@@ -117,7 +117,7 @@ public class Param extends Component {
 
     /**
      * Name of Parameter to set
-     * @ww.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setName(String name) {
         this.name = name;
@@ -125,7 +125,7 @@ public class Param extends Component {
 
     /**
      * Value expression for Parameter to set
-     * @ww.tagattribute required="false" default="The value of evaluating provided name against stack"
+     * @a2.tagattribute required="false" default="The value of evaluating provided name against stack"
      */
     public void setValue(String value) {
         this.value = value;

@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision: 1.11 $
  * @since 2.2
  *
- * @ww.tag name="label" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.LabelTag"
+ * @a2.tag name="label" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.LabelTag"
  * description="Render a label that displays read-only information"
   */
 public class Label extends UIBean {
@@ -67,7 +67,7 @@ public class Label extends UIBean {
 
     /**
      * HTML for attribute
-     * @ww.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setFor(String forAttr) {
         this.forAttr = forAttr;

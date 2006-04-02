@@ -40,7 +40,7 @@ import java.util.Map;
  * @version $Revision: 1.2 $
  * @since 2.2
  *
- * @ww.tag name="debug" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.DebugTag"
+ * @a2.tag name="debug" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.DebugTag"
  * description="Render debug tag"
   */
 public class Debug extends UIBean {

@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package org.apache.struts.action2.example.ajax.actions;
+package org.apache.struts.webwork.example.ajax.actions;
 
-import org.apache.struts.action2.example.ajax.cart.ShoppingCart;
+import org.apache.struts.webwork.example.ajax.cart.ShoppingCart;
 
 /**
  * UpdateQuantityInCart

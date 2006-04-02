@@ -1,12 +1,12 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package org.apache.struts.action2.example.ajax.actions;
+package org.apache.struts.webwork.example.ajax.actions;
 
-import org.apache.struts.action2.example.ajax.cart.ShoppingCart;
-import org.apache.struts.action2.example.ajax.catalog.Catalog;
-import org.apache.struts.action2.example.ajax.catalog.Category;
-import org.apache.struts.action2.interceptor.SessionAware;
+import org.apache.struts.webwork.example.ajax.cart.ShoppingCart;
+import org.apache.struts.webwork.example.ajax.catalog.Catalog;
+import org.apache.struts.webwork.example.ajax.catalog.Category;
+import org.apache.struts.webwork.interceptor.SessionAware;
 import com.opensymphony.xwork.ActionSupport;
 
 import java.util.Map;

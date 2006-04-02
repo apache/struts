@@ -140,7 +140,7 @@
                 <artifactId>maven-idea-plugin</artifactId>
                 <configuration>
                     <jdkName>1.5</jdkName>
-                    <exclude>target,test-output,.clover</exclude>
+                    <exclude>target,dist,docs/wikidocs,test-output,.clover</exclude>
                     <useShortDependencyNames>true</useShortDependencyNames>
                     <libraries>
                         <library>

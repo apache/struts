@@ -142,7 +142,7 @@ public class DebuggingInterceptor implements Interceptor {
                     });
             } else if (COMMAND_MODE.equals(type)) {
                 OgnlValueStack stack = (OgnlValueStack) ctx.getSession().get(SESSION_KEY);
-                String cmd = getParameter(EXPRESION_PARAM);
+                String cmd = getParameter(EXPRESSION_PARAM);
 
                 HttpServletResponse res = ServletActionContext.getResponse();
                 res.setContentType("text/plain");

@@ -239,7 +239,7 @@
      </XDtClass:ifHasClassTag>
     </XDtConfig:ifConfigParamGreaterOrEquals>
     <XDtConfig:ifConfigParamGreaterOrEquals paramName="Jspversion" value="1.2">
-     <XDtClass:ifHasClassTag tagName="a2.tag" paramName="example">
+     <XDtClass:ifHasClassTag tagName="a2:tag" paramName="example">
       <example><![CDATA[<XDtClass:classTagValue tagName="a2.tag" paramName="example"/>]]></example>
      </XDtClass:ifHasClassTag>
     </XDtConfig:ifConfigParamGreaterOrEquals>

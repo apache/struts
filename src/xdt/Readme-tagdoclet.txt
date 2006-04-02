@@ -1,14 +1,14 @@
-Webwork custom tagdoclet
-========================
+Struts Action 2 Custom Tagdoclet
+================================
 
 The provided xdoclet templates are based on original xdoclet distribution templates for tld generation.
 
-The annotations may be used for classes extending TagSupport or cos.components.Component. If used in component
-classes, you will also need a TagSupport wrapper class to generate valid tld (see @ww:tag#tld-tag-class).
+The annotations may be used for classes extending TagSupport or oas.action2.components.Component. If used in component
+classes, you will also need a TagSupport wrapper class to generate valid tld (see @a2:tag#tld-tag-class).
 
 Following a description of the provided tags and their parameters:
 
-@ww.tag (Class javadoc)
+@a2.tag (Class javadoc)
 -----------------------
 Mark annotated class as end user tag provider
 
@@ -17,10 +17,10 @@ Parameters       | Required/Default   | Description
 name             | true/-             | Tag name
 tld-body-content | false/"JSP"        | body-content param for tld
 tld-tag-class    | */current Class    | TagSupport class (*required if current class is not)
-description      | false/""           | Tag description
+description      | false/""           | Tag description. If not provided, javadoc content is used.
 
 
-@ww.tagattribute (Setter method javadoc)
+@a2.tagattribute (Setter method javadoc)
 ----------------------------------------
 Mark annotated setter as tag attribute, usable for end user tag provider class and each superclass
 
@@ -30,4 +30,4 @@ required         | no/"false"         | Whether attribute is required
 default          | no/""              | Default value if not supplied
 type             | no/"String/Object" | DESCRIPTIVE Type, for documentation
 tld-type         | no/""              | ACTUAL JAVA TYPE, if explicitely needed for <type> element in tld
-description      | no/""              | Tag attribute description
+description      | no/""              | Tag attribute description. If not provided, javadoc content is used.

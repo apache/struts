@@ -1,0 +1,25 @@
+package org.apache.struts.webwork.sitegraph;
+
+import com.opensymphony.util.FileUtils;
+import org.apache.struts.webwork.StrutsTestCase;
+
+import java.io.File;
+import java.io.StringWriter;
+
+/**
+ * User: plightbo
+ * Date: Jun 25, 2005
+ * Time: 4:18:28 PM
+ */
+public class SiteGraphTest extends StrutsTestCase {
+    public void testWebFlow() {
+        String dir = "src/test/org/apache/struts/webwork/sitegraph";
+        SiteGraph siteGraph = new SiteGraph(dir, dir, dir, "");
+        StringWriter writer = new StringWriter();
+        siteGraph.setWriter(writer);
+        siteGraph.prepare();
+
+        String out = "src/test/org/apache/struts/webwork/sitegraph/out.txt";
+        assertEquals(FileUtils.readFile(new File(out)), writer.toString());
+    }
+}

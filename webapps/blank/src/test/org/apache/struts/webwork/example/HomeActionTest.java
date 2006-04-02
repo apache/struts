@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2006, Your Corporation. All Rights Reserved.
  */
-package org.apache.struts.action2.example;
+package org.apache.struts.webwork.example;
 
-import com.opensymphony.xwork.ActionSupport;
+import junit.framework.TestCase;
 
 /**
  * <code>HomeActionTest</code>

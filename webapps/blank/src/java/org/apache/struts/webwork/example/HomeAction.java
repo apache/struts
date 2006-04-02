@@ -2,7 +2,7 @@
  * Copyright (c) 2006, Your Corporation. All Rights Reserved.
  */
 
-package org.apache.struts.action2.example;
+package org.apache.struts.webwork.example;
 
 import com.opensymphony.xwork.ActionSupport;
 
@@ -13,7 +13,9 @@ import com.opensymphony.xwork.ActionSupport;
  */
 public class HomeAction extends ActionSupport {
 
-    /**
+	private static final long serialVersionUID = -3881551454078687096L;
+
+	/**
      * A default implementation that does nothing an returns "success".
      *
      * @return {@link #SUCCESS}

@@ -1,0 +1,24 @@
+package org.apache.struts.action2.showcase.exception;
+
+/**
+ * CreateException.
+ *
+ * @author <a href="mailto:gielen@it-neering.net">Rene Gielen</a>
+ */
+
+public class CreateException extends StorageException {
+
+	private static final long serialVersionUID = 6734349565111633783L;
+	
+    public CreateException(String message) {
+        super(message);
+    }
+
+    public CreateException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public CreateException(Throwable cause) {
+        super(cause);
+    }
+}

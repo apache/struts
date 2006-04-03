@@ -1,0 +1,23 @@
+package org.apache.struts.action2;
+
+import com.opensymphony.xwork.ActionInvocation;
+import com.opensymphony.xwork.Result;
+
+public class TestActionTagResult implements Result {
+
+	private static final long serialVersionUID = 5245516954875657626L;
+	
+	private boolean _isExecuted;
+	
+	public void execute(ActionInvocation invocation) throws Exception {
+		_isExecuted = true;
+	}
+	
+	public boolean isExecuted() {
+		return _isExecuted;
+	}
+
+	public void reset() {
+		_isExecuted = false;
+	}
+}

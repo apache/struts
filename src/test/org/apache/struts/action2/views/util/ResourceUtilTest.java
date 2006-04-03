@@ -8,7 +8,7 @@ package org.apache.struts.action2.views.util;
  * <code>ResourceUtilTest</code>
  *
  * @author Rainer Hermanns
- * @version $Id: ResourceUtilTest.java,v 1.2 2006/03/13 05:02:07 rainerh Exp $
+ * @version $Id$
  */
 import junit.framework.TestCase;
 import org.easymock.MockControl;

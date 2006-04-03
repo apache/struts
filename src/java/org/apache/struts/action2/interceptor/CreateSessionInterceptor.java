@@ -59,7 +59,7 @@ import com.opensymphony.xwork.interceptor.AroundInterceptor;
  * </pre>
  * 
  * @author Claus Ibsen
- * @version $Date: 2006/03/19 07:40:59 $ $Id: CreateSessionInterceptor.java,v 1.4 2006/03/19 07:40:59 davsclaus Exp $
+ * @version $Date$ $Id$
  */
 public class CreateSessionInterceptor extends AroundInterceptor {
 	

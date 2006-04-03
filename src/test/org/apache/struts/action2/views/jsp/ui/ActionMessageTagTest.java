@@ -17,7 +17,7 @@ import com.opensymphony.xwork.ActionSupport;
  * ActionMessageTag test case.
  * 
  * @author tm_jee
- * @version $Date: 2005/12/22 16:24:22 $ $Id: ActionMessageTagTest.java,v 1.1 2005/12/22 16:24:22 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class ActionMessageTagTest extends AbstractUITagTest {
 
@@ -52,7 +52,7 @@ public class ActionMessageTagTest extends AbstractUITagTest {
 	 * or without action messages.
 	 * 
 	 * @author tm_jee
-	 * @version $Date: 2005/12/22 16:24:22 $ $Id: ActionMessageTagTest.java,v 1.1 2005/12/22 16:24:22 tmjee Exp $
+	 * @version $Date$ $Id$
 	 */
 	public class InternalActionSupport extends ActionSupport {
 		

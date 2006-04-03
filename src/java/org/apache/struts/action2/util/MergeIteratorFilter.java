@@ -16,7 +16,7 @@ import java.util.List;
  * MergeIteratorTag.
  *
  * @author Rickard Öberg (rickard@middleware-company.com)
- * @version $Revision: 1.7 $
+ * @version $Revision$
  * @see org.apache.struts.webwork.views.jsp.iterator.MergeIteratorTag
  * @see org.apache.struts.webwork.components.MergeIterator
  */

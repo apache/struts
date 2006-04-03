@@ -10,7 +10,7 @@ import javax.servlet.jsp.JspWriter;
  * Unit test for {@link URLTag}.
  *
  * @author Brock Bulger (brockman_bulger@hotmail.com)
- * @version $Date: 2006/03/19 12:50:49 $ $Id: URLTagTest.java,v 1.19 2006/03/19 12:50:49 davsclaus Exp $
+ * @version $Date$ $Id$
  */
 public class URLTagTest extends AbstractUITagTest {
 

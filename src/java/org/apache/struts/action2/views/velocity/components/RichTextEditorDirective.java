@@ -13,7 +13,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
 
 /**
  * @author tm_jee
- * @version $Date: 2006/02/18 05:29:27 $ $Id: RichTextEditorDirective.java,v 1.1 2006/02/18 05:29:27 tmjee Exp $
+ * @version $Date$ $Id$
  * @see RichTextEditor
  */
 public class RichTextEditorDirective extends AbstractDirective {

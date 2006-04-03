@@ -48,7 +48,7 @@ import com.opensymphony.xwork.ActionSupport;
  * 
  * 
  * @author tm_jee
- * @version $Date: 2006/03/08 20:22:33 $ $Id: AbstractRichtexteditorConnector.java,v 1.4 2006/03/08 20:22:33 rainerh Exp $
+ * @version $Date$ $Id$
  * @see org.apache.struts.action2.components.DefaultRichtexteditorConnector
  */
 public abstract class AbstractRichtexteditorConnector extends ActionSupport implements ServletRequestAware, ServletResponseAware {
@@ -391,7 +391,7 @@ public abstract class AbstractRichtexteditorConnector extends ActionSupport impl
 	 * <!-- START SNIPPET: folder -->
 	 * 
 	 * @author tm_jee
-	 * @version $Date: 2006/03/08 20:22:33 $ $Id: AbstractRichtexteditorConnector.java,v 1.4 2006/03/08 20:22:33 rainerh Exp $
+	 * @version $Date$ $Id$
 	 * @see AbstractRichtexteditorConnector#getFolders(String, String)
 	 * @see AbstractRichtexteditorConnector#getFoldersAndFiles(String, String)
 	 * @see AbstractRichtexteditorConnector.FoldersAndFiles
@@ -421,7 +421,7 @@ public abstract class AbstractRichtexteditorConnector extends ActionSupport impl
 	 * <!-- END SNIPPET: File -->
 	 * 
 	 * @author tm_jee
-	 * @version $Date: 2006/03/08 20:22:33 $ $Id: AbstractRichtexteditorConnector.java,v 1.4 2006/03/08 20:22:33 rainerh Exp $
+	 * @version $Date$ $Id$
 	 * @see AbstractRichtexteditorConnector#getFoldersAndFiles(String, String)
 	 * @see AbstractRichtexteditorConnector.FoldersAndFiles
 	 */
@@ -452,7 +452,7 @@ public abstract class AbstractRichtexteditorConnector extends ActionSupport impl
 	 * <!-- END SNIPPET: foldersandfiles -->
 	 * 
 	 * @author tm_jee
-	 * @version $Date: 2006/03/08 20:22:33 $ $Id: AbstractRichtexteditorConnector.java,v 1.4 2006/03/08 20:22:33 rainerh Exp $
+	 * @version $Date$ $Id$
 	 * @see AbstractRichtexteditorConnector#getFoldersAndFiles(String, String)
 	 * @see AbstractRichtexteditorConnector.File
 	 * @see AbstractRichtexteditorConnector.Folder
@@ -493,7 +493,7 @@ public abstract class AbstractRichtexteditorConnector extends ActionSupport impl
 	 * <!-- END SNIPPET: createfolderresult -->
 	 * 
 	 * @author tm_jee
-	 * @version $Date: 2006/03/08 20:22:33 $ $Id: AbstractRichtexteditorConnector.java,v 1.4 2006/03/08 20:22:33 rainerh Exp $
+	 * @version $Date$ $Id$
 	 * @see AbstractRichtexteditorConnector#createFolder(String, String, String)
 	 */
 	public static class CreateFolderResult implements Serializable {
@@ -539,7 +539,7 @@ public abstract class AbstractRichtexteditorConnector extends ActionSupport impl
 	 * <!-- END SNIPPET: fileuploadresult -->
 	 * 
 	 * @author tm_jee
-	 * @version $Date: 2006/03/08 20:22:33 $ $Id: AbstractRichtexteditorConnector.java,v 1.4 2006/03/08 20:22:33 rainerh Exp $
+	 * @version $Date$ $Id$
 	 * @see AbstractRichtexteditorConnector#fileUpload(String, String, String, String, java.io.File)
 	 */
 	public static class FileUploadResult implements Serializable {

@@ -20,7 +20,7 @@ import com.opensymphony.xwork.config.ConfigurationManager;
  * @author Jason Carreira
  *         Created Apr 3, 2003 10:28:58 AM
  *         
- * @version $Date: 2006/03/17 09:46:18 $ $Id: FormTagTest.java,v 1.30 2006/03/17 09:46:18 rainerh Exp $
+ * @version $Date$ $Id$
  */
 public class FormTagTest extends AbstractUITagTest {
 

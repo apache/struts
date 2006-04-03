@@ -8,7 +8,7 @@ package org.apache.struts.action2.interceptor;
  * By using this interface you will not become tied to servlet environment.</p>
  *
  * @author Remigijus Bauzys
- * @version $Revision: 1.5 $
+ * @version $Revision$
  */
 public interface PrincipalAware {
     void setPrincipalProxy(PrincipalProxy principalProxy);

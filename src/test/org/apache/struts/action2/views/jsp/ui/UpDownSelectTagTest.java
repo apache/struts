@@ -17,7 +17,7 @@ import com.opensymphony.xwork.ActionSupport;
  * Test case for UpDownSelectTag 
  * 
  * @author tm_jee
- * @version $Date: 2006/02/03 13:27:22 $ $Id: UpDownSelectTagTest.java,v 1.2 2006/02/03 13:27:22 rgielen Exp $
+ * @version $Date$ $Id$
  */
 public class UpDownSelectTagTest extends AbstractUITagTest {
 

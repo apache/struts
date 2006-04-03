@@ -19,7 +19,7 @@ import com.opensymphony.xwork.ActionSupport;
  * FieldError Tag Test Case.
  * 
  * @author tm_jee
- * @version $Date: 2006/02/25 10:56:53 $ $Id: FieldErrorTagTest.java,v 1.3 2006/02/25 10:56:53 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class FieldErrorTagTest extends AbstractUITagTest {
 

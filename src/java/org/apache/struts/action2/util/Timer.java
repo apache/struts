@@ -9,7 +9,7 @@ package org.apache.struts.action2.util;
  * A bean that can be used to time execution of pages
  *
  * @author Rickard �berg (rickard@middleware-company.com)
- * @version $Revision: 1.4 $
+ * @version $Revision$
  */
 public class Timer {
 

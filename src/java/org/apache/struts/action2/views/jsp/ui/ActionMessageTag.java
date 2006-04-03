@@ -15,7 +15,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * ActionMessage Tag.
  * 
  * @author tm_jee
- * @version $Date: 2005/12/22 16:24:16 $ $Id: ActionMessageTag.java,v 1.1 2005/12/22 16:24:16 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class ActionMessageTag extends AbstractUITag {
 

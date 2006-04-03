@@ -15,7 +15,7 @@ import com.opensymphony.xwork.config.ConfigurationManager;
  * UI components Tooltip test case.
  * 
  * @author tm_jee
- * @version $Date: 2006/02/27 13:41:01 $ $Id: TooltipTest.java,v 1.2 2006/02/27 13:41:01 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class TooltipTest extends AbstractUITagTest {
 

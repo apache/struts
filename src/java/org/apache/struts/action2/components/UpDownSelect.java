@@ -56,7 +56,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * 
  * 
  * @author tm_jee
- * @version $Date: 2006/03/18 15:50:12 $ $Id: UpDownSelect.java,v 1.7 2006/03/18 15:50:12 rgielen Exp $
+ * @version $Date$ $Id$
  * 
  * @a2.tag name="updownselect" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.UpDownSelectTag"
  * description="Render a up down select element"

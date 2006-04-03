@@ -32,8 +32,8 @@ import java.util.Properties;
 
 
 /**
- * @author $Author: the_mindstorm $
- * @version $Revision: 1.20 $
+ * @author $Author$
+ * @version $Revision$
  * @deprecated please use {@link org.apache.struts.action2.dispatcher.VelocityResult} instead of direct access
  */
 public class StrutsVelocityServlet extends VelocityServlet {

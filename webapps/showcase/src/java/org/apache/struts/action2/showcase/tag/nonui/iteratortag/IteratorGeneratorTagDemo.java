@@ -8,7 +8,7 @@ import com.opensymphony.xwork.ActionSupport;
 
 /**
  * @author tm_jee
- * @version $Date: 2006/01/18 19:14:07 $ $Id: IteratorGeneratorTagDemo.java,v 1.1 2006/01/18 19:14:07 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class IteratorGeneratorTagDemo extends ActionSupport {
 

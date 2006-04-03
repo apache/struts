@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Ian Roughley
  * @author Rene Gielen
- * @version $Revision: 1.11 $
+ * @version $Revision$
  * @since 2.2
  *
  * @a2.tag name="div" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.DivTag"

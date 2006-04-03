@@ -50,7 +50,7 @@ import java.util.Iterator;
  * @author Ian Roughley
  * @author Rene Gielen
  * @author Rainer Hermanns
- * @version $Date: 2006/03/18 15:49:26 $ $Id: Form.java,v 1.29 2006/03/18 15:49:26 rgielen Exp $
+ * @version $Date$ $Id$
  * @since 2.2
  *
  * @a2.tag name="form" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.FormTag"

@@ -24,7 +24,7 @@ import org.jmock.core.Constraint;
  * PortletRequestMapTest. Insert description.
  * 
  * @author Nils-Helge Garli
- * @version $Revision: 1.3 $ $Date: 2006/03/10 09:39:24 $
+ * @version $Revision$ $Date$
  */
 public class PortletRequestMapTest extends MockObjectTestCase {
 

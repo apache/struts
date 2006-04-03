@@ -22,7 +22,7 @@ import com.opensymphony.xwork.ActionContext;
  * PortletActionContext. ActionContext thread local for the portlet environment.
  * 
  * @author Nils-Helge Garli
- * @version $Revision: 1.6 $ $Date: 2006/03/08 20:22:33 $
+ * @version $Revision$ $Date$
  */
 public class PortletActionContext implements PortletActionConstants {
 

@@ -94,7 +94,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  *
  *
  * @author tm_jee
- * @version $Date: 2006/03/18 15:57:09 $ $Id: AppendIterator.java,v 1.10 2006/03/18 15:57:09 rgielen Exp $
+ * @version $Date$ $Id$
  * @see org.apache.struts.action2.util.AppendIteratorFilter
  * @see org.apache.struts.action2.views.jsp.iterator.AppendIteratorTag
  *

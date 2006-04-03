@@ -12,7 +12,7 @@ import java.util.List;
  * 
  * @author <a href="mailto:m.bogaert@memenco.com">Mathias Bogaert</a>
  * @author tm_jee
- * @version $Date: 2006/02/03 12:45:24 $ $Id: DoubleSelectTest.java,v 1.6 2006/02/03 12:45:24 rgielen Exp $
+ * @version $Date$ $Id$
  */
 public class DoubleSelectTest extends AbstractUITagTest {
 

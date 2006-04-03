@@ -23,7 +23,7 @@ import java.util.Map;
  *
  * <!-- END SNIPPET: javadoc -->
  * 
- * @version $Date: 2006/03/18 15:49:04 $ $Id: StrutsTypeConverter.java,v 1.5 2006/03/18 15:49:04 rainerh Exp $
+ * @version $Date$ $Id$
  * 
  */
 public abstract class StrutsTypeConverter extends DefaultTypeConverter {

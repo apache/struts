@@ -13,7 +13,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
 /**
  * 
  * @author tm_jee
- * @version $Date: 2006/02/01 16:30:08 $ $Id: UpDownSelectModel.java,v 1.1 2006/02/01 16:30:08 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class UpDownSelectModel extends TagModel {
 

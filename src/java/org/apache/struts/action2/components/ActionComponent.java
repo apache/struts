@@ -87,7 +87,7 @@ import java.util.Map;
  * @author <a href="mailto:plightbo@gmail.com">Pat Lightbody</a>
  * @author tm_jee ( tm_jee (at) yahoo.co.uk )
  * @author Rene Gielen
- * @version $Revision: 1.22 $
+ * @version $Revision$
  * @since 2.2
  *
  * @a2.tag name="action" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ActionTag"

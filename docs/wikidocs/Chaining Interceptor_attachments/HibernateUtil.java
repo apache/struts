@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
  * Helper Singleton class to manage Hibernate Sessions.
  *
  * @author Joel Hockey
- * @version $Id: HibernateUtil.java,v 1.22 2006/03/23 21:23:44 rgielen Exp $
+ * @version $Id$
  */
 public class HibernateUtil {
 

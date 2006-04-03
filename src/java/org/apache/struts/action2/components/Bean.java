@@ -71,7 +71,7 @@ import java.io.Writer;
  * @author Rick Salsa (rsal@mb.sympatico.ca)
  * @author Brock Bulger
  * @author Rene Gielen
- * @version $Revision: 1.14 $
+ * @version $Revision$
  * @since 2.2
  *
  * @see Param

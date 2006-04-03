@@ -67,7 +67,7 @@ import java.io.Writer;
  * @author Rickard �berg (rickard@dreambean.com)
  * @author Rene Gielen
  * @author tm_jee
- * @version $Revision: 1.15 $
+ * @version $Revision$
  * @since 2.2
  *
  * @see Include

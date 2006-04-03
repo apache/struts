@@ -11,7 +11,7 @@ import net.sf.jasperreports.engine.JasperCompileManager;
  * Ported to Struts:
  *
  * @author &lt;a href="hermanns@aixcept.de"&gt;Rainer Hermanns&lt;/a&gt;
- * @version $Id: CompileReport.java,v 1.5 2006/03/08 18:09:05 rainerh Exp $
+ * @version $Id$
  */
 public class CompileReport {
 

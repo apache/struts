@@ -8,7 +8,7 @@ import org.apache.struts.action2.components.table.WebTable;
 
 /**
  * @author $author$
- * @version $Revision: 1.2 $
+ * @version $Revision$
  */
 public interface CellRenderer {
 

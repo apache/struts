@@ -14,7 +14,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
 /**
  * 
  * @author tm_jee
- * @version $Date: 2006/03/15 16:35:38 $ $Id: UpDownSelectDirective.java,v 1.1 2006/03/15 16:35:38 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class UpDownSelectDirective extends AbstractDirective {
 

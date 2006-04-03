@@ -17,7 +17,7 @@ import java.util.Locale;
  *
  * @author Jason Carreira
  * @author tm_jee
- * @version $Date: 2006/03/11 06:23:02 $ $Id: StrutsMockHttpServletResponse.java,v 1.6 2006/03/11 06:23:02 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class StrutsMockHttpServletResponse extends MockHttpServletResponse {
     private Locale locale;

@@ -13,7 +13,7 @@ import org.apache.struts.action2.views.jsp.AbstractUITagTest;
 /**
  * 
  * @author tm_jee
- * @version $Date: 2006/01/07 15:08:41 $ $Id: OptionTransferSelectTagTest.java,v 1.1 2006/01/07 15:08:41 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class OptionTransferSelectTagTest extends AbstractUITagTest {
 

@@ -16,8 +16,8 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 
 /**
- * @author $Author: rainerh $
- * @version $Revision: 1.11 $
+ * @author $Author$
+ * @version $Revision$
  */
 public class IfTagTest extends TestCase {
 

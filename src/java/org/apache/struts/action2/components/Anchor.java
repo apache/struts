@@ -62,7 +62,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Ian Roughley
  * @author Rene Gielen
- * @version $Revision: 1.5 $
+ * @version $Revision$
  * @a2.tag name="a" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.AnchorTag"
  * description="Render a HTML href element that when clicked calls a URL via remote XMLHttpRequest"
  * @since 2.2

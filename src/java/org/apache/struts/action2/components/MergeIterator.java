@@ -107,7 +107,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * <!-- START SNIPPET: description -->
  *
  * @author tm_jee (tm_jee (at) yahoo.co.uk)
- * @version $Date: 2006/03/18 16:14:40 $ $Id: MergeIterator.java,v 1.10 2006/03/18 16:14:40 rgielen Exp $
+ * @version $Date$ $Id$
  * @see org.apache.struts.action2.util.MergeIteratorFilter
  * @see org.apache.struts.action2.views.jsp.iterator.MergeIteratorTag
  *

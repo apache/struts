@@ -60,7 +60,7 @@ import java.util.ResourceBundle;
  * @author Rickard �berg (rickard@dreambean.com)
  * @author Rene Gielen
  * @author tm_jee ( tm_jee (at) yahoo.co.uk )
- * @version $Revision: 1.13 $
+ * @version $Revision$
  * @since 2.2
  *
  * @a2.tag name="i18n" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.I18nTag"

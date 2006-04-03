@@ -9,7 +9,7 @@ package org.apache.struts.action2;
  * <code>RequestUtilsTest</code>
  *
  * @author Rainer Hermanns
- * @version $Id: RequestUtilsTest.java,v 1.3 2006/03/08 18:09:28 rainerh Exp $
+ * @version $Id$
  */
 import junit.framework.TestCase;
 

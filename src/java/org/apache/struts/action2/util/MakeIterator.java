@@ -14,7 +14,7 @@ import java.util.*;
  * Taken from WebWork 1.x by:
  *
  * @author &lt;a href="hermanns@aixcept.de"&gt;Rainer Hermanns&lt;/a&gt;
- * @version $Id: MakeIterator.java,v 1.10 2006/03/11 17:09:32 davsclaus Exp $
+ * @version $Id$
  */
 public class MakeIterator {
 

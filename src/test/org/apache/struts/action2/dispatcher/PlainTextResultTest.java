@@ -23,7 +23,7 @@ import junit.framework.TestCase;
  * Test case for PlainTextResult.
  * 
  * @author tm_jee
- * @version $Date: 2006/03/11 15:38:08 $ $Id: PlainTextResultTest.java,v 1.2 2006/03/11 15:38:08 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class PlainTextResultTest extends TestCase {
 	

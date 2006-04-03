@@ -28,7 +28,7 @@ import java.util.Map;
  *
  * @author tmjee
  * @author Claus Ibsen
- * @version $Date: 2006/03/17 22:46:24 $ $Id: FileUploadInterceptorTest.java,v 1.8 2006/03/17 22:46:24 mrdon Exp $
+ * @version $Date$ $Id$
  */
 public class FileUploadInterceptorTest extends StrutsTestCase {
 

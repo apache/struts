@@ -101,7 +101,7 @@ import com.opensymphony.xwork.util.LocalizedTextUtil;
  * @see TokenSessionStoreInterceptor
  * @see TokenHelper
  * 
- * @version $Date: 2006/03/18 04:45:13 $ $Id: TokenInterceptor.java,v 1.20 2006/03/18 04:45:13 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class TokenInterceptor extends MethodFilterInterceptor {
 	

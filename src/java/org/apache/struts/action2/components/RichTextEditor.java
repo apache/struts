@@ -177,7 +177,7 @@ import java.util.Locale;
  * 
  * 
  * @author tm_jee
- * @version $Date: 2006/03/18 15:45:33 $ $Id: RichTextEditor.java,v 1.9 2006/03/18 15:45:33 rgielen Exp $
+ * @version $Date$ $Id$
  * @see AbstractRichtexteditorConnector
  * 
  * @a2.tag name="richtexteditor" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.RichTextEditorTag"

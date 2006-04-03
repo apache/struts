@@ -89,7 +89,7 @@ import java.io.Writer;
  * @author Patrick Lightbody
  * @author Rene Gielen
  * @author tm_jee
- * @version $Revision: 1.15 $
+ * @version $Revision$
  * @since 2.2
  *
  * @a2.tag name="push" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.PushTag"

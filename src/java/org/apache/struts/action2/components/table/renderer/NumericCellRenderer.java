@@ -11,7 +11,7 @@ import java.text.DecimalFormat;
 
 /**
  * @author $author$
- * @version $Revision: 1.2 $
+ * @version $Revision$
  */
 public class NumericCellRenderer extends AbstractCellRenderer {
 

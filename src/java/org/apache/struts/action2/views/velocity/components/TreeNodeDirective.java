@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  * <code>TreeNodeDirective</code>
  *
  * @author Rainer Hermanns
- * @version $Id: TreeNodeDirective.java,v 1.1 2006/01/26 17:37:42 rainerh Exp $
+ * @version $Id$
  */
 public class TreeNodeDirective  extends AbstractDirective {
     public String getBeanName() {

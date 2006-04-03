@@ -25,7 +25,7 @@ import java.util.Map;
  *
  * @author Patrick Lightbody
  * @author Rene Gielen
- * @version $Revision: 1.10 $
+ * @version $Revision$
  * @since 2.2
  */
 public abstract class ListUIBean extends UIBean {

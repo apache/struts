@@ -71,7 +71,7 @@ import java.util.List;
  *
  * @author Ian Roughley
  * @author Rene Gielen
- * @version $Revision: 1.9 $
+ * @version $Revision$
  * @since 2.2
  *
  * @see Panel

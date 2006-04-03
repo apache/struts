@@ -16,7 +16,7 @@ import java.util.*;
  *
  * @author Rickard �berg (rickard@middleware-company.com)
  * @author tm_jee 
- * @version $Revision: 1.9 $
+ * @version $Revision$
  * @see org.apache.struts.action2.views.jsp.iterator.SortIteratorTag
  */
 public class SortIteratorFilter extends IteratorFilterSupport implements Iterator, Action {

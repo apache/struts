@@ -142,7 +142,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Patrick Lightbody
  * @author Rene Gielen
- * @version $Revision: 1.16 $
+ * @version $Revision$
  * @since 2.2
  *
  * @a2.tag name="submit" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.SubmitTag"

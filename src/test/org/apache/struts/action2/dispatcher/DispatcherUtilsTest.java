@@ -16,7 +16,7 @@ import junit.framework.TestCase;
  * Test case for DispatcherUtils.
  * 
  * @author tm_jee
- * @version $Date: 2006/03/22 21:01:05 $ $Id: DispatcherUtilsTest.java,v 1.2 2006/03/22 21:01:05 davsclaus Exp $
+ * @version $Date$ $Id$
  */
 public class DispatcherUtilsTest extends TestCase {
 

@@ -23,7 +23,7 @@ import org.jmock.core.Constraint;
  * PortletSessionMapTest. Insert description.
  * 
  * @author Nils-Helge Garli
- * @version $Revision: 1.3 $ $Date: 2006/03/10 09:39:24 $
+ * @version $Revision$ $Date$
  */
 public class PortletSessionMapTest extends MockObjectTestCase {
 

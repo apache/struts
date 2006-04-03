@@ -12,7 +12,7 @@ import org.apache.struts.action2.components.AbstractRichtexteditorConnector.Fold
 /**
  * 
  * @author tm_jee
- * @version $Date: 2006/02/17 15:17:36 $ $Id: MockRichtexteditorConnector.java,v 1.1 2006/02/17 15:17:36 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class MockRichtexteditorConnector extends AbstractRichtexteditorConnector {
 

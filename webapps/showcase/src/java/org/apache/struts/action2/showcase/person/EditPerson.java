@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * <code>EditPerson</code>
  *
  * @author <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
- * @version $Id: EditPerson.java,v 1.2 2006/03/12 17:03:20 rainerh Exp $
+ * @version $Id$
  */
 public class EditPerson extends ActionSupport {
 

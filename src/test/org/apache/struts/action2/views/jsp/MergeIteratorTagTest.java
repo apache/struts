@@ -16,7 +16,7 @@ import com.opensymphony.xwork.ActionSupport;
  * Test case for MergeIteratorTag.
  * 
  * @author tmjee (tm_jee (at) yahoo.co.uk)
- * @version $Date: 2005/11/30 16:58:16 $ $Id: MergeIteratorTagTest.java,v 1.2 2005/11/30 16:58:16 rgielen Exp $
+ * @version $Date$ $Id$
  */
 public class MergeIteratorTagTest extends AbstractTagTest {
 

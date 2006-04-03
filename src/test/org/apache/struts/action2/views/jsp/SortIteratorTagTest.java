@@ -19,7 +19,7 @@ import javax.servlet.jsp.JspException;
  * Test case to test SortIteratorTag.
  *
  * @author tm_jee (tm_jee(at)yahoo.co.uk)
- * @version $Date: 2005/11/21 16:28:26 $ $Id: SortIteratorTagTest.java,v 1.2 2005/11/21 16:28:26 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class SortIteratorTagTest extends AbstractTagTest {
 

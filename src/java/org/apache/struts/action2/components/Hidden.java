@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Patrick Lightbody
  * @author Rene Gielen
- * @version $Revision: 1.5 $
+ * @version $Revision$
  * @since 2.2
  *
  * @a2.tag name="hidden" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.HiddenTag"

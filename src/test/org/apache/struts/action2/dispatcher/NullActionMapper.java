@@ -12,7 +12,7 @@ import org.apache.struts.action2.dispatcher.mapper.ActionMapping;
 /**
  * ActionMapper for testing FilterDispatcher (used in FilterDispaatcherTest)
  * @author tm_jee
- * @version $Date: 2005/12/09 00:31:49 $ $Id: NullActionMapper.java,v 1.1 2005/12/09 00:31:49 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class NullActionMapper implements ActionMapper {
 

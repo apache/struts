@@ -13,7 +13,7 @@ import java.io.Writer;
  *
  * @author Patrick Lightbody
  * @author Rene Gielen
- * @version $Revision: 1.6 $
+ * @version $Revision$
  * @since 2.2
  */
 public abstract class ClosingUIBean extends UIBean {

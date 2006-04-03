@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Patrick Lightbody
  * @author Rene Gielen
- * @version $Revision: 1.8 $
+ * @version $Revision$
  * @since 2.2
  *
  * @see TabbedPanel

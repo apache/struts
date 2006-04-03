@@ -8,7 +8,7 @@ import java.sql.Date;
 
 /**
  * @author tm_jee
- * @version $Date: 2006/01/13 16:23:38 $ $Id: FieldValidatorsExampleAction.java,v 1.3 2006/01/13 16:23:38 rainerh Exp $
+ * @version $Date$ $Id$
  */
 
 // START SNIPPET: fieldValidatorsExample

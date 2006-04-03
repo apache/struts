@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * @author Matt Ho <a href="mailto:matt@enginegreen.com">&lt;matt@enginegreen.com&gt;</a>
- * @version $Id: TextareaTest.java,v 1.14 2006/02/03 13:27:21 rgielen Exp $
+ * @version $Id$
  */
 public class TextareaTest extends AbstractUITagTest {
 

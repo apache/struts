@@ -10,7 +10,7 @@ import org.apache.struts.action2.components.ListUIBean;
 /**
  * 
  * @author tm_jee
- * @version $Date: 2005/12/16 17:48:21 $ $Id: AbstractRequiredListTag.java,v 1.1 2005/12/16 17:48:21 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public abstract class AbstractRequiredListTag extends AbstractListTag {
 

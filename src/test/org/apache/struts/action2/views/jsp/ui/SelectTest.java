@@ -17,7 +17,7 @@ import java.util.List;
  * @author Matt Ho <a href="mailto:matt@enginegreen.com">&lt;matt@enginegreen.com&gt;</a>
  * @author tm_jee
  * @author Rene Gielen
- * @version $Id: SelectTest.java,v 1.29 2006/02/22 16:01:32 tmjee Exp $
+ * @version $Id$
  */
 public class SelectTest extends AbstractUITagTest {
 

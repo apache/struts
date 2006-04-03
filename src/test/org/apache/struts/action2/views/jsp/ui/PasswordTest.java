@@ -10,7 +10,7 @@ import org.apache.struts.action2.views.jsp.AbstractUITagTest;
 
 /**
  * @author Matt Ho <a href="mailto:matt@enginegreen.com">&lt;matt@enginegreen.com&gt;</a>
- * @version $Id: PasswordTest.java,v 1.13 2006/02/03 13:14:43 rgielen Exp $
+ * @version $Id$
  */
 public class PasswordTest extends AbstractUITagTest {
 

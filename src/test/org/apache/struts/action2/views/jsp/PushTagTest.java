@@ -8,8 +8,8 @@ import javax.servlet.jsp.JspException;
 
 
 /**
- * @author $Author: plightbo $
- * @version $Revision: 1.7 $
+ * @author $Author$
+ * @version $Revision$
  */
 public class PushTagTest extends AbstractUITagTest {
 

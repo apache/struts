@@ -10,7 +10,7 @@ import org.apache.struts.action2.views.jsp.AbstractUITagTest;
 
 /**
  * @author Ian Roughley<a href="mailto:ian@fdar.com">&lt;ian@fdar.com&gt;</a>
- * @version $Id: AnchorTest.java,v 1.1 2005/12/21 00:24:22 plightbo Exp $
+ * @version $Id$
  */
 public class AnchorTest extends AbstractUITagTest {
 

@@ -10,7 +10,7 @@ import com.opensymphony.xwork.Validateable;
 
 /**
  * @author tm_jee
- * @version $Date: 2006/01/18 19:14:08 $ $Id: MergeIteratorTagDemo.java,v 1.1 2006/01/18 19:14:08 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class MergeIteratorTagDemo extends ActionSupport implements Validateable {
 

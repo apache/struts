@@ -13,7 +13,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
 
 /**
  * @author tm_jee
- * @version $Date: 2006/01/07 15:08:36 $ $Id: OptionTransferSelectModel.java,v 1.1 2006/01/07 15:08:36 tmjee Exp $
+ * @version $Date$ $Id$
  * @see OptionTransferSelect
  */
 public class OptionTransferSelectModel extends TagModel {

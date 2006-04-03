@@ -10,7 +10,7 @@ import com.opensymphony.xwork.Validateable;
 /**
  * 
  * @author tm_jee
- * @version $Date: 2006/01/18 19:14:09 $ $Id: SubsetIteratorTagDemo.java,v 1.1 2006/01/18 19:14:09 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class SubsetIteratorTagDemo extends ActionSupport implements Validateable {
 

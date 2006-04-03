@@ -9,7 +9,7 @@ package org.apache.struts.action2;
  * Struts configurations.
  *
  * @author Onyeje Bose (digi9ten@yahoo.com)
- * @version $Date: 2006/03/20 01:09:37 $ $Id: StrutsConstants.java,v 1.7 2006/03/20 01:09:37 the_mindstorm Exp $
+ * @version $Date$ $Id$
  */
 public final class StrutsConstants {
 

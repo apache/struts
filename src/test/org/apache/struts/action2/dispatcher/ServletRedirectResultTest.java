@@ -24,7 +24,7 @@ import java.util.HashMap;
  * DOCUMENT ME!
  *
  * @author $author$
- * @version $Revision: 1.15 $
+ * @version $Revision$
  */
 public class ServletRedirectResultTest extends StrutsTestCase implements StrutsStatics {
 

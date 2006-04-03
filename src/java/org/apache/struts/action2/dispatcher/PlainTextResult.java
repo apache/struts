@@ -56,7 +56,7 @@ import com.opensymphony.xwork.ActionInvocation;
  * </pre>
  * 
  * @author tm_jee
- * @version $Date: 2006/03/12 05:41:05 $ $Id: PlainTextResult.java,v 1.5 2006/03/12 05:41:05 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class PlainTextResult extends StrutsResultSupport {
 	

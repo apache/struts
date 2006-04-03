@@ -15,7 +15,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * ActionError Tag.
  * 
  * @author tm_jee
- * @version $Date: 2005/12/22 15:05:24 $ $Id: ActionErrorTag.java,v 1.1 2005/12/22 15:05:24 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class ActionErrorTag extends AbstractUITag {
 

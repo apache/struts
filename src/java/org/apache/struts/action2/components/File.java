@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author Patrick Lightbody
  * @author Rene Gielen
- * @version $Revision: 1.11 $
+ * @version $Revision$
  * @since 2.2
  *
  * @a2.tag name="file" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.FileTag"

@@ -14,7 +14,7 @@ import junit.framework.TestCase;
  * test case for AbstractRichtexteditorConnector
  * 
  * @author tm_jee
- * @version $Date: 2006/02/17 15:17:35 $ $Id: AbstractRichtexteditorConnectorTest.java,v 1.1 2006/02/17 15:17:35 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class AbstractRichtexteditorConnectorTest extends TestCase {
 

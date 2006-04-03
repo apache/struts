@@ -7,7 +7,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  * @author Scott N. Smith scottnelsonsmith@yahoo.com
- * @version $Id: SessionLifecycleListenerCompatWeblogic61.java,v 1.2 2005/09/21 03:04:53 plightbo Exp $
+ * @version $Id$
  * @deprecated XWork IoC has been deprecated in favor of Spring.
  *             Please refer to the Spring-Struts integration documentation for more info.
  */

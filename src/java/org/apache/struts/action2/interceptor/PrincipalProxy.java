@@ -8,7 +8,7 @@ import java.security.Principal;
  * HttpServletRequest Principal related methods.
  *
  * @author Remigijus Bauzys
- * @version $Revision: 1.1 $
+ * @version $Revision$
  */
 public class PrincipalProxy {
     private HttpServletRequest request;

@@ -120,7 +120,7 @@ import java.util.List;
  *
  * @author <a href="mailto:philip.luppens@gmail.com">Philip Luppens</a>
  * @author <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
- * @version $Id: Date.java,v 1.7 2006/03/21 17:26:19 rainerh Exp $
+ * @version $Id$
  *
  *
  * @a2.tag name="date" tld-body-content="empty"

@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Ian Roughley
  * @author Rainer Hermanns
  * @author Nils-Helge Garli
- * @version $Revision: 1.14 $
+ * @version $Revision$
  * @since 2.2
  */
 public abstract class RemoteCallUIBean extends ClosingUIBean {

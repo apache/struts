@@ -33,7 +33,7 @@ import com.opensymphony.xwork.ActionInvocation;
  * 
  * @author Nils-Helge Garli
  * @author Rainer Hermanns
- * @version $Revision: 1.5 $
+ * @version $Revision$
  */
 public class PortletResult extends StrutsResultSupport {
 

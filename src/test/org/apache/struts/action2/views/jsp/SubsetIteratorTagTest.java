@@ -18,7 +18,7 @@ import com.opensymphony.xwork.ActionSupport;
  * Test case for SubsetIteratorTag.
  * 
  * @author tmjee
- * @version $Date: 2005/11/24 18:19:58 $ $Id: SubsetIteratorTagTest.java,v 1.1 2005/11/24 18:19:58 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class SubsetIteratorTagTest extends AbstractTagTest {
 	

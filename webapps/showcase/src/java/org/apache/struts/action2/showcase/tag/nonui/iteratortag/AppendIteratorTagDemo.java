@@ -10,7 +10,7 @@ import com.opensymphony.xwork.Validateable;
 /**
  * 
  * @author tm_jee
- * @version $Date: 2006/01/18 19:14:05 $ $Id: AppendIteratorTagDemo.java,v 1.1 2006/01/18 19:14:05 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class AppendIteratorTagDemo extends ActionSupport implements Validateable {
 

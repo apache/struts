@@ -19,7 +19,7 @@ import java.util.List;
  *
  * @author Rickard �berg (rickard@middleware-company.com)
  * @author tm_jee (tm_jee (at) yahoo.co.uk)
- * @version $Revision: 1.10 $
+ * @version $Revision$
  */
 public class SubsetIteratorFilter extends IteratorFilterSupport implements Iterator, Action {
 

@@ -21,7 +21,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author Rickard �berg (rickard@middleware-company.com)
  * @author tm_jee ( tm_jee(at)yahoo.co.uk )
- * @version $Revision: 1.7 $
+ * @version $Revision$
  */
 public class IteratorGenerator implements Iterator, Action {
 	

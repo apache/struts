@@ -14,7 +14,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
 /**
  * @author tm_jee
  * @author Rainer Hermanns
- * @version $Date: 2006/01/31 20:51:25 $ $Id: OptionTransferSelectDirective.java,v 1.2 2006/01/31 20:51:25 rainerh Exp $
+ * @version $Date$ $Id$
  * @see OptionTransferSelect
  */
 public class OptionTransferSelectDirective extends AbstractDirective {

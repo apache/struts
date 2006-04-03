@@ -16,8 +16,8 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 
 /**
- * @author $Author: rainerh $
- * @version $Revision: 1.10 $
+ * @author $Author$
+ * @version $Revision$
  */
 public class ElseTagTest extends TestCase {
 

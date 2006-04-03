@@ -14,7 +14,7 @@ import java.util.Date;
  * A bean that can be used to format dates
  *
  * @author Rickard �berg (rickard@middleware-company.com)
- * @version $Revision: 1.6 $
+ * @version $Revision$
  */
 public class DateFormatter {
 

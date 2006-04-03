@@ -18,7 +18,7 @@ import com.opensymphony.xwork.mock.MockActionInvocation;
  * Test case for CreateSessionInterceptor.
  * 
  * @author tm_jee
- * @version $Date: 2006/03/04 15:06:48 $ $Id: CreateSessionInterceptorTest.java,v 1.2 2006/03/04 15:06:48 rainerh Exp $
+ * @version $Date$ $Id$
  */
 public class CreateSessionInterceptorTest extends StrutsTestCase {
 

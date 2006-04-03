@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  * DOCUMENT ME!
  *
  * @author $author$
- * @version $Revision: 1.7 $
+ * @version $Revision$
  */
 public class ServletDispatcherResultTest extends StrutsTestCase implements StrutsStatics {
 

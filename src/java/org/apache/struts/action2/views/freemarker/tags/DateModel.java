@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
  * <code>DateModel</code>
  *
  * @author Rainer Hermanns
- * @version $Id: DateModel.java,v 1.1 2006/02/26 16:49:42 rainerh Exp $
+ * @version $Id$
  */
 public class DateModel extends TagModel {
 

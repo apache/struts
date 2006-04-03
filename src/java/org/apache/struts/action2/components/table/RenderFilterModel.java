@@ -9,7 +9,7 @@ import javax.swing.table.TableModel;
 
 /**
  * @author $author$
- * @version $Revision: 1.2 $
+ * @version $Revision$
  */
 public class RenderFilterModel extends AbstractFilterModel {
 

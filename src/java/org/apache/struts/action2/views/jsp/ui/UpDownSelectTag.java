@@ -14,7 +14,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
 /**
  * 
  * @author tm_jee
- * @version $Date: 2006/02/01 16:30:09 $ $Id: UpDownSelectTag.java,v 1.1 2006/02/01 16:30:09 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class UpDownSelectTag extends SelectTag {
 

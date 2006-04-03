@@ -26,7 +26,7 @@ import javax.servlet.http.HttpSession;
  * exception as an error.
  *
  * @author Scott N. Smith scottnelsonsmith@yahoo.com
- * @version $Id: FilterDispatcherCompatWeblogic61.java,v 1.3 2006/03/08 20:28:56 rainerh Exp $
+ * @version $Id$
  */
 public class FilterDispatcherCompatWeblogic61
         extends FilterDispatcher

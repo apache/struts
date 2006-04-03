@@ -11,7 +11,7 @@ import ognl.OgnlException;
 
 /**
  * @author Matt Ho <a href="mailto:matt@enginegreen.com">&lt;matt@enginegreen.com&gt;</a>
- * @version $Id: OgnlTool.java,v 1.6 2005/09/02 05:14:21 plightbo Exp $
+ * @version $Id$
  */
 public class OgnlTool {
     private static OgnlTool instance = new OgnlTool();

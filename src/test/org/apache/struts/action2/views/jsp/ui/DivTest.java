@@ -10,7 +10,7 @@ import org.apache.struts.action2.views.jsp.AbstractUITagTest;
 
 /**
  * @author Ian Roughley<a href="mailto:ian@fdar.com">&lt;ian@fdar.com&gt;</a>
- * @version $Id: DivTest.java,v 1.3 2006/02/03 12:28:51 rgielen Exp $
+ * @version $Id$
  */
 public class DivTest extends AbstractUITagTest {
 

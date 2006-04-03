@@ -8,7 +8,7 @@ import com.opensymphony.xwork.ActionSupport;
 
 /**
  * @author tm_jee
- * @version $Date: 2005/12/24 09:13:49 $ $Id: AbstractValidationActionSupport.java,v 1.2 2005/12/24 09:13:49 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public abstract class AbstractValidationActionSupport extends ActionSupport {
 	

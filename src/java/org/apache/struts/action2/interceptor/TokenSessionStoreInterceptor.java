@@ -84,7 +84,7 @@ import java.util.Map;
  * @author Rainer Hermanns
  * @author Nils-Helge Garli
  * 
- * @version $Date: 2006/03/18 04:45:13 $ $Id: TokenSessionStoreInterceptor.java,v 1.17 2006/03/18 04:45:13 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class TokenSessionStoreInterceptor extends TokenInterceptor {
 	

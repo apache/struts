@@ -136,10 +136,10 @@ import java.util.Iterator;
  * <!-- END SNIPPET: example4code -->
  * </pre>
  *
- * @author $Author: rgielen $
+ * @author $Author$
  * @author Rick Salsa (rsal@mb.sympatico.ca)
  * @author tm_jee ( tm_jee(at)yahoo.co.uk )
- * @version $Revision: 1.11 $
+ * @version $Revision$
  * @a2.tag name="iterator" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.IteratorTag"
  * description="Iterate over a iterable value"
  */

@@ -26,7 +26,7 @@ import junit.framework.TestCase;
  * Test case for StrutsUtil.
  * 
  * @author tm_jee
- * @version $Date: 2006/03/14 16:48:21 $ $Id: StrutsUtilTest.java,v 1.1 2006/03/14 16:48:21 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class StrutsUtilTest extends TestCase {
 	

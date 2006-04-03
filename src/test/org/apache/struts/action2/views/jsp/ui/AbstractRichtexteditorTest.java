@@ -19,7 +19,7 @@ import junit.framework.TestCase;
  * Abstract test case for all RichTextEditor based test case. (contains common methods)
  * 
  * @author tm_jee
- * @version $Date: 2006/03/04 15:07:50 $ $Id: AbstractRichtexteditorTest.java,v 1.4 2006/03/04 15:07:50 rainerh Exp $
+ * @version $Date$ $Id$
  */
 public abstract class AbstractRichtexteditorTest extends TestCase {
 	

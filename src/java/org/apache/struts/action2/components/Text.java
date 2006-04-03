@@ -82,7 +82,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * @author Patrick Lightbody
  * @author Rene Gielen
  * @author tm_jee
- * @version $Revision: 1.19 $
+ * @version $Revision$
  * @since 2.2
  *
  * @see Param

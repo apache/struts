@@ -17,7 +17,7 @@ import junit.framework.TestCase;
  * DefaultActionMapper test case.
  * 
  * @author tm_jee
- * @version $Date: 2006/03/17 09:46:17 $ $Id: DefaultActionMapperTest.java,v 1.3 2006/03/17 09:46:17 rainerh Exp $
+ * @version $Date$ $Id$
  */
 public class DefaultActionMapperTest extends TestCase {
 

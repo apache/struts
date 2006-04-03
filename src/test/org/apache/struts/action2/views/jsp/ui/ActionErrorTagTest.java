@@ -18,7 +18,7 @@ import com.opensymphony.xwork.ActionSupport;
  * ActionErrorTag test case.
  * 
  * @author tm_jee
- * @version $Date: 2005/12/22 15:05:26 $ $Id: ActionErrorTagTest.java,v 1.1 2005/12/22 15:05:26 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class ActionErrorTagTest extends AbstractUITagTest {
 	

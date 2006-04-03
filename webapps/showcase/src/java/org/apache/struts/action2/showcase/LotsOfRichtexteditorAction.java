@@ -9,7 +9,7 @@ import com.opensymphony.xwork.ActionSupport;
 /**
  * 
  * @author tm_jee
- * @version $Date: 2006/02/17 15:21:00 $ $Id: LotsOfRichtexteditorAction.java,v 1.1 2006/02/17 15:21:00 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class LotsOfRichtexteditorAction extends ActionSupport {
 

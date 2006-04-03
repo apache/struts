@@ -8,7 +8,7 @@ import java.sql.Date;
 
 /**
  * @author tm_jee
- * @version $Date: 2005/12/22 09:17:56 $ $Id: User.java,v 1.1 2005/12/22 09:17:56 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class User {
 	

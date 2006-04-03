@@ -22,7 +22,7 @@ import java.util.*;
 /**
  * @author Matt Ho <a href="mailto:matt@indigoegg.com">&lt;matt@indigoegg.com&gt;</a>
  * @author <a href="mailto:gielen@it-neering.net">Rene Gielen</a>
- * @version $Id: AbstractUITagTest.java,v 1.20 2006/03/08 18:09:28 rainerh Exp $
+ * @version $Id$
  */
 public abstract class AbstractUITagTest extends AbstractTagTest {
 

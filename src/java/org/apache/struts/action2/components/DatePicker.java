@@ -82,7 +82,7 @@ import java.util.Locale;
  *
  * @author Patrick Lightbody
  * @author Rene Gielen
- * @version $Revision: 1.12 $
+ * @version $Revision$
  * @a2.tag name="datepicker" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.DatePickerTag"
  * description="Render datepicker"
  * @since 2.2

@@ -19,7 +19,7 @@ import javax.servlet.ServletContext;
  * Unit test for {@link StrutsSpringObjectFactory}.
  *
  * @author Claus Ibsen
- * @version $Date: 2006/03/14 16:49:54 $ $Id: StrutsSpringObjectFactoryTest.java,v 1.2 2006/03/14 16:49:54 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class StrutsSpringObjectFactoryTest extends TestCase {
 

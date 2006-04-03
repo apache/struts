@@ -10,7 +10,7 @@ import java.io.Serializable;
  * A model class to be used by the simple Model-Driven example. 
  * 
  * @author tm_jee
- * @version $Date: 2006/03/20 16:22:00 $ $Id: Gangster.java,v 1.2 2006/03/20 16:22:00 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class Gangster implements Serializable {
 

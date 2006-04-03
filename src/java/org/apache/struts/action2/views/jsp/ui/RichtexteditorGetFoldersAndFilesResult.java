@@ -53,7 +53,7 @@ import com.opensymphony.xwork.ActionInvocation;
  * <!-- END SNIPPET: javadoc -->
  * 
  * @author tm_jee
- * @version $Date: 2006/02/20 15:24:38 $ $Id: RichtexteditorGetFoldersAndFilesResult.java,v 1.3 2006/02/20 15:24:38 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class RichtexteditorGetFoldersAndFilesResult extends AbstractRichtexteditorResult {
 

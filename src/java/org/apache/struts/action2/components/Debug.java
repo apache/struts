@@ -37,7 +37,7 @@ import java.util.Map;
  * @author Patrick Lightbody
  * @author Rene Gielen
  * @author Rainer Hermanns
- * @version $Revision: 1.2 $
+ * @version $Revision$
  * @since 2.2
  *
  * @a2.tag name="debug" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.DebugTag"

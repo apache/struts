@@ -9,8 +9,8 @@ import org.apache.velocity.VelocityContext;
 
 
 /**
- * @author $Author: plightbo $
- * @version $Revision: 1.11 $
+ * @author $Author$
+ * @version $Revision$
  */
 public class StrutsVelocityContext extends VelocityContext {
 

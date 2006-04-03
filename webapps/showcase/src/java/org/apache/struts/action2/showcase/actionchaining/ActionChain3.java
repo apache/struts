@@ -9,7 +9,7 @@ import com.opensymphony.xwork.ActionSupport;
 /**
  * 
  * @author tm_jee
- * @version $Date: 2006/01/10 08:37:28 $ $Id: ActionChain3.java,v 1.1 2006/01/10 08:37:28 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class ActionChain3 extends ActionSupport {
 

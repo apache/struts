@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * @author Matt Ho <a href="mailto:matt@enginegreen.com">&lt;matt@enginegreen.com&gt;</a>
- * @version $Id: TestAction.java,v 1.15 2006/03/19 11:33:54 davsclaus Exp $
+ * @version $Id$
  */
 public class TestAction extends ActionSupport {
 

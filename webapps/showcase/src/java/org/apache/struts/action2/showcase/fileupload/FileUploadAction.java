@@ -13,7 +13,7 @@ import java.io.File;
  *
  * @author <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
  * @author tm_jee
- * @version $Id: FileUploadAction.java,v 1.4 2006/03/05 16:48:34 rainerh Exp $
+ * @version $Id$
  */
 public class FileUploadAction extends ActionSupport {
 

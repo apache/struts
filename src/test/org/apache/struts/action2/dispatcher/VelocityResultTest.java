@@ -18,7 +18,7 @@ import org.apache.velocity.exception.ResourceNotFoundException;
 
 /**
  * @author Matt Ho <a href="mailto:matt@enginegreen.com">&lt;matt@enginegreen.com&gt;</a>
- * @version $Id: VelocityResultTest.java,v 1.12 2005/10/09 04:26:47 plightbo Exp $
+ * @version $Id$
  */
 public class VelocityResultTest extends TestCase {
 

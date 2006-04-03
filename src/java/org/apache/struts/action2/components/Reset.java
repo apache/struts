@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletResponse;
  * </pre>
  *
  * @author Rene Gielen
- * @version $Revision: 1.4 $
+ * @version $Revision$
  * @since 2.2.2
  *
  * @a2.tag name="reset" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.ResetTag"

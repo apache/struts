@@ -13,7 +13,7 @@ import junit.framework.TestCase;
  * Test case for ContextUtil
  * 
  * @author tm_jee
- * @version $Date: 2005/12/06 01:10:41 $ $Id: ContextUtilTest.java,v 1.4 2005/12/06 01:10:41 digi9ten Exp $
+ * @version $Date$ $Id$
  */
 public class ContextUtilTest extends TestCase {
 

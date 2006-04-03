@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 
 /**
  * @author $author$
- * @version $Revision: 1.2 $
+ * @version $Revision$
  */
 public class DateCellRenderer extends AbstractCellRenderer {
 

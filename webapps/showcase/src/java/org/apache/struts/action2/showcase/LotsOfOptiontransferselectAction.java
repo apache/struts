@@ -12,7 +12,7 @@ import com.opensymphony.xwork.ActionSupport;
 
 /**
  * @author tm_jee
- * @version $Date: 2006/02/01 16:32:41 $ $Id: LotsOfOptiontransferselectAction.java,v 1.2 2006/02/01 16:32:41 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class LotsOfOptiontransferselectAction extends ActionSupport {
 	

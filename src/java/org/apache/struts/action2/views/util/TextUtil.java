@@ -16,7 +16,7 @@ package org.apache.struts.action2.views.util;
  * It was written and optimized to be as fast as possible.
  *
  * @author Dick Zetterberg (dick@transitor.se)
- * @version $Revision: 1.3 $
+ * @version $Revision$
  */
 public class TextUtil {
 

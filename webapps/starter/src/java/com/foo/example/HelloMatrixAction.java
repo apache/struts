@@ -10,7 +10,7 @@ import com.opensymphony.xwork.ActionSupport;
  * <code>HelloMatrixAction</code>
  *
  * @author <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
- * @version $Id: HelloMatrixAction.java,v 1.1 2006/02/03 11:14:30 rainerh Exp $
+ * @version $Id$
  */
 public class HelloMatrixAction extends ActionSupport {
 

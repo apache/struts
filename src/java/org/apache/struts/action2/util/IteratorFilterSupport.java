@@ -12,7 +12,7 @@ import java.util.Iterator;
  * A base class for iterator filters
  *
  * @author Rickard �berg (rickard@middleware-company.com)
- * @version $Revision: 1.5 $
+ * @version $Revision$
  */
 public abstract class IteratorFilterSupport {
 

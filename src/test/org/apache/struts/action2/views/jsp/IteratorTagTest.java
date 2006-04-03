@@ -19,8 +19,8 @@ import java.util.Map;
 /**
  * Test Case for Iterator Tag 
  * 
- * @author $Author: tmjee $
- * @version $Date: 2006/01/25 16:58:03 $ $Id: IteratorTagTest.java,v 1.23 2006/01/25 16:58:03 tmjee Exp $
+ * @author $Author$
+ * @version $Date$ $Id$
  */
 public class IteratorTagTest extends AbstractUITagTest {
 

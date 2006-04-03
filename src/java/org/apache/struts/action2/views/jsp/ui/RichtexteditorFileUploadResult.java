@@ -35,7 +35,7 @@ import com.opensymphony.xwork.ActionInvocation;
  * <!-- END SNIPPET: javadoc -->
  * 
  * @author tm_jee
- * @version $Date: 2006/02/20 15:24:37 $ $Id: RichtexteditorFileUploadResult.java,v 1.3 2006/02/20 15:24:37 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class RichtexteditorFileUploadResult extends AbstractRichtexteditorResult {
 	

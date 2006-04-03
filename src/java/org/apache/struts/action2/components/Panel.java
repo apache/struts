@@ -18,7 +18,7 @@ import java.io.Writer;
  * @author Ian Roughley
  * @author Patrick Lightbody
  * @author Rene Gielen
- * @version $Revision: 1.16 $
+ * @version $Revision$
  * @since 2.2
  *
  * @see TabbedPanel

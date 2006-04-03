@@ -9,7 +9,7 @@ import com.opensymphony.xwork.ActionSupport;
  * Superclass for Hibernate-aware actions.
  *
  * @author Joel Hockey
- * @version $Id: HibernateAction.java,v 1.22 2006/03/23 21:23:44 rgielen Exp $
+ * @version $Id$
  */
 public abstract class HibernateAction extends ActionSupport {
     /** xwork action return code */

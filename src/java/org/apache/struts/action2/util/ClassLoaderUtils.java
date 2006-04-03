@@ -16,8 +16,8 @@ import java.net.URL;
  * It has come out of many months of frustrating use of multiple application servers at Atlassian,
  * please don't change things unless you're sure they're not going to break in one server or another!
  *
- * @author $Author: plightbo $
- * @version $Revision: 1.8 $
+ * @author $Author$
+ * @version $Revision$
  */
 public class ClassLoaderUtils {
 

@@ -41,7 +41,7 @@ import java.util.Properties;
  * Static Configuration Manager for the FreemarkerResult's configuration
  *
  * @author CameronBraid
- * @version $Date: 2006/03/11 08:37:45 $ $Id: FreemarkerManager.java,v 1.31 2006/03/11 08:37:45 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class FreemarkerManager {
 

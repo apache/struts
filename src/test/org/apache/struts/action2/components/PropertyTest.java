@@ -13,8 +13,8 @@ import java.util.Map;
 /**
  *
  * @author gjoseph
- * @author $Author: tmjee $ (last edit)
- * @version $Revision: 1.1 $
+ * @author $Author$ (last edit)
+ * @version $Revision$
  */
 public class PropertyTest extends TestCase {
     public void testNormalBehaviour() {

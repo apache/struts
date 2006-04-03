@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
  * </pre>
  *
  * @author tm_jee
- * @version $Date: 2006/01/01 15:16:03 $ $Id: ActionError.java,v 1.5 2006/01/01 15:16:03 tmjee Exp $
+ * @version $Date$ $Id$
  * @a2.tag name="actionerror" tld-body-content="empty" tld-tag-class="org.apache.struts.action2.views.jsp.ui.ActionErrorTag"
  * description="Render action errors if they exists"
  * @since 2.2

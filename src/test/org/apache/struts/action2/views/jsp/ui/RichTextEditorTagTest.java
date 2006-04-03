@@ -13,7 +13,7 @@ import com.opensymphony.xwork.ActionContext;
  * RichTextEditor test case.
  * 
  * @author tm_jee
- * @version $Date: 2006/02/25 11:30:39 $ $Id: RichTextEditorTagTest.java,v 1.3 2006/02/25 11:30:39 rgielen Exp $
+ * @version $Date$ $Id$
  */
 public class RichTextEditorTagTest extends AbstractUITagTest {
 

@@ -43,7 +43,7 @@ import java.util.Map;
  * @author patrick
  * @author Rainer Hermanns
  * @author tm_jee
- * @version $Date: 2006/03/20 20:36:40 $ $Id: DispatcherUtils.java,v 1.48 2006/03/20 20:36:40 rainerh Exp $
+ * @version $Date$ $Id$
  *
  * @see org.apache.struts.action2.dispatcher.FilterDispatcher
  */

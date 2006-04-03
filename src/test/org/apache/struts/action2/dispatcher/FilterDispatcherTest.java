@@ -25,7 +25,7 @@ import junit.framework.TestCase;
  * FilterDispatcher TestCase.
  *
  * @author tm_jee 
- * @version $Date: 2006/03/16 17:15:43 $ $Id: FilterDispatcherTest.java,v 1.4 2006/03/16 17:15:43 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class FilterDispatcherTest extends TestCase {
 

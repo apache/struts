@@ -75,7 +75,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * 
  * 
  * @author tm_jee
- * @version $Date: 2006/03/18 16:14:42 $ $Id: OptionTransferSelect.java,v 1.9 2006/03/18 16:14:42 rgielen Exp $
+ * @version $Date$ $Id$
  * @a2.tag name="optiontransferselect" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.OptionTransferSelectTag"
  * description="Renders an input form"
  */

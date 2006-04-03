@@ -88,7 +88,7 @@ import java.util.Map;
  * @author Ian Roughley
  * @author Rene Gielen
  * @author Rainer Hermanns
- * @version $Revision: 1.29 $
+ * @version $Revision$
  * @since 2.2
  *
  * @see Param

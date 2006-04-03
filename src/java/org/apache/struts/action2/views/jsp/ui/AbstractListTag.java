@@ -8,7 +8,7 @@ import org.apache.struts.action2.components.ListUIBean;
 
 /**
  * @author Matt Ho <a href="mailto:matt@enginegreen.com">&lt;matt@enginegreen.com&gt;</a>
- * @version $Id: AbstractListTag.java,v 1.25 2005/11/27 21:48:34 rgielen Exp $
+ * @version $Id$
  */
 public abstract class AbstractListTag extends AbstractUITag {
     protected String list;

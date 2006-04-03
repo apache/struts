@@ -5,7 +5,7 @@ import com.opensymphony.xwork.Action;
 
 /**
  * @author Ian Roughley
- * @version $Id: AjaxTestAction.java,v 1.1 2006/01/09 21:14:15 plightbo Exp $
+ * @version $Id$
  */
 public class AjaxTestAction implements Action {
 

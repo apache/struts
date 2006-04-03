@@ -41,7 +41,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * Jsr168DispatcherTest. Insert description.
  * 
  * @author Nils-Helge Garli
- * @version $Revision: 1.5 $ $Date: 2006/03/13 07:24:07 $
+ * @version $Revision$ $Date$
  */
 public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletActionConstants {
  

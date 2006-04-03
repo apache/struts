@@ -14,7 +14,7 @@ import java.util.Map;
  * Object 1 may be an Object, array, Collection, or a Map
  *
  * @author Matt Baldree (matt@smallleap.com)
- * @version $Revision: 1.4 $
+ * @version $Revision$
  */
 public class ContainUtil {
 

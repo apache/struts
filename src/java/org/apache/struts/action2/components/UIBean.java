@@ -525,7 +525,7 @@ import java.util.Map;
  * @author Rene Gielen
  * @author Rainer Hermanns
  * @author tm_jee
- * @version $Revision: 1.57 $
+ * @version $Revision$
  * @since 2.2
  */
 public abstract class UIBean extends Component {

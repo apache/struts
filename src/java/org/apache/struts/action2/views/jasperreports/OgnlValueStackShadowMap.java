@@ -14,7 +14,7 @@ import java.util.Set;
  * Ported to Struts:
  *
  * @author &lt;a href="hermanns@aixcept.de"&gt;Rainer Hermanns&lt;/a&gt;
- * @version $Id: OgnlValueStackShadowMap.java,v 1.4 2005/10/09 04:26:35 plightbo Exp $
+ * @version $Id$
  */
 public class OgnlValueStackShadowMap extends HashMap {
 

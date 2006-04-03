@@ -15,7 +15,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * Freemarker's Transform model for Richtexteditor 
  * 
  * @author tm_jee
- * @version $Date: 2006/02/18 05:29:26 $ $Id: RichTextEditorModel.java,v 1.1 2006/02/18 05:29:26 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class RichTextEditorModel extends TagModel {
 

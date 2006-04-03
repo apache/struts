@@ -58,7 +58,7 @@ import java.util.Locale;
  *
  * @author Matt Raible
  * @author Rainer Hermanns
- * @version $Id: TilesResult.java,v 1.1 2006/02/17 19:06:02 rainerh Exp $
+ * @version $Id$
  */
 public class TilesResult extends ServletDispatcherResult {
 

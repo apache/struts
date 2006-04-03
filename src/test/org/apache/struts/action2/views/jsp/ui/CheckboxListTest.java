@@ -16,7 +16,7 @@ import java.util.Map;
  * Test case for CheckboxList.
  *
  * @author $author$
- * @version $Date: 2006/02/03 12:59:13 $ $Id: CheckboxListTest.java,v 1.14 2006/02/03 12:59:13 rgielen Exp $
+ * @version $Date$ $Id$
  */
 public class CheckboxListTest extends AbstractUITagTest {
 

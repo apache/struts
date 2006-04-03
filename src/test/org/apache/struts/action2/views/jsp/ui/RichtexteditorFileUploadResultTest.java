@@ -9,7 +9,7 @@ import org.apache.struts.action2.components.AbstractRichtexteditorConnector;
 /**
  * 
  * @author tm_jee
- * @version $Date: 2006/02/17 15:17:38 $ $Id: RichtexteditorFileUploadResultTest.java,v 1.1 2006/02/17 15:17:38 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class RichtexteditorFileUploadResultTest extends AbstractRichtexteditorTest {
 

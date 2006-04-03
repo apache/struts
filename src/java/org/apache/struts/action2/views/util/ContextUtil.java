@@ -22,7 +22,7 @@ import java.util.Map;
  * 
  * @author plightbo
  * @author tm_jee
- * @version $Date: 2006/01/25 17:21:00 $ $Id: ContextUtil.java,v 1.7 2006/01/25 17:21:00 rainerh Exp $
+ * @version $Date$ $Id$
  */
 public class ContextUtil {
     public static final String REQUEST = "req";

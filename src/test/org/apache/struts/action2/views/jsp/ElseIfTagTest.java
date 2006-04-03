@@ -17,7 +17,7 @@ import junit.framework.TestCase;
 /**
  * 
  * @author tm_jee
- * @version $Date: 2005/12/16 17:49:23 $ $Id: ElseIfTagTest.java,v 1.1 2005/12/16 17:49:23 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class ElseIfTagTest extends TestCase {
 

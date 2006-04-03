@@ -41,7 +41,7 @@ import java.io.Writer;
  *
  * @author Patrick Lightbody
  * @author Rene Gielen
- * @version $Revision: 1.12 $
+ * @version $Revision$
  * @since 2.2
  *
  * @a2.tag name="set" tld-body-content="empty" tld-tag-class="org.apache.struts.action2.views.jsp.SetTag"

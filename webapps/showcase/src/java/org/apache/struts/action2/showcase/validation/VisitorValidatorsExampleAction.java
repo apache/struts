@@ -6,7 +6,7 @@ package org.apache.struts.action2.showcase.validation;
 
 /**
  * @author tm_jee
- * @version $Date: 2005/12/22 11:36:42 $ $Id: VisitorValidatorsExampleAction.java,v 1.2 2005/12/22 11:36:42 tmjee Exp $
+ * @version $Date$ $Id$
  */
 
 // START SNIPPET: visitorValidatorsExample

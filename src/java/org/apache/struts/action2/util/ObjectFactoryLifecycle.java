@@ -8,7 +8,7 @@ package org.apache.struts.action2.util;
  * An interface indicating the lifecycle of an ObjectFactory implementation.
  * 
  * @author tm_jee
- * @version $Date: 2006/03/16 14:44:01 $ $Id: ObjectFactoryLifecycle.java,v 1.1 2006/03/16 14:44:01 tmjee Exp $
+ * @version $Date$ $Id$
  * 
  * @see ObjectFactoryLifecycle
  * @see com.opensymphony.xwork.ObjectFactory

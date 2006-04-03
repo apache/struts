@@ -31,7 +31,7 @@ import java.util.Map;
  * @author Patrick Lightbody
  * @author Rene Gielen
  * @author Rainer Hermanns
- * @version $Date: 2006/03/18 16:24:46 $ $Id: Token.java,v 1.8 2006/03/18 16:24:46 rgielen Exp $
+ * @version $Date$ $Id$
  * @since 2.2
  *
  * @see org.apache.struts.action2.interceptor.TokenInterceptor

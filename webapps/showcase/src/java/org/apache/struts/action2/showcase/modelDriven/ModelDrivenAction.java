@@ -11,7 +11,7 @@ import com.opensymphony.xwork.ModelDriven;
  * Action to demonstrate simple model-driven feature of WW.
  * 
  * @author tm_jee
- * @version $Date: 2006/03/20 16:22:00 $ $Id: ModelDrivenAction.java,v 1.2 2006/03/20 16:22:00 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class ModelDrivenAction extends ActionSupport implements ModelDriven {
 

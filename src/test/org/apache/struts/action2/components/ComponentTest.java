@@ -39,7 +39,7 @@ import com.opensymphony.xwork.util.LocalizedTextUtil;
  * test cases for Component in general.
  * 
  * @author tm_jee
- * @version $Date: 2006/02/17 15:17:36 $ $Id: ComponentTest.java,v 1.5 2006/02/17 15:17:36 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class ComponentTest extends AbstractTagTest {
 

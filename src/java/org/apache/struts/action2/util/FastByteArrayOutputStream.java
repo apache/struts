@@ -18,7 +18,7 @@ import java.util.LinkedList;
  * if it's contents is extracted with the writeTo(stream) method.
  *
  * @author Rickard �berg
- * @version $Revision: 1.11 $
+ * @version $Revision$
  */
 public class FastByteArrayOutputStream extends OutputStream {
 

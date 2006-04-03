@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Patrick Lightbody
  * @author Rene Gielen
  * @author tm_jee
- * @version $Revision: 1.10 $
+ * @version $Revision$
  * @since 2.2
  */
 public abstract class DoubleListUIBean extends ListUIBean {

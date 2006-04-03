@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
  * <code>DateDirective</code>
  *
  * @author Rainer Hermanns
- * @version $Id: DateDirective.java,v 1.1 2006/02/26 16:49:42 rainerh Exp $
+ * @version $Id$
  */
 public class DateDirective extends AbstractDirective {
 

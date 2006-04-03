@@ -9,7 +9,7 @@ package org.apache.struts.action2.views.jasperreports;
  * <code>JasperReportConstants</code>
  *
  * @author <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
- * @version $Id: JasperReportConstants.java,v 1.4 2005/10/09 04:26:34 plightbo Exp $
+ * @version $Id$
  */
 public interface JasperReportConstants {
 

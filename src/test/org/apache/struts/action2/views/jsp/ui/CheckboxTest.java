@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * @author Matt Ho <a href="mailto:matt@enginegreen.com">&lt;matt@enginegreen.com&gt;</a>
- * @version $Id: CheckboxTest.java,v 1.16 2006/03/05 21:02:57 plightbo Exp $
+ * @version $Id$
  */
 public class CheckboxTest extends AbstractUITagTest {
 

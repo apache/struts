@@ -15,7 +15,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * Struts's RichTextEditor Jsp Tag.
  * 
  * @author tm_jee
- * @version $Date: 2006/02/17 15:17:33 $ $Id: RichTextEditorTag.java,v 1.1 2006/02/17 15:17:33 tmjee Exp $
+ * @version $Date$ $Id$
  */
 public class RichTextEditorTag extends AbstractUITag {
 

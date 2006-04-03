@@ -16,7 +16,7 @@ import javax.servlet.ServletContext;
  * which will use this object to get it.
  *
  * @author Scott N. Smith scottnelsonsmith@yahoo.com
- * @version $Id: ServletContextSingleton.java,v 1.2 2005/06/25 16:15:15 plightbo Exp $
+ * @version $Id$
  */
 public class ServletContextSingleton {
     /**

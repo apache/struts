@@ -30,7 +30,7 @@ import java.util.*;
  *
  * @author Rickard Ã–berg (rickard@dreambean.com)
  * @author Cameron Braid
- * @version $Revision: 1.19 $
+ * @version $Revision$
  */
 public class StrutsUtil {
 

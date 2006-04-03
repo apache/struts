@@ -42,10 +42,10 @@ public class TooltipTest extends AbstractUITagTest {
 		tag.setTooltip("myTooltip");
 		tag.setTooltipConfig(
 				"#{" +
-				"'tooltipIcon':'/webwork/tooltip/myTooltip.gif', " +
+				"'tooltipIcon':'/struts/tooltip/myTooltip.gif', " +
 				"'tooltipAboveMousePointer':'true', " +
 				"'tooltipBgColor':'#ffffff', " +
-				"'tooltipBgImg':'/webwork/tooltip/myBgImg.gif', " +
+				"'tooltipBgImg':'/struts/tooltip/myBgImg.gif', " +
 				"'tooltipBorderWidth':'10', " +
 				"'tooltipBorderColor':'#eeeeee', " +
 				"'tooltipDelay':'2000', " +
@@ -93,10 +93,10 @@ public class TooltipTest extends AbstractUITagTest {
 		
 		formTag.setTooltipConfig(
 				"#{ " +
-				"'tooltipIcon':'/webwork/tooltip/formMyTooltip.gif', " +
+				"'tooltipIcon':'/struts/tooltip/formMyTooltip.gif', " +
 				"'tooltipAboveMousePointer':'false', " +
 				"'tooltipBgColor':'#aaaaaa', " +
-				"'tooltipBgImg':'/webwork/tooltip/formMyBgImg.gif', " +
+				"'tooltipBgImg':'/struts/tooltip/formMyBgImg.gif', " +
 				"'tooltipBorderWidth':'11', " +
 				"'tooltipBorderColor':'#bbbbbb', " +
 				"'tooltipDelay':'2001', " +
@@ -152,10 +152,10 @@ public class TooltipTest extends AbstractUITagTest {
 		
 		formTag.setTooltipConfig(
 				"#{ " +
-				"'tooltipIcon':'/webwork/tooltip/formMyTooltip.gif', " +
+				"'tooltipIcon':'/struts/tooltip/formMyTooltip.gif', " +
 				"'tooltipAboveMousePointer':'false', " +
 				"'tooltipBgColor':'#aaaaaa', " +
-				"'tooltipBgImg':'/webwork/tooltip/formMyBgImg.gif', " +
+				"'tooltipBgImg':'/struts/tooltip/formMyBgImg.gif', " +
 				"'tooltipBorderWidth':'11', " +
 				"'tooltipBorderColor':'#bbbbbb', " +
 				"'tooltipDelay':'2001', " +
@@ -191,10 +191,10 @@ public class TooltipTest extends AbstractUITagTest {
 		tag.setTooltip("myTooltip");
 		tag.setTooltipConfig(
 				"#{ " +
-				"'tooltipIcon':'/webwork/tooltip/myTooltip.gif', " +
+				"'tooltipIcon':'/struts/tooltip/myTooltip.gif', " +
 				"'tooltipAboveMousePointer':'true', " +
 				"'tooltipBgColor':'#ffffff', " +
-				"'tooltipBgImg':'/webwork/tooltip/myBgImg.gif' " +
+				"'tooltipBgImg':'/struts/tooltip/myBgImg.gif' " +
 				"}"
 		);
 		
@@ -223,10 +223,10 @@ public class TooltipTest extends AbstractUITagTest {
 		formParamTag.setName("tooltipConfig");
 		formParamTag.setValue(
 				"#{ " +
-				"'tooltipIcon':'/webwork/tooltip/formMyTooltip.gif', " +
+				"'tooltipIcon':'/struts/tooltip/formMyTooltip.gif', " +
 				"'tooltipAboveMousePointer':'false', " +
 				"'tooltipBgColor':'#aaaaaa', " +
-				"'tooltipBgImg':'/webwork/tooltip/formMyBgImg.gif', " +
+				"'tooltipBgImg':'/struts/tooltip/formMyBgImg.gif', " +
 				"'tooltipBorderWidth':'11', " +
 				"'tooltipBorderColor':'#bbbbbb', " +
 				"'tooltipDelay':'2001', " +
@@ -265,10 +265,10 @@ public class TooltipTest extends AbstractUITagTest {
 		textFieldParamTag.setName("tooltipConfig");
 		textFieldParamTag.setValue(
 				"#{ " +
-				"'tooltipIcon':'/webwork/tooltip/myTooltip.gif', " +
+				"'tooltipIcon':'/struts/tooltip/myTooltip.gif', " +
 				"'tooltipAboveMousePointer':'true', " +
 				"'tooltipBgColor':'#ffffff', " +
-				"'tooltipBgImg':'/webwork/tooltip/myBgImg.gif' " +
+				"'tooltipBgImg':'/struts/tooltip/myBgImg.gif' " +
 				"}"
 		);
 		
@@ -301,10 +301,10 @@ public class TooltipTest extends AbstractUITagTest {
 		formParamTag.setName("tooltipConfig");
 		StrutsMockBodyContent bodyContent = new StrutsMockBodyContent(new MockJspWriter());
 		bodyContent.setString(
-				"tooltipIcon = /webwork/tooltip/formMyTooltip.gif | " +
+				"tooltipIcon = /struts/tooltip/formMyTooltip.gif | " +
 				"tooltipAboveMousePointer = false | " +
 				"tooltipBgColor = #aaaaaa| " +
-				"tooltipBgImg = /webwork/tooltip/formMyBgImg.gif | " +
+				"tooltipBgImg = /struts/tooltip/formMyBgImg.gif | " +
 				"tooltipBorderWidth = 11 | " +
 				"tooltipBorderColor = #bbbbbb| " +
 				"tooltipDelay = 2001 | " +
@@ -343,10 +343,10 @@ public class TooltipTest extends AbstractUITagTest {
 		textFieldParamTag.setName("tooltipConfig");
 		StrutsMockBodyContent bodyContent2 = new StrutsMockBodyContent(new MockJspWriter());
 		bodyContent2.setString(
-				"tooltipIcon = /webwork/tooltip/myTooltip.gif | " +
+				"tooltipIcon = /struts/tooltip/myTooltip.gif | " +
 				"tooltipAboveMousePointer = true | " +
 				"tooltipBgColor = #ffffff | " +
-				"tooltipBgImg = /webwork/tooltip/myBgImg.gif " 
+				"tooltipBgImg = /struts/tooltip/myBgImg.gif " 
 		);
 		textFieldParamTag.setBodyContent(bodyContent2);
 		

@@ -109,6 +109,7 @@ public class ComponentTest extends AbstractTagTest {
     }
 	
 	// Action Component
+	/*
 	public void testActionComponentDisposeItselfFromComponentStack() throws Exception {
 		ConfigurationManager.clearConfigurationProviders();
         ConfigurationManager.addConfigurationProvider(new TestConfigurationProvider());
@@ -141,7 +142,7 @@ public class ComponentTest extends AbstractTagTest {
 			fail(e.toString());
 		}
 	}
-	
+	*/
 	
 	
 	// AppendInterator

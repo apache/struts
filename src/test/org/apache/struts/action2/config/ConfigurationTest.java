@@ -54,7 +54,7 @@ public class ConfigurationTest extends StrutsTestCase {
 
     public void testSetConfiguration() {
         Configuration.setConfiguration(new TestConfiguration());
-
+        
         String keyName = "a.long.property.key.name";
         assertEquals(keyName, Configuration.getString(keyName));
         assertEquals(2, getKeyCount());
@@ -65,6 +65,7 @@ public class ConfigurationTest extends StrutsTestCase {
         Iterator keyNames = Configuration.list();
 
         while (keyNames.hasNext()) {
+        	keyNames.next();
             count++;
         }
 

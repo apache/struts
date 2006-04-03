@@ -1,8 +1,8 @@
-<script src="/webwork/xhtml/validation.js"></script>
+<script src="/struts/xhtml/validation.js"></script>
 <form namespace="" id="myAction" name="myForm" onsubmit="submitMe(); customOnsubmit(); return validateForm_myAction();" action="myAction" method="POST" enctype="myEncType" title="mytitle">
 <table class="wwFormTable"> <tr>
     <td class="tdLabel"></td>
-    <td>	<script language="javascript" src="/webwork/optiontransferselect/optiontransferselect.js"></script>
+    <td>	<script language="javascript" src="/struts/optiontransferselect/optiontransferselect.js"></script>
 <table>
 <tr><td>
 <select name="myUpDownSelectTag" size="5" id="myAction_myUpDownSelectTag" multiple="multiple">

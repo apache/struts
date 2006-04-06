@@ -4,7 +4,7 @@
 
 <xwork>
 
-    <include file="webwork-default.xml"/>
+    <include file="struts-default.xml"/>
 
     <include file="config-browser.xml"/>
 
@@ -30,7 +30,7 @@
     
     <include file="xwork-filedownload.xml" />
 
-    <package name="default" extends="webwork-default">
+    <package name="default" extends="struts-default">
         <interceptors>
             <interceptor-stack name="crudStack">
                 <interceptor-ref name="params" />

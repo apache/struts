@@ -1,8 +1,8 @@
 <!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
 <xwork>
-    <include file="webwork-default.xml"/>
+    <include file="struts-default.xml"/>
 
-    <package name="wait" extends="webwork-default" namespace="/wait">
+    <package name="wait" extends="struts-default" namespace="/wait">
 
         <action name="longProcess1" class="org.apache.struts.action2.showcase.wait.LongProcessAction">
             <interceptor-ref name="defaultStack"/>

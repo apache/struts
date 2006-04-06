@@ -1,8 +1,8 @@
 <!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
 <xwork>
-    <include file="webwork-default.xml"/>
+    <include file="struts-default.xml"/>
 
-    <package name="token" extends="webwork-default" namespace="/token">
+    <package name="token" extends="struts-default" namespace="/token">
 
         <action name="tokenPrepare" class="org.apache.struts.action2.showcase.token.TokenAction">
             <interceptor-ref name="defaultStack"/>

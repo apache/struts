@@ -4,7 +4,7 @@
 	@version $Date: 2006/03/20 16:04:09 $ $Id: showcase.jsp,v 1.17 2006/03/20 16:04:09 tmjee Exp $
 --%>
 
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-action" prefix="ww" %>
 <html>
 <head>
     <title>Showcase</title>
@@ -14,7 +14,7 @@
 <body>
 <h1>Showcase samples</h1>
 
-<p>The given examples will demonstrate the usages of all WebWork tags as well as validations etc.</p>
+<p>The given examples will demonstrate the usages of all Struts tags as well as validations etc.</p>
 
 <p>
 	<ul>

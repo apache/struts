@@ -4,13 +4,13 @@
 	
 <xwork>
 	
-	<include file="webwork-default.xml" />
+	<include file="struts-default.xml" />
 	
 	<!-- ================================== -->
 	<!-- === Package for ActionTag Demo === -->
 	<!-- ================================== -->
 	
-	<package name="actionTag" extends="webwork-default" namespace="/tags/non-ui/actionTag">
+	<package name="actionTag" extends="struts-default" namespace="/tags/non-ui/actionTag">
 		<action name="showActionTagDemo" class="org.apache.struts.action2.showcase.tag.nonui.actiontag.ActionTagDemo" method="show">
 			<result>/tags/non-ui/actionTag/showActionTagDemo.jsp</result>
 		</action>
@@ -32,7 +32,7 @@
 	<!-- === Package for IteratorGeneratorTag Demo === -->
 	<!-- ==================================== -->
 	
-	<package name="iteratorGeneratorTag" extends="webwork-default" namespace="/tags/non-ui/iteratorGeneratorTag">
+	<package name="iteratorGeneratorTag" extends="struts-default" namespace="/tags/non-ui/iteratorGeneratorTag">
 		<action name="showGeneratorTagDemo" class="org.apache.struts.action2.showcase.tag.nonui.iteratortag.IteratorGeneratorTagDemo" method="input">
 			<result>/tags/non-ui/iteratorTag/showIteratorGeneratorTagDemo.jsp</result>
 		</action>
@@ -46,7 +46,7 @@
 	<!-- ===================================== -->
 	<!-- === Package for AppendIteratorTag Demo ===  -->
 	<!-- ========================================== -->
-	<package name="appendIteratorTag" extends="webwork-default" namespace="/tags/non-ui/appendIteratorTag">
+	<package name="appendIteratorTag" extends="struts-default" namespace="/tags/non-ui/appendIteratorTag">
 		<action name="showAppendTagDemo" class="org.apache.struts.action2.showcase.tag.nonui.iteratortag.AppendIteratorTagDemo" method="input">
 			<result>/tags/non-ui/iteratorTag/showAppendIteratorTagDemo.jsp</result>
 		</action>
@@ -60,7 +60,7 @@
 	<!-- ====================================== -->
 	<!-- === Package for MergeIteratorTag Demo === -->
 	<!-- ========================================= -->
-	<package name="mergeIteratorTag" extends="webwork-default" namespace="/tags/non-ui/mergeIteratorTag">
+	<package name="mergeIteratorTag" extends="struts-default" namespace="/tags/non-ui/mergeIteratorTag">
 		<action name="showMergeTagDemo" class="org.apache.struts.action2.showcase.tag.nonui.iteratortag.MergeIteratorTagDemo" method="input">
 			<result>/tags/non-ui/iteratorTag/showMergeIteratorTagDemo.jsp</result>
 		</action>
@@ -73,7 +73,7 @@
 	<!-- ============================================= -->
 	<!-- === Package for SubsetIteratorTag Demo === -->
 	<!-- =========================================== -->
-	<package name="subsetIteratorTag" extends="webwork-default" namespace="/tags/non-ui/subsetIteratorTag">
+	<package name="subsetIteratorTag" extends="struts-default" namespace="/tags/non-ui/subsetIteratorTag">
 		<action name="showSubsetTagDemo" class="org.apache.struts.action2.showcase.tag.nonui.iteratortag.SubsetIteratorTagDemo" method="input">
 			<result>/tags/non-ui/iteratorTag/subsetIteratorTagDemo.jsp</result>
 		</action>

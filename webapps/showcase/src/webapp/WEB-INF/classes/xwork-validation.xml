@@ -3,9 +3,9 @@
 	"http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
 	
 <xwork>
-	<include file="webwork-default.xml" />
+	<include file="struts-default.xml" />
 
-	<package name="validation" extends="webwork-default" namespace="/validation">
+	<package name="validation" extends="struts-default" namespace="/validation">
 	    <action name="quizBasic" class="org.apache.struts.action2.showcase.validation.QuizAction">
             <result name="input">quiz-basic.jsp</result>
             <result>quiz-success.jsp</result>
@@ -28,7 +28,7 @@
 	</package>
 
 
-	<package name="validationExamples" extends="webwork-default" namespace="/validation" >
+	<package name="validationExamples" extends="struts-default" namespace="/validation" >
 
 		<action name="list">
 			<result>index.jsp</result>

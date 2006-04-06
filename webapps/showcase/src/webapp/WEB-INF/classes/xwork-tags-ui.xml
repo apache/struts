@@ -1,8 +1,8 @@
 <!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
 <xwork>
-    <include file="webwork-default.xml"/>
+    <include file="struts-default.xml"/>
 
-    <package name="ui-tags" extends="webwork-default" namespace="/tags/ui">
+    <package name="ui-tags" extends="struts-default" namespace="/tags/ui">
         <action name="example" class="org.apache.struts.action2.showcase.UITagExample">
             <result>example.jsp</result>
             <result name="input">example.jsp</result>
@@ -40,7 +40,7 @@
     
     
     
-    <package name="richtexteditor-browse" extends="webwork-default" namespace="/webwork/richtexteditor/editor/filemanager/browser/default/connectors/jsp">
+    <package name="richtexteditor-browse" extends="struts-default" namespace="/struts/richtexteditor/editor/filemanager/browser/default/connectors/jsp">
     	<action name="connector" class="org.apache.struts.action2.components.DefaultRichtexteditorConnector" method="browse">
     		<result name="getFolders" type="richtexteditorGetFolders" />
     		<result name="getFoldersAndFiles" type="richtexteditorGetFoldersAndFiles" />
@@ -49,7 +49,7 @@
     	</action>
     </package>
     
-    <package name="richtexteditor-upload" extends="webwork-default" namespace="/webwork/richtexteditor/editor/filemanager/upload">
+    <package name="richtexteditor-upload" extends="struts-default" namespace="/struts/richtexteditor/editor/filemanager/upload">
 		<action name="uploader" class="org.apache.struts.action2.components.DefaultRichtexteditorConnector" method="upload">
 			<result name="richtexteditorFileUpload" />
 		</action>    

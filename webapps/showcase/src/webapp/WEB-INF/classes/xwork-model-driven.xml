@@ -5,9 +5,9 @@
 	"http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
 
 <xwork>
-	<include file="webwork-default.xml" />
+	<include file="struts-default.xml" />
 
-	<package name="modelDriven" extends="webwork-default" namespace="/modelDriven">
+	<package name="modelDriven" extends="struts-default" namespace="/modelDriven">
 	    <!-- Diplay entry page that uses Model-Driven technique -->
 		<action name="modelDriven" class="org.apache.struts.action2.showcase.modelDriven.ModelDrivenAction" method="input">
 			<result>modelDriven.jsp</result>

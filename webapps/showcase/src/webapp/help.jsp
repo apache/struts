@@ -1,4 +1,4 @@
-<%@taglib uri="/webwork" prefix="ww" %>
+<%@taglib uri="/struts-action" prefix="ww" %>
 <html>
 <head>
     <title>WebWork ~ Getting Support</title>

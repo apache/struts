@@ -3,9 +3,9 @@
 <!-- START SNIPPET: xworkSample -->
 
 <xwork>
-    <include file="webwork-default.xml"/>
+    <include file="struts-default.xml"/>
 
-    <package name="person" extends="webwork-default" namespace="/person">
+    <package name="person" extends="struts-default" namespace="/person">
         <action name="listPeople" class="org.apache.struts.action2.showcase.person.ListPeople">
             <interceptor-ref name="validationWorkflowStack"/>
             <result type="freemarker">listPeople.ftl</result>

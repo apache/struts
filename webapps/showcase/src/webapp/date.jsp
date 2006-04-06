@@ -1,2 +1,2 @@
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="ww" uri="/struts-action" %>
 <ww:date name="now"/>

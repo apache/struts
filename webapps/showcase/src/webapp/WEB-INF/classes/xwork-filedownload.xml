@@ -5,9 +5,9 @@
 	"http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
 
 <xwork>
-	<include file="webwork-default.xml" />
+	<include file="struts-default.xml" />
 
-	<package name="filedownload" extends="webwork-default" namespace="/filedownload">
+	<package name="filedownload" extends="struts-default" namespace="/filedownload">
 
         <default-action-ref name="download"/>
 

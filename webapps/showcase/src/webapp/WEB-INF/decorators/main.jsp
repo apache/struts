@@ -9,16 +9,16 @@
 
 <%@ taglib uri="sitemesh-decorator" prefix="decorator" %>
 <%@ taglib uri="sitemesh-page" prefix="page" %>
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="ww" uri="/struts-action" %>
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <title><decorator:title default="WebWork Showcase"/></title>
+    <title><decorator:title default="Struts Action Showcase"/></title>
     <link href="<ww:url value='/styles/main.css'/>" rel="stylesheet" type="text/css" media="all"/>
-    <link href="<ww:url value='/webwork/niftycorners/niftyCorners.css'/>" rel="stylesheet" type="text/css"/>
-    <link href="<ww:url value='/webwork/niftycorners/niftyPrint.css'/>" rel="stylesheet" type="text/css" media="print"/>
+    <link href="<ww:url value='/struts/niftycorners/niftyCorners.css'/>" rel="stylesheet" type="text/css"/>
+    <link href="<ww:url value='/struts/niftycorners/niftyPrint.css'/>" rel="stylesheet" type="text/css" media="print"/>
 
-    <script language="JavaScript" type="text/javascript" src="<ww:url value='/webwork/niftycorners/nifty.js'/>"></script>
+    <script language="JavaScript" type="text/javascript" src="<ww:url value='/struts/niftycorners/nifty.js'/>"></script>
 
     <script language="JavaScript" type="text/javascript">
 
@@ -42,12 +42,12 @@
     <div id="outer-header">
         <div id="header" class="clearfix">
             <div id="branding">
-                <h1 class="title">WebWork Showcase</h1>
+                <h1 class="title">Struts Action Showcase</h1>
                 <ww:action id="dateAction" name="date" namespace="/" executeResult="true" />
             </div><!-- end branding -->
 
             <div id="search">
-                <img src="<ww:url value='/images/logo-small.png'/>" alt="WebWork logo"/>
+                <img src="<ww:url value='/images/logo-small.png'/>" alt="Struts logo"/>
             </div><!-- end search -->
 
             <hr/>

@@ -7,9 +7,9 @@
    All rights reserved.
 -->
 <xwork>
-	<include file="webwork-default.xml" />
+	<include file="struts-default.xml" />
 
-	<package name="view" extends="webwork-portlet-default"
+	<package name="view" extends="struts-portlet-default"
 		namespace="/view">
 		<action name="index"
 			class="com.opensymphony.xwork.ActionSupport">

@@ -1,10 +1,10 @@
 <!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
 
 <xwork>
-    <include file="webwork-default.xml"/>
+    <include file="struts-default.xml"/>
     <include file="config-browser.xml"/>
 
-    <package name="catalog" namespace="/catalog" extends="webwork-default">
+    <package name="catalog" namespace="/catalog" extends="struts-default">
         <interceptors>
             <!-- Basic stack -->
             <interceptor-stack name="catalogStack">

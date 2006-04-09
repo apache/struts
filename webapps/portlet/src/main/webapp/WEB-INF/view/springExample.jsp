@@ -1,16 +1,16 @@
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="saf" uri="/struts-action" %>
 
 <h3>Example of Spring managed singleton. All the 'things' are contained in a Spring defined ThingManager</h3>
 
 <b>Things in the list:</b>
 <p/>
-<ww:iterator value="things">
-	<ww:property /><br/>
-</ww:iterator>
+<saf:iterator value="things">
+	<saf:property /><br/>
+</saf:iterator>
 <p/>
-<ww:form action="springExample" method="POST">
-	<ww:textfield label="Thing to add?" name="thing" value=""/>
-	<ww:submit value="Add the thing"/>
-</ww:form>
+<saf:form action="springExample" method="POST">
+	<saf:textfield label="Thing to add?" name="thing" value=""/>
+	<saf:submit value="Add the thing"/>
+</saf:form>
 <p/>
-<a href="<ww:url action="index"/>">Back to front page</a>
+<a href="<saf:url action="index"/>">Back to front page</a>

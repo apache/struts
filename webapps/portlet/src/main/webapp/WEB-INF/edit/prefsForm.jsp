@@ -1,7 +1,7 @@
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="saf" uri="/struts-action" %>
 <%@ taglib prefix="pw" uri="/portletwork" %>
 <pw:form action="prefsFormSave.action" method="POST">
-	<ww:textfield label="Preference one" name="preferenceOne" value="%{preferenceOne}"/>
-	<ww:textfield label="Preference two" name="preferenceTwo" value="%{preferenceTwo}"/>
-	<ww:submit value="Save prefs"/>
+	<saf:textfield label="Preference one" name="preferenceOne" value="%{preferenceOne}"/>
+	<saf:textfield label="Preference two" name="preferenceTwo" value="%{preferenceTwo}"/>
+	<saf:submit value="Save prefs"/>
 </pw:form>

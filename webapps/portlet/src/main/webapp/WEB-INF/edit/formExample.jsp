@@ -1,5 +1,5 @@
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="saf" uri="/struts-action" %>
 
-<H2>Hello <ww:property value="firstName"/> <ww:property value="lastName"/></H2>
+<H2>Hello <saf:property value="firstName"/> <saf:property value="lastName"/></H2>
 <p/>
-<a href="<ww:url action="index"/>">Back to front page</a>
+<a href="<saf:url action="index"/>">Back to front page</a>

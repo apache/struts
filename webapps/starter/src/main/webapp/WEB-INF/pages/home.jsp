@@ -1,4 +1,4 @@
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="saf" uri="/struts-action" %>
 
 <html>
     <head>
@@ -11,8 +11,8 @@
             <fieldset>
                 <legend>Example action</legend>
                 <p>
-                    <ww:url id="helloURL" action="helloMatrix" />
-                    <ww:a href="%{helloURL}">Enter the matrix</ww:a>
+                    <saf:url id="helloURL" action="helloMatrix" />
+                    <saf:a href="%{helloURL}">Enter the matrix</saf:a>
                 </p>
             </fieldset>
         </p>

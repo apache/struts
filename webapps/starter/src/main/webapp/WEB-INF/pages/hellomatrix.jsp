@@ -1,4 +1,4 @@
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="saf" uri="/struts-action" %>
 
 <html>
     <head>
@@ -10,10 +10,10 @@
         <p>
             <fieldset>
                 <legend>Matrix Form</legend>
-                <ww:form name="helloWorldForm" action="helloMatrixSubmit">
-                    <ww:textfield name="hello" label="Enter your name" />
-                    <ww:submit />
-                </ww:form>
+                <saf:form name="helloWorldForm" action="helloMatrixSubmit">
+                    <saf:textfield name="hello" label="Enter your name" />
+                    <saf:submit />
+                </saf:form>
             </fieldset>
         </p>
     </body>

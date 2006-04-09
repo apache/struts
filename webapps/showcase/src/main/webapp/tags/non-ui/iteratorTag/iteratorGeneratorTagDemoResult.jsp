@@ -1,4 +1,4 @@
-<%@taglib prefix="ww" uri="/webwork" %>
+<%@taglib prefix="saf" uri="/struts-action" %>
 
 <html>
 <head>
@@ -6,14 +6,14 @@
 </head>
 <body>
 
-	<ww:generator val="%{value}" separator="%{separator}" count="%{count}">
-		<ww:iterator value="%{top}">
-			<ww:property /><br/>
-		</ww:iterator>
-	</ww:generator>
+	<saf:generator val="%{value}" separator="%{separator}" count="%{count}">
+		<saf:iterator value="%{top}">
+			<saf:property /><br/>
+		</saf:iterator>
+	</saf:generator>
 
-	<ww:url value="%{'/tags/non-ui/'}" id="url" /><ww:a href="%{#url}">Back To Non-UI Demo</ww:a>
-	<ww:url value="%{'/'}" id="url" /><ww:a href="%{#url}">Back To Showcase</ww:a>
+	<saf:url value="%{'/tags/non-ui/'}" id="url" /><saf:a href="%{#url}">Back To Non-UI Demo</saf:a>
+	<saf:url value="%{'/'}" id="url" /><saf:a href="%{#url}">Back To Showcase</saf:a>
 
 </body>
 </html>

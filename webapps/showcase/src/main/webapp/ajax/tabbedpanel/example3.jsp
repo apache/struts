@@ -1,15 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="saf" uri="/struts-action" %>
 
 <html>
 <head>
     <title>Ajax examples - tabbled panel</title>
 
     <jsp:include page="/ajax/commonInclude.jsp"/>
-    <link rel="stylesheet" type="text/css" href="<ww:url value="/webwork/tabs.css"/>">
-    <link rel="stylesheet" type="text/css" href="<ww:url value="/webwork/niftycorners/niftyCorners.css"/>">
-    <link rel="stylesheet" type="text/css" href="<ww:url value="/webwork/niftycorners/niftyPrint.css"/>" media="print">
-    <script type="text/javascript" src="<ww:url value="/webwork/niftycorners/nifty.js"/>"></script>
+    <link rel="stylesheet" type="text/css" href="<saf:url value="/struts/tabs.css"/>">
+    <link rel="stylesheet" type="text/css" href="<saf:url value="/struts/niftycorners/niftyCorners.css"/>">
+    <link rel="stylesheet" type="text/css" href="<saf:url value="/struts/niftycorners/niftyPrint.css"/>" media="print">
+    <script type="text/javascript" src="<saf:url value="/struts/niftycorners/nifty.js"/>"></script>
     <script type="text/javascript">
         dojo.event.connect(window, "onload", function() {
             if (!NiftyCheck())
@@ -28,30 +28,30 @@
         <tr>
             <td align="top">
                 <!--// START SNIPPET: tabbedpanel-tag-->
-                <ww:tabbedPanel id="test2" theme="simple" >
-                      <ww:panel id="left" tabName="left" theme="ajax">
+                <saf:tabbedPanel id="test2" theme="simple" >
+                      <saf:panel id="left" tabName="left" theme="ajax">
                           This is the left pane<br/>
-                          <ww:form >
-                              <ww:textfield name="tt" label="Test Text" />  <br/>
-                              <ww:textfield name="tt2" label="Test Text2" />
-                          </ww:form>
-                      </ww:panel>
-                      <ww:panel remote="true" href="/AjaxTest.action" id="ryh1" theme="ajax" tabName="remote one" />
-                      <ww:panel id="middle" tabName="middle" theme="ajax">
+                          <saf:form >
+                              <saf:textfield name="tt" label="Test Text" />  <br/>
+                              <saf:textfield name="tt2" label="Test Text2" />
+                          </saf:form>
+                      </saf:panel>
+                      <saf:panel remote="true" href="/AjaxTest.action" id="ryh1" theme="ajax" tabName="remote one" />
+                      <saf:panel id="middle" tabName="middle" theme="ajax">
                           middle tab<br/>
-                          <ww:form >
-                              <ww:textfield name="tt" label="Test Text44" />  <br/>
-                              <ww:textfield name="tt2" label="Test Text442" />
-                          </ww:form>
-                      </ww:panel>
-                      <ww:panel remote="true" href="/AjaxTest.action"  id="ryh21" theme="ajax" tabName="remote right" />
-                  </ww:tabbedPanel>
+                          <saf:form >
+                              <saf:textfield name="tt" label="Test Text44" />  <br/>
+                              <saf:textfield name="tt2" label="Test Text442" />
+                          </saf:form>
+                      </saf:panel>
+                      <saf:panel remote="true" href="/AjaxTest.action"  id="ryh21" theme="ajax" tabName="remote right" />
+                  </saf:tabbedPanel>
                 <!--// END SNIPPET: tabbedpanel-tag-->
              </td>
         </tr>
     </table>
 
-<ww:include value="../footer.jsp"/>
+<saf:include value="../footer.jsp"/>
 
 </body>
 </html>

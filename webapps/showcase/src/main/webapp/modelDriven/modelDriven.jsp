@@ -1,4 +1,4 @@
-<%@taglib prefix="ww" uri="/webwork" %>
+<%@taglib prefix="saf" uri="/struts-action" %>
 
 <html>
 <head>
@@ -6,25 +6,25 @@
 </head>
 <body>
 
-<ww:form action="modelDrivenResult" method="POST" namespace="/modelDriven">
+<saf:form action="modelDrivenResult" method="POST" namespace="/modelDriven">
 	
-	<ww:textfield 
+	<saf:textfield 
 			label="Gangster Name"
 			name="name" />
-	<ww:textfield
+	<saf:textfield
 			label="Gangster Age"
 			name="age" />
-	<ww:checkbox
+	<saf:checkbox
 			label="Gangster Busted Before"
 			name="bustedBefore" />
-	<ww:textarea
+	<saf:textarea
 			cols="30"
 			rows="5"
 			label="Gangster Description"
 			name="description" />			
-	<ww:submit />
+	<saf:submit />
 	
-</ww:form>
+</saf:form>
 
 </body>
 </html>

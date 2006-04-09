@@ -6,7 +6,7 @@
 --%>
 
 
-<%@taglib uri="/webwork" prefix="ww" %>
+<%@taglib uri="/struts-action" prefix="saf" %>
 
 <html>
 	<head><title>Showcase - Validation - SuccessNonFieldValidatorsExample</title></head>
@@ -15,19 +15,19 @@
 		<table>
 			<tr>
 				<td>Some Text: </td>
-				<td><ww:property value="someText" /></td>
+				<td><saf:property value="someText" /></td>
 			</tr>
 			<tr>
 				<td>Some Text Retyped: </td>
-				<td><ww:property value="someTextRetype" /></td>
+				<td><saf:property value="someTextRetype" /></td>
 			</tr>
 			<tr>
 				<td>Some Text Retyped Again: </td>
-				<td><ww:property value="someTextRetypeAgain" /></td>
+				<td><saf:property value="someTextRetypeAgain" /></td>
 			</tr>
 		</table>
 		
-		<ww:include value="footer.jsp" />
+		<saf:include value="footer.jsp" />
 	</body>
 </html>
 

@@ -1,4 +1,4 @@
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="saf" uri="/struts-action" %>
 
 <html>
 <head>
@@ -6,7 +6,7 @@
 </head>
 
 <body>
-<ww:form action="doEditPerson" theme="simple" validate="false">
+<saf:form action="doEditPerson" theme="simple" validate="false">
 
     <table>
         <tr>
@@ -14,23 +14,23 @@
             <th>First Name</th>
             <th>Last Name</th>
         </tr>
-        <ww:iterator id="p" value="persons">
+        <saf:iterator id="p" value="persons">
             <tr>
                 <td>
-                    <ww:property value="%{id}" />
+                    <saf:property value="%{id}" />
                 </td>
                 <td>
-                    <ww:textfield label="First Name" name="persons(%{id}).name" value="%{name}" theme="simple" />
+                    <saf:textfield label="First Name" name="persons(%{id}).name" value="%{name}" theme="simple" />
                 </td>
                 <td>
-                    <ww:textfield label="Last Name" name="persons(%{id}).lastName" value="%{lastName}" theme="simple"/>
+                    <saf:textfield label="Last Name" name="persons(%{id}).lastName" value="%{lastName}" theme="simple"/>
                 </td>
             </tr>
-        </ww:iterator>
+        </saf:iterator>
     </table>
 
-    <ww:submit value="Save all persons"/>
-</ww:form>
+    <saf:submit value="Save all persons"/>
+</saf:form>
 
 <ul>
     <li><a href="newPerson!input.action">Create</a> a new person</li>

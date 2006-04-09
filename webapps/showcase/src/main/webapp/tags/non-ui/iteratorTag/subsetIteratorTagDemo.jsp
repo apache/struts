@@ -1,4 +1,4 @@
-<%@taglib uri="/webwork" prefix="ww" %>
+<%@taglib uri="/struts-action" prefix="saf" %>
 
 <html>
 <head>
@@ -6,15 +6,15 @@
 </head>
 <body>
 
-	<ww:actionerror/>
-	<ww:actionmessage/>
+	<saf:actionerror/>
+	<saf:actionmessage/>
 
-	<ww:form action="submitSubsetTagDemo" namespace="/tags/non-ui/subsetIteratorTag" method="POST">
-		<ww:textfield label="Iterator value (comma separated)" name="iteratorValue" />
-		<ww:textfield label="Count" name="count" />
-		<ww:textfield label="Start" name="start" />
-		<ww:submit />
-	</ww:form>
+	<saf:form action="submitSubsetTagDemo" namespace="/tags/non-ui/subsetIteratorTag" method="POST">
+		<saf:textfield label="Iterator value (comma separated)" name="iteratorValue" />
+		<saf:textfield label="Count" name="count" />
+		<saf:textfield label="Start" name="start" />
+		<saf:submit />
+	</saf:form>
 
 </body>
 </html>

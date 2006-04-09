@@ -6,33 +6,33 @@
 --%>
 
 
-<%@taglib prefix="ww" uri="/webwork" %>
+<%@taglib prefix="saf" uri="/struts-action" %>
 
 <html>
 	<head>
 		<title>Showcase - Validation - Non Field Validator Example</title>
-		<ww:url id="siteCss" value="/validation/validationExamplesStyles.css" includeContext="true" />
-		<ww:head />
-		<!-- link rel="stylesheet" type="text/css" href='<ww:property value="%{siteCss}" />'-->
+		<saf:url id="siteCss" value="/validation/validationExamplesStyles.css" includeContext="true" />
+		<saf:head />
+		<!-- link rel="stylesheet" type="text/css" href='<saf:property value="%{siteCss}" />'-->
 	</head>
 	<body>
 	
 	   
 	   <!-- START SNIPPET: nonFieldValidatorsExample -->
-		<ww:actionerror />
+		<saf:actionerror />
 	
-		<ww:form method="POST" action="submitNonFieldValidatorsExamples" namespace="/validation">
-			<ww:textfield name="someText" label="Some Text" />
-			<ww:textfield name="someTextRetype" label="Retype Some Text" />  
-			<ww:textfield name="someTextRetypeAgain" label="Retype Some Text Again" />
-			<ww:submit label="Submit" />
-		</ww:form>
+		<saf:form method="POST" action="submitNonFieldValidatorsExamples" namespace="/validation">
+			<saf:textfield name="someText" label="Some Text" />
+			<saf:textfield name="someTextRetype" label="Retype Some Text" />  
+			<saf:textfield name="someTextRetypeAgain" label="Retype Some Text Again" />
+			<saf:submit label="Submit" />
+		</saf:form>
 		
 		
 		<!--  END SNIPPET: nonFieldValidatorsExample -->
 		
 		
-		<ww:include value="footer.jsp" />
+		<saf:include value="footer.jsp" />
 	</body>
 </html>
 

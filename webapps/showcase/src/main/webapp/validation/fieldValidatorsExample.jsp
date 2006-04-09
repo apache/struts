@@ -5,51 +5,51 @@
    @version $Date: 2006/01/13 16:23:43 $ $Id: fieldValidatorsExample.jsp,v 1.4 2006/01/13 16:23:43 rainerh Exp $
 --%>
 
-<%@taglib prefix="ww" uri="/webwork" %>
+<%@taglib prefix="saf" uri="/struts-action" %>
 
 <html>
 	<head>
 		<title>Showcase - Validation - Field Validators Example</title>
-		<ww:url id="siteCss" includeContext="true" value="/validation/validationExamplesStyles.css" />
-		<ww:head theme="xhtml"/>
-		<!--  link rel="stylesheet" type="text/css" href='<ww:property value="%{siteCss}" />'-->
+		<saf:url id="siteCss" includeContext="true" value="/validation/validationExamplesStyles.css" />
+		<saf:head theme="xhtml"/>
+		<!--  link rel="stylesheet" type="text/css" href='<saf:property value="%{siteCss}" />'-->
 	</head>
 	<body>
 	
 	<!-- START SNIPPET: fieldValidatorsExample -->
 	
 		<h3>All Field Errors Will Appear Here</h3>
-		<ww:fielderror />
+		<saf:fielderror />
 		<hr/>
 		
 		<h3>Field Error due to 'Required String Validator Field' Will Appear Here</h3>
-		<ww:fielderror>
-			<ww:param value="%{'requiredStringValidatorField'}" />
-		</ww:fielderror>
+		<saf:fielderror>
+			<saf:param value="%{'requiredStringValidatorField'}" />
+		</saf:fielderror>
 		<hr/>
 		
 		<h3>Field Error due to 'String Length Validator Field' Will Appear Here</h3>
-		<ww:fielderror>
-			<ww:param>stringLengthValidatorField</ww:param>
-		</ww:fielderror>
+		<saf:fielderror>
+			<saf:param>stringLengthValidatorField</saf:param>
+		</saf:fielderror>
 		<hr/>
 	
-		<ww:form action="submitFieldValidatorsExamples" namespace="/validation" method="POST" theme="xhtml">
-			<ww:textfield label="Required Validator Field" name="requiredValidatorField" />
-			<ww:textfield label="Required String Validator Field" name="requiredStringValidatorField" />
-			<ww:textfield label="Integer Validator Field" name="integerValidatorField" />
-			<ww:textfield label="Date Validator Field" name="dateValidatorField" />
-			<ww:textfield label="Email Validator Field" name="emailValidatorField" />
-			<ww:textfield label="URL Validator Field" name="urlValidatorField" />
-			<ww:textfield label="String Length Validator Field" name="stringLengthValidatorField" />
-			<ww:textfield label="Regex Validator Field" name="regexValidatorField"/>
-			<ww:textfield label="Field Expression Validator Field" name="fieldExpressionValidatorField" />
-			<ww:submit label="Submit" />
-		</ww:form>
+		<saf:form action="submitFieldValidatorsExamples" namespace="/validation" method="POST" theme="xhtml">
+			<saf:textfield label="Required Validator Field" name="requiredValidatorField" />
+			<saf:textfield label="Required String Validator Field" name="requiredStringValidatorField" />
+			<saf:textfield label="Integer Validator Field" name="integerValidatorField" />
+			<saf:textfield label="Date Validator Field" name="dateValidatorField" />
+			<saf:textfield label="Email Validator Field" name="emailValidatorField" />
+			<saf:textfield label="URL Validator Field" name="urlValidatorField" />
+			<saf:textfield label="String Length Validator Field" name="stringLengthValidatorField" />
+			<saf:textfield label="Regex Validator Field" name="regexValidatorField"/>
+			<saf:textfield label="Field Expression Validator Field" name="fieldExpressionValidatorField" />
+			<saf:submit label="Submit" />
+		</saf:form>
 		
     <!-- END SNIPPET: fieldValidatorsExample -->
 		
 		
-		<ww:include value="footer.jsp" />
+		<saf:include value="footer.jsp" />
 	</body>
 </html>

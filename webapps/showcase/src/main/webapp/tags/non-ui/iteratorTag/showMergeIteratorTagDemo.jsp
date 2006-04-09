@@ -1,4 +1,4 @@
-<%@taglib uri="/webwork" prefix="ww" %>
+<%@taglib uri="/struts-action" prefix="saf" %>
 
 <html>
 <head>
@@ -6,11 +6,11 @@
 </head>
 <body>
 
-	<ww:form action="submitMergeTagDemo" namespace="/tags/non-ui/mergeIteratorTag" method="POST">
-		<ww:textfield label="Iterator 1 Value (Comma Separated)" name="iteratorValue1" />
-		<ww:textfield label="Iterator 2 Value (Comma Separated)" name="iteratorValue2" />
-		<ww:submit />
-	</ww:form>
+	<saf:form action="submitMergeTagDemo" namespace="/tags/non-ui/mergeIteratorTag" method="POST">
+		<saf:textfield label="Iterator 1 Value (Comma Separated)" name="iteratorValue1" />
+		<saf:textfield label="Iterator 2 Value (Comma Separated)" name="iteratorValue2" />
+		<saf:submit />
+	</saf:form>
 
 
 </body>

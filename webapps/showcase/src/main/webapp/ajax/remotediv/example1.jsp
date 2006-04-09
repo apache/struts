@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="saf" uri="/struts-action" %>
 
 <html>
 <head>
@@ -9,16 +9,16 @@
 
 <body>
 
-<ww:div
+<saf:div
         id="once"
         theme="ajax"
         cssStyle="border: 1px solid yellow;"
         href="/AjaxTest.action"
         delay="5000"
         loadingText="loading...">
-    Initial Content</ww:div>
+    Initial Content</saf:div>
 
-<ww:include value="../footer.jsp"/>
+<saf:include value="../footer.jsp"/>
 
 </body>
 </html>

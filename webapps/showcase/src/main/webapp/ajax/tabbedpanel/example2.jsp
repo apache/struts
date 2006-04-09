@@ -1,15 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="saf" uri="/struts-action" %>
 
 <html>
 <head>
     <title>Ajax examples - tabbled panel</title>
 
     <jsp:include page="/ajax/commonInclude.jsp"/>
-    <link rel="stylesheet" type="text/css" href="<ww:url value="/webwork/tabs.css"/>">
-    <link rel="stylesheet" type="text/css" href="<ww:url value="/webwork/niftycorners/niftyCorners.css"/>">
-    <link rel="stylesheet" type="text/css" href="<ww:url value="/webwork/niftycorners/niftyPrint.css"/>" media="print">
-    <script type="text/javascript" src="<ww:url value="/webwork/niftycorners/nifty.js"/>"></script>
+    <link rel="stylesheet" type="text/css" href="<saf:url value="/struts/tabs.css"/>">
+    <link rel="stylesheet" type="text/css" href="<saf:url value="/struts/niftycorners/niftyCorners.css"/>">
+    <link rel="stylesheet" type="text/css" href="<saf:url value="/struts/niftycorners/niftyPrint.css"/>" media="print">
+    <script type="text/javascript" src="<saf:url value="/struts/niftycorners/nifty.js"/>"></script>
     <script type="text/javascript">
         window.onload = function() {
             if (!NiftyCheck())
@@ -27,26 +27,26 @@
     <table cellpadding="0" cellspacing="10" border="0" width="600">
         <tr>
             <td align="top">
-                <ww:tabbedPanel id="test" theme="ajax">
-                    <ww:panel id="one" tabName="one" theme="ajax" >
+                <saf:tabbedPanel id="test" theme="ajax">
+                    <saf:panel id="one" tabName="one" theme="ajax" >
                         This is the first pane<br/>
-                        <ww:form>
-                            <ww:textfield name="tt" label="Test Text"/>  <br/>
-                            <ww:textfield name="tt2" label="Test Text2"/>
-                        </ww:form>
-                    </ww:panel>
-                    <ww:panel id="two" tabName="two" theme="ajax">
+                        <saf:form>
+                            <saf:textfield name="tt" label="Test Text"/>  <br/>
+                            <saf:textfield name="tt2" label="Test Text2"/>
+                        </saf:form>
+                    </saf:panel>
+                    <saf:panel id="two" tabName="two" theme="ajax">
                         This is the second panel
-                    </ww:panel>
-                    <ww:panel id="three" tabName="three" theme="ajax">
+                    </saf:panel>
+                    <saf:panel id="three" tabName="three" theme="ajax">
                         This is the three
-                    </ww:panel>
-                </ww:tabbedPanel>
+                    </saf:panel>
+                </saf:tabbedPanel>
             </td>
         </tr>
     </table>
 
-<ww:include value="../footer.jsp"/>
+<saf:include value="../footer.jsp"/>
 
 </body>
 </html>

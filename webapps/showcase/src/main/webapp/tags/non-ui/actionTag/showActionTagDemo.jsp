@@ -1,4 +1,4 @@
-<%@taglib prefix="ww" uri="/webwork" %>
+<%@taglib prefix="saf" uri="/struts-action" %>
 
 <html>
 <head>
@@ -13,30 +13,30 @@
 
 <!-- lets include the first page many times -->
 <div style="margin: 5px; border: solid 1px; ">
-<ww:action name="includePage" namespace="/tags/non-ui/actionTag" executeResult="true" />
-<ww:action name="includePage" namespace="/tags/non-ui/actionTag" executeResult="true" />
-<ww:action name="includePage" namespace="/tags/non-ui/actionTag" executeResult="true" />
+<saf:action name="includePage" namespace="/tags/non-ui/actionTag" executeResult="true" />
+<saf:action name="includePage" namespace="/tags/non-ui/actionTag" executeResult="true" />
+<saf:action name="includePage" namespace="/tags/non-ui/actionTag" executeResult="true" />
 </div>
 
 
 <!-- lets include the second page many times -->
 <div style="margin: 5px; border: solid 1px; ">
-<ww:action name="includePage2" namespace="/tags/non-ui/actionTag" executeResult="true" />
-<ww:action name="includePage2" namespace="/tags/non-ui/actionTag" executeResult="true" />
-<ww:action name="includePage2" namespace="/tags/non-ui/actionTag" executeResult="true" />
+<saf:action name="includePage2" namespace="/tags/non-ui/actionTag" executeResult="true" />
+<saf:action name="includePage2" namespace="/tags/non-ui/actionTag" executeResult="true" />
+<saf:action name="includePage2" namespace="/tags/non-ui/actionTag" executeResult="true" />
 </div>
 
 
 <!--  lets include the third page many time -->
 <div style="margin: 5px; margin: 5px; border: solid 1px; ">
-<ww:action name="includePage3" namespace="/tags/non-ui/actionTag" executeResult="true" />
-<ww:action name="includePage3" namespace="/tags/non-ui/actionTag" executeResult="true" />
-<ww:action name="includePage3" namespace="/tags/non-ui/actionTag" executeResult="true" />
+<saf:action name="includePage3" namespace="/tags/non-ui/actionTag" executeResult="true" />
+<saf:action name="includePage3" namespace="/tags/non-ui/actionTag" executeResult="true" />
+<saf:action name="includePage3" namespace="/tags/non-ui/actionTag" executeResult="true" />
 </div>
 
 
-<ww:url id="url" action="lookAtSource" namespace="/tags/non-ui/actionTag" />
-<ww:a href="%{#url}">Source</ww:a>
+<saf:url id="url" action="lookAtSource" namespace="/tags/non-ui/actionTag" />
+<saf:a href="%{#url}">Source</saf:a>
 
 </body>
 </html>

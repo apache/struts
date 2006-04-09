@@ -1,36 +1,36 @@
-<%@taglib prefix="ww" uri="/webwork" %>
+<%@taglib prefix="saf" uri="/struts-action" %>
 
 <html>
 <head>
 	<title>Showcase - Tags - UI Tags - Rich Text Editor </title>
-	<ww:head />
+	<saf:head />
 </head>
 <body>
-	<ww:form action="lotsOfRichtexteditorSubmit" method="post" namespace="/tags/ui">
-		<ww:richtexteditor 
+	<saf:form action="lotsOfRichtexteditorSubmit" method="post" namespace="/tags/ui">
+		<saf:richtexteditor 
 			toolbarCanCollapse="false"
 			width="700"
 			label="Description 1" 
 			name="description1" 
 			/>
 			
-		<ww:richtexteditor 
+		<saf:richtexteditor 
 			toolbarCanCollapse="false"
 			width="700"
 			label="Description 2"
 			name="description2" />
 			
-		<ww:richtexteditor
+		<saf:richtexteditor
 			width="700"
 			label="Description 3"
 			name="description3" />
 			
-		<ww:richtexteditor
+		<saf:richtexteditor
 			width="700"
 			label="Description 4"
 			name="description4" />
 			
-		<ww:submit />
-	</ww:form>
+		<saf:submit />
+	</saf:form>
 </body>
 </html>

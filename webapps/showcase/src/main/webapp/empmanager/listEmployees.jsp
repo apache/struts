@@ -1,4 +1,4 @@
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-action" prefix="saf" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -12,15 +12,15 @@
         <th>First Name</th>
         <th>Last Name</th>
     </tr>
-    <ww:iterator value="availableItems">
+    <saf:iterator value="availableItems">
         <tr>
-            <td><a href="<ww:url action="edit"><ww:param name="empId" value="empId"/></ww:url>"><ww:property value="empId"/></a></td>
-            <td><ww:property value="firstName"/></td>
-            <td><ww:property value="lastName"/></td>
+            <td><a href="<saf:url action="edit"><saf:param name="empId" value="empId"/></saf:url>"><saf:property value="empId"/></a></td>
+            <td><saf:property value="firstName"/></td>
+            <td><saf:property value="lastName"/></td>
         </tr>
-    </ww:iterator>
+    </saf:iterator>
 </table>
-<p><a href="<ww:url action="edit" includeParams="none"/>">Create new Employee</a></p>
-<p><a href="<ww:url action="showcase" namespace="/" includeParams="none"/>">Back to Showcase Startpage</a></p>
+<p><a href="<saf:url action="edit" includeParams="none"/>">Create new Employee</a></p>
+<p><a href="<saf:url action="showcase" namespace="/" includeParams="none"/>">Back to Showcase Startpage</a></p>
 </body>
 </html>

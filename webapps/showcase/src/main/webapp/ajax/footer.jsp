@@ -1,9 +1,9 @@
-<%@taglib uri="/webwork" prefix="ww" %>
+<%@taglib uri="/struts-action" prefix="saf" %>
 
 <hr/>
 
-<ww:url id="backToAjaxExamples" value=".." />
-<ww:url id="backToShowCase" action="showcase" namespace="/" />
+<saf:url id="backToAjaxExamples" value=".." />
+<saf:url id="backToShowCase" action="showcase" namespace="/" />
 
-<ww:a href="%{backToAjaxExamples}">Back To AJAX Examples</ww:a>&nbsp;
-<ww:a href="%{backToShowCase}">Back To Showcase</ww:a>
+<saf:a href="%{backToAjaxExamples}">Back To AJAX Examples</saf:a>&nbsp;
+<saf:a href="%{backToShowCase}">Back To Showcase</saf:a>

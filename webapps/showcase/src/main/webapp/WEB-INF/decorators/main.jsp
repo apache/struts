@@ -9,16 +9,16 @@
 
 <%@ taglib uri="sitemesh-decorator" prefix="decorator" %>
 <%@ taglib uri="sitemesh-page" prefix="page" %>
-<%@ taglib prefix="ww" uri="/struts-action" %>
+<%@ taglib prefix="saf" uri="/struts-action" %>
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
     <title><decorator:title default="Struts Action Showcase"/></title>
-    <link href="<ww:url value='/styles/main.css'/>" rel="stylesheet" type="text/css" media="all"/>
-    <link href="<ww:url value='/struts/niftycorners/niftyCorners.css'/>" rel="stylesheet" type="text/css"/>
-    <link href="<ww:url value='/struts/niftycorners/niftyPrint.css'/>" rel="stylesheet" type="text/css" media="print"/>
+    <link href="<saf:url value='/styles/main.css'/>" rel="stylesheet" type="text/css" media="all"/>
+    <link href="<saf:url value='/struts/niftycorners/niftyCorners.css'/>" rel="stylesheet" type="text/css"/>
+    <link href="<saf:url value='/struts/niftycorners/niftyPrint.css'/>" rel="stylesheet" type="text/css" media="print"/>
 
-    <script language="JavaScript" type="text/javascript" src="<ww:url value='/struts/niftycorners/nifty.js'/>"></script>
+    <script language="JavaScript" type="text/javascript" src="<saf:url value='/struts/niftycorners/nifty.js'/>"></script>
 
     <script language="JavaScript" type="text/javascript">
 
@@ -43,11 +43,11 @@
         <div id="header" class="clearfix">
             <div id="branding">
                 <h1 class="title">Struts Action Showcase</h1>
-                <ww:action id="dateAction" name="date" namespace="/" executeResult="true" />
+                <saf:action id="dateAction" name="date" namespace="/" executeResult="true" />
             </div><!-- end branding -->
 
             <div id="search">
-                <img src="<ww:url value='/images/logo-small.png'/>" alt="Struts logo"/>
+                <img src="<saf:url value='/images/logo-small.png'/>" alt="Struts logo"/>
             </div><!-- end search -->
 
             <hr/>
@@ -62,20 +62,20 @@
             <div class="wrapper">
                 <h2 class="accessibility">Navigation</h2>
                 <ul class="clearfix">
-                    <li><strong><a href="<ww:url action="showcase" namespace="/"  includeParams="none" />">Home</a></strong></li>
-                    <li><a href="<ww:url action="index" namespace="/config-browser" includeParams="none" />">Config Browser</a></li>
-                    <li><a href="<ww:url action="guess" namespace="/continuations" />">Continuations</a></li>
-                    <li><a href="<ww:url value="/tags/index.jsp"/>">Tags</a></li>
-                    <li><a href="<ww:url action="upload" namespace="/fileupload" includeParams="none"/>">File Upload</a></li>
-                    <li><a href="<ww:url value="/empmanager/index.jsp"/>">CRUD</a></li>
-                    <li><a href="<ww:url value="/person/index.jsp"/>">Person Manager</a></li>
-                    <li><a href="<ww:url value="/validation/index.jsp"/>">Validation</a></li>
-                    <li><a href="<ww:url value="/ajax/index.jsp"/>">AJAX</a></li>
-                    <li><a href="<ww:url action="actionChain1!input" namespace="/actionchaining"  includeParams="none" />">Action Chaining</a></li>
-                    <li><a href="<ww:url value="/wait/index.jsp"/>">Execute & Wait</a></li>
-                    <li><a href="<ww:url value="/token/index.jsp"/>">Token</a></li>
-                    <li><a href="<ww:url value="/filedownload/index.jsp"/>">File Download</a></li>
-                    <li class="last"><a href="<ww:url value="/help.jsp"/>">Help</a></li>
+                    <li><strong><a href="<saf:url action="showcase" namespace="/"  includeParams="none" />">Home</a></strong></li>
+                    <li><a href="<saf:url action="index" namespace="/config-browser" includeParams="none" />">Config Browser</a></li>
+                    <li><a href="<saf:url action="guess" namespace="/continuations" />">Continuations</a></li>
+                    <li><a href="<saf:url value="/tags/index.jsp"/>">Tags</a></li>
+                    <li><a href="<saf:url action="upload" namespace="/fileupload" includeParams="none"/>">File Upload</a></li>
+                    <li><a href="<saf:url value="/empmanager/index.jsp"/>">CRUD</a></li>
+                    <li><a href="<saf:url value="/person/index.jsp"/>">Person Manager</a></li>
+                    <li><a href="<saf:url value="/validation/index.jsp"/>">Validation</a></li>
+                    <li><a href="<saf:url value="/ajax/index.jsp"/>">AJAX</a></li>
+                    <li><a href="<saf:url action="actionChain1!input" namespace="/actionchaining"  includeParams="none" />">Action Chaining</a></li>
+                    <li><a href="<saf:url value="/wait/index.jsp"/>">Execute & Wait</a></li>
+                    <li><a href="<saf:url value="/token/index.jsp"/>">Token</a></li>
+                    <li><a href="<saf:url value="/filedownload/index.jsp"/>">File Download</a></li>
+                    <li class="last"><a href="<saf:url value="/help.jsp"/>">Help</a></li>
                 </ul>
             </div>
             <hr/>
@@ -86,7 +86,7 @@
 
 
     <div id="footer" class="clearfix">
-        <p>&copy; Copyright 2003-<ww:property value="#dateAction.now.year + 1900" /> OpenSymphony</p>
+        <p>&copy; Copyright 2003-<saf:property value="#dateAction.now.year + 1900" /> OpenSymphony</p>
     </div><!-- end footer -->
     <p/>
 

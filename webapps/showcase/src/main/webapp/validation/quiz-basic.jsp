@@ -1,11 +1,11 @@
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="saf" uri="/struts-action" %>
 
 <!-- START SNIPPET: basicValidation -->
 
 <html>
 <head>
     <title>Validation - Basic</title>
-    <ww:head/>
+    <saf:head/>
 </head>
 
 <body>
@@ -13,12 +13,12 @@
 <b>What is your favorite color?</b>
 <p/>
 
-<ww:form method="post">
-    <ww:textfield label="Name" name="name"/>
-    <ww:textfield label="Age" name="age"/>
-    <ww:textfield label="Favorite color" name="answer"/>
-    <ww:submit/>
-</ww:form>
+<saf:form method="post">
+    <saf:textfield label="Name" name="name"/>
+    <saf:textfield label="Age" name="age"/>
+    <saf:textfield label="Favorite color" name="answer"/>
+    <saf:submit/>
+</saf:form>
 
 </body>
 </html>

@@ -7,7 +7,7 @@
 
 
 
-<%@taglib uri="/webwork" prefix="ww" %>
+<%@taglib uri="/struts-action" prefix="saf" %>
 
 <html>
 	<head><title>Showcase - Validation - SuccessVisitorValidatorsExameple</title></head>
@@ -16,19 +16,19 @@
 		<table>
 			<tr>
 				<td>User Name:</td>
-				<td><ww:property value="user.name" /></td>
+				<td><saf:property value="user.name" /></td>
 			</tr>
 			<tr>
 				<td>User Age:</td>			
-				<td><ww:property value="user.age" /></td>
+				<td><saf:property value="user.age" /></td>
 			</tr>
 			<tr>
 				<td>User Birthday:</td>
-				<td><ww:property value="user.birthday" /></td>
+				<td><saf:property value="user.birthday" /></td>
 			</tr>
 		</table>
 		
-		<ww:include value="footer.jsp" />
+		<saf:include value="footer.jsp" />
 		
 	</body>
 </html>

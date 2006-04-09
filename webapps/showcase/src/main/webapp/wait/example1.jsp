@@ -1,4 +1,4 @@
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="saf" uri="/struts-action" %>
 <html>
     <head><title>Execute and Wait Examples</title></head>
 
@@ -7,10 +7,10 @@
     
     <b>Example 1:</b> In the form below enter how long time to simulate the process should take.
 
-    <ww:form action="longProcess1">
-        <ww:textfield label="Time (millis)" name="time" required="true" value="7000"/>
-        <ww:submit value="submit"/>
-    </ww:form>
+    <saf:form action="longProcess1">
+        <saf:textfield label="Time (millis)" name="time" required="true" value="7000"/>
+        <saf:submit value="submit"/>
+    </saf:form>
 
 </body>
 </html>

@@ -1,4 +1,4 @@
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-action" prefix="saf" %>
 <html>
 <head>
     <title>Showcase</title>
@@ -9,10 +9,10 @@
 
 <p>
     <ul>
-        <li>ContentType: <ww:property value="uploadContentType" /></li>
-        <li>FileName: <ww:property value="uploadFileName" /></li>
-        <li>File: <ww:property value="upload" /></li>
-        <li>Caption:<ww:property value="caption" /></li>
+        <li>ContentType: <saf:property value="uploadContentType" /></li>
+        <li>FileName: <saf:property value="uploadFileName" /></li>
+        <li>File: <saf:property value="upload" /></li>
+        <li>Caption:<saf:property value="caption" /></li>
     </ul>
 </p>
 

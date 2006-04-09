@@ -1,2 +1,2 @@
-<%@ taglib prefix="ww" uri="/struts-action" %>
-<ww:date name="now"/>
+<%@ taglib prefix="saf" uri="/struts-action" %>
+<saf:date name="now"/>

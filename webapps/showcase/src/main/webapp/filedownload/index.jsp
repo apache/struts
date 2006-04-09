@@ -1,4 +1,4 @@
-<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri="/struts-action" prefix="saf" %>
 <html>
 <head>
     <title>Showcase</title>
@@ -7,7 +7,7 @@
 <body>
     <h1>File Download Example</h1>
 
-    Click this <ww:url id="url" action="download"/><ww:a href="%{url}">link</ww:a> to download WebWork logo.
+    Click this <saf:url id="url" action="download"/><saf:a href="%{url}">link</saf:a> to download Struts logo.
 
 </body>
 </html>

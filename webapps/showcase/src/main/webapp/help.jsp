@@ -1,7 +1,7 @@
-<%@taglib uri="/struts-action" prefix="ww" %>
+<%@taglib uri="/struts-action" prefix="saf" %>
 <html>
 <head>
-    <title>WebWork ~ Getting Support</title>
+    <title>Struts ~ Getting Support</title>
 </head>
 
 <body>
@@ -15,7 +15,7 @@
             </tr>
             <tr>
                 <td><a href="http://forums.opensymphony.com/forum.jspa?forumID=1&start=0">User Forum</a></td>
-                <td>Use this forum if you encounter problems while developing and using with WebWork</td>
+                <td>Use this forum if you encounter problems while developing and using with Struts</td>
             </tr>
             <tr>
                 <td><a href="http://wiki.opensymphony.com/display/WW/WebWork">Wiki</a></td>
@@ -25,7 +25,7 @@
     </div>
 
     <div id="local">
-        <img src='<ww:url value="/images/logo.png"/>' alt="WebWork Logo" width="290" height="80"/>
+        <img src='<saf:url value="/images/logo.png"/>' alt="Struts Logo" width="290" height="80"/>
     </div>
 </body>
 </html>

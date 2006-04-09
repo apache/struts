@@ -1,4 +1,4 @@
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="saf" uri="/struts-action" %>
 <!--// START SNIPPET: common-include-->
-<ww:head theme="ajax"/>
+<saf:head theme="ajax"/>
 <!--// END SNIPPET: common-include-->

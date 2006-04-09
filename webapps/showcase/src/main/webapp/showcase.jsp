@@ -4,11 +4,11 @@
 	@version $Date: 2006/03/20 16:04:09 $ $Id: showcase.jsp,v 1.17 2006/03/20 16:04:09 tmjee Exp $
 --%>
 
-<%@ taglib uri="/struts-action" prefix="ww" %>
+<%@ taglib uri="/struts-action" prefix="saf" %>
 <html>
 <head>
     <title>Showcase</title>
-    <ww:head theme="simple"/>
+    <saf:head theme="simple"/>
 </head>
 
 <body>
@@ -19,43 +19,43 @@
 <p>
 	<ul>
         <!-- config-browser -->
-        <li><ww:url id="url" namespace="/config-browser" action="index"/><ww:a href="%{url}">Configuration browser (Great for development!)</ww:a></li>
+        <li><saf:url id="url" namespace="/config-browser" action="index"/><saf:a href="%{url}">Configuration browser (Great for development!)</saf:a></li>
 
 		<!-- continuation -->
-		<li><ww:url id="url" namespace="/continuations" action="guess"/><ww:a href="%{url}">Continuations Example</ww:a></li>
+		<li><saf:url id="url" namespace="/continuations" action="guess"/><saf:a href="%{url}">Continuations Example</saf:a></li>
 		
 		<!-- tags -->
-		<li><ww:url id="url" value="/tags"/><ww:a href="%{url}">Tags Examples</ww:a></li>
+		<li><saf:url id="url" value="/tags"/><saf:a href="%{url}">Tags Examples</saf:a></li>
 		
 		<!-- fileupload -->
-		<li><ww:url id="url" namespace="/fileupload" action="upload"/><ww:a href="%{url}">File Upload Example</ww:a></li>
+		<li><saf:url id="url" namespace="/fileupload" action="upload"/><saf:a href="%{url}">File Upload Example</saf:a></li>
 
 		<!-- crud -->
-		<li><ww:url id="url" value="/empmanager"/><ww:a href="%{url}">CRUD Examples</ww:a></li>
+		<li><saf:url id="url" value="/empmanager"/><saf:a href="%{url}">CRUD Examples</saf:a></li>
 		
 		<!-- person manager sample -->
-		<li><ww:url id="url" value="/person"/><ww:a href="%{url}">PersonManager Sample</ww:a></li>
+		<li><saf:url id="url" value="/person"/><saf:a href="%{url}">PersonManager Sample</saf:a></li>
 
         <!-- validation -->
-        <li><ww:url id="url" value="/validation"/><ww:a href="%{url}">Validation Examples</ww:a></li>
+        <li><saf:url id="url" value="/validation"/><saf:a href="%{url}">Validation Examples</saf:a></li>
 
         <!-- ajax -->
-        <li><ww:url id="url" value="/ajax"/><ww:a href="%{url}">AJAX Examples</ww:a></li>
+        <li><saf:url id="url" value="/ajax"/><saf:a href="%{url}">AJAX Examples</saf:a></li>
         
         <!-- action chaining -->
-		<li><ww:url id="url" namespace="actionchaining" action="actionChain1" method="input" /><ww:a href="%{url}">Action Chaining Example</ww:a></li>
+		<li><saf:url id="url" namespace="actionchaining" action="actionChain1" method="input" /><saf:a href="%{url}">Action Chaining Example</saf:a></li>
 
         <!-- execute and wait -->
-        <li><ww:url id="url" value="/wait"/><ww:a href="%{url}">Execute and Wait Examples</ww:a></li>
+        <li><saf:url id="url" value="/wait"/><saf:a href="%{url}">Execute and Wait Examples</saf:a></li>
 
         <!-- token -->
-        <li><ww:url id="url" value="/token"/><ww:a href="%{url}">Token Examples (double post)</ww:a></li>
+        <li><saf:url id="url" value="/token"/><saf:a href="%{url}">Token Examples (double post)</saf:a></li>
 
         <!-- filedownload -->
-        <li><ww:url id="url" value="/filedownload"/><ww:a href="%{url}">File Download Example</ww:a></li>
+        <li><saf:url id="url" value="/filedownload"/><saf:a href="%{url}">File Download Example</saf:a></li>
         
         <!-- model-driven -->
-        <li><ww:url id="url" action="modelDriven" namespace="/modelDriven" method="input"/><ww:a href="%{url}">Model Driven Example</ww:a>
+        <li><saf:url id="url" action="modelDriven" namespace="/modelDriven" method="input"/><saf:a href="%{url}">Model Driven Example</saf:a>
     </ul>
 </p>
 

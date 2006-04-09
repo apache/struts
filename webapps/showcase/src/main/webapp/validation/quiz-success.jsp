@@ -1,4 +1,4 @@
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="saf" uri="/struts-action" %>
 <html>
 <head>
     <title>Quiz submitted!</title>
@@ -6,9 +6,9 @@
 
 <body>
 
-Thank you, <b><ww:property value="name"/></b>. Your answer has been submitted as:
+Thank you, <b><saf:property value="name"/></b>. Your answer has been submitted as:
 
-<b><ww:property value="answer"/></b>
+<b><saf:property value="answer"/></b>
 
 </body>
 </html>

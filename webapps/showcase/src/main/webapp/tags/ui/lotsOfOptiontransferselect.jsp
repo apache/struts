@@ -1,14 +1,14 @@
-<%@taglib prefix="ww" uri="/webwork" %>
+<%@taglib prefix="saf" uri="/struts-action" %>
 
 <html>
 <head>
 <title>Show Case - Tags - UI Tags - Optiontransferselect</title>
-<ww:head />
+<saf:head />
 </head>
 <body>
 
-<ww:form action="lotsOfOptiontransferselectSubmit" namespace="/tags/ui" method="post">
-	<ww:optiontransferselect 
+<saf:form action="lotsOfOptiontransferselectSubmit" namespace="/tags/ui" method="post">
+	<saf:optiontransferselect 
 		tooltip="Select Your Favourite Cartoon Characters"
 		headerKey="-1"
 		headerValue="--- Please Select ---"
@@ -26,7 +26,7 @@
 		
 	<br/>	
 		
-	<ww:optiontransferselect
+	<saf:optiontransferselect
 		tooltip="Select Your Favourite Cars"
 		label="Favourite Cars"
 		leftTitle="Favourite Cars"
@@ -38,7 +38,7 @@
 		
 	<br/>
 		
-	<ww:optiontransferselect 
+	<saf:optiontransferselect 
 		tooltip="Select Your Favourite Motorcycles"
 		headerKey="-1"
 		headerValue="--- Please Select ---"
@@ -54,7 +54,7 @@
 		
 	<br/>
 		
-	<ww:optiontransferselect 
+	<saf:optiontransferselect 
 		tooltip="Select Your Favourite Countries"
 		emptyOption="true"
 		doubleEmptyOption="true"
@@ -69,7 +69,7 @@
 		
 	<br/>	
 	
-	<ww:updownselect 
+	<saf:updownselect 
 		tooltip="Prioritized Your Favourite Cartoon Characters"
 		label="Prioritised Favourite Cartoon Characters"
 		list="defaultFavouriteCartoonCharacters" 
@@ -80,7 +80,7 @@
 		
 	<br/>
 		
-	<ww:updownselect
+	<saf:updownselect
 		tooltip="Prioritise Your Favourite Cars"
 		label="Prioritised Favourite Cars"
 		list="defaultFavouriteCars"
@@ -90,7 +90,7 @@
 		
 	<br/>
 		
-	<ww:updownselect 
+	<saf:updownselect 
 		tooltip="Prioritised Your Favourite Countries"
 		label="Prioritised Favourite Countries"
 	    list="defaultFavouriteCountries"
@@ -100,10 +100,10 @@
 		
 	<br/>
 	
-	<ww:submit value="Submit It" />
+	<saf:submit value="Submit It" />
 	
 	<br/>
 	
-</ww:form>
+</saf:form>
 
 </body>

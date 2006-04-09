@@ -1,4 +1,4 @@
-<%@taglib prefix="ww" uri="/webwork" %>
+<%@taglib prefix="saf" uri="/struts-action" %>
 
 <html>
 <head>
@@ -6,20 +6,20 @@
 </head>
 <body>
 
-	<ww:generator id="iterator1" separator="," val="%{iteratorValue1}" />
-	<ww:generator id="iterator2" separator="," val="%{iteratorValue2}" />
+	<saf:generator id="iterator1" separator="," val="%{iteratorValue1}" />
+	<saf:generator id="iterator2" separator="," val="%{iteratorValue2}" />
 	
-	<ww:append id="appendedIterator">
-		<ww:param value="%{#attr.iterator1}" />
-		<ww:param value="%{#attr.iterator2}" />
-	</ww:append>
+	<saf:append id="appendedIterator">
+		<saf:param value="%{#attr.iterator1}" />
+		<saf:param value="%{#attr.iterator2}" />
+	</saf:append>
 	
-	<ww:iterator value="#appendedIterator">
-		<ww:property /><br/>
-	</ww:iterator>
+	<saf:iterator value="#appendedIterator">
+		<saf:property /><br/>
+	</saf:iterator>
 	
-	<ww:url value="%{'/tags/non-ui/'}" id="url" /><ww:a href="%{#url}">Back To Non-UI Demo</ww:a>
-	<ww:url value="%{'/'}" id="url" /><ww:a href="%{#url}">Back To Showcase</ww:a>
+	<saf:url value="%{'/tags/non-ui/'}" id="url" /><saf:a href="%{#url}">Back To Non-UI Demo</saf:a>
+	<saf:url value="%{'/'}" id="url" /><saf:a href="%{#url}">Back To Showcase</saf:a>
 
 </body>
 </html>

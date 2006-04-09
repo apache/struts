@@ -1,11 +1,11 @@
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="saf" uri="/struts-action" %>
 <html>
     <head><title>Token Examples (double post)</title></head>
 
 <body>
     <h1>Token Examples</h1>
 
-    These examples illustrate WebWorks build in support of using tokens to prevent double post.
+    These examples illustrate Struts build in support of using tokens to prevent double post.
     <p/>
     You have a web page where user can input data and press a button to submit.
     There could be a problem that the user submit the data many times, by either clicking the

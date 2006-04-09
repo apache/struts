@@ -1,44 +1,44 @@
-<%@taglib prefix="ww" uri="/webwork" %>
+<%@taglib prefix="saf" uri="/struts-action" %>
 
 <html>
 <head>
 	<title>Showcase - Tags - UI Tags - Tooltip Example</title>
 </head>
 <body>
-	<ww:form action="someAction" 
+	<saf:form action="someAction" 
 		tooltipConfig="#{'tooltipAboveMousePointer':'false', 
 						 'tooltipLeftOfMousePointer':'true'}">
 		
-		<ww:url id="leopardPicture" value="images/leopard.jpg" />
-		<ww:url id="backgroundImage" value="images/backgroundImage.jpg" />
+		<saf:url id="leopardPicture" value="images/leopard.jpg" />
+		<saf:url id="backgroundImage" value="images/backgroundImage.jpg" />
 		
 		<!-- NOTE A: Set tooltip config through body of param tag -->
-		<ww:textfield 
+		<saf:textfield 
 			label="Customer Name" 
 			tooltip="One of our customer <br/><img src='%{leopardPicture}'">
-			<ww:param name="tooltipConfig">
+			<saf:param name="tooltipConfig">
 				tooltipWidth = 150 |
 				tooltipAboveMousePointer = false |
 				tooltipLeftOfMousePointer = false  
-			</ww:param>
-		</ww:textfield>
+			</saf:param>
+		</saf:textfield>
 		
 		
 		<!-- NOTE B: Set tooltip config through value attribute of param tag -->
-		<ww:textfield 
+		<saf:textfield 
 			label="Customer Address" 
 			tooltip="Enter The Customer Address, see <a href='#'>HERE</a> "> 
-			<ww:param 
+			<saf:param 
 				name="tooltipConfig" 
 				value="#{'tooltipStatic':'true',
 						 'tooltipSticky':'true',
 						 'tooltipAboveMousePointer':'false',
 						 'tooltipLeftOfMousePointer':'false'}"  />
-		</ww:textfield>	
+		</saf:textfield>	
 			
 			
 		<!--  NOTE C: Set tooltip config through tooltipConfig attribute of component tag -->	
-		<ww:textfield 
+		<saf:textfield 
 			label="Customer Telephone Number" 
 			tooltip="Enter customer Telephone Number" 
 			tooltipConfig="#{'tooltipBgColor':'#cccccc',
@@ -47,12 +47,12 @@
 							 'tooltipLeftOfMousePointer':'false'}" />
 
 		<!--  NOTE D: using the default tooltipConfig values -->							 
-		<ww:textfield 
+		<saf:textfield 
 			label="Customer Fax Number" 
 			tooltip="Properties inhertied from our Form" />
 			
 		<!--  NOTE E:  -->
-		<ww:textarea 
+		<saf:textarea 
 			label="Customer Comment" 
 			cols="70" 
 			rows="6" 
@@ -61,6 +61,6 @@
 						     'tooltipAboveMousePointer':'false',
 							 'tooltipLeftOfMousePointer':'false',
 							 'tooltipOpacity':'40'}" />	
-	</ww:form>
+	</saf:form>
 </body>
 </html>

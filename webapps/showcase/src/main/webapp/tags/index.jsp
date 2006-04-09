@@ -1,4 +1,4 @@
-<%@taglib prefix="ww" uri="/webwork" %>
+<%@taglib prefix="saf" uri="/struts-action" %>
 
 <html>
 <head>
@@ -8,8 +8,8 @@
 <h1> Tags </h1>
 
 <ul>
-	<li><ww:url id="url" value="/tags/non-ui/" /><ww:a href="%{url}">Non UI Tags Examples</ww:a></li>
-	<li><ww:url id="url" value="/tags/ui" /><ww:a href="%{url}">UI Tags Example</ww:a></li>
+	<li><saf:url id="url" value="/tags/non-ui/" /><saf:a href="%{url}">Non UI Tags Examples</saf:a></li>
+	<li><saf:url id="url" value="/tags/ui" /><saf:a href="%{url}">UI Tags Example</saf:a></li>
 </ul>
 
 </body>

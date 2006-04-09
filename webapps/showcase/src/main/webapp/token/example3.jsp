@@ -1,4 +1,4 @@
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="saf" uri="/struts-action" %>
 <html>
     <head><title>Token Examples</title></head>
 
@@ -10,15 +10,15 @@
     happens once. This example uses the token session based interceptor and redirect after post.
     <p/>
 
-    <br/>Balance of source account: <ww:property value="#session.balanceSource"/>
-    <br/>Balance of destination account: <ww:property value="#session.balanceDestination"/>
+    <br/>Balance of source account: <saf:property value="#session.balanceSource"/>
+    <br/>Balance of destination account: <saf:property value="#session.balanceDestination"/>
     <p/>
 
-    <ww:form action="transfer3">
-        <ww:token/>
-        <ww:textfield label="Amount" name="amount" required="true" value="300"/>
-        <ww:submit value="Transfer money"/>
-    </ww:form>
+    <saf:form action="transfer3">
+        <saf:token/>
+        <saf:textfield label="Amount" name="amount" required="true" value="300"/>
+        <saf:submit value="Transfer money"/>
+    </saf:form>
 
 </body>
 </html>

@@ -1,11 +1,11 @@
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="saf" uri="/struts-action" %>
 <html>
     <head><title>Execute and Wait Examples</title></head>
 
 <body>
     <h1>Execute and Wait Examples</h1>
 
-    These examples illustrate WebWorks build in support for execute and wait.
+    These examples illustrate Struts build in support for execute and wait.
     <p/>
     When you have a process that takes a long time your users can be impatient and starts to submit/click again.
     <br/> A good solution is to show the user a progress page (wait page) while the process takes it time.

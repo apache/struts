@@ -1,32 +1,32 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="saf" uri="/struts-action" %>
 <html>
 <head>
     <title>UI Tags Example</title>
-    <ww:head/>
+    <saf:head/>
 </head>
 
 <body>
 
-<ww:form action="exampleSubmit" method="post" enctype="multipart/form-data">
-    <ww:textfield 
+<saf:form action="exampleSubmit" method="post" enctype="multipart/form-data">
+    <saf:textfield 
     		label="Name" 
     		name="name"
     		tooltip="Enter your Name here" />
 
-    <ww:datepicker
+    <saf:datepicker
     		tooltip="Select Your Birthday"
     		label="Birthday"
     		name="birthday" />
 
-    <ww:textarea
+    <saf:textarea
     		tooltip="Enter your Biography"
     		label="Biograph"
     		name="bio"
     		cols="20"
     		rows="3"/>
 
-    <ww:select
+    <saf:select
     		tooltip="Choose Your Favourite Color"
     		label="Favorite Color"
     		list="{'Red', 'Blue', 'Green'}"
@@ -35,7 +35,7 @@
             headerKey="None"
             headerValue="None"/>
 
-    <ww:select
+    <saf:select
     		tooltip="Choose Your Favourite Language"
     		label="Favourite Language"
     		list="favouriteLanguages"
@@ -46,18 +46,18 @@
     		headerKey="None"
     		headerValue="None"/>
 
-    <ww:checkboxlist
+    <saf:checkboxlist
     		tooltip="Choose your Friends"
     		label="Friends"
     		list="{'Patrick', 'Jason', 'Jay', 'Toby', 'Rene'}"
     		name="friends"/>
 
-    <ww:checkbox
+    <saf:checkbox
     		tooltip="Confirmed that your are Over 18"
     		label="Age 18+"
     		name="legalAge"/>
 
-    <ww:doubleselect
+    <saf:doubleselect
     		tooltip="Choose Your State"
     		label="State"
     		name="region" list="{'North', 'South'}"
@@ -69,7 +69,7 @@
             headerValue="---------- Please Select ----------"
             emptyOption="true" />
 
-    <ww:doubleselect
+    <saf:doubleselect
     		tooltip="Choose your Vehical"
     		label="Favourite Vehical"
     		name="favouriteVehicalType"
@@ -85,12 +85,12 @@
     		headerValue="---------- Please Select ----------"
     		emptyOption="true" />
 
-    <ww:file
+    <saf:file
     		tooltip="Upload Your Picture"
     		label="Picture" 
     		name="picture" />
     		
-    <ww:optiontransferselect
+    <saf:optiontransferselect
     		tooltip="Select Your Favourite Cartoon Characters"
     		label="Favourite Cartoons Characters"
 			name="leftSideCartoonCharacters" 
@@ -108,15 +108,15 @@
 			doubleEmptyOption="true"
 			doubleMultiple="true" />
     
-    <ww:richtexteditor
+    <saf:richtexteditor
     		width="700"
     		label="Your Thougths"
      		name="thoughts" 
      		tooltip="Enter your thoughts here" />
      		
-    <ww:submit onclick="alert('aaaa');" />
-    <ww:reset onclick="alert('bbbb');" />
-</ww:form>
+    <saf:submit onclick="alert('aaaa');" />
+    <saf:reset onclick="alert('bbbb');" />
+</saf:form>
     
 </body>
 </html>

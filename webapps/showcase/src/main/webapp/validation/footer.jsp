@@ -1,9 +1,9 @@
-<%@taglib uri="/webwork" prefix="ww" %>
+<%@taglib uri="/struts-action" prefix="saf" %>
 
 <hr/>
 
-<ww:url id="backToValidationExamples" action="list" namespace="/validation" />
-<ww:url id="backToShowCase" action="showcase" namespace="/" />
+<saf:url id="backToValidationExamples" action="list" namespace="/validation" />
+<saf:url id="backToShowCase" action="showcase" namespace="/" />
 		
-<ww:a href="%{backToValidationExamples}">Back To Validation Examples</ww:a>&nbsp;
-<ww:a href="%{backToShowCase}">Back To Showcase</ww:a>
+<saf:a href="%{backToValidationExamples}">Back To Validation Examples</saf:a>&nbsp;
+<saf:a href="%{backToShowCase}">Back To Showcase</saf:a>

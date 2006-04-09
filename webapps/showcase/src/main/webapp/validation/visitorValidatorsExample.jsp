@@ -6,31 +6,31 @@
 --%>
 
 
-<%@taglib uri="/webwork" prefix="ww" %>
+<%@taglib uri="/struts-action" prefix="saf" %>
 
 <html>
 <head><title>Showcase - Validation - VisitorValidatorsExample </title>
-		<ww:url id="siteCss" value="/validation/validationExamplesStyles.css" includeContext="true" />
-		<ww:head />
-		<!-- link rel="stylesheet" type="text/css" href='<ww:property value="%{siteCss}" />' -->
+		<saf:url id="siteCss" value="/validation/validationExamplesStyles.css" includeContext="true" />
+		<saf:head />
+		<!-- link rel="stylesheet" type="text/css" href='<saf:property value="%{siteCss}" />' -->
 </head>
 <body>
 
 	<!-- START SNIPPET: visitorValidatorsExample -->
 	
-	<ww:fielderror />
+	<saf:fielderror />
 
-	<ww:form method="POST" action="submitVisitorValidatorsExamples" namespace="/validation">
-		<ww:textfield name="user.name" label="User Name" />
-		<ww:textfield name="user.age" label="User Age" />
-		<ww:textfield name="user.birthday" label="Birthday" />
-		<ww:submit label="Submit" />
-	</ww:form>
+	<saf:form method="POST" action="submitVisitorValidatorsExamples" namespace="/validation">
+		<saf:textfield name="user.name" label="User Name" />
+		<saf:textfield name="user.age" label="User Age" />
+		<saf:textfield name="user.birthday" label="Birthday" />
+		<saf:submit label="Submit" />
+	</saf:form>
 	
 	<!--  END SNIPPET: visitorValidatorsExample -->
 	
 	
-	<ww:include value="footer.jsp" />
+	<saf:include value="footer.jsp" />
 </body>
 </html>
 

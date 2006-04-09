@@ -8,7 +8,7 @@
         <pattern>/scripts/*</pattern>
         <pattern>/images/*</pattern>
         <pattern>/dojo/*</pattern>
-        <pattern>/webwork/*</pattern>
+        <pattern>/struts/*</pattern>
         <pattern>/ajax/AjaxResult*</pattern>
         <pattern>/AjaxTest.action</pattern>
         <pattern>/ajax/remoteforms/AjaxRemoteForm.action</pattern>

@@ -1,4 +1,4 @@
-<%@taglib prefix="ww" uri="/webwork" %>
+<%@taglib prefix="saf" uri="/struts-action" %>
 
 <html>
 <head>
@@ -6,16 +6,16 @@
 </head>
 <body>
 
-	<ww:label 
+	<saf:label 
 			label="Gangster Name" 
 			name="name" /><br/>
-	<ww:label 
+	<saf:label 
 			label="Gangster Age"
 			name="age" /><br/>
-	<ww:label
+	<saf:label
 			label="Busted Before"
 			name="bustedBefore" /><br/>
-	<ww:label
+	<saf:label
 			label="Gangster Description"
 			name="description" /><br/>
 

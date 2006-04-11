@@ -1,13 +1,13 @@
 #macro(bean $bean_name $name)
-   #set ($name = $webwork.bean($bean_name))
+   #set ($name = $struts.bean($bean_name))
 #end
 
 #macro(includeservlet $name)
-  $webwork.include($name,$req,$res)
+  $struts.include($name,$req,$res)
 #end
 
 #macro(url $name)
-   #set ($name = $webwork.bean("org.apache.struts.action2.util.URLBean"))
+   #set ($name = $struts.bean("org.apache.struts.action2.util.URLBean"))
    $name.setRequest($req)
    $name.setResponse($res)
 #end

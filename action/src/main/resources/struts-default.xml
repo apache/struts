@@ -181,22 +181,5 @@
 
         <default-interceptor-ref name="defaultStack"/>
     </package>
-    <package name="struts-portlet-default" extends="struts-default">
 
-	   <result-types>
-			<result-type name="dispatcher" class="org.apache.struts.action2.portlet.result.PortletResult" default="true"/>
-			<result-type name="freemarker" class="org.apache.struts.action2.views.freemarker.PortletFreemarkerResult"/>
-			<result-type name="velocity" class="org.apache.struts.action2.portlet.result.PortletVelocityResult"/>
-	   </result-types>
-
-	   <action name="renderDirect" class="org.apache.struts.action2.portlet.dispatcher.DirectRenderFromEventAction">
-	   		<result name="success">${location}</result>
-	   </action>
-	   <action name="freemarkerDirect" class="org.apache.struts.action2.portlet.dispatcher.DirectRenderFromEventAction">
-	   		<result type="freemarker" name="success">${location}</result>
-	   </action>
-	   <action name="velocityDirect" class="org.apache.struts.action2.portlet.dispatcher.DirectRenderFromEventAction">
-	   		<result type="velocity" name="success">${location}</result>
-	   </action>
-	</package>
 </xwork>

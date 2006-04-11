@@ -30,8 +30,8 @@ import java.util.List;
  *
  * @author Rickard Öberg (rickard@middleware-company.com)
  * @version $Revision$
- * @see org.apache.struts.webwork.views.jsp.iterator.MergeIteratorTag
- * @see org.apache.struts.webwork.components.MergeIterator
+ * @see org.apache.struts.action2.views.jsp.iterator.MergeIteratorTag
+ * @see org.apache.struts.action2.components.MergeIterator
  */
 public class MergeIteratorFilter extends IteratorFilterSupport implements Iterator, Action {
 

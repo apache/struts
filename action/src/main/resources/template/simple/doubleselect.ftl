@@ -39,7 +39,7 @@
     for (i = 0; i < (${parameters.listSize} + ${startCount}); i++)
     ${parameters.name}Group[i] = new Array();
 
-<@ww.iterator value="parameters.list">
+<@saf.iterator value="parameters.list">
     <#if parameters.listKey?exists>
         <#assign itemKey = stack.findValue(parameters.listKey)/>
     <#else>
@@ -51,7 +51,7 @@
         <#assign itemValue = stack.findString('top')/>
     </#if>
     <#assign doubleItemCount = 0/>
-    <@ww.iterator value="${parameters.doubleList}">
+    <@saf.iterator value="${parameters.doubleList}">
         <#if parameters.doubleListKey?exists>
             <#assign doubleItemKey = stack.findValue(parameters.doubleListKey)/>
         <#else>
@@ -65,14 +65,14 @@
     ${parameters.name}Group[${itemCount}][${doubleItemCount}] = new Option("${doubleItemValue}", "${doubleItemKey}");
 
         <#assign doubleItemCount = doubleItemCount + 1/>
-    </@ww.iterator>
+    </@saf.iterator>
     <#assign itemCount = itemCount + 1/>
-</@ww.iterator>
+</@saf.iterator>
 
     var ${parameters.name}Temp = document.${parameters.formName}.${parameters.doubleName};
 <#assign itemCount = startCount/>
 <#assign redirectTo = 0/>
-<@ww.iterator value="parameters.list">
+<@saf.iterator value="parameters.list">
     <#if parameters.listKey?exists>
         <#assign itemKey = stack.findValue(parameters.listKey)/>
     <#else>
@@ -82,7 +82,7 @@
         <#assign redirectTo = itemCount/>
     </#if>
     <#assign itemCount = itemCount + 1/>
-</@ww.iterator>
+</@saf.iterator>
     ${parameters.name}Redirect(${redirectTo});
     function ${parameters.name}Redirect(x) {
     	var selected = false;

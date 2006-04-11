@@ -1,9 +1,9 @@
 <#if parameters.tooltip?exists><#t/>
       <img 
       <#if parameters.tooltipIcon?exists><#t/>
-      	src='<@ww.url value="${parameters.tooltipIcon}" />' 
+      	src='<@saf.url value="${parameters.tooltipIcon}" />' 
       <#else><#t/>
-      	src='<@ww.url value="/struts/tooltip/tooltip.gif" />'
+      	src='<@saf.url value="/struts/tooltip/tooltip.gif" />'
       </#if><#t/>
       	alt="${parameters.tooltip?html}" 
       	title="${parameters.tooltip?html}" 
@@ -15,7 +15,7 @@
         <#t/>this.T_BGCOLOR='${parameters.tooltipBgColor}';<#t/>
       </#if><#t/>
       <#if parameters.tooltipBgImg?exists><#t/>
-        <#t/>this.T_BGIMG='<@ww.url value="${parameters.tooltipBgImg}" />';<#t/>
+        <#t/>this.T_BGIMG='<@saf.url value="${parameters.tooltipBgImg}" />';<#t/>
       </#if><#t/>
       <#if parameters.tooltipBorderWidth?exists><#t/>
         <#t/>this.T_BORDERWIDTH=${parameters.tooltipBorderWidth};<#t/>

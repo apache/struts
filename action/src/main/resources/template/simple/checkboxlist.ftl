@@ -1,6 +1,6 @@
 <#assign itemCount = 0/>
 <#if parameters.list?exists>
-    <@ww.iterator value="parameters.list">
+    <@saf.iterator value="parameters.list">
         <#assign itemCount = itemCount + 1/>
         <#if parameters.listKey?exists>
             <#assign itemKey = stack.findValue(parameters.listKey)/>
@@ -25,7 +25,7 @@
         <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 />
 <label for="${parameters.name?html}-${itemCount}" class="checkboxLabel">${itemValue?html}</label>
-    </@ww.iterator>
+    </@saf.iterator>
 <#else>
   &nbsp;
 </#if>

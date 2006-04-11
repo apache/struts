@@ -1,5 +1,5 @@
 <#if !stack.findValue("#optiontransferselect_js_included")?exists><#t/>
-	<script language="javascript" src="<@ww.url value="/struts/optiontransferselect/optiontransferselect.js" encode='false' />"></script>
+	<script language="javascript" src="<@saf.url value="/struts/optiontransferselect/optiontransferselect.js" encode='false' />"></script>
 	<#assign temporaryVariable = stack.setValue("#optiontransferselect_js_included", "true") /><#t/>
 </#if><#t/>
 <table>

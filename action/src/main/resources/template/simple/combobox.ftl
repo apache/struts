@@ -6,7 +6,7 @@
  disabled="disabled"<#rt/>
     </#if>
 >
-    <@ww.iterator value="parameters.list">
+    <@saf.iterator value="parameters.list">
     <option value="${top?html}"<#rt/>
         <#if parameters.name = top>
  selected="selected"<#rt/>
@@ -14,6 +14,6 @@
     ><#t/>
             ${top?html}<#t/>
     </option><#lt/>
-    </@ww.iterator>
+    </@saf.iterator>
 </select>
 </#if>

@@ -4,7 +4,7 @@
  name="${parameters.name?html}"<#rt/>
 </#if>
 <#if parameters.nameValue?exists>
- value="<@ww.property value="parameters.nameValue"/>"<#rt/>
+ value="<@saf.property value="parameters.nameValue"/>"<#rt/>
 </#if>
 <#if parameters.cssClass?exists>
  class="${parameters.cssClass?html}"<#rt/>
@@ -13,7 +13,7 @@
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl"/>
-><#if parameters.label?exists><@ww.property value="parameters.label"/><#rt/></#if></button>
+><#if parameters.label?exists><@saf.property value="parameters.label"/><#rt/></#if></button>
 <#else>
 <#if parameters.type?exists && parameters.type=="image">
 <input type="image"<#rt/>
@@ -30,7 +30,7 @@
  name="${parameters.name?html}"<#rt/>
 </#if>
 <#if parameters.nameValue?exists>
- value="<@ww.property value="parameters.nameValue"/>"<#rt/>
+ value="<@saf.property value="parameters.nameValue"/>"<#rt/>
 </#if>
 <#if parameters.cssClass?exists>
  class="${parameters.cssClass?html}"<#rt/>

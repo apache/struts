@@ -19,10 +19,10 @@
 </table>
 
 <!-- URLTag is faulty -->
-<@ww.url id="url" action="showConfig" includeParams="none">
-    <@ww.param name="namespace">${namespace}</@ww.param>
-    <@ww.param name="actionName">${actionName}</@ww.param>
-</@ww.url>
+<@saf.url id="url" action="showConfig" includeParams="none">
+    <@saf.param name="namespace">${namespace}</@saf.param>
+    <@saf.param name="actionName">${actionName}</@saf.param>
+</@saf.url>
 <#assign url = url + "&amp;detailView=">
 <!-- Set all to false -->
 <#assign detailsSelected = false>
@@ -107,10 +107,10 @@
     	</#list>
     </table>
 <#else>
-    <@ww.action name="showValidators" executeResult="true">
-        <@ww.param name="clazz" value="'${config.className}'"/>
-        <@ww.param name="context" value="'${namespace}'"/>
-    </@ww.action>
+    <@saf.action name="showValidators" executeResult="true">
+        <@saf.param name="clazz" value="'${config.className}'"/>
+        <@saf.param name="context" value="'${namespace}'"/>
+    </@saf.action>
 </#if>
 
 <#call endPage>

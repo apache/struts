@@ -17,7 +17,7 @@
 </#if>
 ><#rt/>
 <#if parameters.nameValue?exists>
-<@ww.property value="parameters.nameValue"/><#t/>
+<@saf.property value="parameters.nameValue"/><#t/>
 </#if>
 &nbsp;
 </label>

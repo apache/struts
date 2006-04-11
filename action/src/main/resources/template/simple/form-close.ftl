@@ -59,5 +59,5 @@
 --><#t/>
 <#if parameters.hasTooltip?default(false)><#t/>
 	<#lt/><!-- javascript that is needed for tooltips -->
-	<#lt/><script language="JavaScript" type="text/javascript" src="<@ww.url value='/struts/tooltip/wz_tooltip.js' encode='false' />"></script>
+	<#lt/><script language="JavaScript" type="text/javascript" src="<@saf.url value='/struts/tooltip/wz_tooltip.js' encode='false' />"></script>
 </#if><#t/>

@@ -70,10 +70,10 @@
 			<strong>${caption}</strong></p>
 			${message}
             <#if errors?exists>
-                <@ww.iterator id="e" value="errors">
+                <@saf.iterator id="e" value="errors">
                     <#assign e = stack.findString('top') />
                     <#call error(e)>
-                </@ww.iterator>
+                </@saf.iterator>
             </#if>
         </p>
 	</div>

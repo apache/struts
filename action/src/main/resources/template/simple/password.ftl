@@ -7,7 +7,7 @@
  maxlength="${parameters.maxlength?html}"<#rt/>
 </#if>
 <#if parameters.nameValue?exists && parameters.showPassword?default(false)>
- value="<@ww.property value="parameters.nameValue"/>"<#rt/>
+ value="<@saf.property value="parameters.nameValue"/>"<#rt/>
 </#if>
 <#if parameters.disabled?default(false)>
  disabled="disabled"<#rt/>

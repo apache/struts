@@ -1,5 +1,5 @@
 <#if !stack.findValue('#richtexteditor_js_included')?exists><#t/>
-	<script type="text/javascript" src="<@ww.url value='/struts/richtexteditor/fckeditor.js' encode='false' />"></script>
+	<script type="text/javascript" src="<@saf.url value='/struts/richtexteditor/fckeditor.js' encode='false' />"></script>
 	<#assign tmpVariable = stack.setValue('#richtexteditor_js_included', 'true') /><#t/>
 </#if><#t/>
 <script>
@@ -8,7 +8,7 @@
 	<#if parameters.basePath?exists><#t/>
 		oFCKeditor_${parameters.id}.BasePath = '${parameters.basePath}' ;
 	<#else><#t/>
-		oFCKeditor_${parameters.id}.BasePath = '<@ww.url value="/struts/richtexteditor/" />' ;
+		oFCKeditor_${parameters.id}.BasePath = '<@saf.url value="/struts/richtexteditor/" />' ;
 	</#if><#t/>
 	<#-- height --><#t/>
 	<#if parameters.height?exists><#t/>
@@ -31,9 +31,9 @@
 		oFCKeditor_${parameters.id}.DisplayError = '${parameters.displayError}' ;
 	</#if><#t/>
 	<#-- value --><#t/>
-	<@ww.set name="tmpVal" value="parameters.nameValue" /><#t/>
+	<@saf.set name="tmpVal" value="parameters.nameValue" /><#t/>
 	<#if (stack.findValue('#tmpVal')?has_content)><#t/>
-		oFCKeditor_${parameters.id}.Value = '<@ww.property escape="false" value="parameters.nameValue" />' ;
+		oFCKeditor_${parameters.id}.Value = '<@saf.property escape="false" value="parameters.nameValue" />' ;
 	</#if><#t/>
 	<#-- customConfigurationsPath --><#t/>
 	<#if parameters.customConfigurationsPath?exists><#t/>
@@ -41,7 +41,7 @@
 	</#if><#t/>
 	<#-- editorAreaCSS --><#t/>
 	<#if parameters.editorAreaCss?exists><#t/>
-		oFCKeditor_${parameters.id}.Config['EditorAreaCSS'] = '<@ww.url value=parameters.editorAreaCss?string />' ;
+		oFCKeditor_${parameters.id}.Config['EditorAreaCSS'] = '<@saf.url value=parameters.editorAreaCss?string />' ;
 	</#if><#t/>
 	<#-- baseHref --><#t/>
 	<#if parameters.baseHref?exists><#t/>
@@ -149,43 +149,43 @@
 	</#if><#t/>
 	<#-- stylesXmlPath --><#t/>
 	<#if parameters.stylesXmlPath?exists><#t/>
-		oFCKeditor_${parameters.id}.Config['StylesXmlPath'] = '<@ww.url value=parameters.stylesXmlPath?string />' ;
+		oFCKeditor_${parameters.id}.Config['StylesXmlPath'] = '<@saf.url value=parameters.stylesXmlPath?string />' ;
 	</#if><#t/>
 	<#-- templatesXmlPath --><#t/>
 	<#if parameters.templatesXmlPath?exists><#t/>
-		oFCKeditor_${parameters.id}.Config['TemplatesXmlPath'] = '<@ww.url value=parameters.templatesXmlPath?string />' ;
+		oFCKeditor_${parameters.id}.Config['TemplatesXmlPath'] = '<@saf.url value=parameters.templatesXmlPath?string />' ;
 	</#if><#t/>
 	<#-- linkBrowserURL --><#t/>
 	<#if parameters.linkBrowserURL?exists><#t/>
-		oFCKeditor_${parameters.id}.Config['LinkBrowserURL'] = '<@ww.url value=parameters.linkBrowserURL?string />' ;
+		oFCKeditor_${parameters.id}.Config['LinkBrowserURL'] = '<@saf.url value=parameters.linkBrowserURL?string />' ;
 	</#if><#t/>
 	<#-- imageBrowserURL --><#t/>
 	<#if parameters.imageBrowserURL?exists><#t/>
-		oFCKeditor_${parameters.id}.Config['ImageBrowserURL'] = '<@ww.url value=parameters.imageBrowserURL?string />' ;
+		oFCKeditor_${parameters.id}.Config['ImageBrowserURL'] = '<@saf.url value=parameters.imageBrowserURL?string />' ;
 	</#if><#t/>
 	<#-- flashBrowserURL --><#t/>
 	<#if parameters.flashBrowserURL?exists><#t/>
-		oFCKeditor_${parameters.id}.Config['FlashBrowserURL'] = '<@ww.url value=parameters.flashBrowserURL?string />' ;
+		oFCKeditor_${parameters.id}.Config['FlashBrowserURL'] = '<@saf.url value=parameters.flashBrowserURL?string />' ;
 	</#if><#t/>
 	<#-- linkUploadURL --><#t/>
 	<#if parameters.linkUploadURL?exists><#t/>
-		oFCKeditor_${parameters.id}.Config['LinkUploadURL'] = '<@ww.url value=parameters.linkUploadURL?string />' ;
+		oFCKeditor_${parameters.id}.Config['LinkUploadURL'] = '<@saf.url value=parameters.linkUploadURL?string />' ;
 	</#if><#t/>
 	<#-- imageUploadURL --><#t/>
 	<#if parameters.imageUploadURL?exists><#t/>
-		oFCKeditor_${parameters.id}.Config['ImageUploadURL'] = '<@ww.url value=parameters.imageUploadURL?string />' ;
+		oFCKeditor_${parameters.id}.Config['ImageUploadURL'] = '<@saf.url value=parameters.imageUploadURL?string />' ;
 	</#if><#t/>
 	<#-- flashUploadURL --><#t/>
 	<#if parameters.flashUploadURL?exists><#t/>
-		oFCKeditor_${parameters.id}.Config['FlashUploadURL'] = '<@ww.url value=parameters.flashUploadURL?string />' ;
+		oFCKeditor_${parameters.id}.Config['FlashUploadURL'] = '<@saf.url value=parameters.flashUploadURL?string />' ;
 	</#if><#t/>
 	<#-- allowImageBrowse --><#t/>
 	<#if parameters.allowImageBrowse?exists><#t/>
-		oFCKeditor_${parameters.id}.Config['ImageBrowser'] = '<@ww.url value=parameters.allowImageBrowse?string />' ;
+		oFCKeditor_${parameters.id}.Config['ImageBrowser'] = '<@saf.url value=parameters.allowImageBrowse?string />' ;
 	</#if><#t/>
 	<#-- allowLinkBrowse --><#t/>
 	<#if parameters.allowLinkBrowse?exists><#t/>
-		oFCKeditor_${parameters.id}.Config['LinkBrowser'] = '<@ww.url value=parameters.allowLinkBrowse?string />' ;
+		oFCKeditor_${parameters.id}.Config['LinkBrowser'] = '<@saf.url value=parameters.allowLinkBrowse?string />' ;
 	</#if><#t/>
 	<#-- allowFlashBrowse --><#t/>
 	<#if parameters.allowFlashBrowse?exists><#t/>
@@ -229,7 +229,7 @@
 	</#if><#t/>
 	<#-- smileyPath --><#t/>
 	<#if parameters.smileyPath?exists><#t/>
-		oFCKeditor_${parameters.id}.Config['SmileyPath'] = '<@ww.url value=parameters.smileyPath?string />' ;
+		oFCKeditor_${parameters.id}.Config['SmileyPath'] = '<@saf.url value=parameters.smileyPath?string />' ;
 	</#if><#t/>
 	<#-- smileyImages --><#t/>
 	<#if parameters.smileyImages?exists><#t/>

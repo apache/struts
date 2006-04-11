@@ -36,7 +36,7 @@ import java.util.Map;
 
 public abstract class AbstractDirective extends Directive {
     public String getName() {
-        return "ww" + getBeanName();
+        return "saf" + getBeanName();
     }
 
     public abstract String getBeanName();

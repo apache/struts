@@ -291,7 +291,7 @@ public class FreemarkerManager {
     public SimpleHash buildTemplateModel(OgnlValueStack stack, Object action, ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, ObjectWrapper wrapper) {
         ScopesHashModel model = buildScopesHashModel(servletContext, request, response, wrapper, stack);
         populateContext(model, stack, action, request, response);
-        model.put("ww", new StrutsModels(stack, request, response));
+        model.put("saf", new StrutsModels(stack, request, response));
         return model;
     }
 }

@@ -30,11 +30,11 @@ import java.util.List;
 /**
  * <!-- START SNIPPET: javadoc -->
  *
- * WebWork comes with various related tools included in the webwork jar file. You can access these tools by simply
- * unpacking the WebWork distribution and running <b>java -jar struts.jar</b>. WebWork will automatically include all
- * jars in the same directory as the struts.jar file as well as all jars in the <i>lib</i> directory. This means you
- * can invoke these tools either from within the standard directory structure found in the WebWork distribution, or from
- * within your WEB-INF/lib directory.
+ * Struts Action 2.0 comes with various related tools included in the struts-action-2.0 jar file. You can access these
+ * tools by simply unpacking the Struts Action 2.0 distribution and running <b>java -jar struts.jar</b>.
+ * Struts Action 2.0 will automatically include all jars in the same directory as the struts.jar file as well as all
+ * jars in the <i>lib</i> directory. This means you can invoke these tools either from within the standard directory
+ * structure found in the Struts Action 2.0 distribution, or from within your WEB-INF/lib directory.
  *
  * <p/> You can access the help information for these tools by simply running the jar without any arguments.
  *

@@ -7,7 +7,7 @@
    All rights reserved.
 -->
 <xwork>
-	<include file="struts-default.xml" />
+	<include file="struts-portlet-default.xml" />
 
 	<package name="view" extends="struts-portlet-default"
 		namespace="/view">

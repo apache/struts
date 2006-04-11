@@ -5,11 +5,11 @@
   -->
 <instances>
    <instance>
-      <instance-name>WebWorkPortletInstance</instance-name>
-      <component-ref>WebWorkPortlet</component-ref>
+      <instance-name>StrutsPortletInstance</instance-name>
+      <component-ref>StrutsPortlet</component-ref>
    </instance>
    <instance>
-      <instance-name>WebWorkPortlet2Instance</instance-name>
-      <component-ref>WebWorkPortlet2</component-ref>
+      <instance-name>StrutsPortlet2Instance</instance-name>
+      <component-ref>StrutsPortlet2</component-ref>
    </instance>
 </instances>

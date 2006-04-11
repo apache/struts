@@ -5,21 +5,21 @@
 -->
 <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
 <web-app>
-	<display-name>webwork-portlet</display-name>
+	<display-name>struts-portlet</display-name>
 	<!-- Uncomment/comment this if you need/don't need Spring support -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/applicationContext*.xml</param-value>
 	</context-param>
 	<filter>
-		<filter-name>webwork</filter-name>
+		<filter-name>action2</filter-name>
 		<filter-class>
 			org.apache.struts.action2.dispatcher.FilterDispatcher
 		</filter-class>
 	</filter>
 
 	<filter-mapping>
-		<filter-name>webwork</filter-name>
+		<filter-name>action2</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<listener>

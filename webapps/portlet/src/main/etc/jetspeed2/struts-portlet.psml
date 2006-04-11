@@ -4,11 +4,11 @@
      layout-decorator="tigris"
      portlet-decorator="tigris"
   />
-  <title>WebWork Portlet Example Application</title>
-  <metadata name="title" xml:lang="en">WebWork Portlet Example Application</metadata>
+  <title>Struts Action 2.0 Portlet Example Application</title>
+  <metadata name="title" xml:lang="en">Struts Action 2.0 Portlet Example Application</metadata>
 
   <fragment id="simplest" type="layout" name="jetspeed-layouts::VelocityTwoColumns">
-    <fragment id="webwork-portlet-1" type="portlet" name="webwork-portlet::WebWorkPortlet">
+    <fragment id="struts-portlet-1" type="portlet" name="struts-portlet::StrutsPortlet">
       <property layout="TwoColumns" name="row" value="0" />
       <property layout="TwoColumns" name="column" value="0" />
     </fragment>

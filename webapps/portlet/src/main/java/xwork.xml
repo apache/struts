@@ -117,7 +117,7 @@
 
 	</package>
 
-	<package name="edit" extends="webwork-portlet-default"
+	<package name="edit" extends="struts-portlet-default"
 		namespace="/edit">
 		<action name="index"
 			class="com.opensymphony.xwork.ActionSupport">
@@ -159,7 +159,7 @@
 		</action>
 	</package>
 
-	<package name="help" extends="webwork-portlet-default"
+	<package name="help" extends="struts-portlet-default"
 		namespace="/help">
 		<action name="index"
 			class="com.opensymphony.xwork.ActionSupport">

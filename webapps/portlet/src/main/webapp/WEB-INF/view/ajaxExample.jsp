@@ -1,6 +1,6 @@
 <%@ taglib prefix="saf" uri="/struts-action" %>
 <saf:head theme="ajax"/>
-<link rel="stylesheet" type="text/css" href="<saf:url value="/webwork/tabs.css"/>">
+<link rel="stylesheet" type="text/css" href="<saf:url value="/struts/tabs.css"/>">
 <b>This is a tabbed pane with two panels that fetches data from a remote action via ajax</b>
 
 <saf:tabbedPanel id="test2" theme="simple" >

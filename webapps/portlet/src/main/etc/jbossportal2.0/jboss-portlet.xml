@@ -4,12 +4,12 @@
   ~ All rights reserved.
   -->
    <portlet>
-      <portlet-name>WebWorkPortlet</portlet-name>
+      <portlet-name>StrutsPortlet</portlet-name>
       <security>
       </security>
    </portlet>
    <portlet>
-      <portlet-name>WebWorkPortlet2</portlet-name>
+      <portlet-name>StrutsPortlet2</portlet-name>
       <security>
       </security>
    </portlet>

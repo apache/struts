@@ -1,10 +1,10 @@
 <portlet-app version="1.0" xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" id="webwork-portlet">
-  <portlet id="WebWorkPortlet">
-    <description xml:lang="EN">WebWork2 Test Portlet</description>
-    <portlet-name>WebWorkPortlet</portlet-name>
-    <display-name xml:lang="EN">WebWork2 Test Portlet</display-name>
+xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" id="struts-portlet">
+  <portlet id="StrutsPortlet">
+    <description xml:lang="EN">Struts Action 2.0 Test Portlet</description>
+    <portlet-name>StrutsPortlet</portlet-name>
+    <display-name xml:lang="EN">Struts Action 2.0 Test Portlet</display-name>
     
     <portlet-class>org.apache.struts.action2.portlet.dispatcher.Jsr168Dispatcher</portlet-class>
 
@@ -54,14 +54,14 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http:
     <portlet-info>
       <title>My PortletWork portlet</title>
       <short-title>PW</short-title>
-      <keywords>webwork,portletwork</keywords>
+      <keywords>struts,portletwork</keywords>
     </portlet-info>
   </portlet>
   
-  <portlet id="WebWorkPortlet2">
-    <description xml:lang="EN">WebWork2 Test Portlet2</description>
-    <portlet-name>WebWorkPortlet2</portlet-name>
-    <display-name xml:lang="EN">WebWork2 Test Portlet2</display-name>
+  <portlet id="StrutsPortlet2">
+    <description xml:lang="EN">Struts Action 2 Test Portlet2</description>
+    <portlet-name>StrutsPortlet2</portlet-name>
+    <display-name xml:lang="EN">Struts Action 2 Test Portlet2</display-name>
     
     <portlet-class>org.apache.struts.action2.portlet.dispatcher.Jsr168Dispatcher</portlet-class>
 
@@ -111,7 +111,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http:
     <portlet-info>
       <title>My PortletWork portlet2</title>
       <short-title>PW2</short-title>
-      <keywords>webwork,portletwork</keywords>
+      <keywords>struts,portletwork</keywords>
     </portlet-info>
   </portlet>
 

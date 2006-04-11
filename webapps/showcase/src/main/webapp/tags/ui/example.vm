@@ -1,32 +1,32 @@
 <html>
 <head>
     <title>UI Tags Example</title>
-    #wwhead()
+    #safhead()
 </head>
 
 <body>
 
-#wwurl ("id=url" "value=index.jsp")
+#safurl ("id=url" "value=index.jsp")
 <a href="${url}">Back to index.jsp</a>!
 
 
-#wwform ("action=exampleSubmitVelocity" "method=post" "enctype=multipart/form-data")
-    #wwtextfield ("label=Name" "name=name")
-    #wwdatepicker ("label=Birthday" "name=birthday")
-    #wwtextarea ("label=Biograph" "name=bio" "cols=20" "rows=3")
-    #wwselect ("label=Favorite Color" "list={'Red', 'Blue', 'Green'}" "name=favoriteColor" "emptyOption=true" "headerKey=None" "headerValue=None")
-    #wwselect ("label=Favourite Language" "list=favouriteLanguages" "name=favouriteLanguage" "listKey=key" "listValue=description" "emptyOption=true" "headerKey=None" "headerValue=None")
-    #wwcheckboxlist ("label=Friends" "list={'Patrick', 'Jason', 'Jay', 'Toby', 'Rene'}" "name=friends")
-    #wwcheckbox ("label=Age 18+" "name=legalAge")
-    #wwdoubleselect ("label=State" "name=region" "list={'North', 'South'}" "value='North'" "doubleValue='Florida'" "doubleList=top == 'North' ? {'Oregon', 'Washington'} : {'Texas', 'Florida'}" "doubleName=state" "headerKey=-1" "headerValue=---------- Please Select ----------" "emptyOption=true" )
-    #wwdoubleselect ("label=Favourite Vehical" "name=favouriteVehicalType" "list=vehicalTypeList" "listKey=key" "listValue=description" "value='MotorcycleKey'" "doubleValue='YamahaKey'" "doubleList=vehicalSpecificList" "doubleListKey=key" "doubleListValue=description" "doubleName=favouriteVehicalSpecific" "headerKey=-1" "headerValue=---------- Please Select ----------" "emptyOption=true" )
-    #wwfile ("label=Picture" "name=picture")
-    #wwoptiontransferselect ("label=Favourite Cartoons Characters" "name=leftSideCartoonCharacters" "leftTitle=Left Title" "rightTitle=Right Title" "list={'Popeye', 'He-Man', 'Spiderman'}" "multiple=true" "headerKey=headerKey" "headerValue=--- Please Select ---" "emptyOption=true" "doubleList={'Superman', 'Mickey Mouse', 'Donald Duck'}" "doubleName=rightSideCartoonCharacters" "doubleHeaderKey=doubleHeaderKey" "doubleHeaderValue=--- Please Select ---" "doubleEmptyOption=true" "doubleMultiple=true" )
-    #wwsubmit()
-    #wwreset()
+#safform ("action=exampleSubmitVelocity" "method=post" "enctype=multipart/form-data")
+    #saftextfield ("label=Name" "name=name")
+    #safdatepicker ("label=Birthday" "name=birthday")
+    #saftextarea ("label=Biograph" "name=bio" "cols=20" "rows=3")
+    #safselect ("label=Favorite Color" "list={'Red', 'Blue', 'Green'}" "name=favoriteColor" "emptyOption=true" "headerKey=None" "headerValue=None")
+    #safselect ("label=Favourite Language" "list=favouriteLanguages" "name=favouriteLanguage" "listKey=key" "listValue=description" "emptyOption=true" "headerKey=None" "headerValue=None")
+    #safcheckboxlist ("label=Friends" "list={'Patrick', 'Jason', 'Jay', 'Toby', 'Rene'}" "name=friends")
+    #safcheckbox ("label=Age 18+" "name=legalAge")
+    #safdoubleselect ("label=State" "name=region" "list={'North', 'South'}" "value='North'" "doubleValue='Florida'" "doubleList=top == 'North' ? {'Oregon', 'Washington'} : {'Texas', 'Florida'}" "doubleName=state" "headerKey=-1" "headerValue=---------- Please Select ----------" "emptyOption=true" )
+    #safdoubleselect ("label=Favourite Vehical" "name=favouriteVehicalType" "list=vehicalTypeList" "listKey=key" "listValue=description" "value='MotorcycleKey'" "doubleValue='YamahaKey'" "doubleList=vehicalSpecificList" "doubleListKey=key" "doubleListValue=description" "doubleName=favouriteVehicalSpecific" "headerKey=-1" "headerValue=---------- Please Select ----------" "emptyOption=true" )
+    #saffile ("label=Picture" "name=picture")
+    #safoptiontransferselect ("label=Favourite Cartoons Characters" "name=leftSideCartoonCharacters" "leftTitle=Left Title" "rightTitle=Right Title" "list={'Popeye', 'He-Man', 'Spiderman'}" "multiple=true" "headerKey=headerKey" "headerValue=--- Please Select ---" "emptyOption=true" "doubleList={'Superman', 'Mickey Mouse', 'Donald Duck'}" "doubleName=rightSideCartoonCharacters" "doubleHeaderKey=doubleHeaderKey" "doubleHeaderValue=--- Please Select ---" "doubleEmptyOption=true" "doubleMultiple=true" )
+    #safsubmit()
+    #safreset()
 #end
 
-#wwa("href=${url}")Back to index.jsp#end
+#safa("href=${url}")Back to index.jsp#end
 
 </body>
 </html>

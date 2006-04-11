@@ -65,6 +65,7 @@
 	</macrodef>
 
 	<target name="build">
+        
 		<!-- prepare -->
 		<delete dir="${basedir}/tmp" />
 		<mkdir dir="${basedir}/tmp" />
@@ -110,10 +111,12 @@
 
         <!-- Prompt the user for input -->
         <input message="Enter the name of your new application [myapp]?" addproperty="new.app.name"
-            defaultvalue="myapp"/>
+            defaultvalue="myapp" />
+        <input message="Enter the location of your new application [${basedir}]?" addproperty="new.app.location"
+            defaultvalue="${basedir}" />
 
-        <echo level="info">Creating '${new.app.name}' web application...</echo>
-        <copy todir="${new.app.name}">
+        <echo level="info">Creating '${new.app.location}/${new.app.name}' web application...</echo>
+        <copy todir="${new.app.location}/${new.app.name}">
             <fileset dir="${basedir}/blank">
                 <exclude name="tmp/**"/>
                 <exclude name="build/**"/>
@@ -127,27 +130,58 @@
         </copy>
 
         <!-- Copy the IDEA project file(s) -->
-        <copy file="blank/blank.iml" tofile="${new.app.name}/${new.app.name}.iml"/>
+        <!--copy file="blank/blank.iml" tofile="${new.app.name}/${new.app.name}.iml"/>
         <replace dir="${new.app.name}" value="${new.app.name}" token="blank">
             <include name="${new.app.name}.i*"/>
-        </replace>
+        </replace -->
 
         <!-- Copy the Eclipse project file(s) -->
-        <copy file="blank/.classpath" tofile="${new.app.name}/.classpath"/>
+        <!--copy file="blank/.classpath" tofile="${new.app.name}/.classpath"/>
         <replace file="${new.app.name}/.classpath" value="${basedir}/.." token="@WEBWORK_HOME@"/>
         <replace file="${new.app.name}/.classpath" value="${version}" token="@WEBWORK_VERSION@"/>
         <copy file="blank/.project" tofile="${new.app.name}/.project"/>
-        <replace file="${new.app.name}/.project" value="${new.app.name}" token="@PROJECT_NAME@"/>
+        <replace file="${new.app.name}/.project" value="${new.app.name}" token="@PROJECT_NAME@"/ -->
 
-        <echo level="info">
-            +=============================================================+
-            |    -- Your Web Application was created successfully! --     |
-            |                                                             |
-            | Now you should be able to build your application with:      |
-            | > ant build -Dwebapp=${new.app.name}                        |
-            +=============================================================+
-        </echo>
+        <condition property="hasWebappLocation">
+            <not>
+                <equals arg1="${new.app.location}" arg2="${basedir}" casesensitive="true" trim="true"/>
+            </not>
+        </condition>
+        
+        <antcall target="printConfigMessageWithWebAppLocation"  />
+        <antcall target="printConfigMessageWithoutWebAppLocation" />
     </target>
+    
+    
+    <target name="printConfigMessageWithWebAppLocation" if="hasWebAppLocation">
+        <echo level="info">
+                    +=============================================================================+
+                    |          -- Your Web Application was created successfully! --               |
+                    |                                                                             |
+                    | Now you should be able to build your application with:                      |
+                    | > ant build -Dwebapp=${new.app.name}                                        |
+                    |                                                                             |
+                    | Or if you have changed the default web app location:                        |
+                    | > ant build -Dwebapp=${new.app.name} -Dwebapplocation=${new.app.location}   |
+                    |                                                                             |
+                    +=============================================================================+
+       </echo>
+    </target>
+    <target name="printConfigMessageWithoutWebAppLocation" unless="hasWebAppLocation">
+       <echo level="info">
+                    +=============================================================================+
+                    |          -- Your Web Application was created successfully! --               |
+                    |                                                                             |
+                    | Now you should be able to build your application with:                      |
+                    | > ant build -Dwebapp=${new.app.name}                                        |
+                    |                                                                             |
+                    | Or if you have changed the default web app location:                        |
+                    | > ant build -Dwebapp=${new.app.name} -Dwebapplocation=${new.app.location}   |
+                    |                                                                             |
+                    +=============================================================================+
+       </echo>
+    </target>
+    
 
 
     <target name="build-portlet" depends="prepare-portlet,prepare-portlet-deploy" description="Builds the portlet application. You can use the 'container' system property to target a specific container, e.g. '-Dcontainer=exo'. Supported containers are exo, gridsphere, jboss-portal-2.0, jboss-portal-2.2 and jetspeed2">

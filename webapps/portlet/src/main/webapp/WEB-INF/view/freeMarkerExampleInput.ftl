@@ -1,5 +1,5 @@
-<@ww.form action="processFreeMarkerExample" method="POST">
-    <@ww.textfield label="First name" name="firstName"/>
-    <@ww.textfield label="Last name" name="lastName"/>
-    <@ww.submit value="Say hello!"/>
-</@ww.form>
+<@saf.form action="processFreeMarkerExample" method="POST">
+    <@saf.textfield label="First name" name="firstName"/>
+    <@saf.textfield label="Last name" name="lastName"/>
+    <@saf.submit value="Say hello!"/>
+</@saf.form>

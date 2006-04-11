@@ -19,14 +19,8 @@ digraph mygraph {
         tutorial_test [label="test",color="coral1"];
         tutorial_guess_input_ftl [label="guess-input.ftl",color="darkseagreen2"];
     }
-    renderDirect [label="renderDirect",color="coral1"];
-    freemarkerDirect [label="freemarkerDirect",color="coral1"];
-    __location_ [label="${location}",color="darkseagreen2"];
-    velocityDirect [label="velocityDirect",color="coral1"];
-    __location_ [label="${location}",color="darkseagreen2"];
     hello [label="hello",color="coral1"];
     hello_jsp [label="hello.jsp",color="darkseagreen2"];
-    freemarkerDirect -> __location_ [label="success",color="darkseagreen2"];
     tutorial_sitegraph_guess -> tutorial_sitegraph_guess_error_ftl [label="error",color="darkseagreen2"];
     tutorial_sitegraph_guess -> tutorial_sitegraph_guess_input_ftl [label="input",color="darkseagreen2"];
     tutorial_sitegraph_guess -> tutorial_sitegraph_guess_success_jsp [label="redirect: success"];
@@ -35,5 +29,4 @@ digraph mygraph {
     hello -> hello_jsp [label="success",color="darkseagreen2"];
     hello -> tutorial_test [label="redirect: tutorial"];
     tutorial_test -> tutorial_sitegraph_guess_input_ftl [label="input",color="darkseagreen2"];
-    velocityDirect -> __location_ [label="success",color="darkseagreen2"];
 }

@@ -5,12 +5,12 @@
     <display-name>Acme Corp</display-name>
 
     <filter>
-        <filter-name>webwork</filter-name>
+        <filter-name>action2</filter-name>
         <filter-class>org.apache.struts.action2.dispatcher.FilterDispatcher</filter-class>
     </filter>
 
     <filter-mapping>
-        <filter-name>webwork</filter-name>
+        <filter-name>action2</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
@@ -25,12 +25,12 @@
     </welcome-file-list>
 
     <!--
-        This typically isn't required, as the taglib is included in webwork.jar.
-        If you really need a taglib configuration within web.xml, copy webwork/src/java/META-INF/taglib.tld
-        to the WEB-INF directory as webwork.tld.
+        This typically isn't required, as the taglib is included in struts-action-2.0.jar.
+        If you really need a taglib configuration within web.xml, copy struts/src/java/META-INF/taglib.tld
+        to the WEB-INF directory as struts-action.tld.
      -->
     <!--taglib>
-        <taglib-uri>webwork</taglib-uri>
-        <taglib-location>/WEB-INF/webwork.tld</taglib-location>
+        <taglib-uri>struts-action</taglib-uri>
+        <taglib-location>/WEB-INF/struts-action.tld</taglib-location>
     </taglib-->
 </web-app>

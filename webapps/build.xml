@@ -64,42 +64,63 @@
 		</sequential>
 	</macrodef>
 
-	<target name="build">
+    <target name="build">
         
-		<!-- prepare -->
-		<delete dir="${basedir}/tmp" />
-		<mkdir dir="${basedir}/tmp" />
-		<mkdir dir="${basedir}/dist" />
+        <condition property="hasWebAppLocation">
+            <isset property="webapplocation"/>
+        </condition>
+        
+        <!-- prepare -->
+        <delete dir="${basedir}/tmp" />
+        <mkdir dir="${basedir}/tmp" />
+        <mkdir dir="${basedir}/dist" />
+        
+        <antcall target="buildWithWebAppLocation" />
+        <antcall target="buildWithoutWebAppLocation" />
+        
+        <!-- war up the app -->
+        <war file="${basedir}/dist/${webapp}.war" webxml="tmp/WEB-INF/web.xml">
+            <zipfileset dir="tmp" prefix="" />
 
+            <!-- only these configurations are needed for now. Also, these are probably more than
+                 needed, but we're just picking a single set of jars that each webapp can use -->
+            <zipfileset dir="${basedir}/../lib/ajax" prefix="WEB-INF/lib" includes="*.jar" />
+            <zipfileset dir="${basedir}/../lib/default" prefix="WEB-INF/lib" includes="*.jar" />
+            <zipfileset dir="${basedir}/../lib/fileupload" prefix="WEB-INF/lib" includes="*.jar" />
+            <zipfileset dir="${basedir}/../lib/sitemesh" prefix="WEB-INF/lib" includes="*.jar" />
+            <zipfileset dir="${basedir}/../lib/portlet" prefix="WEB-INF/lib" includes="*.jar" />
+            <zipfileset dir="${basedir}/../lib/jasperreports" prefix="WEB-INF/lib" excludes="commons-collections.jar" />
+            <zipfileset dir="${basedir}/../lib/spring" prefix="WEB-INF/lib" includes="*.jar" excludes="commons-logging.jar" />
+            <zipfileset dir="${basedir}/../lib/velocity" prefix="WEB-INF/lib" includes="velocity*.jar" />
+            <zipfileset dir="${basedir}/../lib/quickstart" prefix="WEB-INF/lib" includes="log4j.jar, commons-io.jar, commons-lang.jar, commons-collections.jar" />
+            <zipfileset dir="${basedir}/../lib/jfree" prefix="WEB-INF/lib" includes="*.jar" />
+            <zipfileset dir="${basedir}/../build" prefix="WEB-INF/lib" includes="${name}-${version}.jar" />
+            <zipfileset dir="${basedir}/.." prefix="WEB-INF/lib" includes="${name}-${version}.jar" />
+        </war>
+    </target>
+    
+    
+	<target name="buildWithoutWebAppLocation" unless="hasWebAppLocation">
 		<!-- copy over the webapp -->
 		<copy todir="${basedir}/tmp">
-			<fileset dir="${basedir}/${webapp}/src/webapp" />
+			<fileset dir="${basedir}/${webapp}/src/main/webapp" />
 		</copy>
 
 		<!-- compile the sources -->
 		<mkdir dir="${basedir}/tmp/WEB-INF/classes" />
-		<compile srcdir="${basedir}/${webapp}/src/java" destdir="${basedir}/tmp/WEB-INF/classes" />
-
-		<!-- war up the app -->
-		<war file="${basedir}/dist/${webapp}.war" webxml="tmp/WEB-INF/web.xml">
-			<zipfileset dir="tmp" prefix="" />
-
-			<!-- only these configurations are needed for now. Also, these are probably more than
-                 needed, but we're just picking a single set of jars that each webapp can use -->
-			<zipfileset dir="${basedir}/../lib/ajax" prefix="WEB-INF/lib" includes="*.jar" />
-			<zipfileset dir="${basedir}/../lib/default" prefix="WEB-INF/lib" includes="*.jar" />
-			<zipfileset dir="${basedir}/../lib/fileupload" prefix="WEB-INF/lib" includes="*.jar" />
-			<zipfileset dir="${basedir}/../lib/sitemesh" prefix="WEB-INF/lib" includes="*.jar" />
-			<zipfileset dir="${basedir}/../lib/portlet" prefix="WEB-INF/lib" includes="*.jar" />
-			<zipfileset dir="${basedir}/../lib/jasperreports" prefix="WEB-INF/lib" excludes="commons-collections.jar" />
-			<zipfileset dir="${basedir}/../lib/spring" prefix="WEB-INF/lib" includes="*.jar" excludes="commons-logging.jar" />
-			<zipfileset dir="${basedir}/../lib/velocity" prefix="WEB-INF/lib" includes="velocity*.jar" />
-			<zipfileset dir="${basedir}/../lib/quickstart" prefix="WEB-INF/lib" includes="log4j.jar, commons-io.jar, commons-lang.jar, commons-collections.jar" />
-			<zipfileset dir="${basedir}/../lib/jfree" prefix="WEB-INF/lib" includes="*.jar" />
-			<zipfileset dir="${basedir}/../build" prefix="WEB-INF/lib" includes="${name}-${version}.jar" />
-			<zipfileset dir="${basedir}/.." prefix="WEB-INF/lib" includes="${name}-${version}.jar" />
-		</war>
+		<compile srcdir="${basedir}/${webapp}/src/main/java" destdir="${basedir}/tmp/WEB-INF/classes" />
 	</target>
+    
+    <target name="buildWithWebAppLocation" if="hasWebAppLocation">
+        <!-- copy over the webapp -->
+        <copy todir="${basedir}/tmp">
+            <fileset dir="${webapplocation}/${webapp}/src/main/webapp" />
+        </copy>
+
+        <!-- compile the sources -->
+        <mkdir dir="${basedir}/tmp/WEB-INF/classes" />
+        <compile srcdir="${webapplocation}/${webapp}/src/main/java" destdir="${basedir}/tmp/WEB-INF/classes" />
+    </target>
 
     <target name="new" description="Create a new webapp project with the specified name and packages">
         <echo level="info">
@@ -129,6 +150,7 @@
             </fileset>
         </copy>
 
+        <!-- Commented out cause idea & eclipse file are missing -->
         <!-- Copy the IDEA project file(s) -->
         <!--copy file="blank/blank.iml" tofile="${new.app.name}/${new.app.name}.iml"/>
         <replace dir="${new.app.name}" value="${new.app.name}" token="blank">
@@ -142,14 +164,14 @@
         <copy file="blank/.project" tofile="${new.app.name}/.project"/>
         <replace file="${new.app.name}/.project" value="${new.app.name}" token="@PROJECT_NAME@"/ -->
 
-        <condition property="hasWebappLocation">
+        <condition property="hasWebAppLocation">
             <not>
                 <equals arg1="${new.app.location}" arg2="${basedir}" casesensitive="true" trim="true"/>
             </not>
         </condition>
         
-        <antcall target="printConfigMessageWithWebAppLocation"  />
-        <antcall target="printConfigMessageWithoutWebAppLocation" />
+        <ant target="printConfigMessageWithWebAppLocation" />
+        <ant target="printConfigMessageWithoutWebAppLocation" />
     </target>
     
     
@@ -157,9 +179,6 @@
         <echo level="info">
                     +=============================================================================+
                     |          -- Your Web Application was created successfully! --               |
-                    |                                                                             |
-                    | Now you should be able to build your application with:                      |
-                    | > ant build -Dwebapp=${new.app.name}                                        |
                     |                                                                             |
                     | Or if you have changed the default web app location:                        |
                     | > ant build -Dwebapp=${new.app.name} -Dwebapplocation=${new.app.location}   |
@@ -174,9 +193,6 @@
                     |                                                                             |
                     | Now you should be able to build your application with:                      |
                     | > ant build -Dwebapp=${new.app.name}                                        |
-                    |                                                                             |
-                    | Or if you have changed the default web app location:                        |
-                    | > ant build -Dwebapp=${new.app.name} -Dwebapplocation=${new.app.location}   |
                     |                                                                             |
                     +=============================================================================+
        </echo>

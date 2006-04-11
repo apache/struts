@@ -30,11 +30,13 @@
     <property name="lib.build" value="${lib}/build"/>
     <property name="lib.optional" value="${lib}/optional"/>
 
-    <property name="src" location="src"/>
-    <property name="src.java" value="${src}/java"/>
+    <property name="src" location="action/src"/>
+    <property name="src.java" value="${src}/main/java"/>
 
     <property name="test" value="${src}/test"/>
     <property name="src.test" value="${test}/java"/>
+
+    <property name="src.resources" value="${src}/main/resources"/>
 
     <property name="build" location="build"/>
     <property name="build.test" value="${build}/test"/>
@@ -131,6 +133,11 @@
 
     <target name="compile" depends="init,precompile" description="compile project">
         <compile srcdir="${src.java}" destdir="${build.java}" excludes="${optional.sources}" />
+        <copy filtering="no" todir="${build.java}"  includeemptydirs="false">
+            <fileset dir="${src.resources}" >
+                <exclude name="java/*"/>
+            </fileset>
+        </copy>
     </target>
 
     <target name="jar" depends="compile" description="build the project jar file">

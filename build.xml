@@ -1,7 +1,7 @@
 <project name="action" default="jar" basedir=".">
     <!-- overridden properties (must be before the import!) -->
-    <property name="src.test" value="src/test"/>
-    <property name="src.xdt" value="src/xdt"/>
+    <property name="src.test" value="action/src/test"/>
+    <property name="src.xdt" value="action/src/xdt"/>
     <property name="compile.version" value="1.4"/>
     <property name="test.compile.version" value="1.4"/>
 

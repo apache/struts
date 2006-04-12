@@ -477,30 +477,30 @@ public class VelocityManager {
          * Ben Hall (22/08/2003)
          */
         if (p.getProperty(Velocity.RESOURCE_LOADER) == null) {
-            p.setProperty(Velocity.RESOURCE_LOADER, "wwfile, wwclass");
+            p.setProperty(Velocity.RESOURCE_LOADER, "saffile, safclass");
         }
 
         /**
-         * If there's a "real" path add it for the wwfile resource loader.
+         * If there's a "real" path add it for the saffile resource loader.
          * If there's no real path and they haven't configured a loader then we change
-         * resource loader property to just use the wwclass loader
+         * resource loader property to just use the safclass loader
          * Ben Hall (22/08/2003)
          */
         if (context.getRealPath("") != null) {
-            p.setProperty("wwfile.resource.loader.description", "Velocity File Resource Loader");
-            p.setProperty("wwfile.resource.loader.class", "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
-            p.setProperty("wwfile.resource.loader.path", context.getRealPath(""));
-            p.setProperty("wwfile.resource.loader.modificationCheckInterval", "2");
-            p.setProperty("wwfile.resource.loader.cache", "true");
+            p.setProperty("saffile.resource.loader.description", "Velocity File Resource Loader");
+            p.setProperty("saffile.resource.loader.class", "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
+            p.setProperty("saffile.resource.loader.path", context.getRealPath(""));
+            p.setProperty("saffile.resource.loader.modificationCheckInterval", "2");
+            p.setProperty("saffile.resource.loader.cache", "true");
         } else {
-            // remove wwfile from resource loader property
+            // remove saffile from resource loader property
             String prop = p.getProperty(Velocity.RESOURCE_LOADER);
-            if (prop.indexOf("wwfile,") != -1) {
-                prop = replace(prop, "wwfile,", "");
-            } else if (prop.indexOf(", wwfile") != -1) {
-                prop = replace(prop, ", wwfile", "");
-            } else if (prop.indexOf("wwfile") != -1) {
-                prop = replace(prop, "wwfile", "");
+            if (prop.indexOf("saffile,") != -1) {
+                prop = replace(prop, "saffile,", "");
+            } else if (prop.indexOf(", saffile") != -1) {
+                prop = replace(prop, ", saffile", "");
+            } else if (prop.indexOf("saffile") != -1) {
+                prop = replace(prop, "saffile", "");
             }
 
             p.setProperty(Velocity.RESOURCE_LOADER, prop);
@@ -512,10 +512,10 @@ public class VelocityManager {
          * Unfortunately, there does not appear to be a macro for the class loader keywords
          * Matt Ho - Mon Mar 17 00:21:46 PST 2003
          */
-        p.setProperty("wwclass.resource.loader.description", "Velocity Classpath Resource Loader");
-        p.setProperty("wwclass.resource.loader.class", "org.apache.struts.action2.views.velocity.StrutsResourceLoader");
-        p.setProperty("wwclass.resource.loader.modificationCheckInterval", "2");
-        p.setProperty("wwclass.resource.loader.cache", "true");
+        p.setProperty("safclass.resource.loader.description", "Velocity Classpath Resource Loader");
+        p.setProperty("safclass.resource.loader.class", "org.apache.struts.action2.views.velocity.StrutsResourceLoader");
+        p.setProperty("safclass.resource.loader.modificationCheckInterval", "2");
+        p.setProperty("safclass.resource.loader.cache", "true");
 
         // components
         StringBuffer sb = new StringBuffer();

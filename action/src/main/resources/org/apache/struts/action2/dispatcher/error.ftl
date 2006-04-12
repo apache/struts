@@ -63,7 +63,7 @@
             
             <#list snippet as line>
                 <#if (line_index == 2)>
-                    <pre style="background:yellow">${(line[0..(rootloc.columnNumber-3)]?html)}<span style="background:red">${(line[(rootloc.columnNumber-2)]?html)}</span><#if ((rootloc.columnNumber)>line.length())>${(line[(rootloc.columnNumber-1)..]?html)}</#if></pre>
+                    <pre style="background:yellow">${(line[0..(rootloc.columnNumber-3)]?html)}<span style="background:red">${(line[(rootloc.columnNumber-2)]?html)}</span><#if ((rootloc.columnNumber)<line.length())>${(line[(rootloc.columnNumber-1)..]?html)}</#if></pre>
                 <#else>
                     <pre>${line?html}</pre>
                 </#if>    

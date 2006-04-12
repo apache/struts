@@ -5,8 +5,6 @@
 <xwork>
 
     <include file="struts-default.xml"/>
-    
-    <include file="xwork-tmjee.xml" />
 
     <include file="config-browser.xml"/>
 

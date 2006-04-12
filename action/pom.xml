@@ -28,9 +28,22 @@
         </profile>
     </profiles>
     <repositories>
+     	<repository>
+            <id>snapshots-maven-codehaus</id>
+            <name>snapshots-maven-codehaus</name>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <url>http://snapshots.maven.codehaus.org/maven2</url>
+        </repository>
         <repository>
-            <id>apache</id>
-            <name>apache</name>
+            <id>opensymphony</id>
+            <name>opensymphony</name>
             <layout>legacy</layout>
             <snapshots>
                 <enabled>true</enabled>
@@ -40,7 +53,7 @@
             <releases>
                 <enabled>false</enabled>
             </releases>
-            <url>http://cvs.apache.org/repository</url>
+            <url>http://maven.opensymphony.com</url>
         </repository>
     </repositories>
     <build>

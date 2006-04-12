@@ -12,41 +12,6 @@
     <artifactId>webapp-shopping-cart</artifactId>
     <packaging>war</packaging>
     <name>Shopping Cart Webapp</name>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-idea-plugin</artifactId>
-                <configuration>
-                    <jdkName>1.4</jdkName>
-                    <exclude>target,test-output,.clover</exclude>
-                    <useShortDependencyNames>true</useShortDependencyNames>
-                    <libraries>
-                        <library>
-                            <name>xwork</name>
-                            <sources>file://$xwork$/src/java</sources>
-                        </library>
-                        <library>
-                            <name>xwork-tiger</name>
-                            <sources>file://$xwork$/tiger/src/java</sources>
-                        </library>
-                    </libraries>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                  <source>1.4</source>
-                  <target>1.4</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
     <dependencies>
-        <dependency>
-            <groupId>org.apache.struts.action2</groupId>
-            <artifactId>action</artifactId>
-            <version>2.0-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 </project>

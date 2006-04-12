@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.apache.struts.action2</groupId>
+        <artifactId>project</artifactId>
+        <version>2.0-SNAPSHOT</version>
+    </parent>
+    <groupId>org.apache.struts.action2</groupId>
+    <version>2.0-SNAPSHOT</version>
+    <artifactId>action-all</artifactId>
+    <packaging>pom</packaging>
+    <name>Uber Jar</name>
+    <build>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <configuration>
+            <descriptor>src/assemble/main.xml</descriptor>
+          </configuration>
+          <!-- Note: We need to turn this off because of http://jira.codehaus.org/browse/MNG-1684 -->
+          <!--
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>attached</goal>
+              </goals>
+            </execution>
+          </executions>
+          -->
+        </plugin>
+      </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.struts.action2</groupId>
+            <artifactId>action</artifactId>
+            <version>2.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.struts.action2</groupId>
+            <version>2.0-SNAPSHOT</version>
+            <artifactId>action-jasperreports</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.struts.action2</groupId>
+            <version>2.0-SNAPSHOT</version>
+            <artifactId>action-jfreechart</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.struts.action2</groupId>
+            <version>2.0-SNAPSHOT</version>
+            <artifactId>action-pell-file-upload</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

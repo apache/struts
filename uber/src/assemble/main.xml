@@ -1,0 +1,19 @@
+<assembly>
+  <formats>
+    <format>jar</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+          <include>org.apache.struts.action2:action</include>
+          <include>org.apache.struts.action2:action-jasperreports</include>
+          <include>org.apache.struts.action2:action-jfreechart</include>
+          <include>org.apache.struts.action2:action-pell-file-upload</include>
+      </includes>
+      <unpack>true</unpack>
+      <scope>test</scope>
+    </dependencySet>
+  </dependencySets>
+</assembly>

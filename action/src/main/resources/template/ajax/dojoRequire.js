@@ -1,7 +1,7 @@
 dojo.require("dojo.io.BrowserIO");
 dojo.require("dojo.event.topic");
 
-dojo.hostenv.setModulePrefix('webwork', 'webwork');
+dojo.hostenv.setModulePrefix('struts', 'struts');
 dojo.require('dojo.widget.*');
 dojo.widget.manager.registerWidgetPackage('struts.widgets');
 

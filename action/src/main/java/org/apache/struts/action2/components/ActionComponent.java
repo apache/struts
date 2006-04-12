@@ -70,7 +70,7 @@ import java.util.Map;
  * </pre>
  *
  * <pre>
- * <!-- START SNIPPET: webworkxml -->
+ * <!-- START SNIPPET: strutsxml -->
  *   <xwork>
  *      ....
  *     <action name="actionTagAction1" class="tmjee.testing.ActionTagAction">
@@ -81,7 +81,7 @@ import java.util.Map;
  *     </action>
  *      ....
  *   </xwork>
- * <!-- END SNIPPET: webworkxml -->
+ * <!-- END SNIPPET: strutsxml -->
  * </pre>
  *
  * <pre>

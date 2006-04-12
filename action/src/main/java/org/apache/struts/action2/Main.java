@@ -113,7 +113,7 @@ public class Main {
                 System.out.println("        - Specify JAVA_HOME to point to your JDK 1.5 home");
                 System.out.println("        - Specify a direct path to tools.jar via, as shown below:");
                 System.out.println("");
-                System.out.println("       java -Dtools=/path/to/tools.jar -jar webwork-launcher.jar ...");
+                System.out.println("       java -Dtools=/path/to/tools.jar -jar struts.jar ...");
                 return;
             }
 

@@ -1,5 +1,5 @@
-var webworkValidator = new ValidationClient("$!base/validation");
-webworkValidator.onErrors = function(input, errors) {
+var strutsValidator = new ValidationClient("$!base/validation");
+strutsValidator.onErrors = function(input, errors) {
 
 	var form = input.form;
 
@@ -22,5 +22,5 @@ function validate(element) {
     element.touched = true;
     var namespace = element.form.attributes['namespace'].nodeValue;
     var actionName = element.form.attributes['name'].nodeValue;
-	webworkValidator.validate(element, namespace, actionName);
+	strutsValidator.validate(element, namespace, actionName);
 }

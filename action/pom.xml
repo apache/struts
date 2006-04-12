@@ -71,7 +71,7 @@
 
         <!-- Ajax -->
         <dependency>
-            <groupId>dwr</groupId>
+            <groupId>uk.ltd.getahead</groupId>
             <artifactId>dwr</artifactId>
             <version>1.1-beta-3</version>
             <optional>true</optional>

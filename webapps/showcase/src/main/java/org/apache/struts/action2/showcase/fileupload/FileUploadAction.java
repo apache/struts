@@ -37,7 +37,7 @@ public class FileUploadAction extends ActionSupport {
     private String fileName;
     private String caption;
     
-    // since we are using <ww:file name="upload" .../> the file name will be
+    // since we are using <saf:file name="upload" .../> the file name will be
     // obtained through getter/setter of <file-tag-name>FileName
     public String getUploadFileName() {
     	return fileName;
@@ -47,7 +47,7 @@ public class FileUploadAction extends ActionSupport {
     }
 
     
-    // since we are using <ww:file name="upload" ... /> the content type will be
+    // since we are using <saf:file name="upload" ... /> the content type will be
     // obtained through getter/setter of <file-tag-name>ContentType
     public String getUploadContentType() {
         return contentType;
@@ -57,7 +57,7 @@ public class FileUploadAction extends ActionSupport {
     }
 
     
-    // since we are using <ww:file name="upload" ... /> the File itself will be
+    // since we are using <saf:file name="upload" ... /> the File itself will be
     // obtained through getter/setter of <file-tag-name>
     public File getUpload() {
         return upload;

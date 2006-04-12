@@ -24,8 +24,6 @@ digraph mygraph {
     tutorial_sitegraph_guess -> tutorial_sitegraph_guess_error_ftl [label="error",color="darkseagreen2"];
     tutorial_sitegraph_guess -> tutorial_sitegraph_guess_input_ftl [label="input",color="darkseagreen2"];
     tutorial_sitegraph_guess -> tutorial_sitegraph_guess_success_jsp [label="redirect: success"];
-    tutorial_sitegraph_guess_input_ftl -> tutorial_sitegraph_guess [label="form"];
-    tutorial_sitegraph_guess_success_jsp -> tutorial_sitegraph_guess [label="href\n(!default)"];
     hello -> hello_jsp [label="success",color="darkseagreen2"];
     hello -> tutorial_test [label="redirect: tutorial"];
     tutorial_test -> tutorial_sitegraph_guess_input_ftl [label="input",color="darkseagreen2"];

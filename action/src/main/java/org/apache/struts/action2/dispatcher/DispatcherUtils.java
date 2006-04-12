@@ -34,6 +34,7 @@ import com.opensymphony.xwork.config.ConfigurationException;
 import com.opensymphony.xwork.interceptor.component.ComponentInterceptor;
 import com.opensymphony.xwork.interceptor.component.ComponentManager;
 import com.opensymphony.xwork.util.*;
+import com.opensymphony.xwork.util.location.Location;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -482,6 +483,7 @@ public class DispatcherUtils {
                 
                 HashMap data = new HashMap();
                 data.put("exception", e);
+                data.put("unknown", Location.UNKNOWN);
                 data.put("chain", chain);
                 template.process(data, response.getWriter());
                 response.getWriter().close();

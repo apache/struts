@@ -14,6 +14,13 @@
         <#assign msgs = [ex.message] + msgs/>
     </#if>    
 </#list>
+<#list chain as ex>
+    <#if (ex.location?exists && (ex.location != unknown))>
+        <#assign rootloc = ex.location/>
+        <#assign rootex = ex/>
+    </#if>    
+</#list>
+
 <div id="exception-info">
 <table>
     <tr>
@@ -30,33 +37,33 @@
             </#if>
         </td>
     </tr>
-    <#if exception.location?exists>
+    <#if rootloc?exists>
     <tr>
         <td><strong>File</strong>:</td>
-        <td>${exception.location.URI}</td>
+        <td>${rootloc.URI}</td>
     </tr>
     <tr>
         <td><strong>Line number</strong>:</td>
-        <td>${exception.location.lineNumber}</td>
+        <td>${rootloc.lineNumber}</td>
     </tr>
     <tr>
         <td><strong>Column number</strong>:</td>
-        <td>${exception.location.columnNumber}</td>
+        <td>${rootloc.columnNumber}</td>
     </tr>
     </#if>
     
 </table>
 </div>
 
-<#if exception.snippet?exists>
-    <#assign snippet = exception.getSnippet(2) />
+<#if rootex.snippet?exists>
+    <#assign snippet = rootex.getSnippet(2) />
     <#if (snippet?size > 0)>
         <div id="snippet">
         <hr />
             
             <#list snippet as line>
                 <#if (line_index == 2)>
-                    <pre style="background:yellow">${(line[0..(exception.location.columnNumber-3)]?html)}<span style="background:red">${(line[(exception.location.columnNumber-2)]?html)}</span><#if ((exception.location.columnNumber)>line.length())>${(line[(exception.location.columnNumber-1)..]?html)}</#if></pre>
+                    <pre style="background:yellow">${(line[0..(rootloc.columnNumber-3)]?html)}<span style="background:red">${(line[(rootloc.columnNumber-2)]?html)}</span><#if ((rootloc.columnNumber)>line.length())>${(line[(rootloc.columnNumber-1)..]?html)}</#if></pre>
                 <#else>
                     <pre>${line?html}</pre>
                 </#if>    

@@ -5,7 +5,7 @@
 <web-app>
 
     <filter>
-        <filter-name>webwork</filter-name>
+        <filter-name>action2</filter-name>
         <filter-class>org.apache.struts.action2.dispatcher.FilterDispatcher</filter-class>
     </filter>
 
@@ -20,7 +20,7 @@
     </filter-mapping>
 
     <filter-mapping>
-        <filter-name>webwork</filter-name>
+        <filter-name>action2</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 

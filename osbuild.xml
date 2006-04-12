@@ -32,14 +32,12 @@
 
     <property name="src" location="action/src"/>
     <property name="src.java" value="${src}/main/java"/>
-
-    <property name="test" value="${src}/test"/>
-    <property name="src.test" value="${test}/java"/>
+    <property name="src.test" value="${src}/test/java/"/>
 
     <property name="src.resources" value="${src}/main/resources"/>
 
     <property name="build" location="build"/>
-    <property name="build.test" value="${build}/test"/>
+    <property name="build.test" value="${build}/test/java"/>
     <property name="build.java-test" value="${build}/java-test"/>
     <property name="build.java" value="${build}/java"/>
     <property name="build.clover" value="${build}/clover"/>
@@ -68,7 +66,9 @@
     </path>
 
     <path id="junit.cp">
+        <pathelement location="${build.java}"/>
         <pathelement location="${build.test}"/>
+        <pathelement location="${src.test}/../resources"/>
         <pathelement location="${build.java-test}"/>
         <path refid="cp"/>
     </path>
@@ -186,7 +186,7 @@
             </files>
         </clover-setup>
 
-        <compile srcdir="${src.java}" destdir="${build.java-test}" />
+        <!-- compile srcdir="${src.java}" destdir="${build.java-test}" / -->
     </target>
 
     <target name="test" depends="junit-check, clover-check, compile, test-compile" description="run tests"
@@ -196,7 +196,7 @@
 
     <macrodef name="run-junit">
         <attribute name="classpathref" default="junit.cp" />
-        <attribute name="includes" default="**/*Test.java"/>
+        <attribute name="includes" default="**/${testcase}Test.java"/>
         <attribute name="excludes" default=""/>
         <sequential>
           <mkdir dir="${dist.docs}/junit"/>
@@ -342,7 +342,7 @@
     <!-- =================================================================== -->
     <target name="fixcrlf" description="Fixed CR/LF problems">
         <echo>Running fixcrlf....</echo>
-         <fixcrlf eol="lf" srcdir="${basedir}/src"
+         <fixcrlf eol="lf" srcdir="${basedir}/action/src"
                  includes="**/*.sh,
                       **/*.properties,
                       **/*.sql,

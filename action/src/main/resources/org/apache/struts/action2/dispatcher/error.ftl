@@ -1,0 +1,97 @@
+<html>
+<head>
+    <title>Struts Action Framework Problem Report</title>
+</head>
+<body>
+    <h2>Struts Action Framework Problem Report</h2>
+    <p>
+    The Struts Action Framework has detected a problem in your configuration:
+    </p>
+
+<#assign msgs = [] />
+<#list chain as ex>
+    <#if ex.message?exists>
+        <#assign msgs = [ex.message] + msgs/>
+    </#if>    
+</#list>
+<div id="exception-info">
+<table>
+    <tr>
+        <td><strong>Messages</strong>:</td>
+        <td>
+            <#if (msgs?size > 1)>
+            <ol>
+                <#list msgs as mgs>
+                    <li>${msg}</li>
+                </#list>
+            </ol>
+            <#else>
+            ${msgs[0]}
+            </#if>
+        </td>
+    </tr>
+    <#if exception.location?exists>
+    <tr>
+        <td><strong>File</strong>:</td>
+        <td>${exception.location.URI}</td>
+    </tr>
+    <tr>
+        <td><strong>Line number</strong>:</td>
+        <td>${exception.location.lineNumber}</td>
+    </tr>
+    <tr>
+        <td><strong>Column number</strong>:</td>
+        <td>${exception.location.columnNumber}</td>
+    </tr>
+    </#if>
+    
+</table>
+</div>
+
+<#if exception.snippet?exists>
+    <#assign snippet = exception.getSnippet(2) />
+    <#if (snippet?size > 0)>
+        <div id="snippet">
+        <hr />
+            
+            <#list snippet as line>
+                <#if (line_index == 2)>
+                    <pre style="background:yellow">${(line[0..(exception.location.columnNumber-2)]?html)}<span style="background:red">${(line[(exception.location.columnNumber-1)]?html)}</span>${(line[exception.location.columnNumber..]?html)}</pre>
+                <#else>
+                    <pre>${line?html}</pre>
+                </#if>    
+            </#list>
+        </div>
+    </#if>    
+</#if>
+
+<div id="stacktraces">
+<hr />
+<h3>Stacktraces</h3>
+<#list chain as ex>
+<div class="stacktrace" style="padding-left: ${ex_index * 2}em">
+    <strong>${ex}</strong>
+    <div>
+    <pre>
+    <#list ex.stackTrace as frame>
+    ${frame}
+    </#list>
+    </pre>
+    </div>
+</div>
+</#list>
+</div>
+
+<div class="footer">
+<hr />
+<p>
+You are seeing this page because development mode is enabled.  Development mode, or devMode, enables extra
+debugging behaviors and reports to assist developers.  To disable this mode, set:
+<pre>
+  struts.devMode=false
+</pre>
+in your <code>WEB-INF/classes/struts.properties</code> file.
+</p>
+</div>
+</body>
+</html>

@@ -37,13 +37,19 @@ import com.opensymphony.xwork.util.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import freemarker.template.Template;
+import org.apache.struts.action2.views.freemarker.FreemarkerManager;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -252,7 +258,7 @@ public class DispatcherUtils {
             }
         } catch (ConfigurationException e) {
             LOG.error("Could not find action", e);
-            sendError(request, response, HttpServletResponse.SC_NOT_FOUND, e);
+            sendError(request, response, context, HttpServletResponse.SC_NOT_FOUND, e);
         } catch (Exception e) {
             String msg = "Could not execute action";
             LOG.error(msg, e);
@@ -458,19 +464,44 @@ public class DispatcherUtils {
      * @param code     the HttpServletResponse error code (see {@link javax.servlet.http.HttpServletResponse} for possible error codes).
      * @param e        the Exception that is reported.
      */
-    public void sendError(HttpServletRequest request, HttpServletResponse response, int code, Exception e) {
-        try {
-            // send a http error response to use the servlet defined error handler
-            // make the exception availible to the web.xml defined error page
-            request.setAttribute("javax.servlet.error.exception", e);
-
-            // for compatibility
-            request.setAttribute("javax.servlet.jsp.jspException", e);
-
-            // send the error response
-            response.sendError(code, e.getMessage());
-        } catch (IOException e1) {
-            // we're already sending an error, not much else we can do if more stuff breaks
+    public void sendError(HttpServletRequest request, HttpServletResponse response, 
+            ServletContext ctx, int code, Exception e) {
+        if (devMode) {
+            response.setContentType("text/html");
+            
+            try {
+                freemarker.template.Configuration config = FreemarkerManager.getInstance().getConfiguration(ctx);
+                Template template = config.getTemplate("/org/apache/struts/action2/dispatcher/error.ftl");
+                
+                List chain = new ArrayList();
+                Throwable cur = e;
+                chain.add(cur);
+                while ((cur = cur.getCause()) != null) {
+                    chain.add(cur);
+                }
+                
+                HashMap data = new HashMap();
+                data.put("exception", e);
+                data.put("chain", chain);
+                template.process(data, response.getWriter());
+                response.getWriter().close();
+            } catch (Exception exp) {
+                exp.printStackTrace();
+            }
+        } else {
+            try {
+                // send a http error response to use the servlet defined error handler
+                // make the exception availible to the web.xml defined error page
+                request.setAttribute("javax.servlet.error.exception", e);
+    
+                // for compatibility
+                request.setAttribute("javax.servlet.jsp.jspException", e);
+    
+                // send the error response
+                response.sendError(code, e.getMessage());
+            } catch (IOException e1) {
+                // we're already sending an error, not much else we can do if more stuff breaks
+            }
         }
     }
 

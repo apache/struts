@@ -131,8 +131,8 @@ public class Main {
             command = "quickstart";
             String name = checkWebAppArgs(args);
             programArgs = new String[]{"/" + name,
-                    "webapps/" + name + "/src/webapp",
-                    "webapps/" + name + "/src/java"};
+                    "webapps/" + name + "/src/main/webapp",
+                    "webapps/" + name + "/src/main/java"};
         }
 
         if ("quickstart".equals(command)) {

@@ -21,7 +21,7 @@
         <td>
             <#if (msgs?size > 1)>
             <ol>
-                <#list msgs as mgs>
+                <#list msgs as msg>
                     <li>${msg}</li>
                 </#list>
             </ol>
@@ -56,7 +56,7 @@
             
             <#list snippet as line>
                 <#if (line_index == 2)>
-                    <pre style="background:yellow">${(line[0..(exception.location.columnNumber-2)]?html)}<span style="background:red">${(line[(exception.location.columnNumber-1)]?html)}</span>${(line[exception.location.columnNumber..]?html)}</pre>
+                    <pre style="background:yellow">${(line[0..(exception.location.columnNumber-3)]?html)}<span style="background:red">${(line[(exception.location.columnNumber-2)]?html)}</span><#if ((exception.location.columnNumber)>line.length())>${(line[(exception.location.columnNumber-1)..]?html)}</#if></pre>
                 <#else>
                     <pre>${line?html}</pre>
                 </#if>    

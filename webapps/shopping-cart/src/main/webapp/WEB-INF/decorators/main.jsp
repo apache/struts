@@ -5,23 +5,23 @@
 %>
 <%@ taglib uri="sitemesh-decorator" prefix="decorator" %>
 <%@ taglib uri="sitemesh-page" prefix="page" %>
-<%@ taglib prefix="ww" uri="/webwork" %>
+<%@ taglib prefix="saf" uri="/struts-action" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
     <title><decorator:title default="CSS Template"/></title>
-    <link href="<ww:url value='/css/main.css'/>" rel="stylesheet" type="text/css" media="all"/>
-    <link href="<ww:url value='/css/niftyCorners.css'/>" rel="stylesheet" type="text/css"/>
-    <link href="<ww:url value='/css/niftyPrint.css'/>" rel="stylesheet" type="text/css" media="print"/>
-    <link href="<ww:url value='/css/dtree.css'/>" rel="stylesheet" type="text/css" media="all"/>
-    <link href="<ww:url value='/css/cart.css'/>" rel="stylesheet" type="text/css" media="all"/>
+    <link href="<saf:url value='/css/main.css'/>" rel="stylesheet" type="text/css" media="all"/>
+    <link href="<saf:url value='/css/niftyCorners.css'/>" rel="stylesheet" type="text/css"/>
+    <link href="<saf:url value='/css/niftyPrint.css'/>" rel="stylesheet" type="text/css" media="print"/>
+    <link href="<saf:url value='/css/dtree.css'/>" rel="stylesheet" type="text/css" media="all"/>
+    <link href="<saf:url value='/css/cart.css'/>" rel="stylesheet" type="text/css" media="all"/>
 
-    <script language="JavaScript" type="text/javascript" src="<ww:url value='/js/nifty.js'/>"></script>
-    <script language="JavaScript" type="text/javascript" src="<ww:url value='/js/dtree.js'/>"></script>
+    <script language="JavaScript" type="text/javascript" src="<saf:url value='/js/nifty.js'/>"></script>
+    <script language="JavaScript" type="text/javascript" src="<saf:url value='/js/dtree.js'/>"></script>
 
-    <ww:head theme="ajax"/>
+    <saf:head theme="ajax"/>
 
     <script language="JavaScript" type="text/javascript">
 
@@ -70,7 +70,7 @@
 
 
         <div id="local">
-            <ww:action namespace="/catalog" name="catalog" executeResult="false" id="catalog"/>
+            <saf:action namespace="/catalog" name="catalog" executeResult="false" id="catalog"/>
             <div id="categories">
                 <p class="boxTitle">Categories</p>
 
@@ -83,7 +83,7 @@
                  var categoryTopic = dojo.event.topic.getTopic("categorySelected");
 
                  function changeCategory(category) {
-                     var serverUrl = "<ww:url value="/catalog/remote/setActiveCategory.action"/>?categoryId=" + category;
+                     var serverUrl = "<saf:url value="/catalog/remote/setActiveCategory.action"/>?categoryId=" + category;
 //                        dojo.debug("Url: " + serverUrl);
                         dojo.io.bind({
                         url: serverUrl,
@@ -100,9 +100,9 @@
 
                     categoryTree = new dTree('categoryTree');
                     categoryTree.add(0,-1,'Categories');
-                    <ww:iterator value="#catalog.catalog.findAllCategories()">
-                    categoryTree.add(<ww:property value="id"/>,<ww:property value="(parent eq null) ? 0 : parent.id"/>,'<ww:property value="name"/>','javascript: changeCategory(<ww:property value="id"/>);');
-                    </ww:iterator>
+                    <saf:iterator value="#catalog.catalog.findAllCategories()">
+                    categoryTree.add(<saf:property value="id"/>,<saf:property value="(parent eq null) ? 0 : parent.id"/>,'<saf:property value="name"/>','javascript: changeCategory(<saf:property value="id"/>);');
+                    </saf:iterator>
                     document.write(categoryTree);
                     //-->
                     </script>
@@ -110,7 +110,7 @@
             </div>
 
             <div id="cart">
-                <ww:div href="/catalog/remote/cart.action" theme="ajax" listenTopics="cartUpdated"
+                <saf:div href="/catalog/remote/cart.action" theme="ajax" listenTopics="cartUpdated"
                         loadingText="loading..." id="cart-body" />
             </div>
             <br clear="all"/>

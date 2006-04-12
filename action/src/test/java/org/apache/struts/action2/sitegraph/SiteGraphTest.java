@@ -17,7 +17,6 @@
  */
 package org.apache.struts.action2.sitegraph;
 
-import com.opensymphony.util.FileUtils;
 import org.apache.struts.action2.StrutsTestCase;
 
 import java.io.File;
@@ -26,9 +25,8 @@ import java.io.InputStream;
 import java.net.URL;
 
 /**
- * User: plightbo
- * Date: Jun 25, 2005
- * Time: 4:18:28 PM
+ * @author plightbo
+ * @author Rainer Hermanns
  */
 public class SiteGraphTest extends StrutsTestCase {
     public void testWebFlow() throws Exception {

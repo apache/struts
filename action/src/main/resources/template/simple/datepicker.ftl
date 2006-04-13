@@ -1,26 +1,35 @@
-<#if !stack.findValue("#datepicker_js_included")?exists>
-<#assign trash = stack.setValue("#datepicker_js_included", true)/>
-<script type="text/javascript" src="<@saf.url value="/struts/jscalendar/" encode='false'/>calendar.js"></script>
-<script type="text/javascript" src="<@saf.url value="/struts/jscalendar/lang/" encode='false'/>calendar-${parameters.language?default("en")}.js"></script>
-<script type="text/javascript" src="<@saf.url value="/struts/jscalendar/" encode='false'/>calendar-setup.js"></script>
-</#if>
-<#include "/${parameters.templateDir}/simple/text.ftl" />
-<#if !parameters.readonly?exists><a href="#" id="${parameters.id}_button"></#if><img src="<@saf.url value="/struts/jscalendar/img.gif" encode='false'/>" width="16" height="16" border="0" alt="Click Here to Pick up the date"><#if !parameters.readonly?exists></a></#if>
-<#if !parameters.readonly?exists>
 <script type="text/javascript">
-    Calendar.setup({
-        inputField     :    "${parameters.id}",
-<#if parameters.format?exists>
-        ifFormat       :    "${parameters.format}",
-</#if>
-<#if parameters.showstime?exists>
-        showsTime      :    "${parameters.showstime}",
-</#if>
-        button         :    "${parameters.id}_button",
-<#if parameters.singleclick?exists>
-        singleclick    :    ${parameters.singleclick},
-</#if>
-        step           :    1
-    });
+    dojo.require("dojo.widget.html.DatePicker");
+    dojo.require("struts.widgets.*");
 </script>
+
+<#if parameters.readonly?exists>
+    <#include "/${parameters.templateDir}/simple/text.ftl" />
+<#else>
+    <div dojoType="dropdowncontainer"
+        dateIconPath="<@saf.url includeParams='none' value='/struts/dojo/struts/widgets/dateIcon.gif' encode='false'/>"
+        <#if parameters.dateFormat?exists>
+            dateFormat="${parameters.dateFormat}"
+        </#if>
+        <#if parameters.dateIconPath?exists>
+            dateIconPath="${parameters.dateIconPath}"
+        </#if>
+        <#if parameters.currentDate?exists>
+            currentDate="${parameters.currentDate}"
+        </#if>
+        <#if parameters.currentDate?exists>
+            templatePath="${parameters.templatePath}"
+        </#if>
+        <#if parameters.templateCssPath?exists>
+            templateCssPath="${parameters.templateCssPath}"
+        </#if>
+        <#if parameters.dateFormat?exists>
+            dateFormat="${parameters.dateFormat}"
+        </#if>
+        <#if parameters.get("size")?exists>
+             inputWidth="${parameters.get("size")?html}"
+        </#if>
+    >
+        <#include "/${parameters.templateDir}/simple/text.ftl" />
+    </div>
 </#if>

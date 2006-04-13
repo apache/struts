@@ -1,0 +1,55 @@
+html, body, #main{	
+	width: 100%;	/* make the body expand to fill the visible window */
+	height: 100%;
+	overflow: hidden;	/* erase window level scrollbars */
+	padding: 0 0 0 0;
+	margin: 0 0 0 0;
+}
+
+/* list of messages */
+#listPane tr:hover, #listPane td:hover {
+	background: gray;
+	cursor: pointer;
+}
+#listPane tr, #listPane td { cursor: pointer; }
+
+#topMenu {
+	background: #660000;
+	color: white;
+	font: bold;
+}
+
+tr.header {
+	background-color: #274383; color: white; font: bold;
+}
+
+body .dojoFloatingPaneDragbar {
+	background-color: #274383; 
+}
+.subject {
+	background: gray;
+	width: 100%;
+	padding-top: 5px;
+	padding-bottom: 10px;
+}
+
+.message {
+	border: black 2px;
+}
+
+body .dojoHtmlSplitterPanePanel {
+	background: beige;
+	overflow: auto;
+}
+/* group multiple buttons in a row */
+.box {
+	display: block;
+	float: right;
+}
+.box .dojoButton {
+	float: left;
+	margin-left: 10px;
+}
+
+.dojoButton .dojoButtonContents {
+}

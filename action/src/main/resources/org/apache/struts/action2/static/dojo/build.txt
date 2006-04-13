@@ -1,0 +1,13 @@
+
+Files baked into this package:
+
+../src/bootstrap1.js,
+../src/hostenv_browser.js,
+../src/bootstrap2.js,
+../src/lang.js,
+../src/string.js,
+../src/io.js,
+../src/dom.js,
+../src/io/BrowserIO.js
+
+		

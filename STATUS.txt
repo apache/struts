@@ -27,11 +27,11 @@ Other resources:
 DISTRIBUTION RIGHTS - LICENSING
 
 JSCalendar for the DatePicker tag
-* Rene has contacted dynarch.com about license change, waiting for response
+* Rene has contacted dynarch.com about license change, waiting for response. No answer yet
 * There may also be a Dojo equivalent
 
 FCKEditor for the Richtexteditor tag
-* Toby will contact author about license change
+* Toby contacted the author about license change, no answer yet
 * There may also be a Dojo equivalent
 
 Walter Zorns tooltip library for all UI Tags
@@ -39,6 +39,8 @@ Walter Zorns tooltip library for all UI Tags
 
 tabbedpane.vm Archived UI template
 * Is this a server-side compoonent, or is there a Dojo equivalent?
+* Component was deprecated and already replaced by TabbedPanel. Simply removed the tag implementation
+  and the archived templates
 
 JasperReports
 * Martin will contact Jasper software about license change

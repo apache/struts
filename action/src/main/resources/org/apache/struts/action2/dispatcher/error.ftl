@@ -14,7 +14,7 @@
         <#assign msgs = [ex.message] + msgs/>
     </#if>    
 </#list>
-<#assign rootloc = exception/>
+<#assign rootex = exception/>
 <#list chain as ex>
     <#if (ex.location?exists && (ex.location != unknown))>
         <#assign rootloc = ex.location/>

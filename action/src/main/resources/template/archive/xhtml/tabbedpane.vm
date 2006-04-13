@@ -1,1 +1,0 @@
-#parse("/$parameters.templateDir/simple/tabbedpane.vm")

@@ -57,7 +57,5 @@
 <#-- 
  Code that will add javascript needed for tooltips
 --><#t/>
-<#if parameters.hasTooltip?default(false)><#t/>
 	<#lt/><!-- javascript that is needed for tooltips -->
-	<#lt/><script language="JavaScript" type="text/javascript" src="<@saf.url value='/struts/tooltip/wz_tooltip.js' encode='false' />"></script>
-</#if><#t/>
+	<#lt/><script language="JavaScript" type="text/javascript">dojo.require("dojo.widget.html.Tooltip");dojo.require("dojo.fx.html");</script>

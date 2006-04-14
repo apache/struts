@@ -2,6 +2,7 @@
 <xwork>
     <package name="struts-default">
         <result-types>
+            <result-type name="jasper" class="org.apache.struts.action2.views.jasperreports.JasperReportsResult"/>
             <result-type name="chain" class="com.opensymphony.xwork.ActionChainResult"/>
             <result-type name="dispatcher" class="org.apache.struts.action2.dispatcher.ServletDispatcherResult" default="true"/>
             <result-type name="freemarker" class="org.apache.struts.action2.views.freemarker.FreemarkerResult"/>
@@ -21,7 +22,7 @@
             <result-type name="richtexteditorFileUpload" class="org.apache.struts.action2.views.jsp.ui.RichtexteditorFileUploadResult" />
 
             <!-- third party integration -->
-            <result-type name="jasper" class="org.apache.struts.action2.views.jasperreports.JasperReportsResult"/>
+
         </result-types>
 
         <interceptors>

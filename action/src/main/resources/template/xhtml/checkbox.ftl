@@ -34,7 +34,7 @@ ${parameters.label?html}<#t/>
 </#if>
 :<#t/>
 <#if parameters.tooltip?exists>
-    <img src='<@saf.url value="/struts/tooltip/tooltip.gif" />' alt="${parameters.tooltip}" title="${parameters.tooltip}" onmouseover="return escape('${parameters.tooltip?js_string}');" />
+    <#include "/${parameters.templateDir}/xhtml/tooltip.ftl" />
 </#if>
 </label><#t/>
 </#if>

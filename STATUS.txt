@@ -26,7 +26,8 @@ DISTRIBUTION RIGHTS - LICENSING
 
 JSCalendar for the DatePicker tag
 * Rene has contacted dynarch.com about license change, waiting for response. No answer yet
-* There may also be a Dojo equivalent
+* Replaced it with Dojo's Date picker, but be warned it is missing a lot
+  of the old features
 
 FCKEditor for the Richtexteditor tag
 * Toby contacted the author about license change, no answer yet
@@ -34,6 +35,8 @@ FCKEditor for the Richtexteditor tag
 
 Walter Zorns tooltip library for all UI Tags
 * Is there a Dojo equivalent?
+* Replaced it with Dojo's tooltip lib, although there are several issues
+  to iron out still
 
 tabbedpane.vm Archived UI template
 * Is this a server-side compoonent, or is there a Dojo equivalent?

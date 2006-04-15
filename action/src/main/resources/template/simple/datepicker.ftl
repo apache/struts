@@ -8,8 +8,8 @@
 <#else>
     <div dojoType="dropdowncontainer"
         dateIconPath="<@saf.url includeParams='none' value='/struts/dojo/struts/widgets/dateIcon.gif' encode='false'/>"
-        <#if parameters.dateFormat?exists>
-            dateFormat="${parameters.dateFormat}"
+        <#if parameters.format?exists>
+            dateFormat="${parameters.format}"
         </#if>
         <#if parameters.dateIconPath?exists>
             dateIconPath="${parameters.dateIconPath}"
@@ -22,9 +22,6 @@
         </#if>
         <#if parameters.templateCssPath?exists>
             templateCssPath="${parameters.templateCssPath}"
-        </#if>
-        <#if parameters.dateFormat?exists>
-            dateFormat="${parameters.dateFormat}"
         </#if>
         <#if parameters.get("size")?exists>
              inputWidth="${parameters.get("size")?html}"

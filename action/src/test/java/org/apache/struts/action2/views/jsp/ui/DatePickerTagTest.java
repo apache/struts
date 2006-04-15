@@ -26,6 +26,7 @@ import java.util.Locale;
  * Unit test for {@link DatePickerTag}.
  *
  * @author Claus Ibsen
+ * @author tm_jee
  */
 public class DatePickerTagTest extends AbstractUITagTest {
 
@@ -49,35 +50,42 @@ public class DatePickerTagTest extends AbstractUITagTest {
     }
 
     public void testFormat() throws Exception {
-        tag.setFormat("yyyy/MM/dd hh:mm:ss");
+        tag.setFormat("#yyyy/#MM/#dd #hh:#mm:#ss");
 
         tag.doStartTag();
         tag.doEndTag();
-        assertTrue("Should contain format", writer.toString().indexOf("yyyy/MM/dd hh:mm:ss") > -1);
+        assertTrue("Should contain format", writer.toString().indexOf("#yyyy/#MM/#dd #hh:#mm:#ss") > -1);
     }
 
-    public void testLanguage() throws Exception {
+    // NOTE: Switching to Dojo's DatePicker, i18n is not supported, 
+    //       Commenting out this test case
+    /*public void testLanguage() throws Exception {
         tag.setLanguage("da");
 
         tag.doStartTag();
         tag.doEndTag();
         assertTrue("Should contain danish language", writer.toString().indexOf("/struts/jscalendar/lang/calendar-da.js") > -1);
-    }
+    }*/
 
-    public void testShowstime() throws Exception {
+    
+    // NOTE: Switching to Dojo's DatePicker, showing time is not supported.
+    //       Commenting this test case
+    /*public void testShowstime() throws Exception {
         tag.setShowstime("24");
 
         tag.doStartTag();
         tag.doEndTag();
         assertTrue("Should contain showsTime 24", writer.toString().indexOf("showsTime      :    \"24\"") > -1);
-    }
+    }*/
 
-    public void testSingleclick() throws Exception {
+    // NOTE: Switching to Dojo's DatePickuer, single / double click to popup
+    //       is not supported. Commenting out this test case.
+    /*public void testSingleclick() throws Exception {
         tag.setSingleclick("true");
 
         tag.doStartTag();
         tag.doEndTag();
-    }
+    }*/
 
     protected void setUp() throws Exception {
         super.setUp();

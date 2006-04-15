@@ -1,18 +1,16 @@
 <tr>
     <td class="tdLabel"></td>
     <td>
-<script type="text/javascript" src="/struts/jscalendar/calendar.js"></script>
-<script type="text/javascript" src="/struts/jscalendar/lang/calendar-fr.js"></script>
-<script type="text/javascript" src="/struts/jscalendar/calendar-setup.js"></script>
-<input type="text" name="" id=""/>
-<a href="#" id="_button"><img src="/struts/jscalendar/img.gif" width="16" height="16" border="0" alt="Click Here to Pick up the date"></a>
 <script type="text/javascript">
-    Calendar.setup({
-        inputField     :    "",
-        button         :    "_button",
-        step           :    1
-    });
+    dojo.require("dojo.widget.html.DatePicker");
+    dojo.require("struts.widgets.*");
 </script>
+
+    <div dojoType="dropdowncontainer"
+        dateIconPath="/struts/dojo/struts/widgets/dateIcon.gif"
+    >
+<input type="text" name="" id=""/>
+    </div>
 </td>
 </tr>
 

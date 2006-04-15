@@ -28,3 +28,6 @@
 	}
 </script>
 
+<!-- javascript that is needed for tooltips -->
+<script language="JavaScript" type="text/javascript">dojo.require("dojo.widget.html.Tooltip");dojo.require("dojo.fx.html");</script>
+

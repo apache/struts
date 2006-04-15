@@ -23,7 +23,9 @@ import org.apache.struts.action2.StrutsConstants;
 import org.apache.struts.action2.config.Configuration;
 import org.apache.struts.action2.views.jsp.AbstractUITagTest;
 import org.apache.struts.action2.views.jsp.ActionTag;
+
 import com.opensymphony.xwork.ActionContext;
+import com.opensymphony.xwork.ObjectFactory;
 import com.opensymphony.xwork.config.ConfigurationManager;
 
 
@@ -31,13 +33,15 @@ import com.opensymphony.xwork.config.ConfigurationManager;
  * FormTagTest
  *
  * @author Jason Carreira
- *         Created Apr 3, 2003 10:28:58 AM
+ * @author tm_jee
  *         
  * @version $Date$ $Id$
  */
 public class FormTagTest extends AbstractUITagTest {
 
     public void testForm() throws Exception {
+    	ObjectFactory.setObjectFactory(new MyObjectFactory());
+    	
         request.setupGetServletPath("/testAction");
 
         TestAction testAction = (TestAction) action;
@@ -363,4 +367,8 @@ public class FormTagTest extends AbstractUITagTest {
         ConfigurationManager.addConfigurationProvider(new TestConfigurationProvider());
         ActionContext.getContext().setValueStack(stack);
     }
+    
+    static class MyObjectFactory extends ObjectFactory {
+		
+	}
 }

@@ -40,7 +40,6 @@ import com.opensymphony.xwork.config.ConfigurationManager;
 public class FormTagTest extends AbstractUITagTest {
 
     public void testForm() throws Exception {
-    	ObjectFactory.setObjectFactory(new MyObjectFactory());
     	
         request.setupGetServletPath("/testAction");
 
@@ -367,8 +366,4 @@ public class FormTagTest extends AbstractUITagTest {
         ConfigurationManager.addConfigurationProvider(new TestConfigurationProvider());
         ActionContext.getContext().setValueStack(stack);
     }
-    
-    static class MyObjectFactory extends ObjectFactory {
-		
-	}
 }

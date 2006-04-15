@@ -1,5 +1,6 @@
 <#if parameters.tooltip?exists><#t/>
-      <img id="_tt${parameters.tooltip.hashCode()}"
+	  <#assign tooltipHashCode=parameters.tooltip.hashCode() />
+      <img id="_tt${tooltipHashCode?string('#')}"
       <#if parameters.tooltipIcon?exists><#t/>
       	src='<@saf.url value="${parameters.tooltipIcon}" />' 
       <#else><#t/>
@@ -7,8 +8,7 @@
       </#if><#t/>
       	alt="${parameters.tooltip?html}" 
       	title="${parameters.tooltip?html}" />
-
-      <span dojoType="tooltip" connectId="_tt${parameters.tooltip.hashCode()}"
+      <span dojoType="tooltip" connectId="_tt${tooltipHashCode?string('#')}"
           <#if parameters.tooltipToggle?exists><#t/>
         	<#t/>toggle="${parameters.tooltipToggle}"<#t/>
           </#if><#t/>

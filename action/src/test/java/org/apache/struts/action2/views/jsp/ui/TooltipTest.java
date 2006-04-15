@@ -22,6 +22,8 @@ import org.apache.struts.action2.TestConfigurationProvider;
 import org.apache.struts.action2.views.jsp.AbstractUITagTest;
 import org.apache.struts.action2.views.jsp.ParamTag;
 import org.apache.struts.action2.views.jsp.StrutsMockBodyContent;
+
+import com.opensymphony.xwork.ObjectFactory;
 import com.opensymphony.xwork.config.ConfigurationManager;
 
 /**
@@ -33,8 +35,10 @@ import com.opensymphony.xwork.config.ConfigurationManager;
 public class TooltipTest extends AbstractUITagTest {
 
 	public void testWithoutFormOverriding() throws Exception {
+		
 		ConfigurationManager.clearConfigurationProviders();
 		ConfigurationManager.addConfigurationProvider(new TestConfigurationProvider());
+		ObjectFactory.setObjectFactory(new MyObjectFactory());
 		
 		
 		// we test it on textfield component, but since the tooltip are common to 
@@ -374,5 +378,8 @@ public class TooltipTest extends AbstractUITagTest {
 		
 		verify(TooltipTest.class.getResource("tooltip-3.txt"));
 	}
-	
+
+	static class MyObjectFactory extends ObjectFactory {
+		
+	}
 }

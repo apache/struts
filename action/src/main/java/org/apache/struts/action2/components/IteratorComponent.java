@@ -152,6 +152,29 @@ import java.util.Iterator;
  * 
  * <!-- END SNIPPET: example4code -->
  * </pre>
+ * 
+ * <!-- START SNIPPET: example5description -->
+ * 
+ * </p>To simulate a simple loop with iterator tag, the following could be done. 
+ * It does the loop 5 times.
+ * 
+ * <!-- END SNIPPET: example5description -->
+ * 
+ * <pre>
+ * <!-- START SNIPPET: example5code -->
+ * 
+ * &lt;a:iterator status="stat" value="{1,2,3,4,5}" &gt;
+ *    &lt;!-- grab the index (start with 0 ... ) --&gt;
+ *    &lt;a:property value="#stat.index" /&gt;
+ *    
+ *    &lt;!-- grab the top of the stack which should be the --&gt;
+ *    &lt;!-- current iteration value (0, 1, ... 5) --&gt;
+ *    &lt;a:property value="top" /&gt;
+ * &lt;/a:iterator&gt;
+ * 
+ * <!-- END SNIPPET: example5code -->
+ * </pre>
+ * 
  *
  * @author $Author$
  * @author Rick Salsa (rsal@mb.sympatico.ca)

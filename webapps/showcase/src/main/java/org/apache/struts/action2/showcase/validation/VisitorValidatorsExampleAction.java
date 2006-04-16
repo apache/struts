@@ -17,10 +17,6 @@
  */
 package org.apache.struts.action2.showcase.validation;
 
-/**
- * @author tm_jee
- * @version $Date$ $Id$
- */
 
 // START SNIPPET: visitorValidatorsExample
 

@@ -20,7 +20,6 @@ package org.apache.struts.action2.showcase.validation;
 import com.opensymphony.xwork.ActionSupport;
 
 /**
- * @author Patrick Lightbody (plightbo at gmail dot com)
  */
 
 // START SNIPPET: quizAction 

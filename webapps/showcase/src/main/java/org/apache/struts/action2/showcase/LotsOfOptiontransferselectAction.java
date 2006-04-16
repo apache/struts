@@ -24,8 +24,6 @@ import java.util.Map;
 import com.opensymphony.xwork.ActionSupport;
 
 /**
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class LotsOfOptiontransferselectAction extends ActionSupport {
 	

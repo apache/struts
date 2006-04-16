@@ -20,7 +20,6 @@ package org.apache.struts.action2.showcase.exception;
 /**
  * CreateException.
  *
- * @author <a href="mailto:gielen@it-neering.net">Rene Gielen</a>
  */
 
 public class CreateException extends StorageException {

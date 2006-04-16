@@ -23,8 +23,6 @@ import com.opensymphony.xwork.ModelDriven;
 /**
  * Action to demonstrate simple model-driven feature of WW.
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class ModelDrivenAction extends ActionSupport implements ModelDriven {
 

@@ -24,7 +24,6 @@ import java.util.List;
 /**
  * Employee.
  *
- * @author <a href="mailto:gielen@it-neering.net">Rene Gielen</a>
  */
 
 public class Employee implements IdEntity {

@@ -21,8 +21,6 @@ import com.opensymphony.xwork.Action;
 
 
 /**
- * @author Ian Roughley
- * @version $Id$
  */
 public class AjaxTestAction implements Action {
 

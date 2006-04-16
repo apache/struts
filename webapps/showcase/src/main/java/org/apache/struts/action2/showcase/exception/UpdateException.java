@@ -21,7 +21,6 @@ package org.apache.struts.action2.showcase.exception;
 /**
  * UpdateException.
  *
- * @author <a href="mailto:gielen@it-neering.net">Rene Gielen</a>
  */
 
 public class UpdateException extends StorageException {

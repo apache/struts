@@ -23,7 +23,6 @@ import org.apache.struts.action2.example.ajax.catalog.Product;
 /**
  * AbstractModifyCartAction
  *
- * @author Jason Carreira <jcarreira@eplus.com>
  */
 public abstract class AbstractModifyCartAction extends ShowCart {
     protected int quantity;

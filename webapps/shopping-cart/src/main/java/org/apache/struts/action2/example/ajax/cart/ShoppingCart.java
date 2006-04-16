@@ -25,7 +25,6 @@ import java.io.Serializable;
 /**
  * ShoppingCart
  *
- * @author Jason Carreira <jcarreira@eplus.com>
  */
 public interface ShoppingCart extends Serializable {
     /**

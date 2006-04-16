@@ -20,8 +20,6 @@ package org.apache.struts.action2.showcase.tag.nonui.actiontag;
 import com.opensymphony.xwork.ActionSupport;
 
 /**
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class ActionTagDemo extends ActionSupport {
 	

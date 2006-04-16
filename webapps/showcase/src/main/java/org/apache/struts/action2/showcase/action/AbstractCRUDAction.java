@@ -28,7 +28,6 @@ import java.io.Serializable;
 /**
  * AbstractCRUDAction.
  *
- * @author <a href="mailto:gielen@it-neering.net">Rene Gielen</a>
  */
 
 public abstract class AbstractCRUDAction extends ActionSupport {

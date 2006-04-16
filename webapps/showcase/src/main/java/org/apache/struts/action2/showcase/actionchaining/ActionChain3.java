@@ -21,8 +21,6 @@ import com.opensymphony.xwork.ActionSupport;
 
 /**
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class ActionChain3 extends ActionSupport {
 

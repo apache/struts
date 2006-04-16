@@ -28,7 +28,6 @@ import java.util.Map;
 /**
  * ActiveCategory
  *
- * @author Jason Carreira <jcarreira@eplus.com>
  */
 public class ActiveCategory extends ActionSupport implements SessionAware {
     public static final String ACTIVE_CATEGORY_ID = "catalog_activeCategoryId";

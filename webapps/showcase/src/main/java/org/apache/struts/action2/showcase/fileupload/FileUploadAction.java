@@ -24,9 +24,6 @@ import java.io.File;
 /**
  * Show case File Upload example's action. <code>FileUploadAction</code>
  *
- * @author <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
- * @author tm_jee
- * @version $Id$
  */
 public class FileUploadAction extends ActionSupport {
 

@@ -31,7 +31,6 @@ import java.util.Map;
 import java.io.File;
 
 /**
- * @author Patrick Lightbody (plightbo at gmail dot com)
  */
 public class UITagExample extends ActionSupport implements Validateable {
 	

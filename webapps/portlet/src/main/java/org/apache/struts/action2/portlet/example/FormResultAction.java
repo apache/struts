@@ -26,7 +26,6 @@ import org.apache.struts.action2.portlet.context.PortletActionContext;
 import com.opensymphony.xwork.ActionSupport;
 
 /**
- * @author Nils-Helge Garli
  */
 public class FormResultAction extends ActionSupport {
 

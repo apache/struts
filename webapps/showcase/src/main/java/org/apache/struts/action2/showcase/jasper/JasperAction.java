@@ -27,8 +27,6 @@ import org.apache.struts.action2.ServletActionContext;
 import org.apache.struts.action2.showcase.person.PersonManager;
 
 /**
- * @author Philip Luppens
- * @author Rainer Hermanns
  */
 public class JasperAction extends ActionSupport {
 

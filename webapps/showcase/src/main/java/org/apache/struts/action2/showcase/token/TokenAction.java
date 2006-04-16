@@ -25,7 +25,6 @@ import java.util.Date;
 /**
  * Example to illustrate the <code>token</code> and <code>token-session</code> interceptor.
  *
- * @author Claus Ibsen
  */
 public class TokenAction extends ActionSupport {
 

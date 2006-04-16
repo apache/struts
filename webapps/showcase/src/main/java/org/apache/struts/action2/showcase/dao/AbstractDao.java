@@ -29,7 +29,6 @@ import java.util.Collection;
 /**
  * AbstractDao.
  *
- * @author <a href="mailto:gielen@it-neering.net">Rene Gielen</a>
  */
 
 public abstract class AbstractDao implements Serializable, Dao {

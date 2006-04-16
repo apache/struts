@@ -26,7 +26,6 @@ import java.util.ArrayList;
 /**
  * EmployeeDao.
  *
- * @author <a href="mailto:gielen@it-neering.net">Rene Gielen</a>
  */
 
 public class EmployeeDao extends AbstractDao {

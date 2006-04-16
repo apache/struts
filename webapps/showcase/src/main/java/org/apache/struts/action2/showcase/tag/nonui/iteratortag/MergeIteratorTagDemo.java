@@ -22,8 +22,6 @@ import com.opensymphony.xwork.Validateable;
 
 
 /**
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class MergeIteratorTagDemo extends ActionSupport implements Validateable {
 

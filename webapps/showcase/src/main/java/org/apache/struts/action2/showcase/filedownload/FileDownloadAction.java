@@ -27,7 +27,6 @@ import java.io.InputStream;
  * <p/>
  * This action is used to download a jpeg file from the image folder.
  *
- * @author Claus Ibsen
  */
 public class FileDownloadAction implements Action {
 

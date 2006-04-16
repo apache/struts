@@ -26,8 +26,6 @@ import java.util.ArrayList;
 /**
  * <code>EditPerson</code>
  *
- * @author <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
- * @version $Id$
  */
 public class EditPerson extends ActionSupport {
 

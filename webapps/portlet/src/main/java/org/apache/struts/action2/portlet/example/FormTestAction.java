@@ -20,7 +20,6 @@ package org.apache.struts.action2.portlet.example;
 import com.opensymphony.xwork.ActionSupport;
 
 /**
- * @author Nils-Helge Garli
  */
 public class FormTestAction extends ActionSupport {
 

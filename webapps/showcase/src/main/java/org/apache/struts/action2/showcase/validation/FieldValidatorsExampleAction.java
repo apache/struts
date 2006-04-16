@@ -20,8 +20,6 @@ package org.apache.struts.action2.showcase.validation;
 import java.sql.Date;
 
 /**
- * @author tm_jee
- * @version $Date$ $Id$
  */
 
 // START SNIPPET: fieldValidatorsExample

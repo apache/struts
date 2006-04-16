@@ -33,7 +33,6 @@ import java.util.ArrayList;
 /**
  * EmployeeAction.
  *
- * @author <a href="mailto:gielen@it-neering.net">Rene Gielen</a>
  */
 
 public class EmployeeAction extends AbstractCRUDAction implements Preparable {

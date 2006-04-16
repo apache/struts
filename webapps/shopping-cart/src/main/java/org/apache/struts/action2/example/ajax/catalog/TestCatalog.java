@@ -22,7 +22,6 @@ import java.util.*;
 /**
  * TestCatalog
  *
- * @author Jason Carreira <jcarreira@eplus.com>
  */
 public class TestCatalog implements Catalog {
     private static Map categories = new HashMap();

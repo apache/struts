@@ -22,7 +22,6 @@ import junit.framework.TestCase;
 /**
  * <code>HomeActionTest</code>
  *
- * @author tm_jee
  */
 public class HomeActionTest extends TestCase {
 	

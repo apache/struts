@@ -23,7 +23,6 @@ import java.io.Serializable;
 /**
  * Catalog
  *
- * @author Jason Carreira <jcarreira@eplus.com>
  */
 public interface Catalog extends Identifiable, Serializable {
     /**

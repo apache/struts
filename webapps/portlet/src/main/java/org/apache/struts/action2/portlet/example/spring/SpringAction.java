@@ -24,7 +24,6 @@ import org.apache.commons.lang.StringUtils;
 import com.opensymphony.xwork.ActionSupport;
 
 /**
- * @author Nils-Helge Garli
  */
 public class SpringAction extends ActionSupport {
     

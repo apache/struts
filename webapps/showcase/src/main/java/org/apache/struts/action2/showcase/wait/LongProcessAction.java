@@ -22,7 +22,6 @@ import com.opensymphony.xwork.ActionSupport;
 /**
  * Example to illustrate the <code>execAndWait</code> interceptor.
  *
- * @author Claus Ibsen
  */
 public class LongProcessAction extends ActionSupport {
 

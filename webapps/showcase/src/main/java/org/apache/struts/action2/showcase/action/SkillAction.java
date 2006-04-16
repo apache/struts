@@ -26,7 +26,6 @@ import org.apache.log4j.Logger;
 /**
  * SkillAction.
  *
- * @author <a href="mailto:gielen@it-neering.net">Rene Gielen</a>
  */
 
 public class SkillAction extends AbstractCRUDAction implements Preparable {

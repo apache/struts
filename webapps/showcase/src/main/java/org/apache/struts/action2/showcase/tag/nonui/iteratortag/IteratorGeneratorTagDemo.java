@@ -20,8 +20,6 @@ package org.apache.struts.action2.showcase.tag.nonui.iteratortag;
 import com.opensymphony.xwork.ActionSupport;
 
 /**
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class IteratorGeneratorTagDemo extends ActionSupport {
 

@@ -20,8 +20,6 @@ package org.apache.struts.action2.showcase.validation;
 import com.opensymphony.xwork.ActionSupport;
 
 /**
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public abstract class AbstractValidationActionSupport extends ActionSupport {
 	

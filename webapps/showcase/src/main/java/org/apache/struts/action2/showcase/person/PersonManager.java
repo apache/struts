@@ -21,9 +21,6 @@ import java.util.Set;
 import java.util.HashSet;
 
 /**
- * User: plightbo
- * Date: Sep 20, 2005
- * Time: 6:27:07 PM
  */
 public class PersonManager {
     private static Set people = new HashSet(5);

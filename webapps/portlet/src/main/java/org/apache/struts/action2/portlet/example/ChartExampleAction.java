@@ -29,10 +29,6 @@ import de.laures.cewolf.DatasetProduceException;
 import de.laures.cewolf.DatasetProducer;
 
 /**
- * @author Nils-Helge Garli
- * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
  */
 public class ChartExampleAction extends ActionSupport {
     private DatasetProducer pieChartProducer;

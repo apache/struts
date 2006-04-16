@@ -26,7 +26,6 @@ import java.util.Set;
 /**
  * ShowCart
  *
- * @author Jason Carreira <jcarreira@eplus.com>
  */
 public class ShowCart extends ActionSupport {
     private ShoppingCart cart;

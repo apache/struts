@@ -23,9 +23,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * User: plightbo
- * Date: Aug 10, 2005
- * Time: 12:03:15 AM
  */
 public class ListPeople extends ActionSupport {
 	

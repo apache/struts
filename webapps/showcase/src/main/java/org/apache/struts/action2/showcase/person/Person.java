@@ -18,9 +18,6 @@
 package org.apache.struts.action2.showcase.person;
 
 /**
- * User: plightbo
- * Date: Aug 6, 2005
- * Time: 7:12:36 PM
  */
 public class Person {
     Long id;

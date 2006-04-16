@@ -27,7 +27,6 @@ import java.util.GregorianCalendar;
 /**
  * <code>DateAction</code>
  *
- * @author Rainer Hermanns
  */
 public class DateAction extends ActionSupport {
 

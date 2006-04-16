@@ -27,7 +27,6 @@ import java.util.Set;
 /**
  * DefaultCart
  *
- * @author Jason Carreira <jcarreira@eplus.com>
  */
 public class DefaultCart implements ShoppingCart {
     Map contents = new HashMap();

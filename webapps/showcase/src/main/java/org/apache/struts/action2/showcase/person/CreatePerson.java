@@ -20,9 +20,6 @@ package org.apache.struts.action2.showcase.person;
 import com.opensymphony.xwork.ActionSupport;
 
 /**
- * User: plightbo
- * Date: Aug 9, 2005
- * Time: 9:24:03 PM
  */
 public class CreatePerson extends ActionSupport {
 	

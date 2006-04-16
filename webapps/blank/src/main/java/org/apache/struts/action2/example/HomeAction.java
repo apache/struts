@@ -22,7 +22,6 @@ import com.opensymphony.xwork.ActionSupport;
 /**
  * <code>HomeAction</code>
  *
- * @author Rainer Hermanns
  */
 public class HomeAction extends ActionSupport {
 

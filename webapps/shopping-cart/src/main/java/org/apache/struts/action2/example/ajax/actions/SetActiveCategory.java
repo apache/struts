@@ -27,7 +27,6 @@ import java.util.Map;
 /**
  * SetActiveCategory
  *
- * @author Jason Carreira <jcarreira@eplus.com>
  */
 public class SetActiveCategory extends ActionSupport implements SessionAware {
     private Map session;

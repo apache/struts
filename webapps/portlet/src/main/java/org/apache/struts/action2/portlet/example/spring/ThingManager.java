@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Nils-Helge Garli
  */
 public class ThingManager {
     private List things = new ArrayList();

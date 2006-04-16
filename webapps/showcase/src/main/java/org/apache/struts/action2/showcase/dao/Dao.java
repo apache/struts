@@ -28,7 +28,6 @@ import java.util.Collection;
 /**
  * Dao. Interface.
  *
- * @author <a href="mailto:gielen@it-neering.net">Rene Gielen</a>
  */
 
 public interface Dao {

@@ -23,7 +23,6 @@ import com.opensymphony.xwork.ActionSupport;
 /**
  * ShowCatalog
  *
- * @author Jason Carreira <jcarreira@eplus.com>
  */
 public class ShowCatalog extends ActionSupport {
     protected Catalog catalog;

@@ -23,9 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * User: plightbo
- * Date: Jun 26, 2005
- * Time: 4:53:57 PM
  */
 public class SubGraph implements Render {
     protected String name;

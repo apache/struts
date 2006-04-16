@@ -38,9 +38,6 @@ import java.util.Map;
 
 
 /**
- * User: plightbo
- * Date: Oct 17, 2003
- * Time: 7:09:59 AM
  */
 public class TagUtils {
 

@@ -20,7 +20,6 @@ package org.apache.struts.action2.plexus;
 import org.codehaus.plexus.PlexusContainer;
 
 /**
- * @author Patrick Lightbody (plightbo at gmail dot com)
  */
 public class PlexusThreadLocal {
     static ThreadLocal ptl = new ThreadLocal();

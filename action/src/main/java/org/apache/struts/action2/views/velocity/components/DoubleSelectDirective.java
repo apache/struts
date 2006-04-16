@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author Rainer Hermanns
  * @see DoubleSelect
  */
 public class DoubleSelectDirective extends AbstractDirective {

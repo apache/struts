@@ -26,11 +26,9 @@ import javax.servlet.http.HttpSessionListener;
  * just the {@link ApplicationLifecycleListener} rather than this class, but generally this
  * class will be fine for almost all needs.
  *
- * @author Patrick Lightbody
  * @see ApplicationLifecycleListener
  * @see SessionLifecycleListener
  * @see org.apache.struts.action2.dispatcher.FilterDispatcher
- * @since 2.2
  * @deprecated XWork IoC has been deprecated in favor of Spring.
  *             Please refer to the Spring-Struts integration documentation for more info.
  */

@@ -18,7 +18,6 @@ import java.util.Map;
  * Extension of XWork's {@link com.opensymphony.xwork.ActionProxyFactory ActionProxyFactory}
  * which creates PicoActionInvocations.
  * 
- * @author Chris Sturm
  * @see PicoActionInvocation
  * @deprecated Use DefaultActionProxyFactory 
  */

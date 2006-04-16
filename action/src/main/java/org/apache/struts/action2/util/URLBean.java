@@ -28,7 +28,6 @@ import java.util.Map;
 /**
  * A bean that can generate a URL.
  *
- * @author plightbo
  */
 public class URLBean {
 

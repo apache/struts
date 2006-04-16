@@ -24,8 +24,6 @@ import java.security.Principal;
  * Proxy class used together with PrincipalAware interface. It allows to get indirect access to
  * HttpServletRequest Principal related methods.
  *
- * @author Remigijus Bauzys
- * @version $Revision$
  */
 public class PrincipalProxy {
     private HttpServletRequest request;

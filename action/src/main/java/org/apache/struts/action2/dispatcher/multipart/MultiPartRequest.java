@@ -29,9 +29,6 @@ import java.util.List;
 /**
  * Abstract wrapper class HTTP requests to handle multi-part data. <p>
  *
- * @author <a href="mailto:matt@smallleap.com">Matt Baldree</a>
- * @author Patrick Lightbody
- * @author Bill Lynch (docs)
  */
 public abstract class MultiPartRequest {
 

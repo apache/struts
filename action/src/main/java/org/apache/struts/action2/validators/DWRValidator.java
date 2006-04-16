@@ -34,16 +34,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * User: plightbo
- * Date: Dec 11, 2004
- * Time: 6:17:58 PM
  * <p/>
- * <dwr>
- * <allow>
- * <create creator="new" javascript="validator" class="org.apache.struts.action2.validators.DWRValidator"/>
- * <convert converter="bean" match="com.opensymphony.xwork.ValidationAwareSupport"/>
- * </allow>
- * </dwr>
+ * Use the dwr configuration as follows :-
+ * 
+ * <pre>
+ * <!-- START SNIPPET: dwrConfiguration -->
+ * 
+ * &lt;dwr&lt;
+ *    &lt;allow&lt;
+ *      &lt;create creator="new" javascript="validator" class="org.apache.struts.action2.validators.DWRValidator"/&lt;
+ *      &lt;convert converter="bean" match="com.opensymphony.xwork.ValidationAwareSupport"/&lt;
+ *    &lt;/allow&lt;
+ * &lt;/dwr&lt;
+ * 
+ * <!-- END SNIPPET: dwrConfiguration -->
+ * </pre>
  */
 public class DWRValidator {
     private static final Log LOG = LogFactory.getLog(DWRValidator.class);

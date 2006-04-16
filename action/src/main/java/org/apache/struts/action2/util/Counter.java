@@ -25,9 +25,6 @@ import java.io.Serializable;
  * <p/>
  * Since it is an Iterator it can be used by the iterator tag
  *
- * @author Rickard �berg (rickard@middleware-company.com)
- * @version $Revision$
- * @see <related>
  */
 public class Counter implements java.util.Iterator, Serializable {
 

@@ -59,9 +59,6 @@ import com.opensymphony.xwork.ActionSupport;
  * <!-- END SNIPPET: example -->
  * </pre>
  * 
- * 
- * @author tm_jee
- * @version $Date$ $Id$
  * @see org.apache.struts.action2.components.DefaultRichtexteditorConnector
  */
 public abstract class AbstractRichtexteditorConnector extends ActionSupport implements ServletRequestAware, ServletResponseAware {

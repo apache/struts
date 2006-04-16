@@ -30,9 +30,6 @@ import java.util.List;
 /**
  * A bean that takes an iterator and outputs a subset of it.
  *
- * @author Rickard �berg (rickard@middleware-company.com)
- * @author tm_jee (tm_jee (at) yahoo.co.uk)
- * @version $Revision$
  */
 public class SubsetIteratorFilter extends IteratorFilterSupport implements Iterator, Action {
 

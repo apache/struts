@@ -76,10 +76,13 @@ import java.util.Locale;
  *
  * <b>Example:</b>
  *
- * <pre><!-- START SNIPPET: example -->
+ * <pre>
+ * <!-- START SNIPPET: example -->
+ * 
  * &lt;result name="success" type="freemarker"&gt;foo.ftl&lt;/result&gt;
- * <!-- END SNIPPET: example --></pre>
- * @author CameronBraid
+ * 
+ * <!-- END SNIPPET: example -->
+ * </pre>
  */
 public class FreemarkerResult extends StrutsResultSupport {
 

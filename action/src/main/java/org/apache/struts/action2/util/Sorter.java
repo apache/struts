@@ -25,8 +25,6 @@ import java.util.Comparator;
 /**
  * Sorters. Utility sorters for use with the "sort" tag.
  *
- * @author Rickard �berg (rickard@middleware-company.com)
- * @version $Revision$
  * @see org.apache.struts.action2.views.jsp.iterator.SortIteratorTag
  * @see SortIteratorFilter
  */

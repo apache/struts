@@ -26,8 +26,6 @@ import java.util.Map;
  * <code>ContainUtil</code> will check if object 1 contains object 2.
  * Object 1 may be an Object, array, Collection, or a Map
  *
- * @author Matt Baldree (matt@smallleap.com)
- * @version $Revision$
  */
 public class ContainUtil {
 

@@ -71,7 +71,6 @@ import com.opensymphony.xwork.interceptor.AroundInterceptor;
  * <!-- END SNIPPET: example -->
  * </pre>
  * 
- * @author Claus Ibsen
  * @version $Date$ $Id$
  */
 public class CreateSessionInterceptor extends AroundInterceptor {

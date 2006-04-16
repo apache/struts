@@ -33,9 +33,6 @@ import java.util.Map;
 /**
  * Value Stack's Context related Utilities.
  * 
- * @author plightbo
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class ContextUtil {
     public static final String REQUEST = "req";

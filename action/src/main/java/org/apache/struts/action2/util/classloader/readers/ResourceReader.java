@@ -18,7 +18,6 @@
 package org.apache.struts.action2.util.classloader.readers;
 
 /**
- * @author tcurdt
  */
 public interface ResourceReader {
     boolean isAvailable(final String filename);

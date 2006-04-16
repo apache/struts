@@ -20,7 +20,6 @@ package org.apache.struts.action2.util.classloader.monitor;
 import java.io.File;
 
 /**
- * @author tcurdt
  */
 public interface FilesystemAlterationListener {
     void onStart(final File repository);

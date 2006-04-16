@@ -28,9 +28,6 @@ import java.util.List;
 /**
  * ListValidatorsAction loads the validations for a given class and context
  *
- * @author Jason Carreira
- * @author Rainer Hermanns
- *         Date: May 31, 2004 5:06:16 PM
  */
 public class ListValidatorsAction extends ActionSupport {
 	

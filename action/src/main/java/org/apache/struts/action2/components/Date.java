@@ -131,11 +131,6 @@ import java.util.List;
  *
  * <code>Date</code>
  *
- * @author <a href="mailto:philip.luppens@gmail.com">Philip Luppens</a>
- * @author <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
- * @version $Id$
- *
- *
  * @a2.tag name="date" tld-body-content="empty"
  *         tld-tag-class="org.apache.struts.action2.views.jsp.DateTag"
  *         description="Render a formatted date."

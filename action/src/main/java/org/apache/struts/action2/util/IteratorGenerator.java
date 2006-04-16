@@ -32,9 +32,6 @@ import org.apache.commons.logging.LogFactory;
  * A bean that generates an iterator filled with a given object depending on the count,
  * separator and converter defined. It is being used by IteratorGeneratorTag. 
  *
- * @author Rickard �berg (rickard@middleware-company.com)
- * @author tm_jee ( tm_jee(at)yahoo.co.uk )
- * @version $Revision$
  */
 public class IteratorGenerator implements Iterator, Action {
 	

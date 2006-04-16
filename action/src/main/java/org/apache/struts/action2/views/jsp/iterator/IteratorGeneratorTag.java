@@ -119,9 +119,6 @@ import org.apache.commons.logging.LogFactory;
  * <!-- END SNIPPET: example -->
  *
  * @see org.apache.struts.action2.util.IteratorGenerator
- * @author Rickard �berg (rickard@dreambean.com)
- * @author tm_jee ( tm_jee(at)yahoo.co.uk )
- * @version $Revision$
  *
  * @ww.tag name="generator" tld-body-content="JSP"
  * description="Generate an iterator for a iterable source."

@@ -20,9 +20,6 @@ package org.apache.struts.action2;
 /**
  * This class provides a central location for framework constants related to
  * Struts configurations.
- *
- * @author Onyeje Bose (digi9ten@yahoo.com)
- * @version $Date$ $Id$
  */
 public final class StrutsConstants {
 

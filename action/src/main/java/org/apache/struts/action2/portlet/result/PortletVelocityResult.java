@@ -86,7 +86,6 @@ import java.io.Writer;
  *  &lt;!-- END SNIPPET: example --&gt;
  * </pre>
  * 
- * @author <a href="mailto:matt@indigoegg.com">Matt Ho </a>
  */
 public class PortletVelocityResult extends StrutsResultSupport {
 

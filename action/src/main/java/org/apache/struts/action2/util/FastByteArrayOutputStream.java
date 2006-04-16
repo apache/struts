@@ -30,8 +30,6 @@ import java.util.LinkedList;
  * does not copy buffers when it's expanded. There's also no copying of the internal buffer
  * if it's contents is extracted with the writeTo(stream) method.
  *
- * @author Rickard �berg
- * @version $Revision$
  */
 public class FastByteArrayOutputStream extends OutputStream {
 

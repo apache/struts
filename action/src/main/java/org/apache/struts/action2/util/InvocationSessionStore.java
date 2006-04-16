@@ -29,8 +29,6 @@ import java.util.Map;
 /**
  * InvocationSessionStore
  *
- * @author Jason Carreira
- *         Created Apr 12, 2003 9:53:19 PM
  */
 public class InvocationSessionStore {
 

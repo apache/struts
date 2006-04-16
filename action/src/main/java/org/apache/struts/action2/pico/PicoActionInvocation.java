@@ -17,8 +17,6 @@ import com.opensymphony.xwork.DefaultActionInvocation;
  * Implementation of {@link com.opensymphony.xwork.ActionInvocation ActionInvocation}
  * which uses a PicoContainer to create Action instances.
  * 
- * @author Chris Sturm
- * @author Aslak Helles&oslash;y
  * @deprecated Use DefaultActionInvocation 
  */
 public class PicoActionInvocation extends DefaultActionInvocation {

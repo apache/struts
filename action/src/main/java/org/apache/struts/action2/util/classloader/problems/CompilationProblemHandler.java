@@ -19,7 +19,6 @@ package org.apache.struts.action2.util.classloader.problems;
 
 
 /**
- * @author tcurdt
  */
 public interface CompilationProblemHandler {
     void onStart();

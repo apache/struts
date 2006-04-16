@@ -22,11 +22,7 @@ import org.w3c.dom.*;
 
 
 /**
- * @author <a href="mailto:meier@meisterbohne.de">Philipp Meier</a>
- * @author Mike Mosiewicz
- * @author Rainer Hermanns
- *         Date: 10.10.2003
- *         Time: 19:46:43
+ * 
  */
 public abstract class DefaultAdapterNode implements Node, AdapterNode {
     private static final NodeList EMPTY_NODELIST = new NodeList() {

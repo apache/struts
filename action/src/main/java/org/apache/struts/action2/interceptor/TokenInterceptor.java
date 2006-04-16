@@ -107,14 +107,8 @@ import com.opensymphony.xwork.util.LocalizedTextUtil;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @author Jason Carreira
- * @author Rainer Hermanns
- * @author Nils-Helge Garli
- * @author <a href='mailto:the_mindstorm[at]evolva[dot]ro'>Alexandru Popescu</a>
  * @see TokenSessionStoreInterceptor
  * @see TokenHelper
- * 
- * @version $Date$ $Id$
  */
 public class TokenInterceptor extends MethodFilterInterceptor {
 	

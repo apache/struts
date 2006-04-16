@@ -30,6 +30,9 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import java.util.Collections;
 
+/**
+ * 
+ */
 public class PlexusLifecycleListener implements ServletContextListener, HttpSessionListener {
     private static final Log log = LogFactory.getLog(PlexusObjectFactory.class);
 

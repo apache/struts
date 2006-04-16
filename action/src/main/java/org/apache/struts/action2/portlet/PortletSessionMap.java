@@ -34,7 +34,6 @@ import org.apache.commons.logging.LogFactory;
  * attributes. The {@link #entrySet()} method enumerates over all session attributes and creates a Set of entries.
  * Note, this will occur lazily - only when the entry set is asked for.
  * 
- * @author Nils-Helge Garli
  */
 public class PortletSessionMap extends AbstractMap {
     

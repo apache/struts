@@ -67,8 +67,6 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  * 
- * 
- * @author tm_jee
  * @version $Date$ $Id$
  * 
  * @a2.tag name="updownselect" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.UpDownSelectTag"

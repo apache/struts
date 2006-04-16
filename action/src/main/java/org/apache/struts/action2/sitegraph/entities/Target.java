@@ -19,9 +19,6 @@ package org.apache.struts.action2.sitegraph.entities;
 
 
 /**
- * User: plightbo
- * Date: Jun 25, 2005
- * Time: 2:11:30 PM
  */
 public class Target {
     private String target;

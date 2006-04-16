@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
  * Note that using this interface makes the Action tied to a servlet environment, so it should be
  * avoided if possible since things like unit testing will become more difficult.
  *
- * @author <a href="mailto:rickard@middleware-company.com">Rickard �berg</a>
  */
 public interface ServletRequestAware {
 

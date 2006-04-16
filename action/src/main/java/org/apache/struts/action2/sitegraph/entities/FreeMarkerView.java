@@ -4,9 +4,6 @@ import java.io.File;
 import java.util.regex.Pattern;
 
 /**
- * User: plightbo
- * Date: Jun 25, 2005
- * Time: 2:22:22 PM
  */
 public class FreeMarkerView extends FileBasedView {
     public FreeMarkerView(File file) {

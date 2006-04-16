@@ -27,11 +27,6 @@ import java.io.Writer;
 
 /**
  * ClosingUIBean is the standard superclass for UI components such as div etc.
- *
- * @author Patrick Lightbody
- * @author Rene Gielen
- * @version $Revision$
- * @since 2.2
  */
 public abstract class ClosingUIBean extends UIBean {
     private static final Log LOG = LogFactory.getLog(ClosingUIBean.class);

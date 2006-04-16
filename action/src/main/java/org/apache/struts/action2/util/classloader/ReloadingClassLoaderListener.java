@@ -19,7 +19,6 @@ package org.apache.struts.action2.util.classloader;
 
 
 /**
- * @author tcurdt
  */
 public interface ReloadingClassLoaderListener {
     void hasReloaded(final boolean pReload);

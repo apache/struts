@@ -34,7 +34,6 @@ import com.opensymphony.xwork.ActionContext;
 /**
  * PortletActionContext. ActionContext thread local for the portlet environment.
  * 
- * @author Nils-Helge Garli
  * @version $Revision$ $Date$
  */
 public class PortletActionContext implements PortletActionConstants {

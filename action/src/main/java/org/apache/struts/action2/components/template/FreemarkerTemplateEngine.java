@@ -39,8 +39,6 @@ import java.util.Map;
 
 /**
  * Freemarker based template engine.
- *
- * @author CameronBraid
  */
 public class FreemarkerTemplateEngine extends BaseTemplateEngine {
     static Class bodyContent = null;

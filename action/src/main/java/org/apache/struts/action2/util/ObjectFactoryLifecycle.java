@@ -20,9 +20,6 @@ package org.apache.struts.action2.util;
 /**
  * An interface indicating the lifecycle of an ObjectFactory implementation.
  * 
- * @author tm_jee
- * @version $Date$ $Id$
- * 
  * @see ObjectFactoryLifecycle
  * @see com.opensymphony.xwork.ObjectFactory
  * @see org.apache.struts.action2.util.ObjectFactoryInitializable

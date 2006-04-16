@@ -24,8 +24,6 @@ import org.apache.struts.action2.views.jsp.ComponentTagSupport;
 /**
  * Abstract base class for all UI tags.
  *
- * @author Matt Ho <a href="mailto:matt@enginegreen.com">&lt;matt@enginegreen.com&gt;</a>
- * @author tm_jee
  */
 public abstract class AbstractUITag extends ComponentTagSupport {
     protected String cssClass;

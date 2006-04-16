@@ -18,7 +18,6 @@
 package org.apache.struts.action2.util.classloader.problems;
 
 /**
- * @author tcurdt
  */
 public final class ConsoleCompilationProblemHandler extends DefaultCompilationProblemHandler {
 

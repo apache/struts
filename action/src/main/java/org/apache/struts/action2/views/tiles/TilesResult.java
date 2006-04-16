@@ -69,9 +69,6 @@ import java.util.Locale;
  * </result-types>
  * <!-- END SNIPPET: packageconfig -->
  *
- * @author Matt Raible
- * @author Rainer Hermanns
- * @version $Id$
  */
 public class TilesResult extends ServletDispatcherResult {
 

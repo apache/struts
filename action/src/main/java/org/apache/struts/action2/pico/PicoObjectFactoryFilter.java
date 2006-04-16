@@ -20,7 +20,6 @@ import java.io.IOException;
  * Filter which initialises a PicoObjectFactory as the XWork ObjectFactory
  * and passes to it the HttpServletRequest.
  * 
- * @author Jonas Engman
  * @deprecated Use {@link PicoFilterDispatcher}
  */
 public class PicoObjectFactoryFilter implements Filter {

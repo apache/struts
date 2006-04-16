@@ -21,8 +21,6 @@ import javax.swing.table.TableModel;
 
 
 /**
- * @author $author$
- * @version $Revision$
  */
 public class RenderFilterModel extends AbstractFilterModel {
 

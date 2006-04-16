@@ -76,7 +76,6 @@ import java.io.Writer;
  * &lt;/result&gt;
  * <!-- END SNIPPET: example --></pre>
  *
- * @author <a href="mailto:matt@indigoegg.com">Matt Ho</a>
  */
 public class VelocityResult extends StrutsResultSupport {
 

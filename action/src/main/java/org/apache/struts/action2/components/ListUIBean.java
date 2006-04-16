@@ -40,10 +40,6 @@ import java.util.Map;
  * 
  * <!-- END SNIPPET: javadoc -->
  *
- * @author Patrick Lightbody
- * @author Rene Gielen
- * @version $Revision$
- * @since 2.2
  */
 public abstract class ListUIBean extends UIBean {
     protected Object list;

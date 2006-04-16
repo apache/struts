@@ -23,9 +23,6 @@ import java.util.Vector;
 /**
  * A bean that helps implement a tabbed pane
  *
- * @author Onyeje Bose (digi9ten@yahoo.com)
- * @author Rickard �berg (rickard@middleware-company.com)
- * @version $Revision$
  */
 public class TabbedPane {
 

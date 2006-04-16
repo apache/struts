@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @see Tree
- * @author Jason Carreira <jcarreira@eplus.com>
  */
 public class TreeTag extends AbstractClosingTag {
 	

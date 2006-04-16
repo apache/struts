@@ -27,9 +27,6 @@ import java.util.Set;
  * a config method is called (get, set, list, etc..) this class will go through the list of configurations
  * and call the method until successful.
  *
- * @author Rickard �berg
- * @author Jason Carreira
- * @author Bill Lynch (docs)
  */
 public class DelegatingConfiguration extends Configuration {
 

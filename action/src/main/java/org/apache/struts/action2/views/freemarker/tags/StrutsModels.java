@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Provides @ww.xxx access for various tags.
  *
- * @author plightbo
  */
 public class StrutsModels {
     protected OgnlValueStack stack;

@@ -38,7 +38,6 @@ import java.util.Set;
  * </ul>
  * A object is searched in the order above, starting from page and ending at application scope.
  *
- * @author plightbo
  */
 public class AttributeMap implements Map {
 

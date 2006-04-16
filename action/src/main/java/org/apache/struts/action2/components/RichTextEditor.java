@@ -33,7 +33,6 @@ import java.util.Locale;
  * 
  * <p/>
  * 
- * 
  * <pre>
  * <!-- START SNIPPET: example -->
  * 
@@ -188,9 +187,6 @@ import java.util.Locale;
  * <!-- END SNIPPET: richtexteditoraction -->
  * 
  * 
- * 
- * @author tm_jee
- * @version $Date$ $Id$
  * @see AbstractRichtexteditorConnector
  * 
  * @a2.tag name="richtexteditor" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.RichTextEditorTag"

@@ -75,9 +75,6 @@ import java.util.List;
  * <!-- END SNIPPET: description -->
  * </pre>
  *
- *
- * @author tm_jee
- * @version $Date$ $Id$
  * @a2.tag name="fielderror" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.FieldErrorTag"
  * description="Render field error (all or partial depending on param tag nested)if they exists"
  */

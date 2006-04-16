@@ -25,8 +25,6 @@ import java.util.List;
  * <p/>
  * A template is used as a model for rendering output.
  * This object contains basic common template information
- *
- * @author plightbo
  */
 public class Template implements Cloneable {
     String dir;

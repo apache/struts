@@ -21,9 +21,6 @@ import org.apache.struts.action2.components.DoubleListUIBean;
 
 
 /**
- * @author <a href="mailto:m.bogaert@memenco.com">Mathias Bogaert</a>
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public abstract class AbstractDoubleListTag extends AbstractRequiredListTag {
 	

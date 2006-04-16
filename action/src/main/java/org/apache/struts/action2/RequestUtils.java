@@ -22,8 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Request handling utility class.
- * 
- * @author <a href='mailto:the_mindstorm[at]evolva[dot]ro'>Alexandru Popescu</a>
  */
 public class RequestUtils {
 

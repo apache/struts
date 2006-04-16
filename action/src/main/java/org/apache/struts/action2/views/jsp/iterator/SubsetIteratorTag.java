@@ -140,8 +140,6 @@ import org.apache.commons.logging.LogFactory;
  * </pre>
  *
  *
- * @author Rickard �berg (rickard@dreambean.com)
- * @author tm_jee ( tm_jee(at)yahoo.co.uk )
  * @ww.tag name="subset" tld-body-content="JSP"
  * description="Takes an iterator and outputs a subset of it"
  */

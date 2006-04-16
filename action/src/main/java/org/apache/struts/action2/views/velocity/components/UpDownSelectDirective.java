@@ -25,9 +25,8 @@ import org.apache.struts.action2.components.UpDownSelect;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 /**
+ * @see UpDownSelect
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class UpDownSelectDirective extends AbstractDirective {
 

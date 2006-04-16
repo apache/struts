@@ -70,8 +70,6 @@ import com.opensymphony.xwork.util.TextParseUtil;
  * <p/>
  * Please see the {@link com.opensymphony.xwork.Result} class for more info on Results in general.
  *
- * @author Jason Carreira
- * @author Bill Lynch (docs)
  * @see com.opensymphony.xwork.Result
  */
 public abstract class StrutsResultSupport implements Result, StrutsStatics {

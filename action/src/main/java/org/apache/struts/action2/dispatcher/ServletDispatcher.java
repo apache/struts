@@ -60,11 +60,6 @@ import java.io.IOException;
  * (essentially unlimited so be careful).</li></ul>
  * <p/>
  *
- * @author <a href="mailto:rickard@middleware-company.com">Rickard �berg</a>
- * @author <a href="mailto:matt@smallleap.com">Matt Baldree</a>
- * @author Jason Carreira
- * @author <a href="mailto:cameron@datacodex.net">Cameron Braid</a>
- * @author Bill Lynch
  * @see ServletDispatcherResult
  * @deprecated use {@link FilterDispatcher} instead
  */

@@ -15,7 +15,6 @@ import java.io.Writer;
  *
  * <p>This code was taken from the XStream project under the BSD license.</p>
  *
- * @author Joe Walnes
  */
 public class PrettyPrintWriter implements HierarchicalStreamWriter {
 

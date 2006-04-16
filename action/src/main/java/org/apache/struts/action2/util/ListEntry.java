@@ -20,7 +20,6 @@ package org.apache.struts.action2.util;
 /**
  * Entry in a list.
  *
- * @author CameronBraid
  */
 public class ListEntry {
 

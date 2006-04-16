@@ -23,8 +23,6 @@ import java.text.SimpleDateFormat;
 
 
 /**
- * @author $author$
- * @version $Revision$
  */
 public class DateCellRenderer extends AbstractCellRenderer {
 

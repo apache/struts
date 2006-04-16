@@ -49,9 +49,7 @@ import org.apache.commons.logging.LogFactory;
  * </ul>
  * <!-- SNIPPET END: description -->
  *
- * @author Patrick Lightbody
  * @see FilterDispatcher
- * @since 2.2
  */
 public class ActionContextCleanUp implements Filter {
 

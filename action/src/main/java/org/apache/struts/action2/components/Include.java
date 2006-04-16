@@ -79,13 +79,6 @@ import java.util.*;
  * <!-- END SNIPPET: exampledescription -->
  * </pre>
  *
- * @author Rickard Oberg (rickard@dreambean.com)
- * @author <a href="mailto:scott@atlassian.com">Scott Farquhar</a>
- * @author Rene Gielen
- * @author tm_jee
- * @version $Revision$
- * @since 2.2
- *
  * @a2.tag name="include" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.IncludeTag"
  * description="Include a servlet's output (result of servlet or a JSP page)"
  */

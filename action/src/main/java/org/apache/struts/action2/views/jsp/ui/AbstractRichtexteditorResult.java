@@ -63,8 +63,6 @@ import com.opensymphony.xwork.Result;
  * 
  * <!-- END SNIPPET: javadoc -->
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public abstract class AbstractRichtexteditorResult implements Result {
 

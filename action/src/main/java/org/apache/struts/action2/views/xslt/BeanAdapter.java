@@ -31,11 +31,6 @@ import java.util.Map;
 
 
 /**
- * @author <a href="mailto:meier@meisterbohne.de">Philipp Meier</a>
- * @author Mike Mosiewicz
- * @author Rainer Hermanns
- *         Date: 10.10.2003
- *         Time: 20:08:17
  */
 public class BeanAdapter extends DefaultElementAdapter {
 

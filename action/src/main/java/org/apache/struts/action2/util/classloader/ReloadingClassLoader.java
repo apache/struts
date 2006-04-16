@@ -34,7 +34,6 @@ import java.net.URL;
 import java.util.*;
 
 /**
- * @author tcurdt
  */
 public class ReloadingClassLoader extends ClassLoader {
 

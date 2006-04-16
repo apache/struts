@@ -55,8 +55,6 @@ import java.io.Writer;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @author tmjee
- *
  * @see Else
  * @see ElseIf
  *

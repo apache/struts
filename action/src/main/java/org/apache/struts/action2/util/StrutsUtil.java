@@ -41,9 +41,6 @@ import java.util.*;
 /**
  * Struts base utility class, for use in Velocity and Freemarker templates
  *
- * @author Rickard Ã–berg (rickard@dreambean.com)
- * @author Cameron Braid
- * @version $Revision$
  */
 public class StrutsUtil {
 

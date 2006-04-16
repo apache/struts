@@ -44,9 +44,6 @@ import com.opensymphony.xwork.ActionInvocation;
 /**
  * Result type that includes a JSP to render.
  * 
- * @author Nils-Helge Garli
- * @author Rainer Hermanns
- * @version $Revision$
  */
 public class PortletResult extends StrutsResultSupport {
 

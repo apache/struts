@@ -26,9 +26,7 @@ import com.opensymphony.xwork.util.OgnlValueStack;
 
 /**
  * Freemarker's Transform model for Richtexteditor 
- * 
- * @author tm_jee
- * @version $Date$ $Id$
+ * @see RichTextEditor
  */
 public class RichTextEditorModel extends TagModel {
 

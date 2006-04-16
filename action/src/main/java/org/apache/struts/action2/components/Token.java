@@ -41,12 +41,6 @@ import java.util.Map;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @author Patrick Lightbody
- * @author Rene Gielen
- * @author Rainer Hermanns
- * @version $Date$ $Id$
- * @since 2.2
- *
  * @see org.apache.struts.action2.interceptor.TokenInterceptor
  * @see org.apache.struts.action2.interceptor.TokenSessionStoreInterceptor
  *

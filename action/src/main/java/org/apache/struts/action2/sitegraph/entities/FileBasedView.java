@@ -29,9 +29,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * User: plightbo
- * Date: Jun 25, 2005
- * Time: 2:07:43 PM
  */
 public abstract class FileBasedView implements View {
     private String name;

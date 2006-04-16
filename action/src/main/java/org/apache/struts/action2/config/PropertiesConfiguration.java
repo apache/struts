@@ -25,10 +25,6 @@ import java.util.Properties;
 
 /**
  * A class to handle configuration via a properties file.
- *
- * @author Rickard �berg
- * @author Jason Carreira
- * @author Bill Lynch (docs)
  */
 public class PropertiesConfiguration extends Configuration {
 

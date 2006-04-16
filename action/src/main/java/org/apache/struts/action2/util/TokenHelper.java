@@ -28,10 +28,6 @@ import java.util.Map;
 /**
  * TokenHelper
  *
- * @author Jason Carreira
- * @author Rainer Hermanns
- * @author Nils-Helge Garli
- * @author Claus Ibson
  */
 public class TokenHelper {
 

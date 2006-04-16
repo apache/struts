@@ -27,7 +27,6 @@ import java.util.Map;
  * is optional, and as such may be null. If a params map is supplied,
  * it <b>must</b> be a mutable map, such as a HashMap.
  *
- * @author Patrick Lightbody
  */
 public class ActionMapping {
 

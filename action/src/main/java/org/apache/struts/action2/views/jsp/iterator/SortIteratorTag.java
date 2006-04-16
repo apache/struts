@@ -77,8 +77,6 @@ import java.util.Comparator;
  *
  *
  * @see org.apache.struts.action2.util.SortIteratorFilter
- * @author Rickard Oberg (rickard@dreambean.com)
- * @author tm_jee (tm_jee(at)yahoo.co.uk)
  *
  * @ww.tag name="sort" tld-body-content="JSP"
  * description="Sort a List using a Comparator both passed in as the tag attribute."

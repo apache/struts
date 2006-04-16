@@ -138,8 +138,6 @@ import java.util.Map;
  * <!-- END SNIPPET: redirect-action-example -->
  * </pre>
  *
- * @author Patrick Lightbody
- * @author tm_jee
  */
 public class DefaultActionMapper implements ActionMapper {
 

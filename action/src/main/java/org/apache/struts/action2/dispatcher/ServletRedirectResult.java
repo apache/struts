@@ -70,7 +70,6 @@ import javax.servlet.http.HttpServletResponse;
  * &lt;/result&gt;
  * <!-- END SNIPPET: example --></pre>
  *
- * @author Patrick Lightbody
  */
 public class ServletRedirectResult extends StrutsResultSupport {
 	

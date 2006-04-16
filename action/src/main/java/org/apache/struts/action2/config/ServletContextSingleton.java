@@ -32,8 +32,6 @@ import javax.servlet.ServletContext;
  * {@link org.apache.struts.action2.lifecycle.SessionLifecycleListener}
  * which will use this object to get it.
  *
- * @author Scott N. Smith scottnelsonsmith@yahoo.com
- * @version $Id$
  */
 public class ServletContextSingleton {
     /**

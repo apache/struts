@@ -48,7 +48,6 @@ import java.util.*;
  * {@link #addError(String)}. An action handling a multipart form should first check {@link #hasErrors()}
  * before doing any other processing. <p>
  *
- * @author Matt Baldree
  */
 public class MultiPartRequestWrapper extends StrutsRequestWrapper {
     protected static final Log log = LogFactory.getLog(MultiPartRequestWrapper.class);

@@ -26,10 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * TreeModel
- * <p/>
- * Created : Dec 12, 2005 3:45:44 PM
+ * @see Tree
  *
- * @author Jason Carreira <jcarreira@eplus.com>
  */
 public class TreeModel extends TagModel {
     public TreeModel(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {

@@ -21,7 +21,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * @author tcurdt
  */
 public final class LogCompilationProblemHandler extends DefaultCompilationProblemHandler {
 

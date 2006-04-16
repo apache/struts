@@ -37,11 +37,6 @@ import javax.servlet.http.HttpServletResponse;
  * 
  * <!-- END SNIPPET: javadoc -->
  *
- * @author Patrick Lightbody
- * @author Rene Gielen
- * @author tm_jee
- * @version $Revision$
- * @since 2.2
  */
 public abstract class DoubleListUIBean extends ListUIBean {
 	

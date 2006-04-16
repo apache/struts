@@ -28,8 +28,6 @@ import java.util.Collections;
 
 
 /**
- * @author Onyeje Bose
- * @version 1.1
  */
 public class SortFilterModel extends AbstractFilterModel implements TableModelListener, SortableTableModel {
 

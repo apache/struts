@@ -51,8 +51,6 @@ import java.util.Map;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @author Rick Salsa (rsal@mb.sympatico.ca)
- * @author tmjee
  * @a2.tag name="else" bodycontent="JSP" description="Else tag"  tld-tag-class="org.apache.struts.action2.views.jsp.ElseTag"
  */
 public class Else extends Component {

@@ -18,7 +18,6 @@
 package org.apache.struts.action2.util.classloader.stores;
 
 /**
- * @author tcurdt
  */
 public interface ResourceStore {
 

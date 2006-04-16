@@ -51,9 +51,6 @@ import java.util.StringTokenizer;
  * Your action just needs a setArticleId() method, and requests such as /article/1, /article/2, etc will all map
  * to that URL pattern.
  *
- * @author <a href="mailto:cameron@datacodex.net">Cameron Braid</a>
- * @author <a href="mailto:jerome.bernard@xtremejava.com">Jerome Bernard</a>
- * @author Patrick Lightbody
  */
 public class RestfulActionMapper implements ActionMapper {
     protected static final Log LOG = LogFactory.getLog(RestfulActionMapper.class);

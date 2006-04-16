@@ -34,7 +34,6 @@ import javax.servlet.http.HttpServletRequestWrapper;
  *
  * <!-- END SNIPPET: javadoc -->
  *
- * @since 2.2
  */
 public class StrutsRequestWrapper extends HttpServletRequestWrapper {
     public StrutsRequestWrapper(HttpServletRequest req) {

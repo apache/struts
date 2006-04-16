@@ -37,7 +37,6 @@ import java.util.Map;
  * {@link org.springframework.web.context.ContextLoaderListener}having been
  * called first.
  * 
- * @author Simon Stewart
  */
 public class SpringExternalReferenceResolverSetupListener implements
         ServletContextListener {

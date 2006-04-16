@@ -26,7 +26,6 @@ import java.util.ArrayList;
 /**
  * Integration with Jetty.
  *
- * @author patrick
  */
 public class MultiDirClassLoader extends URLClassLoader {
     private ClassLoader parent;

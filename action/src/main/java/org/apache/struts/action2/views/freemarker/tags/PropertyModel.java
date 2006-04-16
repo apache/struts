@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author Patrick Lightbody (plightbo at gmail dot com)
+ * @see Property
  */
 public class PropertyModel extends TagModel {
     public PropertyModel(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {

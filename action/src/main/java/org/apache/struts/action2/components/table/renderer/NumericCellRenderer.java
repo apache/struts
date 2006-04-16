@@ -23,8 +23,6 @@ import java.text.DecimalFormat;
 
 
 /**
- * @author $author$
- * @version $Revision$
  */
 public class NumericCellRenderer extends AbstractCellRenderer {
 

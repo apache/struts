@@ -37,9 +37,7 @@ import java.util.Map;
  * </pre>
  * 
  * SessionContextAutowiringInterceptor
- * Created : Aug 21, 2005 12:34:20 AM
  *
- * @author Jason Carreira <jcarreira@eplus.com>
  */
 public class SessionContextAutowiringInterceptor extends AroundInterceptor {
 	

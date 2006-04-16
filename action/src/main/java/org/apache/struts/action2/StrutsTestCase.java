@@ -22,8 +22,6 @@ import com.opensymphony.xwork.XWorkTestCase;
 
 /**
  * Base test case for unit testing WebWork.
- *
- * @author plightbo
  */
 public abstract class StrutsTestCase extends XWorkTestCase {
 

@@ -27,9 +27,6 @@ import java.util.Set;
 
 /**
  * A simple implementation of the {@link java.util.Map} interface to handle a collection of request attributes.
- *
- * @author Patrick Lightbody
- * @author Bill Lynch (docs)
  */
 public class RequestMap extends AbstractMap implements Serializable {
 

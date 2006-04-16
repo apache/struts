@@ -97,12 +97,8 @@ import java.util.Locale;
  * <!-- END SNIPPET: expl2 -->
  * </pre>
  *
- * @author Patrick Lightbody
- * @author Rene Gielen
- * @version $Revision$
  * @a2.tag name="datepicker" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.DatePickerTag"
  * description="Render datepicker"
- * @since 2.2
  */
 public class DatePicker extends TextField {
 

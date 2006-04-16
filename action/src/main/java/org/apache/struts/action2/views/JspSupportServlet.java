@@ -22,9 +22,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
 /**
- * User: plightbo
- * Date: Jun 25, 2005
- * Time: 8:27:24 AM
  */
 public class JspSupportServlet extends HttpServlet {
 	

@@ -21,9 +21,6 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * User: plightbo
- * Date: Jun 26, 2005
- * Time: 4:58:30 PM
  */
 public class Graph extends SubGraph {
     private Set links;

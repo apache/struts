@@ -40,7 +40,6 @@ import java.io.IOException;
  *  An abstract template page filter that sets up the proper contexts for
  *  template processing.
  * 
- * @author patrick
  */
 public abstract class TemplatePageFilter extends PageFilter {
     

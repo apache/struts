@@ -19,7 +19,6 @@ package org.apache.struts.action2.util.classloader.stores;
 
 
 /**
- * @author tcurdt
  */
 public abstract class TransactionalResourceStore implements ResourceStore {
 

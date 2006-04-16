@@ -86,11 +86,6 @@ import java.util.List;
  *
  * <b>Important:</b> Be sure to setup the page containing this tag to be Configured for AJAX
  *
- * @author Ian Roughley
- * @author Rene Gielen
- * @version $Revision$
- * @since 2.2
- *
  * @see Panel
  *
  * @a2.tag name="tabbedPanel" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TabbedPanelTag"

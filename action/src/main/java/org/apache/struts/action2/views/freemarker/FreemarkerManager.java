@@ -53,8 +53,6 @@ import java.util.Properties;
 /**
  * Static Configuration Manager for the FreemarkerResult's configuration
  *
- * @author CameronBraid
- * @version $Date$ $Id$
  */
 public class FreemarkerManager {
 

@@ -38,9 +38,6 @@ import java.io.PrintWriter;
 /**
  *  Applies Velocity-based decorators
  * 
- * User: plightbo
- * Date: Aug 31, 2005
- * Time: 10:49:51 PM
  */
 public class VelocityPageFilter extends TemplatePageFilter {
     private static final Log LOG = LogFactory.getLog(VelocityPageFilter.class);

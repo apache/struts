@@ -26,8 +26,6 @@ import com.opensymphony.xwork.ActionSupport;
 /**
  * A simple action support class that sets properties to be able to serve 
  * 
- * @author amarch
- *
  */
 public class DefaultActionSupport extends ActionSupport {
 

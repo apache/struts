@@ -104,11 +104,9 @@ import java.text.SimpleDateFormat;
  * do to get started with XWork's IoC is add a components.xml file to WEB-INF/classes and properly set up the {@link
  * org.apache.struts.action2.lifecycle.LifecycleListener} in web.xml. See the IoC docs for more information. <p/>
  *
- * @author Patrick Lightbody
  * @see org.apache.struts.action2.lifecycle.LifecycleListener
  * @see ActionMapper
  * @see ActionContextCleanUp
- * @since 2.2
  */
 public class FilterDispatcher implements Filter, StrutsStatics {
     private static final Log LOG = LogFactory.getLog(FilterDispatcher.class);

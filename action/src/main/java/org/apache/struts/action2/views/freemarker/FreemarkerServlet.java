@@ -33,7 +33,6 @@ import java.util.Locale;
 
 
 /**
- * @author CameronBraid
  * @deprecated Please use the FreemarkerResult result type instead
  */
 public class FreemarkerServlet extends HttpServlet {

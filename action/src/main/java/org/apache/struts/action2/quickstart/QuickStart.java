@@ -34,7 +34,6 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * The QuickStart main program.
  *
- * @author plightbo
  */
 public class QuickStart {
     public static void main(String[] args) throws FileNotFoundException, MalformedURLException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {

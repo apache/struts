@@ -29,7 +29,6 @@ import javax.servlet.ServletContextListener;
  * {@link org.springframework.web.context.ContextLoaderListener}having been
  * called first.
  *
- * @author sms
  * @deprecated Please configure struts.property to use {@link org.apache.struts.action2.spring.StrutsSpringObjectFactory}
  */
 public class SpringObjectFactoryListener implements ServletContextListener {

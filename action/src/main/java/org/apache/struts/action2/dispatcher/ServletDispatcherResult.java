@@ -79,7 +79,6 @@ import javax.servlet.jsp.PageContext;
  *
  * This result follows the same rules from {@link StrutsResultSupport}.
  *
- * @author Patrick Lightbody
  * @see javax.servlet.RequestDispatcher
  */
 public class ServletDispatcherResult extends StrutsResultSupport {

@@ -28,7 +28,6 @@ import com.uwyn.rife.continuations.ClassByteAware;
 import java.io.File;
 
 /**
- * @author tcurdt
  */
 public class CompilingClassLoader extends ReloadingClassLoader implements ClassByteAware {
 

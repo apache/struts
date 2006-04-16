@@ -33,7 +33,6 @@ import java.util.Map;
 
 /**
  * Configuration for the QuickStart program.
- * @author patrick
  */
 public class Configuration implements Serializable {
 	

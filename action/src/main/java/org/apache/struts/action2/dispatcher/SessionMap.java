@@ -28,8 +28,6 @@ import java.util.*;
  * attributes. The {@link #entrySet()} method enumerates over all session attributes and creates a Set of entries.
  * Note, this will occur lazily - only when the entry set is asked for.
  *
- * @author <a href="mailto:rickard@middleware-company.com">Rickard �berg</a>
- * @author Bill Lynch (docs)
  */
 public class SessionMap extends AbstractMap implements Serializable {
 

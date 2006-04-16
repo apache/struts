@@ -26,9 +26,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 /**
- * User: plightbo
- * Date: Jul 18, 2005
- * Time: 8:00:24 PM
  */
 public class CallbackWriter extends Writer implements TransformControl {
     private Component bean;

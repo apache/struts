@@ -156,9 +156,6 @@ import java.util.Map;
  *
  * <!-- END SNIPPET: example -->
  *
- * @author <a href="plightbo@gmail.com">Pat Lightbody</a>
- * @author Rainer Hermanns
- * @author Claus Ibsen
  */
 public class ExecuteAndWaitInterceptor implements Interceptor {
 	

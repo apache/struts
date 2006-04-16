@@ -31,8 +31,6 @@ import java.util.List;
 
 /**
  * JSP based template engine.
- *
- * @author jcarreira
  */
 public class JspTemplateEngine extends BaseTemplateEngine {
     private static final Log LOG = LogFactory.getLog(JspTemplateEngine.class);

@@ -29,7 +29,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * User: patrick Date: Dec 22, 2005 Time: 4:14:10 PM
  */
 public class PicoFilterDispatcher extends FilterDispatcher {
     private ObjectReference objectReference;

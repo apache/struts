@@ -28,8 +28,6 @@ import java.util.TreeSet;
 /**
  * ActionNamesAction
  *
- * @author Jason Carreira Created Aug 11, 2003 9:35:15 PM
- * @author Rainer Hermanns
  */
 public class ActionNamesAction extends ActionSupport {
 	

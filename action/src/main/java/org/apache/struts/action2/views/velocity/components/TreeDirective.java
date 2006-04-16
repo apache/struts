@@ -26,9 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * <code>TreeDirective</code>
- *
- * @author Rainer Hermanns
- * @version $Id$
+ * @see Tree
  */
 public class TreeDirective  extends AbstractDirective {
     public String getBeanName() {

@@ -119,8 +119,6 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * This wil generate "1aA2bB3cC".
  * <!-- START SNIPPET: description -->
  *
- * @author tm_jee (tm_jee (at) yahoo.co.uk)
- * @version $Date$ $Id$
  * @see org.apache.struts.action2.util.MergeIteratorFilter
  * @see org.apache.struts.action2.views.jsp.iterator.MergeIteratorTag
  *

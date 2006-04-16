@@ -36,8 +36,6 @@ import java.util.TreeSet;
 /**
  * ShowValidatorAction
  *
- * @author Jason Carreira
- *         Date: Jun 1, 2004 9:01:02 PM
  */
 public class ShowValidatorAction extends ListValidatorsAction {
     private static Log log = LogFactory.getLog(ShowValidatorAction.class);

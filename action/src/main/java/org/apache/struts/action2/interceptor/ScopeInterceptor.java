@@ -130,8 +130,6 @@ import java.util.Map;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @author Mike Mosiewicz
- * @author Rainer Hermanns
  */
 public class ScopeInterceptor implements Interceptor, PreResultListener {
 

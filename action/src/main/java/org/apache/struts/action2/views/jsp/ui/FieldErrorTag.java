@@ -26,9 +26,6 @@ import com.opensymphony.xwork.util.OgnlValueStack;
 
 /**
  * FieldError Tag.
- * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class FieldErrorTag extends AbstractUITag {
 

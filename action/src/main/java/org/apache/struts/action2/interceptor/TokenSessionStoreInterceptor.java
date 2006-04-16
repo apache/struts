@@ -93,11 +93,6 @@ import java.util.Map;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @author Jason Carreira
- * @author Rainer Hermanns
- * @author Nils-Helge Garli
- * 
- * @version $Date$ $Id$
  */
 public class TokenSessionStoreInterceptor extends TokenInterceptor {
 	

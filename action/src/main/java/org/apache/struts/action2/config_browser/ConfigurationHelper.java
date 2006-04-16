@@ -27,8 +27,6 @@ import java.util.Set;
 /**
  * ConfigurationHelper
  *
- * @author Jason Carreira
- *         Created Aug 11, 2003 8:41:17 PM
  */
 public class ConfigurationHelper {
 

@@ -26,8 +26,6 @@ import java.util.*;
  * <p/>
  * Taken from WebWork 1.x by:
  *
- * @author &lt;a href="hermanns@aixcept.de"&gt;Rainer Hermanns&lt;/a&gt;
- * @version $Id$
  */
 public class MakeIterator {
 

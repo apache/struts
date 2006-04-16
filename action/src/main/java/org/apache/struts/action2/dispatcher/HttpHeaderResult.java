@@ -63,7 +63,6 @@ import java.util.Map;
  * &lt;/result&gt;
  * <!-- END SNIPPET: example --></pre>
  *
- * @author Jason Carreira
  */
 public class HttpHeaderResult implements Result {
 

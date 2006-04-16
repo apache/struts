@@ -23,7 +23,6 @@ import org.apache.struts.action2.util.classloader.stores.ResourceStore;
 
 
 /**
- * @author tcurdt
  */
 public interface JavaCompiler {
     void compile(

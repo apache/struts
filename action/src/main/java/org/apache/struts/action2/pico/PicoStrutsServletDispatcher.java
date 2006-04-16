@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
  * To use, replace the Struts ServletDispatcher in web.xml with this.
  *
  * @deprecated Use {@link PicoFilterDispatcher}
- * @author <a href="mailto:joe@thoughtworks.net">Joe Walnes</a>
  */
 public class PicoStrutsServletDispatcher extends ServletDispatcher {
 

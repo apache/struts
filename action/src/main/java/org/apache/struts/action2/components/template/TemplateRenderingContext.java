@@ -25,8 +25,6 @@ import java.util.Map;
 
 /**
  * Context used when rendering templates.
- *
- * @author jcarreira
  */
 public class TemplateRenderingContext {
     Template template;

@@ -20,8 +20,6 @@ package org.apache.struts.action2.components.table.renderer;
 import org.apache.struts.action2.components.table.WebTable;
 
 /**
- * @author $author$
- * @version $Revision$
  */
 public interface CellRenderer {
 

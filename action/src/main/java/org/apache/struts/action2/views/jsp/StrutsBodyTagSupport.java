@@ -28,10 +28,6 @@ import java.io.PrintWriter;
 /**
  * Contains common functonalities for Struts JSP Tags.
  * 
- * @author plightbo
- * @author tm_jee
- * Date: Oct 17, 2003
- * Time: 7:09:15 AM
  */
 public class StrutsBodyTagSupport extends BodyTagSupport {
 

@@ -20,8 +20,6 @@ package org.apache.struts.action2.portlet;
 /**
  * Interface defining some constants used in the Struts portlet implementation
  * 
- * @author <a href="mailto:nils-helge.garli@bekk.no">Nils-Helge Garli</a>
- *  
  */
 public interface PortletActionConstants {
 	/**

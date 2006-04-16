@@ -22,7 +22,6 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 
 /**
- * @author tcurdt
  */
 public final class FileResourceReader implements ResourceReader {
 

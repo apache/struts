@@ -36,8 +36,6 @@ import java.util.Map;
  *
  * <!-- END SNIPPET: javadoc -->
  * 
- * @version $Date$ $Id$
- * 
  */
 public abstract class StrutsTypeConverter extends DefaultTypeConverter {
     public Object convertValue(Map context, Object o, Class toClass) {

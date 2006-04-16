@@ -27,7 +27,6 @@ import java.io.FileFilter;
 import java.util.*;
 
 /**
- * @author tcurdt
  */
 public final class FilesystemAlterationMonitor implements Runnable {
 

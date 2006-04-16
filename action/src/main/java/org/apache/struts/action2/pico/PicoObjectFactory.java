@@ -28,10 +28,6 @@ import java.util.Map;
  * XWork ObjectFactory which uses a PicoContainer to create component instances.
  * </p>
  * 
- * @author Cyrille Le Clerc
- * @author Jonas Engman
- * @author Mauro Talevi
- * @author Gr&eacute;gory Joseph
  */
 public class PicoObjectFactory extends ObjectFactory {
 

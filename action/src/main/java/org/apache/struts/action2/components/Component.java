@@ -44,7 +44,6 @@ import java.util.Stack;
  * <p/>
  * This class is a good extension point when building reuseable UI components.
  *
- * @author plightbo
  */
 public class Component {
     private static final Log LOG = LogFactory.getLog(Component.class);

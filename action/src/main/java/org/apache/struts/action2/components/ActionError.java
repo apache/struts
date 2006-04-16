@@ -43,11 +43,8 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @author tm_jee
- * @version $Date$ $Id$
  * @a2.tag name="actionerror" tld-body-content="empty" tld-tag-class="org.apache.struts.action2.views.jsp.ui.ActionErrorTag"
  * description="Render action errors if they exists"
- * @since 2.2
  */
 public class ActionError extends UIBean {
 

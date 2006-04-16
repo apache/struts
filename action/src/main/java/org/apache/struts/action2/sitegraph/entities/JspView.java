@@ -21,9 +21,6 @@ import java.io.File;
 import java.util.regex.Pattern;
 
 /**
- * User: plightbo
- * Date: Jun 25, 2005
- * Time: 2:19:15 PM
  */
 public class JspView extends FileBasedView {
     public JspView(File file) {

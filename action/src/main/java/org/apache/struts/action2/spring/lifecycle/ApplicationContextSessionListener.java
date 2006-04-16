@@ -35,7 +35,6 @@ import java.io.Serializable;
  * Used to set up a Spring {@link org.springframework.context.ApplicationContext}
  * in the HttpSession. It can be configured similarly to the
  *
- * @author Jason Carreira <jcarreira@eplus.com>
  */
 public class ApplicationContextSessionListener implements HttpSessionListener, Serializable {
 	

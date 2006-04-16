@@ -101,12 +101,6 @@ import java.util.Map;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @author <a href="mailto:plightbo@gmail.com">Pat Lightbody</a>
- * @author tm_jee ( tm_jee (at) yahoo.co.uk )
- * @author Rene Gielen
- * @version $Revision$
- * @since 2.2
- *
  * @a2.tag name="action" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ActionTag"
  * description="Execute an action from within a view"
  */

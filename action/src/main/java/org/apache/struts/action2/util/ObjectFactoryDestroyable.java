@@ -22,9 +22,6 @@ package org.apache.struts.action2.util;
  * if it requires shutdown hook whenever an ObjectFactory is to be 
  * destroyed. 
  * 
- * @author tm_jee
- * @version $Date$ $Id$
- * 
  * @see org.apache.struts.action2.dispatcher.FilterDispatcher
  * @see org.apache.struts.action2.dispatcher.DispatcherUtils
  */

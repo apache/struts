@@ -60,11 +60,6 @@ import java.util.Map;
  * <code>initalize(ServletContext)</code>
  * method
  *
- * @author patrick
- * @author Rainer Hermanns
- * @author tm_jee
- * @version $Date$ $Id$
- *
  * @see org.apache.struts.action2.dispatcher.FilterDispatcher
  */
 public class DispatcherUtils {

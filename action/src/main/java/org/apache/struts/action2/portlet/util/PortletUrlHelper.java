@@ -46,7 +46,6 @@ import org.apache.struts.action2.portlet.context.PortletActionContext;
  * {@link javax.portlet.RenderResponse#createActionURL()} and 
  * {@link javax.portlet.RenderResponse#createRenderURL()} APIs.
  * 
- * @author Nils-Helge Garli
  */
 public class PortletUrlHelper {
     private static final Log LOG = LogFactory.getLog(PortletUrlHelper.class);

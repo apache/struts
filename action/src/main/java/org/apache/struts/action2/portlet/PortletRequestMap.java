@@ -31,7 +31,6 @@ import org.apache.commons.logging.LogFactory;
 /**
  * A simple implementation of the {@link java.util.Map} interface to handle a collection of request attributes.
  * 
- * @author Nils-Helge Garli
  */
 public class PortletRequestMap extends AbstractMap {
 

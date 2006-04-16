@@ -23,8 +23,6 @@ import ognl.OgnlException;
 
 
 /**
- * @author Matt Ho <a href="mailto:matt@enginegreen.com">&lt;matt@enginegreen.com&gt;</a>
- * @version $Id$
  */
 public class OgnlTool {
     private static OgnlTool instance = new OgnlTool();

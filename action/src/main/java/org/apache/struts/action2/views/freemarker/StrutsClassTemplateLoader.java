@@ -23,9 +23,6 @@ import freemarker.cache.URLTemplateLoader;
 import java.net.URL;
 
 /**
- * User: plightbo
- * Date: Aug 10, 2005
- * Time: 11:25:05 PM
  */
 public class StrutsClassTemplateLoader extends URLTemplateLoader {
     protected URL getURL(String name) {

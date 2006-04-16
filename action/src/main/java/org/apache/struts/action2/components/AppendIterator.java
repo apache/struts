@@ -106,8 +106,6 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * <!-- END SNIPPET: example -->
  *
  *
- * @author tm_jee
- * @version $Date$ $Id$
  * @see org.apache.struts.action2.util.AppendIteratorFilter
  * @see org.apache.struts.action2.views.jsp.iterator.AppendIteratorTag
  *

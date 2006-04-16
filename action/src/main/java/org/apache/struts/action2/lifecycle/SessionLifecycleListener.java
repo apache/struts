@@ -31,9 +31,6 @@ import java.io.Serializable;
 /**
  * A filter to handle the lifecycle of an HTTP session-based XWork component manager.
  *
- * @author <a href="mailto:joew@thoughtworks.com">Joe Walnes</a>
- * @author Cameron Braid
- * @author Bill Lynch (docs)
  * @deprecated XWork IoC has been deprecated in favor of Spring.
  *             Please refer to the Spring-Struts integration documentation for more info.
  */

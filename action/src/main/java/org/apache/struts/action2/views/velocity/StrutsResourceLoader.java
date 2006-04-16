@@ -27,8 +27,6 @@ import java.io.InputStream;
 /**
  * Loads resource from the Thread's context ClassLoader.
  *
- * @author $Author$
- * @version $Revision$
  */
 public class StrutsResourceLoader extends ClasspathResourceLoader {
 

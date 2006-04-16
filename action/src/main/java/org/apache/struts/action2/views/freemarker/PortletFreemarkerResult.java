@@ -46,7 +46,6 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
- * @author CameronBraid
  */
 public class PortletFreemarkerResult extends StrutsResultSupport {
 

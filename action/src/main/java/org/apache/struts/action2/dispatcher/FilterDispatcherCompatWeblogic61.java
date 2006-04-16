@@ -42,8 +42,6 @@ import javax.servlet.http.HttpSession;
  * must "swallow" the exception.  This it does by logging the
  * exception as an error.
  *
- * @author Scott N. Smith scottnelsonsmith@yahoo.com
- * @version $Id$
  */
 public class FilterDispatcherCompatWeblogic61
         extends FilterDispatcher

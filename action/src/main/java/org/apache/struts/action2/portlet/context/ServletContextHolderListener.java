@@ -28,7 +28,6 @@ import javax.servlet.ServletContextListener;
  * {@link javax.servlet.ServletContext} and exposes it through a <code>public static</code>
  * method.
  * 
- * @author Nils-Helge Garli
  */
 public class ServletContextHolderListener implements ServletContextListener {
 

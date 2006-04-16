@@ -533,13 +533,6 @@ import java.util.Map;
  * <!-- END SNIPPET: tooltipexample -->
  * </pre>
  *
- *
- * @author Patrick Lightbody
- * @author Rene Gielen
- * @author Rainer Hermanns
- * @author tm_jee
- * @version $Revision$
- * @since 2.2
  */
 public abstract class UIBean extends Component {
     private static final Log LOG = LogFactory.getLog(UIBean.class);

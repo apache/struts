@@ -29,8 +29,6 @@ import java.util.Properties;
 
 /**
  * Base class for template engines.
- *
- * @author jcarreira
  */
 public abstract class BaseTemplateEngine implements TemplateEngine {
     private static final Log LOG = LogFactory.getLog(BaseTemplateEngine.class);

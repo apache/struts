@@ -35,9 +35,6 @@ import java.io.InputStream;
 /**
  * A servlet context listener to handle the lifecycle of an application-based XWork component manager.
  *
- * @author <a href="mailto:joew@thoughtworks.com">Joe Walnes</a>
- * @author Patrick Lightbody
- * @author Bill Lynch (docs)
  * @deprecated XWork IoC has been deprecated in favor of Spring.
  *             Please refer to the Spring-Struts integration documentation for more info.
  */

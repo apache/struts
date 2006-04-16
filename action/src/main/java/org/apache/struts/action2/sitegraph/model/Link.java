@@ -20,9 +20,6 @@ package org.apache.struts.action2.sitegraph.model;
 import java.io.IOException;
 
 /**
- * User: plightbo
- * Date: Jun 26, 2005
- * Time: 4:50:33 PM
  */
 public class Link implements Render, Comparable {
     public static final int TYPE_FORM = 0;

@@ -68,8 +68,6 @@ import com.opensymphony.xwork.ActionInvocation;
  * <!-- END SNIPPET: example -->
  * </pre>
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class PlainTextResult extends StrutsResultSupport {
 	

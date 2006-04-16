@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author Patrick Lightbody (plightbo at gmail dot com)
+ * @see IteratorComponent
  */
 public class IteratorModel extends TagModel {
     public IteratorModel(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {

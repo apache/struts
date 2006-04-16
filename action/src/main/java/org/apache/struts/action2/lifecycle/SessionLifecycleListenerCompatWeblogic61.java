@@ -23,8 +23,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
 /**
- * @author Scott N. Smith scottnelsonsmith@yahoo.com
- * @version $Id$
  * @deprecated XWork IoC has been deprecated in favor of Spring.
  *             Please refer to the Spring-Struts integration documentation for more info.
  */

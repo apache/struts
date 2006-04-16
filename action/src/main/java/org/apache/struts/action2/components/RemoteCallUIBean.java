@@ -25,12 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * RemoteCallUIBean is superclass for all components dealing with remote calls.
  *
- * @author Rene Gielen
- * @author Ian Roughley
- * @author Rainer Hermanns
- * @author Nils-Helge Garli
- * @version $Revision$
- * @since 2.2
  */
 public abstract class RemoteCallUIBean extends ClosingUIBean {
 

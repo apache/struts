@@ -30,7 +30,6 @@ import java.util.Map;
  * Note that all parameter values for a given name will be returned, so the type of the objects in
  * the map is <tt>java.lang.String[]</tt>.
  *
- * @author <a href="mailto:rickard@middleware-company.com">Rickard �berg</a>
  */
 public interface ParameterAware {
 

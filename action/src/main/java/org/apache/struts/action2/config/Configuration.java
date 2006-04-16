@@ -46,10 +46,6 @@ import java.util.StringTokenizer;
  * <li>{@link #setImpl(String, Object)}</li>
  * <li>{@link #listImpl()}</li>
  * <li>{@link #isSetImpl(String)}</li></ul>
- *
- * @author Rickard �berg
- * @author Jason Carreira
- * @author Bill Lynch (docs)
  */
 public class Configuration {
 

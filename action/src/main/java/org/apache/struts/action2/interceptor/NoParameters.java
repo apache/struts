@@ -24,7 +24,6 @@ package org.apache.struts.action2.interceptor;
  * the parameters to the action manually using the param tag. It may also be useful if one for
  * security reasons wants to make sure that parameters cannot be set by malicious users.
  *
- * @author <a href="mailto:dick@transitor.se">Dick Zetterberg</a>
  */
 public interface NoParameters extends com.opensymphony.xwork.interceptor.NoParameters {
 }

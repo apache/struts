@@ -37,11 +37,6 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @author Patrick Lightbody
- * @author Rene Gielen
- * @version $Revision$
- * @since 2.2
- *
  * @a2.tag name="checkboxlist" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.CheckboxListTag"
  * description="Render a list of checkboxes"
   */

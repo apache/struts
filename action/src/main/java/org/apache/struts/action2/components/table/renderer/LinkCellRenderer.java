@@ -21,8 +21,6 @@ import org.apache.struts.action2.components.table.WebTable;
 
 
 /**
- * @author $author$
- * @version $Revision$
  */
 public class LinkCellRenderer extends AbstractCellRenderer {
 

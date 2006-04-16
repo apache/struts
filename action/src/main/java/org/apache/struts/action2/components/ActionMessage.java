@@ -41,11 +41,8 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @author tm_jee
- * @version $Date$ $Id$
  * @a2.tag name="actionmessage" tld-body-content="empty" tld-tag-class="org.apache.struts.action2.views.jsp.ui.ActionMessageTag"
  * description="Render action messages if they exists"
- * @since 2.2
  */
 public class ActionMessage extends UIBean {
 

@@ -38,7 +38,6 @@ import com.opensymphony.xwork.ActionContext;
  * to the objects in the {@link org.apache.struts.action2.ServletActionContext}, and this servlet
  * makes sure that these are available when the portlet actions are executing the render results.
  * 
- * @author Nils-Helge Garli
  */
 public class PreparatorServlet extends HttpServlet implements StrutsStatics {
 

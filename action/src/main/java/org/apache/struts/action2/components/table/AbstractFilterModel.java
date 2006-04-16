@@ -24,8 +24,6 @@ import java.util.Vector;
 
 
 /**
- * @author Onyeje Bose
- * @version 1.0
  */
 abstract public class AbstractFilterModel extends AbstractTableModel {
 

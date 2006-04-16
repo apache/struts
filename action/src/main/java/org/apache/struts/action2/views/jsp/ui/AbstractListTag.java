@@ -20,8 +20,6 @@ package org.apache.struts.action2.views.jsp.ui;
 import org.apache.struts.action2.components.ListUIBean;
 
 /**
- * @author Matt Ho <a href="mailto:matt@enginegreen.com">&lt;matt@enginegreen.com&gt;</a>
- * @version $Id$
  */
 public abstract class AbstractListTag extends AbstractUITag {
     protected String list;

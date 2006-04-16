@@ -33,7 +33,6 @@ import java.util.HashMap;
  *
  * <!-- END SNIPPET: javadoc -->
  *
- * @author Patrick Lightbody
  */
 public class ActionMapperFactory {
     protected static final Log LOG = LogFactory.getLog(ActionMapperFactory.class);

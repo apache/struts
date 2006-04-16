@@ -23,7 +23,6 @@ package org.apache.struts.action2.views.jsp;
  * one can get information about the status of the iteration, such as
  * the size, current index, and whether any more items are available.
  *
- * @author Rickard �berg (rickard@dreambean.com)
  */
 public class IteratorStatus {
     protected StatusState state;

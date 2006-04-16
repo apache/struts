@@ -33,7 +33,6 @@ import java.io.IOException;
 /**
  * Struts velocity related util.
  *
- * @author CameronBraid
  */
 public class VelocityStrutsUtil extends StrutsUtil {
 

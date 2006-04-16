@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.util.Collections;
 
 /**
- * @author Patrick Lightbody (plightbo at gmail dot com)
  */
 public class PlexusFilter implements Filter {
     private static final Log log = LogFactory.getLog(PlexusObjectFactory.class);

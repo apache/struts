@@ -30,8 +30,6 @@ import javax.servlet.http.HttpServletResponse;
  * Append a list of iterators. The values of the iterators will be merged
  * into one iterator.
  *
- * @author Rickard �berg (rickard@dreambean.com)
- * @author tmjee (tm_jee (at) yahoo.co.uk )
  * @see AppendIterator
  */
 public class AppendIteratorTag extends ComponentTagSupport {

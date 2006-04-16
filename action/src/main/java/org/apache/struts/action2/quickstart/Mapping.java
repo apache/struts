@@ -20,7 +20,6 @@ package org.apache.struts.action2.quickstart;
 /**
  * Used for mapping configuration for the QuickStart application.
  *
- * @author patrick
  */
 public class Mapping {
     String path;

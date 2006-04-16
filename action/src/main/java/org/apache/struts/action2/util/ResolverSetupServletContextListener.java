@@ -34,7 +34,6 @@ import java.util.Iterator;
  * container context (ApplicationContext in Spring terms) in the Servlet context, the External
  * Reference Resolver can get a reference to the container context from the servlet context.
  *
- * @author Ross
  */
 public class ResolverSetupServletContextListener implements ServletContextListener {
 

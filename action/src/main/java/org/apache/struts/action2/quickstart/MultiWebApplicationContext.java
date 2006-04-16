@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.List;
 
 /**
- * Integration to Jetty.
  */
 public class MultiWebApplicationContext extends WebApplicationContext {
 	

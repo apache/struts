@@ -29,9 +29,7 @@ import java.io.InputStream;
 
 
 /**
- * @author <a href="mailto:meier@meisterbohne.de">Philipp Meier</a>
- *         Date: 14.10.2003
- *         Time: 16:50:06
+ *
  */
 public class ServletURIResolver implements URIResolver {
 

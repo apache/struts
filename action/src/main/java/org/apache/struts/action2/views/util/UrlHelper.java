@@ -39,7 +39,6 @@ import java.util.Map;
 /**
  * UrlHelper
  *
- * @author Jason Carreira Created Apr 19, 2003 9:32:19 PM
  */
 public class UrlHelper {
     private static final Log LOG = LogFactory.getLog(UrlHelper.class);

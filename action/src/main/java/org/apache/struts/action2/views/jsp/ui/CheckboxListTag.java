@@ -27,8 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @see CheckboxList
- * @author $author$
- * @version $Date$ $Id$
  */
 public class CheckboxListTag extends AbstractRequiredListTag {
 	

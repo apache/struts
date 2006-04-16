@@ -29,12 +29,7 @@ import java.util.regex.Pattern;
 
 
 /**
- * @author <a href="mailto:meier@meisterbohne.de">Philipp Meier</a>
- * @author <a href="mailto:mimo@REMOVEIT.proinet.pl">Mike Mosiewicz</a>
- *         Anti-infinite-loops code. Performance enhancements.
- * @author Rainer Hermanns
- *         Date: 10.10.2003
- *         Time: 19:39:13
+ * 
  */
 public class DOMAdapter {
 

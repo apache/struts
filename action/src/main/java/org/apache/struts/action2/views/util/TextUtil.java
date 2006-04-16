@@ -22,8 +22,6 @@ package org.apache.struts.action2.views.util;
  * This class handles HTML escaping of text.
  * It was written and optimized to be as fast as possible.
  *
- * @author Dick Zetterberg (dick@transitor.se)
- * @version $Revision$
  */
 public class TextUtil {
 

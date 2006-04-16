@@ -24,8 +24,6 @@ import java.util.Map;
 
 /**
  * The TemplateEngineManager will return a template engine for the template
- *
- * @author jcarreira
  */
 public class TemplateEngineManager {
     public static final String DEFAULT_TEMPLATE_TYPE_CONFIG_KEY = "struts.ui.templateSuffix";

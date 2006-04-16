@@ -71,8 +71,6 @@ import org.apache.commons.logging.LogFactory;
  * &lt;/result&gt;
  * <!-- END SNIPPET: example --></pre>
  *
- * @author mcrawford
- * @author Rainer Hermanns
  */
 public class StreamResult extends StrutsResultSupport {
 	

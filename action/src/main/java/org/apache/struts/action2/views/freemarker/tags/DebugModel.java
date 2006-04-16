@@ -27,8 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @see Debug
  *
- * @author Rainer Hermanns
- * @version $Id$
  */
 public class DebugModel extends TagModel {
 

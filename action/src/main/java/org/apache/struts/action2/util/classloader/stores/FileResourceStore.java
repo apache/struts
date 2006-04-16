@@ -23,7 +23,6 @@ import java.io.*;
 
 
 /**
- * @author tcurdt
  */
 public final class FileResourceStore implements ResourceStore {
 

@@ -25,7 +25,6 @@ import java.util.Map;
 
 
 /**
- * @author tcurdt
  */
 public final class MemoryResourceStore implements ResourceStore {
 

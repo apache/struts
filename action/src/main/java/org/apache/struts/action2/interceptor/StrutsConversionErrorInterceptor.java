@@ -63,7 +63,6 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @author Jason Carreira
  * @see com.opensymphony.xwork.ActionContext#getConversionErrors()
  * @see ConversionErrorInterceptor
  */

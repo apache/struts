@@ -27,8 +27,6 @@ import com.opensymphony.xwork.util.OgnlValueStack;
 /**
  * ActionMessage Tag.
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class ActionMessageTag extends AbstractUITag {
 

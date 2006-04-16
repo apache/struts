@@ -25,7 +25,6 @@ import java.net.URL;
 import java.net.MalformedURLException;
 
 /**
- * Integration to Jetty.
  */
 public class MultiDirResource extends Resource {
 	

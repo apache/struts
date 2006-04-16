@@ -38,7 +38,6 @@ import java.util.Locale;
 /**
  *  Applies FreeMarker-based sitemesh decorators.
  *
- * @author patrick
  */
 public class FreeMarkerPageFilter extends TemplatePageFilter {
     private static final Log LOG = LogFactory.getLog(FreeMarkerPageFilter.class);

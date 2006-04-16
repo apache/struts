@@ -178,9 +178,6 @@ import java.util.regex.Pattern;
  * &lt;result name="success" type="xslt"&gt;foo.xslt&lt;/result&gt;
  * <!-- END SNIPPET: example --></pre>
  *
- * @author <a href="mailto:meier@meisterbohne.de">Philipp Meier</a>
- * @author Mike Mosiewicz
- * @author Rainer Hermanns
  */
 public class XSLTResult implements Result {
 

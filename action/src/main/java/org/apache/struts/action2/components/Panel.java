@@ -32,12 +32,6 @@ import java.io.Writer;
  * See the example in {@link TabbedPanel}.
  * <p/>
  *
- * @author Ian Roughley
- * @author Patrick Lightbody
- * @author Rene Gielen
- * @version $Revision$
- * @since 2.2
- *
  * @see TabbedPanel
  *
  * @a2.tag name="panel" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.PanelTag"

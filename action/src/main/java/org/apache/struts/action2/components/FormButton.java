@@ -24,10 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * FormButton.
- *
- * @author <a href="mailto:gielen@it-neering.net">Rene Gielen</a>
  */
-
 public abstract class FormButton extends UIBean {
 
     static final String BUTTONTYPE_INPUT = "input";

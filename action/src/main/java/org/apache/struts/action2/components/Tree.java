@@ -24,10 +24,6 @@ import java.io.Writer;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * Created : Oct 27, 2005 3:56:23 PM
- *
- * @author Jason Carreira <jcarreira@eplus.com>
- *
  * @a2.tag name="tree" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TreeTag"
  * description="Render a tree widget."
  */

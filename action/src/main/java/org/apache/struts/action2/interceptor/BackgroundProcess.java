@@ -24,8 +24,6 @@ import java.io.Serializable;
 /**
  * Background thread to be executed by the ExecuteAndWaitInterceptor.
  *
- * @author <a href="plightbo@gmail.com">Pat Lightbody</a>
- * @author <a href="jim@jimvanfleet.com">Jim Van Fleet</a>
  */
 public class BackgroundProcess implements Serializable {
 	

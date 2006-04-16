@@ -77,12 +77,6 @@ import java.io.Writer;
  * <!-- END SNIPPET: example2 -->
  * <p/>
  *
- * @author Rickard �berg (rickard@dreambean.com)
- * @author Rene Gielen
- * @author tm_jee
- * @version $Revision$
- * @since 2.2
- *
  * @see Include
  * @see Bean
  * @see Text

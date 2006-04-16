@@ -27,7 +27,6 @@ import java.io.InputStreamReader;
 import java.io.ByteArrayInputStream;
 
 /**
- * @author Patrick Lightbody (plightbo at gmail dot com)
  */
 public class PlexusUtils {
     private static final Log log = LogFactory.getLog(PlexusObjectFactory.class);

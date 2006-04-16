@@ -27,8 +27,6 @@ import java.util.List;
 /**
  * A bean that takes several iterators and outputs them in sequence
  *
- * @author Rickard Öberg (rickard@middleware-company.com)
- * @version $Revision$
  * @see org.apache.struts.action2.components.AppendIterator
  * @see org.apache.struts.action2.views.jsp.iterator.AppendIteratorTag
  */

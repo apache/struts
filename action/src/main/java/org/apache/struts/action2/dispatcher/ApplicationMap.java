@@ -28,8 +28,6 @@ import java.util.*;
  * enumerates over all servlet context attributes and init parameters and returns a collection of both.
  * Note, this will occur lazily - only when the entry set is asked for.
  *
- * @author <a href="mailto:rickard@middleware-company.com">Rickard �berg</a>
- * @author Bill Lynch (docs)
  */
 public class ApplicationMap extends AbstractMap implements Serializable {
 

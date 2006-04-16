@@ -27,8 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * <code>DebugDirective</code>
  *
- * @author <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
- * @version $Id$
  */
 public class DebugDirective extends AbstractDirective {
     public String getBeanName() {

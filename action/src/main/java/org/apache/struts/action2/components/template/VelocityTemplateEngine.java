@@ -35,8 +35,6 @@ import java.util.Map;
 
 /**
  * Velocity based template engine.
- *
- * @author jcarreira
  */
 public class VelocityTemplateEngine extends BaseTemplateEngine {
     private static final Log LOG = LogFactory.getLog(VelocityTemplateEngine.class);

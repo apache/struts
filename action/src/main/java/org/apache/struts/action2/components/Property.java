@@ -80,14 +80,6 @@ import org.apache.commons.logging.LogFactory;
  * <!-- END SNIPPET: i18nExample -->
  * </pre>
  *
- *
- * @author Patrick Lightbody
- * @author Cameron Braid
- * @author Mathias Bogaert
- * @author tm_jee
- * @author Rene Gielen
- * @version $Revision$
- *
  * @a2.tag name="property" tld-body-content="empty" tld-tag-class="org.apache.struts.action2.views.jsp.PropertyTag"
  * description="Print out expression which evaluates against the stack"
  */

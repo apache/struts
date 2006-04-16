@@ -27,7 +27,6 @@ import java.util.Map;
  * <p/>
  * Typical uses are configuration objects and caches.
  *
- * @author <a href="mailto:rickard@middleware-company.com">Rickard �berg</a>
  */
 public interface ApplicationAware {
 

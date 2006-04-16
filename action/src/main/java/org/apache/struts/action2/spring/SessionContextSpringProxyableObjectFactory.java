@@ -30,7 +30,6 @@ import java.util.Map;
 /**
  * SessionContextSpringProxyableObjectFactory
  *
- * @author Jason Carreira <jcarreira@eplus.com>
  */
 public class SessionContextSpringProxyableObjectFactory extends SpringProxyableObjectFactory {
     private static final Log log = LogFactory.getLog(SessionContextSpringProxyableObjectFactory.class);

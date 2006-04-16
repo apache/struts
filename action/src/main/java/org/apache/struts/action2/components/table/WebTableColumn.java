@@ -22,8 +22,6 @@ import org.apache.struts.action2.components.table.renderer.DefaultCellRenderer;
 
 
 /**
- * @author $author$
- * @version $Revision$
  */
 public class WebTableColumn {
 

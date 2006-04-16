@@ -52,8 +52,6 @@ import com.opensymphony.xwork.ActionInvocation;
  * 
  * <!-- END SNIPPET: javadoc -->
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class RichtexteditorCreateFolderResult extends AbstractRichtexteditorResult {
 	

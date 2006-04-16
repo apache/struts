@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author Patrick Lightbody (plightbo at gmail dot com)
  */
 public class PropertyDirective extends AbstractDirective {
     public String getBeanName() {

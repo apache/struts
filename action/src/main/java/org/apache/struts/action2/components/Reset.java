@@ -49,10 +49,6 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- END SNIPPET: example2 -->
  * </pre>
  *
- * @author Rene Gielen
- * @version $Revision$
- * @since 2.2.2
- *
  * @a2.tag name="reset" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.ResetTag"
  * description="Render a reset button"
  */

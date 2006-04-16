@@ -47,15 +47,9 @@ import java.util.Map;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @author Patrick Lightbody
- * @author Rene Gielen
- * @author Rainer Hermanns
- * @version $Revision$
- * @since 2.2
- *
  * @a2.tag name="debug" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.DebugTag"
  * description="Render debug tag"
-  */
+ */
 public class Debug extends UIBean {
     public static final String TEMPLATE = "debug";
 

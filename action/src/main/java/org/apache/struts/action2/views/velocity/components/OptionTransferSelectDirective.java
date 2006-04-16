@@ -25,9 +25,6 @@ import org.apache.struts.action2.components.OptionTransferSelect;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 /**
- * @author tm_jee
- * @author Rainer Hermanns
- * @version $Date$ $Id$
  * @see OptionTransferSelect
  */
 public class OptionTransferSelectDirective extends AbstractDirective {

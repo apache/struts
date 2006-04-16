@@ -21,9 +21,6 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * User: plightbo
- * Date: Jun 26, 2005
- * Time: 5:02:14 PM
  */
 public class IndentWriter extends Writer {
     Writer writer;

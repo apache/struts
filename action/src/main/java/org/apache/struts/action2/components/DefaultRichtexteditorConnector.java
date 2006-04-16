@@ -37,8 +37,8 @@ import org.apache.struts.action2.util.ServletContextAware;
 import org.apache.struts.action2.views.util.UrlHelper;
 
 /**
+ * Default AbstractRichtexteditorConnector implementation.
  * 
- * @author tm_jee
  * @version $Date$ $Id$
  */
 public class DefaultRichtexteditorConnector extends AbstractRichtexteditorConnector implements ServletContextAware {

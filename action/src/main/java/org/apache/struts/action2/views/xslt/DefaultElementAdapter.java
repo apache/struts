@@ -26,9 +26,7 @@ import java.util.List;
 
 
 /**
- * @author <a href="mailto:meier@meisterbohne.de">Philipp Meier</a>
- *         Date: 14.10.2003
- *         Time: 19:01:02
+ * 
  */
 public abstract class DefaultElementAdapter extends DefaultAdapterNode implements AdapterNode, Element {
 

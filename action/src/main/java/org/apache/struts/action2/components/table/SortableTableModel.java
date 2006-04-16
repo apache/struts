@@ -21,8 +21,6 @@ import javax.swing.table.TableModel;
 
 
 /**
- * @author $author$
- * @version $Revision$
  */
 public interface SortableTableModel extends TableModel {
 

@@ -20,7 +20,6 @@ package org.apache.struts.action2.util;
 /**
  * Quickly matches a prefix to an object.
  *
- * @author crazybob@google.com (Bob Lee)
  */
 public class PrefixTrie {
 

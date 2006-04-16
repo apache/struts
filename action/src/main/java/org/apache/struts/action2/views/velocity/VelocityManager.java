@@ -50,7 +50,6 @@ import java.util.*;
 /**
  * Manages the environment for Velocity result types
  *
- * @author Matt Ho <matt@indigoegg.com>
  */
 public class VelocityManager {
     private static final Log log = LogFactory.getLog(VelocityManager.class);

@@ -29,8 +29,6 @@ import java.util.TreeSet;
 
 /**
  * ShowConfigAction
- *
- * @author Jason Carreira Created Aug 11, 2003 9:42:12 PM
  */
 public class ShowConfigAction extends ActionNamesAction {
 	

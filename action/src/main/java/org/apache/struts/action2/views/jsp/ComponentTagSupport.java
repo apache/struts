@@ -25,9 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 
 /**
- * User: plightbo
- * Date: Sep 1, 2005
- * Time: 8:44:53 PM
  */
 public abstract class ComponentTagSupport extends StrutsBodyTagSupport {
     protected Component component;

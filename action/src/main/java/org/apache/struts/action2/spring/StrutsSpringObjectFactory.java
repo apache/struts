@@ -35,7 +35,6 @@ import javax.servlet.ServletContext;
  * Spring should be loaded using a web context listener
  * <code>org.springframework.web.context.ContextLoaderListener</code> defined in <code>web.xml</code>.
  *
- * @author plightbo
  */
 public class StrutsSpringObjectFactory extends SpringObjectFactory implements ObjectFactoryInitializable {
     private static final Log log = LogFactory.getLog(StrutsSpringObjectFactory.class);

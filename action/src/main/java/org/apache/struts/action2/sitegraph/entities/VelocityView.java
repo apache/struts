@@ -21,9 +21,6 @@ import java.io.File;
 import java.util.regex.Pattern;
 
 /**
- * User: plightbo
- * Date: Jun 25, 2005
- * Time: 2:23:01 PM
  */
 public class VelocityView extends FileBasedView {
     public VelocityView(File file) {

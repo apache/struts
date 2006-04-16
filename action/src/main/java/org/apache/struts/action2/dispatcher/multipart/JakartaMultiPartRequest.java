@@ -31,7 +31,6 @@ import java.util.*;
 /**
  * Multipart form data request adapter for Jakarta's file upload package.
  *
- * @author Bruce Ritchie
  */
 public class JakartaMultiPartRequest extends MultiPartRequest {
     // maps parameter name -> List of FileItem objects

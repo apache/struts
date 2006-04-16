@@ -70,12 +70,8 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- END SNIPPET: example3 -->
  * </pre>
  *
- * @author Patrick Lightbody
- * @author Rainer Hermanns
- * @author Rene Gielen
  * @a2.tag name="head" tld-body-content="empty" tld-tag-class="org.apache.struts.action2.views.jsp.ui.HeadTag"
  * description="Render a chunk of HEAD for your HTML file"
- * @since 2.2
  */
 public class Head extends UIBean {
     public static final String TEMPLATE = "head";

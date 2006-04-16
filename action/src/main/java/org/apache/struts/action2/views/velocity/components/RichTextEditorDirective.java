@@ -25,8 +25,6 @@ import org.apache.struts.action2.components.RichTextEditor;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 /**
- * @author tm_jee
- * @version $Date$ $Id$
  * @see RichTextEditor
  */
 public class RichTextEditorDirective extends AbstractDirective {

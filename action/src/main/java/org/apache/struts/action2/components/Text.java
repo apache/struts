@@ -94,14 +94,6 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * <!-- END SNIPPET: i18nExample -->
  * </pre>
  * 
- *
- * @author Jason Carreira
- * @author Patrick Lightbody
- * @author Rene Gielen
- * @author tm_jee
- * @version $Revision$
- * @since 2.2
- *
  * @see Param
  *
  * @a2.tag name="text" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.TextTag"

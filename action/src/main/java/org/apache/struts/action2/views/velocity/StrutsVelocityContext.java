@@ -22,8 +22,6 @@ import org.apache.velocity.VelocityContext;
 
 
 /**
- * @author $Author$
- * @version $Revision$
  */
 public class StrutsVelocityContext extends VelocityContext {
 

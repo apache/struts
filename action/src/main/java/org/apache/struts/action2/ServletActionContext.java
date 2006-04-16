@@ -31,9 +31,6 @@ import java.util.Map;
  * Web-specific context information for actions. This class subclasses <tt>ActionContext</tt> which
  * provides access to things like the action name, value stack, etc. This class adds access to
  * web objects like servlet parameters, request attributes and things like the HTTP session.
- *
- * @author <a href="mailto:nightfal@etherlands.net">Erik Beeson</a>
- * @author Bill Lynch (docs)
  */
 public class ServletActionContext extends ActionContext implements StrutsStatics {
 	

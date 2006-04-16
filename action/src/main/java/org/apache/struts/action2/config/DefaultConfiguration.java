@@ -30,10 +30,6 @@ import java.util.StringTokenizer;
 /**
  * Default implementation of Configuration - creates and delegates to other configurations by using an internal
  * {@link DelegatingConfiguration}.
- *
- * @author Rickard �berg
- * @author Jason Carreira
- * @author Bill Lynch (docs)
  */
 public class DefaultConfiguration extends Configuration {
 

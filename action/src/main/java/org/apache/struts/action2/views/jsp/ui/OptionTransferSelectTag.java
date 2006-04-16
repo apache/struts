@@ -25,8 +25,6 @@ import org.apache.struts.action2.components.OptionTransferSelect;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 /**
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class OptionTransferSelectTag extends AbstractDoubleListTag {
 

@@ -18,9 +18,6 @@
 package org.apache.struts.action2.sitegraph.model;
 
 /**
- * User: plightbo
- * Date: Jun 26, 2005
- * Time: 4:49:49 PM
  */
 public class ActionNode extends SiteGraphNode {
     public ActionNode(String name) {

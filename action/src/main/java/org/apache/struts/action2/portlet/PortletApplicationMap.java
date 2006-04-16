@@ -30,7 +30,6 @@ import javax.portlet.PortletContext;
  * Portlet specific {@link java.util.Map} implementation representing the
  * {@link javax.portlet.PortletContext} of a Portlet.
  * 
- * @author Nils-Helge Garli
  */
 public class PortletApplicationMap extends AbstractMap implements Serializable {
 

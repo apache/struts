@@ -84,13 +84,6 @@ import java.io.Writer;
  * an id(key) of <i>counter</i></p>
  * <!-- END SNIPPET: examplesdescription -->
  *
- * @author $author$
- * @author Rick Salsa (rsal@mb.sympatico.ca)
- * @author Brock Bulger
- * @author Rene Gielen
- * @version $Revision$
- * @since 2.2
- *
  * @see Param
  *
  * @a2.tag name="bean" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.BeanTag"

@@ -33,9 +33,6 @@ package org.apache.struts.action2;
  * <ul><code>
  * ActionContext context = ActionContext.getContext();<br>
  * HttpServletRequest request = (HttpServletRequest)context.get(HTTP_REQUEST);</code></ul>
- *
- * @author Patrick Lightbody
- * @author Bill Lynch (docs)
  */
 public interface StrutsStatics {
 

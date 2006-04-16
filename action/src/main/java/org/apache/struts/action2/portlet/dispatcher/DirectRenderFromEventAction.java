@@ -33,7 +33,6 @@ import com.opensymphony.xwork.ActionSupport;
  * specifying this action and the location of the view, which then will be executed in the 
  * following render request.
  * 
- * @author Nils-Helge Garli
  */
 public class DirectRenderFromEventAction extends ActionSupport {
 	

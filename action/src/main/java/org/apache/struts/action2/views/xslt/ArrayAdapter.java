@@ -25,11 +25,6 @@ import java.util.List;
 
 
 /**
- * @author <a href="mailto:meier@meisterbohne.de">Philipp Meier</a>
- * @author Mike Mosiewicz
- * @author Rainer Hermanns
- *         Date: 14.10.2003
- *         Time: 18:59:07
  */
 public class ArrayAdapter extends DefaultElementAdapter {
 

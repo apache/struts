@@ -95,14 +95,6 @@ import java.util.Map;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @author Rickard Öberg (rickard@dreambean.com)
- * @author Patrick Lightbody
- * @author Ian Roughley
- * @author Rene Gielen
- * @author Rainer Hermanns
- * @version $Revision$
- * @since 2.2
- *
  * @see Param
  *
  * @a2.tag name="url" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.URLTag"

@@ -27,8 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @see Radio
- * @author $author$
- * @version $Date$ $Id$
  */
 public class RadioTag extends AbstractRequiredListTag {
 	

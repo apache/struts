@@ -55,8 +55,6 @@ import java.io.Writer;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @author Rick Salsa (rsal@mb.sympatico.ca)
- * @author tmjee
  * @a2.tag name="elseif" tld-body-content="JSP" description="Elseif tag"  tld-tag-class="org.apache.struts.action2.views.jsp.ElseIfTag"
  */
 public class ElseIf extends Component {

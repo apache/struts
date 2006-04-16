@@ -37,9 +37,6 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * Created : Dec 12, 2005 3:53:40 PM
- *
- * @author Jason Carreira <jcarreira@eplus.com>
  *
  * @a2.tag name="treenode" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TreeNodeTag"
  * description="Render a tree node within a tree widget."

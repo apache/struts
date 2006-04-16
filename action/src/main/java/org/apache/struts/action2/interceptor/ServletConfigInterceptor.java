@@ -91,8 +91,6 @@ import javax.servlet.ServletContext;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @author Patrick Lightbody
- * @author Bill Lynch (docs)
  * @see ServletContextAware
  * @see ServletRequestAware
  * @see ServletResponseAware

@@ -34,8 +34,6 @@ import java.util.List;
 /**
  * Multipart form data request adapter for Jason Pell's multipart utils package.
  *
- * @author <a href="matt@smallleap.com">Matt Baldree</a> (modified for WW's use)
- * @author <a href="scott@atlassian.com">Scott Farquhar</a> (added i18n handling (WW-109))
  */
 public class PellMultiPartRequest extends MultiPartRequest {
 

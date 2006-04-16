@@ -32,7 +32,6 @@ import java.io.OutputStream;
  * <a href="http://www.jfree.org/jfreechart/" target="_blank">JFreeChart</a>. When executed
  * this Result will write the given chart as a PNG to the servlet output stream.
  *
- * @author Bernard Choi
  */
 public class ChartResult implements Result {
 

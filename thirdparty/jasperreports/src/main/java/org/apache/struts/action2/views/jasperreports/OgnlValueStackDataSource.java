@@ -30,8 +30,6 @@ import java.util.Iterator;
 /**
  * Ported to Struts.
  *
- * @author &lt;a href="hermanns@aixcept.de"&gt;Rainer Hermanns&lt;/a&gt;
- * @version $Id: OgnlValueStackDataSource.java 392647 2006-04-09 00:41:12Z plightbo $
  */
 public class OgnlValueStackDataSource implements JRDataSource {
 

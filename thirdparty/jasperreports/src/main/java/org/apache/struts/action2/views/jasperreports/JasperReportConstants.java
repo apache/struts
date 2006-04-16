@@ -21,8 +21,6 @@ package org.apache.struts.action2.views.jasperreports;
 /**
  * <code>JasperReportConstants</code>
  *
- * @author <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
- * @version $Id: JasperReportConstants.java 392647 2006-04-09 00:41:12Z plightbo $
  */
 public interface JasperReportConstants {
 

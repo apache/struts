@@ -112,8 +112,6 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * &lt;/result&gt;
  * <!-- END SNIPPET: example2 --></pre>
  *
- * @author Patrick Lightbody
- * @author Rainer Hermanns
  */
 public class JasperReportsResult extends StrutsResultSupport implements JasperReportConstants {
 	

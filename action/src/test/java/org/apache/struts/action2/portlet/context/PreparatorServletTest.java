@@ -32,8 +32,6 @@ import junit.framework.TestCase;
  * 
  * Test for the {@link PreparatorServletTest}
  * 
- * @author Nils-Helge Garli
- *
  */
 public class PreparatorServletTest extends TestCase {
 

@@ -22,8 +22,6 @@ import javax.servlet.jsp.JspWriter;
 /**
  * Unit test for {@link URLTag}.
  *
- * @author Brock Bulger (brockman_bulger@hotmail.com)
- * @version $Date$ $Id$
  */
 public class URLTagTest extends AbstractUITagTest {
 

@@ -30,8 +30,6 @@ import com.opensymphony.xwork.mock.MockActionInvocation;
 /**
  * Test case for CreateSessionInterceptor.
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class CreateSessionInterceptorTest extends StrutsTestCase {
 

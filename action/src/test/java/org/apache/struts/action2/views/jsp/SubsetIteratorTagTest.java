@@ -30,8 +30,6 @@ import com.opensymphony.xwork.ActionSupport;
 /**
  * Test case for SubsetIteratorTag.
  * 
- * @author tmjee
- * @version $Date$ $Id$
  */
 public class SubsetIteratorTagTest extends AbstractTagTest {
 	

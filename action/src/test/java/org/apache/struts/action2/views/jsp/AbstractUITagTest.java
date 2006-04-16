@@ -33,9 +33,6 @@ import java.util.*;
 
 
 /**
- * @author Matt Ho <a href="mailto:matt@indigoegg.com">&lt;matt@indigoegg.com&gt;</a>
- * @author <a href="mailto:gielen@it-neering.net">Rene Gielen</a>
- * @version $Id$
  */
 public abstract class AbstractUITagTest extends AbstractTagTest {
 

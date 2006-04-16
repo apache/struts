@@ -28,7 +28,6 @@ import java.util.Locale;
 /**
  * Unit test for {@link ConfigurationTest}.
  *
- * @author Jason Carreira
  */
 public class ConfigurationTest extends StrutsTestCase {
 

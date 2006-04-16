@@ -22,7 +22,6 @@ import org.apache.struts.action2.views.jsp.AbstractUITagTest;
 /**
  * Unit test for {@link DebugTag}.
  *
- * @author Claus Ibsen
  */
 public class DebugTagTest extends AbstractUITagTest {
 

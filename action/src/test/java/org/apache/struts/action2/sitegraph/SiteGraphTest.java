@@ -27,8 +27,6 @@ import java.io.InputStream;
 import java.net.URL;
 
 /**
- * @author plightbo
- * @author Rainer Hermanns
  */
 public class SiteGraphTest extends StrutsTestCase {
     public void testWebFlow() throws Exception {

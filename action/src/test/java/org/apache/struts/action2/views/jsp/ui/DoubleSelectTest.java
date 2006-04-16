@@ -27,9 +27,6 @@ import java.util.List;
 /**
  * Test case for DoubleSelectTag.
  * 
- * @author <a href="mailto:m.bogaert@memenco.com">Mathias Bogaert</a>
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class DoubleSelectTest extends AbstractUITagTest {
 

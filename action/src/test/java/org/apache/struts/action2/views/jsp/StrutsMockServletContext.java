@@ -30,9 +30,6 @@ import java.util.*;
 /**
  * StrutsMockServletContext
  *
- * @author Jason Carreira
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class StrutsMockServletContext implements ServletContext {
 

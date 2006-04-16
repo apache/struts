@@ -26,8 +26,6 @@ import java.util.Hashtable;
 /**
  * StrutsMockHttpSession
  *
- * @author Jason Carreira
- *         Created Jun 5, 2003 9:26:31 PM
  */
 public class StrutsMockHttpSession extends MockHttpSession {
 

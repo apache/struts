@@ -31,8 +31,6 @@ import junit.framework.TestCase;
 /**
  * Abstract test case for all RichTextEditor based test case. (contains common methods)
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public abstract class AbstractRichtexteditorTest extends TestCase {
 	

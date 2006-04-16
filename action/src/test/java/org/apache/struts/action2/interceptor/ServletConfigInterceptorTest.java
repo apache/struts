@@ -37,7 +37,6 @@ import java.util.Map;
 /**
  * Unit test for {@link ServletConfigInterceptor}.
  *
- * @author Claus Ibsen
  */
 public class ServletConfigInterceptorTest extends StrutsTestCase {
 

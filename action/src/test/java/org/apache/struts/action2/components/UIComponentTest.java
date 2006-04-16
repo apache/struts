@@ -46,8 +46,6 @@ import com.opensymphony.xwork.config.ConfigurationManager;
 /**
  * Test case common for all UI component in general.
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class UIComponentTest extends AbstractUITagTest {
 	

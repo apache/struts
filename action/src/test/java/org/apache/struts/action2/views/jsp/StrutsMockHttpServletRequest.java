@@ -28,8 +28,6 @@ import java.util.*;
 /**
  * StrutsMockHttpServletRequest
  *
- * @author Jason Carreira
- *         Created Mar 28, 2003 10:28:50 PM
  */
 public class StrutsMockHttpServletRequest extends MockHttpServletRequest {
 

@@ -35,8 +35,6 @@ import org.jmock.core.Constraint;
 /**
  * PortletSessionMapTest. Insert description.
  * 
- * @author Nils-Helge Garli
- * @version $Revision$ $Date$
  */
 public class PortletSessionMapTest extends MockObjectTestCase {
 

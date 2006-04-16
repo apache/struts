@@ -32,8 +32,6 @@ import javax.servlet.jsp.JspException;
 /**
  * PropertyTag test case.
  * 
- * @author $Author$
- * @version $Revision$
  */
 public class PropertyTagTest extends StrutsTestCase {
 

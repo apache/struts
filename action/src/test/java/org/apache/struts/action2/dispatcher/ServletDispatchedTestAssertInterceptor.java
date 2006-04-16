@@ -24,7 +24,6 @@ import junit.framework.Assert;
 
 
 /**
- * @author CameronBraid
  */
 public class ServletDispatchedTestAssertInterceptor implements Interceptor {
 	

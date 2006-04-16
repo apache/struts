@@ -33,7 +33,6 @@ import java.util.Map;
  * Unit test for ServletActionContext. Based loosly on Jason's ActionContextTest.
  * My first attempt at unit testing. Please hack away as needed.
  *
- * @author <a href="mailto:nightfal@etherlands.net">Erik Beeson</a>
  */
 public class ServletActionContextTest extends TestCase implements StrutsStatics {
 

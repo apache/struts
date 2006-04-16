@@ -26,8 +26,6 @@ import junit.framework.TestCase;
 /**
  * Test case for FreemarkerManager 
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class FreemarkerManagerTest extends TestCase {
 	

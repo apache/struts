@@ -20,7 +20,6 @@ package org.apache.struts.action2.util;
 import junit.framework.TestCase;
 
 /**
- * @author crazybob@google.com (Bob Lee)
  */
 public class PrefixTrieTest extends TestCase {
 

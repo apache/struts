@@ -28,8 +28,6 @@ import junit.framework.TestCase;
 /**
  * Test case for DispatcherUtils.
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class DispatcherUtilsTest extends TestCase {
 

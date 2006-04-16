@@ -39,7 +39,6 @@ import java.util.Map;
 
 
 /**
- * @author CameronBraid
  */
 public abstract class AbstractServletDispatcherTestCase extends StrutsTestCase {
 

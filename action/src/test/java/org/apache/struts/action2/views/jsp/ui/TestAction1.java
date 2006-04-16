@@ -22,7 +22,6 @@ import com.opensymphony.xwork.ActionSupport;
 /**
  * TestAction1
  *
- * @author Jason Carreira <jcarreira@eplus.com>
  */
 public class TestAction1 extends ActionSupport {
 

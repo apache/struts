@@ -22,7 +22,6 @@ import com.opensymphony.xwork.Action;
 /**
  * Used by ExecuteAndWaitInterceptorTest.
  *
- * @author Claus Ibsen
  */
 public class ExecuteAndWaitDelayAction implements Action {
 

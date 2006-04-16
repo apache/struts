@@ -32,10 +32,6 @@ import com.opensymphony.xwork.config.ConfigurationManager;
 /**
  * FormTagTest
  *
- * @author Jason Carreira
- * @author tm_jee
- *         
- * @version $Date$ $Id$
  */
 public class FormTagTest extends AbstractUITagTest {
 

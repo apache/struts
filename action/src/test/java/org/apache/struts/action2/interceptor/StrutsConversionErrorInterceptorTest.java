@@ -33,8 +33,6 @@ import java.util.Map;
 /**
  * StrutsConversionErrorInterceptorTest
  *
- * @author Jason Carreira
- *         Date: Nov 27, 2003 10:11:42 PM
  */
 public class StrutsConversionErrorInterceptorTest extends StrutsTestCase {
 

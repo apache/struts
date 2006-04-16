@@ -19,7 +19,6 @@ package org.apache.struts.action2.views.freemarker;
 
 
 /**
- * @author CameronBraid
  */
 public class TestBean {
 

@@ -28,8 +28,6 @@ import java.util.Map;
 /**
  * Test case for CheckboxList.
  *
- * @author $author$
- * @version $Date$ $Id$
  */
 public class CheckboxListTest extends AbstractUITagTest {
 

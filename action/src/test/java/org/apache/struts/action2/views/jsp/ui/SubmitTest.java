@@ -27,7 +27,6 @@ import java.util.HashMap;
 /**
  * Unit test for {@link SubmitTag}.
  *
- * @author plightbo
  */
 public class SubmitTest extends AbstractUITagTest {
 

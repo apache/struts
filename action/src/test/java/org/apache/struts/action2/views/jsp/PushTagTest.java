@@ -21,8 +21,6 @@ import javax.servlet.jsp.JspException;
 
 
 /**
- * @author $Author$
- * @version $Revision$
  */
 public class PushTagTest extends AbstractUITagTest {
 

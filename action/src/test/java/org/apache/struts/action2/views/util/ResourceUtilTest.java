@@ -19,8 +19,6 @@ package org.apache.struts.action2.views.util;
 /**
  * <code>ResourceUtilTest</code>
  *
- * @author Rainer Hermanns
- * @version $Id$
  */
 import junit.framework.TestCase;
 import org.easymock.MockControl;

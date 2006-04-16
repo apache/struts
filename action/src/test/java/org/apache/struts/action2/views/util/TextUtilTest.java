@@ -22,7 +22,6 @@ import junit.framework.TestCase;
 /**
  * Unit test for {@link TextUtil}.
  *
- * @author Claus Ibsen
  */
 public class TextUtilTest extends TestCase {
 

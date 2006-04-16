@@ -28,8 +28,6 @@ import com.opensymphony.xwork.ActionSupport;
 /**
  * Test case for MergeIteratorTag.
  * 
- * @author tmjee (tm_jee (at) yahoo.co.uk)
- * @version $Date$ $Id$
  */
 public class MergeIteratorTagTest extends AbstractTagTest {
 

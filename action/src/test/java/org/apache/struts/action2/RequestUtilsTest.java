@@ -20,8 +20,6 @@ package org.apache.struts.action2;
 /**
  * <code>RequestUtilsTest</code>
  *
- * @author Rainer Hermanns
- * @version $Id$
  */
 import junit.framework.TestCase;
 

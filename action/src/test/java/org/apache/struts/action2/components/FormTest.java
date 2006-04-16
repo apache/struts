@@ -26,7 +26,6 @@ import java.util.List;
 /**
  * <code>FormTest</code>
  *
- * @author Rainer Hermanns
  */
 public class FormTest extends AbstractUITagTest {
 

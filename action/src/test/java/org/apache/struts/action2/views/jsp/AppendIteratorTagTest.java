@@ -27,8 +27,6 @@ import com.opensymphony.xwork.ActionSupport;
 
 /**
  * Test case for AppendIteratorTag.
- * @author tmjee
- * @version $Date$ $Id$
  */
 public class AppendIteratorTagTest extends AbstractTagTest {
 

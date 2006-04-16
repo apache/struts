@@ -28,7 +28,6 @@ import java.util.HashMap;
 
 
 /**
- * @author roughley
  */
 public class DefautActionMapperTest extends StrutsTestCase {
     private MockHttpServletRequest req;

@@ -32,8 +32,6 @@ import java.util.List;
 /**
  * TestResult
  *
- * @author Jason Carreira
- *         Created Apr 12, 2003 9:49:35 PM
  */
 public class TestResult implements Result {
 

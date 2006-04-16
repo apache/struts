@@ -25,8 +25,6 @@ import org.apache.struts.action2.views.jsp.AbstractUITagTest;
 
 /**
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class OptionTransferSelectTagTest extends AbstractUITagTest {
 

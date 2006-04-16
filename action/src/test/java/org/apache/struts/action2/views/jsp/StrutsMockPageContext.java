@@ -27,11 +27,6 @@ import java.util.Map;
 
 
 /**
- * Created by IntelliJ IDEA.
- * User: Administrator
- * Date: 14-Mar-2003
- * Time: 5:52:36 PM
- * To change this template use Options | File Templates.
  */
 public class StrutsMockPageContext extends MockPageContext {
 

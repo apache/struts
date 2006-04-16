@@ -29,9 +29,6 @@ import java.util.Map;
  
 /**
  *
- * @author gjoseph
- * @author $Author$ (last edit)
- * @version $Revision$
  */
 public class PropertyTest extends TestCase {
     public void testNormalBehaviour() {

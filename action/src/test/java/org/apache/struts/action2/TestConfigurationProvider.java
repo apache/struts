@@ -39,7 +39,6 @@ import java.util.Map;
 /**
  * TestConfigurationProvider provides a simple configuration class without the need for xml files, etc. for simple testing.
  *
- * @author $author$
  */
 public class TestConfigurationProvider implements ConfigurationProvider {
 

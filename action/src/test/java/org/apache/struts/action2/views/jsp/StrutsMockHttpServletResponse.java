@@ -28,9 +28,6 @@ import java.util.Locale;
 /**
  * StrutsMockHttpServletResponse
  *
- * @author Jason Carreira
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class StrutsMockHttpServletResponse extends MockHttpServletResponse {
     private Locale locale;

@@ -30,7 +30,6 @@ import java.util.Map;
 
 
 /**
- * @author Robert Dawson (robert@rojotek.com)
  */
 public class SessionMapTest extends TestCase {
 

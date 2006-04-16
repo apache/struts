@@ -24,9 +24,7 @@ import java.util.Stack;
 
 import javax.servlet.jsp.tagext.TagSupport;
 
-import org.apache.struts.action2.TestConfigurationProvider;
 import org.apache.struts.action2.views.jsp.AbstractTagTest;
-import org.apache.struts.action2.views.jsp.ActionTag;
 import org.apache.struts.action2.views.jsp.BeanTag;
 import org.apache.struts.action2.views.jsp.ElseIfTag;
 import org.apache.struts.action2.views.jsp.ElseTag;
@@ -44,15 +42,12 @@ import org.apache.struts.action2.views.jsp.ui.RichTextEditorTag;
 import org.apache.struts.action2.views.jsp.ui.TextFieldTag;
 import org.apache.struts.action2.views.jsp.ui.UpDownSelectTag;
 import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.config.ConfigurationManager;
 import com.opensymphony.xwork.util.LocalizedTextUtil;
 
 /**
  * Test case for method findAncestor(Class) in Component and some commons
  * test cases for Component in general.
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class ComponentTest extends AbstractTagTest {
 

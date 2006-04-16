@@ -19,7 +19,6 @@ package org.apache.struts.action2.views.jsp.ui;
 
 
 /**
- * @author Mark Woon
  */
 public class User {
 

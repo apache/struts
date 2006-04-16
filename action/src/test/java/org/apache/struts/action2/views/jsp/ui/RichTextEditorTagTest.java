@@ -25,8 +25,6 @@ import com.opensymphony.xwork.ActionContext;
 /**
  * RichTextEditor test case.
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class RichTextEditorTagTest extends AbstractUITagTest {
 

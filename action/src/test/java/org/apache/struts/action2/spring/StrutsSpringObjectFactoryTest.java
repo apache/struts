@@ -31,8 +31,6 @@ import javax.servlet.ServletContext;
 /**
  * Unit test for {@link StrutsSpringObjectFactory}.
  *
- * @author Claus Ibsen
- * @version $Date$ $Id$
  */
 public class StrutsSpringObjectFactoryTest extends TestCase {
 

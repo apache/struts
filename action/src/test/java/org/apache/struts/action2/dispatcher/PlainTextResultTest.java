@@ -35,8 +35,6 @@ import junit.framework.TestCase;
 /**
  * Test case for PlainTextResult.
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class PlainTextResultTest extends TestCase {
 	

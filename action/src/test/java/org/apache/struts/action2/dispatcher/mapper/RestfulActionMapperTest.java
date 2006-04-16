@@ -28,7 +28,6 @@ import org.apache.struts.action2.views.jsp.StrutsMockHttpServletRequest;
 /**
  * Unit test for {@link RestfulActionMapper}.
  *
- * @author Claus Ibsen
  */
 public class RestfulActionMapperTest extends TestCase {
 

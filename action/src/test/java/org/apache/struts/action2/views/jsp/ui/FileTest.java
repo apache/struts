@@ -24,9 +24,6 @@ import java.util.Map;
 
 
 /**
- * User: plightbo
- * Date: Oct 16, 2003
- * Time: 10:43:24 PM
  */
 public class FileTest extends AbstractUITagTest {
 

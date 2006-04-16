@@ -25,10 +25,6 @@ import java.util.Map;
 
 
 /**
- * Created by IntelliJ IDEA.
- * User: matt
- * Date: May 31, 2003
- * Time: 10:21:36 AM
  */
 public class MockTag extends BodyTagSupport {
 

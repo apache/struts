@@ -26,7 +26,6 @@ import javax.servlet.RequestDispatcher;
 /**
  * Unit test of {@link IncludeTag}.
  *
- * @author Claus Ibsen
  */
 public class IncludeTagTest extends AbstractTagTest {
 

@@ -24,8 +24,6 @@ import org.apache.struts.action2.components.AbstractRichtexteditorConnector.Fold
 
 /**
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class MockRichtexteditorConnector extends AbstractRichtexteditorConnector {
 

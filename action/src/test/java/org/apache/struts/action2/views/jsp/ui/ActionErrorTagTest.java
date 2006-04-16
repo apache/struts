@@ -30,8 +30,6 @@ import com.opensymphony.xwork.ActionSupport;
 /**
  * ActionErrorTag test case.
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class ActionErrorTagTest extends AbstractUITagTest {
 	

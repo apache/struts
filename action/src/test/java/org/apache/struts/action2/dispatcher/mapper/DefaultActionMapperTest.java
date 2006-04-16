@@ -28,8 +28,6 @@ import java.util.Map;
 /**
  * DefaultActionMapper test case.
  *
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class DefaultActionMapperTest extends StrutsTestCase {
 

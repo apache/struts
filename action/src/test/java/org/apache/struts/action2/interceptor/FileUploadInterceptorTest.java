@@ -39,9 +39,6 @@ import java.util.Map;
 /**
  * Test case for FileUploadInterceptor.
  *
- * @author tmjee
- * @author Claus Ibsen
- * @version $Date$ $Id$
  */
 public class FileUploadInterceptorTest extends StrutsTestCase {
 

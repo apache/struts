@@ -31,7 +31,6 @@ import java.util.Map;
 /**
  * InvocationSessionStoreTest
  *
- * @author Jason Carreira Created Apr 12, 2003 10:34:53 PM
  */
 public class InvocationSessionStoreTest extends StrutsTestCase {
 

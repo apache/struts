@@ -42,7 +42,6 @@ import java.util.Map;
 /**
  * Test case for ExecuteAndWaitInterceptor.
  *
- * @author Claus Ibsen
  */
 public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
 

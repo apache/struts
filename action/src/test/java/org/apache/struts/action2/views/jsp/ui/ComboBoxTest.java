@@ -24,10 +24,6 @@ import java.util.ArrayList;
 
 
 /**
- * DOCUMENT ME!
- *
- * @author $author$
- * @version $Revision$
  */
 public class ComboBoxTest extends AbstractUITagTest {
 

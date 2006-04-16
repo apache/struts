@@ -34,8 +34,6 @@ import java.util.Map;
 /**
  * FilterDispatcher TestCase.
  *
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class FilterDispatcherTest extends StrutsTestCase {
 

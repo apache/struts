@@ -23,9 +23,7 @@ import junit.framework.TestCase;
 
 /**
  * TemplateEngineManagerTest
- * Date: Sep 28, 2004 12:22:05 PM
  *
- * @author jcarreira
  */
 public class TemplateEngineManagerTest extends TestCase {
     public void testTemplateTypeFromTemplateNameAndDefaults() {

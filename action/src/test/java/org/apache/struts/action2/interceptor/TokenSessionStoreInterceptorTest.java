@@ -24,7 +24,6 @@ import org.apache.struts.action2.TestConfigurationProvider;
 /**
  * Unit test for {@link TokenSessionStoreInterceptor}.
  *
- * @author Claus Ibsen
  */
 public class TokenSessionStoreInterceptorTest extends TokenInterceptorTest {
 

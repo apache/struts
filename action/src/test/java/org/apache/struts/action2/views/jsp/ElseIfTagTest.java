@@ -29,8 +29,6 @@ import junit.framework.TestCase;
 
 /**
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class ElseIfTagTest extends TestCase {
 

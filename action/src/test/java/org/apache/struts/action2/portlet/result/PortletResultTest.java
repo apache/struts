@@ -42,8 +42,6 @@ import com.opensymphony.xwork.ActionInvocation;
 /**
  * PortletResultTest. Insert description.
  * 
- * @author Nils-Helge Garli
- * @version $Revision$ $Date$
  */
 public class PortletResultTest extends MockObjectTestCase {
     

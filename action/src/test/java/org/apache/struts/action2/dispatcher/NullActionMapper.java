@@ -24,8 +24,6 @@ import org.apache.struts.action2.dispatcher.mapper.ActionMapping;
 
 /**
  * ActionMapper for testing FilterDispatcher (used in FilterDispaatcherTest)
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class NullActionMapper implements ActionMapper {
 

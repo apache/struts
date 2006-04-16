@@ -26,7 +26,6 @@ import java.util.Map;
 /**
  * Reset Component Test.
  *
- * @author Rene Gielen
  */
 public class ResetTest extends AbstractUITagTest {
 

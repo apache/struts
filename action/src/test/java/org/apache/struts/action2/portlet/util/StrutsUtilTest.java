@@ -38,8 +38,6 @@ import junit.framework.TestCase;
 /**
  * Test case for StrutsUtil.
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class StrutsUtilTest extends TestCase {
 	

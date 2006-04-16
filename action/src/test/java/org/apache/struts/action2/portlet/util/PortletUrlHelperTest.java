@@ -34,10 +34,6 @@ import org.apache.struts.action2.portlet.context.PortletActionContext;
 import com.opensymphony.xwork.ActionContext;
 
 /**
- * @author Nils-Helge Garli
- * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
  */
 public class PortletUrlHelperTest extends TestCase {
 

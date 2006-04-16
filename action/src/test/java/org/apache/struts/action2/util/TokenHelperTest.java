@@ -28,8 +28,6 @@ import com.opensymphony.xwork.ActionContext;
 /**
  * TokenHelperTest
  *
- * @author Jason Carreira
- *         Created Apr 3, 2003 10:13:08 AM
  */
 public class TokenHelperTest extends TestCase {
 

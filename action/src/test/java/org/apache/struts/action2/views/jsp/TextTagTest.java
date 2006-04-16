@@ -37,8 +37,6 @@ import java.util.Locale;
 /**
  * TextTagTest
  *
- * @author jcarreira
- * @author Rainer Hermanns
  */
 public class TextTagTest extends AbstractTagTest {
 

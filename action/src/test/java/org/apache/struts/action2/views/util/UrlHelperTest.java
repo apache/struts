@@ -34,9 +34,6 @@ import java.util.HashMap;
 /**
  * Test case for UrlHelper.
  * 
- * @author Matt Ho <a href="mailto:matt@enginegreen.com">&lt;matt@enginegreen.com&gt;</a>
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class UrlHelperTest extends StrutsTestCase {
 	

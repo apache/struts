@@ -27,8 +27,6 @@ import java.io.Writer;
 
 /**
  * StrutsBodyContent
- * User: jcarreira
- * Created: Oct 17, 2003 11:18:58 PM
  */
 public class StrutsBodyContent extends BodyContent {
 

@@ -25,8 +25,6 @@ import junit.framework.TestCase;
 /**
  * Test case for ContextUtil
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class ContextUtilTest extends TestCase {
 

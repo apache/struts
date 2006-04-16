@@ -27,8 +27,6 @@ import com.opensymphony.xwork.ActionSupport;
 /**
  * Test case for IteratorGeneratorTag.
  * 
- * @author tm_jee ( tm_jee(at)yahoo.co.uk )
- * @version $Date$ $Id$
  */
 public class IteratorGeneratorTagTest extends AbstractTagTest {
 

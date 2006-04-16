@@ -23,14 +23,11 @@ import org.apache.struts.action2.views.jsp.AbstractUITagTest;
 import org.apache.struts.action2.views.jsp.ParamTag;
 import org.apache.struts.action2.views.jsp.StrutsMockBodyContent;
 
-import com.opensymphony.xwork.ObjectFactory;
 import com.opensymphony.xwork.config.ConfigurationManager;
 
 /**
  * UI components Tooltip test case.
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class TooltipTest extends AbstractUITagTest {
 

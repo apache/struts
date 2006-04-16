@@ -27,8 +27,6 @@ import junit.framework.TestCase;
 /**
  * Test case for Struts Type Converter.
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class StrutsTypeConverterTest extends TestCase {
 

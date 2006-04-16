@@ -35,7 +35,6 @@ import java.net.URL;
 /**
  * Unit test for {@link StreamResult}.
  *
- * @author Claus Ibsen
  */
 public class StreamResultTest extends TestCase {
 

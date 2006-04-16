@@ -25,8 +25,6 @@ import java.util.Locale;
 /**
  * Unit test for {@link DatePickerTag}.
  *
- * @author Claus Ibsen
- * @author tm_jee
  */
 public class DatePickerTagTest extends AbstractUITagTest {
 

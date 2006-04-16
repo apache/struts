@@ -39,7 +39,6 @@ import java.util.Map;
 /**
  * Base class to extend for unit testing UI Tags.
  *
- * @author jcarreira
  */
 public abstract class AbstractTagTest extends StrutsTestCase {
     protected Action action;

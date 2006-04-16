@@ -29,7 +29,6 @@ import java.util.Date;
 /**
  * Unit test for {@link org.apache.struts.action2.components.Date}.
  *
- * @author Claus Ibsen
  */
 public class DateTagTest extends AbstractTagTest {
 

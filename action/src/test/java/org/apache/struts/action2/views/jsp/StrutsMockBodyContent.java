@@ -27,8 +27,6 @@ import java.io.Writer;
 /**
  * StrutsMockBodyContent
  *
- * @author Jason Carreira
- *         Date: Mar 15, 2004 10:50:56 PM
  */
 public class StrutsMockBodyContent extends BodyContent {
 

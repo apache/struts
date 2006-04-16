@@ -25,9 +25,6 @@ import java.util.HashMap;
 
 
 /**
- * User: plightbo
- * Date: Oct 16, 2003
- * Time: 10:49:54 PM
  */
 public class HiddenTest extends AbstractUITagTest {
 

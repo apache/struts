@@ -35,7 +35,6 @@ import java.util.ArrayList;
 /**
  * Unit test for {@link XSLTResult}.
  *
- * @author Claus Ibsen
  */
 public class XSLTResultTest extends TestCase {
 

@@ -22,8 +22,6 @@ import org.apache.struts.action2.components.AbstractRichtexteditorConnector;
 /**
  * Test case for RichtexteditorGetFoldersResultTest.
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class RichtexteditorGetFoldersResultTest extends AbstractRichtexteditorTest {
 

@@ -22,8 +22,6 @@ import org.apache.struts.action2.views.jsp.AbstractUITagTest;
 
 
 /**
- * @author Matt Ho <a href="mailto:matt@enginegreen.com">&lt;matt@enginegreen.com&gt;</a>
- * @version $Id$
  */
 public class ComponentTest extends AbstractUITagTest {
 

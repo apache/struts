@@ -28,9 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * JspTemplateTest
- * Date: Sep 29, 2004 12:14:34 PM
  *
- * @author jcarreira
  */
 public class JspTemplateTest extends AbstractUITagTest {
     public void testCheckBox() throws Exception {

@@ -29,8 +29,6 @@ import com.opensymphony.xwork.ActionSupport;
 /**
  * ActionMessageTag test case.
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class ActionMessageTagTest extends AbstractUITagTest {
 

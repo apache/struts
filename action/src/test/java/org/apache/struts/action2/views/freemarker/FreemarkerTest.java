@@ -29,7 +29,6 @@ import java.util.List;
 
 
 /**
- * @author CameronBraid
  */
 public class FreemarkerTest extends TestCase {
 

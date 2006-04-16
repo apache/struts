@@ -21,9 +21,6 @@ import junit.framework.TestCase;
 
 
 /**
- * User: plightbo
- * Date: Jan 7, 2004
- * Time: 7:55:35 PM
  */
 public class CounterTest extends TestCase {
 

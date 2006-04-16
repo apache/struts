@@ -7,8 +7,6 @@ package org.apache.struts.action2.views.jsp.ui;
 import org.apache.struts.action2.views.jsp.AbstractUITagTest;
 
 /**
- * @author Ian Roughley
- * @version $Id$
  */
 public class SubmitAjaxTest extends AbstractUITagTest {
 

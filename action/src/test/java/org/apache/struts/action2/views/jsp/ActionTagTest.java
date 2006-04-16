@@ -36,8 +36,6 @@ import javax.servlet.jsp.PageContext;
 /**
  * Unit test for {@link ActionTag}.
  *
- * @author Jason Carreira
- * @author tmjee ( tm_jee(at)yahoo.co.uk )
  */
 public class ActionTagTest extends AbstractTagTest {
 

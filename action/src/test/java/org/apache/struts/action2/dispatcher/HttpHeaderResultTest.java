@@ -33,8 +33,6 @@ import java.util.Map;
 /**
  * HttpHeaderResultTest
  *
- * @author Jason Carreira
- *         Date: Nov 16, 2003 1:08:20 AM
  */
 public class HttpHeaderResultTest extends XWorkTestCase {
 

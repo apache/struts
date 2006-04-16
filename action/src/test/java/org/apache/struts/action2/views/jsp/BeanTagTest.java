@@ -21,10 +21,6 @@ import javax.servlet.jsp.JspException;
 
 
 /**
- * DOCUMENT ME!
- *
- * @author $author$
- * @version $Revision$
  */
 public class BeanTagTest extends AbstractUITagTest {
 

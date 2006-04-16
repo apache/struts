@@ -24,9 +24,6 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * ExecutionCountTestAction
- *
- * @author Jason Carreira
- *         Created Apr 18, 2003 6:17:40 PM
  */
 public class ExecutionCountTestAction extends ActionSupport {
 

@@ -39,8 +39,6 @@ import java.util.Map;
 /**
  * TokenInterceptorTest
  *
- * @author Jason Carreira
- *         Created Apr 9, 2003 11:42:01 PM
  */
 public class TokenInterceptorTest extends TestCase {
 

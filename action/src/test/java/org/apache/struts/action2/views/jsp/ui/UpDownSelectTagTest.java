@@ -29,8 +29,6 @@ import com.opensymphony.xwork.ActionSupport;
 /**
  * Test case for UpDownSelectTag 
  * 
- * @author tm_jee
- * @version $Date$ $Id$
  */
 public class UpDownSelectTagTest extends AbstractUITagTest {
 

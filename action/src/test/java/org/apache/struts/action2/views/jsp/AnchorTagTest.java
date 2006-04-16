@@ -27,8 +27,6 @@ import java.io.StringWriter;
 
 /**
  *
- * @author Mike Porter
- * @version $Revision$
  */
 public class AnchorTagTest extends AbstractUITagTest {
     private StringWriter writer = new StringWriter();

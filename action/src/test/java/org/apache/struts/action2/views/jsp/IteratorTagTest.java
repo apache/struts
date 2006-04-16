@@ -32,8 +32,6 @@ import java.util.Map;
 /**
  * Test Case for Iterator Tag 
  * 
- * @author $Author$
- * @version $Date$ $Id$
  */
 public class IteratorTagTest extends AbstractUITagTest {
 

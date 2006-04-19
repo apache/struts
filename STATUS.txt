@@ -24,38 +24,15 @@ Other resources:
 
 DISTRIBUTION RIGHTS - LICENSING
 
-JSCalendar for the DatePicker tag
-* Rene has contacted dynarch.com about license change, waiting for response. No answer yet
-* Replaced it with Dojo's Date picker, but be warned it is missing a lot
-  of the old features
-
-FCKEditor for the Richtexteditor tag
-* Toby contacted the author about license change, no answer yet
-* There may also be a Dojo equivalent
-* Replaced with Dojo's Editor component
-
-Walter Zorns tooltip library for all UI Tags
-* Is there a Dojo equivalent?
-* Replaced it with Dojo's tooltip lib, although there are several issues
-  to iron out still
-
-tabbedpane.vm Archived UI template
-* Is this a server-side compoonent, or is there a Dojo equivalent?
-* Component was deprecated and already replaced by TabbedPanel. Simply removed the tag implementation
-  and the archived templates
-
-JasperReports
-* Martin will contact Jasper software about license change
-** Alternatively, can we do a bridge API for this? Or must be it be separate extension?
-** Would DataVision be an alternative (http://datavision.sourceforge.net/)?
+optiontransferselect.js
+* Don has contacted Matt Kruse about relicensing or filing a code grant
 
 ----
 
 DISTRIBUTION RIGHTS - COPYRIGHT HOLDERS
 
-Has "Open Symphony Group" filed a software grant? Yes
-
-Has "ePlus Corporation" filed a software grant or CCLA for Jason? Not needed
+Need to get code grants from all signficant copyright holders of WebWork
+* Don will work with Patrick to contact
 
 ----
 

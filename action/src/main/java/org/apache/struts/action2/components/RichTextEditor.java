@@ -253,6 +253,7 @@ public class RichTextEditor extends UIBean {
 	private String flashUploadDeniedExtension;
 	private String smileyPath;
 	private String smileyImages;
+    private String items = "textGroup;|;listGroup;";
 	
 	
 	public RichTextEditor(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
@@ -549,7 +550,12 @@ public class RichTextEditor extends UIBean {
 			addParameter("smileyPath", smileyPath);
 		}
 		
-		// smileyImages
+		// items
+		if (items != null) {
+			addParameter("items", items);
+		}
+
+    	// smileyImages
 		if (smileyImages != null) {
 			addParameter("smileyImages", smileyImages);
 		}
@@ -1216,6 +1222,18 @@ public class RichTextEditor extends UIBean {
 	 */
 	public void setSmileyImages(String smileyImages) {
 		this.smileyImages = smileyImages;
+	}
+
+    public String getItems() {
+		return items;
+	}
+
+	/**
+	 * List of items to be included in the toolbar
+	 * @a2.tagattribute required="false" type="string' default="textGroup;|;listGroup;"
+	 */
+	public void setItems(String items) {
+		this.items = items;
 	}
 
 	public String getSmileyPath() {

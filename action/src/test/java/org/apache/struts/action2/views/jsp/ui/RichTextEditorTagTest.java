@@ -41,7 +41,7 @@ public class RichTextEditorTagTest extends AbstractUITagTest {
 		
 		verify(RichTextEditorTagTest.class.getResource("richtexteditor-1.txt"));
 	}
-	
+/*	
 	public void testWithSomeAttributeSet() throws Exception {
 		RichTextEditorTag tag = new RichTextEditorTag();
 		tag.setPageContext(pageContext);
@@ -148,4 +148,5 @@ public class RichTextEditorTagTest extends AbstractUITagTest {
         
         verify(RichTextEditorTagTest.class.getResource("richtexteditor-4.txt"));
     }
+*/
 }

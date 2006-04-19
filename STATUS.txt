@@ -32,6 +32,7 @@ JSCalendar for the DatePicker tag
 FCKEditor for the Richtexteditor tag
 * Toby contacted the author about license change, no answer yet
 * There may also be a Dojo equivalent
+* Replaced with Dojo's Editor component
 
 Walter Zorns tooltip library for all UI Tags
 * Is there a Dojo equivalent?
@@ -52,9 +53,9 @@ JasperReports
 
 DISTRIBUTION RIGHTS - COPYRIGHT HOLDERS
 
-Has "Open Symphony Group" filed a software grant?
+Has "Open Symphony Group" filed a software grant? Yes
 
-Has "ePlus Corporation" filed a software grant or CCLA for Jason?
+Has "ePlus Corporation" filed a software grant or CCLA for Jason? Not needed
 
 ----
 

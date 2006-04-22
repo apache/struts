@@ -161,10 +161,10 @@
 	id="${parameters.doubleId?html}"
 	</#if><#t/>
 	<#if parameters.doubleCssClass?exists><#t/>
-	class="${parameters.cssClass?html}"
+	class="${parameters.doubleCssClass?html}"
 	</#if><#t/>
 	<#if parameters.doubleCssStyle?exists><#t/>
-	style="${parameters.cssStyle?html}"
+	style="${parameters.doubleCssStyle?html}"
 	</#if><#t/>
     <#if parameters.doubleOnclick?exists><#t/>
     onclick="${parameters.doubleOnclick?html}"

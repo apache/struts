@@ -89,7 +89,13 @@ import com.opensymphony.xwork.util.OgnlValueStack;
  * <pre>
  * <!-- START SNIPPET: i18nExample -->
  * 
+ * &lt;-- Third Example --&gt;
  * &lt;a:text name="some.key" /&gt;
+ * 
+ * &lt;-- Fourth Example --&gt;
+ * &lt;a:text name="some.invalid.key" &gt;
+ *    The Default Message That Will Be Displayed
+ * &lt;/a:text&gt;
  * 
  * <!-- END SNIPPET: i18nExample -->
  * </pre>
@@ -116,6 +122,14 @@ public class Text extends Component implements Param.UnnamedParametric {
      */
     public void setName(String name) {
         this.name = name;
+    }
+    
+    
+    public boolean usesBody() {
+    	// overriding this to true such that EVAL_BODY_BUFFERED is return and 
+    	// bodyContent will be valid hence, text between start & end tag will
+    	// be honoured as default message (WW-1268)
+    	return true;
     }
 
     public boolean end(Writer writer, String body) {

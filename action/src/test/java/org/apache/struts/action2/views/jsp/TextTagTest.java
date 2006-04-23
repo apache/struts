@@ -22,11 +22,18 @@ import org.apache.struts.action2.TestAction;
 import org.apache.struts.action2.components.Text;
 import org.apache.struts.action2.views.jsp.ui.TestAction1;
 import org.apache.struts.action2.views.jsp.ui.StrutsBodyContent;
+
+import com.mockobjects.servlet.MockBodyContent;
+import com.mockobjects.servlet.MockJspWriter;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.BodyTag;
+import javax.servlet.jsp.tagext.Tag;
+import javax.servlet.jsp.tagext.TagSupport;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,6 +56,22 @@ public class TextTagTest extends AbstractTagTest {
         action.setFoo(fooValue);
 
         return action;
+    }
+    
+    public void testDefaultMessageOk() throws Exception {
+    	// NOTE:
+    	// simulate the condition
+    	// <saf:text name="some.invalid.key">My Default Message</saf:text>
+    	
+    	StrutsMockBodyContent mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
+    	mockBodyContent.setString("Sample Of Default Message");
+    	tag.setBodyContent(mockBodyContent);
+    	tag.setName("some.invalid.key.so.we.should.get.the.default.message");
+    	int startStatus = tag.doStartTag();
+    	tag.doEndTag();
+    	
+    	assertEquals(startStatus, BodyTag.EVAL_BODY_BUFFERED);
+    	assertEquals("Sample Of Default Message", writer.toString());
     }
 
     public void testExpressionsEvaluated() throws Exception {

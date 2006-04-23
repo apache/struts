@@ -17,7 +17,16 @@
  */
 package org.apache.struts.action2.views.jsp;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.jsp.JspWriter;
+
+import org.apache.struts.action2.components.URL;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+
+import com.opensymphony.xwork.util.OgnlValueStack;
 
 /**
  * Unit test for {@link URLTag}.
@@ -27,6 +36,31 @@ public class URLTagTest extends AbstractUITagTest {
 
     private URLTag tag;
 
+    public void testIncludeParamsDefaultToGET() throws Exception {
+    	request.setQueryString("one=oneVal&two=twoVal&three=threeVal");
+    	
+    	// request parameter map should not have any effect, as includeParams 
+    	// default to GET, which get its param from request.getQueryString()
+    	Map tmp = new HashMap();
+    	tmp.put("one", "aaa");
+    	tmp.put("two", "bbb");
+    	tmp.put("three", "ccc");
+    	request.setParameterMap(tmp);
+    	
+    	tag.setValue("TestAction.acton");
+    	
+    	tag.doStartTag();
+    	
+    	URL url = (URL) tag.getComponent();
+    	Map parameters = url.getParameters();
+    	
+    	tag.doEndTag();
+    	
+    	assertEquals(parameters.get("one"), "oneVal");
+    	assertEquals(parameters.get("two"), "twoVal");
+    	assertEquals(parameters.get("three"), "threeVal");
+    }
+    
     public void testActionURL() throws Exception {
         tag.setValue("TestAction.action");
 

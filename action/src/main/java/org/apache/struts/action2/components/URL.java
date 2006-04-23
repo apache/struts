@@ -148,7 +148,8 @@ public class URL extends Component {
         // no explicit url set so attach params from current url, do
         // this at start so body params can override any of these they wish.
         try {
-            String includeParams = null;
+        	// ww-1266
+            String includeParams = GET;
 
             if (this.includeParams != null) {
                 includeParams = findString(this.includeParams);

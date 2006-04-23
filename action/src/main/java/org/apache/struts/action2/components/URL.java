@@ -178,7 +178,8 @@ public class URL extends Component {
         if(!(DispatcherUtils.isPortletSupportActive() && PortletActionContext.isPortletRequest())) {
             String query = extractQueryString();
             if (query != null) {
-                mergeRequestParameters(parameters, HttpUtils.parseQueryString(query));
+                //mergeRequestParameters(parameters, HttpUtils.parseQueryString(query));
+            	mergeRequestParameters(parameters, UrlHelper.parseQueryString(query));
             }
         }
     }

@@ -18,6 +18,7 @@
 package org.apache.struts.action2.views.xslt;
 
 import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.StrutsTestCase;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.mock.MockActionInvocation;
@@ -36,7 +37,7 @@ import java.util.ArrayList;
  * Unit test for {@link XSLTResult}.
  *
  */
-public class XSLTResultTest extends TestCase {
+public class XSLTResultTest extends StrutsTestCase {
 
     private XSLTResult result;
     private MockHttpServletResponse response;

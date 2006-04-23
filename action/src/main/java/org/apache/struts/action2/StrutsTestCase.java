@@ -18,7 +18,9 @@
 package org.apache.struts.action2;
 
 import org.apache.struts.action2.config.Configuration;
+import org.apache.struts.action2.dispatcher.DispatcherUtils;
 import com.opensymphony.xwork.XWorkTestCase;
+import com.opensymphony.xwork.util.LocalizedTextUtil;
 
 /**
  * Base test case for unit testing WebWork.
@@ -27,7 +29,9 @@ public abstract class StrutsTestCase extends XWorkTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+        DispatcherUtils.setInstance(null);
         Configuration.reset();
+        LocalizedTextUtil.clearDefaultResourceBundles();
     }
 
     protected void tearDown() throws Exception {

@@ -29,6 +29,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockRequestDispatcher;
 
 import org.apache.struts.action2.TestAction;
+import org.apache.struts.action2.StrutsTestCase;
 import org.apache.struts.action2.util.ListEntry;
 import org.apache.struts.action2.util.StrutsUtil;
 import com.opensymphony.xwork.util.OgnlValueStack;
@@ -39,7 +40,7 @@ import junit.framework.TestCase;
  * Test case for StrutsUtil.
  * 
  */
-public class StrutsUtilTest extends TestCase {
+public class StrutsUtilTest extends StrutsTestCase {
 	
 	protected OgnlValueStack stack = null;
 	protected InternalMockHttpServletRequest request = null;

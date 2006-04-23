@@ -20,6 +20,7 @@ package org.apache.struts.action2.views.jsp;
 import com.mockobjects.servlet.MockJspWriter;
 import com.mockobjects.servlet.MockPageContext;
 import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.StrutsTestCase;
 import org.apache.struts.action2.components.If;
 import com.opensymphony.xwork.util.OgnlValueStack;
 import junit.framework.TestCase;
@@ -30,7 +31,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 /**
  */
-public class ElseTagTest extends TestCase {
+public class ElseTagTest extends StrutsTestCase {
 
     ElseTag elseTag;
     MockPageContext pageContext;

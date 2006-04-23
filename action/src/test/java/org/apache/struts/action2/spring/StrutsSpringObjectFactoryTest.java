@@ -18,6 +18,7 @@
 package org.apache.struts.action2.spring;
 
 import org.apache.struts.action2.StrutsConstants;
+import org.apache.struts.action2.StrutsTestCase;
 import org.apache.struts.action2.config.Configuration;
 import junit.framework.TestCase;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -32,7 +33,7 @@ import javax.servlet.ServletContext;
  * Unit test for {@link StrutsSpringObjectFactory}.
  *
  */
-public class StrutsSpringObjectFactoryTest extends TestCase {
+public class StrutsSpringObjectFactoryTest extends StrutsTestCase {
 
     public void testNoSpringContext() throws Exception {
         // to cover situations where there will be logged an error

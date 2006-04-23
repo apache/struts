@@ -8,7 +8,6 @@
       <version>2.0-SNAPSHOT</version>
     </parent>
     <groupId>org.apache.struts.action2</groupId>
-    <version>2.0-SNAPSHOT</version>
     <artifactId>webapp-starter</artifactId>
     <packaging>war</packaging>
     <name>Starter Webapp</name>

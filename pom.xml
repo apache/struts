@@ -133,7 +133,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-idea-plugin</artifactId>
                 <configuration>
-                    <jdkName>1.4</jdkName>
+                    <jdkName>1.5</jdkName>
                     <exclude>target,test-output,.clover</exclude>
                     <useShortDependencyNames>true</useShortDependencyNames>
                     <libraries>
@@ -151,8 +151,8 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                  <source>1.4</source>
-                  <target>1.4</target>
+                  <source>1.5</source>
+                  <target>1.5</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -173,4 +173,112 @@
         <developerConnection>scm:svn:http://svn.apache.org/repos/asf/incubator/webwork2/trunk/</developerConnection>
         <url>http://svn.apache.org/repos/asf/incubator/webwork2/trunk/</url>
     </scm>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.struts.action2</groupId>
+                <artifactId>action</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.struts.action2</groupId>
+                <version>${project.version}</version>
+                <artifactId>action-jasperreports</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.struts.action2</groupId>
+                <version>${project.version}</version>
+                <artifactId>action-jfreechart</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.struts.action2</groupId>
+                <version>${project.version}</version>
+                <artifactId>action-pell-file-upload</artifactId>
+            </dependency>
+
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>1.2.9</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>1.2.6</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>1.2.6</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>1.2.6</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>1.2.6</version>
+            </dependency>
+
+            <dependency>
+                <groupId>jasperreports</groupId>
+                <artifactId>jasperreports</artifactId>
+                <version>1.1.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>jasperreports</groupId>
+                <artifactId>jasperreports</artifactId>
+                <version>1.1.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>2.4</version>
+            </dependency>
+
+            <dependency>
+                <groupId>jfree</groupId>
+                <artifactId>jfreechart</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>mockobjects</groupId>
+                <artifactId>mockobjects-core</artifactId>
+                <version>0.09</version>
+            </dependency>
+
+            <dependency>
+                <groupId>opensymphony</groupId>
+                <artifactId>pell-multipart</artifactId>
+                <version>2.1.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>portlet-api</groupId>
+                <artifactId>portlet-api</artifactId>
+                <version>1.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>2.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cewolf</groupId>
+                <artifactId>cewolf</artifactId>
+                <version>1.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>

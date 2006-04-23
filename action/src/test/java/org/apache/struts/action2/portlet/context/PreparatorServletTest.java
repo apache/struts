@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.easymock.MockControl;
 
 import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.StrutsTestCase;
 
 import junit.framework.TestCase;
 
@@ -33,7 +34,7 @@ import junit.framework.TestCase;
  * Test for the {@link PreparatorServletTest}
  * 
  */
-public class PreparatorServletTest extends TestCase {
+public class PreparatorServletTest extends StrutsTestCase {
 
     /**
      * Test that the service method stores the request, response and servlet context

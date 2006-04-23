@@ -20,6 +20,7 @@ package org.apache.struts.action2.dispatcher;
 import java.util.Locale;
 
 import org.springframework.mock.web.MockServletContext;
+import org.apache.struts.action2.StrutsTestCase;
 
 import com.opensymphony.xwork.util.LocalizedTextUtil;
 
@@ -29,7 +30,7 @@ import junit.framework.TestCase;
  * Test case for DispatcherUtils.
  * 
  */
-public class DispatcherUtilsTest extends TestCase {
+public class DispatcherUtilsTest extends StrutsTestCase {
 
 	public void testDefaultResurceBundlePropertyLoaded() throws Exception {
         Locale.setDefault(Locale.US); // force to US locale as we also have _de and _da properties

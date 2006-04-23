@@ -19,6 +19,7 @@ package org.apache.struts.action2.interceptor;
 
 import org.apache.struts.action2.ServletActionContext;
 import org.apache.struts.action2.TestConfigurationProvider;
+import org.apache.struts.action2.StrutsTestCase;
 import org.apache.struts.action2.util.TokenHelper;
 import org.apache.struts.action2.views.jsp.StrutsMockHttpServletRequest;
 import org.apache.struts.action2.views.jsp.StrutsMockHttpSession;
@@ -40,7 +41,7 @@ import java.util.Map;
  * TokenInterceptorTest
  *
  */
-public class TokenInterceptorTest extends TestCase {
+public class TokenInterceptorTest extends StrutsTestCase {
 
     ActionContext oldContext;
     HttpSession httpSession;

@@ -20,6 +20,7 @@ package org.apache.struts.action2.dispatcher;
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts.action2.StrutsTestCase;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.XWorkTestCase;
@@ -34,7 +35,7 @@ import java.util.Map;
  * HttpHeaderResultTest
  *
  */
-public class HttpHeaderResultTest extends XWorkTestCase {
+public class HttpHeaderResultTest extends StrutsTestCase {
 
     ActionInvocation invocation;
     HttpHeaderResult result;

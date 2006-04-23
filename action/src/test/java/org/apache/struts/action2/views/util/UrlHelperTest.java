@@ -282,16 +282,30 @@ public class UrlHelperTest extends StrutsTestCase {
     }
     
     public void testTranslateAndEncode() throws Exception {
-    	String result = UrlHelper.translateAndEncode("\u65b0\u805e");
-    	String expectedResult = "%E6%96%B0%E8%81%9E";
+    	Object defaultI18nEncoding = Configuration.get(StrutsConstants.STRUTS_I18N_ENCODING);
+    	try {
+    		Configuration.set(StrutsConstants.STRUTS_I18N_ENCODING, "UTF-8");
+    		String result = UrlHelper.translateAndEncode("\u65b0\u805e");
+    		String expectedResult = "%E6%96%B0%E8%81%9E";
     	
-    	assertEquals(result, expectedResult);
+    		assertEquals(result, expectedResult);
+    	}
+    	finally {
+    		Configuration.set(StrutsConstants.STRUTS_I18N_ENCODING, defaultI18nEncoding);
+    	}
     }
     
     public void testTranslateAndDecode() throws Exception {
-    	String result = UrlHelper.translateAndDecode("%E6%96%B0%E8%81%9E");
-    	String expectedResult = "\u65b0\u805e";
+    	Object defaultI18nEncoding = Configuration.get(StrutsConstants.STRUTS_I18N_ENCODING);
+    	try {
+    		Configuration.set(StrutsConstants.STRUTS_I18N_ENCODING, "UTF-8");
+    		String result = UrlHelper.translateAndDecode("%E6%96%B0%E8%81%9E");
+    		String expectedResult = "\u65b0\u805e";
     	
-    	assertEquals(result, expectedResult);
+    		assertEquals(result, expectedResult);
+    	}
+    	finally {
+    		Configuration.set(StrutsConstants.STRUTS_I18N_ENCODING, defaultI18nEncoding);
+    	}
     }
 }

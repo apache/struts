@@ -1,4 +1,4 @@
-<form namespace="" id="myAction" name="myForm" onsubmit="submitMe(); customOnsubmit(); return true;" action="myAction" method="POST" enctype="myEncType" title="mytitle">
+<form namespace="" id="myAction" name="myForm" onsubmit="submitMe(); return true;" action="myAction" method="POST" enctype="myEncType" title="mytitle">
 <table class="wwFormTable"> <tr>
     <td class="tdLabel"></td>
     <td>	<script language="javascript" src="/struts/optiontransferselect/optiontransferselect.js"></script>
@@ -19,13 +19,14 @@
 
 
 <script>
-	function customOnsubmit() {
-
-		// Code that will auto select updownselect elements upon its containing form submission
-			var updownselectObj = document.getElementById("myAction_myUpDownSelectTag");
-			selectAllOptions(updownselectObj);
-			selectUnselectMatchingOptions(updownselectObj, null, "unselect", false, "key");
-	}
+	dojo.require("dojo.event.connect");
+	var containingForm = document.getElementById("myAction");
+	dojo.event.connect(containingForm, "onsubmit", 
+			function(evt) {
+				var updownselectObj = document.getElementById("myAction_myUpDownSelectTag");
+				selectAllOptions(updownselectObj);
+				selectUnselectMatchingOptions(updownselectObj, null, "unselect", false, "key");
+			});
 </script>
 
 <!-- javascript that is needed for tooltips -->

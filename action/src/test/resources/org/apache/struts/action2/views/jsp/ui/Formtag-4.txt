@@ -1,11 +1,7 @@
-<form id="foo" onsubmit="customOnsubmit(); return true;" action="/foo.jsp">
+<form id="foo" onsubmit="return true;" action="/foo.jsp">
 <table class="wwFormTable">
 </table>
 </form>
-
-<script>
-	function customOnsubmit() {}
-</script>
 
 <!-- javascript that is needed for tooltips -->
 <script language="JavaScript" type="text/javascript">dojo.require("dojo.widget.html.Tooltip");dojo.require("dojo.fx.html");</script>

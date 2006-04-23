@@ -1,11 +1,13 @@
-<script>
 
+<#if (parameters.customOnsubmitEnabled?default(false))>
+<script>
 <#-- 
   Enable auto-select of optiontransferselect tag's entries upon containing form's 
   submission.
 -->
-var containingForm = document.getElementById("${parameters.id}");
+dojo.require("dojo.event.connect");
 <#if (parameters.optiontransferselectIds?if_exists?size > 0)>
+	var containingForm = document.getElementById("${parameters.id}");
 	<#assign selectObjIds = parameters.optiontransferselectIds.keySet() />
 	<#list selectObjIds as selectObjectId>
 		dojo.event.connect(containingForm, "onsubmit", 
@@ -21,6 +23,7 @@ var containingForm = document.getElementById("${parameters.id}");
 	</#list>
 </#if>
 <#if (parameters.optiontransferselectDoubleIds?if_exists?size > 0)>
+	var containingForm = document.getElementById("${parameters.id}");
 	<#assign selectDoubleObjIds = parameters.optiontransferselectDoubleIds.keySet() />
 	<#list selectDoubleObjIds as selectObjId>
 		dojo.event.connect(containingForm, "onsubmit", 
@@ -42,6 +45,7 @@ var containingForm = document.getElementById("${parameters.id}");
 	submission
 -->
 <#if (parameters.updownselectIds?if_exists?size > 0)>
+    var containingForm = document.getElementById("${parameters.id}");
 	<#assign tmpIds = parameters.updownselectIds.keySet() />
 	<#list tmpIds as tmpId>
 		dojo.event.connect(containingForm, "onsubmit", 
@@ -56,8 +60,9 @@ var containingForm = document.getElementById("${parameters.id}");
 			});
 	</#list>
 </#if>
-
 </script>
+</#if>
+
 
 </table>
 </form>

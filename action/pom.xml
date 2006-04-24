@@ -25,39 +25,33 @@
         <dependency>
             <groupId>opensymphony</groupId>
             <artifactId>xwork</artifactId>
-            <version>1.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>freemarker</groupId>
             <artifactId>freemarker</artifactId>
-            <version>2.3.4</version>
         </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
-            <version>2.4</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jsp-api</artifactId>
-            <version>2.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
-            <version>1.0.4</version>
         </dependency>
 
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-            <version>2.0</version>
             <optional>true</optional>
         </dependency>
 
@@ -65,7 +59,6 @@
         <dependency>
             <groupId>uk.ltd.getahead</groupId>
             <artifactId>dwr</artifactId>
-            <version>1.1-beta-3</version>
             <optional>true</optional>
         </dependency>
 
@@ -73,14 +66,12 @@
         <dependency>
             <groupId>velocity</groupId>
             <artifactId>velocity</artifactId>
-            <version>1.4</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>velocity-tools</groupId>
             <artifactId>velocity-tools</artifactId>
-            <version>1.1</version>
             <optional>true</optional>
         </dependency>
 
@@ -88,14 +79,12 @@
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
-            <version>1.1</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>servlets.com</groupId>
             <artifactId>cos</artifactId>
-            <version>05Nov2002</version>
             <optional>true</optional>
         </dependency>
 
@@ -103,7 +92,6 @@
             <groupId>opensymphony</groupId>
             <artifactId>pell-multipart</artifactId>
             <!-- webwork's ivy dependency reports mentions v1.19 ? -->
-            <version>2.1.5</version>
             <optional>true</optional>
         </dependency>
 
@@ -112,7 +100,6 @@
             <!-- group should be com.opensymphony -->
             <groupId>opensymphony</groupId>
             <artifactId>sitemesh</artifactId>
-            <version>2.2.1</version>
             <optional>true</optional>
         </dependency>
 
@@ -120,14 +107,12 @@
         <dependency>
             <groupId>jetty</groupId>
             <artifactId>org.mortbay.jetty</artifactId>
-            <version>5.1.4</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>eclipse</groupId>
             <artifactId>jdtcore</artifactId>
-            <version>3.1.0</version>
             <optional>true</optional>
         </dependency>
 
@@ -135,7 +120,6 @@
         <dependency>
             <groupId>jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
-            <version>1.1.0</version>
             <optional>true</optional>
         </dependency>
 
@@ -143,7 +127,6 @@
         <dependency>
             <groupId>jfree</groupId>
             <artifactId>jfreechart</artifactId>
-            <version>1.0.0</version>
             <optional>true</optional>
             <exclusions>
                 <exclusion>
@@ -157,13 +140,11 @@
         <dependency>
             <groupId>org.apache.struts.tiles</groupId>
             <artifactId>tiles-core</artifactId>
-            <version>0.2-SNAPSHOT</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>commons-digester</groupId>
             <artifactId>commons-digester</artifactId>
-            <version>1.7</version>
             <optional>true</optional>
         </dependency>
 
@@ -171,14 +152,12 @@
         <dependency>
             <groupId>portlet-api</groupId>
             <artifactId>portlet-api</artifactId>
-            <version>1.0</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>org.apache.pluto</groupId>
             <artifactId>pluto</artifactId>
-            <version>1.0.1-rc4</version>
             <optional>true</optional>
         </dependency>
 
@@ -186,7 +165,6 @@
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-container-default</artifactId>
-            <version>1.0-alpha-10-SNAPSHOT</version>
             <optional>true</optional>
         </dependency>
 
@@ -194,28 +172,24 @@
         <dependency>
             <groupId>picocontainer</groupId>
             <artifactId>picocontainer</artifactId>
-            <version>1.2</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>picocontainer</groupId>
             <artifactId>picocontainer-gems</artifactId>
-            <version>1.2</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>nanocontainer</groupId>
             <artifactId>nanocontainer</artifactId>
-            <version>1.0</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>nanocontainer</groupId>
             <artifactId>nanocontainer-nanowar</artifactId>
-            <version>1.0</version>
             <optional>true</optional>
         </dependency>
 
@@ -223,35 +197,30 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-            <version>1.2.6</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>1.2.6</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>1.2.6</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>1.2.6</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-mock</artifactId>
-            <version>1.2.6</version>
             <scope>test</scope>
         </dependency>
 
@@ -259,7 +228,6 @@
         <dependency>
             <groupId>xpp3</groupId>
             <artifactId>xpp3</artifactId>
-            <version>1.1.3.4-RC8</version>
             <optional>true</optional>
         </dependency>
 
@@ -267,7 +235,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.1</version>
             <scope>compile</scope>
             <!-- has to be compile for WebWorkTestCase, which is part of the base package so others can write unit tests -->
             <optional>true</optional>
@@ -276,68 +243,58 @@
         <dependency>
             <groupId>jmock</groupId>
             <artifactId>jmock</artifactId>
-            <version>1.0.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>easymock</groupId>
             <artifactId>easymock</artifactId>
-            <version>1.2_Java1.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>easymock</groupId>
             <artifactId>easymockclassextension</artifactId>
-            <version>1.1</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>jmock</groupId>
             <artifactId>jmock-cglib</artifactId>
-            <version>1.0.1</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>mockobjects</groupId>
             <artifactId>mockobjects-core</artifactId>
-            <version>0.09</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>mockobjects</groupId>
             <artifactId>mockobjects-jdk1.3</artifactId>
-            <version>0.09</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>mockobjects</groupId>
             <artifactId>mockobjects-alt-jdk1.3</artifactId>
-            <version>0.09</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>mockobjects</groupId>
             <artifactId>mockobjects-alt-jdk1.3-j2ee1.3</artifactId>
-            <version>0.09</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>mockobjects</groupId>
             <artifactId>mockobjects-jdk1.3-j2ee1.3</artifactId>
-            <version>0.09</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>1.2.9</version>
             <scope>test</scope>
         </dependency>
 

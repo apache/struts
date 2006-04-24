@@ -3,6 +3,7 @@
 <html>
 <head>
 <title>Showcase - Model Driven Example</title>
+<saf:head/>
 </head>
 <body>
 

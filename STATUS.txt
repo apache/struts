@@ -14,11 +14,12 @@ Other resources:
 
 * Webwork2/Action2 incubator repository - http://svn.apache.org/viewcvs.cgi/incubator/webwork2/
 
-* StrutsAction2 wiki area - http://wiki.apache.org/struts/StrutsAction2
-
 * New Action2 sandbox code - https://svn.apache.org/repos/asf/struts/sandbox/trunk/action2/
 
-* JIRA instance - http://issues.apache.org/struts
+* JIRA instance - http://issues.apache.org/struts/
+
+* Confluence instance - http://confluence.twdata.org/
+
 
 ----
 
@@ -29,16 +30,6 @@ optiontransferselect.js
 
 ----
 
-DISTRIBUTION RIGHTS - COPYRIGHT HOLDERS
-
-Need to get code grants from all signficant copyright holders of WebWork
-* Don will work with Patrick to contact
-
-----
-
-MIGRATE XWORK NOW (see "[Struts Tt] Xwork?")
-
-+1 Gabe
 
 MIGRATING FROM ACTION 1 TO ACTION 2 
 
@@ -52,7 +43,7 @@ example applications.
 * https://svn.apache.org/repos/asf/struts/sandbox/trunk/action2/
 
 ** The MailReader application has been ported. Comments and fixes 
-welcome. The "Tour" is next.
+welcome.
 
 ** A new Cookbook application has been started. The suggestion is 
 that we combine the WW Showcase examples and the various Struts 
@@ -72,6 +63,9 @@ PACKAGE NAMING
 
 * tag prefix: saf
 * property and configuration files: action
+
+
+* xwork.xml -> struts-action.xml
 
 --
 
@@ -107,21 +101,41 @@ Apache zone or on a developer's computer?
 
 ----
 
-WIKI DOCUMENTATION
+CONFLUENCE MIGRATION
 
 What do we need to do to register the Snippet macro the ASF SVN?
 
 * http://forums.opensymphony.com/thread.jspa?threadID=24290&tstart=0
 
-For an ongoing Confluence instance, worse case, there's another 
-Confluence installation that we can use, hosted by Contegrix.
-
-* http://opensource.atlassian.com/confluence/oss/dashboard.action
-
-But,Jeff Turner may be working on getting us a Confluence instance on an ASF machine. 
-
+WebWork2 wiki is now readonly. Volunteers may migrate and add content 
+to <http://confluence.twdata.org> at will. Eventually, this content 
+may be transferred directly to a ASF server. 
 
 ----
 
+JIRA MILESTONES
+
+We prefixING the old releases with WW and startING the new releases
+with a numbering scheme only. In this way, old releases will be 
+archived properly and we do not lose the history.
+
+----
+
+EARLY RELEASE 
+
+Don and Jason will be hosting a Struts session at JavaOne on May 17. 
+It would be helpful if a tagged build of Action2 were available, 
+even if Action2 is not out of the incubator yet (though it may be).
+
+Here are some of the things we need to do to create a tagged build:
+
+ 1. The tickets gone through, keeping only essential tickets against this next release (2.0.0)
+ 2. Ensuring the project renaming is complete in a files, including source code comments
+ 3. Renaming WW instances on the wiki docs (once we get something stood up)
+ 4. Testing some of the new changes like the date picker, rich text editor, and tooltips
+
+The general release process is described here:
+
+* http://struts.apache.org/releases.html
 
 ####

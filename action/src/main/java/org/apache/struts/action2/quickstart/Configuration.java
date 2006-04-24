@@ -35,9 +35,9 @@ import java.util.Map;
  * Configuration for the QuickStart program.
  */
 public class Configuration implements Serializable {
-	
+
 	private static final long serialVersionUID = 9159115401614443449L;
-	
+
 	String ideaConfig;
     String extendsConfig;
     String resolver;
@@ -132,32 +132,36 @@ public class Configuration implements Serializable {
 
     public void resolveDirs(String wd) {
         if (ideaConfig != null) {
-            String full = resolveDir(this.ideaConfig, wd);
+            String[] parts = ideaConfig.split(",");
+            for (int i = 0; i < parts.length; i++) {
+                String full = resolveDir(parts[i], wd);
 
-            try {
-                DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-                Document doc = db.parse(full);
-                NodeList components = doc.getElementsByTagName("root");
-                List jars = new ArrayList();
-                for (int i = 0; i < components.getLength(); i++) {
-                    Element e = (Element) components.item(i);
-                    String value = e.getAttribute("url");
-                    if (value != null && value.startsWith("jar://") && value.endsWith(".jar!/")) {
-                        value = value.substring(6, value.length() - 2);
-                        if (value.startsWith("$MODULE_DIR$")) {
-                            value = value.substring(13);
+                try {
+                    DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                    Document doc = db.parse(full);
+                    NodeList components = doc.getElementsByTagName("root");
+                    List jars = new ArrayList();
+                    for (int j = 0; j < components.getLength(); j++) {
+                        Element e = (Element) components.item(j);
+                        String value = e.getAttribute("url");
+                        if (value != null && value.startsWith("jar://") && value.endsWith(".jar!/")) {
+                            value = value.substring(6, value.length() - 2);
+                            if (value.startsWith("$MODULE_DIR$")) {
+                                value = value.substring(13);
+                            }
+                            jars.add(value);
                         }
-                        jars.add(value);
                     }
+
+                    if (this.libs != null) {
+                        this.libs.addAll(jars);
+                    } else {
+                        this.libs = jars;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
-                if (this.libs != null) {
-                    this.libs.addAll(jars);
-                } else {
-                    this.libs = jars;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
         resolve(this.libs, wd);

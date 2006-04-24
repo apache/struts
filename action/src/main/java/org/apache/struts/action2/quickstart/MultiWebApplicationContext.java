@@ -85,12 +85,12 @@ public class MultiWebApplicationContext extends WebApplicationContext {
 
         // still haven't found what we're looking for?
         // Alright, let's just hack this to work in IDEA
-        if (uriInContext.equals("/struts")) {
+        if (uriInContext.equals("/struts-action")) {
             // we do this check to support both "quickstart:showcase" and "quickstart" (using quickstart.xml)
-            if (new File("../../src/java/META-INF/taglib.tld").exists()) {
-                return FileResource.newResource("../../src/java/META-INF/taglib.tld");
+            if (new File("../../action/src/main/resources/META-INF/taglib.tld").exists()) {
+                return FileResource.newResource("../../action/src/main/resources/META-INF/taglib.tld");
             } else {
-                return FileResource.newResource("src/java/META-INF/taglib.tld");
+                return FileResource.newResource("src/main/resources/META-INF/taglib.tld");
             }
         }
 

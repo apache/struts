@@ -12,7 +12,7 @@
     users who don't have a single directory in their project that
     contains all the libraries they need.
     -->
-    <!--<ideaConfig>ShowCase.iml</ideaConfig>-->
+    <ideaConfig>../../action/action.iml,../../thirdparty/jasperreports/action-jasperreports.iml,webapp-showcase.iml</ideaConfig>
 
     <!-- The context in which to deploy the web application -->
     <context>/showcase</context>
@@ -37,14 +37,16 @@
     using the classDirs and libs elements
     -->
     <sources>
-        <dir>src/java</dir>
+        <dir>src/main/java</dir>
     </sources>
 
     <!--
     The classDirs directories can be a jar or a directory of classes
     -->
     <classDirs>
-        <dir>src/webapp/WEB-INF/classes</dir>
+        <dir>src/main/webapp/WEB-INF/classes</dir>
+        <dir>../../thirdparty/jasperreports/target/classes</dir>
+        <dir>../../action/target/classes</dir>
     </classDirs>
 
     <!--
@@ -56,7 +58,7 @@
     <webDirs>
         <webDir>
             <path>/</path>
-            <dir>src/webapp</dir>
+            <dir>src/main/webapp</dir>
         </webDir>
     </webDirs>
 </configuration>

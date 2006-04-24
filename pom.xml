@@ -297,6 +297,66 @@
                 <version>3.1.0</version>
             </dependency>
 
+            <dependency>
+                <groupId>ant</groupId>
+                <artifactId>ant</artifactId>
+                <version>1.6.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>tomcat</groupId>
+                <artifactId>jasper-runtime</artifactId>
+                <version>5.5.12</version>
+            </dependency>
+
+            <dependency>
+                <groupId>tomcat</groupId>
+                <artifactId>jasper-compiler</artifactId>
+                <version>5.5.12</version>
+            </dependency>
+
+            <dependency>
+                <groupId>tomcat</groupId>
+                <artifactId>jasper-compiler-jdt</artifactId>
+                <version>5.5.12</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-el</groupId>
+                <artifactId>commons-el</artifactId>
+                <version>1.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>1.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>2.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>jspapi</groupId>
+                <artifactId>jsp-api</artifactId>
+                <version>2.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>2.1.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>xstream</groupId>
+                <artifactId>xstream</artifactId>
+                <version>1.1.2</version>
+            </dependency>
+
             <!-- Tiles -->
             <dependency>
                 <groupId>org.apache.struts.tiles</groupId>

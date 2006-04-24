@@ -23,6 +23,42 @@ Other resources:
 
 ----
 
+BOARD STATUS REPORTS 
+
+[18 Apr 2006] 
+
+The last quarter has seen the creation of the WebWork 2 podling and rapid progress.  Our focus has been on migrating
+code, resources, developers, IP, and community over to the ASF.
+
+ - Code: we have imported the code into the Incubator SVN, and have renamed packages, taglib prefixes, and any other
+references to the old WebWork project over to the new Struts Action Framework 2 project, where the final location of the
+code will be.
+
+ - Resources: We've migrated the code to the Apache SVN, setup and migrated JIRA tickets to the new issues.apache.org
+server, and are in the process of migration wiki documentation.
+
+ - Developers: The core WebWork 2 developers have been given accounts and access to the podling, voted in through the
+proposal.  We plan to vote the remaining committers in one-by-one through the Struts PMC, serving as the IPMC for the
+podling.
+
+ - IP: The OpenSymphony organization, who owns the copyright on the WebWork 2 project, has delivered a code grant
+allowing us to change the copyright.  Additionally, we've removed most of the LGPL source code (usually in the form of
+Javascript libraries) and have developed an optional build that compiles integration code depending on LGPL jars, in
+accordance to the draft IP policy document.
+
+ - Community: The WebWork 2 developers have joined the Struts mailing lists and have been very active in participating
+with both development and user threads.  They have been just as, if not more, active committing to the code repository
+as Struts committers, and when conflicts arise, they are very quick to come to a solution in a positive way.  In
+addition, several Struts committers have joined OpenSymphony forums, chat rooms, and projects further strengthening the
+relationship.
+
+We are definitely planning on exiting the Incubator this next quarter, possibly within weeks.  We see a bright future
+for the Struts Action project, and hope to facilitate a new spirit of cooperation within the competitive landscape of
+Java web application frameworks
+
+
+----
+
 DISTRIBUTION RIGHTS - LICENSING
 
 optiontransferselect.js

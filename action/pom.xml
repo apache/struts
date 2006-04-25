@@ -97,7 +97,6 @@
 
         <!-- Sitemesh -->
         <dependency>
-            <!-- group should be com.opensymphony -->
             <groupId>opensymphony</groupId>
             <artifactId>sitemesh</artifactId>
             <optional>true</optional>

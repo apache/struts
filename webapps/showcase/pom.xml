@@ -13,6 +13,16 @@
     <name>Showcase Webapp</name>
     <dependencies>
         <dependency>
+            <groupId>opensymphony</groupId>
+            <artifactId>sitemesh</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.ltd.getahead</groupId>
+            <artifactId>dwr</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
         </dependency>

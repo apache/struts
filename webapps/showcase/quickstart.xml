@@ -12,7 +12,7 @@
     users who don't have a single directory in their project that
     contains all the libraries they need.
     -->
-    <ideaConfig>../../action/action.iml,../../thirdparty/jasperreports/action-jasperreports.iml,webapp-showcase.iml</ideaConfig>
+    <ideaConfig>../../../xwork/xwork.iml,../../action/action.iml,../../thirdparty/jasperreports/action-jasperreports.iml,webapp-showcase.iml</ideaConfig>
 
     <!-- The context in which to deploy the web application -->
     <context>/showcase</context>
@@ -35,10 +35,10 @@
     has been known to cause strange side effects. If you don't
     specify your sources, you must specify where your classes are by
     using the classDirs and libs elements
-    -->
     <sources>
         <dir>src/main/java</dir>
     </sources>
+    -->
 
     <!--
     The classDirs directories can be a jar or a directory of classes

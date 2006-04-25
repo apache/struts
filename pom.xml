@@ -142,6 +142,7 @@
                     <jdkName>1.5</jdkName>
                     <exclude>target,test-output,.clover</exclude>
                     <useShortDependencyNames>true</useShortDependencyNames>
+                    <!--
                     <libraries>
                         <library>
                             <name>xwork</name>
@@ -152,6 +153,7 @@
                             <sources>file://$xwork$/tiger/src/java</sources>
                         </library>
                     </libraries>
+                    -->
                 </configuration>
             </plugin>
             <plugin>

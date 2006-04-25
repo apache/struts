@@ -1,7 +1,7 @@
 <tr> 
 <td class="tdLabel"></td> 
 <td>
-<script language="javascript" src="/struts/optiontransferselect/optiontransferselect.js"></script>
+<script language="javascript" src="/struts/optiontransferselect.js"></script>
 <table border="0">
 <tr>
 <td>

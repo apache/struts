@@ -72,5 +72,7 @@ public final class StrutsConstants {
     public static final String STRUTS_MAPPER_CLASS = "struts.mapper.class";
 
     public static final String STRUTS_PORTLET_CONTEXT = "struts.portlet.context";
+    
     public static final String STRUTS_SERVE_STATIC_CONTENT = "struts.serve.static";
+    public static final String STRUTS_SERVE_STATIC_BROWSER_CACHE = "struts.serve.static.browserCache";
 }

@@ -274,15 +274,22 @@ public class FilterDispatcher implements Filter, StrutsStatics {
                     if (contentType != null) {
                         response.setContentType(contentType);
                     }
-
-                    // set heading information for caching static content
-                    Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-                    response.setHeader("Date",df.format(cal.getTime())+" GMT");
-                    cal.add(Calendar.DAY_OF_MONTH,1);
-                    response.setHeader("Expires",df.format(cal.getTime())+" GMT");
-                    response.setHeader("Retry-After",df.format(cal.getTime())+" GMT");
-                    response.setHeader("Cache-Control","public");
-                    response.setHeader("Last-Modified",lastModified+" GMT");
+                    
+                    if ("true".equals(Configuration.get(StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE))) {
+                    	// set heading information for caching static content
+                        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+                        response.setHeader("Date",df.format(cal.getTime())+" GMT");
+                        cal.add(Calendar.DAY_OF_MONTH,1);
+                        response.setHeader("Expires",df.format(cal.getTime())+" GMT");
+                        response.setHeader("Retry-After",df.format(cal.getTime())+" GMT");
+                        response.setHeader("Cache-Control","public");
+                        response.setHeader("Last-Modified",lastModified+" GMT");
+                    }
+                    else {
+                    	response.setHeader("Cache-Control","no-cache");
+                        response.setHeader("Pragma","no-cache");
+                        response.setHeader("Expires","-1");
+                    }
 
                     try {
                         copy(is, response.getOutputStream());

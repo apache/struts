@@ -36,6 +36,11 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.struts.action2</groupId>
+            <artifactId>action-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.struts.action2</groupId>
             <artifactId>action</artifactId>
             <scope>test</scope>
         </dependency>

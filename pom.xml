@@ -64,6 +64,7 @@
         </mailingList>
     </mailingLists>
     <modules>
+        <module>action-api</module>
         <module>action</module>
         <module>webapps</module>
     </modules>
@@ -183,6 +184,11 @@
     </scm>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.apache.struts.action2</groupId>
+                <artifactId>action-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.apache.struts.action2</groupId>
                 <artifactId>action</artifactId>

@@ -14,11 +14,11 @@ dojo.require("dojo.event.connect");
 		dojo.event.connect(containingForm, "onsubmit", 
 			function(evt) {
 				var selectObj = document.getElementById("${selectObjectId}");
-				selectAllOptions(selectObj);
-				selectUnselectMatchingOptions(selectObj, null, "unselect", false, "key");
 				<#if parameters.optiontransferselectIds.get(selectObjectId)?exists>
 					<#assign selectTagHeaderKey = parameters.optiontransferselectIds.get(selectObjectId)/>
-					selectUnselectMatchingOptions(selectObj, "${selectTagHeaderKey}", "unselect", false, "key");
+					selectAllOptionsExceptSome(selectObj, "key", "${selectTagHeaderKey}");
+				<#else>
+					selectAllOptionsExceptSome(selectObj, "key", "");
 				</#if>
 			});
 	</#list>
@@ -30,11 +30,11 @@ dojo.require("dojo.event.connect");
 		dojo.event.connect(containingForm, "onsubmit", 
 			function(evt) {
 				var selectObj = document.getElementById("${selectObjId}");
-				selectAllOptions(selectObj);
-				selectUnselectMatchingOptions(selectObj, null, "unselect", false, "key");
 				<#if parameters.optiontransferselectDoubleIds.get(selectObjId)?exists>
 					<#assign selectTagHeaderKey = parameters.optiontransferselectDoubleIds.get(selectObjId)/>
-					selectUnselectMatchingOptions(selectObj, "${selectTagHeaderKey}", "unselect", false, "key");
+					selectAllOptionsExceptSome(selectObj, "key", "${selectTagHeaderKey}");
+				<#else>
+					selectAllOptionsExceptSome(selectObj, "key", "");
 				</#if>
 			});
 	</#list>
@@ -52,11 +52,11 @@ dojo.require("dojo.event.connect");
 		dojo.event.connect(containingForm, "onsubmit", 
 			function(evt) {
 				var updownselectObj = document.getElementById("${tmpId}");
-				selectAllOptions(updownselectObj);
-				selectUnselectMatchingOptions(updownselectObj, null, "unselect", false, "key");
 				<#if parameters.updownselectIds.get(tmpId)?exists>
 					<#assign tmpHeaderKey = parameters.updownselectIds.get(tmpId) />
-					selectUnselectMatchingOptions(updownselectObj, "${tmpHeaderKey}", "unselect", false, "key");
+					selectAllOptionsExceptSome(updownselectObj, "key", "${tmpHeaderKey}");
+				<#else>
+					selectAllOptionsExceptSome(updownselectObj, "key", "");
 				</#if>
 			});
 	</#list>

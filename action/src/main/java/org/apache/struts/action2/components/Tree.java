@@ -1,6 +1,3 @@
-/*
- * Copyright (c) 2005 ePlus Corporation. All Rights Reserved.
- */
 package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;

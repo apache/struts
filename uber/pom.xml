@@ -12,26 +12,25 @@
     <packaging>pom</packaging>
     <name>Uber Jar</name>
     <build>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <configuration>
-            <descriptor>src/assemble/main.xml</descriptor>
-          </configuration>
-          <!-- Note: We need to turn this off because of http://jira.codehaus.org/browse/MNG-1684 -->
-          <!--
-          <executions>
-            <execution>
-              <phase>package</phase>
-              <goals>
-                <goal>attached</goal>
-              </goals>
-            </execution>
-          </executions>
-          -->
-        </plugin>
-      </plugins>
+        <!--
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptor>src/assemble/main.xml</descriptor>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>assembly</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        -->
     </build>
     <dependencies>
         <dependency>

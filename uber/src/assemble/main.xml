@@ -8,6 +8,7 @@
       <outputDirectory>/</outputDirectory>
       <includes>
           <include>org.apache.struts.action2:action</include>
+          <include>org.apache.struts.action2:action-api</include>
           <include>org.apache.struts.action2:action-jasperreports</include>
           <include>org.apache.struts.action2:action-jfreechart</include>
           <include>org.apache.struts.action2:action-pell-file-upload</include>

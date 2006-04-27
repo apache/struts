@@ -279,10 +279,6 @@ public class DefaultActionMapper implements ActionMapper {
     static List getExtensions() {
         String extensions = (String) Configuration.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
 
-        if (extensions == null) {
-            System.out.println(Configuration.getConfiguration().getClass());
-        }
-
         if ("".equals(extensions)) {
         	return null;
         } else {

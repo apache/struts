@@ -13,11 +13,11 @@ dojo.require("dojo.event.connect");
 		dojo.event.connect(containingForm, "onsubmit", 
 			function(evt) {
 				var selectObj = document.getElementById("${selectObjectId}");
-				selectAllOptions(selectObj);
-				selectUnselectMatchingOptions(selectObj, null, "unselect", false, "key");
 				<#if parameters.optiontransferselectIds.get(selectObjectId)?exists>
 					<#assign selectTagHeaderKey = parameters.optiontransferselectIds.get(selectObjectId)/>
-					selectUnselectMatchingOptions(selectObj, "${selectTagHeaderKey}", "unselect", false, "key");
+					selectAllOptionsExceptSome(selectObj, "key", "${selectTagHeaderKey}");
+				<#else>
+					selectAllOptionsExceptSome(selectObj, "key", "");
 				</#if>
 			});
 	</#list>
@@ -29,11 +29,11 @@ dojo.require("dojo.event.connect");
 		dojo.event.connect(containingForm, "onsubmit", 
 			function(evt) {
 				var selectObj = document.getElementById("${selectObjId}");
-				selectAllOptions(selectObj);
-				selectUnselectMatchingOptions(selectObj, null, "unselect", false, "key");
 				<#if parameters.optiontransferselectDoubleIds.get(selectObjId)?exists>
 					<#assign selectTagHeaderKey = parameters.optiontransferselectDoubleIds.get(selectObjId)/>
-					selectUnselectMatchingOptions(selectObj, "${selectTagHeaderKey}", "unselect", false, "key");
+					selectAllOptionsExceptSome(selectObj, "key", "${selectTagHeaderKey}");
+				<#else>
+					selectAllOptionsExceptSome(selectObj, "key", "");
 				</#if>
 			});
 	</#list>
@@ -45,17 +45,17 @@ dojo.require("dojo.event.connect");
 	submission
 -->
 <#if (parameters.updownselectIds?if_exists?size > 0)>
-    var containingForm = document.getElementById("${parameters.id}");
+	var containingForm = document.getElementById("${parameters.id}");
 	<#assign tmpIds = parameters.updownselectIds.keySet() />
 	<#list tmpIds as tmpId>
 		dojo.event.connect(containingForm, "onsubmit", 
 			function(evt) {
-				var selectObj = document.getElementById("${tmpId}");
-				selectAllOptions(selectObj);
-				selectUnselectMatchingOptions(selectObj, null, "unselect", false, "key");
+				var updownselectObj = document.getElementById("${tmpId}");
 				<#if parameters.updownselectIds.get(tmpId)?exists>
 					<#assign tmpHeaderKey = parameters.updownselectIds.get(tmpId) />
-					selectUnselectMatchingOptions(selectObj, "${tmpHeaderKey}", "unselect", false, "key");
+					selectAllOptionsExceptSome(updownselectObj, "key", "${tmpHeaderKey}");
+				<#else>
+					selectAllOptionsExceptSome(updownselectObj, "key", "");
 				</#if>
 			});
 	</#list>
@@ -63,6 +63,11 @@ dojo.require("dojo.event.connect");
 </script>
 </#if>
 
+<#-- 
+ Code that will add javascript needed for tooltips
+--><#t/>
+	<#lt/><!-- javascript that is needed for tooltips -->
+	<#lt/><script language="JavaScript" type="text/javascript">dojo.require("dojo.widget.html.Tooltip");dojo.require("dojo.fx.html");</script>
 
 </table>
 </form>

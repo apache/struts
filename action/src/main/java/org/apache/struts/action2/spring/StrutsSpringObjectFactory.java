@@ -29,6 +29,8 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.ServletContext;
 
+import sun.rmi.runtime.Log;
+
 /**
  * Struts object factory that integrates with Spring.
  * <p/>
@@ -55,7 +57,7 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory implements Ob
             log.fatal(message);
             return;
         }
-        
+
         this.setApplicationContext(appContext);
 
         String autoWire = Configuration.getString(StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE);
@@ -70,7 +72,7 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory implements Ob
             type = AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR;
         }
         this.setAutowireStrategy(type);
-        
+
         boolean useClassCache = "true".equals(Configuration.getString(StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE));
         this.setUseClassCache(useClassCache);
 

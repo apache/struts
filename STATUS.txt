@@ -61,11 +61,17 @@ Java web application frameworks
 
 DISTRIBUTION RIGHTS - LICENSING
 
-optiontransferselect.js
-* Don has contacted Matt Kruse about relicensing or filing a code grant
+action/src/main/java/org/apache/struts/action2/spring/interceptor/SessionContextAutowiringInterceptor.java
+* Jason needs to remove the ePlus copyright, mistakenly added by his IDE
 
 ----
 
+VOTE TO TARGET JAVA 5
+
++1: 13, +0: 3, -0: 1 ... so the vote passed
+http://www.mail-archive.com/dev%40struts.apache.org/msg20732.html
+
+----
 
 MIGRATING FROM ACTION 1 TO ACTION 2 
 

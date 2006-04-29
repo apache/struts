@@ -20,13 +20,15 @@
     </listener>
     <!-- END SNIPPET: example -->
 
-    <!-- START SNIPPET: compatibility
+    <!-- START SNIPPET: freemarkerSupport -->
     <servlet>
         <servlet-name>JspSupportServlet</servlet-name>
         <servlet-class>org.apache.struts.action2.views.JspSupportServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <!--  END SNIPPET: freemarkerSupport -->
 
+	<!-- START SNIPPET: compatibility
     <servlet>
         <servlet-name>action</servlet-name>
         <servlet-class>org.apache.struts.action2.dispatcher.ServletDispatcher</servlet-class>

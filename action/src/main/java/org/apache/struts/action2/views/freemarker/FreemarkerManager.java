@@ -32,6 +32,7 @@ import freemarker.cache.WebappTemplateLoader;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.HttpRequestHashModel;
+import freemarker.ext.servlet.HttpRequestParametersHashModel;
 import freemarker.ext.servlet.HttpSessionHashModel;
 import freemarker.ext.servlet.ServletContextHashModel;
 import freemarker.template.*;
@@ -65,12 +66,14 @@ public class FreemarkerManager {
     private static final String ATTR_JSP_TAGLIBS_MODEL = ".freemarker.JspTaglibs";
     private static final String ATTR_SESSION_MODEL = ".freemarker.Session";
     private static final String ATTR_REQUEST_MODEL = ".freemarker.Request";
+    private static final String ATTR_REQUEST_PARAMETERS_MODEL = ".freemarker.RequestParameters";
 
     // coppied from freemarker servlet - so that there is no dependency on it
     public static final String KEY_APPLICATION = "Application";
     public static final String KEY_REQUEST_MODEL = "Request";
     public static final String KEY_SESSION_MODEL = "Session";
     public static final String KEY_JSP_TAGLIBS = "JspTaglibs";
+    public static final String KEY_REQUEST_PARAMETER_MODEL = "Parameters";
     private static FreemarkerManager instance = null;
 
 
@@ -159,7 +162,7 @@ public class FreemarkerManager {
             //            model.put(KEY_SESSION_MODEL, new SimpleHash());
         }
 
-        // Create hash model wrapper for the request
+        // Create hash model wrapper for the request attributes
         HttpRequestHashModel requestModel = (HttpRequestHashModel) request.getAttribute(ATTR_REQUEST_MODEL);
 
         if ((requestModel == null) || (requestModel.getRequest() != request)) {
@@ -168,7 +171,16 @@ public class FreemarkerManager {
         }
 
         model.put(KEY_REQUEST_MODEL, requestModel);
-
+        
+        
+        // Create hash model wrapper for request parameters
+        HttpRequestParametersHashModel reqParametersModel = (HttpRequestParametersHashModel) request.getAttribute(ATTR_REQUEST_PARAMETERS_MODEL);
+        if (reqParametersModel == null || requestModel.getRequest() != request) {
+        	reqParametersModel = new HttpRequestParametersHashModel(request);
+        	request.setAttribute(ATTR_REQUEST_PARAMETERS_MODEL, reqParametersModel);
+        }
+        model.put(KEY_REQUEST_PARAMETER_MODEL, reqParametersModel);
+        
         return model;
     }
 

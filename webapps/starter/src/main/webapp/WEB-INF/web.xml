@@ -14,11 +14,12 @@
         <filter-name>action2</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+	<!-- END SNIPPET: example -->
 
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-    <!-- END SNIPPET: example -->
+    
 
     <!-- START SNIPPET: freemarkerSupport -->
     <servlet>

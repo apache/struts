@@ -50,9 +50,9 @@
         If you really need a taglib configuration within web.xml, copy struts/src/java/META-INF/taglib.tld
         to the WEB-INF directory as struts-action.tld.
      -->
-    <!--taglib>
+    <taglib>
         <taglib-uri>struts-action</taglib-uri>
         <taglib-location>/WEB-INF/struts-action.tld</taglib-location>
-    </taglib-->
+    </taglib>
     <!-- END SNIPPET: taglib -->
 </web-app>

@@ -32,8 +32,33 @@ public class ComboBoxTag extends TextFieldTag {
 	private static final long serialVersionUID = 3509392460170385605L;
 	
 	protected String list;
+	protected String listKey;
+	protected String listValue;
+	protected String headerKey;
+	protected String headerValue;
+	protected String emptyOption;
 
-    public Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public void setEmptyOption(String emptyOption) {
+		this.emptyOption = emptyOption;
+	}
+
+	public void setHeaderKey(String headerKey) {
+		this.headerKey = headerKey;
+	}
+
+	public void setHeaderValue(String headerValue) {
+		this.headerValue = headerValue;
+	}
+
+	public void setListKey(String listKey) {
+		this.listKey = listKey;
+	}
+
+	public void setListValue(String listValue) {
+		this.listValue = listValue;
+	}
+
+	public Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new ComboBox(stack, req, res);
     }
 
@@ -41,6 +66,11 @@ public class ComboBoxTag extends TextFieldTag {
         super.populateParams();
 
         ((ComboBox) component).setList(list);
+        ((ComboBox) component).setListKey(listKey);
+        ((ComboBox) component).setListValue(listValue);
+        ((ComboBox) component).setHeaderKey(headerKey);
+        ((ComboBox) component).setHeaderValue(headerValue);
+        ((ComboBox) component).setEmptyOption(emptyOption);
     }
 
     public void setList(String list) {

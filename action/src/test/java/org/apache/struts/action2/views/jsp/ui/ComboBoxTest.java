@@ -21,9 +21,13 @@ import org.apache.struts.action2.TestAction;
 import org.apache.struts.action2.views.jsp.AbstractUITagTest;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
+ * Test case for ComboBox component.
  */
 public class ComboBoxTest extends AbstractUITagTest {
 
@@ -77,5 +81,59 @@ public class ComboBoxTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(ComboBoxTag.class.getResource("ComboBox-1.txt"));
+    }
+    
+    public void testWithEmptyOptionAndHeader() throws Exception {
+    	TestAction testAction = (TestAction) action;
+    	testAction.setFoo("banana");
+    	
+    	List l = new ArrayList();
+    	l.add("apple");
+    	l.add("banana");
+    	l.add("pineaple");
+    	l.add("grapes");
+    	testAction.setCollection(l);
+    	
+    	ComboBoxTag tag = new ComboBoxTag();
+    	tag.setPageContext(pageContext);
+    	tag.setLabel("My Favourite Fruit");
+    	tag.setName("myFavouriteFruit");
+    	tag.setEmptyOption("true");
+    	tag.setHeaderKey("-1");
+    	tag.setHeaderValue("--- Please Select ---");
+    	tag.setList("collection");
+    	tag.setValue("%{foo}");
+    	
+    	tag.doStartTag();
+    	tag.doEndTag();
+    	
+    	verify(ComboBoxTag.class.getResource("ComboBox-2.txt"));
+    }
+    
+    public void testWithMap() throws Exception {
+    	TestAction testAction = (TestAction) action;
+    	testAction.setFoo("banana");
+    	
+    	Map m = new LinkedHashMap();
+    	m.put("apple", "apple");
+    	m.put("banana", "banana");
+    	m.put("pineaple", "pineaple");
+    	m.put("grapes", "grapes");
+    	testAction.setMap(m);
+    	
+    	ComboBoxTag tag = new ComboBoxTag();
+    	tag.setPageContext(pageContext);
+    	tag.setLabel("My Favourite Fruit");
+    	tag.setName("myFavouriteFruit");
+    	tag.setHeaderKey("-1");
+    	tag.setHeaderValue("--- Please Select ---");
+    	tag.setEmptyOption("true");
+    	tag.setList("map");
+    	tag.setValue("%{foo}");
+    	
+    	tag.doStartTag();
+    	tag.doEndTag();
+    	
+    	verify(ComboBoxTag.class.getResource("ComboBox-3.txt"));
     }
 }

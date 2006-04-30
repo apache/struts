@@ -153,6 +153,7 @@ public class UIComponentTest extends AbstractUITagTest {
 			ComboBoxTag tag = new ComboBoxTag();
 			tag.setName("name");
 			tag.setLabel("label");
+			tag.setList("{'aaa','bbb','ccc'}");
 			tag.setPageContext(pageContext);
 			tag.doStartTag();
 			assertEquals(tag.getComponent().getComponentStack().peek(), tag.getComponent());

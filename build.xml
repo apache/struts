@@ -108,7 +108,7 @@
             classname="xdoclet.DocletTask"
             classpathref="cp"
             />
-        <xdoclet destdir="${src.resources}/java/META-INF"
+        <xdoclet destdir="${src.resources}/META-INF"
                  excludedtags="@version,@author,@return,@exception,@todo"
                  verbose="false"
                  force="true"

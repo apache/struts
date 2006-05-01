@@ -63,6 +63,7 @@ public class PortletRequestMap extends AbstractMap {
      * map.
      */
     public void clear() {
+        entries = null;
         Enumeration keys = request.getAttributeNames();
 
         while (keys.hasMoreElements()) {

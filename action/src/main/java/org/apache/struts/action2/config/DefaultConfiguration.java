@@ -50,7 +50,7 @@ public class DefaultConfiguration extends Configuration {
         try {
             list.add(new PropertiesConfiguration("struts"));
         } catch (Exception e) {
-            log.warn("Could not find struts.properties");
+            log.warn("Could not find or error in struts.properties", e);
         }
 
         try {

@@ -9,6 +9,7 @@
 | Updated: 17.04.2003                               |
 |--------------------------------------------------*/
 
+/* Copyright 2006 The Apache Software Foundation. */
 // Node object
 function Node(id, pid, name, url, title, target, icon, iconOpen, open) {
 	this.id = id;

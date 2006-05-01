@@ -1,8 +1,4 @@
 <portlet-app>
-<!--
-  ~ Copyright (c) 2002-2006 by OpenSymphony
-  ~ All rights reserved.
-  -->
    <portlet>
       <portlet-name>StrutsPortlet</portlet-name>
       <security>

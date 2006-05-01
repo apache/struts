@@ -2,10 +2,6 @@
 <!DOCTYPE xwork PUBLIC
     "-//OpenSymphony Group//XWork 1.1.1//EN"
     "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
-<!--
-   Copyright (c) 2002-2006 by OpenSymphony
-   All rights reserved.
--->
 <xwork>
 	<include file="struts-portlet-default.xml" />
 

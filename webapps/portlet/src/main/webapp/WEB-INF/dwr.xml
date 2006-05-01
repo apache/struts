@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright (c) 2002-2006 by OpenSymphony
-  ~ All rights reserved.
-  -->
-
 <!DOCTYPE dwr PUBLIC
     "-//GetAhead Limited//DTD Direct Web Remoting 1.0//EN"
     "http://www.getahead.ltd.uk/dwr/dwr10.dtd">

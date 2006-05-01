@@ -1,8 +1,4 @@
 <pages>
-<!--
-  ~ Copyright (c) 2002-2006 by OpenSymphony
-  ~ All rights reserved.
-  -->
    <portal-name>default</portal-name>
    <page>
       <page-name>struts-portlet</page-name>

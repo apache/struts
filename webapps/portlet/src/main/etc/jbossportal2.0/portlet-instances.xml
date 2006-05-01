@@ -1,8 +1,4 @@
 <?xml version="1.0" standalone="yes"?>
-<!--
-  ~ Copyright (c) 2002-2006 by OpenSymphony
-  ~ All rights reserved.
-  -->
 <instances>
    <instance>
       <instance-name>StrutsPortletInstance</instance-name>

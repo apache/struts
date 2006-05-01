@@ -50,6 +50,7 @@ public class RequestMap extends AbstractMap implements Serializable {
      * Removes all attributes from the request as well as clears entries in this map.
      */
     public void clear() {
+        entries = null;
         Enumeration keys = request.getAttributeNames();
 
         while (keys.hasMoreElements()) {

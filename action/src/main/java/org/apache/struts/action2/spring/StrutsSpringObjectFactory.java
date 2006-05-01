@@ -29,7 +29,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.ServletContext;
 
-import sun.rmi.runtime.Log;
+
 
 /**
  * Struts object factory that integrates with Spring.

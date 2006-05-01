@@ -138,7 +138,7 @@
 
 
     <div id="footer" class="clearfix">
-        <p>&copy; Copyright 2005 OpenSymphony</p>
+        <p>Copyright &copy; 2005-06 The Apache Software Foundation.</p>
     </div><!-- end footer -->
     <p/>
 

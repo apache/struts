@@ -86,7 +86,7 @@
 
 
     <div id="footer" class="clearfix">
-        <p>&copy; Copyright 2003-<saf:property value="#dateAction.now.year + 1900" /> OpenSymphony</p>
+        <p>Copyright &copy; 2003-<saf:property value="#dateAction.now.year + 1900" /> The Apache Software Foundation.</p>
     </div><!-- end footer -->
     <p/>
 

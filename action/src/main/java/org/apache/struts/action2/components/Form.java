@@ -80,6 +80,7 @@ public class Form extends ClosingUIBean {
     protected String validate;
     protected String portletMode;
     protected String windowState;
+    protected String acceptcharset;
 
     public Form(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -140,6 +141,10 @@ public class Form extends ClosingUIBean {
 
         if (validate != null) {
             addParameter("validate", findValue(validate, Boolean.class));
+        }
+
+        if (acceptcharset != null) {
+            addParameter("acceptcharset", findString(acceptcharset));
         }
 
         // keep a collection of the tag names for anything special the templates might want to do (such as pure client
@@ -368,5 +373,13 @@ public class Form extends ClosingUIBean {
      */
     public void setWindowState(String windowState) {
         this.windowState = windowState;
+    }
+
+    /**
+     * The accepted charsets for this form. The values may be comma or blank delimited.
+     * @a2.tagattribute required="false"
+     */
+    public void setAcceptcharset(String acceptcharset) {
+        this.acceptcharset = acceptcharset;
     }
 }

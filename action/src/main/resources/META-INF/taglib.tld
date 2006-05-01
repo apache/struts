@@ -461,6 +461,14 @@
 
       </attribute>
       <attribute>
+         <name>acceptcharset</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The accepted charsets for this form. The values may be comma or blank delimited.]]></description>
+
+      </attribute>
+      <attribute>
          <name>openTemplate</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>

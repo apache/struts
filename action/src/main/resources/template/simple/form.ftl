@@ -39,4 +39,7 @@
 <#if parameters.title?exists>
  title="${parameters.title?html}"<#rt/>
 </#if>
+<#if parameters.acceptcharset?exists>
+ accept-charset="${parameters.acceptcharset?html}"<#rt/>
+</#if>
 >

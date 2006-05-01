@@ -46,6 +46,7 @@ public class FormTagTest extends AbstractUITagTest {
         tag.setPageContext(pageContext);
         tag.setName("myForm");
         tag.setMethod("POST");
+        tag.setAcceptcharset("UTF-8");
         tag.setAction("myAction");
         tag.setEnctype("myEncType");
         tag.setTitle("mytitle");
@@ -67,6 +68,7 @@ public class FormTagTest extends AbstractUITagTest {
     	tag.setName("myForm");
     	tag.setMethod("POST");
         tag.setAction("myAction");
+        tag.setAcceptcharset("UTF-8");
         tag.setEnctype("myEncType");
         tag.setTitle("mytitle");
         tag.setOnsubmit("submitMe()");

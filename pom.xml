@@ -424,7 +424,7 @@
             <dependency>
                 <groupId>nanocontainer</groupId>
                 <artifactId>nanocontainer-nanowar</artifactId>
-                <version>1.0</version>
+                <version>1.0-SNAPSHOT</version>
             </dependency>
 
             <!-- nanocontainer override -->

@@ -273,13 +273,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- nanocontainer override -->
-        <dependency>
-            <groupId>xpp3</groupId>
-            <artifactId>xpp3</artifactId>
-            <optional>true</optional>
-        </dependency>
-
         <!-- Test dependencies -->
         <dependency>
             <groupId>junit</groupId>

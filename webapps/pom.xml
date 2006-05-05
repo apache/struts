@@ -18,6 +18,75 @@
         <module>showcase</module>
         <module>starter</module>
     </modules>
+    <profiles>
+        <profile>
+            <id>hostedqa</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.hostedqa</groupId>
+                    <artifactId>hostedqa-remote-ant</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <repositories>
+                <repository>
+                    <id>codehaus</id>
+                    <name>codehaus</name>
+                    <url>http://dist.codehaus.org</url>
+                   <layout>legacy</layout>
+                </repository>
+                <repository>
+                    <id>maven-hostedqa</id>
+                    <name>maven-hostedqa</name>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>always</updatePolicy>
+                        <checksumPolicy>ignore</checksumPolicy>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <url>http://maven.hostedqa.com</url>
+                </repository>
+            </repositories>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <taskdef resource="hostedqatasks" classpathref="maven.plugin.classpath"/>
+                                        <upload file="${project.build.directory}/${project.build.finalName}.war"
+                                                account="struts" email="${email}"
+                                                password="${password}" resourceId="${resourceId}"/>
+
+                                        <playsuite suiteId="${suiteId}" clientConfigs="${clientConfigs}" appConfigs="${appConfigs}" account="struts"
+                                                   email="${email}"
+                                                   password="${password}"/>
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.hostedqa</groupId>
+                                <artifactId>hostedqa-remote-ant</artifactId>
+                                <version>1.0-SNAPSHOT</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <dependencies>
         <dependency>
             <groupId>org.apache.struts.action2</groupId>

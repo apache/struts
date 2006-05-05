@@ -24,6 +24,12 @@
             </dependencies>
             <repositories>
                 <repository>
+                    <id>codehaus</id>
+                    <name>codehaus</name>
+                    <url>http://dist.codehaus.org</url>
+                   <layout>legacy</layout>
+                </repository>
+                <repository>
                     <id>maven-hostedqa</id>
                     <name>maven-hostedqa</name>
                     <snapshots>

@@ -15,6 +15,7 @@
         <dependency>
             <groupId>jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
+            <version>1.2.1</version>
         </dependency>
 
         <dependency>

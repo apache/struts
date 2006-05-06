@@ -210,6 +210,10 @@ public class Form extends ClosingUIBean {
                 addParameter("id", action);
             }
         } else if (action != null) {
+        	// Since we can't find an action alias in the configuration, we just assume
+        	// the action attribute supplied is the path to be used as the uri this 
+        	// form is submitting to.
+        	
             String result = UrlHelper.buildUrl(action, request, response, null);
             addParameter("action", result);
 

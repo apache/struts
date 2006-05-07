@@ -35,6 +35,47 @@ import com.opensymphony.xwork.config.ConfigurationManager;
  */
 public class FormTagTest extends AbstractUITagTest {
 
+	public void testFormWithActionAttributeContainingBothActionAndMethod() throws Exception {
+		TestAction testAction = (TestAction) action;
+		
+		FormTag tag = new FormTag();
+		tag.setPageContext(pageContext);
+		tag.setName("myForm");
+		tag.setMethod("POST");
+		tag.setAcceptcharset("UTF-8");
+        tag.setAction("testAction!myLittleMethod");
+        tag.setEnctype("myEncType");
+        tag.setTitle("mytitle");
+        tag.setOnsubmit("submitMe()");
+        
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(FormTag.class.getResource("Formtag-9.txt"));
+	}
+	
+	
+	public void testFormWithActionAttributeContainingBothActionAndMethodAndNamespace() throws Exception {
+		TestAction testAction = (TestAction) action;
+		
+		FormTag tag = new FormTag();
+		tag.setPageContext(pageContext);
+		tag.setName("myForm");
+		tag.setNamespace("/testNamespace");
+		tag.setMethod("POST");
+		tag.setAcceptcharset("UTF-8");
+        tag.setAction("testNamespaceAction!myLittleMethod");
+        tag.setEnctype("myEncType");
+        tag.setTitle("mytitle");
+        tag.setOnsubmit("submitMe()");
+        
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(FormTag.class.getResource("Formtag-10.txt"));
+	}
+	
+	
     public void testForm() throws Exception {
     	
         request.setupGetServletPath("/testAction");

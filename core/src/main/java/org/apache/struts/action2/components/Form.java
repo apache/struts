@@ -173,16 +173,17 @@ public class Form extends ClosingUIBean {
                 action = uri.substring(uri.lastIndexOf('/'));
             }
         }
+        
+        String actionMethod = "";
+        if (action.indexOf("!") != -1) {
+        	int endIdx = action.lastIndexOf("!");
+        	actionMethod = action.substring(endIdx+1, action.length());
+        	action = action.substring(0, endIdx);
+        }
 
         final ActionConfig actionConfig = ConfigurationManager.getConfiguration().getRuntimeConfiguration().getActionConfig(namespace, action);
         String actionName = action;
         if (actionConfig != null) {
-            String actionMethod = "";
-            if (action.indexOf("!") != -1) {
-                int endIdx = action.lastIndexOf("!");
-                actionMethod = action.substring(endIdx + 1, action.length());
-                action = action.substring(0, endIdx);
-            }
 
             ActionMapping mapping = new ActionMapping(action, namespace, actionMethod, parameters);
             String result = UrlHelper.buildUrl(ActionMapperFactory.getMapper().getUriFromActionMapping(mapping), request, response, null);

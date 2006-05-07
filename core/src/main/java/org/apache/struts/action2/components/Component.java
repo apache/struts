@@ -446,7 +446,9 @@ public class Component {
      * @a2.tagattribute required="false"
      */
     public void setId(String id) {
-        this.id = id;
+    	if (id != null) {
+    		this.id = findString(id);
+    	}
     }
 
     /**

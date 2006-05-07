@@ -30,7 +30,7 @@
         <menu name="Documentation">
             <item
                     name="Javadoc"
-                    href="core/apidocs/index.html"
+                    href="struts-core/apidocs/index.html"
                     />        
             <item
                     name="Source Repository"

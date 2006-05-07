@@ -359,7 +359,7 @@
                       **/*.xsl,
                       **/*.xslt,
                       **/*.html" />
-        <fixcrlf eol="lf" srcdir="${basedir}/webapps"
+        <fixcrlf eol="lf" srcdir="${basedir}/apps"
                  includes="**/*.sh,
                       **/*.properties,
                       **/*.sql,

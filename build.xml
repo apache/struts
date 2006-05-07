@@ -71,9 +71,9 @@
     <macrodef name="webapp">
         <attribute name="name"/>
         <sequential>
-            <mkdir dir="${dist}/webapps/@{name}/src"/>
-            <copy todir="${dist}/webapps/@{name}/src">
-                <fileset dir="webapps/@{name}/src" includes="**/**"/>
+            <mkdir dir="${dist}/apps/@{name}/src"/>
+            <copy todir="${dist}/apps/@{name}/src">
+                <fileset dir="apps/@{name}/src" includes="**/**"/>
             </copy>
         </sequential>
     </macrodef>
@@ -88,8 +88,8 @@
         
         <!-- prepare the template project -->
         <webapp name="blank"/>
-        <copy todir="${dist}/webapps/blank">
-            <fileset dir="webapps/blank/" includes="*.iml" />
+        <copy todir="${dist}/apps/blank">
+            <fileset dir="apps/blank/" includes="*.iml" />
         </copy>
 
         <!-- prepare each tutorial/example -->
@@ -99,7 +99,7 @@
         <webapp name="portlet"/>
 
         <!-- copy over elements required to build the final wars -->
-        <copy file="webapps/build.xml" todir="${dist}/webapps"/>
+        <copy file="apps/build.xml" todir="${dist}/apps"/>
     </target>
 
     <target name="xdoclet-taglib" depends="init">
@@ -214,15 +214,15 @@
     </target>
 
     <target name="clean" depends="common.clean">
-        <delete dir="webapps/base/build"/>
-        <delete dir="webapps/blank/build"/>
-        <delete dir="webapps/showcase/build"/>
-        <delete dir="webapps/starter/build"/>
-        <delete dir="webapps/ajax/build"/>
-        <delete dir="webapps/shopping-cart/build"/>
-        <delete dir="webapps/portlet/build"/>
+        <delete dir="apps/base/build"/>
+        <delete dir="apps/blank/build"/>
+        <delete dir="apps/showcase/build"/>
+        <delete dir="apps/starter/build"/>
+        <delete dir="apps/ajax/build"/>
+        <delete dir="apps/shopping-cart/build"/>
+        <delete dir="apps/portlet/build"/>
 <!--
-        <delete dir="webapps/wwia/build"/>
+        <delete dir="apps/wwia/build"/>
 -->
     </target>
 

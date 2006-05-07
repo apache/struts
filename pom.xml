@@ -87,7 +87,7 @@
     <modules>
         <module>core</module>
         <module>thirdparty</module>
-        <module>webapps</module>
+        <module>apps</module>
     </modules>
     <repositories>
      	<repository>

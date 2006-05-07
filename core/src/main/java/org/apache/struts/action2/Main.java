@@ -54,7 +54,7 @@ public class Main {
             System.out.println("");
             System.out.println("Execute the commands for additional usage instructions.");
             System.out.println("Note: the *:xxx commands are just shortcuts for ");
-            System.out.println("      running the command on a webapp in the webapps dir.");
+            System.out.println("      running the command on a webapp in the apps dir.");
             System.out.println("      For example, 'quickstart:sandbox' will start QuickStart");
             System.out.println("      automatically for the webapp 'sandbox'.");
             return;
@@ -131,8 +131,8 @@ public class Main {
             command = "quickstart";
             String name = checkWebAppArgs(args);
             programArgs = new String[]{"/" + name,
-                    "webapps/" + name + "/src/main/webapp",
-                    "webapps/" + name + "/src/main/java"};
+                    "apps/" + name + "/src/main/webapp",
+                    "apps/" + name + "/src/main/java"};
         }
 
         if ("quickstart".equals(command)) {
@@ -151,8 +151,8 @@ public class Main {
         if (command.startsWith("sitegraph:")) {
             command = "sitegraph";
             String name = checkWebAppArgs(args);
-            programArgs = new String[]{"-config", "webapps/" + name + "/src/webapp/WEB-INF/classes",
-                    "-views", "webapps/" + name + "/src/webapp",
+            programArgs = new String[]{"-config", "apps/" + name + "/src/webapp/WEB-INF/classes",
+                    "-views", "apps/" + name + "/src/webapp",
                     "-output", "."};
         }
 
@@ -172,7 +172,7 @@ public class Main {
         if (name == null || name.equals("")) {
             System.out.println("Error: you must specify the webapp you wish");
             System.out.println("       to deploy. The webapp name must be the");
-            System.out.println("       name of the directory found in webapps/.");
+            System.out.println("       name of the directory found in apps/.");
             System.out.println("");
             System.out.println("Example: java -jar struts.jar quickstart:sandbox");
             System.exit(1);

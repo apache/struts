@@ -27,6 +27,18 @@ import java.io.Writer;
  * complex expression and then simply reference that variable each time rather than the complex expression. This is
  * useful in both cases: when the complex expression takes time (performance improvement) or is hard to read (code
  * readability improvement).</P>
+ * 
+ * The scopes available are as follows :-
+ * <ul>
+ *   <li>application - the value will be set in application scope according to servlet spec. using the name as its key</li>
+ *   <li>session - the value will be set in session scope according to servlet spec. using the name as key </li>
+ *   <li>request - the value will be set in request scope according to servlet spec. using the name as key </li>
+ *   <li>page - the value will be set in request scope according to servlet sepc. using the name as key</li>
+ *   <li>action - the value will be set in the request scope and SAF's action context using the name as key</li>
+ * </ul>
+ * 
+ * NOTE:<p/>
+ * If no scope is specified, it will default to action scope.
  *
  * <!-- END SNIPPET: javadoc -->
  *
@@ -98,6 +110,7 @@ public class Set extends Component {
             stack.setValue("#attr['" + name + "']", o, false);
         } else {
             stack.getContext().put(name, o);
+            stack.setValue("#attr['" + name + "']", o, false);
         }
 
         return super.end(writer, body);

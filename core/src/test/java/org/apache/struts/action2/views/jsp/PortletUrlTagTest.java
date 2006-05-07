@@ -49,6 +49,7 @@ import org.apache.struts.action2.views.jsp.ParamTag;
 import org.apache.struts.action2.dispatcher.DispatcherUtils;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.util.OgnlValueStack;
+import org.apache.struts.action2.config.Configuration;
 
 /**
  */
@@ -79,7 +80,9 @@ public class PortletUrlTagTest extends MockObjectTestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 		
-		mockPortletApiAvailable();
+		Configuration.reset();
+        
+        mockPortletApiAvailable();
 		
 		stack = new OgnlValueStack();
 

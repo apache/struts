@@ -21,9 +21,9 @@
     <property name="test.compile.version" value="1.3"/>
 
     <dirname property="common.dir" file="${ant.file.common}"/>
-    <property file="build.properties"/>
-    <property file="release.properties"/>
-    <property file="ivyrep.properties"/>
+    <property file="ant-build/build.properties"/>
+    <property file="ant-build/release.properties"/>
+    <property file="ant-build/ivyrep.properties"/>
 
     <property name="lib" location="lib"/>
     <property name="lib.core" value="${lib}/core"/>

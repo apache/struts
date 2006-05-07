@@ -1,5 +1,5 @@
 <ivyconf>
-    <properties file="ivyconf.properties"/>
+    <properties file="ant-build/ivyconf.properties"/>
     <conf defaultResolver="default" checkUpToDate="true"/>
     <resolvers>
         <chain name="default">

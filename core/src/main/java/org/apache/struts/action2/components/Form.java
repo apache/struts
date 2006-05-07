@@ -50,6 +50,24 @@ import java.util.Iterator;
  *
  * The remote form allows the form to be submitted without the page being refreshed. The results from the form
  * can be inserted into any HTML element on the page.<p/>
+ * 
+ * NOTE:<p/>
+ * The order / logic in determining the posting url of the generated HTML form is as follows:-
+ * <ol>
+ * 	 <li>
+ * 	 If the action attribute is not specified, then the current request will be used to
+ *   determine the posting url
+ *   </li>
+ *   <li>
+ *   If the action is given, SAF will try to obtain an ActionConfig. This will be 
+ *   successfull if the action attribute is a valid action alias defined xwork.xml.
+ *   </li>
+ *   <li>
+ *   If the action is given and is not an action alias defined in xwork.xmlm SAF
+ *   will used the action attribute as if it is the posting url, separting the namespace
+ *   from it and using UrlHelper to generate the final url.
+ *   </li>
+ * </ol>
  *
  * <!-- END SNIPPET: javadoc -->
  *

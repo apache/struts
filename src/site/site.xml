@@ -30,7 +30,7 @@
         <menu name="Documentation">
             <item
                     name="Javadoc"
-                    href="apidocs/index.html"
+                    href="core/apidocs/index.html"
                     />        
             <item
                     name="Source Repository"

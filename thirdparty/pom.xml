@@ -11,15 +11,17 @@
     <artifactId>thirdparty</artifactId>
     <packaging>pom</packaging>
     <name>Third Party Modules</name>
+    
+    <distributionManagement>
+        <site>
+            <id>apache-site</id>
+            <url>scp://people.apache.org/www/struts.apache.org/struts-action2/thirdparty</url>
+        </site>
+    </distributionManagement>
+    
     <modules>
         <module>jasperreports</module>
         <module>jfreechart</module>
         <module>pell-file-upload</module>
     </modules>
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.struts.action2</groupId>
-            <artifactId>action</artifactId>
-        </dependency>
-    </dependencies>
 </project>

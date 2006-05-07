@@ -30,7 +30,7 @@
     <property name="lib.build" value="${lib}/build"/>
     <property name="lib.optional" value="${lib}/optional"/>
 
-    <property name="src" location="action/src"/>
+    <property name="src" location="core/src"/>
     <property name="src.java" value="${src}/main/java"/>
     <property name="src.test" value="${src}/test/java/"/>
 
@@ -342,7 +342,7 @@
     <!-- =================================================================== -->
     <target name="fixcrlf" description="Fixed CR/LF problems">
         <echo>Running fixcrlf....</echo>
-         <fixcrlf eol="lf" srcdir="${basedir}/action/src"
+         <fixcrlf eol="lf" srcdir="${basedir}/core/src"
                  includes="**/*.sh,
                       **/*.properties,
                       **/*.sql,

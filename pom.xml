@@ -86,7 +86,7 @@
     </mailingLists>
     <modules>
         <module>core</module>
-        <module>thirdparty</module>
+        <module>extras</module>
         <module>apps</module>
     </modules>
     <repositories>
@@ -134,9 +134,9 @@
     </repositories>
     <profiles>
         <profile>
-            <id>thirdparty</id>
+            <id>extras</id>
             <modules>
-                <module>thirdparty</module>
+                <module>extras</module>
             </modules>
         </profile>
         <profile>

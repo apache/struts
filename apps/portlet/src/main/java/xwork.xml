@@ -12,10 +12,6 @@
 			<result name="success">/WEB-INF/view/index.jsp</result>
 		</action>
 
-		<action name="chartExample" class="org.apache.struts.action2.portlet.example.ChartExampleAction">
-			<result name="success">/WEB-INF/view/chartExample.jsp</result>
-		</action>
-
 		<action name="formExample"
 			class="org.apache.struts.action2.portlet.example.FormExample" method="input">
 			<result name="input">

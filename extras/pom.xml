@@ -8,20 +8,64 @@
         <version>2.0-SNAPSHOT</version>
     </parent>
     <groupId>org.apache.struts.action2</groupId>
-    <artifactId>thirdparty</artifactId>
-    <packaging>pom</packaging>
-    <name>Third Party Modules</name>
+    <artifactId>struts-extras</artifactId>
+    <packaging>jar</packaging>
+    <name>Struts Extras</name>
     
     <distributionManagement>
         <site>
             <id>apache-site</id>
-            <url>scp://people.apache.org/www/struts.apache.org/struts-action2/thirdparty</url>
+            <url>scp://people.apache.org/www/struts.apache.org/struts-action2/struts-extras</url>
         </site>
     </distributionManagement>
     
-    <modules>
-        <module>jasperreports</module>
-        <module>jfreechart</module>
-        <module>pell-file-upload</module>
-    </modules>
+    <dependencies>
+    
+        <dependency>
+           <groupId>javax.servlet</groupId>
+           <artifactId>servlet-api</artifactId>
+           <version>2.4</version>
+           <scope>provided</scope>
+        </dependency>
+    
+        <dependency>
+            <groupId>org.apache.struts.action2</groupId>
+            <artifactId>struts-core</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+      
+        <dependency>
+            <groupId>jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>mockobjects</groupId>
+            <artifactId>mockobjects-core</artifactId>
+            <version>0.09</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.0.0</version>
+            <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>gnujaxp</groupId>
+                    <artifactId>gnujaxp</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        <dependency>
+            <groupId>opensymphony</groupId>
+            <artifactId>pell-multipart</artifactId>
+            <version>2.1.5</version>
+            <optional>true</optional>
+        </dependency>
+        
+    </dependencies>
 </project>

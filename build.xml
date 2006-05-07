@@ -240,9 +240,7 @@
     </target>
 
     <target name="compile-optional" depends="compile, init-optional" description="compile optional files">
-        <compile srcdir="thirdparty/jasperreports/src/main/java" destdir="${build.java}"  />
-        <compile srcdir="thirdparty/pell-file-upload/src/main/java" destdir="${build.java}"  />
-        <compile srcdir="thirdparty/jfreechart/src/main/java" destdir="${build.java}"  />
+        <compile srcdir="extras/src/main/java" destdir="${build.java}"  />
     </target>
 
 </project>

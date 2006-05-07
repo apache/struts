@@ -6,9 +6,9 @@
     <version>2.0-SNAPSHOT</version>
     <artifactId>project</artifactId>
     <packaging>pom</packaging>
-    <name>Struts Action Framework 2.0 Project</name>
+    <name>Struts Action 2</name>
     <description>
-        WebWork is a Java web-application development framework.
+        Struts Action 2 is a Java web-application development framework.
         It is built specifically with developer productivity and
         code simplicity in mind, providing robust support for building
         reusable UI templates, such as form controls, UI themes,
@@ -17,23 +17,44 @@
     </description>
     <licenses>
         <license>
-            <name>The OpenSymphony Software License 1.1</name>
-            <url>http://opensymphony.com/webwork/license.action</url>
-            <comments>
-                This license is derived and fully compatible with the Apache Software
-                License - see http://www.apache.org/LICENSE.txt
-            </comments>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments/>
         </license>
     </licenses>
-    <url>http://www.opensymphony.com/webwork/</url>
-    <organization>
-        <name>OpenSymphony</name>
-        <url>http://www.opensymphony.com/</url>
+    <url>http://struts.apache.org</url>
+   <organization>
+        <name>Apache Software Foundation</name>
+        <url>http://www.apache.org</url>
     </organization>
+    
+    
+    <scm>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/action/trunk</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/action/trunk</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/action/trunk</url>
+    </scm>
+
     <issueManagement>
         <system>JIRA</system>
-        <url>http://jira.opensymphony.com/browse/WW</url>
+        <url>http://issues.apache.org/struts/</url>
     </issueManagement>
+
+    <ciManagement/>
+    <distributionManagement>
+        <repository>
+           <id>apache-maven-test-builds</id>
+           <name>Apache Maven Repository (Test Builds)</name>
+           <url>scp://people.apache.org/www/cvs.apache.org/maven-snapshot-repository</url>
+        </repository>
+        <site>
+            <id>apache-site</id>
+            <url>scp://people.apache.org/www/struts.apache.org/struts-action2/</url>
+        </site>
+    </distributionManagement>
+    
+    
     <mailingLists>
         <mailingList>
             <name>WebWork users list</name>
@@ -182,11 +203,6 @@
             </plugin>
         </plugins>
     </build>
-    <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/incubator/webwork2/trunk/</connection>
-        <developerConnection>scm:svn:http://svn.apache.org/repos/asf/incubator/webwork2/trunk/</developerConnection>
-        <url>http://svn.apache.org/repos/asf/incubator/webwork2/trunk/</url>
-    </scm>
     <dependencyManagement>
         <dependencies>
             <dependency>

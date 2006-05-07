@@ -25,6 +25,12 @@
           <artifactId>struts-core</artifactId>
           <version>${pom.version}</version>
       </dependency>
+      
+      <dependency>
+          <groupId>opensymphony</groupId>
+          <artifactId>sitemesh</artifactId>
+          <version>2.2.1</version>
+      </dependency>
     
     </dependencies>
     

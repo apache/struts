@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    
+    <parent>
+      <groupId>org.apache.struts</groupId>
+      <artifactId>struts-parent</artifactId>
+      <version>2</version>
+   </parent>
+         
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.apache.struts.action2</groupId>
     <version>2.0-SNAPSHOT</version>
     <artifactId>project</artifactId>
     <packaging>pom</packaging>
     <name>Struts Action 2</name>
+    <url>http://struts.apache.org/struts-action2</url>
+    
+    <inceptionYear>2006</inceptionYear>
+    
     <description>
         Struts Action 2 is a Java web-application development framework.
         It is built specifically with developer productivity and
@@ -15,33 +26,19 @@
         internationalization, dynamic form parameter mapping to JavaBeans,
         robust client and server side validation, and much more.
     </description>
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-            <comments/>
-        </license>
-    </licenses>
-    <url>http://struts.apache.org</url>
-   <organization>
-        <name>Apache Software Foundation</name>
-        <url>http://www.apache.org</url>
-    </organization>
-    
     
     <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/action/trunk</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/action/trunk</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/action/trunk</url>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/action2/trunk</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/action2/trunk</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/action2/trunk</url>
     </scm>
-
+    
     <issueManagement>
         <system>JIRA</system>
         <url>http://issues.apache.org/struts/</url>
     </issueManagement>
-
-    <ciManagement/>
+    
+     <ciManagement/>
     <distributionManagement>
         <repository>
            <id>apache-maven-test-builds</id>
@@ -54,41 +51,26 @@
         </site>
     </distributionManagement>
     
-    
-    <mailingLists>
-        <mailingList>
-            <name>WebWork users list</name>
-            <post>mailto:users@webwork.dev.java.net</post>
-            <subscribe>https://webwork.dev.java.net/servlets/ProjectMailingListList</subscribe>
-            <archive>https://webwork.dev.java.net/servlets/SummarizeList?listName=users</archive>
-            <otherArchives>
-                <otherArchive>http://forums.opensymphony.com/forum.jspa?forumID=1</otherArchive>
-            </otherArchives>
-        </mailingList>
-        <mailingList>
-            <name>WebWork developers list</name>
-            <post>mailto:dev@webwork.dev.java.net</post>
-            <subscribe>https://webwork.dev.java.net/servlets/ProjectMailingListList</subscribe>
-            <archive>https://webwork.dev.java.net/servlets/SummarizeList?listName=dev</archive>
-            <otherArchives>
-                <otherArchive>http://forums.opensymphony.com/forum.jspa?forumID=32</otherArchive>
-            </otherArchives>
-        </mailingList>
-        <mailingList>
-            <name>WebWork cvs commit list</name>
-            <post>mailto:cvs@webwork.dev.java.net</post>
-            <subscribe>https://webwork.dev.java.net/servlets/ProjectMailingListList</subscribe>
-            <archive>https://webwork.dev.java.net/servlets/SummarizeList?listName=cvs</archive>
-            <otherArchives>
-                <otherArchive>http://forums.opensymphony.com/forum.jspa?forumID=9</otherArchive>
-            </otherArchives>
-        </mailingList>
-    </mailingLists>
     <modules>
         <module>core</module>
         <module>extras</module>
         <module>apps</module>
     </modules>
+    
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments/>
+        </license>
+    </licenses>
+    
+   <organization>
+        <name>Apache Software Foundation</name>
+        <url>http://www.apache.org</url>
+    </organization>
+    
     <repositories>
      	<repository>
             <id>snapshots-maven-codehaus</id>
@@ -116,6 +98,13 @@
                 <enabled>false</enabled>
             </releases>
             <url>http://cvs.apache.org/repository</url>
+        </repository>
+        <repository>
+            <id>apache.snapshots</id>
+            <name>Apache Maven Repository (Snapshots and Test Builds)</name>
+            <url>http://cvs.apache.org/maven-snapshot-repository</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
         </repository>
         <repository>
             <id>opensymphony</id>
@@ -160,6 +149,8 @@
             </dependencies>
         </profile>
     </profiles>
+    
+    
     <build>
         <plugins>
             <plugin>
@@ -202,6 +193,43 @@
                 </configuration>
             </plugin>
         </plugins>
+        
+        <defaultGoal>install</defaultGoal>
     </build>
+    
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+             </plugin>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <aggregate>true</aggregate>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+            </plugin>
+            <!--
+            <plugin>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                  <configLocation>org/apache/struts/build/struts_checks.xml</configLocation>
+                </configuration>
+            </plugin>
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jxr-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-pmd-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <dependencies/>
     
 </project>

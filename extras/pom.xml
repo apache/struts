@@ -48,19 +48,6 @@
         </dependency>
         
         <dependency>
-            <groupId>jfree</groupId>
-            <artifactId>jfreechart</artifactId>
-            <version>1.0.0</version>
-            <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <groupId>gnujaxp</groupId>
-                    <artifactId>gnujaxp</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        
-        <dependency>
             <groupId>opensymphony</groupId>
             <artifactId>pell-multipart</artifactId>
             <version>2.1.5</version>

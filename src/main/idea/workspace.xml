@@ -46,8 +46,8 @@
             <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false"/>
             <option name="ALTERNATIVE_JRE_PATH"/>
         </configuration>
-        <configuration selected="false" default="false" name="All Tests" type="JUnit" factoryName="JUnit">
-            <module name="action"/>
+        <configuration selected="true" default="false" name="Struts Core Tests" type="JUnit" factoryName="JUnit">
+            <module name="struts-core"/>
             <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false"/>
             <option name="ALTERNATIVE_JRE_PATH" value=""/>
             <option name="PACKAGE_NAME" value="org.apache.struts.action2"/>
@@ -64,16 +64,15 @@
             <RunnerSettings RunnerId="Run"/>
             <ConfigurationWrapper RunnerId="Run"/>
         </configuration>
-        <configuration selected="true" default="false" name="Showcase" type="Application" factoryName="Application">
+        <configuration selected="true" default="false" name="Struts Showcase" type="Application"
+                       factoryName="Application">
             <option name="MAIN_CLASS_NAME" value="org.apache.struts.action2.Main"/>
             <option name="VM_PARAMETERS" value=""/>
             <option name="PROGRAM_PARAMETERS" value="quickstart"/>
-            <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/webapps/showcase"/>
+            <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/apps/showcase"/>
             <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false"/>
             <option name="ALTERNATIVE_JRE_PATH" value=""/>
-            <module name="webapp-showcase"/>
-            <RunnerSettings RunnerId="Run"/>
-            <ConfigurationWrapper RunnerId="Run"/>
+            <module name="struts-showcase"/>
         </configuration>
     </component>
 </project>

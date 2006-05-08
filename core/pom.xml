@@ -286,6 +286,12 @@
             <artifactId>easymockclassextension</artifactId>
             <version>1.1</version>
             <scope>test</scope>
+            <exclusions>
+            	<exclusion>
+            		<groupId>easymock</groupId>
+            		<artifactId>easymock</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

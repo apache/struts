@@ -77,7 +77,13 @@
             <version>1.1-beta-3</version>
             <optional>true</optional>
         </dependency>
-
+        <dependency>
+            <groupId>jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>1.2.1</version>
+            <scope>provided</scope>
+        </dependency>
+ 
     </dependencies>
     
     <build>

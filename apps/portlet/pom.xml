@@ -23,6 +23,7 @@
             <groupId>cewolf</groupId>
             <artifactId>cewolf</artifactId>
             <version>1.0</version>
+            <scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <groupId>gnujaxp</groupId>

@@ -1,8 +1,8 @@
 <@saf.iterator value="parameters.list">
     <#if parameters.listKey?exists>
-        <#assign itemKey = stack.findValue(parameters.listKey)/>
+        <#assign itemKey = stack.findString(parameters.listKey)/>
     <#else>
-        <#assign itemKey = stack.findValue('top')/>
+        <#assign itemKey = stack.findString('top')/>
     </#if>
     <#if parameters.listValue?exists>
         <#assign itemValue = stack.findString(parameters.listValue)/>

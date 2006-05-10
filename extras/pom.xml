@@ -38,6 +38,7 @@
             <groupId>jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
             <version>1.2.1</version>
+            <scope>provided</scope>
         </dependency>
         
         <dependency>
@@ -51,6 +52,7 @@
             <groupId>opensymphony</groupId>
             <artifactId>pell-multipart</artifactId>
             <version>2.1.5</version>
+            <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         

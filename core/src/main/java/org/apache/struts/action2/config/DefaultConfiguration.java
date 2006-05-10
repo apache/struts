@@ -79,6 +79,9 @@ public class DefaultConfiguration extends Configuration {
             configList = new Configuration[list.size()];
             config = new DelegatingConfiguration((Configuration[]) list.toArray(configList));
         } catch (IllegalArgumentException e) {
+            // thrown when Configuration is unable to find a certain property
+            // eg. struts.custom.properties in default.properties which is commented
+            // out
         }
 
         // Add addtional list of i18n global resource bundles

@@ -53,23 +53,22 @@ END SNIPPET: supported-validators
                 }
             }
             <#elseif validator.validatorType = "regex">
-            if (field.value != null && !field.value.match("${validator.expression?js_string}")) {
+            if (field.value != null && !field.value.match("${validator.expression?js_string}")==null) {
                 addError(field, error);
                 errors = true;
             }
             <#elseif validator.validatorType = "stringregex">
-			if (field.value != null && !field.value.match(/${validator.regex}/)) {
+			if (field.value != null && field.value.match(/${validator.regex}/)==null) {
 				addError(field, error);
 				errors = true;
 			}
             <#elseif validator.validatorType = "email">
-            if (field.value != null && field.value.length > 0 && field.value.match(/^\S+@\S+\.(com|net|org|info|edu|mil|gov|biz|ws|us|tv|cc|aero|arpa|coop|int|jobs|museum|name|pro|travel|nato|.{2,2})$/gi) == null) {
+            if (field.value != null && field.value.length > 0 && field.value.match(/\b(^[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@([A-Za-z0-9-])+(\.[A-Za-z0-9-]+)*((\.[A-Za-z0-9]{2,})|(\.[A-Za-z0-9]{2,}\.[A-Za-z0-9]{2,}))$)\b/gi)==null) {
                 addError(field, error);
                 errors = true;
             }
             <#elseif validator.validatorType = "url">
-            <#--if (field.value != null && field.value.length > 0 && field.value.match(/^\S+@\S+\.(com|net|org|info|edu|mil|gov|biz|ws|us|tv|cc|aero|arpa|coop|int|jobs|museum|name|pro|travel|nato|.{2,2})$/gi) == null) { -->
-            if (field.value != null && field.value.length > 0 && field.value.match(/(^[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@([A-Za-z0-9-])+(\.[A-Za-z0-9-]+)*((\.com)|(\.net)|(\.org)|(\.info)|(\.edu)|(\.mil)|(\.gov)|(\.biz)|(\.ws)|(\.us)|(\.tv)|(\.cc)|(\.aero)|(\.arpa)|(\.coop)|(\.int)|(\.jobs)|(\.museum)|(\.name)|(\.pro)|(\.travel)|(\.nato)|(\.[A-Za-z0-9]{2,3})|(\.[A-Za-z0-9]{2,3}\.[A-Za-z0-9]{2,3}))$)/gi) == null) { 
+            if (field.value != null && field.value.length > 0 && field.value.match(/(^(ftp|http|https):\/\/(\.[_A-Za-z0-9-]+)*(@?([A-Za-z0-9-])+)?(\.[A-Za-z0-9-]+)*((\.[A-Za-z0-9]{2,})|(\.[A-Za-z0-9]{2,}\.[A-Za-z0-9]{2,}))(:[0-9]+)?([/A-Za-z0-9?#_-]*)?$)/gi)==null) { 
                 addError(field, error);
                 errors = true;
             }

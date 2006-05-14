@@ -734,6 +734,14 @@
       <description><![CDATA[Render a custom ui widget]]></description>
 
       <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
+
+      </attribute>
+      <attribute>
          <name>theme</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>

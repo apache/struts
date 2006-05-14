@@ -964,6 +964,13 @@ public abstract class UIBean extends Component {
     }
 
 
+    /**
+     * The template directory.
+     * @a2.tagattribute required="false"
+     */
+    public void setTemplateDir(String templateDir) {
+    	this.templateDir = templateDir;
+    }
 
     /**
      * The theme (other than default) to use for rendering the element

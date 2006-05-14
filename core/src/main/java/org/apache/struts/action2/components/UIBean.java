@@ -32,6 +32,7 @@ import org.apache.commons.logging.LogFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -848,6 +849,7 @@ public abstract class UIBean extends Component {
             addParameter("form", form.getParameters());
 
             if ( name != null ) {
+            	// list should have been created by the form component
                 List tags = (List) form.getParameters().get("tagNames");
                 tags.add(name);
             }

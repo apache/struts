@@ -14,12 +14,6 @@
             <result-type name="xslt" class="org.apache.struts.action2.views.xslt.XSLTResult"/>
             <result-type name="plaintext" class="org.apache.struts.action2.dispatcher.PlainTextResult" />
             
-            <!-- Results necessary when using 'browse server' and 'upload' feature of Richtexteditor -->
-            <result-type name="richtexteditorGetFolders" class="org.apache.struts.action2.views.jsp.ui.RichtexteditorGetFoldersResult" />
-            <result-type name="richtexteditorGetFoldersAndFiles" class="org.apache.struts.action2.views.jsp.ui.RichtexteditorGetFoldersAndFilesResult" />
-            <result-type name="richtexteditorCreateFolder" class="org.apache.struts.action2.views.jsp.ui.RichtexteditorCreateFolderResult" />
-            <result-type name="richtexteditorFileUpload" class="org.apache.struts.action2.views.jsp.ui.RichtexteditorFileUploadResult" />
-
             <!-- third party integration -->
             <result-type name="jasper" class="org.apache.struts.action2.views.jasperreports.JasperReportsResult"/>
         </result-types>

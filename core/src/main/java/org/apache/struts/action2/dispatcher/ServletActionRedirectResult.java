@@ -17,9 +17,13 @@
  */
 package org.apache.struts.action2.dispatcher;
 
+import java.util.Map;
+
 import org.apache.struts.action2.dispatcher.mapper.ActionMapper;
 import org.apache.struts.action2.dispatcher.mapper.ActionMapperFactory;
 import org.apache.struts.action2.dispatcher.mapper.ActionMapping;
+import org.apache.struts.action2.views.util.UrlHelper;
+
 import com.opensymphony.xwork.ActionInvocation;
 
 /**
@@ -85,7 +89,8 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
 
     protected String actionName;
     protected String namespace;
-
+    protected String method;
+    
     public void execute(ActionInvocation invocation) throws Exception {
         actionName = conditionalParse(actionName, invocation);
         if (namespace == null) {
@@ -93,9 +98,15 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
         } else {
             namespace = conditionalParse(namespace, invocation);
         }
+        if (method == null) {
+        	method = "";
+        }
+        else {
+        	method = conditionalParse(method, invocation);
+        }
 
         ActionMapper mapper = ActionMapperFactory.getMapper();
-        location = mapper.getUriFromActionMapping(new ActionMapping(actionName, namespace, "", null));
+        location = mapper.getUriFromActionMapping(new ActionMapping(actionName, namespace, method, null));
 
         super.execute(invocation);
     }
@@ -106,5 +117,9 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
 
     public void setNamespace(String namespace) {
         this.namespace = namespace;
+    }
+    
+    public void setMethod(String method) {
+    	this.method = method;
     }
 }

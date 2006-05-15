@@ -50,15 +50,7 @@
 			org.gridlab.gridsphere.provider.portlet.jsr.PortletServlet
 		</servlet-class>
 	</servlet>
-	<servlet>
-		<servlet-name>CewolfServlet</servlet-name>
-		<servlet-class>de.laures.cewolf.CewolfRenderer</servlet-class>
-	</servlet>
 
-	<servlet-mapping>
-		<servlet-name>CewolfServlet</servlet-name>
-		<url-pattern>/cewolf/*</url-pattern>
-	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>dwr</servlet-name>
 		<url-pattern>/dwr/*</url-pattern>
@@ -67,10 +59,5 @@
 		<servlet-name>PortletServlet</servlet-name>
 		<url-pattern>/jsr/struts-portlet</url-pattern>
 	</servlet-mapping>
-
-	<taglib>
-		<taglib-uri>/cewolf</taglib-uri>
-		<taglib-location>/WEB-INF/tld/cewolf.tld</taglib-location>
-	</taglib>
 
 </web-app>

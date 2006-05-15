@@ -20,19 +20,6 @@
         </dependency>
 
         <dependency>
-            <groupId>cewolf</groupId>
-            <artifactId>cewolf</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>gnujaxp</groupId>
-                    <artifactId>gnujaxp</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        
-        <dependency>
            <groupId>javax.servlet</groupId>
            <artifactId>servlet-api</artifactId>
            <version>2.4</version>

@@ -15,7 +15,7 @@
         <module>blank</module>
         <module>portlet</module>
         <module>shopping-cart</module>
-        <module>showcase</module>
+        <!--<module>showcase</module>-->
         <module>starter</module>
     </modules>
     
@@ -27,6 +27,12 @@
     </distributionManagement>
     
     <profiles>
+        <profile>
+            <id>extras</id>
+            <modules>
+                <module>showcase</module>
+            </modules>
+        </profile>
         <profile>
             <id>hostedqa</id>
             <dependencies>

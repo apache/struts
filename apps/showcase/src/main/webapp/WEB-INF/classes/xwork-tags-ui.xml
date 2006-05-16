@@ -37,21 +37,4 @@
         	<result>tooltipExample.jsp</result>
         </action>
     </package>
-    
-    
-    
-    <package name="richtexteditor-browse" extends="struts-default" namespace="/struts/richtexteditor/editor/filemanager/browser/default/connectors/jsp">
-    	<action name="connector" class="org.apache.struts.action2.components.DefaultRichtexteditorConnector" method="browse">
-    		<result name="getFolders" type="richtexteditorGetFolders" />
-    		<result name="getFoldersAndFiles" type="richtexteditorGetFoldersAndFiles" />
-    		<result name="createFolder" type="richtexteditorCreateFolder" />
-    		<result name="fileUpload" type="richtexteditorFileUpload" />
-    	</action>
-    </package>
-    
-    <package name="richtexteditor-upload" extends="struts-default" namespace="/struts/richtexteditor/editor/filemanager/upload">
-		<action name="uploader" class="org.apache.struts.action2.components.DefaultRichtexteditorConnector" method="upload">
-			<result name="richtexteditorFileUpload" />
-		</action>    
-    </package>
 </xwork>

@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * <!-- START SNIPPET: description -->
  *
- * A custom Result type for evaluating HTTP headers against the ValueStack.
+ * A custom Result type for setting HTTP headers and status by optionally evaluating against the ValueStack.
  * 
  * <!-- END SNIPPET: description -->
  * <p/>

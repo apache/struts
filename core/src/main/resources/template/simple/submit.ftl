@@ -20,9 +20,6 @@
 <#else>
 <#if parameters.type?exists && parameters.type=="image">
 <input type="image"<#rt/>
-<#if parameters.id?exists>
- id="${parameters.id?html}"<#rt/>
-</#if>
 <#if parameters.label?exists>
  alt="${parameters.label?html}"<#rt/>
 </#if>

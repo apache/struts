@@ -596,7 +596,7 @@ public abstract class UIBean extends Component {
             super.end(writer, body, false);
             mergeTemplate(writer, buildTemplateName(template, getDefaultTemplate()));
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("error when rendering", e);
         }
         finally {
         	popComponentStack();

@@ -1,5 +1,8 @@
 <#if parameters.type?exists && parameters.type=="button">
 <button type="submit"<#rt/>
+<#if parameters.id?exists>
+ id="${parameters.id?html}"<#rt/>
+</#if>
 <#if parameters.name?exists>
  name="${parameters.name?html}"<#rt/>
 </#if>
@@ -17,6 +20,9 @@
 <#else>
 <#if parameters.type?exists && parameters.type=="image">
 <input type="image"<#rt/>
+<#if parameters.id?exists>
+ id="${parameters.id?html}"<#rt/>
+</#if>
 <#if parameters.label?exists>
  alt="${parameters.label?html}"<#rt/>
 </#if>
@@ -25,6 +31,9 @@
 </#if>
 <#else>
 <input type="submit"<#rt/>
+</#if>
+<#if parameters.id?exists>
+ id="${parameters.id?html}"<#rt/>
 </#if>
 <#if parameters.name?exists>
  name="${parameters.name?html}"<#rt/>

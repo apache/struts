@@ -77,7 +77,7 @@
 
     <modules>
         <module>core</module>
-        <module>assembly</module>
+        <!--<module>assembly</module>-->
         <module>apps</module>
     </modules>
     

@@ -174,7 +174,8 @@ public class QuickStart {
         System.out.println("");
         System.out.println("********************************************************");
         System.out.println("Quick-started at http://localhost:" + c.getPort() + c.getContext());
-        System.out.println("You may now edit your Java source files and web files.");
+        System.out.println("You may now edit your Java classes and web files without");
+        System.out.println(" deploying or restarting.");
         System.out.println("********************************************************");
     }
 

@@ -1,6 +1,6 @@
 <html>
     <head>
-        <meta http-equiv="refresh" content="5;url=<@ww.url includeParams="all"/>"/>
+        <meta http-equiv="refresh" content="5;url=<@saf.url includeParams="none"/>"/>
     </head>
     <body>
         Please wait while we process your request...

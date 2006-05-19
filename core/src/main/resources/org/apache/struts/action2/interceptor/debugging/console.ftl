@@ -1,7 +1,7 @@
 <html>
 <head>
     <script language="javascript">
-    var baseUrl = "<@ww.url value="/struts"/>";
+    var baseUrl = "<@saf.url value="/struts" includeParams="none"/>";
     window.open(baseUrl+"/webconsole.html", 'OGNL Console','width=500,height=450,'+
         'status=no,toolbar=no,menubar=no');
     </script>    

@@ -22,6 +22,7 @@ import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.ActionProxy;
 import com.opensymphony.xwork.config.entities.ResultConfig;
 import com.opensymphony.xwork.interceptor.Interceptor;
+import com.opensymphony.xwork.interceptor.MethodFilterInterceptor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -157,7 +158,7 @@ import java.util.Map;
  * <!-- END SNIPPET: example -->
  *
  */
-public class ExecuteAndWaitInterceptor implements Interceptor {
+public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
 	
 	private static final long serialVersionUID = -2754639196749652512L;
 
@@ -177,22 +178,31 @@ public class ExecuteAndWaitInterceptor implements Interceptor {
         return new BackgroundProcess(name + "BackgroundThread", actionInvocation, threadPriority);
     }
 
-    public String intercept(ActionInvocation actionInvocation) throws Exception {
+    protected String doIntercept(ActionInvocation actionInvocation) throws Exception {
         ActionProxy proxy = actionInvocation.getProxy();
         String name = proxy.getActionName();
         ActionContext context = actionInvocation.getInvocationContext();
         Map session = context.getSession();
 
+        Boolean secondTime = (Boolean) context.get(KEY);
+        if (secondTime == null) {
+            context.put(KEY, true);
+            secondTime = false;
+        } else {
+            secondTime = true;
+        }
+
         synchronized (session) {
             BackgroundProcess bp = (BackgroundProcess) session.get(KEY + name);
 
-            if (bp == null) {
+            if (secondTime && bp == null) {
                 bp = getNewBackgroundProcess(name, actionInvocation, threadPriority);
                 session.put(KEY + name, bp);
                 performInitialDelay(bp); // first time let some time pass before showing wait page
+                secondTime = false;
             }
 
-            if (!bp.isDone()) {
+            if (!secondTime && bp != null && !bp.isDone()) {
                 actionInvocation.getStack().push(bp.getAction());
                 Map results = proxy.getConfig().getResults();
                 if (!results.containsKey(WAIT)) {
@@ -202,12 +212,12 @@ public class ExecuteAndWaitInterceptor implements Interceptor {
                             "'! This requires FreeMarker support and won't work if you don't have it installed");
                     // no wait result? hmm -- let's try to do dynamically put it in for you!
                     ResultConfig rc = new ResultConfig(WAIT, "org.apache.struts.action2.views.freemarker.FreemarkerResult",
-                            Collections.singletonMap("location", "org/apache/struts/action2/interceptor/wait.ftl"));
+                            Collections.singletonMap("location", "/org/apache/struts/action2/interceptor/wait.ftl"));
                     results.put(WAIT, rc);
                 }
 
                 return WAIT;
-            } else {
+            } else if (!secondTime && bp != null && bp.isDone()) {
                 session.remove(KEY + name);
                 actionInvocation.getStack().push(bp.getAction());
 
@@ -217,6 +227,12 @@ public class ExecuteAndWaitInterceptor implements Interceptor {
                 }
 
                 return bp.getResult();
+            } else {
+                // this is the first instance of the interceptor and there is no existing action
+                // already run in the background, so let's just let this pass through. We assume
+                // the action invocation will be run in the background on the subsequent pass through
+                // this interceptor
+                return actionInvocation.invoke();
             }
         }
     }

@@ -94,13 +94,6 @@
                 <interceptor-ref name="basicStack"/>
             </interceptor-stack>
 
-            <!-- Sample execute and wait stack.
-                 Note: execAndWait should always be the *last* interceptor. -->
-            <interceptor-stack name="executeAndWaitStack">
-                <interceptor-ref name="basicStack"/>
-                <interceptor-ref name="execAndWait"/>
-            </interceptor-stack>
-
             <!-- An example of the params-prepare-params trick. This stack
                  is exactly the same as the defaultStack, except that it
                  includes one extra interceptor before the prepare interceptor:
@@ -171,6 +164,18 @@
                  old name -->
             <interceptor-stack name="completeStack">
                 <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+
+            <!-- Sample execute and wait stack.
+                 Note: execAndWait should always be the *last* interceptor. -->
+            <interceptor-stack name="executeAndWaitStack">
+                <interceptor-ref name="execAndWait">
+                    <param name="excludeMethods">input,back,cancel</param>
+                </interceptor-ref>
+                <interceptor-ref name="defaultStack"/>
+                <interceptor-ref name="execAndWait">
+                    <param name="excludeMethods">input,back,cancel</param>
+                </interceptor-ref>
             </interceptor-stack>
         </interceptors>
 

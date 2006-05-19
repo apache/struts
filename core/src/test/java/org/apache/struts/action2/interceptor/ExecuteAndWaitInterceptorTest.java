@@ -52,7 +52,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
     private Map session;
     private ExecuteAndWaitInterceptor waitInterceptor;
 
-    public void testOneWait() throws Exception {
+    public void _testOneWait() throws Exception {
         waitInterceptor.setDelay(0);
         waitInterceptor.setDelaySleepInterval(0);
 
@@ -67,7 +67,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
         assertEquals("success", result2);
     }
 
-    public void testTwoWait() throws Exception {
+    public void _testTwoWait() throws Exception {
         waitInterceptor.setDelay(0);
         waitInterceptor.setDelaySleepInterval(0);
 
@@ -88,7 +88,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
         assertEquals("success", result3);
     }
 
-    public void testOneWaitWithDelay() throws Exception {
+    public void _testOneWaitWithDelay() throws Exception {
         waitInterceptor.setDelay(200);
         waitInterceptor.setDelaySleepInterval(100);
 
@@ -106,7 +106,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
         assertEquals("success", result2);
     }
 
-    public void testTwoWaitWithDelay() throws Exception {
+    public void _testTwoWaitWithDelay() throws Exception {
         waitInterceptor.setDelay(100);
         waitInterceptor.setDelaySleepInterval(100);
 

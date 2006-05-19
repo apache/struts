@@ -148,7 +148,7 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        assertEquals("<button type=\"submit\" name=\"action:manager!update\" value=\"Submit\">mylabel</button>", writer.toString().trim());
+        assertEquals("<button type=\"submit\" id=\"myname\" name=\"action:manager!update\" value=\"Submit\">mylabel</button>", writer.toString().trim());
     }
 
     public void testSimpleThemeImageUsingActionOnly() throws Exception {
@@ -168,7 +168,7 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        assertEquals("<button type=\"submit\" name=\"action:manager\" value=\"Submit\">mylabel</button>", writer.toString().trim());
+        assertEquals("<button type=\"submit\" id=\"myname\" name=\"action:manager\" value=\"Submit\">mylabel</button>", writer.toString().trim());
     }
 
     public void testSimpleThemeImageUsingMethodOnly() throws Exception {
@@ -188,7 +188,7 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        assertEquals("<button type=\"submit\" name=\"method:update\" value=\"Submit\">mylabel</button>", writer.toString().trim());
+        assertEquals("<button type=\"submit\" id=\"myname\" name=\"method:update\" value=\"Submit\">mylabel</button>", writer.toString().trim());
     }
 
     public void testSimpleThemeInput() throws Exception {
@@ -207,7 +207,7 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        assertEquals("<input type=\"submit\" name=\"myname\" value=\"Submit\"/>", writer.toString().trim());
+        assertEquals("<input type=\"submit\" id=\"myname\" name=\"myname\" value=\"Submit\"/>", writer.toString().trim());
     }
 
     /**

@@ -7,6 +7,8 @@
 </head>
 <body>
 
+<!-- START SNIPPET: treeExampleDynamicJsp -->
+
 <script>
 	function treeNodeSelected(nodeId) {
 		dojo.io.bind({
@@ -39,6 +41,7 @@
 Please click on any of the tree nodes.
 </div>
 
+<!-- END SNIPPET: treeExampleDynamicJsp -->
 
 </body>
 </html>

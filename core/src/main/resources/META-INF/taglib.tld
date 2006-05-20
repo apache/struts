@@ -132,6 +132,14 @@
 
       </attribute>
       <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
+
+      </attribute>
+      <attribute>
          <name>theme</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
@@ -474,6 +482,14 @@
          <rtexprvalue>true</rtexprvalue>
 
            <description><![CDATA[Set template to use for opening the rendered html.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
 
       </attribute>
       <attribute>
@@ -1007,6 +1023,14 @@
 
       </attribute>
       <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
+
+      </attribute>
+      <attribute>
          <name>theme</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
@@ -1310,6 +1334,14 @@
          <rtexprvalue>true</rtexprvalue>
 
            <description><![CDATA[HTML size attribute]]></description>
+
+      </attribute>
+      <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
 
       </attribute>
       <attribute>
@@ -1648,7 +1680,7 @@
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
 
-           <description><![CDATA[The toggle property.]]></description>
+           <description><![CDATA[The toggle property (either 'explode' or 'fade'). Default is 'fade'.]]></description>
 
       </attribute>
       <attribute>
@@ -1673,14 +1705,6 @@
          <rtexprvalue>true</rtexprvalue>
 
            <description><![CDATA[The treeCollapsedTopic property.]]></description>
-
-      </attribute>
-      <attribute>
-         <name>openAll</name>
-         <required>false</required>
-         <rtexprvalue>true</rtexprvalue>
-
-           <description><![CDATA[The openAll property.]]></description>
 
       </attribute>
       <attribute>
@@ -1716,11 +1740,139 @@
 
       </attribute>
       <attribute>
+         <name>showRootGrid</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The showRootGrid property (default true).]]></description>
+
+      </attribute>
+      <attribute>
+         <name>blankIconSrc</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[Blank icon image source.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>expandIconSrcMinus</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[Expand icon (-) image source.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>expandIconSrcPlus</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[Expand Icon (+) image source.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>gridIconSrcC</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[Image source for under child item child icons.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>gridIconSrcL</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[Image source for last child grid.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>gridIconSrcP</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[Image source for under parent item child icons.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>gridIconSrcV</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[Image source for vertical line.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>gridIconSrcX</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[Image source for grid for sole root item.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>gridIconSrcY</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[Image source for grid for last root item.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>iconHeight</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[Icon height (default 18 pixels).]]></description>
+
+      </attribute>
+      <attribute>
+         <name>iconWidth</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[Icon width (default 19 pixels).]]></description>
+
+      </attribute>
+      <attribute>
+         <name>templateCssPath</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[Template css path (default {contextPath}/struts/tree.css.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>toggleDuration</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[Toggle duration (default 150 ms)]]></description>
+
+      </attribute>
+      <attribute>
+         <name>showGrid</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[Show grid (default true).]]></description>
+
+      </attribute>
+      <attribute>
          <name>openTemplate</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
 
            <description><![CDATA[Set template to use for opening the rendered html.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
 
       </attribute>
       <attribute>
@@ -2282,6 +2434,14 @@
          <rtexprvalue>true</rtexprvalue>
 
            <description><![CDATA[Property of list objects to get field content from]]></description>
+
+      </attribute>
+      <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
 
       </attribute>
       <attribute>
@@ -3006,6 +3166,14 @@
 
       </attribute>
       <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
+
+      </attribute>
+      <attribute>
          <name>theme</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
@@ -3373,6 +3541,14 @@
          <rtexprvalue>true</rtexprvalue>
 
            <description><![CDATA[The type of submit to use. Valid values are <i>input</i>, <i>button</i> and <i>image</i>.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
 
       </attribute>
       <attribute>
@@ -3845,6 +4021,14 @@
       <description><![CDATA[Render a hidden input field]]></description>
 
       <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
+
+      </attribute>
+      <attribute>
          <name>theme</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
@@ -4102,6 +4286,14 @@
       <description><![CDATA[Stop double-submission of forms]]></description>
 
       <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
+
+      </attribute>
+      <attribute>
          <name>theme</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
@@ -4358,6 +4550,14 @@
       <body-content>JSP</body-content>
       <description><![CDATA[Render field error (all or partial depending on param tag nested)if they exists]]></description>
 
+      <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
+
+      </attribute>
       <attribute>
          <name>theme</name>
          <required>false</required>
@@ -4640,6 +4840,14 @@
       <body-content>empty</body-content>
       <description><![CDATA[Render action messages if they exists]]></description>
 
+      <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
+
+      </attribute>
       <attribute>
          <name>theme</name>
          <required>false</required>
@@ -4995,6 +5203,14 @@
 
       </attribute>
       <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
+
+      </attribute>
+      <attribute>
          <name>template</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
@@ -5334,6 +5550,14 @@
 
       </attribute>
       <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
+
+      </attribute>
+      <attribute>
          <name>theme</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
@@ -5628,6 +5852,14 @@
          <rtexprvalue>true</rtexprvalue>
 
            <description><![CDATA[HTML size attribute]]></description>
+
+      </attribute>
+      <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
 
       </attribute>
       <attribute>
@@ -6304,6 +6536,14 @@
 
       </attribute>
       <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
+
+      </attribute>
+      <attribute>
          <name>theme</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
@@ -6566,6 +6806,14 @@
          <rtexprvalue>true</rtexprvalue>
 
            <description><![CDATA[HTML for attribute]]></description>
+
+      </attribute>
+      <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
 
       </attribute>
       <attribute>
@@ -6923,6 +7171,14 @@
 
       </attribute>
       <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
+
+      </attribute>
+      <attribute>
          <name>theme</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
@@ -7245,6 +7501,14 @@
 
       </attribute>
       <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
+
+      </attribute>
+      <attribute>
          <name>theme</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
@@ -7515,6 +7779,14 @@
          <rtexprvalue>true</rtexprvalue>
 
            <description><![CDATA[Property of list objects to get field content from]]></description>
+
+      </attribute>
+      <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
 
       </attribute>
       <attribute>
@@ -7807,6 +8079,14 @@
 
       </attribute>
       <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
+
+      </attribute>
+      <attribute>
          <name>theme</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
@@ -8063,6 +8343,14 @@
       <body-content>empty</body-content>
       <description><![CDATA[Render action errors if they exists]]></description>
 
+      <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
+
+      </attribute>
       <attribute>
          <name>theme</name>
          <required>false</required>
@@ -8334,6 +8622,14 @@
          <rtexprvalue>true</rtexprvalue>
 
            <description><![CDATA[Set template to use for opening the rendered html.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
 
       </attribute>
       <attribute>
@@ -8675,6 +8971,14 @@
 
       </attribute>
       <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
+
+      </attribute>
+      <attribute>
          <name>theme</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
@@ -8948,6 +9252,14 @@
 
       </attribute>
       <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
+
+      </attribute>
+      <attribute>
          <name>theme</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
@@ -9204,6 +9516,14 @@
       <body-content>JSP</body-content>
       <description><![CDATA[Render debug tag]]></description>
 
+      <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
+
+      </attribute>
       <attribute>
          <name>theme</name>
          <required>false</required>
@@ -9494,6 +9814,14 @@
 
       </attribute>
       <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
+
+      </attribute>
+      <attribute>
          <name>theme</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
@@ -9772,6 +10100,14 @@
          <rtexprvalue>true</rtexprvalue>
 
            <description><![CDATA[Property of list objects to get field content from]]></description>
+
+      </attribute>
+      <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
 
       </attribute>
       <attribute>
@@ -10104,6 +10440,14 @@
 
       </attribute>
       <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
+
+      </attribute>
+      <attribute>
          <name>template</name>
          <required>false</required>
          <rtexprvalue>true</rtexprvalue>
@@ -10374,6 +10718,14 @@
          <rtexprvalue>true</rtexprvalue>
 
            <description><![CDATA[Whether the table should be sortable. Requires that model implements org.apache.struts.action2.components.table.SortableTableModel if set to true.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
 
       </attribute>
       <attribute>
@@ -10695,6 +11047,14 @@
          <rtexprvalue>true</rtexprvalue>
 
            <description><![CDATA[Property of list objects to get field content from]]></description>
+
+      </attribute>
+      <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
 
       </attribute>
       <attribute>
@@ -11081,6 +11441,14 @@
          <rtexprvalue>true</rtexprvalue>
 
            <description><![CDATA[Set template to use for opening the rendered html.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>templateDir</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[The template directory.]]></description>
 
       </attribute>
       <attribute>

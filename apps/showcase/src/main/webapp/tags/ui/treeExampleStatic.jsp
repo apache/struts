@@ -6,6 +6,8 @@
 </head>
 <body>
 
+<!-- START SNIPPET: treeExampleStaticJsp -->
+
 <script>
 	function treeNodeSelected(nodeId) {
 		dojo.io.bind({
@@ -45,6 +47,7 @@ showRootGrid="true" showGrid="true" treeSelectedTopic="treeSelected">
 Please click on any node on the tree.
 </div>
 
+<!-- END SNIPPET: treeExampleStaticJsp  -->
 
 </body>
 </html>

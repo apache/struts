@@ -12,6 +12,7 @@
         <pattern>/ajax/AjaxResult*</pattern>
         <pattern>/AjaxTest.action</pattern>
         <pattern>/ajax/remoteforms/AjaxRemoteForm.action</pattern>
+        <pattern>/tags/ui/ajax/*</pattern>
     </excludes>
 
     <decorator name="main" page="main.jsp">

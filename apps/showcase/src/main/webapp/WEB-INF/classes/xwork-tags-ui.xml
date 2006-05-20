@@ -36,5 +36,18 @@
         <action name="tooltipExample">
         	<result>tooltipExample.jsp</result>
         </action>
+        <action name="showDynamicTreeAction" class="org.apache.struts.action2.showcase.ShowDynamicTreeAction">
+        	<result>/tags/ui/treeExampleDynamic.jsp</result>
+        </action>
+	</package>
+	
+	<package name="ui-tags-ajax" namespace="/tags/ui/ajax" extends="struts-default">        
+        <!-- Actions dealing with Tree Example  -->
+        <action name="staticTreeSelectAction">
+        	<result>/tags/ui/staticTreeSelect.jsp</result>
+        </action>
+        <action name="dynamicTreeSelectAction" class="org.apache.struts.action2.showcase.DynamicTreeSelectAction">
+        	<result>/tags/ui/dynamicTreeSelect.jsp</result>
+        </action>
     </package>
 </xwork>

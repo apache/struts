@@ -1,0 +1,50 @@
+<%@taglib prefix="saf" uri="/struts-action" %>
+<html>
+<head>
+<title>Showcase - UI Tag Example - Tree Example (Static)</title>
+<saf:head theme="ajax" debug="true"  />
+</head>
+<body>
+
+<script>
+	function treeNodeSelected(nodeId) {
+		dojo.io.bind({
+			url: "<saf:url value='/tags/ui/ajax/staticTreeSelectAction.action'/>?nodeId="+nodeId,
+			load: function(type, data, evt) {
+				var divDisplay = dojo.byId("displayIt");
+				divDisplay.innerHTML=data;
+			},
+			mimeType: "text/html"
+		});
+	};
+
+	dojo.event.topic.subscribe("treeSelected", "treeNodeSelected");
+</script>
+
+
+<div style="float:left; margin-right: 50px;">
+<saf:tree label="parent" id="parentId" theme="ajax" templateCssPath="/struts/tree.css" 
+showRootGrid="true" showGrid="true" treeSelectedTopic="treeSelected">
+	<saf:treenode theme="ajax" label="child1" id="child1Id">
+		<saf:treenode theme="ajax" label="grandchild1" id="grandchild1Id"/>
+		<saf:treenode theme="ajax" label="grandchild2" id="grandchild2Id"/>
+		<saf:treenode theme="ajax" label="grandchild3" id="grandchild3Id"/>
+	</saf:treenode>
+	<saf:treenode theme="ajax" label="child2" id="child2Id"/>
+	<saf:treenode theme="ajax" label="child3" id="child3Id"/>
+	<saf:treenode theme="ajax" label="child4" id="child4Id"/>
+	<saf:treenode theme="ajax" label="child5" id="child5Id">
+		<saf:treenode theme="ajax" label="gChild1" id="gChild1Id"/>
+		<saf:treenode theme="ajax" label="gChild2" id="gChild2Id"/>
+	</saf:treenode>
+</saf:tree>
+</div>
+
+
+<div id="displayIt">
+Please click on any node on the tree.
+</div>
+
+
+</body>
+</html>

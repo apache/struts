@@ -17,9 +17,24 @@ import java.io.Writer;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;tree .../&gt;
+ * &lt;-- statically --&lt;
+ * &lt;saf:tree rootNode="..." /&gt;
+ * 
+ * or 
+ * 
+ * &lt-- dynamically --&gt;
+ * &lt;saf:tree id="..." label="..."&gt;
+ *    &lt;saf:treenode id="..." label="..." /&gt;
+ *    &lt;saf:treenode id="..." label="..."&gt;
+ *        &lt;saf:treenode id="..." label="..." /&gt;
+ *        &lt;saf:treenode id="..." label="..." /&gt;
+ *    &;lt;/saf:treenode&gt;
+ *    &lt;saf:treenode id="..." label="..." /&gt;
+ * &lt;/saf:tree&gt;
+ * 
  * <!-- END SNIPPET: example -->
  * </pre>
+ * 
  *
  * @a2.tag name="tree" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.TreeTag"
  * description="Render a tree widget."

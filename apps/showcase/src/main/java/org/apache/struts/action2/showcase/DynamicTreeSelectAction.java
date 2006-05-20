@@ -4,6 +4,8 @@ import org.apache.struts.action2.showcase.ajax.tree.Category;
 
 import com.opensymphony.xwork.ActionSupport;
 
+//START SNIPPET: treeExampleDynamicJavaSelected
+
 public class DynamicTreeSelectAction extends ActionSupport {
 
 	private long nodeId;
@@ -28,3 +30,6 @@ public class DynamicTreeSelectAction extends ActionSupport {
 		return currentCategory.getName();
 	}
 }
+
+//START SNIPPET: treeExampleDynamicJavaSelected
+

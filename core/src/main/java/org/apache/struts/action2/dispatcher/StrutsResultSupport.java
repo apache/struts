@@ -65,10 +65,13 @@ import com.opensymphony.xwork.util.TextParseUtil;
  * <p/>
  * <pre>
  *  &lt;result name="success" type="redirect" &gt;
- *      &lt;param name="<b>location</b>"&gt;foo.jsp&lt;/param&gt;
+ *      &lt;param name="<b>location</b>"&gt;foo.jsp?url=${myUrl}&lt;/param&gt;
  *      &lt;param name="<b>parse</b>"&gt;true&lt;/param&gt;
- *      &lt;param name="<b>encode</b>"&gt;false&lt;/param&gt;
+ *      &lt;param name="<b>encode</b>"&gt;true&lt;/param&gt;
  *  &lt;/result&gt;</pre>
+ * <p/>
+ * In the above case, myUrl will be parsed against Ognl Value Stack and then 
+ * URL encoded.
  * <p/>
  * or when using the default parameter feature
  * <p/>

@@ -28,7 +28,7 @@
     
     <profiles>
         <profile>
-            <id>extras</id>
+            <id>showcase</id>
             <modules>
                 <module>showcase</module>
             </modules>

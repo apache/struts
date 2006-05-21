@@ -4,6 +4,7 @@
 
     <display-name>WebWork Showcase Application</display-name>
 
+	
     <filter>
         <filter-name>action2-cleanup</filter-name>
         <filter-class>org.apache.struts.action2.dispatcher.ActionContextCleanUp</filter-class>
@@ -18,6 +19,8 @@
         <filter-name>sitemesh</filter-name>
         <filter-class>com.opensymphony.module.sitemesh.filter.PageFilter</filter-class>
     </filter>
+	
+	
 
     <filter-mapping>
         <filter-name>action2-cleanup</filter-name>
@@ -38,8 +41,13 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-
-
+	
+	<listener>
+    <listener-class>
+      org.apache.myfaces.webapp.StartupServletContextListener
+    </listener-class>
+  </listener>
+	
     <!-- SNIPPET START: dwr -->
 
     <servlet>
@@ -50,6 +58,19 @@
             <param-value>true</param-value>
         </init-param>
     </servlet>
+	
+	<!-- JavaServer Faces Servlet Configuration, not used directly -->
+  	<servlet>
+    	<servlet-name>faces</servlet-name>
+	    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+    	<load-on-startup>1</load-on-startup>
+  	</servlet>
+
+  	<!-- JavaServer Faces Servlet Mapping, not called directly -->
+  	<servlet-mapping>
+    	<servlet-name>faces</servlet-name>
+    	<url-pattern>*.action</url-pattern>
+  	</servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>dwr</servlet-name>

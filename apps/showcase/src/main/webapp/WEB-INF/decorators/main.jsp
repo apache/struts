@@ -75,6 +75,7 @@
                     <li><a href="<saf:url value="/wait/index.jsp"/>">Execute & Wait</a></li>
                     <li><a href="<saf:url value="/token/index.jsp"/>">Token</a></li>
                     <li><a href="<saf:url value="/filedownload/index.jsp"/>">File Download</a></li>
+                    <li><a href="<saf:url action="index" namespace="/jsf"/>">JSF</a></li>
                     <li class="last"><a href="<saf:url value="/help.jsp"/>">Help</a></li>
                 </ul>
             </div>

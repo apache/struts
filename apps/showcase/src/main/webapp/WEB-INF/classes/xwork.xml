@@ -23,6 +23,8 @@
     <include file="xwork-person.xml" />
 
     <include file="xwork-wait.xml" />
+	
+	<include file="xwork-jsf.xml" />
 
     <include file="xwork-token.xml" />
     

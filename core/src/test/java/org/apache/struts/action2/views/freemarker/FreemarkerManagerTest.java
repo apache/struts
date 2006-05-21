@@ -18,16 +18,15 @@
 package org.apache.struts.action2.views.freemarker;
 
 import org.apache.struts.action2.StrutsConstants;
+import org.apache.struts.action2.StrutsTestCase;
 import org.apache.struts.action2.config.Configuration;
 import org.apache.struts.action2.views.jsp.StrutsMockServletContext;
-
-import junit.framework.TestCase;
 
 /**
  * Test case for FreemarkerManager 
  * 
  */
-public class FreemarkerManagerTest extends TestCase {
+public class FreemarkerManagerTest extends StrutsTestCase {
 	
 	public void testIfStrutsEncodingIsSetProperty() throws Exception {
 		Configuration.set(StrutsConstants.STRUTS_I18N_ENCODING, "UTF-8");

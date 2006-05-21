@@ -57,8 +57,17 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
 	 * Initializes the lifecycle and factories
 	 */
 	public void init() {
-		facesContextFactory = (FacesContextFactory) FactoryFinder
+		try {
+			facesContextFactory = (FacesContextFactory) FactoryFinder
 				.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
+		} catch (Exception ex) {
+			log.debug("Unable to initialize faces", ex);
+		}
+		
+		if (facesContextFactory == null) {
+			log.info("Unable to initialize jsf interceptors probably due missing JSF framework initialization");
+			return;
+		}
 		// Javadoc says: Lifecycle instance is shared across multiple
 		// simultaneous requests, it must be implemented in a thread-safe
 		// manner.

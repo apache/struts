@@ -75,7 +75,6 @@
             <groupId>uk.ltd.getahead</groupId>
             <artifactId>dwr</artifactId>
             <version>1.1-beta-3</version>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>jasperreports</groupId>

@@ -11,16 +11,6 @@
             <result type="freemarker">listPeople.ftl</result>
         </action>
 
-        <!-- our JasperReports example -->
-        <action name="jasperList" class="org.apache.struts.action2.showcase.jasper.JasperAction">
-            <result name="success" type="jasper">
-                <param name="location">/jasper/sample_report.jasper</param>
-                <param name="dataSource">people</param>
-                <param name="documentName">peoplereport</param>
-            </result>
-        </action>
-
-
         <action name="newPerson" class="org.apache.struts.action2.showcase.person.CreatePerson">
             <result type="redirect">listPeople.action</result>
             <result name="input" type="freemarker">newPerson.ftl</result>

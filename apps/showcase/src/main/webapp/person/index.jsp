@@ -7,7 +7,6 @@
 <ul>
     <li><a href="newPerson!input.action">Create</a> a new person</li>
     <li><a href="listPeople.action">List</a> all people</li>
-    <li><a href="jasperList.action">Jasper Report</a> all people as PDF export</li>
 </ul>
 </body>
 </html>

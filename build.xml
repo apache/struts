@@ -156,7 +156,7 @@
         </xdoclet>
 
         <mkdir dir="${docs.tags}"/>
-        <copy todir="${docs.tags}" flatten="true" includeemptydirs="false">
+        <copy todir="${docs.tags}" flatten="true" includeemptydirs="false" overwrite="true">
             <fileset dir="${build.tagdocs}" includes="**/*.html">
                 <size value="10" when="more"/>
             </fileset>

@@ -23,11 +23,6 @@
         </profile>
     </profiles>
     <dependencies>
-        <dependency>
-            <groupId>org.apache.struts.action2</groupId>
-            <artifactId>struts-extras</artifactId>
-            <version>${pom.version}</version>
-        </dependency>
         
         <dependency>
            <groupId>javax.servlet</groupId>

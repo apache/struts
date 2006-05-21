@@ -15,7 +15,7 @@
         <module>blank</module>
         <module>portlet</module>
         <module>shopping-cart</module>
-        <!--<module>showcase</module>-->
+        <module>showcase</module>
         <module>starter</module>
     </modules>
     

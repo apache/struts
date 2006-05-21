@@ -85,12 +85,12 @@
         </dependency>
 		
 		<dependency>
-	     <groupId>myfaces</groupId>
+	     <groupId>org.apache.myfaces.core</groupId>
 	     <artifactId>myfaces-impl</artifactId>
 	     <version>1.1.2</version>
       </dependency>
       <dependency>
-	     <groupId>myfaces</groupId>
+	     <groupId>org.apache.myfaces.core</groupId>
 	     <artifactId>myfaces-api</artifactId>
 	     <version>1.1.2</version>
 	  </dependency>

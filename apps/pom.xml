@@ -28,12 +28,6 @@
     
     <profiles>
         <profile>
-            <id>showcase</id>
-            <modules>
-                <module>showcase</module>
-            </modules>
-        </profile>
-        <profile>
             <id>hostedqa</id>
             <dependencies>
                 <dependency>

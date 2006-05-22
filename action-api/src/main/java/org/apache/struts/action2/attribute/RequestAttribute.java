@@ -1,7 +1,7 @@
 package org.apache.struts.action2.attribute;
 
-import org.apache.struts.action2.spi.Request;
-import org.apache.struts.action2.spi.ThreadLocalRequest;
+import org.apache.struts.action2.spi.RequestContext;
+import org.apache.struts.action2.spi.ThreadLocalRequestContext;
 
 /**
  * A request attribute. Synchronizes on the underlying {@code HttpServletRequest} instance.
@@ -20,9 +20,9 @@ public class RequestAttribute<T> extends AbstractAttribute<T> {
     }
 
     T execute(UnitOfWork<T> unitOfWork) {
-        Request request = ThreadLocalRequest.get();
-        synchronized (request.getServletRequest()) {
-            return unitOfWork.execute(request.getAttributeMap());
+        RequestContext requestContext = ThreadLocalRequestContext.get();
+        synchronized (requestContext.getServletRequest()) {
+            return unitOfWork.execute(requestContext.getAttributeMap());
         }
     }
 }

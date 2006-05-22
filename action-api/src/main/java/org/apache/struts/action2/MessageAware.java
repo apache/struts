@@ -1,18 +1,25 @@
 package org.apache.struts.action2;
 
 /**
- * Implemented by actions that may need to record messages.
+ * Implemented by actions which may need to record errors or messages.
  *
  * <pre>
  *   static import ResultNames.*;
  *
- *   public class Welcome implements MessageAware {
+ *   public class SetName implements MessageAware {
  *
  *     Messages messages;
+ *     String name;
  *
  *     public String execute() {
- *       messages.add("welcome");
  *       return SUCCESS;
+ *     }
+ *
+ *     public void setName(String name) {
+ *       if ("".equals(name))
+ *         messages.forField("name").addError("name.required");
+ *
+ *       this.name = name;
  *     }
  *
  *     public void setMessages(Messages messages) {
@@ -21,7 +28,6 @@ package org.apache.struts.action2;
  *   }
  * </pre>
  *
- * @see ErrorAware
  * @author crazybob@google.com (Bob Lee)
  */
 public interface MessageAware {

@@ -1,7 +1,7 @@
 package org.apache.struts.action2.attribute;
 
-import org.apache.struts.action2.spi.Request;
-import org.apache.struts.action2.spi.ThreadLocalRequest;
+import org.apache.struts.action2.spi.RequestContext;
+import org.apache.struts.action2.spi.ThreadLocalRequestContext;
 
 /**
  * A session attribute. Synchronizes on the underlying {@code HttpSession}.
@@ -20,9 +20,9 @@ public class SessionAttribute<T> extends AbstractAttribute<T> {
     }
 
     T execute(UnitOfWork<T> unitOfWork) {
-        Request request = ThreadLocalRequest.get();
-        synchronized (request.getServletRequest().getSession()) {
-            return unitOfWork.execute(request.getSessionMap());
+        RequestContext requestContext = ThreadLocalRequestContext.get();
+        synchronized (requestContext.getServletRequest().getSession()) {
+            return unitOfWork.execute(requestContext.getSessionMap());
         }
     }
 }

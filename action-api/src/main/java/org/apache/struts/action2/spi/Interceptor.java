@@ -10,7 +10,7 @@ public interface Interceptor {
     /**
      * Intercepts an action request.
      *
-     * @param request current request
+     * @param requestContext current request context
      */
-    String intercept(Request request) throws Exception;
+    String intercept(RequestContext requestContext) throws Exception;
 }

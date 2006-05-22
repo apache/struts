@@ -10,7 +10,7 @@ public interface Result {
     /**
      * Executes result.
      *
-     * @param request
+     * @param requestContext
      */
-    void execute(Request request) throws Exception;
+    void execute(RequestContext requestContext) throws Exception;
 }

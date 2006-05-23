@@ -17,19 +17,14 @@
  */
 package org.apache.struts.action2.interceptor;
 
+import com.opensymphony.xwork.*;
+import com.opensymphony.xwork.util.OgnlValueStack;
 import org.apache.struts.action2.ServletActionContext;
-import org.apache.struts.action2.TestConfigurationProvider;
 import org.apache.struts.action2.StrutsTestCase;
+import org.apache.struts.action2.TestConfigurationProvider;
 import org.apache.struts.action2.util.TokenHelper;
 import org.apache.struts.action2.views.jsp.StrutsMockHttpServletRequest;
 import org.apache.struts.action2.views.jsp.StrutsMockHttpSession;
-import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionProxy;
-import com.opensymphony.xwork.ActionProxyFactory;
-import com.opensymphony.xwork.config.ConfigurationManager;
-import com.opensymphony.xwork.util.OgnlValueStack;
-import junit.framework.TestCase;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -39,7 +34,6 @@ import java.util.Map;
 
 /**
  * TokenInterceptorTest
- *
  */
 public class TokenInterceptorTest extends StrutsTestCase {
 
@@ -103,9 +97,9 @@ public class TokenInterceptorTest extends StrutsTestCase {
     }
 
     protected void setUp() throws Exception {
-        ConfigurationManager.clearConfigurationProviders();
-        ConfigurationManager.addConfigurationProvider(new TestConfigurationProvider());
-        ConfigurationManager.getConfiguration().reload();
+        XWorkStatic.getConfigurationManager().clearConfigurationProviders();
+        XWorkStatic.getConfigurationManager().addConfigurationProvider(new TestConfigurationProvider());
+        XWorkStatic.getConfigurationManager().getConfiguration().reload();
 
         session = new HashMap();
         params = new HashMap();
@@ -130,7 +124,7 @@ public class TokenInterceptorTest extends StrutsTestCase {
     }
 
     protected void tearDown() throws Exception {
-        ConfigurationManager.destroyConfiguration();
+        XWorkStatic.getConfigurationManager().destroyConfiguration();
         ActionContext.setContext(null);
     }
 }

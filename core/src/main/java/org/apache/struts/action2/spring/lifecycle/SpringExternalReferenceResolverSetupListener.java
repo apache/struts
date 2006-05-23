@@ -17,8 +17,8 @@
  */
 package org.apache.struts.action2.spring.lifecycle;
 
+import com.opensymphony.xwork.XWorkStatic;
 import com.opensymphony.xwork.config.Configuration;
-import com.opensymphony.xwork.config.ConfigurationManager;
 import com.opensymphony.xwork.config.ExternalReferenceResolver;
 import com.opensymphony.xwork.config.entities.PackageConfig;
 import org.springframework.context.ApplicationContext;
@@ -36,7 +36,6 @@ import java.util.Map;
  * framework. Relies on Spring's
  * {@link org.springframework.web.context.ContextLoaderListener}having been
  * called first.
- * 
  */
 public class SpringExternalReferenceResolverSetupListener implements
         ServletContextListener {
@@ -44,7 +43,7 @@ public class SpringExternalReferenceResolverSetupListener implements
         ApplicationContext appContext = WebApplicationContextUtils
                 .getWebApplicationContext(event.getServletContext());
 
-        Configuration xworkConfig = ConfigurationManager.getConfiguration();
+        Configuration xworkConfig = XWorkStatic.getConfigurationManager().getConfiguration();
         Map packageConfigs = xworkConfig.getPackageConfigs();
         Iterator i = packageConfigs.values().iterator();
 
@@ -52,7 +51,7 @@ public class SpringExternalReferenceResolverSetupListener implements
             PackageConfig packageConfig = (PackageConfig) i.next();
             ExternalReferenceResolver resolver = packageConfig.getExternalRefResolver();
             if (resolver == null || !(resolver instanceof ApplicationContextAware))
-                    continue;
+                continue;
             ApplicationContextAware contextAware = (ApplicationContextAware) resolver;
             contextAware.setApplicationContext(appContext);
         }

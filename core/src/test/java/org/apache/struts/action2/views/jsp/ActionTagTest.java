@@ -17,17 +17,13 @@
  */
 package org.apache.struts.action2.views.jsp;
 
+import com.opensymphony.xwork.*;
+import com.opensymphony.xwork.util.OgnlValueStack;
 import org.apache.struts.action2.ServletActionContext;
 import org.apache.struts.action2.TestAction;
 import org.apache.struts.action2.TestActionTagResult;
 import org.apache.struts.action2.TestConfigurationProvider;
 import org.apache.struts.action2.components.ActionComponent;
-import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionProxy;
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.config.ConfigurationManager;
-import com.opensymphony.xwork.util.OgnlValueStack;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
@@ -35,7 +31,6 @@ import javax.servlet.jsp.PageContext;
 
 /**
  * Unit test for {@link ActionTag}.
- *
  */
 public class ActionTagTest extends AbstractTagTest {
 
@@ -115,7 +110,7 @@ public class ActionTagTest extends AbstractTagTest {
         TestActionTagResult result = (TestActionTagResult) component.getProxy().getInvocation().getResult();
 
         assertTrue(stack.getContext().containsKey(ServletActionContext.PAGE_CONTEXT));
-        assertTrue(stack.getContext().get(ServletActionContext.PAGE_CONTEXT) instanceof PageContext);
+        assertTrue(stack.getContext().get(ServletActionContext.PAGE_CONTEXT)instanceof PageContext);
         assertTrue(result.isExecuted());
     }
 
@@ -136,7 +131,7 @@ public class ActionTagTest extends AbstractTagTest {
         TestActionTagResult result = (TestActionTagResult) component.getProxy().getInvocation().getResult();
 
         assertTrue(stack.getContext().containsKey(ServletActionContext.PAGE_CONTEXT));
-        assertTrue(stack.getContext().get(ServletActionContext.PAGE_CONTEXT) instanceof PageContext);
+        assertTrue(stack.getContext().get(ServletActionContext.PAGE_CONTEXT)instanceof PageContext);
         assertNull(result); // result is never executed, hence never set into invocation
     }
 
@@ -229,16 +224,16 @@ public class ActionTagTest extends AbstractTagTest {
         TestActionTagResult result = (TestActionTagResult) component.getProxy().getInvocation().getResult();
 
         assertTrue(stack.getContext().containsKey(ServletActionContext.PAGE_CONTEXT));
-        assertTrue(stack.getContext().get(ServletActionContext.PAGE_CONTEXT) instanceof PageContext);
+        assertTrue(stack.getContext().get(ServletActionContext.PAGE_CONTEXT)instanceof PageContext);
         assertTrue(result.isExecuted());
     }
 
     protected void setUp() throws Exception {
         super.setUp();
 
-        ConfigurationManager.clearConfigurationProviders();
-        ConfigurationManager.addConfigurationProvider(new TestConfigurationProvider());
-        ConfigurationManager.getConfiguration().reload();
+        XWorkStatic.getConfigurationManager().clearConfigurationProviders();
+        XWorkStatic.getConfigurationManager().addConfigurationProvider(new TestConfigurationProvider());
+        XWorkStatic.getConfigurationManager().getConfiguration().reload();
 
         ActionContext actionContext = new ActionContext(context);
         actionContext.setValueStack(stack);
@@ -246,7 +241,7 @@ public class ActionTagTest extends AbstractTagTest {
     }
 
     protected void tearDown() throws Exception {
-        ConfigurationManager.destroyConfiguration();
+        XWorkStatic.getConfigurationManager().destroyConfiguration();
 
         OgnlValueStack stack = new OgnlValueStack();
         ActionContext.setContext(new ActionContext(stack.getContext()));

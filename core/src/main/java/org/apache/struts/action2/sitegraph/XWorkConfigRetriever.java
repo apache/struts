@@ -3,21 +3,24 @@
  */
 package org.apache.struts.action2.sitegraph;
 
-import org.apache.struts.action2.sitegraph.collectors.ArbitraryXMLConfigurationProvider;
-import org.apache.struts.action2.sitegraph.entities.FreeMarkerView;
-import org.apache.struts.action2.sitegraph.entities.JspView;
-import org.apache.struts.action2.sitegraph.entities.VelocityView;
-import org.apache.struts.action2.sitegraph.entities.View;
-import com.opensymphony.xwork.config.ConfigurationManager;
+import com.opensymphony.xwork.XWorkStatic;
 import com.opensymphony.xwork.config.ConfigurationProvider;
 import com.opensymphony.xwork.config.entities.ActionConfig;
 import com.opensymphony.xwork.config.entities.ResultConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.action2.sitegraph.collectors.ArbitraryXMLConfigurationProvider;
+import org.apache.struts.action2.sitegraph.entities.FreeMarkerView;
+import org.apache.struts.action2.sitegraph.entities.JspView;
+import org.apache.struts.action2.sitegraph.entities.VelocityView;
+import org.apache.struts.action2.sitegraph.entities.View;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Initializes and retrieves XWork config elements
@@ -38,7 +41,7 @@ public class XWorkConfigRetriever {
     public static Map getActionConfigs() {
         if (!isXWorkStarted)
             initXWork();
-        return ConfigurationManager.getConfiguration().getRuntimeConfiguration().getActionConfigs();
+        return XWorkStatic.getConfigurationManager().getConfiguration().getRuntimeConfiguration().getActionConfigs();
     }
 
     private static void initXWork() {
@@ -46,7 +49,7 @@ public class XWorkConfigRetriever {
         File configFile = new File(configFilePath);
         try {
             ConfigurationProvider configProvider = new ArbitraryXMLConfigurationProvider(configFile.getCanonicalPath());
-            ConfigurationManager.addConfigurationProvider(configProvider);
+            XWorkStatic.getConfigurationManager().addConfigurationProvider(configProvider);
             isXWorkStarted = true;
         } catch (IOException e) {
             LOG.error("IOException", e);

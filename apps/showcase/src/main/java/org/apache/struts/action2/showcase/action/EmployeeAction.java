@@ -17,29 +17,28 @@
  */
 package org.apache.struts.action2.showcase.action;
 
+import com.opensymphony.xwork.Preparable;
+import org.apache.log4j.Logger;
+import org.apache.struts.action2.showcase.application.TestDataProvider;
 import org.apache.struts.action2.showcase.dao.Dao;
 import org.apache.struts.action2.showcase.dao.EmployeeDao;
 import org.apache.struts.action2.showcase.model.Employee;
 import org.apache.struts.action2.showcase.model.Skill;
-import org.apache.struts.action2.showcase.application.TestDataProvider;
-import com.opensymphony.xwork.Preparable;
-import org.apache.log4j.Logger;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * EmployeeAction.
- *
  */
 
 public class EmployeeAction extends AbstractCRUDAction implements Preparable {
 
-	private static final long serialVersionUID = 7047317819789938957L;
+    private static final long serialVersionUID = 7047317819789938957L;
 
-	private static final Logger log = Logger.getLogger(EmployeeAction.class);
+    private static final Logger log = Logger.getLogger(EmployeeAction.class);
 
     private Long empId;
     protected EmployeeDao employeeDao;
@@ -102,7 +101,7 @@ public class EmployeeAction extends AbstractCRUDAction implements Preparable {
     }
 
     public String execute() throws Exception {
-        if (getCurrentEmployee() != null && getCurrentEmployee().getOtherSkills()!=null) {
+        if (getCurrentEmployee() != null && getCurrentEmployee().getOtherSkills() != null) {
             setSelectedSkills(new ArrayList());
             Iterator it = getCurrentEmployee().getOtherSkills().iterator();
             while (it.hasNext()) {

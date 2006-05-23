@@ -17,80 +17,73 @@
  */
 package org.apache.struts.action2.components;
 
-import org.apache.struts.action2.dispatcher.mapper.ActionMapperFactory;
-import org.apache.struts.action2.dispatcher.mapper.ActionMapping;
-import org.apache.struts.action2.dispatcher.DispatcherUtils;
-import org.apache.struts.action2.portlet.context.PortletActionContext;
-import org.apache.struts.action2.portlet.util.PortletUrlHelper;
-import org.apache.struts.action2.views.util.UrlHelper;
-import com.opensymphony.xwork.config.ConfigurationManager;
-import com.opensymphony.xwork.config.RuntimeConfiguration;
-import com.opensymphony.xwork.config.entities.ActionConfig;
-import com.opensymphony.xwork.config.entities.InterceptorMapping;
-import com.opensymphony.xwork.util.OgnlValueStack;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.ObjectFactory;
+import com.opensymphony.xwork.XWorkStatic;
+import com.opensymphony.xwork.config.RuntimeConfiguration;
+import com.opensymphony.xwork.config.entities.ActionConfig;
+import com.opensymphony.xwork.config.entities.InterceptorMapping;
+import com.opensymphony.xwork.interceptor.MethodFilterInterceptorUtil;
+import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork.validator.ActionValidatorManagerFactory;
+import com.opensymphony.xwork.validator.FieldValidator;
 import com.opensymphony.xwork.validator.ValidationInterceptor;
 import com.opensymphony.xwork.validator.Validator;
-import com.opensymphony.xwork.validator.FieldValidator;
-import com.opensymphony.xwork.validator.ActionValidatorManagerFactory;
+import org.apache.commons.lang.StringUtils;
+import org.apache.struts.action2.dispatcher.DispatcherUtils;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapperFactory;
+import org.apache.struts.action2.dispatcher.mapper.ActionMapping;
+import org.apache.struts.action2.portlet.context.PortletActionContext;
+import org.apache.struts.action2.portlet.util.PortletUrlHelper;
+import org.apache.struts.action2.views.util.UrlHelper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.opensymphony.xwork.interceptor.MethodFilterInterceptorUtil;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.*;
 import java.util.Set;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- *
+ * <p/>
  * Renders HTML an input form.<p/>
- *
+ * <p/>
  * The remote form allows the form to be submitted without the page being refreshed. The results from the form
  * can be inserted into any HTML element on the page.<p/>
- * 
+ * <p/>
  * NOTE:<p/>
  * The order / logic in determining the posting url of the generated HTML form is as follows:-
  * <ol>
- * 	 <li>
- * 	 If the action attribute is not specified, then the current request will be used to
- *   determine the posting url
- *   </li>
- *   <li>
- *   If the action is given, SAF will try to obtain an ActionConfig. This will be 
- *   successfull if the action attribute is a valid action alias defined xwork.xml.
- *   </li>
- *   <li>
- *   If the action is given and is not an action alias defined in xwork.xmlm SAF
- *   will used the action attribute as if it is the posting url, separting the namespace
- *   from it and using UrlHelper to generate the final url.
- *   </li>
+ * <li>
+ * If the action attribute is not specified, then the current request will be used to
+ * determine the posting url
+ * </li>
+ * <li>
+ * If the action is given, SAF will try to obtain an ActionConfig. This will be
+ * successfull if the action attribute is a valid action alias defined xwork.xml.
+ * </li>
+ * <li>
+ * If the action is given and is not an action alias defined in xwork.xmlm SAF
+ * will used the action attribute as if it is the posting url, separting the namespace
+ * from it and using UrlHelper to generate the final url.
+ * </li>
  * </ol>
- *
+ * <p/>
  * <!-- END SNIPPET: javadoc -->
- *
+ * <p/>
  * <p/> <b>Examples</b>
- *
+ * <p/>
  * <pre>
  * <!-- START SNIPPET: example -->
- *
+ * <p/>
  * &lt;a:form ... /&gt;
- *
+ * <p/>
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- *
  * @a2.tag name="form" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.FormTag"
  * description="Renders an input form"
-  */
+ */
 public class Form extends ClosingUIBean {
     public static final String OPEN_TEMPLATE = "form";
     public static final String TEMPLATE = "form-close";
@@ -135,7 +128,7 @@ public class Form extends ClosingUIBean {
         if (validate != null) {
             addParameter("validate", findValue(validate, Boolean.class));
         }
-        
+
         // calculate the action and namespace
         String action = null;
         if (this.action != null) {
@@ -197,15 +190,15 @@ public class Form extends ClosingUIBean {
                 action = uri.substring(uri.lastIndexOf('/'));
             }
         }
-        
+
         String actionMethod = "";
         if (action.indexOf("!") != -1) {
-        	int endIdx = action.lastIndexOf("!");
-        	actionMethod = action.substring(endIdx+1, action.length());
-        	action = action.substring(0, endIdx);
+            int endIdx = action.lastIndexOf("!");
+            actionMethod = action.substring(endIdx + 1, action.length());
+            action = action.substring(0, endIdx);
         }
 
-        final ActionConfig actionConfig = ConfigurationManager.getConfiguration().getRuntimeConfiguration().getActionConfig(namespace, action);
+        final ActionConfig actionConfig = XWorkStatic.getConfigurationManager().getConfiguration().getRuntimeConfiguration().getActionConfig(namespace, action);
         String actionName = action;
         if (actionConfig != null) {
 
@@ -235,10 +228,10 @@ public class Form extends ClosingUIBean {
                 addParameter("id", action);
             }
         } else if (action != null) {
-        	// Since we can't find an action alias in the configuration, we just assume
-        	// the action attribute supplied is the path to be used as the uri this 
-        	// form is submitting to.
-        	
+            // Since we can't find an action alias in the configuration, we just assume
+            // the action attribute supplied is the path to be used as the uri this
+            // form is submitting to.
+
             String result = UrlHelper.buildUrl(action, request, response, null);
             addParameter("action", result);
 
@@ -262,46 +255,47 @@ public class Form extends ClosingUIBean {
                 addParameter("id", escape(id));
             }
         }
-        
+
         // WW-1284
         // evaluate if client-side js is to be enabled. (if validation interceptor 
         // does allow validation eg. method is not filtered out)
         evaluateClientSideJsEnablement(actionName, namespace, actionMethod);
     }
-    
-    private void evaluateClientSideJsEnablement(String actionName, String namespace, String actionMethod) {
-    	
-    	// Only evaluate if Client-Side js is to be enable when validate=true
-    	Boolean validate = (Boolean) getParameters().get("validate");
-    	if (validate != null && validate.booleanValue()) {
-    	
-    		addParameter("performValidation", Boolean.FALSE);
-    	
-    		RuntimeConfiguration runtimeConfiguration = ConfigurationManager.getConfiguration().getRuntimeConfiguration();
-    		ActionConfig actionConfig = runtimeConfiguration.getActionConfig(namespace, actionName);
 
-    		if (actionConfig != null) {
-    			List interceptors = actionConfig.getInterceptors();
-    			for (Iterator i = interceptors.iterator(); i.hasNext(); ) {
-    				InterceptorMapping interceptorMapping = (InterceptorMapping) i.next();
-    				if (ValidationInterceptor.class.isInstance(interceptorMapping.getInterceptor())) {
-    					ValidationInterceptor validationInterceptor = (ValidationInterceptor) interceptorMapping.getInterceptor();
-    				
-    					Set excludeMethods = validationInterceptor.getExcludeMethodsSet();
-    					Set includeMethods = validationInterceptor.getIncludeMethodsSet();
-    			
-    					if (MethodFilterInterceptorUtil.applyMethod(excludeMethods, includeMethods, actionMethod)) {
-    						addParameter("performValidation", Boolean.TRUE);
-    					}
-    					return;
-    				}
-    			}
-    		}
-    	}
+    private void evaluateClientSideJsEnablement(String actionName, String namespace, String actionMethod) {
+
+        // Only evaluate if Client-Side js is to be enable when validate=true
+        Boolean validate = (Boolean) getParameters().get("validate");
+        if (validate != null && validate.booleanValue()) {
+
+            addParameter("performValidation", Boolean.FALSE);
+
+            RuntimeConfiguration runtimeConfiguration = XWorkStatic.getConfigurationManager().getConfiguration().getRuntimeConfiguration();
+            ActionConfig actionConfig = runtimeConfiguration.getActionConfig(namespace, actionName);
+
+            if (actionConfig != null) {
+                List interceptors = actionConfig.getInterceptors();
+                for (Iterator i = interceptors.iterator(); i.hasNext();) {
+                    InterceptorMapping interceptorMapping = (InterceptorMapping) i.next();
+                    if (ValidationInterceptor.class.isInstance(interceptorMapping.getInterceptor())) {
+                        ValidationInterceptor validationInterceptor = (ValidationInterceptor) interceptorMapping.getInterceptor();
+
+                        Set excludeMethods = validationInterceptor.getExcludeMethodsSet();
+                        Set includeMethods = validationInterceptor.getIncludeMethodsSet();
+
+                        if (MethodFilterInterceptorUtil.applyMethod(excludeMethods, includeMethods, actionMethod)) {
+                            addParameter("performValidation", Boolean.TRUE);
+                        }
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     /**
      * Constructs the action url adapted to a portal environment.
+     *
      * @param action The action to create the URL for.
      */
     private void evaluateExtraParamsPortletRequest(String namespace, String action) {
@@ -359,7 +353,7 @@ public class Form extends ClosingUIBean {
             if (validator instanceof FieldValidator) {
                 FieldValidator fieldValidator = (FieldValidator) validator;
                 if (fieldValidator.getFieldName().equals(name)) {
-                	validators.add(fieldValidator);
+                    validators.add(fieldValidator);
                 }
             }
         }
@@ -370,6 +364,7 @@ public class Form extends ClosingUIBean {
 
     /**
      * HTML onsubmit attribute
+     *
      * @a2.tagattribute required="false"
      */
     public void setOnsubmit(String onsubmit) {
@@ -378,6 +373,7 @@ public class Form extends ClosingUIBean {
 
     /**
      * Set action nane to submit to, without .action suffix
+     *
      * @a2.tagattribute required="false" default="current action"
      */
     public void setAction(String action) {
@@ -386,6 +382,7 @@ public class Form extends ClosingUIBean {
 
     /**
      * HTML form target attribute
+     *
      * @a2.tagattribute required="false"
      */
     public void setTarget(String target) {
@@ -394,6 +391,7 @@ public class Form extends ClosingUIBean {
 
     /**
      * HTML form enctype attribute
+     *
      * @a2.tagattribute required="false"
      */
     public void setEnctype(String enctype) {
@@ -402,6 +400,7 @@ public class Form extends ClosingUIBean {
 
     /**
      * HTML form method attribute
+     *
      * @a2.tagattribute required="false"
      */
     public void setMethod(String method) {
@@ -410,6 +409,7 @@ public class Form extends ClosingUIBean {
 
     /**
      * namespace for action to submit to
+     *
      * @a2.tagattribute required="false" default="current namespace"
      */
     public void setNamespace(String namespace) {
@@ -418,6 +418,7 @@ public class Form extends ClosingUIBean {
 
     /**
      * Whether client side/remote validation should be performed. Only useful with theme xhtml/ajax
+     *
      * @a2.tagattribute required="false" type="Boolean" default="false"
      */
     public void setValidate(String validate) {
@@ -426,6 +427,7 @@ public class Form extends ClosingUIBean {
 
     /**
      * The portlet mode to display after the form submit
+     *
      * @a2.tagattribute required="false"
      */
     public void setPortletMode(String portletMode) {
@@ -434,6 +436,7 @@ public class Form extends ClosingUIBean {
 
     /**
      * The window state to display after the form submit
+     *
      * @a2.tagattribute required="false"
      */
     public void setWindowState(String windowState) {
@@ -442,6 +445,7 @@ public class Form extends ClosingUIBean {
 
     /**
      * The accepted charsets for this form. The values may be comma or blank delimited.
+     *
      * @a2.tagattribute required="false"
      */
     public void setAcceptcharset(String acceptcharset) {

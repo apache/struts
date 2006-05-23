@@ -17,21 +17,20 @@
  */
 package org.apache.struts.action2.interceptor;
 
+import com.opensymphony.xwork.*;
+import com.opensymphony.xwork.config.Configuration;
+import com.opensymphony.xwork.config.ConfigurationException;
+import com.opensymphony.xwork.config.ConfigurationProvider;
+import com.opensymphony.xwork.config.entities.ActionConfig;
+import com.opensymphony.xwork.config.entities.InterceptorMapping;
+import com.opensymphony.xwork.config.entities.PackageConfig;
+import com.opensymphony.xwork.config.entities.ResultConfig;
+import com.opensymphony.xwork.interceptor.ParametersInterceptor;
+import com.opensymphony.xwork.mock.MockResult;
 import org.apache.struts.action2.ServletActionContext;
 import org.apache.struts.action2.StrutsTestCase;
 import org.apache.struts.action2.views.jsp.StrutsMockHttpServletRequest;
 import org.apache.struts.action2.views.jsp.StrutsMockHttpSession;
-import com.opensymphony.xwork.*;
-import com.opensymphony.xwork.mock.MockResult;
-import com.opensymphony.xwork.config.Configuration;
-import com.opensymphony.xwork.config.ConfigurationException;
-import com.opensymphony.xwork.config.ConfigurationManager;
-import com.opensymphony.xwork.config.ConfigurationProvider;
-import com.opensymphony.xwork.config.entities.ActionConfig;
-import com.opensymphony.xwork.config.entities.PackageConfig;
-import com.opensymphony.xwork.config.entities.ResultConfig;
-import com.opensymphony.xwork.config.entities.InterceptorMapping;
-import com.opensymphony.xwork.interceptor.ParametersInterceptor;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -41,7 +40,6 @@ import java.util.Map;
 
 /**
  * Test case for ExecuteAndWaitInterceptor.
- *
  */
 public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
 
@@ -162,9 +160,9 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
     }
 
     protected void setUp() throws Exception {
-        ConfigurationManager.clearConfigurationProviders();
-        ConfigurationManager.addConfigurationProvider(new WaitConfigurationProvider());
-        ConfigurationManager.getConfiguration().reload();
+        XWorkStatic.getConfigurationManager().clearConfigurationProviders();
+        XWorkStatic.getConfigurationManager().addConfigurationProvider(new WaitConfigurationProvider());
+        XWorkStatic.getConfigurationManager().getConfiguration().reload();
 
         session = new HashMap();
         params = new HashMap();
@@ -180,8 +178,8 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
     }
 
     protected void tearDown() throws Exception {
-        ConfigurationManager.clearConfigurationProviders();
-        ConfigurationManager.destroyConfiguration();
+        XWorkStatic.getConfigurationManager().clearConfigurationProviders();
+        XWorkStatic.getConfigurationManager().destroyConfiguration();
         ActionContext.setContext(null);
     }
 

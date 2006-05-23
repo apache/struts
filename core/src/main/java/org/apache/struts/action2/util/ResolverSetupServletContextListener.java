@@ -17,8 +17,8 @@
  */
 package org.apache.struts.action2.util;
 
+import com.opensymphony.xwork.XWorkStatic;
 import com.opensymphony.xwork.config.Configuration;
-import com.opensymphony.xwork.config.ConfigurationManager;
 import com.opensymphony.xwork.config.entities.PackageConfig;
 
 import javax.servlet.ServletContextEvent;
@@ -33,7 +33,6 @@ import java.util.Iterator;
  * Spring framework uses a ContextServletListener to initialise it's IoC container, storing it's
  * container context (ApplicationContext in Spring terms) in the Servlet context, the External
  * Reference Resolver can get a reference to the container context from the servlet context.
- *
  */
 public class ResolverSetupServletContextListener implements ServletContextListener {
 
@@ -41,7 +40,7 @@ public class ResolverSetupServletContextListener implements ServletContextListen
     }
 
     public void contextInitialized(ServletContextEvent event) {
-        Configuration config = ConfigurationManager.getConfiguration();
+        Configuration config = XWorkStatic.getConfigurationManager().getConfiguration();
         String key;
         PackageConfig packageConfig;
 
@@ -50,7 +49,7 @@ public class ResolverSetupServletContextListener implements ServletContextListen
             key = (String) iter.next();
             packageConfig = config.getPackageConfig(key);
 
-            if (packageConfig.getExternalRefResolver() instanceof ServletContextAware) {
+            if (packageConfig.getExternalRefResolver()instanceof ServletContextAware) {
                 ((ServletContextAware) packageConfig.getExternalRefResolver()).setServletContext(event.getServletContext());
             }
         }

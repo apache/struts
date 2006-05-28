@@ -1,4 +1,5 @@
-<#include "/${parameters.templateDir}/css_xhtml/controlheader.ftl" />
+<#--include "/${parameters.templateDir}/css_xhtml/controlheader.ftl" /-->
+<#include "/${parameters.templateDir}/${parameters.theme}/controlheader.ftl" />
 <label<#rt/>
 <#if parameters.id?exists>
  id="${parameters.id?html}"<#rt/>

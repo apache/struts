@@ -41,4 +41,5 @@
 </#if>
 </textarea>
 
-<#include "/${parameters.templateDir}/xhtml/controlfooter.ftl" />
+<#--include "/${parameters.templateDir}/xhtml/controlfooter.ftl" /-->
+<#include "/${parameters.templateDir}/${themeProperties.parent}/controlfooter.ftl" />

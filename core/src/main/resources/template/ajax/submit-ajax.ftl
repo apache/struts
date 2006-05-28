@@ -1,5 +1,8 @@
+<#--
 <tr>
     <td colspan="2"><div <#rt/>
+-->
+<#include "/${parameters.templateDir}/${themeProperties.parent}/controlheader.ftl" />
 <#if parameters.align?exists>
     align="${parameters.align?html}"<#t/>
 </#if>
@@ -37,4 +40,6 @@
 </#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl"/>
 ><#if parameters.nameValue?exists><@saf.property value="parameters.nameValue"/><#rt/></#if></button></div>
-<#include "/${parameters.templateDir}/xhtml/controlfooter.ftl" />
+<#--include "/${parameters.templateDir}/xhtml/controlfooter.ftl" /-->
+<#include "/${parameters.templateDir}/${themeProperties.parent}/controlfooter.ftl" />
+

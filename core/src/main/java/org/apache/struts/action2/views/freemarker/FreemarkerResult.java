@@ -134,7 +134,7 @@ public class FreemarkerResult extends StrutsResultSupport {
             String base = ResourceUtil.getResourceBase(req);
             location = base + "/" + location;
         }
-
+        
         Template template = configuration.getTemplate(location, deduceLocale());
         TemplateModel model = createModel();
 

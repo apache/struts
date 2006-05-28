@@ -3,7 +3,7 @@
 <script src="${base}/dwr/interface/validator.js"></script>
 <script src="${base}/dwr/engine.js"></script>
 <script src="${base}/struts/ajax/validation.js"></script>
-<script src="${base}/struts/xhtml/validation.js"></script>
+<script src="${base}/struts/${themeProperties.parent}/validation.js"></script>
 </#if>
 <form<#rt/>
 <#if parameters.namespace?exists>
@@ -39,7 +39,10 @@
  ${tag.addParameter("ajaxSubmit", "true")}
  onSubmit="return isAjaxFormSubmit(this);"
 >
+<#include "/${parameters.templateDir}/${themeProperties.parent}/control.ftl" />
+<#--
 <table class="${parameters.cssClass?default('wwFormTable')?html}"<#rt/>
 <#if parameters.cssStyle?exists> style="${parameters.cssStyle?html}"<#rt/>
 </#if>
 >
+-->

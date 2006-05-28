@@ -32,11 +32,6 @@
         </dependency>
         
         <dependency>
-            <groupId>org.apache.struts.action2</groupId>
-            <artifactId>struts-core</artifactId>
-        </dependency>
-        
-        <dependency>
             <groupId>opensymphony</groupId>
             <artifactId>sitemesh</artifactId>
             <version>2.2.1</version>

@@ -118,15 +118,17 @@
         <finalName>${pom.artifactId}</finalName>
               
     </build>
-    
-    <dependencyManagement>
-      <dependencies>
+
+    <dependencies>
         <dependency>
             <groupId>org.apache.struts.action2</groupId>
             <artifactId>struts-core</artifactId>
             <version>${pom.version}</version>
         </dependency>
+    </dependencies>
 
+    <dependencyManagement>
+      <dependencies>
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>

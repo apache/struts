@@ -114,10 +114,13 @@
                 </configuration>
             </plugin>
         </plugins>
+        
+        <finalName>${pom.artifactId}</finalName>
+              
     </build>
     
-    <dependencies>
-    
+    <dependencyManagement>
+      <dependencies>
         <dependency>
             <groupId>org.apache.struts.action2</groupId>
             <artifactId>struts-core</artifactId>
@@ -129,28 +132,24 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
             <version>1.2.6</version>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>1.2.6</version>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>1.2.6</version>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
             <version>1.2.6</version>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -159,7 +158,7 @@
             <version>1.2.6</version>
             <scope>test</scope>
         </dependency>
-
-
-    </dependencies>    
+      </dependencies>
+    </dependencyManagement>
+    
 </project>

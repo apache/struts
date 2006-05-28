@@ -10,7 +10,7 @@
     <groupId>org.apache.struts.action2</groupId>
     <artifactId>struts-portlet</artifactId>
     <packaging>war</packaging>
-    <name>Portet Webapp</name>
+    <name>Portlet Webapp</name>
     <dependencies>
         <dependency>
             <groupId>portlet-api</groupId>

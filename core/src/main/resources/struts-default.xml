@@ -13,8 +13,7 @@
             <result-type name="velocity" class="org.apache.struts.action2.dispatcher.VelocityResult"/>
             <result-type name="xslt" class="org.apache.struts.action2.views.xslt.XSLTResult"/>
             <result-type name="plaintext" class="org.apache.struts.action2.dispatcher.PlainTextResult" />
-			<result-type name="jsf" class="org.apache.struts.action2.jsf.FacesResult" />
-            
+
             <!-- third party integration -->
             <result-type name="jasper" class="org.apache.struts.action2.views.jasperreports.JasperReportsResult"/>
         </result-types>
@@ -46,14 +45,6 @@
             <interceptor name="validation" class="com.opensymphony.xwork.validator.ValidationInterceptor"/>
             <interceptor name="workflow" class="com.opensymphony.xwork.interceptor.DefaultWorkflowInterceptor"/>
 			
-			<!-- JSF interceptors, one per lifecycle phase -->
-			<interceptor class="org.apache.struts.action2.jsf.FacesSetupInterceptor" name="jsfSetup" />
-			<interceptor class="org.apache.struts.action2.jsf.RestoreViewInterceptor" name="jsfRestore" />
-			<interceptor class="org.apache.struts.action2.jsf.ApplyRequestValuesInterceptor" name="jsfApply" />
-			<interceptor class="org.apache.struts.action2.jsf.ProcessValidationsInterceptor" name="jsfValidate" />
-			<interceptor class="org.apache.struts.action2.jsf.UpdateModelValuesInterceptor" name="jsfUpdate" />
-			<interceptor class="org.apache.struts.action2.jsf.InvokeApplicationInterceptor" name="jsfInvoke" />
-
             <!-- Basic stack -->
             <interceptor-stack name="basicStack">
                 <interceptor-ref name="exception"/>
@@ -185,16 +176,6 @@
                 <interceptor-ref name="execAndWait">
                     <param name="excludeMethods">input,back,cancel</param>
                 </interceptor-ref>
-            </interceptor-stack>
-			
-			<!-- Sample JSF stack, can be combined with other stacks easily -->
-			<interceptor-stack name="jsfStack">
-                <interceptor-ref name="jsfSetup" />
-				<interceptor-ref name="jsfRestore" />
-				<interceptor-ref name="jsfApply" />
-				<interceptor-ref name="jsfValidate" />
-				<interceptor-ref name="jsfUpdate" />
-				<interceptor-ref name="jsfInvoke" />
             </interceptor-stack>
         </interceptors>
 

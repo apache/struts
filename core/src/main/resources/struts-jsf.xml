@@ -1,0 +1,29 @@
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+<xwork>
+    <package name="struts-jsf">
+        <result-types>
+			<result-type name="jsf" class="org.apache.struts.action2.jsf.FacesResult" />
+        </result-types>
+
+        <interceptors>
+			<!-- JSF interceptors, one per lifecycle phase -->
+			<interceptor class="org.apache.struts.action2.jsf.FacesSetupInterceptor" name="jsfSetup" />
+			<interceptor class="org.apache.struts.action2.jsf.RestoreViewInterceptor" name="jsfRestore" />
+			<interceptor class="org.apache.struts.action2.jsf.ApplyRequestValuesInterceptor" name="jsfApply" />
+			<interceptor class="org.apache.struts.action2.jsf.ProcessValidationsInterceptor" name="jsfValidate" />
+			<interceptor class="org.apache.struts.action2.jsf.UpdateModelValuesInterceptor" name="jsfUpdate" />
+			<interceptor class="org.apache.struts.action2.jsf.InvokeApplicationInterceptor" name="jsfInvoke" />
+
+			<!-- Sample JSF stack, can be combined with other stacks easily -->
+			<interceptor-stack name="jsfStack">
+                <interceptor-ref name="jsfSetup" />
+				<interceptor-ref name="jsfRestore" />
+				<interceptor-ref name="jsfApply" />
+				<interceptor-ref name="jsfValidate" />
+				<interceptor-ref name="jsfUpdate" />
+				<interceptor-ref name="jsfInvoke" />
+            </interceptor-stack>
+        </interceptors>
+    </package>
+
+</xwork>

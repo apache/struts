@@ -1,4 +1,8 @@
-<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE xwork PUBLIC 
+	"-//OpenSymphony Group//XWork 1.1.1//EN" 
+	"http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
 
 <!-- START SNIPPET: xworkSample -->
 
@@ -7,7 +11,7 @@
     <include file="struts-default.xml"/>
 
     <include file="config-browser.xml"/>
-
+    
     <include file="xwork-continuations.xml"/>
 
     <include file="xwork-tags.xml"/>
@@ -31,6 +35,8 @@
     <include file="xwork-model-driven.xml" />
     
     <include file="xwork-filedownload.xml" />
+    
+    <include file="xwork-conversion.xml" />
 
     <package name="default" extends="struts-default">
         <interceptors>

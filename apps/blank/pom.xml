@@ -20,12 +20,6 @@
          <scope>provided</scope>
       </dependency>
       
-      <dependency>
-          <groupId>org.apache.struts.action2</groupId>
-          <artifactId>struts-core</artifactId>
-          <version>${pom.version}</version>
-      </dependency>
-    
     </dependencies>
     
     <build>

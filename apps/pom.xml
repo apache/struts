@@ -120,16 +120,14 @@
     </build>
 
     <dependencies>
+
         <dependency>
             <groupId>org.apache.struts.action2</groupId>
             <artifactId>struts-core</artifactId>
             <version>${pom.version}</version>
         </dependency>
-    </dependencies>
 
-    <dependencyManagement>
-      <dependencies>
-        <!-- Spring -->
+      <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
@@ -160,7 +158,6 @@
             <version>1.2.6</version>
             <scope>test</scope>
         </dependency>
-      </dependencies>
-    </dependencyManagement>
+    </dependencies>
     
 </project>

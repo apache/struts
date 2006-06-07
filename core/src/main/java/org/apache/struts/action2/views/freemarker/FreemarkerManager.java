@@ -53,7 +53,38 @@ import java.util.Properties;
 
 /**
  * Static Configuration Manager for the FreemarkerResult's configuration
+ * 
+ * <p/>
  *
+ * Possible extension points are :-
+ * <ul>
+ *   <li>createConfiguration method</li>
+ *   <li>loadSettings method</li>
+ *   <li>getTemplateLoader method</li>
+ *   <li>populateContext method</li>
+ * </ul>
+ *
+ * <p/>
+ * <b> createConfiguration method </b><br/>
+ * Create a freemarker Configuration.
+ * <p/>
+ *
+ * <b> loadSettings method </b><br/>
+ * Load freemarker settings, default to freemarker.properties (if found in classpath)
+ * <p/>
+ *
+ * <b> getTemplateLoader method</b><br/>
+ * create a freemarker TemplateLoader that loads freemarker template in the following order :-
+ * <ol>
+ *   <li>path defined in ServletContext init parameter named 'templatePath' or 'TemplatePath' (must be an absolute path)</li>
+ *   <li>webapp classpath</li>
+ *   <li>webwork's static folder (under [WEBWORK_SOURCE]/com/opensymphony/webwork/static/</li>
+ * </ol>
+ * <p/>
+ *
+ * <b> populateContext method</b><br/>
+ * populate the created model.
+ * 
  */
 public class FreemarkerManager {
 

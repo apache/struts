@@ -96,7 +96,7 @@ public class FreemarkerManager {
             try {
                 log.info("Instantiating Freemarker ConfigManager!, " + classname);
                 // singleton instances shouldn't be built accessing request or session-specific context data
-                instance = (FreemarkerManager) ObjectFactory.getObjectFactory().buildBean(Class.forName(classname), null);
+                instance = (FreemarkerManager) ObjectFactory.getObjectFactory().buildBean(classname, null);
             } catch (Exception e) {
                 log.fatal("Fatal exception occurred while trying to instantiate a Freemarker ConfigManager instance, " + classname, e);
             }

@@ -21,7 +21,7 @@
 		});
 	};
 
-	dojo.event.topic.subscribe("treeSelected", "treeNodeSelected");
+	dojo.event.topic.subscribe("treeSelected", this, "treeNodeSelected");
 </script>
 
 

@@ -11,4 +11,14 @@
 
     <bean id="personManager" class="org.apache.struts.action2.showcase.person.PersonManager" singleton="true"/>
     
+    <!-- Showcase's CustomFreemarkerManager example -->
+    <bean id="customFreemarkerManager" class="org.apache.struts.action2.showcase.freemarker.CustomFreemarkerManager">
+		<constructor-arg index="0">
+			<ref bean="customFreemarkerManagerUtil" />
+		</constructor-arg>    	
+    </bean>
+    <bean id="customFreemarkerManagerUtil" class="org.apache.struts.action2.showcase.freemarker.CustomFreemarkerManagerUtil" />
+    
+    
 </beans>
+

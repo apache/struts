@@ -77,6 +77,7 @@
                     <li><a href="<saf:url value="/filedownload/index.jsp"/>">File Download</a></li>
                     <li><a href="<saf:url value="/conversion/index.jsp"/>"/>Conversion</a></li>
                     <li><a href="<saf:url action="index" namespace="/jsf"/>">JSF</a></li>
+                    <li><a href="<saf:url value="/freemarker/index.jsp"/>">Freemarker</a>
                     <li class="last"><a href="<saf:url value="/help.jsp"/>">Help</a></li>
                 </ul>
             </div>

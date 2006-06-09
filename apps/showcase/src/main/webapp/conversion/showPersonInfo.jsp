@@ -8,8 +8,8 @@
 <body>
 
 <saf:iterator value="persons" status="status">
-	<saf:label label="%{#status.index+' Name'}" value="%{name}" /><br/>
-	<saf:label label="%{#status.index+' Age'}" value="%{age}" /><br/>
+	<saf:label label="%{'SET '+#status.index+' Name'}" value="%{name}" /><br/>
+	<saf:label label="%{'SET '+#status.index+' Age'}" value="%{age}" /><br/>
 </saf:iterator>
 
 </body>

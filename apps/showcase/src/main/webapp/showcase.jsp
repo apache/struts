@@ -57,6 +57,9 @@
         <!-- model-driven -->
         <li><saf:url id="url" action="modelDriven" namespace="/modelDriven" method="input"/><saf:a href="%{url}">Model Driven Example</saf:a>
         
+        <!-- conversion -->
+        <li><saf:url id="url" value="/conversion" /><saf:a href="%{url}">Conversion Example</saf:a></li>
+        
         <!--  freemarker -->
         <li><saf:url id="url" value="/freemarker" /><saf:a href="%{#url}">Freemarker Example</saf:a></li>
     </ul>

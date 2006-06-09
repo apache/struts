@@ -21,7 +21,22 @@ See the code for Person.java <saf:url id="url" action="showPersonJavaCode" names
 <saf:fielderror />
 
 <saf:form action="submitPersonInfo" namespace="/conversion" method="post">
+	<%--
+		The following is done Dynamically
+	--%>
+	<saf:iterator value="new int[3]" status="stat">
+		<saf:textfield 	label="%{'Person '+#stat.index+' Name'}" 
+						name="%{'persons['+#stat.index+'].name'}" />
+		<saf:textfield 	label="%{'Person '+#stat.index+' Age'}" 
+						name="%{'persons['+#stat.index+'].age'}" />
+	</saf:iterator>
 	
+	
+	
+	<%--
+	The following is done statically:-
+	--%>
+	<%-- 
 	<saf:textfield 	label="Person 1 Name" 
 					name="persons[0].name" />
 	<saf:textfield 	label="Person 1 Age"
@@ -34,8 +49,7 @@ See the code for Person.java <saf:url id="url" action="showPersonJavaCode" names
 					name="persons[2].name" />
 	<saf:textfield 	label="Person 3 Age"
 					name="persons[2].age" />
-					
-					
+	--%>				
 					
 	<saf:submit />
 </saf:form>

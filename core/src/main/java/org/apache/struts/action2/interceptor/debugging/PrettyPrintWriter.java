@@ -1,10 +1,8 @@
 package org.apache.struts.action2.interceptor.debugging;
 
-import com.thoughtworks.xstream.core.util.FastStack;
-import com.thoughtworks.xstream.core.util.QuickWriter;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-
+import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.Stack;
 
 /**
  * A simple writer that outputs XML in a pretty-printed indented stream.
@@ -16,10 +14,10 @@ import java.io.Writer;
  * <p>This code was taken from the XStream project under the BSD license.</p>
  *
  */
-public class PrettyPrintWriter implements HierarchicalStreamWriter {
+public class PrettyPrintWriter {
 
-    private final QuickWriter writer;
-    private final FastStack elementStack = new FastStack(16);
+    private final PrintWriter writer;
+    private final Stack<String> elementStack = new Stack<String>();
     private final char[] lineIndenter;
 
     private boolean tagInProgress;
@@ -38,7 +36,7 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
     private static final char[] CLOSE = "</".toCharArray();
 
     public PrettyPrintWriter(Writer writer, char[] lineIndenter, String newLine) {
-        this.writer = new QuickWriter(writer);
+        this.writer = new PrintWriter(writer);
         this.lineIndenter = lineIndenter;
         this.newLine = newLine;
     }
@@ -88,11 +86,11 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
         writer.write('\"');
     }
 
-    protected void writeAttributeValue(QuickWriter writer, String text) {
+    protected void writeAttributeValue(PrintWriter writer, String text) {
         writeText(text);
     }
 
-    protected void writeText(QuickWriter writer, String text) {
+    protected void writeText(PrintWriter writer, String text) {
         writeText(text);
     }
 
@@ -134,7 +132,7 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
             writer.write('/');
             readyForNewLine = false;
             finishTag();
-            elementStack.popSilently();
+            elementStack.pop();
         } else {
             finishTag();
             writer.write(CLOSE);
@@ -172,9 +170,5 @@ public class PrettyPrintWriter implements HierarchicalStreamWriter {
 
     public void close() {
         writer.close();
-    }
-
-    public HierarchicalStreamWriter underlyingWriter() {
-        return this;
     }
 }

@@ -2,8 +2,8 @@
     <!-- overridden properties (must be before the import!) -->
     <!--property name="src.test" value="action/src/test"/-->
     <property name="src.xdt" value="core/src/main/xdt"/>
-    <property name="compile.version" value="1.4"/>
-    <property name="test.compile.version" value="1.4"/>
+    <property name="compile.version" value="1.5"/>
+    <property name="test.compile.version" value="1.5"/>
 
     <property name="optional.sources" value="org/apache/struts/action2/views/jasperreports/**, 
                                              org/apache/struts/action2/dispatcher/multipart/PellMultiPartRequest.java,

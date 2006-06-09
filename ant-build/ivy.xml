@@ -67,11 +67,10 @@
         <dependency org="xjavadoc" name="xjavadoc" rev="1.1" conf="build->*"/>
 
         <!-- default -->
-        <dependency org="opensymphony" name="xwork" rev="1.2+" conf="default->default"/>
+        <dependency org="opensymphony" name="xwork" rev="2.0+" conf="default->default"/>
         <dependency org="apache" name="commons-logging" rev="1.0.4" conf="default->default"/>
-        <dependency org="opensymphony" name="xwork" rev="1.2+" conf="source->source"/>
+        <dependency org="opensymphony" name="xwork" rev="2.0+" conf="source->source"/>
         <dependency org="freemarker" name="freemarker" rev="2.3.4" conf="default->default"/>
-        <dependency org="xstream" name="xstream" rev="1.1.2" conf="default->default" />
 
         <!-- ajax -->
         <dependency org="dwr" name="dwr" rev="1.1-beta-3" conf="ajax->*"/>
@@ -129,7 +128,7 @@
         <dependency org="portlet-api" name="portlet-api" rev="1.0" conf="portlet->default"/>
 
         <!-- spring -->
-        <dependency org="opensymphony" name="xwork" rev="1.2+" conf="spring->spring"/>
+        <dependency org="opensymphony" name="xwork" rev="2.0+" conf="spring->spring"/>
 
         <!-- pico -->
         <dependency org="picocontainer" name="picocontainer" rev="1.2-RC-2" conf="pico->*"/>
@@ -146,7 +145,7 @@
         <dependency org="w3c" name="dom" rev="3.0" conf="xslt->*"/>
 
         <!-- tiger -->
-        <dependency org="opensymphony" name="xwork-tiger" rev="1.2+" conf="tiger->*"/>
+        <dependency org="opensymphony" name="xwork-tiger" rev="2.0+" conf="tiger->*"/>
 
         <!-- cewolf -->
         <dependency org="cewolf" name="cewolf" rev="0.12.0" conf="cewolf->*"/>

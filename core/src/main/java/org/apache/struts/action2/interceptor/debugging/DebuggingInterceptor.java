@@ -68,7 +68,7 @@ public class DebuggingInterceptor implements Interceptor {
             "com.opensymphony.xwork.", "xwork."};
     private String[] _ignoreKeys = new String[]{"application", "session",
             "parameters", "request"};
-    private HashSet ignoreKeys = new HashSet(Arrays.asList(_ignoreKeys));
+    private HashSet<String> ignoreKeys = new HashSet<String>(Arrays.asList(_ignoreKeys));
 
     private final static String XML_MODE = "xml";
     private final static String CONSOLE_MODE = "console";

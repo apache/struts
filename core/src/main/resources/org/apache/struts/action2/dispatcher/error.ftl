@@ -5,7 +5,7 @@
 <body>
     <h2>Struts Action Framework Problem Report</h2>
     <p>
-    The Struts Action Framework has detected a problem in your configuration:
+    The Struts Action Framework has detected an unhandled exception:
     </p>
 
 <#assign msgs = [] />
@@ -19,6 +19,12 @@
     <#if (ex.location?exists && (ex.location != unknown))>
         <#assign rootloc = ex.location/>
         <#assign rootex = ex/>
+    <#else>
+            <#assign tmploc = locator.getLocation(ex) />
+            <#if (tmploc != unknown)>
+            <#assign rootloc = tmploc/>
+                <#assign rootex = ex/>
+            </#if>  
     </#if>    
 </#list>
 
@@ -33,8 +39,8 @@
                     <li>${msg}</li>
                 </#list>
             </ol>
-            <#else>
-            ${msgs[0]}
+            <#elseif (msgs?size == 1)>
+                ${msgs[0]}
             </#if>
         </td>
     </tr>
@@ -47,24 +53,30 @@
         <td><strong>Line number</strong>:</td>
         <td>${rootloc.lineNumber}</td>
     </tr>
+    <#if (rootloc.columnNumber >= 0)>
     <tr>
         <td><strong>Column number</strong>:</td>
         <td>${rootloc.columnNumber}</td>
     </tr>
     </#if>
+    </#if>
     
 </table>
 </div>
 
-<#if rootex.snippet?exists>
-    <#assign snippet = rootex.getSnippet(2) />
+<#if rootloc?exists>
+    <#assign snippet = rootloc.getSnippet(2) />
     <#if (snippet?size > 0)>
         <div id="snippet">
         <hr />
             
             <#list snippet as line>
                 <#if (line_index == 2)>
-                    <pre style="background:yellow">${(line[0..(rootloc.columnNumber-3)]?html)}<span style="background:red">${(line[(rootloc.columnNumber-2)]?html)}</span><#if ((rootloc.columnNumber)<line.length())>${(line[(rootloc.columnNumber-1)..]?html)}</#if></pre>
+                        <#if (rootloc.columnNumber >= 0)>
+                        <pre style="background:yellow">${(line[0..(rootloc.columnNumber-3)]?html)}<span style="background:red">${(line[(rootloc.columnNumber-2)]?html)}</span><#if ((rootloc.columnNumber)<line.length())>${(line[(rootloc.columnNumber-1)..]?html)}</#if></pre>
+                    <#else>
+                            <pre style="background:yellow">${line?html}</pre>
+                    </#if>    
                 <#else>
                     <pre>${line?html}</pre>
                 </#if>    

@@ -35,6 +35,8 @@ import com.opensymphony.xwork.interceptor.component.ComponentInterceptor;
 import com.opensymphony.xwork.interceptor.component.ComponentManager;
 import com.opensymphony.xwork.util.*;
 import com.opensymphony.xwork.util.location.Location;
+import com.opensymphony.xwork.util.location.LocationUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -95,23 +97,23 @@ public class DispatcherUtils {
     }
 
     protected void cleanup() {
-    	ObjectFactory objectFactory = ObjectFactory.getObjectFactory();
-    	if (objectFactory == null) {
-    		LOG.warn("Object Factory is null, something is seriously wrong, no clean up will be performed");
-    	}
-    	if (objectFactory instanceof ObjectFactoryDestroyable) {
-    		try {
-    			((ObjectFactoryDestroyable)objectFactory).destroy();
-    		}
-    		catch(Exception e) {
-    			// catch any exception that may occured during destroy() and log it
-    			LOG.error("exception occurred while destroying ObjectFactory ["+objectFactory+"]", e);
-    		}
-    	}
+        ObjectFactory objectFactory = ObjectFactory.getObjectFactory();
+        if (objectFactory == null) {
+            LOG.warn("Object Factory is null, something is seriously wrong, no clean up will be performed");
+        }
+        if (objectFactory instanceof ObjectFactoryDestroyable) {
+            try {
+                ((ObjectFactoryDestroyable)objectFactory).destroy();
+            }
+            catch(Exception e) {
+                // catch any exception that may occured during destroy() and log it
+                LOG.error("exception occurred while destroying ObjectFactory ["+objectFactory+"]", e);
+            }
+        }
     }
 
     protected void init(ServletContext servletContext) {
-    	boolean reloadi18n = Boolean.valueOf((String) Configuration.get(StrutsConstants.STRUTS_I18N_RELOAD)).booleanValue();
+        boolean reloadi18n = Boolean.valueOf((String) Configuration.get(StrutsConstants.STRUTS_I18N_RELOAD)).booleanValue();
         LocalizedTextUtil.setReloadBundles(reloadi18n);
 
         if (Configuration.isSet(StrutsConstants.STRUTS_OBJECTFACTORY)) {
@@ -256,9 +258,8 @@ public class DispatcherUtils {
             LOG.error("Could not find action", e);
             sendError(request, response, context, HttpServletResponse.SC_NOT_FOUND, e);
         } catch (Exception e) {
-            String msg = "Could not execute action";
-            LOG.error(msg, e);
-            throw new ServletException(msg, e);
+            LOG.error("Could not execute action", e);
+                sendError(request, response, context, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);
         }
     }
 
@@ -480,10 +481,15 @@ public class DispatcherUtils {
                 data.put("exception", e);
                 data.put("unknown", Location.UNKNOWN);
                 data.put("chain", chain);
+                data.put("locator", new Locator());
                 template.process(data, response.getWriter());
                 response.getWriter().close();
             } catch (Exception exp) {
-                exp.printStackTrace();
+                try {
+                    response.sendError(code, "Unable to show problem report: " + exp);
+                } catch (IOException ex) {
+                    // we're already sending an error, not much else we can do if more stuff breaks
+                }
             }
         } else {
             try {
@@ -510,5 +516,11 @@ public class DispatcherUtils {
     public static boolean isPortletSupportActive() {
         return portletSupportActive;
     }
-
+    
+    /** Simple accessor for a static method */
+    public class Locator {
+        public Location getLocation(Throwable t) {
+            return LocationUtils.getLocation(t);
+        }
+    }
 }

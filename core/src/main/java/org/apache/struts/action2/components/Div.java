@@ -18,6 +18,9 @@
 package org.apache.struts.action2.components;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action2.views.util.UrlHelper;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +52,9 @@ import javax.servlet.http.HttpServletResponse;
  * description="Render HTML div providing content from remote call via AJAX"
   */
 public class Div extends RemoteCallUIBean {
+	
+	private static final Log _log = LogFactory.getLog(Div.class);
+	
 
     public static final String TEMPLATE = "div";
     public static final String TEMPLATE_CLOSE = "div-close";
@@ -84,6 +90,22 @@ public class Div extends RemoteCallUIBean {
             addParameter("delay", findString(delay));
         } else {
             addParameter("delay", "0");
+        }
+        
+        String tmpUpdateFreq = (String) getParameters().get("delay");
+        String tmpDelay = (String) getParameters().get("updateFreq");
+        try {
+        	int _updateFreq = Integer.parseInt(tmpUpdateFreq);
+        	int _delay = Integer.parseInt(tmpDelay);
+        	
+        	if (_updateFreq <= 0 && _delay <= 0) {
+        		addParameter("autoStart", "false");
+        	}
+        }
+        catch(NumberFormatException e) {
+        	// too bad, invalid updateFreq or delay provided, we
+        	// can't determine autoStart mode.
+        	_log.info("error while parsing updateFreq ["+tmpUpdateFreq+"] or delay ["+tmpDelay+"] to integer, cannot determine autoStart mode", e);
         }
 
         if (loadingText != null) {

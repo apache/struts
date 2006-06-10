@@ -10,7 +10,8 @@
 	<#if parameters.updateFreq?exists>refresh='${parameters.updateFreq}'</#if>
 	<#if parameters.listenTopics?exists>listenTopics='${parameters.listenTopics}'</#if>
 	<#if parameters.afterLoading?exists>onLoad='${parameters.afterLoading}'</#if>
-
+	<#if parameters.autoStart?exists>autoStart='${parameters.autoStart}'</#if>
+	
 <#if parameters.tabindex?exists>
  tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>

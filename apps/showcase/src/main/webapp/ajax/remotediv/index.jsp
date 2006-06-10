@@ -40,6 +40,10 @@
         <li>
             <a href="example7.jsp">A div that calls the server, and JS in the resulting page is executed</a>
         </li>
+        
+        <li>
+        	<a href="example8.jsp">A div that will not update itself (updateFreq=0 and delay=0)</a>
+        </li>
 
     </ol>
 

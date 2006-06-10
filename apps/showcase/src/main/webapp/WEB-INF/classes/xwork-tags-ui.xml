@@ -50,6 +50,11 @@
         
         <!--  END SNIPPET: treeExampleDynamicXWorkXml -->
         
+        
+        <action name="showComponentTagExampleCode">
+        	<result type="plaintext">/tags/ui/componentTagExample.jsp</result>
+        </action>
+        
 	</package>
 	
 	<!--  START SNIPPET: treeExampleXWorkXml -->

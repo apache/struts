@@ -12,6 +12,8 @@
 
     <include file="config-browser.xml"/>
     
+    <include file="xwork-tmjee.xml" />
+    
     <include file="xwork-continuations.xml"/>
 
     <include file="xwork-tags.xml"/>

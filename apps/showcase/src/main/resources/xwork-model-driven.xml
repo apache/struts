@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE xwork PUBLIC 
+	"-//OpenSymphony Group//XWork 1.1.1//EN" 
+	"http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+
+<xwork>
+	<include file="struts-default.xml" />
+
+	<package name="modelDriven" extends="struts-default" namespace="/modelDriven">
+	    <!-- Diplay entry page that uses Model-Driven technique -->
+		<action name="modelDriven" class="org.apache.struts.action2.showcase.modelDriven.ModelDrivenAction" method="input">
+			<result>modelDriven.jsp</result>
+		</action>
+		
+		<!-- Display the result page whose content is populated using the Model-Driven technique -->
+		<action name="modelDrivenResult" class="org.apache.struts.action2.showcase.modelDriven.ModelDrivenAction">
+			<result>modelDrivenResult.jsp</result>
+		</action>
+	</package>
+</xwork>	
+	

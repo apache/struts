@@ -301,12 +301,7 @@ public class DebuggingInterceptor implements Interceptor {
                 serializeIt(Array.get(bean, i), "arrayitem", writer, stack);
             }
         } else {
-            if (clsName != null && clsName.startsWith("org.apache.struts")) {
-                // ignore
-            } else if (clsName != null
-                    && clsName.startsWith("com.opensymphony.xwork")) {
-                // ignore
-            } else if (clsName.startsWith("java.lang")) {
+            if (clsName.startsWith("java.lang")) {
                 writer.setValue(bean.toString());
             } else {
                 // Not java.lang, so we can call ourselves with this object's

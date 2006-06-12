@@ -259,7 +259,7 @@ public class DispatcherUtils {
             sendError(request, response, context, HttpServletResponse.SC_NOT_FOUND, e);
         } catch (Exception e) {
             LOG.error("Could not execute action", e);
-                sendError(request, response, context, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);
+            sendError(request, response, context, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);
         }
     }
 

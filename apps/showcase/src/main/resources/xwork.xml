@@ -44,6 +44,7 @@
         <interceptors>
             <interceptor-stack name="crudStack">
                 <interceptor-ref name="params" />
+				<interceptor-ref name="static-params" />
                 <interceptor-ref name="defaultStack" />
             </interceptor-stack>
         </interceptors>
@@ -89,17 +90,18 @@
             <result>/empmanager/listEmployees.jsp</result>
             <interceptor-ref name="basicStack"/>
         </action>
-        <action name="edit" class="org.apache.struts.action2.showcase.action.EmployeeAction">
+        <action name="edit-*" class="org.apache.struts.action2.showcase.action.EmployeeAction">
+			<param name="empId">{1}</param>
             <result>/empmanager/editEmployee.jsp</result>
             <interceptor-ref name="crudStack"><param name="validation.excludeMethods">execute</param></interceptor-ref>
         </action>
         <action name="save" class="org.apache.struts.action2.showcase.action.EmployeeAction" method="save">
             <result name="input">/empmanager/editEmployee.jsp</result>
-            <result type="redirect">edit.action?empId=${currentEmployee.empId}</result>
+            <result type="redirect">edit-${currentEmployee.empId}.action</result>
         </action>
         <action name="delete" class="org.apache.struts.action2.showcase.action.EmployeeAction" method="delete">
             <result name="error">/empmanager/editEmployee.jsp</result>
-            <result type="redirect">edit.action?empId=${currentEmployee.empId}</result>
+            <result type="redirect">edit-${currentEmployee.empId}.action</result>
         </action>
     </package>
 

@@ -44,7 +44,6 @@
     The classDirs directories can be a jar or a directory of classes
     -->
     <classDirs>
-        <dir>src/main/webapp/WEB-INF/classes</dir>
         <dir>src/main/resources</dir>
         <dir>../../core/target/classes</dir>
     </classDirs>

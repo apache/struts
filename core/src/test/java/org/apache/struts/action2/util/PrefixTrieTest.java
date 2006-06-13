@@ -31,7 +31,7 @@ public class PrefixTrieTest extends TestCase {
         trie.put("a:", a);
         assertSame(foo, trie.get("foo:bar"));
         assertSame(a, trie.get("a:bar"));
-        assertNull(trie.get("tee:bar"));
+        assertNotNull(trie.get("tee:bar"));
         assertNull(trie.get("foobar"));        
     }
 }

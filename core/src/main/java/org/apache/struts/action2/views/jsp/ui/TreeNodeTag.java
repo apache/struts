@@ -40,6 +40,8 @@ public class TreeNodeTag extends AbstractClosingTag {
         this.label = label;
     }
 
+    // NOTE: not necessary, label property is inherited, will be populated 
+    // by super-class
     /*protected void populateParams() {
         if (label != null) {
             TreeNode treeNode = (TreeNode)component;

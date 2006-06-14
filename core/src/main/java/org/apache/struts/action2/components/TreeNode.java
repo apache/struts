@@ -27,13 +27,48 @@ import javax.servlet.http.HttpServletResponse;
  *
  * Renders a tree node within a tree widget with AJAX support.<p/>
  *
+ * Either of the following combinations should be used depending on if the tree 
+ * is to be constrcted dynamically or statically. <p/>
+ * 
+ * <b>Dynamically</b>
+ * <ul>
+ * 		<li>id - id of this tree node</li>
+ * 		<li>title - label to be displayed for this tree node</li>
+ * </ul>
+ * 
+ * <b>Statically</b>
+ * <ul>
+ * 		<li>rootNode - the parent node of which this tree is derived from</li>
+ * 		<li>nodeIdProperty - property to obtained this current tree node's id</li>
+ * 		<li>nodeTitleProperty - property to obtained this current tree node's title</li>
+ * 		<li>childCollectionProperty - property that returnds this current tree node's children</li>
+ * </ul>
+ *
  * <!-- END SNIPPET: javadoc -->
  *
  * <p/> <b>Examples</b>
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;treenode .../&gt;
+ * 
+ * &lt-- statically --&gt;
+ * &lt;ww:tree id="..." label="..."&gt;
+ *    &lt;ww:treenode id="..." label="..." /&gt;
+ *    &lt;ww:treenode id="..." label="..."&gt;
+ *        &lt;ww:treenode id="..." label="..." /&gt;
+ *        &lt;ww:treenode id="..." label="..." /&gt;
+ *    &;lt;/ww:treenode&gt;
+ *    &lt;ww:treenode id="..." label="..." /&gt;
+ * &lt;/ww:tree&gt;
+ * 
+ * &lt;-- dynamically --&gt;
+ * &lt;ww:tree 
+ *          id="..."
+ *          rootNode="..."
+ *          nodeIdProperty="..."
+ *          nodeTitleProperty="..."
+ *          childCollectionProperty="..." /&gt;
+ * 
  * <!-- END SNIPPET: example -->
  * </pre>
  *

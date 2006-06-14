@@ -27,6 +27,9 @@ import java.io.Writer;
  * <!-- START SNIPPET: javadoc -->
  *
  * Renders a tree widget with AJAX support.<p/>
+ * 
+ * The id attribute is normally specified, such that it could be looked up using
+ * javascript if necessary.<p/>
  *
  * <!-- END SNIPPET: javadoc -->
  *
@@ -34,12 +37,8 @@ import java.io.Writer;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;-- statically --&lt;
- * &lt;saf:tree rootNode="..." /&gt;
  * 
- * or 
- * 
- * &lt-- dynamically --&gt;
+ * &lt-- statically --&gt;
  * &lt;saf:tree id="..." label="..."&gt;
  *    &lt;saf:treenode id="..." label="..." /&gt;
  *    &lt;saf:treenode id="..." label="..."&gt;
@@ -48,6 +47,14 @@ import java.io.Writer;
  *    &;lt;/saf:treenode&gt;
  *    &lt;saf:treenode id="..." label="..." /&gt;
  * &lt;/saf:tree&gt;
+ * 
+ * &lt;-- dynamically --&gt;
+ * &lt;saf:tree 
+ * 			id="..."
+ *          rootNode="..."
+ *          nodeIdProperty="..."
+ *          nodeTitleProperty="..."
+ *          childCollectionProperty="..." /&gt;
  * 
  * <!-- END SNIPPET: example -->
  * </pre>

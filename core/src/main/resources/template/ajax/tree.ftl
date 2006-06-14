@@ -72,9 +72,11 @@
     </#if>
     >
     <#if parameters.label?exists>
-    <div dojoType="TreeNode" id="${parameters.id}_root" title="${parameters.label?html}"
+    <div dojoType="TreeNode" title="${parameters.label?html}"
     <#if parameters.nodeIdProperty?exists>
     id="${stack.findValue(parameters.nodeIdProperty)}"
+    <#else>
+    id="${parameters.id}_root"
     </#if>
     >
     <#elseif parameters.rootNode?exists>

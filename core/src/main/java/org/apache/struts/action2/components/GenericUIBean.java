@@ -47,6 +47,7 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- START SNIPPET: example -->
  * JSP
  *     &lt;a:component template="/my/custom/component.vm"/&gt;
+ *     
  *       or
  *
  *     &lt;a:component template="/my/custom/component.vm"&gt;
@@ -63,8 +64,30 @@ import javax.servlet.http.HttpServletResponse;
  *       #param( "key1" "value1" )
  *       #param( "key2" "value2" )
  *     #end
+ *     
+ * Freemarker
+ *    &lt;@saf.component template="/my/custom/component.ftl" />
+ *    
+ *      or
+ *      
+ *    &lt;@saf.component template="/my/custom/component.ftl"&gt;
+ *       &lt;@saf.param name="key1" value="value1" /&gt;
+ *       &lt;@saf.param name="key2" value="value2" /&gt;
+ *    &lt;/@saf.component&gt;
+ *     
  * <!-- END SNIPPET: example -->
  * </pre>
+ * 
+ * <p/>
+ * 
+ * <b>NOTE:</b>
+ * <!-- START SNIPPET: note -->
+ * 
+ * If Jsp is used as the template, the jsp template itself must lie within the 
+ * webapp itself and not the classpath. Unlike Freemarker or Velocity, JSP template
+ * could not be picked up from the classpath.
+ * 
+ * <!-- END SNIPPET: note -->
  *
  * @a2.tag name="component" tld-body-content="JSP" tld-tag-class="org.apache.struts.action2.views.jsp.ui.ComponentTag"
  * description="Render a custom ui widget"

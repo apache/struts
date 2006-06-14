@@ -13,7 +13,7 @@
     id="rootId"
     toggle="fade"
     >
-    <div dojoType="TreeNode" id="rootId_root" title="Root"
+    <div dojoType="TreeNode" title="Root" id="rootId_root"
     >
 <div dojoType="TreeNode" 
 	    id="child1"

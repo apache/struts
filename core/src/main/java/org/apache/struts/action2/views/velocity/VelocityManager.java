@@ -527,7 +527,6 @@ public class VelocityManager {
         addDirective(sb, ComponentDirective.class);
         addDirective(sb, DateDirective.class);
         addDirective(sb, DatePickerDirective.class);
-        addDirective(sb, DebugDirective.class);
         addDirective(sb, DivDirective.class);
         addDirective(sb, DoubleSelectDirective.class);
         addDirective(sb, FileDirective.class);

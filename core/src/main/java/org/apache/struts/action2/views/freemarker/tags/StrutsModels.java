@@ -40,7 +40,6 @@ public class StrutsModels {
     protected DateModel date;
     protected DatePickerModel datepicker;
     protected DivModel div;
-    protected DebugModel debug;
     protected DoubleSelectModel doubleselect;
     protected FileModel file;
     protected FormModel form;
@@ -129,14 +128,6 @@ public class StrutsModels {
         }
 
         return file;
-    }
-
-    public DebugModel getDebug() {
-        if (debug == null) {
-            debug = new DebugModel(stack, req, res);
-        }
-
-        return debug;
     }
 
     public FormModel getForm() {

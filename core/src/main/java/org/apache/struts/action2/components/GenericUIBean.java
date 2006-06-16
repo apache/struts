@@ -25,12 +25,26 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * <!-- START SNIPPET: javadoc -->
+ * 
  * Renders an custom UI widget using the specified templates. Additional objects can be passed in to the template
- * using the param tags. Objects provided can be retrieve from within the template via $parameters._paramname_.<p/>
+ * using the param tags.<p/>
+ * 
+ * <b>Freemarker:</b><p/>
+ * Objects provided can be retrieve from within the template via $parameters._paramname_.<p/>
+ * 
+ * <b>Jsp:</b><p/>
+ * Objects provided can be retrieve from within the template via &lt;saf:property value="%{parameters._paramname_}" /&gt;<p/>
+ *
  *
  * In the bottom JSP and Velocity samples, two parameters are being passed in to the component. From within the
- * component, they can be accessed as $parameters.get('key1') and $parameters.get('key2'). Velocity also allows
- * you reference them as $parameters.key1 and $parameters.key2.<p/>
+ * component, they can be accessed as:- <p/>
+ * 
+ * <b>Freemarker:</b><p/>
+ * $parameters.get('key1') and $parameters.get('key2') or $parameters.key1 and $parameters.key2<p/>
+ * 
+ * <b>Jsp:</b><p/>
+ * &lt;saf:property value="%{parameters.key1}" /&gt; and &lt;saf:property value="%{'parameters.key2'}" /&gt; or
+ * &lt;saf:property value="%{parameters.get('key1')}" /&gt; and &lt;saf:property value="%{parameters.get('key2')}" /&gt;<p/>
  *
  * Currently, your custom UI components can be written in Velocity, JSP, or Freemarker, and the correct rendering
  * engine will be found based on file extension.<p/>
@@ -39,6 +53,7 @@ import javax.servlet.http.HttpServletResponse;
  * string literal to your component, make sure to wrap it in quotes i.e. value="'value1'" otherwise, the the value
  * stack will search for an Object on the stack with a method of getValue1(). (now that i've written this, i'm not
  * entirely sure this is the case. i should verify this manana)<p/>
+ * 
  * <!-- END SNIPPET: javadoc -->
  *
  * <p/> <b>Examples</b>
@@ -71,8 +86,8 @@ import javax.servlet.http.HttpServletResponse;
  *      or
  *      
  *    &lt;@saf.component template="/my/custom/component.ftl"&gt;
- *       &lt;@saf.param name="key1" value="value1" /&gt;
- *       &lt;@saf.param name="key2" value="value2" /&gt;
+ *       &lt;@saf.param name="key1" value="%{'value1'}" /&gt;
+ *       &lt;@saf.param name="key2" value="%{'value2'}" /&gt;
  *    &lt;/@saf.component&gt;
  *     
  * <!-- END SNIPPET: example -->

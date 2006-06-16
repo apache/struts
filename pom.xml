@@ -79,6 +79,7 @@
         <module>core</module>
         <!--<module>assembly</module>-->
         <module>apps</module>
+        <module>action-api</module>
     </modules>
     
     <licenses>

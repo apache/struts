@@ -1,2 +1,6 @@
 <#include "/${parameters.templateDir}/xhtml/controlheader-core.ftl" />
-    <td>
+    <td
+<#if parameters.align?exists>
+    align="${parameters.align?html}"<#t/>
+</#if>
+><#t/>

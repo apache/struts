@@ -3,10 +3,6 @@
     <td colspan="2"><div <#rt/>
 -->
 <#include "/${parameters.templateDir}/${themeProperties.parent}/controlheader.ftl" />
-<#if parameters.align?exists>
-    align="${parameters.align?html}"<#t/>
-</#if>
-><#t/>
 <button type="submit" dojoType="BindButton"<#rt/>
 <#if parameters.form?exists && parameters.form.id?exists>
  formId="${parameters.form.id}"<#rt/>

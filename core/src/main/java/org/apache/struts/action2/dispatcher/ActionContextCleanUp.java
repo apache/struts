@@ -18,7 +18,6 @@
 package org.apache.struts.action2.dispatcher;
 
 import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.interceptor.component.ComponentManager;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -112,12 +111,6 @@ public class ActionContextCleanUp implements Filter {
                  ((Integer)req.getAttribute(COUNTER)).intValue() > 0 ) {
              return;
          }
-
-        // tear down the component manager if it was created
-        ComponentManager componentManager = (ComponentManager) req.getAttribute(ComponentManager.COMPONENT_MANAGER_KEY);
-        if (componentManager != null) {
-            componentManager.dispose();
-        }
 
         // always dontClean up the thread request, even if an action hasn't been executed
         ActionContext.setContext(null);

@@ -22,7 +22,6 @@
             <interceptor name="alias" class="com.opensymphony.xwork.interceptor.AliasInterceptor"/>
             <interceptor name="autowiring" class="com.opensymphony.xwork.spring.interceptor.ActionAutowiringInterceptor"/>
             <interceptor name="chain" class="com.opensymphony.xwork.interceptor.ChainingInterceptor"/>
-            <interceptor name="component" class="com.opensymphony.xwork.interceptor.component.ComponentInterceptor"/>
             <interceptor name="conversionError" class="org.apache.struts.action2.interceptor.StrutsConversionErrorInterceptor"/>
             <interceptor name="createSession" class="org.apache.struts.action2.interceptor.CreateSessionInterceptor" />
             <interceptor name="debugging" class="org.apache.struts.action2.interceptor.debugging.DebuggingInterceptor" />

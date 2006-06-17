@@ -26,9 +26,6 @@ import org.apache.struts.action2.dispatcher.mapper.ActionMapper;
 import org.apache.struts.action2.dispatcher.mapper.ActionMapperFactory;
 import org.apache.struts.action2.dispatcher.mapper.ActionMapping;
 import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.interceptor.component.ComponentConfiguration;
-import com.opensymphony.xwork.interceptor.component.ComponentManager;
-import com.opensymphony.xwork.interceptor.component.DefaultComponentManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -98,11 +95,7 @@ import java.text.SimpleDateFormat;
  * careful</b>, however, to expose any packages that may have sensitive information, such as properties file with
  * database access credentials.
  *
- * <p/> <b>Kicking off XWork's IoC for the request lifecycle</b>
- *
- * <p/> This filter also kicks off the XWork IoC request scope, provided that you are using XWork's IoC. All you have to
- * do to get started with XWork's IoC is add a components.xml file to WEB-INF/classes and properly set up the {@link
- * org.apache.struts.action2.lifecycle.LifecycleListener} in web.xml. See the IoC docs for more information. <p/>
+ * <p/>
  *
  * @see org.apache.struts.action2.lifecycle.LifecycleListener
  * @see ActionMapper
@@ -206,7 +199,6 @@ public class FilterDispatcher implements Filter, StrutsStatics {
         Object o = null;
         try {
 
-            setupContainer(request);
             o = beforeActionInvocation(request, servletContext);
             
             du.serviceAction(request, response, servletContext, mapping);
@@ -223,35 +215,6 @@ public class FilterDispatcher implements Filter, StrutsStatics {
     protected Object beforeActionInvocation(HttpServletRequest request, ServletContext servletContext) {
         // nothing by default, but a good hook for scoped ioc integration
         return null;
-    }
-
-    protected void setupContainer(HttpServletRequest request) {
-        ComponentManager container = null;
-        HttpSession session = request.getSession(false);
-        ComponentManager fallback = null;
-        if (session != null) {
-            fallback = (ComponentManager) session.getAttribute(ComponentManager.COMPONENT_MANAGER_KEY);
-        }
-
-        ServletContext servletContext = getServletContext(session);
-        if (fallback == null) {
-            fallback = (ComponentManager) servletContext.getAttribute(ComponentManager.COMPONENT_MANAGER_KEY);
-        }
-
-        if (fallback != null) {
-            container = createComponentManager();
-            container.setFallback(fallback);
-        }
-
-        ComponentConfiguration config = (ComponentConfiguration) servletContext.getAttribute("ComponentConfiguration");
-        if (config != null) {
-            if (container == null) {
-                container = createComponentManager();
-            }
-
-            config.configure(container, "request");
-            request.setAttribute(ComponentManager.COMPONENT_MANAGER_KEY, container);
-        }
     }
 
     /**
@@ -367,15 +330,5 @@ public class FilterDispatcher implements Filter, StrutsStatics {
         }
 
         return true;
-    }
-
-    /**
-     * Returns a new <tt>DefaultComponentManager</tt> instance. This method is useful for developers wishing to subclass
-     * this class and provide a different implementation of <tt>DefaultComponentManager</tt>.
-     *
-     * @return a new <tt>DefaultComponentManager</tt> instance.
-     */
-    protected DefaultComponentManager createComponentManager() {
-        return new DefaultComponentManager();
     }
 }

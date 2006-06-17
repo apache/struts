@@ -31,8 +31,6 @@ import org.apache.struts.action2.util.ObjectFactoryDestroyable;
 import org.apache.struts.action2.util.ObjectFactoryInitializable;
 import com.opensymphony.xwork.*;
 import com.opensymphony.xwork.config.ConfigurationException;
-import com.opensymphony.xwork.interceptor.component.ComponentInterceptor;
-import com.opensymphony.xwork.interceptor.component.ComponentManager;
 import com.opensymphony.xwork.util.*;
 import com.opensymphony.xwork.util.location.Location;
 import com.opensymphony.xwork.util.location.LocationUtils;
@@ -326,7 +324,6 @@ public class DispatcherUtils {
         extraContext.put(StrutsStatics.HTTP_REQUEST, request);
         extraContext.put(StrutsStatics.HTTP_RESPONSE, response);
         extraContext.put(StrutsStatics.SERVLET_CONTEXT, servletContext);
-        extraContext.put(ComponentInterceptor.COMPONENT_MANAGER, request.getAttribute(ComponentManager.COMPONENT_MANAGER_KEY));
 
         // helpers to get access to request/session/application scope
         extraContext.put("request", requestMap);

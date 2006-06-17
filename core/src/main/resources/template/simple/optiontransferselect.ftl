@@ -8,7 +8,31 @@
 <#if parameters.leftTitle?exists><#t/>
 	<label for="leftTitle">${parameters.leftTitle}</label><br/>
 </#if><#t/>
-<#include "/${parameters.templateDir}/simple/select.ftl" /> </td>
+<#include "/${parameters.templateDir}/simple/select.ftl" /> 
+<#if parameters.allowUpDownOnLeft?default(true)>
+<input type="button" 
+<#if parameters.headerKey?exists>
+	onclick="moveOptionDown(document.getElementById('${parameters.id}'), 'key', '${parameters.headerKey}');"
+<#else>
+	onclick="moveOptionDown(document.getElementById('${parameters.id}'), 'key', '');"
+</#if>
+<#if parameters.leftDownLabel?exists>
+	value="${parameters.leftDownLabel?html}"
+</#if>
+/>
+<input type="button"
+<#if parameters.headerKey?exists>
+	onclick="moveOptionUp(document.getElementById('${parameters.id}'), 'key', '${parameters.headerKey}');"
+<#else>
+	onclick="moveOptionUp(document.getElementById('${parameters.id}'), 'key', '');"
+</#if>	
+<#if parameters.leftUpLabel?exists>
+	value="${parameters.leftUpLabel?html}"
+</#if>
+/>
+</#if>
+
+</td>
 <td valign="middle" align="center">
 	<#if parameters.allowAddToLeft?default(true)><#t/>
 		<#assign addToLeftLabel = parameters.addToLeftLabel?default("<-")?html/><#t/>
@@ -231,6 +255,28 @@
     	>${doubleItemValue?html}</option><#lt/>
 	</@saf.iterator><#t/>
 </select>
+<#if parameters.allowUpDownOnRight?default(true)>
+<input type="button" 
+<#if parameters.doubleHeaderKey?exists>
+	onclick="moveOptionDown(document.getElementById('${parameters.doubleId}'), 'key', '${parameters.doubleHeaderKey}');"
+<#else>
+	onclick="moveOptionDown(document.getElementById('${parameters.doubleId}'), 'key', '');"
+</#if>
+<#if parameters.rightDownLabel?exists>
+	value="${parameters.rightDownLabel?html}"
+</#if>
+/>
+<input type="button" 
+<#if parameters.doubleHeaderKey?exists>
+	onclick="moveOptionUp(document.getElementById('${parameters.doubleId}'), 'key', '${parameters.doubleHeaderKey}');"
+<#else>
+	onclick="moveOptionUp(document.getElementById('${parameters.doubleId}'), 'key', '');"
+</#if>
+<#if parameters.rightUpLabel?exists>
+	value="${parameters.rightUpLabel?html}"
+</#if>
+/>
+</#if>
 </td>
 </tr>
 </table>

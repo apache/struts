@@ -100,6 +100,8 @@ public class OptionTransferSelect extends DoubleListUIBean {
 	protected String allowAddAllToLeft;
 	protected String allowAddAllToRight;
 	protected String allowSelectAll;
+	protected String allowUpDownOnLeft;
+	protected String allowUpDownOnRight;
 	
 	protected String leftTitle;
 	protected String rightTitle;
@@ -112,6 +114,10 @@ public class OptionTransferSelect extends DoubleListUIBean {
 	protected String addAllToLeftLabel;
 	protected String addAllToRightLabel;
 	protected String selectAllLabel;
+	protected String leftUpLabel;
+	protected String leftDownlabel;
+	protected String rightUpLabel;
+	protected String rightDownLabel;
 	
 	
 	public OptionTransferSelect(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
@@ -182,6 +188,13 @@ public class OptionTransferSelect extends DoubleListUIBean {
 		addParameter("allowAddAllToRight", 
 				allowAddAllToRight != null ? findValue(allowAddAllToRight, Boolean.class) : Boolean.TRUE);
 		
+		// allowUpDownOnLeft
+		addParameter("allowUpDownOnLeft", 
+				allowUpDownOnLeft != null ? findValue(allowUpDownOnLeft, Boolean.class) : Boolean.TRUE);
+		
+		// allowUpDownOnRight
+		addParameter("allowUpDownOnRight", 
+				allowUpDownOnRight != null ? findValue(allowUpDownOnRight, Boolean.class) : Boolean.TRUE);
 		
 		
 		// leftTitle
@@ -215,6 +228,24 @@ public class OptionTransferSelect extends DoubleListUIBean {
 		addParameter("selectAllLabel",
 				selectAllLabel != null ? findValue(selectAllLabel, String.class) : "<*>");
 		
+		// leftUpLabel
+		addParameter("leftUpLabel", 
+				leftUpLabel != null ? findValue(leftUpLabel, String.class) : "^");
+		
+		
+		// leftDownLabel
+		addParameter("leftDownLabel", 
+				leftDownlabel != null ? findValue(leftDownlabel, String.class) : "v");
+		
+		
+		// rightUpLabel
+		addParameter("rightUpLabel", 
+				rightUpLabel != null ? findValue(rightUpLabel, String.class) : "^");
+		
+		
+		// rightDownlabel
+		addParameter("rightDownLabel", 
+				rightDownLabel != null ? findValue(rightDownLabel, String.class) : "v");
 		
 		
 		
@@ -364,6 +395,33 @@ public class OptionTransferSelect extends DoubleListUIBean {
 	public String getLeftTitle() {
 		return leftTitle;
 	}
+	
+	
+	/**
+	 * enable up / down on the left side
+	 * @a2 tagattribute required="false" 
+	 */
+	public void setAllowUpDownOnLeft(String allowUpDownOnLeft) {
+		this.allowUpDownOnLeft = allowUpDownOnLeft;
+	}
+	
+	public String getAllowUpDownOnLeft() {
+		return this.allowUpDownOnLeft;
+	}
+	
+	
+	/**
+	 * enable up / down on the right side
+	 * @a2 tagattribute required="false"
+	 */
+	public void setAllowUpDownOnRight(String allowUpDownOnRight) {
+		this.allowUpDownOnRight = allowUpDownOnRight;
+	}
+	
+	public String getAllowUpDownOnRight() {
+		return this.allowUpDownOnRight;
+	}
+	
 
 	/**
      * set Left title
@@ -436,4 +494,52 @@ public class OptionTransferSelect extends DoubleListUIBean {
     public String getButtonCssStyle() {
 		return this.buttonCssStyle;
 	}
+    
+    
+    /**
+     * Up label for the left side
+     * @a2 tagattribute required="false"
+     */
+    public void setLeftUpLabel(String leftUpLabel) {
+    	this.leftUpLabel = leftUpLabel;
+    }
+    public String getLeftUpLabel() {
+    	return this.leftUpLabel;
+    }
+    
+    /**
+     * Down label for the left side.
+     * @a2 tagattribute required="false"
+     */
+    public void setLeftDownLabel(String leftDownLabel) {
+    	this.leftDownlabel = leftDownLabel;
+    }
+    public String getLeftDownLabel() {
+    	return this.leftDownlabel;
+    }
+    
+    /**
+     * Up label for the right side.
+     * @a2 tagattribute required="false"
+     */
+    public void setRightUpLabel(String rightUpLabel) {
+    	this.rightUpLabel = rightUpLabel;
+    }
+    public String getRightUpLabel() {
+    	return this.rightUpLabel;
+    }
+    
+    
+    /**
+     * Down label for the left side.
+     * @a2 tagattribute required="false"
+     */
+    public void setRightDownLabel(String rightDownlabel) {
+    	this.rightDownLabel = rightDownlabel;
+    }
+    public String getRightDownLabel() {
+    	return rightDownLabel;
+    }
+    
+    
 }

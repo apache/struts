@@ -12,6 +12,8 @@
     	<option value="Left2" selected="selected">Left2</option>
     	<option value="Left3">Left3</option>
 	</select> 
+	<input type="button" onclick="moveOptionDown(document.getElementById('id'), 'key', 'Header Key');" value="v" />
+	<input type="button" onclick="moveOptionUp(document.getElementById('id'), 'key', 'Header Key');" value="^" />
 </td>
 <td valign="middle" align="center">
 	<input type="button" class="buttonCssClass" style="buttonCssStyle"
@@ -38,6 +40,8 @@
     	<option value="Right2" selected="selected">Right2</option>
     	<option value="Right3">Right3</option>
 	</select>
+	<input type="button" onclick="moveOptionDown(document.getElementById('doubleId'), 'key', 'Double Header Key');" value="v" />
+	<input type="button" onclick="moveOptionUp(document.getElementById('doubleId'), 'key', 'Double Header Key');" value="^" />
 </td>
 </tr>
 </table>

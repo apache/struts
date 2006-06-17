@@ -25,6 +25,7 @@ import org.apache.struts.action2.components.OptionTransferSelect;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 /**
+ * OptionTransferSelect jsp tag.
  */
 public class OptionTransferSelectTag extends AbstractDoubleListTag {
 
@@ -35,6 +36,8 @@ public class OptionTransferSelectTag extends AbstractDoubleListTag {
 	protected String allowAddAllToLeft;
 	protected String allowAddAllToRight;
 	protected String allowSelectAll;
+	protected String allowUpDownOnLeft;
+	protected String allowUpDownOnRight;
 	
 	protected String leftTitle;
 	protected String rightTitle;
@@ -47,6 +50,10 @@ public class OptionTransferSelectTag extends AbstractDoubleListTag {
 	protected String addAllToLeftLabel;
 	protected String addAllToRightLabel;
 	protected String selectAllLabel;
+	protected String leftUpLabel;
+	protected String leftDownLabel;
+	protected String rightUpLabel;
+	protected String rightDownLabel;
 	
 	
 	public Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
@@ -62,12 +69,18 @@ public class OptionTransferSelectTag extends AbstractDoubleListTag {
 		optionTransferSelect.setAllowAddAllToLeft(allowAddAllToLeft);
 		optionTransferSelect.setAllowAddAllToRight(allowAddAllToRight);
 		optionTransferSelect.setAllowSelectAll(allowSelectAll);
+		optionTransferSelect.setAllowUpDownOnLeft(allowUpDownOnLeft);
+		optionTransferSelect.setAllowUpDownOnRight(allowUpDownOnRight);
 		
 		optionTransferSelect.setAddToLeftLabel(addToLeftLabel);
 		optionTransferSelect.setAddToRightLabel(addToRightLabel);
 		optionTransferSelect.setAddAllToLeftLabel(addAllToLeftLabel);
 		optionTransferSelect.setAddAllToRightLabel(addAllToRightLabel);
 		optionTransferSelect.setSelectAllLabel(selectAllLabel);
+		optionTransferSelect.setLeftUpLabel(leftUpLabel);
+		optionTransferSelect.setLeftDownLabel(leftDownLabel);
+		optionTransferSelect.setRightUpLabel(rightUpLabel);
+		optionTransferSelect.setRightDownLabel(rightDownLabel);
 		
 		optionTransferSelect.setButtonCssClass(buttonCssClass);
 		optionTransferSelect.setButtonCssStyle(buttonCssStyle);

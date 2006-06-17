@@ -67,14 +67,6 @@
                 <interceptor-ref name="basicStack"/>
             </interceptor-stack>
 
-            <!-- Sample Struts Inversion of Control stack
-                 Note: Struts's IoC is deprecated - please
-                 look at alternatives such as Spring -->
-            <interceptor-stack name="componentStack">
-                <interceptor-ref name="component"/>
-                <interceptor-ref name="basicStack"/>
-            </interceptor-stack>
-
             <!-- Sample model-driven stack  -->
             <interceptor-stack name="modelDrivenStack">
                 <interceptor-ref name="model-driven"/>

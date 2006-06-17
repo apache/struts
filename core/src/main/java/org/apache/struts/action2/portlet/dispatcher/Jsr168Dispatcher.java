@@ -36,11 +36,8 @@ import javax.portlet.RenderResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import com.opensymphony.util.ClassLoaderUtil;
-import com.opensymphony.util.FileManager;
-import org.apache.struts.action2.StrutsStatics;
 import org.apache.struts.action2.StrutsConstants;
+import org.apache.struts.action2.StrutsStatics;
 import org.apache.struts.action2.config.Configuration;
 import org.apache.struts.action2.dispatcher.ApplicationMap;
 import org.apache.struts.action2.dispatcher.RequestMap;
@@ -54,12 +51,16 @@ import org.apache.struts.action2.portlet.context.PortletActionContext;
 import org.apache.struts.action2.portlet.context.ServletContextHolderListener;
 import org.apache.struts.action2.util.AttributeMap;
 import org.apache.struts.action2.util.ObjectFactoryInitializable;
+
+import com.opensymphony.util.ClassLoaderUtil;
+import com.opensymphony.util.FileManager;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionProxy;
 import com.opensymphony.xwork.ActionProxyFactory;
 import com.opensymphony.xwork.ObjectFactory;
 import com.opensymphony.xwork.config.ConfigurationException;
 import com.opensymphony.xwork.util.LocalizedTextUtil;
+import com.opensymphony.xwork.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -420,8 +421,10 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
                 ActionProxy action = (ActionProxy) request.getPortletSession()
                         .getAttribute(EVENT_ACTION);
                 if (action != null) {
-                    proxy.getInvocation().getStack().push(
-                            action.getInvocation().getAction());
+                    OgnlValueStack stack = proxy.getInvocation().getStack();
+                    Object top = stack.pop();
+                    stack.push(action.getInvocation().getAction());
+                    stack.push(top);
                 }
             }
             proxy.execute();

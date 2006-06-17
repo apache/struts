@@ -27,7 +27,10 @@ import javax.faces.lifecycle.LifecycleFactory;
 
 import org.apache.struts.action2.ServletActionContext;
 
+import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionInvocation;
+import com.opensymphony.xwork.config.entities.ActionConfig;
+import com.opensymphony.xwork.config.entities.ResultConfig;
 import com.opensymphony.xwork.interceptor.Interceptor;
 
 /**
@@ -95,20 +98,28 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
 	 *            The action invocation
 	 */
 	public String intercept(ActionInvocation invocation) throws Exception {
-		FacesContext facesContext = facesContextFactory.getFacesContext(
-				ServletActionContext.getServletContext(), ServletActionContext
-						.getRequest(), ServletActionContext.getResponse(),
-				lifecycle);
-
-		setLifecycle(lifecycle);
-
-		try {
-			return invocation.invoke();
-		} finally {
-			facesContext.release();
-		}
+        if (facesContextFactory != null && isFacesAction(invocation)) {
+            
+            invocation.getInvocationContext().put(
+                    FacesInterceptor.FACES_ENABLED, Boolean.TRUE);
+            
+        		FacesContext facesContext = facesContextFactory.getFacesContext(
+        				ServletActionContext.getServletContext(), ServletActionContext
+        						.getRequest(), ServletActionContext.getResponse(),
+        				lifecycle);
+        
+        		setLifecycle(lifecycle);
+        
+        		try {
+        			return invocation.invoke();
+        		} finally {
+        			facesContext.release();
+        		}
+        } else {
+            return invocation.invoke();
+        }
 	}
-
+    
 	/**
 	 * Cleans up the lifecycle and factories
 	 */
@@ -116,4 +127,29 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
 		facesContextFactory = null;
 		lifecycle = null;
 	}
+    
+    /**
+     * Determines if this action mapping will be have a JSF view
+     * 
+     * @param inv The action invocation
+     * @return True if the JSF interceptors should fire
+     */
+    protected boolean isFacesAction(ActionInvocation inv) {
+        ActionConfig config = inv.getProxy().getConfig();
+        if (config != null) {
+            ResultConfig resultConfig = config.getResults().get(Action.SUCCESS);
+            Class resClass = null;
+            try {
+                resClass = Class.forName(resultConfig.getClassName());
+            } catch (ClassNotFoundException ex) {
+                log.warn("Can't find result class, ignoring as a faces request", ex);
+            }
+            if (resClass != null) {
+                if (resClass.isAssignableFrom(FacesResult.class)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

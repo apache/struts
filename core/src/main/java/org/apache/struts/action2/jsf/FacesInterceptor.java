@@ -19,7 +19,12 @@ package org.apache.struts.action2.jsf;
 
 import javax.faces.context.FacesContext;
 
+import com.opensymphony.xwork.Action;
+import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
+import com.opensymphony.xwork.Result;
+import com.opensymphony.xwork.config.entities.ActionConfig;
+import com.opensymphony.xwork.config.entities.ResultConfig;
 import com.opensymphony.xwork.interceptor.Interceptor;
 
 /**
@@ -28,63 +33,84 @@ import com.opensymphony.xwork.interceptor.Interceptor;
  */
 public class FacesInterceptor extends FacesSupport implements Interceptor {
 
-	private static final long serialVersionUID = -5418255964277566516L;
+    private static final long serialVersionUID = -5418255964277566516L;
 
-	/**
-	 * Not used
-	 */
-	public void init() {
-	}
+    /** 
+     * Marker key for the ActionContext to dictate whether to treat the request
+     * as a JSF faces request and therefore process the Faces phases
+     */
+    protected static final String FACES_ENABLED = "facesEnabled";
 
-	/**
-	 * Adapts the phase workflow to Action 2
-	 * 
-	 * @param invocation
-	 *            The action invocation
-	 * @return The string result code
-	 */
-	public String intercept(ActionInvocation invocation) throws Exception {
+    /**
+     * Not used
+     */
+    public void init() {
+    }
 
-		FacesContext context = FacesContext.getCurrentInstance();
+    /**
+     * Adapts the phase workflow to Action 2
+     * 
+     * @param invocation
+     *            The action invocation
+     * @return The string result code
+     */
+    public String intercept(ActionInvocation invocation) throws Exception {
 
-		if (context.getRenderResponse()) {
-			return invocation.invoke();
-		} else {
-			String viewId = invocation.getProxy().getNamespace() + '/'
-					+ invocation.getProxy().getActionName();
-			executePhase(viewId, context);
+        if (isFacesEnabled(invocation.getInvocationContext())) {
+            FacesContext context = FacesContext.getCurrentInstance();
 
-			if (context.getResponseComplete()) {
-				// Abort the chain as the result is done
-				return null;
-			} else {
-				if (invocation.getResultCode() != null) {
-					return invocation.getResultCode();
-				} else {
-					return invocation.invoke();
-				}
-			}
-		}
-	}
+            if (context.getRenderResponse()) {
+                return invocation.invoke();
+            } else {
 
-	/**
-	 * Executes the specific phase. The phase id is constructed as a composite
-	 * of the namespace and action name.
-	 * 
-	 * @param viewId
-	 *            The view id
-	 * @param facesContext
-	 *            The current faces context
-	 * @return True if the next phases should be skipped
-	 */
-	protected boolean executePhase(String viewId, FacesContext facesContext) {
-		return false;
-	}
+                String viewId = invocation.getProxy().getNamespace() + '/'
+                        + invocation.getProxy().getActionName();
+                executePhase(viewId, context);
 
-	/**
-	 * Not used
-	 */
-	public void destroy() {
-	}
+                if (context.getResponseComplete()) {
+                    // Abort the chain as the result is done
+                    return null;
+                } else {
+                    if (invocation.getResultCode() != null) {
+                        return invocation.getResultCode();
+                    } else {
+                        return invocation.invoke();
+                    }
+                }
+            }
+        } else {
+            return invocation.invoke();
+        }
+    }
+
+    /**
+     * Executes the specific phase. The phase id is constructed as a composite
+     * of the namespace and action name.
+     * 
+     * @param viewId
+     *            The view id
+     * @param facesContext
+     *            The current faces context
+     * @return True if the next phases should be skipped
+     */
+    protected boolean executePhase(String viewId, FacesContext facesContext) {
+        return false;
+    }
+
+    /**
+     * Not used
+     */
+    public void destroy() {
+    }
+
+    /**
+     * Determines whether to process this request with the JSF phases
+     * 
+     * @param ctx The current action context
+     * @return True if it is a faces-enabled request
+     */
+    protected boolean isFacesEnabled(ActionContext ctx) {
+        return ctx.get(FACES_ENABLED) != null;
+    }
 
 }

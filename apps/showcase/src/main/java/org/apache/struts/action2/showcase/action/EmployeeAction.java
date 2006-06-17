@@ -31,7 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * EmployeeAction.
+ * EditEmployeeAction.
  */
 
 public class EmployeeAction extends AbstractCRUDAction implements Preparable {
@@ -83,7 +83,7 @@ public class EmployeeAction extends AbstractCRUDAction implements Preparable {
 
     public void setEmployeeDao(EmployeeDao employeeDao) {
         if (log.isDebugEnabled()) {
-            log.debug("EmployeeAction - [setEmployeeDao]: employeeDao injected.");
+            log.debug("EditEmployeeAction - [setEmployeeDao]: employeeDao injected.");
         }
         this.employeeDao = employeeDao;
     }

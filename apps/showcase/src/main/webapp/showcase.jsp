@@ -62,6 +62,9 @@
         
         <!--  freemarker -->
         <li><saf:url id="url" value="/freemarker" /><saf:a href="%{#url}">Freemarker Example</saf:a></li>
+        
+        <!--  JavaServer Faces -->
+        <li><saf:url id="url" value="/jsf" /><saf:a href="%{#url}">JavaServer Faces Example</saf:a></li>
     </ul>
 </p>
 

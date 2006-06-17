@@ -2,24 +2,29 @@ package org.apache.struts.action2.showcase.jsf;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class EmployeeDao {
 	
 	private static String[] skills;
 	
-	private static List<Employee> employees;
-	
+	private static Map<Integer,Employee> employees;
+    
+    private static int counter = 4;
+    
 	static {
-		employees = new ArrayList<Employee>();
-		employees.add(new Employee(0, "Tom Jones", new String[]{"Java", "PHP"}));
-		employees.add(new Employee(1, "Bart Simpson", new String[]{"PHP"}));
-		employees.add(new Employee(2, "Sofia Jones", new String[]{"Java"}));
+		employees = new TreeMap<Integer,Employee>();
+		employees.put(1, new Employee(1, "Tom Jones", new String[]{"Java", "PHP"}));
+		employees.put(2, new Employee(2, "Bart Simpson", new String[]{"PHP"}));
+		employees.put(3, new Employee(3, "Sofia Jones", new String[]{"Java"}));
 		
 		skills = new String[]{"Java", "PHP", "C#"};
 	}
 	
-	public static List<Employee> getEmployees() {
+	public static Map<Integer,Employee> getEmployees() {
 		return employees;
 	}
 	
@@ -28,7 +33,13 @@ public class EmployeeDao {
 	}
 	
 	public static void save(Employee e) {
-		employees.set(e.getId(), e);
+        if (e.getId() > 0) {
+            employees.put(e.getId(), e);
+        } else {
+            e.setId(counter);
+            employees.put(counter, e);
+            counter++;
+        }
 	}
 	
 	public static String[] getSkills() {

@@ -21,38 +21,40 @@ import java.util.List;
 
 import com.opensymphony.xwork.ActionSupport;
 
-public class EmployeeAction extends ActionSupport {
-	
-	private static final long serialVersionUID = 1L;
+public class EditEmployeeAction extends ActionSupport {
 
-	private Employee employee;
-	private int id;
-	
-	public EmployeeAction() {
-		employee = new Employee();
-	}
-	
-	public Employee getEmployee() {
-		return employee;
-	}
-	
-	public String[] getAllSkills() {
-		return EmployeeDao.getSkills();
-	}
-	
-	public void setId(int id) {
-		this.id = id;
-	}
-	
+    private static final long serialVersionUID = 1L;
+
+    private Employee employee;
+
+    private int id;
+
+    public EditEmployeeAction() {
+        employee = new Employee();
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public String[] getAllSkills() {
+        return EmployeeDao.getSkills();
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String execute() {
-    	this.employee = EmployeeDao.getEmployee(id);
-    	return SUCCESS;
+        if (id > 0) {
+            this.employee = EmployeeDao.getEmployee(id);
+        }
+        return SUCCESS;
     }
-    
-    public String save() {
-    	EmployeeDao.save(employee);
-    	return "index";
-    }
-    
-}
 
+    public String save() {
+        EmployeeDao.save(employee);
+        return "index";
+    }
+
+}

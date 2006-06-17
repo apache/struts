@@ -17,27 +17,29 @@
  */
 package org.apache.struts.action2.showcase.jsf;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.opensymphony.xwork.ActionSupport;
 
-public class IndexAction extends ActionSupport {
-	
-	private static final long serialVersionUID = 1L;
+public class ListEmployeesAction extends ActionSupport {
 
-	private List loadedEmployees;
-	
-	public List getEmployees() {
-		System.out.println("getting employees:"+loadedEmployees);
-		return loadedEmployees;
-	}
+    private static final long serialVersionUID = 1L;
+
+    private Map loadedEmployees;
+
+    public Collection<Employee> getEmployees() {
+        // Why can't JSF handle the collection itself??
+        return new ArrayList<Employee>(loadedEmployees.values());
+    }
 
     public String execute() {
-    	System.out.println("executing");
-    	loadedEmployees = EmployeeDao.getEmployees();
-    	
-    	return SUCCESS;
-    }
-    
-}
+        loadedEmployees = EmployeeDao.getEmployees();
 
+        return SUCCESS;
+    }
+
+}

@@ -5,16 +5,16 @@
 
     <package name="jsf" extends="struts-default, struts-jsf" namespace="/jsf">
     
-        <action name="index" class="org.apache.struts.action2.showcase.jsf.IndexAction">
+        <action name="listEmployees" class="org.apache.struts.action2.showcase.jsf.ListEmployeesAction">
             <interceptor-ref name="jsfStack"/>
             <result name="success" type="jsf" />
         </action>
     
-        <action name="employee" class="org.apache.struts.action2.showcase.jsf.EmployeeAction">
+        <action name="editEmployee" class="org.apache.struts.action2.showcase.jsf.EditEmployeeAction">
             <interceptor-ref name="basicStack"/>
             <interceptor-ref name="jsfStack"/>
             <result name="success" type="jsf" />
-            <result name="index" type="redirect-action">index</result>
+            <result name="index" type="redirect-action">listEmployees</result>
         </action>
 
     </package>

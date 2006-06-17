@@ -30,30 +30,35 @@
   </head>
 
   <body>
-  
-  	<h2>Modify Employee</h2>
+  	<h1>Employee List</h1>
   	
-  	<h:form>
-  		<h:inputHidden value="#{action.employee.id}" />
-  		<h:panelGrid columns="2">
-  			<h:outputText value="ID:" />
-  			<h:outputText value="#{action.employee.id}" />
-  			<h:outputText value="Name:" />
-  			<h:inputText size="30" value="#{action.employee.name}" />
-  			<h:outputText value="Skills:" />
-  			<h:selectManyCheckbox value="#{action.employee.skills}">
-  				<f:selectItem itemValue="Java" itemLabel="Java" />
-				<f:selectItem itemValue="PHP" itemLabel="PHP" />
-				<f:selectItem itemValue="Ruby" itemLabel="Ruby" />
-  			</h:selectManyCheckbox>	
-  		</h:panelGrid>
-  		
-  		<h:commandButton value="Submit" action="#{action.save}" />
-  		<br /><br />
-  		<h:outputLink value="index.action">
-  			<h:outputText value="Back" />
-  		</h:outputLink>
-  	</h:form>
+  	<h:dataTable value="#{action.employees}" var="e">
+  		<h:column>
+  			<f:facet name="header">
+  				<h:outputText value="ID" />${e} }
+  			</f:facet>
+  			<h:outputLink value="editEmployee.action">
+  				<f:param name="id" value="#{e.id}" />
+  				<h:outputText value="#{e.id}" />
+  			</h:outputLink>	
+  		</h:column>
+		<h:column>
+  			<f:facet name="header">
+  				<h:outputText value="Name" />
+  			</f:facet>
+  			<h:outputText value="#{e.name}" />
+  		</h:column>
+  		<h:column>
+  			<f:facet name="header">
+  				<h:outputText value="Skills" />
+  			</f:facet>
+  			<h:outputText value="#{e.skills}" />
+  		</h:column>
+  	</h:dataTable>	
+  	
+  	<h:outputLink value="index.jsp">
+  		<h:outputText value="Back" />
+  	</h:outputLink>
   </body>
 
 </html>

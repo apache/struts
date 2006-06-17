@@ -85,8 +85,6 @@ public class JakartaMultiPartRequest extends MultiPartRequest {
                         values.add(item.getString());
                     }
                     params.put(item.getFieldName(), values);
-                } else if (item.getSize() == 0) {
-                    log.warn("Item is a file upload of 0 size, ignoring");
                 } else {
                     log.debug("Item is a file upload");
 

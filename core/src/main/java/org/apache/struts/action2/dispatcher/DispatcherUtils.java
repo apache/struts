@@ -411,7 +411,7 @@ public class DispatcherUtils {
             locale = LocalizedTextUtil.localeFromString(Configuration.getString(StrutsConstants.STRUTS_LOCALE), request.getLocale());
         }
 
-        if (encoding != null && !MultiPartRequest.isMultiPart(request)) {
+        if (encoding != null) {
             try {
                 request.setCharacterEncoding(encoding);
             } catch (Exception e) {

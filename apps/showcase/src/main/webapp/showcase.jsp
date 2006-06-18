@@ -65,6 +65,9 @@
         
         <!--  JavaServer Faces -->
         <li><saf:url id="url" value="/jsf" /><saf:a href="%{#url}">JavaServer Faces Example</saf:a></li>
+        
+        <!--  Chat (AJAX) Example -->
+        <li><saf:url id="url" value="/chat" /><saf:a href="%{#url}">Chat (AJAX) Example</saf:a></li>
     </ul>
 </p>
 

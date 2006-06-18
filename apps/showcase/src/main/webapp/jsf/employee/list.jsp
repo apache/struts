@@ -24,40 +24,43 @@
 <f:view>
 
 <html>
+<head><title>Available Employees</title></head>
 
-  <head>
-    <title>JSF Integration Examples</title>
-  </head>
-
-  <body>
-  	<h1>Employee List</h1>
+<body>
+<h1>Available Employees</h1>
   	
-  	<h:dataTable value="#{action.employees}" var="e">
+  	<h:dataTable value="#{action.availableItems}" var="e">
   		<h:column>
   			<f:facet name="header">
-  				<h:outputText value="ID" />${e} }
+  				<h:outputText value="Id" />
   			</f:facet>
-  			<h:outputLink value="editEmployee.action">
-  				<f:param name="id" value="#{e.id}" />
-  				<h:outputText value="#{e.id}" />
+  			<h:outputLink value="edit.action">
+  				<f:param name="empId" value="#{e.empId}" />
+  				<h:outputText value="#{e.empId}" />
   			</h:outputLink>	
   		</h:column>
 		<h:column>
   			<f:facet name="header">
-  				<h:outputText value="Name" />
+  				<h:outputText value="First Name" />
   			</f:facet>
-  			<h:outputText value="#{e.name}" />
+  			<h:outputText value="#{e.firstName}" />
   		</h:column>
   		<h:column>
   			<f:facet name="header">
-  				<h:outputText value="Skills" />
+  				<h:outputText value="Last Name" />
   			</f:facet>
-  			<h:outputText value="#{e.skills}" />
+  			<h:outputText value="#{e.lastName}" />
   		</h:column>
   	</h:dataTable>	
   	
-  	<h:outputLink value="index.jsp">
-  		<h:outputText value="Back" />
+  	<p>
+  	<h:outputLink value="edit.action">
+  		<h:outputText value="Create new Employee" />
+  	</h:outputLink>
+  	</p>
+  	
+  	<h:outputLink value="../../showcase.action">
+  		<h:outputText value="Back to Showcase Startpage" />
   	</h:outputLink>
   </body>
 

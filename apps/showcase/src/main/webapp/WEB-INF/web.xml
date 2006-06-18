@@ -42,11 +42,11 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 	
-	<listener>
-    <listener-class>
-      org.apache.myfaces.webapp.StartupServletContextListener
-    </listener-class>
-  </listener>
+    <listener>
+        <listener-class>
+          org.apache.myfaces.webapp.StartupServletContextListener
+        </listener-class>
+    </listener>
 	
     <!-- SNIPPET START: dwr -->
 
@@ -67,9 +67,9 @@
   	</servlet>
 
   	<!-- JavaServer Faces Servlet Mapping, not called directly -->
-  	<servlet-mapping>
-    	<servlet-name>faces</servlet-name>
-    	<url-pattern>*.action</url-pattern>
+    	<servlet-mapping>
+        <servlet-name>faces</servlet-name>
+        <url-pattern>*.action</url-pattern>
   	</servlet-mapping>
 
     <servlet-mapping>

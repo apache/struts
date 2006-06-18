@@ -3,20 +3,31 @@
     <include file="struts-default.xml"/>
     <include file="struts-jsf.xml"/>
 
-    <package name="jsf" extends="struts-default, struts-jsf" namespace="/jsf">
-    
-        <action name="listEmployees" class="org.apache.struts.action2.showcase.jsf.ListEmployeesAction">
-            <interceptor-ref name="jsfStack"/>
-            <result name="success" type="jsf" />
-        </action>
-    
-        <action name="editEmployee" class="org.apache.struts.action2.showcase.jsf.EditEmployeeAction">
-            <interceptor-ref name="basicStack"/>
-            <interceptor-ref name="jsfStack"/>
-            <result name="success" type="jsf" />
-            <result name="index" type="redirect-action">listEmployees</result>
-        </action>
+	<package name="jsf" extends="struts-default, struts-jsf" namespace="/jsf">
+		<interceptors>
+            <interceptor-stack name="jsfFullStack">
+				<interceptor-ref name="params" />
+                <interceptor-ref name="basicStack"/>
+                <interceptor-ref name="jsfStack"/>
+            </interceptor-stack>
+		</interceptors>
+		
+		<default-interceptor-ref name="jsfFullStack"/>
+    </package>
+				
+    <package name="jsf.employee" extends="jsf" namespace="/jsf/employee">
 
+		<action name="list" class="org.apache.struts.action2.showcase.jsf.JsfEmployeeAction" method="list">
+			<result name="success" type="jsf" />
+        </action>
+        <action name="edit" class="org.apache.struts.action2.showcase.jsf.JsfEmployeeAction">
+            <result name="success" type="jsf" />
+        </action>
+        <action name="delete" class="org.apache.struts.action2.showcase.action.EmployeeAction" method="delete">
+			<result name="error" type="redirect">list.action</result>
+            <result type="redirect">list.action</result>
+        </action>
+		
     </package>
 
 </xwork>

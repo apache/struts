@@ -156,7 +156,7 @@ public class FreemarkerManager {
         return config;
     }
 
-    public ScopesHashModel buildScopesHashModel(ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, ObjectWrapper wrapper, OgnlValueStack stack) {
+    protected ScopesHashModel buildScopesHashModel(ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, ObjectWrapper wrapper, OgnlValueStack stack) {
         ScopesHashModel model = new ScopesHashModel(wrapper, servletContext, request, stack);
 
         // Create hash model wrapper for servlet context (the application)
@@ -215,7 +215,7 @@ public class FreemarkerManager {
         return model;
     }
 
-    public void populateContext(ScopesHashModel model, OgnlValueStack stack, Object action, HttpServletRequest request, HttpServletResponse response) {
+    protected void populateContext(ScopesHashModel model, OgnlValueStack stack, Object action, HttpServletRequest request, HttpServletResponse response) {
         // put the same objects into the context that the velocity result uses
         Map standard = ContextUtil.getStandardContext(stack, request, response);
         model.putAll(standard);

@@ -14,6 +14,7 @@
 	<li><saf:url id="url" action="showAppendTagDemo" namespace="/tags/non-ui/appendIteratorTag" /><saf:a href="%{#url}">Append Iterator Tag</saf:a>
 	<li><saf:url id="url" action="showMergeTagDemo" namespace="/tags/non-ui/mergeIteratorTag" /><saf:a href="%{#url}">Merge Iterator Demo</saf:a>
 	<li><saf:url id="url" action="showSubsetTagDemo" namespace="/tags/non-ui/subsetIteratorTag" /><saf:a href="%{#url}">Subset Tag</saf:a>
+	<li><saf:url id="url" value="actionPrefix/index.jsp"/><saf:a href="%{#url}">Action Prefix Example</saf:a></li>
 </ul>
 
 </body>

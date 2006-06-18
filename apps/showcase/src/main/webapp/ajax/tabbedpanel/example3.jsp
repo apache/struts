@@ -29,7 +29,7 @@
             <td align="top">
                 <!--// START SNIPPET: tabbedpanel-tag-->
                 <saf:tabbedPanel id="test2" theme="simple" >
-                      <saf:panel id="left" tabName="left" theme="ajax">
+                      <saf:panel id="left" tabName="left">
                           This is the left pane<br/>
                           <saf:form >
                               <saf:textfield name="tt" label="Test Text" />  <br/>
@@ -37,7 +37,7 @@
                           </saf:form>
                       </saf:panel>
                       <saf:panel remote="true" href="/AjaxTest.action" id="ryh1" theme="ajax" tabName="remote one" />
-                      <saf:panel id="middle" tabName="middle" theme="ajax">
+                      <saf:panel id="middle" tabName="middle">
                           middle tab<br/>
                           <saf:form >
                               <saf:textfield name="tt" label="Test Text44" />  <br/>

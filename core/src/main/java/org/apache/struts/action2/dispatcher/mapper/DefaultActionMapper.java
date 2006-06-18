@@ -70,7 +70,7 @@ import java.util.Map;
  *
  * <pre>
  * <!-- START SNIPPET: method-example -->
- * &lt;a:form name="baz"&gt;
+ * &lt;a:form action="baz"&gt;
  *     &lt;a:textfield label="Enter your name" name="person.name"/&gt;
  *     &lt;a:submit value="Create person"/&gt;
  *     &lt;a:submit name="method:anotherMethod" value="Cancel"/&gt;
@@ -90,7 +90,7 @@ import java.util.Map;
  *
  * <pre>
  * <!-- START SNIPPET: action-example -->
- * &lt;a:form name="baz"&gt;
+ * &lt;a:form action="baz"&gt;
  *     &lt;a:textfield label="Enter your name" name="person.name"/&gt;
  *     &lt;a:submit value="Create person"/&gt;
  *     &lt;a:submit name="action:anotherAction" value="Cancel"/&gt;
@@ -110,7 +110,7 @@ import java.util.Map;
  *
  * <pre>
  * <!-- START SNIPPET: redirect-example -->
- * &lt;a:form name="baz"&gt;
+ * &lt;a:form action="baz"&gt;
  *     &lt;a:textfield label="Enter your name" name="person.name"/&gt;
  *     &lt;a:submit value="Create person"/&gt;
  *     &lt;a:submit name="redirect:www.google.com" value="Cancel"/&gt;
@@ -130,7 +130,7 @@ import java.util.Map;
  *
  * <pre>
  * <!-- START SNIPPET: redirect-action-example -->
- * &lt;a:form name="baz"&gt;
+ * &lt;a:form action="baz"&gt;
  *     &lt;a:textfield label="Enter your name" name="person.name"/&gt;
  *     &lt;a:submit value="Create person"/&gt;
  *     &lt;a:submit name="redirect-action:dashboard" value="Cancel"/&gt;

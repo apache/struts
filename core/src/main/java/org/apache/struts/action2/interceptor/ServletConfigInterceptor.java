@@ -17,6 +17,8 @@
  */
 package org.apache.struts.action2.interceptor;
 
+import java.util.Map;
+
 import org.apache.struts.action2.StrutsStatics;
 import org.apache.struts.action2.util.ServletContextAware;
 import com.opensymphony.xwork.ActionContext;
@@ -129,6 +131,10 @@ public class ServletConfigInterceptor extends AroundInterceptor implements Strut
 
         if (action instanceof ParameterAware) {
             ((ParameterAware) action).setParameters(context.getParameters());
+        }
+        
+        if (action instanceof RequestAware) {
+        	((RequestAware) action).setRequest((Map) context.get("request"));
         }
 
         if (action instanceof SessionAware) {

@@ -48,6 +48,8 @@ import javax.servlet.ServletContext;
  * <li>{@link ServletResponseAware}</li>
  *
  * <li>{@link ParameterAware}</li>
+ * 
+ * <li>{@link RequestAware}</li>
  *
  * <li>{@link SessionAware}</li>
  *

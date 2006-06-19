@@ -6,13 +6,13 @@
 		<@saf.head theme="ajax" />
 		<style type="text/css">
 			div.box {
-				border: 1px solid red;
+				border: 1px solid darkblue;
 				margin: 5px;
 			}
 			
 			div.box h3 {
 				color: white;
-				background: red;
+				background: darkblue;
 				margin: 3px;
 				padding: 2px;
 			}
@@ -22,14 +22,14 @@
 			}
 			
 			table.table {
-				border: 1px solid red;
+				border: 1px solid darkblue;
 				width: 98%;
 				margin: 5px;
 			}
 			
 			table.table tr.tableHeader {
 				color: white;
-				background: red;
+				background: darkblue;
 				margin: 3px;
 				padding: 2px;
 				font-size: medium; 
@@ -85,24 +85,24 @@
 			}
 
 			div.container {
-				padding-left: 200px;
-				float: left;
+				margin-left: auto;
+				margin-right: auto;
+				width: 100%;
 			}
 			
 			div.left {
-				width: 200px;
-				margin-left: -200px;
+				width: 20%;
 				float: left;
 			}
 			
 			div.right {
-				width: 200px;
-				margin-right: -200px;
+				width: 20%;
 				float: right;
 			}
 			
 			div.center {
-				width: 100%;
+				width: 60%;
+				float: left;
 			}
 			
 		</style>

@@ -5,13 +5,13 @@
 		<@saf.head theme="ajax" />
 		<style type="text/css">
 			div.box {
-				border: 1px solid red;
+				border: 1px solid darkblue;
 				margin: 5px;
 			}
 			
 			div.box h3 {
 				color: white;
-				background: red;
+				background: darkblue;
 				margin: 3px;
 				padding: 2px;
 			}
@@ -21,14 +21,14 @@
 			}
 			
 			table.table {
-				border: 1px solid red;
+				border: 1px solid darkblue;
 				width: 98%;
 				margin: 5px;
 			}
 			
 			table.table tr.tableHeader {
 				color: white;
-				background: red;
+				background: darkblue;
 				margin: 3px;
 				padding: 2px;
 				font-size: medium; 
@@ -72,25 +72,24 @@
 			}
 			
 			div.container {
-				padding-left: 200px;
-				padding-right: 200px;
-				float: left;
+				margin-left: auto;
+				margin-right: auto;
+				width: 100%;
 			}
 			
 			div.left {
-				width: 200px;
-				margin-left: -200px;
+				width: 20%;
 				float: left;
 			}
 			
 			div.right {
-				width: 200px;
-				margin-right: -200px;
-				float: right;
+				width: 20%;
+				float: left;
 			}
 			
 			div.center {
-				width: 100%;
+				width: 60%;
+				float: left;
 			}
 			
 		</style>
@@ -112,19 +111,6 @@
 		<@saf.div id="usersAvailable" href="/chat/ajax/usersAvailable.action" 
 				  theme="ajax" delay="1" updateFreq="%{@org.apache.struts.action2.showcase.chat.Constants@UPDATE_FREQ}">
 			Initial Users Available ...
-		</@saf.div>
-		</div>
-		</div>
-
-		<div class="right">
-		<div class="box">
-		<h3>Users Available In Room [${roomName?default('')}]</h3>
-		<@saf.url id="url" value="/chat/ajax/usersAvailableInRoom.action" includeContext="false">
-			<@saf.param name="roomName" value="%{roomName}" />
-		</@saf.url>
-		<@saf.div id="usersAvailableInRoom" href="%{#url}" includeContext="false"
-				  theme="ajax" delay="1" updateFreq="%{@org.apache.struts.action2.showcase.chat.Constants@UPDATE_FREQ}">
-			Initial Users Available In Room ...
 		</@saf.div>
 		</div>
 		</div>
@@ -152,6 +138,22 @@
 		</@saf.form>
 		</div>
 		</div>
+		
+
+		<div class="right">
+		<div class="box">
+		<h3>Users Available In Room [${roomName?default('')}]</h3>
+		<@saf.url id="url" value="/chat/ajax/usersAvailableInRoom.action" includeContext="false">
+			<@saf.param name="roomName" value="%{roomName}" />
+		</@saf.url>
+		<@saf.div id="usersAvailableInRoom" href="%{#url}" includeContext="false"
+				  theme="ajax" delay="1" updateFreq="%{@org.apache.struts.action2.showcase.chat.Constants@UPDATE_FREQ}">
+			Initial Users Available In Room ...
+		</@saf.div>
+		</div>
+		</div>
+		
+		
 		</div>
 	
 	</body>

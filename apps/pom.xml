@@ -41,8 +41,7 @@
                 <repository>
                     <id>codehaus</id>
                     <name>codehaus</name>
-                    <url>http://dist.codehaus.org</url>
-                   <layout>legacy</layout>
+                    <url>http://repository.codehaus.org</url>
                 </repository>
                 <repository>
                     <id>maven-hostedqa</id>

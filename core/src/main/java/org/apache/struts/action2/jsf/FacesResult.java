@@ -33,53 +33,56 @@ import com.opensymphony.xwork.Result;
  */
 public class FacesResult extends FacesSupport implements Result {
 
-	private static final long serialVersionUID = -3548970638740937804L;
+    private static final long serialVersionUID = -3548970638740937804L;
 
-	/**
-	 * Executes the result
-	 */
-	public void execute(ActionInvocation invocation) throws Exception {
-		render(FacesContext.getCurrentInstance());
-	}
+    /**
+     * Executes the result
+     */
+    public void execute(ActionInvocation invocation) throws Exception {
+        render(FacesContext.getCurrentInstance());
+    }
 
-	/**
-	 * Executes the render phase, borrowed from MyFaces
-	 * 
-	 * @param facesContext
-	 *            The faces context
-	 * @throws FacesException
-	 *             If anything goes wrong
-	 */
-	public void render(FacesContext facesContext) throws FacesException {
-		// if the response is complete we should not be invoking the phase
-		// listeners
-		if (isResponseComplete(facesContext, "render", true)) {
-			return;
-		}
-		if (log.isTraceEnabled())
-			log.trace("entering renderResponse");
+    /**
+     * Executes the render phase, borrowed from MyFaces
+     * 
+     * @param facesContext
+     *            The faces context
+     * @throws FacesException
+     *             If anything goes wrong
+     */
+    public void render(FacesContext facesContext) throws FacesException {
+        // if the response is complete we should not be invoking the phase
+        // listeners
+        if (isResponseComplete(facesContext, "render", true)) {
+            return;
+        }
+        if (log.isTraceEnabled())
+            log.trace("entering renderResponse");
 
-		informPhaseListenersBefore(facesContext, PhaseId.RENDER_RESPONSE);
-		// also possible that one of the listeners completed the response
-		if (isResponseComplete(facesContext, "render", true)) {
-			return;
-		}
-		Application application = facesContext.getApplication();
-		ViewHandler viewHandler = application.getViewHandler();
-		try {
-			viewHandler.renderView(facesContext, facesContext.getViewRoot());
-		} catch (IOException e) {
-			throw new FacesException(e.getMessage(), e);
-		}
+        informPhaseListenersBefore(facesContext, PhaseId.RENDER_RESPONSE);
+        try {
+            // also possible that one of the listeners completed the response
+            if (isResponseComplete(facesContext, "render", true)) {
+                return;
+            }
+            Application application = facesContext.getApplication();
+            ViewHandler viewHandler = application.getViewHandler();
+            try {
+                viewHandler
+                        .renderView(facesContext, facesContext.getViewRoot());
+            } catch (IOException e) {
+                throw new FacesException(e.getMessage(), e);
+            }
+        } finally {
+            informPhaseListenersAfter(facesContext, PhaseId.RENDER_RESPONSE);
+        }
+        if (log.isTraceEnabled()) {
+            // Note: DebugUtils Logger must also be in trace level
+            // DebugUtils.traceView("View after rendering");
+        }
 
-		informPhaseListenersAfter(facesContext, PhaseId.RENDER_RESPONSE);
-		if (log.isTraceEnabled()) {
-			// Note: DebugUtils Logger must also be in trace level
-			// DebugUtils.traceView("View after rendering");
-		}
-
-		if (log.isTraceEnabled())
-			log.trace("exiting renderResponse");
-	}
+        if (log.isTraceEnabled())
+            log.trace("exiting renderResponse");
+    }
 
 }

@@ -26,48 +26,50 @@ import javax.faces.event.PhaseId;
  */
 public class InvokeApplicationInterceptor extends FacesInterceptor {
 
-	private static final long serialVersionUID = -7388153356410171208L;
+    private static final long serialVersionUID = -7388153356410171208L;
 
-	/**
-	 * Invoke Application (JSF.2.2.5)
-	 * 
-	 * @param viewId
-	 *            The view id
-	 * @param facesContext
-	 *            The faces context
-	 * @return true, if response is complete
-	 */
-	protected boolean executePhase(String viewId, FacesContext facesContext)
-			throws FacesException {
-		boolean skipFurtherProcessing = false;
-		if (log.isTraceEnabled())
-			log.trace("entering invokeApplication");
+    /**
+     * Invoke Application (JSF.2.2.5)
+     * 
+     * @param viewId
+     *            The view id
+     * @param facesContext
+     *            The faces context
+     * @return true, if response is complete
+     */
+    protected boolean executePhase(String viewId, FacesContext facesContext)
+            throws FacesException {
+        boolean skipFurtherProcessing = false;
+        if (log.isTraceEnabled())
+            log.trace("entering invokeApplication");
 
-		informPhaseListenersBefore(facesContext, PhaseId.INVOKE_APPLICATION);
+        informPhaseListenersBefore(facesContext, PhaseId.INVOKE_APPLICATION);
 
-		if (isResponseComplete(facesContext, "invokeApplication", true)) {
-			// have to return right away
-			return true;
-		}
-		if (shouldRenderResponse(facesContext, "invokeApplication", true)) {
-			skipFurtherProcessing = true;
-		}
+        try {
+            if (isResponseComplete(facesContext, "invokeApplication", true)) {
+                // have to return right away
+                return true;
+            }
+            if (shouldRenderResponse(facesContext, "invokeApplication", true)) {
+                skipFurtherProcessing = true;
+            }
 
-		facesContext.getViewRoot().processApplication(facesContext);
+            facesContext.getViewRoot().processApplication(facesContext);
+        } finally {
+            informPhaseListenersAfter(facesContext, PhaseId.INVOKE_APPLICATION);
+        }
 
-		informPhaseListenersAfter(facesContext, PhaseId.INVOKE_APPLICATION);
+        if (isResponseComplete(facesContext, "invokeApplication", false)
+                || shouldRenderResponse(facesContext, "invokeApplication",
+                        false)) {
+            // since this phase is completed we don't need to return right away
+            // even if the response is completed
+            skipFurtherProcessing = true;
+        }
 
-		if (isResponseComplete(facesContext, "invokeApplication", false)
-				|| shouldRenderResponse(facesContext, "invokeApplication",
-						false)) {
-			// since this phase is completed we don't need to return right away
-			// even if the response is completed
-			skipFurtherProcessing = true;
-		}
+        if (!skipFurtherProcessing && log.isTraceEnabled())
+            log.trace("exiting invokeApplication ");
 
-		if (!skipFurtherProcessing && log.isTraceEnabled())
-			log.trace("exiting invokeApplication ");
-
-		return skipFurtherProcessing;
-	}
+        return skipFurtherProcessing;
+    }
 }

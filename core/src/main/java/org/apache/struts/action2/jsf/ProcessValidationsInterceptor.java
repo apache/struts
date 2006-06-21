@@ -45,17 +45,19 @@ public class ProcessValidationsInterceptor extends FacesInterceptor {
 
 		informPhaseListenersBefore(facesContext, PhaseId.PROCESS_VALIDATIONS);
 
-		if (isResponseComplete(facesContext, "processValidations", true)) {
-			// have to return right away
-			return true;
-		}
-		if (shouldRenderResponse(facesContext, "processValidations", true)) {
-			skipFurtherProcessing = true;
-		}
-
-		facesContext.getViewRoot().processValidators(facesContext);
-
-		informPhaseListenersAfter(facesContext, PhaseId.PROCESS_VALIDATIONS);
+        try {
+        		if (isResponseComplete(facesContext, "processValidations", true)) {
+        			// have to return right away
+        			return true;
+        		}
+        		if (shouldRenderResponse(facesContext, "processValidations", true)) {
+        			skipFurtherProcessing = true;
+        		}
+        
+        		facesContext.getViewRoot().processValidators(facesContext);
+        } finally {
+            informPhaseListenersAfter(facesContext, PhaseId.PROCESS_VALIDATIONS);
+        }
 
 		if (isResponseComplete(facesContext, "processValidations", false)
 				|| shouldRenderResponse(facesContext, "processValidations",

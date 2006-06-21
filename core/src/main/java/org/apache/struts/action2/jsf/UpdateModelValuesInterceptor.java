@@ -25,45 +25,50 @@ import javax.faces.event.PhaseId;
  * Updates the model values from the component tree
  */
 public class UpdateModelValuesInterceptor extends FacesInterceptor {
-	
-	private static final long serialVersionUID = 4011504235094251077L;
 
-	/**
+    private static final long serialVersionUID = 4011504235094251077L;
+
+    /**
      * Update Model Values (JSF.2.2.4)
      * 
-     * @param viewId The view id
-     * @param facesContext The faces context
+     * @param viewId
+     *            The view id
+     * @param facesContext
+     *            The faces context
      * @return true, if response is complete
      */
-	protected boolean executePhase(String viewId, FacesContext facesContext) throws FacesException
-    {
-	    boolean skipFurtherProcessing = false;
-        if (log.isTraceEnabled()) log.trace("entering updateModelValues");
+    protected boolean executePhase(String viewId, FacesContext facesContext)
+            throws FacesException {
+        boolean skipFurtherProcessing = false;
+        if (log.isTraceEnabled())
+            log.trace("entering updateModelValues");
 
         informPhaseListenersBefore(facesContext, PhaseId.UPDATE_MODEL_VALUES);
 
-        if(isResponseComplete(facesContext, "updateModelValues", true))
-        {
-        		// have to return right away
-        		return true;
-        }
-        if(shouldRenderResponse(facesContext, "updateModelValues", true))
-        {
-        		skipFurtherProcessing = true;
-        }
+        try {
+            if (isResponseComplete(facesContext, "updateModelValues", true)) {
+                // have to return right away
+                return true;
+            }
+            if (shouldRenderResponse(facesContext, "updateModelValues", true)) {
+                skipFurtherProcessing = true;
+            }
 
-        facesContext.getViewRoot().processUpdates(facesContext);
-
-        informPhaseListenersAfter(facesContext, PhaseId.UPDATE_MODEL_VALUES);
-
-		if (isResponseComplete(facesContext, "updateModelValues", false)
-				|| shouldRenderResponse(facesContext, "updateModelValues", false))
-        {
-        		// since this phase is completed we don't need to return right away even if the response is completed
-        		skipFurtherProcessing = true;
+            facesContext.getViewRoot().processUpdates(facesContext);
+        } finally {
+            informPhaseListenersAfter(facesContext, PhaseId.UPDATE_MODEL_VALUES);
         }
 
-        if (!skipFurtherProcessing && log.isTraceEnabled()) log.trace("exiting updateModelValues");
+        if (isResponseComplete(facesContext, "updateModelValues", false)
+                || shouldRenderResponse(facesContext, "updateModelValues",
+                        false)) {
+            // since this phase is completed we don't need to return right away
+            // even if the response is completed
+            skipFurtherProcessing = true;
+        }
+
+        if (!skipFurtherProcessing && log.isTraceEnabled())
+            log.trace("exiting updateModelValues");
 
         return skipFurtherProcessing;
     }

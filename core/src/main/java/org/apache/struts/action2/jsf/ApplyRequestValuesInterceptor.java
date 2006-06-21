@@ -26,45 +26,50 @@ import javax.faces.event.PhaseId;
  */
 public class ApplyRequestValuesInterceptor extends FacesInterceptor {
 
-	private static final long serialVersionUID = -1471180154211835323L;
+    private static final long serialVersionUID = -1471180154211835323L;
 
-	/**
-	 * Apply Request Values (JSF.2.2.2)
-	 * 
-	 * @param viewId The view id
-	 * @param facesContext The faces context
-	 * @return true, if response is complete
-	 */
-	protected boolean executePhase(String viewId, FacesContext facesContext)
-			throws FacesException {
-		boolean skipFurtherProcessing = false;
-		if (log.isTraceEnabled())
-			log.trace("entering applyRequestValues");
+    /**
+     * Apply Request Values (JSF.2.2.2)
+     * 
+     * @param viewId
+     *            The view id
+     * @param facesContext
+     *            The faces context
+     * @return true, if response is complete
+     */
+    protected boolean executePhase(String viewId, FacesContext facesContext)
+            throws FacesException {
+        boolean skipFurtherProcessing = false;
+        if (log.isTraceEnabled())
+            log.trace("entering applyRequestValues");
 
-		informPhaseListenersBefore(facesContext, PhaseId.APPLY_REQUEST_VALUES);
+        informPhaseListenersBefore(facesContext, PhaseId.APPLY_REQUEST_VALUES);
 
-		if (isResponseComplete(facesContext, "applyRequestValues", true)) {
-			// have to return right away
-			return true;
-		}
-		if (shouldRenderResponse(facesContext, "applyRequestValues", true)) {
-			skipFurtherProcessing = true;
-		}
+        try {
+            if (isResponseComplete(facesContext, "applyRequestValues", true)) {
+                // have to return right away
+                return true;
+            }
+            if (shouldRenderResponse(facesContext, "applyRequestValues", true)) {
+                skipFurtherProcessing = true;
+            }
 
-		facesContext.getViewRoot().processDecodes(facesContext);
+            facesContext.getViewRoot().processDecodes(facesContext);
+        } finally {
+            informPhaseListenersAfter(facesContext,
+                    PhaseId.APPLY_REQUEST_VALUES);
+        }
 
-		informPhaseListenersAfter(facesContext, PhaseId.APPLY_REQUEST_VALUES);
+        if (isResponseComplete(facesContext, "applyRequestValues", false)
+                || shouldRenderResponse(facesContext, "applyRequestValues",
+                        false)) {
+            // since this phase is completed we don't need to return right away
+            // even if the response is completed
+            skipFurtherProcessing = true;
+        }
 
-		if (isResponseComplete(facesContext, "applyRequestValues", false)
-				|| shouldRenderResponse(facesContext, "applyRequestValues",
-						false)) {
-			// since this phase is completed we don't need to return right away
-			// even if the response is completed
-			skipFurtherProcessing = true;
-		}
-
-		if (!skipFurtherProcessing && log.isTraceEnabled())
-			log.trace("exiting applyRequestValues");
-		return skipFurtherProcessing;
-	}
+        if (!skipFurtherProcessing && log.isTraceEnabled())
+            log.trace("exiting applyRequestValues");
+        return skipFurtherProcessing;
+    }
 }

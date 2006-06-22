@@ -1,0 +1,80 @@
+/* A CSS Framework by Mike Stenhouse of Content with Style */
+
+/* NAV */
+	div#nav {
+        font-size: 0.8em;
+    }
+    * html div#nav {
+        /* hide ie/mac \*/
+        height: 1%;
+        /* end hide */
+    }
+    div#nav div.wrapper {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+    }
+    div#nav ul {
+        width: auto; 
+        width: 100%;
+                
+        margin: 0;
+        padding: 0;
+        
+        line-height: 1em;
+        list-style: none;
+    }
+    div#nav li {
+        float: left;
+        display: inline;
+   
+        list-style: none;
+        
+        margin: 0;
+        padding: 0;
+        
+        line-height: 1em;
+        border-right: 1px solid #aaa;
+    }
+    div#nav li.last {
+        border-right: none;
+    }
+    div#nav a,
+    div#nav a:link,
+    div#nav a:active,
+    div#nav a:visited {
+        display: inline-block;
+        /* hide from ie/mac \*/
+        display: block;
+        /* end hide */
+        font-weight: bold;
+        text-decoration: none;
+        
+        margin: 0;
+        padding: 5px 38px 5px 38px;
+        
+        color: black;
+        background: #ddd;
+    }
+    div#nav a:hover {
+        text-decoration: underline;
+    }
+    div#nav strong {
+        display: inline-block;
+        /* hide from ie/mac \*/
+        display: block;
+        /* end hide */
+        
+        color: white;
+        background: black;
+    }
+    div#nav strong a,
+    div#nav strong a:link,
+    div#nav strong a:active,
+    div#nav strong a:visited,
+    div#nav strong a:hover {
+       color: white;
+       background-color: black;
+    }
+/* END NAV */

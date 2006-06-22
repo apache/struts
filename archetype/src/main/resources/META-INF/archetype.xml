@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<archetype>
+  <id>quickstart</id>
+  <sources>
+    <source>src/main/java/com/myComp/myApp/HelloWorldAction.java</source>
+    <source>src/main/java/com/myComp/myApp/IndexAction.java</source>
+    <source>src/main/java/com/myComp/myApp/DateConverter.java</source>
+  </sources>
+  <resources>
+  	<resource>src/main/resources/com/myComp/myApp/HelloWorldAction-validation.xml</resource>
+  	<resource>src/main/resources/com/myComp/myApp/HelloWorldAction-helloWorld-validation.xml</resource>
+  	<resource>src/main/resources/com/myComp/myApp/IndexAction-conversion.properties</resource>
+  	<resource>src/main/resources/xwork.xml</resource>
+  	<resource>src/main/resources/xwork-conversion.properties</resource>
+  	<resource>src/main/resources/struts.properties</resource>
+  	<resource>src/main/webapp/ftl/index.ftl</resource>
+	<resource>src/main/webapp/ftl/helloWorld.ftl</resource>
+	<resource>src/main/webapp/WEB-INF/decorators/main.ftl</resource>
+	<resource>src/main/webapp/WEB-INF/applicationContext.xml</resource>
+	<resource>src/main/webapp/WEB-INF/decorators.xml</resource>
+	<resource>src/main/webapp/WEB-INF/decorators/css/forms.css</resource>
+	<resource>src/main/webapp/WEB-INF/decorators/css/layout.css</resource>
+	<resource>src/main/webapp/WEB-INF/decorators/css/layout-1col.css</resource>
+	<resource>src/main/webapp/WEB-INF/decorators/css/layout-navleft-1col.css</resource>
+	<resource>src/main/webapp/WEB-INF/decorators/css/layout-navleft-2col.css</resource>
+	<resource>src/main/webapp/WEB-INF/decorators/css/layout-navtop-1col.css</resource>
+	<resource>src/main/webapp/WEB-INF/decorators/css/layout-navtop-3col.css</resource>
+	<resource>src/main/webapp/WEB-INF/decorators/css/layout-navtop-localleft.css</resource>
+	<resource>src/main/webapp/WEB-INF/decorators/css/layout-navtop-subright.css</resource>
+	<resource>src/main/webapp/WEB-INF/decorators/css/nav-horizontal.css</resource>
+	<resource>src/main/webapp/WEB-INF/decorators/css/nav-vertical.css</resource>
+	<resource>src/main/webapp/WEB-INF/decorators/css/tools.css</resource>
+	<resource>src/main/webapp/WEB-INF/decorators/css/typo.css</resource>
+	<resource>src/main/webapp/WEB-INF/dwr.xml</resource>
+	<resource>src/main/webapp/WEB-INF/sitemesh.xml</resource>
+	<resource>src/main/webapp/WEB-INF/sitemesh-decorator.tld</resource>
+	<resource>src/main/webapp/WEB-INF/sitemesh-page.tld</resource>
+	<resource>src/main/webapp/WEB-INF/web.xml</resource>
+	<resource>src/main/webapp/index.jsp</resource>  	
+  </resources>
+  <testSources>
+    <source>src/test/java/com/myComp/myApp/HelloWorldActionTest.java</source>
+    <source>src/test/java/com/myComp/myApp/IndexActionTest.java</source>
+  </testSources>
+  <testResources>
+  	<resource>src/test/resources/com/myComp/myApp/HelloWorldActionTest.properties</resource>
+  </testResources>
+</archetype>
+

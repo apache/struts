@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>${groupId}</groupId>
+	<artifactId>${artifactId}</artifactId>
+	<packaging>war</packaging>
+	<version>${version}</version>
+	<name>SAF2 Quickstart Web App Sample</name>
+	<url>http://www.myComp.com</url>
+	<description>Apache Struts Action Framework 2 - Maven Archetype - Quickstart</description>
+	
+	<dependencies>
+		<!-- Junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!--  SAF2 -->
+		<dependency>
+            <groupId>org.apache.struts.action2</groupId>
+            <artifactId>struts-core</artifactId>
+            <version>2.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.struts.action2</groupId>
+            <artifactId>struts-extras</artifactId>
+            <version>2.0-SNAPSHOT</version>
+        </dependency>
+
+		<!-- XWork -->
+		<dependency>
+			<groupId>opensymphony</groupId>
+			<artifactId>xwork</artifactId>
+			<version>2.0-SNAPSHOT</version>
+		</dependency>
+
+		<!-- Freemarker -->
+		<dependency>
+			<groupId>freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+			<version>2.3.4</version>
+		</dependency>
+
+		<!-- Servlet & Jsp -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Jakarta Commons -->
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.1</version>
+		</dependency>
+
+		<!-- Dwr -->
+		<dependency>
+			<groupId>uk.ltd.getahead</groupId>
+			<artifactId>dwr</artifactId>
+			<version>1.1-beta-3</version>
+		</dependency>
+
+		<!-- SiteMesh -->
+		<dependency>
+			<groupId>opensymphony</groupId>
+			<artifactId>sitemesh</artifactId>
+			<version>2.2.1</version>
+		</dependency>
+
+		<!-- Spring -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>1.2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>1.2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>1.2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>1.2.6</version>
+		</dependency>
+		
+		<!-- JasperReport -->
+		<dependency>
+            <groupId>jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+	</dependencies>
+	
+	<repositories>
+     	<repository>
+            <id>snapshots-maven-codehaus</id>
+            <name>snapshots-maven-codehaus</name>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <url>http://snapshots.maven.codehaus.org/maven2</url>
+        </repository>
+        <repository>
+            <id>apache</id>
+            <name>apache</name>
+            <layout>legacy</layout>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <url>http://cvs.apache.org/repository</url>
+        </repository>
+        <repository>
+            <id>apache.snapshots</id>
+            <name>Apache Maven Repository (Snapshots and Test Builds)</name>
+            <url>http://cvs.apache.org/maven-snapshot-repository</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+        <repository>
+            <id>opensymphony</id>
+            <name>opensymphony</name>
+            <layout>legacy</layout>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <url>http://maven.opensymphony.com</url>
+        </repository>
+    </repositories>
+    
+    <build>
+    	<plugins>
+    		<plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                   <source>1.5</source>
+                   <target>1.5</target>
+                </configuration>
+            </plugin>
+    		<plugin>
+    			<groupId>org.mortbay.jetty</groupId>
+    			<artifactId>maven-jetty6-plugin</artifactId>
+    			<configuration>
+    				<scanIntervalSeconds>10</scanIntervalSeconds>
+    			</configuration>
+    			<dependencies>
+    				<dependency>
+    					<groupId>org.apache.geronimo.specs</groupId>
+    					<artifactId>geronimo-j2ee_1.4_spec</artifactId>
+    					<version>1.0</version>
+    					<scope>provided</scope>
+    				</dependency>
+    			</dependencies>
+    		</plugin>
+    	</plugins>
+    </build>
+</project>

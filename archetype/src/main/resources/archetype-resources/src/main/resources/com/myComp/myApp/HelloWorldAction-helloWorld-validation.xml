@@ -10,7 +10,7 @@
 	<field name="name">
 		<field-validator type="requiredstring">
 			<param name="trim">true</param>
-			<message>Name is required</message>
+			<message>Name cannot be empty</message>
 		</field-validator>
 	</field>
 </validators>

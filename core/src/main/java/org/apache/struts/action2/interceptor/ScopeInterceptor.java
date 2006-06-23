@@ -20,7 +20,7 @@ package org.apache.struts.action2.interceptor;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.ActionProxy;
-import com.opensymphony.xwork.interceptor.Interceptor;
+import com.opensymphony.xwork.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork.interceptor.PreResultListener;
 import com.opensymphony.xwork.util.OgnlValueStack;
 import org.apache.struts.action2.dispatcher.SessionMap;
@@ -131,7 +131,7 @@ import java.util.Map;
  * </pre>
  *
  */
-public class ScopeInterceptor implements Interceptor, PreResultListener {
+public class ScopeInterceptor extends AbstractInterceptor implements PreResultListener {
 
 	private static final long serialVersionUID = 9120762699600054395L;
 
@@ -369,12 +369,6 @@ public class ScopeInterceptor implements Interceptor, PreResultListener {
 
     public void setSessionReset(String sessionReset) {
         this.sessionReset = sessionReset;
-    }
-
-    public void destroy() {
-    }
-
-    public void init() {
     }
 
     public String intercept(ActionInvocation invocation) throws Exception {

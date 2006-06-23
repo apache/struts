@@ -23,7 +23,7 @@ import org.apache.struts.action2.StrutsStatics;
 import org.apache.struts.action2.util.ServletContextAware;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.interceptor.AroundInterceptor;
+import com.opensymphony.xwork.interceptor.AbstractInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -103,12 +103,9 @@ import javax.servlet.ServletContext;
  * @see ApplicationAware
  * @see PrincipalAware
  */
-public class ServletConfigInterceptor extends AroundInterceptor implements StrutsStatics {
+public class ServletConfigInterceptor extends AbstractInterceptor implements StrutsStatics {
 	
 	private static final long serialVersionUID = 605261777858676638L;
-
-	protected void after(ActionInvocation dispatcher, String result) throws Exception {
-    }
 
     /**
      * Sets action properties based on the interfaces an action implements. Things like application properties,
@@ -117,7 +114,7 @@ public class ServletConfigInterceptor extends AroundInterceptor implements Strut
      * @param invocation an encapsulation of the action execution state.
      * @throws Exception if an error occurs when setting action properties.
      */
-    protected void before(ActionInvocation invocation) throws Exception {
+    public String intercept(ActionInvocation invocation) throws Exception {
         final Object action = invocation.getAction();
         final ActionContext context = invocation.getInvocationContext();
 
@@ -155,5 +152,6 @@ public class ServletConfigInterceptor extends AroundInterceptor implements Strut
             ServletContext servletContext = (ServletContext) context.get(SERVLET_CONTEXT);
             ((ServletContextAware) action).setServletContext(servletContext);
         }
+        return invocation.invoke();
     }
 }

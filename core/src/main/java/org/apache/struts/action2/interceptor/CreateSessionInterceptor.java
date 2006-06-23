@@ -22,7 +22,7 @@ import org.apache.commons.logging.LogFactory;
 
 import org.apache.struts.action2.ServletActionContext;
 import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.interceptor.AroundInterceptor;
+import com.opensymphony.xwork.interceptor.AbstractInterceptor;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -73,18 +73,17 @@ import com.opensymphony.xwork.interceptor.AroundInterceptor;
  * 
  * @version $Date$ $Id$
  */
-public class CreateSessionInterceptor extends AroundInterceptor {
+public class CreateSessionInterceptor extends AbstractInterceptor {
 	
 	private static final long serialVersionUID = -4590322556118858869L;
 	
 	private static final Log _log = LogFactory.getLog(CreateSessionInterceptor.class);
 	
 	
-	protected void before(ActionInvocation invocation) throws Exception {
+    public String intercept(ActionInvocation invocation) throws Exception {
 		_log.debug("Creating HttpSession");
 		ServletActionContext.getRequest().getSession(true);
+        return invocation.invoke();
 	}
 
-	protected void after(ActionInvocation dispatcher, String result) throws Exception {
-	}
 }

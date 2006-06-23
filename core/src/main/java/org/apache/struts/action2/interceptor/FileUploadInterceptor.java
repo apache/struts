@@ -23,6 +23,7 @@ import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.ActionProxy;
 import com.opensymphony.xwork.ValidationAware;
+import com.opensymphony.xwork.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork.interceptor.Interceptor;
 import com.opensymphony.xwork.util.LocalizedTextUtil;
 import org.apache.commons.logging.Log;
@@ -145,7 +146,7 @@ import java.util.*;
  * <!-- END SNIPPET: example -->
  *
  */
-public class FileUploadInterceptor implements Interceptor {
+public class FileUploadInterceptor extends AbstractInterceptor {
 	
 	private static final long serialVersionUID = -4764627478894962478L;
 	
@@ -166,12 +167,6 @@ public class FileUploadInterceptor implements Interceptor {
 
     public void setMaximumSize(Long maximumSize) {
         this.maximumSize = maximumSize;
-    }
-
-    public void destroy() {
-    }
-
-    public void init() {
     }
 
     public String intercept(ActionInvocation invocation) throws Exception {

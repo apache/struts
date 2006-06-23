@@ -11,6 +11,7 @@
 			<result type="freemarker">/ftl/index.ftl</result>
 		</action>
 		<action name="helloWorld" class="helloWorldAction"> 
+			<result name="input" type="freemarker">/ftl/index.ftl</result>
 			<result type="freemarker">/ftl/helloWorld.ftl</result>
 		</action>
 	</package>

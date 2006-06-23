@@ -5,12 +5,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 	<title>${title}</title>
-    <link href="<@saf.url value='/styles/main.css'/>" rel="stylesheet" type="text/css" media="all"/>
+    <link href="<@saf.url value='/WEB-INF/styles/main.css'/>" rel="stylesheet" type="text/css" media="all"/>
     <link href="<@saf.url value='/struts/niftycorners/niftyCorners.css'/>" rel="stylesheet" type="text/css"/>
     <link href="<@saf.url value='/struts/niftycorners/niftyPrint.css'/>" rel="stylesheet" type="text/css" media="print"/>
     <script language="JavaScript" type="text/javascript" src="<@saf.url value='/struts/niftycorners/nifty.js'/>"></script>
 	<script language="JavaScript" type="text/javascript">
-        window.onload=function(){
+        window.onload = function(){
             if(!NiftyCheck()) {
                 return;
             }
@@ -19,26 +19,6 @@
             // Rounded("blockquote","tr bl","#ECF1F9","#CDFFAA","smooth border #88D84F");
         }
     </script>
-    <!-- 
-    	Css Framework 
-    		- see http://www.contentwithstyle.co.uk/Articles/17/a-css-framework
-    		  or more info.
-     -->
-    <style type="text/css" media="screen">
-        @import url("<@saf.url value="/WEB-INF/decorators/css/tools.css" />");
-        @import url("<@saf.url value="/WEB-INF/decorators/css/typo.css" />");
-        @import url("<@saf.url value="/WEB-INF/decorators/css/forms.css" />");
-        /* swap layout stylesheet: 
-        layout-navtop-localleft.css
-		layout-navtop-subright.css
-		layout-navtop-3col.css
-		layout-navtop-1col.css
-		layout-navleft-1col.css
-		layout-navleft-2col.css*/
-        @import url("<@saf.url value="/WEB-INF/decorators/css/layout-navtop-localleft.css" />");
-        @import url("<@saf.url value="/WEB-INF/decorators/css/layout.css" />");
-    </style>
-    
     ${head}
 </head>
 <body id="page-home">
@@ -62,19 +42,35 @@
             
             <div id="local">
                 <h3>Local Nav. Bar</h3>
+                <ul>
+                    <li><a href="#">Content page 1</a></li>
+                    <li><a href="#">Content page 2</a></li>
+                    <li><a href="#">Content page 3</a></li>
+                    <li><a href="#">Content page 4</a></li>
+                    <li><a href="#">Content page 5</a></li>
+                    <li><a href="#">Content page 6</a></li>
+                </ul>
             </div>
             
             
             <div id="nav">
                 <div class="wrapper">
                 <h3>Nav. bar</h3>
+                <ul class="clearfix">
+                     <li><a href="home.html">Home</a></li>
+                     <li><a href="#">Articles</a></li>
+                     <li><a href="#">Archive</a></li>
+                     <li><a href="#">Photos</a></li>
+                     <li><a href="#">About</a></li>
+                     <li class="last"><a href="#">Contact</a></li>
+                </ul>
                 </div>
                 <hr />
             </div>
         </div>
         
         <div id="footer" class="clearfix">
-            <h3>Footer</h3>
+            Footer
         </div>
         
     </div>

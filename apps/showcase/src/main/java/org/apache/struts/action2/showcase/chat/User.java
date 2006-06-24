@@ -17,12 +17,16 @@
  */
 package org.apache.struts.action2.showcase.chat;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Represends a user in the Chat example.
  */
-public class User {
+public class User implements Serializable  {
+	
+	private static final long serialVersionUID = -1434958919516089297L;
+	
 	private String name;
 	private Date creationDate;
 	

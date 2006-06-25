@@ -38,10 +38,12 @@ public class ChatSessionListener implements HttpSessionListener {
 		WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(session.getServletContext());
 		if (context != null) {
 			User user = (User) session.getAttribute(ChatInterceptor.CHAT_USER_SESSION_KEY);
-			ChatService service = (ChatService) context.getBean("chatService");
-			service.logout(user.getName());
-			
-			_log.info("session expired, logged user ["+user.getName()+"] out");
+			if (user != null) {
+				ChatService service = (ChatService) context.getBean("chatService");
+				service.logout(user.getName());
+				
+				_log.info("session expired, logged user ["+user.getName()+"] out");
+			}
 		}
 	}
 

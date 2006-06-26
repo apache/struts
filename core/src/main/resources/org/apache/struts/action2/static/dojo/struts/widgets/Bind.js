@@ -173,7 +173,8 @@ struts.widgets.HTMLBind = function() {
             for (var i=0; i < nt.length; i++) {
                 var topic = trim(nt[i]);
                 dojo.debug('notifying [' + topic + ']');
-                dojo.event.topic.publish( topic, "notify" );
+                //dojo.event.topic.publish( topic, "notify" );
+                dojo.event.topic.publish(topic, self.id);
             }
         }
 

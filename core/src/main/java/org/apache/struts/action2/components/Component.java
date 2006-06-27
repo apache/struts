@@ -228,6 +228,9 @@ public class Component {
 
     /**
      * Finds a value from the OGNL stack based on the given expression.
+     * Will always evaluate <code>expr</code> against stack except when <code>expr</code>
+     * is null. If altsyntax (%{...}) is applied, simply strip it off.
+     * 
      * @param expr  the expression. Returns <tt>null</tt> if expr is null.
      * @return the value, <tt>null</tt> if not found.
      */
@@ -260,8 +263,10 @@ public class Component {
     /**
      * Evaluates the OGNL stack to find an Object value.
      * <p/>
-     * If the given expression is <tt>null</tt/> a error is logged and a <code>RuntimeException</code> is thrown
-     * constructed with a messaged based on the given field and errorMsg paramter.
+     * Function just like <code>findValue(String)</code> except that if the 
+     * given expression is <tt>null</tt/> a error is logged and 
+     * a <code>RuntimeException</code> is thrown constructed with a 
+     * messaged based on the given field and errorMsg paramter.
      *
      * @param expr  OGNL expression.
      * @param field   field name used when throwing <code>RuntimeException</code>.
@@ -290,7 +295,10 @@ public class Component {
     }
 
     /**
-     * Evaluates the OGNL stack to find an Object of the given type.
+     * Evaluates the OGNL stack to find an Object of the given type. Will evaluate
+     * <code>expr</code> the portion wrapped with altSyntax (%{...}) 
+     * against stack when altSyntax is on, else the whole <code>expr</code>
+     * is evaluated against the stack.
      * <p/>
      * This method only supports the altSyntax. So this should be set to true.
      * @param expr  OGNL expression.

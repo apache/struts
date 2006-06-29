@@ -4,11 +4,11 @@
 </head>
 
 <body>
-<@ww.form action="newPerson">
-    <@ww.textfield label="First Name" name="person.name"/>
-    <@ww.textfield label="Last Name" name="person.lastName"/>
-    <@ww.submit value="Create person"/>
-</@ww.form>
+<@saf.form action="newPerson">
+    <@saf.textfield label="First Name" name="person.name"/>
+    <@saf.textfield label="Last Name" name="person.lastName"/>
+    <@saf.submit value="Create person"/>
+</@saf.form>
 
 <ul>
     <li><a href="editPerson.action">Edit people</a></li>

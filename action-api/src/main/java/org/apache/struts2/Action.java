@@ -1,4 +1,4 @@
-package org.apache.struts.action2;
+package org.apache.struts2;
 
 /**
  * Default action interface. Provided purely for user convenience. Struts does not require actions to implement any

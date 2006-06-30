@@ -1,4 +1,4 @@
-package org.apache.struts.action2.spi;
+package org.apache.struts2.spi;
 
 import java.lang.reflect.Method;
 

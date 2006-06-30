@@ -1,4 +1,4 @@
-package org.apache.struts.action2.servlet;
+package org.apache.struts2.servlet;
 
 import javax.servlet.http.HttpServletResponse;
 

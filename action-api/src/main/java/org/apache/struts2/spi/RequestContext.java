@@ -1,6 +1,7 @@
-package org.apache.struts.action2.spi;
+package org.apache.struts2.spi;
 
-import org.apache.struts.action2.Messages;
+import org.apache.struts2.Messages;
+import org.apache.struts2.spi.ActionContext;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;

@@ -1,4 +1,4 @@
-package org.apache.struts.action2.spi;
+package org.apache.struts2.spi;
 
 /**
  * A central fixture of the Struts Action framework, the {@code ValueStack} is a stack which contains the actions

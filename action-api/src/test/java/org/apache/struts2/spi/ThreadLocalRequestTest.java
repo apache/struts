@@ -1,6 +1,8 @@
-package org.apache.struts.action2.spi;
+package org.apache.struts2.spi;
 
 import static org.easymock.EasyMock.*;
+import org.apache.struts2.spi.RequestContext;
+import org.apache.struts2.spi.ThreadLocalRequestContext;
 import junit.framework.TestCase;
 
 import java.util.concurrent.Callable;

@@ -1,4 +1,4 @@
-package org.apache.struts.action2;
+package org.apache.struts2;
 
 /**
  * Implemented by actions which may need to record errors or messages.

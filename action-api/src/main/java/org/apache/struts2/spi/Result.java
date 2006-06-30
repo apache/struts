@@ -1,4 +1,6 @@
-package org.apache.struts.action2.spi;
+package org.apache.struts2.spi;
+
+import org.apache.struts2.spi.RequestContext;
 
 /**
  * The result of an action request. Struts creates a new {@code Result} instance for each request.

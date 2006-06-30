@@ -1,4 +1,4 @@
-package org.apache.struts.action2;
+package org.apache.struts2;
 
 import java.util.List;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package org.apache.struts.action2;
+package org.apache.struts2;
 
 /**
  * Commonly used result names returned by action methods.

@@ -1,4 +1,6 @@
-package org.apache.struts.action2;
+package org.apache.struts2;
+
+import org.apache.struts2.MessageAware;
 
 /**
  * Implemented by actions which wish to execute some validation logic before their action method. Useful for

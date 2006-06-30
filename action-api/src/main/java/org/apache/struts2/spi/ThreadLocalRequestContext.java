@@ -1,9 +1,11 @@
-package org.apache.struts.action2.spi;
+package org.apache.struts2.spi;
+
+import org.apache.struts2.spi.RequestContext;
 
 import java.util.concurrent.Callable;
 
 /**
- * Provides a reference to the current {@link RequestContext} for this thread.
+ * Provides a reference to the current {@link org.apache.struts2.spi.RequestContext} for this thread.
  *
  * <p>Actions which spawn additional threads are responsible for setting this value if access to Struts from the
  * additional thread is needed.

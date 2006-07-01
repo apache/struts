@@ -9,11 +9,11 @@
 	
 	<package name="conversion" namespace="/conversion" extends="struts-default">
 		<action name="enterPersonsInfo" method="input"
-				class="org.apache.struts.action2.showcase.conversion.PersonAction">
+				class="org.apache.struts2.showcase.conversion.PersonAction">
 			<result>enterPersonInfo.jsp</result>
 		</action>
 		<action name="submitPersonInfo" method="submit"
-				class="org.apache.struts.action2.showcase.conversion.PersonAction">
+				class="org.apache.struts2.showcase.conversion.PersonAction">
 			<result>showPersonInfo.jsp</result>	
 			<result name="input">enterPersonInfo.jsp</result>
 		</action>

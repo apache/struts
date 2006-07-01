@@ -127,7 +127,7 @@
 		</#if>
 		<div class="box">
 		<h3>Users Available In Chat</h3>
-		<@saf.div id="usersAvailable" delay="1" updateFreq="%{@org.apache.struts.action2.showcase.chat.Constants@UPDATE_FREQ}" 
+		<@saf.div id="usersAvailable" delay="1" updateFreq="%{@org.apache.struts2.showcase.chat.Constants@UPDATE_FREQ}" 
 		          theme="ajax" href="/chat/ajax/usersAvailable.action"
 		          class="box">
 				Initial Loading Users ...
@@ -140,7 +140,7 @@
 		<div class="box">
 		<h3>Rooms Available In Chat</h3>
 		<@saf.div id="roomsAvailable" listenTopics="topicRoomCreated" 
-				  delay="1" updateFreq="%{@org.apache.struts.action2.showcase.chat.Constants@UPDATE_FREQ}"
+				  delay="1" updateFreq="%{@org.apache.struts2.showcase.chat.Constants@UPDATE_FREQ}"
 				  theme="ajax" href="/chat/ajax/roomsAvailable.action" >
 			     Initial Loading Rooms ...
 		</@saf.div>

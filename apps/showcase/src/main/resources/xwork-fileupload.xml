@@ -11,11 +11,11 @@
         
         <default-action-ref name="upload"/>
 
-        <action name="upload" class="org.apache.struts.action2.showcase.fileupload.FileUploadAction" method="input">
+        <action name="upload" class="org.apache.struts2.showcase.fileupload.FileUploadAction" method="input">
 			<result>upload.jsp</result>
 		</action>
 
-        <action name="doUpload" class="org.apache.struts.action2.showcase.fileupload.FileUploadAction" method="upload">
+        <action name="doUpload" class="org.apache.struts2.showcase.fileupload.FileUploadAction" method="upload">
 			<result>upload-success.jsp</result>
 		</action>
 

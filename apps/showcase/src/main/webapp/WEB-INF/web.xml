@@ -7,12 +7,12 @@
 	
     <filter>
         <filter-name>action2-cleanup</filter-name>
-        <filter-class>org.apache.struts.action2.dispatcher.ActionContextCleanUp</filter-class>
+        <filter-class>org.apache.struts2.dispatcher.ActionContextCleanUp</filter-class>
     </filter>
 
     <filter>
         <filter-name>action2</filter-name>
-        <filter-class>org.apache.struts.action2.dispatcher.FilterDispatcher</filter-class>
+        <filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
     </filter>
 
     <filter>
@@ -51,7 +51,7 @@
     <!-- Chat Example in Showcase -->
     <listener>
     	<listener-class>
-    	  org.apache.struts.action2.showcase.chat.ChatSessionListener
+    	  org.apache.struts2.showcase.chat.ChatSessionListener
     	</listener-class>
     </listener>
 	
@@ -89,15 +89,15 @@
     <!-- SNIPPET START: example.velocity.filter.chain
         <filter>
             <filter-name>action2-cleanup</filter-name>
-            <filter-class>org.apache.struts.action2.dispatcher.ActionContextCleanUp</filter-class>
+            <filter-class>org.apache.struts2.dispatcher.ActionContextCleanUp</filter-class>
         </filter>
         <filter>
             <filter-name>sitemesh</filter-name>
-            <filter-class>org.apache.struts.action2.sitemesh.VelocityPageFilter</filter-class>
+            <filter-class>org.apache.struts2.sitemesh.VelocityPageFilter</filter-class>
         </filter>
         <filter>
             <filter-name>action2</filter-name>
-            <filter-class>org.apache.struts.action2.dispatcher.FilterDispatcher</filter-class>
+            <filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
         </filter>
 
         <filter-mapping>
@@ -117,15 +117,15 @@
     <!-- SNIPPET START: example.freemarker.filter.chain
     <filter>
         <filter-name>action2-cleanup</filter-name>
-        <filter-class>org.apache.struts.action2.dispatcher.ActionContextCleanUp</filter-class>
+        <filter-class>org.apache.struts2.dispatcher.ActionContextCleanUp</filter-class>
     </filter>
     <filter>
         <filter-name>sitemesh</filter-name>
-        <filter-class>org.apache.struts.action2.sitemesh.FreeMarkerPageFilter</filter-class>
+        <filter-class>org.apache.struts2.sitemesh.FreeMarkerPageFilter</filter-class>
     </filter>
     <filter>
         <filter-name>action2</filter-name>
-        <filter-class>org.apache.struts.action2.dispatcher.FilterDispatcher</filter-class>
+        <filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
     </filter>
 
     <filter-mapping>

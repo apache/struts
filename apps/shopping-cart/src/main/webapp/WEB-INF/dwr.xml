@@ -4,7 +4,7 @@
 <dwr>
     <allow>
         <create creator="new" javascript="validator">
-            <param name="class" value="org.apache.struts.action2.validators.DWRValidator"/>
+            <param name="class" value="org.apache.struts2.validators.DWRValidator"/>
         </create>
         <convert converter="bean" match="com.opensymphony.xwork.ValidationAwareSupport"/>
     </allow>
@@ -12,7 +12,7 @@
     <signatures>
         <![CDATA[
         import java.util.Map;
-        import org.apache.struts.action2.validators.DWRValidator;
+        import org.apache.struts2.validators.DWRValidator;
 
         DWRValidator.doPost(String, String, Map<String, String>);
         ]]>

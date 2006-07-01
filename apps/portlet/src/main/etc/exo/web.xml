@@ -10,7 +10,7 @@
 	<filter>
 		<filter-name>action2</filter-name>
 		<filter-class>
-			org.apache.struts.action2.dispatcher.FilterDispatcher
+			org.apache.struts2.dispatcher.FilterDispatcher
 		</filter-class>
 	</filter>
 
@@ -25,7 +25,7 @@
 	</listener>
 	<listener>
 		<listener-class>
-			org.apache.struts.action2.portlet.context.ServletContextHolderListener
+			org.apache.struts2.portlet.context.ServletContextHolderListener
 		</listener-class>
 	</listener>
 	<listener>
@@ -37,7 +37,7 @@
 	<servlet>
 		<servlet-name>preparator</servlet-name>
 		<servlet-class>
-			org.apache.struts.action2.portlet.context.PreparatorServlet
+			org.apache.struts2.portlet.context.PreparatorServlet
 		</servlet-class>
 	</servlet>
 	<servlet>

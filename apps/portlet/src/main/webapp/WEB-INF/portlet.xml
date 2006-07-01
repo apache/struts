@@ -6,7 +6,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http:
     <portlet-name>StrutsPortlet</portlet-name>
     <display-name xml:lang="EN">Struts Action 2.0 Test Portlet</display-name>
     
-    <portlet-class>org.apache.struts.action2.portlet.dispatcher.Jsr168Dispatcher</portlet-class>
+    <portlet-class>org.apache.struts2.portlet.dispatcher.Jsr168Dispatcher</portlet-class>
 
     <init-param>
 		<!-- The view mode namespace. Maps to a namespace in the xwork config file -->
@@ -63,7 +63,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http:
     <portlet-name>StrutsPortlet2</portlet-name>
     <display-name xml:lang="EN">Struts Action 2 Test Portlet2</display-name>
     
-    <portlet-class>org.apache.struts.action2.portlet.dispatcher.Jsr168Dispatcher</portlet-class>
+    <portlet-class>org.apache.struts2.portlet.dispatcher.Jsr168Dispatcher</portlet-class>
 
     <init-param>
 		<!-- The view mode namespace. Maps to a namespace in the xwork config file -->

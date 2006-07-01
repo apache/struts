@@ -11,10 +11,10 @@
 	<!-- ================================== -->
 	
 	<package name="actionTag" extends="struts-default" namespace="/tags/non-ui/actionTag">
-		<action name="showActionTagDemo" class="org.apache.struts.action2.showcase.tag.nonui.actiontag.ActionTagDemo" method="show">
+		<action name="showActionTagDemo" class="org.apache.struts2.showcase.tag.nonui.actiontag.ActionTagDemo" method="show">
 			<result>/tags/non-ui/actionTag/showActionTagDemo.jsp</result>
 		</action>
-		<action name="includePage" class="org.apache.struts.action2.showcase.tag.nonui.actiontag.ActionTagDemo" method="doInclude">
+		<action name="includePage" class="org.apache.struts2.showcase.tag.nonui.actiontag.ActionTagDemo" method="doInclude">
 			<result>/tags/non-ui/actionTag/includedPage.jsp</result>
 		</action>
 		<action name="includePage2">
@@ -33,10 +33,10 @@
 	<!-- ==================================== -->
 	
 	<package name="iteratorGeneratorTag" extends="struts-default" namespace="/tags/non-ui/iteratorGeneratorTag">
-		<action name="showGeneratorTagDemo" class="org.apache.struts.action2.showcase.tag.nonui.iteratortag.IteratorGeneratorTagDemo" method="input">
+		<action name="showGeneratorTagDemo" class="org.apache.struts2.showcase.tag.nonui.iteratortag.IteratorGeneratorTagDemo" method="input">
 			<result>/tags/non-ui/iteratorTag/showIteratorGeneratorTagDemo.jsp</result>
 		</action>
-		<action name="submitGeneratorTagDemo" class="org.apache.struts.action2.showcase.tag.nonui.iteratortag.IteratorGeneratorTagDemo" method="submit">
+		<action name="submitGeneratorTagDemo" class="org.apache.struts2.showcase.tag.nonui.iteratortag.IteratorGeneratorTagDemo" method="submit">
 			<result name="input">/tags/non-ui/iteratorTag/showIteratorGeneratorTagDemo.jsp</result>
 			<result>/tags/non-ui/iteratorTag/iteratorGeneratorTagDemoResult.jsp</result>
 		</action>
@@ -47,10 +47,10 @@
 	<!-- === Package for AppendIteratorTag Demo ===  -->
 	<!-- ========================================== -->
 	<package name="appendIteratorTag" extends="struts-default" namespace="/tags/non-ui/appendIteratorTag">
-		<action name="showAppendTagDemo" class="org.apache.struts.action2.showcase.tag.nonui.iteratortag.AppendIteratorTagDemo" method="input">
+		<action name="showAppendTagDemo" class="org.apache.struts2.showcase.tag.nonui.iteratortag.AppendIteratorTagDemo" method="input">
 			<result>/tags/non-ui/iteratorTag/showAppendIteratorTagDemo.jsp</result>
 		</action>
-		<action name="submitAppendTagDemo" class="org.apache.struts.action2.showcase.tag.nonui.iteratortag.AppendIteratorTagDemo" method="submit">
+		<action name="submitAppendTagDemo" class="org.apache.struts2.showcase.tag.nonui.iteratortag.AppendIteratorTagDemo" method="submit">
 			<result name="input">/tag/non-ui/iteratorTag/showAppendIteratorTagDemo.jsp</result>
 			<result>/tags/non-ui/iteratorTag/appendIteratorTagDemoResult.jsp</result>
 		</action>
@@ -61,10 +61,10 @@
 	<!-- === Package for MergeIteratorTag Demo === -->
 	<!-- ========================================= -->
 	<package name="mergeIteratorTag" extends="struts-default" namespace="/tags/non-ui/mergeIteratorTag">
-		<action name="showMergeTagDemo" class="org.apache.struts.action2.showcase.tag.nonui.iteratortag.MergeIteratorTagDemo" method="input">
+		<action name="showMergeTagDemo" class="org.apache.struts2.showcase.tag.nonui.iteratortag.MergeIteratorTagDemo" method="input">
 			<result>/tags/non-ui/iteratorTag/showMergeIteratorTagDemo.jsp</result>
 		</action>
-		<action name="submitMergeTagDemo" class="org.apache.struts.action2.showcase.tag.nonui.iteratortag.MergeIteratorTagDemo" method="submit">
+		<action name="submitMergeTagDemo" class="org.apache.struts2.showcase.tag.nonui.iteratortag.MergeIteratorTagDemo" method="submit">
 			<result name="input">/tags/non-ui/iteratorTag/showMergeIteratorTagDemo.jsp</result>
 			<result>/tags/non-ui/iteratorTag/mergeIteratorTagDemoResult.jsp</result>
 		</action>
@@ -74,10 +74,10 @@
 	<!-- === Package for SubsetIteratorTag Demo === -->
 	<!-- =========================================== -->
 	<package name="subsetIteratorTag" extends="struts-default" namespace="/tags/non-ui/subsetIteratorTag">
-		<action name="showSubsetTagDemo" class="org.apache.struts.action2.showcase.tag.nonui.iteratortag.SubsetIteratorTagDemo" method="input">
+		<action name="showSubsetTagDemo" class="org.apache.struts2.showcase.tag.nonui.iteratortag.SubsetIteratorTagDemo" method="input">
 			<result>/tags/non-ui/iteratorTag/subsetIteratorTagDemo.jsp</result>
 		</action>
-		<action name="submitSubsetTagDemo" class="org.apache.struts.action2.showcase.tag.nonui.iteratortag.SubsetIteratorTagDemo" method="submit">
+		<action name="submitSubsetTagDemo" class="org.apache.struts2.showcase.tag.nonui.iteratortag.SubsetIteratorTagDemo" method="submit">
 			<result name="input">/tags/non-ui/iteratorTag/subsetIteratorTagDemo.jsp</result>
 			<result>/tags/non-ui/iteratorTag/subsetIteratorTagDemoResult.jsp</result>
 		</action>
@@ -90,13 +90,13 @@
 		<action name="actionPrefixExampleUsingFreemarker">
 			<result type="freemarker">/tags/non-ui/actionPrefix/actionPrefixExample.ftl</result>
 		</action>	
-		<action name="submit" class="org.apache.struts.action2.showcase.tag.nonui.actionPrefix.SubmitAction">
+		<action name="submit" class="org.apache.struts2.showcase.tag.nonui.actionPrefix.SubmitAction">
 			<result type="freemarker">/tags/non-ui/actionPrefix/normalSubmit.ftl</result>
 		</action>
-		<action name="submit" class="org.apache.struts.action2.showcase.tag.nonui.actionPrefix.SubmitAction" method="alternateMethod">
+		<action name="submit" class="org.apache.struts2.showcase.tag.nonui.actionPrefix.SubmitAction" method="alternateMethod">
 			<result name="methodPrefixResult" type="freemarker">/tags/non-ui/actionPrefix/methodPrefix.ftl</result>
 		</action>
-		<action name="actionPrefix" class="org.apache.struts.action2.showcase.tag.nonui.actionPrefix.SubmitAction">
+		<action name="actionPrefix" class="org.apache.struts2.showcase.tag.nonui.actionPrefix.SubmitAction">
 			<result type="freemarker">/tags/non-ui/actionPrefix/actionPrefix.ftl</result>
 		</action>
 		<action name="redirectPrefix">

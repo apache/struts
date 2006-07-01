@@ -11,7 +11,7 @@
 
         <default-action-ref name="download"/>
 
-        <action name="download" class="org.apache.struts.action2.showcase.filedownload.FileDownloadAction">
+        <action name="download" class="org.apache.struts2.showcase.filedownload.FileDownloadAction">
 			<result name="success" type="stream">
                 <param name="contentType">image/jpeg</param>
                 <param name="inputName">imageStream</param>

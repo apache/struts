@@ -6,7 +6,7 @@
 
     <filter>
         <filter-name>action2</filter-name>
-        <filter-class>org.apache.struts.action2.dispatcher.FilterDispatcher</filter-class>
+        <filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
     </filter>
 
     <filter-mapping>

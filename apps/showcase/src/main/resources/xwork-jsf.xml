@@ -17,13 +17,13 @@
 				
     <package name="jsf.employee" extends="jsf" namespace="/jsf/employee">
 
-		<action name="list" class="org.apache.struts.action2.showcase.jsf.JsfEmployeeAction" method="list">
+		<action name="list" class="org.apache.struts2.showcase.jsf.JsfEmployeeAction" method="list">
 			<result name="success" type="jsf" />
         </action>
-        <action name="edit" class="org.apache.struts.action2.showcase.jsf.JsfEmployeeAction">
+        <action name="edit" class="org.apache.struts2.showcase.jsf.JsfEmployeeAction">
             <result name="success" type="jsf" />
         </action>
-        <action name="delete" class="org.apache.struts.action2.showcase.action.EmployeeAction" method="delete">
+        <action name="delete" class="org.apache.struts2.showcase.action.EmployeeAction" method="delete">
 			<result name="error" type="redirect">list.action</result>
             <result type="redirect">list.action</result>
         </action>

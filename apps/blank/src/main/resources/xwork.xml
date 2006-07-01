@@ -7,7 +7,7 @@
 
         <default-action-ref name="home" />
 
-        <action name="home" class="org.apache.struts.action2.example.HomeAction">
+        <action name="home" class="org.apache.struts2.example.HomeAction">
             <result>/WEB-INF/pages/home.jsp</result>
         </action>
 

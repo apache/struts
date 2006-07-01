@@ -8,7 +8,7 @@
 	<package name="chat" extends="struts-default" namespace="/chat">
 		<interceptors>
 			<interceptor name="chatAuthentication" 
-						 class="org.apache.struts.action2.showcase.chat.ChatAuthenticationInterceptor" />
+						 class="org.apache.struts2.showcase.chat.ChatAuthenticationInterceptor" />
 			<interceptor-stack name="chatAuthenticationStack">
 				<interceptor-ref name="createSession" />
 				<interceptor-ref name="exception"/>
@@ -73,7 +73,7 @@
 	<package name="chat-remote" extends="struts-default" namespace="/chat/ajax">
 		<interceptors>
 			<interceptor name="chatAuthentication" 
-						 class="org.apache.struts.action2.showcase.chat.ChatAuthenticationInterceptor" />
+						 class="org.apache.struts2.showcase.chat.ChatAuthenticationInterceptor" />
 			<interceptor-stack name="chatAuthenticationStack">
 				<interceptor-ref name="createSession" />
 				<interceptor-ref name="exception"/>

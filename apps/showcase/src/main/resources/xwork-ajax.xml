@@ -4,15 +4,15 @@
     <include file="struts-default.xml"/>
 
     <package name="ajax" extends="struts-default">
-        <action name="AjaxTest" class="org.apache.struts.action2.showcase.ajax.AjaxTestAction">
+        <action name="AjaxTest" class="org.apache.struts2.showcase.ajax.AjaxTestAction">
             <result>/ajax/AjaxResult.jsp</result>
         </action>
 
-        <action name="AjaxRemoteLink" class="org.apache.struts.action2.showcase.ajax.AjaxTestAction">
+        <action name="AjaxRemoteLink" class="org.apache.struts2.showcase.ajax.AjaxTestAction">
             <result>/ajax/AjaxResult2.js</result>
         </action>
 
-        <action name="AjaxRemoteForm" class="org.apache.struts.action2.showcase.ajax.AjaxTestAction">
+        <action name="AjaxRemoteForm" class="org.apache.struts2.showcase.ajax.AjaxTestAction">
             <result>/ajax/AjaxResult3.jsp</result>
         </action>
 
@@ -32,11 +32,11 @@
             <result>/ajax/tree/tree.jsp</result>
         </action>
 
-        <action name="getCategory" class="org.apache.struts.action2.showcase.ajax.tree.GetCategory">
+        <action name="getCategory" class="org.apache.struts2.showcase.ajax.tree.GetCategory">
             <result>/ajax/tree/getCategory.jsp</result>
         </action>
 
-        <action name="toggle" class="org.apache.struts.action2.showcase.ajax.tree.Toggle">
+        <action name="toggle" class="org.apache.struts2.showcase.ajax.tree.Toggle">
             <result>/ajax/tree/toggle.jsp</result>
         </action>
     </package>

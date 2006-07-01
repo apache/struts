@@ -6,22 +6,22 @@
 	<include file="struts-default.xml" />
 
 	<package name="validation" extends="struts-default" namespace="/validation">
-	    <action name="quizBasic" class="org.apache.struts.action2.showcase.validation.QuizAction">
+	    <action name="quizBasic" class="org.apache.struts2.showcase.validation.QuizAction">
             <result name="input">quiz-basic.jsp</result>
             <result>quiz-success.jsp</result>
         </action>
 
-        <action name="quizClient" class="org.apache.struts.action2.showcase.validation.QuizAction">
+        <action name="quizClient" class="org.apache.struts2.showcase.validation.QuizAction">
             <result name="input">quiz-client.jsp</result>
             <result>quiz-success.jsp</result>
         </action>
 
-        <action name="quizClientCss" class="org.apache.struts.action2.showcase.validation.QuizAction">
+        <action name="quizClientCss" class="org.apache.struts2.showcase.validation.QuizAction">
             <result name="input">quiz-client-css.jsp</result>
             <result>quiz-success.jsp</result>
         </action>
 
-        <action name="quizAjax" class="org.apache.struts.action2.showcase.validation.QuizAction">
+        <action name="quizAjax" class="org.apache.struts2.showcase.validation.QuizAction">
             <result name="input">quiz-ajax.jsp</result>
             <result>quiz-success.jsp</result>
         </action>
@@ -39,11 +39,11 @@
 		<!-- === Field Validators === -->
 		<!-- ======================== -->
 		
-		<action name="showFieldValidatorsExamples" class="org.apache.struts.action2.showcase.validation.FieldValidatorsExampleAction" method="input">
+		<action name="showFieldValidatorsExamples" class="org.apache.struts2.showcase.validation.FieldValidatorsExampleAction" method="input">
 			<result name="input" type="dispatcher">/validation/fieldValidatorsExample.jsp</result>
 		</action>
 		
-		<action name="submitFieldValidatorsExamples" class="org.apache.struts.action2.showcase.validation.FieldValidatorsExampleAction" method="submit">
+		<action name="submitFieldValidatorsExamples" class="org.apache.struts2.showcase.validation.FieldValidatorsExampleAction" method="submit">
 			<result name="input" type="dispatcher">/validation/fieldValidatorsExample.jsp</result>
 			<result type="dispatcher">/validation/successFieldValidatorsExample.jsp</result>
 		</action>
@@ -54,11 +54,11 @@
 		<!-- === Non Field Validators === -->
 		<!-- ============================ -->
 		
-		<action name="showNonFieldValidatorsExamples" class="org.apache.struts.action2.showcase.validation.NonFieldValidatorsExampleAction" method="input">
+		<action name="showNonFieldValidatorsExamples" class="org.apache.struts2.showcase.validation.NonFieldValidatorsExampleAction" method="input">
 			<result name="input">/validation/nonFieldValidatorsExample.jsp</result>		
 		</action>
 		
-		<action name="submitNonFieldValidatorsExamples" class="org.apache.struts.action2.showcase.validation.NonFieldValidatorsExampleAction" method="submit">
+		<action name="submitNonFieldValidatorsExamples" class="org.apache.struts2.showcase.validation.NonFieldValidatorsExampleAction" method="submit">
 			<result name="input">/validation/nonFieldValidatorsExample.jsp</result>		
 			<result>/validation/successNonFieldValidatorsExample.jsp</result>
 		</action>
@@ -69,11 +69,11 @@
 		<!-- === Visitor Validators === -->
 		<!-- ========================== -->
 		
-		<action name="showVisitorValidatorsExamples" class="org.apache.struts.action2.showcase.validation.VisitorValidatorsExampleAction" method="input">
+		<action name="showVisitorValidatorsExamples" class="org.apache.struts2.showcase.validation.VisitorValidatorsExampleAction" method="input">
 			<result name="input">/validation/visitorValidatorsExample.jsp</result>
 		</action>
 		
-		<action name="submitVisitorValidatorsExamples" class="org.apache.struts.action2.showcase.validation.VisitorValidatorsExampleAction" method="submit">
+		<action name="submitVisitorValidatorsExamples" class="org.apache.struts2.showcase.validation.VisitorValidatorsExampleAction" method="submit">
 			<result name="input">/validation/visitorValidatorsExample.jsp</result>
 			<result>/validation/successVisitorValidatorsExample.jsp</result>
 		</action>
@@ -84,11 +84,11 @@
 		<!-- === Visitor Validators === -->
 		<!-- ========================== -->
 
-		<action name="clientSideValidationExample" class="org.apache.struts.action2.showcase.validation.FieldValidatorsExampleAction" method="input">
+		<action name="clientSideValidationExample" class="org.apache.struts2.showcase.validation.FieldValidatorsExampleAction" method="input">
 			<result name="input">/validation/clientSideValidationExample.jsp</result>
 		</action>
 
-		<action name="submitClientSideValidationExample" class="org.apache.struts.action2.showcase.validation.FieldValidatorsExampleAction" method="submit">
+		<action name="submitClientSideValidationExample" class="org.apache.struts2.showcase.validation.FieldValidatorsExampleAction" method="submit">
 			<result name="input">/validation/clientSideValidationExample.jsp</result>
 			<result>/validation/successClientSideValidationExample.jsp</result>
 		</action>

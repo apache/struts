@@ -4,14 +4,14 @@
 
     <package name="wait" extends="struts-default" namespace="/wait">
 
-        <action name="longProcess1" class="org.apache.struts.action2.showcase.wait.LongProcessAction">
+        <action name="longProcess1" class="org.apache.struts2.showcase.wait.LongProcessAction">
             <interceptor-ref name="defaultStack"/>
             <interceptor-ref name="execAndWait"/>
             <result name="wait">wait.jsp</result>
             <result name="success">complete.jsp</result>
         </action>
 
-        <action name="longProcess2" class="org.apache.struts.action2.showcase.wait.LongProcessAction">
+        <action name="longProcess2" class="org.apache.struts2.showcase.wait.LongProcessAction">
             <interceptor-ref name="defaultStack"/>
             <interceptor-ref name="execAndWait">
                 <param name="delay">2000</param>
@@ -20,7 +20,7 @@
             <result name="success">complete.jsp</result>
         </action>
 
-        <action name="longProcess3" class="org.apache.struts.action2.showcase.wait.LongProcessAction">
+        <action name="longProcess3" class="org.apache.struts2.showcase.wait.LongProcessAction">
             <interceptor-ref name="defaultStack"/>
             <interceptor-ref name="execAndWait">
                 <param name="delay">3000</param>

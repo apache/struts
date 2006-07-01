@@ -13,7 +13,7 @@
 	<filter>
 		<filter-name>action2</filter-name>
 		<filter-class>
-			org.apache.struts.action2.dispatcher.FilterDispatcher
+			org.apache.struts2.dispatcher.FilterDispatcher
 		</filter-class>
 	</filter>
 
@@ -33,7 +33,7 @@
 	</listener>
 	<listener>
 		<listener-class>
-			org.apache.struts.action2.portlet.context.ServletContextHolderListener
+			org.apache.struts2.portlet.context.ServletContextHolderListener
 		</listener-class>
 	</listener>
 
@@ -46,7 +46,7 @@
 		<init-param>
 			<param-name>portlet-class</param-name>
 			<param-value>
-				org.apache.struts.action2.portlet.dispatcher.Jsr168Dispatcher
+				org.apache.struts2.portlet.dispatcher.Jsr168Dispatcher
 			</param-value>
 		</init-param>
 		<load-on-startup>0</load-on-startup>
@@ -55,7 +55,7 @@
 	<servlet>
 		<servlet-name>preparator</servlet-name>
 		<servlet-class>
-			org.apache.struts.action2.portlet.context.PreparatorServlet
+			org.apache.struts2.portlet.context.PreparatorServlet
 		</servlet-class>
 	</servlet>
 	<servlet>

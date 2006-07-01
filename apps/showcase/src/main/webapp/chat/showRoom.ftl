@@ -109,7 +109,7 @@
 		<div class="box">
 		<h3>Users Available In Chat</h3>
 		<@saf.div id="usersAvailable" href="/chat/ajax/usersAvailable.action" 
-				  theme="ajax" delay="1" updateFreq="%{@org.apache.struts.action2.showcase.chat.Constants@UPDATE_FREQ}">
+				  theme="ajax" delay="1" updateFreq="%{@org.apache.struts2.showcase.chat.Constants@UPDATE_FREQ}">
 			Initial Users Available ...
 		</@saf.div>
 		</div>
@@ -122,7 +122,7 @@
 			<@saf.param name="roomName" value="%{roomName}" />		
 		</@saf.url>
 		<@saf.div id="messagesInRoom" href="%{#url}" includeContext="false"
-				  theme="ajax" delay="1" updateFreq="%{@org.apache.struts.action2.showcase.chat.Constants@UPDATE_FREQ}" 
+				  theme="ajax" delay="1" updateFreq="%{@org.apache.struts2.showcase.chat.Constants@UPDATE_FREQ}" 
 				  listenTopics="topicMessageSend">
 			Initial Messages In Room ...
 		</@saf.div>
@@ -147,7 +147,7 @@
 			<@saf.param name="roomName" value="%{roomName}" />
 		</@saf.url>
 		<@saf.div id="usersAvailableInRoom" href="%{#url}" includeContext="false"
-				  theme="ajax" delay="1" updateFreq="%{@org.apache.struts.action2.showcase.chat.Constants@UPDATE_FREQ}">
+				  theme="ajax" delay="1" updateFreq="%{@org.apache.struts2.showcase.chat.Constants@UPDATE_FREQ}">
 			Initial Users Available In Room ...
 		</@saf.div>
 		</div>

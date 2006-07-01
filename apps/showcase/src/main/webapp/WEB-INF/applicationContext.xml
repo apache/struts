@@ -2,84 +2,84 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans default-autowire="byName">
 
-    <bean id="storage" class="org.apache.struts.action2.showcase.application.MemoryStorage" singleton="true"/>
+    <bean id="storage" class="org.apache.struts2.showcase.application.MemoryStorage" singleton="true"/>
 
-    <bean id="testDataProvider" class="org.apache.struts.action2.showcase.application.TestDataProvider" singleton="true" lazy-init="false"/>
+    <bean id="testDataProvider" class="org.apache.struts2.showcase.application.TestDataProvider" singleton="true" lazy-init="false"/>
 
-    <bean id="skillDao" class="org.apache.struts.action2.showcase.dao.SkillDao"/>
-    <bean id="employeeDao" class="org.apache.struts.action2.showcase.dao.EmployeeDao"/>
+    <bean id="skillDao" class="org.apache.struts2.showcase.dao.SkillDao"/>
+    <bean id="employeeDao" class="org.apache.struts2.showcase.dao.EmployeeDao"/>
 
-    <bean id="personManager" class="org.apache.struts.action2.showcase.person.PersonManager" singleton="true"/>
+    <bean id="personManager" class="org.apache.struts2.showcase.person.PersonManager" singleton="true"/>
     
     <!-- Showcase's CustomFreemarkerManager example -->
-    <bean id="customFreemarkerManager" class="org.apache.struts.action2.showcase.freemarker.CustomFreemarkerManager">
+    <bean id="customFreemarkerManager" class="org.apache.struts2.showcase.freemarker.CustomFreemarkerManager">
 		<constructor-arg index="0">
 			<ref bean="customFreemarkerManagerUtil" />
 		</constructor-arg>    	
     </bean>
-    <bean id="customFreemarkerManagerUtil" class="org.apache.struts.action2.showcase.freemarker.CustomFreemarkerManagerUtil" />
+    <bean id="customFreemarkerManagerUtil" class="org.apache.struts2.showcase.freemarker.CustomFreemarkerManagerUtil" />
     
     
     
     <!-- Chat Example -->
-    <bean id="chatService" class="org.apache.struts.action2.showcase.chat.ChatServiceImpl">
+    <bean id="chatService" class="org.apache.struts2.showcase.chat.ChatServiceImpl">
     </bean>
     
-    <bean id="chatLoginAction" class="org.apache.struts.action2.showcase.chat.ChatLoginAction" singleton="false">
+    <bean id="chatLoginAction" class="org.apache.struts2.showcase.chat.ChatLoginAction" singleton="false">
     	<constructor-arg index="0">
     		<ref local="chatService" />
     	</constructor-arg>
     </bean>
     
-    <bean id="chatLogoutAction" class="org.apache.struts.action2.showcase.chat.ChatLogoutAction" singleton="false">
+    <bean id="chatLogoutAction" class="org.apache.struts2.showcase.chat.ChatLogoutAction" singleton="false">
     	<constructor-arg index="0">
     		<ref local="chatService" />
     	</constructor-arg>
     </bean>
     
-    <bean id="usersAvailableAction" class="org.apache.struts.action2.showcase.chat.UsersAvailableAction" singleton="false">
+    <bean id="usersAvailableAction" class="org.apache.struts2.showcase.chat.UsersAvailableAction" singleton="false">
     	<constructor-arg index="0">
     		<ref local="chatService" />
     	</constructor-arg>
     </bean>
     
-    <bean id="roomsAvailableAction" class="org.apache.struts.action2.showcase.chat.RoomsAvailableAction" singleton="false">
+    <bean id="roomsAvailableAction" class="org.apache.struts2.showcase.chat.RoomsAvailableAction" singleton="false">
     	<constructor-arg index="0">
     		<ref local="chatService" />
     	</constructor-arg>
     </bean>
     
-    <bean id="crudRoomAction" class="org.apache.struts.action2.showcase.chat.CrudRoomAction" singleton="false"> 
+    <bean id="crudRoomAction" class="org.apache.struts2.showcase.chat.CrudRoomAction" singleton="false"> 
     	<constructor-arg index="0">
     		<ref local="chatService" />
     	</constructor-arg>
     </bean>
     
-    <bean id="enterRoomAction" class="org.apache.struts.action2.showcase.chat.EnterRoomAction" singleton="false">
+    <bean id="enterRoomAction" class="org.apache.struts2.showcase.chat.EnterRoomAction" singleton="false">
     	<constructor-arg index="0">
     		<ref local="chatService" />
     	</constructor-arg>
     </bean>
     
-    <bean id="messagesAvailableInRoomAction" class="org.apache.struts.action2.showcase.chat.MessagesAvailableInRoomAction" singleton="false">
+    <bean id="messagesAvailableInRoomAction" class="org.apache.struts2.showcase.chat.MessagesAvailableInRoomAction" singleton="false">
     	<constructor-arg index="0">
     		<ref local="chatService" />
     	</constructor-arg>
     </bean>
     
-    <bean id="sendMessageToRoomAction" class="org.apache.struts.action2.showcase.chat.SendMessageToRoomAction" singleton="false">
+    <bean id="sendMessageToRoomAction" class="org.apache.struts2.showcase.chat.SendMessageToRoomAction" singleton="false">
     	<constructor-arg index="0">
     		<ref local="chatService" />
     	</constructor-arg>
     </bean>
     
-    <bean id="usersAvailableInRoomAction" class="org.apache.struts.action2.showcase.chat.UsersAvailableInRoomAction" singleton="false">
+    <bean id="usersAvailableInRoomAction" class="org.apache.struts2.showcase.chat.UsersAvailableInRoomAction" singleton="false">
     	<constructor-arg index="0">
     		<ref local="chatService" />
     	</constructor-arg>
     </bean>
     
-    <bean id="exitRoomAction" class="org.apache.struts.action2.showcase.chat.ExitRoomAction" singleton="false">
+    <bean id="exitRoomAction" class="org.apache.struts2.showcase.chat.ExitRoomAction" singleton="false">
     	<constructor-arg index="0">
     		<ref local="chatService" />
     	</constructor-arg>

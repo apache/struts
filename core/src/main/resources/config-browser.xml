@@ -21,21 +21,21 @@
             <result type="redirect-action">actionNames</result>
         </action>
 
-        <action name="actionNames" class="org.apache.struts.action2.config_browser.ActionNamesAction">
+        <action name="actionNames" class="org.apache.struts2.config_browser.ActionNamesAction">
             <result type="freemarker" name="success">/config-browser/actionNames.ftl</result>
         </action>
 
-        <action name="showConfig" class="org.apache.struts.action2.config_browser.ShowConfigAction">
+        <action name="showConfig" class="org.apache.struts2.config_browser.ShowConfigAction">
             <result type="freemarker" name="success">/config-browser/showConfig.ftl</result>
         </action>
 
-        <action name="showValidators" class="org.apache.struts.action2.config_browser.ListValidatorsAction">
+        <action name="showValidators" class="org.apache.struts2.config_browser.ListValidatorsAction">
             <result name="error" type="freemarker">/config-browser/simple-error.ftl</result>
             <result name="input" type="freemarker">/config-browser/simple-error.ftl</result>
             <result type="freemarker" name="success">/config-browser/showValidators.ftl</result>
         </action>
 
-        <action name="validatorDetails" class="org.apache.struts.action2.config_browser.ShowValidatorAction">
+        <action name="validatorDetails" class="org.apache.struts2.config_browser.ShowValidatorAction">
             <result type="freemarker" name="success">/config-browser/validatorDetails.ftl</result>
         </action>
     </package>

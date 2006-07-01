@@ -2,17 +2,17 @@
 <xwork>
     <package name="struts-jsf">
         <result-types>
-			<result-type name="jsf" class="org.apache.struts.action2.jsf.FacesResult" />
+			<result-type name="jsf" class="org.apache.struts2.jsf.FacesResult" />
         </result-types>
 
         <interceptors>
 			<!-- JSF interceptors, one per lifecycle phase -->
-			<interceptor class="org.apache.struts.action2.jsf.FacesSetupInterceptor" name="jsfSetup" />
-			<interceptor class="org.apache.struts.action2.jsf.RestoreViewInterceptor" name="jsfRestore" />
-			<interceptor class="org.apache.struts.action2.jsf.ApplyRequestValuesInterceptor" name="jsfApply" />
-			<interceptor class="org.apache.struts.action2.jsf.ProcessValidationsInterceptor" name="jsfValidate" />
-			<interceptor class="org.apache.struts.action2.jsf.UpdateModelValuesInterceptor" name="jsfUpdate" />
-			<interceptor class="org.apache.struts.action2.jsf.InvokeApplicationInterceptor" name="jsfInvoke" />
+			<interceptor class="org.apache.struts2.jsf.FacesSetupInterceptor" name="jsfSetup" />
+			<interceptor class="org.apache.struts2.jsf.RestoreViewInterceptor" name="jsfRestore" />
+			<interceptor class="org.apache.struts2.jsf.ApplyRequestValuesInterceptor" name="jsfApply" />
+			<interceptor class="org.apache.struts2.jsf.ProcessValidationsInterceptor" name="jsfValidate" />
+			<interceptor class="org.apache.struts2.jsf.UpdateModelValuesInterceptor" name="jsfUpdate" />
+			<interceptor class="org.apache.struts2.jsf.InvokeApplicationInterceptor" name="jsfInvoke" />
 
 			<!-- Sample JSF stack, can be combined with other stacks easily -->
 			<interceptor-stack name="jsfStack">

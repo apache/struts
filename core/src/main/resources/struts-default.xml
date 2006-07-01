@@ -3,44 +3,44 @@
     <package name="struts-default">
         <result-types>
             <result-type name="chain" class="com.opensymphony.xwork.ActionChainResult"/>
-            <result-type name="dispatcher" class="org.apache.struts.action2.dispatcher.ServletDispatcherResult" default="true"/>
-            <result-type name="freemarker" class="org.apache.struts.action2.views.freemarker.FreemarkerResult"/>
-            <result-type name="httpheader" class="org.apache.struts.action2.dispatcher.HttpHeaderResult"/>
-            <result-type name="redirect" class="org.apache.struts.action2.dispatcher.ServletRedirectResult"/>
-            <result-type name="redirect-action" class="org.apache.struts.action2.dispatcher.ServletActionRedirectResult"/>
-            <result-type name="stream" class="org.apache.struts.action2.dispatcher.StreamResult"/>
-            <result-type name="tiles" class="org.apache.struts.action2.views.tiles.TilesResult"/>
-            <result-type name="velocity" class="org.apache.struts.action2.dispatcher.VelocityResult"/>
-            <result-type name="xslt" class="org.apache.struts.action2.views.xslt.XSLTResult"/>
-            <result-type name="plaintext" class="org.apache.struts.action2.dispatcher.PlainTextResult" />
+            <result-type name="dispatcher" class="org.apache.struts2.dispatcher.ServletDispatcherResult" default="true"/>
+            <result-type name="freemarker" class="org.apache.struts2.views.freemarker.FreemarkerResult"/>
+            <result-type name="httpheader" class="org.apache.struts2.dispatcher.HttpHeaderResult"/>
+            <result-type name="redirect" class="org.apache.struts2.dispatcher.ServletRedirectResult"/>
+            <result-type name="redirect-action" class="org.apache.struts2.dispatcher.ServletActionRedirectResult"/>
+            <result-type name="stream" class="org.apache.struts2.dispatcher.StreamResult"/>
+            <result-type name="tiles" class="org.apache.struts2.views.tiles.TilesResult"/>
+            <result-type name="velocity" class="org.apache.struts2.dispatcher.VelocityResult"/>
+            <result-type name="xslt" class="org.apache.struts2.views.xslt.XSLTResult"/>
+            <result-type name="plaintext" class="org.apache.struts2.dispatcher.PlainTextResult" />
 
             <!-- third party integration -->
-            <result-type name="jasper" class="org.apache.struts.action2.views.jasperreports.JasperReportsResult"/>
+            <result-type name="jasper" class="org.apache.struts2.views.jasperreports.JasperReportsResult"/>
         </result-types>
 
         <interceptors>
             <interceptor name="alias" class="com.opensymphony.xwork.interceptor.AliasInterceptor"/>
             <interceptor name="autowiring" class="com.opensymphony.xwork.spring.interceptor.ActionAutowiringInterceptor"/>
             <interceptor name="chain" class="com.opensymphony.xwork.interceptor.ChainingInterceptor"/>
-            <interceptor name="conversionError" class="org.apache.struts.action2.interceptor.StrutsConversionErrorInterceptor"/>
-            <interceptor name="createSession" class="org.apache.struts.action2.interceptor.CreateSessionInterceptor" />
-            <interceptor name="debugging" class="org.apache.struts.action2.interceptor.debugging.DebuggingInterceptor" />
+            <interceptor name="conversionError" class="org.apache.struts2.interceptor.StrutsConversionErrorInterceptor"/>
+            <interceptor name="createSession" class="org.apache.struts2.interceptor.CreateSessionInterceptor" />
+            <interceptor name="debugging" class="org.apache.struts2.interceptor.debugging.DebuggingInterceptor" />
             <interceptor name="external-ref" class="com.opensymphony.xwork.interceptor.ExternalReferencesInterceptor"/>
-            <interceptor name="execAndWait" class="org.apache.struts.action2.interceptor.ExecuteAndWaitInterceptor"/>
+            <interceptor name="execAndWait" class="org.apache.struts2.interceptor.ExecuteAndWaitInterceptor"/>
             <interceptor name="exception" class="com.opensymphony.xwork.interceptor.ExceptionMappingInterceptor"/>
-            <interceptor name="fileUpload" class="org.apache.struts.action2.interceptor.FileUploadInterceptor"/>
+            <interceptor name="fileUpload" class="org.apache.struts2.interceptor.FileUploadInterceptor"/>
             <interceptor name="i18n" class="com.opensymphony.xwork.interceptor.I18nInterceptor"/>
             <interceptor name="logger" class="com.opensymphony.xwork.interceptor.LoggingInterceptor"/>
             <interceptor name="model-driven" class="com.opensymphony.xwork.interceptor.ModelDrivenInterceptor"/>
             <interceptor name="params" class="com.opensymphony.xwork.interceptor.ParametersInterceptor"/>
             <interceptor name="prepare" class="com.opensymphony.xwork.interceptor.PrepareInterceptor"/>
             <interceptor name="static-params" class="com.opensymphony.xwork.interceptor.StaticParametersInterceptor"/>
-            <interceptor name="scope" class="org.apache.struts.action2.interceptor.ScopeInterceptor"/>
-            <interceptor name="servlet-config" class="org.apache.struts.action2.interceptor.ServletConfigInterceptor"/>
-            <interceptor name="sessionAutowiring" class="org.apache.struts.action2.spring.interceptor.SessionContextAutowiringInterceptor"/>
+            <interceptor name="scope" class="org.apache.struts2.interceptor.ScopeInterceptor"/>
+            <interceptor name="servlet-config" class="org.apache.struts2.interceptor.ServletConfigInterceptor"/>
+            <interceptor name="sessionAutowiring" class="org.apache.struts2.spring.interceptor.SessionContextAutowiringInterceptor"/>
             <interceptor name="timer" class="com.opensymphony.xwork.interceptor.TimerInterceptor"/>
-            <interceptor name="token" class="org.apache.struts.action2.interceptor.TokenInterceptor"/>
-            <interceptor name="token-session" class="org.apache.struts.action2.interceptor.TokenSessionStoreInterceptor"/>
+            <interceptor name="token" class="org.apache.struts2.interceptor.TokenInterceptor"/>
+            <interceptor name="token-session" class="org.apache.struts2.interceptor.TokenSessionStoreInterceptor"/>
             <interceptor name="validation" class="com.opensymphony.xwork.validator.ValidationInterceptor"/>
             <interceptor name="workflow" class="com.opensymphony.xwork.interceptor.DefaultWorkflowInterceptor"/>
 			

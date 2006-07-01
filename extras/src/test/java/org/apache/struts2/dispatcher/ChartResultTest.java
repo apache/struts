@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts.action2.dispatcher;
+package org.apache.struts2.dispatcher;
 
 import com.mockobjects.dynamic.Mock;
-import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts2.ServletActionContext;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
 import junit.framework.TestCase;

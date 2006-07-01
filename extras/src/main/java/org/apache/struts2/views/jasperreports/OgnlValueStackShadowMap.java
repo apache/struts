@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts.action2.views.jasperreports;
+package org.apache.struts2.views.jasperreports;
 
 import com.opensymphony.xwork.util.OgnlValueStack;
 

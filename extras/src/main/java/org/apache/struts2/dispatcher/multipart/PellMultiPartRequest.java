@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts.action2.dispatcher.multipart;
+package org.apache.struts2.dispatcher.multipart;
 
-import org.apache.struts.action2.config.Configuration;
-import org.apache.struts.action2.StrutsConstants;
+import org.apache.struts2.config.Configuration;
+import org.apache.struts2.StrutsConstants;
 import http.utils.multipartrequest.ServletMultipartRequest;
 
 import javax.servlet.http.HttpServletRequest;

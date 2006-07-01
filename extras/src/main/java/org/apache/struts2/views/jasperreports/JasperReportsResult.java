@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts.action2.views.jasperreports;
+package org.apache.struts2.views.jasperreports;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -42,8 +42,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.opensymphony.util.TextUtils;
-import org.apache.struts.action2.ServletActionContext;
-import org.apache.struts.action2.dispatcher.StrutsResultSupport;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.StrutsResultSupport;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.util.OgnlValueStack;
 

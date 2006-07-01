@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts.action2.views.jasperreports;
+package org.apache.struts2.views.jasperreports;
 
-import org.apache.struts.action2.util.MakeIterator;
+import org.apache.struts2.util.MakeIterator;
 import com.opensymphony.xwork.util.OgnlValueStack;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;

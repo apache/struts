@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.struts.action2.dispatcher;
+package org.apache.struts2.dispatcher;
 
-import org.apache.struts.action2.ServletActionContext;
+import org.apache.struts2.ServletActionContext;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.Result;
 import org.jfree.chart.ChartUtilities;

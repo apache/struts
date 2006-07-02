@@ -30,19 +30,19 @@
    </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.apache.struts.action2</groupId>
-    <artifactId>struts-action2-parent</artifactId>
+    <groupId>org.apache.struts2</groupId>
+    <artifactId>struts2-parent</artifactId>
     <version>2.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Struts Action 2</name>
-    <url>http://struts.apache.org/struts-action2</url>
+    <name>Struts 2</name>
+    <url>http://struts.apache.org/struts2</url>
     <description>Apache Struts Action Framework 2</description>
 
     <inceptionYear>2006</inceptionYear>
 
     <!--
     <description>
-        Struts Action 2 is a Java web-application development framework.
+        Struts 2 is a Java web-application development framework.
         It is built specifically with developer productivity and
         code simplicity in mind, providing robust support for building
         reusable UI templates, such as form controls, UI themes,
@@ -52,9 +52,9 @@
     -->
     
     <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/action2/trunk</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/action2/trunk</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/action2/trunk</url>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk</url>
     </scm>
 
     <issueManagement>
@@ -71,7 +71,7 @@
         </repository>
         <site>
             <id>apache-site</id>
-            <url>scp://people.apache.org/www/struts.apache.org/struts-action2/</url>
+            <url>scp://people.apache.org/www/struts.apache.org/struts2/</url>
         </site>
     </distributionManagement>
 

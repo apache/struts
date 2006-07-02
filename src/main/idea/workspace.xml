@@ -50,7 +50,7 @@
             <module name="struts-core"/>
             <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false"/>
             <option name="ALTERNATIVE_JRE_PATH" value=""/>
-            <option name="PACKAGE_NAME" value="org.apache.struts.action2"/>
+            <option name="PACKAGE_NAME" value="org.apache.struts2"/>
             <option name="MAIN_CLASS_NAME" value=""/>
             <option name="METHOD_NAME" value=""/>
             <option name="TEST_OBJECT" value="package"/>
@@ -66,7 +66,7 @@
         </configuration>
         <configuration selected="true" default="false" name="Struts Showcase" type="Application"
                        factoryName="Application">
-            <option name="MAIN_CLASS_NAME" value="org.apache.struts.action2.Main"/>
+            <option name="MAIN_CLASS_NAME" value="org.apache.struts2.Main"/>
             <option name="VM_PARAMETERS" value=""/>
             <option name="PROGRAM_PARAMETERS" value="quickstart"/>
             <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/apps/showcase"/>

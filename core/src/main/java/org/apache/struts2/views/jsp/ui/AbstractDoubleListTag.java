@@ -62,6 +62,8 @@ public abstract class AbstractDoubleListTag extends AbstractRequiredListTag {
     protected String doubleOnkeyup;
     protected String doubleOnselect;
     protected String doubleOnchange;
+    
+    protected String doubleAccesskey;
 
     protected void populateParams() {
         super.populateParams();
@@ -99,6 +101,8 @@ public abstract class AbstractDoubleListTag extends AbstractRequiredListTag {
         bean.setDoubleOnkeyup(doubleOnkeyup);
         bean.setDoubleOnselect(doubleOnselect);
         bean.setDoubleOnchange(doubleOnchange);
+        
+        bean.setDoubleAccesskey(doubleAccesskey);
         
         bean.setEmptyOption(emptyOption);
         bean.setHeaderKey(headerKey);
@@ -357,5 +361,9 @@ public abstract class AbstractDoubleListTag extends AbstractRequiredListTag {
 
     public void setSize(String size) {
         this.size = size;
+    }
+    
+    public void setDoubleAccesskey(String doubleAccesskey) {
+    	this.doubleAccesskey = doubleAccesskey;
     }
 }

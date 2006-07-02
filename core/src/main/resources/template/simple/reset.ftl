@@ -13,6 +13,7 @@
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl"/>
+<#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 ><#if parameters.label?exists><@saf.property value="parameters.label"/><#rt/></#if></button>
 <#else>
 <input type="reset"<#rt/>
@@ -32,5 +33,6 @@
  title="${parameters.title?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
+<#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 />
 </#if>

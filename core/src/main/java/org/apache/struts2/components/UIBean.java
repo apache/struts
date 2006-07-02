@@ -584,6 +584,9 @@ public abstract class UIBean extends Component {
     protected String onkeyup;
     protected String onselect;
     protected String onchange;
+    
+    // common html attributes
+    protected String accesskey;
 
     // javascript tooltip attribute
     protected String tooltip;
@@ -788,6 +791,10 @@ public abstract class UIBean extends Component {
             addParameter("onchange", findString(onchange));
         }
 
+        if (accesskey != null) {
+        	addParameter("accesskey", findString(accesskey));
+        }
+        
         if (cssClass != null) {
             addParameter("cssClass", findString(cssClass));
         }
@@ -1198,6 +1205,14 @@ public abstract class UIBean extends Component {
      */
     public void setOnchange(String onchange) {
         this.onchange = onchange;
+    }
+    
+    /**
+     * Set the html accesskey attribute on rendered html element
+     * @a2.tagattribute required="false"
+     */
+    public void setAccesskey(String accesskey) {
+    	this.accesskey = accesskey;
     }
 
     /**

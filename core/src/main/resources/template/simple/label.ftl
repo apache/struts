@@ -14,6 +14,7 @@
 <#if parameters.for?exists>
  for="${parameters.for?html}"<#rt/>
 </#if>
+<#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 ><#rt/>
 <#if parameters.nameValue?exists>
 <@saf.property value="parameters.nameValue"/><#t/>

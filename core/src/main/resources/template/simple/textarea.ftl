@@ -27,6 +27,7 @@
  title="${parameters.title?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
+<#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 ><#rt/>
 <#if parameters.nameValue?exists>
 <@saf.property value="parameters.nameValue"/><#t/>

@@ -79,6 +79,8 @@ public abstract class DoubleListUIBean extends ListUIBean {
     protected String doubleOnselect;
     protected String doubleOnchange;
     
+    protected String doubleAccesskey;
+    
 
     public DoubleListUIBean(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -246,6 +248,10 @@ public abstract class DoubleListUIBean extends ListUIBean {
         
         if (doubleEmptyOption != null) {
         	addParameter("doubleEmptyOption", findValue(doubleEmptyOption, Boolean.class));
+        }
+        
+        if (doubleAccesskey != null) {
+        	addParameter("doubleAccesskey", findString(doubleAccesskey));
         }
     }
 
@@ -641,5 +647,13 @@ public abstract class DoubleListUIBean extends ListUIBean {
      */
     public void setSize(String size) {
         this.size = size;
+    }
+    
+    /**
+     * Set the html accesskey attribute.
+     * @a2.tagattribute required="false"
+     */
+    public void setDoubleAccesskey(String doubleAccesskey) {
+    	this.doubleAccesskey = doubleAccesskey;
     }
 }

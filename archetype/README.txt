@@ -29,7 +29,7 @@ USAGE
     - the webapp war name   ->  myWebApp
 
 
-  mvn archetype:create -DgroupId=com.myCompany.mySystem -DartifactId=myWebApp -DarchetypeGroupId=org.apache.struts.action2 -DarchetypeArtifactId=saf2-archetype-quickstart
+  mvn archetype:create -DgroupId=com.myCompany.mySystem -DartifactId=myWebApp -DarchetypeGroupId=org.apache.struts2 -DarchetypeArtifactId=struts2-archetype-quickstart
 
 THis will create the sample Web app template
 

@@ -28,11 +28,11 @@ limitations under the License.
 
          <ul>
             <li>
-               <a href="../struts-core/apidocs/index.html" target="_blank">
+               <a href="../struts2-core/apidocs/index.html" target="_blank">
                Struts 2 Core</a></li>
             <li>
-               <a href="../struts-extras/apidocs/index.html" target="_blank">
-               Struts Extras</a></li>
+               <a href="../struts2-extras/apidocs/index.html" target="_blank">
+               Struts 2 Extras</a></li>
          </ul>
 
       </section>

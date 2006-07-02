@@ -214,9 +214,11 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jxr-maven-plugin</artifactId>
             </plugin>
+            <!--
             <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
             </plugin>
+            -->
         </plugins>
     </reporting>
 

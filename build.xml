@@ -5,11 +5,11 @@
     <property name="compile.version" value="1.5"/>
     <property name="test.compile.version" value="1.5"/>
 
-    <property name="optional.sources" value="org/apache/struts/action2/views/jasperreports/**, 
-                                             org/apache/struts/action2/dispatcher/multipart/PellMultiPartRequest.java,
-                                             org/apache/struts/action2/dispatcher/ChartResult.java
+    <property name="optional.sources" value="org/apache/struts2/views/jasperreports/**, 
+                                             org/apache/struts2/dispatcher/multipart/PellMultiPartRequest.java,
+                                             org/apache/struts2/dispatcher/ChartResult.java
                                              " />
-    <property name="optional.test.sources" value="org/apache/struts/action2/dispatcher/ChartResultTest.java" />
+    <property name="optional.test.sources" value="org/apache/struts2/dispatcher/ChartResultTest.java" />
     
     <import file="ant-build/osbuild.xml"/>
 
@@ -113,14 +113,14 @@
                  mergedir="src/etc"
             -->
             <fileset dir="${src.java}">
-                <include name="org/apache/struts/action2/views/**/*.java"/>
-                <include name="org/apache/struts/action2/components/**/*.java"/>
+                <include name="org/apache/struts2/views/**/*.java"/>
+                <include name="org/apache/struts2/components/**/*.java"/>
             </fileset>
             <configParam name="Jspversion" value="1.2"/>
             <configParam name="Taglibversion" value="${version}"/>
-            <configParam name="Description" value="Struts Action 2 JSP Taglib"/>
-            <configParam name="Shortname" value="Struts Action 2 Taglib"/>
-            <configParam name="Displayname" value="Struts Action 2 Taglib"/>
+            <configParam name="Description" value="Struts 2 JSP Taglib"/>
+            <configParam name="Shortname" value="Struts 2 Taglib"/>
+            <configParam name="Displayname" value="Struts 2 Taglib"/>
             <configParam name="Smallicon" value=""/>
             <configParam name="Largeicon" value=""/>
             <configParam name="Uri" value="/struts-action"/>
@@ -137,8 +137,8 @@
                 force="true"
             >
             <fileset dir="${src.java}">
-                <include name="org/apache/struts/action2/views/**/*.java"/>
-                <include name="org/apache/struts/action2/components/**/*.java"/>
+                <include name="org/apache/struts2/views/**/*.java"/>
+                <include name="org/apache/struts2/components/**/*.java"/>
             </fileset>
             <xmlTemplate templateFile="${src.xdt}/tagdoc.xdt" destinationfile="{0}.html"/>
         </xdoclet>
@@ -148,8 +148,8 @@
                 force="true"
             >
             <fileset dir="${src.java}">
-                <include name="org/apache/struts/action2/views/**/*.java"/>
-                <include name="org/apache/struts/action2/components/**/*.java"/>
+                <include name="org/apache/struts2/views/**/*.java"/>
+                <include name="org/apache/struts2/components/**/*.java"/>
             </fileset>
             <configParam name="Taglibversion" value="${version}"/>
             <template templateFile="${src.xdt}/tagdoc-toc.xdt" destinationfile="index.html"/>
@@ -176,7 +176,7 @@
 
         <jar basedir="${build.java}" jarfile="${build}/${name}-${version}.jar">
             <manifest>
-                <attribute name="Main-Class" value="org.apache.struts.action2.Main"/>
+                <attribute name="Main-Class" value="org.apache.struts2.Main"/>
                 <attribute name="Implementation-Title" value="${fullname}"/>
                 <attribute name="Implementation-Version" value="${version}"/>
             </manifest>
@@ -190,16 +190,16 @@
         </jar>
         <jar jarfile="${build}/${name}-nostatic-${version}.jar">
             <fileset dir="${build.java}">
-                <exclude name="org/apache/struts/action2/static/**/*" />
+                <exclude name="org/apache/struts2/static/**/*" />
             </fileset>
             <manifest>
-                <attribute name="Main-Class" value="org.apache.struts.action2.Main"/>
+                <attribute name="Main-Class" value="org.apache.struts2.Main"/>
                 <attribute name="Implementation-Title" value="${fullname}"/>
                 <attribute name="Implementation-Version" value="${version}"/>
             </manifest>
         </jar>        
         <zip destfile="${build}/${name}-static-${version}.zip">
-            <zipfileset dir="${build.java}/org/apache/struts/action2/static" prefix="webwork" />
+            <zipfileset dir="${build.java}/org/apache/struts2/static" prefix="webwork" />
         </zip>
     </target>
 

@@ -19,17 +19,17 @@ limitations under the License.
 <document>
 
    <properties>
-      <title>Struts Action 2 - Javadoc</title>
+      <title>Struts 2 - Javadoc</title>
    </properties>
 
    <body>
 
-      <section name="Struts Action 2 Javadoc">
+      <section name="Struts 2 Javadoc">
 
          <ul>
             <li>
                <a href="../struts-core/apidocs/index.html" target="_blank">
-               Struts Action 2 Core</a></li>
+               Struts 2 Core</a></li>
             <li>
                <a href="../struts-extras/apidocs/index.html" target="_blank">
                Struts Extras</a></li>

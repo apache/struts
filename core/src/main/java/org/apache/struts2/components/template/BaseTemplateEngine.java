@@ -21,6 +21,9 @@ import com.opensymphony.util.ClassLoaderUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -31,16 +34,38 @@ import java.util.Properties;
  * Base class for template engines.
  */
 public abstract class BaseTemplateEngine implements TemplateEngine {
+	
     private static final Log LOG = LogFactory.getLog(BaseTemplateEngine.class);
+    
+    /** The default theme properties file name. Default is 'theme.properties' */
+    public static final String DEFAULT_THEME_PROPERTIES_FILE_NAME = "theme.properties";
 
-    final Map themeProps = new HashMap();
+    final Map<String, Properties> themeProps = new HashMap<String, Properties>();
 
     public Map getThemeProps(Template template) {
         synchronized (themeProps) {
             Properties props = (Properties) themeProps.get(template.getTheme());
             if (props == null) {
-                String propName = template.getDir() + "/" + template.getTheme() + "/theme.properties";
-                InputStream is = ClassLoaderUtil.getResourceAsStream(propName, getClass());
+                String propName = template.getDir() + "/" + template.getTheme() + "/"+getThemePropertiesFileName();
+                
+//              WW-1292
+                // let's try getting it from the filesystem
+                File propFile = new File(propName);
+                InputStream is = null;
+                try {
+                	if (propFile.exists()) {
+                		is = new FileInputStream(propFile);
+                	}
+                }
+                catch(FileNotFoundException e) {
+                	LOG.warn("Unable to find file in filesystem ["+propFile.getAbsolutePath()+"]");
+                }
+                
+                if (is == null) {
+                	// if its not in filesystem. let's try the classpath
+                	is = ClassLoaderUtil.getResourceAsStream(propName, getClass());
+                }
+                
                 props = new Properties();
 
                 if (is != null) {
@@ -65,6 +90,10 @@ public abstract class BaseTemplateEngine implements TemplateEngine {
         }
 
         return t;
+    }
+    
+    protected String getThemePropertiesFileName() {
+    	return DEFAULT_THEME_PROPERTIES_FILE_NAME;
     }
 
     protected abstract String getSuffix();

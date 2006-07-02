@@ -13,27 +13,28 @@ INFORMATION
 
 USAGE
 =====
-- change directory to SAF2's maven archetype directory eg. from SAF2's root directory
-  cd ./archetype   <press enter>
 
-- run the following command to install SAF2 maven archetype into the local repository
-  mvn install 
-
-- change directory to where the web app template is to be created eg. assuming the directory to be myWebApp.
-  mkdir /home/tmjee/myWebApp
-  cd /home/tmjee/myWebApp
-
+- change directory to where the web app template is to be created,
+  for example, a 'projects' directory (which you may need to create):
+  
+     cd /home/tmjee/projects
+  
 - run the following command to generate the sample web app templatem, assuming :-
     - root java package -> com.myCompany.mySystem
 
     - the webapp war name   ->  myWebApp
 
 
-  mvn archetype:create -DgroupId=com.myCompany.mySystem -DartifactId=myWebApp -DarchetypeGroupId=org.apache.struts2 -DarchetypeArtifactId=struts2-archetype-quickstart
+  mvn archetype:create -DgroupId=com.myCompany.mySystem \
+                       -DartifactId=myWebApp \
+                       -DarchetypeGroupId=org.apache.struts \
+                       -DarchetypeArtifactId=struts2-archetype-quickstart \
+                       -DarchetypeVersion=1.0-SNAPSHOT \
+                       -DremoteRepositories=http://people.apache.org/maven-snapshot-repository
 
 THis will create the sample Web app template
 
-- to complile execute
+- to compile, execute
   mvn compile
 
 - to run test cases execute

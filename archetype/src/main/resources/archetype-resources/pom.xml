@@ -21,13 +21,13 @@
 
 		<!--  SAF2 -->
 		<dependency>
-            <groupId>org.apache.struts2</groupId>
-            <artifactId>struts-core</artifactId>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-core</artifactId>
             <version>2.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.struts2</groupId>
-            <artifactId>struts-extras</artifactId>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-extras</artifactId>
             <version>2.0-SNAPSHOT</version>
         </dependency>
 

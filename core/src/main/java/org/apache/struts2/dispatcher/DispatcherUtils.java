@@ -32,6 +32,7 @@ import org.apache.struts2.util.ObjectFactoryInitializable;
 import com.opensymphony.xwork.*;
 import com.opensymphony.xwork.config.ConfigurationException;
 import com.opensymphony.xwork.config.ConfigurationManager;
+import com.opensymphony.xwork.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork.util.*;
 import com.opensymphony.xwork.util.location.Location;
 import com.opensymphony.xwork.util.location.LocationUtils;
@@ -213,6 +214,8 @@ public class DispatcherUtils {
         }
         
         configurationManager = new ConfigurationManager();
+        configurationManager.addConfigurationProvider(new XmlConfigurationProvider("xwork.xml", false));
+        configurationManager.addConfigurationProvider(new XmlConfigurationProvider("struts.xml", false));
         
         synchronized(DispatcherUtils.class) {
             if (dispatcherListeners.size() > 0) {

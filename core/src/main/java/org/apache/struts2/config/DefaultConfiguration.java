@@ -92,7 +92,6 @@ public class DefaultConfiguration extends Configuration {
 
             while (bundleFiles.hasMoreTokens()) {
                 String name = bundleFiles.nextToken();
-
                 try {
                     log.info("Loading global messages from " + name);
                     LocalizedTextUtil.addDefaultResourceBundle(name);

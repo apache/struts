@@ -81,6 +81,7 @@ public class PortletUrlTagTest extends MockObjectTestCase {
 		super.setUp();
 		
 		Configuration.reset();
+        DispatcherUtils.setInstance(new DispatcherUtils(null));
         
         mockPortletApiAvailable();
 		

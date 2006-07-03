@@ -23,7 +23,6 @@ import com.mockobjects.servlet.MockHttpServletResponse;
 import com.mockobjects.servlet.MockHttpSession;
 import com.mockobjects.servlet.MockServletConfig;
 import com.mockobjects.servlet.MockServletOutputStream;
-import com.opensymphony.xwork.XWorkStatic;
 import com.opensymphony.xwork.config.providers.XmlConfigurationProvider;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
@@ -66,14 +65,14 @@ public abstract class AbstractServletDispatcherTestCase extends StrutsTestCase {
 
     protected void loadConfig() {
         XmlConfigurationProvider c = new XmlConfigurationProvider(getConfigFilename());
-        XWorkStatic.getConfigurationManager().clearConfigurationProviders();
-        XWorkStatic.getConfigurationManager().destroyConfiguration();
-        XWorkStatic.getConfigurationManager().addConfigurationProvider(c);
-        XWorkStatic.getConfigurationManager().getConfiguration();
+        configurationManager.clearConfigurationProviders();
+        configurationManager.destroyConfiguration();
+        configurationManager.addConfigurationProvider(c);
+        configurationManager.getConfiguration();
     }
 
     protected void tearDown() throws Exception {
-        XWorkStatic.getConfigurationManager().destroyConfiguration();
+        configurationManager.destroyConfiguration();
     }
 
     private void service(HttpServlet servlet) throws ServletException, IOException {

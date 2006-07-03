@@ -17,8 +17,12 @@
  */
 package org.apache.struts2;
 
+import javax.servlet.ServletContext;
+
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.dispatcher.DispatcherUtils;
+import org.springframework.mock.web.MockServletContext;
+
 import com.opensymphony.xwork.XWorkTestCase;
 import com.opensymphony.xwork.util.LocalizedTextUtil;
 
@@ -27,11 +31,16 @@ import com.opensymphony.xwork.util.LocalizedTextUtil;
  */
 public abstract class StrutsTestCase extends XWorkTestCase {
 
+    
+    
     protected void setUp() throws Exception {
         super.setUp();
-        DispatcherUtils.setInstance(null);
         Configuration.reset();
         LocalizedTextUtil.clearDefaultResourceBundles();
+        DispatcherUtils du = new DispatcherUtils(new MockServletContext());
+        du.setInstance(du);
+        du.setConfigurationManager(configurationManager);
+        
     }
 
     protected void tearDown() throws Exception {

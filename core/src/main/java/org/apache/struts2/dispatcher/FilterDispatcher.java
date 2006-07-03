@@ -106,6 +106,7 @@ public class FilterDispatcher implements Filter, StrutsStatics {
 
     protected FilterConfig filterConfig;
     protected String[] pathPrefixes;
+    protected DispatcherUtils dispatcher;
 
     private SimpleDateFormat df = new SimpleDateFormat("E, d MMM yyyy HH:mm:ss");
     private final Calendar lastModifiedCal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
@@ -116,11 +117,11 @@ public class FilterDispatcher implements Filter, StrutsStatics {
     }
 
     public void destroy() {
-    	DispatcherUtils du = DispatcherUtils.getInstance(); // should not be null as it is initialized in init(FilterConfig)
-    	if (du == null) {
-    		LOG.warn("something is seriously wrong, DispatcherUtil is not initialized (null) ");
-    	}
-    	du.cleanup();
+        	if (dispatcher == null) {
+        		LOG.warn("something is seriously wrong, DispatcherUtil is not initialized (null) ");
+        	} else {
+        	    dispatcher.cleanup();
+        }
     }
 
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -131,7 +132,7 @@ public class FilterDispatcher implements Filter, StrutsStatics {
             packages = param + " " + packages;
         }
         this.pathPrefixes = parse(packages);
-        DispatcherUtils.initialize(filterConfig.getServletContext());
+        dispatcher = new DispatcherUtils(filterConfig.getServletContext());
     }
 
     protected String[] parse(String packages) {
@@ -158,19 +159,26 @@ public class FilterDispatcher implements Filter, StrutsStatics {
         HttpServletResponse response = (HttpServletResponse) res;
         ServletContext servletContext = filterConfig.getServletContext();
 
-        // prepare the request no matter what - this ensures that the proper character encoding
-        // is used before invoking the mapper (see WW-9127)
         DispatcherUtils du = DispatcherUtils.getInstance();
-        try {
-        	// Wrap request first, just in case it is multipart/form-data 
-        	// parameters might not be accessible through before encoding (ww-1278)
-            request = du.wrapRequest(request, servletContext);
-        } catch (IOException e) {
-            String message = "Could not wrap servlet request with MultipartRequestWrapper!";
-            LOG.error(message, e);
-            throw new ServletException(message, e);
+        
+        // Prepare and wrap the request if the cleanup filter hasn't already
+        if (du == null) {
+            du = dispatcher;
+            // prepare the request no matter what - this ensures that the proper character encoding
+            // is used before invoking the mapper (see WW-9127)
+            du.prepare(request, response);
+
+            try {
+                // Wrap request first, just in case it is multipart/form-data 
+                // parameters might not be accessible through before encoding (ww-1278)
+                request = du.wrapRequest(request, servletContext);
+            } catch (IOException e) {
+                String message = "Could not wrap servlet request with MultipartRequestWrapper!";
+                LOG.error(message, e);
+                throw new ServletException(message, e);
+            }
+            DispatcherUtils.setInstance(du);
         }
-        du.prepare(request, response);
 
         ActionMapper mapper = ActionMapperFactory.getMapper();
         ActionMapping mapping = mapper.getMapping(request);
@@ -201,7 +209,7 @@ public class FilterDispatcher implements Filter, StrutsStatics {
 
             o = beforeActionInvocation(request, servletContext);
             
-            du.serviceAction(request, response, servletContext, mapping);
+            dispatcher.serviceAction(request, response, servletContext, mapping);
         } finally {
             afterActionInvocation(request, servletContext, o);
             ActionContextCleanUp.cleanUp(req);

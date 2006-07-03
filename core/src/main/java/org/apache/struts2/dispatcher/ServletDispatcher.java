@@ -29,6 +29,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Main dispatcher servlet in Struts which acts as the controller in the MVC paradigm. <p>
@@ -69,6 +71,10 @@ public class ServletDispatcher extends HttpServlet implements StrutsStatics {
      * Logger for this class.
      */
     protected static final Log LOG = LogFactory.getLog(ServletDispatcher.class);
+    
+    protected static Map<String,DispatcherUtils> dispatchers = new HashMap<String,DispatcherUtils>();
+    
+    protected DispatcherUtils dispatcher;
 
     /**
      * Initalizes the servlet. Please read the {@link ServletDispatcher class documentation} for more
@@ -79,7 +85,29 @@ public class ServletDispatcher extends HttpServlet implements StrutsStatics {
      */
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
-        DispatcherUtils.initialize(getServletContext());
+        synchronized(dispatchers) {
+            dispatcher = dispatchers.get(servletConfig.getServletName());
+            if (dispatcher == null) {
+                dispatcher = new DispatcherUtils(getServletContext());
+                dispatchers.put(servletConfig.getServletName(), dispatcher);
+            }
+        }
+    }
+    
+    /**
+     * Cleans up the dispatcher
+     */
+    @Override
+    public void destroy() {
+        super.destroy();
+        synchronized(dispatchers) {
+            String key = getServletConfig().getServletName();
+            if (dispatchers.containsKey(key)) {
+                dispatcher.cleanup();
+                dispatchers.remove(key);
+                dispatcher = null;
+            }
+        }
     }
 
     /**
@@ -95,8 +123,8 @@ public class ServletDispatcher extends HttpServlet implements StrutsStatics {
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         // prepare the request no matter what - this ensures that the proper character encoding
         // is used before invoking the mapper (see WW-9127)
-        DispatcherUtils du = DispatcherUtils.getInstance();
-        du.prepare(request, response);
+        DispatcherUtils.setInstance(dispatcher);
+        dispatcher.prepare(request, response);
 
         ActionMapping mapping = ActionMapperFactory.getMapper().getMapping(request);
         if (mapping == null) {
@@ -109,13 +137,13 @@ public class ServletDispatcher extends HttpServlet implements StrutsStatics {
         }
 
         try {
-            request = du.wrapRequest(request, getServletContext());
+            request = dispatcher.wrapRequest(request, getServletContext());
         } catch (IOException e) {
             String message = "Could not wrap servlet request with MultipartRequestWrapper!";
             LOG.error(message, e);
             throw new ServletException(message, e);
         }
 
-        du.serviceAction(request, response, getServletContext(), mapping);
+        dispatcher.serviceAction(request, response, getServletContext(), mapping);
     }
 }

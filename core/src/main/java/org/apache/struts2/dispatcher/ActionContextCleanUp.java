@@ -57,6 +57,7 @@ public class ActionContextCleanUp implements Filter {
     private static final String COUNTER = "__cleanup_recursion_counter";
 
     protected FilterConfig filterConfig;
+    protected DispatcherUtils dispatcher;
 
     public FilterConfig getFilterConfig() {
         return filterConfig;
@@ -64,7 +65,7 @@ public class ActionContextCleanUp implements Filter {
 
     public void init(FilterConfig filterConfig) throws ServletException {
         this.filterConfig = filterConfig;
-        DispatcherUtils.initialize(filterConfig.getServletContext());
+        dispatcher = new DispatcherUtils(filterConfig.getServletContext());
     }
 
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
@@ -74,13 +75,12 @@ public class ActionContextCleanUp implements Filter {
 
         // prepare the request no matter what - this ensures that the proper character encoding
         // is used before invoking the mapper (see WW-9127)
-        DispatcherUtils du = DispatcherUtils.getInstance();
-        du.prepare(request, response);
-
+        DispatcherUtils.setInstance(dispatcher);
+        dispatcher.prepare(request, response);
 
         ServletContext servletContext = filterConfig.getServletContext();
         try {
-            request = du.wrapRequest(request, servletContext);
+            request = dispatcher.wrapRequest(request, servletContext);
         } catch (IOException e) {
             String message = "Could not wrap servlet request with MultipartRequestWrapper!";
             LOG.error(message, e);
@@ -114,6 +114,8 @@ public class ActionContextCleanUp implements Filter {
 
         // always dontClean up the thread request, even if an action hasn't been executed
         ActionContext.setContext(null);
+        
+        DispatcherUtils.setInstance(null);
     }
 
     public void destroy() {

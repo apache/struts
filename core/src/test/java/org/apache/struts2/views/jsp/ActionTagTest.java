@@ -231,9 +231,9 @@ public class ActionTagTest extends AbstractTagTest {
     protected void setUp() throws Exception {
         super.setUp();
 
-        XWorkStatic.getConfigurationManager().clearConfigurationProviders();
-        XWorkStatic.getConfigurationManager().addConfigurationProvider(new TestConfigurationProvider());
-        XWorkStatic.getConfigurationManager().getConfiguration().reload();
+        configurationManager.clearConfigurationProviders();
+        configurationManager.addConfigurationProvider(new TestConfigurationProvider());
+        configurationManager.reload();
 
         ActionContext actionContext = new ActionContext(context);
         actionContext.setValueStack(stack);
@@ -241,7 +241,7 @@ public class ActionTagTest extends AbstractTagTest {
     }
 
     protected void tearDown() throws Exception {
-        XWorkStatic.getConfigurationManager().destroyConfiguration();
+        configurationManager.destroyConfiguration();
 
         OgnlValueStack stack = new OgnlValueStack();
         ActionContext.setContext(new ActionContext(stack.getContext()));

@@ -64,12 +64,9 @@ public class FilterDispatcherTest extends StrutsTestCase {
     }
 
     public void testObjectFactoryDestroy() throws Exception {
-        Configuration.reset();
-        DispatcherUtils.setInstance(null);
-
-        DispatcherUtils.initialize(new MockServletContext());
 
         FilterDispatcher filterDispatcher = new FilterDispatcher();
+        filterDispatcher.init(new MockFilterConfig(null));
         InnerDestroyableObjectFactory destroyedObjectFactory = new InnerDestroyableObjectFactory();
         ObjectFactory.setObjectFactory(destroyedObjectFactory);
 
@@ -80,8 +77,6 @@ public class FilterDispatcherTest extends StrutsTestCase {
 
 
     public void testObjectFactoryInitializable() throws Exception {
-        Configuration.reset();
-        DispatcherUtils.setInstance(null);
 
         Map configMap = new HashMap();
         configMap.put(StrutsConstants.STRUTS_OBJECTFACTORY, "org.apache.struts2.dispatcher.FilterDispatcherTest$InnerInitializableObjectFactory");
@@ -100,8 +95,6 @@ public class FilterDispatcherTest extends StrutsTestCase {
     }
 
     public void testObjectFactoryLifecycle() throws Exception {
-        Configuration.reset();
-        DispatcherUtils.setInstance(null);
 
         Map configMap = new HashMap();
         configMap.put(StrutsConstants.STRUTS_OBJECTFACTORY, "org.apache.struts2.dispatcher.FilterDispatcherTest$InnerInitailizableDestroyableObjectFactory");

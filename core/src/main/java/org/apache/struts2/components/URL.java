@@ -176,7 +176,7 @@ public class URL extends Component {
     }
 
     private void includeGetParameters() {
-        if(!(DispatcherUtils.isPortletSupportActive() && PortletActionContext.isPortletRequest())) {
+        if(!(DispatcherUtils.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest())) {
             String query = extractQueryString();
             if (query != null) {
                 //mergeRequestParameters(parameters, HttpUtils.parseQueryString(query));
@@ -209,14 +209,14 @@ public class URL extends Component {
 
         String result;
         if (value == null && action != null) {
-            if(DispatcherUtils.isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
+            if(DispatcherUtils.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
                 result = PortletUrlHelper.buildUrl(action, namespace, parameters, portletUrlType, portletMode, windowState);
             }
             else {
                 result = determineActionURL(action, namespace, method, req, res, parameters, scheme, includeContext, encode);
             }
         } else {
-            if(DispatcherUtils.isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
+            if(DispatcherUtils.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
                 result = PortletUrlHelper.buildResourceUrl(value, parameters);
             }
             else {

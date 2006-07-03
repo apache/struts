@@ -20,7 +20,7 @@ package org.apache.struts2.components;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.ObjectFactory;
-import com.opensymphony.xwork.XWorkStatic;
+import com.opensymphony.xwork.config.Configuration;
 import com.opensymphony.xwork.config.RuntimeConfiguration;
 import com.opensymphony.xwork.config.entities.ActionConfig;
 import com.opensymphony.xwork.config.entities.InterceptorMapping;
@@ -136,7 +136,7 @@ public class Form extends ClosingUIBean {
             action = findString(this.action);
         }
 
-        if (DispatcherUtils.isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
+        if (DispatcherUtils.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
             evaluateExtraParamsPortletRequest(namespace, action);
         } else {
             String namespace = determineNamespace(this.namespace, getStack(),
@@ -198,7 +198,8 @@ public class Form extends ClosingUIBean {
             action = action.substring(0, endIdx);
         }
 
-        final ActionConfig actionConfig = XWorkStatic.getConfigurationManager().getConfiguration().getRuntimeConfiguration().getActionConfig(namespace, action);
+        Configuration config = DispatcherUtils.getInstance().getConfigurationManager().getConfiguration();
+        final ActionConfig actionConfig = config.getRuntimeConfiguration().getActionConfig(namespace, action);
         String actionName = action;
         if (actionConfig != null) {
 
@@ -270,7 +271,7 @@ public class Form extends ClosingUIBean {
 
             addParameter("performValidation", Boolean.FALSE);
 
-            RuntimeConfiguration runtimeConfiguration = XWorkStatic.getConfigurationManager().getConfiguration().getRuntimeConfiguration();
+            RuntimeConfiguration runtimeConfiguration = DispatcherUtils.getInstance().getConfigurationManager().getConfiguration().getRuntimeConfiguration();
             ActionConfig actionConfig = runtimeConfiguration.getActionConfig(namespace, actionName);
 
             if (actionConfig != null) {

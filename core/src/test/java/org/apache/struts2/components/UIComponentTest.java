@@ -18,7 +18,6 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.XWorkStatic;
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ui.*;
@@ -246,8 +245,8 @@ public class UIComponentTest extends AbstractUITagTest {
 
     // form
     public void testFormComponentDisposeItselfFromComponentStack() throws Exception {
-        XWorkStatic.getConfigurationManager().clearConfigurationProviders();
-        XWorkStatic.getConfigurationManager().addConfigurationProvider(new TestConfigurationProvider());
+        configurationManager.clearConfigurationProviders();
+        configurationManager.addConfigurationProvider(new TestConfigurationProvider());
         ActionContext.getContext().setValueStack(stack);
 
         request.setupGetServletPath("/testAction");

@@ -20,7 +20,6 @@ package org.apache.struts2.views.jsp.ui;
 import com.opensymphony.xwork.ActionContext;
 import com.opensymphony.xwork.ActionSupport;
 import com.opensymphony.xwork.ObjectFactory;
-import com.opensymphony.xwork.XWorkStatic;
 import com.opensymphony.xwork.config.RuntimeConfiguration;
 import com.opensymphony.xwork.config.entities.ActionConfig;
 import com.opensymphony.xwork.config.entities.InterceptorMapping;
@@ -114,12 +113,12 @@ public class FormTagTest extends AbstractUITagTest {
      */
     public void testFormWithCustomOnsubmitEnabledWithValidateEnabled1() throws Exception {
 
-        com.opensymphony.xwork.config.Configuration originalConfiguration = XWorkStatic.getConfigurationManager().getConfiguration();
+        com.opensymphony.xwork.config.Configuration originalConfiguration = configurationManager.getConfiguration();
         ObjectFactory originalObjectFactory = ObjectFactory.getObjectFactory();
 
         try {
             // used to determined if the form action needs js validation
-            XWorkStatic.getConfigurationManager().setConfiguration(new com.opensymphony.xwork.config.impl.DefaultConfiguration() {
+            configurationManager.setConfiguration(new com.opensymphony.xwork.config.impl.DefaultConfiguration() {
                 public RuntimeConfiguration getRuntimeConfiguration() {
                     return new RuntimeConfiguration() {
                         public ActionConfig getActionConfig(String namespace, String name) {
@@ -184,7 +183,7 @@ public class FormTagTest extends AbstractUITagTest {
             verify(FormTag.class.getResource("Formtag-2.txt"));
         }
         finally {
-            XWorkStatic.getConfigurationManager().setConfiguration(originalConfiguration);
+            configurationManager.setConfiguration(originalConfiguration);
             ObjectFactory.setObjectFactory(originalObjectFactory);
         }
     }
@@ -197,12 +196,12 @@ public class FormTagTest extends AbstractUITagTest {
      */
     public void testFormWithCustomOnsubmitEnabledWithValidateEnabled2() throws Exception {
 
-        com.opensymphony.xwork.config.Configuration originalConfiguration = XWorkStatic.getConfigurationManager().getConfiguration();
+        com.opensymphony.xwork.config.Configuration originalConfiguration = configurationManager.getConfiguration();
         ObjectFactory originalObjectFactory = ObjectFactory.getObjectFactory();
 
         try {
             // used to determined if the form action needs js validation
-            XWorkStatic.getConfigurationManager().setConfiguration(new com.opensymphony.xwork.config.impl.DefaultConfiguration() {
+            configurationManager.setConfiguration(new com.opensymphony.xwork.config.impl.DefaultConfiguration() {
                 public RuntimeConfiguration getRuntimeConfiguration() {
                     return new RuntimeConfiguration() {
                         public ActionConfig getActionConfig(String namespace, String name) {
@@ -267,7 +266,7 @@ public class FormTagTest extends AbstractUITagTest {
             verify(FormTag.class.getResource("Formtag-11.txt"));
         }
         finally {
-            XWorkStatic.getConfigurationManager().setConfiguration(originalConfiguration);
+            configurationManager.setConfiguration(originalConfiguration);
             ObjectFactory.setObjectFactory(originalObjectFactory);
         }
     }
@@ -542,8 +541,8 @@ public class FormTagTest extends AbstractUITagTest {
 
     protected void setUp() throws Exception {
         super.setUp();
-        XWorkStatic.getConfigurationManager().clearConfigurationProviders();
-        XWorkStatic.getConfigurationManager().addConfigurationProvider(new TestConfigurationProvider());
+        configurationManager.clearConfigurationProviders();
+        configurationManager.addConfigurationProvider(new TestConfigurationProvider());
         ActionContext.getContext().setValueStack(stack);
     }
 }

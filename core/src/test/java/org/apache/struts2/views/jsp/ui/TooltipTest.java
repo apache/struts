@@ -18,7 +18,6 @@
 package org.apache.struts2.views.jsp.ui;
 
 import com.mockobjects.servlet.MockJspWriter;
-import com.opensymphony.xwork.XWorkStatic;
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ParamTag;
@@ -31,8 +30,8 @@ public class TooltipTest extends AbstractUITagTest {
 
     public void testWithoutFormOverriding() throws Exception {
 
-        XWorkStatic.getConfigurationManager().clearConfigurationProviders();
-        XWorkStatic.getConfigurationManager().addConfigurationProvider(new TestConfigurationProvider());
+        configurationManager.clearConfigurationProviders();
+        configurationManager.addConfigurationProvider(new TestConfigurationProvider());
 
         // we test it on textfield component, but since the tooltip are common to
         // all components, it will be the same for other components as well.
@@ -92,8 +91,8 @@ public class TooltipTest extends AbstractUITagTest {
 
     public void testWithFormOverriding() throws Exception {
 
-        XWorkStatic.getConfigurationManager().clearConfigurationProviders();
-        XWorkStatic.getConfigurationManager().addConfigurationProvider(new TestConfigurationProvider());
+        configurationManager.clearConfigurationProviders();
+        configurationManager.addConfigurationProvider(new TestConfigurationProvider());
 
         FormTag formTag = new FormTag();
         formTag.setPageContext(pageContext);
@@ -151,8 +150,8 @@ public class TooltipTest extends AbstractUITagTest {
 
     public void testWithPartialFormOverriding() throws Exception {
 
-        XWorkStatic.getConfigurationManager().clearConfigurationProviders();
-        XWorkStatic.getConfigurationManager().addConfigurationProvider(new TestConfigurationProvider());
+        configurationManager.clearConfigurationProviders();
+        configurationManager.addConfigurationProvider(new TestConfigurationProvider());
 
         FormTag formTag = new FormTag();
         formTag.setName("myForm");
@@ -218,8 +217,8 @@ public class TooltipTest extends AbstractUITagTest {
 
 
     public void testUsingParamValueToSetConfigurations() throws Exception {
-        XWorkStatic.getConfigurationManager().clearConfigurationProviders();
-        XWorkStatic.getConfigurationManager().addConfigurationProvider(new TestConfigurationProvider());
+        configurationManager.clearConfigurationProviders();
+        configurationManager.addConfigurationProvider(new TestConfigurationProvider());
 
         FormTag formTag = new FormTag();
         formTag.setName("myForm");
@@ -296,8 +295,8 @@ public class TooltipTest extends AbstractUITagTest {
 
 
     public void testUsingParamBodyValueToSetConfigurations() throws Exception {
-        XWorkStatic.getConfigurationManager().clearConfigurationProviders();
-        XWorkStatic.getConfigurationManager().addConfigurationProvider(new TestConfigurationProvider());
+        configurationManager.clearConfigurationProviders();
+        configurationManager.addConfigurationProvider(new TestConfigurationProvider());
 
         FormTag formTag = new FormTag();
         formTag.setName("myForm");

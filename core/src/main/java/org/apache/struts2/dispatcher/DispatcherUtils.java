@@ -31,6 +31,7 @@ import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.apache.struts2.util.ObjectFactoryInitializable;
 import com.opensymphony.xwork.*;
 import com.opensymphony.xwork.config.ConfigurationException;
+import com.opensymphony.xwork.config.ConfigurationManager;
 import com.opensymphony.xwork.util.*;
 import com.opensymphony.xwork.util.location.Location;
 import com.opensymphony.xwork.util.location.LocationUtils;
@@ -65,32 +66,35 @@ import java.util.Map;
 public class DispatcherUtils {
     private static final Log LOG = LogFactory.getLog(DispatcherUtils.class);
 
-    private static DispatcherUtils instance;
+    private static ThreadLocal instance = new ThreadLocal<DispatcherUtils>();
+    private static List<DispatcherListener> dispatcherListeners = 
+        new ArrayList<DispatcherListener>();
+    private ConfigurationManager configurationManager;
 
-    private static boolean portletSupportActive;
-
-    public static void initialize(ServletContext servletContext) {
-        synchronized (DispatcherUtils.class) {
-            if (instance == null) {
-                instance = new DispatcherUtils(servletContext);
-            }
-        }
-    }
+    private boolean portletSupportActive;
 
     public static DispatcherUtils getInstance() {
-        return instance;
+        return (DispatcherUtils) instance.get();
     }
 
     public static void setInstance(DispatcherUtils instance) {
-        DispatcherUtils.instance = instance;
+        DispatcherUtils.instance.set(instance);
     }
-
+    
+    public static synchronized void addDispatcherListener(DispatcherListener l) {
+        dispatcherListeners.add(l);
+    }
+    
+    public static synchronized void removeDispatcherListener(DispatcherListener l) {
+        dispatcherListeners.remove(l);
+    }
+    
     protected boolean devMode = false;
 
     // used to get WebLogic to play nice
     protected boolean paramsWorkaroundEnabled = false;
 
-    protected DispatcherUtils(ServletContext servletContext) {
+    public DispatcherUtils(ServletContext servletContext) {
         init(servletContext);
     }
 
@@ -106,6 +110,14 @@ public class DispatcherUtils {
             catch(Exception e) {
                 // catch any exception that may occured during destroy() and log it
                 LOG.error("exception occurred while destroying ObjectFactory ["+objectFactory+"]", e);
+            }
+        }
+        instance.set(null);
+        synchronized(DispatcherUtils.class) {
+            if (dispatcherListeners.size() > 0) {
+                for (DispatcherListener l : dispatcherListeners) {
+                    l.dispatcherDestroyed(this);
+                }
             }
         }
     }
@@ -129,8 +141,10 @@ public class DispatcherUtils {
             try {
                 Class clazz = ClassLoaderUtil.loadClass(className, DispatcherUtils.class);
                 ObjectFactory objectFactory = (ObjectFactory) clazz.newInstance();
-                if (objectFactory instanceof ObjectFactoryInitializable) {
-                    ((ObjectFactoryInitializable) objectFactory).init(servletContext);
+                if (servletContext != null) {
+                    if (objectFactory instanceof ObjectFactoryInitializable) {
+                        ((ObjectFactoryInitializable) objectFactory).init(servletContext);
+                    }
                 }
                 ObjectFactory.setObjectFactory(objectFactory);
             } catch (Exception e) {
@@ -175,7 +189,8 @@ public class DispatcherUtils {
         }
 
         // test wether param-access workaround needs to be enabled
-        if (servletContext.getServerInfo().indexOf("WebLogic") >= 0) {
+        if (servletContext != null && servletContext.getServerInfo() != null 
+                && servletContext.getServerInfo().indexOf("WebLogic") >= 0) {
             LOG.info("WebLogic server detected. Enabling Struts parameter access work-around.");
             paramsWorkaroundEnabled = true;
         } else if (Configuration.isSet(StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND)) {
@@ -194,6 +209,16 @@ public class DispatcherUtils {
         } catch (Exception e) {
             if (LOG.isInfoEnabled()) {
                 LOG.info("Could not load portlet-api, disabling Struts's portlet support.");
+            }
+        }
+        
+        configurationManager = new ConfigurationManager();
+        
+        synchronized(DispatcherUtils.class) {
+            if (dispatcherListeners.size() > 0) {
+                for (DispatcherListener l : dispatcherListeners) {
+                    l.dispatcherInitialized(this);
+                }
             }
         }
     }
@@ -236,7 +261,8 @@ public class DispatcherUtils {
                 extraContext.put(XWorkContinuationConfig.CONTINUE_KEY, id);
             }
 
-            ActionProxy proxy = ActionProxyFactory.getFactory().createActionProxy(namespace, name, extraContext, true, false);
+            ActionProxy proxy = ActionProxyFactory.getFactory().createActionProxy(
+                    configurationManager.getConfiguration(), namespace, name, extraContext, true, false);
             proxy.setMethod(method);
             request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, proxy.getInvocation().getStack());
 
@@ -510,7 +536,7 @@ public class DispatcherUtils {
      *
      * @return <tt>true</tt>, if portlet support is active, <tt>false</tt> otherwise.
      */
-    public static boolean isPortletSupportActive() {
+    public boolean isPortletSupportActive() {
         return portletSupportActive;
     }
     
@@ -519,5 +545,13 @@ public class DispatcherUtils {
         public Location getLocation(Throwable t) {
             return LocationUtils.getLocation(t);
         }
+    }
+
+    public ConfigurationManager getConfigurationManager() {
+        return configurationManager;
+    }
+    
+    public void setConfigurationManager(ConfigurationManager mgr) {
+        this.configurationManager = mgr;
     }
 }

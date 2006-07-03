@@ -3,12 +3,12 @@
  */
 package org.apache.struts2.sitegraph;
 
-import com.opensymphony.xwork.XWorkStatic;
 import com.opensymphony.xwork.config.ConfigurationProvider;
 import com.opensymphony.xwork.config.entities.ActionConfig;
 import com.opensymphony.xwork.config.entities.ResultConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.dispatcher.DispatcherUtils;
 import org.apache.struts2.sitegraph.collectors.ArbitraryXMLConfigurationProvider;
 import org.apache.struts2.sitegraph.entities.FreeMarkerView;
 import org.apache.struts2.sitegraph.entities.JspView;
@@ -41,7 +41,7 @@ public class XWorkConfigRetriever {
     public static Map getActionConfigs() {
         if (!isXWorkStarted)
             initXWork();
-        return XWorkStatic.getConfigurationManager().getConfiguration().getRuntimeConfiguration().getActionConfigs();
+        return DispatcherUtils.getInstance().getConfigurationManager().getConfiguration().getRuntimeConfiguration().getActionConfigs();
     }
 
     private static void initXWork() {
@@ -49,7 +49,7 @@ public class XWorkConfigRetriever {
         File configFile = new File(configFilePath);
         try {
             ConfigurationProvider configProvider = new ArbitraryXMLConfigurationProvider(configFile.getCanonicalPath());
-            XWorkStatic.getConfigurationManager().addConfigurationProvider(configProvider);
+            DispatcherUtils.getInstance().getConfigurationManager().addConfigurationProvider(configProvider);
             isXWorkStarted = true;
         } catch (IOException e) {
             LOG.error("IOException", e);

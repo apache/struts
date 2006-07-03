@@ -40,6 +40,7 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.dispatcher.ApplicationMap;
+import org.apache.struts2.dispatcher.DispatcherUtils;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -59,6 +60,7 @@ import com.opensymphony.xwork.ActionProxy;
 import com.opensymphony.xwork.ActionProxyFactory;
 import com.opensymphony.xwork.ObjectFactory;
 import com.opensymphony.xwork.config.ConfigurationException;
+import com.opensymphony.xwork.config.ConfigurationManager;
 import com.opensymphony.xwork.util.LocalizedTextUtil;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
@@ -164,13 +166,15 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
     private Map actionMap = new HashMap(3);
 
     private String portletNamespace = null;
+    
+    private DispatcherUtils dispatcherUtils;
 
     /**
      * Initialize the portlet with the init parameters from <tt>portlet.xml</tt>
      */
     public void init(PortletConfig cfg) throws PortletException {
         super.init(cfg);
-        LOG.debug("Initializin portlet " + getPortletName());
+        LOG.debug("Initializing portlet " + getPortletName());
         // For testability
         if (factory == null) {
             factory = ActionProxyFactory.getFactory();
@@ -234,6 +238,8 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
                         + ". Using default ObjectFactory.", e);
             }
         }
+        
+        dispatcherUtils = new DispatcherUtils(null);
     }
 
     /**
@@ -281,6 +287,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
     public void processAction(ActionRequest request, ActionResponse response)
             throws PortletException, IOException {
         LOG.debug("Entering processAction");
+        DispatcherUtils.setInstance(dispatcherUtils);
         resetActionContext();
         try {
             serviceAction(request, response, getActionMapping(request),
@@ -410,7 +417,8 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         try {
             LOG.debug("Creating action proxy for name = " + actionName
                     + ", namespace = " + namespace);
-            ActionProxy proxy = factory.createActionProxy(namespace,
+            ActionProxy proxy = factory.createActionProxy(
+                    dispatcherUtils.getConfigurationManager().getConfiguration(), namespace,
                     actionName, extraContext);
             request.setAttribute("struts.valueStack", proxy.getInvocation()
                     .getStack());

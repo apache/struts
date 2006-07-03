@@ -156,13 +156,14 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
     }
 
     protected ActionProxy buildProxy(String actionName) throws Exception {
-        return ActionProxyFactory.getFactory().createActionProxy("", actionName, context);
+        return ActionProxyFactory.getFactory().createActionProxy(
+                configurationManager.getConfiguration(), "", actionName, context);
     }
 
     protected void setUp() throws Exception {
-        XWorkStatic.getConfigurationManager().clearConfigurationProviders();
-        XWorkStatic.getConfigurationManager().addConfigurationProvider(new WaitConfigurationProvider());
-        XWorkStatic.getConfigurationManager().getConfiguration().reload();
+        configurationManager.clearConfigurationProviders();
+        configurationManager.addConfigurationProvider(new WaitConfigurationProvider());
+        configurationManager.reload();
 
         session = new HashMap();
         params = new HashMap();
@@ -178,8 +179,8 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
     }
 
     protected void tearDown() throws Exception {
-        XWorkStatic.getConfigurationManager().clearConfigurationProviders();
-        XWorkStatic.getConfigurationManager().destroyConfiguration();
+        configurationManager.clearConfigurationProviders();
+        configurationManager.destroyConfiguration();
         ActionContext.setContext(null);
     }
 

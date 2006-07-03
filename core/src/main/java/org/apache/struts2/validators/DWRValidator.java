@@ -22,6 +22,8 @@ import org.apache.struts2.dispatcher.DispatcherUtils;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 import com.opensymphony.xwork.*;
+import com.opensymphony.xwork.config.Configuration;
+import com.opensymphony.xwork.config.ConfigurationManager;
 import com.opensymphony.xwork.config.entities.ActionConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -77,7 +79,8 @@ public class DWRValidator {
                 servletContext);
 
         try {
-            ValidatorActionProxy proxy = new ValidatorActionProxy(namespace, action, ctx);
+            Configuration cfg = du.getConfigurationManager().getConfiguration();
+            ValidatorActionProxy proxy = new ValidatorActionProxy(cfg, namespace, action, ctx);
             proxy.execute();
             Object a = proxy.getAction();
 
@@ -109,8 +112,8 @@ public class DWRValidator {
     }
 
     public static class ValidatorActionProxy extends DefaultActionProxy {
-        protected ValidatorActionProxy(String namespace, String actionName, Map extraContext) throws Exception {
-            super(namespace, actionName, extraContext, false, true);
+        protected ValidatorActionProxy(Configuration config, String namespace, String actionName, Map extraContext) throws Exception {
+            super(config, namespace, actionName, extraContext, false, true);
         }
 
         protected void prepare() throws Exception {

@@ -17,12 +17,13 @@
  */
 package org.apache.struts2.config_browser;
 
-import com.opensymphony.xwork.XWorkStatic;
 import com.opensymphony.xwork.config.entities.ActionConfig;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.struts2.dispatcher.DispatcherUtils;
 
 /**
  * ConfigurationHelper
@@ -31,7 +32,7 @@ public class ConfigurationHelper {
 
     public static Set getNamespaces() {
         Set namespaces = Collections.EMPTY_SET;
-        Map allActionConfigs = XWorkStatic.getConfigurationManager().getConfiguration().getRuntimeConfiguration().getActionConfigs();
+        Map allActionConfigs = DispatcherUtils.getInstance().getConfigurationManager().getConfiguration().getRuntimeConfiguration().getActionConfigs();
         if (allActionConfigs != null) {
             namespaces = allActionConfigs.keySet();
         }
@@ -40,7 +41,7 @@ public class ConfigurationHelper {
 
     public static Set getActionNames(String namespace) {
         Set actionNames = Collections.EMPTY_SET;
-        Map allActionConfigs = XWorkStatic.getConfigurationManager().getConfiguration().getRuntimeConfiguration().getActionConfigs();
+        Map allActionConfigs = DispatcherUtils.getInstance().getConfigurationManager().getConfiguration().getRuntimeConfiguration().getActionConfigs();
         if (allActionConfigs != null) {
             Map actionMappings = (Map) allActionConfigs.get(namespace);
             if (actionMappings != null) {
@@ -52,7 +53,7 @@ public class ConfigurationHelper {
 
     public static ActionConfig getActionConfig(String namespace, String actionName) {
         ActionConfig config = null;
-        Map allActionConfigs = XWorkStatic.getConfigurationManager().getConfiguration().getRuntimeConfiguration().getActionConfigs();
+        Map allActionConfigs = DispatcherUtils.getInstance().getConfigurationManager().getConfiguration().getRuntimeConfiguration().getActionConfigs();
         if (allActionConfigs != null) {
             Map actionMappings = (Map) allActionConfigs.get(namespace);
             if (actionMappings != null) {

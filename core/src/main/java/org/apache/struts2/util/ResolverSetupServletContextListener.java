@@ -17,13 +17,19 @@
  */
 package org.apache.struts2.util;
 
-import com.opensymphony.xwork.XWorkStatic;
 import com.opensymphony.xwork.config.Configuration;
 import com.opensymphony.xwork.config.entities.PackageConfig;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+
+import org.apache.struts2.dispatcher.DispatcherUtils;
+import org.apache.struts2.dispatcher.DispatcherListener;
+
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 
 /**
@@ -36,22 +42,46 @@ import java.util.Iterator;
  */
 public class ResolverSetupServletContextListener implements ServletContextListener {
 
-    public void contextDestroyed(ServletContextEvent event) {
+    Map<ServletContext,Listener> listeners = new HashMap<ServletContext,Listener>();
+    
+    public synchronized void contextDestroyed(ServletContextEvent event) {
+        Listener l = listeners.get(event.getServletContext());
+        DispatcherUtils.removeDispatcherListener(l);
+        listeners.remove(event.getServletContext());
     }
 
-    public void contextInitialized(ServletContextEvent event) {
-        Configuration config = XWorkStatic.getConfigurationManager().getConfiguration();
-        String key;
-        PackageConfig packageConfig;
+    public synchronized void contextInitialized(ServletContextEvent event) {
+        Listener l = new Listener(event.getServletContext());
+        DispatcherUtils.addDispatcherListener(l);
+        listeners.put(event.getServletContext(), l);
+    }
+    
+    private class Listener implements DispatcherListener {
 
-        for (Iterator iter = config.getPackageConfigNames().iterator();
-             iter.hasNext();) {
-            key = (String) iter.next();
-            packageConfig = config.getPackageConfig(key);
+        private ServletContext servletContext;
+        
+        public Listener(ServletContext ctx) {
+            this.servletContext = ctx;
+        }
+        
+        public void dispatcherInitialized(DispatcherUtils du) {
+            Configuration config = du.getConfigurationManager().getConfiguration();
+            String key;
+            PackageConfig packageConfig;
 
-            if (packageConfig.getExternalRefResolver()instanceof ServletContextAware) {
-                ((ServletContextAware) packageConfig.getExternalRefResolver()).setServletContext(event.getServletContext());
+            for (Iterator iter = config.getPackageConfigNames().iterator();
+                 iter.hasNext();) {
+                key = (String) iter.next();
+                packageConfig = config.getPackageConfig(key);
+
+                if (packageConfig.getExternalRefResolver()instanceof ServletContextAware) {
+                    ((ServletContextAware) packageConfig.getExternalRefResolver()).setServletContext(servletContext);
+                }
             }
+            
+        }
+
+        public void dispatcherDestroyed(DispatcherUtils du) {
         }
     }
 }

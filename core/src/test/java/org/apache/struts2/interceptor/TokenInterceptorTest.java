@@ -97,9 +97,9 @@ public class TokenInterceptorTest extends StrutsTestCase {
     }
 
     protected void setUp() throws Exception {
-        XWorkStatic.getConfigurationManager().clearConfigurationProviders();
-        XWorkStatic.getConfigurationManager().addConfigurationProvider(new TestConfigurationProvider());
-        XWorkStatic.getConfigurationManager().getConfiguration().reload();
+        configurationManager.clearConfigurationProviders();
+        configurationManager.addConfigurationProvider(new TestConfigurationProvider());
+        configurationManager.reload();
 
         session = new HashMap();
         params = new HashMap();
@@ -120,11 +120,12 @@ public class TokenInterceptorTest extends StrutsTestCase {
     }
 
     protected ActionProxy buildProxy(String actionName) throws Exception {
-        return ActionProxyFactory.getFactory().createActionProxy("", actionName, extraContext, true, true);
+        return ActionProxyFactory.getFactory().createActionProxy(
+                configurationManager.getConfiguration(), "", actionName, extraContext, true, true);
     }
 
     protected void tearDown() throws Exception {
-        XWorkStatic.getConfigurationManager().destroyConfiguration();
+        configurationManager.destroyConfiguration();
         ActionContext.setContext(null);
     }
 }

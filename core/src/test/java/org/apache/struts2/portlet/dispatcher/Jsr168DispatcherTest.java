@@ -42,12 +42,15 @@ import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import org.jmock.core.Constraint;
 
+import org.apache.struts2.dispatcher.DispatcherUtils;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.context.ServletContextHolderListener;
 import com.opensymphony.xwork.Action;
 import com.opensymphony.xwork.ActionInvocation;
 import com.opensymphony.xwork.ActionProxy;
 import com.opensymphony.xwork.ActionProxyFactory;
+import com.opensymphony.xwork.config.Configuration;
+import com.opensymphony.xwork.config.ConfigurationManager;
 import com.opensymphony.xwork.util.OgnlValueStack;
 
 /**
@@ -71,17 +74,17 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
     }
     
     private void initPortletConfig(final Map initParams, final Map attributes) {
-    	mockConfig = mock(PortletConfig.class);
-    	mockCtx = mock(PortletContext.class);
-    	mockConfig.stubs().method(ANYTHING);
-    	setupStub(initParams, mockConfig, "getInitParameter");
-    	mockCtx.stubs().method("getAttributeNames").will(returnValue(Collections.enumeration(attributes.keySet())));
-    	setupStub(attributes, mockCtx, "getAttribute");
-    	mockConfig.stubs().method("getPortletContext").will(returnValue(mockCtx.proxy()));
-    	mockCtx.stubs().method("getInitParameterNames").will(returnValue(Collections.enumeration(initParams.keySet())));
-    	setupStub(initParams, mockCtx, "getInitParameter");
-    	
-    	mockConfig.stubs().method("getResourceBundle").will(returnValue(new ListResourceBundle() {
+        mockConfig = mock(PortletConfig.class);
+        mockCtx = mock(PortletContext.class);
+        mockConfig.stubs().method(ANYTHING);
+        setupStub(initParams, mockConfig, "getInitParameter");
+        mockCtx.stubs().method("getAttributeNames").will(returnValue(Collections.enumeration(attributes.keySet())));
+        setupStub(attributes, mockCtx, "getAttribute");
+        mockConfig.stubs().method("getPortletContext").will(returnValue(mockCtx.proxy()));
+        mockCtx.stubs().method("getInitParameterNames").will(returnValue(Collections.enumeration(initParams.keySet())));
+        setupStub(initParams, mockCtx, "getInitParameter");
+        
+        mockConfig.stubs().method("getResourceBundle").will(returnValue(new ListResourceBundle() {
             protected Object[][] getContents() {
                 return new String[][]{{"javax.portlet.title", "MyTitle"}};
             }
@@ -89,18 +92,18 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
     }
 
     private void setupActionFactory(String namespace, String actionName, String result, OgnlValueStack stack) {
-    	if(mockActionFactory == null) {
-    		mockActionFactory = mock(ActionProxyFactory.class);
-    	}
-    	mockAction = mock(Action.class);
-    	mockActionProxy = mock(ActionProxy.class);
-    	mockInvocation = mock(ActionInvocation.class);
-    	
-    	mockActionFactory.expects(once()).method("createActionProxy").with(new Constraint[]{eq(namespace), eq(actionName), isA(Map.class)}).will(returnValue(mockActionProxy.proxy()));
-    	mockActionProxy.stubs().method("getAction").will(returnValue(mockAction.proxy()));
-    	mockActionProxy.expects(once()).method("execute").will(returnValue(result));
-    	mockActionProxy.expects(once()).method("getInvocation").will(returnValue(mockInvocation.proxy()));
-    	mockInvocation.stubs().method("getStack").will(returnValue(stack));
+        if(mockActionFactory == null) {
+            mockActionFactory = mock(ActionProxyFactory.class);
+        }
+        mockAction = mock(Action.class);
+        mockActionProxy = mock(ActionProxy.class);
+        mockInvocation = mock(ActionInvocation.class);
+        
+        mockActionFactory.expects(once()).method("createActionProxy").with(new Constraint[]{isA(Configuration.class), eq(namespace), eq(actionName), isA(Map.class)}).will(returnValue(mockActionProxy.proxy()));
+        mockActionProxy.stubs().method("getAction").will(returnValue(mockAction.proxy()));
+        mockActionProxy.expects(once()).method("execute").will(returnValue(result));
+        mockActionProxy.expects(once()).method("getInvocation").will(returnValue(mockInvocation.proxy()));
+        mockInvocation.stubs().method("getStack").will(returnValue(stack));
     	
     }
 

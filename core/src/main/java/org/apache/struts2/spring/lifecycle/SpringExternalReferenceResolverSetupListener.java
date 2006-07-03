@@ -17,16 +17,22 @@
  */
 package org.apache.struts2.spring.lifecycle;
 
-import com.opensymphony.xwork.XWorkStatic;
 import com.opensymphony.xwork.config.Configuration;
 import com.opensymphony.xwork.config.ExternalReferenceResolver;
 import com.opensymphony.xwork.config.entities.PackageConfig;
+
+import org.apache.struts2.dispatcher.DispatcherListener;
+import org.apache.struts2.dispatcher.DispatcherUtils;
+import org.apache.struts2.util.ServletContextAware;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -39,26 +45,49 @@ import java.util.Map;
  */
 public class SpringExternalReferenceResolverSetupListener implements
         ServletContextListener {
-    public void contextInitialized(ServletContextEvent event) {
-        ApplicationContext appContext = WebApplicationContextUtils
-                .getWebApplicationContext(event.getServletContext());
+    
+    private Map<ServletContext,Listener> listeners = new HashMap<ServletContext,Listener>();
+    
+    public synchronized void contextDestroyed(ServletContextEvent event) {
+        Listener l = listeners.get(event.getServletContext());
+        DispatcherUtils.removeDispatcherListener(l);
+        listeners.remove(event.getServletContext());
+    }
 
-        Configuration xworkConfig = XWorkStatic.getConfigurationManager().getConfiguration();
-        Map packageConfigs = xworkConfig.getPackageConfigs();
-        Iterator i = packageConfigs.values().iterator();
+    public synchronized void contextInitialized(ServletContextEvent event) {
+        Listener l = new Listener(event.getServletContext());
+        DispatcherUtils.addDispatcherListener(l);
+        listeners.put(event.getServletContext(), l);
+    }
+    
+    private class Listener implements DispatcherListener {
 
-        while (i.hasNext()) {
-            PackageConfig packageConfig = (PackageConfig) i.next();
-            ExternalReferenceResolver resolver = packageConfig.getExternalRefResolver();
-            if (resolver == null || !(resolver instanceof ApplicationContextAware))
-                continue;
-            ApplicationContextAware contextAware = (ApplicationContextAware) resolver;
-            contextAware.setApplicationContext(appContext);
+        private ServletContext servletContext;
+        
+        public Listener(ServletContext ctx) {
+            this.servletContext = ctx;
+        }
+        
+        public void dispatcherInitialized(DispatcherUtils du) {
+            ApplicationContext appContext = WebApplicationContextUtils
+            .getWebApplicationContext(servletContext);
+
+            Configuration xworkConfig = du.getConfigurationManager().getConfiguration();
+            Map packageConfigs = xworkConfig.getPackageConfigs();
+            Iterator i = packageConfigs.values().iterator();
+        
+            while (i.hasNext()) {
+                PackageConfig packageConfig = (PackageConfig) i.next();
+                ExternalReferenceResolver resolver = packageConfig.getExternalRefResolver();
+                if (resolver == null || !(resolver instanceof ApplicationContextAware))
+                    continue;
+                ApplicationContextAware contextAware = (ApplicationContextAware) resolver;
+                contextAware.setApplicationContext(appContext);
+            }
+            
+        }
+
+        public void dispatcherDestroyed(DispatcherUtils du) {
         }
     }
-
-    public void contextDestroyed(ServletContextEvent event) {
-        // Nothing to do
-    }
-
 }

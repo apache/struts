@@ -7,7 +7,7 @@
 #end
 
 #macro(url $name)
-   #set ($name = $struts.bean("org.apache.struts.action2.util.URLBean"))
+   #set ($name = $struts.bean("org.apache.struts2.util.URLBean"))
    $name.setRequest($req)
    $name.setResponse($res)
 #end

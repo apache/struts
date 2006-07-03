@@ -49,7 +49,6 @@ public class TagUtils {
             stack = new OgnlValueStack();
 
             HttpServletResponse res = (HttpServletResponse) pageContext.getResponse();
-            DispatcherUtils.initialize(pageContext.getServletContext());
             DispatcherUtils du = DispatcherUtils.getInstance();
             Map extraContext = du.createContextMap(new RequestMap(req),
                     req.getParameterMap(),

@@ -16,7 +16,7 @@ Render a tree node within a tree widget.
 </p>
 
 <p>
-<!-- START SNIPPET: javadoc --> Renders a tree node within a tree widget with AJAX support.<p/> <!-- END SNIPPET: javadoc --> <p/> <b>Examples</b> <pre> <!-- START SNIPPET: example --> &lt;treenode .../&gt; <!-- END SNIPPET: example --> </pre>
+<!-- START SNIPPET: javadoc --> Renders a tree node within a tree widget with AJAX support.<p/> Either of the following combinations should be used depending on if the tree is to be constrcted dynamically or statically. <p/> <b>Dynamically</b> <ul> <li>id - id of this tree node</li> <li>title - label to be displayed for this tree node</li> </ul> <b>Statically</b> <ul> <li>rootNode - the parent node of which this tree is derived from</li> <li>nodeIdProperty - property to obtained this current tree node's id</li> <li>nodeTitleProperty - property to obtained this current tree node's title</li> <li>childCollectionProperty - property that returnds this current tree node's children</li> </ul> <!-- END SNIPPET: javadoc --> <p/> <b>Examples</b> <pre> <!-- START SNIPPET: example --> &lt-- statically --&gt; &lt;ww:tree id="..." label="..."&gt; &lt;ww:treenode id="..." label="..." /&gt; &lt;ww:treenode id="..." label="..."&gt; &lt;ww:treenode id="..." label="..." /&gt; &lt;ww:treenode id="..." label="..." /&gt; &;lt;/ww:treenode&gt; &lt;ww:treenode id="..." label="..." /&gt; &lt;/ww:tree&gt; &lt;-- dynamically --&gt; &lt;ww:tree id="..." rootNode="..." nodeIdProperty="..." nodeTitleProperty="..." childCollectionProperty="..." /&gt; <!-- END SNIPPET: example --> </pre>
 </p>
 
 <h2>Attributes</h2>
@@ -571,6 +571,24 @@ Render a tree node within a tree widget.
 
 <!-- Description -->
 <td align="left" valign="top">Set the html onchange attribute on rendered html element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">accesskey</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the html accesskey attribute on rendered html element</td>
 
 </tr>
 

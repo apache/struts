@@ -16,7 +16,7 @@ Render a tree widget.
 </p>
 
 <p>
-<!-- START SNIPPET: javadoc --> Renders a tree widget with AJAX support.<p/> <!-- END SNIPPET: javadoc --> <p/> <b>Examples</b> <pre> <!-- START SNIPPET: example --> &lt;-- statically --&lt; &lt;saf:tree rootNode="..." /&gt; or &lt-- dynamically --&gt; &lt;saf:tree id="..." label="..."&gt; &lt;saf:treenode id="..." label="..." /&gt; &lt;saf:treenode id="..." label="..."&gt; &lt;saf:treenode id="..." label="..." /&gt; &lt;saf:treenode id="..." label="..." /&gt; &;lt;/saf:treenode&gt; &lt;saf:treenode id="..." label="..." /&gt; &lt;/saf:tree&gt; <!-- END SNIPPET: example --> </pre>
+<!-- START SNIPPET: javadoc --> Renders a tree widget with AJAX support.<p/> The id attribute is normally specified, such that it could be looked up using javascript if necessary.<p/> <!-- END SNIPPET: javadoc --> <p/> <b>Examples</b> <pre> <!-- START SNIPPET: example --> &lt-- statically --&gt; &lt;saf:tree id="..." label="..."&gt; &lt;saf:treenode id="..." label="..." /&gt; &lt;saf:treenode id="..." label="..."&gt; &lt;saf:treenode id="..." label="..." /&gt; &lt;saf:treenode id="..." label="..." /&gt; &;lt;/saf:treenode&gt; &lt;saf:treenode id="..." label="..." /&gt; &lt;/saf:tree&gt; &lt;-- dynamically --&gt; &lt;saf:tree id="..." rootNode="..." nodeIdProperty="..." nodeTitleProperty="..." childCollectionProperty="..." /&gt; <!-- END SNIPPET: example --> </pre>
 </p>
 
 <h2>Attributes</h2>
@@ -985,6 +985,24 @@ Render a tree widget.
 
 <!-- Description -->
 <td align="left" valign="top">Set the html onchange attribute on rendered html element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">accesskey</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the html accesskey attribute on rendered html element</td>
 
 </tr>
 

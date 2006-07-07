@@ -16,7 +16,7 @@ Renders an input form
 </p>
 
 <p>
-<!-- START SNIPPET: javadoc --> Renders HTML an input form.<p/> The remote form allows the form to be submitted without the page being refreshed. The results from the form can be inserted into any HTML element on the page.<p/> NOTE:<p/> The order / logic in determining the posting url of the generated HTML form is as follows:- <ol> <li> If the action attribute is not specified, then the current request will be used to determine the posting url </li> <li> If the action is given, SAF will try to obtain an ActionConfig. This will be successfull if the action attribute is a valid action alias defined xwork.xml. </li> <li> If the action is given and is not an action alias defined in xwork.xmlm SAF will used the action attribute as if it is the posting url, separting the namespace from it and using UrlHelper to generate the final url. </li> </ol> <!-- END SNIPPET: javadoc --> <p/> <b>Examples</b> <pre> <!-- START SNIPPET: example --> &lt;a:form ... /&gt; <!-- END SNIPPET: example --> </pre>
+<!-- START SNIPPET: javadoc --> <p/> Renders HTML an input form.<p/> <p/> The remote form allows the form to be submitted without the page being refreshed. The results from the form can be inserted into any HTML element on the page.<p/> <p/> NOTE:<p/> The order / logic in determining the posting url of the generated HTML form is as follows:- <ol> <li> If the action attribute is not specified, then the current request will be used to determine the posting url </li> <li> If the action is given, SAF will try to obtain an ActionConfig. This will be successfull if the action attribute is a valid action alias defined xwork.xml. </li> <li> If the action is given and is not an action alias defined in xwork.xmlm SAF will used the action attribute as if it is the posting url, separting the namespace from it and using UrlHelper to generate the final url. </li> </ol> <p/> <!-- END SNIPPET: javadoc --> <p/> <p/> <b>Examples</b> <p/> <pre> <!-- START SNIPPET: example --> <p/> &lt;a:form ... /&gt; <p/> <!-- END SNIPPET: example --> </pre>
 </p>
 
 <h2>Attributes</h2>
@@ -751,6 +751,24 @@ Renders an input form
 
 <!-- Description -->
 <td align="left" valign="top">Set the html onchange attribute on rendered html element</td>
+
+</tr>
+
+<tr>
+<!-- Attribute name -->
+<td align="left" valign="top">accesskey</td>
+
+<!-- Required -->
+<td align="left" valign="top">false</td>
+
+<!-- Default -->
+<td align="left" valign="top">&nbsp;</td>
+
+<!-- Type -->
+<td align="left" valign="top">Object/String</td>
+
+<!-- Description -->
+<td align="left" valign="top">Set the html accesskey attribute on rendered html element</td>
 
 </tr>
 

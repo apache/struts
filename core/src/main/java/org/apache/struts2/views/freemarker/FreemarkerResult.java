@@ -37,10 +37,7 @@ import java.util.Locale;
 /**
  * <!-- START SNIPPET: description -->
  *
- * Renders a view using the Freemarker template engine.  Alternatively, the
- * {@link org.apache.struts2.dispatcher.ServletDispatcherResult
- * dispatcher} result type can be used in conjunction Struts's {@link
- * FreemarkerServlet}.
+ * Renders a view using the Freemarker template engine. 
  * <p>
  * The FreemarkarManager class configures the template loaders so that the
  * template location can be either

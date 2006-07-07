@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
  * vice-versa. When given an HttpServletRequest, the ActionMapper may return null if no action invocation request maps,
  * or it may return an {@link ActionMapping} that describes an action invocation that Struts should attempt to try. The
  * ActionMapper is not required to guarantee that the {@link ActionMapping} returned be a real action or otherwise
- * ensure a valid request. This means that most ActionMappers do not need to consult Struts Action Framework 's configuration to
+ * ensure a valid request. This means that most ActionMappers do not need to consult the Struts configuration to
  * determine if a request should be mapped.
  *
  * <p/> Just as requests can be mapped from HTTP to an action invocation, the opposite is true as well. However, because

@@ -1,4 +1,4 @@
-Struts Action 2 Custom Tagdoclet
+Struts Custom Tagdoclet
 ================================
 
 The provided xdoclet templates are based on original xdoclet distribution templates for tld generation.

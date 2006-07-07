@@ -11,7 +11,7 @@
 	<table border="0" cellspacing="0" cellpadding="4" width="100%">
 		<tr>
 			<td> 
-				WebWork Configuration Browser > ${pageTitle}
+				Struts Configuration Browser > ${pageTitle}
 			</td>
 		</tr>
 	</table>

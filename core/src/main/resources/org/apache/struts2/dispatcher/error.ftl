@@ -1,11 +1,11 @@
 <html>
 <head>
-    <title>Struts Action Framework Problem Report</title>
+    <title>Struts Problem Report</title>
 </head>
 <body>
-    <h2>Struts Action Framework Problem Report</h2>
+    <h2>Struts Problem Report</h2>
     <p>
-    The Struts Action Framework has detected an unhandled exception:
+    The Struts has detected an unhandled exception:
     </p>
 
 <#assign msgs = [] />

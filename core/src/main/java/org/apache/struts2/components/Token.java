@@ -93,7 +93,7 @@ public class Token extends UIBean {
     }
 
     /**
-     * This will be removed in a future version of Struts Action Framework.
+     * This will be removed in a future version of Struts.
      * @deprecated Templates should use $parameters from now on, not $tag.
      */
     public String getTokenNameField() {

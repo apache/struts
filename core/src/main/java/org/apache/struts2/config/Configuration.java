@@ -31,7 +31,7 @@ import java.util.StringTokenizer;
  * Handles all Struts config properties. Implementation of this class is pluggable (the
  * default implementation is {@link DefaultConfiguration}). This gives developers to ability to customize how
  * Struts properties are set and retrieved. As an example, a developer may wish to check a separate property
- * store before delegating to the Struts Action Framework one. <p>
+ * store before delegating to the Struts one. <p>
  * <p/>
  * Key methods: <ul>
  * <p/>
@@ -76,13 +76,13 @@ public class Configuration {
     }
 
     /**
-     * Returns the Struts Action Framework locale. Keys off the property <tt>struts.locale</tt> which should be set
+     * Returns the Struts locale. Keys off the property <tt>struts.locale</tt> which should be set
      * as the Java {@link java.util.Locale#toString() toString()} representation of a Locale object (i.e.,
      * "en", "de_DE", "_GB", "en_US_WIN", "de__POSIX", "fr_MAC", etc). <p>
      * <p/>
      * If no locale is specified then the default VM locale is used ({@link java.util.Locale#getDefault()}).
      *
-     * @return the Struts Action Framework locale if specified or the VM default locale.
+     * @return the Struts locale if specified or the VM default locale.
      */
     public static Locale getLocale() {
         if (locale == null) {

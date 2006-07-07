@@ -107,7 +107,7 @@ public abstract class AbstractDirective extends Directive {
      * @param node        the parameter to set expressed in "name=value" format
      */
     protected void putProperty(Map propertyMap, InternalContextAdapter contextAdapter, Node node) throws ParseErrorException, MethodInvocationException {
-        // node.value uses the WebWorkValueStack to evaluate the directive's value parameter
+        // node.value uses the StrutsValueStack to evaluate the directive's value parameter
         String param = node.value(contextAdapter).toString();
 
         int idx = param.indexOf("=");

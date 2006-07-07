@@ -17,7 +17,7 @@
 
 <a href="#" onclick="toggleDebug('${parameters.id?default("debug")}');return false;">[Debug]</a>
 <div style="display:none" id="${parameters.id?default("debug")}">
-<h2>WebWork ValueStack Debug</h2>
+<h2>Struts ValueStack Debug</h2>
 <p/>
 
 <h3>Value Stack Contents</h3>

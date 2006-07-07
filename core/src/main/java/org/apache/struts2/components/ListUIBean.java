@@ -28,7 +28,7 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * DoubleListUIBean is the standard superclass of all Struts Action Framework list handling components.
+ * DoubleListUIBean is the standard superclass of all Struts list handling components.
  *
  * <p/>
  * 

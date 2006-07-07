@@ -34,7 +34,7 @@ import javax.servlet.jsp.PageContext;
  * Includes or forwards to a view (usually a jsp). Behind the scenes Struts
  * will use a RequestDispatcher, where the target servlet/JSP receives the same
  * request/response objects as the original servlet/JSP. Therefore, you can pass
- * data between them using request.setAttribute() - the WebWork action is
+ * data between them using request.setAttribute() - the Struts action is
  * available.
  * <p/>
  * There are three possible ways the result can be executed:

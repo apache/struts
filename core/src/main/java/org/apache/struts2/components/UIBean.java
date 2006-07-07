@@ -38,8 +38,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * UIBean is the standard superclass of all Struts Action Framework UI componentns.
- * It defines common Struts Action Framework and html properties all UI components should present for usage.
+ * UIBean is the standard superclass of all Struts UI componentns.
+ * It defines common Struts and html properties all UI components should present for usage.
  *
  * <!-- START SNIPPET: templateRelatedAttributes -->
  *

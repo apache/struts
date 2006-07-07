@@ -1,11 +1,11 @@
 <html>
 <head>
-<title>Struts Action 2 <XDtConfig:configParameterValue paramName="Taglibversion"/> Taglib Index</title>
+<title>Struts <XDtConfig:configParameterValue paramName="Taglibversion"/> Taglib Index</title>
 </head>
 
 <body>
 
-<h1>Struts Action 2 <XDtConfig:configParameterValue paramName="Taglibversion"/> Taglib Index</h1>
+<h1>Struts <XDtConfig:configParameterValue paramName="Taglibversion"/> Taglib Index</h1>
 <p>
 <table width="100%">
 

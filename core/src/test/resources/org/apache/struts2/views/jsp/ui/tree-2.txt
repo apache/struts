@@ -17,13 +17,7 @@
     
 <div dojoType="TreeNode" title="Web Frameworks" id="3">
     
-<div dojoType="TreeNode" title="WebWork" id="4">
-</div>
-    
-<div dojoType="TreeNode" title="Struts Action" id="5">
-</div>
-    
-<div dojoType="TreeNode" title="Struts Shale" id="6">
+<div dojoType="TreeNode" title="Struts" id="4">
 </div>
     
 <div dojoType="TreeNode" title="Stripes" id="7">

@@ -51,7 +51,7 @@ public class ActionMapperFactory {
 
                 return mapper;
             } catch (Exception e) {
-                String msg = "Could not create ActionMapper: Struts Action Framework will *not* work!";
+                String msg = "Could not create ActionMapper: Struts will *not* work!";
                 LOG.fatal(msg, e);
                 throw new RuntimeException(msg, e);
             }

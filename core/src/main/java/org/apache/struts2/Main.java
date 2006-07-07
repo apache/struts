@@ -30,11 +30,11 @@ import java.util.List;
 /**
  * <!-- START SNIPPET: javadoc -->
  *
- * Struts Action 2.0 comes with various related tools included in the struts-action-2.0 jar file. You can access these
- * tools by simply unpacking the Struts Action 2.0 distribution and running <b>java -jar struts.jar</b>.
- * Struts Action 2.0 will automatically include all jars in the same directory as the struts.jar file as well as all
+ * Struts comes with various related tools included in the struts-action-2.0 jar file. You can access these
+ * tools by simply unpacking the Struts distribution and running <b>java -jar struts.jar</b>.
+ * Struts will automatically include all jars in the same directory as the struts.jar file as well as all
  * jars in the <i>lib</i> directory. This means you can invoke these tools either from within the standard directory
- * structure found in the Struts Action 2.0 distribution, or from within your WEB-INF/lib directory.
+ * structure found in the Struts distribution, or from within your WEB-INF/lib directory.
  *
  * <p/> You can access the help information for these tools by simply running the jar without any arguments.
  *

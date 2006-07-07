@@ -53,7 +53,7 @@ import java.util.Locale;
  * 
  * It is possible to have a rich text editor do server side browsing  
  * when for example the image button is clicked. To integrate this functionality with 
- * Struts Action Framework, one need to defined the following action definition typically in xwork.xml
+ * Struts, one need to defined the following action definition typically in xwork.xml
  * 
  * <pre>
  *   &lt;package name="richtexteditor-browse" extends="struts-default" 
@@ -73,7 +73,7 @@ import java.util.Locale;
  * 'browse server' button, the url '/struts/static/richtexteditor/editor/filemanager/browser/default/browser.html?&Type=Image&Connector=connectors/jsp/connector.action'.
  * The page browser.html which comes with FCK Editor will trigger the url 
  * '/struts/richtexteditor/editor/filemanager/browser/default/connectors/jsp/connector.action' which will
- * caused the Struts Action Framework's DefaultRichtexteditorConnector to be executed. The trigerring url could be
+ * caused the Struts' DefaultRichtexteditorConnector to be executed. The trigerring url could be
  * changed by altering the 'imageBrowseURL'. There 3 types of such related url, namely 'imageBrowseURL', 
  * 'linkBrowseURL' and 'flashBrowseURL'. It is recomended that the default one being used. One could change the
  * Connector parameter instead. For example
@@ -114,7 +114,7 @@ import java.util.Locale;
  * It is possible for the richtexteditor to do server side uploading as well. For example when clicking
  * on the 'Image' button and then the 'Upload' tab and then selecting a file from client local
  * machine and the clicking 'Send it to the server'. To integrate this functionality with 
- * Struts Action Framework, one need to defined the following action definition typically in xwork.xml
+ * Struts, one need to defined the following action definition typically in xwork.xml
  * 
  * <pre>
  *   &lt;package name="richtexteditor-upload" extends="struts-default" 
@@ -129,7 +129,7 @@ import java.util.Locale;
  * 
  * By default whenever an upload command is triggered, a '/struts/static/richtexteditor/editor/filemanager/upload/uploader.action?Type=Image'
  * will be issued. This could be changed by setting the imageUploadURL attribute of the tag. 
- * When this link is issued, the Struts Action Framework action will get executed. There's 3 such related upload url
+ * When this link is issued, the Struts action will get executed. There's 3 such related upload url
  * namely, 'imageUploadURL', 'linkUploadURL' and 'flashUploadURL'. It is recomended that the default 
  * one being used. However one could change the url, but need to include the Type parameter. For example
  * 
@@ -160,7 +160,7 @@ import java.util.Locale;
  * 
  * <!-- START SNIPPET: richtexteditoraction -->
  * 
- * The Struts Action Framework action that handles the server-side browsing and uploading needs to extends from 
+ * The Struts action that handles the server-side browsing and uploading needs to extends from 
  * AbstractRichtexteditorConnector.
  * 
  * There are four abstract methods need to be implemented, namely 

@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * DoubleListUIBean is the standard superclass of all Struts Action Framework 2.0 double list handling components.
+ * DoubleListUIBean is the standard superclass of all Struts double list handling components.
  *
  * <p/>
  *

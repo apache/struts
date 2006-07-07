@@ -27,7 +27,7 @@ import com.opensymphony.xwork.XWorkTestCase;
 import com.opensymphony.xwork.util.LocalizedTextUtil;
 
 /**
- * Base test case for unit testing WebWork.
+ * Base test case for unit testing Struts.
  */
 public abstract class StrutsTestCase extends XWorkTestCase {
 

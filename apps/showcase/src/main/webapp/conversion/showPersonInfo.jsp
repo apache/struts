@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Showcase - Conversion - Populate Object into SAF Action List</title>
+<title>Showcase - Conversion - Populate Object into Struts action List</title>
 </head>
 <body>
 

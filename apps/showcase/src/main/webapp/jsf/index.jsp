@@ -8,7 +8,7 @@
 <h1> JavaServer Faces Integration </h1>
 
 <p>
-The following pages show how Struts Action 2 and JSF components can work together,
+The following pages show how Struts and JSF components can work together,
 each doing what they do best.
 </p>
 

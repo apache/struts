@@ -9,7 +9,7 @@
 		instead of the normal 'submit' action alias. <p/><p/>
 		
 		<b>Method Prefix</b><br/>
-		By clicking on the 'method prefix' button, the request will cuase SAF to invoke 'submit' 
+		By clicking on the 'method prefix' button, the request will cause Struts to invoke 'submit' 
 		action alias's 'alternateMethod' method instead of the default 'execute' method.<p/>
 		
 		<b>Redirect Prefix</b><br/>

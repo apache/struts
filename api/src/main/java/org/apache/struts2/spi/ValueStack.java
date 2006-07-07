@@ -1,7 +1,7 @@
 package org.apache.struts2.spi;
 
 /**
- * A central fixture of the Struts Action framework, the {@code ValueStack} is a stack which contains the actions
+ * A central fixture of the Struts framework, the {@code ValueStack} is a stack which contains the actions
  * which have executed in addition to other objects. Users can get and set values on the stack using expressions. The
  * {@code ValueStack} will search down the stack starting with the most recent objects until it finds an object to
  * which the expression can apply.

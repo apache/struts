@@ -4,8 +4,8 @@
      layout-decorator="tigris"
      portlet-decorator="tigris"
   />
-  <title>Struts Action 2.0 Portlet Example Application</title>
-  <metadata name="title" xml:lang="en">Struts Action 2.0 Portlet Example Application</metadata>
+  <title>Struts Portlet Example Application</title>
+  <metadata name="title" xml:lang="en">Struts Portlet Example Application</metadata>
 
   <fragment id="simplest" type="layout" name="jetspeed-layouts::VelocityTwoColumns">
     <fragment id="struts-portlet-1" type="portlet" name="struts-portlet::StrutsPortlet">

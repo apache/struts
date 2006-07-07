@@ -8,7 +8,7 @@
 <body>
 
 <ul>
-	<li><saf:url id="url" action="enterPersonsInfo" namespace="/conversion" /><saf:a href="%{#url}">Populate into SAF action class a List of Person.java Object</saf:a></li>
+	<li><saf:url id="url" action="enterPersonsInfo" namespace="/conversion" /><saf:a href="%{#url}">Populate into the Struts action class a List of Person.java Object</saf:a></li>
 </ul>
 
 </body>

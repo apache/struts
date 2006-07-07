@@ -37,7 +37,7 @@
         <echo>
             The default build only retrieves dependencies that released under a license compatible
             with the Apache Software Foundation.  To optionally download the optional LGPL dependencies
-            and compile the dependent Struts Action 2 code, run the 'compile-optional' task.
+            and compile the dependent Struts code, run the 'compile-optional' task.
         </echo>    
         
         <taskdef file="ant-build/ivy-tasks.properties" classpathref="cp" />

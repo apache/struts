@@ -2,9 +2,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" id="struts-portlet">
   <portlet id="StrutsPortlet">
-    <description xml:lang="EN">Struts Action 2.0 Test Portlet</description>
+    <description xml:lang="EN">Struts Test Portlet</description>
     <portlet-name>StrutsPortlet</portlet-name>
-    <display-name xml:lang="EN">Struts Action 2.0 Test Portlet</display-name>
+    <display-name xml:lang="EN">Struts Test Portlet</display-name>
     
     <portlet-class>org.apache.struts2.portlet.dispatcher.Jsr168Dispatcher</portlet-class>
 
@@ -59,9 +59,9 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http:
   </portlet>
   
   <portlet id="StrutsPortlet2">
-    <description xml:lang="EN">Struts Action 2 Test Portlet2</description>
+    <description xml:lang="EN">Struts Test Portlet2</description>
     <portlet-name>StrutsPortlet2</portlet-name>
-    <display-name xml:lang="EN">Struts Action 2 Test Portlet2</display-name>
+    <display-name xml:lang="EN">Struts Test Portlet2</display-name>
     
     <portlet-class>org.apache.struts2.portlet.dispatcher.Jsr168Dispatcher</portlet-class>
 

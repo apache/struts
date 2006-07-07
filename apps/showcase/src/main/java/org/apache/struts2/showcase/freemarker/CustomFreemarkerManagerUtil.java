@@ -23,7 +23,7 @@ import java.util.Date;
 /**
  * This class is just a simple util that gets injected into 
  * {@link CustomFreemarkerManager} through Spring's constructor
- * injection, serving as a simple example in SAF2's Showcase. 
+ * injection, serving as a simple example in Struts' Showcase. 
  */
 public class CustomFreemarkerManagerUtil {
 

@@ -2,12 +2,12 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Showcase - Conversion - Populate Object into SAF Action List</title>
+<title>Showcase - Conversion - Populate Object into Struts' action List</title>
 </head>
 <body>
 
 <p/>
-An example populating a list of object (Person.java) into SAF's action (PersonAction.java)
+An example populating a list of object (Person.java) into Struts' action (PersonAction.java)
 
 <p/>
 

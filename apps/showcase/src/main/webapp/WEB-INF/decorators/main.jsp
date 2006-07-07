@@ -13,7 +13,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <title><decorator:title default="Struts Action Showcase"/></title>
+    <title><decorator:title default="Struts Showcase"/></title>
     <link href="<saf:url value='/styles/main.css'/>" rel="stylesheet" type="text/css" media="all"/>
     <link href="<saf:url value='/struts/niftycorners/niftyCorners.css'/>" rel="stylesheet" type="text/css"/>
     <link href="<saf:url value='/struts/niftycorners/niftyPrint.css'/>" rel="stylesheet" type="text/css" media="print"/>
@@ -42,7 +42,7 @@
     <div id="outer-header">
         <div id="header" class="clearfix">
             <div id="branding">
-                <h1 class="title">Struts Action Showcase</h1>
+                <h1 class="title">Struts Showcase</h1>
                 <saf:action id="dateAction" name="date" namespace="/" executeResult="true" />
             </div><!-- end branding -->
 

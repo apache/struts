@@ -57,11 +57,6 @@ END SNIPPET: supported-validators
                 addError(field, error);
                 errors = true;
             }
-            <#elseif validator.validatorType = "stringregex">
-			if (field.value != null && field.value.match(/${validator.regex}/)==null) {
-				addError(field, error);
-				errors = true;
-			}
             <#elseif validator.validatorType = "email">
             if (field.value != null && field.value.length > 0 && field.value.match(/\b(^[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@([A-Za-z0-9-])+(\.[A-Za-z0-9-]+)*((\.[A-Za-z0-9]{2,})|(\.[A-Za-z0-9]{2,}\.[A-Za-z0-9]{2,}))$)\b/gi)==null) {
                 addError(field, error);

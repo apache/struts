@@ -6160,6 +6160,63 @@
    </tag>
    <tag>
 
+      <name>optgroup</name>
+      <tag-class>com.opensymphony.webwork.views.jsp.ui.OptGroupTag</tag-class>
+      <body-content>JSP</body-content>
+      <description><![CDATA[Renders a Select Tag's OptGroup Tag]]></description>
+
+      <attribute>
+         <name>label</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[Set the label attribute.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>disabled</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[Set the disable attribute.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>list</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[Set the list attribute.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>listKey</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[Set the listKey attribute.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>listValue</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[Set the listValue attribute.]]></description>
+
+      </attribute>
+      <attribute>
+         <name>id</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+
+           <description><![CDATA[id for referencing element. For UI and form tags it will be used as HTML id attribute]]></description>
+
+      </attribute>
+
+   </tag>
+   <tag>
+
       <name>table</name>
       <tag-class>org.apache.struts2.views.jsp.ui.table.WebTableTag</tag-class>
       <body-content>JSP</body-content>

@@ -51,4 +51,7 @@
         </#if>
     >${itemValue?html}</option><#lt/>
 </@saf.iterator>
+
+<#include "/${parameters.templateDir}/simple/optgroup.ftl" />
+
 </select>

@@ -269,7 +269,7 @@ public class PlexusObjectFactory extends ObjectFactory implements ObjectFactoryI
             return pc.lookup(role, roleHint);
         }
         catch (Exception e) {
-            log.debug("Can't load component (" + role + "/" + roleHint + ") with plexus, try now with webwork.", e);
+            log.debug("Can't load component (" + role + "/" + roleHint + ") with plexus, try now with struts.", e);
             Object o = super.buildBean(super.getClassInstance(role), extraContext);
             pc.autowire(o);
             return o;

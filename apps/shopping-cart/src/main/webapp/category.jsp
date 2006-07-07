@@ -42,7 +42,7 @@
     </saf:else>
 </saf:if>
 <saf:else>
-    <h2>WebWork Ajax Catalog</h2>
+    <h2>Struts Ajax Catalog</h2>
 
     <p>Please choose a category to start shopping.</p>
 </saf:else>

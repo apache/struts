@@ -48,7 +48,7 @@
     <div id="outer-header">
         <div id="header" class="clearfix">
             <div id="branding">
-                <h1 class="title">WebWork Ajax</h1>
+                <h1 class="title">Struts Ajax</h1>
             </div><!-- end branding -->
 
             <div id="search">

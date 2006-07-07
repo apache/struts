@@ -78,7 +78,7 @@ import java.util.Properties;
  * <ol>
  *   <li>path defined in ServletContext init parameter named 'templatePath' or 'TemplatePath' (must be an absolute path)</li>
  *   <li>webapp classpath</li>
- *   <li>webwork's static folder (under [WEBWORK_SOURCE]/com/opensymphony/webwork/static/</li>
+ *   <li>struts's static folder (under [WEBWORK_SOURCE]/org/apache/struts2/static/</li>
  * </ol>
  * <p/>
  *

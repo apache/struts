@@ -22,7 +22,7 @@
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
             <scope>test</scope>
-            <!-- has to be compile for WebWorkTestCase, which is part of the base package so others can write unit tests -->
+            <!-- has to be compile for StrutsTestCase, which is part of the base package so others can write unit tests -->
             <optional>true</optional>
         </dependency>            
         <dependency>

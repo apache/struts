@@ -29,18 +29,6 @@
     </servlet>
     <!--  END SNIPPET: freemarkerSupport -->
 
-	<!-- START SNIPPET: compatibility
-    <servlet>
-        <servlet-name>action</servlet-name>
-        <servlet-class>org.apache.struts2.dispatcher.ServletDispatcher</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>action</servlet-name>
-        <url-pattern>*.action</url-pattern>
-    </servlet-mapping>
-    END SNIPPET: compatibility -->
-
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
         <welcome-file>default.jsp</welcome-file>

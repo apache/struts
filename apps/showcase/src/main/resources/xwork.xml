@@ -14,6 +14,8 @@
     
     <include file="xwork-chat.xml" />
     
+    <include file="xwork-hangman.xml" />
+    
     <include file="xwork-continuations.xml"/>
 
     <include file="xwork-tags.xml"/>

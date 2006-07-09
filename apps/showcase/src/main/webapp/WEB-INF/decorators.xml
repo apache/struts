@@ -14,6 +14,7 @@
         <pattern>/ajax/remoteforms/AjaxRemoteForm.action</pattern>
         <pattern>/tags/ui/ajax/*</pattern>
         <pattern>/chat/ajax/*</pattern>
+        <pattern>/hangman/ajax/*</pattern>
     </excludes>
 
     <decorator name="main" page="main.jsp">

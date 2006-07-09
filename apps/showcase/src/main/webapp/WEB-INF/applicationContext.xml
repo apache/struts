@@ -84,5 +84,34 @@
     		<ref local="chatService" />
     	</constructor-arg>
     </bean>
+    
+    
+    <!-- Hangman Showcase Example  -->
+    <bean id="hangmanService" class="org.apache.struts2.showcase.hangman.HangmanService">
+        <constructor-arg index="0">
+                <bean class="org.apache.struts2.showcase.hangman.PropertiesVocabSource">
+                        <constructor-arg index="0">
+                                <props>
+                                        <!--
+                                        <prop key="DOG">An animal, men best friend</prop>
+                                        <prop key="CAT">An animal whose child is called kitten</prop>
+                                        <prop key="CAR">A common vehical with 4 wheels</prop>
+                                        <prop key="WEBWORK">One of the best action based framework from Opensymphony</prop>
+                                        -->
+                                        <prop key="JAVA">A popular programming language from which WebWork is written off</prop>
+                                </props>
+                        </constructor-arg>
+                </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="startHangmanAction" class="org.apache.struts2.showcase.hangman.StartHangmanAction" singleton="false">
+                <constructor-arg index="0">
+                        <ref local="hangmanService" />
+                </constructor-arg>
+    </bean>
+
+    <bean id="guessCharacterAction" class="org.apache.struts2.showcase.hangman.GuessCharacterAction" singleton="false" />
+    <bean id="getUpdatedHangmanAction" class="org.apache.struts2.showcase.hangman.GetUpdatedHangmanAction" singleton="false" />
 </beans>
 

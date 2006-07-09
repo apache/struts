@@ -8,6 +8,11 @@
 
 <body>
 
+<saf:actionerror/>
+<saf:actionmessage/>
+<saf:fielderror />
+
+
 <saf:form action="exampleSubmit" method="post" enctype="multipart/form-data">
     <saf:textfield 
     		label="Name" 

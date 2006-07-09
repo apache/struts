@@ -35,7 +35,7 @@
  listenTopics="${parameters.listenTopics}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl"/>
-><#if parameters.nameValue?exists><@saf.property value="parameters.nameValue"/><#rt/></#if></button></div>
+><#if parameters.nameValue?exists><@saf.property value="parameters.nameValue"/><#rt/></#if></button>
 <#--include "/${parameters.templateDir}/xhtml/controlfooter.ftl" /-->
 <#include "/${parameters.templateDir}/${themeProperties.parent}/controlfooter.ftl" />
 

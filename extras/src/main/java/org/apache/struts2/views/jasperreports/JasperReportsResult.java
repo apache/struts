@@ -44,8 +44,8 @@ import org.apache.commons.logging.LogFactory;
 import com.opensymphony.util.TextUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: description -->

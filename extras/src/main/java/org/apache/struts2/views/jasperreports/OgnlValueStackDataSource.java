@@ -18,7 +18,7 @@
 package org.apache.struts2.views.jasperreports;
 
 import org.apache.struts2.util.MakeIterator;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;

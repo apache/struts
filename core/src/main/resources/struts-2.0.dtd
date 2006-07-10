@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- START SNIPPET: xworkDtd -->
+<!-- START SNIPPET: strutsDtd -->
 
 <!--
    Struts2 configuration DTD.
@@ -100,5 +100,5 @@
     file CDATA #REQUIRED
 >
 
-<!-- END SNIPPET: xworkDtd -->
+<!-- END SNIPPET: strutsDtd -->
 

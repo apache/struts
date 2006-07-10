@@ -51,7 +51,7 @@ import java.util.Locale;
  * <!-- END SNIPPET: webxml -->
  *
  * <!-- START SNIPPET: xworkxml -->
- * In xwork.xml, use type="tiles" on your <result>.
+ * In struts.xml, use type="tiles" on your <result>.
  *
  * <action name="editUser" class="userAction" method="edit">
  *      <result name="success" type="tiles">userForm</result>

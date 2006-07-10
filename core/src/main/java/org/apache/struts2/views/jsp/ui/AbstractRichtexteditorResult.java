@@ -46,7 +46,7 @@ import com.opensymphony.xwork2.Result;
  * Abstract result for all Rich Text Editor results. It contains common methods
  * that might come in handy to its subclass. 
  * 
- * Configuration of result necessary in xwork.xml (is already there by default) are
+ * Configuration of result necessary in struts.xml (is already there by default) are
  * as follows:
  * 
  * <pre>

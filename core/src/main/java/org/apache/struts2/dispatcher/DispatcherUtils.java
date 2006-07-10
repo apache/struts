@@ -23,6 +23,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.StrutsXMLConfigurationProvider;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
@@ -32,6 +33,7 @@ import org.apache.struts2.util.ObjectFactoryInitializable;
 import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.util.*;
 import com.opensymphony.xwork2.util.location.Location;
@@ -217,11 +219,7 @@ public class DispatcherUtils {
         configurationManager.addConfigurationProvider(new XmlConfigurationProvider("xwork.xml", false));
         
         // Load Struts config files
-        Map<String,String> dtdMappings = new HashMap<String,String>();
-        dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.0//EN", "struts-2.0.dtd");
-        XmlConfigurationProvider prov = new XmlConfigurationProvider("struts.xml", false);
-        prov.setDtdMappings(dtdMappings);
-        configurationManager.addConfigurationProvider(prov);
+        configurationManager.addConfigurationProvider(new StrutsXMLConfigurationProvider(false));
         
         synchronized(DispatcherUtils.class) {
             if (dispatcherListeners.size() > 0) {

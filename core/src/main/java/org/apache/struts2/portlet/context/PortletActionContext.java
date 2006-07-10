@@ -107,7 +107,7 @@ public class PortletActionContext implements PortletActionConstants {
      * Get the action namespace of the portlet. Used to organize actions for multiple portlets in
      * the same portlet application.
      *
-     * @return The portlet namespace as defined in <code>portlet.xml</code> and <code>xwork.xml</code>
+     * @return The portlet namespace as defined in <code>portlet.xml</code> and <code>struts.xml</code>
      */
     public static String getPortletNamespace() {
         return (String)getContext().get(PORTLET_NAMESPACE);

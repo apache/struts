@@ -18,7 +18,7 @@
 package org.apache.struts2.sitegraph.renderers;
 
 import org.apache.struts2.config.Configuration;
-import org.apache.struts2.sitegraph.XWorkConfigRetriever;
+import org.apache.struts2.sitegraph.StrutsConfigRetriever;
 import org.apache.struts2.sitegraph.entities.Target;
 import org.apache.struts2.sitegraph.entities.View;
 import org.apache.struts2.sitegraph.model.*;
@@ -55,7 +55,7 @@ public class DOTRenderer {
             }
         });
 
-        Set namespaces = XWorkConfigRetriever.getNamespaces();
+        Set namespaces = StrutsConfigRetriever.getNamespaces();
         for (Iterator iter = namespaces.iterator(); iter.hasNext();) {
             String namespace = (String) iter.next();
 
@@ -65,10 +65,10 @@ public class DOTRenderer {
 
             SubGraph subGraph = graph.create(namespace);
 
-            Set actionNames = XWorkConfigRetriever.getActionNames(namespace);
+            Set actionNames = StrutsConfigRetriever.getActionNames(namespace);
             for (Iterator iterator = actionNames.iterator(); iterator.hasNext();) {
                 String actionName = (String) iterator.next();
-                ActionConfig actionConfig = XWorkConfigRetriever.getActionConfig(namespace,
+                ActionConfig actionConfig = StrutsConfigRetriever.getActionConfig(namespace,
                         actionName);
 
                 ActionNode action = new ActionNode(actionName);
@@ -184,7 +184,7 @@ public class DOTRenderer {
         } else if (location.endsWith(".vm")) {
             type = View.TYPE_VM;
         }
-        return XWorkConfigRetriever.getView(namespace, actionName, resultName, type);
+        return StrutsConfigRetriever.getView(namespace, actionName, resultName, type);
     }
 
     private String getViewLocation(String location, String namespace) {

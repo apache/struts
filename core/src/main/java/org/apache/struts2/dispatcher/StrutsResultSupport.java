@@ -54,7 +54,7 @@ import com.opensymphony.xwork2.util.TextParseUtil;
  * <!-- START SNIPPET: example -->
  * 
  * <p/>
- * In the xwork.xml configuration file, these would be included as:
+ * In the struts.xml configuration file, these would be included as:
  * <p/>
  * <pre>
  *  &lt;result name="success" type="redirect"&gt;
@@ -82,7 +82,7 @@ import com.opensymphony.xwork2.util.TextParseUtil;
  * to your Result. If you do subclass this class you will need to
  * override {@link #doExecute(String, ActionInvocation)}.<p>
  * <p/>
- * Any custom result can be defined in xwork.xml as:
+ * Any custom result can be defined in struts.xml as:
  * <p/>
  * <pre>
  *  &lt;result-types&gt;

@@ -53,7 +53,7 @@ import java.util.Locale;
  * 
  * It is possible to have a rich text editor do server side browsing  
  * when for example the image button is clicked. To integrate this functionality with 
- * Struts, one need to defined the following action definition typically in xwork.xml
+ * Struts, one need to defined the following action definition typically in struts.xml
  * 
  * <pre>
  *   &lt;package name="richtexteditor-browse" extends="struts-default" 
@@ -95,7 +95,7 @@ import java.util.Locale;
  * 
  * <p/>
  * 
- * By default the action method that needs to be defined in xwork.xml needs to be 'browse'. If this needs
+ * By default the action method that needs to be defined in struts.xml needs to be 'browse'. If this needs
  * to be something else say, myBrowse, the following could be used
  * 
  * <pre>
@@ -114,7 +114,7 @@ import java.util.Locale;
  * It is possible for the richtexteditor to do server side uploading as well. For example when clicking
  * on the 'Image' button and then the 'Upload' tab and then selecting a file from client local
  * machine and the clicking 'Send it to the server'. To integrate this functionality with 
- * Struts, one need to defined the following action definition typically in xwork.xml
+ * Struts, one need to defined the following action definition typically in struts.xml
  * 
  * <pre>
  *   &lt;package name="richtexteditor-upload" extends="struts-default" 
@@ -146,7 +146,7 @@ import java.util.Locale;
  * In this case the action will need to have a namespace of '/struts/static/richtexteditor/editor/filemanager/upload'
  * and action name of 'aDifferentUploader'
  * 
- * By default the action method that needs to be defined in xwork.xml needs to be 'upload'. If this needs
+ * By default the action method that needs to be defined in struts.xml needs to be 'upload'. If this needs
  * to be something else say, myUpload, the following could be used
  * 
  * <pre>

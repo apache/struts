@@ -18,7 +18,10 @@
 package org.apache.struts2.sitegraph;
 
 import com.opensymphony.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.config.ConfigurationManager;
+
 import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.dispatcher.DispatcherUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -29,10 +32,11 @@ import java.net.URL;
  */
 public class SiteGraphTest extends StrutsTestCase {
     public void testWebFlow() throws Exception {
+        DispatcherUtils.getInstance().getConfigurationManager().clearConfigurationProviders();
         // use the classloader rather than relying on the
         // working directory being an assumed value when
         // running the test:  so let's get this class's parent dir 
-        URL url = ClassLoaderUtil.getResource("org/apache/struts2/sitegraph/xwork.xml", SiteGraphTest.class);
+        URL url = ClassLoaderUtil.getResource("org/apache/struts2/sitegraph/struts.xml", SiteGraphTest.class);
         File file = new File(url.toString().substring(5));
         String dir = file.getParent();
 

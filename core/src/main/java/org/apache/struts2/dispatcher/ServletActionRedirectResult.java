@@ -31,7 +31,7 @@ import com.opensymphony.xwork2.ActionInvocation;
  *
  * This result uses the {@link ActionMapper} provided by the {@link ActionMapperFactory} to redirect the browser to a
  * URL that invokes the specified action and (optional) namespace. This is better than the {@link ServletRedirectResult}
- * because it does not require you to encode the URL patterns processed by the {@link ActionMapper} in to your xwork.xml
+ * because it does not require you to encode the URL patterns processed by the {@link ActionMapper} in to your struts.xml
  * configuration files. This means you can change your URL patterns at any point and your application will still work.
  * It is strongly recommended that if you are redirecting to another action, you use this result rather than the
  * standard redirect result.

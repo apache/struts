@@ -60,10 +60,10 @@ import java.util.Set;
  * </li>
  * <li>
  * If the action is given, Struts will try to obtain an ActionConfig. This will be
- * successfull if the action attribute is a valid action alias defined xwork.xml.
+ * successfull if the action attribute is a valid action alias defined struts.xml.
  * </li>
  * <li>
- * If the action is given and is not an action alias defined in xwork.xml, Struts
+ * If the action is given and is not an action alias defined in struts.xml, Struts
  * will used the action attribute as if it is the posting url, separting the namespace
  * from it and using UrlHelper to generate the final url.
  * </li>

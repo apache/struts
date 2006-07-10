@@ -96,7 +96,7 @@ public class SiteGraph {
             }
         }
 
-        XWorkConfigRetriever.setConfiguration(configDir, views.split("[, ]+"));
+        StrutsConfigRetriever.setConfiguration(configDir, views.split("[, ]+"));
         DOTRenderer renderer = new DOTRenderer(writer);
         renderer.render(namespace);
     }

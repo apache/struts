@@ -61,7 +61,7 @@ import java.util.Map;
  *
  * <!-- START SNIPPET: method -->
  *
- * With method-prefix, instead of calling baz action's execute() method (by default if it isn't overriden in xwork.xml
+ * With method-prefix, instead of calling baz action's execute() method (by default if it isn't overriden in struts.xml
  * to be something else), the baz action's anotherMethod() will be called. A very elegant way determine which button is
  * clicked. Alternatively, one would have submit button set a particular value on the action when clicked, and the
  * execute() method decides on what to do with the setted value depending on which button is clicked.
@@ -82,9 +82,9 @@ import java.util.Map;
  *
  * <!-- START SNIPPET: action -->
  *
- * With action-prefix, instead of executing baz action's execute() method (by default if it isn't overriden in xwork.xml
+ * With action-prefix, instead of executing baz action's execute() method (by default if it isn't overriden in struts.xml
  * to be something else), the anotherAction action's execute() method (assuming again if it isn't overriden with
- * something else in xwork.xml) will be executed.
+ * something else in struts.xml) will be executed.
  *
  * <!-- END SNIPPET: action -->
  *
@@ -102,7 +102,7 @@ import java.util.Map;
  *
  * <!-- START SNIPPET: redirect -->
  *
- * With redirect-prefix, instead of executing baz action's execute() method (by default it isn't overriden in xwork.xml
+ * With redirect-prefix, instead of executing baz action's execute() method (by default it isn't overriden in struts.xml
  * to be something else), it will get redirected to, in this case to www.google.com. Internally it uses
  * ServletRedirectResult to do the task.
  *
@@ -123,7 +123,7 @@ import java.util.Map;
  * <!-- START SNIPPET: redirect-action -->
  *
  * With redirect-action-prefix, instead of executing baz action's execute() method (by default it isn't overriden in
- * xwork.xml to be something else), it will get redirected to, in this case 'dashboard.action'. Internally it uses
+ * struts.xml to be something else), it will get redirected to, in this case 'dashboard.action'. Internally it uses
  * ServletRedirectResult to do the task and read off the extension from the struts.properties.
  *
  * <!-- END SNIPPET: redirect-action -->

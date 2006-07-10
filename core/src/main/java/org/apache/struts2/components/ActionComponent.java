@@ -41,7 +41,7 @@ import java.util.Map;
  * <!-- START SNIPPET: javadoc -->
  * <p>This tag enables developers to call actions directly from a JSP page by specifying the action name and an optional
  * namespace.  The body content of the tag is used to render the results from the Action.  Any result processor defined
- * for this action in xwork.xml will be ignored, <i>unless</i> the executeResult parameter is specified.</p>
+ * for this action in struts.xml will be ignored, <i>unless</i> the executeResult parameter is specified.</p>
  * <!-- END SNIPPET: javadoc -->
  *
  * <!-- START SNIPPET: params -->

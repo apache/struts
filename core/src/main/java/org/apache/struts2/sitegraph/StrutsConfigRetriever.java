@@ -3,13 +3,14 @@
  */
 package org.apache.struts2.sitegraph;
 
+import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.config.StrutsXMLConfigurationProvider;
 import org.apache.struts2.dispatcher.DispatcherUtils;
-import org.apache.struts2.sitegraph.collectors.ArbitraryXMLConfigurationProvider;
 import org.apache.struts2.sitegraph.entities.FreeMarkerView;
 import org.apache.struts2.sitegraph.entities.JspView;
 import org.apache.struts2.sitegraph.entities.VelocityView;
@@ -25,13 +26,14 @@ import java.util.Set;
 /**
  * Initializes and retrieves XWork config elements
  */
-public class XWorkConfigRetriever {
+public class StrutsConfigRetriever {
 
-    private static final Log LOG = LogFactory.getLog(XWorkConfigRetriever.class);
+    private static final Log LOG = LogFactory.getLog(StrutsConfigRetriever.class);
     private static String configDir;
     private static String[] views;
     private static boolean isXWorkStarted = false;
     private static Map viewCache = new LinkedHashMap();
+    private static ConfigurationManager cm;
 
     /**
      * Returns a Map of all action names/configs
@@ -41,15 +43,16 @@ public class XWorkConfigRetriever {
     public static Map getActionConfigs() {
         if (!isXWorkStarted)
             initXWork();
-        return DispatcherUtils.getInstance().getConfigurationManager().getConfiguration().getRuntimeConfiguration().getActionConfigs();
+        return cm.getConfiguration().getRuntimeConfiguration().getActionConfigs();
     }
 
     private static void initXWork() {
-        String configFilePath = configDir + "/xwork.xml";
+        String configFilePath = configDir + "/struts.xml";
         File configFile = new File(configFilePath);
         try {
-            ConfigurationProvider configProvider = new ArbitraryXMLConfigurationProvider(configFile.getCanonicalPath());
-            DispatcherUtils.getInstance().getConfigurationManager().addConfigurationProvider(configProvider);
+            ConfigurationProvider configProvider = new StrutsXMLConfigurationProvider(configFile.getCanonicalPath(), true);
+            cm = new ConfigurationManager();
+            cm.addConfigurationProvider(configProvider);
             isXWorkStarted = true;
         } catch (IOException e) {
             LOG.error("IOException", e);
@@ -145,7 +148,7 @@ public class XWorkConfigRetriever {
         String viewId = namespace + "/" + actionName + "/" + resultName;
         View view = (View) viewCache.get(viewId);
         if (view == null) {
-            File viewFile = XWorkConfigRetriever.getViewFile(namespace, actionName, resultName);
+            File viewFile = StrutsConfigRetriever.getViewFile(namespace, actionName, resultName);
             if (viewFile != null) {
                 switch (type) {
                     case View.TYPE_JSP:
@@ -168,8 +171,8 @@ public class XWorkConfigRetriever {
     }
 
     public static void setConfiguration(String configDir, String[] views) {
-        XWorkConfigRetriever.configDir = configDir;
-        XWorkConfigRetriever.views = views;
+        StrutsConfigRetriever.configDir = configDir;
+        StrutsConfigRetriever.views = views;
         isXWorkStarted = false;
         viewCache = new LinkedHashMap();
     }

@@ -19,8 +19,8 @@ package org.apache.struts2.views.tiles;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.LocaleProvider;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.LocaleProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tiles.*;

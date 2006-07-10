@@ -17,16 +17,16 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork.*;
-import com.opensymphony.xwork.config.Configuration;
-import com.opensymphony.xwork.config.ConfigurationException;
-import com.opensymphony.xwork.config.ConfigurationProvider;
-import com.opensymphony.xwork.config.entities.ActionConfig;
-import com.opensymphony.xwork.config.entities.InterceptorMapping;
-import com.opensymphony.xwork.config.entities.PackageConfig;
-import com.opensymphony.xwork.config.entities.ResultConfig;
-import com.opensymphony.xwork.interceptor.ParametersInterceptor;
-import com.opensymphony.xwork.mock.MockResult;
+import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
+import com.opensymphony.xwork2.mock.MockResult;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;

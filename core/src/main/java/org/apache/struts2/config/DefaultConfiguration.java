@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.config;
 
-import com.opensymphony.xwork.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.struts2.StrutsConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

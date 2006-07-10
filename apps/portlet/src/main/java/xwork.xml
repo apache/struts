@@ -8,7 +8,7 @@
 	<package name="view" extends="struts-portlet-default"
 		namespace="/view">
 		<action name="index"
-			class="com.opensymphony.xwork.ActionSupport">
+			class="com.opensymphony.xwork2.ActionSupport">
 			<result name="success">/WEB-INF/view/index.jsp</result>
 		</action>
 
@@ -48,14 +48,14 @@
 		</action>
 
 		<action name="tokenExample"
-			class="com.opensymphony.xwork.ActionSupport" method="input">
+			class="com.opensymphony.xwork2.ActionSupport" method="input">
 			<result name="input">
 				/WEB-INF/view/tokenExampleInput.jsp
 			</result>
 		</action>
 
 		<action name="processTokenExample"
-			class="com.opensymphony.xwork.ActionSupport">
+			class="com.opensymphony.xwork2.ActionSupport">
 			<result name="input">
 				/WEB-INF/view/tokenExampleInput.jsp
 			</result>
@@ -76,19 +76,19 @@
 		</action>
 
 		<action name="ajaxExample"
-			class="com.opensymphony.xwork.ActionSupport">
+			class="com.opensymphony.xwork2.ActionSupport">
 			<result name="success">
 				/WEB-INF/view/ajaxExample.jsp
 			</result>
 		</action>
 
 		<action name="ajaxData"
-			class="com.opensymphony.xwork.ActionSupport">
+			class="com.opensymphony.xwork2.ActionSupport">
 			<result name="success">/WEB-INF/view/ajaxData.jsp</result>
 		</action>
 
 		<action name="freeMarkerExample"
-			class="com.opensymphony.xwork.ActionSupport" method="input">
+			class="com.opensymphony.xwork2.ActionSupport" method="input">
 			<result type="freemarker" name="input">
 				/WEB-INF/view/freeMarkerExampleInput.ftl
 			</result>
@@ -103,7 +103,7 @@
 			<result type="freemarker" name="success">/WEB-INF/view/freeMarkerExample.ftl</result>
 		</action>
 		
-		<action name="velocityHelloWorld" class="com.opensymphony.xwork.ActionSupport">
+		<action name="velocityHelloWorld" class="com.opensymphony.xwork2.ActionSupport">
 			<result type="velocity" name="success">/WEB-INF/view/helloWorld.vm</result>
 		</action>
 
@@ -112,11 +112,11 @@
 	<package name="edit" extends="struts-portlet-default"
 		namespace="/edit">
 		<action name="index"
-			class="com.opensymphony.xwork.ActionSupport">
+			class="com.opensymphony.xwork2.ActionSupport">
 			<result name="success">/WEB-INF/edit/index.jsp</result>
 		</action>
 		<action name="test"
-			class="com.opensymphony.xwork.ActionSupport">
+			class="com.opensymphony.xwork2.ActionSupport">
 			<result name="success">/WEB-INF/edit/test.jsp</result>
 		</action>
 		<action name="formExampleEdit"
@@ -146,7 +146,7 @@
 
 	<package name="editTest" extends="edit" namespace="/edit/dummy/test">
 		<action name="testAction"
-			class="com.opensymphony.xwork.ActionSupport">
+			class="com.opensymphony.xwork2.ActionSupport">
 			<result name="success">/WEB-INF/edit/namespaceTest.jsp</result>
 		</action>
 	</package>
@@ -154,7 +154,7 @@
 	<package name="help" extends="struts-portlet-default"
 		namespace="/help">
 		<action name="index"
-			class="com.opensymphony.xwork.ActionSupport">
+			class="com.opensymphony.xwork2.ActionSupport">
 			<result name="success">/WEB-INF/help/index.jsp</result>
 		</action>
 	</package>

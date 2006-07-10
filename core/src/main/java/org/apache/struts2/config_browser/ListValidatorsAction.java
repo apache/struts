@@ -17,9 +17,9 @@
  */
 package org.apache.struts2.config_browser;
 
-import com.opensymphony.xwork.ActionSupport;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.validator.ActionValidatorManagerFactory;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.validator.ActionValidatorManagerFactory;
 import org.apache.struts2.util.ClassLoaderUtils;
 
 import java.util.Collections;

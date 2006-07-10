@@ -19,8 +19,8 @@ package org.apache.struts2.portlet.example;
 
 import java.util.Map;
 
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
 
 public class ExampleAction extends ActionSupport {
     

@@ -55,14 +55,14 @@ import org.apache.struts2.util.ObjectFactoryInitializable;
 
 import com.opensymphony.util.ClassLoaderUtil;
 import com.opensymphony.util.FileManager;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionProxy;
-import com.opensymphony.xwork.ActionProxyFactory;
-import com.opensymphony.xwork.ObjectFactory;
-import com.opensymphony.xwork.config.ConfigurationException;
-import com.opensymphony.xwork.config.ConfigurationManager;
-import com.opensymphony.xwork.util.LocalizedTextUtil;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->

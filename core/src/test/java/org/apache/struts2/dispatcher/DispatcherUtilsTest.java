@@ -21,7 +21,7 @@ import java.util.Locale;
 
 import org.apache.struts2.StrutsTestCase;
 
-import com.opensymphony.xwork.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 /**
  * Test case for DispatcherUtils.

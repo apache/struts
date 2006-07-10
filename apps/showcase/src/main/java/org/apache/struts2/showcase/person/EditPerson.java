@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.showcase.person;
 
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 import java.util.List;
 import java.util.Iterator;

@@ -26,7 +26,7 @@ import org.apache.struts2.components.URL;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * Unit test for {@link URLTag}.

@@ -25,9 +25,9 @@ import org.apache.struts2.dispatcher.DispatcherUtils;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.Configuration;
 
-import com.opensymphony.xwork.*;
-import com.opensymphony.xwork.interceptor.PreResultListener;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.interceptor.PreResultListener;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;

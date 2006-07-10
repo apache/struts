@@ -18,7 +18,7 @@
 package org.apache.struts2.dispatcher;
 
 import org.apache.struts2.ServletActionContext;
-import com.opensymphony.xwork.ActionInvocation;
+import com.opensymphony.xwork2.ActionInvocation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

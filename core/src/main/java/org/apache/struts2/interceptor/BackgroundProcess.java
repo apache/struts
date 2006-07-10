@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork.ActionInvocation;
+import com.opensymphony.xwork2.ActionInvocation;
 
 import java.io.Serializable;
 

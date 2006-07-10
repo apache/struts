@@ -23,8 +23,8 @@ import org.apache.struts2.config.Configuration;
 import org.apache.struts2.dispatcher.DispatcherUtils;
 import org.springframework.mock.web.MockServletContext;
 
-import com.opensymphony.xwork.XWorkTestCase;
-import com.opensymphony.xwork.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 /**
  * Base test case for unit testing Struts.

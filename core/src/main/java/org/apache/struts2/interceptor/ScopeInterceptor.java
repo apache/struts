@@ -17,12 +17,12 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.ActionProxy;
-import com.opensymphony.xwork.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork.interceptor.PreResultListener;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import com.opensymphony.xwork2.interceptor.PreResultListener;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.ServletActionContext;
 import org.apache.commons.logging.Log;

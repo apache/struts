@@ -21,7 +21,7 @@ package org.apache.struts2.dispatcher;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * A simple action support class that sets properties to be able to serve 
@@ -39,7 +39,7 @@ public class DefaultActionSupport extends ActionSupport {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.opensymphony.xwork.ActionSupport#execute()
+	 * @see com.opensymphony.xwork2.ActionSupport#execute()
 	 */
 	public String execute() throws Exception {
 		HttpServletRequest request = ServletActionContext.getRequest();

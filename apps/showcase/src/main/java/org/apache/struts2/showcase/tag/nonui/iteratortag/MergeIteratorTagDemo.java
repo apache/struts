@@ -17,8 +17,8 @@
  */
 package org.apache.struts2.showcase.tag.nonui.iteratortag;
 
-import com.opensymphony.xwork.ActionSupport;
-import com.opensymphony.xwork.Validateable;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Validateable;
 
 
 /**

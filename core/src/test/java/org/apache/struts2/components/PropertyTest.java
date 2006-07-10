@@ -19,8 +19,8 @@ package org.apache.struts2.components;
 
 import org.apache.struts2.components.Property;
 import org.apache.struts2.util.StrutsTypeConverter;
-import com.opensymphony.xwork.util.OgnlValueStack;
-import com.opensymphony.xwork.util.XWorkConverter;
+import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.XWorkConverter;
 import junit.framework.TestCase;
 import ognl.Ognl;
  

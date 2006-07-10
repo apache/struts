@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.config;
 
-import com.opensymphony.xwork.ObjectFactory;
+import com.opensymphony.xwork2.ObjectFactory;
 import org.apache.struts2.StrutsConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

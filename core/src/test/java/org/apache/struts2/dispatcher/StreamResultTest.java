@@ -19,10 +19,10 @@ package org.apache.struts2.dispatcher;
 
 import com.opensymphony.util.ClassLoaderUtil;
 import org.apache.struts2.ServletActionContext;
-import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.mock.MockActionInvocation;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import junit.framework.TestCase;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -141,7 +141,7 @@ public class StreamResultTest extends TestCase {
         MyImageAction action = new MyImageAction();
         contentLength = (int) action.getContentLength();
 
-        mai = new com.opensymphony.xwork.mock.MockActionInvocation();
+        mai = new com.opensymphony.xwork2.mock.MockActionInvocation();
         mai.setAction(action);
         mai.setStack(stack);
         mai.setInvocationContext(ActionContext.getContext());

@@ -18,8 +18,8 @@
 package org.apache.struts2.util;
 
 import com.opensymphony.util.GUID;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

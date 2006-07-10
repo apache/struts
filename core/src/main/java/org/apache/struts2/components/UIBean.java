@@ -24,8 +24,8 @@ import org.apache.struts2.components.template.TemplateEngineManager;
 import org.apache.struts2.components.template.TemplateRenderingContext;
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.views.util.ContextUtil;
-import com.opensymphony.xwork.config.ConfigurationException;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

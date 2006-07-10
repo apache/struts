@@ -18,7 +18,7 @@
 package org.apache.struts2.components.template;
 
 import org.apache.struts2.components.UIBean;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import java.io.Writer;
 import java.util.Map;

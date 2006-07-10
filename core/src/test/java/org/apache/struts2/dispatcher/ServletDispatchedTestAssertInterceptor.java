@@ -18,8 +18,8 @@
 package org.apache.struts2.dispatcher;
 
 import org.apache.struts2.TestAction;
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.interceptor.Interceptor;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.interceptor.Interceptor;
 import junit.framework.Assert;
 
 

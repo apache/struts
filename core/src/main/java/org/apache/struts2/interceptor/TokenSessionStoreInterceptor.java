@@ -20,10 +20,10 @@ package org.apache.struts2.interceptor;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.util.InvocationSessionStore;
 import org.apache.struts2.util.TokenHelper;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.Result;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;

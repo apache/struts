@@ -21,7 +21,7 @@ import org.apache.struts2.example.ajax.cart.ShoppingCart;
 import org.apache.struts2.example.ajax.catalog.Catalog;
 import org.apache.struts2.example.ajax.catalog.Category;
 import org.apache.struts2.interceptor.SessionAware;
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 import java.util.Map;
 

@@ -25,8 +25,8 @@ import javax.faces.application.ViewHandler;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
 
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.Result;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.Result;
 
 /**
  * Executes the JSF render phase

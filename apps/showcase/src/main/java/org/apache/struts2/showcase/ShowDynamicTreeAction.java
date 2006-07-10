@@ -2,7 +2,7 @@ package org.apache.struts2.showcase;
 
 import org.apache.struts2.showcase.ajax.tree.Category;
 
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 // START SNIPPET: treeExampleDynamicJavaShow 
 

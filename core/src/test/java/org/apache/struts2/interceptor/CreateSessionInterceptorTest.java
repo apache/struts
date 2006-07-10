@@ -25,7 +25,7 @@ import org.jmock.core.matcher.InvokeOnceMatcher;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
-import com.opensymphony.xwork.mock.MockActionInvocation;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
 
 /**
  * Test case for CreateSessionInterceptor.

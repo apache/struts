@@ -20,11 +20,11 @@ package org.apache.struts2.views.xslt;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.Configuration;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.Result;
-import com.opensymphony.xwork.util.OgnlValueStack;
-import com.opensymphony.xwork.util.TextParseUtil;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

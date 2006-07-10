@@ -19,13 +19,13 @@ package org.apache.struts2.interceptor;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.ActionProxy;
-import com.opensymphony.xwork.ValidationAware;
-import com.opensymphony.xwork.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork.interceptor.Interceptor;
-import com.opensymphony.xwork.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

@@ -4,7 +4,7 @@
 package org.apache.struts2.sitegraph.collectors;
 
 import com.opensymphony.util.FileManager;
-import com.opensymphony.xwork.config.providers.XmlConfigurationProvider;
+import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -33,7 +33,7 @@ public class ArbitraryXMLConfigurationProvider extends XmlConfigurationProvider 
     /**
      * Override Xwork method so we cn use an arbitrary config file
      *
-     * @see com.opensymphony.xwork.config.providers.XmlConfigurationProvider#getInputStream(java.lang.String)
+     * @see com.opensymphony.xwork2.config.providers.XmlConfigurationProvider#getInputStream(java.lang.String)
      */
     protected InputStream getInputStream(String fileName) {
         InputStream is = null;

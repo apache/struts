@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ui.*;

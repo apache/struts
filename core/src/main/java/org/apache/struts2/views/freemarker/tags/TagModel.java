@@ -18,7 +18,7 @@
 package org.apache.struts2.views.freemarker.tags;
 
 import org.apache.struts2.components.Component;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import freemarker.template.SimpleNumber;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateTransformModel;

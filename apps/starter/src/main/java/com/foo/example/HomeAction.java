@@ -17,7 +17,7 @@
  */
 package com.foo.example;
 
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * <code>HomeAction</code>

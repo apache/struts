@@ -20,7 +20,7 @@ package org.apache.struts2.spring;
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.util.ObjectFactoryInitializable;
 import org.apache.struts2.StrutsConstants;
-import com.opensymphony.xwork.spring.SpringObjectFactory;
+import com.opensymphony.xwork2.spring.SpringObjectFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;

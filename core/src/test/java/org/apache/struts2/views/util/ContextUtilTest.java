@@ -19,7 +19,7 @@ package org.apache.struts2.views.util;
 
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.StrutsConstants;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import junit.framework.TestCase;
 
 /**

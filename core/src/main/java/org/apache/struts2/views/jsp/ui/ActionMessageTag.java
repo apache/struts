@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.components.ActionMessage;
 import org.apache.struts2.components.Component;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * ActionMessage Tag.

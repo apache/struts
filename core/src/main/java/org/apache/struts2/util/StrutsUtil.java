@@ -20,8 +20,8 @@ package org.apache.struts2.util;
 import com.opensymphony.util.TextUtils;
 import org.apache.struts2.views.jsp.ui.OgnlTool;
 import org.apache.struts2.views.util.UrlHelper;
-import com.opensymphony.xwork.ObjectFactory;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

@@ -21,9 +21,9 @@ import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
 import org.apache.struts2.views.util.UrlHelper;
 import org.apache.struts2.dispatcher.DispatcherUtils;
-import com.opensymphony.xwork.util.OgnlValueStack;
-import com.opensymphony.xwork.util.XWorkContinuationConfig;
-import com.opensymphony.xwork.ActionContext;
+import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.XWorkContinuationConfig;
+import com.opensymphony.xwork2.ActionContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

@@ -17,8 +17,8 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.xwork.*;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.TestConfigurationProvider;

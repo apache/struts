@@ -39,25 +39,25 @@ public interface StrutsStatics {
     /**
      * Constant for the HTTP request object.
      */
-    public static final String HTTP_REQUEST = "com.opensymphony.xwork.dispatcher.HttpServletRequest";
+    public static final String HTTP_REQUEST = "com.opensymphony.xwork2.dispatcher.HttpServletRequest";
 
     /**
      * Constant for the HTTP response object.
      */
-    public static final String HTTP_RESPONSE = "com.opensymphony.xwork.dispatcher.HttpServletResponse";
+    public static final String HTTP_RESPONSE = "com.opensymphony.xwork2.dispatcher.HttpServletResponse";
 
     /**
      * Constant for an HTTP {@link javax.servlet.RequestDispatcher request dispatcher}.
      */
-    public static final String SERVLET_DISPATCHER = "com.opensymphony.xwork.dispatcher.ServletDispatcher";
+    public static final String SERVLET_DISPATCHER = "com.opensymphony.xwork2.dispatcher.ServletDispatcher";
 
     /**
      * Constant for the {@link javax.servlet.ServletContext servlet context} object.
      */
-    public static final String SERVLET_CONTEXT = "com.opensymphony.xwork.dispatcher.ServletContext";
+    public static final String SERVLET_CONTEXT = "com.opensymphony.xwork2.dispatcher.ServletContext";
 
     /**
      * Constant for the JSP {@link javax.servlet.jsp.PageContext page context}.
      */
-    public static final String PAGE_CONTEXT = "com.opensymphony.xwork.dispatcher.PageContext";
+    public static final String PAGE_CONTEXT = "com.opensymphony.xwork2.dispatcher.PageContext";
 }

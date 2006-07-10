@@ -17,9 +17,9 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import junit.framework.TestCase;
 

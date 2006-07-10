@@ -17,8 +17,8 @@
  */
 package org.apache.struts2;
 
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;

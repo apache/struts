@@ -19,7 +19,7 @@ package org.apache.struts2.config;
 
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.StrutsConstants;
-import com.opensymphony.xwork.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 import java.util.Iterator;
 import java.util.Locale;

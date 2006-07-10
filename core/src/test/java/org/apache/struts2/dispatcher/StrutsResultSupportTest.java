@@ -37,9 +37,9 @@ import org.apache.struts2.StrutsTestCase;
  */
 import org.easymock.EasyMock;
 
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.ActionSupport;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * Test case for StrutsResultSupport.

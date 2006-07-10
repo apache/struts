@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.example;
 
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * <code>HomeAction</code>

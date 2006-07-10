@@ -17,8 +17,8 @@
  */
 package org.apache.struts2.config_browser;
 
-import com.opensymphony.xwork.ActionSupport;
-import com.opensymphony.xwork.config.entities.ActionConfig;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.StrutsConstants;
 

@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.components.Param.UnnamedParametric;
 import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.util.MergeIteratorFilter;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->

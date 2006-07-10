@@ -18,7 +18,7 @@
 package org.apache.struts2.showcase.filedownload;
 
 import org.apache.struts2.ServletActionContext;
-import com.opensymphony.xwork.Action;
+import com.opensymphony.xwork2.Action;
 
 import java.io.InputStream;
 

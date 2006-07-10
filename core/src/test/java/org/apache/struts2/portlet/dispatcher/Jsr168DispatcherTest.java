@@ -45,13 +45,13 @@ import org.jmock.core.Constraint;
 import org.apache.struts2.dispatcher.DispatcherUtils;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.context.ServletContextHolderListener;
-import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.ActionProxy;
-import com.opensymphony.xwork.ActionProxyFactory;
-import com.opensymphony.xwork.config.Configuration;
-import com.opensymphony.xwork.config.ConfigurationManager;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * Jsr168DispatcherTest. Insert description.

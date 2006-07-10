@@ -24,7 +24,7 @@ import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.util.UrlHelper;
 
-import com.opensymphony.xwork.ActionInvocation;
+import com.opensymphony.xwork2.ActionInvocation;
 
 /**
  * <!-- START SNIPPET: description -->

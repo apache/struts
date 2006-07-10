@@ -24,8 +24,8 @@ import org.apache.struts2.views.util.UrlHelper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
-import com.opensymphony.xwork.util.OgnlValueStack;
-import com.opensymphony.xwork.util.TextParseUtil;
+import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.TextParseUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

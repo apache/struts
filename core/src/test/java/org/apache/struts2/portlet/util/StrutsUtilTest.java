@@ -32,7 +32,7 @@ import org.apache.struts2.TestAction;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.util.ListEntry;
 import org.apache.struts2.util.StrutsUtil;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import junit.framework.TestCase;
 

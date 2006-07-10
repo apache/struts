@@ -19,7 +19,7 @@ package org.apache.struts2.views.jsp;
 
 import org.apache.struts2.util.FastByteArrayOutputStream;
 import org.apache.struts2.views.util.ContextUtil;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import java.io.PrintWriter;

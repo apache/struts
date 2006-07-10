@@ -18,9 +18,9 @@
 package org.apache.struts2.showcase;
 
 import org.apache.struts2.ServletActionContext;
-import com.opensymphony.xwork.ActionSupport;
-import com.opensymphony.xwork.Validateable;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Validateable;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import java.util.ArrayList;
 import java.util.Collections;

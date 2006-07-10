@@ -20,7 +20,7 @@ package org.apache.struts2.components.template;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.components.Include;
 import org.apache.struts2.components.UIBean;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

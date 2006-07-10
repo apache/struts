@@ -17,8 +17,8 @@
  */
 package org.apache.struts2.config_browser;
 
-import com.opensymphony.xwork.util.OgnlUtil;
-import com.opensymphony.xwork.validator.Validator;
+import com.opensymphony.xwork2.util.OgnlUtil;
+import com.opensymphony.xwork2.validator.Validator;
 import ognl.Ognl;
 import ognl.OgnlException;
 import org.apache.commons.logging.Log;

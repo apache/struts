@@ -20,7 +20,7 @@ package org.apache.struts2.showcase.chat;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 public class MessagesAvailableInRoomAction extends ActionSupport {
 

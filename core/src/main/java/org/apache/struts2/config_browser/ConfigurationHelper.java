@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.config_browser;
 
-import com.opensymphony.xwork.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
 
 import java.util.Collections;
 import java.util.Map;

@@ -37,8 +37,8 @@ import org.apache.struts2.components.AbstractRichtexteditorConnector.CreateFolde
 import org.apache.struts2.components.AbstractRichtexteditorConnector.FileUploadResult;
 import org.apache.struts2.components.AbstractRichtexteditorConnector.Folder;
 import org.apache.struts2.components.AbstractRichtexteditorConnector.FoldersAndFiles;
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.Result;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.Result;
 
 /**
  * <!-- START SNIPPET: javadoc -->

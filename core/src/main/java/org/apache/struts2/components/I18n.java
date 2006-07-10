@@ -17,11 +17,11 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.LocaleProvider;
-import com.opensymphony.xwork.TextProviderSupport;
-import com.opensymphony.xwork.util.LocalizedTextUtil;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.TextProviderSupport;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

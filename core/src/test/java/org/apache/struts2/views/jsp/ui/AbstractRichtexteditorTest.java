@@ -23,8 +23,8 @@ import java.io.InputStream;
 import com.mockobjects.servlet.MockHttpServletResponse;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
-import com.opensymphony.xwork.mock.MockActionInvocation;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import junit.framework.TestCase;
 

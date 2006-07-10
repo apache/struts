@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.showcase.wait;
 
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * Example to illustrate the <code>execAndWait</code> interceptor.

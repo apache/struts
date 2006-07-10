@@ -20,7 +20,7 @@ package org.apache.struts2.showcase.action;
 import org.apache.struts2.showcase.dao.Dao;
 import org.apache.struts2.showcase.dao.SkillDao;
 import org.apache.struts2.showcase.model.Skill;
-import com.opensymphony.xwork.Preparable;
+import com.opensymphony.xwork2.Preparable;
 import org.apache.log4j.Logger;
 
 /**

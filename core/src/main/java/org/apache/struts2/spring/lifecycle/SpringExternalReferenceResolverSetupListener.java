@@ -17,9 +17,9 @@
  */
 package org.apache.struts2.spring.lifecycle;
 
-import com.opensymphony.xwork.config.Configuration;
-import com.opensymphony.xwork.config.ExternalReferenceResolver;
-import com.opensymphony.xwork.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ExternalReferenceResolver;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
 
 import org.apache.struts2.dispatcher.DispatcherListener;
 import org.apache.struts2.dispatcher.DispatcherUtils;
@@ -37,7 +37,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Setup any {@link com.opensymphony.xwork.config.ExternalReferenceResolver}s
+ * Setup any {@link com.opensymphony.xwork2.config.ExternalReferenceResolver}s
  * that implement the ApplicationContextAware interface from the Spring
  * framework. Relies on Spring's
  * {@link org.springframework.web.context.ContextLoaderListener}having been

@@ -23,8 +23,8 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.Configuration;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import javax.servlet.jsp.JspException;
 

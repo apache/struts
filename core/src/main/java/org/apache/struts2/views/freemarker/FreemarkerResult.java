@@ -20,10 +20,10 @@ package org.apache.struts2.views.freemarker;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
 import org.apache.struts2.views.util.ResourceUtil;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.LocaleProvider;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import freemarker.template.*;
 
 import javax.servlet.ServletContext;

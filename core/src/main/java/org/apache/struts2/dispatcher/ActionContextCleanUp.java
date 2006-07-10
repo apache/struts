@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.xwork.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;

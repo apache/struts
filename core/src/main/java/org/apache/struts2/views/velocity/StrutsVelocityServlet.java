@@ -22,7 +22,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.views.util.ContextUtil;
-import com.opensymphony.xwork.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
 import org.apache.velocity.Template;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.exception.MethodInvocationException;

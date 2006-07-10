@@ -23,9 +23,9 @@ import java.net.URLEncoder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsStatics;
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.Result;
-import com.opensymphony.xwork.util.TextParseUtil;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.util.TextParseUtil;
 
 
 /**
@@ -38,7 +38,7 @@ import com.opensymphony.xwork.util.TextParseUtil;
  * <ul>
  * <li>location - the location to go to after execution (could be a jsp page or another action).
  * It can be parsed as per the rules definied in the
- * {@link TextParseUtil#translateVariables(java.lang.String, com.opensymphony.xwork.util.OgnlValueStack) translateVariables}
+ * {@link TextParseUtil#translateVariables(java.lang.String, com.opensymphony.xwork2.util.OgnlValueStack) translateVariables}
  * method</li>
  * <li>parse - true by default. If set to false, the location param will not be parsed for expressions</li>
  * <li>encode - false by default. If set to false, the location param will not be url encoded. This only have effect when parse is true</li>
@@ -90,11 +90,11 @@ import com.opensymphony.xwork.util.TextParseUtil;
  *      &lt;result-type name="myresult" class="com.foo.MyResult" /&gt;
  *  &lt;/result-types&gt;</pre>
  * <p/>
- * Please see the {@link com.opensymphony.xwork.Result} class for more info on Results in general.
+ * Please see the {@link com.opensymphony.xwork2.Result} class for more info on Results in general.
  *
  * <!-- END SNIPPET: example -->
  * 
- * @see com.opensymphony.xwork.Result
+ * @see com.opensymphony.xwork2.Result
  */
 public abstract class StrutsResultSupport implements Result, StrutsStatics {
 	

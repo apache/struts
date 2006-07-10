@@ -21,7 +21,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.EvaluationException;
 import javax.faces.el.VariableResolver;
 
-import com.opensymphony.xwork.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
 
 /**
  * Adds the current Action instance to the variable lookups. All other requests

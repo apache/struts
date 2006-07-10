@@ -19,7 +19,7 @@ package org.apache.struts2.views.jsp;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.jsp.ui.AbstractUITag;
-import com.opensymphony.xwork.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

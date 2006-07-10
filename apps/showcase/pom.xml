@@ -56,6 +56,11 @@
 	     <artifactId>myfaces-api</artifactId>
 	     <version>1.1.2</version>
 	  </dependency>
+      <dependency>
+         <groupId>org.rifers</groupId>
+         <artifactId>rife-continuations</artifactId>
+         <version>0.0.2</version>
+     </dependency>
  
     </dependencies>
     

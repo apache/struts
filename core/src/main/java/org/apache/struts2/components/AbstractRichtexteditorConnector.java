@@ -27,8 +27,8 @@ import org.apache.commons.logging.LogFactory;
 
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * <!-- START SNIPPET: javadoc -->

@@ -18,7 +18,7 @@
 package org.apache.struts2.util;
 
 import org.apache.struts2.views.velocity.VelocityManager;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;

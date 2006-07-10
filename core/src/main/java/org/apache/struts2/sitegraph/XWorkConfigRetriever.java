@@ -3,9 +3,9 @@
  */
 package org.apache.struts2.sitegraph;
 
-import com.opensymphony.xwork.config.ConfigurationProvider;
-import com.opensymphony.xwork.config.entities.ActionConfig;
-import com.opensymphony.xwork.config.entities.ResultConfig;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.dispatcher.DispatcherUtils;

@@ -38,7 +38,7 @@ public class PreparatorServletTest extends StrutsTestCase {
 
     /**
      * Test that the service method stores the request, response and servlet context
-     * in the {@link com.opensymphony.xwork.ActionContext}
+     * in the {@link com.opensymphony.xwork2.ActionContext}
      */
     public void testServiceHttpServletRequestHttpServletResponse() throws Exception {
         MockControl mockRequest = MockControl.createNiceControl(HttpServletRequest.class);

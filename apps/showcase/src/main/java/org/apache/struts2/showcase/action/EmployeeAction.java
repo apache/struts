@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.showcase.action;
 
-import com.opensymphony.xwork.Preparable;
+import com.opensymphony.xwork2.Preparable;
 import org.apache.log4j.Logger;
 import org.apache.struts2.showcase.application.TestDataProvider;
 import org.apache.struts2.showcase.dao.Dao;

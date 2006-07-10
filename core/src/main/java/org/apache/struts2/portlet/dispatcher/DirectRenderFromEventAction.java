@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.portlet.dispatcher;
 
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * When a portlet is targetted for an <code>event</code>, the portlet will receive two 

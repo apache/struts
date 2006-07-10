@@ -32,7 +32,7 @@ import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
 
 import org.apache.struts2.portlet.PortletActionConstants;
-import com.opensymphony.xwork.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
 
 /**
  */

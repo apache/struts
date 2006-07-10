@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.showcase;
 
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -82,7 +82,7 @@ public class DateAction extends ActionSupport {
     }
 
     /**
-     * @see com.opensymphony.xwork.ActionSupport#execute()
+     * @see com.opensymphony.xwork2.ActionSupport#execute()
      */
     public String execute() throws Exception {
         Calendar cal = GregorianCalendar.getInstance();

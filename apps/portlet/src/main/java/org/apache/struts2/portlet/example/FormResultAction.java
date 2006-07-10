@@ -23,7 +23,7 @@ import java.util.Map;
 import javax.portlet.RenderRequest;
 
 import org.apache.struts2.portlet.context.PortletActionContext;
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  */

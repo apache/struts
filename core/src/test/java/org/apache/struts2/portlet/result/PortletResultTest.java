@@ -36,8 +36,8 @@ import org.jmock.cglib.MockObjectTestCase;
 import org.jmock.core.Constraint;
 
 import org.apache.struts2.portlet.PortletActionConstants;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionInvocation;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
 
 /**
  * PortletResultTest. Insert description.

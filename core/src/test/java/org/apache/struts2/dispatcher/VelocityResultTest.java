@@ -18,10 +18,10 @@
 package org.apache.struts2.dispatcher;
 
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.ActionProxy;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import junit.framework.TestCase;
 import org.apache.velocity.Template;
 import org.apache.velocity.app.VelocityEngine;

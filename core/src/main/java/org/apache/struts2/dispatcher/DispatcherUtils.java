@@ -29,13 +29,13 @@ import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.util.AttributeMap;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.apache.struts2.util.ObjectFactoryInitializable;
-import com.opensymphony.xwork.*;
-import com.opensymphony.xwork.config.ConfigurationException;
-import com.opensymphony.xwork.config.ConfigurationManager;
-import com.opensymphony.xwork.config.providers.XmlConfigurationProvider;
-import com.opensymphony.xwork.util.*;
-import com.opensymphony.xwork.util.location.Location;
-import com.opensymphony.xwork.util.location.LocationUtils;
+import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import com.opensymphony.xwork2.util.*;
+import com.opensymphony.xwork2.util.location.Location;
+import com.opensymphony.xwork2.util.location.LocationUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -158,10 +158,10 @@ public class DispatcherUtils {
             if (className.equals("tiger")) {
                 // note: this class name needs to be in string form so we don't put hard
                 //       dependencies on xwork-tiger, since it isn't technically required.
-                className = "com.opensymphony.xwork.util.GenericsObjectTypeDeterminer";
+                className = "com.opensymphony.xwork2.util.GenericsObjectTypeDeterminer";
             }
             else if (className.equals("notiger")) {
-                className = "com.opensymphony.xwork.util.DefaultObjectTypeDeterminer";
+                className = "com.opensymphony.xwork2.util.DefaultObjectTypeDeterminer";
             }
 
             try {

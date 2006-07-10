@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.showcase.chat;
 
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 public class CrudRoomAction extends ActionSupport {
 

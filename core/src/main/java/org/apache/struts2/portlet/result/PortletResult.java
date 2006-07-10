@@ -39,7 +39,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.context.PortletActionContext;
-import com.opensymphony.xwork.ActionInvocation;
+import com.opensymphony.xwork2.ActionInvocation;
 
 /**
  * Result type that includes a JSP to render.
@@ -63,7 +63,7 @@ public class PortletResult extends StrutsResultSupport {
      * {@link javax.portlet.PortletRequestDispatcher}from the
      * {@link PortletActionContext}and includes the JSP.
      * 
-     * @see com.opensymphony.xwork.Result#execute(com.opensymphony.xwork.ActionInvocation)
+     * @see com.opensymphony.xwork2.Result#execute(com.opensymphony.xwork2.ActionInvocation)
      */
     public void doExecute(String finalLocation,
             ActionInvocation actionInvocation) throws Exception {

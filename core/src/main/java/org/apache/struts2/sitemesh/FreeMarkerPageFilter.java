@@ -21,7 +21,7 @@ import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.module.sitemesh.HTMLPage;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
-import com.opensymphony.xwork.*;
+import com.opensymphony.xwork2.*;
 import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;

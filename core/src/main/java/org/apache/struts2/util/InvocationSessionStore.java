@@ -17,9 +17,9 @@
  */
 package org.apache.struts2.util;
 
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import java.io.Serializable;
 import java.util.HashMap;

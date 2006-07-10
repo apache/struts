@@ -18,8 +18,8 @@
 package org.apache.struts2.views.jsp;
 
 import org.apache.struts2.views.jsp.iterator.SortIteratorTag;
-import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
 
 import java.util.ArrayList;
 import java.util.Comparator;

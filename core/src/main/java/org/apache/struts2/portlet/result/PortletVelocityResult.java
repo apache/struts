@@ -25,9 +25,9 @@ import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.views.JspSupportServlet;
 import org.apache.struts2.views.velocity.VelocityManager;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

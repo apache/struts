@@ -22,7 +22,7 @@ import com.mockobjects.dynamic.Mock;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
-import com.opensymphony.xwork.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
 import ognl.Ognl;
 
 import javax.servlet.RequestDispatcher;

@@ -21,9 +21,9 @@ import java.util.Map;
 
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.util.ServletContextAware;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.interceptor.AbstractInterceptor;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

@@ -17,8 +17,8 @@
  */
 package org.apache.struts2.util;
 
-import com.opensymphony.xwork.config.Configuration;
-import com.opensymphony.xwork.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;

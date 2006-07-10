@@ -20,7 +20,7 @@ package org.apache.struts2.jsf;
 import javax.faces.application.NavigationHandler;
 import javax.faces.context.FacesContext;
 
-import com.opensymphony.xwork.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
 
 /**
  * Overrides the JFS navigation by delegating the result to handling by the core

@@ -28,8 +28,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.opensymphony.util.TextUtils;
-import com.opensymphony.xwork.TextProvider;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->

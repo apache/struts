@@ -18,9 +18,9 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.util.ClassLoaderUtil;
-import com.opensymphony.xwork.ObjectFactory;
-import com.opensymphony.xwork.util.OgnlUtil;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.util.OgnlUtil;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

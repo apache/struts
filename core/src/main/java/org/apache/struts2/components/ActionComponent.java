@@ -21,11 +21,11 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.DispatcherUtils;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.views.jsp.TagUtils;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionProxy;
-import com.opensymphony.xwork.ActionProxyFactory;
-import com.opensymphony.xwork.config.Configuration;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

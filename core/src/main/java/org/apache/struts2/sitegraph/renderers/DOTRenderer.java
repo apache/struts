@@ -23,9 +23,9 @@ import org.apache.struts2.sitegraph.entities.Target;
 import org.apache.struts2.sitegraph.entities.View;
 import org.apache.struts2.sitegraph.model.*;
 import org.apache.struts2.StrutsConstants;
-import com.opensymphony.xwork.ActionChainResult;
-import com.opensymphony.xwork.config.entities.ActionConfig;
-import com.opensymphony.xwork.config.entities.ResultConfig;
+import com.opensymphony.xwork2.ActionChainResult;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
 
 import java.io.IOException;
 import java.io.Writer;

@@ -18,7 +18,7 @@
 package org.apache.struts2.example.ajax.actions;
 
 import org.apache.struts2.example.ajax.cart.ShoppingCart;
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.ActionSupport;
 
 import java.util.Iterator;
 import java.util.Set;

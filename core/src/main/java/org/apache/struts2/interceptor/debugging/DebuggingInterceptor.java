@@ -17,11 +17,11 @@
  */
 package org.apache.struts2.interceptor.debugging;
 
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.interceptor.Interceptor;
-import com.opensymphony.xwork.interceptor.PreResultListener;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.interceptor.PreResultListener;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
@@ -65,7 +65,7 @@ public class DebuggingInterceptor implements Interceptor {
     private final static Log log = LogFactory.getLog(DebuggingInterceptor.class);
 
     private String[] ignorePrefixes = new String[]{"org.apache.struts.",
-            "com.opensymphony.xwork.", "xwork."};
+            "com.opensymphony.xwork2.", "xwork."};
     private String[] _ignoreKeys = new String[]{"application", "session",
             "parameters", "request"};
     private HashSet<String> ignoreKeys = new HashSet<String>(Arrays.asList(_ignoreKeys));
@@ -97,7 +97,7 @@ public class DebuggingInterceptor implements Interceptor {
     /*
      * (non-Javadoc)
      *
-     * @see com.opensymphony.xwork.interceptor.Interceptor#invoke(com.opensymphony.xwork.ActionInvocation)
+     * @see com.opensymphony.xwork2.interceptor.Interceptor#invoke(com.opensymphony.xwork2.ActionInvocation)
      */
     public String intercept(ActionInvocation inv) throws Exception {
 

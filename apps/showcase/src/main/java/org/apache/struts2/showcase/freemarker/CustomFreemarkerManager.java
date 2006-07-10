@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.ScopesHashModel;
 
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * This is an example of a custom FreemarkerManager, mean to be 

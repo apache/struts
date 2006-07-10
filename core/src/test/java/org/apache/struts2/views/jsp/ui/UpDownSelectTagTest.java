@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.struts2.views.jsp.AbstractUITagTest;
-import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * Test case for UpDownSelectTag 

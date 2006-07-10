@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
-import com.opensymphony.xwork.Result;
+import com.opensymphony.xwork2.Result;
 
 import java.util.Map;
 

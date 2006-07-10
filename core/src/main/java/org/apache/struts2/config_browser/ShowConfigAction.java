@@ -17,8 +17,8 @@
  */
 package org.apache.struts2.config_browser;
 
-import com.opensymphony.xwork.ObjectFactory;
-import com.opensymphony.xwork.config.entities.ActionConfig;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
 import ognl.OgnlRuntime;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

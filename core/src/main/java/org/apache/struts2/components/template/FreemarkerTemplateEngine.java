@@ -19,9 +19,9 @@ package org.apache.struts2.components.template;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import com.opensymphony.util.ClassLoaderUtil;
 import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;

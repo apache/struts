@@ -21,8 +21,8 @@ import com.opensymphony.util.ClassLoaderUtil;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
-import com.opensymphony.xwork.*;
-import com.opensymphony.xwork.mock.MockActionInvocation;
+import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;

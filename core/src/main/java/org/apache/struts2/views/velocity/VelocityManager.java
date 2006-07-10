@@ -25,8 +25,8 @@ import org.apache.struts2.views.jsp.ui.OgnlTool;
 import org.apache.struts2.views.util.ContextUtil;
 import org.apache.struts2.views.velocity.components.*;
 
-import com.opensymphony.xwork.ObjectFactory;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.velocity.VelocityContext;

@@ -17,8 +17,8 @@
  */
 package org.apache.struts2;
 
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.Result;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.Result;
 
 public class TestActionTagResult implements Result {
 

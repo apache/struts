@@ -19,7 +19,7 @@ package org.apache.struts2.components.table;
 
 import org.apache.struts2.components.GenericUIBean;
 import org.apache.struts2.components.table.renderer.CellRenderer;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

@@ -6,7 +6,6 @@
     <package name="config" extends="struts-default" namespace="/config-browser">
         <interceptors>
             <interceptor-stack name="config-browser-default">
-                <interceptor-ref name="component"/>
                 <interceptor-ref name="validationWorkflowStack"/>
             </interceptor-stack>
         </interceptors>

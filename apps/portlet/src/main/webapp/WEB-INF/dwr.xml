@@ -7,7 +7,7 @@
         <create creator="new" javascript="validator">
             <param name="class" value="org.apache.struts2.validators.DWRValidator"/>
         </create>
-        <convert converter="bean" match="com.opensymphony.xwork.ValidationAwareSupport"/>
+        <convert converter="bean" match="com.opensymphony.xwork2.ValidationAwareSupport"/>
     </allow>
 
     <signatures>

@@ -47,8 +47,8 @@ import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
 import org.apache.struts2.views.jsp.ParamTag;
 import org.apache.struts2.dispatcher.DispatcherUtils;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.struts2.config.Configuration;
 
 /**

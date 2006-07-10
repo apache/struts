@@ -17,8 +17,8 @@
  */
 package org.apache.struts2.showcase.modelDriven;
 
-import com.opensymphony.xwork.ActionSupport;
-import com.opensymphony.xwork.ModelDriven;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ModelDriven;
 
 /**
  * Action to demonstrate simple model-driven feature of WW.

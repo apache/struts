@@ -21,7 +21,7 @@ package org.apache.struts2.util;
  * An interface indicating the lifecycle of an ObjectFactory implementation.
  * 
  * @see ObjectFactoryLifecycle
- * @see com.opensymphony.xwork.ObjectFactory
+ * @see com.opensymphony.xwork2.ObjectFactory
  * @see org.apache.struts2.util.ObjectFactoryInitializable
  * @see org.apache.struts2.util.ObjectFactoryDestroyable
  */

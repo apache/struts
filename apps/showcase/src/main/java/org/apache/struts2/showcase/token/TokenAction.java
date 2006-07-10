@@ -17,8 +17,8 @@
  */
 package org.apache.struts2.showcase.token;
 
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionSupport;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
 
 import java.util.Date;
 

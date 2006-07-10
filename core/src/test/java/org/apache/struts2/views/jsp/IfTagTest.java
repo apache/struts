@@ -19,8 +19,8 @@ package org.apache.struts2.views.jsp;
 
 import com.mockobjects.servlet.MockJspWriter;
 import com.mockobjects.servlet.MockPageContext;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.struts2.ServletActionContext;
 import junit.framework.TestCase;
 

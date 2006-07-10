@@ -19,7 +19,7 @@ package org.apache.struts2.views.jsp;
 
 import org.apache.struts2.components.Bean;
 import org.apache.struts2.components.Component;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

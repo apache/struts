@@ -17,16 +17,16 @@
  */
 package org.apache.struts2.plexus;
 
-import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ObjectFactory;
-import com.opensymphony.xwork.Result;
-import com.opensymphony.xwork.config.ConfigurationException;
-import com.opensymphony.xwork.config.entities.ActionConfig;
-import com.opensymphony.xwork.config.entities.InterceptorConfig;
-import com.opensymphony.xwork.config.entities.ResultConfig;
-import com.opensymphony.xwork.interceptor.Interceptor;
-import com.opensymphony.xwork.util.OgnlUtil;
-import com.opensymphony.xwork.validator.Validator;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.util.OgnlUtil;
+import com.opensymphony.xwork2.validator.Validator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.util.ObjectFactoryInitializable;
@@ -153,7 +153,7 @@ public class PlexusObjectFactory extends ObjectFactory implements ObjectFactoryI
         }
         catch (ClassCastException e) {
             cause = e;
-            message = "Class [" + interceptorClassName + "] does not implement com.opensymphony.xwork.interceptor.Interceptor";
+            message = "Class [" + interceptorClassName + "] does not implement com.opensymphony.xwork2.interceptor.Interceptor";
         }
         catch (Exception e) {
             cause = e;

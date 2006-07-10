@@ -19,10 +19,10 @@ package org.apache.struts2.views.xslt;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
-import com.opensymphony.xwork.Action;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.mock.MockActionInvocation;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import junit.framework.TestCase;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -126,7 +126,7 @@ public class XSLTResultTest extends StrutsTestCase {
 
         MyAction action = new MyAction();
 
-        mai = new com.opensymphony.xwork.mock.MockActionInvocation();
+        mai = new com.opensymphony.xwork2.mock.MockActionInvocation();
         mai.setAction(action);
         mai.setStack(stack);
         mai.setInvocationContext(ActionContext.getContext());

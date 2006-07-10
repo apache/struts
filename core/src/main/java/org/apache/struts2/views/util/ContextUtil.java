@@ -17,9 +17,9 @@
  */
 package org.apache.struts2.views.util;
 
-import com.opensymphony.xwork.util.OgnlValueStack;
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.ActionContext;
+import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.views.jsp.ui.OgnlTool;
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.util.StrutsUtil;

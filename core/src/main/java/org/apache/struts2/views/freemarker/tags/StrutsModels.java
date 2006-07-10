@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.views.freemarker.tags;
 
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

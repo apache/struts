@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
-import com.opensymphony.xwork.Result;
+import com.opensymphony.xwork2.Result;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.ServletRedirectResult;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;

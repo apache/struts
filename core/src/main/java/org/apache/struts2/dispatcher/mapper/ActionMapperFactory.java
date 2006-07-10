@@ -19,7 +19,7 @@ package org.apache.struts2.dispatcher.mapper;
 
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.StrutsConstants;
-import com.opensymphony.xwork.ObjectFactory;
+import com.opensymphony.xwork2.ObjectFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

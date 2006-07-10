@@ -22,7 +22,7 @@ import com.mockobjects.servlet.MockPageContext;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.components.If;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import junit.framework.TestCase;
 
 import javax.servlet.jsp.JspException;

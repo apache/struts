@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 import org.easymock.MockControl;
 
 import org.apache.struts2.portlet.context.PortletActionContext;
-import com.opensymphony.xwork.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
 
 /**
  */

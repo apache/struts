@@ -22,7 +22,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import com.opensymphony.xwork.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
 
 
 /**

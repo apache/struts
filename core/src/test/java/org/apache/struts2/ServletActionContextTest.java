@@ -20,7 +20,7 @@ package org.apache.struts2;
 import com.mockobjects.servlet.MockHttpServletRequest;
 import com.mockobjects.servlet.MockHttpServletResponse;
 import com.mockobjects.servlet.MockServletContext;
-import com.opensymphony.xwork.ActionContext;
+import com.opensymphony.xwork2.ActionContext;
 import junit.framework.TestCase;
 
 import javax.servlet.http.HttpServletRequest;

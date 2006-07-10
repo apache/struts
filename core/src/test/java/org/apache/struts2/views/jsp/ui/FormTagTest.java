@@ -17,13 +17,13 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionSupport;
-import com.opensymphony.xwork.ObjectFactory;
-import com.opensymphony.xwork.config.RuntimeConfiguration;
-import com.opensymphony.xwork.config.entities.ActionConfig;
-import com.opensymphony.xwork.config.entities.InterceptorMapping;
-import com.opensymphony.xwork.validator.ValidationInterceptor;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.config.RuntimeConfiguration;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.validator.ValidationInterceptor;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.TestConfigurationProvider;
@@ -113,12 +113,12 @@ public class FormTagTest extends AbstractUITagTest {
      */
     public void testFormWithCustomOnsubmitEnabledWithValidateEnabled1() throws Exception {
 
-        com.opensymphony.xwork.config.Configuration originalConfiguration = configurationManager.getConfiguration();
+        com.opensymphony.xwork2.config.Configuration originalConfiguration = configurationManager.getConfiguration();
         ObjectFactory originalObjectFactory = ObjectFactory.getObjectFactory();
 
         try {
             // used to determined if the form action needs js validation
-            configurationManager.setConfiguration(new com.opensymphony.xwork.config.impl.DefaultConfiguration() {
+            configurationManager.setConfiguration(new com.opensymphony.xwork2.config.impl.DefaultConfiguration() {
                 public RuntimeConfiguration getRuntimeConfiguration() {
                     return new RuntimeConfiguration() {
                         public ActionConfig getActionConfig(String namespace, String name) {
@@ -196,12 +196,12 @@ public class FormTagTest extends AbstractUITagTest {
      */
     public void testFormWithCustomOnsubmitEnabledWithValidateEnabled2() throws Exception {
 
-        com.opensymphony.xwork.config.Configuration originalConfiguration = configurationManager.getConfiguration();
+        com.opensymphony.xwork2.config.Configuration originalConfiguration = configurationManager.getConfiguration();
         ObjectFactory originalObjectFactory = ObjectFactory.getObjectFactory();
 
         try {
             // used to determined if the form action needs js validation
-            configurationManager.setConfiguration(new com.opensymphony.xwork.config.impl.DefaultConfiguration() {
+            configurationManager.setConfiguration(new com.opensymphony.xwork2.config.impl.DefaultConfiguration() {
                 public RuntimeConfiguration getRuntimeConfiguration() {
                     return new RuntimeConfiguration() {
                         public ActionConfig getActionConfig(String namespace, String name) {

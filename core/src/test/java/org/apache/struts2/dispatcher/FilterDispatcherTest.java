@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.xwork.ObjectFactory;
+import com.opensymphony.xwork2.ObjectFactory;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.config.Configuration;

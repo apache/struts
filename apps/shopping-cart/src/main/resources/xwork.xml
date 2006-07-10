@@ -1,14 +1,49 @@
-<validators>
-    <validator name="required" class="com.opensymphony.xwork.validator.validators.RequiredFieldValidator"/>
-    <validator name="requiredstring" class="com.opensymphony.xwork.validator.validators.RequiredStringValidator"/>
-    <validator name="int" class="com.opensymphony.xwork.validator.validators.IntRangeFieldValidator"/>
-    <validator name="double" class="com.opensymphony.xwork.validator.validators.DoubleRangeFieldValidator"/>
-    <validator name="date" class="com.opensymphony.xwork.validator.validators.DateRangeFieldValidator"/>
-    <validator name="expression" class="com.opensymphony.xwork.validator.validators.ExpressionValidator"/>
-    <validator name="fieldexpression" class="com.opensymphony.xwork.validator.validators.FieldExpressionValidator"/>
-    <validator name="email" class="com.opensymphony.xwork.validator.validators.EmailValidator"/>
-    <validator name="url" class="com.opensymphony.xwork.validator.validators.URLValidator"/>
-    <validator name="visitor" class="com.opensymphony.xwork.validator.validators.VisitorFieldValidator"/>
-    <validator name="conversion" class="com.opensymphony.xwork.validator.validators.ConversionErrorFieldValidator"/>
-    <validator name="stringlength" class="com.opensymphony.xwork.validator.validators.StringLengthFieldValidator"/>
-</validators>
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+
+<xwork>
+    <include file="struts-default.xml"/>
+    <include file="config-browser.xml"/>
+
+    <package name="catalog" namespace="/catalog" extends="struts-default">
+        <interceptors>
+            <!-- Basic stack -->
+            <interceptor-stack name="catalogStack">
+                <interceptor-ref name="logger"/>
+                <interceptor-ref name="servlet-config"/>
+                <interceptor-ref name="static-params"/>
+                <interceptor-ref name="params"/>
+                <interceptor-ref name="conversionError"/>
+                <interceptor-ref name="validation"/>
+                <interceptor-ref name="workflow"/>
+            </interceptor-stack>
+        </interceptors>
+
+        <default-interceptor-ref name="catalogStack"/>
+
+        <action name="catalog" class="org.apache.struts2.example.ajax.actions.ShowCatalog">
+            <result name="success">/category.jsp</result>
+        </action>
+
+        <action name="cart" class="org.apache.struts2.example.ajax.actions.ShowCart">
+            <result name="success">/cart.jsp</result>
+        </action>
+
+        <action name="main" class="org.apache.struts2.example.ajax.actions.ActiveCategory">
+            <result name="success">/category-main.jsp</result>
+        </action>
+
+
+    </package>
+    <package name="catalog-remote" namespace="/catalog/remote" extends="catalog">
+        <action name="activeCategory" class="org.apache.struts2.example.ajax.actions.ActiveCategory">
+            <result name="success">/category.jsp</result>
+        </action>
+
+        <action name="setActiveCategory" class="org.apache.struts2.example.ajax.actions.SetActiveCategory">
+            <result name="success" type="chain">activeCategory</result>
+        </action>
+
+        <action name="updateQuantity" class="org.apache.struts2.example.ajax.actions.UpdateQuantityInCart"/>
+
+    </package>
+</xwork>

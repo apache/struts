@@ -26,9 +26,9 @@ import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.mock.MockActionInvocation;
-import com.opensymphony.xwork.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import junit.framework.TestCase;
 

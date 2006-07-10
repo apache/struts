@@ -215,7 +215,13 @@ public class DispatcherUtils {
         
         configurationManager = new ConfigurationManager();
         configurationManager.addConfigurationProvider(new XmlConfigurationProvider("xwork.xml", false));
-        configurationManager.addConfigurationProvider(new XmlConfigurationProvider("struts.xml", false));
+        
+        // Load Struts config files
+        Map<String,String> dtdMappings = new HashMap<String,String>();
+        dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.0//EN", "struts-2.0.dtd");
+        XmlConfigurationProvider prov = new XmlConfigurationProvider("struts.xml", false);
+        prov.setDtdMappings(dtdMappings);
+        configurationManager.addConfigurationProvider(prov);
         
         synchronized(DispatcherUtils.class) {
             if (dispatcherListeners.size() > 0) {

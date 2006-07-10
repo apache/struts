@@ -1,6 +1,8 @@
-<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
 
-<xwork>
+<struts>
     <include file="struts-default.xml"/>
 
     <package name="default" extends="struts-default">
@@ -13,4 +15,4 @@
 
         <!-- Add your actions here -->
     </package>
-</xwork>
+</struts>

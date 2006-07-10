@@ -1,5 +1,10 @@
-<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.1.1//EN" "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
-<xwork>
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+    
+<struts>
     <package name="struts-default">
         <result-types>
             <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult"/>
@@ -16,6 +21,8 @@
 
             <!-- third party integration -->
             <result-type name="jasper" class="org.apache.struts2.views.jasperreports.JasperReportsResult"/>
+            
+            <result-type name="jsf" class="org.apache.struts2.jsf.FacesResult" />
         </result-types>
 
         <interceptors>
@@ -43,6 +50,14 @@
             <interceptor name="token-session" class="org.apache.struts2.interceptor.TokenSessionStoreInterceptor"/>
             <interceptor name="validation" class="com.opensymphony.xwork2.validator.ValidationInterceptor"/>
             <interceptor name="workflow" class="com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor"/>
+            
+            <!-- JSF interceptors, one per lifecycle phase -->
+            <interceptor class="org.apache.struts2.jsf.FacesSetupInterceptor" name="jsfSetup" />
+            <interceptor class="org.apache.struts2.jsf.RestoreViewInterceptor" name="jsfRestore" />
+            <interceptor class="org.apache.struts2.jsf.ApplyRequestValuesInterceptor" name="jsfApply" />
+            <interceptor class="org.apache.struts2.jsf.ProcessValidationsInterceptor" name="jsfValidate" />
+            <interceptor class="org.apache.struts2.jsf.UpdateModelValuesInterceptor" name="jsfUpdate" />
+            <interceptor class="org.apache.struts2.jsf.InvokeApplicationInterceptor" name="jsfInvoke" />
 			
             <!-- Basic stack -->
             <interceptor-stack name="basicStack">
@@ -168,9 +183,19 @@
                     <param name="excludeMethods">input,back,cancel</param>
                 </interceptor-ref>
             </interceptor-stack>
+            
+            <!-- Sample JSF stack, can be combined with other stacks easily -->
+            <interceptor-stack name="jsfStack">
+                <interceptor-ref name="jsfSetup" />
+                <interceptor-ref name="jsfRestore" />
+                <interceptor-ref name="jsfApply" />
+                <interceptor-ref name="jsfValidate" />
+                <interceptor-ref name="jsfUpdate" />
+                <interceptor-ref name="jsfInvoke" />
+            </interceptor-stack>
         </interceptors>
-
+        
         <default-interceptor-ref name="defaultStack"/>
     </package>
 
-</xwork>
+</struts>

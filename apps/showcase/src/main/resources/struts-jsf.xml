@@ -1,0 +1,34 @@
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+  <include file="struts-default.xml"/>
+
+  <package name="jsf" extends="struts-default" namespace="/jsf">
+    <interceptors>
+      <interceptor-stack name="jsfFullStack">
+        <interceptor-ref name="params" />
+        <interceptor-ref name="basicStack"/>
+        <interceptor-ref name="jsfStack"/>
+      </interceptor-stack>
+    </interceptors>
+    
+    <default-interceptor-ref name="jsfFullStack"/>
+  </package>
+  
+  <package name="jsf.employee" extends="jsf" namespace="/jsf/employee">
+  
+    <action name="list" class="org.apache.struts2.showcase.jsf.JsfEmployeeAction" method="list">
+      <result name="success" type="jsf" />
+    </action>
+    <action name="edit" class="org.apache.struts2.showcase.jsf.JsfEmployeeAction">
+      <result name="success" type="jsf" />
+    </action>
+    <action name="delete" class="org.apache.struts2.showcase.action.EmployeeAction" method="delete">
+      <result name="error" type="redirect">list.action</result>
+      <result type="redirect">list.action</result>
+    </action>
+  
+  </package>
+
+</struts>

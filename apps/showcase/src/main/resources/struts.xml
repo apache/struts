@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!DOCTYPE xwork PUBLIC 
-	"-//OpenSymphony Group//XWork 1.1.1//EN" 
-	"http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
 
 <!-- START SNIPPET: xworkSample -->
 
-<xwork>
+<struts>
 
     <include file="struts-default.xml"/>
 
     <include file="config-browser.xml"/>
     
-    <include file="xwork-chat.xml" />
+    <include file="struts-chat.xml" />
     
-    <include file="xwork-hangman.xml" />
+    <include file="struts-hangman.xml" />
     
-    <include file="xwork-continuations.xml"/>
+    <include file="struts-continuations.xml"/>
 
-    <include file="xwork-tags.xml"/>
+    <include file="struts-tags.xml"/>
     
-    <include file="xwork-validation.xml" />
+    <include file="struts-validation.xml" />
     
-    <include file="xwork-actionchaining.xml" />
+    <include file="struts-actionchaining.xml" />
 
-    <include file="xwork-ajax.xml" />
+    <include file="struts-ajax.xml" />
 
-    <include file="xwork-fileupload.xml" />
+    <include file="struts-fileupload.xml" />
 
-    <include file="xwork-person.xml" />
+    <include file="struts-person.xml" />
 
-    <include file="xwork-wait.xml" />
+    <include file="struts-wait.xml" />
 	
-	<include file="xwork-jsf.xml" />
+    <include file="struts-jsf.xml" />
 
-    <include file="xwork-token.xml" />
+    <include file="struts-token.xml" />
     
-    <include file="xwork-model-driven.xml" />
+    <include file="struts-model-driven.xml" />
     
-    <include file="xwork-filedownload.xml" />
+    <include file="struts-filedownload.xml" />
     
-    <include file="xwork-conversion.xml" />
+    <include file="struts-conversion.xml" />
     
-    <include file="xwork-freemarker.xml" />
+    <include file="struts-freemarker.xml" />
 
     <package name="default" extends="struts-default">
         <interceptors>
@@ -109,7 +109,7 @@
         </action>
     </package>
 
-</xwork>
+</struts>
 
 <!-- END SNIPPET: xworkSample -->
 

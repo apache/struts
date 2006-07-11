@@ -18,8 +18,8 @@
 package org.apache.struts2.dispatcher;
 
 import org.apache.struts2.ServletActionContext;
-import com.opensymphony.xwork.ActionInvocation;
-import com.opensymphony.xwork.Result;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.Result;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 

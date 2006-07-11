@@ -17,6 +17,7 @@
  */
 package org.apache.struts2.components;
 
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
 import org.apache.struts2.views.util.UrlHelper;
@@ -238,8 +239,7 @@ public class URL extends Component {
             try {
                 writer.write(result);
             } catch (IOException e) {
-                e.printStackTrace();
-                throw new RuntimeException("IOError: " + e.getMessage(), e);
+                throw new StrutsException("IOError: " + e.getMessage(), e);
             }
         }
         return super.end(writer, body);

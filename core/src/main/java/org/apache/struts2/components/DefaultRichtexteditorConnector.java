@@ -33,6 +33,7 @@ import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.util.ServletContextAware;
 import org.apache.struts2.views.util.UrlHelper;
 
@@ -168,7 +169,7 @@ public class DefaultRichtexteditorConnector extends AbstractRichtexteditorConnec
 	}
 
 	protected void unknownCommand(String command, String virtualFolderPath, String type, String filename, String contentType, java.io.File newFile) {
-		throw new RuntimeException("unknown command "+command);
+		throw new StrutsException("Unknown command "+command);
 	}
 
 	
@@ -186,7 +187,7 @@ public class DefaultRichtexteditorConnector extends AbstractRichtexteditorConnec
 			_log.debug("make directory "+dir);
 			boolean ok = dir.mkdirs();
 			if (! ok) {
-				throw new RuntimeException("cannot make directory "+dir);
+				throw new StrutsException("Cannot make directory "+dir);
 			}
 			return false;
 		}
@@ -204,7 +205,7 @@ public class DefaultRichtexteditorConnector extends AbstractRichtexteditorConnec
 			_log.debug("creating file "+filePath);
 			boolean ok = f.createNewFile();
 			if (! ok) {
-				throw new RuntimeException("cannot create file "+filePath);
+				throw new StrutsException("Cannot create file "+filePath);
 			}
 			return false;
 		}

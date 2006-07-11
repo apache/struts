@@ -21,6 +21,8 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import java.io.Writer;
 
+import org.apache.struts2.StrutsException;
+
 /**
  * <!-- START SNIPPET: javadoc -->
  * <p>This tag can be used to parameterize other tags.</p>
@@ -101,7 +103,7 @@ public class Param extends Component {
                 String name = findString(this.name);
 
                 if (name == null) {
-                    throw new RuntimeException("No name found for following expression: " + name);
+                    throw new StrutsException("No name found for following expression: " + name);
                 }
 
                 Object value = findValue(this.value);

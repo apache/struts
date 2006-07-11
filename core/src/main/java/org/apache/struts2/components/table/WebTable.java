@@ -17,6 +17,7 @@
  */
 package org.apache.struts2.components.table;
 
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.GenericUIBean;
 import org.apache.struts2.components.table.renderer.CellRenderer;
 import com.opensymphony.xwork2.util.OgnlValueStack;
@@ -97,8 +98,7 @@ public class WebTable extends GenericUIBean {
                     LOG.debug("we just sorted the data");
                 }
             } catch (Exception e) {
-                LOG.error(e);
-                throw new RuntimeException("Error with WebTable: " + toString(e));
+                throw new StrutsException("Error with WebTable: " + toString(e), e);
             }
         }
 

@@ -19,6 +19,7 @@ package org.apache.struts2.views.xslt;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.StrutsException;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -131,8 +132,8 @@ public class BeanAdapter extends DefaultElementAdapter {
 
             return props;
         } catch (IntrospectionException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error getting property descriptors for " + bean + " : " + e.getMessage());
+            throw new StrutsException("Error getting property descriptors for " 
+                    + bean + " : " + e.getMessage(), e);
         }
     }
 }

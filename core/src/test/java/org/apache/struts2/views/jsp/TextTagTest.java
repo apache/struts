@@ -18,6 +18,7 @@
 package org.apache.struts2.views.jsp;
 
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.components.Text;
 import org.apache.struts2.views.jsp.ui.TestAction1;
@@ -238,7 +239,7 @@ public class TextTagTest extends AbstractTagTest {
             tag.doStartTag();
             tag.doEndTag();
             fail("Should have thrown a RuntimeException");
-        } catch (RuntimeException e) {
+        } catch (StrutsException e) {
             assertEquals(msg, e.getMessage());
         }
     }

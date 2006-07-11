@@ -20,6 +20,7 @@ package org.apache.struts2.views.jsp;
 import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.TestActionTagResult;
 import org.apache.struts2.TestConfigurationProvider;
@@ -190,7 +191,7 @@ public class ActionTagTest extends AbstractTagTest {
             tag.doStartTag();
             tag.doEndTag();
             fail("Should have thrown RuntimeException");
-        } catch (RuntimeException e) {
+        } catch (StrutsException e) {
             assertEquals("tag actioncomponent, field name: Action name is required. Example: updatePerson", e.getMessage());
         }
     }

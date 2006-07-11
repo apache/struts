@@ -18,6 +18,8 @@
 package org.apache.struts2.views.jsp;
 
 import com.mockobjects.servlet.MockRequestDispatcher;
+
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.Include;
 import org.easymock.MockControl;
 
@@ -39,7 +41,7 @@ public class IncludeTagTest extends AbstractTagTest {
             tag.doStartTag();
             tag.doEndTag();
             fail("Should have thrown exception as no URL is specified in setValue");
-        } catch (RuntimeException e) {
+        } catch (StrutsException e) {
             assertEquals("tag include, field value: You must specify the URL to include. Example: /foo.jsp", e.getMessage());
         }
     }

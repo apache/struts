@@ -17,6 +17,7 @@
  */
 package org.apache.struts2.components;
 
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.util.FastByteArrayOutputStream;
 import org.apache.struts2.views.jsp.TagUtils;
 import org.apache.struts2.views.util.ContextUtil;
@@ -138,7 +139,7 @@ public class Component {
         try {
             writer.write(body);
         } catch (IOException e) {
-            throw new RuntimeException("IOError while writing the body: " + e.getMessage(), e);
+            throw new StrutsException("IOError while writing the body: " + e.getMessage(), e);
         }
         if (popComponentStack) {
         	popComponentStack();
@@ -195,7 +196,7 @@ public class Component {
      * @param field   field name used when throwing <code>RuntimeException</code>.
      * @param errorMsg  error message used when throwing <code>RuntimeException</code>.
      * @return  the String value found.
-     * @throws RuntimeException is thrown in case of expression is <tt>null</tt>.
+     * @throws StrutsException is thrown in case of expression is <tt>null</tt>.
      */
     protected String findString(String expr, String field, String errorMsg) {
         if (expr == null) {
@@ -213,17 +214,11 @@ public class Component {
      * @param field   field name used when throwing <code>RuntimeException</code>.
      * @param errorMsg  error message used when throwing <code>RuntimeException</code>.
      * @param e  the caused exception, can be <tt>null</tt>.
-     * @return  the constructed <code>RuntimeException</code>.
+     * @return  the constructed <code>StrutsException</code>.
      */
-    protected RuntimeException fieldError(String field, String errorMsg, Exception e) {
+    protected StrutsException fieldError(String field, String errorMsg, Exception e) {
         String msg = "tag " + getComponentName() + ", field " + field + ": " + errorMsg;
-        if (e == null) {
-            LOG.error(msg);
-            return new RuntimeException(msg);
-        } else {
-            LOG.error(msg, e);
-            return new RuntimeException(msg, e);
-        }
+        throw new StrutsException(msg, e);
     }
 
     /**
@@ -272,7 +267,7 @@ public class Component {
      * @param field   field name used when throwing <code>RuntimeException</code>.
      * @param errorMsg  error message used when throwing <code>RuntimeException</code>.
      * @return  the Object found, is never <tt>null</tt>.
-     * @throws RuntimeException is thrown in case of not found in the OGNL stack, or expression is <tt>null</tt>.
+     * @throws StrutsException is thrown in case of not found in the OGNL stack, or expression is <tt>null</tt>.
      */
     protected Object findValue(String expr, String field, String errorMsg) {
         if (expr == null) {

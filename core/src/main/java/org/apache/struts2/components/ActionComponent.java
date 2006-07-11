@@ -18,6 +18,7 @@
 package org.apache.struts2.components;
 
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.DispatcherUtils;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.views.jsp.TagUtils;
@@ -186,9 +187,7 @@ public class ActionComponent extends Component {
         String actualName = findString(name, "name", "Action name is required. Example: updatePerson");
 
         if (actualName == null) {
-            String message = "Unable to find value for name " + name;
-            LOG.error(message);
-            throw new RuntimeException(message);
+            throw new StrutsException("Unable to find value for name " + name);
         }
 
         // handle "name!method" convention.

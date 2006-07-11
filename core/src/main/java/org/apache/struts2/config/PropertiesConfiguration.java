@@ -22,6 +22,8 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Properties;
 
+import org.apache.struts2.StrutsException;
+
 
 /**
  * A class to handle configuration via a properties file.
@@ -51,7 +53,7 @@ public class PropertiesConfiguration extends Configuration {
         try {
             settings.load(settingsUrl.openStream());
         } catch (IOException e) {
-            throw new RuntimeException("Could not load " + name + ".properties:" + e);
+            throw new StrutsException("Could not load " + name + ".properties:" + e, e);
         }
     }
 

@@ -17,6 +17,7 @@
  */
 package org.apache.struts2.views.xslt;
 
+import org.apache.struts2.StrutsException;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
@@ -33,7 +34,7 @@ public class SimpleTextNode extends DefaultAdapterNode implements Text, AdapterN
 
 
     public void setData(String string) throws DOMException {
-        throw new RuntimeException("Operation not supported");
+        throw new StrutsException("Operation not supported");
     }
 
     public String getData() throws DOMException {
@@ -57,23 +58,23 @@ public class SimpleTextNode extends DefaultAdapterNode implements Text, AdapterN
     }
 
     public void appendData(String string) throws DOMException {
-        throw new RuntimeException("Operation not supported");
+        throw new StrutsException("Operation not supported");
     }
 
     public void deleteData(int i, int i1) throws DOMException {
-        throw new RuntimeException("Operation not supported");
+        throw new StrutsException("Operation not supported");
     }
 
     public void insertData(int i, String string) throws DOMException {
-        throw new RuntimeException("Operation not supported");
+        throw new StrutsException("Operation not supported");
     }
 
     public void replaceData(int i, int i1, String string) throws DOMException {
-        throw new RuntimeException("Operation not supported");
+        throw new StrutsException("Operation not supported");
     }
 
     public Text splitText(int i) throws DOMException {
-        throw new RuntimeException("Operation not supported");
+        throw new StrutsException("Operation not supported");
     }
 
     public String substringData(int beginIndex, int endIndex) throws DOMException {

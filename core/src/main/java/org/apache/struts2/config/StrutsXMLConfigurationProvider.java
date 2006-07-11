@@ -7,6 +7,7 @@ import com.opensymphony.util.FileManager;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.StrutsException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -72,7 +73,7 @@ public class StrutsXMLConfigurationProvider extends XmlConfigurationProvider {
             try {
                 is = new FileInputStream(file);
             } catch (FileNotFoundException ex) {
-                throw new RuntimeException("File not found: "+file, ex);
+                throw new StrutsException("File not found: "+file, ex);
             }
         } else {
             

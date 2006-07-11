@@ -17,6 +17,7 @@
  */
 package org.apache.struts2.views.xslt;
 
+import org.apache.struts2.StrutsException;
 import org.w3c.dom.*;
 
 import java.util.ArrayList;
@@ -128,7 +129,7 @@ public abstract class DefaultElementAdapter extends DefaultAdapterNode implement
         int index = getAdapters().indexOf(child);
 
         if (index < 0) {
-            throw new RuntimeException(child + " is no child of " + this);
+            throw new StrutsException(child + " is no child of " + this);
         }
 
         int siblingIndex = index + 1;

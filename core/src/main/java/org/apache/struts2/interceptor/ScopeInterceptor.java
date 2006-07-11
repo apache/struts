@@ -25,6 +25,7 @@ import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -213,7 +214,7 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
                     locks.remove(o);
                     o.notify();
 
-                    throw new RuntimeException("Deadlock in session lock");
+                    throw new StrutsException("Deadlock in session lock");
                 }
                 o.wait(10000);
             }

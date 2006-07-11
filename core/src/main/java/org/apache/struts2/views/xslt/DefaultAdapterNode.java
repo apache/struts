@@ -18,6 +18,7 @@
 package org.apache.struts2.views.xslt;
 
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.StrutsException;
 import org.w3c.dom.*;
 
 
@@ -237,7 +238,7 @@ public abstract class DefaultAdapterNode implements Node, AdapterNode {
     }
 
     protected void operationNotSupported() {
-        throw new RuntimeException("Operation not supported.");
+        throw new StrutsException("Operation not supported.");
     }
 
 

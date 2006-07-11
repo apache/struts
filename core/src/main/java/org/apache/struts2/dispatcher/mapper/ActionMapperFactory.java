@@ -19,6 +19,8 @@ package org.apache.struts2.dispatcher.mapper;
 
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
+
 import com.opensymphony.xwork2.ObjectFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,8 +54,7 @@ public class ActionMapperFactory {
                 return mapper;
             } catch (Exception e) {
                 String msg = "Could not create ActionMapper: Struts will *not* work!";
-                LOG.fatal(msg, e);
-                throw new RuntimeException(msg, e);
+                throw new StrutsException(msg, e);
             }
         }
     }

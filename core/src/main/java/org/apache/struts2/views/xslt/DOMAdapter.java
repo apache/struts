@@ -19,6 +19,7 @@ package org.apache.struts2.views.xslt;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.StrutsException;
 import org.w3c.dom.Node;
 
 import java.lang.reflect.Constructor;
@@ -148,7 +149,7 @@ public class DOMAdapter {
             return adapter;
         } catch (Exception e) {
             LOG.debug("Cannot adapt ", e);
-            throw new RuntimeException("Cannot adapt " + parent + " (" + propertyName + ") ", e);
+            throw new StrutsException("Cannot adapt " + parent + " (" + propertyName + ") ", e);
         }
     }
 

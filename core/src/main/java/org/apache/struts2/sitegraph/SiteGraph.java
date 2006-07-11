@@ -3,6 +3,7 @@
  */
 package org.apache.struts2.sitegraph;
 
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.sitegraph.renderers.DOTRenderer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -92,7 +93,7 @@ public class SiteGraph {
             try {
                 writer = new FileWriter(output + "/out.dot");
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new StrutsException(e);
             }
         }
 

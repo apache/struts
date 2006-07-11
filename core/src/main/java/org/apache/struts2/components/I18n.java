@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.StrutsException;
 
 import java.io.Writer;
 import java.util.Locale;
@@ -108,8 +109,7 @@ public class I18n extends Component {
             }
         } catch (Exception e) {
             String msg = "Could not find the bundle " + name;
-            LOG.error(msg, e);
-            throw new RuntimeException(msg);
+            throw new StrutsException(msg, e);
         }
 
         return result;

@@ -19,6 +19,7 @@ package org.apache.struts2.views.velocity;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.util.VelocityStrutsUtil;
 import org.apache.struts2.views.jsp.ui.OgnlTool;
@@ -450,8 +451,7 @@ public class VelocityManager {
             velocityEngine.init(p);
         } catch (Exception e) {
             String gripe = "Unable to instantiate VelocityEngine!";
-            log.error(gripe, e);
-            throw new RuntimeException(gripe);
+            throw new StrutsException(gripe, e);
         }
 
         return velocityEngine;

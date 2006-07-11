@@ -17,19 +17,37 @@
  */
 package org.apache.struts2.jsf;
 
+import java.util.Map;
+
+import javax.faces.FactoryFinder;
 import javax.faces.application.NavigationHandler;
 import javax.faces.context.FacesContext;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
 
 /**
  * Overrides the JFS navigation by delegating the result to handling by the core
- * result code lookup and execution.
+ * result code lookup and execution.  If a result cannot be found, the previous
+ * NavigationHandler is called.
  */
 public class StrutsNavigationHandler extends NavigationHandler {
+    
+    private NavigationHandler parent;
+    
+    /**
+     * Creates the handler
+     * 
+     * @param handler The old NavigationHandler to possibly delegate to
+     */
+    public StrutsNavigationHandler(NavigationHandler handler) {
+        this.parent = handler;
+    }
 
 	/**
-	 * Stores any outcomes as the result code
+	 * Stores any outcomes as the result code, failing over to the old
+     * NavigationHandler
 	 * 
 	 * @param facesContext The faces context
 	 * @param fromAction The action we are coming from
@@ -39,7 +57,27 @@ public class StrutsNavigationHandler extends NavigationHandler {
 	public void handleNavigation(FacesContext facesContext, String fromAction, String outcome) {
 		ActionContext ctx = ActionContext.getContext();
 		if (outcome != null) {
-			ctx.getActionInvocation().setResultCode(outcome);
+            ActionConfig config = ctx.getActionInvocation().getProxy().getConfig();
+            Map results = config.getResults();
+
+            ResultConfig resultConfig = null;
+
+            synchronized (config) {
+                try {
+                    resultConfig = (ResultConfig) results.get(outcome);
+                } catch (NullPointerException e) {
+                }
+                if (resultConfig == null) {
+                    // If no result is found for the given resultCode, try to get a wildcard '*' match.
+                    resultConfig = (ResultConfig) results.get("*");
+                }
+            }
+            if (resultConfig != null) {
+                ctx.getActionInvocation().setResultCode(outcome);
+            } else {
+                // Failing over to parent handler
+                parent.handleNavigation(facesContext, fromAction, outcome);
+            }
 		}
 	}
 

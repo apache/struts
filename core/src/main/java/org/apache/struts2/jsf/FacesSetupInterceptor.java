@@ -83,7 +83,8 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
 				.getFactory(FactoryFinder.APPLICATION_FACTORY))
 				.getApplication();
 		if (!(application.getNavigationHandler() instanceof StrutsNavigationHandler)) {
-			application.setNavigationHandler(new StrutsNavigationHandler());
+			application.setNavigationHandler(new StrutsNavigationHandler(
+                    application.getNavigationHandler()));
 		}
 		if (!(application.getVariableResolver() instanceof StrutsVariableResolver)) {
 			application.setVariableResolver(new StrutsVariableResolver(

@@ -19,8 +19,8 @@ package org.apache.struts2.dispatcher;
 
 import com.mockobjects.dynamic.Mock;
 import org.apache.struts2.ServletActionContext;
-import com.opensymphony.xwork.ActionContext;
-import com.opensymphony.xwork.ActionInvocation;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
 import junit.framework.TestCase;
 import ognl.Ognl;
 import org.jfree.chart.ChartFactory;

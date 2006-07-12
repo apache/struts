@@ -195,7 +195,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
         }
 
         public void init(Configuration configuration) throws ConfigurationException {
-            PackageConfig wait = new PackageConfig();
+            PackageConfig wait = new PackageConfig("");
 
             Map results = new HashMap();
             results.put(Action.SUCCESS, new ResultConfig(Action.SUCCESS, MockResult.class, null));
@@ -210,7 +210,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
             ActionConfig ac = new ActionConfig(null, ExecuteAndWaitDelayAction.class, null, results, interceptors);
             wait.addActionConfig("action1", ac);
 
-            configuration.addPackageConfig("wait", wait);
+            configuration.addPackageConfig("", wait);
         }
 
     }

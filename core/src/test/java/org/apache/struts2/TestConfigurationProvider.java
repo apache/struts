@@ -60,7 +60,7 @@ public class TestConfigurationProvider implements ConfigurationProvider {
      * Initializes the configuration object.
      */
     public void init(Configuration configurationManager) {
-        PackageConfig defaultPackageConfig = new PackageConfig();
+        PackageConfig defaultPackageConfig = new PackageConfig("");
 
         HashMap results = new HashMap();
 
@@ -116,7 +116,7 @@ public class TestConfigurationProvider implements ConfigurationProvider {
         ActionConfig tokenSessionActionConfig = new ActionConfig(null, TestAction.class, null, results, interceptors);
         defaultPackageConfig.addActionConfig(TOKEN_SESSION_ACTION_NAME, tokenSessionActionConfig);
 
-        configurationManager.addPackageConfig("defaultPackage", defaultPackageConfig);
+        configurationManager.addPackageConfig("", defaultPackageConfig);
 
         Map testActionTagResults = new HashMap();
         testActionTagResults.put(Action.SUCCESS, new ResultConfig(Action.SUCCESS, TestActionTagResult.class, new HashMap()));
@@ -124,7 +124,7 @@ public class TestConfigurationProvider implements ConfigurationProvider {
         ActionConfig testActionTagActionConfig = new ActionConfig((String) null, TestAction.class, (Map) null, testActionTagResults, new ArrayList());
         defaultPackageConfig.addActionConfig("testActionTagAction", testActionTagActionConfig);
 
-        PackageConfig namespacePackageConfig = new PackageConfig();
+        PackageConfig namespacePackageConfig = new PackageConfig("namespacePackage");
         namespacePackageConfig.setNamespace(TEST_NAMESPACE);
         namespacePackageConfig.addParent(defaultPackageConfig);
 

@@ -36,10 +36,20 @@ import javax.servlet.http.HttpServletRequestWrapper;
  *
  */
 public class StrutsRequestWrapper extends HttpServletRequestWrapper {
+    
+    /**
+     * The constructor
+     * @param req The request
+     */
     public StrutsRequestWrapper(HttpServletRequest req) {
         super(req);
     }
 
+    /**
+     * Gets the object, looking in the value stack if not found
+     * 
+     * @param s The attribute key
+     */
     public Object getAttribute(String s) {
         if (s != null && s.startsWith("javax.servlet")) {
             // don't bother with the standard javax.servlet attributes, we can short-circuit this

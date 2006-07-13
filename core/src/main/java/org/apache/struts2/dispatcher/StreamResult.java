@@ -154,6 +154,9 @@ public class StreamResult extends StrutsResultSupport {
         this.inputName = inputName;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.struts2.dispatcher.StrutsResultSupport#doExecute(java.lang.String, com.opensymphony.xwork2.ActionInvocation)
+     */
     protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
 
         InputStream oInput = null;

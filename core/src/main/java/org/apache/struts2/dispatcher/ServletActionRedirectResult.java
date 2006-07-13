@@ -17,12 +17,9 @@
  */
 package org.apache.struts2.dispatcher;
 
-import java.util.Map;
-
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.views.util.UrlHelper;
 
 import com.opensymphony.xwork2.ActionInvocation;
 
@@ -85,12 +82,16 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
 	
 	private static final long serialVersionUID = -9042425229314584066L;
 
+    /** The default parameter */
 	public static final String DEFAULT_PARAM = "actionName";
 
     protected String actionName;
     protected String namespace;
     protected String method;
     
+    /* (non-Javadoc)
+     * @see com.opensymphony.xwork2.Result#execute(com.opensymphony.xwork2.ActionInvocation)
+     */
     public void execute(ActionInvocation invocation) throws Exception {
         actionName = conditionalParse(actionName, invocation);
         if (namespace == null) {
@@ -111,14 +112,29 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
         super.execute(invocation);
     }
 
+    /**
+     * Sets the action name
+     * 
+     * @param actionName The name
+     */
     public void setActionName(String actionName) {
         this.actionName = actionName;
     }
 
+    /**
+     * Sets the namespace
+     * 
+     * @param namespace The namespace
+     */
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
     
+    /**
+     * Sets the method
+     * 
+     * @param method The method
+     */
     public void setMethod(String method) {
     	this.method = method;
     }

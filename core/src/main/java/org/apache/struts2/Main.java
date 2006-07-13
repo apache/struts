@@ -30,9 +30,9 @@ import java.util.List;
 /**
  * <!-- START SNIPPET: javadoc -->
  *
- * Struts comes with various related tools included in the struts-action-2.0 jar file. You can access these
- * tools by simply unpacking the Struts distribution and running <b>java -jar struts.jar</b>.
- * Struts will automatically include all jars in the same directory as the struts.jar file as well as all
+ * Struts comes with various related tools included in the struts-core-VERSION.jar file. You can access these
+ * tools by simply unpacking the Struts distribution and running <b>java -jar struts-core-VERSION.jar</b>.
+ * Struts will automatically include all jars in the same directory as the struts-core-VERSION.jar file as well as all
  * jars in the <i>lib</i> directory. This means you can invoke these tools either from within the standard directory
  * structure found in the Struts distribution, or from within your WEB-INF/lib directory.
  *
@@ -65,7 +65,7 @@ public class Main {
         boolean jdk15 = version.indexOf("1.5") != -1;
 
         String javaHome = System.getProperty("java.home");
-        ArrayList urls = new ArrayList();
+        ArrayList<URL> urls = new ArrayList<URL>();
         try {
             findJars(new File("lib"), urls);
 
@@ -132,7 +132,8 @@ public class Main {
             String name = checkWebAppArgs(args);
             programArgs = new String[]{"/" + name,
                     "apps/" + name + "/src/main/webapp",
-                    "apps/" + name + "/src/main/java"};
+                    "apps/" + name + "/src/main/java",
+                    "apps/" + name + "/src/main/resources"};
         }
 
         if ("quickstart".equals(command)) {
@@ -174,16 +175,16 @@ public class Main {
             System.out.println("       to deploy. The webapp name must be the");
             System.out.println("       name of the directory found in apps/.");
             System.out.println("");
-            System.out.println("Example: java -jar struts.jar quickstart:sandbox");
+            System.out.println("Example: java -jar struts-core-VERSION.jar quickstart:sandbox");
             System.exit(1);
         }
 
         return name;
     }
 
-    private static void launch(String program, String[] programArgs, List urls) {
+    private static void launch(String program, String[] programArgs, List<URL> urls) {
         Collections.reverse(urls);
-        URL[] urlArray = (URL[]) urls.toArray(new URL[urls.size()]);
+        URL[] urlArray = urls.toArray(new URL[urls.size()]);
         URLClassLoader cl = new MainClassLoader(urlArray);
         Thread.currentThread().setContextClassLoader(cl);
         try {
@@ -195,7 +196,7 @@ public class Main {
         }
     }
 
-    private static void findJars(File file, ArrayList urls) throws MalformedURLException {
+    private static void findJars(File file, ArrayList<URL> urls) throws MalformedURLException {
         File[] files = file.listFiles();
         if (files == null) {
             return;
@@ -220,14 +221,14 @@ public class Main {
     /**
      * Reverses the typical order of classloading to defer only to the parent if the current class loader can't be
      * found. This is required to allow for the launcher to be embedded within struts.jar (otherwise the dependencies
-     * wouldn't be found by the system ClassLoader when invoking using "java -jar struts.jar ...").
+     * wouldn't be found by the system ClassLoader when invoking using "java -jar struts-core-VERSION.jar ...").
      */
     public static class MainClassLoader extends URLClassLoader {
         public MainClassLoader(URL[] urls) {
             super(urls);
         }
 
-        public Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        public Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
             if (name.startsWith("org.xml.") || name.startsWith("org.w3c.")
                     || name.startsWith("java.") || name.startsWith("javax.")
                     || name.startsWith("sun.") || name.startsWith("com.sun.")) {

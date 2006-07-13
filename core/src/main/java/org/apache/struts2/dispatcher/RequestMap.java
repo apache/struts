@@ -32,7 +32,7 @@ public class RequestMap extends AbstractMap implements Serializable {
 
 	private static final long serialVersionUID = -7675640869293787926L;
 	
-	Set entries;
+	private Set<Object> entries;
     private HttpServletRequest request;
 
 
@@ -66,7 +66,7 @@ public class RequestMap extends AbstractMap implements Serializable {
      */
     public Set entrySet() {
         if (entries == null) {
-            entries = new HashSet();
+            entries = new HashSet<Object>();
 
             Enumeration enumeration = request.getAttributeNames();
 

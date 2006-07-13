@@ -122,7 +122,7 @@ public class DelegatingConfiguration extends Configuration {
     public Iterator listImpl() {
         boolean workedAtAll = false;
 
-        Set settingList = new HashSet();
+        Set<Object> settingList = new HashSet<Object>();
         UnsupportedOperationException e = null;
 
         for (int i = 0; i < configList.length; i++) {

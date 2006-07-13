@@ -33,8 +33,8 @@ public class ApplicationMap extends AbstractMap implements Serializable {
 
 	private static final long serialVersionUID = 9136809763083228202L;
 	
-	ServletContext context;
-    Set entries;
+	private ServletContext context;
+    private Set<Object> entries;
 
 
     /**
@@ -67,7 +67,7 @@ public class ApplicationMap extends AbstractMap implements Serializable {
      */
     public Set entrySet() {
         if (entries == null) {
-            entries = new HashSet();
+            entries = new HashSet<Object>();
 
             // Add servlet context attributes
             Enumeration enumeration = context.getAttributeNames();

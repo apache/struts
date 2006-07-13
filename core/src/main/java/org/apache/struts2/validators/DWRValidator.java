@@ -18,7 +18,7 @@
 package org.apache.struts2.validators;
 
 import org.apache.struts2.dispatcher.ApplicationMap;
-import org.apache.struts2.dispatcher.DispatcherUtils;
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 import com.opensymphony.xwork2.*;
@@ -69,7 +69,7 @@ public class DWRValidator {
         Map requestMap = new RequestMap(req);
         Map session = new SessionMap(req);
         Map application = new ApplicationMap(servletContext);
-        DispatcherUtils du = DispatcherUtils.getInstance();
+        Dispatcher du = Dispatcher.getInstance();
         HashMap ctx = du.createContextMap(requestMap,
                 params,
                 session,

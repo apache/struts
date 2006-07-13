@@ -21,7 +21,7 @@ import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.module.sitemesh.filter.PageFilter;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.DispatcherUtils;
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.Configuration;
 
@@ -83,7 +83,7 @@ public abstract class TemplatePageFilter extends PageFilter {
         if (ctx == null) {
             // ok, one isn't associated with the request, so let's get a ThreadLocal one (which will create one if needed)
             OgnlValueStack vs = new OgnlValueStack();
-            vs.getContext().putAll(DispatcherUtils.getInstance().createContextMap(req, res, null, servletContext));
+            vs.getContext().putAll(Dispatcher.getInstance().createContextMap(req, res, null, servletContext));
             ctx = new ActionContext(vs.getContext());
             if (ctx.getActionInvocation() == null) {
                 // put in a dummy ActionSupport so basic functionality still works

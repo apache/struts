@@ -53,12 +53,12 @@ public class ServletContextSingleton {
     }
 
     /**
-     * answers the singleton.
+     * Answers the singleton.
      * <p/>
      * At some point, the caller must populate the web servlet
      * context.
      *
-     * @return answers the singleton instance of this class
+     * @return Answers the singleton instance of this class
      */
     public static ServletContextSingleton getInstance() {
         if (singleton == null) {
@@ -68,14 +68,18 @@ public class ServletContextSingleton {
     }
 
     /**
-     * @return the web servlet context
+     * Gets the servlet context
+     * 
+     * @return The web servlet context
      */
     public ServletContext getServletContext() {
         return servletContext;
     }
 
     /**
-     * @param context the web servlet context
+     * Sets the servlet context
+     * 
+     * @param context The web servlet context
      */
     public void setServletContext(ServletContext context) {
         servletContext = context;

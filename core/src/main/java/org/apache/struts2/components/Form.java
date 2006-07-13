@@ -31,7 +31,7 @@ import com.opensymphony.xwork2.validator.FieldValidator;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
 import com.opensymphony.xwork2.validator.Validator;
 import org.apache.commons.lang.StringUtils;
-import org.apache.struts2.dispatcher.DispatcherUtils;
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.portlet.context.PortletActionContext;
@@ -136,7 +136,7 @@ public class Form extends ClosingUIBean {
             action = findString(this.action);
         }
 
-        if (DispatcherUtils.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
+        if (Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
             evaluateExtraParamsPortletRequest(namespace, action);
         } else {
             String namespace = determineNamespace(this.namespace, getStack(),
@@ -198,7 +198,7 @@ public class Form extends ClosingUIBean {
             action = action.substring(0, endIdx);
         }
 
-        Configuration config = DispatcherUtils.getInstance().getConfigurationManager().getConfiguration();
+        Configuration config = Dispatcher.getInstance().getConfigurationManager().getConfiguration();
         final ActionConfig actionConfig = config.getRuntimeConfiguration().getActionConfig(namespace, action);
         String actionName = action;
         if (actionConfig != null) {
@@ -271,7 +271,7 @@ public class Form extends ClosingUIBean {
 
             addParameter("performValidation", Boolean.FALSE);
 
-            RuntimeConfiguration runtimeConfiguration = DispatcherUtils.getInstance().getConfigurationManager().getConfiguration().getRuntimeConfiguration();
+            RuntimeConfiguration runtimeConfiguration = Dispatcher.getInstance().getConfigurationManager().getConfiguration().getRuntimeConfiguration();
             ActionConfig actionConfig = runtimeConfiguration.getActionConfig(namespace, actionName);
 
             if (actionConfig != null) {

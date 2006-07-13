@@ -40,7 +40,7 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.dispatcher.ApplicationMap;
-import org.apache.struts2.dispatcher.DispatcherUtils;
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -167,7 +167,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
 
     private String portletNamespace = null;
     
-    private DispatcherUtils dispatcherUtils;
+    private Dispatcher dispatcherUtils;
 
     /**
      * Initialize the portlet with the init parameters from <tt>portlet.xml</tt>
@@ -239,7 +239,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
             }
         }
         
-        dispatcherUtils = new DispatcherUtils(null);
+        dispatcherUtils = new Dispatcher(null);
     }
 
     /**
@@ -287,7 +287,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
     public void processAction(ActionRequest request, ActionResponse response)
             throws PortletException, IOException {
         LOG.debug("Entering processAction");
-        DispatcherUtils.setInstance(dispatcherUtils);
+        Dispatcher.setInstance(dispatcherUtils);
         resetActionContext();
         try {
             serviceAction(request, response, getActionMapping(request),
@@ -365,7 +365,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         }
         extraContext.put(ActionContext.LOCALE, locale);
 
-        extraContext.put(StrutsConstants.STRUTS_PORTLET_CONTEXT, getPortletContext());
+        extraContext.put(StrutsStatics.STRUTS_PORTLET_CONTEXT, getPortletContext());
         extraContext.put(REQUEST, request);
         extraContext.put(RESPONSE, response);
         extraContext.put(PORTLET_CONFIG, portletConfig);

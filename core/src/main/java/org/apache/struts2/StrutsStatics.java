@@ -19,9 +19,8 @@ package org.apache.struts2;
 
 
 /**
- * Constants used by Struts. The constants 
- * can be used to get or set objects out of the action context
- * or other collections.
+ * Constants used by Struts. The constants can be used to get or set objects 
+ * out of the action context or other collections.
  * 
  * <p/>
  * 
@@ -60,4 +59,7 @@ public interface StrutsStatics {
      * Constant for the JSP {@link javax.servlet.jsp.PageContext page context}.
      */
     public static final String PAGE_CONTEXT = "com.opensymphony.xwork2.dispatcher.PageContext";
+    
+    /** Constant for the PortletContext object */
+    public static final String STRUTS_PORTLET_CONTEXT = "struts.portlet.context";
 }

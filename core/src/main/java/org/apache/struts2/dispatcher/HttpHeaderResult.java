@@ -68,10 +68,11 @@ public class HttpHeaderResult implements Result {
 
 	private static final long serialVersionUID = 195648957144219214L;
 
+    /** The default parameter */
 	public static final String DEFAULT_PARAM = "status";
 
 
-    protected boolean parse = true;
+    private boolean parse = true;
     private Map headers;
     private int status = -1;
 

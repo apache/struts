@@ -25,15 +25,17 @@ import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * A simple action support class that sets properties to be able to serve 
- * 
  */
 public class DefaultActionSupport extends ActionSupport {
 
 	private static final long serialVersionUID = -2426166391283746095L;
 	
-	String successResultValue;
+	private String successResultValue;
 	
 	
+	/**
+	 * Constructor 
+	 */
 	public DefaultActionSupport() {
 		super();
 	}

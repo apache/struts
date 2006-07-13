@@ -22,7 +22,7 @@ import com.opensymphony.xwork2.config.ExternalReferenceResolver;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 
 import org.apache.struts2.dispatcher.DispatcherListener;
-import org.apache.struts2.dispatcher.DispatcherUtils;
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.util.ServletContextAware;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -50,13 +50,13 @@ public class SpringExternalReferenceResolverSetupListener implements
     
     public synchronized void contextDestroyed(ServletContextEvent event) {
         Listener l = listeners.get(event.getServletContext());
-        DispatcherUtils.removeDispatcherListener(l);
+        Dispatcher.removeDispatcherListener(l);
         listeners.remove(event.getServletContext());
     }
 
     public synchronized void contextInitialized(ServletContextEvent event) {
         Listener l = new Listener(event.getServletContext());
-        DispatcherUtils.addDispatcherListener(l);
+        Dispatcher.addDispatcherListener(l);
         listeners.put(event.getServletContext(), l);
     }
     
@@ -68,7 +68,7 @@ public class SpringExternalReferenceResolverSetupListener implements
             this.servletContext = ctx;
         }
         
-        public void dispatcherInitialized(DispatcherUtils du) {
+        public void dispatcherInitialized(Dispatcher du) {
             ApplicationContext appContext = WebApplicationContextUtils
             .getWebApplicationContext(servletContext);
 
@@ -87,7 +87,7 @@ public class SpringExternalReferenceResolverSetupListener implements
             
         }
 
-        public void dispatcherDestroyed(DispatcherUtils du) {
+        public void dispatcherDestroyed(Dispatcher du) {
         }
     }
 }

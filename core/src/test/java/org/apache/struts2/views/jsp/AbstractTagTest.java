@@ -22,7 +22,7 @@ import org.apache.struts2.TestAction;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.dispatcher.ApplicationMap;
-import org.apache.struts2.dispatcher.DispatcherUtils;
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 import com.opensymphony.xwork2.Action;
@@ -96,7 +96,7 @@ public abstract class AbstractTagTest extends StrutsTestCase {
         pageContext.setJspWriter(jspWriter);
         pageContext.setServletContext(servletContext);
 
-        DispatcherUtils du = new DispatcherUtils(pageContext.getServletContext());
+        Dispatcher du = new Dispatcher(pageContext.getServletContext());
         du.setInstance(du);
         du.setConfigurationManager(configurationManager);
         session = new SessionMap(request);
@@ -107,7 +107,7 @@ public abstract class AbstractTagTest extends StrutsTestCase {
                 request,
                 response,
                 pageContext.getServletContext());
-        // let's not set the locale -- there is a test that checks if DispatcherUtils actually picks this up...
+        // let's not set the locale -- there is a test that checks if Dispatcher actually picks this up...
         // ... but generally we want to just use no locale (let it stay system default)
         extraContext.remove(ActionContext.LOCALE);
         stack.getContext().putAll(extraContext);

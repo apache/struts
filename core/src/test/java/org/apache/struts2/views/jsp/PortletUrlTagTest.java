@@ -46,7 +46,7 @@ import com.mockobjects.servlet.MockJspWriter;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
 import org.apache.struts2.views.jsp.ParamTag;
-import org.apache.struts2.dispatcher.DispatcherUtils;
+import org.apache.struts2.dispatcher.Dispatcher;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.struts2.config.Configuration;
@@ -81,7 +81,7 @@ public class PortletUrlTagTest extends MockObjectTestCase {
 		super.setUp();
 		
 		Configuration.reset();
-        DispatcherUtils.setInstance(new DispatcherUtils(null));
+        Dispatcher.setInstance(new Dispatcher(null));
         
         mockPortletApiAvailable();
 		
@@ -139,7 +139,7 @@ public class PortletUrlTagTest extends MockObjectTestCase {
      */
     private void mockPortletApiAvailable() {
         try {
-            Field field = DispatcherUtils.class.getDeclaredField("portletSupportActive");
+            Field field = Dispatcher.class.getDeclaredField("portletSupportActive");
             field.setAccessible(true);
             field.set(null, Boolean.TRUE);
         }

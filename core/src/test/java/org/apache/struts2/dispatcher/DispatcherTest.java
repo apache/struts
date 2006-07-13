@@ -24,10 +24,10 @@ import org.apache.struts2.StrutsTestCase;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 /**
- * Test case for DispatcherUtils.
+ * Test case for Dispatcher.
  * 
  */
-public class DispatcherUtilsTest extends StrutsTestCase {
+public class DispatcherTest extends StrutsTestCase {
 
 	public void testDefaultResurceBundlePropertyLoaded() throws Exception {
         Locale.setDefault(Locale.US); // force to US locale as we also have _de and _da properties

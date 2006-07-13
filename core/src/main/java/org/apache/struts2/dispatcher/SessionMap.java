@@ -34,7 +34,7 @@ public class SessionMap extends AbstractMap implements Serializable {
 	private static final long serialVersionUID = 4678843241638046854L;
 	
 	protected HttpSession session;
-    protected Set entries;
+    protected Set<Object> entries;
     protected HttpServletRequest request;
 
 
@@ -84,7 +84,7 @@ public class SessionMap extends AbstractMap implements Serializable {
 
         synchronized (session) {
             if (entries == null) {
-                entries = new HashSet();
+                entries = new HashSet<Object>();
 
                 Enumeration enumeration = session.getAttributeNames();
 

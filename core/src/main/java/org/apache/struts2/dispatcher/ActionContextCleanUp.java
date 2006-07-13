@@ -57,17 +57,22 @@ public class ActionContextCleanUp implements Filter {
     private static final String COUNTER = "__cleanup_recursion_counter";
 
     protected FilterConfig filterConfig;
-    protected DispatcherUtils dispatcher;
+    protected Dispatcher dispatcher;
 
-    public FilterConfig getFilterConfig() {
-        return filterConfig;
-    }
-
+    /**
+     * Initializes the filter
+     * 
+     * @param filterConfig The filter configuration
+     */
     public void init(FilterConfig filterConfig) throws ServletException {
         this.filterConfig = filterConfig;
-        dispatcher = new DispatcherUtils(filterConfig.getServletContext());
+        dispatcher = new Dispatcher(filterConfig.getServletContext());
     }
 
+    
+    /* (non-Javadoc)
+     * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
+     */
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
         HttpServletRequest request = (HttpServletRequest) req;
@@ -75,7 +80,7 @@ public class ActionContextCleanUp implements Filter {
 
         // prepare the request no matter what - this ensures that the proper character encoding
         // is used before invoking the mapper (see WW-9127)
-        DispatcherUtils.setInstance(dispatcher);
+        Dispatcher.setInstance(dispatcher);
         dispatcher.prepare(request, response);
 
         ServletContext servletContext = filterConfig.getServletContext();
@@ -105,6 +110,11 @@ public class ActionContextCleanUp implements Filter {
         }
     }
 
+    /**
+     * Clean up the request of threadlocals if this is the last execution
+     * 
+     * @param req The servlet request
+     */
     protected static void cleanUp(ServletRequest req) {
         // should we clean up yet?
         if (req.getAttribute(COUNTER) != null &&
@@ -115,9 +125,13 @@ public class ActionContextCleanUp implements Filter {
         // always dontClean up the thread request, even if an action hasn't been executed
         ActionContext.setContext(null);
         
-        DispatcherUtils.setInstance(null);
+        Dispatcher.setInstance(null);
     }
 
+    
+    /* (non-Javadoc)
+     * @see javax.servlet.Filter#destroy()
+     */
     public void destroy() {
     }
 }

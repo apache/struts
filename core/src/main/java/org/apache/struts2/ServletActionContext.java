@@ -42,7 +42,12 @@ public class ServletActionContext extends ActionContext implements StrutsStatics
         super(context);
     }
 
-
+    /**
+     * Gets the current action context
+     * 
+     * @param req The request
+     * @return The current action context
+     */
     public static ActionContext getActionContext(HttpServletRequest req) {
         OgnlValueStack vs = getValueStack(req);
         if (vs != null) {
@@ -52,6 +57,12 @@ public class ServletActionContext extends ActionContext implements StrutsStatics
         }
     }
 
+    /**
+     * Gets the current value stack for this request
+     *
+     * @param req The request
+     * @return The value stack
+     */
     public static OgnlValueStack getValueStack(HttpServletRequest req) {
         return (OgnlValueStack) req.getAttribute(STRUTS_VALUESTACK_KEY);
     }
@@ -110,6 +121,11 @@ public class ServletActionContext extends ActionContext implements StrutsStatics
         return (ServletContext) ActionContext.getContext().get(SERVLET_CONTEXT);
     }
 
+    /**
+     * Sets the current servlet context object
+     * 
+     * @param servletContext The servlet context to use
+     */
     public static void setServletContext(ServletContext servletContext) {
         ActionContext.getContext().put(SERVLET_CONTEXT, servletContext);
     }

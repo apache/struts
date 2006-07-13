@@ -46,9 +46,7 @@ import javax.servlet.http.HttpSession;
 public class FilterDispatcherCompatWeblogic61
         extends FilterDispatcher
         implements Filter {
-    /**
-     * the standard logger
-     */
+
     private static Log log =
             LogFactory.getLog(FilterDispatcherCompatWeblogic61.class);
 

@@ -19,16 +19,12 @@ package org.apache.struts2;
 
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.util.location.Locatable;
-import com.opensymphony.xwork2.util.location.Location;
 
 
 /**
  * A generic runtime exception that optionally contains Location information 
  */
 public class StrutsException extends XWorkException implements Locatable {
-
-    private Location location;
-
 
     /**
      * Constructs a <code>StrutsException</code> with no detail message.

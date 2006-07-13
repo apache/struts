@@ -45,7 +45,7 @@ public class DefaultConfiguration extends Configuration {
     public DefaultConfiguration() {
         // Create default implementations 
         // Use default properties and struts.properties
-        ArrayList list = new ArrayList();
+        ArrayList<Configuration> list = new ArrayList<Configuration>();
 
         try {
             list.add(new PropertiesConfiguration("struts"));
@@ -84,7 +84,7 @@ public class DefaultConfiguration extends Configuration {
             // out
         }
 
-        // Add addtional list of i18n global resource bundles
+        // Add additional list of i18n global resource bundles
         try {
 
             LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");

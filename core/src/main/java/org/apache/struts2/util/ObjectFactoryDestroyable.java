@@ -23,7 +23,7 @@ package org.apache.struts2.util;
  * destroyed. 
  * 
  * @see org.apache.struts2.dispatcher.FilterDispatcher
- * @see org.apache.struts2.dispatcher.DispatcherUtils
+ * @see org.apache.struts2.dispatcher.Dispatcher
  */
 public interface ObjectFactoryDestroyable {
 	void destroy();

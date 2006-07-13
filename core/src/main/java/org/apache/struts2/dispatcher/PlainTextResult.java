@@ -70,25 +70,37 @@ import com.opensymphony.xwork2.ActionInvocation;
  * 
  */
 public class PlainTextResult extends StrutsResultSupport {
-	
+
+    public static final int BUFFER_SIZE = 1024;
+    
 	private static final Log _log = LogFactory.getLog(PlainTextResult.class);
 
 	private static final long serialVersionUID = 3633371605905583950L;
 	
-	public static final int BUFFER_SIZE = 1024;
-	
 	private String charSet;
 	
 	
+    /**
+     * Set the character set
+     * 
+     * @return The character set
+     */
 	public String getCharSet() {
 		return charSet;
 	}
+    
+    /**
+     * Set the character set
+     * 
+     * @param charSet The character set
+     */
 	public void setCharSet(String charSet) {
 		this.charSet = charSet;
 	}
 	
-	
-	
+	/* (non-Javadoc)
+	 * @see org.apache.struts2.dispatcher.StrutsResultSupport#doExecute(java.lang.String, com.opensymphony.xwork2.ActionInvocation)
+	 */
 	protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
 		
 		// verify charset 

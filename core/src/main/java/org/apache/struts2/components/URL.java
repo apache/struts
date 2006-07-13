@@ -21,7 +21,7 @@ import org.apache.struts2.StrutsException;
 import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
 import org.apache.struts2.views.util.UrlHelper;
-import org.apache.struts2.dispatcher.DispatcherUtils;
+import org.apache.struts2.dispatcher.Dispatcher;
 import com.opensymphony.xwork2.util.OgnlValueStack;
 import com.opensymphony.xwork2.util.XWorkContinuationConfig;
 import com.opensymphony.xwork2.ActionContext;
@@ -177,7 +177,7 @@ public class URL extends Component {
     }
 
     private void includeGetParameters() {
-        if(!(DispatcherUtils.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest())) {
+        if(!(Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest())) {
             String query = extractQueryString();
             if (query != null) {
                 //mergeRequestParameters(parameters, HttpUtils.parseQueryString(query));
@@ -210,14 +210,14 @@ public class URL extends Component {
 
         String result;
         if (value == null && action != null) {
-            if(DispatcherUtils.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
+            if(Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
                 result = PortletUrlHelper.buildUrl(action, namespace, parameters, portletUrlType, portletMode, windowState);
             }
             else {
                 result = determineActionURL(action, namespace, method, req, res, parameters, scheme, includeContext, encode);
             }
         } else {
-            if(DispatcherUtils.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
+            if(Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
                 result = PortletUrlHelper.buildResourceUrl(value, parameters);
             }
             else {

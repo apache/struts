@@ -20,7 +20,7 @@ package org.apache.struts2.views.jsp;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.ApplicationMap;
-import org.apache.struts2.dispatcher.DispatcherUtils;
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
@@ -49,7 +49,7 @@ public class TagUtils {
             stack = new OgnlValueStack();
 
             HttpServletResponse res = (HttpServletResponse) pageContext.getResponse();
-            DispatcherUtils du = DispatcherUtils.getInstance();
+            Dispatcher du = Dispatcher.getInstance();
             Map extraContext = du.createContextMap(new RequestMap(req),
                     req.getParameterMap(),
                     new SessionMap(req),

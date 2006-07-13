@@ -17,7 +17,30 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.util.ClassLoaderUtil;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.TimeZone;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
@@ -25,21 +48,9 @@ import org.apache.struts2.config.Configuration;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import com.opensymphony.xwork2.ActionContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.*;
-import java.text.SimpleDateFormat;
+import com.opensymphony.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.ActionContext;
 
 /**
  * Master filter for Struts that handles four distinct 
@@ -53,7 +64,7 @@ import java.text.SimpleDateFormat;
  *
  * <li>Serving static content</li>
  *
- * <li>Kicking off XWork's IoC for the request lifecycle</li>
+ * <li>Kicking off XWork's interceptor chain for the request lifecycle</li>
  *
  * </ul>
  *
@@ -104,18 +115,26 @@ import java.text.SimpleDateFormat;
 public class FilterDispatcher implements Filter, StrutsStatics {
     private static final Log LOG = LogFactory.getLog(FilterDispatcher.class);
 
-    protected FilterConfig filterConfig;
-    protected String[] pathPrefixes;
-    protected DispatcherUtils dispatcher;
+    private FilterConfig filterConfig;
+    private String[] pathPrefixes;
+    private Dispatcher dispatcher;
 
     private SimpleDateFormat df = new SimpleDateFormat("E, d MMM yyyy HH:mm:ss");
     private final Calendar lastModifiedCal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
     private final String lastModified = df.format(lastModifiedCal.getTime());
 
-    public FilterConfig getFilterConfig() {
+    /** 
+     * Gets this filter's configuration
+     * 
+     * @return The filter config
+     */
+    protected FilterConfig getFilterConfig() {
         return filterConfig;
     }
 
+    /**
+     * Cleans up the dispatcher
+     */
     public void destroy() {
         	if (dispatcher == null) {
         		LOG.warn("something is seriously wrong, DispatcherUtil is not initialized (null) ");
@@ -124,6 +143,9 @@ public class FilterDispatcher implements Filter, StrutsStatics {
         }
     }
 
+    /**
+     * Initializes the dispatcher and filter
+     */
     public void init(FilterConfig filterConfig) throws ServletException {
         this.filterConfig = filterConfig;
         String param = filterConfig.getInitParameter("packages");
@@ -132,14 +154,20 @@ public class FilterDispatcher implements Filter, StrutsStatics {
             packages = param + " " + packages;
         }
         this.pathPrefixes = parse(packages);
-        dispatcher = new DispatcherUtils(filterConfig.getServletContext());
+        dispatcher = new Dispatcher(filterConfig.getServletContext());
     }
 
+    /**
+     * Parses the list of packages
+     * 
+     * @param packages A comma-delimited String 
+     * @return A string array of packages
+     */
     protected String[] parse(String packages) {
         if (packages == null) {
             return null;
         }
-        List pathPrefixes = new ArrayList();
+        List<String> pathPrefixes = new ArrayList<String>();
 
         StringTokenizer st = new StringTokenizer(packages, ", \n\t");
         while (st.hasMoreTokens()) {
@@ -154,12 +182,15 @@ public class FilterDispatcher implements Filter, StrutsStatics {
     }
 
 
+    /* (non-Javadoc)
+     * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
+     */
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         ServletContext servletContext = filterConfig.getServletContext();
 
-        DispatcherUtils du = DispatcherUtils.getInstance();
+        Dispatcher du = Dispatcher.getInstance();
         
         // Prepare and wrap the request if the cleanup filter hasn't already
         if (du == null) {
@@ -177,7 +208,7 @@ public class FilterDispatcher implements Filter, StrutsStatics {
                 LOG.error(message, e);
                 throw new ServletException(message, e);
             }
-            DispatcherUtils.setInstance(du);
+            Dispatcher.setInstance(du);
         }
 
         ActionMapper mapper = ActionMapperFactory.getMapper();
@@ -204,25 +235,11 @@ public class FilterDispatcher implements Filter, StrutsStatics {
         }
 
 
-        Object o = null;
         try {
-
-            o = beforeActionInvocation(request, servletContext);
-            
             dispatcher.serviceAction(request, response, servletContext, mapping);
         } finally {
-            afterActionInvocation(request, servletContext, o);
             ActionContextCleanUp.cleanUp(req);
         }
-    }
-
-    protected void afterActionInvocation(HttpServletRequest request, Object o, Object o1) {
-        // nothing by default, but a good hook for scoped ioc integration
-    }
-
-    protected Object beforeActionInvocation(HttpServletRequest request, ServletContext servletContext) {
-        // nothing by default, but a good hook for scoped ioc integration
-        return null;
     }
 
     /**
@@ -237,6 +254,13 @@ public class FilterDispatcher implements Filter, StrutsStatics {
         return filterConfig.getServletContext();
     }
 
+    /**
+     * Fins a static resource
+     * 
+     * @param name The resource name
+     * @param response The request
+     * @throws IOException If anything goes wrong
+     */
     protected void findStaticResource(String name, HttpServletResponse response) throws IOException {
         if (!name.endsWith(".class")) {
             for (int i = 0; i < pathPrefixes.length; i++) {
@@ -277,7 +301,13 @@ public class FilterDispatcher implements Filter, StrutsStatics {
         response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 
-    private String getContentType(String name) {
+    /**
+     * Determines the content type for the resource name
+     * 
+     * @param name The resource name
+     * @return The mime type
+     */
+    protected String getContentType(String name) {
         // NOT using the code provided activation.jar to avoid adding yet another dependency
         // this is generally OK, since these are the main files we server up
         if (name.endsWith(".js")) {
@@ -299,6 +329,13 @@ public class FilterDispatcher implements Filter, StrutsStatics {
         }
     }
 
+    /**
+     * Copies the from the input stream to the output stream
+     * 
+     * @param input The input stream
+     * @param output The output stream
+     * @throws IOException If anything goes wrong
+     */
     protected void copy(InputStream input, OutputStream output) throws IOException {
         final byte[] buffer = new byte[4096];
         int n;
@@ -307,6 +344,14 @@ public class FilterDispatcher implements Filter, StrutsStatics {
         }
     }
 
+    /**
+     * Looks for a static resource in the classpath
+     * 
+     * @param name The resource name
+     * @param packagePrefix The package prefix to use to locate the resource
+     * @return The inputstream of the resource
+     * @throws IOException If there is a problem locating the resource
+     */
     protected InputStream findInputStream(String name, String packagePrefix) throws IOException {
         String resourcePath;
         if (packagePrefix.endsWith("/") && name.startsWith("/")) {
@@ -319,24 +364,5 @@ public class FilterDispatcher implements Filter, StrutsStatics {
         resourcePath = URLDecoder.decode(resourcePath, enc);
 
         return ClassLoaderUtil.getResourceAsStream(resourcePath, getClass());
-    }
-
-    /**
-     * handle .. chars here and other URL hacks
-     */
-    protected boolean checkUrl(URL url, String rawResourcePath) {
-
-        // ignore folder resources - they provide streams too ! dunno why :)
-        if (url.getPath().endsWith("/")) {
-            return false;
-        }
-
-        // check for parent path access
-        // NOTE : most servlet containers shoudl resolve .. chars in the request url anyway
-        if (url.toExternalForm().indexOf(rawResourcePath) == -1) {
-            return false;
-        }
-
-        return true;
     }
 }

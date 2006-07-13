@@ -19,7 +19,7 @@ package org.apache.struts2.components;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
-import org.apache.struts2.dispatcher.DispatcherUtils;
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.views.jsp.TagUtils;
 import com.opensymphony.xwork2.ActionContext;
@@ -153,7 +153,7 @@ public class ActionComponent extends Component {
         Map session = ctx.getSession();
         Map application = ctx.getApplication();
 
-        DispatcherUtils du = DispatcherUtils.getInstance();
+        Dispatcher du = Dispatcher.getInstance();
         Map extraContext = du.createContextMap(new RequestMap(req),
                 newParams,
                 session,
@@ -215,7 +215,7 @@ public class ActionComponent extends Component {
         OgnlValueStack stack = getStack();
         // execute at this point, after params have been set
         try {
-            Configuration config = DispatcherUtils.getInstance().getConfigurationManager().getConfiguration();
+            Configuration config = Dispatcher.getInstance().getConfigurationManager().getConfiguration();
             proxy = ActionProxyFactory.getFactory().createActionProxy(config, namespace, actionName, createExtraContext(), executeResult, true);
             if (null != methodName) {
                 proxy.setMethod(methodName);

@@ -23,7 +23,17 @@ package org.apache.struts2.dispatcher;
  */
 public interface DispatcherListener {
 
-    public void dispatcherInitialized(DispatcherUtils du);
+    /**
+     * Called when the dispatcher is initialized
+     * 
+     * @param du The dispatcher instance
+     */
+    public void dispatcherInitialized(Dispatcher du);
     
-    public void dispatcherDestroyed(DispatcherUtils du);
+    /**
+     * Called when the dispatcher is destroyed
+     * 
+     * @param du The dispatcher instance
+     */
+    public void dispatcherDestroyed(Dispatcher du);
 }

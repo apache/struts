@@ -42,7 +42,7 @@ import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import org.jmock.core.Constraint;
 
-import org.apache.struts2.dispatcher.DispatcherUtils;
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.context.ServletContextHolderListener;
 import com.opensymphony.xwork2.Action;

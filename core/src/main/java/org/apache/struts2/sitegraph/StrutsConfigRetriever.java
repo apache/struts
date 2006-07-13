@@ -10,7 +10,7 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.config.StrutsXMLConfigurationProvider;
-import org.apache.struts2.dispatcher.DispatcherUtils;
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.sitegraph.entities.FreeMarkerView;
 import org.apache.struts2.sitegraph.entities.JspView;
 import org.apache.struts2.sitegraph.entities.VelocityView;

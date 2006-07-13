@@ -24,7 +24,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.apache.struts2.dispatcher.DispatcherUtils;
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.DispatcherListener;
 
 import java.util.HashMap;
@@ -46,13 +46,13 @@ public class ResolverSetupServletContextListener implements ServletContextListen
     
     public synchronized void contextDestroyed(ServletContextEvent event) {
         Listener l = listeners.get(event.getServletContext());
-        DispatcherUtils.removeDispatcherListener(l);
+        Dispatcher.removeDispatcherListener(l);
         listeners.remove(event.getServletContext());
     }
 
     public synchronized void contextInitialized(ServletContextEvent event) {
         Listener l = new Listener(event.getServletContext());
-        DispatcherUtils.addDispatcherListener(l);
+        Dispatcher.addDispatcherListener(l);
         listeners.put(event.getServletContext(), l);
     }
     
@@ -64,7 +64,7 @@ public class ResolverSetupServletContextListener implements ServletContextListen
             this.servletContext = ctx;
         }
         
-        public void dispatcherInitialized(DispatcherUtils du) {
+        public void dispatcherInitialized(Dispatcher du) {
             Configuration config = du.getConfigurationManager().getConfiguration();
             String key;
             PackageConfig packageConfig;
@@ -81,7 +81,7 @@ public class ResolverSetupServletContextListener implements ServletContextListen
             
         }
 
-        public void dispatcherDestroyed(DispatcherUtils du) {
+        public void dispatcherDestroyed(Dispatcher du) {
         }
     }
 }

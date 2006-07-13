@@ -17,11 +17,24 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.util.ClassLoaderUtil;
-import com.opensymphony.util.FileManager;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.config.Configuration;
 import org.apache.struts2.config.StrutsXMLConfigurationProvider;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -30,78 +43,99 @@ import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.util.AttributeMap;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.apache.struts2.util.ObjectFactoryInitializable;
-import com.opensymphony.xwork2.*;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
+
+import com.opensymphony.util.ClassLoaderUtil;
+import com.opensymphony.util.FileManager;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-import com.opensymphony.xwork2.util.*;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.ObjectTypeDeterminer;
+import com.opensymphony.xwork2.util.ObjectTypeDeterminerFactory;
+import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.XWorkContinuationConfig;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import freemarker.template.Template;
-import org.apache.struts2.views.freemarker.FreemarkerManager;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 /**
- * A utility class whereby FilterDispatcher delegate most of its tasks to. A static
- * singleton that gets initlialized upon the call to it's
- * <code>initalize(ServletContext)</code>
- * method
+ * A utility class the actual dispatcher delegates most of its tasks to. Each instance
+ * of the primary dispatcher holds an instance of this dispatcher to be shared for
+ * all requests.
  *
  * @see org.apache.struts2.dispatcher.FilterDispatcher
+ * @see org.apache.struts2.portlet.dispatcher.Jsr168Dispatcher
  */
-public class DispatcherUtils {
-    private static final Log LOG = LogFactory.getLog(DispatcherUtils.class);
+public class Dispatcher {
+    private static final Log LOG = LogFactory.getLog(Dispatcher.class);
 
-    private static ThreadLocal instance = new ThreadLocal<DispatcherUtils>();
+    private static ThreadLocal<Dispatcher> instance = new ThreadLocal<Dispatcher>();
     private static List<DispatcherListener> dispatcherListeners = 
         new ArrayList<DispatcherListener>();
+    
     private ConfigurationManager configurationManager;
-
     private boolean portletSupportActive;
+    private boolean devMode = false;
 
-    public static DispatcherUtils getInstance() {
-        return (DispatcherUtils) instance.get();
+    // used to get WebLogic to play nice
+    private boolean paramsWorkaroundEnabled = false;
+
+    /**
+     * Gets the current instance for this thread
+     * 
+     * @return The dispatcher instance
+     */
+    public static Dispatcher getInstance() {
+        return (Dispatcher) instance.get();
     }
 
-    public static void setInstance(DispatcherUtils instance) {
-        DispatcherUtils.instance.set(instance);
+    /** 
+     * Sets the dispatcher instance for this thread
+     * 
+     * @param instance The instance
+     */
+    public static void setInstance(Dispatcher instance) {
+        Dispatcher.instance.set(instance);
     }
     
+    /**
+     * Adds a dispatcher lifecycle listener
+     * 
+     * @param l The listener
+     */
     public static synchronized void addDispatcherListener(DispatcherListener l) {
         dispatcherListeners.add(l);
     }
     
+    /** 
+     * Removes a dispatcher lifecycle listener
+     * 
+     * @param l The listener
+     */
     public static synchronized void removeDispatcherListener(DispatcherListener l) {
         dispatcherListeners.remove(l);
     }
-    
-    protected boolean devMode = false;
 
-    // used to get WebLogic to play nice
-    protected boolean paramsWorkaroundEnabled = false;
-
-    public DispatcherUtils(ServletContext servletContext) {
+    /**
+     * The constructor with its servlet context instance (optional)
+     * 
+     * @param servletContext The servlet context
+     */
+    public Dispatcher(ServletContext servletContext) {
         init(servletContext);
     }
 
-    protected void cleanup() {
+    /** 
+     * Cleans up thread local variables
+     */
+    public void cleanup() {
         ObjectFactory objectFactory = ObjectFactory.getObjectFactory();
         if (objectFactory == null) {
             LOG.warn("Object Factory is null, something is seriously wrong, no clean up will be performed");
@@ -116,7 +150,7 @@ public class DispatcherUtils {
             }
         }
         instance.set(null);
-        synchronized(DispatcherUtils.class) {
+        synchronized(Dispatcher.class) {
             if (dispatcherListeners.size() > 0) {
                 for (DispatcherListener l : dispatcherListeners) {
                     l.dispatcherDestroyed(this);
@@ -125,7 +159,12 @@ public class DispatcherUtils {
         }
     }
 
-    protected void init(ServletContext servletContext) {
+    /**
+     * Initializes the instance
+     * 
+     * @param servletContext The servlet context
+     */
+    private void init(ServletContext servletContext) {
         boolean reloadi18n = Boolean.valueOf((String) Configuration.get(StrutsConstants.STRUTS_I18N_RELOAD)).booleanValue();
         LocalizedTextUtil.setReloadBundles(reloadi18n);
 
@@ -142,7 +181,7 @@ public class DispatcherUtils {
             }
 
             try {
-                Class clazz = ClassLoaderUtil.loadClass(className, DispatcherUtils.class);
+                Class clazz = ClassLoaderUtil.loadClass(className, Dispatcher.class);
                 ObjectFactory objectFactory = (ObjectFactory) clazz.newInstance();
                 if (servletContext != null) {
                     if (objectFactory instanceof ObjectFactoryInitializable) {
@@ -167,7 +206,7 @@ public class DispatcherUtils {
             }
 
             try {
-                Class clazz = ClassLoaderUtil.loadClass(className, DispatcherUtils.class);
+                Class clazz = ClassLoaderUtil.loadClass(className, Dispatcher.class);
                 ObjectTypeDeterminer objectTypeDeterminer = (ObjectTypeDeterminer) clazz.newInstance();
                 ObjectTypeDeterminerFactory.setInstance(objectTypeDeterminer);
             } catch (Exception e) {
@@ -204,7 +243,7 @@ public class DispatcherUtils {
 
         // Check wether portlet support is active or not by trying to get "javax.portlet.PortletRequest"
         try {
-            Class clazz = ClassLoaderUtil.loadClass("javax.portlet.PortletRequest", DispatcherUtils.class);
+            ClassLoaderUtil.loadClass("javax.portlet.PortletRequest", Dispatcher.class);
             portletSupportActive = true;
             if (LOG.isInfoEnabled()) {
                 LOG.info("Found portlet-api. Activating Struts's portlet support");
@@ -221,7 +260,7 @@ public class DispatcherUtils {
         // Load Struts config files
         configurationManager.addConfigurationProvider(new StrutsXMLConfigurationProvider(false));
         
-        synchronized(DispatcherUtils.class) {
+        synchronized(Dispatcher.class) {
             if (dispatcherListeners.size() > 0) {
                 for (DispatcherListener l : dispatcherListeners) {
                     l.dispatcherInitialized(this);
@@ -234,7 +273,7 @@ public class DispatcherUtils {
      * Loads the action and executes it. This method first creates the action context from the given
      * parameters then loads an <tt>ActionProxy</tt> from the given action name and namespace. After that,
      * the action is executed and output channels throught the response object. Actions not found are
-     * sent back to the user via the {@link DispatcherUtils#sendError} method, using the 404 return code.
+     * sent back to the user via the {@link Dispatcher#sendError} method, using the 404 return code.
      * All other errors are reported by throwing a ServletException.
      *
      * @param request  the HttpServletRequest object
@@ -244,7 +283,7 @@ public class DispatcherUtils {
      *                          would end up as a 5xx by the servlet container)
      */
     public void serviceAction(HttpServletRequest request, HttpServletResponse response, ServletContext context, ActionMapping mapping) throws ServletException {
-        Map extraContext = createContextMap(request, response, mapping, context);
+        Map<String, Object> extraContext = createContextMap(request, response, mapping, context);
 
         // If there was a previous value stack, then create a new copy and pass it in to be used by the new Action
         OgnlValueStack stack = (OgnlValueStack) request.getAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY);
@@ -294,7 +333,17 @@ public class DispatcherUtils {
         }
     }
 
-    public Map createContextMap(HttpServletRequest request, HttpServletResponse response, ActionMapping mapping, ServletContext context) {
+    /**
+     * Creates a context map containing all the wrapped request objects
+     * 
+     * @param request The servlet request
+     * @param response The servlet response
+     * @param mapping The action mapping
+     * @param context The servlet context
+     * @return A map of context objects
+     */
+    public Map<String,Object> createContextMap(HttpServletRequest request, HttpServletResponse response, 
+            ActionMapping mapping, ServletContext context) {
         // request map wrapping the http request objects
         Map requestMap = new RequestMap(request);
 
@@ -332,14 +381,14 @@ public class DispatcherUtils {
      * @param servletContext the ServletContext object.
      * @return a HashMap representing the <tt>Action</tt> context.
      */
-    public HashMap createContextMap(Map requestMap,
+    public HashMap<String,Object> createContextMap(Map requestMap,
                                     Map parameterMap,
                                     Map sessionMap,
                                     Map applicationMap,
                                     HttpServletRequest request,
                                     HttpServletResponse response,
                                     ServletContext servletContext) {
-        HashMap extraContext = new HashMap();
+        HashMap<String,Object> extraContext = new HashMap<String,Object>();
         extraContext.put(ActionContext.PARAMETERS, new HashMap(parameterMap));
         extraContext.put(ActionContext.SESSION, sessionMap);
         extraContext.put(ActionContext.APPLICATION, applicationMap);
@@ -375,7 +424,7 @@ public class DispatcherUtils {
      *
      * @return the maximum upload size allowed for multipart requests
      */
-    public static int getMaxSize() {
+    private static int getMaxSize() {
         Integer maxSize = new Integer(Integer.MAX_VALUE);
         try {
             String maxSizeStr = Configuration.getString(StrutsConstants.STRUTS_MULTIPART_MAXSIZE);
@@ -405,7 +454,7 @@ public class DispatcherUtils {
      *
      * @return the path to save uploaded files to
      */
-    public String getSaveDir(ServletContext servletContext) {
+    private String getSaveDir(ServletContext servletContext) {
         String saveDir = Configuration.getString(StrutsConstants.STRUTS_MULTIPART_SAVEDIR).trim();
 
         if (saveDir.equals("")) {
@@ -430,6 +479,12 @@ public class DispatcherUtils {
         return saveDir;
     }
 
+    /**
+     * Prepares a request, including setting the encoding and locale
+     * 
+     * @param request The request
+     * @param response The response
+     */
     public void prepare(HttpServletRequest request, HttpServletResponse response) {
         String encoding = null;
         if (Configuration.isSet(StrutsConstants.STRUTS_I18N_ENCODING)) {
@@ -491,7 +546,7 @@ public class DispatcherUtils {
      * @param code     the HttpServletResponse error code (see {@link javax.servlet.http.HttpServletResponse} for possible error codes).
      * @param e        the Exception that is reported.
      */
-    public void sendError(HttpServletRequest request, HttpServletResponse response, 
+    private void sendError(HttpServletRequest request, HttpServletResponse response, 
             ServletContext ctx, int code, Exception e) {
         if (devMode) {
             response.setContentType("text/html");
@@ -500,14 +555,14 @@ public class DispatcherUtils {
                 freemarker.template.Configuration config = FreemarkerManager.getInstance().getConfiguration(ctx);
                 Template template = config.getTemplate("/org/apache/struts2/dispatcher/error.ftl");
                 
-                List chain = new ArrayList();
+                List<Throwable> chain = new ArrayList<Throwable>();
                 Throwable cur = e;
                 chain.add(cur);
                 while ((cur = cur.getCause()) != null) {
                     chain.add(cur);
                 }
                 
-                HashMap data = new HashMap();
+                HashMap<String,Object> data = new HashMap<String,Object>();
                 data.put("exception", e);
                 data.put("unknown", Location.UNKNOWN);
                 data.put("chain", chain);
@@ -554,10 +609,20 @@ public class DispatcherUtils {
         }
     }
 
+    /**
+     * Gets the current configuration manager instance
+     * 
+     * @return The instance
+     */
     public ConfigurationManager getConfigurationManager() {
         return configurationManager;
     }
-    
+
+    /**
+     * Sets the current configuration manager instance
+     * 
+     * @param mgr The configuration manager
+     */
     public void setConfigurationManager(ConfigurationManager mgr) {
         this.configurationManager = mgr;
     }

@@ -100,6 +100,7 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
 	
 	private static final Log _log = LogFactory.getLog(StrutsResultSupport.class);
 	
+    /** The default parameter */
     public static final String DEFAULT_PARAM = "location";
 
     protected boolean parse = true;
@@ -149,7 +150,14 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
     public void execute(ActionInvocation invocation) throws Exception {
         doExecute(conditionalParse(location, invocation), invocation);
     }
-
+    
+    /**
+     * Parses the parameter for OGNL expressions against the valuestack
+     * 
+     * @param param The parameter value
+     * @param invocation The action invocation instance
+     * @return The resulting string
+     */
     protected String conditionalParse(String param, ActionInvocation invocation) {
         if (parse && param != null && invocation != null) {
             return TextParseUtil.translateVariables(param, invocation.getStack(), 

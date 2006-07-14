@@ -48,26 +48,45 @@ public class SpringExternalReferenceResolverSetupListener implements
     
     private Map<ServletContext,Listener> listeners = new HashMap<ServletContext,Listener>();
     
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
+     */
     public synchronized void contextDestroyed(ServletContextEvent event) {
         Listener l = listeners.get(event.getServletContext());
         Dispatcher.removeDispatcherListener(l);
         listeners.remove(event.getServletContext());
     }
 
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
+     */
     public synchronized void contextInitialized(ServletContextEvent event) {
         Listener l = new Listener(event.getServletContext());
         Dispatcher.addDispatcherListener(l);
         listeners.put(event.getServletContext(), l);
     }
     
+    /**
+     * Handles initializing and cleaning up the dispatcher
+     * @author brownd
+     *
+     */
     private class Listener implements DispatcherListener {
 
         private ServletContext servletContext;
         
+        /**
+         * Constructs the listener
+         * 
+         * @param ctx The servlet context
+         */
         public Listener(ServletContext ctx) {
             this.servletContext = ctx;
         }
         
+        /* (non-Javadoc)
+         * @see org.apache.struts2.dispatcher.DispatcherListener#dispatcherInitialized(org.apache.struts2.dispatcher.Dispatcher)
+         */
         public void dispatcherInitialized(Dispatcher du) {
             ApplicationContext appContext = WebApplicationContextUtils
             .getWebApplicationContext(servletContext);
@@ -87,6 +106,9 @@ public class SpringExternalReferenceResolverSetupListener implements
             
         }
 
+        /* (non-Javadoc)
+         * @see org.apache.struts2.dispatcher.DispatcherListener#dispatcherDestroyed(org.apache.struts2.dispatcher.Dispatcher)
+         */
         public void dispatcherDestroyed(Dispatcher du) {
         }
     }

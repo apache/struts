@@ -31,14 +31,24 @@ import javax.servlet.http.HttpSessionListener;
 import java.util.Collections;
 
 /**
- * 
+ * Manages the Plexus lifecycle for the servlet and session contexts
  */
 public class PlexusLifecycleListener implements ServletContextListener, HttpSessionListener {
     private static final Log log = LogFactory.getLog(PlexusObjectFactory.class);
 
-    public static boolean loaded = false;
+    private static boolean loaded = false;
     public static final String KEY = "struts.plexus.container";
 
+    /**
+     * @return Returns if the container is loaded.
+     */
+    public static boolean isLoaded() {
+        return loaded;
+    }
+
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
+     */
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         loaded = true;
 
@@ -55,6 +65,9 @@ public class PlexusLifecycleListener implements ServletContextListener, HttpSess
         }
     }
 
+    /* (non-Javadoc)
+     * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
+     */
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         try {
             ServletContext ctx = servletContextEvent.getServletContext();
@@ -65,6 +78,9 @@ public class PlexusLifecycleListener implements ServletContextListener, HttpSess
         }
     }
 
+    /* (non-Javadoc)
+     * @see javax.servlet.http.HttpSessionListener#sessionCreated(javax.servlet.http.HttpSessionEvent)
+     */
     public void sessionCreated(HttpSessionEvent httpSessionEvent) {
         try {
             HttpSession session = httpSessionEvent.getSession();
@@ -80,6 +96,9 @@ public class PlexusLifecycleListener implements ServletContextListener, HttpSess
         }
     }
 
+    /* (non-Javadoc)
+     * @see javax.servlet.http.HttpSessionListener#sessionDestroyed(javax.servlet.http.HttpSessionEvent)
+     */
     public void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
         try {
             HttpSession session = httpSessionEvent.getSession();

@@ -94,6 +94,9 @@ public class PortletVelocityResult extends StrutsResultSupport {
 	private static final Log log = LogFactory
             .getLog(PortletVelocityResult.class);
 
+    /* (non-Javadoc)
+     * @see org.apache.struts2.dispatcher.StrutsResultSupport#doExecute(java.lang.String, com.opensymphony.xwork2.ActionInvocation)
+     */
     public void doExecute(String location, ActionInvocation invocation)
             throws Exception {
         if (PortletActionContext.isEvent()) {
@@ -104,8 +107,10 @@ public class PortletVelocityResult extends StrutsResultSupport {
     }
 
     /**
-     * @param location
-     * @param invocation
+     * Executes the result
+     * 
+     * @param location The location string
+     * @param invocation The action invocation
      */
     private void executeActionResult(String location,
             ActionInvocation invocation) {
@@ -268,7 +273,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
     }
 
     /**
-     *  
+     *  Prepares the servlet action context for this request
      */
     private void prepareServletActionContext() throws PortletException,
             IOException {

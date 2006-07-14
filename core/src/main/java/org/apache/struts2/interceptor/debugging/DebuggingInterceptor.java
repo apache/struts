@@ -214,7 +214,7 @@ public class DebuggingInterceptor implements Interceptor {
         ActionContext ctx = ActionContext.getContext();
         writer.startNode(DEBUG_PARAM);
         serializeIt(ctx.getParameters(), "parameters", writer,
-                new ArrayList());
+                new ArrayList<Object>());
         writer.startNode("context");
         String key;
         Map ctxMap = ctx.getContextMap();
@@ -229,15 +229,15 @@ public class DebuggingInterceptor implements Interceptor {
                 }
             }
             if (print) {
-                serializeIt(ctxMap.get(key), key, writer, new ArrayList());
+                serializeIt(ctxMap.get(key), key, writer, new ArrayList<Object>());
             }
         }
         writer.endNode();
-        serializeIt(ctx.getSession(), "request", writer, new ArrayList());
-        serializeIt(ctx.getSession(), "session", writer, new ArrayList());
+        serializeIt(ctx.getSession(), "request", writer, new ArrayList<Object>());
+        serializeIt(ctx.getSession(), "session", writer, new ArrayList<Object>());
 
         OgnlValueStack stack = (OgnlValueStack) ctx.get(ActionContext.VALUE_STACK);
-        serializeIt(stack.getRoot(), "valueStack", writer, new ArrayList());
+        serializeIt(stack.getRoot(), "valueStack", writer, new ArrayList<Object>());
         writer.endNode();
     }
 
@@ -256,7 +256,7 @@ public class DebuggingInterceptor implements Interceptor {
      *               of this function (to prevent looping on circular references).
      */
     protected void serializeIt(Object bean, String name,
-                               PrettyPrintWriter writer, List stack) {
+                               PrettyPrintWriter writer, List<Object> stack) {
         writer.flush();
         // Check stack for this object
         if ((bean != null) && (stack.contains(bean))) {

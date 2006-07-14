@@ -28,20 +28,34 @@ import java.io.IOException;
 import java.util.Collections;
 
 /**
+ * Creates a plexus container for the application, session, and request
  */
 public class PlexusFilter implements Filter {
     private static final Log log = LogFactory.getLog(PlexusObjectFactory.class);
     private static final String CHILD_CONTAINER_NAME = "request";
 
-    public static boolean loaded = false;
+    private static boolean loaded = false;
 
     private ServletContext ctx;
 
+    /**
+     * @return Returns if the container is loaded.
+     */
+    public static boolean isLoaded() {
+        return loaded;
+    }
+
+    /* (non-Javadoc)
+     * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
+     */
     public void init(FilterConfig filterConfig) throws ServletException {
         ctx = filterConfig.getServletContext();
         loaded = true;
     }
 
+    /* (non-Javadoc)
+     * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
+     */
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         PlexusContainer child = null;
         try {
@@ -83,6 +97,9 @@ public class PlexusFilter implements Filter {
         }
     }
 
+    /* (non-Javadoc)
+     * @see javax.servlet.Filter#destroy()
+     */
     public void destroy() {
     }
 }

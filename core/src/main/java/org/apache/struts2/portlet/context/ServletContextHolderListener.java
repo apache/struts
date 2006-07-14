@@ -33,6 +33,9 @@ public class ServletContextHolderListener implements ServletContextListener {
 
     private static ServletContext context = null;
 
+    /**
+     * @return The current servlet context
+     */
     public static ServletContext getServletContext() {
         return context;
     }

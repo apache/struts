@@ -40,8 +40,7 @@ public class PortletSessionMap extends AbstractMap {
     private static final Log LOG = LogFactory.getLog(PortletSessionMap.class);
 
     private PortletSession session = null;
-
-    private Set            entries = null;
+    private Set<Object> entries = null;
 
     /**
      * Creates a new session map given a portlet request. 
@@ -67,7 +66,7 @@ public class PortletSessionMap extends AbstractMap {
     public Set entrySet() {
         synchronized (session) {
             if (entries == null) {
-                entries = new HashSet();
+                entries = new HashSet<Object>();
 
                 Enumeration enumeration = session.getAttributeNames();
 

@@ -20,15 +20,22 @@ package org.apache.struts2.plexus;
 import org.codehaus.plexus.PlexusContainer;
 
 /**
+ * Stores and retrieves the plexus container in the thread
  */
 public class PlexusThreadLocal {
-    static ThreadLocal ptl = new ThreadLocal();
+    private static ThreadLocal<PlexusContainer> ptl = new ThreadLocal<PlexusContainer>();
 
+    /**
+     * @param pc The plexus container for this thread
+     */
     public static void setPlexusContainer(PlexusContainer pc) {
         ptl.set(pc);
     }
 
+    /**
+     * @return The plexus container for this thread
+     */
     public static PlexusContainer getPlexusContainer() {
-        return (PlexusContainer) ptl.get();
+        return ptl.get();
     }
 }

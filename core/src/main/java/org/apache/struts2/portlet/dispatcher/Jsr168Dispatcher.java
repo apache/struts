@@ -161,9 +161,9 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
 
     private ActionProxyFactory factory = null;
 
-    private Map modeMap = new HashMap(3);
+    private Map<PortletMode,String> modeMap = new HashMap<PortletMode,String>(3);
 
-    private Map actionMap = new HashMap(3);
+    private Map<PortletMode,ActionMapping> actionMap = new HashMap<PortletMode,ActionMapping>(3);
 
     private String portletNamespace = null;
     
@@ -352,7 +352,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
 
         // TODO Must put http request/response objects into map for use with
         // ServletActionContext
-        HashMap extraContext = new HashMap();
+        HashMap<String,Object> extraContext = new HashMap<String,Object>();
         extraContext.put(ActionContext.PARAMETERS, parameterMap);
         extraContext.put(ActionContext.SESSION, sessionMap);
         extraContext.put(ActionContext.APPLICATION, applicationMap);
@@ -411,7 +411,6 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         HashMap extraContext = createContextMap(requestMap, parameterMap,
                 sessionMap, applicationMap, request, response,
                 getPortletConfig(), phase);
-        PortletMode mode = request.getPortletMode();
         String actionName = mapping.getName();
         String namespace = mapping.getNamespace();
         try {

@@ -17,7 +17,6 @@
  */
 package org.apache.struts2.portlet.util;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -30,12 +29,10 @@ import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
-import javax.servlet.jsp.JspException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.context.PortletActionContext;
 
@@ -49,18 +46,6 @@ import org.apache.struts2.portlet.context.PortletActionContext;
  */
 public class PortletUrlHelper {
     private static final Log LOG = LogFactory.getLog(PortletUrlHelper.class);
-
-    /**
-     * Default HTTP port (80).
-     */
-    private static final int DEFAULT_HTTP_PORT = 80;
-
-    /**
-     * Default HTTPS port (443).
-     */
-    private static final int DEFAULT_HTTPS_PORT = 443;
-
-    private static final String AMP = "&";
 
     /**
      * Create a portlet URL with for the specified action and namespace.

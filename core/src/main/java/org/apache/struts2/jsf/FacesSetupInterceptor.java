@@ -41,16 +41,13 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
 	private static final long serialVersionUID = -621512342655103941L;
 
 	private String lifecycleId = LifecycleFactory.DEFAULT_LIFECYCLE;
-
 	private FacesContextFactory facesContextFactory;
-
 	private Lifecycle lifecycle;
 
 	/**
 	 * Sets the lifecycle id
 	 * 
-	 * @param id
-	 *            The id
+	 * @param id The id
 	 */
 	public void setLifecycleId(String id) {
 		this.lifecycleId = id;

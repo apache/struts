@@ -36,8 +36,7 @@ public class PortletRequestMap extends AbstractMap {
 
     private static final Log LOG = LogFactory.getLog(PortletRequestMap.class);
     
-    private Set            entries = null;
-
+    private Set<Object> entries = null;
     private PortletRequest request = null;
 
     /**
@@ -79,7 +78,7 @@ public class PortletRequestMap extends AbstractMap {
      */
     public Set entrySet() {
         if (entries == null) {
-            entries = new HashSet();
+            entries = new HashSet<Object>();
 
             Enumeration enumeration = request.getAttributeNames();
 

@@ -27,10 +27,18 @@ import java.io.InputStreamReader;
 import java.io.ByteArrayInputStream;
 
 /**
+ * Utility methods for dealing with Plexus
  */
 public class PlexusUtils {
     private static final Log log = LogFactory.getLog(PlexusObjectFactory.class);
 
+    /**
+     * Configures the container with the configuration file
+     * 
+     * @param pc The plexus container
+     * @param file The file path
+     * @throws PlexusConfigurationResourceException If the plexus configuration can't be loaded
+     */
     public static void configure(PlexusContainer pc, String file) throws PlexusConfigurationResourceException {
         InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(file);
         if (is == null) {

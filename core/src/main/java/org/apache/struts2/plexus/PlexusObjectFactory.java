@@ -70,18 +70,13 @@ public class PlexusObjectFactory extends ObjectFactory implements ObjectFactoryI
 
     private static final String PLEXUS_COMPONENT_TYPE = "plexus.component.type";
 
-    // ----------------------------------------------------------------------
-    // Privates
-    // ----------------------------------------------------------------------
-
     private PlexusContainer base;
 
-    // ----------------------------------------------------------------------
-    // ObjectFactory overrides
-    // ----------------------------------------------------------------------
-
+    /* (non-Javadoc)
+     * @see org.apache.struts2.util.ObjectFactoryInitializable#init(javax.servlet.ServletContext)
+     */
     public void init(ServletContext servletContext) {
-        if (!PlexusLifecycleListener.loaded || !PlexusFilter.loaded) {
+        if (!PlexusLifecycleListener.isLoaded() || !PlexusFilter.isLoaded()) {
             // uh oh! looks like the lifecycle listener wasn't installed. Let's inform the user
             String message = "********** FATAL ERROR STARTING UP PLEXUS-STRUTS INTEGRATION **********\n" +
                     "Looks like the Plexus listener was not configured for your web app! \n" +
@@ -113,6 +108,9 @@ public class PlexusObjectFactory extends ObjectFactory implements ObjectFactoryI
         base = (PlexusContainer) servletContext.getAttribute(PlexusLifecycleListener.KEY);
     }
 
+    /* (non-Javadoc)
+     * @see com.opensymphony.xwork2.ObjectFactory#buildAction(java.lang.String, java.lang.String, com.opensymphony.xwork2.config.entities.ActionConfig, java.util.Map)
+     */
     public Object buildAction(String actionName, String namespace, ActionConfig config, Map extraContext)
             throws Exception {
         if (extraContext == null) {
@@ -124,6 +122,9 @@ public class PlexusObjectFactory extends ObjectFactory implements ObjectFactoryI
         return super.buildAction(actionName, namespace, config, extraContext);
     }
 
+    /* (non-Javadoc)
+     * @see com.opensymphony.xwork2.ObjectFactory#buildInterceptor(com.opensymphony.xwork2.config.entities.InterceptorConfig, java.util.Map)
+     */
     public Interceptor buildInterceptor(InterceptorConfig interceptorConfig, Map interceptorRefParams)
             throws ConfigurationException {
         String interceptorClassName = interceptorConfig.getClassName();
@@ -167,6 +168,9 @@ public class PlexusObjectFactory extends ObjectFactory implements ObjectFactoryI
         throw new ConfigurationException(message, cause);
     }
 
+    /* (non-Javadoc)
+     * @see com.opensymphony.xwork2.ObjectFactory#buildResult(com.opensymphony.xwork2.config.entities.ResultConfig, java.util.Map)
+     */
     public Result buildResult(ResultConfig resultConfig, Map extraContext)
             throws Exception {
         if (extraContext == null) {
@@ -178,6 +182,9 @@ public class PlexusObjectFactory extends ObjectFactory implements ObjectFactoryI
         return super.buildResult(resultConfig, extraContext);
     }
 
+    /* (non-Javadoc)
+     * @see com.opensymphony.xwork2.ObjectFactory#buildValidator(java.lang.String, java.util.Map, java.util.Map)
+     */
     public Validator buildValidator(String className, Map params, Map extraContext)
             throws Exception {
         Map context = new HashMap();
@@ -188,6 +195,9 @@ public class PlexusObjectFactory extends ObjectFactory implements ObjectFactoryI
         return validator;
     }
 
+    /* (non-Javadoc)
+     * @see com.opensymphony.xwork2.ObjectFactory#buildBean(java.lang.Class, java.util.Map)
+     */
     public Object buildBean(Class clazz, Map extraContext)
             throws Exception {
         try {
@@ -206,6 +216,9 @@ public class PlexusObjectFactory extends ObjectFactory implements ObjectFactoryI
         }
     }
 
+    /* (non-Javadoc)
+     * @see com.opensymphony.xwork2.ObjectFactory#getClassInstance(java.lang.String)
+     */
     public Class getClassInstance(String className)
             throws ClassNotFoundException {
         PlexusContainer pc = PlexusThreadLocal.getPlexusContainer();
@@ -242,21 +255,28 @@ public class PlexusObjectFactory extends ObjectFactory implements ObjectFactoryI
         }
     }
 
-    private Object lookup(String role)
-            throws Exception {
-        return lookup(role, null, null);
-    }
-
+    /**
+     * Looks up an object
+     * 
+     * @param role The role name
+     * @param extraContext The extra context
+     * @return The object
+     * @throws Exception If the lookup fails
+     */
     private Object lookup(String role, Map extraContext)
             throws Exception {
         return lookup(role, null, extraContext);
     }
 
-    private Object lookup(String role, String roleHint)
-            throws Exception {
-        return lookup(role, roleHint, null);
-    }
-
+    /**
+     * Looks up an object
+     * 
+     * @param role The role name
+     * @param roleHint The role hint
+     * @param extraContext The extra context
+     * @return The object
+     * @throws Exception If the lookup fails
+     */
     private Object lookup(String role, String roleHint, Map extraContext)
             throws Exception {
         PlexusContainer pc = PlexusThreadLocal.getPlexusContainer();

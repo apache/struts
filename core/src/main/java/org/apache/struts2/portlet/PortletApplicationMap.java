@@ -33,9 +33,9 @@ import javax.portlet.PortletContext;
  */
 public class PortletApplicationMap extends AbstractMap implements Serializable {
 
-	PortletContext context;
+	private PortletContext context;
 
-	Set entries;
+	private Set<Object> entries;
 
 	/**
 	 * Creates a new map object given the {@link PortletContext}.
@@ -69,7 +69,7 @@ public class PortletApplicationMap extends AbstractMap implements Serializable {
 	 */
 	public Set entrySet() {
 		if (entries == null) {
-			entries = new HashSet();
+			entries = new HashSet<Object>();
 
 			// Add portlet context attributes
 			Enumeration enumeration = context.getAttributeNames();

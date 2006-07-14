@@ -41,6 +41,9 @@ import javax.servlet.ServletContext;
 public class StrutsSpringObjectFactory extends SpringObjectFactory implements ObjectFactoryInitializable {
     private static final Log log = LogFactory.getLog(StrutsSpringObjectFactory.class);
 
+    /* (non-Javadoc)
+     * @see org.apache.struts2.util.ObjectFactoryInitializable#init(javax.servlet.ServletContext)
+     */
     public void init(ServletContext servletContext) {
         log.info("Initializing Struts-Spring integration...");
 

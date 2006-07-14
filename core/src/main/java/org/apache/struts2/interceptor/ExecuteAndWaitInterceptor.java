@@ -17,17 +17,17 @@
  */
 package org.apache.struts2.interceptor;
 
+import java.util.Collections;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.util.Collections;
-import java.util.Map;
 
 
 /**
@@ -171,13 +171,27 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
 
     private int threadPriority = Thread.NORM_PRIORITY;
 
+    /* (non-Javadoc)
+     * @see com.opensymphony.xwork2.interceptor.Interceptor#init()
+     */
     public void init() {
     }
 
+    /**
+     * Creates a new background process
+     * 
+     * @param name The process name
+     * @param actionInvocation The action invocation
+     * @param threadPriority The thread priority
+     * @return The new process
+     */
     protected BackgroundProcess getNewBackgroundProcess(String name, ActionInvocation actionInvocation, int threadPriority) {
         return new BackgroundProcess(name + "BackgroundThread", actionInvocation, threadPriority);
     }
 
+    /* (non-Javadoc)
+     * @see com.opensymphony.xwork2.interceptor.MethodFilterInterceptor#doIntercept(com.opensymphony.xwork2.ActionInvocation)
+     */
     protected String doIntercept(ActionInvocation actionInvocation) throws Exception {
         ActionProxy proxy = actionInvocation.getProxy();
         String name = proxy.getActionName();
@@ -238,6 +252,9 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
     }
 
 
+    /* (non-Javadoc)
+     * @see com.opensymphony.xwork2.interceptor.Interceptor#destroy()
+     */
     public void destroy() {
     }
 

@@ -36,12 +36,28 @@ public class ActionMapping {
     private Map params;
     private Result result;
 
+    /**
+     * Constructs an ActionMapping
+     */
     public ActionMapping() {}
 
+    /**
+     * Constructs an ActionMapping with a default result
+     * 
+     * @param result The default result
+     */
     public ActionMapping(Result result) {
         this.result = result;
     }
 
+    /**
+     * Constructs an ActionMapping with its values
+     * 
+     * @param name The action name
+     * @param namespace The action namespace
+     * @param method The method
+     * @param params The extra parameters
+     */
     public ActionMapping(String name, String namespace, String method, Map params) {
         this.name = name;
         this.namespace = namespace;
@@ -49,18 +65,30 @@ public class ActionMapping {
         this.params = params;
     }
 
+    /**
+     * @return The action name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @return The action namespace
+     */
     public String getNamespace() {
         return namespace;
     }
 
+    /**
+     * @return The extra parameters
+     */
     public Map getParams() {
         return params;
     }
 
+    /**
+     * @return The method
+     */
     public String getMethod() {
         if (null != method && "".equals(method)) {
             return null;
@@ -69,26 +97,44 @@ public class ActionMapping {
         }
     }
 
+    /**
+     * @return The default result
+     */
     public Result getResult() {
         return result;
     }
 
+    /**
+     * @param result The result
+     */
     public void setResult(Result result) {
         this.result = result;
     }
 
+    /**
+     * @param name The action name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * @param namespace The action namespace
+     */
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
 
+    /**
+     * @param method The method name to call on the action
+     */
     public void setMethod(String method) {
         this.method = method;
     }
 
+    /**
+     * @param params The extra parameters for this mapping
+     */
     public void setParams(Map params) {
         this.params = params;
     }

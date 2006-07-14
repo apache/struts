@@ -138,28 +138,41 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
 
 	private static final Log LOG = LogFactory.getLog(ScopeInterceptor.class);
 
-    String[] application = null;
-    String[] session = null;
-    String key;
-    String type = null;
-    boolean autoCreateSession = true;
-    String sessionReset = "session.reset";
-    boolean reset = false;
+    private String[] application = null;
+    private String[] session = null;
+    private String key;
+    private String type = null;
+    private boolean autoCreateSession = true;
+    private String sessionReset = "session.reset";
+    private boolean reset = false;
 
-    //list of application scoped properties
+    /**
+     * Sets a list of application scoped properties
+     * 
+     * @param s A comma-delimited list
+     */
     public void setApplication(String s) {
         if (s != null) {
             application = s.split(" *, *");
         }
     }
 
-    //list of session scoped properties
+    /**
+     * Sets a list of session scoped properties
+     * 
+     * @param s A comma-delimited list
+     */
     public void setSession(String s) {
         if (s != null) {
             session = s.split(" *, *");
         }
     }
 
+    /**
+     * Sets if the session should be automatically created
+     * 
+     * @param value True if it should be created
+     */
     public void setAutoCreateSession(String value) {
         if (value != null && value.length() > 0) {
             this.autoCreateSession = new Boolean(value).booleanValue();
@@ -176,6 +189,9 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
         return key;
     }
 
+    /**
+     * The constructor
+     */
     public ScopeInterceptor() {
         super();
     }
@@ -302,6 +318,9 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
         this.key = key;
     }
 
+    /* (non-Javadoc)
+     * @see com.opensymphony.xwork2.interceptor.PreResultListener#beforeResult(com.opensymphony.xwork2.ActionInvocation, java.lang.String)
+     */
     public void beforeResult(ActionInvocation invocation, String resultCode) {
         String key = getKey(invocation);
         Map app = ActionContext.getContext().getApplication();
@@ -351,10 +370,18 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
         }
     }
 
+    /**
+     * @return The type of scope operation, "start" or "end"
+     */      
     public String getType() {
         return type;
     }
 
+    /**
+     * Sets the type of scope operation
+     * 
+     * @param type Either "start" or "end"
+     */
     public void setType(String type) {
         type = type.toLowerCase();
         if ("start".equals(type) || "end".equals(type)) {
@@ -364,14 +391,23 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
         }
     }
 
+    /**
+     * @return Gets the session reset parameter name
+     */
     public String getSessionReset() {
         return sessionReset;
     }
 
+    /**
+     * @param sessionReset The session reset parameter name
+     */
     public void setSessionReset(String sessionReset) {
         this.sessionReset = sessionReset;
     }
 
+    /* (non-Javadoc)
+     * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
+     */
     public String intercept(ActionInvocation invocation) throws Exception {
         String result = null;
         Map ses = ActionContext.getContext().getSession();
@@ -388,10 +424,16 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
         return result;
     }
 
+    /**
+     * @return True if the scope is reset
+     */
     public boolean isReset() {
         return reset;
     }
 
+    /**
+     * @param reset True if the scope should be reset
+     */
     public void setReset(boolean reset) {
         this.reset = reset;
     }

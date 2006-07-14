@@ -29,16 +29,16 @@ import java.io.InputStream;
 import java.util.*;
 
 /**
- * Multipart form data request adapter for Jakarta's file upload package.
+ * Multipart form data request adapter for Jakarta Commons Fileupload package.
  *
  */
 public class JakartaMultiPartRequest extends MultiPartRequest {
     // maps parameter name -> List of FileItem objects
-    private Map files = new HashMap();
+    private Map<String,List<FileItem>> files = new HashMap<String,List<FileItem>>();
     // maps parameter name -> List of param values
-    private Map params = new HashMap();
+    private Map<String,List<String>> params = new HashMap<String,List<String>>();
     // any errors while processing this request
-    private List errors = new ArrayList();
+    private List<String> errors = new ArrayList<String>();
 
     /**
      * Creates a new request wrapper to handle multi-part data using methods adapted from Jason Pell's
@@ -67,11 +67,11 @@ public class JakartaMultiPartRequest extends MultiPartRequest {
                 if (log.isDebugEnabled()) log.debug("Found item " + item.getFieldName());
                 if (item.isFormField()) {
                     log.debug("Item is a normal form field");
-                    List values;
+                    List<String> values;
                     if (params.get(item.getFieldName()) != null) {
-                        values = (List) params.get(item.getFieldName());
+                        values = params.get(item.getFieldName());
                     } else {
-                        values = new ArrayList();
+                        values = new ArrayList<String>();
                     }
 
                     // note: see http://jira.opensymphony.com/browse/WW-633
@@ -88,11 +88,11 @@ public class JakartaMultiPartRequest extends MultiPartRequest {
                 } else {
                     log.debug("Item is a file upload");
 
-                    List values;
+                    List<FileItem> values;
                     if (files.get(item.getFieldName()) != null) {
-                        values = (List) files.get(item.getFieldName());
+                        values = files.get(item.getFieldName());
                     } else {
-                        values = new ArrayList();
+                        values = new ArrayList<FileItem>();
                     }
 
                     values.add(item);
@@ -105,10 +105,16 @@ public class JakartaMultiPartRequest extends MultiPartRequest {
         }
     }
 
-    public Enumeration getFileParameterNames() {
+    /* (non-Javadoc)
+     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFileParameterNames()
+     */
+    public Enumeration<String> getFileParameterNames() {
         return Collections.enumeration(files.keySet());
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getContentType(java.lang.String)
+     */
     public String[] getContentType(String fieldName) {
         List items = (List) files.get(fieldName);
 
@@ -116,7 +122,7 @@ public class JakartaMultiPartRequest extends MultiPartRequest {
             return null;
         }
 
-        List contentTypes = new ArrayList(items.size());
+        List<String> contentTypes = new ArrayList<String>(items.size());
         for (int i = 0; i < items.size(); i++) {
             FileItem fileItem = (FileItem) items.get(i);
             contentTypes.add(fileItem.getContentType());
@@ -125,6 +131,9 @@ public class JakartaMultiPartRequest extends MultiPartRequest {
         return (String[]) contentTypes.toArray(new String[contentTypes.size()]);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFile(java.lang.String)
+     */
     public File[] getFile(String fieldName) {
         List items = (List) files.get(fieldName);
 
@@ -132,7 +141,7 @@ public class JakartaMultiPartRequest extends MultiPartRequest {
             return null;
         }
 
-        List fileList = new ArrayList(items.size());
+        List<File> fileList = new ArrayList<File>(items.size());
         for (int i = 0; i < items.size(); i++) {
             DiskFileItem fileItem = (DiskFileItem) items.get(i);
             fileList.add(fileItem.getStoreLocation());
@@ -141,14 +150,17 @@ public class JakartaMultiPartRequest extends MultiPartRequest {
         return (File[]) fileList.toArray(new File[fileList.size()]);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFileNames(java.lang.String)
+     */
     public String[] getFileNames(String fieldName) {
-        List items = (List) files.get(fieldName);
+        List<FileItem> items = files.get(fieldName);
 
         if (items == null) {
             return null;
         }
 
-        List fileNames = new ArrayList(items.size());
+        List<String> fileNames = new ArrayList<String>(items.size());
         for (int i = 0; i < items.size(); i++) {
             DiskFileItem fileItem = (DiskFileItem) items.get(i);
             fileNames.add(getCanonicalName(fileItem.getName()));
@@ -157,6 +169,9 @@ public class JakartaMultiPartRequest extends MultiPartRequest {
         return (String[]) fileNames.toArray(new String[fileNames.size()]);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getFilesystemName(java.lang.String)
+     */
     public String[] getFilesystemName(String fieldName) {
         List items = (List) files.get(fieldName);
 
@@ -164,7 +179,7 @@ public class JakartaMultiPartRequest extends MultiPartRequest {
             return null;
         }
 
-        List fileNames = new ArrayList(items.size());
+        List<String> fileNames = new ArrayList<String>(items.size());
         for (int i = 0; i < items.size(); i++) {
             DiskFileItem fileItem = (DiskFileItem) items.get(i);
             fileNames.add(fileItem.getStoreLocation().getName());
@@ -173,6 +188,9 @@ public class JakartaMultiPartRequest extends MultiPartRequest {
         return (String[]) fileNames.toArray(new String[fileNames.size()]);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getParameter(java.lang.String)
+     */
     public String getParameter(String name) {
         List v = (List) params.get(name);
         if (v != null && v.size() > 0) {
@@ -182,12 +200,18 @@ public class JakartaMultiPartRequest extends MultiPartRequest {
         return null;
     }
 
-    public Enumeration getParameterNames() {
+    /* (non-Javadoc)
+     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getParameterNames()
+     */
+    public Enumeration<String> getParameterNames() {
         return Collections.enumeration(params.keySet());
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getParameterValues(java.lang.String)
+     */
     public String[] getParameterValues(String name) {
-        List v = (List) params.get(name);
+        List<String> v = params.get(name);
         if (v != null && v.size() > 0) {
             return (String[]) v.toArray(new String[v.size()]);
         }
@@ -195,6 +219,9 @@ public class JakartaMultiPartRequest extends MultiPartRequest {
         return null;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getErrors()
+     */
     public List getErrors() {
         return errors;
     }

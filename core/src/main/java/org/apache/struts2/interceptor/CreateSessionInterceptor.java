@@ -80,6 +80,9 @@ public class CreateSessionInterceptor extends AbstractInterceptor {
 	private static final Log _log = LogFactory.getLog(CreateSessionInterceptor.class);
 	
 	
+    /* (non-Javadoc)
+     * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
+     */
     public String intercept(ActionInvocation invocation) throws Exception {
 		_log.debug("Creating HttpSession");
 		ServletActionContext.getRequest().getSession(true);

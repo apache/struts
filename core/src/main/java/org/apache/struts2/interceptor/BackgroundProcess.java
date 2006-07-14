@@ -35,6 +35,13 @@ public class BackgroundProcess implements Serializable {
     protected Exception exception;
     protected boolean done;
 
+    /**
+     * Constructs a background process
+     * 
+     * @param threadName The thread name
+     * @param invocation The action invocation
+     * @param threadPriority The thread priority
+     */
     public BackgroundProcess(String threadName, final ActionInvocation invocation, int threadPriority) {
         this.invocation = invocation;
         this.action = invocation.getAction();
@@ -61,7 +68,7 @@ public class BackgroundProcess implements Serializable {
     }
 
     /**
-     * called before the background thread determines the result code
+     * Called before the background thread determines the result code
      * from the ActionInvocation.
      *
      * @throws Exception any exception thrown will be thrown, in turn, by the ExecuteAndWaitInterceptor
@@ -70,7 +77,7 @@ public class BackgroundProcess implements Serializable {
     }
 
     /**
-     * called after the background thread determines the result code
+     * Called after the background thread determines the result code
      * from the ActionInvocation, but before the background thread is
      * marked as done.
      *

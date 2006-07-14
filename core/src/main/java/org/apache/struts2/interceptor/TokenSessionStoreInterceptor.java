@@ -98,6 +98,9 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
 	
 	private static final long serialVersionUID = -9032347965469098195L;
 
+	/* (non-Javadoc)
+	 * @see org.apache.struts2.interceptor.TokenInterceptor#handleInvalidToken(com.opensymphony.xwork2.ActionInvocation)
+	 */
 	protected String handleInvalidToken(ActionInvocation invocation) throws Exception {
         ActionContext ac = invocation.getInvocationContext();
 
@@ -133,6 +136,9 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
         return INVALID_TOKEN_CODE;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.struts2.interceptor.TokenInterceptor#handleValidToken(com.opensymphony.xwork2.ActionInvocation)
+     */
     protected String handleValidToken(ActionInvocation invocation) throws Exception {
         // we know the token name and token must be there
         String key = TokenHelper.getTokenName();

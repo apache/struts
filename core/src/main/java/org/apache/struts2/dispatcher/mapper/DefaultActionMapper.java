@@ -191,6 +191,9 @@ public class DefaultActionMapper implements ActionMapper {
         }
     };
 
+    /* (non-Javadoc)
+     * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(javax.servlet.http.HttpServletRequest)
+     */
     public ActionMapping getMapping(HttpServletRequest request) {
         ActionMapping mapping = new ActionMapping();
         String uri = getUri(request);
@@ -213,6 +216,13 @@ public class DefaultActionMapper implements ActionMapper {
         return mapping;
     }
 
+    /**
+     * Special parameters, as described in the class-level comment, are searched for
+     * and handled.
+     * 
+     * @param request The request
+     * @param mapping The action mapping
+     */
     public static void handleSpecialParameters(HttpServletRequest request, ActionMapping mapping) {
         // handle special parameter prefixes.
         Map parameterMap = request.getParameterMap();
@@ -226,6 +236,12 @@ public class DefaultActionMapper implements ActionMapper {
         }
     }
 
+    /**
+     * Parses the name and namespace from the uri
+     * 
+     * @param uri The uri
+     * @param mapping The action mapping to populate
+     */
     void parseNameAndNamespace(String uri, ActionMapping mapping) {
         String namespace, name;
         int lastSlash = uri.lastIndexOf("/");
@@ -245,6 +261,12 @@ public class DefaultActionMapper implements ActionMapper {
         mapping.setName(dropExtension(name));
     }
 
+    /**
+     * Drops the extension from the action name
+     * 
+     * @param name The action name
+     * @return The action name without its extension
+     */
     String dropExtension(String name) {
     		List extensions = getExtensions();
 		if (extensions == null) {
@@ -286,6 +308,12 @@ public class DefaultActionMapper implements ActionMapper {
         } 
     }
 
+    /**
+     * Gets the uri from the request
+     * 
+     * @param request The request
+     * @return The uri
+     */
     String getUri(HttpServletRequest request) {
         // handle http dispatcher includes.
         String uri = (String) request.getAttribute("javax.servlet.include.servlet_path");
@@ -302,6 +330,9 @@ public class DefaultActionMapper implements ActionMapper {
         return uri.substring(request.getContextPath().length());
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getUriFromActionMapping(org.apache.struts2.dispatcher.mapper.ActionMapping)
+     */
     public String getUriFromActionMapping(ActionMapping mapping) {
         StringBuffer uri = new StringBuffer();
 
@@ -332,6 +363,9 @@ public class DefaultActionMapper implements ActionMapper {
         return uri.toString();
     }
 
+    /**
+     * Defines a parameter action prefix
+     */
     interface ParameterAction {
         void execute(String key, ActionMapping mapping);
     }

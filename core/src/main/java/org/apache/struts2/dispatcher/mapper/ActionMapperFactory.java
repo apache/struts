@@ -39,8 +39,13 @@ import java.util.HashMap;
 public class ActionMapperFactory {
     protected static final Log LOG = LogFactory.getLog(ActionMapperFactory.class);
 
-    private static final HashMap classMap = new HashMap();
+    private static final HashMap<String,ActionMapper> classMap = new HashMap<String,ActionMapper>();
 
+    /**
+     * Gets an instance of the ActionMapper
+     * 
+     * @return The action mapper
+     */
     public static ActionMapper getMapper() {
         synchronized (classMap) {
             String clazz = (String) Configuration.get(StrutsConstants.STRUTS_MAPPER_CLASS);

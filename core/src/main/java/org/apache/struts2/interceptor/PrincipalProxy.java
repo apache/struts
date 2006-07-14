@@ -28,26 +28,57 @@ import java.security.Principal;
 public class PrincipalProxy {
     private HttpServletRequest request;
 
+    /**
+     * Constructs a proxy
+     * 
+     * @param request The underlying request
+     */
     public PrincipalProxy(HttpServletRequest request) {
         this.request = request;
     }
 
+    /**
+     * True if the user is in the given role
+     * 
+     * @param role The role
+     * @return True if the user is in that role
+     */
     public boolean isUserInRole(String role) {
         return request.isUserInRole(role);
     }
 
+    /**
+     * Gets the user principal
+     * 
+     * @return The principal
+     */
     public Principal getUserPrincipal() {
         return request.getUserPrincipal();
     }
 
+    /**
+     * Gets the user id
+     * 
+     * @return The user id
+     */
     public String getRemoteUser() {
         return request.getRemoteUser();
     }
 
+    /**
+     * Is the request using https?
+     * 
+     * @return True if using https
+     */
     public boolean isRequestSecure() {
         return request.isSecure();
     }
 
+    /**
+     * Gets the request
+     * 
+     * @return The request
+     */
     public HttpServletRequest getRequest() {
         return request;
     }

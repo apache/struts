@@ -130,37 +130,17 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
     }
 
     /**
-     * @deprecated use {@link #getFileParameterNames()} instead
-     */
-    public Enumeration getFileNames() {
-        return getFileParameterNames();
-    }
-
-    /**
      * Get an enumeration of the parameter names for uploaded files
      *
      * @return enumeration of parameter names for uploaded files
      */
-    public Enumeration getFileParameterNames() {
+    public Enumeration<String> getFileParameterNames() {
         if (multi == null) {
             return null;
         }
 
         return multi.getFileParameterNames();
     }
-
-    /**
-     * @deprecated use {@link #getContentTypes(String)} instead
-     */
-    public String getContentType(String fieldName) {
-        String[] contentTypes = getContentTypes(fieldName);
-        if (contentTypes != null && contentTypes.length > 0) {
-            return contentTypes[0];
-        }
-
-        return null;
-    }
-
 
     /**
      * Get an array of content encoding for the specified input field name or <tt>null</tt> if
@@ -175,18 +155,6 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
         }
 
         return multi.getContentType(name);
-    }
-
-    /**
-     * @deprecated use {@link #getFiles(String)} instead
-     */
-    public File getFile(String fieldName) {
-        File[] files = getFiles(fieldName);
-        if (files != null && files.length > 0) {
-            return files[0];
-        }
-
-        return null;
     }
 
     /**
@@ -214,18 +182,6 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
         }
 
         return multi.getFileNames(fieldName);
-    }
-
-    /**
-     * @deprecated use {@link #getFileSystemNames(String)} instead
-     */
-    public String getFilesystemName(String fieldName) {
-        String[] names = getFileSystemNames(fieldName);
-        if (names != null && names.length > 0) {
-            return names[0];
-        }
-
-        return null;
     }
 
     /**

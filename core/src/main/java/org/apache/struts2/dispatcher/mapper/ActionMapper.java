@@ -36,7 +36,20 @@ import javax.servlet.http.HttpServletRequest;
  * <!-- END SNIPPET: javadoc -->
  */
 public interface ActionMapper {
+    
+    /**
+     * Gets an action mapping for the current request
+     * 
+     * @param request The servlet request
+     * @return The appropriate action mapping
+     */
     ActionMapping getMapping(HttpServletRequest request);
 
+    /**
+     * Converts an ActionMapping into a URI string
+     * 
+     * @param mapping The action mapping
+     * @return The URI string that represents this mapping
+     */
     String getUriFromActionMapping(ActionMapping mapping);
 }

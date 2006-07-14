@@ -17,21 +17,30 @@
  */
 package org.apache.struts2.interceptor;
 
+import java.io.File;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.util.*;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -158,6 +167,11 @@ public class FileUploadInterceptor extends AbstractInterceptor {
     protected String allowedTypes;
     protected Set allowedTypesSet = Collections.EMPTY_SET;
 
+    /**
+     * Sets the allowed mimetypes
+     * 
+     * @param allowedTypes A comma-delimited list of types
+     */
     public void setAllowedTypes(String allowedTypes) {
         this.allowedTypes = allowedTypes;
 
@@ -165,10 +179,18 @@ public class FileUploadInterceptor extends AbstractInterceptor {
         allowedTypesSet = getDelimitedValues(allowedTypes);
     }
 
+    /**
+     * Sets the maximum size of an uploaded file
+     * 
+     * @param maximumSize The maximum size in bytes
+     */
     public void setMaximumSize(Long maximumSize) {
         this.maximumSize = maximumSize;
     }
 
+    /* (non-Javadoc)
+     * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
+     */
     public String intercept(ActionInvocation invocation) throws Exception {
         ActionContext ac = invocation.getInvocationContext();
         HttpServletRequest request = (HttpServletRequest) ac.get(ServletActionContext.HTTP_REQUEST);
@@ -314,7 +336,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
     }
 
     private static Set getDelimitedValues(String delimitedString) {
-        Set delimitedValues = new HashSet();
+        Set<String> delimitedValues = new HashSet<String>();
         if (delimitedString != null) {
             StringTokenizer stringTokenizer = new StringTokenizer(delimitedString, DEFAULT_DELIMITER);
             while (stringTokenizer.hasMoreTokens()) {

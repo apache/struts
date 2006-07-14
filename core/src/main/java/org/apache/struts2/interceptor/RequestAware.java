@@ -32,7 +32,7 @@ public interface RequestAware {
 	/**
      * Sets the Map of request attributes in the implementing class.
      *
-     * @param session a Map of HTTP request attribute name/value pairs.
+     * @param request a Map of HTTP request attribute name/value pairs.
      */
     public void setRequest(Map request);
 }

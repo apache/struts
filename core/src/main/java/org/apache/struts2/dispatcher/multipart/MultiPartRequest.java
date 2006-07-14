@@ -17,13 +17,14 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 /**
@@ -51,7 +52,7 @@ public abstract class MultiPartRequest {
      *
      * @return an enumeration of the parameter names for uploaded files
      */
-    public abstract Enumeration getFileParameterNames();
+    public abstract Enumeration<String> getFileParameterNames();
 
     /**
      * Returns the content type(s) of the file(s) associated with the specified field name
@@ -103,7 +104,7 @@ public abstract class MultiPartRequest {
      *
      * @return an enumeration of String parameter names.
      */
-    public abstract Enumeration getParameterNames();
+    public abstract Enumeration<String> getParameterNames();
 
     /**
      * Returns a list of all parameter values associated with a parameter name. If there is only

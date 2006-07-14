@@ -55,6 +55,9 @@ import java.util.StringTokenizer;
 public class RestfulActionMapper implements ActionMapper {
     protected static final Log LOG = LogFactory.getLog(RestfulActionMapper.class);
 
+    /* (non-Javadoc)
+     * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(javax.servlet.http.HttpServletRequest)
+     */
     public ActionMapping getMapping(HttpServletRequest request) {
         String uri = RequestUtils.getServletPath(request);
 
@@ -64,7 +67,7 @@ public class RestfulActionMapper implements ActionMapper {
         }
 
         String actionName = uri.substring(1, nextSlash);
-        HashMap parameters = new HashMap();
+        HashMap<String,String> parameters = new HashMap<String,String>();
         try {
             StringTokenizer st = new StringTokenizer(uri.substring(nextSlash), "/");
             boolean isNameTok = true;
@@ -98,6 +101,9 @@ public class RestfulActionMapper implements ActionMapper {
         return new ActionMapping(actionName, "", "", parameters);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getUriFromActionMapping(org.apache.struts2.dispatcher.mapper.ActionMapping)
+     */
     public String getUriFromActionMapping(ActionMapping mapping) {
         String base = mapping.getNamespace() + mapping.getName();
         for (Iterator iterator = mapping.getParams().entrySet().iterator(); iterator.hasNext();) {

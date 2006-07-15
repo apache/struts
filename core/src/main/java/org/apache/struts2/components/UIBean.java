@@ -306,17 +306,17 @@ import java.util.Map;
  *
  * <p/>
  *
- * In Example 1, the textfield will inherit the tooltipAboveMousePointer attribte from
+ * In Example 1, the textfield will inherit the tooltipDelay adn tooltipIcon attribte from
  * its containing form. In other words, although it doesn't defined a tooltipAboveMousePointer
- * attribute, it will have that attribute defined as true inherited from its containing form.
+ * attribute, it will have that attributes inherited from its containing form.
  *
  * <p/>
  *
- * In Example 2, the the textfield will inherite both the tooltipAboveMousePointer and
- * tooltipLeftOfMousePointer attribute from its containing form but tooltipLeftOfMousePointer
+ * In Example 2, the the textfield will inherite both the tooltipDelay and
+ * tooltipIcon attribute from its containing form but tooltipDelay
  * attribute is overriden at the textfield itself. Hence, the textfield actually will
- * have tooltipAboveMousePointer defined as true, inherited from its containing form and
- * tooltipLeftOfMousePointer defined as false, due to overriden at the textfield itself.
+ * have tooltipIcon defined as /myImages/myIcon.gif, inherited from its containing form and
+ * tooltipDelay defined as 5000, due to overriden at the textfield itself.
  *
  * <p/>
  *
@@ -333,8 +333,8 @@ import java.util.Map;
  *
  * &lt;!-- Example 1: --&gt;
  * &lt;a:form
- * 			tooltipConfig="#{'tooltipAboveMousePointer':'true',
- *                           'tooltipBgColor='#eeeeee'}" .... &gt;
+ * 			tooltipConfig="#{'tooltipDelay':'500',
+ *                           'tooltipIcon='/myImages/myIcon.gif'}" .... &gt;
  *   ....
  *     &lt;a:textfield label="Customer Name" tooltip="Enter the customer name" .... /&gt;
  *   ....
@@ -342,12 +342,12 @@ import java.util.Map;
  *
  * &lt;!-- Example 2: --&gt;
  * &lt;a:form
- *         tooltipConfig="#{'tooltipAboveMousePointer':'true',
- *          				 'tooltipLeftOfMousePointer':'true'}" ... &gt;
+ *         tooltipConfig="#{'tooltipDelay':'500',
+ *          				'tooltipIcon':'/myImages/myIcon.gif'}" ... &gt;
  *   ....
  *     &lt;a:textfield label="Address"
  *          tooltip="Enter your address"
- *          tooltipConfig="#{'tooltipLeftOfMousePointer':'false'}" /&gt;
+ *          tooltipConfig="#{'tooltipDelay':'5000'}" /&gt;
  *   ....
  * &lt;/a:form&gt;
  *
@@ -357,9 +357,8 @@ import java.util.Map;
  *        label="Customer Name"
  *	      tooltip="One of our customer Details'"&gt;
  *        &lt;a:param name="tooltipConfig"&gt;
- *             tooltipWidth = 150 |
- *             tooltipAboveMousePointer = false |
- *             tooltipLeftOfMousePointer = false
+ *             tooltipDelay = 500 |
+ *             tooltipIcon = /myImages/myIcon.gif 
  *        &lt;/a:param&gt;
  * &lt;/a:textfield&gt;
  *
@@ -370,10 +369,8 @@ import java.util.Map;
  *	        tooltip="Enter The Customer Address" &gt;
  *	        &lt;a:param
  *              name="tooltipConfig"
- *              value="#{'tooltipStatic':'true',
- *                       'tooltipSticky':'true',
- *                       'tooltipAboveMousePointer':'false',
- *                       'tooltipLeftOfMousePointer':'false'}"  /&gt;
+ *              value="#{'tooltipDelay':'500',
+ *                       'tooltipIcon':'/myImages/myIcon.gif'}" /&gt;
  * &lt;/a:textfield&gt;
  *
  *
@@ -381,10 +378,8 @@ import java.util.Map;
  * &lt;a:textfield
  *          label="Customer Telephone Number"
  *          tooltip="Enter customer Telephone Number"
- *          tooltipConfig="#{'tooltipBgColor':'#cccccc',
- *                           'tooltipFontColor':'#eeeeee',
- *                           'tooltipAboveMousePointer':'false',
- *                           'tooltipLeftOfMousePointer':'false'}" /&lt;
+ *          tooltipConfig="#{'tooltipDelay':'500',
+ *                           'tooltipIcon':'/myImages/myIcon.gif'}" /&gt;
  *
  * <!-- END SNIPPET: tooltipexample -->
  * </pre>

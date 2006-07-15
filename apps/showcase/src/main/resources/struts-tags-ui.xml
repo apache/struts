@@ -31,16 +31,6 @@
         	<result name="input">lotsOfOptiontransferselect.jsp</result>
         	<result>lotsOfOptiontransferselectSubmit.jsp</result>
         </action>
-        <action name="lotsOfRichtexteditor" class="org.apache.struts2.showcase.LotsOfRichtexteditorAction" method="input">
-        	<result>lotsOfRichtexteditor.jsp</result>
-        </action>
-        <action name="lotsOfRichtexteditorSubmit" class="org.apache.struts2.showcase.LotsOfRichtexteditorAction" method="submit">
-        	<result name="input">lotsOfRichtexteditor.jsp</result>
-			<result>lotsOfRichtexteditorSubmit.jsp</result>        
-        </action>
-        <action name="tooltipExample">
-        	<result>tooltipExample.jsp</result>
-        </action>
         
         <!--  START SNIPPET: treeExampleDynamicXWorkXml -->
         

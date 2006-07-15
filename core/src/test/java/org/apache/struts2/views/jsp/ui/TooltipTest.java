@@ -52,32 +52,8 @@ public class TooltipTest extends AbstractUITagTest {
         tag.setTooltipConfig(
                 "#{" +
                         "'tooltipIcon':'/struts/tooltip/myTooltip.gif', " +
-                        "'tooltipAboveMousePointer':'true', " +
-                        "'tooltipBgColor':'#ffffff', " +
-                        "'tooltipBgImg':'/struts/tooltip/myBgImg.gif', " +
-                        "'tooltipBorderWidth':'10', " +
-                        "'tooltipBorderColor':'#eeeeee', " +
-                        "'tooltipDelay':'2000', " +
-                        "'tooltipFixCoordinateX':'300', " +
-                        "'tooltipFixCoordinateY':'300', " +
-                        "'tooltipFontColor':'#dddddd', " +
-                        "'tooltipFontFace':'San-Serif,Verdana', " +
-                        "'tooltipFontSize':'20', " +
-                        "'tooltipFontWeight':'bold', " +
-                        "'tooltipLeftOfMousePointer':'true', " +
-                        "'tooltipOffsetX':'10', " +
-                        "'tooltipOffsetY':'20', " +
-                        "'tooltipOpacity':'90', " +
-                        "'tooltipPadding':'30', " +
-                        "'tooltipShadowColor':'#cccccc', " +
-                        "'tooltipShadowWidth':'40', " +
-                        "'tooltipStatic':'true', " +
-                        "'tooltipSticky':'true', " +
-                        "'tooltipStayAppearTime':'3000', " +
-                        "'tooltipTextAlign':'right', " +
-                        "'tooltipTitle':'MyTitle', " +
-                        "'tooltipTitleColor':'#bbbbbb', " +
-                        "'tooltipWidth':'600' " +
+                        "'tooltipDelay':'500', " +
+                        "'jsTooltipEnabled':'true' "+
                         "}"
         );
 
@@ -101,35 +77,11 @@ public class TooltipTest extends AbstractUITagTest {
         formTag.setAction("testAction");
 
         formTag.setTooltipConfig(
-                "#{ " +
-                        "'tooltipIcon':'/struts/tooltip/formMyTooltip.gif', " +
-                        "'tooltipAboveMousePointer':'false', " +
-                        "'tooltipBgColor':'#aaaaaa', " +
-                        "'tooltipBgImg':'/struts/tooltip/formMyBgImg.gif', " +
-                        "'tooltipBorderWidth':'11', " +
-                        "'tooltipBorderColor':'#bbbbbb', " +
-                        "'tooltipDelay':'2001', " +
-                        "'tooltipFixCoordinateX':'301', " +
-                        "'tooltipFixCoordinateY':'301', " +
-                        "'tooltipFontColor':'#cccccc', " +
-                        "'tooltipFontFace':'Verdana,San-Serif', " +
-                        "'tooltipFontSize':'21', " +
-                        "'tooltipFontWeight':'normal', " +
-                        "'tooltipLeftOfMousePointer':'false', " +
-                        "'tooltipOffsetX':'11', " +
-                        "'tooltipOffsetY':'21', " +
-                        "'tooltipOpacity':'91', " +
-                        "'tooltipPadding':'31', " +
-                        "'tooltipShadowColor':'#cccccc', " +
-                        "'tooltipShadowWidth':'41', " +
-                        "'tooltipStatic':'false', " +
-                        "'tooltipSticky':'false', " +
-                        "'tooltipStayAppearTime':'3001', " +
-                        "'tooltipTextAlign':'left', " +
-                        "'tooltipTitle':'FormMyTitle', " +
-                        "'tooltipTitleColor':'#dddddd', " +
-                        "'tooltipWidth':'601' " +
-                        "}"
+        		"#{" +
+                "'tooltipIcon':'/struts/tooltip/myTooltip.gif', " +
+                "'tooltipDelay':'500', " +
+                "'jsTooltipEnabled':'true' "+
+                "}"
         );
 
 
@@ -160,35 +112,11 @@ public class TooltipTest extends AbstractUITagTest {
         formTag.setAction("testAction");
 
         formTag.setTooltipConfig(
-                "#{ " +
-                        "'tooltipIcon':'/struts/tooltip/formMyTooltip.gif', " +
-                        "'tooltipAboveMousePointer':'false', " +
-                        "'tooltipBgColor':'#aaaaaa', " +
-                        "'tooltipBgImg':'/struts/tooltip/formMyBgImg.gif', " +
-                        "'tooltipBorderWidth':'11', " +
-                        "'tooltipBorderColor':'#bbbbbb', " +
-                        "'tooltipDelay':'2001', " +
-                        "'tooltipFixCoordinateX':'301', " +
-                        "'tooltipFixCoordinateY':'301', " +
-                        "'tooltipFontColor':'#cccccc', " +
-                        "'tooltipFontFace':'Verdana,San-Serif', " +
-                        "'tooltipFontSize':'21', " +
-                        "'tooltipFontWeight':'normal', " +
-                        "'tooltipLeftOfMousePointer':'false', " +
-                        "'tooltipOffsetX':'11', " +
-                        "'tooltipOffsetY':'21', " +
-                        "'tooltipOpacity':'91', " +
-                        "'tooltipPadding':'31', " +
-                        "'tooltipShadowColor':'#cccccc', " +
-                        "'tooltipShadowWidth':'41', " +
-                        "'tooltipStatic':'false', " +
-                        "'tooltipSticky':'false', " +
-                        "'tooltipStayAppearTime':'3001', " +
-                        "'tooltipTextAlign':'left', " +
-                        "'tooltipTitle':'FormMyTitle', " +
-                        "'tooltipTitleColor':'#dddddd', " +
-                        "'tooltipWidth':'601' " +
-                        "}"
+        		"#{" +
+                "'tooltipIcon':'/struts/tooltip/myTooltip.gif', " +
+                "'tooltipDelay':'500', " +
+                "'jsTooltipEnabled':'true' "+
+                "}"
         );
 
 
@@ -199,12 +127,10 @@ public class TooltipTest extends AbstractUITagTest {
 
         tag.setTooltip("myTooltip");
         tag.setTooltipConfig(
-                "#{ " +
-                        "'tooltipIcon':'/struts/tooltip/myTooltip.gif', " +
-                        "'tooltipAboveMousePointer':'true', " +
-                        "'tooltipBgColor':'#ffffff', " +
-                        "'tooltipBgImg':'/struts/tooltip/myBgImg.gif' " +
-                        "}"
+        		"#{" +
+                "'tooltipIcon':'/struts/tooltip/myTooltip2.gif', " +
+                "'tooltipDelay':'5000' " +
+                "}"
         );
 
         formTag.doStartTag();
@@ -231,35 +157,11 @@ public class TooltipTest extends AbstractUITagTest {
         formParamTag.setPageContext(pageContext);
         formParamTag.setName("tooltipConfig");
         formParamTag.setValue(
-                "#{ " +
-                        "'tooltipIcon':'/struts/tooltip/formMyTooltip.gif', " +
-                        "'tooltipAboveMousePointer':'false', " +
-                        "'tooltipBgColor':'#aaaaaa', " +
-                        "'tooltipBgImg':'/struts/tooltip/formMyBgImg.gif', " +
-                        "'tooltipBorderWidth':'11', " +
-                        "'tooltipBorderColor':'#bbbbbb', " +
-                        "'tooltipDelay':'2001', " +
-                        "'tooltipFixCoordinateX':'301', " +
-                        "'tooltipFixCoordinateY':'301', " +
-                        "'tooltipFontColor':'#cccccc', " +
-                        "'tooltipFontFace':'Verdana,San-Serif', " +
-                        "'tooltipFontSize':'21', " +
-                        "'tooltipFontWeight':'normal', " +
-                        "'tooltipLeftOfMousePointer':'false', " +
-                        "'tooltipOffsetX':'11', " +
-                        "'tooltipOffsetY':'21', " +
-                        "'tooltipOpacity':'91', " +
-                        "'tooltipPadding':'31', " +
-                        "'tooltipShadowColor':'#cccccc', " +
-                        "'tooltipShadowWidth':'41', " +
-                        "'tooltipStatic':'false', " +
-                        "'tooltipSticky':'false', " +
-                        "'tooltipStayAppearTime':'3001', " +
-                        "'tooltipTextAlign':'left', " +
-                        "'tooltipTitle':'FormMyTitle', " +
-                        "'tooltipTitleColor':'#dddddd', " +
-                        "'tooltipWidth':'601' " +
-                        "}"
+        		"#{" +
+                "'tooltipIcon':'/struts/tooltip/myTooltip.gif', " +
+                "'tooltipDelay':'500', " +
+                "'jsTooltipEnabled':'true' "+
+                "}"
         );
 
 
@@ -273,12 +175,10 @@ public class TooltipTest extends AbstractUITagTest {
         textFieldParamTag.setPageContext(pageContext);
         textFieldParamTag.setName("tooltipConfig");
         textFieldParamTag.setValue(
-                "#{ " +
-                        "'tooltipIcon':'/struts/tooltip/myTooltip.gif', " +
-                        "'tooltipAboveMousePointer':'true', " +
-                        "'tooltipBgColor':'#ffffff', " +
-                        "'tooltipBgImg':'/struts/tooltip/myBgImg.gif' " +
-                        "}"
+        		"#{" +
+                "'tooltipIcon':'/struts/tooltip/myTooltip2.gif', " +
+                "'tooltipDelay':'5000' "+
+                "}"
         );
 
         formTag.doStartTag();
@@ -310,33 +210,9 @@ public class TooltipTest extends AbstractUITagTest {
         formParamTag.setName("tooltipConfig");
         StrutsMockBodyContent bodyContent = new StrutsMockBodyContent(new MockJspWriter());
         bodyContent.setString(
-                "tooltipIcon = /struts/tooltip/formMyTooltip.gif | " +
-                        "tooltipAboveMousePointer = false | " +
-                        "tooltipBgColor = #aaaaaa| " +
-                        "tooltipBgImg = /struts/tooltip/formMyBgImg.gif | " +
-                        "tooltipBorderWidth = 11 | " +
-                        "tooltipBorderColor = #bbbbbb| " +
-                        "tooltipDelay = 2001 | " +
-                        "tooltipFixCoordinateX = 301| " +
-                        "tooltipFixCoordinateY = 301| " +
-                        "tooltipFontColor = #cccccc | " +
-                        "tooltipFontFace = Verdana,San-Serif | " +
-                        "tooltipFontSize = 21 | " +
-                        "tooltipFontWeight = normal | " +
-                        "tooltipLeftOfMousePointer = false | " +
-                        "tooltipOffsetX = 11 | " +
-                        "tooltipOffsetY = 21| " +
-                        "tooltipOpacity = 91| " +
-                        "tooltipPadding = 31| " +
-                        "tooltipShadowColor = #cccccc| " +
-                        "tooltipShadowWidth = 41| " +
-                        "tooltipStatic = false | " +
-                        "tooltipSticky = false| " +
-                        "tooltipStayAppearTime = 3001| " +
-                        "tooltipTextAlign = left| " +
-                        "tooltipTitle = FormMyTitle| " +
-                        "tooltipTitleColor = #dddddd| " +
-                        "tooltipWidth = 601 "
+                "tooltipIcon=/struts/tooltip/myTooltip.gif| " +
+                "tooltipDelay=500| " +
+                "jsTooltipEnabled=true "
         );
         formParamTag.setBodyContent(bodyContent);
 
@@ -352,10 +228,8 @@ public class TooltipTest extends AbstractUITagTest {
         textFieldParamTag.setName("tooltipConfig");
         StrutsMockBodyContent bodyContent2 = new StrutsMockBodyContent(new MockJspWriter());
         bodyContent2.setString(
-                "tooltipIcon = /struts/tooltip/myTooltip.gif | " +
-                        "tooltipAboveMousePointer = true | " +
-                        "tooltipBgColor = #ffffff | " +
-                        "tooltipBgImg = /struts/tooltip/myBgImg.gif "
+                "tooltipIcon=/struts/tooltip/myTooltip2.gif| " +
+                "tooltipDelay=5000 "
         );
         textFieldParamTag.setBodyContent(bodyContent2);
 
@@ -367,6 +241,8 @@ public class TooltipTest extends AbstractUITagTest {
         textFieldParamTag.doEndTag();
         tag.doEndTag();
         formTag.doEndTag();
+        
+        System.out.println(writer.toString());
 
         verify(TooltipTest.class.getResource("tooltip-3.txt"));
     }

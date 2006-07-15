@@ -7,7 +7,7 @@
       	alt="myTooltip" 
       	title="myTooltip" />
 
-      <span dojoType="tooltip" connectId="_tt1507188919" delay="2000"
+      <span dojoType="tooltip" connectId="_tt1507188919" delay="500"
           caption="myTooltip"></span>
 	  </label></td>
     <td><input type="text" name="" id="myId"/></td>

@@ -275,167 +275,23 @@ import java.util.Map;
  *  	<td>none</td>
  *  	<td>Set the tooltip of this particular component</td>
  *  </tr>
+ *  <tr>
+ *      <td>jsTooltipEnabled</td>
+ *      <td>String</td>
+ *      <td>false</td>
+ *      <td>Enable js tooltip rendering</td>
+ *  </tr>
  *    <tr>
  *   	<td>tooltipIcon</td>
  *   	<td>String</td>
  *   	<td>/struts/static/tooltip/tooltip.gif</td>
  *   	<td>The url to the tooltip icon</td>
- *   </tr>
- *   	<td>tooltipAboveMousePointer</td>
- *   	<td>Boolean</td>
- *   	<td>false</td>
- *   	<td>Places the tooltip above the mousepointer. Additionally applied the tooltipOffseY allows to set the vertical distance from the mousepointer.</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipBgColor</td>
- *   	<td>String</td>
- *   	<td>#e6ecff</td>
- *   	<td>Background color of the tooltip.</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipBgImg</td>
- *   	<td>String</td>
- *   	<td>none</td>
- *   	<td>Background image.</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipBorderWidth</td>
- *   	<td>String</td>
- *   	<td>1</td>
- *   	<td>Width of tooltip border.</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipBorderColor</td>
- *   	<td>String</td>
- *   	<td>#003399</td>
- *   	<td>Background color of the tooltip</td>
- *   </tr>
  *   <tr>
  *   	<td>tooltipDelay</td>
  *   	<td>String</td>
  *   	<td>500</td>
  *   	<td>Tooltip shows up after the specified timeout (miliseconds). A behavior similar to that of OS based tooltips.</td>
  *   </tr>
- *   <tr>
- *   	<td>tooltipFixCoordinateX</td>
- *   	<td>String</td>
- *   	<td>not specified</td>
- *   	<td>Fixes the tooltip to the X co-ordinates specified. Useful for example if combined with tooltipSticky attribute.</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipFixCoordinateY</td>
- *   	<td>String</td>
- *   	<td>not specified</td>
- *   	<td>Fixes the tooltip to the Y co-ordinates specified. Useful for example if combined with tooltipSticky attribute.</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipFontColor</td>
- *   	<td>String</td>
- *   	<td>#000066</td>
- *   	<td>Font color.</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipFontFace</td>
- *   	<td>String</td>
- *   	<td>arial,helvetica,sans-serif</td>
- *   	<td>Font face/family eg. verdana,geneva,sans-serif</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipFontSize</td>
- *   	<td>String</td>
- *   	<td>11px</td>
- *   	<td>Font size + unit eg. 30px</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipFontWeight</td>
- *   	<td>String</td>
- *   	<td>normal</td>
- *   	<td>Font weight. either normal or bold</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipLeftOfMousePointer</td>
- *   	<td>Boolean</td>
- *   	<td>false</td>
- *   	<td>Tooltip positioned on the left side of the mousepointer</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipOffsetX</td>
- *   	<td>String</td>
- *   	<td>12</td>
- *   	<td>Horizontal offset from mouse-pointer.</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipOffsetY</td>
- *   	<td>String</td>
- *   	<td>15</td>
- *   	<td>Vertical offset from mouse-pointer.</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipOpacity</td>
- *   	<td>String</td>
- *   	<td>100</td>
- *   	<td>Transparency of tooltip. Opacity is the opposite of transparency. Value must be a number between 0 (fully transparent) and 100 (opaque, no transparency). Not (yet) supported by Opera.</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipPadding</td>
- *   	<td>String</td>
- *   	<td>3</td>
- *   	<td>Inner spacing, ie. the spacing between border and content, for instance text or image(s)</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipShadowColor</td>
- *   	<td>String</td>
- *   	<td>#cccccc</td>
- *   	<td>Creates shadow with the specified color.</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipShadowWidth</td>
- *   	<td>String</td>
- *   	<td>5</td>
- *   	<td>Creates shodow with the specified width (offset).</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipStatic</td>
- *   	<td>Boolean</td>
- *   	<td>false</td>
- *   	<td>Like OS-based tooltips, the tooltip doesn't follow the movements of the mouse pointer.</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipSticky</td>
- *   	<td>Boolean</td>
- *   	<td>false</td>
- *   	<td>The tooltip stays fixed on its inital position until anohter tooltip is activated, or the user clicks on the document.</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipStayAppearTime</td>
- *   	<td>String</td>
- *   	<td>0</td>
- *   	<td>Specifies a time span in miliseconds after which the tooltip disappears, even if the mousepointer is still on the concerned HTML element, with value <=0 it acts as if no time span is defined</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipTextAlign</td>
- *   	<td>String</td>
- *   	<td>left</td>
- *   	<td>Aligns the text of both the title and the body of the tooltip. Either right, left or justify</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipTitle</td>
- *   	<td>String</td>
- *   	<td>none</td>
- *   	<td>title</td>
- *   </tr>
- *   <tr>
- *   	<td>tooltipTitleColor</td>
- *   	<td>String</td>
- *   	<td>#ffffff</td>
- *   	<td>Color of the title text</td>
- *   </tr>
- *   <tr>
- *    	<td>tooltipWidth</td>
- *    	<td>String</td>
- *    	<td>300</td>
- *    	<td>Width of tooltip</td>
- *    </tr>
  * </table>
  *
  * <!-- END SNIPPET: tooltipattributes -->
@@ -873,11 +729,6 @@ public abstract class UIBean extends Component {
         	addParameter("tooltip", findString(tooltip));
 
         	Map tooltipConfigMap = getTooltipConfig(this);
-
-
-        	if (tooltipConfigMap.containsKey("tooltipIcon")) {
-        		addParameter("tooltipIcon", tooltipConfigMap.get("tooltipIcon"));
-        	}
 
         	if (form != null) { // inform the containing form that we need tooltip javascript included
         		form.addParameter("hasTooltip", Boolean.TRUE);

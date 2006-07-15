@@ -13,7 +13,7 @@
 <saf:fielderror />
 
 
-<saf:form action="exampleSubmit" method="post" enctype="multipart/form-data">
+<saf:form action="exampleSubmit" method="post" enctype="multipart/form-data" tooltipConfig="#{'jsTooltipEnabled':'true'}">
     <saf:textfield 
     		label="Name" 
     		name="name"
@@ -113,8 +113,7 @@
 			doubleEmptyOption="true"
 			doubleMultiple="true" />
     
-    <saf:richtexteditor
-    		width="700"
+    <saf:textarea
     		label="Your Thougths"
      		name="thoughts" 
      		tooltip="Enter your thoughts here" />

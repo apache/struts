@@ -8,6 +8,7 @@
       </#if><#t/>
       	alt="${parameters.tooltip?html}" 
       	title="${parameters.tooltip?html}" />
+      <#if parameters.jsTooltipEnabled?default('false') == 'true'>
       <span dojoType="tooltip" connectId="_tt${tooltipHashCode?string('#')}"
           <#if parameters.tooltipToggle?exists><#t/>
         	<#t/>toggle="${parameters.tooltipToggle}"<#t/>
@@ -19,4 +20,5 @@
           	<#t/>delay="${parameters.tooltipDelay}"<#t/>
           </#if><#t/>
           caption="${parameters.tooltip}"></span>
+     </#if>
 </#if><#t/>

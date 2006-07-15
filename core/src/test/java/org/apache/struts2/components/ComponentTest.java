@@ -38,7 +38,6 @@ import org.apache.struts2.views.jsp.TextTag;
 import org.apache.struts2.views.jsp.URLTag;
 import org.apache.struts2.views.jsp.iterator.AppendIteratorTag;
 import org.apache.struts2.views.jsp.iterator.MergeIteratorTag;
-import org.apache.struts2.views.jsp.ui.RichTextEditorTag;
 import org.apache.struts2.views.jsp.ui.TextFieldTag;
 import org.apache.struts2.views.jsp.ui.UpDownSelectTag;
 import com.opensymphony.xwork2.ActionContext;
@@ -492,32 +491,6 @@ public class ComponentTest extends AbstractTagTest {
 		tag.setPageContext(pageContext);
 		tag.setName("updownselectName");
 		tag.setList("{}");
-		
-		try {
-			t.doStartTag();
-			tag.doStartTag();
-			assertEquals(tag.getComponent().getComponentStack().peek(), tag.getComponent());
-			tag.doEndTag();
-			assertEquals(t.getComponent().getComponentStack().peek(), t.getComponent());
-			t.doEndTag();
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			fail(e.toString());
-		}
-	}
-	
-	
-	// richtexteditor
-	public void testRichTextEditorDisposeItselfFromComponentStack() throws Exception {
-		TextFieldTag t = new TextFieldTag();
-		t.setPageContext(pageContext);
-		t.setName("textFieldName");
-		
-		RichTextEditorTag tag = new RichTextEditorTag();
-		tag.setId("myId");
-		tag.setPageContext(pageContext);
-		tag.setName("myRichtTextEditor");
 		
 		try {
 			t.doStartTag();

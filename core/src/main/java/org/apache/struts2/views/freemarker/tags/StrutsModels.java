@@ -73,7 +73,6 @@ public class StrutsModels {
     protected OptionTransferSelectModel optiontransferselect;
     protected TreeModel treeModel;
     protected UpDownSelectModel updownselect;
-    protected RichTextEditorModel richtexteditorModel;
     protected OptGroupModel optGroupModel;
     
 
@@ -421,13 +420,6 @@ public class StrutsModels {
     		updownselect = new UpDownSelectModel(stack, req, res);
     	}
     	return updownselect;
-    }
-    
-    public RichTextEditorModel getRichtexteditor() {
-    	if (richtexteditorModel == null) {
-    		richtexteditorModel = new RichTextEditorModel(stack, req, res);
-    	}
-    	return richtexteditorModel;
     }
     
     public OptGroupModel getOptgroup() {

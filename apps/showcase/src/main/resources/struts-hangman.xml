@@ -7,6 +7,9 @@
 <struts>
 	<include file="struts-default.xml" />
 	<package name="hangman" extends="struts-default" namespace="/hangman">
+		<action name="hangmanMenu">
+			<result type="freemarker">/hangman/hangmanMenu.ftl</result>
+		</action>
 		<action name="hangmanAjax" class="startHangmanAction">
 			<result type="freemarker">/hangman/hangmanAjax.ftl</result>		
 		</action>

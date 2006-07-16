@@ -68,6 +68,9 @@
         
         <!--  Chat (AJAX) Example -->
         <li><saf:url id="url" value="/chat" /><saf:a href="%{#url}">Chat (AJAX) Example</saf:a></li>
+        
+        <!--  Hangman (AJAX and Non AJAX) Example -->
+        <li><saf:url id="url" action="hangmanMenu" namespace="/hangman"/><saf:a href="%{#url}">Hangman (AJAX and Non AJAX) Example</saf:a>
     </ul>
 </p>
 

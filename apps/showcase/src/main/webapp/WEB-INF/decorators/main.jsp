@@ -79,6 +79,7 @@
                     <li><a href="<saf:url value="/jsf/index.jsp"/>">JSF</a></li>
                     <li><a href="<saf:url value="/freemarker/index.jsp"/>">Freemarker</a>
                     <li><a href="<saf:url value="/chat/index.jsp"/>">Chat (AJAX)</a>
+                    <li><a href="<saf:url action="hangmanMenu" namespace="/hangman"/>">Hangman</a></li>
                     <li class="last"><a href="<saf:url value="/help.jsp"/>">Help</a></li>
                 </ul>
             </div>

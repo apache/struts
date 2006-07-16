@@ -12,18 +12,17 @@ public class GuessCharacterAction extends ActionSupport implements SessionAware 
 	
 	private Map session;
 	private Character character;
-	
+	private Hangman hangman;
 	
 	public String execute() throws Exception {
-		Hangman hangman = (Hangman) session.get(HangmanConstants.HANGMAN_SESSION_KEY);
+		hangman = (Hangman) session.get(HangmanConstants.HANGMAN_SESSION_KEY);
 		hangman.guess(character);
 		
-		System.out.println("\n\n\n");
-		System.out.println("character="+character);
-		System.out.println("available="+hangman.getCharactersAvailable().size());
-		System.out.println("\n\n\n");
-		
 		return SUCCESS;
+	}
+	
+	public Hangman getHangman() {
+		return hangman;
 	}
 
 	public void setSession(Map session) {

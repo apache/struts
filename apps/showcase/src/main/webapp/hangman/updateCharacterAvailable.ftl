@@ -5,7 +5,7 @@
 	<@saf.url id="winImageUrl" value="%{'/hangman/images/'+#winImageName}"  />
 	<@saf.url id="looseImageUrl" value="%{'/hangman/images/'+#looseImageName}" />
 	<@saf.url id="startImageUrl" value="%{'/hangman/images/'+#startImageName}" />
-	<@saf.url id="startHref" action="hangman" namespace="/hangman" />
+	<@saf.url id="startHref" action="hangmanAjax" namespace="/hangman" />
 	
 	<#if hangman.isWin()>
 	<img src="<@saf.property value="%{#winImageUrl}" />" width="341" height="44" />

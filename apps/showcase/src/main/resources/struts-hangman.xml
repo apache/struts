@@ -7,14 +7,20 @@
 <struts>
 	<include file="struts-default.xml" />
 	<package name="hangman" extends="struts-default" namespace="/hangman">
-		<action name="hangman" class="startHangmanAction">
-			<result type="freemarker">/hangman/hangman.ftl</result>		
+		<action name="hangmanAjax" class="startHangmanAction">
+			<result type="freemarker">/hangman/hangmanAjax.ftl</result>		
+		</action>
+		<action name="hangmanNonAjax" class="startHangmanAction">
+			<result type="freemarker">/hangman/hangmanNonAjax.ftl</result>
 		</action>
 		<action name="test">
 			<result type="freemarker">/hangman/test.ftl</result>
 		</action>
 		<action name="guessCharacter" class="guessCharacterAction">
 			<result type="freemarker">/hangman/blank.ftl</result>
+		</action>
+		<action name="guessCharacterNonAjax" class="guessCharacterAction">
+			<result type="freemarker">/hangman/hangmanNonAjax.ftl</result>
 		</action>
 	</package>
 	

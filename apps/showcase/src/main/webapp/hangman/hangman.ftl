@@ -8,6 +8,13 @@
 
 <script>
 	var _listeners = {
+		   guessMade: function(sourceId) {
+		   		this.guessMadeFunc(sourceId);
+		   		this.updateCharacterAvailable(sourceId);
+		   		this.updateVocab(sourceId);
+		   		this.updateScaffold(sourceId);
+		   		this.updateGuessLeft(sourceId);
+		   }, 
 	       guessMadeFunc: function(sourceId) { 
 	       				var requestAttr = { character: sourceId };
 						dojo.io.bind({
@@ -117,11 +124,12 @@
 	       		});
 	       	}
 	    };
-	dojo.event.topic.subscribe("topicGuessMade", _listeners, "guessMadeFunc"); 
-	dojo.event.topic.subscribe("topicGuessMade", _listeners, "updateCharacterAvailable");
-	dojo.event.topic.subscribe("topicGuessMade", _listeners, "updateVocab");
-	dojo.event.topic.subscribe("topicGuessMade", _listeners, "updateScaffold");
-	dojo.event.topic.subscribe("topicGuessMade", _listeners, "updateGuessLeft");
+	dojo.event.topic.subscribe("topicGuessMade", _listeners, "guessMade");
+	// dojo.event.topic.subscribe("topicGuessMade", _listeners, "guessMadeFunc"); 
+	// dojo.event.topic.subscribe("topicGuessMade", _listeners, "updateCharacterAvailable");
+	// dojo.event.topic.subscribe("topicGuessMade", _listeners, "updateVocab");
+	// dojo.event.topic.subscribe("topicGuessMade", _listeners, "updateScaffold");
+	// dojo.event.topic.subscribe("topicGuessMade", _listeners, "updateGuessLeft");
 </script>
 
 <table bgcolor="green"> 

@@ -14,6 +14,10 @@
         <li><a href="example2.jsp">A local tabbed panel</a></li>
         <li><a href="example3.jsp">A remote and local tabbed panel</a></li>
         <li><a href="example1.jsp">Various remote and local tabbed panels (with enclosed tabbed pannels)</a></li>
+        <li>
+        	<saf:url id="url" action="example4" />
+        	<saf:a href="%{#url}">Only remove tabbed panel</saf:a>
+        </li>
     </ol>
 
 

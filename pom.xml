@@ -71,7 +71,7 @@
         </repository>
         <site>
             <id>apache-site</id>
-            <url>scp://people.apache.org/www/struts.apache.org/2.0/</url>
+            <url>scp://people.apache.org/www/struts.apache.org/2.x/</url>
         </site>
     </distributionManagement>
 
@@ -217,7 +217,7 @@
     <dependencies/>
 
     <repositories>
-     	<repository>
+        <repository>
             <id>snapshots-maven-codehaus</id>
             <name>snapshots-maven-codehaus</name>
             <snapshots>

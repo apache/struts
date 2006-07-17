@@ -15,7 +15,7 @@
     <distributionManagement>
         <site>
             <id>apache-site</id>
-            <url>scp://people.apache.org/www/struts.apache.org/2.0/struts-core</url>
+            <url>scp://people.apache.org/www/struts.apache.org/2.x/struts-core</url>
         </site>
     </distributionManagement>
     
@@ -288,10 +288,10 @@
             <version>1.1</version>
             <scope>test</scope>
             <exclusions>
-            	<exclusion>
-            		<groupId>easymock</groupId>
-            		<artifactId>easymock</artifactId>
-            	</exclusion>
+                <exclusion>
+                    <groupId>easymock</groupId>
+                    <artifactId>easymock</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
       <dependency>

@@ -24,6 +24,20 @@
     <format>zip</format>
   </formats>
   <includeBaseDirectory>true</includeBaseDirectory>
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>lib</outputDirectory>
+      <scope>optional</scope>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>lib</outputDirectory>
+      <scope>compile</scope>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>lib</outputDirectory>
+      <scope>provided</scope>
+    </dependencySet>
+  </dependencySets>
   <fileSets>
 
       <fileSet>
@@ -33,6 +47,7 @@
               <include>README*</include>
               <include>LICENSE*</include>
               <include>NOTICE*</include>
+              <include>build.xml</include>
           </includes>
       </fileSet>
 

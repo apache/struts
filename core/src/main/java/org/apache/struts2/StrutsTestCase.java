@@ -18,10 +18,12 @@
 package org.apache.struts2;
 
 import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.StrutsXMLConfigurationProvider;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.springframework.mock.web.MockServletContext;
 
 import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 /**
@@ -40,6 +42,9 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         LocalizedTextUtil.clearDefaultResourceBundles();
         Dispatcher du = new Dispatcher(new MockServletContext());
         Dispatcher.setInstance(du);
+        configurationManager = new ConfigurationManager();
+        configurationManager.addConfigurationProvider(
+                new StrutsXMLConfigurationProvider("struts.xml", false));
         du.setConfigurationManager(configurationManager);
         
     }

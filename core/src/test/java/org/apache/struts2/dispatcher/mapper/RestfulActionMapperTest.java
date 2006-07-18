@@ -69,14 +69,14 @@ public class RestfulActionMapperTest extends TestCase {
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setupGetServletPath("noslash");
 
-        assertNull(mapper.getMapping(request));
+        assertNull(mapper.getMapping(request, null));
     }
 
     public void testGetMapping() throws Exception {
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setupGetServletPath("/myapp/view/12");
 
-        ActionMapping am = mapper.getMapping(request);
+        ActionMapping am = mapper.getMapping(request, null);
         assertEquals("myapp", am.getName());
         assertEquals(1, am.getParams().size());
         assertEquals("12", am.getParams().get("view"));
@@ -86,7 +86,7 @@ public class RestfulActionMapperTest extends TestCase {
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setupGetServletPath("/myapp/12/region/europe");
 
-        ActionMapping am = mapper.getMapping(request);
+        ActionMapping am = mapper.getMapping(request, null);
         assertEquals("myapp", am.getName());
         assertEquals(2, am.getParams().size());
         assertEquals("12", am.getParams().get("myappId"));
@@ -97,7 +97,7 @@ public class RestfulActionMapperTest extends TestCase {
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setupGetServletPath("/myapp/view/12/region/europe");
 
-        ActionMapping am = mapper.getMapping(request);
+        ActionMapping am = mapper.getMapping(request, null);
         assertEquals("myapp", am.getName());
         assertEquals(2, am.getParams().size());
         assertEquals("12", am.getParams().get("view"));

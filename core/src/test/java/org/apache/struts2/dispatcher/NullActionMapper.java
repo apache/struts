@@ -22,6 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
+import com.opensymphony.xwork2.config.Configuration;
+
 /**
  * ActionMapper for testing FilterDispatcher (used in FilterDispaatcherTest)
  */
@@ -35,7 +37,7 @@ public class NullActionMapper implements ActionMapper {
 			_actionMapping = actionMappingToBeRetrned;
 		}
 		
-		public ActionMapping getMapping(HttpServletRequest request) {
+		public ActionMapping getMapping(HttpServletRequest request, Configuration config) {
 			return _actionMapping;
 		}
 

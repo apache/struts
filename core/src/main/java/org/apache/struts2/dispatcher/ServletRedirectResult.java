@@ -103,7 +103,8 @@ public class ServletRedirectResult extends StrutsResultSupport {
 
         if (isPathUrl(finalLocation)) {
             if (!finalLocation.startsWith("/")) {
-                String namespace = ActionMapperFactory.getMapper().getMapping(request).getNamespace();
+                String namespace = ActionMapperFactory.getMapper().getMapping(
+                        request, Dispatcher.getInstance().getConfigurationManager().getConfiguration()).getNamespace();
 
                 if ((namespace != null) && (namespace.length() > 0) && (!"/".equals(namespace))) {
                     finalLocation = namespace + "/" + finalLocation;

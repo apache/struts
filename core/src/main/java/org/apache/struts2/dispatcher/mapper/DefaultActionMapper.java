@@ -19,9 +19,11 @@ package org.apache.struts2.dispatcher.mapper;
 
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Configuration;
 import org.apache.struts2.dispatcher.ServletRedirectResult;
 import org.apache.struts2.util.PrefixTrie;
+
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -149,8 +151,8 @@ public class DefaultActionMapper implements ActionMapper {
     private PrefixTrie prefixTrie = null;
     private boolean compatibilityMode = false;
     public DefaultActionMapper() {
-        if (Configuration.isSet(StrutsConstants.STRUTS_COMPATIBILITY_MODE)) {
-            compatibilityMode = "true".equals(Configuration.get(StrutsConstants.STRUTS_COMPATIBILITY_MODE));
+        if (org.apache.struts2.config.Configuration.isSet(StrutsConstants.STRUTS_COMPATIBILITY_MODE)) {
+            compatibilityMode = "true".equals(org.apache.struts2.config.Configuration.get(StrutsConstants.STRUTS_COMPATIBILITY_MODE));
         }
         prefixTrie = new PrefixTrie() {
             {
@@ -203,11 +205,11 @@ public class DefaultActionMapper implements ActionMapper {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(javax.servlet.http.HttpServletRequest)
      */
-    public ActionMapping getMapping(HttpServletRequest request) {
+    public ActionMapping getMapping(HttpServletRequest request, Configuration config) {
         ActionMapping mapping = new ActionMapping();
         String uri = getUri(request);
 
-        parseNameAndNamespace(uri, mapping);
+        parseNameAndNamespace(uri, mapping, config);
 
         handleSpecialParameters(request, mapping);
 
@@ -253,7 +255,7 @@ public class DefaultActionMapper implements ActionMapper {
      * @param uri The uri
      * @param mapping The action mapping to populate
      */
-    void parseNameAndNamespace(String uri, ActionMapping mapping) {
+    void parseNameAndNamespace(String uri, ActionMapping mapping, Configuration config) {
         String namespace, name;
         int lastSlash = uri.lastIndexOf("/");
         if (lastSlash == -1) {
@@ -265,8 +267,19 @@ public class DefaultActionMapper implements ActionMapper {
             namespace = "/";
             name = uri.substring(lastSlash + 1);
         } else {
-            namespace = uri.substring(0, lastSlash);
-            name = uri.substring(lastSlash + 1);
+            String prefix = uri.substring(0, lastSlash);
+            namespace = "";
+            // Find the longest matching namespace, defaulting to the default
+            for (Iterator i = config.getPackageConfigs().values().iterator(); i.hasNext(); ) {
+                String ns = ((PackageConfig)i.next()).getNamespace();
+                if (ns != null && prefix.startsWith(ns)) {
+                    if (ns.length() > namespace.length()) {
+                        namespace = ns;
+                    }
+                }
+            }
+            
+            name = uri.substring(namespace.length() + 1);
         }
         mapping.setNamespace(namespace);
         mapping.setName(dropExtension(name));
@@ -310,7 +323,7 @@ public class DefaultActionMapper implements ActionMapper {
      * Returns null if no extension is specified.
      */
     static List getExtensions() {
-        String extensions = (String) Configuration.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
+        String extensions = (String) org.apache.struts2.config.Configuration.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
 
         if ("".equals(extensions)) {
         	return null;

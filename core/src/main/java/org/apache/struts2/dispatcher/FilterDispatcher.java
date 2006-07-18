@@ -212,7 +212,7 @@ public class FilterDispatcher implements Filter, StrutsStatics {
         }
 
         ActionMapper mapper = ActionMapperFactory.getMapper();
-        ActionMapping mapping = mapper.getMapping(request);
+        ActionMapping mapping = mapper.getMapping(request, du.getConfigurationManager().getConfiguration());
 
         if (mapping == null) {
             // there is no action in this request, should we look for a static resource?

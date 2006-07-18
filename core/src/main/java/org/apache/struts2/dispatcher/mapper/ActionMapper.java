@@ -19,6 +19,8 @@ package org.apache.struts2.dispatcher.mapper;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.opensymphony.xwork2.config.Configuration;
+
 /**
  * <!-- START SNIPPET: javadoc -->
  *
@@ -41,9 +43,10 @@ public interface ActionMapper {
      * Gets an action mapping for the current request
      * 
      * @param request The servlet request
+     * @param config The current configuration
      * @return The appropriate action mapping
      */
-    ActionMapping getMapping(HttpServletRequest request);
+    ActionMapping getMapping(HttpServletRequest request, Configuration config);
 
     /**
      * Converts an ActionMapping into a URI string

@@ -22,6 +22,8 @@ import org.apache.commons.logging.LogFactory;
 
 import org.apache.struts2.RequestUtils;
 
+import com.opensymphony.xwork2.config.Configuration;
+
 import javax.servlet.http.HttpServletRequest;
 import java.net.URLDecoder;
 import java.util.HashMap;
@@ -58,7 +60,7 @@ public class RestfulActionMapper implements ActionMapper {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(javax.servlet.http.HttpServletRequest)
      */
-    public ActionMapping getMapping(HttpServletRequest request) {
+    public ActionMapping getMapping(HttpServletRequest request, Configuration config) {
         String uri = RequestUtils.getServletPath(request);
 
         int nextSlash = uri.indexOf('/', 1);

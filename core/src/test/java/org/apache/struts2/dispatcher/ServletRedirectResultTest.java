@@ -19,11 +19,17 @@ package org.apache.struts2.dispatcher;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
+
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.config.StrutsXMLConfigurationProvider;
+import org.springframework.mock.web.MockServletContext;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.OgnlValueStack;
 import ognl.Ognl;
@@ -90,6 +96,14 @@ public class ServletRedirectResultTest extends StrutsTestCase implements StrutsS
 
     protected void setUp() throws Exception {
         super.setUp();
+        Dispatcher du = new Dispatcher(new MockServletContext());
+        Dispatcher.setInstance(du);
+        ConfigurationManager cm = new ConfigurationManager();
+        cm.addConfigurationProvider(new StrutsXMLConfigurationProvider("struts.xml", false));
+        du.setConfigurationManager(cm);
+        du.getConfigurationManager().getConfiguration().
+            addPackageConfig("foo", new PackageConfig("foo", "/namespace", false, null));
+        
 
         view = new ServletRedirectResult();
 

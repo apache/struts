@@ -411,7 +411,6 @@ public class Form extends ClosingUIBean {
      * HTML form method attribute
      *
      * @a2.tagattribute required="false"
-     * @deprecated Since Struts 2.0.0
      */
     public void setMethod(String method) {
         this.method = method;

@@ -1,4 +1,4 @@
-<form id="foo" onsubmit="return true;" action="/foo.jsp">
+<form id="foo" onsubmit="return true;" action="/foo.jsp" method="POST">
 <table class="wwFormTable">
 </table>
 </form>

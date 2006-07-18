@@ -1,4 +1,4 @@
-<form id="myFormId" name="myForm" onsubmit="return true;" action="/testAction.action">
+<form id="myFormId" name="myForm" onsubmit="return true;" action="/testAction.action" method="POST">
  <table class="wwFormTable"> 
 <tr>
     <td class="tdLabel"><label for="myId" class="label">MyLabel:

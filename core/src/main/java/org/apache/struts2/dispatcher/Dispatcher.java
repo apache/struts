@@ -83,6 +83,7 @@ public class Dispatcher {
     private ConfigurationManager configurationManager;
     private boolean portletSupportActive;
     private boolean devMode = false;
+    private boolean compatibilityMode = true;
 
     // used to get WebLogic to play nice
     private boolean paramsWorkaroundEnabled = false;
@@ -255,6 +256,8 @@ public class Dispatcher {
         }
         
         configurationManager = new ConfigurationManager();
+        
+        // Load old xwork files
         configurationManager.addConfigurationProvider(new XmlConfigurationProvider("xwork.xml", false));
         
         // Load Struts config files

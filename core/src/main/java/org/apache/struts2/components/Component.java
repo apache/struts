@@ -326,6 +326,7 @@ public class Component {
      * @param scheme      http or https
      * @param includeContext  should the context path be included or not
      * @param encodeResult    should the url be encoded
+     * @deprecated Since Struts 2.0.0
      * @return the action url.
      */
     protected String determineActionURL(String action, String namespace, String method,
@@ -337,6 +338,25 @@ public class Component {
         ActionMapper mapper = ActionMapperFactory.getMapper();
         String uri = mapper.getUriFromActionMapping(mapping);
         return UrlHelper.buildUrl(uri, req, res, parameters, scheme, includeContext, encodeResult);
+    }
+    
+    /**
+     * Renders an action URL by consulting the {@link org.apache.struts2.dispatcher.mapper.ActionMapper}.
+     * @param action      the action
+     * @param namespace   the namespace
+     * @param req         HTTP request
+     * @param res         HTTP response
+     * @param parameters  parameters
+     * @param scheme      http or https
+     * @param includeContext  should the context path be included or not
+     * @param encodeResult    should the url be encoded
+     * @return the action url.
+     */
+    protected String determineActionURL(String action, String namespace,                                         
+                                        HttpServletRequest req, HttpServletResponse res, Map parameters, String scheme,
+                                        boolean includeContext, boolean encodeResult) {
+        return determineActionURL(action, namespace, null, req, res, parameters, 
+                scheme, includeContext, encodeResult);
     }
 
     /**

@@ -288,6 +288,7 @@ public class URL extends Component {
     /**
      * The method of action to use
      * @a2.tagattribute required="false"
+     * @deprecated Since Struts 2.0.0
      */
     public void setMethod(String method) {
         this.method = method;

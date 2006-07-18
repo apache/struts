@@ -31,6 +31,7 @@ import com.opensymphony.xwork2.validator.FieldValidator;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
 import com.opensymphony.xwork2.validator.Validator;
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -98,6 +99,13 @@ public class Form extends ClosingUIBean {
     protected String portletMode;
     protected String windowState;
     protected String acceptcharset;
+    protected static boolean compatibilityMode = false;
+    
+    static {
+        if (org.apache.struts2.config.Configuration.isSet(StrutsConstants.STRUTS_COMPATIBILITY_MODE)) {
+            compatibilityMode = "true".equals(org.apache.struts2.config.Configuration.get(StrutsConstants.STRUTS_COMPATIBILITY_MODE));
+        }
+    }
 
     public Form(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -192,7 +200,7 @@ public class Form extends ClosingUIBean {
         }
 
         String actionMethod = "";
-        if (action.indexOf("!") != -1) {
+        if (compatibilityMode && action.indexOf("!") != -1) {
             int endIdx = action.lastIndexOf("!");
             actionMethod = action.substring(endIdx + 1, action.length());
             action = action.substring(0, endIdx);
@@ -403,6 +411,7 @@ public class Form extends ClosingUIBean {
      * HTML form method attribute
      *
      * @a2.tagattribute required="false"
+     * @deprecated Since Struts 2.0.0
      */
     public void setMethod(String method) {
         this.method = method;

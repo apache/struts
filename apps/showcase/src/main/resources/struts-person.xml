@@ -13,7 +13,7 @@
             <result type="freemarker">listPeople.ftl</result>
         </action>
 
-        <action name="newPerson" class="org.apache.struts2.showcase.person.CreatePerson">
+        <action name="newPerson!*" class="org.apache.struts2.showcase.person.CreatePerson" method="{1}">
             <result type="redirect">listPeople.action</result>
             <result name="input" type="freemarker">newPerson.ftl</result>
         </action>

@@ -50,7 +50,7 @@ public class FormTagTest extends AbstractUITagTest {
         tag.setName("myForm");
         tag.setMethod("POST");
         tag.setAcceptcharset("UTF-8");
-        tag.setAction("testAction!myLittleMethod");
+        tag.setAction("testAction");
         tag.setEnctype("myEncType");
         tag.setTitle("mytitle");
         tag.setOnsubmit("submitMe()");
@@ -71,7 +71,7 @@ public class FormTagTest extends AbstractUITagTest {
         tag.setNamespace("/testNamespace");
         tag.setMethod("POST");
         tag.setAcceptcharset("UTF-8");
-        tag.setAction("testNamespaceAction!myLittleMethod");
+        tag.setAction("testNamespaceAction");
         tag.setEnctype("myEncType");
         tag.setTitle("mytitle");
         tag.setOnsubmit("submitMe()");

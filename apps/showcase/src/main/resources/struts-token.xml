@@ -6,7 +6,7 @@
 
     <package name="token" extends="struts-default" namespace="/token">
 
-        <action name="tokenPrepare" class="org.apache.struts2.showcase.token.TokenAction">
+        <action name="tokenPrepare!*" class="org.apache.struts2.showcase.token.TokenAction" method="{1}">
             <interceptor-ref name="defaultStack"/>
             <result name="input">example1.jsp</result>
         </action>
@@ -20,7 +20,7 @@
 
 
 
-        <action name="tokenPrepare2" class="org.apache.struts2.showcase.token.TokenAction">
+        <action name="tokenPrepare2!*" class="org.apache.struts2.showcase.token.TokenAction" method="{1}">
             <interceptor-ref name="defaultStack"/>
             <result name="input">example2.jsp</result>
         </action>
@@ -34,7 +34,7 @@
 
 
 
-        <action name="tokenPrepare3" class="org.apache.struts2.showcase.token.TokenAction">
+        <action name="tokenPrepare3!*" class="org.apache.struts2.showcase.token.TokenAction" method="{1}">
             <interceptor-ref name="defaultStack"/>
             <result name="input">example3.jsp</result>
         </action>
@@ -47,7 +47,7 @@
         </action>
 
 
-        <action name="tokenPrepare4" class="org.apache.struts2.showcase.token.TokenAction">
+        <action name="tokenPrepare4!*" class="org.apache.struts2.showcase.token.TokenAction" method="{1}">
             <interceptor-ref name="defaultStack"/>
             <interceptor-ref name="createSession"/> <!-- we must have a session when using freemarker and the @ww.token tag -->
             <result name="input" type="freemarker">example4.ftl</result>

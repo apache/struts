@@ -18,6 +18,8 @@
 package org.apache.struts2.dispatcher;
 
 import com.mockobjects.servlet.MockHttpServletRequest;
+
+import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.Configuration;
@@ -65,8 +67,7 @@ public class DefautActionMapperTest extends StrutsTestCase {
         ActionMapping mapping = mapper.getMapping(req);
 
         assertEquals("/my/namespace", mapping.getNamespace());
-        assertEquals("actionName", mapping.getName());
-        assertEquals("add", mapping.getMethod());
+        assertEquals("actionName!add", mapping.getName());
     }
 
     public void testGetUri() throws Exception {

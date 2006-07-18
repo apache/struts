@@ -69,19 +69,6 @@ public class DefaultActionMapperTest extends StrutsTestCase {
     // ===========================
     // === test special prefix ===
     // ===========================
-    public void testMethodPrefix() throws Exception {
-        Map parameterMap = new HashMap();
-        parameterMap.put(DefaultActionMapper.METHOD_PREFIX + "myMethod", "");
-
-        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
-        request.setParameterMap(parameterMap);
-        request.setupGetServletPath("/someServletPath.action");
-
-        DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
-        ActionMapping actionMapping = defaultActionMapper.getMapping(request);
-
-        assertEquals(actionMapping.getMethod(), "myMethod");
-    }
 
     public void testActionPrefix() throws Exception {
         Map parameterMap = new HashMap();
@@ -133,23 +120,6 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         // TODO: need to test location but there's noaccess to the property/method, unless we use reflection
     }
 
-
-    // ==========================
-    // === test action!method ===
-    // ==========================
-    public void testActionBangMethod() throws Exception {
-
-        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
-        request.setupGetServletPath("/someName!someMethod.action");
-
-        DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
-        ActionMapping actionMapping = defaultActionMapper.getMapping(request);
-
-        assertEquals(actionMapping.getMethod(), "someMethod");
-        assertEquals(actionMapping.getName(), "someName");
-    }
-
-
     public void testGetUriFromActionMapper1() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping actionMapping = new ActionMapping();
@@ -158,7 +128,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         actionMapping.setNamespace("/myNamespace");
         String uri = mapper.getUriFromActionMapping(actionMapping);
 
-        assertEquals("/myNamespace/myActionName!myMethod.action", uri);
+        assertEquals("/myNamespace/myActionName.action", uri);
     }
 
     public void testGetUriFromActionMapper2() throws Exception {
@@ -169,7 +139,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         actionMapping.setNamespace("/");
         String uri = mapper.getUriFromActionMapping(actionMapping);
 
-        assertEquals("/myActionName!myMethod.action", uri);
+        assertEquals("/myActionName.action", uri);
     }
 
     public void testGetUriFromActionMapper3() throws Exception {
@@ -180,7 +150,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         actionMapping.setNamespace("");
         String uri = mapper.getUriFromActionMapping(actionMapping);
 
-        assertEquals("/myActionName!myMethod.action", uri);
+        assertEquals("/myActionName.action", uri);
     }
 
 
@@ -213,7 +183,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         actionMapping.setNamespace("/myNamespace");
         String uri = mapper.getUriFromActionMapping(actionMapping);
 
-        assertEquals("/myNamespace/myActionName!myMethod.action?test=bla", uri);
+        assertEquals("/myNamespace/myActionName.action?test=bla", uri);
     }
 
     public void testGetUriFromActionMapper7() throws Exception {
@@ -224,7 +194,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         actionMapping.setNamespace("/");
         String uri = mapper.getUriFromActionMapping(actionMapping);
 
-        assertEquals("/myActionName!myMethod.action?test=bla", uri);
+        assertEquals("/myActionName.action?test=bla", uri);
     }
 
     public void testGetUriFromActionMapper8() throws Exception {
@@ -235,7 +205,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         actionMapping.setNamespace("");
         String uri = mapper.getUriFromActionMapping(actionMapping);
 
-        assertEquals("/myActionName!myMethod.action?test=bla", uri);
+        assertEquals("/myActionName.action?test=bla", uri);
     }
 
 

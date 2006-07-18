@@ -6,12 +6,12 @@
 
 	
     <filter>
-        <filter-name>action2-cleanup</filter-name>
+        <filter-name>struts-cleanup</filter-name>
         <filter-class>org.apache.struts2.dispatcher.ActionContextCleanUp</filter-class>
     </filter>
 
     <filter>
-        <filter-name>action2</filter-name>
+        <filter-name>struts</filter-name>
         <filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
     </filter>
 
@@ -23,7 +23,7 @@
 	
 
     <filter-mapping>
-        <filter-name>action2-cleanup</filter-name>
+        <filter-name>struts-cleanup</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
@@ -33,7 +33,7 @@
     </filter-mapping>
 
     <filter-mapping>
-        <filter-name>action2</filter-name>
+        <filter-name>struts</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
@@ -88,7 +88,7 @@
 
     <!-- SNIPPET START: example.velocity.filter.chain
         <filter>
-            <filter-name>action2-cleanup</filter-name>
+            <filter-name>struts-cleanup</filter-name>
             <filter-class>org.apache.struts2.dispatcher.ActionContextCleanUp</filter-class>
         </filter>
         <filter>
@@ -96,12 +96,12 @@
             <filter-class>org.apache.struts2.sitemesh.VelocityPageFilter</filter-class>
         </filter>
         <filter>
-            <filter-name>action2</filter-name>
+            <filter-name>struts</filter-name>
             <filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
         </filter>
 
         <filter-mapping>
-            <filter-name>action2-cleanup</filter-name>
+            <filter-name>struts-cleanup</filter-name>
             <url-pattern>/*</url-pattern>
         </filter-mapping>
         <filter-mapping>
@@ -109,14 +109,14 @@
             <url-pattern>/*</url-pattern>
         </filter-mapping>
         <filter-mapping>
-            <filter-name>action2</filter-name>
+            <filter-name>struts</filter-name>
             <url-pattern>/*</url-pattern>
         </filter-mapping>
     END SNIPPET: example.velocity.filter.chain -->
 
     <!-- SNIPPET START: example.freemarker.filter.chain
     <filter>
-        <filter-name>action2-cleanup</filter-name>
+        <filter-name>struts-cleanup</filter-name>
         <filter-class>org.apache.struts2.dispatcher.ActionContextCleanUp</filter-class>
     </filter>
     <filter>
@@ -124,12 +124,12 @@
         <filter-class>org.apache.struts2.sitemesh.FreeMarkerPageFilter</filter-class>
     </filter>
     <filter>
-        <filter-name>action2</filter-name>
+        <filter-name>struts</filter-name>
         <filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
     </filter>
 
     <filter-mapping>
-        <filter-name>action2-cleanup</filter-name>
+        <filter-name>struts-cleanup</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     <filter-mapping>
@@ -137,7 +137,7 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     <filter-mapping>
-        <filter-name>action2</filter-name>
+        <filter-name>struts</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     END SNIPPET: example.freemarker.filter.chain -->

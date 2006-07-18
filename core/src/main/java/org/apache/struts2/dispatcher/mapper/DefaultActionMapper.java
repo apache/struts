@@ -146,50 +146,59 @@ public class DefaultActionMapper implements ActionMapper {
     static final String REDIRECT_PREFIX = "redirect:";
     static final String REDIRECT_ACTION_PREFIX = "redirect-action:";
 
-    static PrefixTrie prefixTrie = new PrefixTrie() {
-        {
-            put(METHOD_PREFIX, new ParameterAction() {
-                public void execute(String key, ActionMapping mapping) {
-                    mapping.setMethod(key.substring(METHOD_PREFIX.length()));
-                }
-            });
-
-            put(ACTION_PREFIX, new ParameterAction() {
-                public void execute(String key, ActionMapping mapping) {
-                    String name = key.substring(ACTION_PREFIX.length());
-                    int bang = name.indexOf('!');
-                    if (bang != -1) {
-                        String method = name.substring(bang + 1);
-                        mapping.setMethod(method);
-                        name = name.substring(0, bang);
-                    }
-                    
-                    mapping.setName(name);
-                }
-            });
-
-            put(REDIRECT_PREFIX, new ParameterAction() {
-                public void execute(String key, ActionMapping mapping) {
-                    ServletRedirectResult redirect = new ServletRedirectResult();
-                    redirect.setLocation(key.substring(REDIRECT_PREFIX.length()));
-                    mapping.setResult(redirect);
-                }
-            });
-
-            put(REDIRECT_ACTION_PREFIX, new ParameterAction() {
-                public void execute(String key, ActionMapping mapping) {
-                    String location = key.substring(REDIRECT_ACTION_PREFIX.length());
-                    ServletRedirectResult redirect = new ServletRedirectResult();
-                    String extension = getDefaultExtension();
-                    if (extension != null) {
-                        location += "." + extension;
-                    }
-                    redirect.setLocation(location);
-                    mapping.setResult(redirect);
-                }
-            });
+    private PrefixTrie prefixTrie = null;
+    private boolean compatibilityMode = false;
+    public DefaultActionMapper() {
+        if (Configuration.isSet(StrutsConstants.STRUTS_COMPATIBILITY_MODE)) {
+            compatibilityMode = "true".equals(Configuration.get(StrutsConstants.STRUTS_COMPATIBILITY_MODE));
         }
-    };
+        prefixTrie = new PrefixTrie() {
+            {
+                if (compatibilityMode) {
+                    put(METHOD_PREFIX, new ParameterAction() {
+                        public void execute(String key, ActionMapping mapping) {
+                            mapping.setMethod(key.substring(METHOD_PREFIX.length()));
+                        }
+                    });
+                }
+    
+                put(ACTION_PREFIX, new ParameterAction() {
+                    public void execute(String key, ActionMapping mapping) {
+                        String name = key.substring(ACTION_PREFIX.length());
+                        int bang = name.indexOf('!');
+                        if (bang != -1) {
+                            String method = name.substring(bang + 1);
+                            mapping.setMethod(method);
+                            name = name.substring(0, bang);
+                        }
+                        
+                        mapping.setName(name);
+                    }
+                });
+    
+                put(REDIRECT_PREFIX, new ParameterAction() {
+                    public void execute(String key, ActionMapping mapping) {
+                        ServletRedirectResult redirect = new ServletRedirectResult();
+                        redirect.setLocation(key.substring(REDIRECT_PREFIX.length()));
+                        mapping.setResult(redirect);
+                    }
+                });
+    
+                put(REDIRECT_ACTION_PREFIX, new ParameterAction() {
+                    public void execute(String key, ActionMapping mapping) {
+                        String location = key.substring(REDIRECT_ACTION_PREFIX.length());
+                        ServletRedirectResult redirect = new ServletRedirectResult();
+                        String extension = getDefaultExtension();
+                        if (extension != null) {
+                            location += "." + extension;
+                        }
+                        redirect.setLocation(location);
+                        mapping.setResult(redirect);
+                    }
+                });
+            }
+        };
+    }
 
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(javax.servlet.http.HttpServletRequest)
@@ -206,12 +215,14 @@ public class DefaultActionMapper implements ActionMapper {
             return null;
         }
 
-        // handle "name!method" convention.
-        String name = mapping.getName();
-        int exclamation = name.lastIndexOf("!");
-        if (exclamation != -1) {
-            mapping.setName(name.substring(0, exclamation));
-            mapping.setMethod(name.substring(exclamation + 1));
+        if (compatibilityMode) {
+            // handle "name!method" convention.
+            String name = mapping.getName();
+            int exclamation = name.lastIndexOf("!");
+            if (exclamation != -1) {
+                mapping.setName(name.substring(0, exclamation));
+                mapping.setMethod(name.substring(exclamation + 1));
+            }
         }
         return mapping;
     }
@@ -223,7 +234,7 @@ public class DefaultActionMapper implements ActionMapper {
      * @param request The request
      * @param mapping The action mapping
      */
-    public static void handleSpecialParameters(HttpServletRequest request, ActionMapping mapping) {
+    public void handleSpecialParameters(HttpServletRequest request, ActionMapping mapping) {
         // handle special parameter prefixes.
         Map parameterMap = request.getParameterMap();
         for (Iterator iterator = parameterMap.keySet().iterator(); iterator.hasNext();) {
@@ -348,8 +359,10 @@ public class DefaultActionMapper implements ActionMapper {
         }
         uri.append(name);
 
-        if (null != mapping.getMethod() && !"".equals(mapping.getMethod())) {
-            uri.append("!").append(mapping.getMethod());
+        if (compatibilityMode) {
+            if (null != mapping.getMethod() && !"".equals(mapping.getMethod())) {
+                uri.append("!").append(mapping.getMethod());
+            }
         }
 
         String extension = getDefaultExtension();

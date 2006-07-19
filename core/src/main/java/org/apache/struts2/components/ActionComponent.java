@@ -34,6 +34,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
@@ -125,13 +127,23 @@ public class ActionComponent extends Component {
     }
 
     public boolean end(Writer writer, String body) {
-        executeAction();
+    	boolean end = super.end(writer, "", false);
+		try {
+			try {
+				writer.flush();
+			} catch (IOException e) {
+				LOG.warn("error while trying to flush writer ", e);
+			}
+			executeAction();
 
-        if ((getId() != null) && (proxy != null)) {
-            getStack().setValue("#attr['" + getId() + "']", proxy.getAction());
-        }
-
-        return super.end(writer, "");
+			if ((getId() != null) && (proxy != null)) {
+				getStack().setValue("#attr['" + getId() + "']",
+						proxy.getAction());
+			}
+		} finally {
+			popComponentStack();
+		}
+        return end; 
     }
 
     private Map createExtraContext() {

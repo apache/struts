@@ -52,10 +52,25 @@ public class SessionMap extends AbstractMap implements Serializable {
         this.session = request.getSession(false);
     }
 
+    /**
+     * Invalidate the http session.
+     */
+    public void invalidate() {
+		if (session == null) {
+			return;
+		}
+
+		synchronized (session) {
+			session.invalidate();
+			session = null;
+			entries = null;
+		}
+	}
 
     /**
-     * Removes all attributes from the session as well as clears entries in this map.
-     */
+	 * Removes all attributes from the session as well as clears entries in this
+	 * map.
+	 */
     public void clear() {
         if (session == null ) {
             return;

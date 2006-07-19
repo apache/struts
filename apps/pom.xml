@@ -17,6 +17,7 @@
         <module>shopping-cart</module>
         <module>showcase</module>
         <module>starter</module>
+        <module>mailreader</module>
     </modules>
     
      <distributionManagement>

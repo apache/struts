@@ -132,36 +132,32 @@ public class Configuration implements Serializable {
 
     public void resolveDirs(String wd) {
         if (ideaConfig != null) {
-            String[] parts = ideaConfig.split(",");
-            for (int i = 0; i < parts.length; i++) {
-                String full = resolveDir(parts[i], wd);
+            String full = resolveDir(this.ideaConfig, wd);
 
-                try {
-                    DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-                    Document doc = db.parse(full);
-                    NodeList components = doc.getElementsByTagName("root");
-                    List jars = new ArrayList();
-                    for (int j = 0; j < components.getLength(); j++) {
-                        Element e = (Element) components.item(j);
-                        String value = e.getAttribute("url");
-                        if (value != null && value.startsWith("jar://") && value.endsWith(".jar!/")) {
-                            value = value.substring(6, value.length() - 2);
-                            if (value.startsWith("$MODULE_DIR$")) {
-                                value = value.substring(13);
-                            }
-                            jars.add(value);
+            try {
+                DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                Document doc = db.parse(full);
+                NodeList components = doc.getElementsByTagName("root");
+                List jars = new ArrayList();
+                for (int i = 0; i < components.getLength(); i++) {
+                    Element e = (Element) components.item(i);
+                    String value = e.getAttribute("url");
+                    if (value != null && value.startsWith("jar://") && value.endsWith(".jar!/")) {
+                        value = value.substring(6, value.length() - 2);
+                        if (value.startsWith("$MODULE_DIR$")) {
+                            value = value.substring(13);
                         }
+                        jars.add(value);
                     }
-
-                    if (this.libs != null) {
-                        this.libs.addAll(jars);
-                    } else {
-                        this.libs = jars;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
 
+                if (this.libs != null) {
+                    this.libs.addAll(jars);
+                } else {
+                    this.libs = jars;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         resolve(this.libs, wd);
@@ -174,6 +170,20 @@ public class Configuration implements Serializable {
             String path = mapping.getPath();
             String dir = mapping.getDir();
             dir = resolveDir(dir, wd);
+
+            // if the ${dir}/WEB-INF/classes dir exists and isn't already added to the classDirs, let's do it
+            // ... but make sure we put it at the front (to obey the class loading behaviors)
+            File classDir = new File(dir, "WEB-INF/classes");
+            if (classDir.exists()) {
+                String fullClassDir = getFullPath(classDir);
+                if (this.classDirs == null) {
+                    this.classDirs = new ArrayList();
+                }
+
+                if (!classDirs.contains(fullClassDir)) {
+                    classDirs.add(0, fullClassDir);
+                }
+            }
 
             if (this.mappings == null) {
                 this.mappings = new MultiHashMap();
@@ -202,6 +212,10 @@ public class Configuration implements Serializable {
             file = new File(dir);
         }
 
+        return getFullPath(file);
+    }
+
+    private String getFullPath(File file) {
         try {
             return file.getCanonicalPath();
         } catch (IOException e) {

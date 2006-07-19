@@ -102,41 +102,21 @@ public class QuickStart {
             return;
         }
 
-
-        // ok, clean up the classpath crap
-        TreeSet finalLibs = new TreeSet();
-        for (Iterator iterator = c.getLibs().iterator(); iterator.hasNext();) {
-            String s = (String) iterator.next();
-            finalLibs.add(s);
-        }
-        TreeSet finalClasses = new TreeSet();
-        for (Iterator iterator = c.getClassDirs().iterator(); iterator.hasNext();) {
-            String s = (String) iterator.next();
-            finalClasses.add(s);
-        }
-        TreeSet finalSources = new TreeSet();
-        if (c.getSources() != null) {
-            for (Iterator iterator = c.getSources().iterator(); iterator.hasNext();) {
-                String s = (String) iterator.next();
-                finalSources.add(s);
-            }
-        }
-
         // explain what is being executed
         System.out.println("Launching Jetty with the following configuration:");
         System.out.println("Jars/Directory of jars:");
-        for (Iterator iterator = finalLibs.iterator(); iterator.hasNext();) {
+        for (Iterator iterator = c.getLibs().iterator(); iterator.hasNext();) {
             String s = (String) iterator.next();
             System.out.println("    " + s);
         }
         System.out.println("Directories of classes:");
-        for (Iterator iterator = finalClasses.iterator(); iterator.hasNext();) {
+        for (Iterator iterator = c.getClassDirs().iterator(); iterator.hasNext();) {
             String s = (String) iterator.next();
             System.out.println("    " + s);
         }
-        if (!finalSources.isEmpty()) {
+        if (c.getSources() != null) {
             System.out.println("Sources:");
-            for (Iterator iterator = finalSources.iterator(); iterator.hasNext();) {
+            for (Iterator iterator = c.getSources().iterator(); iterator.hasNext();) {
                 String s = (String) iterator.next();
                 System.out.println("    " + s);
             }
@@ -150,12 +130,12 @@ public class QuickStart {
         // prepare the classloader
         List libs = c.getLibs();
         List classDirs = c.getClassDirs();
-        ClassLoader parent = new MultiDirClassLoader((String[]) finalLibs.toArray(new String[finalLibs.size()]),
-                (String[]) finalClasses.toArray(new String[finalClasses.size()]),
+        ClassLoader parent = new MultiDirClassLoader((String[]) libs.toArray(new String[libs.size()]),
+                (String[]) classDirs.toArray(new String[classDirs.size()]),
                 Thread.currentThread().getContextClassLoader());
 
-        if (!finalSources.isEmpty()) {
-            for (Iterator iterator = finalSources.iterator(); iterator.hasNext();) {
+        if (c.getSources() != null) {
+            for (Iterator iterator = c.getSources().iterator(); iterator.hasNext();) {
                 String source = (String) iterator.next();
                 File file = new File(source);
                 CompilingClassLoader ccl = new CompilingClassLoader(parent, file);

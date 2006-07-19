@@ -379,10 +379,15 @@ public class DefaultActionMapper implements ActionMapper {
         }
 
         String extension = getDefaultExtension();
-        if ( extension != null && uri.indexOf( '.' + extension) == -1  ) {
-            uri.append(".").append(extension);
-            if ( params.length() > 0) {
-                uri.append(params);
+        if ( extension != null) {
+            
+            // When in compatibility mode, we don't add an extension if it exists already
+            // otherwise, we always add it
+            if (!compatibilityMode || (compatibilityMode && uri.indexOf( '.' + extension) == -1  )) {
+                uri.append(".").append(extension);
+                if ( params.length() > 0) {
+                    uri.append(params);
+                }
             }
         }
 

@@ -247,6 +247,16 @@ public class DefaultActionMapperTest extends StrutsTestCase {
 
         // TODO: need to test location but there's noaccess to the property/method, unless we use reflection
     }
+    
+    public void testDropExtension() throws Exception {
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        String name = mapper.dropExtension("foo.action");
+        assertTrue("Name not right: "+name, "foo".equals(name));
+        
+        name = mapper.dropExtension("foo.action.action");
+        assertTrue("Name not right: "+name, "foo.action".equals(name));
+        
+    }
 
     public void testGetUriFromActionMapper1() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
@@ -355,6 +365,33 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         String uri = mapper.getUriFromActionMapping(actionMapping);
 
         assertEquals("/myActionName.action?test=bla", uri);
+    }
+    
+    public void testGetUriFromActionMapper11() throws Exception {
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        ActionMapping actionMapping = new ActionMapping();
+        actionMapping.setName("myActionName.action");
+        actionMapping.setNamespace("/");
+        String uri = mapper.getUriFromActionMapping(actionMapping);
+
+        assertEquals("/myActionName.action.action", uri);
+    }
+    
+    public void testGetUriFromActionMapper12() throws Exception {
+        Object old = org.apache.struts2.config.Configuration.get(StrutsConstants.STRUTS_COMPATIBILITY_MODE);
+        org.apache.struts2.config.Configuration.set(StrutsConstants.STRUTS_COMPATIBILITY_MODE, "true");
+        try {
+            DefaultActionMapper mapper = new DefaultActionMapper();
+            ActionMapping actionMapping = new ActionMapping();
+            actionMapping.setName("myActionName.action");
+            actionMapping.setNamespace("/");
+            String uri = mapper.getUriFromActionMapping(actionMapping);
+
+            assertEquals("/myActionName.action", uri);
+        }
+        finally {
+            org.apache.struts2.config.Configuration.set(StrutsConstants.STRUTS_COMPATIBILITY_MODE, old);
+        }
     }
 
 }

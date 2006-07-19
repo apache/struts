@@ -78,7 +78,6 @@
     <modules>
         <module>core</module>
         <!--<module>assembly</module>-->
-        <module>apps</module>
         <module>api</module>
     </modules>
     
@@ -97,6 +96,17 @@
     </organization>
 
     <profiles>
+        <profile>
+            <id>apps</id>
+            <activation>
+                <property>
+                    <name>apps</name>
+                </property>
+            </activation>
+            <modules>
+                <module>apps</module>
+            </modules>
+        </profile>
         <profile>
             <id>extras</id>
             <modules>

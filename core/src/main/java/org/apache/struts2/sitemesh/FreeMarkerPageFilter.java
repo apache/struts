@@ -37,7 +37,63 @@ import java.util.Locale;
 
 /**
  *  Applies FreeMarker-based sitemesh decorators.
- *
+ *  
+ *  <!-- START SNIPPET: javadoc -->
+ *  
+ *  The following variables are available to the decorating freemarker page :-
+ *  <ul>
+ *      <li>${title}           - content of &lt;title&gt; tag in the decorated page</li>
+ *      <li>${head}            - content of &lt;head&gt; tag in the decorated page</li>
+ *      <li>${body}            - content of t&lt;body&gt; tag in the decorated page</li>
+ *      <li>${page.properties} - content of the page properties</li>
+ *  </ul>
+ *  <p/>
+ *  With the following decorated page :-
+ *  <pre>
+ *  &lt;html&gt;
+ *      &lt;meta name="author" content="tm_jee" /&gt;
+ *      &lt;head&gt;
+ *          &lt;title&gt;My Title&lt;/title&gt;
+ *          &lt;link rel="stylesheet" type="text/css" href="mycss.css" /&gt;
+ *          &lt;style type="text/javascript" language="javascript" src="myjavascript.js"&gt;&lt;/script&gt;
+ *      &lt;/head&gt;
+ *      &lt;body&lt;
+ *          &lt;h1&gt;Sample&lt;/h1&gt;
+ *      &lt;/body&gt;
+ *  &lt;/html&gt;
+ *  </pre>
+ *  <p/>
+ *  <table border="1">
+ *      <tr>
+ *          <td>Properties</td>
+ *          <td>Content</td>
+ *      </tr>
+ *      <tr>
+ *          <td>${title}</td>
+ *          <td>My Title</td>
+ *      </tr>
+ *      <tr>
+ *          <td>${head}</td>
+ *          <td>
+ *              &lt;link rel="stylesheet" type="text/css" href="mycss.css" /&gt;
+ *              &lt;style type="text/javascript" language="javascript" src="myjavascript.js"&gt;&lt;/script&gt;
+ *          </td>
+ *      </tr>
+ *      <tr>
+ *          <td>${body}</td>
+ *          <td>
+ *              &lt;h1&gt;Sample&lt;/h1&gt;
+ *          </td>
+ *      </tr>
+ *      <tr>
+ *          <td>${page.properties.meta.author}</td>
+ *          <td>tm_jee</td>
+ *      </tr>
+ *  </table>
+ *  
+ *  <!-- END SNIPPET: javadoc -->
+ *  
+ *  @version $Date$ $Id$
  */
 public class FreeMarkerPageFilter extends TemplatePageFilter {
     private static final Log LOG = LogFactory.getLog(FreeMarkerPageFilter.class);

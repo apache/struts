@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <include file="struts-default.xml"/>
+
+    <package name="default" namespace="/" extends="struts-default">
+
+        <interceptors>
+
+            <interceptor name="authentication"
+                         class="mailreader2.AuthenticationInterceptor"/>
+
+            <interceptor-stack name="user" >
+                <interceptor-ref name="authentication" />
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+
+            <interceptor-stack name="user-submit" >
+                <interceptor-ref name="token-session" />
+                <interceptor-ref name="user"/>
+            </interceptor-stack>
+
+            <interceptor-stack name="guest" >
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+
+            <interceptor-stack name="guest-submit" >
+                <interceptor-ref name="token-session" />
+                <interceptor-ref name="guest"/>
+            </interceptor-stack>
+
+        </interceptors>
+
+        <default-interceptor-ref name="user"/>
+        
+        <default-action-ref name="Welcome"/>
+
+        <global-results>
+            <result name="error">/pages/Error.jsp</result>
+            <result name="invalid.token">/pages/Error.jsp</result>
+            <result name="login" type="redirect-action">Logon!input</result>
+        </global-results>
+
+        <global-exception-mappings>
+            <exception-mapping
+                    result="error"
+                    exception="java.lang.Throwable"/>
+        </global-exception-mappings>
+
+        <action name="Welcome" class="mailreader2.Welcome">
+            <result>/pages/Welcome.jsp</result>
+            <interceptor-ref name="guest"/>
+        </action>
+
+        <action name="Logon" class="mailreader2.Logon">
+            <result name="input">/pages/Logon.jsp</result>
+            <result name="cancel" type="redirect-action">Welcome</result>
+            <result type="redirect-action">MainMenu</result>
+            <result name="expired" type="chain">ChangePassword</result>
+            <exception-mapping
+                    exception="org.apache.struts.apps.mailreader.dao.ExpiredPasswordException"
+                    result="expired"/>
+            <interceptor-ref name="guest"/>
+        </action>
+
+        <action name="ChangePassword">
+            <result>/pages/ChangePassword.jsp</result>
+        </action>
+
+        <action name="MainMenu" class="mailreader2.MailreaderSupport">
+            <result>/pages/MainMenu.jsp</result>
+        </action>
+
+        <action name="Registration" class="mailreader2.Registration">
+            <result name="input">/pages/Registration.jsp</result>
+            <result type="redirect-action">MainMenu</result>
+            <interceptor-ref name="guest"/>
+        </action>
+
+        <action name="RegistrationSave" class="mailreader2.RegistrationSave">
+            <result name="input">/pages/Registration.jsp</result>
+            <result type="redirect-action">MainMenu</result>
+            <interceptor-ref name="guest-submit" />
+        </action>
+
+        <action name="Subscription" class="mailreader2.Subscription">
+            <result name="input">/pages/Subscription.jsp</result>
+            <result type="redirect-action">Registration!input</result>
+        </action>
+
+        <action name="SubscriptionSave" class="mailreader2.SubscriptionSave">
+            <result name="input">/pages/Subscription.jsp</result>
+            <result type="redirect-action">Registration!input</result>
+            <interceptor-ref name="user-submit" />
+        </action>
+
+        <action name="Logoff" class="mailreader2.Logoff">
+            <result type="redirect-action">Welcome</result>
+        </action>
+
+        <action name="Tour">
+            <result>/pages/tour.html</result>
+            <interceptor-ref name="guest"/>
+        </action>
+
+    </package>
+</struts>

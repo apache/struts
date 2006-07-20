@@ -19,6 +19,7 @@ package org.apache.struts2.views.xslt;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,23 +27,24 @@ import java.util.List;
 
 /**
  */
-public class ArrayAdapter extends DefaultElementAdapter {
+public class ArrayAdapter extends AbstractAdapterElement {
 
     private Log log = LogFactory.getLog(this.getClass());
 
-
-    public ArrayAdapter(DOMAdapter rootAdapter, AdapterNode parent, String propertyName, Object value) {
-        super(rootAdapter, parent, propertyName, value);
+    public ArrayAdapter() {
     }
 
+    public ArrayAdapter(AdapterFactory adapterFactory, AdapterNode parent, String propertyName, Object value) {
+        setContext(adapterFactory, parent, propertyName, value);
+    }
 
-    protected List buildChildrenAdapters() {
-        List children = new ArrayList();
-        Object[] values = (Object[]) getValue();
+    protected List<Node> buildChildAdapters() {
+        List<Node> children = new ArrayList<Node>();
+        Object[] values = (Object[]) getPropertyValue();
 
-        for (int i = 0; i < values.length; i++) {
-            AdapterNode childAdapter = getRootAdapter().adapt(getRootAdapter(), this, "item", values[i]);
-            if( childAdapter != null)
+        for (Object value : values) {
+            Node childAdapter = getAdapterFactory().adaptNode(this, "item", value);
+            if (childAdapter != null)
                 children.add(childAdapter);
 
             if (log.isDebugEnabled()) {

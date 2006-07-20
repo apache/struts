@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: AdapterNode.java 418521 2006-07-01 23:36:50Z mrdon $
  *
  * Copyright 2006 The Apache Software Foundation.
  *
@@ -17,30 +17,39 @@
  */
 package org.apache.struts2.views.xslt;
 
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 
+public class SimpleNodeList implements NodeList {
 
-/**
- * 
- */
-public class CollectionNodeList implements NodeList {
+    private Log log = LogFactory.getLog(SimpleNodeList.class);
 
-    private List nodes;
+    private List<Node> nodes;
 
-
-    public CollectionNodeList(List nodes) {
+    public SimpleNodeList(List<Node> nodes) {
         this.nodes = nodes;
     }
 
-
     public int getLength() {
+        if (log.isTraceEnabled())
+            log.trace("getLength: " + nodes.size());
         return nodes.size();
     }
 
     public Node item(int i) {
-        return (Node) nodes.get(i);
+        log.trace("getItem: " + i);
+        return nodes.get(i);
+    }
+
+    public String toString() {
+        StringBuffer sb = new StringBuffer("SimpleNodeList: [");
+        for (int i = 0; i < getLength(); i++)
+            sb.append(item(i).getNodeName() + ',');
+        sb.append("]");
+        return sb.toString();
     }
 }

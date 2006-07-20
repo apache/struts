@@ -19,20 +19,57 @@ package org.apache.struts2.views.xslt;
 
 import org.w3c.dom.Node;
 
-
 /**
  */
 public interface AdapterNode extends Node {
 
-    Node getNextSibling(AdapterNode child);
+    /**
+     * The adapter factory that created this node.
+     */
+    AdapterFactory getAdapterFactory();
 
-    AdapterNode getParentAdapterNode();
+    /**
+     * The adapter factory that created this node.
+     */
+    void setAdapterFactory(AdapterFactory factory);
 
+    /**
+     * The parent adapter node of this node. Note that our parent must be another adapter node, but our children may be any
+     * kind of Node.
+     */
+    AdapterNode getParent();
+
+    /**
+     * The parent adapter node of this node. Note that our parent must be another adapter node, but our children may be any
+     * kind of Node.
+     */
+    void setParent(AdapterNode parent);
+
+    /**
+     * The child node before the specified sibling
+     */
+    Node getChildBefore(Node thisNode);
+
+    /**
+     * The child node after the specified sibling
+     */
+    Node getChildAfter(Node thisNode);
+
+    /**
+     * The name of the Java object (property) that we are adapting
+     */
     String getPropertyName();
 
-    DOMAdapter getRootAdapter();
+    /**
+     * The name of the Java object (property) that we are adapting
+     */
+    void setPropertyName(String name);
 
-    Object getValue();
+    /**
+     * The Java object (property) that we are adapting
+     */
+    Object getPropertyValue();
 
-    int getDepth();
+    /** The Java object (property) that we are adapting */
+    void setPropertyValue(Object prop );
 }

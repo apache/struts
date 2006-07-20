@@ -26,12 +26,15 @@ import org.w3c.dom.Text;
 /**
  * 
  */
-public class SimpleTextNode extends DefaultAdapterNode implements Text, AdapterNode {
+public class SimpleTextNode extends AbstractAdapterNode implements Node, Text {
 
-    public SimpleTextNode(DOMAdapter rootAdapter, AdapterNode parent, String propertyName, Object value) {
-        super(rootAdapter, parent, propertyName, value);
+    public SimpleTextNode(AdapterFactory rootAdapterFactory, AdapterNode parent, String propertyName, Object value) {
+        setContext(rootAdapterFactory, parent, propertyName, value);
     }
 
+    protected String getStringValue() {
+        return getPropertyValue().toString();
+    }
 
     public void setData(String string) throws DOMException {
         throw new StrutsException("Operation not supported");
@@ -81,7 +84,19 @@ public class SimpleTextNode extends DefaultAdapterNode implements Text, AdapterN
         return getStringValue().substring(beginIndex, endIndex);
     }
 
-    private String getStringValue() {
-        return getValue().toString();
+    // DOM level 3
+
+    public boolean isElementContentWhitespace() {
+        throw operationNotSupported();
     }
+
+    public String getWholeText() {
+        throw operationNotSupported();
+    }
+
+    public Text replaceWholeText(String string) throws DOMException {
+        throw operationNotSupported();
+    }
+    // end DOM level 3
+
 }

@@ -18,7 +18,6 @@
 package org.apache.struts2.views.xslt;
 
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.Configuration;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -39,7 +38,6 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 
 /**
@@ -181,58 +179,54 @@ import java.util.regex.Pattern;
  */
 public class XSLTResult implements Result {
 
-	private static final long serialVersionUID = 8024698928688847685L;
-	
-	private static final Log log = LogFactory.getLog(XSLTResult.class);
-    public static final String DEFAULT_PARAM = "location";
+    private static final Log log = LogFactory.getLog(XSLTResult.class);
+    public static final String DEFAULT_PARAM = "stylesheetLocation";
 
-    private static final Object LOCK = new Object(); // lock in synchronized code
-
-    protected boolean noCache = false;
-    protected Map templatesCache;
-    protected String location;
-    protected boolean parse;
-    protected Pattern matchingPattern = null;
-    protected Pattern excludingPattern = null;
+    protected boolean noCache;
+    private final Map<String, Templates> templatesCache;
+    private String stylesheetLocation;
+    private boolean parse;
+    private AdapterFactory adapterFactory;
 
     public XSLTResult() {
-        templatesCache = new HashMap();
-        noCache = Configuration.getString(StrutsConstants.STRUTS_XSLT_NOCACHE).trim().equalsIgnoreCase("true");
+        templatesCache = new HashMap<String, Templates>();
+        noCache = Configuration.getString("struts.xslt.nocache").trim().equalsIgnoreCase("true");
     }
 
+    /**
+     * @deprecated Use #setStylesheetLocation(String)
+     */
     public void setLocation(String location) {
-        this.location = location;
+        setStylesheetLocation(location);
     }
 
-    public void setMatchingPattern(String matchingPattern) {
-        this.matchingPattern = Pattern.compile(matchingPattern);
+    public void setStylesheetLocation(String location) {
+        if (location == null)
+            throw new IllegalArgumentException("Null location");
+        System.out.println("location = " + location);
+        this.stylesheetLocation = location;
     }
 
-    public void setExcludingPattern(String excludingPattern) {
-        this.excludingPattern = Pattern.compile(excludingPattern);
+    public String getStylesheetLocation() {
+        return stylesheetLocation;
     }
 
+    /**
+     * If true, parse the stylesheet location for OGNL expressions.
+     *
+     * @param parse
+     */
     public void setParse(boolean parse) {
         this.parse = parse;
     }
 
     public void execute(ActionInvocation invocation) throws Exception {
-        long startTime = -1;
-
-        if (log.isDebugEnabled()) {
-            startTime = System.currentTimeMillis();
-        }
+        long startTime = System.currentTimeMillis();
+        String location = getStylesheetLocation();
 
         if (parse) {
             OgnlValueStack stack = ActionContext.getContext().getValueStack();
             location = TextParseUtil.translateVariables(location, stack);
-        }
-
-        if (location == null || location.trim().length() == 0) {
-            String msg = "Location paramter is empty. " +
-                "Check the <param name=\"location\"> tag specified for this action.";
-            log.error(msg);
-            throw new IllegalArgumentException(msg);
         }
 
         try {
@@ -241,71 +235,90 @@ public class XSLTResult implements Result {
             Writer writer = response.getWriter();
 
             // Create a transformer for the stylesheet.
-            Templates templates = getTemplates(location);
-            Transformer transformer = templates.newTransformer();
+            Templates templates = null;
+            Transformer transformer;
+            if (location != null) {
+                templates = getTemplates(location);
+                transformer = templates.newTransformer();
+            } else
+                transformer = TransformerFactory.newInstance().newTransformer();
 
-            String mimeType = templates.getOutputProperties().getProperty(OutputKeys.MEDIA_TYPE);
+            transformer.setURIResolver(getURIResolver());
 
+            String mimeType;
+            if (templates == null)
+                mimeType = "text/xml"; // no stylesheet, raw xml
+            else
+                mimeType = templates.getOutputProperties().getProperty(OutputKeys.MEDIA_TYPE);
             if (mimeType == null) {
                 // guess (this is a servlet, so text/html might be the best guess)
-                log.debug("Not possible to determine MineType from media-type, using text/html then");
                 mimeType = "text/html";
             }
 
             response.setContentType(mimeType);
 
-            Source xmlSource = getTraxSourceForStack(invocation.getAction());
+            Source xmlSource = getDOMSourceForStack(invocation.getAction());
 
             // Transform the source XML to System.out.
             PrintWriter out = response.getWriter();
-            try {
-                transformer.transform(xmlSource, new StreamResult(out));
-            } finally {
-                out.close(); // ...and flush...
-            }
+
+            log.debug("xmlSource = " + xmlSource);
+            transformer.transform(xmlSource, new StreamResult(out));
+
+            out.close(); // ...and flush...
 
             if (log.isDebugEnabled()) {
-                log.debug("Time: " + (System.currentTimeMillis() - startTime) + "ms");
+                log.debug("Time:" + (System.currentTimeMillis() - startTime) + "ms");
             }
 
             writer.flush();
         } catch (Exception e) {
-            log.error("Unable to render XSLT Template with location=[" + location + "]", e);
+            log.error("Unable to render XSLT Template, '" + location + "'", e);
             throw e;
         }
     }
 
-    private Templates getTemplates(String path) throws TransformerException, IOException {
+    protected AdapterFactory getAdapterFactory() {
+        if (adapterFactory == null)
+            adapterFactory = new AdapterFactory();
+        return adapterFactory;
+    }
+
+    protected void setAdapterFactory(AdapterFactory adapterFactory) {
+        this.adapterFactory = adapterFactory;
+    }
+
+    /**
+     * Get the URI Resolver to be called by the processor when it encounters an xsl:include, xsl:import, or document()
+     * function. The default is an instance of ServletURIResolver, which operates relative to the servlet context.
+     */
+    protected URIResolver getURIResolver() {
+        return new ServletURIResolver(
+                ServletActionContext.getServletContext());
+    }
+
+    protected Templates getTemplates(String path) throws TransformerException, IOException {
         String pathFromRequest = ServletActionContext.getRequest().getParameter("xslt.location");
 
-        if (pathFromRequest != null) {
+        if (pathFromRequest != null)
             path = pathFromRequest;
-        }
 
-        if (path == null) {
+        if (path == null)
             throw new TransformerException("Stylesheet path is null");
-        }
 
-        Templates templates = (Templates) templatesCache.get(path);
+        Templates templates = templatesCache.get(path);
 
         if (noCache || (templates == null)) {
-            synchronized (LOCK) {
+            synchronized (templatesCache) {
                 URL resource = ServletActionContext.getServletContext().getResource(path);
 
                 if (resource == null) {
                     throw new TransformerException("Stylesheet " + path + " not found in resources.");
                 }
 
-                if (log.isDebugEnabled()) {
-                    // This may result in the template being put into the cache multiple times
-                    // if concurrent requests are made, but that's ok.
-                    log.debug("Preparing new XSLT stylesheet: " + path);
-                }
+                log.debug("Preparing XSLT stylesheet templates: " + path);
 
                 TransformerFactory factory = TransformerFactory.newInstance();
-                log.trace("Uri-Resolver is: " + factory.getURIResolver());
-                factory.setURIResolver(new ServletURIResolver(ServletActionContext.getServletContext()));
-                log.trace("Uri-Resolver is: " + factory.getURIResolver());
                 templates = factory.newTemplates(new StreamSource(resource.openStream()));
                 templatesCache.put(path, templates);
             }
@@ -314,9 +327,8 @@ public class XSLTResult implements Result {
         return templates;
     }
 
-    protected Source getTraxSourceForStack(Object action) throws IllegalAccessException, InstantiationException {
-        DOMAdapter adapter = new DOMAdapter();
-        adapter.setPattern(matchingPattern, excludingPattern);
-        return new DOMSource(adapter.adapt(action));
-    }
+    protected Source getDOMSourceForStack(Object action)
+            throws IllegalAccessException, InstantiationException {
+        return new DOMSource(getAdapterFactory().adaptDocument("result", action) );
+	}
 }

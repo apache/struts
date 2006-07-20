@@ -29,36 +29,41 @@ import java.io.InputStream;
 
 
 /**
+ * ServletURIResolver is a URIResolver that can retrieve resources from the servlet context using the scheme "res".
+ * e.g.
  *
+ * A URI resolver is called when a stylesheet uses an xsl:include, xsl:import, or document() function to find the
+ * resource (file).
  */
 public class ServletURIResolver implements URIResolver {
 
-    protected static Log log = LogFactory.getLog(URIResolver.class);
-    static final String protocol = "res:";
-
+    private Log log = LogFactory.getLog(getClass());
+    static final String PROTOCOL = "res:";
 
     private ServletContext sc;
 
-
     public ServletURIResolver(ServletContext sc) {
+        log.trace("ServletURIResolver: " + sc);
         this.sc = sc;
     }
 
-
     public Source resolve(String href, String base) throws TransformerException {
-        if (href.startsWith(protocol)) {
-            String res = href.substring(protocol.length());
+        log.debug("ServletURIResolver resolve(): href=" + href + ", base=" + base);
+        if (href.startsWith(PROTOCOL)) {
+            String res = href.substring(PROTOCOL.length());
             log.debug("Resolving resource <" + res + ">");
 
             InputStream is = sc.getResourceAsStream(res);
 
             if (is == null) {
-                throw new TransformerException("Resource " + res + " not found in resources.");
+                throw new TransformerException(
+                        "Resource " + res + " not found in resources.");
             }
 
             return new StreamSource(is);
         }
 
-        throw new TransformerException("Cannot handle procotol of resource " + href);
+        throw new TransformerException(
+                "Cannot handle procotol of resource " + href);
     }
 }

@@ -69,40 +69,38 @@ public class XSLTResultTest extends StrutsTestCase {
     }
 
     public void testSimpleTransform() throws Exception {
-        // TODO: XSLTResult does not work with JDK1.5
-
-        /*result.setParse(false);
+        result.setParse(false);
         result.setLocation("XSLTResultTest.xsl");
         result.execute(mai);
 
         String out = response.getContentAsString();
         assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
-        assertTrue(out.indexOf("<result xmlns=\"http://www.w3.org/TR/xhtml1/strict\"") > -1);*/
+        assertTrue(out.indexOf("<result xmlns=\"http://www.w3.org/TR/xhtml1/strict\"") > -1);
     }
 
     public void testSimpleTransformParse() throws Exception {
-        /*result.setParse(true);
+        result.setParse(true);
         result.setLocation("${top.myLocation}");
         result.execute(mai);
 
         String out = response.getContentAsString();
         assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
-        assertTrue(out.indexOf("<result xmlns=\"http://www.w3.org/TR/xhtml1/strict\"") > -1);*/
+        assertTrue(out.indexOf("<result xmlns=\"http://www.w3.org/TR/xhtml1/strict\"") > -1);
     }
 
     public void testTransform2() throws Exception {
-        /*result.setParse(false);
+        result.setParse(false);
         result.setLocation("XSLTResultTest2.xsl");
         result.execute(mai);
 
         String out = response.getContentAsString();
         assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
         assertTrue(out.indexOf("<html xmlns=\"http://www.w3.org/TR/xhtml1/strict\"") > -1);
-        assertTrue(out.indexOf("Hello Santa Claus how are you?") > -1);*/
+        assertTrue(out.indexOf("Hello Santa Claus how are you?") > -1);
     }
 
     public void testTransform3() throws Exception {
-        /*result.setParse(false);
+        result.setParse(false);
         result.setLocation("XSLTResultTest3.xsl");
         result.execute(mai);
 
@@ -110,9 +108,8 @@ public class XSLTResultTest extends StrutsTestCase {
         assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
         assertTrue(out.indexOf("<html xmlns=\"http://www.w3.org/TR/xhtml1/strict\"") > -1);
         assertTrue(out.indexOf("Hello Santa Claus how are you?") > -1);
-        assertTrue(out.indexOf("Struts in Action by Patrick and Jason") > -1);*/
-        // TODO: There is a bug in XSLTResult and having collections
-        //assertTrue(out.indexOf("XWork not in Action by Superman") > -1);
+        assertTrue(out.indexOf("WebWork in Action by Patrick and Jason") > -1);
+        assertTrue(out.indexOf("XWork not in Action by Superman") > -1);
     }
 
     protected void setUp() throws Exception {
@@ -162,7 +159,7 @@ public class XSLTResultTest extends StrutsTestCase {
 
         public List getBooks() {
             List list = new ArrayList();
-            list.add(new Book("Struts in Action", "Patrick and Jason"));
+            list.add(new Book("WebWork in Action", "Patrick and Jason"));
             list.add(new Book("XWork not in Action", "Superman"));
             return list;
         }
@@ -187,5 +184,4 @@ public class XSLTResultTest extends StrutsTestCase {
             return author;
         }
     }
-
 }

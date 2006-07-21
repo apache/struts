@@ -1,4 +1,4 @@
-<%@taglib prefix="saf" uri="/struts-action" %>
+<%@taglib prefix="s" uri="/tags" %>
 
 <html>
 <head>
@@ -13,30 +13,30 @@
 
 <!-- lets include the first page many times -->
 <div style="margin: 5px; border: solid 1px; ">
-<saf:action name="includePage" namespace="/tags/non-ui/actionTag" executeResult="true" />
-<saf:action name="includePage" namespace="/tags/non-ui/actionTag" executeResult="true" />
-<saf:action name="includePage" namespace="/tags/non-ui/actionTag" executeResult="true" />
+<s:action name="includePage" namespace="/tags/non-ui/actionTag" executeResult="true" />
+<s:action name="includePage" namespace="/tags/non-ui/actionTag" executeResult="true" />
+<s:action name="includePage" namespace="/tags/non-ui/actionTag" executeResult="true" />
 </div>
 
 
 <!-- lets include the second page many times -->
 <div style="margin: 5px; border: solid 1px; ">
-<saf:action name="includePage2" namespace="/tags/non-ui/actionTag" executeResult="true" />
-<saf:action name="includePage2" namespace="/tags/non-ui/actionTag" executeResult="true" />
-<saf:action name="includePage2" namespace="/tags/non-ui/actionTag" executeResult="true" />
+<s:action name="includePage2" namespace="/tags/non-ui/actionTag" executeResult="true" />
+<s:action name="includePage2" namespace="/tags/non-ui/actionTag" executeResult="true" />
+<s:action name="includePage2" namespace="/tags/non-ui/actionTag" executeResult="true" />
 </div>
 
 
 <!--  lets include the third page many time -->
 <div style="margin: 5px; margin: 5px; border: solid 1px; ">
-<saf:action name="includePage3" namespace="/tags/non-ui/actionTag" executeResult="true" />
-<saf:action name="includePage3" namespace="/tags/non-ui/actionTag" executeResult="true" />
-<saf:action name="includePage3" namespace="/tags/non-ui/actionTag" executeResult="true" />
+<s:action name="includePage3" namespace="/tags/non-ui/actionTag" executeResult="true" />
+<s:action name="includePage3" namespace="/tags/non-ui/actionTag" executeResult="true" />
+<s:action name="includePage3" namespace="/tags/non-ui/actionTag" executeResult="true" />
 </div>
 
 
-<saf:url id="url" action="lookAtSource" namespace="/tags/non-ui/actionTag" />
-<saf:a href="%{#url}">Source</saf:a>
+<s:url id="url" action="lookAtSource" namespace="/tags/non-ui/actionTag" />
+<s:a href="%{#url}">Source</s:a>
 
 </body>
 </html>

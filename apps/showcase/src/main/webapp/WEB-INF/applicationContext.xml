@@ -13,9 +13,9 @@
     
     <!-- Showcase's CustomFreemarkerManager example -->
     <bean id="customFreemarkerManager" class="org.apache.struts2.showcase.freemarker.CustomFreemarkerManager">
-		<constructor-arg index="0">
-			<ref bean="customFreemarkerManagerUtil" />
-		</constructor-arg>    	
+        <constructor-arg index="0">
+            <ref bean="customFreemarkerManagerUtil" />
+        </constructor-arg>      
     </bean>
     <bean id="customFreemarkerManagerUtil" class="org.apache.struts2.showcase.freemarker.CustomFreemarkerManagerUtil" />
     
@@ -26,63 +26,63 @@
     </bean>
     
     <bean id="chatLoginAction" class="org.apache.struts2.showcase.chat.ChatLoginAction" singleton="false">
-    	<constructor-arg index="0">
-    		<ref local="chatService" />
-    	</constructor-arg>
+        <constructor-arg index="0">
+            <ref local="chatService" />
+        </constructor-arg>
     </bean>
     
     <bean id="chatLogoutAction" class="org.apache.struts2.showcase.chat.ChatLogoutAction" singleton="false">
-    	<constructor-arg index="0">
-    		<ref local="chatService" />
-    	</constructor-arg>
+        <constructor-arg index="0">
+            <ref local="chatService" />
+        </constructor-arg>
     </bean>
     
     <bean id="usersAvailableAction" class="org.apache.struts2.showcase.chat.UsersAvailableAction" singleton="false">
-    	<constructor-arg index="0">
-    		<ref local="chatService" />
-    	</constructor-arg>
+        <constructor-arg index="0">
+            <ref local="chatService" />
+        </constructor-arg>
     </bean>
     
     <bean id="roomsAvailableAction" class="org.apache.struts2.showcase.chat.RoomsAvailableAction" singleton="false">
-    	<constructor-arg index="0">
-    		<ref local="chatService" />
-    	</constructor-arg>
+        <constructor-arg index="0">
+            <ref local="chatService" />
+        </constructor-arg>
     </bean>
     
     <bean id="crudRoomAction" class="org.apache.struts2.showcase.chat.CrudRoomAction" singleton="false"> 
-    	<constructor-arg index="0">
-    		<ref local="chatService" />
-    	</constructor-arg>
+        <constructor-arg index="0">
+            <ref local="chatService" />
+        </constructor-arg>
     </bean>
     
     <bean id="enterRoomAction" class="org.apache.struts2.showcase.chat.EnterRoomAction" singleton="false">
-    	<constructor-arg index="0">
-    		<ref local="chatService" />
-    	</constructor-arg>
+        <constructor-arg index="0">
+            <ref local="chatService" />
+        </constructor-arg>
     </bean>
     
     <bean id="messagesAvailableInRoomAction" class="org.apache.struts2.showcase.chat.MessagesAvailableInRoomAction" singleton="false">
-    	<constructor-arg index="0">
-    		<ref local="chatService" />
-    	</constructor-arg>
+        <constructor-arg index="0">
+            <ref local="chatService" />
+        </constructor-arg>
     </bean>
     
     <bean id="sendMessageToRoomAction" class="org.apache.struts2.showcase.chat.SendMessageToRoomAction" singleton="false">
-    	<constructor-arg index="0">
-    		<ref local="chatService" />
-    	</constructor-arg>
+        <constructor-arg index="0">
+            <ref local="chatService" />
+        </constructor-arg>
     </bean>
     
     <bean id="usersAvailableInRoomAction" class="org.apache.struts2.showcase.chat.UsersAvailableInRoomAction" singleton="false">
-    	<constructor-arg index="0">
-    		<ref local="chatService" />
-    	</constructor-arg>
+        <constructor-arg index="0">
+            <ref local="chatService" />
+        </constructor-arg>
     </bean>
     
     <bean id="exitRoomAction" class="org.apache.struts2.showcase.chat.ExitRoomAction" singleton="false">
-    	<constructor-arg index="0">
-    		<ref local="chatService" />
-    	</constructor-arg>
+        <constructor-arg index="0">
+            <ref local="chatService" />
+        </constructor-arg>
     </bean>
     
     
@@ -96,9 +96,9 @@
                                         <prop key="DOG">An animal, men best friend</prop>
                                         <prop key="CAT">An animal whose child is called kitten</prop>
                                         <prop key="CAR">A common vehical with 4 wheels</prop>
-                                        <prop key="WEBWORK">One of the best action based framework from Opensymphony</prop>
+                                        <prop key="STRUTS2">The premier action-based framework for Java</prop>
                                         -->
-                                        <prop key="JAVA">A popular programming language from which WebWork is written off</prop>
+                                        <prop key="JAVA">A popular programming language that is used to create the Struts framework</prop>
                                 </props>
                         </constructor-arg>
                 </bean>

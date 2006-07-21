@@ -1,4 +1,4 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 <html>
     <head><title>Execute and Wait Examples</title></head>
 
@@ -7,7 +7,7 @@
 
     <b>We have processed your request.</b>
     <p/>
-    Click here to <saf:url id="back" value="/wait"/><saf:a href="%{back}">return</saf:a>.
+    Click here to <s:url id="back" value="/wait"/><s:a href="%{back}">return</s:a>.
 
 </body>
 </html>

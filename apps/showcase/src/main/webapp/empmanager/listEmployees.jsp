@@ -1,4 +1,4 @@
-<%@ taglib uri="/struts-action" prefix="saf" %>
+<%@ taglib prefix="s" uri="/tags" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -12,15 +12,15 @@
         <th>First Name</th>
         <th>Last Name</th>
     </tr>
-    <saf:iterator value="availableItems">
+    <s:iterator value="availableItems">
         <tr>
-            <td><a href="<saf:url action="edit-%{empId}" />"><saf:property value="empId"/></a></td>
-            <td><saf:property value="firstName"/></td>
-            <td><saf:property value="lastName"/></td>
+            <td><a href="<s:url action="edit-%{empId}" />"><s:property value="empId"/></a></td>
+            <td><s:property value="firstName"/></td>
+            <td><s:property value="lastName"/></td>
         </tr>
-    </saf:iterator>
+    </s:iterator>
 </table>
-<p><a href="<saf:url action="edit-" includeParams="none"/>">Create new Employee</a></p>
-<p><a href="<saf:url action="showcase" namespace="/" includeParams="none"/>">Back to Showcase Startpage</a></p>
+<p><a href="<s:url action="edit-" includeParams="none"/>">Create new Employee</a></p>
+<p><a href="<s:url action="showcase" namespace="/" includeParams="none"/>">Back to Showcase Startpage</a></p>
 </body>
 </html>

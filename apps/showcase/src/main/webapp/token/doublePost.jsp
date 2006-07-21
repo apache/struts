@@ -1,4 +1,4 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 <html>
 <head>
 </head>
@@ -9,7 +9,7 @@
     </p>
 
     <p/>
-    Click here to <saf:url id="back" value="/token"/><saf:a href="%{back}">return</saf:a>.
+    Click here to <s:url id="back" value="/token"/><s:a href="%{back}">return</s:a>.
 
 </body>
 </html>

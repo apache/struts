@@ -1,18 +1,18 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 
 <html>
 <head>
-<saf:head theme="ajax"/>
+<s:head theme="ajax"/>
 </head>
 
 <body>
-<saf:form name="test1" id="test1" action="/ajax/Test1.action" theme="ajax">
+<s:form name="test1" id="test1" action="/ajax/Test1.action" theme="ajax">
     Test 1 Form
-<saf:submit theme="ajax" resultDivId="result2"/>
-</saf:form>
+<s:submit theme="ajax" resultDivId="result2"/>
+</s:form>
 
-<saf:div id="result2" theme="ajax" >test2 - before</saf:div>
+<s:div id="result2" theme="ajax" >test2 - before</s:div>
 
-<saf:div id="result3" theme="ajax">test3 - before</saf:div>
+<s:div id="result3" theme="ajax">test3 - before</s:div>
 </body>
 </html>

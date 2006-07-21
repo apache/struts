@@ -1,21 +1,21 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 
 <!-- START SNIPPET: ajaxValidation -->
 
 <html>
 <head>
     <title>Validation - Basic</title>
-    <saf:head theme="ajax"/>
+    <s:head theme="ajax"/>
 </head>
 
 <body>
 
-<saf:form method="post" validate="true" theme="ajax">
-    <saf:textfield label="Name" name="name"/>
-    <saf:textfield label="Age" name="age"/>
-    <saf:textfield label="Favorite color" name="answer"/>
-    <saf:submit/>
-</saf:form>
+<s:form method="post" validate="true" theme="ajax">
+    <s:textfield label="Name" name="name"/>
+    <s:textfield label="Age" name="age"/>
+    <s:textfield label="Favorite color" name="answer"/>
+    <s:submit/>
+</s:form>
 
 </body>
 </html>

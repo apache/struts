@@ -1,8 +1,8 @@
-<%@taglib prefix="saf" uri="/struts-action" %>
+<%@taglib prefix="s" uri="/tags" %>
 
 <div style="background-color:yellow;">
 <p>
 JSP Custom Template - 
-parameter 'paramName' - <saf:property value="%{top.parameters.paramName}" />
+parameter 'paramName' - <s:property value="%{top.parameters.paramName}" />
 </p>
 </div>

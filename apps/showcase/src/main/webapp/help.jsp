@@ -1,4 +1,4 @@
-<%@taglib uri="/struts-action" prefix="saf" %>
+<%@taglib prefix="s" uri="/tags" %>
 <html>
 <head>
     <title>Struts ~ Getting Support</title>
@@ -14,18 +14,18 @@
                 <th style="width: auto;">Description</th>
             </tr>
             <tr>
-                <td><a href="http://forums.opensymphony.com/forum.jspa?forumID=1&start=0">User Forum</a></td>
-                <td>Use this forum if you encounter problems while developing and using with Struts</td>
+                <td><a href="http://struts.apache.org/mail.html">User List</a></td>
+                <td>Use this mailing list if you encounter problems while developing and using with Struts</td>
             </tr>
             <tr>
-                <td><a href="http://wiki.opensymphony.com/display/WW/WebWork">Wiki</a></td>
-                <td>The primary online documentation web site</td>
+                <td><a href="http://struts.apache.org/2.x/">Struts 2</a></td>
+                <td>The Struts 2 website</td>
             </tr>
         </table>
     </div>
 
     <div id="local">
-        <img src='<saf:url value="/images/logo.png"/>' alt="Struts Logo" width="290" height="80"/>
+        <img src='<s:url value="/images/logo.png"/>' alt="Struts Logo" width="290" height="80"/>
     </div>
 </body>
 </html>

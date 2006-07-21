@@ -1,4 +1,4 @@
-<%@taglib prefix="saf" uri="/struts-action" %>
+<%@taglib prefix="s" uri="/tags" %>
 
 <html>
 <head>
@@ -7,10 +7,10 @@
 </head>
 <body>
 
-<saf:iterator value="persons" status="status">
-	<saf:label label="%{'SET '+#status.index+' Name'}" value="%{name}" /><br/>
-	<saf:label label="%{'SET '+#status.index+' Age'}" value="%{age}" /><br/>
-</saf:iterator>
+<s:iterator value="persons" status="status">
+    <s:label label="%{'SET '+#status.index+' Name'}" value="%{name}" /><br/>
+    <s:label label="%{'SET '+#status.index+' Age'}" value="%{age}" /><br/>
+</s:iterator>
 
 </body>
 </html>

@@ -60,13 +60,13 @@ simply run "ant jar" to create your own version of Struts.
 
 === Distribution jars ===
 
-The distribution zip file contains in the main dir the Struts jar, named struts-action-<version>.jar.
+The distribution zip file contains in the main dir the Struts jar, named struts-core-<version>.jar.
 
 You can also find in the dist subdirectory a different Struts packaging:
-- struts-action-nostatic-<version>.jar: containing only Struts without the static content
-- struts-action-static-<version>.zip: containing the required Struts static dependencies
+- struts-core-nostatic-<version>.jar: containing only Struts without the static content
+- struts-core-static-<version>.zip: containing the required Struts static dependencies
 
-The struts-action-static-<version>.zip content must be included in the war distribution under struts directory,
+The struts-core-static-<version>.zip content must be included in the war distribution under struts directory,
 or a directory mapped to the URL <context_path>/struts.
 You must also set in your webapp struts.properties the struts.serve.static property to false.
 

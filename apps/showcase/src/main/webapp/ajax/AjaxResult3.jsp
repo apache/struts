@@ -1,4 +1,4 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 
 <%
     request.setAttribute("decorator", "none");
@@ -7,6 +7,6 @@
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 %>
 
-Result: <saf:property value="count"/> @ <saf:property value="serverTime"/>
+Result: <s:property value="count"/> @ <s:property value="serverTime"/>
 
-The value you entered was: <saf:property value="data"/><br/>
+The value you entered was: <s:property value="data"/><br/>

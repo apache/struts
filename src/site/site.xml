@@ -27,9 +27,33 @@
         </menu>
 
         <menu name="Documentation">
+        
+            <item
+                    name="Getting Started"
+                    href="http://www.twdata.org/backups/WW/home.html"
+                    />        
+            <item
+                    name="Tutorials"
+                    href="http://www.twdata.org/backups/WW/tutorials.html"
+                    />        
+
+            <item
+                    name="FAQs"
+                    href="http://www.twdata.org/backups/WW/faqs.html"
+                    />        
+
+            <item
+                    name="Guides"
+                    href="http://www.twdata.org/backups/WW/guides.html"
+                    />        
+
+            <item
+                    name="Release Notes"
+                    href="http://www.twdata.org/backups/WW/release-notes-200.html"
+                    />        
             <item
                     name="Javadoc"
-                    href="struts2-core/apidocs/index.html"
+                    href="apidocs/index.html"
                     />        
             <item
                     name="Source Repository"

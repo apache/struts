@@ -1,13 +1,13 @@
 
-<%@taglib prefix="saf" uri="/struts-action" %>
+<%@taglib prefix="s" uri="/tags" %>
 
 <html>
 <head>
 <title>Showcase - Tags - Non-Ui - Action Prefix</title>
 </head>
 <body>
-	<ul><saf:url id="url" action="actionPrefixExampleUsingFreemarker" namespace="/tags/non-ui/actionPrefix" />
-	<saf:a href="%{#url}">Action Prefix Example (Freemarker)</saf:a></ul>
+    <ul><s:url id="url" action="actionPrefixExampleUsingFreemarker" namespace="/tags/non-ui/actionPrefix" />
+    <s:a href="%{#url}">Action Prefix Example (Freemarker)</s:a></ul>
 </body>
 </html>
 

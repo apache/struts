@@ -1,14 +1,14 @@
 <%-- 
-	showcase.jsp
-	
-	@version $Date: 2006/03/20 16:04:09 $ $Id: showcase.jsp,v 1.17 2006/03/20 16:04:09 tmjee Exp $
+    showcase.jsp
+    
+    @version $Date: 2006/03/20 16:04:09 $ $Id: showcase.jsp,v 1.17 2006/03/20 16:04:09 tmjee Exp $
 --%>
 
-<%@ taglib uri="/struts-action" prefix="saf" %>
+<%@ taglib prefix="s" uri="/tags" %>
 <html>
 <head>
     <title>Showcase</title>
-    <saf:head theme="simple"/>
+    <s:head theme="simple"/>
 </head>
 
 <body>
@@ -17,60 +17,60 @@
 <p>The given examples will demonstrate the usages of all Struts tags as well as validations etc.</p>
 
 <p>
-	<ul>
+    <ul>
         <!-- config-browser -->
-        <li><saf:url id="url" namespace="/config-browser" action="index"/><saf:a href="%{url}">Configuration browser (Great for development!)</saf:a></li>
+        <li><s:url id="url" namespace="/config-browser" action="index"/><s:a href="%{url}">Configuration browser (Great for development!)</s:a></li>
 
-		<!-- continuation -->
-		<li><saf:url id="url" namespace="/continuations" action="guess"/><saf:a href="%{url}">Continuations Example</saf:a></li>
-		
-		<!-- tags -->
-		<li><saf:url id="url" value="/tags"/><saf:a href="%{url}">Tags Examples</saf:a></li>
-		
-		<!-- fileupload -->
-		<li><saf:url id="url" namespace="/fileupload" action="upload"/><saf:a href="%{url}">File Upload Example</saf:a></li>
+        <!-- continuation -->
+        <li><s:url id="url" namespace="/continuations" action="guess"/><s:a href="%{url}">Continuations Example</s:a></li>
+        
+        <!-- tags -->
+        <li><s:url id="url" value="/tags"/><s:a href="%{url}">Tags Examples</s:a></li>
+        
+        <!-- fileupload -->
+        <li><s:url id="url" namespace="/fileupload" action="upload"/><s:a href="%{url}">File Upload Example</s:a></li>
 
-		<!-- crud -->
-		<li><saf:url id="url" value="/empmanager"/><saf:a href="%{url}">CRUD Examples</saf:a></li>
-		
-		<!-- person manager sample -->
-		<li><saf:url id="url" value="/person"/><saf:a href="%{url}">PersonManager Sample</saf:a></li>
+        <!-- crud -->
+        <li><s:url id="url" value="/empmanager"/><s:a href="%{url}">CRUD Examples</s:a></li>
+        
+        <!-- person manager sample -->
+        <li><s:url id="url" value="/person"/><s:a href="%{url}">PersonManager Sample</s:a></li>
 
         <!-- validation -->
-        <li><saf:url id="url" value="/validation"/><saf:a href="%{url}">Validation Examples</saf:a></li>
+        <li><s:url id="url" value="/validation"/><s:a href="%{url}">Validation Examples</s:a></li>
 
         <!-- ajax -->
-        <li><saf:url id="url" value="/ajax"/><saf:a href="%{url}">AJAX Examples</saf:a></li>
+        <li><s:url id="url" value="/ajax"/><s:a href="%{url}">AJAX Examples</s:a></li>
         
         <!-- action chaining -->
-		<li><saf:url id="url" namespace="actionchaining" action="actionChain1" method="input" /><saf:a href="%{url}">Action Chaining Example</saf:a></li>
+        <li><s:url id="url" namespace="actionchaining" action="actionChain1" method="input" /><s:a href="%{url}">Action Chaining Example</s:a></li>
 
         <!-- execute and wait -->
-        <li><saf:url id="url" value="/wait"/><saf:a href="%{url}">Execute and Wait Examples</saf:a></li>
+        <li><s:url id="url" value="/wait"/><s:a href="%{url}">Execute and Wait Examples</s:a></li>
 
         <!-- token -->
-        <li><saf:url id="url" value="/token"/><saf:a href="%{url}">Token Examples (double post)</saf:a></li>
+        <li><s:url id="url" value="/token"/><s:a href="%{url}">Token Examples (double post)</s:a></li>
 
         <!-- filedownload -->
-        <li><saf:url id="url" value="/filedownload"/><saf:a href="%{url}">File Download Example</saf:a></li>
+        <li><s:url id="url" value="/filedownload"/><s:a href="%{url}">File Download Example</s:a></li>
         
         <!-- model-driven -->
-        <li><saf:url id="url" action="modelDriven" namespace="/modelDriven" method="input"/><saf:a href="%{url}">Model Driven Example</saf:a>
+        <li><s:url id="url" action="modelDriven" namespace="/modelDriven" method="input"/><s:a href="%{url}">Model Driven Example</s:a>
         
         <!-- conversion -->
-        <li><saf:url id="url" value="/conversion" /><saf:a href="%{url}">Conversion Example</saf:a></li>
+        <li><s:url id="url" value="/conversion" /><s:a href="%{url}">Conversion Example</s:a></li>
         
         <!--  freemarker -->
-        <li><saf:url id="url" value="/freemarker" /><saf:a href="%{#url}">Freemarker Example</saf:a></li>
+        <li><s:url id="url" value="/freemarker" /><s:a href="%{#url}">Freemarker Example</s:a></li>
         
         <!--  JavaServer Faces -->
-        <li><saf:url id="url" value="/jsf" /><saf:a href="%{#url}">JavaServer Faces Example</saf:a></li>
+        <li><s:url id="url" value="/jsf" /><s:a href="%{#url}">JavaServer Faces Example</s:a></li>
         
         <!--  Chat (AJAX) Example -->
-        <li><saf:url id="url" value="/chat" /><saf:a href="%{#url}">Chat (AJAX) Example</saf:a></li>
+        <li><s:url id="url" value="/chat" /><s:a href="%{#url}">Chat (AJAX) Example</s:a></li>
         
         <!--  Hangman (AJAX and Non AJAX) Example -->
-        <li><saf:url id="url" action="hangmanMenu" namespace="/hangman"/><saf:a href="%{#url}">Hangman (AJAX and Non AJAX) Example</saf:a>
+        <li><s:url id="url" action="hangmanMenu" namespace="/hangman"/><s:a href="%{#url}">Hangman (AJAX and Non AJAX) Example</s:a>
     </ul>
 </p>
 

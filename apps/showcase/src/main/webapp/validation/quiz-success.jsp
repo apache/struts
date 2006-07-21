@@ -1,4 +1,4 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 <html>
 <head>
     <title>Quiz submitted!</title>
@@ -6,9 +6,9 @@
 
 <body>
 
-Thank you, <b><saf:property value="name"/></b>. Your answer has been submitted as:
+Thank you, <b><s:property value="name"/></b>. Your answer has been submitted as:
 
-<b><saf:property value="answer"/></b>
+<b><s:property value="answer"/></b>
 
 </body>
 </html>

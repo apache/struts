@@ -1,4 +1,4 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 
 <html>
     <head>
@@ -10,10 +10,10 @@
         <p>
             <fieldset>
                 <legend>Matrix Form</legend>
-                <saf:form name="helloWorldForm" action="helloMatrixSubmit">
-                    <saf:textfield name="hello" label="Enter your name" />
-                    <saf:submit />
-                </saf:form>
+                <s:form name="helloWorldForm" action="helloMatrixSubmit">
+                    <s:textfield name="hello" label="Enter your name" />
+                    <s:submit />
+                </s:form>
             </fieldset>
         </p>
     </body>

@@ -1,45 +1,45 @@
-<%@taglib prefix="saf" uri="/struts-action" %>
+<%@taglib prefix="s" uri="/tags" %>
 <html>
 <head>
 <title>Showcase - UI Tag Example - Tree Example (Static)</title>
-<saf:head theme="ajax" debug="true"  />
+<s:head theme="ajax" debug="true"  />
 </head>
 <body>
 
 <!-- START SNIPPET: treeExampleStaticJsp -->
 
 <script>
-	function treeNodeSelected(nodeId) {
-		dojo.io.bind({
-			url: "<saf:url value='/tags/ui/ajax/staticTreeSelectAction.action'/>?nodeId="+nodeId,
-			load: function(type, data, evt) {
-				var divDisplay = dojo.byId("displayIt");
-				divDisplay.innerHTML=data;
-			},
-			mimeType: "text/html"
-		});
-	};
+    function treeNodeSelected(nodeId) {
+        dojo.io.bind({
+            url: "<s:url value='/tags/ui/ajax/staticTreeSelectAction.action'/>?nodeId="+nodeId,
+            load: function(type, data, evt) {
+                var divDisplay = dojo.byId("displayIt");
+                divDisplay.innerHTML=data;
+            },
+            mimeType: "text/html"
+        });
+    };
 
-	dojo.event.topic.subscribe("treeSelected", this, "treeNodeSelected");
+    dojo.event.topic.subscribe("treeSelected", this, "treeNodeSelected");
 </script>
 
 
 <div style="float:left; margin-right: 50px;">
-<saf:tree label="parent" id="parentId" theme="ajax" templateCssPath="/struts/tree.css" 
+<s:tree label="parent" id="parentId" theme="ajax" templateCssPath="/struts/tree.css" 
 showRootGrid="true" showGrid="true" treeSelectedTopic="treeSelected">
-	<saf:treenode theme="ajax" label="child1" id="child1Id">
-		<saf:treenode theme="ajax" label="grandchild1" id="grandchild1Id"/>
-		<saf:treenode theme="ajax" label="grandchild2" id="grandchild2Id"/>
-		<saf:treenode theme="ajax" label="grandchild3" id="grandchild3Id"/>
-	</saf:treenode>
-	<saf:treenode theme="ajax" label="child2" id="child2Id"/>
-	<saf:treenode theme="ajax" label="child3" id="child3Id"/>
-	<saf:treenode theme="ajax" label="child4" id="child4Id"/>
-	<saf:treenode theme="ajax" label="child5" id="child5Id">
-		<saf:treenode theme="ajax" label="gChild1" id="gChild1Id"/>
-		<saf:treenode theme="ajax" label="gChild2" id="gChild2Id"/>
-	</saf:treenode>
-</saf:tree>
+    <s:treenode theme="ajax" label="child1" id="child1Id">
+        <s:treenode theme="ajax" label="grandchild1" id="grandchild1Id"/>
+        <s:treenode theme="ajax" label="grandchild2" id="grandchild2Id"/>
+        <s:treenode theme="ajax" label="grandchild3" id="grandchild3Id"/>
+    </s:treenode>
+    <s:treenode theme="ajax" label="child2" id="child2Id"/>
+    <s:treenode theme="ajax" label="child3" id="child3Id"/>
+    <s:treenode theme="ajax" label="child4" id="child4Id"/>
+    <s:treenode theme="ajax" label="child5" id="child5Id">
+        <s:treenode theme="ajax" label="gChild1" id="gChild1Id"/>
+        <s:treenode theme="ajax" label="gChild2" id="gChild2Id"/>
+    </s:treenode>
+</s:tree>
 </div>
 
 

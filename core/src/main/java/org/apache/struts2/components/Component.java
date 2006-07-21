@@ -122,7 +122,7 @@ public class Component {
     public boolean end(Writer writer, String body) {
         return end(writer, body, true);
     }
-    
+
     /**
      * Callback for the start tag of this component.
      * Should the body be evaluated again?
@@ -164,7 +164,7 @@ public class Component {
         int currPosition = componentStack.search(this);
         if (currPosition >= 0) {
         	int start = componentStack.size() - currPosition - 1;
-        	
+
         	//for (int i = componentStack.size() - 2; i >= 0; i--) {
         	for (int i = start; i >=0; i--) {
             	Component component = (Component) componentStack.get(i);
@@ -225,7 +225,7 @@ public class Component {
      * Finds a value from the OGNL stack based on the given expression.
      * Will always evaluate <code>expr</code> against stack except when <code>expr</code>
      * is null. If altsyntax (%{...}) is applied, simply strip it off.
-     * 
+     *
      * @param expr  the expression. Returns <tt>null</tt> if expr is null.
      * @return the value, <tt>null</tt> if not found.
      */
@@ -245,11 +245,9 @@ public class Component {
     }
 
     /**
-     * Is the altSyntax enabled?
+     * Is the altSyntax enabled? [TRUE]
      * <p/>
      * See <code>struts.properties</code> where the altSyntax flag is defined.
-     * <b>Note:</b> Since WebWork 2.17 the altSyntax is default <tt>true</tt>.
-     * @return true if the altSyntax is enabled.
      */
     public boolean altSyntax() {
         return ContextUtil.isUseAltSyntax(stack.getContext());
@@ -258,9 +256,9 @@ public class Component {
     /**
      * Evaluates the OGNL stack to find an Object value.
      * <p/>
-     * Function just like <code>findValue(String)</code> except that if the 
-     * given expression is <tt>null</tt/> a error is logged and 
-     * a <code>RuntimeException</code> is thrown constructed with a 
+     * Function just like <code>findValue(String)</code> except that if the
+     * given expression is <tt>null</tt/> a error is logged and
+     * a <code>RuntimeException</code> is thrown constructed with a
      * messaged based on the given field and errorMsg paramter.
      *
      * @param expr  OGNL expression.
@@ -291,7 +289,7 @@ public class Component {
 
     /**
      * Evaluates the OGNL stack to find an Object of the given type. Will evaluate
-     * <code>expr</code> the portion wrapped with altSyntax (%{...}) 
+     * <code>expr</code> the portion wrapped with altSyntax (%{...})
      * against stack when altSyntax is on, else the whole <code>expr</code>
      * is evaluated against the stack.
      * <p/>
@@ -339,7 +337,7 @@ public class Component {
         String uri = mapper.getUriFromActionMapping(mapping);
         return UrlHelper.buildUrl(uri, req, res, parameters, scheme, includeContext, encodeResult);
     }
-    
+
     /**
      * Renders an action URL by consulting the {@link org.apache.struts2.dispatcher.mapper.ActionMapper}.
      * @param action      the action
@@ -352,10 +350,10 @@ public class Component {
      * @param encodeResult    should the url be encoded
      * @return the action url.
      */
-    protected String determineActionURL(String action, String namespace,                                         
+    protected String determineActionURL(String action, String namespace,
                                         HttpServletRequest req, HttpServletResponse res, Map parameters, String scheme,
                                         boolean includeContext, boolean encodeResult) {
-        return determineActionURL(action, namespace, null, req, res, parameters, 
+        return determineActionURL(action, namespace, null, req, res, parameters,
                 scheme, includeContext, encodeResult);
     }
 

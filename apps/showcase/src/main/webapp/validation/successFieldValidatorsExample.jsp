@@ -1,48 +1,48 @@
 <%--
-	successFieldValidatorsExample.jsp
-	
-	@author tm_jee
-	@version $Date: 2005/12/22 09:17:59 $ $Id: successFieldValidatorsExample.jsp,v 1.1 2005/12/22 09:17:59 tmjee Exp $
+    successFieldValidatorsExample.jsp
+    
+    @author tm_jee
+    @version $Date: 2005/12/22 09:17:59 $ $Id: successFieldValidatorsExample.jsp,v 1.1 2005/12/22 09:17:59 tmjee Exp $
 --%>
 
-<%@taglib prefix="saf" uri="/struts-action" %>
+<%@taglib prefix="s" uri="/tags" %>
 
 <html>
-	<head><title>Showcase - Validation - SuccessFieldValidatorsExample</title></head>
-	<body>
-		<h1>Success !</h1>
-		<table>
-			<tr>
-				<td>Required Validator Field:</td>
-				<td><saf:property value="requiredValidatorField" /></td>
-			</tr>
-			<tr>
-				<td>Required String Validator Field:</td>
-				<td><saf:property value="requiredStringValidatorField" /></td>
-			</tr>
-			<tr>
-				<td>Integer Validator Field: </td>
-				<td><saf:property value="integerValidatorField" /></td>
-			</tr>
-			<tr>
-				<td>Date Validator Field: </td>
-				<td><saf:property value="dateValidatorField" /></td>
-			</tr>
-			<tr>
-				<td>Email Validator Field: </td>
-				<td><saf:property value="emailValidatorField" /></td>
-			</tr>
-			<tr>
-				<td>String Length Validator Field: </td>
-				<td><saf:property value="stringLengthValidatorField" /></td>
-			</tr>
-			<tr>
-				<td>Regex Validator Field: <saf:property value="regexValidatorField" /></td>
-				<td>Field Expression Validator Field: <saf:property value="fieldExpressionValidatorField" /></td>
-			</tr>
-		</table>
-		
-		<saf:include value="footer.jsp" />
-	</body>
+    <head><title>Showcase - Validation - SuccessFieldValidatorsExample</title></head>
+    <body>
+        <h1>Success !</h1>
+        <table>
+            <tr>
+                <td>Required Validator Field:</td>
+                <td><s:property value="requiredValidatorField" /></td>
+            </tr>
+            <tr>
+                <td>Required String Validator Field:</td>
+                <td><s:property value="requiredStringValidatorField" /></td>
+            </tr>
+            <tr>
+                <td>Integer Validator Field: </td>
+                <td><s:property value="integerValidatorField" /></td>
+            </tr>
+            <tr>
+                <td>Date Validator Field: </td>
+                <td><s:property value="dateValidatorField" /></td>
+            </tr>
+            <tr>
+                <td>Email Validator Field: </td>
+                <td><s:property value="emailValidatorField" /></td>
+            </tr>
+            <tr>
+                <td>String Length Validator Field: </td>
+                <td><s:property value="stringLengthValidatorField" /></td>
+            </tr>
+            <tr>
+                <td>Regex Validator Field: <s:property value="regexValidatorField" /></td>
+                <td>Field Expression Validator Field: <s:property value="fieldExpressionValidatorField" /></td>
+            </tr>
+        </table>
+        
+        <s:include value="footer.jsp" />
+    </body>
 </html>
 

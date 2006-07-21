@@ -24,18 +24,26 @@ limitations under the License.
 
     <body>
 
-        <section name="Welcome to Struts 2">
+        <section name="About Struts 2">
             <a name="Welcome"/>
 
-            <p>
-                Struts 2 is a Java web-application development framework.
-        It is built specifically with developer productivity and
-        code simplicity in mind, providing robust support for building
-        reusable UI templates, such as form controls, UI themes,
-        internationalization, dynamic form parameter mapping to JavaBeans,
-        robust client and server side validation, and much more.
-            </p>
+        <p>
+        Apache Struts 2 is a flexible control layer based on standard
+        technologies like Java Filters, JavaBeans, ResourceBundles, Locales,
+        and XML, as well as various 
+        <a href="http://www.OpenSymphony.com/">
+          OpenSymphony</a>
+        packages, like OGNL and XWork. The framework helps you create an
+        extensible development environment for your application, based on
+        industry standards and proven design patterns.
+        </p>
 
+        <p>
+        For more About Struts 2 see
+        <a href="http://www.twdata.org/backups/WW/home.html">
+          Getting Started.
+        </a>
+        </p>
         </section>
 
     </body>

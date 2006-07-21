@@ -1,13 +1,13 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 <html>
 <head>
     <title>Tree</title>
-    <saf:head theme="ajax"/>
+    <s:head theme="ajax"/>
 </head>
 
 <body>
 
-<saf:action name="getCategory" executeResult="true"/>
+<s:action name="getCategory" executeResult="true"/>
 
 </body>
 </html>

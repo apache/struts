@@ -1,4 +1,4 @@
-<%@taglib prefix="saf" uri="/struts-action" %>
+<%@taglib prefix="s" uri="/tags" %>
 
 <html>
 <head>
@@ -13,10 +13,10 @@ each doing what they do best.
 </p>
 
 <p>
-	<ul>
-        <li><saf:url id="url" namespace="/jsf/employee" action="list"/><saf:a href="%{url}">List available Employees</saf:a></li>
-        <li><saf:url id="url" namespace="/jsf/employee" action="edit"/><saf:a href="%{url}">Create/Edit Employee</saf:a></li>
-	</ul>
+    <ul>
+        <li><s:url id="url" namespace="/jsf/employee" action="list"/><s:a href="%{url}">List available Employees</s:a></li>
+        <li><s:url id="url" namespace="/jsf/employee" action="edit"/><s:a href="%{url}">Create/Edit Employee</s:a></li>
+    </ul>
 </p>
 
 

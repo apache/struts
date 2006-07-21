@@ -1,4 +1,4 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 
 <html>
     <head>
@@ -11,8 +11,8 @@
             <fieldset>
                 <legend>Example action</legend>
                 <p>
-                    <saf:url id="helloURL" action="helloMatrix" />
-                    <saf:a href="%{helloURL}">Enter the matrix</saf:a>
+                    <s:url id="helloURL" action="helloMatrix" />
+                    <s:a href="%{helloURL}">Enter the matrix</s:a>
                 </p>
             </fieldset>
         </p>

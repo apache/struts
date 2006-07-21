@@ -1,14 +1,14 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 <html>
     <head><title>Token Examples (double post)</title></head>
 
 <body>
     <h1>Token Examples</h1>
 
-    The transfer is done at <saf:text name="token.transfer.time"><saf:param value="#session.time"/></saf:text>
+    The transfer is done at <s:text name="token.transfer.time"><s:param value="#session.time"/></s:text>
 
-    <br/>New balance of source account: <saf:property value="#session.balanceSource"/>
-    <br/>New balance of destination account: <saf:property value="#session.balanceDestination"/>
+    <br/>New balance of source account: <s:property value="#session.balanceSource"/>
+    <br/>New balance of destination account: <s:property value="#session.balanceDestination"/>
 
     <p/>
     Try using the browser back button and submit the form again. This should result in a double post
@@ -19,7 +19,7 @@
     web page result from the first post. 
 
     <p/>
-    Click here to <saf:url id="back" value="/token"/><saf:a href="%{back}">return</saf:a>.
+    Click here to <s:url id="back" value="/token"/><s:a href="%{back}">return</s:a>.
 
 </body>
 </html>

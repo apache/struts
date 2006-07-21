@@ -1,4 +1,4 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 <html>
     <head><title>Execute and Wait Examples</title></head>
 
@@ -7,10 +7,10 @@
     
     <b>Example 1:</b> In the form below enter how long time to simulate the process should take.
 
-    <saf:form action="longProcess1">
-        <saf:textfield label="Time (millis)" name="time" required="true" value="7000"/>
-        <saf:submit value="submit"/>
-    </saf:form>
+    <s:form action="longProcess1">
+        <s:textfield label="Time (millis)" name="time" required="true" value="7000"/>
+        <s:submit value="submit"/>
+    </s:form>
 
 </body>
 </html>

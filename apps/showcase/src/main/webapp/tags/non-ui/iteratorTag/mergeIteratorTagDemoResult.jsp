@@ -1,4 +1,4 @@
-<%@taglib prefix="saf" uri="/struts-action" %>
+<%@taglib prefix="s" uri="/tags" %>
 
 <html>
 <head>
@@ -6,20 +6,20 @@
 </head>
 <body>
 
-	<saf:generator id="iterator1" val="%{iteratorValue1}" separator="," />
-	<saf:generator id="iterator2" val="%{iteratorValue2}" separator="," />
-	
-	<saf:merge id="mergedIterator">
-		<saf:param value="%{#attr.iterator1}" />
-		<saf:param value="%{#attr.iterator2}" />
-	</saf:merge>
-	
-	<saf:iterator value="%{#mergedIterator}">
-		<saf:property /><br/>
-	</saf:iterator>
+    <s:generator id="iterator1" val="%{iteratorValue1}" separator="," />
+    <s:generator id="iterator2" val="%{iteratorValue2}" separator="," />
+    
+    <s:merge id="mergedIterator">
+        <s:param value="%{#attr.iterator1}" />
+        <s:param value="%{#attr.iterator2}" />
+    </s:merge>
+    
+    <s:iterator value="%{#mergedIterator}">
+        <s:property /><br/>
+    </s:iterator>
 
-	<saf:url value="%{'/tags/non-ui/'}" id="url" /><saf:a href="%{#url}">Back To Non-UI Demo</saf:a>
-	<saf:url value="%{'/'}" id="url" /><saf:a href="%{#url}">Back To Showcase</saf:a>
+    <s:url value="%{'/tags/non-ui/'}" id="url" /><s:a href="%{#url}">Back To Non-UI Demo</s:a>
+    <s:url value="%{'/'}" id="url" /><s:a href="%{#url}">Back To Showcase</s:a>
 
 </body>
 </html>

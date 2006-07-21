@@ -1,10 +1,10 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 <%@include file="partialChunkHeader.jsp"%>
 <%
     response.setContentType("text/javascript");
 %>
-dojo.event.topic.publish("children_<saf:property value="category.id"/>");
-var d = document.getElementById("children_<saf:property value="category.id"/>");
+dojo.event.topic.publish("children_<s:property value="category.id"/>");
+var d = document.getElementById("children_<s:property value="category.id"/>");
 if (d.style.display != "none") {
     d.style.display = "none";
 } else {

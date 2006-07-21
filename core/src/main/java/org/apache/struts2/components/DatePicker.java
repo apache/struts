@@ -29,12 +29,7 @@ import java.util.Locale;
  *
  * Renders datepicker element.</p>
  *
- * Implementation was changed in WebWork 2.2 to use <a href="http://www.dynarch.com/projects/calendar/">jscalendar</a>
- * instead of non locale aware tigracalendar. Check locale and format settings if you used the old widget in your
- * applications. Be sure to include proper stylesheet as described below if you don't want the calender widget to look
- * transparent.</p>
- *
- * <b>Important:</b> Be sure to set the id attributs if not used within a &lt;a:form /&gt; tag, as it takes care of
+ * <b>Important:</b> Be sure to set the id attributes if not used within a &lt;a:form /&gt; tag, as it takes care of
  * setting the id for you, being required to copy selected date to text input element.</p>
  *
  * Following a reference for the format parameter (copied from jscalendar documentation):

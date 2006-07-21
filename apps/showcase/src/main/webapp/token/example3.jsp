@@ -1,4 +1,4 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 <html>
     <head><title>Token Examples</title></head>
 
@@ -10,15 +10,15 @@
     happens once. This example uses the token session based interceptor and redirect after post.
     <p/>
 
-    <br/>Balance of source account: <saf:property value="#session.balanceSource"/>
-    <br/>Balance of destination account: <saf:property value="#session.balanceDestination"/>
+    <br/>Balance of source account: <s:property value="#session.balanceSource"/>
+    <br/>Balance of destination account: <s:property value="#session.balanceDestination"/>
     <p/>
 
-    <saf:form action="transfer3">
-        <saf:token/>
-        <saf:textfield label="Amount" name="amount" required="true" value="300"/>
-        <saf:submit value="Transfer money"/>
-    </saf:form>
+    <s:form action="transfer3">
+        <s:token/>
+        <s:textfield label="Amount" name="amount" required="true" value="300"/>
+        <s:submit value="Transfer money"/>
+    </s:form>
 
 </body>
 </html>

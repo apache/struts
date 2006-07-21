@@ -1,4 +1,4 @@
-<%@ taglib uri="/struts-action" prefix="saf" %>
+<%@ taglib prefix="s" uri="/tags" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -10,15 +10,15 @@
     <tr>
         <th>Name</th><th>Description</th>
     </tr>
-    <saf:iterator value="availableItems">
+    <s:iterator value="availableItems">
         <tr>
-            <td><a href="<saf:url action="edit"><saf:param name="skillName" value="name"/></saf:url>"><saf:property value="name"/></a></td>
-            <td><saf:property value="description"/></td>
+            <td><a href="<s:url action="edit"><s:param name="skillName" value="name"/></s:url>"><s:property value="name"/></a></td>
+            <td><s:property value="description"/></td>
         </tr>
-    </saf:iterator>
+    </s:iterator>
 </table>
 <!-- Although namescape not correctly specified, the following link should find the right action -->
-<p><a href="<saf:url action="edit" includeParams="none"/>">Create new Skill</a></p>
-<p><a href="<saf:url action="showcase" namespace="/" includeParams="none"/>">Back to Showcase Startpage</a></p>
+<p><a href="<s:url action="edit" includeParams="none"/>">Create new Skill</a></p>
+<p><a href="<s:url action="showcase" namespace="/" includeParams="none"/>">Back to Showcase Startpage</a></p>
 </body>
 </html>

@@ -1,4 +1,4 @@
-<%@taglib prefix="saf" uri="/struts-action" %>
+<%@taglib prefix="s" uri="/tags" %>
 
 <html>
 <head>
@@ -6,16 +6,16 @@
 </head>
 <body>
 
-	<saf:generator id="iterator" val="%{iteratorValue}" separator="," />
+    <s:generator id="iterator" val="%{iteratorValue}" separator="," />
 
-	<saf:subset count="%{count}" start="%{start}" source="%{#attr.iterator}" >
-		<saf:iterator>
-			<saf:property /><br/>
-		</saf:iterator>
-	</saf:subset>
+    <s:subset count="%{count}" start="%{start}" source="%{#attr.iterator}" >
+        <s:iterator>
+            <s:property /><br/>
+        </s:iterator>
+    </s:subset>
 
-	<saf:url value="%{'/tags/non-ui/'}" id="url" /><saf:a href="%{#url}">Back To Non-UI Demo</saf:a>
-	<saf:url value="%{'/'}" id="url" /><saf:a href="%{#url}">Back To Showcase</saf:a>
+    <s:url value="%{'/tags/non-ui/'}" id="url" /><s:a href="%{#url}">Back To Non-UI Demo</s:a>
+    <s:url value="%{'/'}" id="url" /><s:a href="%{#url}">Back To Showcase</s:a>
 
 </body>
 </html>

@@ -1,4 +1,4 @@
-<%@ taglib uri="/struts-action" prefix="saf" %>
+<%@ taglib prefix="s" uri="/tags" %>
 <html>
 <head>
     <title>Showcase</title>
@@ -9,10 +9,10 @@
 
 <p>
     <ul>
-        <li>ContentType: <saf:property value="uploadContentType" /></li>
-        <li>FileName: <saf:property value="uploadFileName" /></li>
-        <li>File: <saf:property value="upload" /></li>
-        <li>Caption:<saf:property value="caption" /></li>
+        <li>ContentType: <s:property value="uploadContentType" /></li>
+        <li>FileName: <s:property value="uploadFileName" /></li>
+        <li>File: <s:property value="upload" /></li>
+        <li>Caption:<s:property value="caption" /></li>
     </ul>
 </p>
 

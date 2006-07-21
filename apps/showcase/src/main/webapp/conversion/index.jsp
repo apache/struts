@@ -1,4 +1,4 @@
-<%@taglib prefix="saf" uri="/struts-action" %>
+<%@taglib prefix="s" uri="/tags" %>
 
 <html>
 <head>
@@ -8,7 +8,7 @@
 <body>
 
 <ul>
-	<li><saf:url id="url" action="enterPersonsInfo" namespace="/conversion" /><saf:a href="%{#url}">Populate into the Struts action class a List of Person.java Object</saf:a></li>
+    <li><s:url id="url" action="enterPersonsInfo" namespace="/conversion" /><s:a href="%{#url}">Populate into the Struts action class a List of Person.java Object</s:a></li>
 </ul>
 
 </body>

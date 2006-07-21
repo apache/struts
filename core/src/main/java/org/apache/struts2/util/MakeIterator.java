@@ -23,8 +23,6 @@ import java.util.*;
 
 /**
  * MakeIterator.
- * <p/>
- * Taken from WebWork 1.x by:
  *
  */
 public class MakeIterator {

@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 
 <html>
 <head>
@@ -9,7 +9,7 @@
 
 <body>
 
-<saf:div
+<s:div
         id="fiveseconds"
         cssStyle="border: 1px solid yellow;"
         href="/AjaxTest.action"
@@ -17,9 +17,9 @@
         delay="1000"
         updateFreq="5000"
         errorText="There was an error"
-        loadingText="reloading">loading now</saf:div>
+        loadingText="reloading">loading now</s:div>
 
-<saf:include value="../footer.jsp"/>
+<s:include value="../footer.jsp"/>
 
 </body>
 </html>

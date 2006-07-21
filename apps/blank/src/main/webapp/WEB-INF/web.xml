@@ -25,12 +25,12 @@
     </welcome-file-list>
 
     <!--
-        This typically isn't required, as the taglib is included in struts-action-2.0.jar.
+        This typically isn't required, as the taglib is included in struts-core.jar.
         If you really need a taglib configuration within web.xml, copy struts/src/java/META-INF/taglib.tld
-        to the WEB-INF directory as struts-action.tld.
+        to the WEB-INF directory as tags.tld.
      -->
     <!--taglib>
-        <taglib-uri>struts-action</taglib-uri>
-        <taglib-location>/WEB-INF/struts-action.tld</taglib-location>
+        <taglib-uri>tags</taglib-uri>
+        <taglib-location>/WEB-INF/tags.tld</taglib-location>
     </taglib-->
 </web-app>

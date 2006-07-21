@@ -1,4 +1,4 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 <!--// START SNIPPET: common-include-->
-<saf:head theme="ajax"/>
+<s:head theme="ajax"/>
 <!--// END SNIPPET: common-include-->

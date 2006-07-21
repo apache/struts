@@ -1,40 +1,40 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
-<saf:head theme="ajax"/>
-<link rel="stylesheet" type="text/css" href="<saf:url value="/struts/tabs.css"/>">
+<%@ taglib prefix="s" uri="/tags" %>
+<s:head theme="ajax"/>
+<link rel="stylesheet" type="text/css" href="<s:url value="/struts/tabs.css"/>">
 <b>This is a tabbed pane with two panels that fetches data from a remote action via ajax</b>
 
-<saf:tabbedPanel id="test2" theme="simple" >
-      <saf:panel id="left" tabName="left" theme="ajax" href="/">
+<s:tabbedPanel id="test2" theme="simple" >
+      <s:panel id="left" tabName="left" theme="ajax" href="/">
           This is the left pane<br/>
-          <saf:form >
-              <saf:textfield name="tt" label="Test Text" />  <br/>
-              <saf:textfield name="tt2" label="Test Text2" />
-          </saf:form>
-      </saf:panel>
-      <saf:panel remote="true" href="/view/ajaxData.action" id="ryh1" theme="ajax" tabName="remote one" />
-      <saf:panel id="middle" tabName="middle" theme="ajax" href="/">
+          <s:form >
+              <s:textfield name="tt" label="Test Text" />  <br/>
+              <s:textfield name="tt2" label="Test Text2" />
+          </s:form>
+      </s:panel>
+      <s:panel remote="true" href="/view/ajaxData.action" id="ryh1" theme="ajax" tabName="remote one" />
+      <s:panel id="middle" tabName="middle" theme="ajax" href="/">
           middle tab<br/>
-          <saf:form >
-              <saf:textfield name="tt" label="Test Text44" />  <br/>
-              <saf:textfield name="tt2" label="Test Text442" />
-          </saf:form>
-      </saf:panel>
-      <saf:panel remote="true" href="/view/ajaxData.action"  id="ryh21" theme="ajax" tabName="remote right" />
-  </saf:tabbedPanel>
+          <s:form >
+              <s:textfield name="tt" label="Test Text44" />  <br/>
+              <s:textfield name="tt2" label="Test Text442" />
+          </s:form>
+      </s:panel>
+      <s:panel remote="true" href="/view/ajaxData.action"  id="ryh21" theme="ajax" tabName="remote right" />
+  </s:tabbedPanel>
   
 <p/>
 A DIV that waits for 5 seconds before loading the contents
-<saf:div
+<s:div
         id="once"
         theme="ajax"
         cssStyle="border: 1px solid yellow;"
         href="/view/ajaxData.action"
         delay="5000"
         loadingText="loading...">
-    Waiting for data</saf:div>
+    Waiting for data</s:div>
 <p/>
 A DIV that is updated every 2 seconds
-<saf:div
+<s:div
             id="twoseconds"
             cssStyle="border: 1px solid yellow;"
             href="/view/ajaxData.action"
@@ -43,6 +43,6 @@ A DIV that is updated every 2 seconds
             updateFreq="2000"
             errorText="There was an error"
             loadingText="loading...">Initial Content
-    </saf:div>
+    </s:div>
 <p/>
-<a href="<saf:url action="index"/>">Back to front page</a>
+<a href="<s:url action="index"/>">Back to front page</a>

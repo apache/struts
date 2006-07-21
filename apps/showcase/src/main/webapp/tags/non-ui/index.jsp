@@ -1,4 +1,4 @@
-<%@taglib prefix="saf" uri="/struts-action" %>
+<%@taglib prefix="s" uri="/tags" %>
 
 <html>
 <head>
@@ -8,13 +8,13 @@
 <h1>Non UI Tags</h1>
 
 <ul>
-	<li><saf:url id="url" action="showActionTagDemo" namespace="/tags/non-ui/actionTag"/><saf:a href="%{url}">Action Tag</saf:a></li>
-	<li><saf:url id="url" value="date.jsp" /><saf:a href="%{url}">Date Tag</saf:a></li>
-	<li><saf:url id="url" action="showGeneratorTagDemo" namespace="/tags/non-ui/iteratorGeneratorTag" /><saf:a href="%{url}">Iterator Generator Tag</saf:a></li>
-	<li><saf:url id="url" action="showAppendTagDemo" namespace="/tags/non-ui/appendIteratorTag" /><saf:a href="%{#url}">Append Iterator Tag</saf:a>
-	<li><saf:url id="url" action="showMergeTagDemo" namespace="/tags/non-ui/mergeIteratorTag" /><saf:a href="%{#url}">Merge Iterator Demo</saf:a>
-	<li><saf:url id="url" action="showSubsetTagDemo" namespace="/tags/non-ui/subsetIteratorTag" /><saf:a href="%{#url}">Subset Tag</saf:a>
-	<li><saf:url id="url" value="actionPrefix/index.jsp"/><saf:a href="%{#url}">Action Prefix Example</saf:a></li>
+    <li><s:url id="url" action="showActionTagDemo" namespace="/tags/non-ui/actionTag"/><s:a href="%{url}">Action Tag</s:a></li>
+    <li><s:url id="url" value="date.jsp" /><s:a href="%{url}">Date Tag</s:a></li>
+    <li><s:url id="url" action="showGeneratorTagDemo" namespace="/tags/non-ui/iteratorGeneratorTag" /><s:a href="%{url}">Iterator Generator Tag</s:a></li>
+    <li><s:url id="url" action="showAppendTagDemo" namespace="/tags/non-ui/appendIteratorTag" /><s:a href="%{#url}">Append Iterator Tag</s:a>
+    <li><s:url id="url" action="showMergeTagDemo" namespace="/tags/non-ui/mergeIteratorTag" /><s:a href="%{#url}">Merge Iterator Demo</s:a>
+    <li><s:url id="url" action="showSubsetTagDemo" namespace="/tags/non-ui/subsetIteratorTag" /><s:a href="%{#url}">Subset Tag</s:a>
+    <li><s:url id="url" value="actionPrefix/index.jsp"/><s:a href="%{#url}">Action Prefix Example</s:a></li>
 </ul>
 
 </body>

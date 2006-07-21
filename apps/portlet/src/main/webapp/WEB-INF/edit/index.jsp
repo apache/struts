@@ -1,11 +1,11 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 There are no examples in edit mode yet
 
 <p/>
-<a href="<saf:url action="test"/>">Test</a>
+<a href="<s:url action="test"/>">Test</a>
 <p/>
-<a href="<saf:url action="formExampleEdit"/>">Form test</a>
+<a href="<s:url action="formExampleEdit"/>">Form test</a>
 <p/>
-<a href="<saf:url action="/test/testAction" namespace="dummy"/>">Dummy test</a>
+<a href="<s:url action="/test/testAction" namespace="dummy"/>">Dummy test</a>
 <p/>
-<a href="<saf:url action="index" portletMode="view"/>">Back to view mode</a>
+<a href="<s:url action="index" portletMode="view"/>">Back to view mode</a>

@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 
 <html>
 <head>
@@ -15,22 +15,22 @@ NOTES:
 </ul>
 
 Default Editor configuration:<br/>
-<saf:form id="form1" action="AjaxRemoteForm" method="post">
-    <saf:textarea name="data" theme="ajax" cols="50" rows="10" value="Test Data 1" />
-    <saf:submit value="Submit"/>
-</saf:form>
+<s:form id="form1" action="AjaxRemoteForm" method="post">
+    <s:textarea name="data" theme="ajax" cols="50" rows="10" value="Test Data 1" />
+    <s:submit value="Submit"/>
+</s:form>
 <br/>
 
 Configured Editor configuration:<br/>
-<saf:form id="form2" action="AjaxRemoteForm" method="post">
-    <saf:textarea id="editor2" name="data" theme="ajax" cols="50" rows="10" value="Test Data 2">
-        <saf:param name="editorControls">textGroup;|;justifyGroup;|;listGroup;indentGroup</saf:param>
-    </saf:textarea>
-    <saf:submit value="Submit"/>
-</saf:form>
+<s:form id="form2" action="AjaxRemoteForm" method="post">
+    <s:textarea id="editor2" name="data" theme="ajax" cols="50" rows="10" value="Test Data 2">
+        <s:param name="editorControls">textGroup;|;justifyGroup;|;listGroup;indentGroup</s:param>
+    </s:textarea>
+    <s:submit value="Submit"/>
+</s:form>
 <br/>
 
-<saf:include value="../footer.jsp"/>
+<s:include value="../footer.jsp"/>
 
 </body>
 </html>

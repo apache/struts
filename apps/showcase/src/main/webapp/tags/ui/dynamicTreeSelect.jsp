@@ -1,6 +1,6 @@
-<%@taglib prefix="saf" uri="/struts-action" %>
+<%@taglib prefix="s" uri="/tags" %>
 
-Id:<saf:property value="%{nodeId}" /><br/>
-Name:<saf:property value="%{nodeName}" /><br/>
+Id:<s:property value="%{nodeId}" /><br/>
+Name:<s:property value="%{nodeName}" /><br/>
 
 

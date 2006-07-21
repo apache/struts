@@ -77,9 +77,9 @@
     <target name="predist">
         <!-- grab the README.txt file -->
         <copy file="${src}/etc/README.txt" todir="${dist}"/>
-				
+                
         <mkdir dir="${dist}/dist" />
-				<move file="${build}/${name}-nostatic-${version}.jar" todir="${dist}/dist" />
+                <move file="${build}/${name}-nostatic-${version}.jar" todir="${dist}/dist" />
         <move file="${build}/${name}-static-${version}.zip" todir="${dist}/dist" />
         
         <!-- prepare the template project -->
@@ -123,8 +123,8 @@
             <configParam name="Displayname" value="Struts 2 Taglib"/>
             <configParam name="Smallicon" value=""/>
             <configParam name="Largeicon" value=""/>
-            <configParam name="Uri" value="/struts-action"/>
-            <xmlTemplate templateFile="${src.xdt}/taglib_tld.xdt" destinationfile="taglib.tld"/>
+            <configParam name="Uri" value="/tags"/>
+            <xmlTemplate templateFile="${src.xdt}/tags_tld.xdt" destinationfile="tags.tld"/>
         </xdoclet>
     </target>
 
@@ -164,7 +164,7 @@
     </target>
 
     <target name="mavenrep" depends="jar">
-        <!-- webwork -->
+        <!-- struts2 -->
         <copy file="pom.xml" tofile="/opt/repository/ibiblio.org/opensymphony/poms/${name}-${version}-SNAPSHOT.pom"/>
         <copy file="${build}/${name}-${version}.jar" tofile="/opt/repository/ibiblio.org/opensymphony/jars/${name}-${version}-SNAPSHOT.jar"/>
         <copy file="${build}/${name}-src-${version}.jar" tofile="/opt/repository/ibiblio.org/opensymphony/jars/${name}-src-${version}-SNAPSHOT.jar"/>
@@ -199,7 +199,7 @@
             </manifest>
         </jar>        
         <zip destfile="${build}/${name}-static-${version}.zip">
-            <zipfileset dir="${build.java}/org/apache/struts2/static" prefix="webwork" />
+            <zipfileset dir="${build.java}/org/apache/struts2/static" prefix="struts2" />
         </zip>
     </target>
 

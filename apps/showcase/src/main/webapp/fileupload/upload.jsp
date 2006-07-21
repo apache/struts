@@ -1,5 +1,5 @@
 
-<%@ taglib uri="/struts-action" prefix="saf" %>
+<%@ taglib prefix="s" uri="/tags" %>
 <html>
 <head>
     <title>Showcase</title>
@@ -8,11 +8,11 @@
 <body>
     <h1>Fileupload sample</h1>
 
-    <saf:form action="doUpload" method="POST" enctype="multipart/form-data">
-        <saf:file name="upload" label="File"/>
-        <saf:textfield name="caption" label="Caption"/>
-        <saf:submit />
-    </saf:form>
+    <s:form action="doUpload" method="POST" enctype="multipart/form-data">
+        <s:file name="upload" label="File"/>
+        <s:textfield name="caption" label="Caption"/>
+        <s:submit />
+    </s:form>
 </body>
 </html>
 

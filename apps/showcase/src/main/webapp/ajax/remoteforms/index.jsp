@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 
 <html>
 <head>
@@ -21,7 +21,7 @@
 Remote form replacing another div:<br/>
 
 <div id='two' style="border: 1px solid yellow;"><b>initial content</b></div>
-<saf:form
+<s:form
         id='theForm2'
         cssStyle="border: 1px solid green;"
         action='AjaxRemoteForm'
@@ -30,13 +30,13 @@ Remote form replacing another div:<br/>
 
     <input type='text' name='data' value='Struts User'>
 
-    <saf:submit value="GO2" theme="ajax" resultDivId="two"/>
+    <s:submit value="GO2" theme="ajax" resultDivId="two"/>
 
-</saf:form>
+</s:form>
 
 
 Remote form replacing the forms content:<br/>
-<saf:form
+<s:form
         id='theForm3'
         cssStyle="border: 1px solid green;"
         action='AjaxRemoteForm'
@@ -45,12 +45,12 @@ Remote form replacing the forms content:<br/>
 
     <input type='text' name='data' value='Struts User'>
 
-    <saf:submit value="GO3" theme="ajax" resultDivId="theForm3"/>
+    <s:submit value="GO3" theme="ajax" resultDivId="theForm3"/>
 
-</saf:form>
+</s:form>
 
 Remote form evaluating suplied JS on completion:<br/>
-<saf:form
+<s:form
         id='theForm4'
         cssStyle="border: 1px solid green;"
         action='AjaxRemoteForm'
@@ -59,12 +59,12 @@ Remote form evaluating suplied JS on completion:<br/>
 
     <input type='text' name='data' value='Struts User'>
 
-    <saf:submit value="GO4" theme="ajax" onLoadJS="alert('form submitted');"/>
+    <s:submit value="GO4" theme="ajax" onLoadJS="alert('form submitted');"/>
 
-</saf:form>
+</s:form>
 
 Remote form replacing the forms content after confirming results:<br/>
-<saf:form
+<s:form
         id='theForm5'
         cssStyle="border: 1px solid green;"
         action='AjaxRemoteForm'
@@ -73,12 +73,12 @@ Remote form replacing the forms content after confirming results:<br/>
 
     <input type='text' name='data' value='Struts User'>
 
-    <saf:submit value="GO3" theme="ajax" resultDivId="theForm5" preInvokeJS="confirm('sure?');"/>
+    <s:submit value="GO3" theme="ajax" resultDivId="theForm5" preInvokeJS="confirm('sure?');"/>
 
-</saf:form>
+</s:form>
 
 Remote form replacing the forms content after running a function:<br/>
-<saf:form
+<s:form
         id='theForm6'
         cssStyle="border: 1px solid green;"
         action='AjaxRemoteForm'
@@ -87,12 +87,12 @@ Remote form replacing the forms content after running a function:<br/>
 
     <input type='text' name='data' value='Struts User'>
 
-    <saf:submit value="GO3" theme="ajax" resultDivId="theForm6" preInvokeJS="doSomething();"/>
+    <s:submit value="GO3" theme="ajax" resultDivId="theForm6" preInvokeJS="doSomething();"/>
 
-</saf:form>
+</s:form>
 
 A form with no remote submit (so should not be ajaxified):<br/>
-<saf:form
+<s:form
         id='theForm7'
         cssStyle="border: 1px solid green;"
         action='AjaxRemoteForm'
@@ -101,11 +101,11 @@ A form with no remote submit (so should not be ajaxified):<br/>
 
     <input type='text' name='data' value='Struts User'>
 
-    <saf:submit value="Go AWAY" resultDivId="theForm7" />
+    <s:submit value="Go AWAY" resultDivId="theForm7" />
 
-</saf:form>
+</s:form>
 
-<saf:include value="../footer.jsp"/>
+<s:include value="../footer.jsp"/>
 
 </body>
 </html>

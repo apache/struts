@@ -31,7 +31,7 @@ import java.io.InputStream;
 public class FileDownloadAction implements Action {
 
     public InputStream getImageStream() throws Exception {
-        return ServletActionContext.getServletContext().getResourceAsStream("/images/logo.png");
+        return ServletActionContext.getServletContext().getResourceAsStream("/images/struts.gif");
     }
 
     public String execute() throws Exception {

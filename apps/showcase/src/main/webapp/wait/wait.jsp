@@ -1,7 +1,7 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 <html>
 <head>
-    <meta http-equiv="refresh" content="5;url=<saf:url includeParams="all"/>"/>
+    <meta http-equiv="refresh" content="5;url=<s:url includeParams="all"/>"/>
 </head>
 
 <body>
@@ -10,7 +10,7 @@
     </p>
 
     <p/>
-    You can click this link to <a href="<saf:url includeParams="all"/>">refresh</a>.
+    You can click this link to <a href="<s:url includeParams="all"/>">refresh</a>.
 
 </body>
 </html>

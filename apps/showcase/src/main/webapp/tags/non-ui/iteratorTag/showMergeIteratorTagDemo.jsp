@@ -1,4 +1,4 @@
-<%@taglib uri="/struts-action" prefix="saf" %>
+<%@taglib prefix="s" uri="/tags" %>
 
 <html>
 <head>
@@ -6,11 +6,11 @@
 </head>
 <body>
 
-	<saf:form action="submitMergeTagDemo" namespace="/tags/non-ui/mergeIteratorTag" method="POST">
-		<saf:textfield label="Iterator 1 Value (Comma Separated)" name="iteratorValue1" />
-		<saf:textfield label="Iterator 2 Value (Comma Separated)" name="iteratorValue2" />
-		<saf:submit />
-	</saf:form>
+    <s:form action="submitMergeTagDemo" namespace="/tags/non-ui/mergeIteratorTag" method="POST">
+        <s:textfield label="Iterator 1 Value (Comma Separated)" name="iteratorValue1" />
+        <s:textfield label="Iterator 2 Value (Comma Separated)" name="iteratorValue2" />
+        <s:submit />
+    </s:form>
 
 
 </body>

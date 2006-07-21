@@ -1,9 +1,9 @@
-<%@taglib uri="/struts-action" prefix="saf" %>
+ <%@taglib prefix="s" uri="/tags" %>
 
 <hr/>
 
-<saf:url id="backToValidationExamples" action="list" namespace="/validation" />
-<saf:url id="backToShowCase" action="showcase" namespace="/" />
-		
-<saf:a href="%{backToValidationExamples}">Back To Validation Examples</saf:a>&nbsp;
-<saf:a href="%{backToShowCase}">Back To Showcase</saf:a>
+<s:url id="backToValidationExamples" action="list" namespace="/validation" />
+<s:url id="backToShowCase" action="showcase" namespace="/" />
+        
+<s:a href="%{backToValidationExamples}">Back To Validation Examples</s:a>&nbsp;
+<s:a href="%{backToShowCase}">Back To Showcase</s:a>

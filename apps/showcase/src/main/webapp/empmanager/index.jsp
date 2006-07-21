@@ -1,4 +1,4 @@
-<%@taglib prefix="saf" uri="/struts-action" %>
+<%@taglib prefix="s" uri="/tags" %>
 
 <html>
 <head>
@@ -8,12 +8,12 @@
 <h1> CRUD </h1>
 
 <p>
-	<ul>
-		<li><saf:url id="url" namespace="/skill" action="list"/><saf:a href="%{url}">List available Skills</saf:a></li>
-        <li><saf:url id="url" namespace="/skill" action="edit"/><saf:a href="%{url}">Create/Edit Skill</saf:a></li>
-        <li><saf:url id="url" namespace="/employee" action="list"/><saf:a href="%{url}">List available Employees</saf:a></li>
-        <li><saf:url id="url" namespace="/employee" action="edit"/><saf:a href="%{url}">Create/Edit Employee</saf:a></li>
-	</ul>
+    <ul>
+        <li><s:url id="url" namespace="/skill" action="list"/><s:a href="%{url}">List available Skills</s:a></li>
+        <li><s:url id="url" namespace="/skill" action="edit"/><s:a href="%{url}">Create/Edit Skill</s:a></li>
+        <li><s:url id="url" namespace="/employee" action="list"/><s:a href="%{url}">List available Employees</s:a></li>
+        <li><s:url id="url" namespace="/employee" action="edit"/><s:a href="%{url}">Create/Edit Employee</s:a></li>
+    </ul>
 </p>
 
 

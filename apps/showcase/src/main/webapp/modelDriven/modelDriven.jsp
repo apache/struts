@@ -1,31 +1,31 @@
-<%@taglib prefix="saf" uri="/struts-action" %>
+<%@taglib prefix="s" uri="/tags" %>
 
 <html>
 <head>
 <title>Showcase - Model Driven Example</title>
-<saf:head/>
+<s:head/>
 </head>
 <body>
 
-<saf:form action="modelDrivenResult" method="POST" namespace="/modelDriven">
-	
-	<saf:textfield 
-			label="Gangster Name"
-			name="name" />
-	<saf:textfield
-			label="Gangster Age"
-			name="age" />
-	<saf:checkbox
-			label="Gangster Busted Before"
-			name="bustedBefore" />
-	<saf:textarea
-			cols="30"
-			rows="5"
-			label="Gangster Description"
-			name="description" />			
-	<saf:submit />
-	
-</saf:form>
+<s:form action="modelDrivenResult" method="POST" namespace="/modelDriven">
+    
+    <s:textfield 
+            label="Gangster Name"
+            name="name" />
+    <s:textfield
+            label="Gangster Age"
+            name="age" />
+    <s:checkbox
+            label="Gangster Busted Before"
+            name="bustedBefore" />
+    <s:textarea
+            cols="30"
+            rows="5"
+            label="Gangster Description"
+            name="description" />           
+    <s:submit />
+    
+</s:form>
 
 </body>
 </html>

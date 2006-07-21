@@ -1,4 +1,4 @@
-<%@taglib uri="/struts-action" prefix="saf" %>
+<%@taglib prefix="s" uri="/tags" %>
 
 <html>
 <head>
@@ -6,15 +6,15 @@
 </head>
 <body>
 
-	<saf:actionerror/>
-	<saf:actionmessage/>
+    <s:actionerror/>
+    <s:actionmessage/>
 
-	<saf:form action="submitSubsetTagDemo" namespace="/tags/non-ui/subsetIteratorTag" method="POST">
-		<saf:textfield label="Iterator value (comma separated)" name="iteratorValue" />
-		<saf:textfield label="Count" name="count" />
-		<saf:textfield label="Start" name="start" />
-		<saf:submit />
-	</saf:form>
+    <s:form action="submitSubsetTagDemo" namespace="/tags/non-ui/subsetIteratorTag" method="POST">
+        <s:textfield label="Iterator value (comma separated)" name="iteratorValue" />
+        <s:textfield label="Count" name="count" />
+        <s:textfield label="Start" name="start" />
+        <s:submit />
+    </s:form>
 
 </body>
 </html>

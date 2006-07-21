@@ -7,7 +7,7 @@
    <jsp-version>1.2</jsp-version>
    <short-name>Struts 2 Taglib</short-name>
 
-   <uri>/struts-action</uri>
+   <uri>/tags</uri>
 
    <display-name>Struts 2 Taglib</display-name>
    <description><![CDATA[Struts 2 JSP Taglib]]></description>
@@ -6161,7 +6161,7 @@
    <tag>
 
       <name>optgroup</name>
-      <tag-class>com.opensymphony.webwork.views.jsp.ui.OptGroupTag</tag-class>
+      <tag-class>org.apache.struts2.views.jsp.ui.OptGroupTag</tag-class>
       <body-content>JSP</body-content>
       <description><![CDATA[Renders a Select Tag's OptGroup Tag]]></description>
 

@@ -1,4 +1,4 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 <html>
 <head>
     <title>AJAX-based remote DIV tag</title>
@@ -42,7 +42,7 @@
         </li>
         
         <li>
-        	<a href="example8.jsp">A div that will not update itself (updateFreq=0 and delay=0)</a>
+            <a href="example8.jsp">A div that will not update itself (updateFreq=0 and delay=0)</a>
         </li>
 
     </ol>
@@ -50,7 +50,7 @@
 
 </p>
 
-<saf:include value="../footer.jsp"/>
+<s:include value="../footer.jsp"/>
 
 </body>
 </html>

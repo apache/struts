@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <?xml-stylesheet type="text/xsl" href="http://www.jayasoft.fr/org/ivyrep/ivy-doc.xsl"?>
 <ivy-module version="1.0">
-    <info organisation="apache" module="struts-action2"
+    <info organisation="apache" module="struts2"
           revision="2.0"
           status="integration"
           publication="20060323000000">
         <license name="Apache" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
         <ivyauthor name="apache" url="http://www.apache.org/"/>
 
-        <description homepage="http://www.opensymphony.com/webwork/">
-            WebWork is a Java web-application development framework. It is built specifically with developer
-            productivity and code simplicity in mind. WebWork is built on
+        <description homepage="http://struts.apache.org/2.x/">
+            Struts 2 is a Java web-application development framework. It is built specifically with developer
+            productivity and code simplicity in mind. Struts 2 is built on
             top of XWork, which provides a generic command pattern framework as well as an Inversion of Control
-            container. In addition to these features, WebWork provides
-            robust support for building reusable UI templates, such as form controls, UI themes, internationalization,
+            container. In addition to these features, Struts 2 provides
             robust support for building reusable UI templates, such as form controls, UI themes, internationalization,
             dynamic form parameter mapping to JavaBeans, robust
             client and server side validation, and much more.
@@ -44,7 +43,7 @@
         <conf name="tiles"/>
     </configurations>
     <publications>
-        <artifact name="struts-action" type="jar" conf="default"/>
+        <artifact name="struts2" type="jar" conf="default"/>
     </publications>
     <dependencies>
         <!-- build -->

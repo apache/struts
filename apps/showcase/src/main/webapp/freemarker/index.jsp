@@ -1,18 +1,18 @@
 
-<%@taglib prefix="saf" uri="/struts-action" %>
+<%@taglib prefix="s" uri="/tags" %>
 
 <html>
 <head>
-	<title>Showcase - Freemarker</title>
+    <title>Showcase - Freemarker</title>
 </head>
 <body>
-	
-	<ul>
-		<li>
-			<saf:url id="url" action="customFreemarkerManagerDemo" namespace="/freemarker" />
-			<saf:a href="%{#url}">Demo of usage of a Custom Freemarker Manager</saf:a>
-		</li>
-	</ul>
+    
+    <ul>
+        <li>
+            <s:url id="url" action="customFreemarkerManagerDemo" namespace="/freemarker" />
+            <s:a href="%{#url}">Demo of usage of a Custom Freemarker Manager</s:a>
+        </li>
+    </ul>
 
 </body>
 </html>

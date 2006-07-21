@@ -1,4 +1,4 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 
 <html>
 <head>
@@ -6,7 +6,7 @@
 </head>
 
 <body>
-<saf:form action="doEditPerson" theme="simple" validate="false">
+<s:form action="doEditPerson" theme="simple" validate="false">
 
     <table>
         <tr>
@@ -14,23 +14,23 @@
             <th>First Name</th>
             <th>Last Name</th>
         </tr>
-        <saf:iterator id="p" value="persons">
+        <s:iterator id="p" value="persons">
             <tr>
                 <td>
-                    <saf:property value="%{id}" />
+                    <s:property value="%{id}" />
                 </td>
                 <td>
-                    <saf:textfield label="First Name" name="persons(%{id}).name" value="%{name}" theme="simple" />
+                    <s:textfield label="First Name" name="persons(%{id}).name" value="%{name}" theme="simple" />
                 </td>
                 <td>
-                    <saf:textfield label="Last Name" name="persons(%{id}).lastName" value="%{lastName}" theme="simple"/>
+                    <s:textfield label="Last Name" name="persons(%{id}).lastName" value="%{lastName}" theme="simple"/>
                 </td>
             </tr>
-        </saf:iterator>
+        </s:iterator>
     </table>
 
-    <saf:submit value="Save all persons"/>
-</saf:form>
+    <s:submit value="Save all persons"/>
+</s:form>
 
 <ul>
     <li><a href="newPerson!input.action">Create</a> a new person</li>

@@ -1,11 +1,11 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 
-<input type="checkbox" <saf:if test="parameters['nameValue']">checked="checked"</saf:if>
-   name="<saf:property value="parameters['name']"/>"
-   value="<saf:property value="parameters['fieldValue']"/>"
-    <saf:if test="parameters['disabled']">disabled="disabled"</saf:if>
-    <saf:if test="parameters['tabindex'] != null">tabindex="<saf:property value="parameters['tabindex']"/>"</saf:if>
-    <saf:if test="parameters['onchange'] != null">onchange="<saf:property value="parameters['onchange']"/>"</saf:if>
-    <saf:if test="parameters['onclick'] != null">onclick="<saf:property value="parameters['onclick']"/>"</saf:if>
-    <saf:if test="parameters['id'] != null">id="<saf:property value="parameters['id']"/>"</saf:if>
+<input type="checkbox" <s:if test="parameters['nameValue']">checked="checked"</s:if>
+   name="<s:property value="parameters['name']"/>"
+   value="<s:property value="parameters['fieldValue']"/>"
+    <s:if test="parameters['disabled']">disabled="disabled"</s:if>
+    <s:if test="parameters['tabindex'] != null">tabindex="<s:property value="parameters['tabindex']"/>"</s:if>
+    <s:if test="parameters['onchange'] != null">onchange="<s:property value="parameters['onchange']"/>"</s:if>
+    <s:if test="parameters['onclick'] != null">onclick="<s:property value="parameters['onclick']"/>"</s:if>
+    <s:if test="parameters['id'] != null">id="<s:property value="parameters['id']"/>"</s:if>
 />

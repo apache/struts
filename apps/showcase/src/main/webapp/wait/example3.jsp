@@ -1,4 +1,4 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 <html>
     <head><title>Execute and Wait Examples</title></head>
 
@@ -9,10 +9,10 @@
     While waiting for the wait page it will check every 1000 millis if the background process is already
     done. Try simulating with a value of 700 millis to see that the wait page is shown soon thereafter.
 
-    <saf:form action="longProcess3">
-        <saf:textfield label="Time (millis)" name="time" required="true" value="9000"/>
-        <saf:submit value="submit"/>
-    </saf:form>
+    <s:form action="longProcess3">
+        <s:textfield label="Time (millis)" name="time" required="true" value="9000"/>
+        <s:submit value="submit"/>
+    </s:form>
 
 </body>
 </html>

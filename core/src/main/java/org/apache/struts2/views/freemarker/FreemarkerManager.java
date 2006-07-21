@@ -53,7 +53,7 @@ import java.util.Properties;
 
 /**
  * Static Configuration Manager for the FreemarkerResult's configuration
- * 
+ *
  * <p/>
  *
  * Possible extension points are :-
@@ -78,13 +78,13 @@ import java.util.Properties;
  * <ol>
  *   <li>path defined in ServletContext init parameter named 'templatePath' or 'TemplatePath' (must be an absolute path)</li>
  *   <li>webapp classpath</li>
- *   <li>struts's static folder (under [WEBWORK_SOURCE]/org/apache/struts2/static/</li>
+ *   <li>struts's static folder (under [STRUT2_SOURCE]/org/apache/struts2/static/</li>
  * </ol>
  * <p/>
  *
  * <b> populateContext method</b><br/>
  * populate the created model.
- * 
+ *
  */
 public class FreemarkerManager {
 
@@ -202,8 +202,8 @@ public class FreemarkerManager {
         }
 
         model.put(KEY_REQUEST_MODEL, requestModel);
-        
-        
+
+
         // Create hash model wrapper for request parameters
         HttpRequestParametersHashModel reqParametersModel = (HttpRequestParametersHashModel) request.getAttribute(ATTR_REQUEST_PARAMETERS_MODEL);
         if (reqParametersModel == null || requestModel.getRequest() != request) {
@@ -211,7 +211,7 @@ public class FreemarkerManager {
         	request.setAttribute(ATTR_REQUEST_PARAMETERS_MODEL, reqParametersModel);
         }
         model.put(KEY_REQUEST_PARAMETER_MODEL, reqParametersModel);
-        
+
         return model;
     }
 
@@ -298,7 +298,7 @@ public class FreemarkerManager {
         configuration.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
 
         configuration.setObjectWrapper(getObjectWrapper());
-        
+
         if (Configuration.isSet(StrutsConstants.STRUTS_I18N_ENCODING)) {
         	configuration.setDefaultEncoding(Configuration.getString(StrutsConstants.STRUTS_I18N_ENCODING));
         }

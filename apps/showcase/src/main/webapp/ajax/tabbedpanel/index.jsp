@@ -1,4 +1,4 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 <html>
 <head>
     <title>Tabbed Panes</title>
@@ -15,15 +15,15 @@
         <li><a href="example3.jsp">A remote and local tabbed panel</a></li>
         <li><a href="example1.jsp">Various remote and local tabbed panels (with enclosed tabbed pannels)</a></li>
         <li>
-        	<saf:url id="url" action="example4" />
-        	<saf:a href="%{#url}">Only remove tabbed panel</saf:a>
+            <s:url id="url" action="example4" />
+            <s:a href="%{#url}">Only remove tabbed panel</s:a>
         </li>
     </ol>
 
 
 </p>
 
-<saf:include value="../footer.jsp"/>
+<s:include value="../footer.jsp"/>
 
 </body>
 </html>

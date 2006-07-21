@@ -33,9 +33,9 @@ import java.util.List;
 /**
  */
 public class MultiWebApplicationContext extends WebApplicationContext {
-	
+
 	private static final long serialVersionUID = -4732081314967099271L;
-	
+
 	private List pathPriority;
     private Map paths;
     private Class resolver;
@@ -85,12 +85,12 @@ public class MultiWebApplicationContext extends WebApplicationContext {
 
         // still haven't found what we're looking for?
         // Alright, let's just hack this to work in IDEA
-        if (uriInContext.equals("/struts-action")) {
+        if (uriInContext.equals("/tags")) {
             // we do this check to support both "quickstart:showcase" and "quickstart" (using quickstart.xml)
-            if (new File("../../core/src/main/resources/META-INF/taglib.tld").exists()) {
-                return FileResource.newResource("../../core/src/main/resources/META-INF/taglib.tld");
+            if (new File("../../core/src/main/resources/META-INF/tags.tld").exists()) {
+                return FileResource.newResource("../../core/src/main/resources/META-INF/tags.tld");
             } else {
-                return FileResource.newResource("src/main/resources/META-INF/taglib.tld");
+                return FileResource.newResource("src/main/resources/META-INF/tags.tld");
             }
         }
 

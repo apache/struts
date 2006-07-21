@@ -1,4 +1,4 @@
-<%@ taglib prefix="saf" uri="/struts-action" %>
+<%@ taglib prefix="s" uri="/tags" %>
 <html>
     <head><title>Token Examples</title></head>
 
@@ -10,15 +10,15 @@
     happens once.
     <p/>
 
-    <br/>Balance of source account: <saf:property value="#session.balanceSource"/>
-    <br/>Balance of destination account: <saf:property value="#session.balanceDestination"/>
+    <br/>Balance of source account: <s:property value="#session.balanceSource"/>
+    <br/>Balance of destination account: <s:property value="#session.balanceDestination"/>
     <p/>
 
-    <saf:form action="transfer">
-        <saf:token/>
-        <saf:textfield label="Amount" name="amount" required="true" value="100"/>
-        <saf:submit value="Transfer money"/>
-    </saf:form>
+    <s:form action="transfer">
+        <s:token/>
+        <s:textfield label="Amount" name="amount" required="true" value="100"/>
+        <s:submit value="Transfer money"/>
+    </s:form>
 
 </body>
 </html>

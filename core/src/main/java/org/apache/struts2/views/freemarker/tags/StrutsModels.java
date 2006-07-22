@@ -74,6 +74,9 @@ public class StrutsModels {
     protected TreeModel treeModel;
     protected UpDownSelectModel updownselect;
     protected OptGroupModel optGroupModel;
+    protected IfModel ifModel;
+    protected ElseModel elseModel;
+    protected ElseIfModel elseIfModel;
     
 
     public StrutsModels(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
@@ -427,5 +430,26 @@ public class StrutsModels {
     		optGroupModel = new OptGroupModel(stack, req, res);
     	}
     	return optGroupModel;
+    }
+    
+    public IfModel getIf() {
+    	if (ifModel == null) {
+    		ifModel = new IfModel(stack, req, res);
+    	}
+    	return ifModel;
+    }
+    
+    public ElseModel getElse() {
+    	if (elseModel == null) {
+    		elseModel = new ElseModel(stack, req, res);
+    	}
+    	return elseModel;
+    }
+    
+    public ElseIfModel getElseif() {
+    	if (elseIfModel == null) {
+    		elseIfModel = new ElseIfModel(stack, req, res);
+    	}
+    	return elseIfModel;
     }
 }

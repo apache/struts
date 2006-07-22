@@ -75,17 +75,16 @@ public class ElseIf extends Component {
         //make the comparision
         answer = (Boolean) findValue(test, Boolean.class);
 
+        if (answer == null) {
+            answer = Boolean.FALSE;
+        }
+        if (answer.booleanValue()) {
+            stack.getContext().put(If.ANSWER, answer);
+        }
         return answer != null && answer.booleanValue();
     }
 
     public boolean end(Writer writer, String body) {
-        if (answer == null) {
-            answer = Boolean.FALSE;
-        }
-
-        if (answer.booleanValue()) {
-            stack.getContext().put(If.ANSWER, answer);
-        }
 
         return super.end(writer, "");
     }

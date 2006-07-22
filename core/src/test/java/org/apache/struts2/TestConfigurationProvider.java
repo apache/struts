@@ -68,7 +68,7 @@ public class TestConfigurationProvider implements ConfigurationProvider {
         successParams.put("propertyName", "executionCount");
         successParams.put("expectedValue", "1");
 
-        ResultConfig successConfig = new ResultConfig(Action.SUCCESS, TestResult.class, successParams);
+        ResultConfig successConfig = new ResultConfig(Action.SUCCESS, TestResult.class.getName(), successParams);
 
         results.put(Action.SUCCESS, successConfig);
 
@@ -82,7 +82,7 @@ public class TestConfigurationProvider implements ConfigurationProvider {
         successParams = new HashMap();
         successParams.put("location", "success.jsp");
 
-        successConfig = new ResultConfig(Action.SUCCESS, ServletDispatcherResult.class, successParams);
+        successConfig = new ResultConfig(Action.SUCCESS, ServletDispatcherResult.class.getName(), successParams);
 
         results.put(Action.SUCCESS, successConfig);
 
@@ -107,7 +107,7 @@ public class TestConfigurationProvider implements ConfigurationProvider {
         successParams = new HashMap();
         successParams.put("actionName", EXECUTION_COUNT_ACTION_NAME);
 
-        successConfig = new ResultConfig(Action.SUCCESS, ActionChainResult.class, successParams);
+        successConfig = new ResultConfig(Action.SUCCESS, ActionChainResult.class.getName(), successParams);
 
         results.put(Action.SUCCESS, successConfig);
 
@@ -119,8 +119,8 @@ public class TestConfigurationProvider implements ConfigurationProvider {
         configurationManager.addPackageConfig("", defaultPackageConfig);
 
         Map testActionTagResults = new HashMap();
-        testActionTagResults.put(Action.SUCCESS, new ResultConfig(Action.SUCCESS, TestActionTagResult.class, new HashMap()));
-        testActionTagResults.put(Action.INPUT, new ResultConfig(Action.INPUT, TestActionTagResult.class, new HashMap()));
+        testActionTagResults.put(Action.SUCCESS, new ResultConfig(Action.SUCCESS, TestActionTagResult.class.getName(), new HashMap()));
+        testActionTagResults.put(Action.INPUT, new ResultConfig(Action.INPUT, TestActionTagResult.class.getName(), new HashMap()));
         ActionConfig testActionTagActionConfig = new ActionConfig((String) null, TestAction.class, (Map) null, testActionTagResults, new ArrayList());
         defaultPackageConfig.addActionConfig("testActionTagAction", testActionTagActionConfig);
 

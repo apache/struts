@@ -198,8 +198,8 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
             PackageConfig wait = new PackageConfig("");
 
             Map results = new HashMap();
-            results.put(Action.SUCCESS, new ResultConfig(Action.SUCCESS, MockResult.class, null));
-            results.put(ExecuteAndWaitInterceptor.WAIT, new ResultConfig(ExecuteAndWaitInterceptor.WAIT, MockResult.class, null));
+            results.put(Action.SUCCESS, new ResultConfig(Action.SUCCESS, MockResult.class.getName(), null));
+            results.put(ExecuteAndWaitInterceptor.WAIT, new ResultConfig(ExecuteAndWaitInterceptor.WAIT, MockResult.class.getName(), null));
 
             // interceptors
             waitInterceptor = new ExecuteAndWaitInterceptor();

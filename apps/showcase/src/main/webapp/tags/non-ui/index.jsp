@@ -15,6 +15,8 @@
     <li><s:url id="url" action="showMergeTagDemo" namespace="/tags/non-ui/mergeIteratorTag" /><s:a href="%{#url}">Merge Iterator Demo</s:a>
     <li><s:url id="url" action="showSubsetTagDemo" namespace="/tags/non-ui/subsetIteratorTag" /><s:a href="%{#url}">Subset Tag</s:a>
     <li><s:url id="url" value="actionPrefix/index.jsp"/><s:a href="%{#url}">Action Prefix Example</s:a></li>
+	<li><saf:url id="url" action="testIfTagJsp" namespace="/tags/non-ui/ifTag"/><saf:a href="%{#url}">If Tag (JSP)</saf:a></li>
+	<li><saf:url id="url" action="testIfTagFreemarker" namespace="/tags/non-ui/ifTag"/><saf:a href="%{#url}">If Tag (Freemarker)</saf:a></li>
 </ul>
 
 </body>

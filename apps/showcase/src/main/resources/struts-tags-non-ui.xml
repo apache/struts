@@ -110,6 +110,16 @@
 		</action>
 	</package>
 	
-	
+	<!--  ========================================== -->
+	<!--  === Package for If Tag Test / Examples === -->
+	<!--  ========================================== -->
+	<package name="ifTagPackage" extends="struts-default" namespace="/tags/non-ui/ifTag">
+		<action name="testIfTagJsp">
+			<result>/tags/non-ui/ifTag/testIf.jsp</result>
+		</action>
+		<action name="testIfTagFreemarker">
+			<result type="freemarker">/tags/non-ui/ifTag/testIf.ftl</result>
+		</action>
+	</package>
 </struts>
 

@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<%@taglib prefix="saf" uri="/struts-action" %>    
+<%@taglib prefix="s" uri="/tags" %>    
     
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -11,66 +11,66 @@
 </head>
 <body>
 <!--  1 -->
-<saf:if test="true">
+<s:if test="true">
 	1]THIS SHOULD APPEAR <br/>
-</saf:if>
-<saf:else>
+</s:if>
+<s:else>
 	THIS SHOULD NOT APPEAR <br/>
-</saf:else>
+</s:else>
 
 
 <!--  2 -->
-<saf:if test="false">
+<s:if test="false">
 	THIS SHOULD NOT APPEAR <br/>
-</saf:if>
-<saf:elseif test="true">
+</s:if>
+<s:elseif test="true">
 	2]THIS SHOULD APPEAR <br/>
-</saf:elseif>
+</s:elseif>
 
 <!--  3 -->
-<saf:if test="false">
+<s:if test="false">
 	THIS SHOULD NOT APPEAR <br/>
-</saf:if>
-<saf:elseif test="false">
+</s:if>
+<s:elseif test="false">
 	THIS SHOULD NOT APPEAR <br/>
-</saf:elseif>
-<saf:elseif test="true">
+</s:elseif>
+<s:elseif test="true">
 	3]THIS SHOULD APPEAR <br/>
-</saf:elseif>
-<saf:elseif test="true">
+</s:elseif>
+<s:elseif test="true">
 	THIS SHOULD NOT APPEAR <br/>
-</saf:elseif>
-<saf:else>
+</s:elseif>
+<s:else>
 	THIS SHOULD NOT APPEAR <br/>
-</saf:else>
+</s:else>
 
 <!-- 4 -->
-<saf:if test="false">
+<s:if test="false">
 	THIS SHOULD NOT APPEAR<br/>
-</saf:if>
-<saf:elseif test="false">
+</s:if>
+<s:elseif test="false">
 	THIS SHOULD NOT APPEAR<br/>
-</saf:elseif>
-<saf:else>
+</s:elseif>
+<s:else>
 	4]THIS SHOULD APPEAR<br/>
-</saf:else>
+</s:else>
 
 <!-- 5 -->
-<saf:if test="false">
+<s:if test="false">
 	THIS SHOULD NOT APPEAR<br/>
-</saf:if>
-<saf:elseif test="false">
+</s:if>
+<s:elseif test="false">
 	THIS SHOULD NOT APPEAR<br/>
-</saf:elseif>
-<saf:elseif test="false">
+</s:elseif>
+<s:elseif test="false">
 	THIS SHOULD NOT APPEAR<br/>
-</saf:elseif>
-<saf:elseif test="false">
+</s:elseif>
+<s:elseif test="false">
 	THIS SHOULD NOT APPEAR<br/>
-</saf:elseif>
-<saf:else>
+</s:elseif>
+<s:else>
 	5]THIS SHOULD APPEAR<br/>
-</saf:else>
+</s:else>
 
 
 </body>

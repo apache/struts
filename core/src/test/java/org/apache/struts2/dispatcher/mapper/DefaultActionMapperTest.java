@@ -138,8 +138,8 @@ public class DefaultActionMapperTest extends StrutsTestCase {
     }
 
     public void testGetMappingWithNoExtension() throws Exception {
-        Object old = org.apache.struts2.config.Configuration.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
-        org.apache.struts2.config.Configuration.set(StrutsConstants.STRUTS_ACTION_EXTENSION, "");
+        String old = org.apache.struts2.config.Settings.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
+        org.apache.struts2.config.Settings.set(StrutsConstants.STRUTS_ACTION_EXTENSION, "");
         try {
             req.setupGetParameterMap(new HashMap());
             req.setupGetRequestURI("/my/namespace/actionName");
@@ -155,7 +155,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
             assertNull(mapping.getMethod());
         }
         finally {
-            org.apache.struts2.config.Configuration.set(StrutsConstants.STRUTS_ACTION_EXTENSION, old);
+            org.apache.struts2.config.Settings.set(StrutsConstants.STRUTS_ACTION_EXTENSION, old);
         }
     }
     
@@ -378,8 +378,8 @@ public class DefaultActionMapperTest extends StrutsTestCase {
     }
     
     public void testGetUriFromActionMapper12() throws Exception {
-        Object old = org.apache.struts2.config.Configuration.get(StrutsConstants.STRUTS_COMPATIBILITY_MODE);
-        org.apache.struts2.config.Configuration.set(StrutsConstants.STRUTS_COMPATIBILITY_MODE, "true");
+        String old = org.apache.struts2.config.Settings.get(StrutsConstants.STRUTS_COMPATIBILITY_MODE);
+        org.apache.struts2.config.Settings.set(StrutsConstants.STRUTS_COMPATIBILITY_MODE, "true");
         try {
             DefaultActionMapper mapper = new DefaultActionMapper();
             ActionMapping actionMapping = new ActionMapping();
@@ -390,7 +390,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
             assertEquals("/myActionName.action", uri);
         }
         finally {
-            org.apache.struts2.config.Configuration.set(StrutsConstants.STRUTS_COMPATIBILITY_MODE, old);
+            org.apache.struts2.config.Settings.set(StrutsConstants.STRUTS_COMPATIBILITY_MODE, old);
         }
     }
 

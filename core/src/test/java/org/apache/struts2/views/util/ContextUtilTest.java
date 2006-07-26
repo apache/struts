@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.views.util;
 
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.StrutsConstants;
 import com.opensymphony.xwork2.util.OgnlValueStack;
 import junit.framework.TestCase;
@@ -32,10 +32,10 @@ public class ContextUtilTest extends TestCase {
         OgnlValueStack stack = new OgnlValueStack();
         stack.getContext().put("useAltSyntax", "true");
         
-        Configuration.reset();
-        Configuration.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");
+        Settings.reset();
+        Settings.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");
         
-        assertEquals(Configuration.getString(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "true");
+        assertEquals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "true");
         assertTrue(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
     
@@ -43,10 +43,10 @@ public class ContextUtilTest extends TestCase {
         OgnlValueStack stack = new OgnlValueStack();
         stack.getContext().put("useAltSyntax", "false");
         
-        Configuration.reset();
-        Configuration.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");
+        Settings.reset();
+        Settings.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");
         
-        assertEquals(Configuration.getString(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "true");
+        assertEquals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "true");
         assertTrue(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
     
@@ -54,10 +54,10 @@ public class ContextUtilTest extends TestCase {
         OgnlValueStack stack = new OgnlValueStack();
         stack.getContext().put("useAltSyntax", "true");
         
-        Configuration.reset();
-        Configuration.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");
+        Settings.reset();
+        Settings.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");
         
-        assertEquals(Configuration.getString(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "false");
+        assertEquals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "false");
         assertTrue(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
     
@@ -65,10 +65,10 @@ public class ContextUtilTest extends TestCase {
         OgnlValueStack stack = new OgnlValueStack();
         stack.getContext().put("useAltSyntax", "false");
         
-        Configuration.reset();
-        Configuration.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");
+        Settings.reset();
+        Settings.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");
         
-        assertEquals(Configuration.getString(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "false");
+        assertEquals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "false");
         assertFalse(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
     
@@ -78,40 +78,40 @@ public class ContextUtilTest extends TestCase {
         OgnlValueStack stack = new OgnlValueStack();
         stack.getContext().put("useAltSyntax", Boolean.TRUE);
         
-        Configuration.reset();
-        Configuration.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");
+        Settings.reset();
+        Settings.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");
         
-        assertEquals(Configuration.getString(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "true");
+        assertEquals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "true");
         assertTrue(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
     public void testAltSyntaxMethod6() throws Exception {
         OgnlValueStack stack = new OgnlValueStack();
         stack.getContext().put("useAltSyntax", Boolean.FALSE);
         
-        Configuration.reset();
-        Configuration.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");
+        Settings.reset();
+        Settings.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");
         
-        assertEquals(Configuration.getString(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "true");
+        assertEquals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "true");
         assertTrue(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
     public void testAltSyntaxMethod7() throws Exception {
         OgnlValueStack stack = new OgnlValueStack();
         stack.getContext().put("useAltSyntax", Boolean.TRUE);
         
-        Configuration.reset();
-        Configuration.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");
+        Settings.reset();
+        Settings.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");
         
-        assertEquals(Configuration.getString(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "false");
+        assertEquals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "false");
         assertTrue(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
     public void testAltSyntaxMethod8() throws Exception {
         OgnlValueStack stack = new OgnlValueStack();
         stack.getContext().put("useAltSyntax", Boolean.FALSE);
         
-        Configuration.reset();
-        Configuration.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");
+        Settings.reset();
+        Settings.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");
         
-        assertEquals(Configuration.getString(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "false");
+        assertEquals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "false");
         assertFalse(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
     
@@ -120,10 +120,10 @@ public class ContextUtilTest extends TestCase {
         OgnlValueStack stack = new OgnlValueStack();
         stack.getContext().put("useAltSyntax", null);
         
-        Configuration.reset();
-        Configuration.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, Boolean.TRUE);
+        Settings.reset();
+        Settings.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");
         
-        assertEquals(Configuration.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), Boolean.TRUE);
+        assertEquals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "true");
         assertTrue(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
 }

@@ -19,7 +19,7 @@ package org.apache.struts2.config_browser;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.StrutsConstants;
 
 import java.util.Set;
@@ -60,7 +60,7 @@ public class ActionNamesAction extends ActionSupport {
 
     public String getExtension() {
         if ( extension == null) {
-            String ext = (String) Configuration.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
+            String ext = (String) Settings.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
             if ( ext == null || ext.equals("")) {
                 extension = "action";
             } else {

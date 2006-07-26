@@ -18,7 +18,7 @@
 package org.apache.struts2.views;
 
 import org.apache.struts2.components.template.*;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import junit.framework.TestCase;
 
 /**
@@ -27,12 +27,12 @@ import junit.framework.TestCase;
  */
 public class TemplateEngineManagerTest extends TestCase {
     public void testTemplateTypeFromTemplateNameAndDefaults() {
-        Configuration.setConfiguration(new Configuration() {
+        Settings.setInstance(new Settings() {
             public boolean isSetImpl(String name) {
                 return name.equals(TemplateEngineManager.DEFAULT_TEMPLATE_TYPE_CONFIG_KEY);
             }
 
-            public Object getImpl(String aName) throws IllegalArgumentException {
+            public String getImpl(String aName) throws IllegalArgumentException {
                 if (aName.equals(TemplateEngineManager.DEFAULT_TEMPLATE_TYPE_CONFIG_KEY)) {
                     return "jsp";
                 }
@@ -63,6 +63,6 @@ public class TemplateEngineManagerTest extends TestCase {
 
     protected void tearDown() throws Exception {
         super.tearDown();
-        Configuration.setConfiguration(null);
+        Settings.setInstance(null);
     }
 }

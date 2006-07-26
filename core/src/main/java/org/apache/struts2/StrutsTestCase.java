@@ -17,7 +17,7 @@
  */
 package org.apache.struts2;
 
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.config.StrutsXMLConfigurationProvider;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.springframework.mock.web.MockServletContext;
@@ -38,7 +38,7 @@ public abstract class StrutsTestCase extends XWorkTestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        Configuration.reset();
+        Settings.reset();
         LocalizedTextUtil.clearDefaultResourceBundles();
         Dispatcher du = new Dispatcher(new MockServletContext());
         Dispatcher.setInstance(du);

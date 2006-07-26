@@ -19,7 +19,7 @@ package org.apache.struts2.spring;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import junit.framework.TestCase;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.mock.web.MockServletContext;
@@ -48,7 +48,7 @@ public class StrutsSpringObjectFactoryTest extends StrutsTestCase {
         StrutsSpringObjectFactory fac = new StrutsSpringObjectFactory();
 
         // autowire by constructure, we try a non default setting in this unit test
-        Configuration.set(StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE, "constructor");
+        Settings.set(StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE, "constructor");
 
         ConfigurableWebApplicationContext ac = new XmlWebApplicationContext();
         ServletContext msc = (ServletContext) new MockServletContext();

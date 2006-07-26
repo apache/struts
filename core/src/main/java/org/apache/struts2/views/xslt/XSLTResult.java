@@ -18,7 +18,7 @@
 package org.apache.struts2.views.xslt;
 
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
@@ -190,7 +190,7 @@ public class XSLTResult implements Result {
 
     public XSLTResult() {
         templatesCache = new HashMap<String, Templates>();
-        noCache = Configuration.getString("struts.xslt.nocache").trim().equalsIgnoreCase("true");
+        noCache = Settings.get("struts.xslt.nocache").trim().equalsIgnoreCase("true");
     }
 
     /**

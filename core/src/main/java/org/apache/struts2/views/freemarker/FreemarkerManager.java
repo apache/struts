@@ -18,7 +18,7 @@
 package org.apache.struts2.views.freemarker;
 
 import com.opensymphony.util.FileManager;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.views.JspSupportServlet;
 import org.apache.struts2.views.freemarker.tags.StrutsModels;
 import org.apache.struts2.views.util.ContextUtil;
@@ -120,8 +120,8 @@ public class FreemarkerManager {
         if (instance == null) {
             String classname = FreemarkerManager.class.getName();
 
-            if (Configuration.isSet(StrutsConstants.STRUTS_FREEMARKER_MANAGER_CLASSNAME)) {
-                classname = Configuration.getString(StrutsConstants.STRUTS_FREEMARKER_MANAGER_CLASSNAME).trim();
+            if (Settings.isSet(StrutsConstants.STRUTS_FREEMARKER_MANAGER_CLASSNAME)) {
+                classname = Settings.get(StrutsConstants.STRUTS_FREEMARKER_MANAGER_CLASSNAME).trim();
             }
 
             try {
@@ -299,8 +299,8 @@ public class FreemarkerManager {
 
         configuration.setObjectWrapper(getObjectWrapper());
 
-        if (Configuration.isSet(StrutsConstants.STRUTS_I18N_ENCODING)) {
-        	configuration.setDefaultEncoding(Configuration.getString(StrutsConstants.STRUTS_I18N_ENCODING));
+        if (Settings.isSet(StrutsConstants.STRUTS_I18N_ENCODING)) {
+        	configuration.setDefaultEncoding(Settings.get(StrutsConstants.STRUTS_I18N_ENCODING));
         }
 
         loadSettings(servletContext, configuration);

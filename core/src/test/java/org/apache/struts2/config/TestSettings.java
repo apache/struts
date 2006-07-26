@@ -23,17 +23,17 @@ import java.util.List;
 
 
 /**
- * TestConfiguration
+ * TestSettings
  *
  */
-public class TestConfiguration extends Configuration {
+public class TestSettings extends Settings {
 
     /**
      * Get a named setting.
      *
-     * @throws IllegalArgumentException if there is no configuration parameter with the given name.
+     * @throws IllegalArgumentException if there is no settings parameter with the given name.
      */
-    public Object getImpl(String aName) throws IllegalArgumentException {
+    public String getImpl(String aName) throws IllegalArgumentException {
         return aName;
     }
 

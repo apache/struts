@@ -102,8 +102,8 @@ public class Form extends ClosingUIBean {
     protected static boolean compatibilityMode = false;
     
     static {
-        if (org.apache.struts2.config.Configuration.isSet(StrutsConstants.STRUTS_COMPATIBILITY_MODE)) {
-            compatibilityMode = "true".equals(org.apache.struts2.config.Configuration.get(StrutsConstants.STRUTS_COMPATIBILITY_MODE));
+        if (org.apache.struts2.config.Settings.isSet(StrutsConstants.STRUTS_COMPATIBILITY_MODE)) {
+            compatibilityMode = "true".equals(org.apache.struts2.config.Settings.get(StrutsConstants.STRUTS_COMPATIBILITY_MODE));
         }
     }
 

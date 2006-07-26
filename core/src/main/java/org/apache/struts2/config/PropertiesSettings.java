@@ -26,21 +26,21 @@ import org.apache.struts2.StrutsException;
 
 
 /**
- * A class to handle configuration via a properties file.
+ * A class to handle settings via a properties file.
  */
-public class PropertiesConfiguration extends Configuration {
+public class PropertiesSettings extends Settings {
 
     Properties settings;
 
 
     /**
      * Creates a new properties config given the name of a properties file. The name is expected to NOT have
-     * the ".properties" file extension.  So when <tt>new PropertiesConfiguration("foo")</tt> is called
+     * the ".properties" file extension.  So when <tt>new PropertiesSettings("foo")</tt> is called
      * this class will look in the classpath for the <tt>foo.properties</tt> file.
      *
      * @param name the name of the properties file, excluding the ".properties" extension.
      */
-    public PropertiesConfiguration(String name) {
+    public PropertiesSettings(String name) {
         settings = new Properties();
 
         URL settingsUrl = Thread.currentThread().getContextClassLoader().getResource(name + ".properties");
@@ -61,10 +61,10 @@ public class PropertiesConfiguration extends Configuration {
     /**
      * Sets a property in the properties file.
      *
-     * @see #set(String, Object)
+     * @see #set(String, String)
      */
-    public void setImpl(String aName, Object aValue) {
-        settings.put(aName, aValue);
+    public void setImpl(String aName, String aValue) {
+        settings.setProperty(aName, aValue);
     }
 
     /**
@@ -72,8 +72,8 @@ public class PropertiesConfiguration extends Configuration {
      *
      * @see #get(String)
      */
-    public Object getImpl(String aName) throws IllegalArgumentException {
-        Object setting = settings.get(aName);
+    public String getImpl(String aName) throws IllegalArgumentException {
+        String setting = settings.getProperty(aName);
 
         if (setting == null) {
             throw new IllegalArgumentException("No such setting:" + aName);

@@ -23,22 +23,22 @@ import java.util.Set;
 
 
 /**
- * A Configuration implementation which stores an internal list of configuration objects. Each time
- * a config method is called (get, set, list, etc..) this class will go through the list of configurations
+ * A Settings implementation which stores an internal list of settings objects. Each time
+ * a config method is called (get, set, list, etc..) this class will go through the list of settingss
  * and call the method until successful.
  *
  */
-public class DelegatingConfiguration extends Configuration {
+public class DelegatingSettings extends Settings {
 
-    Configuration[] configList;
+    Settings[] configList;
 
 
     /**
-     * Creates a new DelegatingConfiguration object given a list of {@link Configuration} implementations.
+     * Creates a new DelegatingSettings object given a list of {@link Settings} implementations.
      *
-     * @param aConfigList a list of Configuration implementations.
+     * @param aConfigList a list of Settings implementations.
      */
-    public DelegatingConfiguration(Configuration[] aConfigList) {
+    public DelegatingSettings(Settings[] aConfigList) {
         configList = aConfigList;
     }
 
@@ -47,11 +47,11 @@ public class DelegatingConfiguration extends Configuration {
      * Sets the given property - calls setImpl(String, Object) method on config objects in the config
      * list until successful.
      *
-     * @see #set(String, Object)
+     * @see #set(String, String)
      */
-    public void setImpl(String name, Object value) throws IllegalArgumentException, UnsupportedOperationException {
+    public void setImpl(String name, String value) throws IllegalArgumentException, UnsupportedOperationException {
         // Determine which config to use by using get
-        // Delegate to the other configurations
+        // Delegate to the other settingss
         IllegalArgumentException e = null;
 
         for (int i = 0; i < configList.length; i++) {
@@ -79,8 +79,8 @@ public class DelegatingConfiguration extends Configuration {
      *
      * @see #get(String)
      */
-    public Object getImpl(String name) throws IllegalArgumentException {
-        // Delegate to the other configurations
+    public String getImpl(String name) throws IllegalArgumentException {
+        // Delegate to the other settings
         IllegalArgumentException e = null;
 
         for (int i = 0; i < configList.length; i++) {

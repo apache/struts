@@ -29,50 +29,50 @@ import java.util.StringTokenizer;
 
 /**
  * Handles all Struts config properties. Implementation of this class is pluggable (the
- * default implementation is {@link DefaultConfiguration}). This gives developers to ability to customize how
+ * default implementation is {@link DefaultSettings}). This gives developers to ability to customize how
  * Struts properties are set and retrieved. As an example, a developer may wish to check a separate property
  * store before delegating to the Struts one. <p>
  * <p/>
  * Key methods: <ul>
  * <p/>
  * <li>{@link #getLocale()}</li>
- * <li>{@link #getString(String)}</li>
- * <li>{@link #set(String, Object)}</li>
+ * <li>{@link #get(String)}</li>
+ * <li>{@link #set(String, String)}</li>
  * <li>{@link #list()}</li></ul>
  * <p/>
  * Key methods for subclassers: <ul>
  * <p/>
  * <li>{@link #getImpl(String)}</li>
- * <li>{@link #setImpl(String, Object)}</li>
+ * <li>{@link #setImpl(String, String)}</li>
  * <li>{@link #listImpl()}</li>
  * <li>{@link #isSetImpl(String)}</li></ul>
  */
-public class Configuration {
+public class Settings {
 
-    static Configuration configurationImpl;
-    static Configuration defaultImpl;
+    static Settings settingsImpl;
+    static Settings defaultImpl;
     static Locale locale; // Cached locale
-    private static final Log LOG = LogFactory.getLog(Configuration.class);
+    private static final Log LOG = LogFactory.getLog(Settings.class);
 
 
     /**
-     * Sets the current configuration implementation. Can only be called once.
+     * Sets the current settings implementation. Can only be called once.
      *
-     * @param config a Configuration implementation
-     * @throws IllegalStateException if an error occurs when setting the configuration implementation.
+     * @param config a Settings implementation
+     * @throws IllegalStateException if an error occurs when setting the settings implementation.
      */
-    public static void setConfiguration(Configuration config) throws IllegalStateException {
-        configurationImpl = config;
+    public static void setInstance(Settings config) throws IllegalStateException {
+        settingsImpl = config;
         locale = null; // Reset cached locale
     }
 
     /**
-     * Gets the current configuration implementation.
+     * Gets the current settings implementation.
      *
-     * @return the current configuration implementation.
+     * @return the current settings implementation.
      */
-    public static Configuration getConfiguration() {
-        return (configurationImpl == null) ? getDefaultConfiguration() : configurationImpl;
+    public static Settings getInstance() {
+        return (settingsImpl == null) ? getDefaultInstance() : settingsImpl;
     }
 
     /**
@@ -87,7 +87,7 @@ public class Configuration {
     public static Locale getLocale() {
         if (locale == null) {
             try {
-                StringTokenizer localeTokens = new StringTokenizer(getString(StrutsConstants.STRUTS_LOCALE), "_");
+                StringTokenizer localeTokens = new StringTokenizer(get(StrutsConstants.STRUTS_LOCALE), "_");
                 String lang = null;
                 String country = null;
 
@@ -118,21 +118,7 @@ public class Configuration {
      * @return <tt>true</tt> if the property exists and has a value, <tt>false</tt> otherwise.
      */
     public static boolean isSet(String name) {
-        return getConfiguration().isSetImpl(name);
-    }
-
-    /**
-     * Returns a property as a String. This will throw an <tt>IllegalArgumentException</tt> if an error occurs
-     * while retrieveing the property or if the property doesn't exist.
-     *
-     * @param name the name of the property to get.
-     * @return the property as a String
-     * @throws IllegalArgumentException if an error occurs retrieveing the property or the property does not exist.
-     */
-    public static String getString(String name) throws IllegalArgumentException {
-        String val = get(name).toString();
-
-        return val;
+        return getInstance().isSetImpl(name);
     }
 
     /**
@@ -143,8 +129,8 @@ public class Configuration {
      * @return the property as an Object.
      * @throws IllegalArgumentException if an error occurs retrieveing the property or the property does not exist.
      */
-    public static Object get(String name) throws IllegalArgumentException {
-        Object val = getConfiguration().getImpl(name);
+    public static String get(String name) throws IllegalArgumentException {
+        String val = getInstance().getImpl(name);
 
         return val;
     }
@@ -155,7 +141,7 @@ public class Configuration {
      * @return an Iterator of all properties names.
      */
     public static Iterator list() {
-        return getConfiguration().listImpl();
+        return getInstance().listImpl();
     }
 
     /**
@@ -171,24 +157,24 @@ public class Configuration {
 
     /**
      * Sets a property. Throws an exception if an error occurs when setting the property or if the
-     * Configuration implementation does not support setting properties.
+     * Settings implementation does not support setting properties.
      *
      * @param name  the name of the property to set.
      * @param value the property to set.
      * @throws IllegalArgumentException      if an error occurs when setting the property.
      * @throws UnsupportedOperationException if the config implementation does not support setting properties.
      */
-    public static void set(String name, Object value) throws IllegalArgumentException, UnsupportedOperationException {
-        getConfiguration().setImpl(name, value);
+    public static void set(String name, String value) throws IllegalArgumentException, UnsupportedOperationException {
+        getInstance().setImpl(name, value);
     }
 
     /**
-     * Implementation of the {@link #set(String, Object)} method.
+     * Implementation of the {@link #set(String, String)} method.
      *
-     * @see #set(String, Object)
+     * @see #set(String, String)
      */
-    public void setImpl(String name, Object value) throws IllegalArgumentException, UnsupportedOperationException {
-        throw new UnsupportedOperationException("This configuration does not support updating a setting");
+    public void setImpl(String name, String value) throws IllegalArgumentException, UnsupportedOperationException {
+        throw new UnsupportedOperationException("This settings does not support updating a setting");
     }
 
     /**
@@ -196,7 +182,7 @@ public class Configuration {
      *
      * @see #get(String)
      */
-    public Object getImpl(String aName) throws IllegalArgumentException {
+    public String getImpl(String aName) throws IllegalArgumentException {
         return null;
     }
 
@@ -206,24 +192,24 @@ public class Configuration {
      * @see #list()
      */
     public Iterator listImpl() {
-        throw new UnsupportedOperationException("This configuration does not support listing the settings");
+        throw new UnsupportedOperationException("This settings does not support listing the settings");
     }
 
-    private static Configuration getDefaultConfiguration() {
+    private static Settings getDefaultInstance() {
         if (defaultImpl == null) {
             // Create bootstrap implementation
-            defaultImpl = new DefaultConfiguration();
+            defaultImpl = new DefaultSettings();
 
             // Create default implementation
             try {
-                String className = getString(StrutsConstants.STRUTS_CONFIGURATION);
+                String className = get(StrutsConstants.STRUTS_CONFIGURATION);
 
                 if (!className.equals(defaultImpl.getClass().getName())) {
                     try {
                         // singleton instances shouldn't be built accessing request or session-specific context data
-                        defaultImpl = (Configuration) ObjectFactory.getObjectFactory().buildBean(Thread.currentThread().getContextClassLoader().loadClass(className), null);
+                        defaultImpl = (Settings) ObjectFactory.getObjectFactory().buildBean(Thread.currentThread().getContextClassLoader().loadClass(className), null);
                     } catch (Exception e) {
-                        LOG.error("Could not instantiate configuration", e);
+                        LOG.error("Could not instantiate settings", e);
                     }
                 }
             } catch (IllegalArgumentException ex) {
@@ -236,6 +222,6 @@ public class Configuration {
 
     public static void reset() {
         defaultImpl = null;
-        configurationImpl = null;
+        settingsImpl = null;
     }
 }

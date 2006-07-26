@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.components;
 
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.util.FastByteArrayOutputStream;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
@@ -264,7 +264,7 @@ public class Include extends Component {
     private static String getEncoding() {
         if (encodingDefined) {
             try {
-                encoding = Configuration.getString(StrutsConstants.STRUTS_I18N_ENCODING);
+                encoding = Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
             } catch (IllegalArgumentException e) {
                 encoding = System.getProperty("file.encoding");
                 encodingDefined = false;

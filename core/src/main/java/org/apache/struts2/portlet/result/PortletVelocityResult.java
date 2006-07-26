@@ -19,7 +19,7 @@ package org.apache.struts2.portlet.result;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.context.PortletActionContext;
@@ -221,7 +221,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
      *         of 'struts.i18n.encoding' property)
      */
     protected String getEncoding(String templateLocation) {
-        String encoding = (String) Configuration
+        String encoding = (String) Settings
                 .get(StrutsConstants.STRUTS_I18N_ENCODING);
         if (encoding == null) {
             encoding = System.getProperty("file.encoding");

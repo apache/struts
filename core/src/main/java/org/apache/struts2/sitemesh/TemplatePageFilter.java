@@ -23,7 +23,7 @@ import com.opensymphony.module.sitemesh.filter.PageFilter;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 
 import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
@@ -102,7 +102,7 @@ public abstract class TemplatePageFilter extends PageFilter {
      *  Gets the L18N encoding of the system.  The default is UTF-8.
      */
     protected String getEncoding() {
-        String encoding = (String) Configuration.get(StrutsConstants.STRUTS_I18N_ENCODING);
+        String encoding = (String) Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
         if (encoding == null) {
             encoding = System.getProperty("file.encoding");
         }

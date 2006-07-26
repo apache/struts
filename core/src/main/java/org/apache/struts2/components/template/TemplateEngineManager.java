@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.components.template;
 
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,8 +69,8 @@ public class TemplateEngineManager {
             templateType = templateName.substring(templateName.indexOf(".") + 1);
         } else if (templateTypeOverride !=null && templateTypeOverride.length() > 0) {
             templateType = templateTypeOverride;
-        } else if (Configuration.isSet(DEFAULT_TEMPLATE_TYPE_CONFIG_KEY)) {
-            templateType = (String) Configuration.get(DEFAULT_TEMPLATE_TYPE_CONFIG_KEY);
+        } else if (Settings.isSet(DEFAULT_TEMPLATE_TYPE_CONFIG_KEY)) {
+            templateType = (String) Settings.get(DEFAULT_TEMPLATE_TYPE_CONFIG_KEY);
         }
         return (TemplateEngine) MANAGER.templateEngines.get(templateType);
     }

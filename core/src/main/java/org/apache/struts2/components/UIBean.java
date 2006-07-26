@@ -22,7 +22,7 @@ import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
 import org.apache.struts2.components.template.TemplateEngineManager;
 import org.apache.struts2.components.template.TemplateRenderingContext;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.views.util.ContextUtil;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.util.OgnlValueStack;
@@ -512,7 +512,7 @@ public abstract class UIBean extends Component {
 
         // Default template set
         if ((templateDir == null) || (templateDir.equals(""))) {
-            templateDir = Configuration.getString(StrutsConstants.STRUTS_UI_TEMPLATEDIR);
+            templateDir = Settings.get(StrutsConstants.STRUTS_UI_TEMPLATEDIR);
         }
 
         // Defaults to 'template'
@@ -545,7 +545,7 @@ public abstract class UIBean extends Component {
 
         // Default theme set
         if ((theme == null) || (theme.equals(""))) {
-            theme = Configuration.getString(StrutsConstants.STRUTS_UI_THEME);
+            theme = Settings.get(StrutsConstants.STRUTS_UI_THEME);
         }
 
         return theme;

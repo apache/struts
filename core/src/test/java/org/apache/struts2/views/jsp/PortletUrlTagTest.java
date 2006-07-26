@@ -49,7 +49,7 @@ import org.apache.struts2.views.jsp.ParamTag;
 import org.apache.struts2.dispatcher.Dispatcher;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.OgnlValueStack;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 
 /**
  */
@@ -80,7 +80,7 @@ public class PortletUrlTagTest extends MockObjectTestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 		
-		Configuration.reset();
+		Settings.reset();
         Dispatcher.setInstance(new Dispatcher(null));
         
         mockPortletApiAvailable();

@@ -27,7 +27,7 @@ import com.opensymphony.xwork2.validator.ValidationInterceptor;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.TestConfigurationProvider;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ActionTag;
@@ -308,8 +308,8 @@ public class FormTagTest extends AbstractUITagTest {
      */
     public void testFormTagWithDifferentActionExtension() throws Exception {
         request.setupGetServletPath("/testNamespace/testNamespaceAction");
-        String oldConfiguration = (String) Configuration.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
-        Configuration.set(StrutsConstants.STRUTS_ACTION_EXTENSION, "jspa");
+        String oldConfiguration = (String) Settings.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
+        Settings.set(StrutsConstants.STRUTS_ACTION_EXTENSION, "jspa");
 
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
@@ -321,12 +321,12 @@ public class FormTagTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        Configuration.set(StrutsConstants.STRUTS_ACTION_EXTENSION, oldConfiguration);
+        Settings.set(StrutsConstants.STRUTS_ACTION_EXTENSION, oldConfiguration);
 
         verify(FormTag.class.getResource("Formtag-5.txt"));
 
         // set it back to the default
-        Configuration.set(StrutsConstants.STRUTS_ACTION_EXTENSION, "action");
+        Settings.set(StrutsConstants.STRUTS_ACTION_EXTENSION, "action");
     }
 
     /**
@@ -519,8 +519,8 @@ public class FormTagTest extends AbstractUITagTest {
 
     public void testFormWithActionAndExtension() throws Exception {
         request.setupGetServletPath("/BLA");
-        String oldConfiguration = (String) Configuration.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
-        Configuration.set(StrutsConstants.STRUTS_ACTION_EXTENSION, "jspa");
+        String oldConfiguration = (String) Settings.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
+        Settings.set(StrutsConstants.STRUTS_ACTION_EXTENSION, "jspa");
 
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
@@ -530,12 +530,12 @@ public class FormTagTest extends AbstractUITagTest {
 
         tag.doStartTag();
         tag.doEndTag();
-        Configuration.set(StrutsConstants.STRUTS_ACTION_EXTENSION, oldConfiguration);
+        Settings.set(StrutsConstants.STRUTS_ACTION_EXTENSION, oldConfiguration);
 
         verify(FormTag.class.getResource("Formtag-8.txt"));
 
         // set it back to the default
-        Configuration.set(StrutsConstants.STRUTS_ACTION_EXTENSION, "action");
+        Settings.set(StrutsConstants.STRUTS_ACTION_EXTENSION, "action");
 
     }
 

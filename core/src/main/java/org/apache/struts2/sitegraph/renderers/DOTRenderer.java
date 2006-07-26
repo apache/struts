@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.sitegraph.renderers;
 
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.sitegraph.StrutsConfigRetriever;
 import org.apache.struts2.sitegraph.entities.Target;
 import org.apache.struts2.sitegraph.entities.View;
@@ -90,7 +90,7 @@ public class DOTRenderer {
                         }
 
                         String location = getViewLocation((String) resultConfig.getParams().get("location"), namespace);
-                        if (location.endsWith((String) Configuration.get(StrutsConstants.STRUTS_ACTION_EXTENSION))) {
+                        if (location.endsWith((String) Settings.get(StrutsConstants.STRUTS_ACTION_EXTENSION))) {
                             addTempLink(action, location, Link.TYPE_RESULT, resultConfig.getName());
                         } else {
                             ViewNode view = new ViewNode(stripLocation(location));
@@ -110,7 +110,7 @@ public class DOTRenderer {
                     } else if (resultClassName.indexOf("Redirect") != -1) {
                         // check if the redirect is to an action -- if so, link it
                         String location = getViewLocation((String) resultConfig.getParams().get("location"), namespace);
-                        if (location.endsWith((String) Configuration.get(StrutsConstants.STRUTS_ACTION_EXTENSION))) {
+                        if (location.endsWith((String) Settings.get(StrutsConstants.STRUTS_ACTION_EXTENSION))) {
                             addTempLink(action, location, Link.TYPE_REDIRECT, resultConfig.getName());
                         } else {
                             ViewNode view = new ViewNode(stripLocation(location));
@@ -145,8 +145,8 @@ public class DOTRenderer {
         for (Iterator iterator = links.iterator(); iterator.hasNext();) {
             TempLink temp = (TempLink) iterator.next();
             String location = temp.location;
-            if (location.endsWith((String) Configuration.get(StrutsConstants.STRUTS_ACTION_EXTENSION))) {
-                location = location.substring(0, location.indexOf((String) Configuration.get(StrutsConstants.STRUTS_ACTION_EXTENSION)) - 1);
+            if (location.endsWith((String) Settings.get(StrutsConstants.STRUTS_ACTION_EXTENSION))) {
+                location = location.substring(0, location.indexOf((String) Settings.get(StrutsConstants.STRUTS_ACTION_EXTENSION)) - 1);
 
                 if (location.indexOf('!') != -1) {
                     temp.label = temp.label + "\\n(" + location.substring(location.indexOf('!')) + ")";

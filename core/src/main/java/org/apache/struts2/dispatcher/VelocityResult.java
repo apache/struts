@@ -19,7 +19,7 @@ package org.apache.struts2.dispatcher;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.views.JspSupportServlet;
 import org.apache.struts2.views.velocity.VelocityManager;
 import com.opensymphony.xwork2.ActionContext;
@@ -167,7 +167,7 @@ public class VelocityResult extends StrutsResultSupport {
      * @return The encoding associated with this template (defaults to the value of 'struts.i18n.encoding' property)
      */
     protected String getEncoding(String templateLocation) {
-        String encoding = (String) Configuration.get(StrutsConstants.STRUTS_I18N_ENCODING);
+        String encoding = (String) Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
         if (encoding == null) {
             encoding = System.getProperty("file.encoding");
         }

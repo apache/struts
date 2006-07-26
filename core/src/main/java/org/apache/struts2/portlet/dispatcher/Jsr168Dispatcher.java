@@ -38,7 +38,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.ApplicationMap;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
@@ -204,13 +204,13 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
                 .addDefaultResourceBundle("org/apache/struts2/struts-messages");
 
         //check for configuration reloading
-        if ("true".equalsIgnoreCase(Configuration
-                .getString(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD))) {
+        if ("true".equalsIgnoreCase(Settings
+                .get(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD))) {
             FileManager.setReloadingConfigs(true);
         }
 
-        if (Configuration.isSet(StrutsConstants.STRUTS_OBJECTFACTORY)) {
-            String className = (String) Configuration
+        if (Settings.isSet(StrutsConstants.STRUTS_OBJECTFACTORY)) {
+            String className = (String) Settings
                     .get(StrutsConstants.STRUTS_OBJECTFACTORY);
             if (className.equals("spring")) {
                 // note: this class name needs to be in string form so we don't put hard
@@ -358,8 +358,8 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         extraContext.put(ActionContext.APPLICATION, applicationMap);
 
         Locale locale = null;
-        if (Configuration.isSet(StrutsConstants.STRUTS_LOCALE)) {
-            locale = LocalizedTextUtil.localeFromString(Configuration.getString(StrutsConstants.STRUTS_LOCALE), request.getLocale());
+        if (Settings.isSet(StrutsConstants.STRUTS_LOCALE)) {
+            locale = LocalizedTextUtil.localeFromString(Settings.get(StrutsConstants.STRUTS_LOCALE), request.getLocale());
         } else {
             locale = request.getLocale(); 
         }

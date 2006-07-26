@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.config.StrutsXMLConfigurationProvider;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
@@ -166,11 +166,11 @@ public class Dispatcher {
      * @param servletContext The servlet context
      */
     private void init(ServletContext servletContext) {
-        boolean reloadi18n = Boolean.valueOf((String) Configuration.get(StrutsConstants.STRUTS_I18N_RELOAD)).booleanValue();
+        boolean reloadi18n = Boolean.valueOf((String) Settings.get(StrutsConstants.STRUTS_I18N_RELOAD)).booleanValue();
         LocalizedTextUtil.setReloadBundles(reloadi18n);
 
-        if (Configuration.isSet(StrutsConstants.STRUTS_OBJECTFACTORY)) {
-            String className = (String) Configuration.get(StrutsConstants.STRUTS_OBJECTFACTORY);
+        if (Settings.isSet(StrutsConstants.STRUTS_OBJECTFACTORY)) {
+            String className = (String) Settings.get(StrutsConstants.STRUTS_OBJECTFACTORY);
             if (className.equals("spring")) {
                 // note: this class name needs to be in string form so we don't put hard
                 //       dependencies on spring, since it isn't technically required.
@@ -195,8 +195,8 @@ public class Dispatcher {
             }
         }
 
-        if (Configuration.isSet(StrutsConstants.STRUTS_OBJECTTYPEDETERMINER)) {
-            String className = (String) Configuration.get(StrutsConstants.STRUTS_OBJECTTYPEDETERMINER);
+        if (Settings.isSet(StrutsConstants.STRUTS_OBJECTTYPEDETERMINER)) {
+            String className = (String) Settings.get(StrutsConstants.STRUTS_OBJECTTYPEDETERMINER);
             if (className.equals("tiger")) {
                 // note: this class name needs to be in string form so we don't put hard
                 //       dependencies on xwork-tiger, since it isn't technically required.
@@ -215,19 +215,19 @@ public class Dispatcher {
             }
         }
 
-        if ("true".equals(Configuration.get(StrutsConstants.STRUTS_DEVMODE))) {
+        if ("true".equals(Settings.get(StrutsConstants.STRUTS_DEVMODE))) {
             devMode = true;
-            Configuration.set(StrutsConstants.STRUTS_I18N_RELOAD, "true");
-            Configuration.set(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "true");
+            Settings.set(StrutsConstants.STRUTS_I18N_RELOAD, "true");
+            Settings.set(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "true");
         }
 
         //check for configuration reloading
-        if ("true".equalsIgnoreCase(Configuration.getString(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD))) {
+        if ("true".equalsIgnoreCase(Settings.get(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD))) {
             FileManager.setReloadingConfigs(true);
         }
 
-        if (Configuration.isSet(StrutsConstants.STRUTS_CONTINUATIONS_PACKAGE)) {
-            String pkg = Configuration.getString(StrutsConstants.STRUTS_CONTINUATIONS_PACKAGE);
+        if (Settings.isSet(StrutsConstants.STRUTS_CONTINUATIONS_PACKAGE)) {
+            String pkg = Settings.get(StrutsConstants.STRUTS_CONTINUATIONS_PACKAGE);
             ObjectFactory.setContinuationPackage(pkg);
         }
 
@@ -236,8 +236,8 @@ public class Dispatcher {
                 && servletContext.getServerInfo().indexOf("WebLogic") >= 0) {
             LOG.info("WebLogic server detected. Enabling Struts parameter access work-around.");
             paramsWorkaroundEnabled = true;
-        } else if (Configuration.isSet(StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND)) {
-            paramsWorkaroundEnabled = "true".equals(Configuration.get(StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND));
+        } else if (Settings.isSet(StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND)) {
+            paramsWorkaroundEnabled = "true".equals(Settings.get(StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND));
         } else {
             LOG.debug("Parameter access work-around disabled.");
         }
@@ -397,8 +397,8 @@ public class Dispatcher {
         extraContext.put(ActionContext.APPLICATION, applicationMap);
 
         Locale locale = null;
-        if (Configuration.isSet(StrutsConstants.STRUTS_LOCALE)) {
-            locale = LocalizedTextUtil.localeFromString(Configuration.getString(StrutsConstants.STRUTS_LOCALE), request.getLocale());
+        if (Settings.isSet(StrutsConstants.STRUTS_LOCALE)) {
+            locale = LocalizedTextUtil.localeFromString(Settings.get(StrutsConstants.STRUTS_LOCALE), request.getLocale());
         } else {
             locale = request.getLocale();
         }
@@ -430,7 +430,7 @@ public class Dispatcher {
     private static int getMaxSize() {
         Integer maxSize = new Integer(Integer.MAX_VALUE);
         try {
-            String maxSizeStr = Configuration.getString(StrutsConstants.STRUTS_MULTIPART_MAXSIZE);
+            String maxSizeStr = Settings.get(StrutsConstants.STRUTS_MULTIPART_MAXSIZE);
 
             if (maxSizeStr != null) {
                 try {
@@ -458,7 +458,7 @@ public class Dispatcher {
      * @return the path to save uploaded files to
      */
     private String getSaveDir(ServletContext servletContext) {
-        String saveDir = Configuration.getString(StrutsConstants.STRUTS_MULTIPART_SAVEDIR).trim();
+        String saveDir = Settings.get(StrutsConstants.STRUTS_MULTIPART_SAVEDIR).trim();
 
         if (saveDir.equals("")) {
             File tempdir = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
@@ -490,13 +490,13 @@ public class Dispatcher {
      */
     public void prepare(HttpServletRequest request, HttpServletResponse response) {
         String encoding = null;
-        if (Configuration.isSet(StrutsConstants.STRUTS_I18N_ENCODING)) {
-            encoding = Configuration.getString(StrutsConstants.STRUTS_I18N_ENCODING);
+        if (Settings.isSet(StrutsConstants.STRUTS_I18N_ENCODING)) {
+            encoding = Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
         }
 
         Locale locale = null;
-        if (Configuration.isSet(StrutsConstants.STRUTS_LOCALE)) {
-            locale = LocalizedTextUtil.localeFromString(Configuration.getString(StrutsConstants.STRUTS_LOCALE), request.getLocale());
+        if (Settings.isSet(StrutsConstants.STRUTS_LOCALE)) {
+            locale = LocalizedTextUtil.localeFromString(Settings.get(StrutsConstants.STRUTS_LOCALE), request.getLocale());
         }
 
         if (encoding != null) {

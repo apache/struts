@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.spring;
 
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.util.ObjectFactoryInitializable;
 import org.apache.struts2.StrutsConstants;
 import com.opensymphony.xwork2.spring.SpringObjectFactory;
@@ -63,7 +63,7 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory implements Ob
 
         this.setApplicationContext(appContext);
 
-        String autoWire = Configuration.getString(StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE);
+        String autoWire = Settings.get(StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE);
         int type = AutowireCapableBeanFactory.AUTOWIRE_BY_NAME;   // default
         if ("name".equals(autoWire)) {
             type = AutowireCapableBeanFactory.AUTOWIRE_BY_NAME;
@@ -76,7 +76,7 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory implements Ob
         }
         this.setAutowireStrategy(type);
 
-        boolean useClassCache = "true".equals(Configuration.getString(StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE));
+        boolean useClassCache = "true".equals(Settings.get(StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE));
         this.setUseClassCache(useClassCache);
 
         log.info("... initialized Struts-Spring integration successfully");

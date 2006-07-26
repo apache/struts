@@ -19,7 +19,7 @@ package org.apache.struts2.views.util;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.OgnlValueStack;
 import com.opensymphony.xwork2.util.TextParseUtil;
@@ -73,14 +73,14 @@ public class UrlHelper {
         int httpPort = DEFAULT_HTTP_PORT;
 
         try {
-            httpPort = Integer.parseInt((String) Configuration.get(StrutsConstants.STRUTS_URL_HTTP_PORT));
+            httpPort = Integer.parseInt((String) Settings.get(StrutsConstants.STRUTS_URL_HTTP_PORT));
         } catch (Exception ex) {
         }
 
         int httpsPort = DEFAULT_HTTPS_PORT;
 
         try {
-            httpsPort = Integer.parseInt((String) Configuration.get(StrutsConstants.STRUTS_URL_HTTPS_PORT));
+            httpsPort = Integer.parseInt((String) Settings.get(StrutsConstants.STRUTS_URL_HTTPS_PORT));
         } catch (Exception ex) {
         }
 
@@ -250,8 +250,8 @@ public class UrlHelper {
     
     private static String getEncodingFromConfiguration() {
     	final String encoding;
-        if (Configuration.isSet(StrutsConstants.STRUTS_I18N_ENCODING)) {
-            encoding = Configuration.getString(StrutsConstants.STRUTS_I18N_ENCODING);
+        if (Settings.isSet(StrutsConstants.STRUTS_I18N_ENCODING)) {
+            encoding = Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
         } else {
             encoding = "UTF-8";
         }

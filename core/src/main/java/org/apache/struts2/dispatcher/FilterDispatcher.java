@@ -44,7 +44,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -222,7 +222,7 @@ public class FilterDispatcher implements Filter, StrutsStatics {
                 resourcePath = request.getPathInfo();
             }
 
-            if ("true".equals(Configuration.get(StrutsConstants.STRUTS_SERVE_STATIC_CONTENT)) 
+            if ("true".equals(Settings.get(StrutsConstants.STRUTS_SERVE_STATIC_CONTENT)) 
                     && resourcePath.startsWith("/struts")) {
                 String name = resourcePath.substring("/struts".length());
                 findStaticResource(name, response);
@@ -272,7 +272,7 @@ public class FilterDispatcher implements Filter, StrutsStatics {
                         response.setContentType(contentType);
                     }
                     
-                    if ("true".equals(Configuration.get(StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE))) {
+                    if ("true".equals(Settings.get(StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE))) {
                     	// set heading information for caching static content
                         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
                         response.setHeader("Date",df.format(cal.getTime())+" GMT");
@@ -360,7 +360,7 @@ public class FilterDispatcher implements Filter, StrutsStatics {
             resourcePath = packagePrefix + name;
         }
 
-        String enc = (String) Configuration.get(StrutsConstants.STRUTS_I18N_ENCODING);
+        String enc = (String) Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
         resourcePath = URLDecoder.decode(resourcePath, enc);
 
         return ClassLoaderUtil.getResourceAsStream(resourcePath, getClass());

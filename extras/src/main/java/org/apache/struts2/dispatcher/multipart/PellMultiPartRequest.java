@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.StrutsConstants;
 import http.utils.multipartrequest.ServletMultipartRequest;
 
@@ -121,7 +121,7 @@ public class PellMultiPartRequest extends MultiPartRequest {
         String encoding = null;
 
         try {
-            encoding = Configuration.getString(StrutsConstants.STRUTS_I18N_ENCODING);
+            encoding = Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
 
             if (encoding != null) {
                 //NB: This should never be called at the same time as the constructor for

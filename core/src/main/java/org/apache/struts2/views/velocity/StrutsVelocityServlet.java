@@ -20,7 +20,7 @@ package org.apache.struts2.views.velocity;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.views.util.ContextUtil;
 import com.opensymphony.xwork2.ActionContext;
 import org.apache.velocity.Template;
@@ -124,7 +124,7 @@ public class StrutsVelocityServlet extends VelocityServlet {
     private String getEncoding() {
         // todo look into converting this to using XWork/Struts encoding rules
         try {
-            return Configuration.getString(StrutsConstants.STRUTS_I18N_ENCODING);
+            return Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
         } catch (IllegalArgumentException e) {
             return RuntimeSingleton.getString(RuntimeSingleton.OUTPUT_ENCODING, DEFAULT_OUTPUT_ENCODING);
         }

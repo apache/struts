@@ -20,7 +20,7 @@ package org.apache.struts2.views.velocity;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.util.VelocityStrutsUtil;
 import org.apache.struts2.views.jsp.ui.OgnlTool;
 import org.apache.struts2.views.util.ContextUtil;
@@ -94,8 +94,8 @@ public class VelocityManager {
         if (instance == null) {
             String classname = VelocityManager.class.getName();
 
-            if (Configuration.isSet(StrutsConstants.STRUTS_VELOCITY_MANAGER_CLASSNAME)) {
-                classname = Configuration.getString(StrutsConstants.STRUTS_VELOCITY_MANAGER_CLASSNAME).trim();
+            if (Settings.isSet(StrutsConstants.STRUTS_VELOCITY_MANAGER_CLASSNAME)) {
+                classname = Settings.get(StrutsConstants.STRUTS_VELOCITY_MANAGER_CLASSNAME).trim();
             }
 
             if (!classname.equals(VelocityManager.class.getName())) {
@@ -249,8 +249,8 @@ public class VelocityManager {
          */
         String configfile;
 
-        if (Configuration.isSet(StrutsConstants.STRUTS_VELOCITY_CONFIGFILE)) {
-            configfile = Configuration.getString(StrutsConstants.STRUTS_VELOCITY_CONFIGFILE);
+        if (Settings.isSet(StrutsConstants.STRUTS_VELOCITY_CONFIGFILE)) {
+            configfile = Settings.get(StrutsConstants.STRUTS_VELOCITY_CONFIGFILE);
         } else {
             configfile = "velocity.properties";
         }
@@ -356,8 +356,8 @@ public class VelocityManager {
         initChainedContexts();
 
 
-        if (Configuration.isSet(StrutsConstants.STRUTS_VELOCITY_TOOLBOXLOCATION)) {
-            toolBoxLocation = Configuration.get(StrutsConstants.STRUTS_VELOCITY_TOOLBOXLOCATION).toString();
+        if (Settings.isSet(StrutsConstants.STRUTS_VELOCITY_TOOLBOXLOCATION)) {
+            toolBoxLocation = Settings.get(StrutsConstants.STRUTS_VELOCITY_TOOLBOXLOCATION).toString();
         }
 
     }
@@ -385,9 +385,9 @@ public class VelocityManager {
      */
     protected void initChainedContexts() {
 
-        if (Configuration.isSet(StrutsConstants.STRUTS_VELOCITY_CONTEXTS)) {
+        if (Settings.isSet(StrutsConstants.STRUTS_VELOCITY_CONTEXTS)) {
             // we expect contexts to be a comma separated list of classnames
-            String contexts = Configuration.get(StrutsConstants.STRUTS_VELOCITY_CONTEXTS).toString();
+            String contexts = Settings.get(StrutsConstants.STRUTS_VELOCITY_CONTEXTS).toString();
             StringTokenizer st = new StringTokenizer(contexts, ",");
             List contextList = new ArrayList();
 

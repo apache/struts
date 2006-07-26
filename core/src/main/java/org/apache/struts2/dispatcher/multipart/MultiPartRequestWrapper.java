@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.StrutsRequestWrapper;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.util.ClassLoaderUtils;
@@ -68,7 +68,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
         if (request instanceof MultiPartRequest) {
             multi = (MultiPartRequest) request;
         } else {
-            String parser = Configuration.getString(StrutsConstants.STRUTS_MULTIPART_PARSER);
+            String parser = Settings.get(StrutsConstants.STRUTS_MULTIPART_PARSER);
 
             // If it's not set, use Jakarta
             if (parser.equals("")) {

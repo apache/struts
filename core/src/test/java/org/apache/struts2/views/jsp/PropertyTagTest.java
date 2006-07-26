@@ -22,7 +22,7 @@ import com.mockobjects.servlet.MockPageContext;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.OgnlValueStack;
 
@@ -160,8 +160,8 @@ public class PropertyTagTest extends StrutsTestCase {
 
     public void testWithAltSyntax1() throws Exception {
         // setups
-        Configuration.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");
-        assertEquals(Configuration.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "true");
+        Settings.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");
+        assertEquals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "true");
 
         Foo foo = new Foo();
         foo.setTitle("tm_jee");
@@ -189,8 +189,8 @@ public class PropertyTagTest extends StrutsTestCase {
 
     public void testWithAltSyntax2() throws Exception {
         // setups
-        Configuration.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");
-        assertEquals(Configuration.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "true");
+        Settings.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");
+        assertEquals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "true");
 
         Foo foo = new Foo();
         foo.setTitle("tm_jee");
@@ -218,8 +218,8 @@ public class PropertyTagTest extends StrutsTestCase {
 
     public void testWithoutAltSyntax1() throws Exception {
         //      setups
-        Configuration.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");
-        assertEquals(Configuration.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "false");
+        Settings.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");
+        assertEquals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "false");
 
         Foo foo = new Foo();
         foo.setTitle("tm_jee");
@@ -248,8 +248,8 @@ public class PropertyTagTest extends StrutsTestCase {
 
     public void testWithoutAltSyntax2() throws Exception {
         //      setups
-        Configuration.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");
-        assertEquals(Configuration.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "false");
+        Settings.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");
+        assertEquals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "false");
 
         Foo foo = new Foo();
         foo.setTitle("tm_jee");

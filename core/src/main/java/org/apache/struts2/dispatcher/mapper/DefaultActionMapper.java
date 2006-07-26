@@ -151,8 +151,8 @@ public class DefaultActionMapper implements ActionMapper {
     private PrefixTrie prefixTrie = null;
     private boolean compatibilityMode = false;
     public DefaultActionMapper() {
-        if (org.apache.struts2.config.Configuration.isSet(StrutsConstants.STRUTS_COMPATIBILITY_MODE)) {
-            compatibilityMode = "true".equals(org.apache.struts2.config.Configuration.get(StrutsConstants.STRUTS_COMPATIBILITY_MODE));
+        if (org.apache.struts2.config.Settings.isSet(StrutsConstants.STRUTS_COMPATIBILITY_MODE)) {
+            compatibilityMode = "true".equals(org.apache.struts2.config.Settings.get(StrutsConstants.STRUTS_COMPATIBILITY_MODE));
         }
         prefixTrie = new PrefixTrie() {
             {
@@ -323,7 +323,7 @@ public class DefaultActionMapper implements ActionMapper {
      * Returns null if no extension is specified.
      */
     static List getExtensions() {
-        String extensions = (String) org.apache.struts2.config.Configuration.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
+        String extensions = (String) org.apache.struts2.config.Settings.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
 
         if ("".equals(extensions)) {
         	return null;

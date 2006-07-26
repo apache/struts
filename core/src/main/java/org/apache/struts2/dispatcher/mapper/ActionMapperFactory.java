@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 
@@ -48,7 +48,7 @@ public class ActionMapperFactory {
      */
     public static ActionMapper getMapper() {
         synchronized (classMap) {
-            String clazz = (String) Configuration.get(StrutsConstants.STRUTS_MAPPER_CLASS);
+            String clazz = (String) Settings.get(StrutsConstants.STRUTS_MAPPER_CLASS);
             try {
                 ActionMapper mapper = (ActionMapper) classMap.get(clazz);
                 if (mapper == null) {

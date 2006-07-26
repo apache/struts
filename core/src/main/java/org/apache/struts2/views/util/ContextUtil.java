@@ -21,7 +21,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.views.jsp.ui.OgnlTool;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.util.StrutsUtil;
 import org.apache.struts2.StrutsConstants;
 
@@ -74,7 +74,7 @@ public class ContextUtil {
         // We didn't make altSyntax static cause, if so, struts.configuration.xml.reload will not work
         // plus the Configuration implementation should cache the properties, which WW's
         // configuration implementation does
-        boolean altSyntax = "true".equals(Configuration.getString(StrutsConstants.STRUTS_TAG_ALTSYNTAX));
+        boolean altSyntax = "true".equals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX));
         return altSyntax ||(
                 (context.containsKey("useAltSyntax") &&
                         context.get("useAltSyntax") != null &&

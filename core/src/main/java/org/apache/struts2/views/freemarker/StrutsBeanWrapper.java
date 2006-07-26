@@ -43,7 +43,7 @@ import java.util.Set;
  */
 public class StrutsBeanWrapper extends BeansWrapper {
     private static final boolean altMapWrapper
-            = "true".equals(org.apache.struts2.config.Configuration.get("struts.freemarker.wrapper.altMap"));
+            = "true".equals(org.apache.struts2.config.Settings.get("struts.freemarker.wrapper.altMap"));
 
     public TemplateModel wrap(Object object) throws TemplateModelException {
         if (object instanceof TemplateBooleanModel) {

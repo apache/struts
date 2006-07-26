@@ -20,7 +20,7 @@ package org.apache.struts2.views.jsp;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.ApplicationMap;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
@@ -118,7 +118,7 @@ public abstract class AbstractTagTest extends StrutsTestCase {
 
         ActionContext.setContext(new ActionContext(context));
 
-        Configuration.setConfiguration(null);
+        Settings.setInstance(null);
     }
 
     protected void tearDown() throws Exception {

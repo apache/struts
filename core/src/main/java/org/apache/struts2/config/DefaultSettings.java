@@ -28,41 +28,41 @@ import java.util.StringTokenizer;
 
 
 /**
- * Default implementation of Configuration - creates and delegates to other configurations by using an internal
- * {@link DelegatingConfiguration}.
+ * Default implementation of Settings - creates and delegates to other settingss by using an internal
+ * {@link DelegatingSettings}.
  */
-public class DefaultConfiguration extends Configuration {
+public class DefaultSettings extends Settings {
 
     protected Log log = LogFactory.getLog(this.getClass());
-    Configuration config;
+    Settings config;
 
 
     /**
-     * Creates a new DefaultConfiguration object by loading all property files
-     * and creating an internal {@link DelegatingConfiguration} object. All calls to get and set
-     * in this class will call that configuration object.
+     * Creates a new DefaultSettings object by loading all property files
+     * and creating an internal {@link DelegatingSettings} object. All calls to get and set
+     * in this class will call that settings object.
      */
-    public DefaultConfiguration() {
+    public DefaultSettings() {
         // Create default implementations 
         // Use default properties and struts.properties
-        ArrayList<Configuration> list = new ArrayList<Configuration>();
+        ArrayList<Settings> list = new ArrayList<Settings>();
 
         try {
-            list.add(new PropertiesConfiguration("struts"));
+            list.add(new PropertiesSettings("struts"));
         } catch (Exception e) {
             log.warn("Could not find or error in struts.properties", e);
         }
 
         try {
-            list.add(new PropertiesConfiguration("org/apache/struts2/default"));
+            list.add(new PropertiesSettings("org/apache/struts2/default"));
         } catch (Exception e) {
             log.error("Could not find org/apache/struts2/default.properties", e);
         }
 
-        Configuration[] configList = new Configuration[list.size()];
-        config = new DelegatingConfiguration((Configuration[]) list.toArray(configList));
+        Settings[] configList = new Settings[list.size()];
+        config = new DelegatingSettings((Settings[]) list.toArray(configList));
 
-        // Add list of additional properties configurations
+        // Add list of additional properties settingss
         try {
             StringTokenizer configFiles = new StringTokenizer((String) config.getImpl(StrutsConstants.STRUTS_CUSTOM_PROPERTIES), ",");
 
@@ -70,16 +70,16 @@ public class DefaultConfiguration extends Configuration {
                 String name = configFiles.nextToken();
 
                 try {
-                    list.add(new PropertiesConfiguration(name));
+                    list.add(new PropertiesSettings(name));
                 } catch (Exception e) {
                     log.error("Could not find " + name + ".properties. Skipping");
                 }
             }
 
-            configList = new Configuration[list.size()];
-            config = new DelegatingConfiguration((Configuration[]) list.toArray(configList));
+            configList = new Settings[list.size()];
+            config = new DelegatingSettings((Settings[]) list.toArray(configList));
         } catch (IllegalArgumentException e) {
-            // thrown when Configuration is unable to find a certain property
+            // thrown when Settings is unable to find a certain property
             // eg. struts.custom.properties in default.properties which is commented
             // out
         }
@@ -108,9 +108,9 @@ public class DefaultConfiguration extends Configuration {
     /**
      * Sets the given property - delegates to the internal config implementation.
      *
-     * @see #set(String, Object)
+     * @see #set(String, String)
      */
-    public void setImpl(String aName, Object aValue) throws IllegalArgumentException, UnsupportedOperationException {
+    public void setImpl(String aName, String aValue) throws IllegalArgumentException, UnsupportedOperationException {
         config.setImpl(aName, aValue);
     }
 
@@ -119,7 +119,7 @@ public class DefaultConfiguration extends Configuration {
      *
      * @see #get(String)
      */
-    public Object getImpl(String aName) throws IllegalArgumentException {
+    public String getImpl(String aName) throws IllegalArgumentException {
         // Delegate
         return config.getImpl(aName);
     }

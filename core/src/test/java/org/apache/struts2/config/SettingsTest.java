@@ -26,20 +26,20 @@ import java.util.Locale;
 
 
 /**
- * Unit test for {@link ConfigurationTest}.
+ * Unit test for {@link SettingsTest}.
  *
  */
-public class ConfigurationTest extends StrutsTestCase {
+public class SettingsTest extends StrutsTestCase {
 
-    public void testConfiguration() {
-        assertEquals("12345", Configuration.getString(StrutsConstants.STRUTS_MULTIPART_MAXSIZE));
-        assertEquals("\temp", Configuration.getString(StrutsConstants.STRUTS_MULTIPART_SAVEDIR));
+    public void testSettings() {
+        assertEquals("12345", Settings.get(StrutsConstants.STRUTS_MULTIPART_MAXSIZE));
+        assertEquals("\temp", Settings.get(StrutsConstants.STRUTS_MULTIPART_SAVEDIR));
 
-        assertEquals("test,org/apache/struts2/othertest", Configuration.getString( StrutsConstants.STRUTS_CUSTOM_PROPERTIES));
-        assertEquals("testvalue", Configuration.getString("testkey"));
-        assertEquals("othertestvalue", Configuration.getString("othertestkey"));
+        assertEquals("test,org/apache/struts2/othertest", Settings.get( StrutsConstants.STRUTS_CUSTOM_PROPERTIES));
+        assertEquals("testvalue", Settings.get("testkey"));
+        assertEquals("othertestvalue", Settings.get("othertestkey"));
 
-        Locale locale = Configuration.getLocale();
+        Locale locale = Settings.getLocale();
         assertEquals("de", locale.getLanguage());
 
         int count = getKeyCount();
@@ -47,7 +47,7 @@ public class ConfigurationTest extends StrutsTestCase {
     }
 
     public void testDefaultResourceBundlesLoaded() {
-        assertEquals("testmessages,testmessages2", Configuration.getString(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES));
+        assertEquals("testmessages,testmessages2", Settings.get(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES));
         assertEquals("This is a test message", LocalizedTextUtil.findDefaultText("default.testmessage", Locale.getDefault()));
         assertEquals("This is another test message", LocalizedTextUtil.findDefaultText("default.testmessage2", Locale.getDefault()));
     }
@@ -58,23 +58,23 @@ public class ConfigurationTest extends StrutsTestCase {
         LocalizedTextUtil.clearDefaultResourceBundles();
         LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
         assertEquals("The form has already been processed or no token was supplied, please try again.", LocalizedTextUtil.findDefaultText("struts.messages.invalid.token", Locale.getDefault()));
-        Configuration.reset();
+        Settings.reset();
 
-        assertEquals("testmessages,testmessages2", Configuration.getString(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES));
+        assertEquals("testmessages,testmessages2", Settings.get(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES));
         assertEquals("Replaced message for token tag", LocalizedTextUtil.findDefaultText("struts.messages.invalid.token", Locale.getDefault()));
     }
 
-    public void testSetConfiguration() {
-        Configuration.setConfiguration(new TestConfiguration());
+    public void testSetSettings() {
+        Settings.setInstance(new TestSettings());
         
         String keyName = "a.long.property.key.name";
-        assertEquals(keyName, Configuration.getString(keyName));
+        assertEquals(keyName, Settings.get(keyName));
         assertEquals(2, getKeyCount());
     }
 
     private int getKeyCount() {
         int count = 0;
-        Iterator keyNames = Configuration.list();
+        Iterator keyNames = Settings.list();
 
         while (keyNames.hasNext()) {
         	keyNames.next();

@@ -20,7 +20,7 @@ package org.apache.struts2.dispatcher;
 import com.opensymphony.xwork2.ObjectFactory;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.apache.struts2.util.ObjectFactoryInitializable;
 import org.apache.struts2.util.ObjectFactoryLifecycle;
@@ -81,7 +81,7 @@ public class FilterDispatcherTest extends StrutsTestCase {
         Map configMap = new HashMap();
         configMap.put(StrutsConstants.STRUTS_OBJECTFACTORY, "org.apache.struts2.dispatcher.FilterDispatcherTest$InnerInitializableObjectFactory");
         configMap.put(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "false");
-        Configuration.setConfiguration(new InnerConfiguration(configMap));
+        Settings.setInstance(new InnerConfiguration(configMap));
 
         MockServletContext servletContext = new MockServletContext();
         MockFilterConfig filterConfig = new MockFilterConfig(servletContext);
@@ -99,7 +99,7 @@ public class FilterDispatcherTest extends StrutsTestCase {
         Map configMap = new HashMap();
         configMap.put(StrutsConstants.STRUTS_OBJECTFACTORY, "org.apache.struts2.dispatcher.FilterDispatcherTest$InnerInitailizableDestroyableObjectFactory");
         configMap.put(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "false");
-        Configuration.setConfiguration(new InnerConfiguration(configMap));
+        Settings.setInstance(new InnerConfiguration(configMap));
 
         MockServletContext servletContext = new MockServletContext();
         MockFilterConfig filterConfig = new MockFilterConfig(servletContext);
@@ -118,8 +118,8 @@ public class FilterDispatcherTest extends StrutsTestCase {
 
 
     // === inner class ========
-    public static class InnerConfiguration extends Configuration {
-        Map m;
+    public static class InnerConfiguration extends Settings {
+        Map<String,String> m;
 
         public InnerConfiguration(Map configMap) {
             m = configMap;
@@ -132,7 +132,7 @@ public class FilterDispatcherTest extends StrutsTestCase {
                 return true;
         }
 
-        public Object getImpl(String aName) throws IllegalArgumentException {
+        public String getImpl(String aName) throws IllegalArgumentException {
             if (!m.containsKey(aName))
                 return super.getImpl(aName);
             else

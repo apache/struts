@@ -18,7 +18,7 @@
 package org.apache.struts2.components;
 
 import com.opensymphony.xwork2.util.OgnlValueStack;
-import org.apache.struts2.config.Configuration;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.StrutsConstants;
 
 import javax.servlet.http.HttpServletRequest;
@@ -101,7 +101,7 @@ public class Head extends UIBean {
             }
         }
 
-        addParameter("encoding", Configuration.get(StrutsConstants.STRUTS_I18N_ENCODING));
+        addParameter("encoding", Settings.get(StrutsConstants.STRUTS_I18N_ENCODING));
         addParameter("debug", Boolean.valueOf(debug).toString());
     }
 

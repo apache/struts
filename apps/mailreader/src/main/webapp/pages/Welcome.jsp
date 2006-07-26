@@ -22,9 +22,22 @@
 
 <h3>Language Options</h3>
 <ul>
-    <li><a href="<s:url action="Welcome?request_locale=en"/>">English</a></li>
-    <li><a href="<s:url action="Welcome?request_locale=ja"/>">Japanese</a></li>
-    <li><a href="<s:url action="Welcome?request_locale=ru"/>">Russian</a></li>
+    <li>
+        <s:url id="en" action="Welcome">
+            <s:param name="request_locale">en</s:param>
+        </s:url>
+        <s:a href="%{en}">English</s:a>
+    </li>
+    <li>
+        <a href="<s:url action="Welcome">
+            <s:param name="request_locale">ja</s:param>
+        </s:url>">Japanese</a>
+   </li>
+    <li>
+        <a href="<s:url value="Welcome.do">
+            <s:param name="request_locale" value="'ru'" />
+            </s:url>">Russian</a>
+    </li>
 </ul>
 
 <hr/>

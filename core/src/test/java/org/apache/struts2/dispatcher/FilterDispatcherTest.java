@@ -66,7 +66,7 @@ public class FilterDispatcherTest extends StrutsTestCase {
     public void testObjectFactoryDestroy() throws Exception {
 
         FilterDispatcher filterDispatcher = new FilterDispatcher();
-        filterDispatcher.init(new MockFilterConfig(null));
+        filterDispatcher.init(new MockFilterConfig((ServletContext) null));
         InnerDestroyableObjectFactory destroyedObjectFactory = new InnerDestroyableObjectFactory();
         ObjectFactory.setObjectFactory(destroyedObjectFactory);
 

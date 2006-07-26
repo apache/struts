@@ -20,7 +20,7 @@
 <body onLoad="self.focus();document.Subscription.username.focus()">
 
 <s:actionerror/>
-<s:form method="POST" action="SubscriptionSave" validate="false">
+<s:form action="Subscription!save" validate="false">
     <s:token />
     <s:hidden name="task"/>
     <s:label label="%{getText('username')}" name="user.username"/>

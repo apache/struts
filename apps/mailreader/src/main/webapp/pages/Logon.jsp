@@ -12,7 +12,7 @@
 <body onLoad="self.focus();document.Logon.username.focus()">
 
 <s:actionerror />
-<s:form method="POST" validate="true">
+<s:form action="Logon!execute" validate="true">
     <s:textfield label="%{getText('username')}" name="username"/>
 
     <s:password label="%{getText('password')}" name="password" showPassword="true"/>

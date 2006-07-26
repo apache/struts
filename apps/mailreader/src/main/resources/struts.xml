@@ -55,7 +55,7 @@
             <interceptor-ref name="guest"/>
         </action>
 
-        <action name="Logon" class="mailreader2.Logon">
+        <action name="Logon!*" class="mailreader2.Logon" method="{1}">
             <result name="input">/pages/Logon.jsp</result>
             <result name="cancel" type="redirect-action">Welcome</result>
             <result type="redirect-action">MainMenu</result>
@@ -74,24 +74,24 @@
             <result>/pages/MainMenu.jsp</result>
         </action>
 
-        <action name="Registration" class="mailreader2.Registration">
+        <action name="Registration!*" class="mailreader2.Registration" method="{1}">
             <result name="input">/pages/Registration.jsp</result>
             <result type="redirect-action">MainMenu</result>
             <interceptor-ref name="guest"/>
         </action>
 
-        <action name="RegistrationSave" class="mailreader2.RegistrationSave">
+        <action name="Registration!save" class="mailreader2.RegistrationSave">
             <result name="input">/pages/Registration.jsp</result>
             <result type="redirect-action">MainMenu</result>
             <interceptor-ref name="guest-submit" />
         </action>
 
-        <action name="Subscription" class="mailreader2.Subscription">
+        <action name="Subscription!*" class="mailreader2.Subscription" method="{1}">
             <result name="input">/pages/Subscription.jsp</result>
             <result type="redirect-action">Registration!input</result>
         </action>
 
-        <action name="SubscriptionSave" class="mailreader2.SubscriptionSave">
+        <action name="Subscription!save" class="mailreader2.SubscriptionSave">
             <result name="input">/pages/Subscription.jsp</result>
             <result type="redirect-action">Registration!input</result>
             <interceptor-ref name="user-submit" />

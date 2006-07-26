@@ -17,7 +17,7 @@
 <body onLoad="self.focus();document.Registration.username.focus()">
 
 <s:actionerror/>
-<s:form method="POST" validate="false">
+<s:form action="Registration!execute" validate="false">
     <s:token />
     <s:hidden name="task"/>
     <s:if test="task == 'Create'">

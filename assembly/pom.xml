@@ -97,6 +97,23 @@
                             <outputDirectory>${project.build.directory}/apps</outputDirectory>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>xwork-javadoc</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>opensymphony</groupId>
+                                    <artifactId>xwork</artifactId>
+                                    <classifier>javadoc</classifier>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}/xwork-apidocs</outputDirectory>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>

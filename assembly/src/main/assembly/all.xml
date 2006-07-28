@@ -46,7 +46,13 @@
         <include>*.war</include>
       </includes>
     </fileSet>
-    
+
+    <!-- Include the XWork Javadoc in the assembly -->
+    <fileSet>
+      <directory>target/xwork-apidocs</directory>
+      <outputDirectory>xwork-apidocs</outputDirectory>
+    </fileSet>
+
     <!-- Include the source code in the assembly -->
     <fileSet>
       <directory>../</directory>

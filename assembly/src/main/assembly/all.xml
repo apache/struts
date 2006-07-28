@@ -50,8 +50,26 @@
     <!-- Include the XWork Javadoc in the assembly -->
     <fileSet>
       <directory>target/xwork-apidocs</directory>
-      <outputDirectory>xwork-apidocs</outputDirectory>
+      <outputDirectory>docs/xwork-apidocs</outputDirectory>
     </fileSet>
+
+      <!-- Include the website in the assembly -->
+      <fileSet>
+        <directory>../target/site</directory>
+        <outputDirectory>docs</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../api/target/site</directory>
+        <outputDirectory>docs/struts2-api</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../core/target/site</directory>
+        <outputDirectory>docs/struts2-core</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../extras/target/site</directory>
+        <outputDirectory>docs/struts2-extras</outputDirectory>
+      </fileSet>
 
     <!-- Include the source code in the assembly -->
     <fileSet>

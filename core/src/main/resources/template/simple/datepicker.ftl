@@ -6,6 +6,7 @@
 <#if parameters.readonly?exists>
     <#include "/${parameters.templateDir}/simple/text.ftl" />
 <#else>
+<#--
     <div dojoType="dropdowncontainer"
         dateIconPath="<@saf.url includeParams='none' value='/struts/dojo/struts/widgets/dateIcon.gif' encode='false'/>"
         <#if parameters.format?exists>
@@ -25,6 +26,31 @@
         </#if>
         <#if parameters.get("size")?exists>
              inputWidth="${parameters.get("size")?html}"
+        </#if>
+    >
+        <#include "/${parameters.templateDir}/simple/text.ftl" />
+    </div>
+-->
+	<div dojoType="dropdowndatepicker"
+        <#if parameters.format?exists>
+            dateFormat="${parameters.format}"
+        </#if>
+        <#if parameters.dateIconPath?exists>
+            iconPath="${parameters.dateIconPath}"
+        <#else>
+        	iconPath="<@saf.url includeParams='none' value='/struts/dojo/struts/widgets/dateIcon.gif' encode='false' includeParams="none" />"
+        </#if>
+        <#if parameters.nameValue?exists>
+        	value="${parameters.nameValue?html}"
+        </#if>
+        <#if parameters.templatePath?exists>
+            templatePath="${parameters.templatePath}"
+        </#if>
+        <#if parameters.templateCssPath?exists>
+            templateCssPath="${parameters.templateCssPath}"
+        </#if>
+        <#if parameters.get("size")?exists>
+             inputWidth="${parameters.get("size")?string?html}"
         </#if>
     >
         <#include "/${parameters.templateDir}/simple/text.ftl" />

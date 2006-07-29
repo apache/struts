@@ -77,6 +77,7 @@ public class StrutsModels {
     protected IfModel ifModel;
     protected ElseModel elseModel;
     protected ElseIfModel elseIfModel;
+    protected TimePickerModel timePickerModel;
     
 
     public StrutsModels(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
@@ -451,5 +452,12 @@ public class StrutsModels {
     		elseIfModel = new ElseIfModel(stack, req, res);
     	}
     	return elseIfModel;
+    }
+    
+    public TimePickerModel getTimepicker() {
+    	if (timePickerModel == null) {
+    		timePickerModel = new TimePickerModel(stack, req, res);
+    	}
+    	return timePickerModel;
     }
 }

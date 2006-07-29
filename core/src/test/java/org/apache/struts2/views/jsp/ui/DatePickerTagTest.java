@@ -40,7 +40,6 @@ public class DatePickerTagTest extends AbstractUITagTest {
     public void testLocaleInStack() throws Exception {
         stack.getContext().put(ActionContext.LOCALE, Locale.FRANCE);
 
-        tag.setLanguage(null);
         tag.doStartTag();
         tag.doEndTag();
 

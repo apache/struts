@@ -6,8 +6,8 @@
     dojo.require("struts.widgets.*");
 </script>
 
-    <div dojoType="dropdowncontainer"
-        dateIconPath="/struts/dojo/struts/widgets/dateIcon.gif"
+    <div dojoType="dropdowndatepicker"
+        iconPath="/struts/dojo/struts/widgets/dateIcon.gif"
     >
 <input type="text" name="" id=""/>
     </div>

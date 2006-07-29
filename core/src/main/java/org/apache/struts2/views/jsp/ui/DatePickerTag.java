@@ -31,10 +31,11 @@ public class DatePickerTag extends TextFieldTag {
 
 	private static final long serialVersionUID = 4054114507143447232L;
 	
-	protected String language;
     protected String format;
-    protected String showstime;
-    protected String singleclick;
+    protected String dateIconPath;
+    protected String templatePath;
+    protected String templateCssPath;
+    
 
     public Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new DatePicker(stack, req, res);
@@ -44,25 +45,26 @@ public class DatePickerTag extends TextFieldTag {
         super.populateParams();
 
         final DatePicker datePicker = (DatePicker) component;
-        datePicker.setLanguage(language);
         datePicker.setFormat(format);
-        datePicker.setShowstime(showstime);
-        datePicker.setSingleclick(singleclick);
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
+        datePicker.setDateIconPath(dateIconPath);
+        datePicker.setTemplatePath(templatePath);
+        datePicker.setTemplateCssPath(templateCssPath);
     }
 
     public void setFormat(String format) {
         this.format = format;
     }
-
-    public void setShowstime(String showstime) {
-        this.showstime = showstime;
+    
+    public void setDateIconPath(String dateIconPath) {
+    	this.dateIconPath = dateIconPath;
+    }
+    
+    public void setTemplatePath(String templatePath) {
+    	this.templatePath = templatePath;
+    }
+    
+    public void setTemplateCssPath(String templateCsspath) {
+    	this.templateCssPath = templateCssPath;
     }
 
-    public void setSingleclick(String singleclick) {
-        this.singleclick = singleclick;
-    }
 }

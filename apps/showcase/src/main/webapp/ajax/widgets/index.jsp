@@ -24,7 +24,7 @@ Default Editor configuration:<br/>
 Configured Editor configuration:<br/>
 <s:form id="form2" action="AjaxRemoteForm" method="post">
     <s:textarea id="editor2" name="data" theme="ajax" cols="50" rows="10" value="Test Data 2">
-        <s:param name="editorControls">textGroup;|;justifyGroup;|;listGroup;indentGroup</s:param>
+        <s:param name="editorControls">textGroup;|;justifyGroup;|;listGroup;|;indentGroup</s:param>
     </s:textarea>
     <s:submit value="Submit"/>
 </s:form>

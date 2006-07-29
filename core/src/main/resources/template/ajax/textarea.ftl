@@ -5,7 +5,7 @@
 <#if parameters.editorControls?exists>
  items="${parameters.editorControls?html}"<#rt/>
 <#else>
- items="linkGroup;|;textGroup;|;justifyGroup;|;listGroup;indentGroup;|;colorGroup"
+ items="linkGroup;|;textGroup;|;justifyGroup;|;listGroup;|;indentGroup;|;colorGroup"
 </#if>
  name="${parameters.name?default("")?html}"<#rt/>
  cols="${parameters.cols?default("")?html}"<#rt/>

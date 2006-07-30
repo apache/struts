@@ -23,7 +23,22 @@ package mailreader2;
  */
 public final class Constants {
 
-    // --- Tokens ----
+    // -- Statements --
+
+    public static final String LOCALE_LIST = "LOCALE_LIST";
+    public static final String REGISTRATION_INSERT_ASSERT = "REGISTRATION_INSERT_ASSERT";
+    public static final String REGISTRATION_INSERT = "REGISTRATION_INSERT";
+    public static final String REGISTRATION_PASSWORD = "REGISTRATION_PASSWORD";
+    public static final String REGISTRATION_FULLNAME = "REGISTRATION_FULLNAME";
+    public static final String REGISTRATION_EDIT = "REGISTRATION_EDIT";
+    public static final String REGISTRATION_UPDATE = "REGISTRATION_UPDATE";
+    public static final String SUBSCRIPTION_INSERT_ASSERT = "SUBSCRIPTION_INSERT_ASSERT";
+    public static final String SUBSCRIPTION_INSERT = "SUBSCRIPTION_INSERT";
+    public static final String SUBSCRIPTION_LIST = "SUBSCRIPTION_LIST";
+    public static final String SUBSCRIPTION_EDIT = "SUBSCRIPTION_EDIT";
+    public static final String SUBSCRIPTION_UPDATE = "SUBSCRIPTION_UPDATE";
+
+    // -- Tokens --
 
     /**
      * <p> The token representing a "cancel" request. </p>

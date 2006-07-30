@@ -17,7 +17,7 @@ public class AppData {
     private String locale_code;
     private String locale_name;
 
-    private String account_key;
+    private String registration_key;
     private String username;
     private String password;
     private String password2;
@@ -29,16 +29,44 @@ public class AppData {
     private String protocol_code;
     private String protocol_name;
 
-    private String host_key;
-    private String host_name;
+    private String subscription_key;
+    private String subscription_host;
     private String host_user;
     private String host_pass;
     private Integer host_auto;
 
+    /**
+     * <p>Adapt internal Integer value to external boolean value. </p>
+     * @return False if host_auto==0, True otherwise
+     */
+    public boolean isHost_auto_checkbox() {
+        Integer _host_auto = getHost_auto();
+        if (_host_auto == null) _host_auto = 0;
+        return (_host_auto == 0);
+    }
+
+    /**
+     * <p>Adapt internal Integer value to external boolean value. </p>
+     */
+    public void setHost_auto_checkbox(boolean host_auto_checkbox) {
+        if (host_auto_checkbox)
+            setHost_auto(1);
+        else setHost_auto(0);
+    }
+
+    /**
+     * <p>Return true if a logic or state test passed,
+     * such as whether a record already exists.</p>
+     * @return True if a business logic test passed.
+     */
     public boolean isNominal() {
         return nominal;
     }
 
+    /**
+     * <p>Record outcome of a logic or state test,
+     * such as whether a record already exists.</p>
+     */
     public void setNominal(boolean nominal) {
         this.nominal = nominal;
     }
@@ -67,12 +95,12 @@ public class AppData {
         this.locale_name = locale_name;
     }
 
-    public String getAccount_key() {
-        return account_key;
+    public String getRegistration_key() {
+        return registration_key;
     }
 
-    public void setAccount_key(String account_key) {
-        this.account_key = account_key;
+    public void setRegistration_key(String registration_key) {
+        this.registration_key = registration_key;
     }
 
     public String getUsername() {
@@ -139,20 +167,20 @@ public class AppData {
         this.protocol_code = protocol_code;
     }
 
-    public String getHost_key() {
-        return host_key;
+    public String getSubscription_key() {
+        return subscription_key;
     }
 
-    public void setHost_key(String host_key) {
-        this.host_key = host_key;
+    public void setSubscription_key(String subscription_key) {
+        this.subscription_key = subscription_key;
     }
 
-    public String getHost_name() {
-        return host_name;
+    public String getSubscription_host() {
+        return subscription_host;
     }
 
-    public void setHost_name(String host_name) {
-        this.host_name = host_name;
+    public void setSubscription_host(String subscription_host) {
+        this.subscription_host = subscription_host;
     }
 
     public String getHost_user() {
@@ -185,18 +213,6 @@ public class AppData {
 
     public void setHost_auto(Integer host_auto) {
         this.host_auto = host_auto;
-    }
-
-    public boolean isHost_auto_checkbox() {
-        Integer _host_auto = getHost_auto();
-        if (_host_auto == null) _host_auto = 0;
-        return (_host_auto == 0);
-    }
-
-    public void setHost_auto_checkbox(boolean host_auto_checkbox) {
-        if (host_auto_checkbox)
-            setHost_auto(1);
-        else setHost_auto(0);
     }
 
 }

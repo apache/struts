@@ -1,0 +1,26 @@
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+                        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="mailreader">
+
+  <typeAlias alias="data"
+             type="mailreader2.AppData"/>
+
+  <update id="registration_update" parameterClass="data">
+  </update>
+
+  <select id="subscription_list" parameterClass="data">
+  </select>
+
+  <insert id="registration_insert" parameterClass="data">
+  </insert>
+
+  <select id="registration_fullname" parameterClass="data" resultClass="data">
+      SELECT username, fullname FROM registration WHERE username=#username#;
+  </select>
+
+    <select id="locale_list" parameterClass="data" resultClass="data">
+        SELECT locale_code, locale_name FROM locale;
+    </select>
+
+</sqlMap>

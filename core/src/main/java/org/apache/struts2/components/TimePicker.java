@@ -23,6 +23,53 @@ import javax.servlet.http.HttpServletResponse;
 import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
+ * <!-- START SNIPPET: javadoc -->
+ * Renders timepicker element.</p>
+ * Format supported by this component are:-
+ * <table border="1">
+ *   <tr>
+ *   	<td>Format</td>
+ *    	<td>Description</td>
+ *   </tr>
+ *   <tr>
+ *   	<td>#HH</td>
+ *   	<td>Display hour in two digit format</td>
+ *   </tr>
+ *   <tr>
+ *   	<td>#H</td>
+ *    	<td>Try to display hour in one digit format, if cannot use 2 digits</td>
+ *   </tr>
+ *   <tr>
+ *   	<td>#hh</td>
+ *   	<td>Display hour in two digit format</td>
+ *   </tr>
+ *   <tr>
+ *   	<td>#h</td>
+ *      <td>Try to display hour in one digit format, if cannot use 2 digits</td>
+ *   </tr>
+ *   <tr>
+ *      <td>#mm</td>
+ *      <td>Display minutes in 2 digits format</td>
+ *   </tr>
+ *   <tr>
+ *   	<td>#m</td>
+ *      <td>Try to display minutes in 2 digits fomrat, if cannot use 2 digits</td>
+ *   </tr>
+ * </table>
+ * 
+ * <!-- END SNIPPET: javadoc -->
+ * 
+ * 
+ * <pre>
+ * <!-- START SNIPPET: example -->
+ * 
+ * &lt;s:timepicker label="Show Time" name="showTime" value="05:00" format="#hh:#mm" /&gt;
+ * 
+ * &lt;s:timepicker label="Dinner Time" name="dinnerTime" format="#hh-#mm" /&gt;
+ * 
+ * <!-- END SNIPPET: example -->
+ * </pre>
+ * 
  * @version $Date$ $Id$
  */
 public class TimePicker extends TextField {

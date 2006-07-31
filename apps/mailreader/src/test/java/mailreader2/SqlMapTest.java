@@ -6,7 +6,7 @@ import java.util.List;
  * @author Ted Husted
  * @version $Revision: 1.0 $ $Date: Jul 29, 2006 5:34:31 PM $
  */
-public class MailreaderTest extends BaseSqlMapTest {
+public class SqlMapTest extends BaseSqlMapTest {
 
     // DEFAULTS FROM SAMPLE SCRIPT
 

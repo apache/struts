@@ -29,7 +29,7 @@ CREATE TABLE subscription
   fk_registration  char(36),
   fk_protocol char(36),
   subscription_host  char(36),
-  subscription_user char(18),
-  subscription_pass char(18),
-  subscription_auto int
+  host_user char(18),
+  host_pass char(18),
+  host_auto int
 );

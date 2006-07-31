@@ -25,6 +25,9 @@ public final class Constants {
 
     // -- Statements --
 
+    public static final Integer DB_FALSE = 0;
+    public static final Integer DB_TRUE = 1;
+
     public static final String LOCALE_LIST = "LOCALE_LIST";
     public static final String REGISTRATION_INSERT_ASSERT = "REGISTRATION_INSERT_ASSERT";
     public static final String REGISTRATION_INSERT = "REGISTRATION_INSERT";

@@ -41,8 +41,8 @@ public class AppData {
      */
     public boolean isHost_auto_checkbox() {
         Integer _host_auto = getHost_auto();
-        if (_host_auto == null) _host_auto = 0;
-        return (_host_auto == 0);
+        if (_host_auto == null) _host_auto = Constants.DB_FALSE;
+        return (_host_auto == Constants.DB_TRUE);
     }
 
     /**
@@ -50,8 +50,8 @@ public class AppData {
      */
     public void setHost_auto_checkbox(boolean host_auto_checkbox) {
         if (host_auto_checkbox)
-            setHost_auto(1);
-        else setHost_auto(0);
+            setHost_auto(Constants.DB_TRUE);
+        else setHost_auto(Constants.DB_FALSE);
     }
 
     /**

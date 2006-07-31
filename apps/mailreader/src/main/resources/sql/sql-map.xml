@@ -39,7 +39,7 @@
         SELECT pk_registration AS registration_key, fk_locale AS locale_key,
             username, password, fullname, email_from, email_replyto
         FROM registration
-        WHERE username=#username#;
+        WHERE pk_registration=#registration_key#;
     </select>
 
     <update id="REGISTRATION_UPDATE" parameterClass="data">
@@ -49,7 +49,7 @@
         WHERE pk_registration=#registration_key#;
     </update>
 
-    <select id="SUBSCRIPTION_INSERT_ASSERT" parameterClass="data" resultClass="data">
+    <select id="SUBSCRIPTION_INSERT_ASSERT" parameterClass="data" resultClass="long">
         SELECT COUNT(*)
         FROM subscription
         WHERE fk_registration=#registration_key#
@@ -59,21 +59,23 @@
     <insert id="SUBSCRIPTION_INSERT" parameterClass="data">
         INSERT INTO subscription
             (pk_subscription, fk_registration, fk_protocol, subscription_host, host_user, host_pass, host_auto)
-        VALUES (#subscription_key#, #registration_key#, #protocol_key#, #username#,
-            #subscription_host#, #host_user#, #host_pass#, #host_auto#);
+        VALUES (#subscription_key#, #registration_key#, #protocol_key#, #subscription_host#,
+            #host_user#, #host_pass#, #host_auto#);
     </insert>
 
     <select id="SUBSCRIPTION_LIST" parameterClass="data" resultClass="data">
         SELECT pk_subscription AS subscription_key,
             subscription_host, host_user, host_pass, host_auto, protocol_name
         FROM subscription
-            JOIN protocol ON fk_protocol=pk_protocol
+            JOIN protocol ON pk_protocol=fk_protocol
         WHERE fk_registration=#registration_key#;
     </select>
 
     <select id="SUBSCRIPTION_EDIT" parameterClass="data" resultClass="data">
-        SELECT pk_subscription AS subscription_key, fk_registration AS registration_key, fk_protocol AS protocol_key,
-            subscription_host, host_user, host_pass, host_auto FROM subscription, protocol
+        SELECT pk_subscription AS subscription_key, fk_protocol AS protocol_key,
+            subscription_host, host_user, host_pass, host_auto, protocol_name
+        FROM subscription
+            JOIN protocol ON pk_protocol=fk_protocol
         WHERE pk_subscription=#subscription_key#;
     </select>
 
@@ -81,7 +83,7 @@
         UPDATE subscription
         SET fk_registration=#registration_key#, fk_protocol=#protocol_key#,
             subscription_host=#subscription_host#, host_user=#host_user#, host_pass=#host_pass#, host_auto=#host_auto#
-        FROM subscription WHERE pk_subscription=#subscription_key#;
+        WHERE pk_subscription=#subscription_key#;
     </update>
 
 </sqlMap>

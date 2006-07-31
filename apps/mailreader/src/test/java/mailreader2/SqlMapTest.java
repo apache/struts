@@ -128,7 +128,7 @@ public class SqlMapTest extends BaseSqlMapTest {
     }
 
     public void testSUBSCRIPTION_INSERT_ASSERT_fail() throws Exception {
-        input.setSubscription_key(subscription_key);
+        input.setRegistration_key(registration_key);
         input.setSubscription_host(subscription_host);
         Object output = sqlMap.queryForObject(Constants.SUBSCRIPTION_INSERT_ASSERT,input);
         Long count = (Long) output;
@@ -157,7 +157,6 @@ public class SqlMapTest extends BaseSqlMapTest {
         Long count = (Long) output;
         assertTrue("Expected subscription to NOW exist",count.intValue()>0);
     }
-
 
    private void assertSubscription(AppData output) throws Exception {
        assertEquals(host_user, output.getHost_user());

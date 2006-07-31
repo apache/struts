@@ -17,15 +17,15 @@ import java.util.Properties;
  */
 public class BaseSqlMapTest extends TestCase {
 
-    protected static SqlMapClient sqlMap;
+    protected SqlMapClient sqlMap;
 
-    protected static void initSqlMap(String configFile, Properties props) throws Exception {
+    protected  void initSqlMap(String configFile, Properties props) throws Exception {
         Reader reader = Resources.getResourceAsReader(configFile);
         sqlMap = SqlMapClientBuilder.buildSqlMapClient(reader, props);
         reader.close();
     }
 
-    protected static void initScript(String script) throws Exception {
+    protected void runScript(String script) throws Exception {
         DataSource ds = sqlMap.getDataSource();
 
         Connection conn = ds.getConnection();
@@ -44,14 +44,13 @@ public class BaseSqlMapTest extends TestCase {
 
 
     protected void setUp() throws Exception {
-        if (sqlMap==null) {
-            initSqlMap("sql-map-config.xml", null);
-            initScript("sql/mailreader-schema.sql");
-            initScript("sql/mailreader-sample.sql");
-        }
+        initSqlMap("sql-map-config.xml", null);
+        runScript("sql/mailreader-schema.sql");
+        runScript("sql/mailreader-sample.sql");
     }
 
     protected void tearDown() throws Exception {
+        runScript("sql/mailreader-schema-drop.sql");
     }
 
     public void testInit() throws Exception {

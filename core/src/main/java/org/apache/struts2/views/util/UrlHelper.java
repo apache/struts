@@ -166,11 +166,15 @@ public class UrlHelper {
     }
 
     public static void buildParametersString(Map params, StringBuffer link) {
+    	buildParametersString(params, link, AMP);
+    }
+    
+    public static void buildParametersString(Map params, StringBuffer link, String paramSeparator) {
         if ((params != null) && (params.size() > 0)) {
             if (link.toString().indexOf("?") == -1) {
                 link.append("?");
             } else {
-                link.append(AMP);
+                link.append(paramSeparator);
             }
 
             // Set params
@@ -200,12 +204,12 @@ public class UrlHelper {
                     }
 
                     if (i < (values.length - 1)) {
-                        link.append(AMP);
+                        link.append(paramSeparator);
                     }
                 }
 
                 if (iter.hasNext()) {
-                    link.append(AMP);
+                    link.append(paramSeparator);
                 }
             }
         }

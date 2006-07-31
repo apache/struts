@@ -17,10 +17,18 @@
  */
 package org.apache.struts2.dispatcher;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.views.util.UrlHelper;
 
+import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.ActionInvocation;
 
 /**
@@ -89,7 +97,11 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
     protected String namespace;
     protected String method;
     
-    /* (non-Javadoc)
+    protected List<String> prohibitedResultParam = Arrays.asList(new String[] { 
+    		DEFAULT_PARAM, "namespace", "method", "encode", "parse", "location", 
+    		"prependServletContext" });
+    
+    /**
      * @see com.opensymphony.xwork2.Result#execute(com.opensymphony.xwork2.ActionInvocation)
      */
     public void execute(ActionInvocation invocation) throws Exception {
@@ -106,9 +118,25 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
         	method = conditionalParse(method, invocation);
         }
 
+        Map<String, String> requestParameters = new HashMap<String, String>();
+        ResultConfig resultConfig = invocation.getProxy().getConfig().getResults().get(
+        		invocation.getResultCode());
+        Map resultConfigParams = resultConfig.getParams();
+        for (Iterator i = resultConfigParams.entrySet().iterator(); i.hasNext(); ) {
+        	Map.Entry e = (Map.Entry) i.next();
+        	if (! prohibitedResultParam.contains(e.getKey())) {
+        		requestParameters.put(e.getKey().toString(), 
+        				e.getValue() == null ? "": 
+        					conditionalParse(e.getValue().toString(), invocation));
+        	}
+        }
+        
         ActionMapper mapper = ActionMapperFactory.getMapper();
-        location = mapper.getUriFromActionMapping(new ActionMapping(actionName, namespace, method, null));
-
+        StringBuffer tmpLocation = new StringBuffer(mapper.getUriFromActionMapping(new ActionMapping(actionName, namespace, method, null)));
+        UrlHelper.buildParametersString(requestParameters, tmpLocation, "&");
+        
+        location = tmpLocation.toString();
+        
         super.execute(invocation);
     }
 

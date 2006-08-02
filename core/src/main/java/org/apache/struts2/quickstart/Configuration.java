@@ -132,32 +132,35 @@ public class Configuration implements Serializable {
 
     public void resolveDirs(String wd) {
         if (ideaConfig != null) {
-            String full = resolveDir(this.ideaConfig, wd);
+            String[] paths = ideaConfig.split(",");
+            for (String path : paths) {
+                String full = resolveDir(path, wd);
 
-            try {
-                DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-                Document doc = db.parse(full);
-                NodeList components = doc.getElementsByTagName("root");
-                List jars = new ArrayList();
-                for (int i = 0; i < components.getLength(); i++) {
-                    Element e = (Element) components.item(i);
-                    String value = e.getAttribute("url");
-                    if (value != null && value.startsWith("jar://") && value.endsWith(".jar!/")) {
-                        value = value.substring(6, value.length() - 2);
-                        if (value.startsWith("$MODULE_DIR$")) {
-                            value = value.substring(13);
+                try {
+                    DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                    Document doc = db.parse(full);
+                    NodeList components = doc.getElementsByTagName("root");
+                    List jars = new ArrayList();
+                    for (int i = 0; i < components.getLength(); i++) {
+                        Element e = (Element) components.item(i);
+                        String value = e.getAttribute("url");
+                        if (value != null && value.startsWith("jar://") && value.endsWith(".jar!/")) {
+                            value = value.substring(6, value.length() - 2);
+                            if (value.startsWith("$MODULE_DIR$")) {
+                                value = value.substring(13);
+                            }
+                            jars.add(value);
                         }
-                        jars.add(value);
                     }
-                }
 
-                if (this.libs != null) {
-                    this.libs.addAll(jars);
-                } else {
-                    this.libs = jars;
+                    if (this.libs != null) {
+                        this.libs.addAll(jars);
+                    } else {
+                        this.libs = jars;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
         resolve(this.libs, wd);

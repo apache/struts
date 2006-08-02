@@ -47,7 +47,7 @@
             <option name="ALTERNATIVE_JRE_PATH"/>
         </configuration>
         <configuration selected="true" default="false" name="Struts Core Tests" type="JUnit" factoryName="JUnit">
-            <module name="struts-core"/>
+            <module name="struts2-core"/>
             <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false"/>
             <option name="ALTERNATIVE_JRE_PATH" value=""/>
             <option name="PACKAGE_NAME" value="org.apache.struts2"/>
@@ -72,7 +72,7 @@
             <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/apps/showcase"/>
             <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false"/>
             <option name="ALTERNATIVE_JRE_PATH" value=""/>
-            <module name="struts-showcase"/>
+            <module name="struts2-showcase"/>
         </configuration>
     </component>
 </project>

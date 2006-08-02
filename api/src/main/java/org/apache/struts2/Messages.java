@@ -13,6 +13,8 @@ import java.util.Map;
  */
 public interface Messages {
 
+    // TODO: Use Object[] for args instead of String[].
+
     /**
      * Message severity.
      */
@@ -70,7 +72,7 @@ public interface Messages {
      * @param arguments message arguments
      * @see Severity.INFO
      */
-    void addInformation(String key, Object... arguments);
+    void addInformation(String key, String... arguments);
 
     /**
      * Adds warning message.
@@ -87,7 +89,7 @@ public interface Messages {
      * @param arguments message arguments
      * @see Severity.WARN
      */
-    void addWarning(String key, Object... arguments);
+    void addWarning(String key, String... arguments);
 
     /**
      * Adds error message.
@@ -104,7 +106,7 @@ public interface Messages {
      * @param arguments message arguments
      * @see Severity.ERROR
      */
-    void addError(String key, Object... arguments);
+    void addError(String key, String... arguments);
 
     /**
      * Adds message.
@@ -121,7 +123,7 @@ public interface Messages {
      * @param key message key
      * @param arguments message arguments
      */
-    void add(Severity severity, String key, Object... arguments);
+    void add(Severity severity, String key, String... arguments);
 
     /**
      * Gets set of severities for which this {@code Messages} instance has messages. Not recursive.

@@ -1,7 +1,6 @@
 package org.apache.struts2.spi;
 
 import org.apache.struts2.Messages;
-import org.apache.struts2.spi.ActionContext;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
@@ -71,11 +70,6 @@ public interface RequestContext {
      * Gets messages.
      */
     Messages getMessages();
-
-    /**
-     * Gets error messages.
-     */
-    Messages getErrors();
 
     /**
      * Gets the servlet request.

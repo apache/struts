@@ -45,6 +45,7 @@
     -->
     <classDirs>
         <dir>src/main/resources</dir>
+        <dir>target/classes</dir>
         <dir>../../core/target/classes</dir>
         <dir>../../extras/target/classes</dir>
     </classDirs>

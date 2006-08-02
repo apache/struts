@@ -14,14 +14,13 @@ public class Welcome extends MailreaderSupport {
         }
 
         // Confirm database loaded
-        if (null==getDatabase()) {
-             addActionError(Constants.ERROR_DATABASE_NOT_LOADED);
+        if (null == getDatabase()) {
+            addActionError(Constants.ERROR_DATABASE_NOT_LOADED);
         }
 
         if (hasErrors()) {
             return ERROR;
-        }
-        else {
+        } else {
             return SUCCESS;
         }
     }

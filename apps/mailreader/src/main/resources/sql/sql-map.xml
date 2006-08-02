@@ -1,10 +1,10 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
-                        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+        "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="mailreader">
 
     <typeAlias alias="data"
-      type="mailreader2.AppData"/>
+               type="mailreader2.AppData"/>
 
     <select id="LOCALE_LIST" resultClass="data">
         SELECT pk_locale AS locale_key, locale_code
@@ -19,7 +19,7 @@
 
     <insert id="REGISTRATION_INSERT" parameterClass="data">
         INSERT INTO registration
-            (pk_registration, fk_locale, username, password, fullname, email_from, email_replyto)
+        (pk_registration, fk_locale, username, password, fullname, email_from, email_replyto)
         VALUES (#registration_key#, #locale_key#, #username#, #password#, #fullname#, #email_from#, #email_replyto#);
     </insert>
 
@@ -37,7 +37,7 @@
 
     <select id="REGISTRATION_EDIT" parameterClass="data" resultClass="data">
         SELECT pk_registration AS registration_key, fk_locale AS locale_key,
-            username, password, fullname, email_from, email_replyto
+        username, password, fullname, email_from, email_replyto
         FROM registration
         WHERE pk_registration=#registration_key#;
     </select>
@@ -45,7 +45,7 @@
     <update id="REGISTRATION_UPDATE" parameterClass="data">
         UPDATE registration
         SET fk_locale=#locale_key#, username=#username#, password=#password#, fullname=#fullname#,
-            email_from=#email_from#, email_replyto=#email_replyto#
+        email_from=#email_from#, email_replyto=#email_replyto#
         WHERE pk_registration=#registration_key#;
     </update>
 
@@ -53,36 +53,36 @@
         SELECT COUNT(*)
         FROM subscription
         WHERE fk_registration=#registration_key#
-            AND subscription_host=#subscription_host#;
+        AND subscription_host=#subscription_host#;
     </select>
 
     <insert id="SUBSCRIPTION_INSERT" parameterClass="data">
         INSERT INTO subscription
-            (pk_subscription, fk_registration, fk_protocol, subscription_host, host_user, host_pass, host_auto)
+        (pk_subscription, fk_registration, fk_protocol, subscription_host, host_user, host_pass, host_auto)
         VALUES (#subscription_key#, #registration_key#, #protocol_key#, #subscription_host#,
-            #host_user#, #host_pass#, #host_auto#);
+        #host_user#, #host_pass#, #host_auto#);
     </insert>
 
     <select id="SUBSCRIPTION_LIST" parameterClass="data" resultClass="data">
         SELECT pk_subscription AS subscription_key,
-            subscription_host, host_user, host_pass, host_auto, protocol_name
+        subscription_host, host_user, host_pass, host_auto, protocol_name
         FROM subscription
-            JOIN protocol ON pk_protocol=fk_protocol
+        JOIN protocol ON pk_protocol=fk_protocol
         WHERE fk_registration=#registration_key#;
     </select>
 
     <select id="SUBSCRIPTION_EDIT" parameterClass="data" resultClass="data">
         SELECT pk_subscription AS subscription_key, fk_protocol AS protocol_key,
-            subscription_host, host_user, host_pass, host_auto, protocol_name
+        subscription_host, host_user, host_pass, host_auto, protocol_name
         FROM subscription
-            JOIN protocol ON pk_protocol=fk_protocol
+        JOIN protocol ON pk_protocol=fk_protocol
         WHERE pk_subscription=#subscription_key#;
     </select>
 
     <update id="SUBSCRIPTION_UPDATE" parameterClass="data">
         UPDATE subscription
         SET fk_registration=#registration_key#, fk_protocol=#protocol_key#,
-            subscription_host=#subscription_host#, host_user=#host_user#, host_pass=#host_pass#, host_auto=#host_auto#
+        subscription_host=#subscription_host#, host_user=#host_user#, host_pass=#host_pass#, host_auto=#host_auto#
         WHERE pk_subscription=#subscription_key#;
     </update>
 

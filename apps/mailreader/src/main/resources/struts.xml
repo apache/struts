@@ -1,112 +1,169 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
-    "http://struts.apache.org/dtds/struts-2.0.dtd">
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
 
 <struts>
     <include file="struts-default.xml"/>
 
-    <package name="default" namespace="/" extends="struts-default">
+    <package name="default" namespace="" extends="struts-default">
 
         <interceptors>
 
             <interceptor name="authentication"
                          class="mailreader2.AuthenticationInterceptor"/>
 
-            <interceptor-stack name="user" >
-                <interceptor-ref name="authentication" />
+            <interceptor-stack name="user">
+                <interceptor-ref name="authentication"/>
                 <interceptor-ref name="defaultStack"/>
             </interceptor-stack>
 
-            <interceptor-stack name="user-submit" >
-                <interceptor-ref name="token-session" />
+            <interceptor-stack name="user-submit">
+                <interceptor-ref name="token-session"/>
                 <interceptor-ref name="user"/>
             </interceptor-stack>
 
-            <interceptor-stack name="guest" >
+            <interceptor-stack name="guest">
                 <interceptor-ref name="defaultStack"/>
             </interceptor-stack>
 
-            <interceptor-stack name="guest-submit" >
-                <interceptor-ref name="token-session" />
+            <interceptor-stack name="guest-submit">
+                <interceptor-ref name="token-session"/>
                 <interceptor-ref name="guest"/>
             </interceptor-stack>
 
         </interceptors>
 
         <default-interceptor-ref name="user"/>
-        
-        <default-action-ref name="Welcome"/>
+
+        <!-- default-action-ref name="Welcome"/ -->
 
         <global-results>
             <result name="error">/pages/Error.jsp</result>
             <result name="invalid.token">/pages/Error.jsp</result>
-            <result name="login" type="redirect-action">Logon!input</result>
+            <result name="login" type="redirect-action">Logon</result>
+            <result name="cancel" type="redirect-action">Welcome</result>
+            <result name="success" type="redirect-action">MainMenu</result>
+            <result name="expired" type="chain">ChangePassword</result>
         </global-results>
 
         <global-exception-mappings>
             <exception-mapping
                     result="error"
                     exception="java.lang.Throwable"/>
-        </global-exception-mappings>
-
-        <action name="Welcome" class="mailreader2.Welcome">
-            <result>/pages/Welcome.jsp</result>
-            <interceptor-ref name="guest"/>
-        </action>
-
-        <action name="Logon!*" class="mailreader2.Logon" method="{1}">
-            <result name="input">/pages/Logon.jsp</result>
-            <result name="cancel" type="redirect-action">Welcome</result>
-            <result type="redirect-action">MainMenu</result>
-            <result name="expired" type="chain">ChangePassword</result>
             <exception-mapping
                     exception="org.apache.struts.apps.mailreader.dao.ExpiredPasswordException"
                     result="expired"/>
-            <interceptor-ref name="guest"/>
+        </global-exception-mappings>
+
+        <!--
+        <action name="*" class="mailreader2.{1}">
+            <result name="input">/pages/{1}.jsp</result>
         </action>
+
+        <action name="*/*" class="mailreader2.{1}.{2}">
+            <result name="input">/pages/{1}.jsp</result>
+            <result type="redirect-action">MainMenu</result>
+        </action>
+
+        <action name="*/Create" class="mailreader2.{1}.Create">
+            <result name="input">/pages/{1}.jsp</result>
+            <result type="redirect-action">MainMenu</result>
+            <interceptor-ref name="user-submit" />
+        </action>
+
+        <action name="*/Update" class="mailreader2.{1}.Update">
+            <result name="input">/pages/{1}.jsp</result>
+            <result type="redirect-action">MainMenu</result>
+            <interceptor-ref name="user-submit" />
+        </action>
+
+        <action name="*/Save" class="mailreader2.{1}.Save">
+            <result name="input">/pages/{1}.jsp</result>
+            <result type="redirect-action">MainMenu</result>
+            <interceptor-ref name="user-submit" />
+        </action>
+
+        -->
 
         <action name="ChangePassword">
-            <result>/pages/ChangePassword.jsp</result>
-        </action>
-
-        <action name="MainMenu" class="mailreader2.MailreaderSupport">
-            <result>/pages/MainMenu.jsp</result>
-        </action>
-
-        <action name="Registration!*" class="mailreader2.Registration" method="{1}">
-            <result name="input">/pages/Registration.jsp</result>
-            <result type="redirect-action">MainMenu</result>
-            <interceptor-ref name="guest"/>
-        </action>
-
-        <!-- last match wins -->
-        <action name="Registration_save" class="mailreader2.RegistrationSave">
-            <result name="input">/pages/Registration.jsp</result>
-            <result type="redirect-action">MainMenu</result>
-            <interceptor-ref name="guest-submit" />
-        </action>
-
-        <action name="Subscription!*" class="mailreader2.Subscription" method="{1}">
-            <result name="input">/pages/Subscription.jsp</result>
-            <result type="redirect-action">Registration!input</result>
-        </action>
-
-        <!-- last match wins -->
-        <action name="Subscription_save" class="mailreader2.SubscriptionSave">
-            <result name="input">/pages/Subscription.jsp</result>
-            <result type="redirect-action">Registration!input</result>
-            <interceptor-ref name="user-submit" />
+            <result name="input">/pages/ChangePassword.jsp</result>
         </action>
 
         <action name="Logoff" class="mailreader2.Logoff">
             <result type="redirect-action">Welcome</result>
         </action>
 
+        <action name="Logon">
+            <result>/pages/Logon.jsp</result>
+            <interceptor-ref name="guest"/>
+        </action>
+
+        <action name="MainMenu" class="mailreader2.MailreaderSupport">
+            <result>/pages/MainMenu.jsp</result>
+        </action>
+
         <action name="Tour">
-            <result>/pages/tour.html</result>
+            <result>/pages/Tour.html</result>
+            <interceptor-ref name="guest"/>
+        </action>
+
+        <action name="Welcome" class="mailreader2.Welcome">
+            <result>/pages/Welcome.jsp</result>
             <interceptor-ref name="guest"/>
         </action>
 
     </package>
+
+    <package name="registration" namespace="/registration" extends="default">
+
+        <action name="Update" class="mailreader2.registration.Update">
+            <result name="input">/pages/registration.jsp</result>
+            <result type="redirect-action">MainMenu</result>
+        </action>
+
+        <action name="Create" class="mailreader2.registration.Create">
+            <result name="input">/pages/registration.jsp</result>
+            <result type="redirect-action">MainMenu</result>
+            <interceptor-ref name="guest-submit"/>
+        </action>
+
+        <action name="Input" class="mailreader2.registration.Input">
+            <result>/pages/registration.jsp</result>
+            <interceptor-ref name="guest"/>
+        </action>
+
+        <action name="Retrieve" class="mailreader2.registration.Retrieve">
+            <result name="input">/pages/Logon.jsp</result>
+            <result type="redirect-action">MainMenu</result>
+            <interceptor-ref name="guest"/>
+        </action>
+
+    </package>
+
+    <package name="subscription" namespace="/subscription" extends="default">
+
+        <action name="Delete" class="mailreader2.subscription.Delete">
+            <result>/pages/subscription.jsp</result>
+        </action>
+
+        <action name="Edit" class="mailreader2.subscription.Edit">
+            <result>/pages/subscription.jsp</result>
+        </action>
+
+        <action name="Input" class="mailreader2.subscription.Input">
+            <result>/pages/subscription.jsp</result>
+        </action>
+
+        <action name="Save" class="mailreader2.subscription.Save">
+            <result name="input">/pages/subscription.jsp</result>
+            <result type="redirect-action">
+                <param name="actionName">Input</param>
+                <param name="namespace">/registration</param>
+            </result>
+            <interceptor-ref name="user-submit"/>
+        </action>
+
+    </package>
+
 </struts>

@@ -37,6 +37,7 @@ public class AppData {
 
     /**
      * <p>Adapt internal Integer value to external boolean value. </p>
+     *
      * @return False if host_auto==0, True otherwise
      */
     public boolean isHost_auto_checkbox() {
@@ -57,6 +58,7 @@ public class AppData {
     /**
      * <p>Return true if a logic or state test passed,
      * such as whether a record already exists.</p>
+     *
      * @return True if a business logic test passed.
      */
     public boolean isNominal() {

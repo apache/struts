@@ -19,7 +19,7 @@ public class BaseSqlMapTest extends TestCase {
 
     protected SqlMapClient sqlMap;
 
-    protected  void initSqlMap(String configFile, Properties props) throws Exception {
+    protected void initSqlMap(String configFile, Properties props) throws Exception {
         Reader reader = Resources.getResourceAsReader(configFile);
         sqlMap = SqlMapClientBuilder.buildSqlMapClient(reader, props);
         reader.close();

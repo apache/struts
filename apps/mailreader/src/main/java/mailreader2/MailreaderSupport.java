@@ -19,8 +19,6 @@
 package mailreader2;
 
 import com.opensymphony.util.BeanUtils;
-import org.apache.struts2.interceptor.ApplicationAware;
-import org.apache.struts2.interceptor.SessionAware;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,6 +28,8 @@ import org.apache.struts.apps.mailreader.dao.User;
 import org.apache.struts.apps.mailreader.dao.UserDatabase;
 import org.apache.struts.apps.mailreader.dao.impl.memory.MemorySubscription;
 import org.apache.struts.apps.mailreader.dao.impl.memory.MemoryUser;
+import org.apache.struts2.interceptor.ApplicationAware;
+import org.apache.struts2.interceptor.SessionAware;
 
 import java.util.Map;
 
@@ -54,12 +54,12 @@ public class MailreaderSupport extends ActionSupport
 
     /**
      * Return CANCEL so apropriate result can be selected.
+     *
      * @return "cancel" so apropriate result can be selected.
      */
     public String cancel() {
         return Constants.CANCEL;
     }
-
 
     // ---- ApplicationAware ----
 
@@ -140,7 +140,7 @@ public class MailreaderSupport extends ActionSupport
      * @param value The task to set.
      */
     public void setTask(String value) {
-        task =  value;
+        task = value;
     }
 
     // ---- Token property (utilized by UI) ----
@@ -166,18 +166,17 @@ public class MailreaderSupport extends ActionSupport
      * @param value The token to set.
      */
     public void setToken(String value) {
-        token =  value;
+        token = value;
     }
-
 
     // ---- Host property ----
 
     /**
-     * <p>Field to store Subscription host.</p>
+     * <p>Field to store Support host.</p>
      * <p/>
      * <p> The host is an immutable property of the Subscrtion DAP object, so
      * we need to store it locally until we are ready to create the
-     * Subscription. </p>
+     * Support. </p>
      */
     private String host;
 
@@ -191,7 +190,7 @@ public class MailreaderSupport extends ActionSupport
     }
 
     /**
-     * <p>Store new Subscription host.</p>
+     * <p>Store new Support host.</p>
      *
      * @param value
      */
@@ -401,7 +400,7 @@ public class MailreaderSupport extends ActionSupport
 
         try {
             user = database.findUser(username);
-         }
+        }
 
         catch (ExpiredPasswordException e) {
             user = getUser(); // Just so that it is not null
@@ -437,19 +436,19 @@ public class MailreaderSupport extends ActionSupport
         }
     }
 
-    // ---- Subscription property ----
+    // ---- Support property ----
 
     /**
-     * <p>Obtain the cached Subscription object, if any. </p>
+     * <p>Obtain the cached Support object, if any. </p>
      *
-     * @return Cached Subscription object or null
+     * @return Cached Support object or null
      */
     public Subscription getSubscription() {
         return (Subscription) getSession().get(Constants.SUBSCRIPTION_KEY);
     }
 
     /**
-     * <p>Store new User Subscription.</p>
+     * <p>Store new User Support.</p>
      *
      * @param subscription
      */
@@ -458,13 +457,13 @@ public class MailreaderSupport extends ActionSupport
     }
 
     /**
-     * <p> Obtain User Subscription object for the given host, or return null
+     * <p> Obtain User Support object for the given host, or return null
      * if not found. </p>
-     *
+     * <p/>
      * <p>It would be possible for this code to throw a NullPointerException,
      * but the ExceptionHandler in the xwork.xml will catch that for us.</p>
      *
-     * @return The matching Subscription or null
+     * @return The matching Support or null
      */
     public Subscription findSubscription(String host) {
         Subscription subscription;
@@ -473,19 +472,19 @@ public class MailreaderSupport extends ActionSupport
     }
 
     /**
-     * <p>Obtain uSER Subscription for the local Host property.</p>
+     * <p>Obtain uSER Support for the local Host property.</p>
      * <p/>
      * <p>Usually, the host property will be set from the client request,
      * because it was embedded in a link to the Subcription action.
      *
-     * @return Subscription or null if not found
+     * @return Support or null if not found
      */
     public Subscription findSubscription() {
         return findSubscription(getHost());
     }
 
     /**
-     * <p>Provide a "temporary" User Subscription object that can be used to
+     * <p>Provide a "temporary" User Support object that can be used to
      * capture input values.</p>
      */
     public void createInputSubscription() {
@@ -495,11 +494,11 @@ public class MailreaderSupport extends ActionSupport
     }
 
     /**
-     * <p>Provide new User Subscription object for the given host, or null if
+     * <p>Provide new User Support object for the given host, or null if
      * the host is not unique.</p>
      *
      * @param host
-     * @return New User Subscription object or null
+     * @return New User Support object or null
      */
     public Subscription createSubscription(String host) {
 
@@ -509,7 +508,7 @@ public class MailreaderSupport extends ActionSupport
 
         if (null != sub) {
             // FIXME - localization - "error.host.unique")
-            addFieldError(Constants.HOST,"That hostname is already defined");
+            addFieldError(Constants.HOST, "That hostname is already defined");
             return null;
         }
 
@@ -517,10 +516,10 @@ public class MailreaderSupport extends ActionSupport
     }
 
     /**
-     * <p>Create a new Subscription from the current Subscription object,
-     * making the new Subscription the current Subscription. </p>
+     * <p>Create a new Support from the current Support object,
+     * making the new Support the current Support. </p>
      * <p/>
-     * <p>Usually, the "current" Subscription is a temporary object being used
+     * <p>Usually, the "current" Support is a temporary object being used
      * to capture input values.</p>
      *
      * @param host
@@ -536,17 +535,17 @@ public class MailreaderSupport extends ActionSupport
     }
 
     /**
-     * <p>Delete the current Subscription object from the database.</p>
+     * <p>Delete the current Support object from the database.</p>
      */
-    public void removeSubscription()  {
+    public void removeSubscription() {
         getUser().removeSubscription(getSubscription());
         getSession().remove(Constants.SUBSCRIPTION_KEY);
     }
 
     /**
-     * <p>Provide MailServer Host for current User Subscription.</p>
+     * <p>Provide MailServer Host for current User Support.</p>
      *
-     * @return MailServer Host for current User Subscription
+     * @return MailServer Host for current User Support
      */
     public String getSubscriptionHost() {
         Subscription sub = getSubscription();

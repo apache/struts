@@ -75,7 +75,7 @@ public final class Constants {
     public static final String PACKAGE = "org.apache.struts.apps.mailreader";
 
     /**
-     * <p> The session scope attribute under which the Subscription object
+     * <p> The session scope attribute under which the Support object
      * currently selected by our logged-in User is stored. </p>
      */
     public static final String SUBSCRIPTION_KEY = "subscription";
@@ -91,11 +91,10 @@ public final class Constants {
      */
     public static final String HOST = "host";
 
-    
     // ---- Error Messages ----
 
     /**
-     * <p>
+     * <p/>
      * A static message in case message resource is not loaded.
      * </p>
      */
@@ -103,31 +102,31 @@ public final class Constants {
             "ERROR:  Message resources not loaded -- check servlet container logs for error messages.";
 
     /**
-     * <p>
+     * <p/>
      * A static message in case database resource is not loaded.
-     * <p>
+     * <p/>
      */
     public static final String ERROR_DATABASE_NOT_LOADED =
             "ERROR:  User database not loaded -- check servlet container logs for error messages.";
 
     /**
-     * <p>
+     * <p/>
      * A standard key from the message resources file, to test if it is available.
-     * <p>
+     * <p/>
      */
     public static final String ERROR_DATABASE_MISSING = "error.database.missing";
 
     /**
-     * <P>
+     * <p/>
      * A "magic" username to trigger an ExpiredPasswordException for testing.
-     *</p>
+     * </p>
      */
     public static final String EXPIRED_PASSWORD_EXCEPTION = "ExpiredPasswordException";
 
     /**
-     * <p>
+     * <p/>
      * Name of field to associate with authentification errors.
-     * <p>
+     * <p/>
      */
     public static final String PASSWORD_MISMATCH_FIELD = "password";
 

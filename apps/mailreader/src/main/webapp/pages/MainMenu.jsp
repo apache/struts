@@ -13,13 +13,21 @@
 <h3><s:text name="mainMenu.heading"/> <s:property
         value="user.fullName"/></h3>
 <ul>
-    <li><a href="<s:url action="Registration!input" />">
-        <s:text name="mainMenu.registration"/>
-    </a>
+    <li>
+        <s:url id="Input" action="Input" namespace="/registration"/>
+        <s:a href="%{Input}">
+            <s:text name="mainMenu.registration"/>
+        </s:a>
     </li>
-    <li><a href="<s:url action="Logoff"/>">
-        <s:text name="mainMenu.logoff"/>
-    </a>
+    <li>
+        <s:url id="Logoff" action="Logoff"/>
+        <s:a href="%{Logoff}">
+            <s:text name="mainMenu.logoff"/>
+        </s:a>
+    </li>
 </ul>
+
+<jsp:include page="Footer.jsp"/>
+
 </body>
 </html>

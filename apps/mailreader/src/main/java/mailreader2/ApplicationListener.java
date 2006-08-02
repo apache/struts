@@ -29,7 +29,7 @@ import java.io.*;
 
 /**
  * <p><code>ServletContextListener</code> that initializes and finalizes the
- * persistent storage of User and Subscription information for the Struts
+ * persistent storage of User and Support information for the Struts
  * Demonstration Application, using an in-memory database backed by an XML
  * file.</p>
  * <p/>
@@ -50,7 +50,7 @@ import java.io.*;
  * <li>Class to store protocol list (an array here). </li>
  * <p/>
  * </ul>
- * <p>
+ * <p/>
  * DEVELOPMENT NOTE - Another approach would be to instantiate the database via Spring.
  * </p>
  */

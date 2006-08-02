@@ -9,10 +9,10 @@
           type="text/css"/>
 </head>
 
-<body onLoad="self.focus();document.Logon.username.focus()">
+<body onLoad="self.focus();document.Retrieve.username.focus()">
 
-<s:actionerror />
-<s:form action="Logon!execute" validate="true">
+<s:actionerror/>
+<s:form action="Retrieve" namespace="/registration" validate="true">
     <s:textfield label="%{getText('username')}" name="username"/>
 
     <s:password label="%{getText('password')}" name="password" showPassword="true"/>
@@ -21,8 +21,8 @@
 
     <s:reset value="%{getText('button.reset')}"/>
 
-    <s:submit action="Logon!cancel" value="%{getText('button.cancel')}"
-                onclick="form.onsubmit=null"/>
+    <s:submit action="Welcome" value="%{getText('button.cancel')}"
+              onclick="form.onsubmit=null"/>
 </s:form>
 
 <jsp:include page="Footer.jsp"/>

@@ -17,10 +17,10 @@
           type="text/css"/>
 </head>
 
-<body onLoad="self.focus();document.Subscription_save.username.focus()">
+<body onLoad="self.focus();document.Save.username.focus()">
 
 <s:actionerror/>
-<s:form action="Subscription_save" validate="true">
+<s:form action="Save" validate="true">
     <s:token/>
     <s:hidden name="task"/>
     <s:label label="%{getText('username')}" name="user.username"/>
@@ -35,31 +35,31 @@
 
     <s:if test="task == 'Delete'">
         <s:label label="%{getText('mailUsername')}"
-                   name="subscription.username"/>
+                 name="subscription.username"/>
         <s:label label="%{getText('mailPassword')}"
-                   name="subscription.password"/>
+                 name="subscription.password"/>
         <s:label label="%{getText('mailServerType')}"
-                   name="subscription.type"/>
+                 name="subscription.type"/>
         <s:label label="%{getText('autoConnect')}"
-                   name="subscription.autoConnect"/>
+                 name="subscription.autoConnect"/>
         <s:submit value="%{getText('button.confirm')}"/>
     </s:if>
     <s:else>
         <s:textfield label="%{getText('mailUsername')}"
-                       name="subscription.username"/>
+                     name="subscription.username"/>
         <s:textfield label="%{getText('mailPassword')}"
-                       name="subscription.password"/>
+                     name="subscription.password"/>
         <s:select label="%{getText('mailServerType')}"
-                    name="subscription.type" list="types"/>
+                  name="subscription.type" list="types"/>
         <s:checkbox label="%{getText('autoConnect')}"
-                      name="subscription.autoConnect"/>
+                    name="subscription.autoConnect"/>
         <s:submit value="%{getText('button.save')}"/>
         <s:reset value="%{getText('button.reset')}"/>
     </s:else>
 
-    <s:submit action="Registration!input"
-                value="%{getText('button.cancel')}"
-                onclick="form.onsubmit=null"/>
+    <s:submit action="MainMenu"
+              value="%{getText('button.cancel')}"
+              onclick="form.onsubmit=null"/>
 </s:form>
 
 <jsp:include page="Footer.jsp"/>

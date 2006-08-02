@@ -1,16 +1,19 @@
 package mailreader2;
 
-import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Action;
-import java.util.Map;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.interceptor.Interceptor;
 import org.apache.struts.apps.mailreader.dao.User;
 
-public class AuthenticationInterceptor implements Interceptor  {
+import java.util.Map;
 
-    public void destroy () {}
+public class AuthenticationInterceptor implements Interceptor {
 
-    public void init() {}
+    public void destroy() {
+    }
+
+    public void init() {
+    }
 
     public String intercept(ActionInvocation actionInvocation) throws Exception {
 
@@ -18,12 +21,11 @@ public class AuthenticationInterceptor implements Interceptor  {
 
         User user = (User) session.get(Constants.USER_KEY);
 
-        boolean isAuthenticated = (null!=user) && (null!=user.getDatabase());
+        boolean isAuthenticated = (null != user) && (null != user.getDatabase());
 
         if (!isAuthenticated) {
-            return Action.LOGIN;            
-        }
-        else {
+            return Action.LOGIN;
+        } else {
             return actionInvocation.invoke();
         }
 

@@ -20,7 +20,7 @@
 
 <h3>Error Message</h3>
 
-<s:actionerror />
+<s:actionerror/>
 
 <p>
     <s:property value="%{exception.message}"/>

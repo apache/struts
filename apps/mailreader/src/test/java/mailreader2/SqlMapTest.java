@@ -48,47 +48,47 @@ public class SqlMapTest extends BaseSqlMapTest {
 
     public void setUp() throws Exception {
         super.setUp();
-        input =  new AppData();
+        input = new AppData();
     }
 
     public void testLOCALE_LIST() throws Exception {
-        AppData output = (AppData) sqlMap.queryForObject(Constants.LOCALE_LIST,null);
+        AppData output = (AppData) sqlMap.queryForObject(Constants.LOCALE_LIST, null);
         assertNotNull(output);
     }
 
     public void testREGISTRATION_INSERT_ASSERT_fail() throws Exception {
         input.setUsername(username);
-        Object output = sqlMap.queryForObject(Constants.REGISTRATION_INSERT_ASSERT,input);
+        Object output = sqlMap.queryForObject(Constants.REGISTRATION_INSERT_ASSERT, input);
         Long count = (Long) output;
-        assertTrue("Expected user to already exist",count.intValue()>0);
+        assertTrue("Expected user to already exist", count.intValue() > 0);
     }
 
     public void testREGISTRATION_INSERT_ASSERT() throws Exception {
         input.setUsername(username2);
-        Object output = sqlMap.queryForObject(Constants.REGISTRATION_INSERT_ASSERT,input);
+        Object output = sqlMap.queryForObject(Constants.REGISTRATION_INSERT_ASSERT, input);
         Long count = (Long) output;
-        assertTrue("Did not expected user to exist",count.intValue()==0);
+        assertTrue("Did not expected user to exist", count.intValue() == 0);
     }
 
     public void testREGISTRATION_INSERT() throws Exception {
         input.setRegistration_key(registration_key2);
         input.setLocale_key(locale_key);
         input.setUsername(username2);
-        input.setPassword(password2 );
+        input.setPassword(password2);
         input.setFullname(fullname2);
         input.setEmail_from(email_from2);
         input.setEmail_replyto(email_replyto2);
-        sqlMap.insert(Constants.REGISTRATION_INSERT,input);
+        sqlMap.insert(Constants.REGISTRATION_INSERT, input);
         // Trust but verify
         input.setPassword(null);
-        AppData output = (AppData) sqlMap.queryForObject(Constants.REGISTRATION_PASSWORD,input);
-        assertEquals(password2,output.getPassword());
+        AppData output = (AppData) sqlMap.queryForObject(Constants.REGISTRATION_PASSWORD, input);
+        assertEquals(password2, output.getPassword());
     }
 
-    public void testREGISTRATION_PASSWORD()  throws Exception {
+    public void testREGISTRATION_PASSWORD() throws Exception {
         input.setUsername(username);
-        AppData output = (AppData) sqlMap.queryForObject(Constants.REGISTRATION_PASSWORD,input);
-        assertEquals(password,output.getPassword());
+        AppData output = (AppData) sqlMap.queryForObject(Constants.REGISTRATION_PASSWORD, input);
+        assertEquals(password, output.getPassword());
     }
 
     public void testREGISTRATION_FULLNAME() throws Exception {
@@ -96,13 +96,13 @@ public class SqlMapTest extends BaseSqlMapTest {
         AppData output = (AppData) sqlMap.queryForObject(Constants.REGISTRATION_FULLNAME, input);
         assertEquals(fullname, output.getFullname());
         assertNull("Expected other fields to be null", output.getPassword());
-        assertNull("Expected other fields to be null",output.getEmail_from());
+        assertNull("Expected other fields to be null", output.getEmail_from());
     }
 
     public void testREGISTRATION_EDIT() throws Exception {
         input.setRegistration_key(registration_key);
         AppData output = (AppData) sqlMap.queryForObject(Constants.REGISTRATION_EDIT, input);
-        assertNotNull("Registration not found!",output);
+        assertNotNull("Support not found!", output);
         assertEquals(fullname, output.getFullname());
         assertEquals(email_from, output.getEmail_from());
         assertEquals(email_replyto, output.getEmail_replyto());
@@ -111,36 +111,36 @@ public class SqlMapTest extends BaseSqlMapTest {
     public void testREGISTRATION_UPDATE() throws Exception {
         input.setRegistration_key(registration_key);
         input.setUsername(username2);
-        input.setPassword(password2 );
+        input.setPassword(password2);
         input.setFullname(fullname2);
         input.setEmail_from(email_from2);
         input.setEmail_replyto(email_replyto2);
-        sqlMap.update(Constants.REGISTRATION_UPDATE,input);
+        sqlMap.update(Constants.REGISTRATION_UPDATE, input);
         // Trust but verify
         input.setPassword(null);
-        AppData output = (AppData) sqlMap.queryForObject(Constants.REGISTRATION_PASSWORD,input);
-        assertEquals(password2,output.getPassword());
+        AppData output = (AppData) sqlMap.queryForObject(Constants.REGISTRATION_PASSWORD, input);
+        assertEquals(password2, output.getPassword());
     }
 
     public void testREGISTRATION_UPDATE_fails() throws Exception {
         input.setRegistration_key(null);
-        sqlMap.update(Constants.REGISTRATION_UPDATE,input);
+        sqlMap.update(Constants.REGISTRATION_UPDATE, input);
     }
 
     public void testSUBSCRIPTION_INSERT_ASSERT_fail() throws Exception {
         input.setRegistration_key(registration_key);
         input.setSubscription_host(subscription_host);
-        Object output = sqlMap.queryForObject(Constants.SUBSCRIPTION_INSERT_ASSERT,input);
+        Object output = sqlMap.queryForObject(Constants.SUBSCRIPTION_INSERT_ASSERT, input);
         Long count = (Long) output;
-        assertTrue("Expected subscription to already exist",count.intValue()>0);
+        assertTrue("Expected subscription to already exist", count.intValue() > 0);
     }
 
     public void SUBSCRIPTION_INSERT_ASSERT() throws Exception {
         input.setSubscription_key(subscription_key2);
         input.setSubscription_host(subscription_host2);
-        Object output = sqlMap.queryForObject(Constants.SUBSCRIPTION_INSERT_ASSERT,input);
+        Object output = sqlMap.queryForObject(Constants.SUBSCRIPTION_INSERT_ASSERT, input);
         Long count = (Long) output;
-        assertTrue("Did not expect subscription to exist",count.intValue()==0);
+        assertTrue("Did not expect subscription to exist", count.intValue() == 0);
     }
 
     public void testSUBSCRIPTION_INSERT() throws Exception {
@@ -151,27 +151,27 @@ public class SqlMapTest extends BaseSqlMapTest {
         input.setHost_user(host_user2);
         input.setHost_pass(host_pass2);
         input.setHost_auto(host_auto2);
-        sqlMap.insert(Constants.SUBSCRIPTION_INSERT,input);
+        sqlMap.insert(Constants.SUBSCRIPTION_INSERT, input);
         // Trust but verify
-        Object output = sqlMap.queryForObject(Constants.SUBSCRIPTION_INSERT_ASSERT,input);
+        Object output = sqlMap.queryForObject(Constants.SUBSCRIPTION_INSERT_ASSERT, input);
         Long count = (Long) output;
-        assertTrue("Expected subscription to NOW exist",count.intValue()>0);
+        assertTrue("Expected subscription to NOW exist", count.intValue() > 0);
     }
 
-   private void assertSubscription(AppData output) throws Exception {
-       assertEquals(host_user, output.getHost_user());
-       assertEquals(host_pass, output.getHost_pass());
-       assertEquals(protocol_name, output.getProtocol_name());
-       assertEquals(host_auto,output.getHost_auto());
-       assertFalse(output.isHost_auto_checkbox());
-   }
+    private void assertSubscription(AppData output) throws Exception {
+        assertEquals(host_user, output.getHost_user());
+        assertEquals(host_pass, output.getHost_pass());
+        assertEquals(protocol_name, output.getProtocol_name());
+        assertEquals(host_auto, output.getHost_auto());
+        assertFalse(output.isHost_auto_checkbox());
+    }
 
     public void testSUBSCRIPTION_LIST() throws Exception {
         input.setRegistration_key(registration_key);
-        Object output = sqlMap.queryForList(Constants.SUBSCRIPTION_LIST,input);
-        assertNotNull("Query failed!",output);
+        Object output = sqlMap.queryForList(Constants.SUBSCRIPTION_LIST, input);
+        assertNotNull("Query failed!", output);
         List list = (List) output;
-        assertEquals(SAMPLE_SIZE,list.size());
+        assertEquals(SAMPLE_SIZE, list.size());
         AppData row1 = (AppData) list.get(0);
         assertSubscription(row1);
     }
@@ -179,7 +179,7 @@ public class SqlMapTest extends BaseSqlMapTest {
     public void testSUBSCRIPTION_EDIT() throws Exception {
         input.setSubscription_key(subscription_key);
         AppData output = (AppData) sqlMap.queryForObject(Constants.SUBSCRIPTION_EDIT, input);
-        assertNotNull("Subscription not found!",output);
+        assertNotNull("Support not found!", output);
         assertSubscription(output);
     }
 
@@ -191,11 +191,11 @@ public class SqlMapTest extends BaseSqlMapTest {
         input.setHost_user(host_user2);
         input.setHost_pass(host_pass2);
         input.setHost_auto(host_auto2);
-        sqlMap.update(Constants.SUBSCRIPTION_UPDATE,input);
+        sqlMap.update(Constants.SUBSCRIPTION_UPDATE, input);
         // Trust but verify
-        Object output = sqlMap.queryForObject(Constants.SUBSCRIPTION_INSERT_ASSERT,input);
+        Object output = sqlMap.queryForObject(Constants.SUBSCRIPTION_INSERT_ASSERT, input);
         Long count = (Long) output;
-        assertTrue("Expected subscription to exist",count.intValue()>0);
+        assertTrue("Expected subscription to exist", count.intValue() > 0);
     }
 
 }

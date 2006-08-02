@@ -16,7 +16,7 @@
 </p>
 
 <p>
-    <a href="<s:url action="Logon!input"/>">
+    <a href="<s:url action="Logon"/>">
         <s:text name="change.try"/>
     </a>
 </p>

@@ -14,10 +14,10 @@
           type="text/css"/>
 </head>
 
-<body onLoad="self.focus();document.Registration.username.focus()">
+<body onLoad="self.focus();document.Update.username.focus()">
 
 <s:actionerror/>
-<s:form action="Registration" validate="true">
+<s:form action="Update" validate="true">
     <s:token/>
     <s:hidden name="task"/>
     <s:if test="task == 'Create'">
@@ -33,29 +33,29 @@
     <s:password label="%{getText('password2')}" name="password2"/>
 
     <s:textfield label="%{getText('fullName')}"
-                   name="user.fullName"/>
+                 name="user.fullName"/>
 
     <s:textfield label="%{getText('fromAddress')}"
-                   name="user.fromAddress"/>
+                 name="user.fromAddress"/>
 
     <s:textfield label="%{getText('replyToAddress')}"
-                   name="user.replyToAddress"/>
+                 name="user.replyToAddress"/>
 
     <s:if test="task == 'Create'">
-        <s:submit value="%{getText('button.save')}" action="Registration_save"/>
+        <s:submit value="%{getText('button.save')}" action="Create"/>
 
         <s:reset value="%{getText('button.reset')}"/>
 
         <s:submit action="Welcome" value="%{getText('button.cancel')}"
-                    onclick="form.onsubmit=null"/>
+                  onclick="form.onsubmit=null"/>
     </s:if>
     <s:else>
         <s:submit value="%{getText('button.save')}"/>
 
         <s:reset value="%{getText('button.reset')}"/>
 
-        <s:submit action="MainMenu" value="%{getText('button.cancel')}"
-                    onclick="form.onsubmit=null"/>
+        <s:submit value="%{getText('button.cancel')}"
+                  action="MainMenu" onclick="form.onsubmit=null"/>
     </s:else>
 
 </s:form>
@@ -100,23 +100,27 @@
                     <s:property value="autoConnect"/>
                 </td>
                 <td align="center">
-
-                    <a href="<s:url action="Subscription!delete"><s:param name="host" value="host"/></s:url>">
+                    <s:url id="Delete" action="Delete" namespace="/subscription">
+                        <s:param name="host" value="host"/>
+                    </s:url>
+                    <s:a href="%{Delete}">
                         <s:text name="registration.deleteSubscription"/>
-                    </a>
+                    </s:a>
                     &nbsp;
-                    <a href="<s:url action="Subscription!edit"><s:param name="host" value="host"/></s:url>">
+                    <s:url id="Edit" action="Edit" namespace="/subscription">
+                        <s:param name="host" value="host"/>
+                    </s:url>
+                    <s:a href="%{Edit}">
                         <s:text name="registration.editSubscription"/>
-                    </a>
-
+                    </s:a>
                 </td>
             </tr>
         </s:iterator>
 
     </table>
 
-    <a href="<s:url action="Subscription!input"/>"><s:text
-            name="registration.addSubscription"/></a>
+    <s:url id="Input" action="Input" namespace="/subscription"/>
+    <s:a href="%{Input}"><s:text name="registration.addSubscription"/></s:a>
 
 </s:if>
 

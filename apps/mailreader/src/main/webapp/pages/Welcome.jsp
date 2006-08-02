@@ -14,10 +14,14 @@
 <h3><s:text name="index.heading"/></h3>
 
 <ul>
-    <li><a href="<s:url action="Registration!input"/>"><s:text
-            name="index.registration"/></a></li>
-    <li><a href="<s:url action="Logon!input"/>"><s:text
-            name="index.logon"/></a></li>
+    <li>
+        <s:url id="Input" action="Input" namespace="/registration"/>
+        <s:a href="%{Input}"><s:text name="index.registration"/></s:a>
+    </li>
+    <li>
+        <s:url id="Logon" action="Logon"/>
+        <s:a href="%{Logon}"><s:text name="index.logon"/></s:a>
+    </li>
 </ul>
 
 <h3>Language Options</h3>
@@ -29,25 +33,31 @@
         <s:a href="%{en}">English</s:a>
     </li>
     <li>
-        <a href="<s:url action="Welcome">
+        <s:url id="ja" action="Welcome">
             <s:param name="request_locale">ja</s:param>
-        </s:url>">Japanese</a>
-   </li>
+        </s:url>
+        <s:a href="%{ja}">Japanese</s:a>
+    </li>
     <li>
-        <a href="<s:url value="Welcome.do">
-            <s:param name="request_locale" value="'ru'" />
-            </s:url>">Russian</a>
+        <s:url id="ru" action="Welcome">
+            <s:param name="request_locale">ru</s:param>
+        </s:url>
+        <s:a href="%{ru}">Russian</s:a>
     </li>
 </ul>
 
 <hr/>
 
-<p><s:i18n name="alternate">
-    <img src="<s:text name="struts.logo.path"/>"
-         alt="<s:text name="struts.logo.alt"/>"/>
-</s:i18n></p>
+<p>
+    <s:i18n name="alternate">
+        <img src="<s:text name="struts.logo.path"/>"
+             alt="<s:text name="struts.logo.alt"/>"/>
+    </s:i18n>
+</p>
 
-<p><a href="<s:url action="Tour" />"><s:text name="index.tour"/></a></p>
+<p>
+    <s:url id="Tour" action="Tour"/><s:a href="%{Tour}"><s:text name="index.tour"/></s:a>
+</p>
 
 </body>
 </html>

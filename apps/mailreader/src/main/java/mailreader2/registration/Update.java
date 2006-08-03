@@ -19,7 +19,11 @@ public class Update extends Support {
 
         boolean creating = Constants.CREATE.equals(getTask());
         creating = creating && isCreating(); // trust but verify
-        if (creating) return ERROR;
+        if (creating) {
+            addActionError("registration/Update: ");
+            addActionError(Constants.ERROR_INVALID_WORKFLOW);            
+            return ERROR;
+        }
         // FIXME: Any way to call the RegisrationSave validators from here?
         String newPassword = fixNull(getPassword());
         String confirmPassword = fixNull(getPassword2());

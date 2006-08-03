@@ -9,9 +9,10 @@
           type="text/css"/>
 </head>
 
-<body onLoad="self.focus();document.Retrieve.username.focus()">
+<body onLoad="self.focus();document.registration/Retrieve.username.focus()">
 
 <s:actionerror/>
+<s:url id="Retrieve" action="registration/Retrieve" />
 <s:form action="registration/Retrieve" validate="true">
     <s:textfield label="%{getText('username')}" name="username"/>
 
@@ -25,6 +26,6 @@
               onclick="form.onsubmit=null"/>
 </s:form>
 
-<jsp:include page="Footer.jsp"/>
+<jsp:include page="../Footer.jsp"/>
 </body>
 </html>

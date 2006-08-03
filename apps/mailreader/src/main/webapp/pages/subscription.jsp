@@ -17,10 +17,10 @@
           type="text/css"/>
 </head>
 
-<body onLoad="self.focus();document.subscription/Save.username.focus()">
+<body onLoad="self.focus();document.form1.username.focus()">
 
 <s:actionerror/>
-<s:form action="subscription/Save" validate="true">
+<s:form id="form1" action="subscription/Save" validate="true">
     <s:token/>
     <s:hidden name="task"/>
     <s:label label="%{getText('username')}" name="user.username"/>

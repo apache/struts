@@ -2,6 +2,7 @@ package mailreader2.subscription;
 
 import com.opensymphony.xwork2.Preparable;
 import mailreader2.MailreaderSupport;
+import mailreader2.Constants;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -56,6 +57,8 @@ public class Support extends MailreaderSupport
                 sub = findSubscription();
 
         if (sub == null) {
+            addActionError("find (Subscription): ");
+            addActionError(Constants.ERROR_INVALID_WORKFLOW);            
             return ERROR;
         }
 

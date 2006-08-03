@@ -130,6 +130,14 @@ public final class Constants {
      */
     public static final String PASSWORD_MISMATCH_FIELD = "password";
 
+    /**
+     * <p/>
+     * A static message in case message resource is not loaded.
+     * </p>
+     */
+    public static final String ERROR_INVALID_WORKFLOW =
+            "ERROR:  Action is being executed out of sequence!";
+
     // ---- Log Messages ----
 
     /**

@@ -16,7 +16,11 @@ public final class Create extends Update {
         // trust but verify
         boolean creating = Constants.CREATE.equals(getTask());
         creating = creating && isCreating();
-        if (!creating) return ERROR;
+        if (!creating) {
+            addActionError("registration/Create: ");
+            addActionError(Constants.ERROR_INVALID_WORKFLOW);
+            return ERROR;
+        }
 
         User user = findUser(getUsername(), getPassword());
         boolean haveUser = (user != null);

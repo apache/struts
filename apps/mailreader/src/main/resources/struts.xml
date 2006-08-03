@@ -8,41 +8,9 @@
 
     <package name="default" namespace="" extends="struts-default">
 
-        <interceptors>
-
-            <interceptor name="authentication"
-                         class="mailreader2.AuthenticationInterceptor"/>
-
-            <interceptor-stack name="user">
-                <interceptor-ref name="authentication"/>
-                <interceptor-ref name="defaultStack"/>
-            </interceptor-stack>
-
-            <interceptor-stack name="user-submit">
-                <interceptor-ref name="token-session"/>
-                <interceptor-ref name="user"/>
-            </interceptor-stack>
-
-            <interceptor-stack name="guest">
-                <interceptor-ref name="defaultStack"/>
-            </interceptor-stack>
-
-            <interceptor-stack name="guest-submit">
-                <interceptor-ref name="token-session"/>
-                <interceptor-ref name="guest"/>
-            </interceptor-stack>
-
-        </interceptors>
-
-        <default-interceptor-ref name="user"/>
-
-        <!-- default-action-ref name="Welcome"/ -->
-
         <global-results>
             <result name="error">/pages/Error.jsp</result>
             <result name="invalid.token">/pages/Error.jsp</result>
-            <result name="login" type="redirect-action">Logon</result>
-            <result name="cancel" type="redirect-action">Welcome</result>
             <result name="success" type="redirect-action">MainMenu</result>
             <result name="expired" type="chain">ChangePassword</result>
         </global-results>
@@ -56,127 +24,48 @@
                     result="expired"/>
         </global-exception-mappings>
 
-        <!-- different result -->
-
-        <action name="Logoff" class="mailreader2.Logoff">
-            <result type="redirect-action">Welcome</result>
-        </action>
-
-        <action name="Logon">
-            <result>/pages/registration/Retrieve.jsp</result>
-            <interceptor-ref name="guest"/>
-        </action>
-
-        <action name="Tour">
-            <result>/pages/Tour.html</result>
-            <interceptor-ref name="guest"/>
-        </action>
+        <!-- goto actions: Exit to another workflow -->
 
         <action name="subscription/Save" class="mailreader2.subscription.Save">
             <result name="input">/pages/subscription.jsp</result>
-            <result type="redirect-action">registration/Input</result>
-            <interceptor-ref name="user-submit"/>
+            <result type="redirect-action">registration/vInput</result>
         </action>
 
-        <!-- different security -->
+        <!-- prepare actions: Confirm/Delete, Edit, Input -->
+        <!-- A "!" might be a better convention,
+             but that doesn't seem to work with a button -->
+
+        <action name="*/v*" class="mailreader2.{1}.{2}">
+            <result>/pages/{1}.jsp</result>
+        </action>
+
+        <!-- execute actions: Create, Retrieve, Update, Save -->
+
+        <action name="*/*" class="mailreader2.{1}.{2}">
+            <result name="input">/pages/{1}.jsp</result>
+        </action>
+
+        <!-- Why doen't these match * -->
+        <!-- It seems to be concaternating a period to the token -->
+        <!-- Unable to instantiate Action, mailreader2.Welcome.,
+             defined for 'Welcome' in namespace '/'mailreader2.Welcome. -->
+        <action name="Logoff" class="mailreader2.Logoff">
+            <result>/pages/Logoff.jsp</result>
+        </action>
 
         <action name="MainMenu" class="mailreader2.MainMenu">
             <result>/pages/MainMenu.jsp</result>
         </action>
 
-        <action name="registration/Create" class="mailreader2.registration.Create">
-            <result name="input">/pages/registration.jsp</result>
-            <result type="redirect-action">MainMenu</result>
-            <interceptor-ref name="guest-submit"/>
-        </action>
-
-        <!-- different result and different security -->
-
-        <action name="registration/Input" class="mailreader2.registration.Input">
-            <result>/pages/registration.jsp</result>
-            <interceptor-ref name="guest" />
-        </action>
-
-        <!-- different input, result, and security -->
-
-        <action name="registration/Retrieve" class="mailreader2.registration.Retrieve">
-            <result name="input">/pages/registration/Retrieve.jsp</result>
-            <result type="redirect-action">MainMenu</result>
-            <interceptor-ref name="guest"/>
-        </action>
-
-        <!-- different result (wild) -->
-
-        <action name="*/Delete" class="mailreader2.{1}.Delete">
-            <result>/pages/{1}.jsp</result>
-        </action>
-
-        <action name="*/Edit" class="mailreader2.{1}.Edit">
-            <result>/pages/{1}.jsp</result>
-        </action>
-
-        <action name="*/Input" class="mailreader2.{1}.Input">
-            <result>/pages/{1}.jsp</result>
-        </action>
-
-        <!-- Why doesn't this match * -->
-        <!-- Unable to instantiate Action, mailreader2.Welcome.,  defined for 'Welcome' in namespace '/'mailreader2.Welcome. -->
         <action name="Welcome" class="mailreader2.Welcome">
             <result>/pages/Welcome.jsp</result>
-            <interceptor-ref name="guest"/>
         </action>
 
-        <!-- default wildcards -->
-
-        <action name="*/*" class="mailreader2.{1}.{2}">
-            <result name="input">/pages/{1}.jsp</result>
-            <result type="redirect-action">MainMenu</result>
-            <interceptor-ref name="user-submit" />
-        </action>
+        <!-- display actions: Welcome, Logoff, MainMenu -->
 
         <action name="*" class="mailreader2.{1}">
             <result>/pages/{1}.jsp</result>
-            <interceptor-ref name="guest"/>
         </action>
-
-        <!-- matched by wildcards
-
-        <action name="registration/Update" class="mailreader2.registration.Update">
-            <result name="input">/pages/registration.jsp</result>
-            <result type="redirect-action">mailreader2.MainMenu</result>
-        </action>
-
-        <action name="subscription/Delete" class="mailreader2.subscription.Delete">
-            <result>/pages/subscription.jsp</result>
-        </action>
-
-        <action name="subscription/Edit" class="mailreader2.subscription.Edit">
-            <result>/pages/subscription.jsp</result>
-        </action>
-
-        <action name="subscription/Input" class="mailreader2.subscription.Input">
-            <result>/pages/subscription.jsp</result>
-        </action>
-
-        <action name="subscription/Save" class="mailreader2.subscription.Save">
-            <result name="input">/pages/subscription.jsp</result>
-            <result type="redirect-action">
-                <param name="actionName">registration/Input</param>
-            </result>
-            <interceptor-ref name="user-submit"/>
-        </action>
-
-        <action name="ChangePassword" class="mailreader2.ChangePassword">
-            <result>/pages/ChangePassword.jsp</result>
-            <interceptor-ref name="guest"/>
-        </action>
-
-        <action name="Welcome" class="mailreader2.Welcome">
-            <result>/pages/Welcome.jsp</result>
-            <interceptor-ref name="guest"/>
-        </action>
-
-        -->
 
     </package>
 

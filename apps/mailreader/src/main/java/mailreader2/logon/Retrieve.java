@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package mailreader2.registration;
+package mailreader2.logon;
 
 import mailreader2.MailreaderSupport;
 import org.apache.struts.apps.mailreader.dao.ExpiredPasswordException;

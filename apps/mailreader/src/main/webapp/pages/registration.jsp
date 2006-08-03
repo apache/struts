@@ -100,14 +100,14 @@
                     <s:property value="autoConnect"/>
                 </td>
                 <td align="center">
-                    <s:url id="Delete" action="subscription/Delete" >
+                    <s:url id="Delete" action="subscription/vDelete" >
                         <s:param name="host" value="host"/>
                     </s:url>
                     <s:a href="%{Delete}">
                         <s:text name="registration.deleteSubscription"/>
                     </s:a>
                     &nbsp;
-                    <s:url id="Edit" action="subscription/Edit">
+                    <s:url id="Edit" action="subscription/vEdit">
                         <s:param name="host" value="host"/>
                     </s:url>
                     <s:a href="%{Edit}">
@@ -119,7 +119,7 @@
 
     </table>
 
-    <s:url id="Input" action="subscription/Input" />
+    <s:url id="Input" action="subscription/vInput" />
     <s:a href="%{Input}"><s:text name="registration.addSubscription"/></s:a>
 
 </s:if>

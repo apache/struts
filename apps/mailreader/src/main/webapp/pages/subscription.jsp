@@ -57,7 +57,7 @@
         <s:reset value="%{getText('button.reset')}"/>
     </s:else>
 
-    <s:submit action="registration/Input"
+    <s:submit action="registration/vInput"
               value="%{getText('button.cancel')}"
               onclick="form.onsubmit=null"/>
 </s:form>

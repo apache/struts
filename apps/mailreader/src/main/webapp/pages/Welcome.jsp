@@ -15,12 +15,12 @@
 
 <ul>
     <li>
-        <s:url id="Input" action="Input" namespace="/registration"/>
-        <s:a href="%{Input}"><s:text name="index.registration"/></s:a>
+        <s:url id="registration" action="registration/vInput" />
+        <s:a href="%{registration}"><s:text name="index.registration"/></s:a>
     </li>
     <li>
-        <s:url id="Logon" action="Logon"/>
-        <s:a href="%{Logon}"><s:text name="index.logon"/></s:a>
+        <s:url id="logon" action="logon/vInput"/>
+        <s:a href="%{logon}"><s:text name="index.logon"/></s:a>
     </li>
 </ul>
 

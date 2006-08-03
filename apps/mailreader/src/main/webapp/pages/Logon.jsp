@@ -12,7 +12,7 @@
 <body onLoad="self.focus();document.Retrieve.username.focus()">
 
 <s:actionerror/>
-<s:form action="Retrieve" namespace="/registration" validate="true">
+<s:form action="registration/Retrieve" validate="true">
     <s:textfield label="%{getText('username')}" name="username"/>
 
     <s:password label="%{getText('password')}" name="password" showPassword="true"/>

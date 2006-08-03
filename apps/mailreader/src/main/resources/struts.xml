@@ -113,53 +113,44 @@
             <interceptor-ref name="guest"/>
         </action>
 
-    </package>
-
-    <package name="registration" namespace="/registration" extends="default">
-
-        <action name="Update" class="mailreader2.registration.Update">
+        <action name="registration/Update" class="mailreader2.registration.Update">
             <result name="input">/pages/registration.jsp</result>
             <result type="redirect-action">MainMenu</result>
         </action>
 
-        <action name="Create" class="mailreader2.registration.Create">
+        <action name="registration/Create" class="mailreader2.registration.Create">
             <result name="input">/pages/registration.jsp</result>
             <result type="redirect-action">MainMenu</result>
             <interceptor-ref name="guest-submit"/>
         </action>
 
-        <action name="Input" class="mailreader2.registration.Input">
+        <action name="registration/Input" class="mailreader2.registration.Input">
             <result>/pages/registration.jsp</result>
             <interceptor-ref name="guest"/>
         </action>
 
-        <action name="Retrieve" class="mailreader2.registration.Retrieve">
+        <action name="registration/Retrieve" class="mailreader2.registration.Retrieve">
             <result name="input">/pages/Logon.jsp</result>
             <result type="redirect-action">MainMenu</result>
             <interceptor-ref name="guest"/>
         </action>
 
-    </package>
-
-    <package name="subscription" namespace="/subscription" extends="default">
-
-        <action name="Delete" class="mailreader2.subscription.Delete">
+        <action name="subscription/Delete" class="mailreader2.subscription.Delete">
             <result>/pages/subscription.jsp</result>
         </action>
 
-        <action name="Edit" class="mailreader2.subscription.Edit">
+        <action name="subscription/Edit" class="mailreader2.subscription.Edit">
             <result>/pages/subscription.jsp</result>
         </action>
 
-        <action name="Input" class="mailreader2.subscription.Input">
+        <action name="subscription/Input" class="mailreader2.subscription.Input">
             <result>/pages/subscription.jsp</result>
         </action>
 
-        <action name="Save" class="mailreader2.subscription.Save">
+        <action name="subscription/Save" class="mailreader2.subscription.Save">
             <result name="input">/pages/subscription.jsp</result>
             <result type="redirect-action">
-                <param name="actionName">Input</param>
-                <param name="namespace">/registration</param>
+                <param name="actionName">registration/Input</param>
             </result>
             <interceptor-ref name="user-submit"/>
         </action>

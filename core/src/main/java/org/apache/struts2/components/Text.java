@@ -82,6 +82,11 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * &lt;!-- Second Example --&gt;
  * &lt;a:text name="main.title" /&gt;
  * 
+ * &lt;!-- Third Examlpe --&gt;
+ * &lt;a:text name="i18n.label.greetings"&gt;
+ *    &lt;a:param &gt;Mr Smith&lt;/a:param&gt;
+ * &lt;/a:text&gt;
+ * 
  * <!-- END SNIPPET: example -->
  * </pre>
  * 
@@ -89,10 +94,10 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <pre>
  * <!-- START SNIPPET: i18nExample -->
  * 
- * &lt;-- Third Example --&gt;
+ * &lt;-- Fourth Example --&gt;
  * &lt;a:text name="some.key" /&gt;
  * 
- * &lt;-- Fourth Example --&gt;
+ * &lt;-- Fifth Example --&gt;
  * &lt;a:text name="some.invalid.key" &gt;
  *    The Default Message That Will Be Displayed
  * &lt;/a:text&gt;

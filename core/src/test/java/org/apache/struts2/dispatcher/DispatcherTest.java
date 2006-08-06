@@ -19,8 +19,16 @@ package org.apache.struts2.dispatcher;
 
 import java.util.Locale;
 
-import org.apache.struts2.StrutsTestCase;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts2.StrutsTestCase;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.config.Settings;
+import org.apache.struts2.dispatcher.Dispatcher;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 /**
@@ -44,4 +52,30 @@ public class DispatcherTest extends StrutsTestCase {
 				"Error uploading: some error messages");
 	}
 	
+	public void testPrepareSetEncodingProperly() throws Exception {
+		HttpServletRequest req = new MockHttpServletRequest();
+		HttpServletResponse res = new MockHttpServletResponse();
+		
+		Settings.set(StrutsConstants.STRUTS_I18N_ENCODING, "utf-8");
+		
+		
+		Dispatcher du = Dispatcher.getInstance();
+		du.prepare(req, res);
+		
+		assertEquals(req.getCharacterEncoding(), "utf-8");
+	}
+	
+	public void testPrepareSetEncodingPropertyWithMultipartRequest() throws Exception {
+		MockHttpServletRequest req = new MockHttpServletRequest();
+		MockHttpServletResponse res = new MockHttpServletResponse();
+		
+		req.setContentType("multipart/form-data");
+		Settings.set(StrutsConstants.STRUTS_I18N_ENCODING, "utf-8");
+		
+		
+		Dispatcher du = Dispatcher.getInstance();
+		du.prepare(req, res);
+		
+		assertEquals(req.getCharacterEncoding(), "utf-8");
+	}
 }

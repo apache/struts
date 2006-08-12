@@ -154,9 +154,9 @@ public class FilterDispatcher implements Filter, StrutsStatics {
             packages = param + " " + packages;
         }
         this.pathPrefixes = parse(packages);
-        dispatcher = new Dispatcher(filterConfig.getServletContext());
+        dispatcher = createDispatcher();
     }
-
+    
     /**
      * Parses the list of packages
      * 
@@ -364,5 +364,15 @@ public class FilterDispatcher implements Filter, StrutsStatics {
         resourcePath = URLDecoder.decode(resourcePath, enc);
 
         return ClassLoaderUtil.getResourceAsStream(resourcePath, getClass());
+    }
+    
+    /**
+     * Create a {@link Dispatcher}, this serves as a hook for subclass to overried
+     * such that a custom {@link Dispatcher} could be created. 
+     * 
+     * @return Dispatcher
+     */
+    protected Dispatcher createDispatcher() {
+    	return new Dispatcher(filterConfig.getServletContext());
     }
 }

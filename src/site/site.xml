@@ -30,26 +30,26 @@
         
             <item
                     name="Getting Started"
-                    href="http://www.twdata.org/backups/WW/home.html"
+                    href="http://cwiki.apache.org/WW/home.html"
                     />        
             <item
                     name="Tutorials"
-                    href="http://www.twdata.org/backups/WW/tutorials.html"
+                    href="http://cwiki.apache.org/WW/tutorials.html"
                     />        
 
             <item
                     name="FAQs"
-                    href="http://www.twdata.org/backups/WW/faqs.html"
+                    href="http://cwiki.apache.org/WW/faqs.html"
                     />        
 
             <item
                     name="Guides"
-                    href="http://www.twdata.org/backups/WW/guides.html"
+                    href="http://cwiki.apache.org/WW/guides.html"
                     />        
 
             <item
                     name="Release Notes"
-                    href="http://www.twdata.org/backups/WW/release-notes-200.html"
+                    href="http://cwiki.apache.org/WW/release-notes-200.html"
                     />        
             <item
                     name="Struts API"

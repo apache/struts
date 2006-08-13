@@ -92,6 +92,7 @@ public abstract class FormButton extends UIBean {
      *   <li>[this_component_name]</li>
      *   <li>[this_component_action]_[this_component_method]</li>
      *   <li>[this_component_method]</li>
+     *   <li>[some_random_number]</li>
      * </ol>
      */
     protected void populateComponentHtmlId(Form form) {

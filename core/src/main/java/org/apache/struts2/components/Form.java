@@ -180,6 +180,13 @@ public class Form extends ClosingUIBean {
         }
     }
     
+    /**
+     * Form component determine the its HTML element id as follows:-
+     * <ol>
+     *    <li>if an 'id' attribute is specified.</li>
+     *    <li>if an 'action' attribute is specified, it will be used as the id.</li>
+     * </ol>
+     */
     protected void populateComponentHtmlId(Form form) {
     	boolean isAjax = "ajax".equalsIgnoreCase(this.theme);
     	

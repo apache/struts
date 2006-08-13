@@ -179,12 +179,20 @@ public class Submit extends FormButton {
     }
 
     public void evaluateParams() {
-
-        if (value == null) {
+    	if (value == null) {
             value = "Submit";
         }
+    	super.evaluateParams();
+    }
+    
+    public void evaluateExtraParams() {
+    	super.evaluateExtraParams();
 
-        super.evaluateParams();
+       /* if (value == null) {
+            value = "Submit";
+        }*/
+
+        //super.evaluateParams();
 
         if (null != src) {
             addParameter("src", findString(src));

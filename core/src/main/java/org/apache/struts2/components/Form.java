@@ -131,14 +131,14 @@ public class Form extends ClosingUIBean {
     protected void evaluateExtraParams() {
         super.evaluateExtraParams();
 
-        boolean isAjax = "ajax".equalsIgnoreCase(this.theme);
+        //boolean isAjax = "ajax".equalsIgnoreCase(this.theme);
 
         if (validate != null) {
             addParameter("validate", findValue(validate, Boolean.class));
         }
 
         // calculate the action and namespace
-        String action = null;
+        /*String action = null;
         if (this.action != null) {
             // if it isn't specified, we'll make somethig up
             action = findString(this.action);
@@ -150,7 +150,7 @@ public class Form extends ClosingUIBean {
             String namespace = determineNamespace(this.namespace, getStack(),
                     request);
             evaluateExtraParamsServletRequest(action, namespace, isAjax);
-        }
+        }*/
 
         if (onsubmit != null) {
             addParameter("onsubmit", findString(onsubmit));
@@ -177,6 +177,27 @@ public class Form extends ClosingUIBean {
         if (!parameters.containsKey("tagNames")) {
             // we have this if check so we don't do this twice (on open and close of the template)
             addParameter("tagNames", new ArrayList());
+        }
+    }
+    
+    protected void populateComponentHtmlId(Form form) {
+    	boolean isAjax = "ajax".equalsIgnoreCase(this.theme);
+    	
+    	String action = null;
+        if (this.action != null) {
+            // if it isn't specified, we'll make somethig up
+            action = findString(this.action);
+        }
+
+        if (id != null) {
+        	addParameter("id", escape(id));
+        }
+        if (Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
+            evaluateExtraParamsPortletRequest(namespace, action);
+        } else {
+            String namespace = determineNamespace(this.namespace, getStack(),
+                    request);
+            evaluateExtraParamsServletRequest(action, namespace, isAjax);
         }
     }
 

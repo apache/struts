@@ -40,7 +40,9 @@ public abstract class FormButton extends UIBean {
         super(stack, request, response);
     }
 
-    public void evaluateParams() {
+    //public void evaluateParams() {
+    public void evaluateExtraParams() {
+    	super.evaluateExtraParams();
         if (align == null) {
             align = "right";
         }
@@ -51,7 +53,7 @@ public abstract class FormButton extends UIBean {
             submitType = type;
         }
 
-        super.evaluateParams();
+        //super.evaluateParams();
 
         addParameter("type", submitType);
 
@@ -78,12 +80,55 @@ public abstract class FormButton extends UIBean {
         addParameter("align", findString(align));
 
     }
+    
+    /**
+     * Override UIBean's implementation, such that component Html id is determined
+     * in the following order :-
+     * <ol>
+     * 	 <li>This component id attribute</li>
+     *   <li>[containing_form_id]_[this_component_name]</li>
+     *   <li>[containing_form_id]_[this_component_action]_[this_component_method]</li>
+     *   <li>[containing_form_id]_[this_component_method]</li>
+     *   <li>[this_component_name]</li>
+     *   <li>[this_component_action]_[this_component_method]</li>
+     *   <li>[this_component_method]</li>
+     * </ol>
+     */
+    protected void populateComponentHtmlId(Form form) {
+        String _tmp_id = "";
+        if (id != null) {
+            // this check is needed for backwards compatibility with 2.1.x
+            if (altSyntax()) {
+            	_tmp_id = findString(id);
+            } else {
+            	_tmp_id = id;
+            }
+        }
+        else {
+        	if (form != null && form.getParameters().get("id") != null) {
+				_tmp_id = _tmp_id + form.getParameters().get("id").toString() + "_";
+        	}
+			if (name != null) {
+				_tmp_id = _tmp_id + escape(name);
+			} else if (action != null || method != null){
+				if (action != null) {
+					_tmp_id = _tmp_id + escape(action);
+				}
+				if (method != null) {
+					_tmp_id = _tmp_id + "_" + escape(method);
+				}
+			} else {
+				_tmp_id = _tmp_id + hashCode();
+			}
+        }
+		addParameter("id", _tmp_id);
+    }
 
     /**
-     * Indicate whether the concrete button supports the type "image".
-     *
-     * @return <tt>true</tt> if type image is supported.
-     */
+	 * Indicate whether the concrete button supports the type "image".
+	 * 
+	 * @return <tt>true</tt> if type image is supported.
+	 */
     protected abstract boolean supportsImageType();
 
     /**

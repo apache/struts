@@ -689,18 +689,8 @@ public abstract class UIBean extends Component {
 
         final Form form = (Form) findAncestor(Form.class);
 
-        if (id != null) {
-            // this check is needed for backwards compatibility with 2.1.x
-            if (altSyntax()) {
-                addParameter("id", findString(id));
-            } else {
-                addParameter("id", id);
-            }
-        } else if (form != null) {
-            addParameter("id", form.getParameters().get("id") + "_" + escape(name));
-        } else {
-            addParameter("id", escape(name));
-        }
+        // create HTML id element
+        populateComponentHtmlId(form);
 
         if (form != null ) {
             addParameter("form", form.getParameters());
@@ -815,6 +805,34 @@ public abstract class UIBean extends Component {
     	return tooltipConfig;
     }
 
+    /**
+     * Create HTML id element for the component and populate this component parmaeter
+     * map.
+     * 
+     * The order is as follows :-
+     * <ol>
+     *   <li>This component id attribute</li>
+     *   <li>[containing_form_id]_[this_component_name]</li>
+     *   <li>[this_component_name]</li>
+     * </ol>
+     * 
+     * @param form
+     */
+    protected void populateComponentHtmlId(Form form) {
+    	if (id != null) {
+            // this check is needed for backwards compatibility with 2.1.x
+            if (altSyntax()) {
+                addParameter("id", findString(id));
+            } else {
+                addParameter("id", id);
+            }
+        } else if (form != null) {
+            addParameter("id", form.getParameters().get("id") + "_" + escape(name));
+        } else {
+            addParameter("id", escape(name));
+        }
+    }
+    
 
     /**
      * The template directory.

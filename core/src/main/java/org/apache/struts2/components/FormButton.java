@@ -92,7 +92,7 @@ public abstract class FormButton extends UIBean {
      *   <li>[this_component_name]</li>
      *   <li>[this_component_action]_[this_component_method]</li>
      *   <li>[this_component_method]</li>
-     *   <li>[some_random_number]</li>
+     *   <li>[an increasing sequential number unique to the form starting with 0]</li>
      * </ol>
      */
     protected void populateComponentHtmlId(Form form) {
@@ -119,7 +119,11 @@ public abstract class FormButton extends UIBean {
 					_tmp_id = _tmp_id + "_" + escape(method);
 				}
 			} else {
-				_tmp_id = _tmp_id + hashCode();
+				// if form is null, this component is used, without a form, i guess
+				// there's not much we could do then.
+				if (form != null) {
+					_tmp_id = _tmp_id + form.getSequence();
+				}
 			}
         }
 		addParameter("id", _tmp_id);

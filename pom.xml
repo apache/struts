@@ -39,7 +39,7 @@
     <description>Apache Struts Action Framework 2</description>
 
     <inceptionYear>2006</inceptionYear>
-
+    
     <!--
     <description>
         Struts 2 is a Java web-application development framework.
@@ -126,6 +126,7 @@
             </modules>
         </profile>
         <profile>
+            <id>1.4-backport</id>
             <activation>
                 <jdk>1.4</jdk>
             </activation>
@@ -181,6 +182,26 @@
                             <exclude>**/TestBean.java</exclude>
                         </excludes>
                     </configuration>
+                </plugin>
+                <plugin>
+                  <groupId>org.codehaus.mojo</groupId>
+                  <artifactId>retrotranslator-maven-plugin</artifactId>
+                  <version>1.0-SNAPSHOT</version>
+                  <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>translate</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>
+                                    <directory>${pom.basedir}/target/classes</directory>
+                                </include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                  </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -286,6 +307,28 @@
             </releases>
             <url>http://maven.opensymphony.com</url>
         </repository>
+		  <repository>
+		    <id>Maven Snapshots</id>
+		    <url>http://snapshots.maven.codehaus.org/maven2/</url>
+		    <snapshots>
+		      <enabled>true</enabled>
+		    </snapshots>
+		    <releases>
+		      <enabled>false</enabled>
+		    </releases>
+		  </repository>
     </repositories>
+	<pluginRepositories>
+	  <pluginRepository>
+	    <id>Maven Snapshots</id>
+	    <url>http://snapshots.maven.codehaus.org/maven2/</url>
+	    <snapshots>
+	      <enabled>true</enabled>
+	    </snapshots>
+	    <releases>
+	      <enabled>false</enabled>
+	    </releases>
+	  </pluginRepository>
+	</pluginRepositories>
 
 </project>

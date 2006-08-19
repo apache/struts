@@ -90,7 +90,7 @@ public class FreemarkerResult extends StrutsResultSupport {
     protected ObjectWrapper wrapper;
 
     /*
-     * Struts results are constructed for each result execeution
+     * Struts results are constructed for each result execution
      *
      * the current context is availible to subclasses via these protected fields
      */

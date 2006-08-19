@@ -84,41 +84,41 @@ import org.apache.commons.logging.LogFactory;
  *
  * <pre>
  * <!-- START SNIPPET: example1 -->
- * &lt;!-- A: List basic --&gt;
- *    &lt;a:subset source="myList"&gt;
- *	     &lt;a:iterator&gt;
- *		    &lt;a:property /&gt;
- *	     &lt;/a:iterator&gt;
- *    &lt;/a:subset&gt;
+ * &lt;!-- s: List basic --&gt;
+ *    &lt;s:subset source="myList"&gt;
+ *	     &lt;s:iterator&gt;
+ *		    &lt;s:property /&gt;
+ *	     &lt;/s:iterator&gt;
+ *    &lt;/s:subset&gt;
  * <!-- END SNIPPET: example1 -->
  * </pre>
  *
  * <pre>
  * <!-- START SNIPPET: example2 -->
  * &lt;!-- B: List with count --&gt;
- *    &lt;a:subset source="myList" count="3"&gt;
- * 	     &lt;a:iterator&gt;
- * 		     &lt;a:property /&gt;
- * 	     &lt;/a:iterator&gt;
- *     &lt;/a:subset&gt;
+ *    &lt;s:subset source="myList" count="3"&gt;
+ * 	     &lt;s:iterator&gt;
+ * 		     &lt;s:property /&gt;
+ * 	     &lt;/s:iterator&gt;
+ *     &lt;/s:subset&gt;
  * <!-- END SNIPPET: example2 -->
  * </pre>
  *
  * <pre>
  * <!-- START SNIPPET: example3 -->
  * &lt;!--  C: List with start -->
- *      &lt;a:subset source="myList" count="13" start="3"&gt;
- * 	       &lt;a:iterator&gt;
- * 		     &lt;a:property /&gt;
- * 	       &lt;/a:iterator&gt;
- *      &lt;/a:subset&gt;
+ *      &lt;s:subset source="myList" count="13" start="3"&gt;
+ * 	       &lt;s:iterator&gt;
+ * 		     &lt;s:property /&gt;
+ * 	       &lt;/s:iterator&gt;
+ *      &lt;/s:subset&gt;
  * <!-- END SNIPPET: example3 -->
  * </pre>
  *
  * <pre>
  * <!-- START SNIPPET: example4 -->
  * &lt;!--  D: List with id --&gt;
- *      &lt;a:subset id="mySubset" source="myList" count="13" start="3" /&gt;
+ *      &lt;s:subset id="mySubset" source="myList" count="13" start="3" /&gt;
  *      &lt;%
  * 	        Iterator i = (Iterator) pageContext.getAttribute("mySubset");
  *          while(i.hasNext()) {
@@ -131,11 +131,11 @@ import org.apache.commons.logging.LogFactory;
  * <pre>
  * <!-- START SNIPPET: example5 -->
  *  &lt;!--  D: List with Decider --&gt;
- *      &lt;a:subset source="myList" decider="myDecider"&gt;
- * 	           &lt;a:iterator&gt;
- *		            &lt;a:property /&gt;
- *	           &lt;/a:iterator&gt;
- *      &lt;/a:subset&gt;
+ *      &lt;s:subset source="myList" decider="myDecider"&gt;
+ * 	           &lt;s:iterator&gt;
+ *		            &lt;s:property /&gt;
+ *	           &lt;/s:iterator&gt;
+ *      &lt;/s:subset&gt;
  * <!-- END SNIPPET: example5 -->
  * </pre>
  *

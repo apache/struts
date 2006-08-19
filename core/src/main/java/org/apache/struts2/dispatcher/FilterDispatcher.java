@@ -107,6 +107,9 @@ import com.opensymphony.xwork2.ActionContext;
  * database access credentials.
  *
  * <p/>
+ * 
+ * To use a custom {@link Dispatcher}, the <code>createDispatcher()</code> method could be overriden by 
+ * the subclass.
  *
  * @see org.apache.struts2.lifecycle.LifecycleListener
  * @see ActionMapper

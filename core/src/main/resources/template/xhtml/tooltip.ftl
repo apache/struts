@@ -2,9 +2,9 @@
 	  <#assign tooltipHashCode=parameters.tooltip.hashCode() />
       <img id="_tt${tooltipHashCode?string('#')}"
       <#if parameters.tooltipIcon?exists><#t/>
-      	src='<@saf.url value="${parameters.tooltipIcon}" />' 
+      	src='<@s.url value="${parameters.tooltipIcon}" />'
       <#else><#t/>
-      	src='<@saf.url value="/struts/dojo/struts/tooltip.gif" />'
+      	src='<@s.url value="/struts/dojo/struts/tooltip.gif" />'
       </#if><#t/>
       	alt="${parameters.tooltip?html}" 
       	title="${parameters.tooltip?html}" />

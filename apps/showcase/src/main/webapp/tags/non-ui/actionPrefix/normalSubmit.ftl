@@ -9,8 +9,8 @@
 	
 	The text you've enter is %{text}<p/>
 	
-	<@saf.url id="url" action="actionPrefixExampleUsingFreemarker" namespace="/tags/non-ui/prefix" />
-	<@saf.a href="%{#url}">Back</@saf.a>
+	<@s.url id="url" action="actionPrefixExampleUsingFreemarker" namespace="/tags/non-ui/prefix" />
+	<@s.a href="%{#url}">Back</@s.a>
 	
 </body>
 </html>

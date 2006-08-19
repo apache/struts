@@ -233,7 +233,7 @@ public class FilterDispatcher implements Filter, StrutsStatics {
                 // this is a normal request, let it pass through
                 chain.doFilter(request, response);
             }
-            // WW did its job here
+            // The framework did its job here
             return;
         }
 

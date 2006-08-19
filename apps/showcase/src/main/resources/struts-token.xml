@@ -49,7 +49,7 @@
 
         <action name="tokenPrepare4!*" class="org.apache.struts2.showcase.token.TokenAction" method="{1}">
             <interceptor-ref name="defaultStack"/>
-            <interceptor-ref name="createSession"/> <!-- we must have a session when using freemarker and the @ww.token tag -->
+            <interceptor-ref name="createSession"/> <!-- we must have a session when using freemarker and the @s.token tag -->
             <result name="input" type="freemarker">example4.ftl</result>
         </action>
 

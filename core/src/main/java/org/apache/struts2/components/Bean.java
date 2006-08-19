@@ -50,7 +50,7 @@ import java.io.Writer;
  * <pre>
  * <!-- START SNIPPET: examples -->
  * &lt;-- in freemarker form --&gt;
- * [ww.bean name="org.apache.struts2.example.counter.SimpleCounter" id="counter"]
+ * [@s.bean name="org.apache.struts2.example.counter.SimpleCounter" id="counter"]
  *   [a:param name="foo" value="BAR"/]
  *   The value of foo is : [a:property value="foo"/], when inside the bean tag.<br />
  * [/a:bean]
@@ -70,7 +70,7 @@ import java.io.Writer;
  * with the Property tag and get their values.</p>
  * <p/>
  * <p>In the above example, the id has been set to a value of <i>counter</i>. This means that the SimpleCounter class
- * will be placed into the stack's context. You can access the SimpleCounter class using WW's tag:</p>
+ * will be placed into the stack's context. You can access the SimpleCounter class using a Struts tag:</p>
  * <p/>
  * <pre>
  * &lt;-- jsp form --&gt;

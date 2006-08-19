@@ -120,7 +120,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @see org.apache.struts2.util.IteratorGenerator
  *
- * @ww.tag name="generator" tld-body-content="JSP"
+ * @s.tag name="generator" tld-body-content="JSP"
  * description="Generate an iterator for a iterable source."
  */
 public class IteratorGeneratorTag extends StrutsBodyTagSupport {
@@ -139,7 +139,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
     IteratorGenerator iteratorGenerator = null;
 
     /**
-     * @ww.tagattribute required="false" type="Integer"
+     * @s.tagattribute required="false" type="Integer"
      * description="the max number entries to be in the iterator"
      */
     public void setCount(String count) {
@@ -147,7 +147,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
     }
 
     /**
-     * @ww.tagattribute required="true" type="String"
+     * @s.tagattribute required="true" type="String"
      * description="the separator to be used in separating the <i>val</i> into entries of the iterator"
      */
     public void setSeparator(String separator) {
@@ -155,7 +155,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
     }
 
     /**
-     * @ww.tagattribute required="true"
+     * @s.tagattribute required="true"
      * description="the source to be parsed into an iterator"
      */
     public void setVal(String val) {
@@ -163,7 +163,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
     }
 
     /**
-     * @ww.tagattribute required="false" type="org.apache.struts2.util.IteratorGenerator.Converter"
+     * @s.tagattribute required="false" type="org.apache.struts2.util.IteratorGenerator.Converter"
      * description="the converter to convert the String entry parsed from <i>val</i> into an object"
      */
     public void setConverter(String aConverter) {
@@ -171,7 +171,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
     }
 
     /**
-     * @ww.tagattribute required="false" type="String"
+     * @s.tagattribute required="false" type="String"
      * description="the id to store the resultant iterator into page context, if such id is supplied"
      */
     public void setId(String string) {

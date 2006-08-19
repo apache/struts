@@ -24,6 +24,7 @@
     </li>
 </ul>
 
+<!--
 <h3>Language Options</h3>
 <ul>
     <li>
@@ -45,6 +46,17 @@
         <s:a href="%{ru}">Russian</s:a>
     </li>
 </ul>
+-->
+<h3>Language Options</h3>
+<form>
+<s:select
+        name="request_locale"
+        list="locale_list"
+        listKey="locale_code"
+        listValue="locale_name"
+        />
+<s:submit />
+</form>
 
 <hr/>
 

@@ -72,7 +72,7 @@ public class ContextUtil {
      */
     public static boolean isUseAltSyntax(Map context) {
         // We didn't make altSyntax static cause, if so, struts.configuration.xml.reload will not work
-        // plus the Configuration implementation should cache the properties, which WW's
+        // plus the Configuration implementation should cache the properties, which the framework's
         // configuration implementation does
         boolean altSyntax = "true".equals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX));
         return altSyntax ||(

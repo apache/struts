@@ -37,7 +37,7 @@
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 ><#rt/>
 <#if parameters.nameValue?exists>
-<@saf.property value="parameters.nameValue"/><#t/>
+<@s.property value="parameters.nameValue"/><#t/>
 </#if>
 </textarea>
 

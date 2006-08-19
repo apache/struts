@@ -123,5 +123,5 @@ public final class StrutsConstants {
     public static final String STRUTS_SERVE_STATIC_BROWSER_CACHE = "struts.serve.static.browserCache";
 
     /** Whether Struts is in WebWork 2.2 compatibility mode or not */
-    public static final String STRUTS_COMPATIBILITY_MODE = "struts.compatibilityMode";
+    public static final String STRUTS_COMPATIBILITY_MODE_WEBWORK = "struts.compatibilityMode.WebWork";
 }

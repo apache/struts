@@ -6,12 +6,12 @@
 <body>
 	<ul>
 		<li>
-			<@saf.url id="url" action="hangmanAjax" namespace="/hangman" />
-			<@saf.a href="%{#url}">Hangman (Ajax)</@saf.a>
+			<@s.url id="url" action="hangmanAjax" namespace="/hangman" />
+			<@s.a href="%{#url}">Hangman (Ajax)</@s.a>
 		</li>
 		<li>
-			<@saf.url id="url" action="hangmanNonAjax" namespace="/hangman" />
-			<@saf.a href="%{#url}">Hangman (Non Ajax)</@saf.a>
+			<@s.url id="url" action="hangmanNonAjax" namespace="/hangman" />
+			<@s.a href="%{#url}">Hangman (Non Ajax)</@s.a>
 		</li>
 	</ul>
 </body>

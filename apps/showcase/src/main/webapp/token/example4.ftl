@@ -8,19 +8,19 @@
     one account to another. We use the token to prevent double posts so the transfer only
     happens once. This page is rendered using freemarker. See the xwork-token.xml where
     we must also use the createSession interceptor to be sure that a HttpSession exists
-    when freemarker renders this webpage, otherwise the ww.token tag causes an exception
+    when freemarker renders this webpage, otherwise the @s.token tag causes an exception
     while rendering the page.
     <p/>
 
-    <br/>Balance of source account: <@saf.property value="#session.balanceSource"/>
-    <br/>Balance of destination account: <@saf.property value="#session.balanceDestination"/>
+    <br/>Balance of source account: <@s.property value="#session.balanceSource"/>
+    <br/>Balance of destination account: <@s.property value="#session.balanceDestination"/>
     <p/>
 
-    <@saf.form action="transfer4">
-        <@saf.token/>
-        <@saf.textfield label="Amount" name="amount" required="true" value="400"/>
-        <@saf.submit value="Transfer money"/>
-    </@saf.form>
+    <@s.form action="transfer4">
+        <@s.token/>
+        <@s.textfield label="Amount" name="amount" required="true" value="400"/>
+        <@s.submit value="Transfer money"/>
+    </@s.form>
 
 </body>
 </html>

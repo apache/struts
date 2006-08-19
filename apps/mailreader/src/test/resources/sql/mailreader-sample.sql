@@ -1,6 +1,14 @@
 INSERT INTO locale
     (pk_locale, locale_code, locale_name)
-VALUES ('01-en','en','English'), ('02-ru','ru','Russian'), ('03-ja','ja','Japanese');
+VALUES ('01-en','en','English');
+
+INSERT INTO locale
+    (pk_locale, locale_code, locale_name)
+VALUES ('02-ru','ru','Russian');
+
+INSERT INTO locale
+    (pk_locale, locale_code, locale_name)
+VALUES ('03-ja','ja','Japanese');
 
 INSERT INTO protocol
     (pk_protocol, protocol_code, protocol_name)

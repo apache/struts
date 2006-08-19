@@ -20,6 +20,7 @@ package mailreader2;
 
 import com.opensymphony.util.BeanUtils;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ModelDriven;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.apps.mailreader.dao.ExpiredPasswordException;
@@ -50,7 +51,32 @@ import java.util.Map;
  * avoids creating unnecessary local properties. Pick your poison.</p>
  */
 public class MailreaderSupport extends ActionSupport
-        implements SessionAware, ApplicationAware {
+        implements SessionAware, ApplicationAware, ModelDriven {
+
+    private AppService appService;
+
+    public AppService getAppService() {
+        return appService;
+    }
+
+    public void setAppService(AppService appService) {
+        this.appService = appService;
+    }
+
+    private AppData appData = new AppData();
+
+    public Object getModel() {
+        return appData;
+    }
+
+    public void setAppData(AppData appData) {
+        this.appData = appData;
+    }
+
+    public AppData getAppData() {
+        return appData;
+    }
+
 
     /**
      * Return CANCEL so apropriate result can be selected.

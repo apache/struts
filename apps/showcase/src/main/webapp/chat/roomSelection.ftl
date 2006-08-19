@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<title>Showcase - Chat - Room Selection</title>
-		<@saf.head theme="ajax" />
+		<@s.head theme="ajax" />
 		<style type="text/css">
 			div.box {
 				border: 1px solid darkblue;
@@ -114,24 +114,24 @@
 		<div class="left">
 		<div class="box">
 			<h3>Operations</h3>
-			<@saf.url id="url" action="logout" namespace="/chat" />
+			<@s.url id="url" action="logout" namespace="/chat" />
 			<ul>
-				<li><@saf.a href="%{#url}">Logout</@saf.a></li>
+				<li><@s.a href="%{#url}">Logout</@s.a></li>
 			</ul>
 		</div>
 		<#if (actionErrors?size gt 0)>
 		<div class="box">
 			<h3>Action Errors</h3>
-			<@saf.actionerrors />
+			<@s.actionerrors />
 		</div>
 		</#if>
 		<div class="box">
 		<h3>Users Available In Chat</h3>
-		<@saf.div id="usersAvailable" delay="1" updateFreq="%{@org.apache.struts2.showcase.chat.Constants@UPDATE_FREQ}" 
+		<@s.div id="usersAvailable" delay="1" updateFreq="%{@org.apache.struts2.showcase.chat.Constants@UPDATE_FREQ}"
 		          theme="ajax" href="/chat/ajax/usersAvailable.action"
 		          class="box">
 				Initial Loading Users ...
-		</@saf.div>
+		</@s.div>
 		</div>
 		</div>
 		
@@ -139,21 +139,21 @@
 		<div class="center">
 		<div class="box">
 		<h3>Rooms Available In Chat</h3>
-		<@saf.div id="roomsAvailable" listenTopics="topicRoomCreated" 
+		<@s.div id="roomsAvailable" listenTopics="topicRoomCreated"
 				  delay="1" updateFreq="%{@org.apache.struts2.showcase.chat.Constants@UPDATE_FREQ}"
 				  theme="ajax" href="/chat/ajax/roomsAvailable.action" >
 			     Initial Loading Rooms ...
-		</@saf.div>
+		</@s.div>
 		</div>
 		
 		<div id="createRoom" class="box">
 		<h3>Create Room In Chat</h3>
 			<div id="createRoomResult"></div>
-			<@saf.form id="createRoomId" action="createRoom" namespace="/chat/ajax" method="POST" theme="ajax">
-				<@saf.textfield label="Room Name" required="true" name="name" />
-				<@saf.textarea theme="xhtml" label="Room Description" required="true" name="Description" />
-				<@saf.submit value="%{'Create Room'}" resultDivId="createRoomResult" notifyTopics="topicRoomCreated" theme="ajax" align="left" />
-			</@saf.form>
+			<@s.form id="createRoomId" action="createRoom" namespace="/chat/ajax" method="POST" theme="ajax">
+				<@s.textfield label="Room Name" required="true" name="name" />
+				<@s.textarea theme="xhtml" label="Room Description" required="true" name="Description" />
+				<@s.submit value="%{'Create Room'}" resultDivId="createRoomResult" notifyTopics="topicRoomCreated" theme="ajax" align="left" />
+			</@s.form>
 		</div>
 		</div>
 		

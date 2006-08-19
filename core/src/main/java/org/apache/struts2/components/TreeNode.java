@@ -52,17 +52,17 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- START SNIPPET: example -->
  * 
  * &lt-- statically --&gt;
- * &lt;ww:tree id="..." label="..."&gt;
- *    &lt;ww:treenode id="..." label="..." /&gt;
- *    &lt;ww:treenode id="..." label="..."&gt;
- *        &lt;ww:treenode id="..." label="..." /&gt;
- *        &lt;ww:treenode id="..." label="..." /&gt;
- *    &;lt;/ww:treenode&gt;
- *    &lt;ww:treenode id="..." label="..." /&gt;
- * &lt;/ww:tree&gt;
+ * &lt;s:tree id="..." label="..."&gt;
+ *    &lt;s:treenode id="..." label="..." /&gt;
+ *    &lt;s:treenode id="..." label="..."&gt;
+ *        &lt;s:treenode id="..." label="..." /&gt;
+ *        &lt;s:treenode id="..." label="..." /&gt;
+ *    &;lt;/s:treenode&gt;
+ *    &lt;s:treenode id="..." label="..." /&gt;
+ * &lt;/s:tree&gt;
  * 
  * &lt;-- dynamically --&gt;
- * &lt;ww:tree 
+ * &lt;s:tree
  *          id="..."
  *          rootNode="..."
  *          nodeIdProperty="..."
@@ -73,7 +73,7 @@ import javax.servlet.http.HttpServletResponse;
  * </pre>
  *
  *
- * @a2.tag name="treenode" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TreeNodeTag"
+ * @s.tag name="treenode" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TreeNodeTag"
  * description="Render a tree node within a tree widget."
  */
 public class TreeNode extends ClosingUIBean {

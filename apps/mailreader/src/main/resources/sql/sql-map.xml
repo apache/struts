@@ -7,7 +7,7 @@
                type="mailreader2.AppData"/>
 
     <select id="LOCALE_LIST" resultClass="data">
-        SELECT pk_locale AS locale_key, locale_code
+        SELECT pk_locale AS locale_key, locale_code, locale_name
         FROM locale;
     </select>
 

@@ -1,7 +1,7 @@
 
 <div id="result">
 </div>
-<@saf.form action="panel2Submit" namespace="/nodecorate" theme="ajax">
-	<@saf.textfield label="Name" name="name" theme="ajax" />
-	<@saf.submit theme="ajax" resultDivId="result" />
-</@saf.form>
+<@s.form action="panel2Submit" namespace="/nodecorate" theme="ajax">
+	<@s.textfield label="Name" name="name" theme="ajax" />
+	<@s.submit theme="ajax" resultDivId="result" />
+</@s.form>

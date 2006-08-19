@@ -237,8 +237,8 @@
                  use="true"
                  verbose="false"
                  source="${compile.version}">
-            <tag name="ww.tag" description="ww.tag" enabled="false"/>
-            <tag name="ww.tagattribute" description="ww.tagattribute" enabled="false"/>
+            <tag name="s.tag" description="s.tag" enabled="false"/>
+            <tag name="s.tagattribute" description="s.tagattribute" enabled="false"/>
             <link href="http://java.sun.com/j2se/${compile.version}/docs/api/"/>
             <link href="http://java.sun.com/j2ee/${compile.version}/docs/api/"/>
         </javadoc>

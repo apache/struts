@@ -111,17 +111,17 @@ import java.util.Iterator;
  * <pre>
  * <!-- START SNIPPET: example3code -->
  * 
- * 	&lt;saf:iterator value="groupDao.groups" status="groupStatus"&gt;
- * 		&lt;tr class="&lt;saf:if test="#groupStatus.odd == true "&gt;odd&lt;/saf:if&gt;&lt;saf:else&gt;even&lt;/saf:else&gt;"&gt;
- * 			&lt;td&gt;&lt;saf:property value="name" /&gt;&lt;/td&gt;
- * 			&lt;td&gt;&lt;saf:property value="description" /&gt;&lt;/td&gt;
+ * 	&lt;s:iterator value="groupDao.groups" status="groupStatus"&gt;
+ * 		&lt;tr class="&lt;s:if test="#groupStatus.odd == true "&gt;odd&lt;/s:if&gt;&lt;s:else&gt;even&lt;/s:else&gt;"&gt;
+ * 			&lt;td&gt;&lt;s:property value="name" /&gt;&lt;/td&gt;
+ * 			&lt;td&gt;&lt;s:property value="description" /&gt;&lt;/td&gt;
  * 			&lt;td&gt;
- * 				&lt;saf:iterator value="users" status="userStatus"&gt;
- * 					&lt;saf:property value="fullName" /&gt;&lt;saf:if test="!#userStatus.last"&gt;,&lt;/saf:if&gt;
- * 				&lt;/saf:iterator&gt;
+ * 				&lt;s:iterator value="users" status="userStatus"&gt;
+ * 					&lt;s:property value="fullName" /&gt;&lt;s:if test="!#userStatus.last"&gt;,&lt;/s:if&gt;
+ * 				&lt;/s:iterator&gt;
  * 			&lt;/td&gt;
  * 		&lt;/tr&gt;
- * 	&lt;/saf:iterator&gt;
+ * 	&lt;/s:iterator&gt;
  * 
  * <!-- END SNIPPET: example3code -->
  * </pre>

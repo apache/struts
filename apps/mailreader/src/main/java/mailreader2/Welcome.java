@@ -1,9 +1,18 @@
 package mailreader2;
 
+import com.opensymphony.xwork2.Preparable;
+import com.opensymphony.xwork2.ModelDriven;
+import java.util.List;
+
 /**
  * Verify that essential resources are available.
  */
-public class Welcome extends MailreaderSupport {
+public class Welcome extends MailreaderSupport implements Preparable {
+
+    public void prepare() throws Exception {
+        List value = getAppService().getLocaleList();
+        getAppData().setLocale_list(value);
+    }
 
     public String execute() {
 
@@ -24,4 +33,5 @@ public class Welcome extends MailreaderSupport {
             return SUCCESS;
         }
     }
+
 }

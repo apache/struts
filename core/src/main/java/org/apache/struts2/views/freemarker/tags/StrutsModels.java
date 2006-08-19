@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Provides @ww.xxx access for various tags.
+ * Provides @s.tag access for various tags.
  *
  */
 public class StrutsModels {

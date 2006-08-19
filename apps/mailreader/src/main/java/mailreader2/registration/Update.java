@@ -7,6 +7,9 @@ import mailreader2.Constants;
  */
 public class Update extends Support {
 
+
+    
+
     private String fixNull(String value) {
         if (value == null) return null;
         String buffer = value.trim();

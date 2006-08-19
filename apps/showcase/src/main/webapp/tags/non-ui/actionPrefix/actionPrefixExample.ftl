@@ -22,24 +22,24 @@
 		redirect (a new request is issue from the client), the text entered will be lost.<p/>
 		
 		
-		<@saf.url id="url" action="viewSource" namespace="/tags/non-ui/actionPrefix" />
-		The JSP code can be read <@saf.a href="%{#url}">here</@saf.a>.
+		<@s.url id="url" action="viewSource" namespace="/tags/non-ui/actionPrefix" />
+		The JSP code can be read <@s.a href="%{#url}">here</@s.a>.
 		
 	
-		<@saf.form action="submit" namespace="/tags/non-ui/actionPrefix" method="POST">
+		<@s.form action="submit" namespace="/tags/non-ui/actionPrefix" method="POST">
 			
-			<@saf.textfield label="Enter Some Text" name="text" />
+			<@s.textfield label="Enter Some Text" name="text" />
 			
-			<@saf.submit name="action:actionPrefix" value="%{'action prefix'}" />
+			<@s.submit name="action:actionPrefix" value="%{'action prefix'}" />
 			
-			<@saf.submit name="method:alternateMethod" value="%{'method prefix'}" />
+			<@s.submit name="method:alternateMethod" value="%{'method prefix'}" />
 			
-			<@saf.submit name="redirect:http://www.google.com" value="%{'redirect prefix'}" />
+			<@s.submit name="redirect:http://www.google.com" value="%{'redirect prefix'}" />
 			
-			<@saf.submit name="redirect-action:redirectActionPrefix" value="%{'redirect-action prefix'}" />
+			<@s.submit name="redirect-action:redirectActionPrefix" value="%{'redirect-action prefix'}" />
 			
-			<@saf.submit value="Normal Submit" />
-		</@saf.form>
+			<@s.submit value="Normal Submit" />
+		</@s.form>
 	</body>
 </html>
 

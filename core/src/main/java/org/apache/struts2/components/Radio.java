@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
  * <p/>
  * <!-- START SNIPPET: exdescription -->
  * In this example, a radio control is displayed with a list of genders. The gender list is built from attribute
- * id=genders. WW calls getGenders() which will return a Map. For examples using listKey and listValue attributes,
+ * id=genders. The framework calls getGenders() which will return a Map. For examples using listKey and listValue attributes,
  * see the section select tag. The default selected one will be determined (in this case) by the getMale() method 
  * in the action class which should retun a value similar to the key of the getGenters() map if that particular 
  * gender is to be selected.<p/>

@@ -49,20 +49,20 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <pre>
  * <!-- START SNIPPET: example -->
  *
- * &lt;ww:select label="My Selection"
+ * &lt;s:select label="My Selection"
  *            name="mySelection"
  *            value="%{'POPEYE'}"
  *            list="%{#{'SUPERMAN':'Superman', 'SPIDERMAN':'spiderman'}}"&gt;
- *    &lt;ww:optgroup label="Adult"
+ *    &lt;s:optgroup label="Adult"
  *                 list="%{#{'SOUTH_PARK':'South Park'}}" /&gt;
- *    &lt;ww:optgroup label="Japanese"
+ *    &lt;s:optgroup label="Japanese"
  *                 list="%{#{'POKEMON':'pokemon','DIGIMON':'digimon','SAILORMOON':'Sailormoon'}}" /&gt;
- * &lt;/ww:select&gt;
+ * &lt;/s:select&gt;
  *
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @a2.tag name="optgroup" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.OptGroupTag"
+ * @s.tag name="optgroup" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.OptGroupTag"
  * description="Renders a Select Tag's OptGroup Tag"
  */
 public class OptGroup extends Component {

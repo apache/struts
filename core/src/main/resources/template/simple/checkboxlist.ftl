@@ -1,6 +1,6 @@
 <#assign itemCount = 0/>
 <#if parameters.list?exists>
-    <@saf.iterator value="parameters.list">
+    <@s.iterator value="parameters.list">
         <#assign itemCount = itemCount + 1/>
         <#if parameters.listKey?exists>
             <#assign itemKey = stack.findValue(parameters.listKey)/>
@@ -27,7 +27,7 @@
         <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 />
 <label for="${parameters.name?html}-${itemCount}" class="checkboxLabel">${itemValue?html}</label>
-    </@saf.iterator>
+    </@s.iterator>
 <#else>
   &nbsp;
 </#if>

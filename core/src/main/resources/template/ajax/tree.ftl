@@ -8,46 +8,46 @@
  </script>
 <div dojoType="Tree"   
 	<#if parameters.blankIconSrc?exists>
-	gridIconSrcT="<@saf.url value='${parameters.blankIconSrc}' encode="false" />"
+	gridIconSrcT="<@s.url value='${parameters.blankIconSrc}' encode="false" />"
 	</#if>
 	<#if parameters.gridIconSrcL?exists>
-	gridIconSrcL="<@saf.url value='${parameters.gridIconSrcL}' encode="false" />"
+	gridIconSrcL="<@s.url value='${parameters.gridIconSrcL}' encode="false" />"
 	</#if>
 	<#if parameters.gridIconSrcV?exists>
-	gridIconSrcV="<@saf.url value='${parameters.gridIconSrcV}' encode="false" />"
+	gridIconSrcV="<@s.url value='${parameters.gridIconSrcV}' encode="false" />"
 	</#if>
 	<#if parameters.gridIconSrcP?exists>
-	gridIconSrcP="<@saf.url value='${parameters.gridIconSrcP}' encode="false" />"
+	gridIconSrcP="<@s.url value='${parameters.gridIconSrcP}' encode="false" />"
 	</#if>
 	<#if parameters.gridIconSrcC?exists>
-	gridIconSrcC="<@saf.url value='${parameters.gridIconSrcC}' encode="false" />"
+	gridIconSrcC="<@s.url value='${parameters.gridIconSrcC}' encode="false" />"
 	</#if>
 	<#if parameters.gridIconSrcX?exists>
-	gridIconSrcX="<@saf.url value='${parameters.gridIconSrcX}' encode="false" />"
+	gridIconSrcX="<@s.url value='${parameters.gridIconSrcX}' encode="false" />"
 	</#if>
 	<#if parameters.gridIconSrcY?exists>
-	gridIconSrcY="<@saf.url value='${parameters.gridIconSrcY}' encode="false" />"
+	gridIconSrcY="<@s.url value='${parameters.gridIconSrcY}' encode="false" />"
 	</#if>
 	<#if parameters.gridIconSrcZ?exists>
-	gridIconSrcZ="<@saf.url value='${parameters.gridIconSrcZ}' encode="false" />"
+	gridIconSrcZ="<@s.url value='${parameters.gridIconSrcZ}' encode="false" />"
 	</#if>
 	<#if parameters.expandIconSrcPlus?exists>
-	expandIconSrcPlus="<@saf.url value='${parameters.expandIconSrcPlus}' />"
+	expandIconSrcPlus="<@s.url value='${parameters.expandIconSrcPlus}' />"
 	</#if>
 	<#if parameters.expandIconSrcMinus?exists>
-	expandIconSrcMinus="<@saf.url value='${parameters.expandIconSrcMinus?html}' />"
+	expandIconSrcMinus="<@s.url value='${parameters.expandIconSrcMinus?html}' />"
 	</#if>
 	<#if parameters.iconWidth?exists>
-	iconWidth="<@saf.url value='${parameters.iconWidth?html}' encode="false" />"
+	iconWidth="<@s.url value='${parameters.iconWidth?html}' encode="false" />"
 	</#if>
 	<#if parameters.iconHeight?exists>
-	iconHeight="<@saf.url value='${parameters.iconHeight?html}' encode="false" />"
+	iconHeight="<@s.url value='${parameters.iconHeight?html}' encode="false" />"
 	</#if>
 	<#if parameters.toggleDuration?exists>
 	toggleDuration=${parameters.toggleDuration?c}
 	</#if>
 	<#if parameters.templateCssPath?exists>
-	templateCssPath="<@saf.url value='${parameters.templateCssPath}' encode="false" />"
+	templateCssPath="<@s.url value='${parameters.templateCssPath}' encode="false" />"
 	</#if>
 	<#if parameters.showGrid?exists>
 	showGrid="${parameters.showGrid?default(true)?string}"

@@ -39,17 +39,17 @@ import java.io.Writer;
  * <!-- START SNIPPET: example -->
  * 
  * &lt-- statically --&gt;
- * &lt;saf:tree id="..." label="..."&gt;
- *    &lt;saf:treenode id="..." label="..." /&gt;
- *    &lt;saf:treenode id="..." label="..."&gt;
- *        &lt;saf:treenode id="..." label="..." /&gt;
- *        &lt;saf:treenode id="..." label="..." /&gt;
- *    &;lt;/saf:treenode&gt;
- *    &lt;saf:treenode id="..." label="..." /&gt;
- * &lt;/saf:tree&gt;
+ * &lt;s:tree id="..." label="..."&gt;
+ *    &lt;s:treenode id="..." label="..." /&gt;
+ *    &lt;s:treenode id="..." label="..."&gt;
+ *        &lt;s:treenode id="..." label="..." /&gt;
+ *        &lt;s:treenode id="..." label="..." /&gt;
+ *    &;lt;/s:treenode&gt;
+ *    &lt;s:treenode id="..." label="..." /&gt;
+ * &lt;/s:tree&gt;
  * 
  * &lt;-- dynamically --&gt;
- * &lt;saf:tree 
+ * &lt;s:tree
  * 			id="..."
  *          rootNode="..."
  *          nodeIdProperty="..."

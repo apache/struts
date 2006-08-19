@@ -1,8 +1,8 @@
 
 <ul>
-<@saf.iterator id="member" value="%{usersAvailableInRoom}">
-	<li><@saf.property value="%{#member.name}" /></li>
-</@saf.iterator>
+<@s.iterator id="member" value="%{usersAvailableInRoom}">
+	<li><@s.property value="%{#member.name}" /></li>
+</@s.iterator>
 </ul>
 
 

@@ -4,7 +4,6 @@ import com.ibatis.common.jdbc.ScriptRunner;
 import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ibatis.sqlmap.client.SqlMapClientBuilder;
-import junit.framework.TestCase;
 
 import javax.sql.DataSource;
 import java.io.Reader;
@@ -15,18 +14,18 @@ import java.util.Properties;
  * @author Ted Husted
  * @version $Revision: 1.0 $ $Date: Jul 29, 2006 4:59:19 PM $
  */
-public class BaseSqlMapTest extends TestCase {
+public class BaseSqlMapTest extends BaseAppDataTest {
 
-    protected SqlMapClient sqlMap;
+    private SqlMapClient sqlMap;
 
     protected void initSqlMap(String configFile, Properties props) throws Exception {
         Reader reader = Resources.getResourceAsReader(configFile);
-        sqlMap = SqlMapClientBuilder.buildSqlMapClient(reader, props);
+        setSqlMap(SqlMapClientBuilder.buildSqlMapClient(reader, props));
         reader.close();
     }
 
     protected void runScript(String script) throws Exception {
-        DataSource ds = sqlMap.getDataSource();
+        DataSource ds = getSqlMap().getDataSource();
 
         Connection conn = ds.getConnection();
 
@@ -54,6 +53,14 @@ public class BaseSqlMapTest extends TestCase {
     }
 
     public void testInit() throws Exception {
-        assertNotNull(sqlMap);
+        assertNotNull(getSqlMap());
+    }
+
+    public SqlMapClient getSqlMap() {
+        return sqlMap;
+    }
+
+    public void setSqlMap(SqlMapClient sqlMap) {
+        this.sqlMap = sqlMap;
     }
 }

@@ -93,7 +93,7 @@ public class ElseTagTest extends StrutsTestCase {
         // create the mock http servlet request
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         
-        // NOTE: in WW Tag library, TagUtil gets stack from request, which will be set
+        // NOTE: in Struts Tag library, TagUtil gets stack from request, which will be set
         //       when request going through the FilterDispatcher --> DispatcherUtil etc. route
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
 

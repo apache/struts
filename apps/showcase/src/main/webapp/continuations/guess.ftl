@@ -9,10 +9,10 @@
     ${msg}
 </#list>
 
-<@saf.form action="guess" method="post">
-    <@saf.textfield label="Guess" name="guess"/>
-    <@saf.submit value="Guess"/>
-</@saf.form>
+<@s.form action="guess" method="post">
+    <@s.textfield label="Guess" name="guess"/>
+    <@s.submit value="Guess"/>
+</@s.form>
 </body>
 </html>
 <!-- END SNIPPET: example -->

@@ -21,7 +21,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
 /**
- * Action to demonstrate simple model-driven feature of WW.
+ * Action to demonstrate simple model-driven feature of the framework.
  * 
  */
 public class ModelDrivenAction extends ActionSupport implements ModelDriven {

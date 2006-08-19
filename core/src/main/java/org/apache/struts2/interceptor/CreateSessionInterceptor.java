@@ -29,7 +29,7 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
  *
  * This interceptor creates the HttpSession.
  * <p/>
- * This is particular usefull when using the &lt;@ww.tokten&gt; tag in freemarker templates.
+ * This is particular usefull when using the &lt;@s.token&gt; tag in freemarker templates.
  * The tag <b>do</b> require that a HttpSession is already created since freemarker commits
  * the response to the client immediately.
  * 

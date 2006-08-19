@@ -1,7 +1,7 @@
 
 <html>
 <head>
-  <@saf.head theme="ajax" debug="true" />
+  <@s.head theme="ajax" debug="true" />
 </head>
 <body>
 	

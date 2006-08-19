@@ -2,5 +2,10 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans default-autowire="autodetect">
+
+    <bean id="appService" class="mailreader2.service.SqlMapAppService">
+        <property name="testMode" value="true"/>
+    </bean>
+
     <!-- add your spring beans here -->
 </beans>

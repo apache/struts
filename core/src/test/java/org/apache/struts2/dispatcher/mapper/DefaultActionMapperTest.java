@@ -378,8 +378,8 @@ public class DefaultActionMapperTest extends StrutsTestCase {
     }
     
     public void testGetUriFromActionMapper12() throws Exception {
-        String old = org.apache.struts2.config.Settings.get(StrutsConstants.STRUTS_COMPATIBILITY_MODE);
-        org.apache.struts2.config.Settings.set(StrutsConstants.STRUTS_COMPATIBILITY_MODE, "true");
+        String old = org.apache.struts2.config.Settings.get(StrutsConstants.STRUTS_COMPATIBILITY_MODE_WEBWORK);
+        org.apache.struts2.config.Settings.set(StrutsConstants.STRUTS_COMPATIBILITY_MODE_WEBWORK, "true");
         try {
             DefaultActionMapper mapper = new DefaultActionMapper();
             ActionMapping actionMapping = new ActionMapping();
@@ -390,7 +390,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
             assertEquals("/myActionName.action", uri);
         }
         finally {
-            org.apache.struts2.config.Settings.set(StrutsConstants.STRUTS_COMPATIBILITY_MODE, old);
+            org.apache.struts2.config.Settings.set(StrutsConstants.STRUTS_COMPATIBILITY_MODE_WEBWORK, old);
         }
     }
 

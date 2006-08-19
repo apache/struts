@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
  * Objects provided can be retrieve from within the template via $parameters._paramname_.<p/>
  * 
  * <b>Jsp:</b><p/>
- * Objects provided can be retrieve from within the template via &lt;saf:property value="%{parameters._paramname_}" /&gt;<p/>
+ * Objects provided can be retrieve from within the template via &lt;s:property value="%{parameters._paramname_}" /&gt;<p/>
  *
  *
  * In the bottom JSP and Velocity samples, two parameters are being passed in to the component. From within the
@@ -43,8 +43,8 @@ import javax.servlet.http.HttpServletResponse;
  * $parameters.get('key1') and $parameters.get('key2') or $parameters.key1 and $parameters.key2<p/>
  * 
  * <b>Jsp:</b><p/>
- * &lt;saf:property value="%{parameters.key1}" /&gt; and &lt;saf:property value="%{'parameters.key2'}" /&gt; or
- * &lt;saf:property value="%{parameters.get('key1')}" /&gt; and &lt;saf:property value="%{parameters.get('key2')}" /&gt;<p/>
+ * &lt;s:property value="%{parameters.key1}" /&gt; and &lt;s:property value="%{'parameters.key2'}" /&gt; or
+ * &lt;s:property value="%{parameters.get('key1')}" /&gt; and &lt;s:property value="%{parameters.get('key2')}" /&gt;<p/>
  *
  * Currently, your custom UI components can be written in Velocity, JSP, or Freemarker, and the correct rendering
  * engine will be found based on file extension.<p/>
@@ -71,24 +71,24 @@ import javax.servlet.http.HttpServletResponse;
  *     &lt;/a:component&gt;
  *
  * Velocity
- *     #safcomponent( "template=/my/custom/component.vm" )
+ *     #s-component( "template=/my/custom/component.vm" )
  *
  *       or
  *
- *     #safcomponent( "template=/my/custom/component.vm" )
- *       #safparam( "name=key1" "value=value1" )
- *       #safparam( "name=key2" "value=value2" )
+ *     #s-component( "template=/my/custom/component.vm" )
+ *       #s-param( "name=key1" "value=value1" )
+ *       #s-param( "name=key2" "value=value2" )
  *     #end
  *     
  * Freemarker
- *    &lt;@saf.component template="/my/custom/component.ftl" />
+ *    &lt;@s..component template="/my/custom/component.ftl" />
  *    
  *      or
  *      
- *    &lt;@saf.component template="/my/custom/component.ftl"&gt;
- *       &lt;@saf.param name="key1" value="%{'value1'}" /&gt;
- *       &lt;@saf.param name="key2" value="%{'value2'}" /&gt;
- *    &lt;/@saf.component&gt;
+ *    &lt;@s..component template="/my/custom/component.ftl"&gt;
+ *       &lt;@s..param name="key1" value="%{'value1'}" /&gt;
+ *       &lt;@s..param name="key2" value="%{'value2'}" /&gt;
+ *    &lt;/@s..component&gt;
  *     
  * <!-- END SNIPPET: example -->
  * </pre>

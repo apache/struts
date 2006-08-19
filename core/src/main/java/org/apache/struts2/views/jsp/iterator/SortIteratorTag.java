@@ -78,7 +78,7 @@ import java.util.Comparator;
  *
  * @see org.apache.struts2.util.SortIteratorFilter
  *
- * @ww.tag name="sort" tld-body-content="JSP"
+ * @s.tag name="sort" tld-body-content="JSP"
  * description="Sort a List using a Comparator both passed in as the tag attribute."
  */
 public class SortIteratorTag extends StrutsBodyTagSupport {
@@ -91,7 +91,7 @@ public class SortIteratorTag extends StrutsBodyTagSupport {
     SortIteratorFilter sortIteratorFilter = null;
 
     /**
-     * @ww.tagattribute required="true" type="java.util.Comparator"
+     * @s.tagattribute required="true" type="java.util.Comparator"
      * description="The comparator to use"
      */
     public void setComparator(String comparator) {
@@ -99,7 +99,7 @@ public class SortIteratorTag extends StrutsBodyTagSupport {
     }
 
     /**
-     * @ww.tagattribute required="false"
+     * @s.tagattribute required="false"
      * description="The iterable source to sort"
      */
     public void setSource(String source) {

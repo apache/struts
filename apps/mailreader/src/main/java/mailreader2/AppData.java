@@ -1,12 +1,13 @@
 package mailreader2;
 
+import java.util.List;
+
 /**
  * <p/>
  * Provide properties to transfer data values between
  * the view and model layers (data transfer object).
  * </p>
  *
- * @author Ted Husted
  * @version $Revision: 1.0 $ $Date: Jul 30, 2006 9:29:50 AM $
  */
 public class AppData {
@@ -16,6 +17,7 @@ public class AppData {
     private String locale_key;
     private String locale_code;
     private String locale_name;
+    private List locale_list;
 
     private String registration_key;
     private String username;
@@ -95,6 +97,14 @@ public class AppData {
 
     public void setLocale_name(String locale_name) {
         this.locale_name = locale_name;
+    }
+
+    public List getLocale_list() {
+        return locale_list;
+    }
+
+    public void setLocale_list(List locale_list) {
+        this.locale_list = locale_list;
     }
 
     public String getRegistration_key() {

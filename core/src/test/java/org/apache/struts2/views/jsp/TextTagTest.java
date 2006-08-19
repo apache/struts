@@ -62,7 +62,7 @@ public class TextTagTest extends AbstractTagTest {
     public void testDefaultMessageOk() throws Exception {
     	// NOTE:
     	// simulate the condition
-    	// <saf:text name="some.invalid.key">My Default Message</saf:text>
+    	// <s:text name="some.invalid.key">My Default Message</s:text>
     	
     	StrutsMockBodyContent mockBodyContent = new StrutsMockBodyContent(new MockJspWriter());
     	mockBodyContent.setString("Sample Of Default Message");

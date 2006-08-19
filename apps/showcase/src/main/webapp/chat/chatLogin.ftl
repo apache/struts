@@ -2,15 +2,15 @@
 <html>
 	<head>
 		<title>Showcase - Chat - Login</title>
-		<@saf.head theme="ajax" />
+		<@s.head theme="ajax" />
 	</head>
 	<body>
-	<@saf.actionerror />
-	<@saf.actionmessage />
-	<@saf.fielderror />
-	<@saf.form action="login" namespace="/chat" method="POST">
-		<@saf.textfield name="name" label="Name" required="true" />
-		<@saf.submit/>
-	</@saf.form>
+	<@s.actionerror />
+	<@s.actionmessage />
+	<@s.fielderror />
+	<@s.form action="login" namespace="/chat" method="POST">
+		<@s.textfield name="name" label="Name" required="true" />
+		<@s.submit/>
+	</@s.form>
 	</body>
 </html>

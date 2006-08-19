@@ -79,26 +79,26 @@ import java.util.Map;
  * <!-- START SNIPPET: example -->
  * 
  * &lt;-- Example 1 --&gt;
- * &lt;a:url value="editGadget.action"&gt;
- *     &lt;a:param name="id" value="%{selected}" /&gt;
- * &lt;/a:url&gt;
+ * &lt;s:url value="editGadget.action"&gt;
+ *     &lt;s:param name="id" value="%{selected}" /&gt;
+ * &lt;/s:url&gt;
  *
  * &lt;-- Example 2 --&gt;
- * &lt;a:url action="editGadget"&gt;
- *     &lt;a:param name="id" value="%{selected}" /&gt;
- * &lt;/a:url&gt;
+ * &lt;s:url action="editGadget"&gt;
+ *     &lt;s:param name="id" value="%{selected}" /&gt;
+ * &lt;/s:url&gt;
  * 
  * &lt;-- Example 3--&gt;
- * &lt;a:url includeParams="get"  &gt;
+ * &lt;s:url includeParams="get"  &gt;
  *     &lt:param name="id" value="%{'22'}" /&gt;
- * &lt;/a:url&gt;
+ * &lt;/s:url&gt;
  * 
  * <!-- END SNIPPET: example -->
  * </pre>
  *
  * @see Param
  *
- * @a2.tag name="url" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.URLTag"
+ * @s.tag name="url" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.URLTag"
  * description="This tag is used to create a URL"
  */
 public class URL extends Component {
@@ -247,7 +247,7 @@ public class URL extends Component {
 
     /**
      * The includeParams attribute may have the value 'none', 'get' or 'all'.
-     * @a2.tagattribute required="false" default="get"
+     * @s.tagattribute required="false" default="get"
      */
     public void setIncludeParams(String includeParams) {
         this.includeParams = includeParams;
@@ -255,7 +255,7 @@ public class URL extends Component {
 
     /**
      * Set scheme attribute
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setScheme(String scheme) {
         this.scheme = scheme;
@@ -263,7 +263,7 @@ public class URL extends Component {
 
     /**
      * The target value to use, if not using action
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setValue(String value) {
         this.value = value;
@@ -271,7 +271,7 @@ public class URL extends Component {
 
     /**
      * The action generate url for, if not using value
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setAction(String action) {
         this.action = action;
@@ -279,7 +279,7 @@ public class URL extends Component {
 
     /**
      * The namespace to use
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setNamespace(String namespace) {
         this.namespace = namespace;
@@ -287,7 +287,7 @@ public class URL extends Component {
 
     /**
      * The method of action to use
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      * @deprecated Since Struts 2.0.0
      */
     public void setMethod(String method) {
@@ -296,7 +296,7 @@ public class URL extends Component {
 
     /**
      * whether to encode parameters
-     * @a2.tagattribute required="false" type="Boolean" default="true"
+     * @s.tagattribute required="false" type="Boolean" default="true"
      */
     public void setEncode(boolean encode) {
         this.encode = encode;
@@ -304,7 +304,7 @@ public class URL extends Component {
 
     /**
      * whether actual context should be included in url
-     * @a2.tagattribute required="false" type="Boolean" default="true"
+     * @s.tagattribute required="false" type="Boolean" default="true"
      */
     public void setIncludeContext(boolean includeContext) {
         this.includeContext = includeContext;
@@ -312,7 +312,7 @@ public class URL extends Component {
     
     /**
      * The resulting portlet mode
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setPortletMode(String portletMode) {
         this.portletMode = portletMode;
@@ -320,7 +320,7 @@ public class URL extends Component {
 
     /**
      * The resulting portlet window state
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setWindowState(String windowState) {
         this.windowState = windowState;
@@ -328,7 +328,7 @@ public class URL extends Component {
 
     /**
      * Specifies if this should be a portlet render or action url
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setPortletUrlType(String portletUrlType) {
         this.portletUrlType = portletUrlType;
@@ -336,7 +336,7 @@ public class URL extends Component {
 
     /**
      * The anchor for this URL
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setAnchor(String anchor) {
         this.anchor = anchor;

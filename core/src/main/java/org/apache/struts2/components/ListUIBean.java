@@ -118,7 +118,7 @@ public abstract class ListUIBean extends UIBean {
 
     /**
      * Iterable source to populate from. If the list is a Map (key, value), the Map key will become the option "value" parameter and the Map value will become the option body.
-     * @a2.tagattribute required="true"
+     * @s.tagattribute required="true"
      */
     public void setList(Object list) {
         this.list = list;
@@ -126,7 +126,7 @@ public abstract class ListUIBean extends UIBean {
 
     /**
      * Property of list objects to get field value from
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setListKey(String listKey) {
         this.listKey = listKey;
@@ -134,7 +134,7 @@ public abstract class ListUIBean extends UIBean {
 
     /**
      * Property of list objects to get field content from
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
       */
     public void setListValue(String listValue) {
         this.listValue = listValue;

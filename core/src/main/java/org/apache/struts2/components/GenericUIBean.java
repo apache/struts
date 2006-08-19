@@ -61,14 +61,14 @@ import javax.servlet.http.HttpServletResponse;
  * <pre>
  * <!-- START SNIPPET: example -->
  * JSP
- *     &lt;a:component template="/my/custom/component.vm"/&gt;
+ *     &lt;s:component template="/my/custom/component.vm"/&gt;
  *     
  *       or
  *
- *     &lt;a:component template="/my/custom/component.vm"&gt;
- *       &lt;a:param name="key1" value="value1"/&gt;
- *       &lt;a:param name="key2" value="value2"/&gt;
- *     &lt;/a:component&gt;
+ *     &lt;s:component template="/my/custom/component.vm"&gt;
+ *       &lt;s:param name="key1" value="value1"/&gt;
+ *       &lt;s:param name="key2" value="value2"/&gt;
+ *     &lt;/s:component&gt;
  *
  * Velocity
  *     #s-component( "template=/my/custom/component.vm" )
@@ -104,7 +104,7 @@ import javax.servlet.http.HttpServletResponse;
  * 
  * <!-- END SNIPPET: note -->
  *
- * @a2.tag name="component" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.ComponentTag"
+ * @s.tag name="component" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.ComponentTag"
  * description="Render a custom ui widget"
  */
 public class GenericUIBean extends UIBean {

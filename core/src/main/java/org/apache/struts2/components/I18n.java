@@ -56,9 +56,9 @@ import java.util.ResourceBundle;
  * <pre>
  * <!-- START SNIPPET: example -->
  * 
- * &lt;a:i18n name="myCustomBundle"&gt;
- *    The i18n value for key aaa.bbb.ccc in myCustomBundle is &lt;a:property value="text('aaa.bbb.ccc')" /&gt;
- * &lt;/a:i18n&gt;
+ * &lt;s:i18n name="myCustomBundle"&gt;
+ *    The i18n value for key aaa.bbb.ccc in myCustomBundle is &lt;s:property value="text('aaa.bbb.ccc')" /&gt;
+ * &lt;/s:i18n&gt;
  * 
  * <!-- END SNIPPET: example -->
  * </pre>
@@ -67,14 +67,14 @@ import java.util.ResourceBundle;
  * <pre>
  * <!-- START SNIPPET: i18nExample -->
  * 
- * &lt;a:i18n name="some.package.bundle" &gt;
- *      &lt;a:text name="some.key" /&gt;
- * &lt;/a:i18n&gt;
+ * &lt;s:i18n name="some.package.bundle" &gt;
+ *      &lt;s:text name="some.key" /&gt;
+ * &lt;/s:i18n&gt;
  * 
  * <!-- END SNIPPET: i18nExample -->
  * </pre>
  * 
- * @a2.tag name="i18n" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.I18nTag"
+ * @s.tag name="i18n" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.I18nTag"
  * description="Get a resource bundle and place it on the value stack"
  */
 public class I18n extends Component {
@@ -125,7 +125,7 @@ public class I18n extends Component {
 
     /**
      * Name of ressource bundle to use (eg foo/bar/customBundle)
-     * @a2.tagattribute required="true" default="String"
+     * @s.tagattribute required="true" default="String"
      */
     public void setName(String name) {
         this.name = name;

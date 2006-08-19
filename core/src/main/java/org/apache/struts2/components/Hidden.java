@@ -32,9 +32,9 @@ import javax.servlet.http.HttpServletResponse;
  * <pre>
  * <!-- START SNIPPET: example -->
  * &lt;-- example one --&gt;
- * &lt;a:hidden name="foo" /&gt;
+ * &lt;s:hidden name="foo" /&gt;
  * &lt;-- example two --&gt;
- * &lt;a:hidden name="foo" value="bar" /&gt;
+ * &lt;s:hidden name="foo" value="bar" /&gt;
  *
  * Example One Resulting HTML (if foo evaluates to bar):
  * &lt;input type="hidden" name="foo" value="bar" /&gt;
@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @a2.tag name="hidden" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.HiddenTag"
+ * @s.tag name="hidden" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.HiddenTag"
  * description="Render a hidden input field"
   */
 public class Hidden extends UIBean {

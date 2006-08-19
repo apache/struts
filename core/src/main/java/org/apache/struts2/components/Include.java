@@ -57,19 +57,19 @@ import java.util.*;
  * <pre>
  * <!-- START SNIPPET: example -->
  * &lt;-- One: --&gt;
- * &lt;a:include value="myJsp.jsp" /&gt;
+ * &lt;s:include value="myJsp.jsp" /&gt;
  *
  * &lt;-- Two: --&gt;
- * &lt;a:include value="myJsp.jsp"&gt;
- *    &lt;a:param name="param1" value="value2" /&gt;
- *    &lt;a:param name="param2" value="value2" /&gt;
- * &lt;/a:include&gt;
+ * &lt;s:include value="myJsp.jsp"&gt;
+ *    &lt;s:param name="param1" value="value2" /&gt;
+ *    &lt;s:param name="param2" value="value2" /&gt;
+ * &lt;/s:include&gt;
  *
  * &lt;-- Three: --&gt;
- * &lt;a:include value="myJsp.jsp"&gt;
- *    &lt;a:param name="param1"&gt;value1&lt;/a:param&gt;
- *    &lt;a:param name="param2"&gt;value2&lt;a:param&gt;
- * &lt;/a:include&gt;
+ * &lt;s:include value="myJsp.jsp"&gt;
+ *    &lt;s:param name="param1"&gt;value1&lt;/s:param&gt;
+ *    &lt;s:param name="param2"&gt;value2&lt;s:param&gt;
+ * &lt;/s:include&gt;
  * <!-- END SNIPPET: example -->
  *
  * <!-- START SNIPPET: exampledescription -->
@@ -79,7 +79,7 @@ import java.util.*;
  * <!-- END SNIPPET: exampledescription -->
  * </pre>
  *
- * @a2.tag name="include" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.IncludeTag"
+ * @s.tag name="include" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.IncludeTag"
  * description="Include a servlet's output (result of servlet or a JSP page)"
  */
 public class Include extends Component {
@@ -150,7 +150,7 @@ public class Include extends Component {
 
     /**
      * The jsp/servlet output to include
-     * @a2.tagattribute required="true" type="String"
+     * @s.tagattribute required="true" type="String"
      */
     public void setValue(String value) {
         this.value = value;

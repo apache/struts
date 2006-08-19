@@ -38,12 +38,12 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- END SNIPPET: exdescription -->
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;a:action name="GenderMap" id="genders"/&gt;
- * &lt;a:radio label="Gender" name="male" list="#genders.genders"/&gt;
+ * &lt;s:action name="GenderMap" id="genders"/&gt;
+ * &lt;s:radio label="Gender" name="male" list="#genders.genders"/&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @a2.tag name="radio" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.RadioTag"
+ * @s.tag name="radio" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.RadioTag"
  * description="Renders a radio button input field"
  */
 public class Radio extends ListUIBean {

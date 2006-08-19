@@ -109,7 +109,7 @@ public class OptGroup extends Component {
 
 	/**
 	 * Set the label attribute.
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setLabel(String label) {
 		internalUiBean.setLabel(label);
@@ -117,7 +117,7 @@ public class OptGroup extends Component {
 
 	/**
 	 * Set the disable attribute.
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setDisabled(String disabled) {
 		internalUiBean.setDisabled(disabled);
@@ -125,7 +125,7 @@ public class OptGroup extends Component {
 
 	/**
 	 * Set the list attribute.
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setList(String list) {
 		internalUiBean.setList(list);
@@ -133,7 +133,7 @@ public class OptGroup extends Component {
 
 	/**
 	 * Set the listKey attribute.
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setListKey(String listKey) {
 		internalUiBean.setListKey(listKey);
@@ -141,7 +141,7 @@ public class OptGroup extends Component {
 
 	/**
 	 * Set the listValue attribute.
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setListValue(String listValue) {
 		internalUiBean.setListValue(listValue);

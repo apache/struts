@@ -63,12 +63,12 @@ import java.io.Writer;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;a:set name="personName" value="person.name"/&gt;
- * Hello, &lt;a:property value="#personName"/&gt;. How are you?
+ * &lt;s:set name="personName" value="person.name"/&gt;
+ * Hello, &lt;s:property value="#personName"/&gt;. How are you?
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @a2.tag name="set" tld-body-content="empty" tld-tag-class="org.apache.struts2.views.jsp.SetTag"
+ * @s.tag name="set" tld-body-content="empty" tld-tag-class="org.apache.struts2.views.jsp.SetTag"
  * description="Assigns a value to a variable in a specified scope"
  */
 public class Set extends Component {
@@ -118,7 +118,7 @@ public class Set extends Component {
 
     /**
      * The name of the new variable that is assigned the value of <i>value</i>
-     * @a2.tagattribute required="true" type="String"
+     * @s.tagattribute required="true" type="String"
      */
     public void setName(String name) {
         this.name = name;
@@ -126,7 +126,7 @@ public class Set extends Component {
 
     /**
      * The scope in which to assign the variable. Can be <b>application</b>, <b>session</b>, <b>request</b>, <b>page</b>, or <b>action</b>.
-     * @a2.tagattribute required="false" type="String" default="action"
+     * @s.tagattribute required="false" type="String" default="action"
      */
     public void setScope(String scope) {
         this.scope = scope;
@@ -134,7 +134,7 @@ public class Set extends Component {
 
     /**
      * The value that is assigned to the variable named <i>name</i>
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setValue(String value) {
         this.value = value;

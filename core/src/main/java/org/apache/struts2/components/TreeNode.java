@@ -94,7 +94,7 @@ public class TreeNode extends ClosingUIBean {
 
     /**
      * Label expression used for rendering tree node label.
-     * @a2.tagattribute required="true"
+     * @s.tagattribute required="true"
      */
     public void setLabel(String label) {
         super.setLabel(label);

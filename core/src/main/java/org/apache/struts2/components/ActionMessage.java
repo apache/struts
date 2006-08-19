@@ -34,14 +34,14 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- *    &lt;a:actionmessage /&gt;
- *    &lt;a:form .... &gt;
+ *    &lt;s:actionmessage /&gt;
+ *    &lt;s:form .... &gt;
  *       ....
- *    &lt;/a:form&gt;
+ *    &lt;/s:form&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @a2.tag name="actionmessage" tld-body-content="empty" tld-tag-class="org.apache.struts2.views.jsp.ui.ActionMessageTag"
+ * @s.tag name="actionmessage" tld-body-content="empty" tld-tag-class="org.apache.struts2.views.jsp.ui.ActionMessageTag"
  * description="Render action messages if they exists"
  */
 public class ActionMessage extends UIBean {

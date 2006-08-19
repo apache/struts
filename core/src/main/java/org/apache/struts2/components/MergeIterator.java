@@ -105,14 +105,14 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <!-- END SNIPPET: javacode -->
  *
  * <!-- START SNIPPET: example -->
- * &lt;a:merge id="myMergedIterator1"&gt;
- *		&lt;a:param value="%{myList1}" /&gt;
- *		&lt;a:param value="%{myList2}" /&gt;
- *		&lt;a:param value="%{myList3}" /&gt;
- * &lt;/a:merge&gt;
- * &lt;a:iterator value="%{#myMergedIterator1}"&gt;
- *		&lt;a:property /&gt;
- * &lt;/a:iterator&gt;
+ * &lt;s:merge id="myMergedIterator1"&gt;
+ *		&lt;s:param value="%{myList1}" /&gt;
+ *		&lt;s:param value="%{myList2}" /&gt;
+ *		&lt;s:param value="%{myList3}" /&gt;
+ * &lt;/s:merge&gt;
+ * &lt;s:iterator value="%{#myMergedIterator1}"&gt;
+ *		&lt;s:property /&gt;
+ * &lt;/s:iterator&gt;
  * <!-- END SNIPPET: example -->
  *
  * <!-- START SNIPPET: description -->
@@ -122,7 +122,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * @see org.apache.struts2.util.MergeIteratorFilter
  * @see org.apache.struts2.views.jsp.iterator.MergeIteratorTag
  *
- * @a2.tag name="merge" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.iterator.MergeIteratorTag"
+ * @s.tag name="merge" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.iterator.MergeIteratorTag"
  * description="Merge the values of a list of iterators into one iterator"
  */
 public class MergeIterator extends Component implements UnnamedParametric {
@@ -169,7 +169,7 @@ public class MergeIterator extends Component implements UnnamedParametric {
 
     /**
      * the id where the resultant merged iterator will be stored in the stack's context
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setId(String id) {
         super.setId(id);

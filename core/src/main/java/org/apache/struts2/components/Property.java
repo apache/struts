@@ -51,13 +51,13 @@ import org.apache.commons.logging.LogFactory;
  * <pre>
  * <!-- START SNIPPET: example -->
  * 
- * <a:push value="myBean">
+ * <s:push value="myBean">
  *     <!-- Example 1: -->
- *     <a:property value="myBeanProperty" />
+ *     <s:property value="myBeanProperty" />
  *
  *     <!-- Example 2: -->
- *     <a:property value="myBeanProperty" default="a default value" />
- * </a:push>
+ *     <s:property value="myBeanProperty" default="a default value" />
+ * </s:push>
  * 
  * <!-- END SNIPPET: example -->
  * </pre>
@@ -75,12 +75,12 @@ import org.apache.commons.logging.LogFactory;
  * <pre>
  * <!-- START SNIPPET: i18nExample -->
  * 
- * &lt;a:property value="getText('some.key')" /&gt;
+ * &lt;s:property value="getText('some.key')" /&gt;
  * 
  * <!-- END SNIPPET: i18nExample -->
  * </pre>
  *
- * @a2.tag name="property" tld-body-content="empty" tld-tag-class="org.apache.struts2.views.jsp.PropertyTag"
+ * @s.tag name="property" tld-body-content="empty" tld-tag-class="org.apache.struts2.views.jsp.PropertyTag"
  * description="Print out expression which evaluates against the stack"
  */
 public class Property extends Component {
@@ -96,7 +96,7 @@ public class Property extends Component {
 
     /**
      * The default value to be used if <u>value</u> attribute is null
-     * @a2.tagattribute required="false" type="String"
+     * @s.tagattribute required="false" type="String"
      */
     public void setDefault(String defaultValue) {
         this.defaultValue = defaultValue;
@@ -104,7 +104,7 @@ public class Property extends Component {
 
     /**
      * Whether to escape HTML
-     * @a2.tagattribute required="false" type="Boolean" default="true"
+     * @s.tagattribute required="false" type="Boolean" default="true"
      */
     public void setEscape(boolean escape) {
         this.escape = escape;
@@ -112,7 +112,7 @@ public class Property extends Component {
 
     /**
      * value to be displayed
-     * @a2.tagattribute required="false" type="Object" default="&lt;top of stack&gt;"
+     * @s.tagattribute required="false" type="Object" default="&lt;top of stack&gt;"
      */
     public void setValue(String value) {
         this.value = value;

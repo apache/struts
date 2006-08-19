@@ -92,20 +92,20 @@ import java.util.Map;
  * <!-- START SNIPPET: example -->
  *  <div>The following action tag will execute result and include it in this page</div>
  *	<br />
- *	<a:action name="actionTagAction" executeResult="true" />
+ *	<s:action name="actionTagAction" executeResult="true" />
  *  <br />
  *  <div>The following action tag will do the same as above, but invokes method specialMethod in action</div>
  *	<br />
- *	<a:action name="actionTagAction!specialMethod" executeResult="true" />
+ *	<s:action name="actionTagAction!specialMethod" executeResult="true" />
  *  <br />
  *  <div>The following action tag will not execute result, but put a String in request scope
  *       under an id "stringByAction" which will be retrieved using property tag</div>
- *  <a:action name="actionTagAction!default" executeResult="false" />
- *  <a:property value="#attr.stringByAction" />
+ *  <s:action name="actionTagAction!default" executeResult="false" />
+ *  <s:property value="#attr.stringByAction" />
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @a2.tag name="action" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ActionTag"
+ * @s.tag name="action" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ActionTag"
  * description="Execute an action from within a view"
  */
 public class ActionComponent extends Component {
@@ -252,7 +252,7 @@ public class ActionComponent extends Component {
 
     /**
      * the id (if speficied) to put the action under stack's context.
-     * @a2.tagattribute required="false" type="String"
+     * @s.tagattribute required="false" type="String"
      */
     public void setId(String id) {
         super.setId(id);
@@ -260,7 +260,7 @@ public class ActionComponent extends Component {
 
     /**
      * name of the action to be executed (without the extension suffix eg. .action)
-     * @a2.tagattribute required="true" type="String"
+     * @s.tagattribute required="true" type="String"
      */
     public void setName(String name) {
         this.name = name;
@@ -268,7 +268,7 @@ public class ActionComponent extends Component {
 
     /**
      * namespace for action to call
-     * @a2.tagattribute required="false" type="String" default="namespace from where tag is used"
+     * @s.tagattribute required="false" type="String" default="namespace from where tag is used"
      */
     public void setNamespace(String namespace) {
         this.namespace = namespace;
@@ -276,7 +276,7 @@ public class ActionComponent extends Component {
 
     /**
      * whether the result of this action (probably a view) should be executed/rendered
-     * @a2.tagattribute required="false" type="Boolean" default="false"
+     * @s.tagattribute required="false" type="Boolean" default="false"
      */
     public void setExecuteResult(boolean executeResult) {
         this.executeResult = executeResult;
@@ -284,7 +284,7 @@ public class ActionComponent extends Component {
 
     /**
      * whether the request parameters are to be included when the action is invoked
-     * @a2.tagattribute required="false" type="Boolean" default="false"
+     * @s.tagattribute required="false" type="Boolean" default="false"
      */
     public void setIgnoreContextParams(boolean ignoreContextParams) {
         this.ignoreContextParams = ignoreContextParams;

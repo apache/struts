@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
  * <pre>
  * <!-- START SNIPPET: example -->
  * JSP:
- * &lt;a:checkbox label="checkbox test" name="checkboxField1" value="aBoolean" fieldValue="true"/&gt;
+ * &lt;s:checkbox label="checkbox test" name="checkboxField1" value="aBoolean" fieldValue="true"/&gt;
  *
  * Velocity:
  * #tag( Checkbox "label=checkbox test" "name=checkboxField1" "value=aBoolean" )
@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @a2.tag name="checkbox" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.CheckboxTag"
+ * @s.tag name="checkbox" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.CheckboxTag"
  * description="Render a checkbox input field"
   */
 public class Checkbox extends UIBean {
@@ -73,7 +73,7 @@ public class Checkbox extends UIBean {
 
     /**
      * The actual HTML value attribute of the checkbox.
-     * @a2.tagattribute required="false" default="'true'"
+     * @s.tagattribute required="false" default="'true'"
      */
     public void setFieldValue(String fieldValue) {
         this.fieldValue = fieldValue;

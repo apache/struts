@@ -49,15 +49,15 @@ import java.util.Iterator;
  * <!-- START SNIPPET: example1description -->
  *
  * <p>The following example retrieves the value of the getDays() method of the current object on the value stack and
- * uses it to iterate over. The &lt;a:property/&gt; tag prints out the current value of the iterator.</p>
+ * uses it to iterate over. The &lt;s:property/&gt; tag prints out the current value of the iterator.</p>
  *
  * <!-- END SNIPPET: example1description -->
  *
  * <pre>
  * <!-- START SNIPPET: example1code -->
- * &lt;a:iterator value="days"&gt;
- *   &lt;p&gt;day is: &lt;a:property/&gt;&lt;/p&gt;
- * &lt;/a:iterator&gt;
+ * &lt;s:iterator value="days"&gt;
+ *   &lt;p&gt;day is: &lt;s:property/&gt;&lt;/p&gt;
+ * &lt;/s:iterator&gt;
  * <!-- END SNIPPET: example1code -->
  * </pre>
  *
@@ -75,26 +75,26 @@ import java.util.Iterator;
  * <pre>
  * <!-- START SNIPPET: example2code -->
  * 
- * &lt;a:bean name="org.apache.struts2.example.IteratorExample" id="it"&gt;
- *   &lt;a:param name="day" value="'foo'"/&gt;
- *   &lt;a:param name="day" value="'bar'"/&gt;
- * &lt;/a:bean&gt;
+ * &lt;s:bean name="org.apache.struts2.example.IteratorExample" id="it"&gt;
+ *   &lt;s:param name="day" value="'foo'"/&gt;
+ *   &lt;s:param name="day" value="'bar'"/&gt;
+ * &lt;/s:bean&gt;
  * <p/>
  * &lt;table border="0" cellspacing="0" cellpadding="1"&gt;
  * &lt;tr&gt;
  *   &lt;th&gt;Days of the week&lt;/th&gt;
  * &lt;/tr&gt;
  * <p/>
- * &lt;a:iterator value="#it.days" status="rowstatus"&gt;
+ * &lt;s:iterator value="#it.days" status="rowstatus"&gt;
  *   &lt;tr&gt;
- *     &lt;a:if test="#rowstatus.odd == true"&gt;
- *       &lt;td style="background: grey"&gt;&lt;a:property/&gt;&lt;/td&gt;
- *     &lt;/a:if&gt;
- *     &lt;a:else&gt;
- *       &lt;td&gt;&lt;a:property/&gt;&lt;/td&gt;
- *     &lt;/a:else&gt;
+ *     &lt;s:if test="#rowstatus.odd == true"&gt;
+ *       &lt;td style="background: grey"&gt;&lt;s:property/&gt;&lt;/td&gt;
+ *     &lt;/s:if&gt;
+ *     &lt;s:else&gt;
+ *       &lt;td&gt;&lt;s:property/&gt;&lt;/td&gt;
+ *     &lt;/s:else&gt;
  *   &lt;/tr&gt;
- * &lt;/a:iterator&gt;
+ * &lt;/s:iterator&gt;
  * &lt;/table&gt;
  * 
  * <!-- END SNIPPET: example2code -->
@@ -131,7 +131,7 @@ import java.util.Iterator;
  *
  * </p> The next example iterates over a an action collection and passes every iterator value to another action. The
  * trick here lies in the use of the '[0]' operator. It takes the current iterator value and passes it on to the edit
- * action. Using the '[0]' operator has the same effect as using &gt;a:property /&gt;. (The latter, however, does not
+ * action. Using the '[0]' operator has the same effect as using &gt;s:property /&gt;. (The latter, however, does not
  * work from inside the param tag). </p>
  *
  * <!-- END SNIPPET: example4description -->
@@ -139,16 +139,16 @@ import java.util.Iterator;
  * <pre>
  * <!-- START SNIPPET: example4code -->
  * 
- * 		&lt;a:action name="entries" id="entries"/&gt;
- * 		&lt;a:iterator value="#entries.entries" &gt;
- * 			&lt;a:property value="name" /&gt;
- * 			&lt;a:property /&gt;
- * 			&lt;a:push value="..."&gt;
- * 				&lt;a:action name="edit" id="edit" &gt;
- * 					&lt;a:param name="entry" value="[0]" /&gt;
- * 				&lt;/a:action&gt;
+ * 		&lt;s:action name="entries" id="entries"/&gt;
+ * 		&lt;s:iterator value="#entries.entries" &gt;
+ * 			&lt;s:property value="name" /&gt;
+ * 			&lt;s:property /&gt;
+ * 			&lt;s:push value="..."&gt;
+ * 				&lt;s:action name="edit" id="edit" &gt;
+ * 					&lt;s:param name="entry" value="[0]" /&gt;
+ * 				&lt;/s:action&gt;
  * 			&lt;/push&gt;
- * 		&lt;/a:iterator&gt;
+ * 		&lt;/s:iterator&gt;
  * 
  * <!-- END SNIPPET: example4code -->
  * </pre>
@@ -163,19 +163,19 @@ import java.util.Iterator;
  * <pre>
  * <!-- START SNIPPET: example5code -->
  * 
- * &lt;a:iterator status="stat" value="{1,2,3,4,5}" &gt;
+ * &lt;s:iterator status="stat" value="{1,2,3,4,5}" &gt;
  *    &lt;!-- grab the index (start with 0 ... ) --&gt;
- *    &lt;a:property value="#stat.index" /&gt;
+ *    &lt;s:property value="#stat.index" /&gt;
  *    
  *    &lt;!-- grab the top of the stack which should be the --&gt;
  *    &lt;!-- current iteration value (0, 1, ... 5) --&gt;
- *    &lt;a:property value="top" /&gt;
- * &lt;/a:iterator&gt;
+ *    &lt;s:property value="top" /&gt;
+ * &lt;/s:iterator&gt;
  * 
  * <!-- END SNIPPET: example5code -->
  * </pre>
  * 
- * @a2.tag name="iterator" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.IteratorTag"
+ * @s.tag name="iterator" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.IteratorTag"
  * description="Iterate over a iterable value"
  */
 public class IteratorComponent extends Component {
@@ -272,7 +272,7 @@ public class IteratorComponent extends Component {
 
     /**
      * if specified, an instanceof IteratorStatus will be pushed into stack upon each iteration
-     * @a2.tagattribute required="false" type="Boolean" default="false"
+     * @s.tagattribute required="false" type="Boolean" default="false"
      */
     public void setStatus(String status) {
         this.statusAttr = status;
@@ -280,7 +280,7 @@ public class IteratorComponent extends Component {
 
     /**
      * the iteratable source to iterate over, else an the object itself will be put into a newly created List
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setValue(String value) {
         this.value = value;

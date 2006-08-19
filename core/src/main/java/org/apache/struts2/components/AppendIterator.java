@@ -95,21 +95,21 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <!-- END SNIPPET: code -->
  *
  * <!-- START SNIPPET: example -->
- * &lt;a:append id="myAppendIterator"&gt;
- *		&lt;a:param value="%{myList1}" /&gt;
- *		&lt;a:param value="%{myList2}" /&gt;
- *		&lt;a:param value="%{myList3}" /&gt;
- * &lt;/a:append&gt;
- * &lt;a:iterator value="%{#myAppendIterator}"&gt;
- *		&lt;a:property /&gt;
- * &lt;/a:iterator&gt;
+ * &lt;s:append id="myAppendIterator"&gt;
+ *		&lt;s:param value="%{myList1}" /&gt;
+ *		&lt;s:param value="%{myList2}" /&gt;
+ *		&lt;s:param value="%{myList3}" /&gt;
+ * &lt;/s:append&gt;
+ * &lt;s:iterator value="%{#myAppendIterator}"&gt;
+ *		&lt;s:property /&gt;
+ * &lt;/s:iterator&gt;
  * <!-- END SNIPPET: example -->
  *
  *
  * @see org.apache.struts2.util.AppendIteratorFilter
  * @see org.apache.struts2.views.jsp.iterator.AppendIteratorTag
  *
- * @a2.tag name="append" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.iterator.AppendIteratorTag"
+ * @s.tag name="append" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.iterator.AppendIteratorTag"
  * description="Append the values of a list of iterators to one iterator"
  */
 public class AppendIterator extends Component implements UnnamedParametric {
@@ -160,7 +160,7 @@ public class AppendIterator extends Component implements UnnamedParametric {
 
     /**
      * the id of which if supplied will have the resultant appended iterator stored under in the stack's context
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setId(String id) {
         super.setId(id);

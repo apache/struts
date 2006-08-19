@@ -464,7 +464,7 @@ public class Component {
 
     /**
      * id for referencing element. For UI and form tags it will be used as HTML id attribute
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setId(String id) {
     	if (id != null) {

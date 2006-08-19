@@ -38,18 +38,18 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;a:reset value="%{'Reset'}" /&gt;
+ * &lt;s:reset value="%{'Reset'}" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
  * <pre>
  * <!-- START SNIPPET: example2 -->
  * Render an button reset:
- * &lt;a:reset type="button" value="%{'Reset'}" label="Reset the form"/&gt;
+ * &lt;s:reset type="button" value="%{'Reset'}" label="Reset the form"/&gt;
  * <!-- END SNIPPET: example2 -->
  * </pre>
  *
- * @a2.tag name="reset" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.ResetTag"
+ * @s.tag name="reset" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.ResetTag"
  * description="Render a reset button"
  */
 public class Reset extends FormButton {
@@ -90,7 +90,7 @@ public class Reset extends FormButton {
      * Supply a reset button text apart from reset value. Will have no effect for <i>input</i> type reset, since button
      * text will always be the value parameter.
      *
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setLabel(String label) {
         super.setLabel(label);

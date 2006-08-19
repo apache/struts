@@ -77,12 +77,12 @@ import java.util.Set;
  * <pre>
  * <!-- START SNIPPET: example -->
  * <p/>
- * &lt;a:form ... /&gt;
+ * &lt;s:form ... /&gt;
  * <p/>
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @a2.tag name="form" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.FormTag"
+ * @s.tag name="form" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.FormTag"
  * description="Renders an input form"
  */
 public class Form extends ClosingUIBean {
@@ -415,7 +415,7 @@ public class Form extends ClosingUIBean {
     /**
      * HTML onsubmit attribute
      *
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setOnsubmit(String onsubmit) {
         this.onsubmit = onsubmit;
@@ -424,7 +424,7 @@ public class Form extends ClosingUIBean {
     /**
      * Set action nane to submit to, without .action suffix
      *
-     * @a2.tagattribute required="false" default="current action"
+     * @s.tagattribute required="false" default="current action"
      */
     public void setAction(String action) {
         this.action = action;
@@ -433,7 +433,7 @@ public class Form extends ClosingUIBean {
     /**
      * HTML form target attribute
      *
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setTarget(String target) {
         this.target = target;
@@ -442,7 +442,7 @@ public class Form extends ClosingUIBean {
     /**
      * HTML form enctype attribute
      *
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setEnctype(String enctype) {
         this.enctype = enctype;
@@ -451,7 +451,7 @@ public class Form extends ClosingUIBean {
     /**
      * HTML form method attribute
      *
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setMethod(String method) {
         this.method = method;
@@ -460,7 +460,7 @@ public class Form extends ClosingUIBean {
     /**
      * namespace for action to submit to
      *
-     * @a2.tagattribute required="false" default="current namespace"
+     * @s.tagattribute required="false" default="current namespace"
      */
     public void setNamespace(String namespace) {
         this.namespace = namespace;
@@ -469,7 +469,7 @@ public class Form extends ClosingUIBean {
     /**
      * Whether client side/remote validation should be performed. Only useful with theme xhtml/ajax
      *
-     * @a2.tagattribute required="false" type="Boolean" default="false"
+     * @s.tagattribute required="false" type="Boolean" default="false"
      */
     public void setValidate(String validate) {
         this.validate = validate;
@@ -478,7 +478,7 @@ public class Form extends ClosingUIBean {
     /**
      * The portlet mode to display after the form submit
      *
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setPortletMode(String portletMode) {
         this.portletMode = portletMode;
@@ -487,7 +487,7 @@ public class Form extends ClosingUIBean {
     /**
      * The window state to display after the form submit
      *
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setWindowState(String windowState) {
         this.windowState = windowState;
@@ -496,7 +496,7 @@ public class Form extends ClosingUIBean {
     /**
      * The accepted charsets for this form. The values may be comma or blank delimited.
      *
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setAcceptcharset(String acceptcharset) {
         this.acceptcharset = acceptcharset;

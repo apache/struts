@@ -34,12 +34,12 @@ import org.apache.commons.logging.LogFactory;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;a:file name="anUploadFile" accept="text/*" /&gt;
- * &lt;a:file name="anohterUploadFIle" accept="text/html,text/plain" /&gt;
+ * &lt;s:file name="anUploadFile" accept="text/*" /&gt;
+ * &lt;s:file name="anohterUploadFIle" accept="text/html,text/plain" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @a2.tag name="file" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.FileTag"
+ * @s.tag name="file" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.FileTag"
  * description="Render a file input field"
  */
 public class File extends UIBean {
@@ -66,13 +66,13 @@ public class File extends UIBean {
             String encType = (String) form.getParameters().get("enctype");
             if (!"multipart/form-data".equals(encType)) {
                 // uh oh, this isn't good! Let's warn the developer
-                log.warn("Struts has detected a file upload UI tag (a:file) being used without a form set to enctype 'multipart/form-data'. This is probably an error!");
+                log.warn("Struts has detected a file upload UI tag (s:file) being used without a form set to enctype 'multipart/form-data'. This is probably an error!");
             }
 
             String method = (String) form.getParameters().get("method");
             if (!"post".equalsIgnoreCase(method)) {
                 // uh oh, this isn't good! Let's warn the developer
-                log.warn("Struts has detected a file upload UI tag (a:file) being used without a form set to method 'POST'. This is probably an error!");
+                log.warn("Struts has detected a file upload UI tag (s:file) being used without a form set to method 'POST'. This is probably an error!");
             }
         }
 
@@ -87,7 +87,7 @@ public class File extends UIBean {
 
     /**
      * HTML accept attribute to indicate accepted file mimetypes
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setAccept(String accept) {
         this.accept = accept;
@@ -95,7 +95,7 @@ public class File extends UIBean {
 
     /**
      * HTML size attribute
-     * @a2.tagattribute required="false" type="Integer"
+     * @s.tagattribute required="false" type="Integer"
      */
     public void setSize(String size) {
         this.size = size;

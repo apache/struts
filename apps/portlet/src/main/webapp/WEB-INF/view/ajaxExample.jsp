@@ -1,4 +1,4 @@
-<%@ taglib prefix="s" uri="/tags" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <s:head theme="ajax"/>
 <link rel="stylesheet" type="text/css" href="<s:url value="/struts/tabs.css"/>">
 <b>This is a tabbed pane with two panels that fetches data from a remote action via ajax</b>

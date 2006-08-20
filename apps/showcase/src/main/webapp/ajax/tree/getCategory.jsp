@@ -1,4 +1,4 @@
-<%@ taglib prefix="s" uri="/tags" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <%@include file="partialChunkHeader.jsp"%>
 <ul>
 <s:iterator value="category.children">

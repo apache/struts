@@ -1,4 +1,4 @@
-<%@ taglib prefix="s" uri="/tags" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <html>
     <head><title>Execute and Wait Examples</title></head>
 

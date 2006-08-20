@@ -6,7 +6,7 @@
 --%>
 
 
-<%@taglib prefix="s" uri="/tags" %>
+<%@taglib prefix="s" uri="/struts-tags" %>
 
 <html>
     <head><title>Showcase - Validation - SuccessNonFieldValidatorsExample</title></head>

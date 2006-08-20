@@ -1,4 +1,4 @@
-<%@ taglib prefix="s" uri="/tags" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 
 <input type="checkbox" <s:if test="parameters['nameValue']">checked="checked"</s:if>
    name="<s:property value="parameters['name']"/>"

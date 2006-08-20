@@ -1,4 +1,4 @@
-<%@ taglib prefix="s" uri="/tags" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <html>
 <head>
     <meta http-equiv="refresh" content="5;url=<s:url includeParams="all"/>"/>

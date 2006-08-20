@@ -1,4 +1,4 @@
-<%@ taglib prefix="s" uri="/tags" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 
 <H2>Input your name</H2>
 <s:form action="processFormExample" method="POST">

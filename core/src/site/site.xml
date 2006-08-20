@@ -51,6 +51,9 @@
                     name="Release Notes"
                     href="http://cwiki.apache.org/WW/release-notes-200.html"
                     />        
+
+        </menu>
+        <menu name="Reference">
             <item
                     name="Struts API"
                     href="apidocs/index.html"
@@ -62,9 +65,14 @@
                     />        
 
             <item
-                    name="Taglib API"
-                    href="tags/index.html"
+                    name="Tag Reference"
+                    href="tagreference.html"
                     />        
+
+            <item
+                    name="Struts Tags API"
+                    href="tlddoc/index.html"
+                    />
 
             <item
                     name="Source Repository"

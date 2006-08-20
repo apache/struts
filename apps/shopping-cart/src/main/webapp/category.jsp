@@ -3,7 +3,7 @@
     response.setHeader("Cache-Control", "no-cache");
     response.setDateHeader("Expires", 0);
 %>
-<%@ taglib prefix="s" uri="/tags" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <s:if test="category != null">
     <h3><s:if test="category.parent != null"><s:property value="category.parent.name"/> &gt; </s:if><s:property value="category.name"/></h3>

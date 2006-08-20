@@ -5,7 +5,7 @@
    @version $Date: 2006/01/13 16:23:43 $ $Id: fieldValidatorsExample.jsp,v 1.4 2006/01/13 16:23:43 rainerh Exp $
 --%>
 
-<%@taglib prefix="s" uri="/tags" %>
+<%@taglib prefix="s" uri="/struts-tags" %>
 
 <html>
     <head>

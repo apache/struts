@@ -1,4 +1,4 @@
-<%@ taglib prefix="s" uri="/tags" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 
 <h3>Example of Spring managed singleton. All the 'things' are contained in a Spring defined ThingManager</h3>
 

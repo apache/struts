@@ -1,4 +1,4 @@
-<%@taglib prefix="s" uri="/tags" %>
+<%@taglib prefix="s" uri="/struts-tags" %>
 <html>
 <head>
     <title>Struts ~ Getting Support</title>

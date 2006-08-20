@@ -1,4 +1,4 @@
-<%@ taglib prefix="s" uri="/tags" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <s:if test="hasErrors()">
   ERROR:<br />
   <font color="red">

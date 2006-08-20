@@ -1,4 +1,4 @@
-<%@ taglib prefix="s" uri="/tags" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="pw" uri="/portletwork" %>
 <pw:form action="prefsFormSave.action" method="POST">
     <s:textfield label="Preference one" name="preferenceOne" value="%{preferenceOne}"/>

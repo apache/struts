@@ -5,7 +5,7 @@
     @version $Date: 2005/12/22 09:17:59 $ $Id: successFieldValidatorsExample.jsp,v 1.1 2005/12/22 09:17:59 tmjee Exp $
 --%>
 
-<%@taglib prefix="s" uri="/tags" %>
+<%@taglib prefix="s" uri="/struts-tags" %>
 
 <html>
     <head><title>Showcase - Validation - SuccessFieldValidatorsExample</title></head>

@@ -1,5 +1,5 @@
 
-<%@taglib prefix="s" uri="/tags" %>
+<%@taglib prefix="s" uri="/struts-tags" %>
 
 <div style="background-color:yellow;">
 <p>

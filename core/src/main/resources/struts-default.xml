@@ -50,6 +50,7 @@
             <interceptor name="token-session" class="org.apache.struts2.interceptor.TokenSessionStoreInterceptor"/>
             <interceptor name="validation" class="com.opensymphony.xwork2.validator.ValidationInterceptor"/>
             <interceptor name="workflow" class="com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor"/>
+            <interceptor name="store" class="org.apache.struts2.interceptor.MessageStoreInterceptor" />
             
             <!-- JSF interceptors, one per lifecycle phase -->
             <interceptor class="org.apache.struts2.jsf.FacesSetupInterceptor" name="jsfSetup" />

@@ -7,12 +7,7 @@ import java.util.List;
 /**
  * Verify that essential resources are available.
  */
-public class Welcome extends MailreaderSupport implements Preparable {
-
-    public void prepare() throws Exception {
-        List value = getAppService().getLocaleList();
-        getAppData().setLocale_list(value);
-    }
+public class Welcome extends MailreaderSupport  {
 
     public String execute() {
 
@@ -33,5 +28,4 @@ public class Welcome extends MailreaderSupport implements Preparable {
             return SUCCESS;
         }
     }
-
 }

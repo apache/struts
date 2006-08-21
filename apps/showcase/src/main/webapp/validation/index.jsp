@@ -23,6 +23,7 @@
         <s:url id="visitorValidatorUrl" action="showVisitorValidatorsExamples" namespace="/validation" />
         <s:url id="clientSideValidationUrl" action="clientSideValidationExample" namespace="/validation" />
         <s:url id="backToShowcase" action="showcase" namespace="/" />
+        <s:url id="storeMessageAcrossRequestExample" value="/validation/storeErrorsAcrossRequestExample.jsp" />
         
         <ul>
             <li><s:a href="%{quizBasic}">Validation (basic)</s:a></li>
@@ -34,6 +35,7 @@
             <li><s:a href="%{visitorValidatorUrl}">Visitor Validator</s:a></li>
             <li><s:a href="%{clientSideValidationUrl}">Client side validation using JavaScript</s:a></li>
             <li><s:a href="%{backToShowcase}">Back To Showcase</s:a>
+            <li><s:a href="%{storeMessageAcrossRequestExample}">Store across request using MessageStoreInterceptor (Example)</s:a></li>
         </ul>
     </body>
 </html>

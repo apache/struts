@@ -93,8 +93,34 @@
 			<result>/validation/successClientSideValidationExample.jsp</result>
 		</action>
 
-
-
+		<!-- =========================================== -->
+		<!-- === Store Error Messages Across Request === -->
+		<!-- =========================================== -->
+		
+		<action name="submitApplication" class="org.apache.struts2.showcase.validation.SubmitApplication" method="submitApplication">
+			<interceptor-ref name="store">
+				<param name="operationMode">STORE</param>
+			</interceptor-ref>
+			<interceptor-ref name="defaultStack" />
+			<result name="input" type="redirect">/validation/resubmitApplication.action</result>
+			<result type="redirect">/validation/applicationOk.action</result>
+		</action>
+		<action name="resubmitApplication" class="org.apache.struts2.showcase.validation.SubmitApplication">
+			<interceptor-ref name="store">
+				<param name="operationMode">RETRIEVE</param>
+			</interceptor-ref>
+			<result>/validation/storeErrorsAcrossRequestExample.jsp</result>
+		</action>
+		<action name="applicationOk" class="org.apache.struts2.showcase.validation.SubmitApplication" method="applicationOk">
+			<interceptor-ref name="store">
+				<param name="operationMode">RETRIEVE</param>
+			</interceptor-ref>
+			<result>/validation/storeErrorsAcrossRequestOk.jsp</result>
+		</action>
+		<action name="cancelApplication" class="org.apache.struts2.showcase.validation.SubmitApplication" method="cancelApplication">
+			<result>/validation/storeErrorsAcrossRequestCancel.jsp</result>
+		</action>
+		
     </package>
 </struts>
 	

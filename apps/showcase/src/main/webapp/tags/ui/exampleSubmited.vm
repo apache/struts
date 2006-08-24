@@ -6,18 +6,18 @@
 
 <h1>Example Submitted</h1>
 <table>
-	#saflabel ("label=Name" "name=name")
-	#saflabel ("label=Birthday" "name=birthday")
-	#saflabel ("label=Biography" "name=bio")
-	#saflabel ("label=Favourite Color" "name=favouriteColor")
-	#saflabel ("label=Friends" "name=friends")
-	#saflabel ("label=Legal Age" "name=legalAge")
-	#saflabel ("label=Region" "name=region")
-	#saflabel ("label=State" "name=state")
-	#saflabel ("label=Picture" "name=picture")
-	#saflabel ("label=Favourite Language" "name=favouriteLanguage")
-	#saflabel ("label=Favourite Vehical Type" "name=favouriteVehicalType")
-	#saflabel ("label=Favourite Vehical Specific" "name=favouriteVehicalSpecific")
+	#slabel ("label=Name" "name=name")
+	#slabel ("label=Birthday" "name=birthday")
+	#slabel ("label=Biography" "name=bio")
+	#slabel ("label=Favourite Color" "name=favouriteColor")
+	#slabel ("label=Friends" "name=friends")
+	#slabel ("label=Legal Age" "name=legalAge")
+	#slabel ("label=Region" "name=region")
+	#slabel ("label=State" "name=state")
+	#slabel ("label=Picture" "name=picture")
+	#slabel ("label=Favourite Language" "name=favouriteLanguage")
+	#slabel ("label=Favourite Vehical Type" "name=favouriteVehicalType")
+	#slabel ("label=Favourite Vehical Specific" "name=favouriteVehicalSpecific")
 	<tr>
 		<td>Favourite Cartoon Characters (Left):</td>
 		<td>
@@ -40,8 +40,8 @@
 	</tr>
 </table>
 
-#safurl ("id=url" "value=index.jsp")
-#safa("href=${url}")Back to index.jsp#end
+#surl ("id=url" "value=index.jsp")
+#sa("href=${url}")Back to index.jsp#end
 
 </body>
 </html>

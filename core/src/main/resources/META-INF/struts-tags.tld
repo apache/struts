@@ -13,7 +13,8 @@
     <description><![CDATA[
     To make it easier to access dynamic data,
     the Apache Struts framework includes a library of custom tags.
-    The tags interact with the framework's validation and internationalization features,
+    The tags interact with the framework's expression language,
+    and its validation and internationalization features,
     to ensure that input is correct and output is localized.
     The Struts Tags can be used with JSP, FreeMarker, or Velocity.
     ]]></description>
@@ -3004,51 +3005,83 @@
         <name>action</name>
         <tag-class>org.apache.struts2.views.jsp.ActionTag</tag-class>
         <body-content>JSP</body-content>
-        <description><![CDATA[Execute an action from within a view]]></description>
+        <description>
+        Invoke an action directly from a view.
+        Tag attributes specify an action name and an optional namespace.
+        Tag body content renders the result from the Action.
+        If the executeResult attribute is TRUE,
+        any result class specified by the action mapping is invoked and rendered,
+        otherwise the result is ignored.
+        </description>
 
         <attribute>
             <name>id</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[the id (if speficied) to put the action under stack's context.]]></description>
-
+            <description>If specified, the action's stack context ID.</description>
         </attribute>
         <attribute>
             <name>name</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
-
-            <description>
-                <![CDATA[name of the action to be executed (without the extension suffix eg. .action)]]></description>
-
+            <description>Action mapping to invoke</description>
         </attribute>
         <attribute>
             <name>namespace</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[namespace for action to call]]></description>
-
+            <description>The action mapping's namespace (if different than the current namespace)</description>
         </attribute>
         <attribute>
             <name>executeResult</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-
-            <description>
-                <![CDATA[whether the result of this action (probably a view) should be executed/rendered]]></description>
-
+            <description>If TRUE, invoke the result class, rendering its content (if any)</description>
         </attribute>
         <attribute>
             <name>ignoreContextParams</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-
-            <description>
-                <![CDATA[whether the request parameters are to be included when the action is invoked]]></description>
-
+            <description>If FALSE, include the request parameters during the action invocation</description>
         </attribute>
+        <example><![CDATA[
+
+            // Action class
+            public class ActionTagAction extends ActionSupport {
+
+                public String execute() throws Exception {
+                    return SUCCESS;
+                }
+
+                public String alternate() throws Exception {
+                    ServletActionContext.getRequest().setAttribute("actionAttribute",
+                     "This string is a request attribute set by the ActionTagAction's alternate() method.");
+                    return SUCCESS;
+                }
+            }
+
+            <!-- Struts configuation -->
+            <struts>
+            ....
+            <action name="ActionTagAction1" class="testing.ActionTagAction">
+                <result>success.jsp</result>
+            </action>
+            <action name="ActionTagAction2" class="testing.ActionTagAction" method="alternate">
+                <result name="done">success.jsp</result>
+            </action>
+            ....
+            </struts>
+
+            <!-- Struts tags (in a server page) -->
+            <div>
+            <p>Content rendered by another Action, invoked as this page is being rendered:</p>
+        	<s:action name="ActionTagAction1" executeResult="true" />
+        	</div><div>
+            <p>Content placed into the context by another Action, invoked as this page is being rendered:</p>
+            <s:action name="ActionTagAction2" executeResult="false" />
+            <s:property value="#attr.actionAttribute" />
+            <p>(Note that the Action itself did not render a result.)</p>
+        ]]></example>
 
     </tag>
     <tag>

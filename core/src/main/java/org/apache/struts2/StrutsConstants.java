@@ -121,7 +121,4 @@ public final class StrutsConstants {
     
     /** If static content served by the Struts filter should set browser caching header properties or not */
     public static final String STRUTS_SERVE_STATIC_BROWSER_CACHE = "struts.serve.static.browserCache";
-
-    /** Whether Struts is in WebWork 2.2 compatibility mode or not */
-    public static final String STRUTS_COMPATIBILITY_MODE_WEBWORK = "struts.compatibilityMode.WebWork";
 }

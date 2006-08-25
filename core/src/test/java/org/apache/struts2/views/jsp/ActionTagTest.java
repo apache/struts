@@ -207,7 +207,6 @@ public class ActionTagTest extends AbstractTagTest {
 
     // TODO - !input form fails in Maven, but passes in IDEA. The settings seem to be ignored under Maven.
     public void FIXME_testActionMethodWithExecuteResult() throws Exception {
-        org.apache.struts2.config.Settings.set(StrutsConstants.STRUTS_COMPATIBILITY_MODE_WEBWORK, "true");
         ActionTag tag = new ActionTag();
         tag.setPageContext(pageContext);
         tag.setNamespace("");

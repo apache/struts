@@ -101,13 +101,6 @@ public class Form extends ClosingUIBean {
     protected String portletMode;
     protected String windowState;
     protected String acceptcharset;
-    protected static boolean compatibilityMode = false;
-    
-    static {
-        if (org.apache.struts2.config.Settings.isSet(StrutsConstants.STRUTS_COMPATIBILITY_MODE_WEBWORK)) {
-            compatibilityMode = "true".equals(org.apache.struts2.config.Settings.get(StrutsConstants.STRUTS_COMPATIBILITY_MODE_WEBWORK));
-        }
-    }
 
     public Form(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -230,11 +223,9 @@ public class Form extends ClosingUIBean {
         }
 
         String actionMethod = "";
-        if (compatibilityMode && action.indexOf("!") != -1) {
-            int endIdx = action.lastIndexOf("!");
-            actionMethod = action.substring(endIdx + 1, action.length());
-            action = action.substring(0, endIdx);
-        }
+        int endIdx = action.lastIndexOf("!");
+        actionMethod = action.substring(endIdx + 1, action.length());
+        action = action.substring(0, endIdx);
 
         Configuration config = Dispatcher.getInstance().getConfigurationManager().getConfiguration();
         final ActionConfig actionConfig = config.getRuntimeConfiguration().getActionConfig(namespace, action);

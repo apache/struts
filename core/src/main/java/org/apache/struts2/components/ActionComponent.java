@@ -83,17 +83,6 @@ public class ActionComponent extends Component {
     protected boolean ignoreContextParams;
 
     /**
-     * Indicate whether WebWork compatibility mode is set.
-     */
-    protected static boolean compatibilityMode = false;
-
-    static {
-        if (org.apache.struts2.config.Settings.isSet(StrutsConstants.STRUTS_COMPATIBILITY_MODE_WEBWORK)) {
-            compatibilityMode = "true".equals(org.apache.struts2.config.Settings.get(StrutsConstants.STRUTS_COMPATIBILITY_MODE_WEBWORK));
-        }
-    }
-
-    /**
      * Construct object instance, setting runtime parameters.
      *
      * @param stack Our OgnlValueStack
@@ -188,13 +177,11 @@ public class ActionComponent extends Component {
         String actionName = actualName;
         String methodName = null;
 
-        if (compatibilityMode) {
-            // handle "name!method" convention.
-            int exclamation = actualName.lastIndexOf("!");
-            if (exclamation != -1) {
-                actionName = actualName.substring(0, exclamation);
-                methodName = actualName.substring(exclamation + 1);
-            }
+        // handle "name!method" convention.
+        int exclamation = actualName.lastIndexOf("!");
+        if (exclamation != -1) {
+            actionName = actualName.substring(0, exclamation);
+            methodName = actualName.substring(exclamation + 1);
         }
 
         String namespace;

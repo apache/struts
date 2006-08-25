@@ -149,21 +149,15 @@ public class DefaultActionMapper implements ActionMapper {
     static final String REDIRECT_ACTION_PREFIX = "redirect-action:";
 
     private PrefixTrie prefixTrie = null;
-    private boolean compatibilityMode = false;
     public DefaultActionMapper() {
-        if (org.apache.struts2.config.Settings.isSet(StrutsConstants.STRUTS_COMPATIBILITY_MODE_WEBWORK)) {
-            compatibilityMode = "true".equals(org.apache.struts2.config.Settings.get(StrutsConstants.STRUTS_COMPATIBILITY_MODE_WEBWORK));
-        }
         prefixTrie = new PrefixTrie() {
             {
-                if (compatibilityMode) {
-                    put(METHOD_PREFIX, new ParameterAction() {
-                        public void execute(String key, ActionMapping mapping) {
-                            mapping.setMethod(key.substring(METHOD_PREFIX.length()));
-                        }
-                    });
-                }
-    
+                put(METHOD_PREFIX, new ParameterAction() {
+                    public void execute(String key, ActionMapping mapping) {
+                        mapping.setMethod(key.substring(METHOD_PREFIX.length()));
+                    }
+                });
+
                 put(ACTION_PREFIX, new ParameterAction() {
                     public void execute(String key, ActionMapping mapping) {
                         String name = key.substring(ACTION_PREFIX.length());
@@ -217,15 +211,14 @@ public class DefaultActionMapper implements ActionMapper {
             return null;
         }
 
-        if (compatibilityMode) {
-            // handle "name!method" convention.
-            String name = mapping.getName();
-            int exclamation = name.lastIndexOf("!");
-            if (exclamation != -1) {
-                mapping.setName(name.substring(0, exclamation));
-                mapping.setMethod(name.substring(exclamation + 1));
-            }
+        // handle "name!method" convention.
+        String name = mapping.getName();
+        int exclamation = name.lastIndexOf("!");
+        if (exclamation != -1) {
+            mapping.setName(name.substring(0, exclamation));
+            mapping.setMethod(name.substring(exclamation + 1));
         }
+
         return mapping;
     }
 
@@ -372,18 +365,13 @@ public class DefaultActionMapper implements ActionMapper {
         }
         uri.append(name);
 
-        if (compatibilityMode) {
-            if (null != mapping.getMethod() && !"".equals(mapping.getMethod())) {
-                uri.append("!").append(mapping.getMethod());
-            }
+        if (null != mapping.getMethod() && !"".equals(mapping.getMethod())) {
+            uri.append("!").append(mapping.getMethod());
         }
 
         String extension = getDefaultExtension();
         if ( extension != null) {
-            
-            // When in compatibility mode, we don't add an extension if it exists already
-            // otherwise, we always add it
-            if (!compatibilityMode || (compatibilityMode && uri.indexOf( '.' + extension) == -1  )) {
+            if (uri.indexOf( '.' + extension) == -1  ) {
                 uri.append(".").append(extension);
                 if ( params.length() > 0) {
                     uri.append(params);

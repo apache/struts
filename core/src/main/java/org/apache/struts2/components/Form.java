@@ -223,9 +223,12 @@ public class Form extends ClosingUIBean {
         }
 
         String actionMethod = "";
-        int endIdx = action.lastIndexOf("!");
-        actionMethod = action.substring(endIdx + 1, action.length());
-        action = action.substring(0, endIdx);
+        // todo: this logic is flawed - the only concept of ! should be in DefaultActionMapper
+        if (action.indexOf("!") != -1) {
+            int endIdx = action.lastIndexOf("!");
+            actionMethod = action.substring(endIdx + 1, action.length());
+            action = action.substring(0, endIdx);
+        }
 
         Configuration config = Dispatcher.getInstance().getConfigurationManager().getConfiguration();
         final ActionConfig actionConfig = config.getRuntimeConfiguration().getActionConfig(namespace, action);

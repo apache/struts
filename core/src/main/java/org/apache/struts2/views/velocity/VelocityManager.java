@@ -128,8 +128,8 @@ public class VelocityManager {
      * following context parameters are defined:
      * <p/>
      * <ul>
-     * <li><strong>req</strong> - the current HttpServletRequest</li>
-     * <li><strong>res</strong> - the current HttpServletResponse</li>
+     * <li><strong>request</strong> - the current HttpServletRequest</li>
+     * <li><strong>response</strong> - the current HttpServletResponse</li>
      * <li><strong>stack</strong> - the current {@link OgnlValueStack}</li>
      * <li><strong>ognl</strong> - an {@link OgnlTool}</li>
      * <li><strong>struts</strong> - an instance of {@link org.apache.struts2.util.StrutsUtil}</li>

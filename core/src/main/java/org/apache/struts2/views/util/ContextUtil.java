@@ -35,9 +35,9 @@ import java.util.Map;
  * 
  */
 public class ContextUtil {
-    public static final String REQUEST = "req";
+    public static final String REQUEST = "request";
     public static final String REQUEST2 = "request";
-    public static final String RESPONSE = "res";
+    public static final String RESPONSE = "response";
     public static final String RESPONSE2 = "response";
     public static final String SESSION = "session";
     public static final String BASE = "base";

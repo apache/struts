@@ -2684,11 +2684,11 @@ dojo.dom.createDocumentFromText = function(str, mimetype){
 		var mtype = "text/xml";
 		var xml = '<?xml version="1.0"?>'+str;
 		var url = "data:"+mtype+";charset=utf-8,"+encodeURIComponent(xml);
-		var req = new XMLHttpRequest();
-		req.open("GET", url, false);
-		req.overrideMimeType(mtype);
-		req.send(null);
-		return req.responseXML;
+		var request = new XMLHttpRequest();
+		request.open("GET", url, false);
+		request.overrideMimeType(mtype);
+		request.send(null);
+		return request.responseXML;
 	*/
 	}else if(document.createElement){
 		// FIXME: this may change all tags to uppercase!

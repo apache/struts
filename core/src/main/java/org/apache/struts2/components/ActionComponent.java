@@ -50,12 +50,12 @@ public class ActionComponent extends Component {
     /**
      * Store our HttpServletResponse.
      */
-    protected HttpServletResponse res;
+    protected HttpServletResponse response;
 
     /**
      * Store our HttpServletRequest.
      */
-    protected HttpServletRequest req;
+    protected HttpServletRequest request;
 
     /**
      * Store our ActionProxy.
@@ -97,13 +97,13 @@ public class ActionComponent extends Component {
      * Construct object instance, setting runtime parameters.
      *
      * @param stack Our OgnlValueStack
-     * @param req   Our HttpServletRequest
-     * @param res   Our HttpServletResponse
+     * @param request Our HttpServletRequest
+     * @param response Our HttpServletResponse
      */
-    public ActionComponent(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public ActionComponent(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack);
-        this.req = req;
-        this.res = res;
+        this.request = request;
+        this.response = response;
     }
 
 
@@ -155,12 +155,12 @@ public class ActionComponent extends Component {
         Map application = ctx.getApplication();
 
         Dispatcher du = Dispatcher.getInstance();
-        Map extraContext = du.createContextMap(new RequestMap(req),
+        Map extraContext = du.createContextMap(new RequestMap(request),
                 newParams,
                 session,
                 application,
-                req,
-                res,
+                request,
+                response,
                 servletContext);
 
         OgnlValueStack newStack = new OgnlValueStack(stack);
@@ -200,7 +200,7 @@ public class ActionComponent extends Component {
         String namespace;
 
         if (this.namespace == null) {
-            namespace = TagUtils.buildNamespace(getStack(), req);
+            namespace = TagUtils.buildNamespace(getStack(), request);
         } else {
             namespace = findString(this.namespace);
         }
@@ -216,7 +216,7 @@ public class ActionComponent extends Component {
                 proxy.setMethod(methodName);
             }
             // set the new stack into the request for the taglib to use
-            req.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, proxy.getInvocation().getStack());
+            request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, proxy.getInvocation().getStack());
             proxy.execute();
 
         } catch (Exception e) {
@@ -224,7 +224,7 @@ public class ActionComponent extends Component {
             LOG.error(message, e);
         } finally {
             // set the old stack back on the request
-            req.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
+            request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
         }
 
         if ((getId() != null) && (proxy != null)) {

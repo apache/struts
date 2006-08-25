@@ -99,7 +99,7 @@ public class IncludeTagTest extends AbstractTagTest {
         tag = new IncludeTag();
 
         controlRequestDispatcher = MockControl.createNiceControl(RequestDispatcher.class);
-        // use always matcher as we can not determine the excact objects used in mock.include(req, res) call
+        // use always matcher as we can not determine the excact objects used in mock.include(request, response) call
         controlRequestDispatcher.setDefaultMatcher(MockControl.ALWAYS_MATCHER);
         mockRequestDispatcher = (RequestDispatcher) controlRequestDispatcher.getMock();
 

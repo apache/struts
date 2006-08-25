@@ -29,7 +29,7 @@ import java.io.InputStream;
 
 
 /**
- * ServletURIResolver is a URIResolver that can retrieve resources from the servlet context using the scheme "res".
+ * ServletURIResolver is a URIResolver that can retrieve resources from the servlet context using the scheme "response".
  * e.g.
  *
  * A URI resolver is called when a stylesheet uses an xsl:include, xsl:import, or document() function to find the
@@ -38,7 +38,7 @@ import java.io.InputStream;
 public class ServletURIResolver implements URIResolver {
 
     private Log log = LogFactory.getLog(getClass());
-    static final String PROTOCOL = "res:";
+    static final String PROTOCOL = "response:";
 
     private ServletContext sc;
 

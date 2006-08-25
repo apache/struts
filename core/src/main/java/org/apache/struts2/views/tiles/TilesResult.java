@@ -58,7 +58,7 @@ import java.util.Locale;
  *      &lt;result name="success" type="tiles">userForm&lt;/result>
  *      &lt;result name="input" type="tiles">userList&lt;/result>
  * &lt;/action>
- * <!-- END SNIPPET: xworkxml -->
+ * <!-- END SNIPPET: strutsxml -->
  *
  *
  * <!-- START SNIPPET: packageconfig -->

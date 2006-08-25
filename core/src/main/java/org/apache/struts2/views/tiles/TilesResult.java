@@ -40,24 +40,24 @@ import java.util.Locale;
  * In your web.xml file, you need to add a servlet entry for TilesServlet to load the tiles
  * definitions into the ServletContext.
  *
- * &lt;servlet>
- *      &lt;servlet-name>tiles&lt;/servlet-name>
- *      &lt;servlet-class>org.apache.tiles.servlets.TilesServlet&lt;/servlet-class>
- *      &lt;init-param>
- *          &lt;param-name>definitions-config&lt;/param-name>
- *          &lt;param-value>/WEB-INF/tiles-config.xml&lt;/param-value>
- *      &lt;/init-param>
- *      &lt;load-on-startup>1&lt;/load-on-startup>
- * &lt;/servlet>
+ * &lt;servlet&gt;
+ *      &lt;servlet-name&gt;tiles&lt;/servlet-name&gt;
+ *      &lt;servlet-class&gt;org.apache.tiles.servlets.TilesServlet&lt;/servlet-class&gt;
+ *      &lt;init-param&gt;
+ *          &lt;param-name&gt;definitions-config&lt;/param-name&gt;
+ *          &lt;param-value&gt;/WEB-INF/tiles-config.xml&lt;/param-value&gt;
+ *      &lt;/init-param&gt;
+ *      &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ * &lt;/servlet&gt;
  * <!-- END SNIPPET: webxml -->
  *
  * <!-- START SNIPPET: strutsxml -->
- * In struts.xml, use type="tiles" on your &lt;result>.
+ * In struts.xml, use type="tiles" on your &lt;result&gt;.
  *
- * &lt;action name="editUser" class="userAction" method="edit">
- *      &lt;result name="success" type="tiles">userForm&lt;/result>
- *      &lt;result name="input" type="tiles">userList&lt;/result>
- * &lt;/action>
+ * &lt;action name="editUser" class="userAction" method="edit"&gt;
+ *      &lt;result name="success" type="tiles"&gt;userForm&lt;/result&gt;
+ *      &lt;result name="input" type="tiles"&gt;userList&lt;/result&gt;
+ * &lt;/action&gt;
  * <!-- END SNIPPET: strutsxml -->
  *
  *
@@ -65,10 +65,10 @@ import java.util.Locale;
  *
  * Making this result type the default for the current package.
  *
- * &lt;result-types>
+ * &lt;result-types&gt;
  *      &lt;result-type name="tiles"
- * class="org.apache.struts2.views.tiles.TilesResult" default="true" />
- * &lt;/result-types>
+ * class="org.apache.struts2.views.tiles.TilesResult" default="true" /&gt;
+ * &lt;/result-types&gt;
  * <!-- END SNIPPET: packageconfig -->
  *
  */

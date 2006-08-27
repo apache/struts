@@ -26,7 +26,7 @@
    <parent>
       <groupId>org.apache.struts</groupId>
       <artifactId>struts-master</artifactId>
-      <version>3-SNAPSHOT</version>
+      <version>3</version>
    </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -36,7 +36,7 @@
     <packaging>pom</packaging>
     <name>Struts 2</name>
     <url>http://struts.apache.org/struts2</url>
-    <description>Apache Struts Action Framework 2</description>
+    <description>Apache Struts Framework 2</description>
 
     <inceptionYear>2000</inceptionYear>
     

@@ -121,4 +121,7 @@ public final class StrutsConstants {
     
     /** If static content served by the Struts filter should set browser caching header properties or not */
     public static final String STRUTS_SERVE_STATIC_BROWSER_CACHE = "struts.serve.static.browserCache";
+
+    /** Allows one to disable dynamic method invocation from the URL */
+    public static final String STRUTS_DISABLE_DYNAMIC_METHOD_INVOCATIOn = "struts.core.disableDynamicMethodInvocation";
 }

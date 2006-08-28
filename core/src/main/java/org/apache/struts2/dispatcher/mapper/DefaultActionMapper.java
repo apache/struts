@@ -19,6 +19,7 @@ package org.apache.struts2.dispatcher.mapper;
 
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.ServletRedirectResult;
 import org.apache.struts2.util.PrefixTrie;
 
@@ -148,6 +149,8 @@ public class DefaultActionMapper implements ActionMapper {
     static final String REDIRECT_PREFIX = "redirect:";
     static final String REDIRECT_ACTION_PREFIX = "redirect-action:";
 
+    private static boolean disableDyanmicMethodCalls = "true".equals(Settings.get(StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE));
+
     private PrefixTrie prefixTrie = null;
     public DefaultActionMapper() {
         prefixTrie = new PrefixTrie() {
@@ -205,18 +208,22 @@ public class DefaultActionMapper implements ActionMapper {
 
         parseNameAndNamespace(uri, mapping, config);
 
-        handleSpecialParameters(request, mapping);
+        if (!disableDyanmicMethodCalls) {
+            handleSpecialParameters(request, mapping);
+        }
 
         if (mapping.getName() == null) {
             return null;
         }
 
-        // handle "name!method" convention.
-        String name = mapping.getName();
-        int exclamation = name.lastIndexOf("!");
-        if (exclamation != -1) {
-            mapping.setName(name.substring(0, exclamation));
-            mapping.setMethod(name.substring(exclamation + 1));
+        if (!disableDyanmicMethodCalls) {
+            // handle "name!method" convention.
+            String name = mapping.getName();
+            int exclamation = name.lastIndexOf("!");
+            if (exclamation != -1) {
+                mapping.setName(name.substring(0, exclamation));
+                mapping.setMethod(name.substring(exclamation + 1));
+            }
         }
 
         return mapping;

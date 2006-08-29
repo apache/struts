@@ -149,7 +149,7 @@ public class DefaultActionMapper implements ActionMapper {
     static final String REDIRECT_PREFIX = "redirect:";
     static final String REDIRECT_ACTION_PREFIX = "redirect-action:";
 
-    private static boolean disableDynamicMethodCalls = "true".equals(Settings.get(StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE));
+    private static boolean allowDynamicMethodCalls = "true".equals(Settings.get(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION));
 
     private PrefixTrie prefixTrie = null;
     public DefaultActionMapper() {
@@ -208,7 +208,7 @@ public class DefaultActionMapper implements ActionMapper {
 
         parseNameAndNamespace(uri, mapping, config);
 
-        if (!disableDynamicMethodCalls) {
+        if (allowDynamicMethodCalls) {
             handleSpecialParameters(request, mapping);
         }
 
@@ -216,7 +216,7 @@ public class DefaultActionMapper implements ActionMapper {
             return null;
         }
 
-        if (!disableDynamicMethodCalls) {
+        if (allowDynamicMethodCalls) {
             // handle "name!method" convention.
             String name = mapping.getName();
             int exclamation = name.lastIndexOf("!");

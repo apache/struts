@@ -32,6 +32,7 @@ import com.opensymphony.xwork2.validator.ValidationInterceptor;
 import com.opensymphony.xwork2.validator.Validator;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -223,11 +224,16 @@ public class Form extends ClosingUIBean {
         }
 
         String actionMethod = "";
-        // todo: this logic is flawed - the only concept of ! should be in DefaultActionMapper
-        if (action.indexOf("!") != -1) {
-            int endIdx = action.lastIndexOf("!");
-            actionMethod = action.substring(endIdx + 1, action.length());
-            action = action.substring(0, endIdx);
+        // FIXME: our implementation is flawed - the only concept of ! should be in DefaultActionMapper
+        boolean allowDynamicMethodCalls = "true".equals(Settings.get(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION));
+
+        // handle "name!method" convention.
+        if (allowDynamicMethodCalls) {
+            if (action.indexOf("!") != -1) {
+                int endIdx = action.lastIndexOf("!");
+                actionMethod = action.substring(endIdx + 1, action.length());
+                action = action.substring(0, endIdx);
+            }
         }
 
         Configuration config = Dispatcher.getInstance().getConfigurationManager().getConfiguration();

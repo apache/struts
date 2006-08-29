@@ -123,5 +123,5 @@ public final class StrutsConstants {
     public static final String STRUTS_SERVE_STATIC_BROWSER_CACHE = "struts.serve.static.browserCache";
 
     /** Allows one to disable dynamic method invocation from the URL */
-    public static final String STRUTS_DISABLE_DYNAMIC_METHOD_INVOCATION = "struts.core.disableDynamicMethodInvocation";
+    public static final String STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION = "struts.enable.DynamicMethodInvocation";
 }

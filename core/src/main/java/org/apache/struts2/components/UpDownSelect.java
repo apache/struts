@@ -148,7 +148,7 @@ public class UpDownSelect extends Select {
 			ancestorForm.getParameters().put("updownselectIds", m);
 		}
 		else {
-			_log.warn("no ancestor form found for updownselect "+this+", therefore autoselect of all elements unpon form submission will not work ");
+			_log.warn("no ancestor form found for updownselect "+this+", therefore autoselect of all elements upon form submission will not work ");
 		}
 	}
 

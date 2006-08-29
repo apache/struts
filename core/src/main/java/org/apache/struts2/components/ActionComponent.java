@@ -27,6 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.views.jsp.TagUtils;
@@ -168,6 +169,8 @@ public class ActionComponent extends Component {
      * @see org.apache.struts2.views.jsp.TagUtils#buildNamespace
      */
     private void executeAction() {
+        // FIXME: our implementation is flawed - the only concept of ! should be in DefaultActionMapper
+        boolean allowDynamicMethodCalls = "true".equals(Settings.get(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION));
         String actualName = findString(name, "name", "Action name is required. Example: updatePerson");
 
         if (actualName == null) {
@@ -178,10 +181,12 @@ public class ActionComponent extends Component {
         String methodName = null;
 
         // handle "name!method" convention.
-        int exclamation = actualName.lastIndexOf("!");
-        if (exclamation != -1) {
-            actionName = actualName.substring(0, exclamation);
-            methodName = actualName.substring(exclamation + 1);
+        if (allowDynamicMethodCalls) {
+            int exclamation = actualName.lastIndexOf("!");
+            if (exclamation != -1) {
+                actionName = actualName.substring(0, exclamation);
+                methodName = actualName.substring(exclamation + 1);
+            }
         }
 
         String namespace;

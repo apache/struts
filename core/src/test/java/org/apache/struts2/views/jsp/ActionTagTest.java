@@ -193,6 +193,7 @@ public class ActionTagTest extends AbstractTagTest {
         }
     }
 
+    // FIXME: Logging the error seems to cause the standard Maven build to fail
     public void testUnknownNameDefined() throws Exception {
         ActionTag tag = new ActionTag();
         tag.setPageContext(pageContext);
@@ -202,11 +203,10 @@ public class ActionTagTest extends AbstractTagTest {
 
         tag.doStartTag();
         tag.doEndTag();
-        // will just log it to ERROR but we run th code to test that it works somehow
+        // will just log it to ERROR but we run the code to test that it works somehow
     }
 
-    // TODO - !input form fails in Maven, but passes in IDEA. The settings seem to be ignored under Maven.
-    public void FIXME_testActionMethodWithExecuteResult() throws Exception {
+    public void testActionMethodWithExecuteResult() throws Exception {
         ActionTag tag = new ActionTag();
         tag.setPageContext(pageContext);
         tag.setNamespace("");

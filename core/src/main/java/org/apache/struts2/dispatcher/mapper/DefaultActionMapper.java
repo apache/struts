@@ -164,17 +164,18 @@ public class DefaultActionMapper implements ActionMapper {
                 put(ACTION_PREFIX, new ParameterAction() {
                     public void execute(String key, ActionMapping mapping) {
                         String name = key.substring(ACTION_PREFIX.length());
-                        int bang = name.indexOf('!');
-                        if (bang != -1) {
-                            String method = name.substring(bang + 1);
-                            mapping.setMethod(method);
-                            name = name.substring(0, bang);
+                        if (allowDynamicMethodCalls) {
+                            int bang = name.indexOf('!');
+                            if (bang != -1) {
+                                String method = name.substring(bang + 1);
+                                mapping.setMethod(method);
+                                name = name.substring(0, bang);
+                            }
                         }
-                        
                         mapping.setName(name);
                     }
                 });
-    
+
                 put(REDIRECT_PREFIX, new ParameterAction() {
                     public void execute(String key, ActionMapping mapping) {
                         ServletRedirectResult redirect = new ServletRedirectResult();
@@ -208,9 +209,7 @@ public class DefaultActionMapper implements ActionMapper {
 
         parseNameAndNamespace(uri, mapping, config);
 
-        if (allowDynamicMethodCalls) {
-            handleSpecialParameters(request, mapping);
-        }
+        handleSpecialParameters(request, mapping);
 
         if (mapping.getName() == null) {
             return null;

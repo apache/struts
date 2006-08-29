@@ -67,8 +67,10 @@ public class ElseIf extends Component {
 
     public boolean start(Writer writer) {
         Boolean ifResult = (Boolean) stack.getContext().get(If.ANSWER);
-
-        if ((ifResult == null) || (ifResult.booleanValue())) {
+        ifResult = ifResult == null ? Boolean.FALSE : ifResult;
+        
+        //if ((ifResult == null) || (ifResult.booleanValue())) {
+        if (ifResult.booleanValue()) {
             return false;
         }
 

@@ -61,10 +61,11 @@ public class Else extends Component {
     public boolean start(Writer writer) {
         Map context = stack.getContext();
         Boolean ifResult = (Boolean) context.get(If.ANSWER);
+        ifResult = ifResult == null ? Boolean.FALSE : ifResult;
 
         context.remove(If.ANSWER);
 
-        return !((ifResult == null) || (ifResult.booleanValue()));
-
+        //return !((ifResult == null) || (ifResult.booleanValue()));
+        return ! ifResult.booleanValue();
     }
 }

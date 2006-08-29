@@ -85,12 +85,11 @@ public class If extends Component {
             answer = Boolean.FALSE;
         }
         
-        stack.getContext().put(ANSWER, answer);
         return answer.booleanValue();
     }
 
     public boolean end(Writer writer, String body) {
-
+    	stack.getContext().put(ANSWER, answer);
         return super.end(writer, body);
     }
 }

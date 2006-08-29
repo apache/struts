@@ -84,7 +84,7 @@ public class If extends Component {
         if (answer == null) {
             answer = Boolean.FALSE;
         }
-        
+        stack.getContext().put(ANSWER, answer);
         return answer.booleanValue();
     }
 

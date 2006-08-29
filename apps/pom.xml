@@ -13,11 +13,10 @@
     <name>Webapps</name>
     <modules>
         <module>blank</module>
+        <module>mailreader</module>
         <module>portlet</module>
-        <module>shopping-cart</module>
         <module>showcase</module>
         <module>starter</module>
-        <module>mailreader</module>
     </modules>
     
      <distributionManagement>

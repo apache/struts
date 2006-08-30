@@ -7,11 +7,8 @@
 
     <include file="struts-default.xml"/>
 
-    <include file="struts-support.xml"/>
+    <include file="mailreader-default.xml"/>
 
-    <!--
-    <include file="struts-bang.xml"/>
-    -->
-    <include file="struts-wildcard.xml"/>
+    <include file="mailreader-support.xml"/>
 
 </struts>

@@ -40,12 +40,22 @@ public class Registration extends MailreaderSupport {
     }
 
     /**
+     * <p>Insert or update a Registration.</p>
+     *
+     * @return The "outcome" result code
+     * @throws Exception on any error
+     */
+    public String save() throws Exception {
+        return execute();
+    }
+
+    /**
      * <p> Insert or update a User object to the persistent store. </p>
      * <p/>
      * <p> If a User is not logged in, then a new User is created and
      * automatically logged in. Otherwise, the existing User is updated. </p>
      *
-     * @return The "Success" result for this mapping
+     * @return The "outcome" result code
      * @throws Exception on any error
      */
     public String execute()

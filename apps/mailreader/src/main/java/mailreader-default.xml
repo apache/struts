@@ -5,7 +5,7 @@
 
 <struts>
 
-    <package name="struts-support" namespace="/" extends="struts-default">
+    <package name="mailreader-default" namespace="/" extends="struts-default">
 
         <interceptors>
 
@@ -46,28 +46,6 @@
                     result="error"
                     exception="java.lang.Throwable"/>
         </global-exception-mappings>
-
-        <action name="Welcome" class="mailreader2.Welcome">
-            <result>/pages/Welcome.jsp</result>
-            <interceptor-ref name="guest"/>
-        </action>
-
-        <action name="ChangePassword" class="mailreader2.MailreaderSupport">
-            <result>/pages/ChangePassword.jsp</result>
-        </action>
-
-        <action name="MainMenu" class="mailreader2.MailreaderSupport">
-            <result>/pages/MainMenu.jsp</result>
-        </action>
-
-        <action name="Logoff" class="mailreader2.Logoff">
-            <result type="redirect-action">Welcome</result>
-        </action>
-
-        <action name="Tour">
-            <result>/pages/tour.html</result>
-            <interceptor-ref name="guest"/>
-        </action>
 
     </package>
 

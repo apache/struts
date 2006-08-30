@@ -17,7 +17,7 @@
 <body onLoad="self.focus();document.Registration.username.focus()">
 
 <s:actionerror/>
-<s:form action="RegistrationSave" validate="false">
+<s:form action="Registration!save" validate="false">
     <s:token />
     <s:hidden name="task"/>
     <s:if test="task == 'Create'">
@@ -42,7 +42,7 @@
                    name="user.replyToAddress"/>
 
     <s:if test="task == 'Create'">
-        <s:submit value="%{getText('button.save')}" action="RegistrationSave"/>
+        <s:submit value="%{getText('button.save')}" action="Registration!save"/>
 
         <s:reset value="%{getText('button.reset')}"/>
 

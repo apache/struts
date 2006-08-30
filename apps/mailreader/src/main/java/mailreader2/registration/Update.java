@@ -3,12 +3,9 @@ package mailreader2.registration;
 import mailreader2.Constants;
 
 /**
- * <p> Update a User object to the persistent store. </p>
+ * <p> Update Registration object to the persistent store. </p>
  */
 public class Update extends Support {
-
-
-    
 
     private String fixNull(String value) {
         if (value == null) return null;
@@ -27,7 +24,7 @@ public class Update extends Support {
             addActionError(Constants.ERROR_INVALID_WORKFLOW);            
             return ERROR;
         }
-        // FIXME: Any way to call the RegisrationSave validators from here?
+        // FIXME: Any way to call the Update validators from here?
         String newPassword = fixNull(getPassword());
         String confirmPassword = fixNull(getPassword2());
         if (newPassword != null) {

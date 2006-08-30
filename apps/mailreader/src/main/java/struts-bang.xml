@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="bang" namespace="/" extends="struts-support">
+
+        <action name="Logon" class="mailreader2.Logon">
+            <result name="input">/pages/Logon.jsp</result>
+            <result name="cancel" type="redirect-action">Welcome</result>
+            <result type="redirect-action">MainMenu</result>
+            <result name="expired" type="chain">ChangePassword</result>
+            <exception-mapping
+                    exception="org.apache.struts.apps.mailreader.dao.ExpiredPasswordException"
+                    result="expired"/>
+            <interceptor-ref name="guest"/>
+        </action>
+
+        <action name="Registration" class="mailreader2.Registration">
+            <result name="input">/pages/Registration.jsp</result>
+            <result type="redirect-action">MainMenu</result>
+            <interceptor-ref name="guest"/>
+        </action>
+
+        <action name="RegistrationSave" class="mailreader2.Registration">
+            <result name="input">/pages/Registration.jsp</result>
+            <result type="redirect-action">MainMenu</result>
+            <interceptor-ref name="guest-submit" />
+        </action>
+
+        <action name="Subscription" class="mailreader2.Subscription">
+            <result name="input">/pages/Subscription.jsp</result>
+            <result type="redirect-action">Registration!input</result>
+        </action>
+
+        <action name="SubscriptionSave" class="mailreader2.SubscriptionSave">
+            <result name="input">/pages/Subscription.jsp</result>
+            <result type="redirect-action">Registration!input</result>
+            <interceptor-ref name="user-submit" />
+        </action>
+
+    </package>
+</struts>

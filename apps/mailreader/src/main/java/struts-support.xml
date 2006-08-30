@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+    <package name="struts-support" namespace="/" extends="struts-default">
+
+        <interceptors>
+
+            <interceptor name="authentication"
+                         class="mailreader2.AuthenticationInterceptor"/>
+
+            <interceptor-stack name="user" >
+                <interceptor-ref name="authentication" />
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+
+            <interceptor-stack name="user-submit" >
+                <interceptor-ref name="token-session" />
+                <interceptor-ref name="user"/>
+            </interceptor-stack>
+
+            <interceptor-stack name="guest" >
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+
+            <interceptor-stack name="guest-submit" >
+                <interceptor-ref name="token-session" />
+                <interceptor-ref name="guest"/>
+            </interceptor-stack>
+
+        </interceptors>
+
+        <default-interceptor-ref name="user"/>
+
+        <global-results>
+            <result name="error">/pages/Error.jsp</result>
+            <result name="invalid.token">/pages/Error.jsp</result>
+            <result name="login" type="redirect-action">Logon!input</result>
+        </global-results>
+
+        <global-exception-mappings>
+            <exception-mapping
+                    result="error"
+                    exception="java.lang.Throwable"/>
+        </global-exception-mappings>
+
+        <action name="Welcome" class="mailreader2.Welcome">
+            <result>/pages/Welcome.jsp</result>
+            <interceptor-ref name="guest"/>
+        </action>
+
+        <action name="ChangePassword" class="mailreader2.MailreaderSupport">
+            <result>/pages/ChangePassword.jsp</result>
+        </action>
+
+        <action name="MainMenu" class="mailreader2.MailreaderSupport">
+            <result>/pages/MainMenu.jsp</result>
+        </action>
+
+        <action name="Logoff" class="mailreader2.Logoff">
+            <result type="redirect-action">Welcome</result>
+        </action>
+
+        <action name="Tour">
+            <result>/pages/tour.html</result>
+            <interceptor-ref name="guest"/>
+        </action>
+
+    </package>
+
+</struts>

@@ -1,15 +1,18 @@
-README.txt - mailreader-bang 
+README.txt - mailreader 
 
-This application demonstrates switching from the "bang" syntax for invoking
-dynamic methods to a general-purpose wild card approach. 
+The MailReader demonstrates a localized application with a master/child 
+CRUD workflow. 
 
-To switch between approaches, edit the struts.xml file to include either the 
-struts-bang.xml file OR the struts-wildcard.xml. (But not both.)
+This rendition also demonstrates using wildcards to "normalize" an 
+application. 
 
-When using the -bang application, be sure that the 
-struts.enable.DynamicMethodInvocation property is set to "true".
+See the Sandbox for other MailReader examples using other architectures. 
 
-For the -wilcard application. be sure that the 
-struts.enable.DynamicMethodInvocation property is set to "false". 
+* http://svn.apache.org/viewvc/struts/sandbox/trunk/struts2/apps/
+
+For more about the MailReader applicaton genneraly, visit Struts University.
+
+* http://www.StrutsUniversity.org/
+
 
 ----------------------------------------------------------------------------

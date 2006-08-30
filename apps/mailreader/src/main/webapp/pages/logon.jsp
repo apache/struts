@@ -9,10 +9,10 @@
           type="text/css"/>
 </head>
 
-<body onLoad="self.focus();document.Retrieve.username.focus()">
+<body onLoad="self.focus();document.logon_Retrieve.logon_Retrieve_username.focus()">
 
 <s:actionerror/>
-<s:form id="Retrieve" action="logon/Retrieve" validate="true">
+<s:form id="logon_Retrieve" action="logon/Retrieve" validate="true">
     <s:textfield label="%{getText('username')}" name="username"/>
 
     <s:password label="%{getText('password')}" name="password" showPassword="true"/>

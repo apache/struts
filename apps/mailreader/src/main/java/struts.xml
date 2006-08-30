@@ -26,7 +26,7 @@
 
         <!-- goto actions: Exit to another workflow -->
 
-        <action name="subscription/Save" class="mailreader2.subscription.Save">
+        <action name="subscription/Save" class="mailreader2.subscription.Update">
             <result name="input">/pages/subscription.jsp</result>
             <result type="redirect-action">registration/+Input</result>
         </action>
@@ -43,7 +43,7 @@
             <result>/pages/{1}.jsp</result>
         </action>
 
-        <!-- execute actions: Create, Retrieve, Update, Save -->
+        <!-- execute actions: Create, Retrieve, Update, Update -->
 
         <action name="*/*" class="mailreader2.{1}.{2}">
             <result name="input">/pages/{1}.jsp</result>

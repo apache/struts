@@ -5,7 +5,7 @@ import mailreader2.Constants;
 /**
  * <p> Workaround class. Submitting to an alias doesn't seem to work. </p>
  */
-public final class Save extends Edit {
+public final class Update extends Edit {
 
     public void prepare() {
         super.prepare();

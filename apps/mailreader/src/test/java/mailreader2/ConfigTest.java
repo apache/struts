@@ -39,7 +39,7 @@ public class ConfigTest extends XWorkTestCase {
     }
 
     public void testSubscriptionSave() throws Exception {
-        ActionConfig config = assertClass("subscription/Save", "mailreader2.subscription.Save");
+        ActionConfig config = assertClass("subscription/Update", "mailreader2.subscription.Update");
         assertResult(config, ActionSupport.SUCCESS, "registration/+Input");
         assertResult(config, ActionSupport.INPUT, "/pages/subscription.jsp");
     }

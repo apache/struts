@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * <p> Provide an Edit method for retrieving an existing subscription, and a
- * Save method for updating or inserting a subscription. </p>
+ * Update method for updating or inserting a subscription. </p>
  */
 public class Support extends MailreaderSupport
         implements Preparable {

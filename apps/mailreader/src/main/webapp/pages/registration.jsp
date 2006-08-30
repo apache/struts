@@ -14,10 +14,10 @@
           type="text/css"/>
 </head>
 
-<body onLoad="self.focus();document.form1.username.focus()">
+<body onLoad="self.focus();document.registration_Update.registration_Update_username.focus()">
 
 <s:actionerror/>
-<s:form id="form1" action="registration/Update" validate="true">
+<s:form id="registration_Update" action="registration/Update" validate="true">
     <s:token/>
     <s:hidden name="task"/>
     <s:if test="task == 'Create'">

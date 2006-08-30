@@ -5,6 +5,11 @@
   <include file="struts-default.xml"/>
 
   <package name="jsf" extends="struts-default" namespace="/jsf">
+
+      <result-types>
+          <result-type name="jsf" class="org.apache.struts2.jsf.FacesResult" />
+      </result-types>
+
     <interceptors>
       <interceptor-stack name="jsfFullStack">
         <interceptor-ref name="params" />
@@ -12,8 +17,9 @@
         <interceptor-ref name="jsfStack"/>
       </interceptor-stack>
     </interceptors>
-    
+
     <default-interceptor-ref name="jsfFullStack"/>
+
   </package>
   
   <package name="jsf.employee" extends="jsf" namespace="/jsf/employee">

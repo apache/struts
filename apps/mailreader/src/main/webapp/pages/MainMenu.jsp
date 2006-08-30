@@ -14,7 +14,7 @@
         value="user.fullName"/></h3>
 <ul>
     <li>
-        <s:url id="Input" action="registration/vInput" />
+        <s:url id="Input" action="registration/+Input" />
         <s:a href="%{Input}">
             <s:text name="mainMenu.registration"/>
         </s:a>

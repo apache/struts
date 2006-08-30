@@ -28,14 +28,18 @@
 
         <action name="subscription/Save" class="mailreader2.subscription.Save">
             <result name="input">/pages/subscription.jsp</result>
-            <result type="redirect-action">registration/vInput</result>
+            <result type="redirect-action">registration/+Input</result>
+        </action>
+
+        <!-- display actions: Welcome, Logoff, MainMenu -->
+
+        <action name="*" class="mailreader2.{1}">
+            <result>/pages/{1}.jsp</result>
         </action>
 
         <!-- prepare actions: Confirm/Delete, Edit, Input -->
-        <!-- A "!" might be a better convention,
-             but that doesn't seem to work with a button -->
 
-        <action name="*/v*" class="mailreader2.{1}.{2}">
+        <action name="*/+*" class="mailreader2.{1}.{2}">
             <result>/pages/{1}.jsp</result>
         </action>
 
@@ -45,28 +49,6 @@
             <result name="input">/pages/{1}.jsp</result>
         </action>
 
-        <!-- Why doen't these match * -->
-        <!-- It seems to be concaternating a period to the token -->
-        <!-- Unable to instantiate Action, mailreader2.Welcome.,
-             defined for 'Welcome' in namespace '/'mailreader2.Welcome. -->
-        <action name="Logoff" class="mailreader2.Logoff">
-            <result>/pages/Logoff.jsp</result>
-        </action>
-
-        <action name="MainMenu" class="mailreader2.MainMenu">
-            <result>/pages/MainMenu.jsp</result>
-        </action>
-
-        <action name="Welcome" class="mailreader2.Welcome">
-            <result>/pages/Welcome.jsp</result>
-        </action>
-
-        <!-- display actions: Welcome, Logoff, MainMenu -->
-
-        <action name="*" class="mailreader2.{1}">
-            <result>/pages/{1}.jsp</result>
-        </action>
-
-    </package>
+   </package>
 
 </struts>

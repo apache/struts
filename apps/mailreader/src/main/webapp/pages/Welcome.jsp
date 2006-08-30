@@ -15,11 +15,11 @@
 
 <ul>
     <li>
-        <s:url id="registration" action="registration/vInput" />
+        <s:url id="registration" action="registration/+Input" />
         <s:a href="%{registration}"><s:text name="index.registration"/></s:a>
     </li>
     <li>
-        <s:url id="logon" action="logon/vInput"/>
+        <s:url id="logon" action="logon/+Input"/>
         <s:a href="%{logon}"><s:text name="index.logon"/></s:a>
     </li>
 </ul>

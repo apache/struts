@@ -44,6 +44,8 @@
     
     <include file="struts-freemarker.xml" />
 
+    <include file="org/apache/struts2/showcase/tutorial/struts-tutorial.xml" />
+
     <package name="default" extends="struts-default">
         <interceptors>
             <interceptor-stack name="crudStack">
@@ -52,8 +54,6 @@
                 <interceptor-ref name="defaultStack" />
             </interceptor-stack>
         </interceptors>
-		
-		<default-action-ref name="showcase"/>
 		
         <action name="showcase">
             <result>showcase.jsp</result>

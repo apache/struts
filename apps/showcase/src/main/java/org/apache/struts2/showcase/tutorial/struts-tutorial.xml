@@ -6,23 +6,31 @@
 <struts>
     <include file="struts-default.xml"/>
 
-    <package name="tutorial-hello" extends="struts-default" namespace="/tutorial">
+    <package name="tutorial-default" extends="struts-default" namespace="/tutorial">
 
-        <action name="HelloWorld" class="org.apache.struts2.showcase.tutorial.HelloWorld">
-            <result name="success">HelloWorld.jsp</result>
+        <action name="Welcome">
+            <result>Welcome.jsp</result>
         </action>
 
     </package>
 
-    <package name="tutorial-actions" extends="struts-default" namespace="/tutorial">
+    <package name="tutorial-hello" extends="tutorial-default">
+
+        <action name="HelloWorld" class="org.apache.struts2.showcase.tutorial.HelloWorld">
+            <result>HelloWorld.jsp</result>
+        </action>
+
+    </package>
+
+    <package name="tutorial-actions" extends="tutorial-default">
 
         <action name="HelloName" class="org.apache.struts2.showcase.tutorial.HelloName">
-            <result name="success">HelloName-success.jsp</result>
+            <result>HelloName-success.jsp</result>
             <result name="error">HelloName-error.html</result>
         </action>
 
         <action name="HelloName2" class="org.apache.struts2.showcase.tutorial.HelloName2">
-            <result name="success">HelloName2-success.jsp</result>
+            <result>HelloName2-success.jsp</result>
             <result name="error">HelloName-error.html</result>
         </action>
 

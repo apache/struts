@@ -267,18 +267,20 @@ public class UrlHelper {
     	if (queryString != null) {
     		String[] params = queryString.split("&");
     		for (int a=0; a< params.length; a++) {
-    			String[] tmpParams = params[a].split("=");
-    			String paramName = null;
-    			String paramValue = "";
-    			if (tmpParams.length > 0) {
-    				paramName = tmpParams[0];
-    			}
-    			if (tmpParams.length > 1) {
-    				paramValue = tmpParams[1];
-    			}
-    			if (paramName != null) {
-    				String translatedParamValue = translateAndDecode(paramValue);
-    				queryParams.put(paramName, translatedParamValue);
+    			if (params[a].trim().length() > 0) {
+    				String[] tmpParams = params[a].split("=");
+    				String paramName = null;
+    				String paramValue = "";
+    				if (tmpParams.length > 0) {
+    					paramName = tmpParams[0];
+    				}
+    				if (tmpParams.length > 1) {
+    					paramValue = tmpParams[1];
+    				}
+    				if (paramName != null) {
+    					String translatedParamValue = translateAndDecode(paramValue);
+    					queryParams.put(paramName, translatedParamValue);
+    				}
     			}
     		}
     	}

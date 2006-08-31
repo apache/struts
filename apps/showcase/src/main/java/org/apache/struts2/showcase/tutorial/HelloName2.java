@@ -1,4 +1,4 @@
-package tutorial;
+package org.apache.struts2.showcase.tutorial;
 
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.interceptor.ParameterAware;

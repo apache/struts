@@ -15,6 +15,4 @@ public final class SubscriptionSave extends Subscription {
         return save();
     }
 
-
-
 }

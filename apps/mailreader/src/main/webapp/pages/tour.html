@@ -38,8 +38,6 @@
 
 <hr/>
 
-<p>Logging In</p>
-
 <ul>
     <li>
         <a href="#Welcome">Welcome</a>
@@ -102,7 +100,7 @@
         <a href="#Subscription">Subscription</a>
 
         <ul>
-            <li><a href="#SubscriptionAction.java">Subscription.java</a>
+            <li><a href="#Subscription.java">Subscription.java</a>
             </li>
         </ul>
     </li>
@@ -255,8 +253,9 @@
 
 <p>
     Sites can list zero or more "Welcome" pages in the web.xml.
-    Unless you are using Java 1.5, actions cannot be specified as a Welcome
-    page.
+    <a href="http://forum.java.sun.com/thread.jspa?threadID=721445">
+        Unless you are using Java 1.5,</a>
+    actions cannot be specified as a Welcome page.
     So, in the case of a Welcome page,
     how do we follow the best practice of navigating through actions
     rather than pages?
@@ -288,8 +287,8 @@
 <h4><a name="Welcome.do" id="Welcome.do">Welcome.do</a></h4>
 
 <p>
-    When the client requests "Welcome.do", the request is passed to the "struts2" FilterDispatcher
-    (that we registered in the web.xml file).
+    When the client requests "Welcome.do", the request is passed to the "struts2"
+    FilterDispatcher (that we registered in the web.xml file).
     The FilterDispatcher retrieves the appropriate action mapping from the 
     configuration.
     If we just wanted to forward to the Welcome page, we could use a simple
@@ -303,7 +302,7 @@
 <hr/>
 
 <p>
-    If a client asks for the Welcome action ("Welcome.do), the "/page/Welcome.jsp"
+    If a client asks for the Welcome action ("Welcome.do"), the "/page/Welcome.jsp"
     page would be returned in response.
     The client does not know, or need to know, that the physical resource is located at
     "/pages/Welcome.jsp".
@@ -485,7 +484,7 @@ public class Welcome extends MailreaderSupport {
 
 <p>
     The database comes seeded with a sample user.
-    If you check the "database.xml" file under "/src/main",
+    If you check the "database.xml" file under "/src/main/resources",
     you'll see the sample user described in XML.
 </p>
 
@@ -512,28 +511,12 @@ public class Welcome extends MailreaderSupport {
 
 <p>
     As mentioned, MailReader is an internationalized application.
-    The message resources for the application are loaded through a reference in the
-    "struts.properties" file.
-    Like the database contents, the "struts.properties" file is kept under
-    "/src/main/" in the source tree.
-</p>
-
-<hr/>
-<h5>struts.properties</h5>
-<pre><code>struts.custom.i18n.resources = <strong>resources</strong>
-struts.action.extension = <strong>do</strong></code></pre>
-<hr/>
-
-<p>
-    When we specify "resources" in the properties file,
-    we are telling the framework to scan the classpath
-    for a Resource Bundle named "resources.properties".
-    The bundle might be embedded in a JAR, or found in the "WEB-INF/classes"
-    folder, or anywhere else on the runtime classpath.
-    In the MailReader, we keep the <strong>original</strong> bundle in the 
-    source tree under "src/main/". When the application is built, the 
-    properties files are  <strong>copied</strong> to "WEB-INF/classes", so 
-    that they are on the Java classpath.
+    In Struts 2, message resources are associated with the Action class being processed.
+    If we check the source, we find a language resource bundle named
+    <em>MailreaderSupport.</em>
+    MailreaderSupport is our base class for all the MailReader Actions.
+    Since all of our Actions extend MailreaderSupport,
+    all of our Actions can use the same resource bundle.
 </p>
 
 <hr/>
@@ -585,9 +568,24 @@ struts.action.extension = <strong>do</strong></code></pre>
 
       &lt;h3>Language Options&lt;/h3>
       &lt;ul>
-        &lt;li>&lt;a href="&lt;s:url action="Welcome?request_locale=en"/>">English&lt;/a>&lt;/li>
-        &lt;li>&lt;a href="&lt;s:url action="Welcome?request_locale=ja"/>">Japanese&lt;/a>&lt;/li>
-        &lt;li>&lt;a href="&lt;s:url action="Welcome?request_locale=ru"/>">Russian&lt;/a>&lt;/li>
+          &lt;li>
+              &lt;s:url id="en" action="Welcome">
+                  &lt;s:param name="request_locale">en&lt;/s:param>
+              &lt;/s:url>
+               &lt;s:a href="%{en}">English&lt;/s:a>
+           &lt;/li>
+          &lt;li>
+              &lt;s:url id="ja" action="Welcome">
+                &lt;s:param name="request_locale">ja&lt;/s:param>
+              &lt;/s:url>
+              &lt;s:a href="%{ja}">Japanese&lt;/s:a>
+          &lt;/li>
+          &lt;li>
+              &lt;s:url id="ru" action="Welcome">
+              &lt;s:param name="request_locale">ru&lt;/s:param>
+              &lt;/s:url>
+              &lt;s:a href="%{ru}">Russian&lt;/s:a>
+          &lt;/li>
       &lt;/ul>
 
     &lt;hr />
@@ -655,7 +653,7 @@ struts.action.extension = <strong>do</strong></code></pre>
 </p>
 
 <p>
-    The <strong>alternate</strong> bundle is stored next to the default bundle,
+    The <strong>alternate</strong> bundle is stored in the {{/src/main/resources}} folder,
     so that it ends up under "classes", which is on the application's class path.
 </p>
 
@@ -718,7 +716,7 @@ struts.action.extension = <strong>do</strong></code></pre>
   &lt;/head>
   &lt;body onLoad="self.focus();document.Logon.username.focus()">
     <strong>&lt;s:actionerror/></strong>
-    <strong>&lt;s:form method="POST" validate="true"></strong>
+    <strong>&lt;s:form action="Logon" validate="true"></strong>
       <strong>&lt;s:textfield label="%{getText('username')}" name="username"/></strong>
       <strong>&lt;s:password label="%{getText('password')}" name="password"/></strong>
       <strong>&lt;s:submit value="%{getText('button.save')}"/></strong>
@@ -754,14 +752,11 @@ struts.action.extension = <strong>do</strong></code></pre>
 <p>
     The second new tag is <strong>form</strong>.
     This tag renders a HTML form tag.
-    By default, the form will submit back to whatever action invoked the page.
     The "validate=true" setting enables client-side validation,
     so that the form can be validated with JavaScript before being sent
     back to the server.
     The framework will still validate the form again, just to be sure, but the
     client-side validation can save a few round-trips to the server.
-    You can use the method attribute to designate "GET" or "POST",
-    just like the HTML form tag.
 </p>
 
 <p>
@@ -781,8 +776,8 @@ struts.action.extension = <strong>do</strong></code></pre>
 </p>
 
 <p>
-    The UI Tags support templates and themes so that a set of HTML tags can be
-    rendered from a single UI Tag. For example, the single tag
+    The Struts Tags support templates and themes so that a set of HTML tags can be
+    rendered from a single Struts Tag. For example, the single tag
 </p>
 
 <pre><code>
@@ -805,7 +800,7 @@ struts.action.extension = <strong>do</strong></code></pre>
 <hr/>
 
 <p>
-    If for some reason you don't like the markup generated by a UI Tag,
+    If for some reason you don't like the markup generated by a Struts Tag,
     it's each to change.
     Each tag is driven by a template that can be updated on a tag-by-tag basis.
     For example,
@@ -824,8 +819,9 @@ struts.action.extension = <strong>do</strong></code></pre>
 
 <p>
     If you wanted ActionErrors displayed in a table instead of a list,
-    you could edit a copy of this file, save it as a file named "actionerror.ftl",
-    and place this one file somewhere on your classpath.
+    you could edit a copy of this file, save it as a file named
+    "template/simple/actionerror.ftl",
+    and place this one file at the base of your application's classpath.
 </p>
 
 <hr/>
@@ -845,7 +841,7 @@ struts.action.extension = <strong>do</strong></code></pre>
     FreeMarker is similar to
     <a href="http://jakarta.apache.org/velocity/">Velocity</a>,
     but it offers better error reporting and some additional features.
-    If you prefer, Velocity and JSP templates can also be used to create your own UI Tags.
+    If you prefer, Velocity and JSP templates can also be used to create your own tags.
 </p>
 
 <p>
@@ -879,15 +875,16 @@ struts.action.extension = <strong>do</strong></code></pre>
     The <em>onclick="form.onsubmit=null"</em> script defeats client-side validation.
     On the server side, "cancel" is on a special list of methods that bypass validation,
     so the request will go directly to the Action's <strong>cancel</strong> method.
-    (Other special aliases on the bypass list include "input" and "back".)
+    Another entry on the special-case list is the "input" method.
 </p>
 
 <hr/>
 <h5>Tip:</h5>
 <blockquote>
     <p><font class="hint">
-        The UI tags have options and capabilities beyond what we have shown here.
-        For more see, the <a href="http://confluence.twdata.org/display/WW/Tags">UI Tag documentation.</a>
+        The Struts Tags have options and capabilities beyond what we have shown here.
+        For more see, the <a href="http://cwiki.apache.org/WW/tag-developers-guide.html">
+            Struts Tag documentation.</a>
     </font></p>
 </blockquote>
 <hr/>
@@ -1081,7 +1078,9 @@ public void setPassword(String password) {
 <hr/>
 <h5>Best Practice:</h5>
 <blockquote>
-    <p><font class="hint">"Strongly separate data access and business logic from the rest of the application."</font>
+    <p>
+        <font class="hint">"Strongly separate data access and business logic from the rest of
+            the application."</font>
     </p>
 </blockquote>
 <hr/>
@@ -1121,12 +1120,14 @@ public void <strong>setSession(Map value)</strong> {
 <hr />
 
 <p>
-    To look at the MailreaderSupport class, you would think the Session property is a plain-old Map.
-    In fact, the Session property is an adapter that is backed by the servlet session object at runtime.
+    To look at the MailreaderSupport class,
+    you would think the Session property is a plain-old Map.
+    In fact,
+    the Session property is an adapter that is backed by the servlet session object at runtime.
     The MailreaderSupport class doesn't need to know that though.
     It can treat Session like any other Map.
-    We can also test the MailreaderSupport class by passing it some other implementation of Map,
-    running the test,
+    We can also test the MailreaderSupport class by passing it some other implementation of
+    Map, running the test,
     and then looking to see what changes MailreaderSupport made to our "mock" Session object.
 </p>
 
@@ -1143,9 +1144,11 @@ public void <strong>setSession(Map value)</strong> {
 </p>
 
 <p>
-    The magic that provides the Session property a runtime value is called "dependency injection".
+    The magic that provides the Session property a runtime value is called
+    "dependency injection".
     The MailreaderSupport class implements a interface called <strong>SessionAware</strong>.
-    SessionAware is bundled with the framework, and it defines a setter for the Session property.
+    SessionAware is bundled with the framework,
+    and it defines a setter for the Session property.
 </p>
 
 <p>
@@ -1153,7 +1156,8 @@ public void <strong>setSession(Map value)</strong> {
 </p>
 
 <p>
-    Also bundled with the framework is an object called the <strong>ServletConfigInterceptor</strong>.
+    Also bundled with the framework is an object called the
+    <strong>ServletConfigInterceptor</strong>.
     If the ServletConfigInterceptor sees that an Action implements the SessionAware interface,
     it automatically set the session property.
 </p>
@@ -1181,19 +1185,22 @@ public void <strong>setSession(Map value)</strong> {
     The framework comes with a default set of Interceptors,
     that it will use when another set is not specified,
     but you can designate your own default Interceptor set (or "stack")
-    in the struts.xml configuration file.
+    in the Struts configuration.
 </p>
 
 <p>
-    Many Interceptors provide a utility or helper functions, like setting the session property.
-    Others, like the <strong>ValidationInterceptor</strong>, can change the workflow of an action.
+    Many Interceptors provide a utility or helper functions,
+    like setting the session property.
+    Others, like the <strong>ValidationInterceptor</strong>,
+    can change the workflow of an action.
     Interceptors are key feature of the framework,
     and we will see a few more on the tour.
 </p>
 
 <p>
     If a valid User is not found, or the password doesn't match,
-    the "findUser" method invokes the <strong>addFieldError</strong> method to note the problem.
+    the "findUser" method invokes the <strong>addFieldError</strong> method to note the
+    problem.
     When "findUser" returns, the Logon Action checks for errors,
     and then it returns either INPUT or SUCCESS.
 </p>
@@ -1228,7 +1235,8 @@ public void <strong>setSession(Map value)</strong> {
 
 <p>
     To answer that question,
-    we need to turn back to the "struts.xml" file and look at how Logon is configured.
+    we need to turn back to the Struts configuration
+    and look at how Logon is declared.
 </p>
 
 
@@ -1241,8 +1249,8 @@ public void <strong>setSession(Map value)</strong> {
 </p>
 
 <hr/>
-<h5>struts.xml Logon</h5>
-<pre><code>&lt;action name="<strong>Logon</strong>" class="mailreader2.Logon">
+<h5>mailreader-support.xml Logon</h5>
+<pre><code>&lt;action name="<strong>Logon!*</strong>" class="mailreader2.Logon" method="{1}">
   &lt;result name="<strong>input</strong>">/pages/Logon.jsp&lt;/result>
   &lt;result name="<strong>cancel</strong>" type="redirect-action">Welcome&lt;/result>
   &lt;result type="redirect-action">MainMenu&lt;/result>
@@ -1255,7 +1263,27 @@ public void <strong>setSession(Map value)</strong> {
 <hr/>
 
 <p>
-    In the Logon action element, the first result element is named "input".
+    You might notice that the name of the Logon action element is not "Logon" but "Logon!*".
+    The asterisk is a special "wildcard" notation that tells the framework to match any series
+    of character at this point.
+    In the method attribute,
+    the "{1}" notation indicates that framework should substitute whatever characters match
+    the asterisk at runtime.
+    When we cite actions like "Logon!cancel" or "Logon!input",
+    the framework matches "cancel" or "input" with the wildcard and fills in the blanks.
+</p>
+
+<p>
+    Using wildcards with a exclamation point (or "bang") is not the only way we can use
+    wilcards.
+    If we wanted to use actions like "inputLogin",
+    we could move the asterisk and use an action name like "*Logon".
+    (Albeit, the trailing bang is a common convention,
+    adopted from on a similar WebWork 2 feature.)
+</p>
+
+<p>
+    Within the Logon action element, the first result element is named "input".
     If validation or authentification fail,
     the Action class will return "input" and the framework will transfer control to the 
     "Logon.jsp" page.
@@ -1288,7 +1316,7 @@ public void <strong>setSession(Map value)</strong> {
 </p>
 
 <hr/>
-<h5>struts.xml exception-mapping</h5>
+<h5>mailreader-default.xml exception-mapping</h5>
 <pre><code>&lt;global-exception-mappings>
   &lt;exception-mapping
     result="error"
@@ -1400,7 +1428,7 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
 </p>
 
 <hr/>
-<h5>struts.xml interceptors</h5>
+<h5>mailreader-default.xml interceptors</h5>
 <pre><code>&lt;interceptors>
   &lt;interceptor name="<strong>authentication</strong>"
                class="mailreader2.AuthenticationInterceptor"/>
@@ -1769,7 +1797,8 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
     </p>
     <p>
         How about that the markup between the iterator tag is
-        actually <em>simpler</em> than the markup that we would use to render one row of the table?
+        actually <em>simpler</em> than the markup that we would use to render one row of the
+        table?
     </p>
     <p>
         Instead of using a qualified reference  like "value=user.subscription[0].host",
@@ -1783,7 +1812,8 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
 
 <p>
     The secret to this magic is the <strong>value stack</strong>.
-    Next to Interceptors, the value stack is probably the coolest thing there is about the framework.
+    Next to Interceptors, the value stack is probably the coolest thing there is about the
+    framework.
     To explain the value stack, let's step back and start from the beginning.
 </p>
 
@@ -1826,11 +1856,13 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
 <p>
     When an Action is invoked, the Action class is pushed onto the value stack.
     Since the Action is on the value stack,
-    our tags can access any property of the Action as if it were an implicit property of the page.
+    our tags can access any property of the Action
+    as if it were an implicit property of the page.
     The tags don't access the Action directly.
     If a textfield tag is told to render the "Username" property,
     the tag asks the value stack for the value of "Username",
-    and the value stack returns the first property it finds by that name.
+    and the value stack returns the first property it finds by that name,
+    on any object on the stack.
 </p>
 
 <p>
@@ -1845,14 +1877,17 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
 
 <p>
     The Subscription list uses another new tag: the <strong>param</strong> tag.
-    As tags go, "param" takes very few parameters of its own: just "name" and "value", and neither is required.
+    As tags go, "param" takes very few parameters of its own: just "name" and "value",
+    and neither is required.
     Although simple, "param" is one of the most powerful tags the framework provides.
-    Not so much because of what it does, but because of what "param" allows the other tags to do.
+    Not so much because of what it does,
+    but because of what "param" allows the other tags to do.
 </p>
 
 <p>
     Essentially, the "param" tag provides parameters to other tags.
-    A tag like "text" might be retrieving a message template with several replaceable parameters.
+    A tag like "text" might be retrieving a message template with several replaceable
+    parameters.
     No matter how many parameters are in the template, and no matter what they are named,
     you can use the "param" tag to pass in whatever you need.
 </p>
@@ -1883,7 +1918,6 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
   &lt;a href="/struts2-mailreader/Subscription!edit.do?<strong>host=mail.yahoo.com</strong>">Edit&lt;/a>
 </code></pre>
 
-
 <!--
 <p>
     At the foot of the Register page is a link for adding a subscription.
@@ -1906,13 +1940,13 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
     If we follow one of the "Edit" subscription links on the Registration page,
     we come to the Subscriptions page,
     which displays the details of our description in a data-entry form.
-    Let's have a look a the Subscription configuration in "struts.xml"
+    Let's have a look at the Subscription configuration
     and follow the bouncing ball from page to action to page.
 </p>
 
 <hr />
-<h5>struts.xml Subscription element</h5>
-<pre><code>&lt;action name="Subscription" class="mailreader2.Subscription">
+<h5>mailreader-support.xml Subscription element</h5>
+<pre><code>&lt;action name="Subscription!*" class="mailreader2.Subscription" method="{1}">
   &lt;result name="input">/pages/Subscription.jsp&lt;/result>
   &lt;result type="redirect-action">Registration!input&lt;/result>
 &lt;/action></code></pre>
@@ -1921,9 +1955,9 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
 <p>
     The Edit link specified the Subscription action,
     but also includes the qualifier <strong>!edit</strong>.
-    The <strong>!</strong> idiom tells the framework to invoke the
-    "edit" method of the Subscription action,
-    instead of the default "execute" method
+    The wildcard notation tells the framework to use any characters given after "Subscription!"
+    as the name of a method to invoke on the Action class,
+    instead of the default execute method.
     The "alternate" execute methods are called <strong>alias</strong> methods.
 </p>
 
@@ -1991,8 +2025,8 @@ public Subscription findSubscription(String host) {
     But, that's OK.
     Since the page is suppose to be entered from a link that we created,
     we do expect everything to go right here.
-    But, if it doesn't, the global exception handler we defined in "struts.xml"
-    will trap the exception for us.
+    But, if it doesn't, the global exception handler we defined in the
+    MailReader configuration will trap the exception for us.
 </p>
 
 <p>
@@ -2020,7 +2054,7 @@ public Subscription findSubscription(String host) {
 <hr />
 
 <p>
-    By keeping routine sety precautions out of the Action class,
+    By keeping routine safety precautions out of the Action class,
     the all-important Actions becomes smaller and easier to maintain.
 </p>
 
@@ -2052,7 +2086,7 @@ public Subscription findSubscription(String host) {
   &lt;body onLoad="self.focus();document.Subscription.username.focus()">
 
     &lt;s:actionerror/>
-    &lt;s:form method="POST" <strong>action="SubscriptionSave"</strong> validate="false">
+    &lt;s:form <strong>action="Subscription!save"</strong> validate="true">
       <strong>&lt;s:token /></strong>
       <strong>&lt;s:hidden name="task"/></strong>
       <strong>&lt;s:label label="%{getText('username')}" name="user.username"/></strong>
@@ -2105,44 +2139,8 @@ public Subscription findSubscription(String host) {
 </p>
 
 <p>
-    When we looked at the form tag for the Logon page,
-    it did not specify a target for the submit.
-    Instead, it just posted back to the Logon action.
-    In this <strong>form</strong> tag, we are specifying a different action,
-    <strong>SubscriptionSave</strong>
-    to be the target of the submit,
-</p>
-
-<p>
-    The main reason we use another action is so that we can use a different set of validations.
-    When we retrieve the Subscription for editing, all we need is the Host property.
-    When we save the Subscription, we want to validate additional properties.
-    Since the validation files are coupled to the classes,
-    we created a new Action class for saving a Subscription.
-</p>
-
-<hr />
-<h5>Subscription-validation.xml</h5>
-<pre><code>&lt;!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN"
-    "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
-&lt;validators>
-  &lt;field name="<strong>host</strong>">
-    &lt;field-validator type="<strong>requiredstring</strong>">
-        &lt;message key="error.host.required"/>
-    &lt;/field-validator>
-  &lt;/field>
-&lt;/validators></code></pre>
-<hr />
-
-<p>
-    The validators follow the same type of inheritance path as the classes.
-    SubscriptionSave extends Subscription,
-    so when SubscriptionSave is validated,
-    the Host property specified by "Subscription-validation.xml" will also be required.
-</p>
-
-<p>
-    The <strong>token</strong> tag works with the Token Session Interceptor to foil double submits.
+    The <strong>token</strong> tag works with the Token Session Interceptor to foil double
+    submits.
     The tag generates a key that is embedded in the form and cached in the session.
     Without this tag, the Interceptor can't work it's magic.
 </p>
@@ -2150,7 +2148,7 @@ public Subscription findSubscription(String host) {
 <p>
     The <strong>hidden</strong> tag embeds the Task property into the form.
     When the form is submitted,
-    the SubscriptionSave action wil use the Task property to decide
+    the Subscription!save action will use the Task property to decide
     whether to insert or update the form.
 </p>
 
@@ -2164,7 +2162,7 @@ public Subscription findSubscription(String host) {
 </p>
 
 <p>
-    Saving the best for last, the Subscription utilizes two more interesting
+    Saving the best for last, the Subscription form utilizes two more interesting
     tags, "select" and "checkbox".
 </p>
 
@@ -2234,9 +2232,8 @@ public Subscription findSubscription(String host) {
     to a local property, where it is easier to manage.
 </p>
 
-
 <h4>
-    <a name="SubscriptionAction.java" id="SubscriptionAction.java">SubscriptionAction.java</a>
+    <a name="Subscription.java" id="Subscription.java">Subscription.java</a>
 </h4>
 
 <p>
@@ -2284,13 +2281,29 @@ public Subscription findSubscription(String host) {
 <hr/>
 
 <p>
-    The simplest solution is to employ our old friend Preparable again.
-    In the "prepare" method for SubscriptionSave,
-    we can set the property represented by the checkbox to false.
+    The simplest solution is to employ our old friend Preparable again,
+    and reset the checkbox just before a Subscription is saved.
     If the control is not submitted, then the property remains false.
     If the control is submitted, then the property is set to true.
 </p>
 
+<p>
+    But, we only want to reset the checkbox when we are about to save
+    a Subscription.
+    If we add it to the Subscription class,
+    all of the aliases will reset the checkbox,
+    which isn't what we want.
+    As an alternative, we can give Subscription!save its own class,
+    so that it can have it's own preparable method.
+</p>
+
+<hr />
+<h5>mailreader-support.xml Subscription!save element</h5>
+<pre><code>&lt;action name="Subscription!save" class="mailreader2.SubscriptionSave">
+        &lt;result name="input">/pages/Subscription.jsp&lt;/result>
+        &lt;result type="redirect-action">Registration!input&lt;/result>
+        &lt;interceptor-ref name="user-submit" />
+    &lt;/action></code></pre>
 <hr />
 <h5>SubscriptionSave</h5>
 <pre><code>public final class SubscriptionSave extends Subscription {
@@ -2307,16 +2320,48 @@ public Subscription findSubscription(String host) {
 }</code></pre>
 <hr />
 
-
 <p>
     If we press the SAVE button,
-    the form will be submitted to the SubscriptionSave action.
-    If the validation succeeds, as we've seen,
-    SubscriptionSave will invoke the Subscription.save method.
+    the form will be submitted to the Subscription!save action.
+    Since the action has it's own class,
+    it can also have its own set of validators.
 </p>
 
 <hr />
-<h5>Subscription save method</h5>
+<h5>SubscriptionSave-validation.xml</h5>
+<pre><code>&lt;!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN"
+    "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+&lt;validators>
+  &lt;field name="<strong>host</strong>">
+    &lt;field-validator type="<strong>requiredstring</strong>">
+        &lt;message key="error.host.required"/>
+    &lt;/field-validator>
+  &lt;/field>
+&lt;/validators></code></pre>
+<hr />
+
+<p>
+    The validators follow the same type of inheritance path as the classes.
+    SubscriptionSave extends Subscription,
+    so when Subscription!save is validated,
+    the Host property specified by "Subscription-validation.xml" will also be required.
+</p>
+
+<p>
+    If validation succeeds, the execute method of SubscriptionSave will fire.
+    Just to keep all the code together,
+    all the execute method does is call save on the parent Subscription class.
+</p>
+
+<hr />
+<h5>SubscriptionSave</h5>
+
+<pre><code>public String execute() throws Exception {
+    return save();
+}</code></pre>
+<hr />
+<h5>Subscription</h5>
+
 <pre><code>public String <strong>save</strong>() throws Exception {
 
   if (Constants.DELETE.equals(getTask())) {
@@ -2398,6 +2443,7 @@ public Subscription findSubscription(String host) {
     setHost(sub.getHost());
   }
 }</code></pre>
+<hr />
 
 <p>
     Of course, this is not a preferred solution,
@@ -2411,7 +2457,8 @@ public Subscription findSubscription(String host) {
     reviewed a Registration record, and edited a Subscription.
     Of course, there's more, but from here on, it is mostly more of the same.
     The full source code for MailReader is
-    <a href="http://svn.apache.org/viewcvs.cgi/struts/sandbox/trunk/struts2/apps/mailreader/">available online</a>
+    <a href="http://svn.apache.org/viewvc/struts/struts2/trunk/apps/mailreader/">
+        available online</a>
     and in the distribution.
 </p>
 

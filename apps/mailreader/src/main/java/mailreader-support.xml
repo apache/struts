@@ -28,13 +28,13 @@
             <exception-mapping
                     exception="org.apache.struts.apps.mailreader.dao.ExpiredPasswordException"
                     result="expired"/>
-            <interceptor-ref name="guest"/>
+            <interceptor-ref name="guest-submit"/>
         </action>
 
         <action name="Registration!*" class="mailreader2.Registration" method="{1}">
             <result name="input">/pages/Registration.jsp</result>
             <result type="redirect-action">MainMenu</result>
-            <interceptor-ref name="guest"/>
+            <interceptor-ref name="guest-submit"/>
         </action>
 
         <action name="Subscription!save" class="mailreader2.SubscriptionSave">
@@ -46,6 +46,7 @@
         <action name="Subscription!*" class="mailreader2.Subscription" method="{1}">
             <result name="input">/pages/Subscription.jsp</result>
             <result type="redirect-action">Registration!input</result>
+            <interceptor-ref name="user" />
         </action>
 
         <action name="*" class="mailreader2.MailreaderSupport">

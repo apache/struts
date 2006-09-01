@@ -17,6 +17,11 @@
  */
 package org.apache.struts2.components;
 
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.RequestMap;
+import org.apache.struts2.views.jsp.TagUtils;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
@@ -24,107 +29,123 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.config.Settings;
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.RequestMap;
-import org.apache.struts2.views.jsp.TagUtils;
 
 import javax.servlet.ServletContext;
+import javax.servlet.jsp.PageContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.PageContext;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Invoke an action directly from a view.
- * See struts-tags.tld for documentation.
+ * <!-- START SNIPPET: javadoc -->
+ * <p>This tag enables developers to call actions directly from a JSP page by specifying the action name and an optional
+ * namespace.  The body content of the tag is used to render the results from the Action.  Any result processor defined
+ * for this action in struts.xml will be ignored, <i>unless</i> the executeResult parameter is specified.</p>
+ * <!-- END SNIPPET: javadoc -->
+ *
+ * <!-- START SNIPPET: params -->
+ * <ul>
+ *      <li>id (String) - the id (if specified) to put the action under stack's context.
+ * 		<li>name* (String) - name of the action to be executed (without the extension suffix eg. .action)</li>
+ * 		<li>namespace (String) - default to the namespace where this action tag is invoked</li>
+ *      <li>executeResult (Boolean) -  default is false. Decides wheather the result of this action is to be executed or not</li>
+ *      <li>ignoreContextParams (Boolean) - default to false. Decides wheather the request parameters are to be included when the action is invoked</li>
+ * </ul>
+ * <!-- END SNIPPET: params -->
+ *
+ * <pre>
+ * <!-- START SNIPPET: javacode -->
+ * public class ActionTagAction extends ActionSupport {
+ *
+ *	public String execute() throws Exception {
+ *		return "done";
+ *	}
+ *
+ *	public String doDefault() throws Exception {
+ *		ServletActionContext.getRequest().setAttribute("stringByAction", "This is a String put in by the action's doDefault()");
+ *		return "done";
+ *	}
+ * }
+ * <!-- END SNIPPET: javacode -->
+ * </pre>
+ *
+ * <pre>
+ * <!-- START SNIPPET: strutsxml -->
+ *   <xwork>
+ *      ....
+ *     <action name="actionTagAction1" class="tmjee.testing.ActionTagAction">
+ *         <result name="done">success.jsp</result>
+ *     </action>
+ *      <action name="actionTagAction2" class="tmjee.testing.ActionTagAction" method="default">
+ *         <result name="done">success.jsp</result>
+ *     </action>
+ *      ....
+ *   </xwork>
+ * <!-- END SNIPPET: strutsxml -->
+ * </pre>
+ *
+ * <pre>
+ * <!-- START SNIPPET: example -->
+ *  <div>The following action tag will execute result and include it in this page</div>
+ *	<br />
+ *	<s:action name="actionTagAction" executeResult="true" />
+ *  <br />
+ *  <div>The following action tag will do the same as above, but invokes method specialMethod in action</div>
+ *	<br />
+ *	<s:action name="actionTagAction!specialMethod" executeResult="true" />
+ *  <br />
+ *  <div>The following action tag will not execute result, but put a String in request scope
+ *       under an id "stringByAction" which will be retrieved using property tag</div>
+ *  <s:action name="actionTagAction!default" executeResult="false" />
+ *  <s:property value="#attr.stringByAction" />
+ * <!-- END SNIPPET: example -->
+ * </pre>
+ *
+ * @s.tag name="action" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ActionTag"
+ * description="Execute an action from within a view"
  */
 public class ActionComponent extends Component {
     private static final Log LOG = LogFactory.getLog(ActionComponent.class);
 
-    /**
-     * Store our HttpServletResponse.
-     */
-    protected HttpServletResponse response;
+    protected HttpServletResponse res;
+    protected HttpServletRequest req;
 
-    /**
-     * Store our HttpServletRequest.
-     */
-    protected HttpServletRequest request;
-
-    /**
-     * Store our ActionProxy.
-     */
     protected ActionProxy proxy;
-
-    /**
-     * Store the action mapping name.
-     */
     protected String name;
-
-    /**
-     * Store the action mappinng namespace, if different.
-     */
     protected String namespace;
-
-    /**
-     * Indicate whether to invoke the result class and render its content.
-     */
     protected boolean executeResult;
-
-    /**
-     * Indicate whether to pass the request parameters to the Action invocation.
-     */
     protected boolean ignoreContextParams;
 
-    /**
-     * Construct object instance, setting runtime parameters.
-     *
-     * @param stack Our OgnlValueStack
-     * @param request Our HttpServletRequest
-     * @param response Our HttpServletResponse
-     */
-    public ActionComponent(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public ActionComponent(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack);
-        this.request = request;
-        this.response = response;
+        this.req = req;
+        this.res = res;
     }
 
-
-    // See superclass for documentation
     public boolean end(Writer writer, String body) {
-        boolean end = super.end(writer, "", false);
-        try {
-            try {
-                writer.flush();
-            } catch (IOException e) {
-                LOG.warn("error while trying to flush writer ", e);
-            }
-            executeAction();
+    	boolean end = super.end(writer, "", false);
+		try {
+			try {
+				writer.flush();
+			} catch (IOException e) {
+				LOG.warn("error while trying to flush writer ", e);
+			}
+			executeAction();
 
-            if ((getId() != null) && (proxy != null)) {
-                getStack().setValue("#attr['" + getId() + "']",
-                        proxy.getAction());
-            }
-        } finally {
-            popComponentStack();
-        }
+			if ((getId() != null) && (proxy != null)) {
+				getStack().setValue("#attr['" + getId() + "']",
+						proxy.getAction());
+			}
+		} finally {
+			popComponentStack();
+		}
         return end;
     }
 
-    /**
-     * Create a context in which to invoke Action class,
-     * passing along context parameters
-     * if ignoreContextParams is FALSE.
-     *
-     * @return A map representing the new context
-     */
     private Map createExtraContext() {
         Map parentParams = null;
 
@@ -145,12 +166,12 @@ public class ActionComponent extends Component {
         Map application = ctx.getApplication();
 
         Dispatcher du = Dispatcher.getInstance();
-        Map extraContext = du.createContextMap(new RequestMap(request),
+        Map extraContext = du.createContextMap(new RequestMap(req),
                 newParams,
                 session,
                 application,
-                request,
-                response,
+                req,
+                res,
                 servletContext);
 
         OgnlValueStack newStack = new OgnlValueStack(stack);
@@ -162,37 +183,42 @@ public class ActionComponent extends Component {
         return extraContext;
     }
 
+    public ActionProxy getProxy() {
+        return proxy;
+    }
+
     /**
-     * Invoke the Action class,
-     * If no namespace is provided, attempt to derive a namespace using the buildNamespace method.
+     * Execute the requested action.  If no namespace is provided, we'll
+     * attempt to derive a namespace using buildNamespace().  The ActionProxy
+     * and the namespace will be saved into the instance variables proxy and
+     * namespace respectively.
      *
      * @see org.apache.struts2.views.jsp.TagUtils#buildNamespace
      */
     private void executeAction() {
-        // FIXME: our implementation is flawed - the only concept of ! should be in DefaultActionMapper
-        boolean allowDynamicMethodCalls = "true".equals(Settings.get(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION));
         String actualName = findString(name, "name", "Action name is required. Example: updatePerson");
 
         if (actualName == null) {
             throw new StrutsException("Unable to find value for name " + name);
         }
 
-        String actionName = actualName;
-        String methodName = null;
-
         // handle "name!method" convention.
-        if (allowDynamicMethodCalls) {
-            int exclamation = actualName.lastIndexOf("!");
-            if (exclamation != -1) {
-                actionName = actualName.substring(0, exclamation);
-                methodName = actualName.substring(exclamation + 1);
-            }
+        final String actionName;
+        final String methodName;
+
+        int exclamation = actualName.lastIndexOf("!");
+        if (exclamation != -1) {
+            actionName = actualName.substring(0, exclamation);
+            methodName = actualName.substring(exclamation + 1);
+        } else {
+            actionName = actualName;
+            methodName = null;
         }
 
         String namespace;
 
         if (this.namespace == null) {
-            namespace = TagUtils.buildNamespace(getStack(), request);
+            namespace = TagUtils.buildNamespace(getStack(), req);
         } else {
             namespace = findString(this.namespace);
         }
@@ -202,21 +228,20 @@ public class ActionComponent extends Component {
         // execute at this point, after params have been set
         try {
             Configuration config = Dispatcher.getInstance().getConfigurationManager().getConfiguration();
-            proxy = ActionProxyFactory.getFactory().createActionProxy(config, namespace, actionName,
-                    createExtraContext(), executeResult, true);
+            proxy = ActionProxyFactory.getFactory().createActionProxy(config, namespace, actionName, createExtraContext(), executeResult, true);
             if (null != methodName) {
                 proxy.setMethod(methodName);
             }
             // set the new stack into the request for the taglib to use
-            request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, proxy.getInvocation().getStack());
+            req.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, proxy.getInvocation().getStack());
             proxy.execute();
 
         } catch (Exception e) {
-            String message = "Could not invoke action: " + namespace + "/" + actualName;
+            String message = "Could not execute action: " + namespace + "/" + actualName;
             LOG.error(message, e);
         } finally {
             // set the old stack back on the request
-            request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
+            req.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
         }
 
         if ((getId() != null) && (proxy != null)) {
@@ -226,35 +251,41 @@ public class ActionComponent extends Component {
     }
 
     /**
-     * Expose proxy instance (for testing).
-     *
-     * @return proxy instance
+     * the id (if speficied) to put the action under stack's context.
+     * @s.tagattribute required="false" type="String"
      */
-    public ActionProxy getProxy() {
-        return proxy;
-    }
-
-    // See TLD for documentation
     public void setId(String id) {
         super.setId(id);
     }
 
-    // See TLD for documentation
+    /**
+     * name of the action to be executed (without the extension suffix eg. .action)
+     * @s.tagattribute required="true" type="String"
+     */
     public void setName(String name) {
         this.name = name;
     }
 
-    // See TLD for documentation
+    /**
+     * namespace for action to call
+     * @s.tagattribute required="false" type="String" default="namespace from where tag is used"
+     */
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
 
-    // See TLD for documentation
+    /**
+     * whether the result of this action (probably a view) should be executed/rendered
+     * @s.tagattribute required="false" type="Boolean" default="false"
+     */
     public void setExecuteResult(boolean executeResult) {
         this.executeResult = executeResult;
     }
 
-    // See TLD for documentation
+    /**
+     * whether the request parameters are to be included when the action is invoked
+     * @s.tagattribute required="false" type="Boolean" default="false"
+     */
     public void setIgnoreContextParams(boolean ignoreContextParams) {
         this.ignoreContextParams = ignoreContextParams;
     }

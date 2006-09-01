@@ -23,32 +23,38 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Render action errors, if they exist,
- * obtaining the layout from theme.
+ * <!-- START SNIPPET: javadoc -->
+ *
+ * Render action errors if they exists the specific layout of the rendering depends on
+ * the theme itself.
+ *
+ * <!-- END SNIPPET: javadoc -->
+ *
+ * <p/> <b>Examples</b>
+ *
+ * <pre>
+ * <!-- START SNIPPET: example -->
+ *
+ *    &lt;s:actionerror /&gt;
+ *    &lt;s:form .... &gt;>
+ *       ....
+ *    &lt;/s:form&gt;
+ *
+ * <!-- END SNIPPET: example -->
+ * </pre>
+ *
+ * @s.tag name="actionerror" tld-body-content="empty" tld-tag-class="org.apache.struts2.views.jsp.ui.ActionErrorTag"
+ * description="Render action errors if they exists"
  */
 public class ActionError extends UIBean {
 
-    /**
-     * Provide the tag template name.
-     */
-    private static final String TEMPLATE = "actionerror";
+    public static final String TEMPLATE = "actionerror";
 
-    /**
-     * Construct object instance, setting runtime parameters.
-     *
-     * @param stack Our OgnlValueStack
-     * @param request Our HttpServletRequest
-     * @param response Our HttpServletResponse
-     */
+
     public ActionError(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 
-    /**
-     * Provide the tag's default template.
-     *
-     * @return the tag's default template
-     */
     protected String getDefaultTemplate() {
         return TEMPLATE;
     }

@@ -68,5 +68,7 @@ dojo.require("dojo.event.connect");
 <#-- 
  Code that will add javascript needed for tooltips
 --><#t/>
+<#if (parameters.hasTooltip?default(false))><#t/>
 	<#lt/><!-- javascript that is needed for tooltips -->
 	<#lt/><script language="JavaScript" type="text/javascript">dojo.require("dojo.widget.html.Tooltip");dojo.require("dojo.fx.html");</script>
+</#if><#t/>

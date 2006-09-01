@@ -26,11 +26,6 @@
                 <interceptor-ref name="defaultStack"/>
             </interceptor-stack>
 
-            <interceptor-stack name="guest-submit" >
-                <interceptor-ref name="token-session" />
-                <interceptor-ref name="guest"/>
-            </interceptor-stack>
-
         </interceptors>
 
         <default-interceptor-ref name="user"/>

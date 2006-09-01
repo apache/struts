@@ -1448,8 +1448,8 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
 </p>
 
 <p>
-    The MailReader defines four custom Interceptor stacks: "user", "user-submit",
-    "guest", and "guest-submit".
+    The MailReader defines three custom Interceptor stacks: "user", "user-submit",
+    and "guest".
 </p>
 
 <hr/>
@@ -1467,10 +1467,6 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
   &lt;/interceptor-stack>
   &lt;interceptor-stack name="<strong>guest</strong>" >
       &lt;interceptor-ref name="defaultStack"/>
-  &lt;/interceptor-stack>
-  &lt;interceptor-stack name="<strong>guest-submit</strong>" >
-      &lt;interceptor-ref name="token-session" />
-      &lt;interceptor-ref name="guest"/>
   &lt;/interceptor-stack>
 &lt;/interceptors>
 &lt;<strong>default-interceptor-ref</strong> name="user"/></code></pre>

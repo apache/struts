@@ -17,21 +17,21 @@
  */
 package org.apache.struts2.views.xslt;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.StrutsException;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
-
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.StrutsException;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 
 /**

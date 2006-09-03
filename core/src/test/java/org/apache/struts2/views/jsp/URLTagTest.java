@@ -18,16 +18,11 @@
 package org.apache.struts2.views.jsp;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.jsp.JspWriter;
 
 import org.apache.struts2.components.URL;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-
-import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * Unit test for {@link URLTag}.

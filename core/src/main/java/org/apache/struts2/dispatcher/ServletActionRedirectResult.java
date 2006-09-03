@@ -28,8 +28,8 @@ import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.util.UrlHelper;
 
-import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
 
 /**
  * <!-- START SNIPPET: description -->

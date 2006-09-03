@@ -17,23 +17,28 @@
  */
 package org.apache.struts2.sitemesh;
 
-import com.opensymphony.module.sitemesh.Decorator;
-import com.opensymphony.module.sitemesh.Page;
-import com.opensymphony.module.sitemesh.HTMLPage;
-import org.apache.struts2.views.freemarker.FreemarkerManager;
-import com.opensymphony.xwork2.*;
-import freemarker.template.Configuration;
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.util.Locale;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Locale;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
+
+import com.opensymphony.module.sitemesh.Decorator;
+import com.opensymphony.module.sitemesh.HTMLPage;
+import com.opensymphony.module.sitemesh.Page;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.LocaleProvider;
+
+import freemarker.template.Configuration;
+import freemarker.template.SimpleHash;
+import freemarker.template.Template;
 
 /**
  *  Applies FreeMarker-based sitemesh decorators.

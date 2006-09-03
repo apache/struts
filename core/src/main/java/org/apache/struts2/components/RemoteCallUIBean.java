@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * RemoteCallUIBean is superclass for all components dealing with remote calls.

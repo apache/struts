@@ -2,10 +2,11 @@
 
 package org.apache.struts2.impl;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import java.util.Iterator;
+
 import org.apache.struts2.spi.ValueStack;
 
-import java.util.Iterator;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 public class ValueStackAdapter implements ValueStack {
 

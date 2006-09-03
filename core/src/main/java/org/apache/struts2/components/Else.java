@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
 import java.io.Writer;
 import java.util.Map;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->

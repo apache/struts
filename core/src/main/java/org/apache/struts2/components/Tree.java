@@ -17,11 +17,12 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import java.io.Writer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.Writer;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->

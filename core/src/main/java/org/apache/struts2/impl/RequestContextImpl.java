@@ -2,23 +2,28 @@
 
 package org.apache.struts2.impl;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import org.apache.struts2.Messages;
-import static org.apache.struts2.StrutsStatics.*;
-import org.apache.struts2.dispatcher.RequestMap;
-import org.apache.struts2.spi.ActionContext;
-import org.apache.struts2.spi.RequestContext;
-import org.apache.struts2.spi.ValueStack;
+import static org.apache.struts2.StrutsStatics.HTTP_REQUEST;
+import static org.apache.struts2.StrutsStatics.HTTP_RESPONSE;
+import static org.apache.struts2.StrutsStatics.SERVLET_CONTEXT;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Callable;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.Messages;
+import org.apache.struts2.dispatcher.RequestMap;
+import org.apache.struts2.spi.ActionContext;
+import org.apache.struts2.spi.RequestContext;
+import org.apache.struts2.spi.ValueStack;
+
+import com.opensymphony.xwork2.ActionInvocation;
 
 public class RequestContextImpl implements RequestContext {
 

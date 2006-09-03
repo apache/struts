@@ -17,23 +17,9 @@
  */
 package org.apache.struts2.portlet.result;
 
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
-import org.apache.struts2.dispatcher.StrutsResultSupport;
-import org.apache.struts2.portlet.PortletActionConstants;
-import org.apache.struts2.portlet.context.PortletActionContext;
-import org.apache.struts2.views.JspSupportServlet;
-import org.apache.struts2.views.velocity.VelocityManager;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.velocity.Template;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.context.Context;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
@@ -45,9 +31,23 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspFactory;
 import javax.servlet.jsp.PageContext;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.config.Settings;
+import org.apache.struts2.dispatcher.StrutsResultSupport;
+import org.apache.struts2.portlet.PortletActionConstants;
+import org.apache.struts2.portlet.context.PortletActionContext;
+import org.apache.struts2.views.JspSupportServlet;
+import org.apache.struts2.views.velocity.VelocityManager;
+import org.apache.velocity.Template;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.context.Context;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: description -->

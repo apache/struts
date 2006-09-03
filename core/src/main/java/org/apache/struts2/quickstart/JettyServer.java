@@ -17,13 +17,13 @@
  */
 package org.apache.struts2.quickstart;
 
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+
 import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.WebApplicationContext;
-
-import java.util.List;
-import java.util.Map;
-import java.io.File;
 
 /**
  * To start a Jetty server used by the QuickStart application.

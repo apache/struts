@@ -17,26 +17,27 @@
  */
 package org.apache.struts2.components;
 
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.portlet.context.PortletActionContext;
-import org.apache.struts2.portlet.util.PortletUrlHelper;
-import org.apache.struts2.views.util.UrlHelper;
-import org.apache.struts2.dispatcher.Dispatcher;
-import com.opensymphony.xwork2.util.OgnlValueStack;
-import com.opensymphony.xwork2.util.XWorkContinuationConfig;
-import com.opensymphony.xwork2.ActionContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpUtils;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.portlet.context.PortletActionContext;
+import org.apache.struts2.portlet.util.PortletUrlHelper;
+import org.apache.struts2.views.util.UrlHelper;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.XWorkContinuationConfig;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -295,7 +296,6 @@ public class URL extends Component {
     /**
      * The method of action to use
      * @s.tagattribute required="false"
-     * @deprecated Since Struts 2.0.0
      */
     public void setMethod(String method) {
         this.method = method;

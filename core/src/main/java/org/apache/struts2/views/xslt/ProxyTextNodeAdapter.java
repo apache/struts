@@ -17,8 +17,8 @@
  */
 package org.apache.struts2.views.xslt;
 
-import org.w3c.dom.Text;
 import org.w3c.dom.DOMException;
+import org.w3c.dom.Text;
 
 /**
  * ProxyTextNodeAdapter is a pass-through adapter for objects which already

@@ -17,11 +17,12 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import com.mockobjects.servlet.MockJspWriter;
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ParamTag;
 import org.apache.struts2.views.jsp.StrutsMockBodyContent;
+
+import com.mockobjects.servlet.MockJspWriter;
 
 /**
  * UI components Tooltip test case.

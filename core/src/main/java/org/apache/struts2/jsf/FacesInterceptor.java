@@ -19,12 +19,8 @@ package org.apache.struts2.jsf;
 
 import javax.faces.context.FacesContext;
 
-import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 
 /**

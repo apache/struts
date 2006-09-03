@@ -17,10 +17,6 @@
  */
 package org.apache.struts2.components.template;
 
-import com.opensymphony.util.ClassLoaderUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -29,6 +25,11 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.opensymphony.util.ClassLoaderUtil;
 
 /**
  * Base class for template engines.

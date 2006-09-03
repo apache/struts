@@ -17,11 +17,11 @@
  */
 package org.apache.struts2.util;
 
-import com.opensymphony.xwork2.Action;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import com.opensymphony.xwork2.Action;
 
 
 /**

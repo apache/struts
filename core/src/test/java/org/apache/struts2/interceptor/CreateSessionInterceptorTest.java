@@ -19,12 +19,12 @@ package org.apache.struts2.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsTestCase;
 import org.jmock.Mock;
 import org.jmock.core.constraint.IsEqual;
 import org.jmock.core.matcher.InvokeOnceMatcher;
 
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsTestCase;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 
 /**

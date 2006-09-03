@@ -17,8 +17,12 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.mockobjects.dynamic.C;
-import com.mockobjects.dynamic.Mock;
+import java.util.HashMap;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import ognl.Ognl;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
@@ -26,17 +30,14 @@ import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.config.StrutsXMLConfigurationProvider;
 import org.springframework.mock.web.MockServletContext;
 
+import com.mockobjects.dynamic.C;
+import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.OgnlValueStack;
-import ognl.Ognl;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
 
 
 /**

@@ -17,21 +17,21 @@
  */
 package org.apache.struts2.util.classloader.listeners;
 
-import org.apache.struts2.util.classloader.ReloadingClassLoader;
-import org.apache.struts2.util.classloader.compilers.JavaCompiler;
-import org.apache.struts2.util.classloader.monitor.FilesystemAlterationListener;
-import org.apache.struts2.util.classloader.problems.CompilationProblem;
-import org.apache.struts2.util.classloader.problems.DefaultCompilationProblemHandler;
-import org.apache.struts2.util.classloader.problems.ConsoleCompilationProblemHandler;
-import org.apache.struts2.util.classloader.readers.ResourceReader;
-import org.apache.struts2.util.classloader.stores.TransactionalResourceStore;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.util.classloader.ReloadingClassLoader;
+import org.apache.struts2.util.classloader.compilers.JavaCompiler;
+import org.apache.struts2.util.classloader.monitor.FilesystemAlterationListener;
+import org.apache.struts2.util.classloader.problems.CompilationProblem;
+import org.apache.struts2.util.classloader.problems.ConsoleCompilationProblemHandler;
+import org.apache.struts2.util.classloader.problems.DefaultCompilationProblemHandler;
+import org.apache.struts2.util.classloader.readers.ResourceReader;
+import org.apache.struts2.util.classloader.stores.TransactionalResourceStore;
 
 
 public class CompilingListener implements FilesystemAlterationListener {

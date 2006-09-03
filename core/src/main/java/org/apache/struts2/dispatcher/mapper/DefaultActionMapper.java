@@ -17,6 +17,13 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.Settings;
@@ -25,12 +32,6 @@ import org.apache.struts2.util.PrefixTrie;
 
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->

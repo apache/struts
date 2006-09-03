@@ -17,6 +17,17 @@
  */
 package org.apache.struts2.components;
 
+import java.io.Writer;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
@@ -24,18 +35,9 @@ import org.apache.struts2.components.template.TemplateEngineManager;
 import org.apache.struts2.components.template.TemplateRenderingContext;
 import org.apache.struts2.config.Settings;
 import org.apache.struts2.views.util.ContextUtil;
+
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.util.OgnlValueStack;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.Writer;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * UIBean is the standard superclass of all Struts UI componentns.

@@ -17,18 +17,16 @@
  */
 package org.apache.struts2.components;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
-
-import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.util.MakeIterator;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->

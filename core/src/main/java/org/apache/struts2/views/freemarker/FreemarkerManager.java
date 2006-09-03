@@ -17,14 +17,30 @@
  */
 package org.apache.struts2.views.freemarker;
 
-import com.opensymphony.util.FileManager;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.Settings;
 import org.apache.struts2.views.JspSupportServlet;
 import org.apache.struts2.views.freemarker.tags.StrutsModels;
 import org.apache.struts2.views.util.ContextUtil;
-import org.apache.struts2.StrutsConstants;
+
+import com.opensymphony.util.FileManager;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.util.OgnlValueStack;
+
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
@@ -35,20 +51,11 @@ import freemarker.ext.servlet.HttpRequestHashModel;
 import freemarker.ext.servlet.HttpRequestParametersHashModel;
 import freemarker.ext.servlet.HttpSessionHashModel;
 import freemarker.ext.servlet.ServletContextHashModel;
-import freemarker.template.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.servlet.GenericServlet;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
-import java.util.Properties;
+import freemarker.template.ObjectWrapper;
+import freemarker.template.SimpleHash;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
+import freemarker.template.TemplateModel;
 
 
 /**
@@ -95,7 +102,6 @@ public class FreemarkerManager {
     // coppied from freemarker servlet - since they are private
     private static final String ATTR_APPLICATION_MODEL = ".freemarker.Application";
     private static final String ATTR_JSP_TAGLIBS_MODEL = ".freemarker.JspTaglibs";
-    private static final String ATTR_SESSION_MODEL = ".freemarker.Session";
     private static final String ATTR_REQUEST_MODEL = ".freemarker.Request";
     private static final String ATTR_REQUEST_PARAMETERS_MODEL = ".freemarker.RequestParameters";
 
@@ -183,8 +189,6 @@ public class FreemarkerManager {
         }
 
         // Create hash model wrapper for session
-        TemplateHashModel sessionModel;
-
         HttpSession session = request.getSession(false);
         if (session != null) {
             model.put(KEY_SESSION_MODEL, new HttpSessionHashModel(session, wrapper));

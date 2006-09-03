@@ -17,14 +17,15 @@
  */
 package org.apache.struts2.components;
 
+import java.io.Writer;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.opensymphony.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.util.OgnlUtil;
 import com.opensymphony.xwork2.util.OgnlValueStack;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.io.Writer;
 
 /**
  * <!-- START SNIPPET: javadoc -->

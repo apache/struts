@@ -17,12 +17,12 @@
  */
 package org.apache.struts2.views.xslt;
 
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.util.List;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class SimpleNodeList implements NodeList {
 

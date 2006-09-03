@@ -17,27 +17,35 @@
  */
 package org.apache.struts2.views.xslt;
 
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.config.Settings;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.util.OgnlValueStack;
-import com.opensymphony.xwork2.util.TextParseUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Templates;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.URIResolver;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.config.Settings;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.TextParseUtil;
 
 
 /**
@@ -179,6 +187,7 @@ import java.util.Map;
  */
 public class XSLTResult implements Result {
 
+    private static final long serialVersionUID = 6424691441777176763L;
     private static final Log log = LogFactory.getLog(XSLTResult.class);
     public static final String DEFAULT_PARAM = "stylesheetLocation";
 

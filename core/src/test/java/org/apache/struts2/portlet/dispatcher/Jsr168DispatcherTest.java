@@ -38,19 +38,17 @@ import javax.servlet.ServletContextEvent;
 
 import junit.textui.TestRunner;
 
+import org.apache.struts2.portlet.PortletActionConstants;
+import org.apache.struts2.portlet.context.ServletContextHolderListener;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import org.jmock.core.Constraint;
 
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.portlet.PortletActionConstants;
-import org.apache.struts2.portlet.context.ServletContextHolderListener;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
@@ -114,7 +112,6 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         servletContext.stubs().method(ANYTHING);
         ServletContextEvent event = new ServletContextEvent((ServletContext)servletContext.proxy());
         new ServletContextHolderListener().contextInitialized(event);
-        String actionName = "testAction";
         PortletMode mode = PortletMode.VIEW;
 
         Map requestParams = new HashMap();
@@ -152,7 +149,6 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
     public void testProcessAction_ok() {
         final Mock mockResponse = mock(ActionResponse.class);
 
-        String actionName = "testAction";
         PortletMode mode = PortletMode.VIEW;
         Map initParams = new HashMap();
         initParams.put("viewNamespace", "/view");
@@ -259,7 +255,6 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
     public void testModeChangeUsingPortletWidgets() {
         final Mock mockResponse = mock(RenderResponse.class);
         mockResponse.stubs().method(ANYTHING);
-        String actionName = "testAction";
         PortletMode mode = PortletMode.EDIT;
 
         Map requestParams = new HashMap();

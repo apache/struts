@@ -23,8 +23,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import com.opensymphony.xwork2.util.OgnlValueStack;
 
-import junit.framework.TestCase;
-
 /**
  * 
  * @version $Date$ $Id$

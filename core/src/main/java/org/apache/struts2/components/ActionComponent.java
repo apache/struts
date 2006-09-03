@@ -17,28 +17,29 @@
  */
 package org.apache.struts2.components;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.PageContext;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.views.jsp.TagUtils;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.util.OgnlValueStack;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.servlet.ServletContext;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->

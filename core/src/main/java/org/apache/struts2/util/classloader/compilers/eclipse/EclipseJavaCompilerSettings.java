@@ -17,11 +17,11 @@
  */
 package org.apache.struts2.util.classloader.compilers.eclipse;
 
-import org.apache.struts2.util.classloader.compilers.JavaCompilerSettings;
-import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.struts2.util.classloader.compilers.JavaCompilerSettings;
+import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 
 
 public class EclipseJavaCompilerSettings implements JavaCompilerSettings {

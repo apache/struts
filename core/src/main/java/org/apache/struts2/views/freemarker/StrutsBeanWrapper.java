@@ -17,14 +17,20 @@
  */
 package org.apache.struts2.views.freemarker;
 
+import java.util.Map;
+import java.util.Set;
+
 import freemarker.core.CollectionAndSequence;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.MapModel;
 import freemarker.ext.util.ModelFactory;
-import freemarker.template.*;
-
-import java.util.Map;
-import java.util.Set;
+import freemarker.template.ObjectWrapper;
+import freemarker.template.SimpleSequence;
+import freemarker.template.TemplateBooleanModel;
+import freemarker.template.TemplateCollectionModel;
+import freemarker.template.TemplateHashModelEx;
+import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
 
 /**
  * <!-- START SNIPPET: javadoc -->

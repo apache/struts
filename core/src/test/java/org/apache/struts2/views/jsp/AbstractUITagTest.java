@@ -17,19 +17,26 @@
  */
 package org.apache.struts2.views.jsp;
 
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.views.jsp.ui.AbstractUITag;
-import com.opensymphony.xwork2.ActionContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.views.jsp.ui.AbstractUITag;
+
+import com.opensymphony.xwork2.ActionContext;
 
 
 /**

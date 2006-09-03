@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.struts2.views.jsp.AbstractUITagTest;
-import org.apache.struts2.views.jsp.ui.ActionErrorTag;
+
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 

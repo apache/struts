@@ -17,24 +17,29 @@
  */
 package org.apache.struts2.sitemesh;
 
-import com.opensymphony.module.sitemesh.Decorator;
-import com.opensymphony.module.sitemesh.Page;
-import com.opensymphony.module.sitemesh.filter.PageFilter;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
-
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.interceptor.PreResultListener;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import java.io.IOException;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.config.Settings;
+import org.apache.struts2.dispatcher.Dispatcher;
+
+import com.opensymphony.module.sitemesh.Decorator;
+import com.opensymphony.module.sitemesh.Page;
+import com.opensymphony.module.sitemesh.filter.PageFilter;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.interceptor.PreResultListener;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  *  An abstract template page filter that sets up the proper contexts for

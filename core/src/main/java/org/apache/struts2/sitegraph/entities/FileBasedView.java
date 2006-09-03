@@ -17,16 +17,17 @@
  */
 package org.apache.struts2.sitegraph.entities;
 
-import com.opensymphony.util.FileUtils;
-import org.apache.struts2.config.Settings;
-import org.apache.struts2.sitegraph.model.Link;
-import org.apache.struts2.StrutsConstants;
-
 import java.io.File;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.config.Settings;
+import org.apache.struts2.sitegraph.model.Link;
+
+import com.opensymphony.util.FileUtils;
 
 /**
  */

@@ -17,6 +17,25 @@
  */
 package org.apache.struts2.components;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.config.Settings;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.portlet.context.PortletActionContext;
+import org.apache.struts2.portlet.util.PortletUrlHelper;
+import org.apache.struts2.views.util.UrlHelper;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ObjectFactory;
@@ -30,20 +49,6 @@ import com.opensymphony.xwork2.validator.ActionValidatorManagerFactory;
 import com.opensymphony.xwork2.validator.FieldValidator;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
 import com.opensymphony.xwork2.validator.Validator;
-import org.apache.commons.lang.StringUtils;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.portlet.context.PortletActionContext;
-import org.apache.struts2.portlet.util.PortletUrlHelper;
-import org.apache.struts2.views.util.UrlHelper;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
-import java.util.Set;
 
 /**
  * <!-- START SNIPPET: javadoc -->

@@ -17,15 +17,17 @@
  */
 package org.apache.struts2.components;
 
-import org.apache.struts2.util.ContainUtil;
-import org.apache.struts2.util.MakeIterator;
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.util.ContainUtil;
+import org.apache.struts2.util.MakeIterator;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * DoubleListUIBean is the standard superclass of all Struts list handling components.

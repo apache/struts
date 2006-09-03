@@ -17,25 +17,33 @@
  */
 package org.apache.struts2.util;
 
-import com.opensymphony.util.TextUtils;
-import org.apache.struts2.views.jsp.ui.OgnlTool;
-import org.apache.struts2.views.util.UrlHelper;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.util.OgnlValueStack;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.*;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.views.jsp.ui.OgnlTool;
+import org.apache.struts2.views.util.UrlHelper;
+
+import com.opensymphony.util.TextUtils;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 
 /**

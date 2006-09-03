@@ -17,12 +17,13 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
-import org.apache.struts2.config.Settings;
-import org.apache.struts2.StrutsConstants;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.config.Settings;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->

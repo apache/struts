@@ -17,29 +17,26 @@
  */
 package org.apache.struts2.views.jsp;
 
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.TestAction;
-import org.apache.struts2.components.Text;
-import org.apache.struts2.views.jsp.ui.TestAction1;
-import org.apache.struts2.views.jsp.ui.StrutsBodyContent;
-
-import com.mockobjects.servlet.MockBodyContent;
-import com.mockobjects.servlet.MockJspWriter;
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.BodyTag;
-import javax.servlet.jsp.tagext.Tag;
-import javax.servlet.jsp.tagext.TagSupport;
-
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.BodyTag;
+
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.TestAction;
+import org.apache.struts2.components.Text;
+import org.apache.struts2.views.jsp.ui.StrutsBodyContent;
+import org.apache.struts2.views.jsp.ui.TestAction1;
+
+import com.mockobjects.servlet.MockJspWriter;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 
 /**

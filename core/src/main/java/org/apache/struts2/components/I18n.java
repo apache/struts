@@ -17,18 +17,17 @@
  */
 package org.apache.struts2.components;
 
+import java.io.Writer;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import org.apache.struts2.StrutsException;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.TextProviderSupport;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.OgnlValueStack;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.StrutsException;
-
-import java.io.Writer;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -78,8 +77,6 @@ import java.util.ResourceBundle;
  * description="Get a resource bundle and place it on the value stack"
  */
 public class I18n extends Component {
-    private static final Log LOG = LogFactory.getLog(I18n.class);
-
     protected boolean pushed;
     protected String name;
 

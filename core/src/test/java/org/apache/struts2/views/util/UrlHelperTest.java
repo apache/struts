@@ -17,19 +17,19 @@
  */
 package org.apache.struts2.views.util;
 
-import com.mockobjects.dynamic.Mock;
-import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.HashMap;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.config.Settings;
+
+import com.mockobjects.dynamic.Mock;
 
 
 /**

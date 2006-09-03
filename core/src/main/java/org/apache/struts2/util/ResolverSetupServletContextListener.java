@@ -17,8 +17,9 @@
  */
 package org.apache.struts2.util;
 
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -27,9 +28,8 @@ import javax.servlet.ServletContextListener;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.DispatcherListener;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
 
 
 /**

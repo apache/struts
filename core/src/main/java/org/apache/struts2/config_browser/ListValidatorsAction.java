@@ -17,13 +17,14 @@
  */
 package org.apache.struts2.config_browser;
 
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.validator.ActionValidatorManagerFactory;
-import org.apache.struts2.util.ClassLoaderUtils;
-
 import java.util.Collections;
 import java.util.List;
+
+import org.apache.struts2.util.ClassLoaderUtils;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.validator.ActionValidatorManagerFactory;
 
 /**
  * ListValidatorsAction loads the validations for a given class and context

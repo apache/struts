@@ -26,6 +26,9 @@ import com.opensymphony.xwork2.util.location.Locatable;
  */
 public class StrutsException extends XWorkException implements Locatable {
 
+    private static final long serialVersionUID = 888724366243600135L;
+
+
     /**
      * Constructs a <code>StrutsException</code> with no detail message.
      */

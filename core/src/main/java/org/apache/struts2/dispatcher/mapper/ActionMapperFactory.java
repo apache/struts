@@ -17,15 +17,15 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
-import org.apache.struts2.config.Settings;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsException;
+import java.util.HashMap;
 
-import com.opensymphony.xwork2.ObjectFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.config.Settings;
 
-import java.util.HashMap;
+import com.opensymphony.xwork2.ObjectFactory;
 
 /**
  * <!-- START SNIPPET: javadoc -->

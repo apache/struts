@@ -17,12 +17,14 @@
  */
 package org.apache.struts2.components;
 
-import org.apache.struts2.util.TokenHelper;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
+
+import org.apache.struts2.util.TokenHelper;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->

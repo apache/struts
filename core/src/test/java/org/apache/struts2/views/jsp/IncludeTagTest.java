@@ -17,13 +17,13 @@
  */
 package org.apache.struts2.views.jsp;
 
-import com.mockobjects.servlet.MockRequestDispatcher;
+import javax.servlet.RequestDispatcher;
 
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.Include;
 import org.easymock.MockControl;
 
-import javax.servlet.RequestDispatcher;
+import com.mockobjects.servlet.MockRequestDispatcher;
 
 /**
  * Unit test of {@link IncludeTag}.

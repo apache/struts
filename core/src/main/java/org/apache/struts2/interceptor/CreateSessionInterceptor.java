@@ -19,8 +19,8 @@ package org.apache.struts2.interceptor;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.struts2.ServletActionContext;
+
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 

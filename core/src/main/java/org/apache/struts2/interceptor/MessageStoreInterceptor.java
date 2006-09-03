@@ -217,7 +217,6 @@ public class MessageStoreInterceptor implements Interceptor {
 				
 				_log.debug("retrieve error / message from session to populate into action ["+action+"]");
 				
-				ValidationAware vaidationAwareAction = (ValidationAware) action;
 				Collection actionErrors = (Collection) session.get(actionErrorsSessionKey);
 				Collection actionMessages = (Collection) session.get(actionMessagesSessionKey);
 				Map fieldErrors = (Map) session.get(fieldErrorsSessionKey);

@@ -24,10 +24,10 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.apache.struts2.components.Param.UnnamedParametric;
 import org.apache.struts2.util.AppendIteratorFilter;
 import org.apache.struts2.util.MakeIterator;
+
 import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**

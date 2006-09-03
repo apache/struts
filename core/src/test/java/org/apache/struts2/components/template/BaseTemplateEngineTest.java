@@ -21,11 +21,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.Map;
 
-import org.apache.struts2.components.template.BaseTemplateEngine;
-import org.apache.struts2.components.template.Template;
-import org.apache.struts2.components.template.TemplateEngine;
-import org.apache.struts2.components.template.TemplateRenderingContext;
-
 import junit.framework.TestCase;
 
 /**

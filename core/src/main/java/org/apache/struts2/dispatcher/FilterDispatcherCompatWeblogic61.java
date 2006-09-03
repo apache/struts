@@ -17,15 +17,15 @@
  */
 package org.apache.struts2.dispatcher;
 
-import org.apache.struts2.config.ServletContextSingleton;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.config.ServletContextSingleton;
 
 
 /**

@@ -17,13 +17,13 @@
  */
 package org.apache.struts2.views.jsp.iterator;
 
-import org.apache.struts2.util.MakeIterator;
-import org.apache.struts2.util.SortIteratorFilter;
-import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
+import java.util.Comparator;
 
 import javax.servlet.jsp.JspException;
 
-import java.util.Comparator;
+import org.apache.struts2.util.MakeIterator;
+import org.apache.struts2.util.SortIteratorFilter;
+import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
 
 
 /**

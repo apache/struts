@@ -2,16 +2,16 @@
 
 package org.apache.struts2.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.util.OgnlUtil;
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.interceptor.Interceptor;
-
-import java.util.Map;
-import java.util.HashMap;
+import com.opensymphony.xwork2.util.OgnlUtil;
 
 public class StrutsObjectFactory extends ObjectFactory {
 

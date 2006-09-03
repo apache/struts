@@ -17,10 +17,7 @@
  */
 package org.apache.struts2.plexus;
 
-import org.codehaus.plexus.DefaultPlexusContainer;
-import org.codehaus.plexus.PlexusContainer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.Collections;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -28,7 +25,11 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
-import java.util.Collections;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.codehaus.plexus.DefaultPlexusContainer;
+import org.codehaus.plexus.PlexusContainer;
 
 /**
  * Manages the Plexus lifecycle for the servlet and session contexts

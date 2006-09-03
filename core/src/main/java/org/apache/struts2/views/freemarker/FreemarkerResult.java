@@ -17,21 +17,29 @@
  */
 package org.apache.struts2.views.freemarker;
 
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.StrutsResultSupport;
-import org.apache.struts2.views.util.ResourceUtil;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.LocaleProvider;
-import com.opensymphony.xwork2.util.OgnlValueStack;
-import freemarker.template.*;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Locale;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Locale;
+
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.StrutsResultSupport;
+import org.apache.struts2.views.util.ResourceUtil;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.util.OgnlValueStack;
+
+import freemarker.template.Configuration;
+import freemarker.template.ObjectWrapper;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
 
 
 /**

@@ -20,9 +20,9 @@ package org.apache.struts2.portlet.context;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
-import org.easymock.MockControl;
-
 import junit.framework.TestCase;
+
+import org.easymock.MockControl;
 
 /**
  */

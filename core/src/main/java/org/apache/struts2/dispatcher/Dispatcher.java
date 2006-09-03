@@ -17,40 +17,55 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.util.ClassLoaderUtil;
-import com.opensymphony.util.FileManager;
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-import com.opensymphony.xwork2.util.*;
-import com.opensymphony.xwork2.util.location.Location;
-import com.opensymphony.xwork2.util.location.LocationUtils;
-import freemarker.template.Template;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.impl.StrutsObjectFactory;
-import org.apache.struts2.impl.StrutsActionProxyFactory;
-import org.apache.struts2.config.Settings;
-import org.apache.struts2.config.StrutsXMLConfigurationProvider;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
-import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
-import org.apache.struts2.util.AttributeMap;
-import org.apache.struts2.util.ObjectFactoryDestroyable;
-import org.apache.struts2.util.ObjectFactoryInitializable;
-import org.apache.struts2.views.freemarker.FreemarkerManager;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.config.Settings;
+import org.apache.struts2.config.StrutsXMLConfigurationProvider;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
+import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
+import org.apache.struts2.impl.StrutsActionProxyFactory;
+import org.apache.struts2.impl.StrutsObjectFactory;
+import org.apache.struts2.util.AttributeMap;
+import org.apache.struts2.util.ObjectFactoryDestroyable;
+import org.apache.struts2.util.ObjectFactoryInitializable;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
+
+import com.opensymphony.util.ClassLoaderUtil;
+import com.opensymphony.util.FileManager;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.ObjectTypeDeterminer;
+import com.opensymphony.xwork2.util.ObjectTypeDeterminerFactory;
+import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.XWorkContinuationConfig;
+import com.opensymphony.xwork2.util.location.Location;
+import com.opensymphony.xwork2.util.location.LocationUtils;
+
+import freemarker.template.Template;
 
 /**
  * A utility class the actual dispatcher delegates most of its tasks to. Each instance
@@ -77,7 +92,6 @@ public class Dispatcher {
     private ConfigurationManager configurationManager;
     private boolean portletSupportActive;
     private boolean devMode = false;
-    private boolean compatibilityMode = true;
 
     // used to get WebLogic to play nice
     private boolean paramsWorkaroundEnabled = false;

@@ -17,19 +17,23 @@
  */
 package org.apache.struts2.quickstart;
 
-import org.apache.struts2.util.classloader.CompilingClassLoader;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
-
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.net.MalformedURLException;
-import java.util.*;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.struts2.util.classloader.CompilingClassLoader;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
 /**
  * The QuickStart main program.

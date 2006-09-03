@@ -17,15 +17,17 @@
  */
 package org.apache.struts2.views.jsp;
 
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+
+import junit.framework.TestCase;
+
+import org.apache.struts2.ServletActionContext;
+
 import com.mockobjects.servlet.MockJspWriter;
 import com.mockobjects.servlet.MockPageContext;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.OgnlValueStack;
-import org.apache.struts2.ServletActionContext;
-import junit.framework.TestCase;
-
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.TagSupport;
 
 
 /**

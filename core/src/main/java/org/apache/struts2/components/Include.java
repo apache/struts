@@ -17,14 +17,17 @@
  */
 package org.apache.struts2.components;
 
-import org.apache.struts2.config.Settings;
-import org.apache.struts2.util.FastByteArrayOutputStream;
-import org.apache.struts2.RequestUtils;
-import org.apache.struts2.StrutsConstants;
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
+import java.util.StringTokenizer;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -33,12 +36,15 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.net.URLEncoder;
-import java.util.*;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.RequestUtils;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.config.Settings;
+import org.apache.struts2.util.FastByteArrayOutputStream;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->

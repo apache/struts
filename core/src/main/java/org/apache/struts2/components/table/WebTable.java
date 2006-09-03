@@ -17,20 +17,22 @@
  */
 package org.apache.struts2.components.table;
 
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.components.GenericUIBean;
-import org.apache.struts2.components.table.renderer.CellRenderer;
-import com.opensymphony.xwork2.util.OgnlValueStack;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.swing.table.TableModel;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.swing.table.TableModel;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.components.GenericUIBean;
+import org.apache.struts2.components.table.renderer.CellRenderer;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * @s.tag name="table" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.table.WebTableTag"

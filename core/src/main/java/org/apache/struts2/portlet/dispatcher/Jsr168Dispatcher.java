@@ -60,7 +60,6 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.OgnlValueStack;
 

@@ -22,13 +22,12 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.config.Settings;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
-import org.apache.struts2.dispatcher.Dispatcher;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 /**

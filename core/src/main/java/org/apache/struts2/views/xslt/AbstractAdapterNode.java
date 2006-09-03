@@ -17,14 +17,19 @@
  */
 package org.apache.struts2.views.xslt;
 
-import org.w3c.dom.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsException;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.UserDataHandler;
 
 /**
  * AbstractAdapterNode is the base for childAdapters that expose a read-only view

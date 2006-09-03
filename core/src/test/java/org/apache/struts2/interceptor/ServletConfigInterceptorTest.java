@@ -17,22 +17,24 @@
  */
 package org.apache.struts2.interceptor;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.util.ServletContextAware;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
 import org.easymock.MockControl;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
 
 /**
  * Unit test for {@link ServletConfigInterceptor}.

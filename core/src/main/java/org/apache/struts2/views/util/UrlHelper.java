@@ -17,18 +17,6 @@
  */
 package org.apache.struts2.views.util;
 
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.OgnlValueStack;
-import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.XWorkContinuationConfig;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -36,6 +24,20 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.config.Settings;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.TextParseUtil;
+import com.opensymphony.xwork2.util.XWorkContinuationConfig;
 
 
 /**

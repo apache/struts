@@ -31,11 +31,11 @@ import javax.portlet.RenderResponse;
 
 import junit.textui.TestRunner;
 
+import org.apache.struts2.portlet.PortletActionConstants;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import org.jmock.core.Constraint;
 
-import org.apache.struts2.portlet.PortletActionConstants;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 
@@ -208,7 +208,6 @@ public class PortletResultTest extends MockObjectTestCase {
         PortletRequestDispatcher rd = (PortletRequestDispatcher)mockRd.proxy();
         PortletConfig cfg = (PortletConfig)mockConfig.proxy();
         PortletContext ctx = (PortletContext)mockCtx.proxy();
-        ActionInvocation inv = (ActionInvocation)mockInvocation.proxy();
         
         Constraint[] params = new Constraint[]{same(req), same(res)};
         mockRd.expects(once()).method("include").with(params);

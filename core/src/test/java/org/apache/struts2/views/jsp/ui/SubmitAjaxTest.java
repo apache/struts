@@ -18,8 +18,6 @@
 package org.apache.struts2.views.jsp.ui;
 
 import org.apache.struts2.views.jsp.AbstractUITagTest;
-import org.apache.struts2.views.jsp.ui.AnchorTest;
-import org.apache.struts2.views.jsp.ui.SubmitTag;
 
 /**
  * Test Submit component in "ajax" theme.

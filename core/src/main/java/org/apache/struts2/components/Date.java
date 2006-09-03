@@ -17,12 +17,6 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.util.OgnlValueStack;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.text.DateFormat;
@@ -30,6 +24,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->

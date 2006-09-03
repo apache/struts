@@ -17,9 +17,10 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import com.opensymphony.xwork2.util.OgnlUtil;
 import ognl.Ognl;
 import ognl.OgnlException;
+
+import com.opensymphony.xwork2.util.OgnlUtil;
 
 
 /**

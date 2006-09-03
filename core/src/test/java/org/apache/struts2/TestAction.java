@@ -17,13 +17,14 @@
  */
 package org.apache.struts2;
 
-import org.apache.struts2.views.jsp.ui.User;
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionSupport;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.struts2.views.jsp.ui.User;
+
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
 
 
 /**

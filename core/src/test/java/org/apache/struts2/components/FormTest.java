@@ -17,11 +17,12 @@
  */
 package org.apache.struts2.components;
 
-import org.apache.struts2.views.jsp.AbstractUITagTest;
-import org.apache.struts2.TestAction;
-import com.opensymphony.xwork2.validator.validators.RequiredFieldValidator;
-
 import java.util.List;
+
+import org.apache.struts2.TestAction;
+import org.apache.struts2.views.jsp.AbstractUITagTest;
+
+import com.opensymphony.xwork2.validator.validators.RequiredFieldValidator;
 
 /**
  * <code>FormTest</code>

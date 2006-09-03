@@ -17,9 +17,9 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
-import com.opensymphony.xwork2.Result;
-
 import java.util.Map;
+
+import com.opensymphony.xwork2.Result;
 
 /**
  * Simple class that holds the action mapping information used to invoke a

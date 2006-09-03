@@ -19,9 +19,9 @@ package org.apache.struts2.views.xslt;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.w3c.dom.Node;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.DOMException;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 
 /**
  * ProxyNodeAdapter is a read-only delegating adapter for objects which already

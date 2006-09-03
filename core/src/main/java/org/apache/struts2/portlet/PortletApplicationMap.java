@@ -33,7 +33,9 @@ import javax.portlet.PortletContext;
  */
 public class PortletApplicationMap extends AbstractMap implements Serializable {
 
-	private PortletContext context;
+	private static final long serialVersionUID = 2296107511063504414L;
+
+    private PortletContext context;
 
 	private Set<Object> entries;
 

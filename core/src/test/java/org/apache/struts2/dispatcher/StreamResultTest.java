@@ -17,20 +17,22 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.util.ClassLoaderUtil;
-import org.apache.struts2.ServletActionContext;
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.OgnlValueStack;
-import junit.framework.TestCase;
-import org.springframework.mock.web.MockHttpServletResponse;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
+
+import junit.framework.TestCase;
+
+import org.apache.struts2.ServletActionContext;
+import org.springframework.mock.web.MockHttpServletResponse;
+
+import com.opensymphony.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * Unit test for {@link StreamResult}.

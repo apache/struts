@@ -17,12 +17,17 @@
  */
 package org.apache.struts2.views.xslt;
 
-import org.apache.struts2.StrutsException;
-import org.w3c.dom.*;
-
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.struts2.StrutsException;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.Text;
 
 /**
  * AdapterFactory produces Node adapters for Java object types.

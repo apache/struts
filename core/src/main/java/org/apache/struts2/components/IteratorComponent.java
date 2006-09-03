@@ -17,12 +17,13 @@
  */
 package org.apache.struts2.components;
 
-import org.apache.struts2.util.MakeIterator;
-import org.apache.struts2.views.jsp.IteratorStatus;
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
 import java.io.Writer;
 import java.util.Iterator;
+
+import org.apache.struts2.util.MakeIterator;
+import org.apache.struts2.views.jsp.IteratorStatus;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->

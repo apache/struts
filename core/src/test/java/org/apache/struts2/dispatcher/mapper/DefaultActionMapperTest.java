@@ -17,19 +17,19 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
-import com.mockobjects.servlet.MockHttpServletRequest;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.ServletRedirectResult;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.mockobjects.servlet.MockHttpServletRequest;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 
 /**
  * DefaultActionMapper test case.

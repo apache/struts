@@ -17,14 +17,13 @@
  */
 package org.apache.struts2.views.jsp.iterator;
 
-import org.apache.struts2.util.IteratorGenerator;
-import org.apache.struts2.util.IteratorGenerator.Converter;
-import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
-
 import javax.servlet.jsp.JspException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.util.IteratorGenerator;
+import org.apache.struts2.util.IteratorGenerator.Converter;
+import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
 
 
 /**

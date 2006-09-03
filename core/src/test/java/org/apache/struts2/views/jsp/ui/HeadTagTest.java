@@ -17,8 +17,8 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import org.apache.struts2.components.Head;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
+import org.apache.struts2.components.Head;
 
 /**
  * Unit test for {@link HeadTag}.

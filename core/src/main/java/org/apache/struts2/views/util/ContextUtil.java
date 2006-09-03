@@ -17,29 +17,27 @@
  */
 package org.apache.struts2.views.util;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.views.jsp.ui.OgnlTool;
+import org.apache.struts2.config.Settings;
+import org.apache.struts2.util.StrutsUtil;
+import org.apache.struts2.StrutsConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
-import org.apache.struts2.util.StrutsUtil;
-import org.apache.struts2.views.jsp.ui.OgnlTool;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Value Stack's Context related Utilities.
  * 
  */
 public class ContextUtil {
-    public static final String REQUEST = "req";
+    public static final String REQUEST = "request";
     public static final String REQUEST2 = "request";
-    public static final String RESPONSE = "res";
+    public static final String RESPONSE = "response";
     public static final String RESPONSE2 = "response";
     public static final String SESSION = "session";
     public static final String BASE = "base";
@@ -74,7 +72,7 @@ public class ContextUtil {
      */
     public static boolean isUseAltSyntax(Map context) {
         // We didn't make altSyntax static cause, if so, struts.configuration.xml.reload will not work
-        // plus the Configuration implementation should cache the properties, which WW's
+        // plus the Configuration implementation should cache the properties, which the framework's
         // configuration implementation does
         boolean altSyntax = "true".equals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX));
         return altSyntax ||(

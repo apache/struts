@@ -17,12 +17,11 @@
  */
 package org.apache.struts2.components;
 
-import java.io.Writer;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import java.io.Writer;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -40,17 +39,17 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <!-- START SNIPPET: example -->
  * 
  * &lt-- statically --&gt;
- * &lt;saf:tree id="..." label="..."&gt;
- *    &lt;saf:treenode id="..." label="..." /&gt;
- *    &lt;saf:treenode id="..." label="..."&gt;
- *        &lt;saf:treenode id="..." label="..." /&gt;
- *        &lt;saf:treenode id="..." label="..." /&gt;
- *    &;lt;/saf:treenode&gt;
- *    &lt;saf:treenode id="..." label="..." /&gt;
- * &lt;/saf:tree&gt;
+ * &lt;s:tree id="..." label="..."&gt;
+ *    &lt;s:treenode id="..." label="..." /&gt;
+ *    &lt;s:treenode id="..." label="..."&gt;
+ *        &lt;s:treenode id="..." label="..." /&gt;
+ *        &lt;s:treenode id="..." label="..." /&gt;
+ *    &;lt;/s:treenode&gt;
+ *    &lt;s:treenode id="..." label="..." /&gt;
+ * &lt;/s:tree&gt;
  * 
  * &lt;-- dynamically --&gt;
- * &lt;saf:tree 
+ * &lt;s:tree
  * 			id="..."
  *          rootNode="..."
  *          nodeIdProperty="..."
@@ -61,7 +60,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * </pre>
  * 
  *
- * @a2.tag name="tree" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TreeTag"
+ * @s.tag name="tree" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TreeTag"
  * description="Render a tree widget."
  */
 public class Tree extends ClosingUIBean {
@@ -221,7 +220,7 @@ public class Tree extends ClosingUIBean {
 
     /**
      * The toggle property (either 'explode' or 'fade'). Default is 'fade'.
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setToggle(String toggle) {
         this.toggle = toggle;
@@ -233,7 +232,7 @@ public class Tree extends ClosingUIBean {
 
     /**
      * The treeSelectedTopic property.
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setTreeSelectedTopic(String treeSelectedTopic) {
         this.treeSelectedTopic = treeSelectedTopic;
@@ -245,7 +244,7 @@ public class Tree extends ClosingUIBean {
 
     /**
      * The treeExpandedTopic property.
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setTreeExpandedTopic(String treeExpandedTopic) {
         this.treeExpandedTopic = treeExpandedTopic;
@@ -257,7 +256,7 @@ public class Tree extends ClosingUIBean {
 
     /**
      * The treeCollapsedTopic property.
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setTreeCollapsedTopic(String treeCollapsedTopic) {
         this.treeCollapsedTopic = treeCollapsedTopic;
@@ -269,7 +268,7 @@ public class Tree extends ClosingUIBean {
 
     /**
      * The rootNode property.
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setRootNode(String rootNode) {
         this.rootNodeAttr = rootNode;
@@ -281,7 +280,7 @@ public class Tree extends ClosingUIBean {
 
     /**
      * The childCollectionProperty property.
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setChildCollectionProperty(String childCollectionProperty) {
         this.childCollectionProperty = childCollectionProperty;
@@ -293,7 +292,7 @@ public class Tree extends ClosingUIBean {
 
     /**
      * The nodeTitleProperty property.
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setNodeTitleProperty(String nodeTitleProperty) {
         this.nodeTitleProperty = nodeTitleProperty;
@@ -305,7 +304,7 @@ public class Tree extends ClosingUIBean {
 
     /**
      * The nodeIdProperty property.
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setNodeIdProperty(String nodeIdProperty) {
         this.nodeIdProperty = nodeIdProperty;
@@ -313,7 +312,7 @@ public class Tree extends ClosingUIBean {
     
     /**
      * The showRootGrid property (default true).
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setShowRootGrid(String showRootGrid) {
     	this.showRootGrid = showRootGrid;
@@ -329,7 +328,7 @@ public class Tree extends ClosingUIBean {
 
 	/**
 	 * Blank icon image source.
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setBlankIconSrc(String blankIconSrc) {
 		this.blankIconSrc = blankIconSrc;
@@ -341,7 +340,7 @@ public class Tree extends ClosingUIBean {
 
 	/**
 	 * Expand icon (-) image source.
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setExpandIconSrcMinus(String expandIconSrcMinus) {
 		this.expandIconSrcMinus = expandIconSrcMinus;
@@ -353,7 +352,7 @@ public class Tree extends ClosingUIBean {
 
 	/**
 	 * Expand Icon (+) image source.
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setExpandIconSrcPlus(String expandIconSrcPlus) {
 		this.expandIconSrcPlus = expandIconSrcPlus;
@@ -365,7 +364,7 @@ public class Tree extends ClosingUIBean {
 
 	/**
 	 * Image source for under child item child icons.
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setGridIconSrcC(String gridIconSrcC) {
 		this.gridIconSrcC = gridIconSrcC;
@@ -378,7 +377,7 @@ public class Tree extends ClosingUIBean {
 	
 	/**
 	 * Image source for last child grid.
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setGridIconSrcL(String gridIconSrcL) {
 		this.gridIconSrcL = gridIconSrcL;
@@ -390,7 +389,7 @@ public class Tree extends ClosingUIBean {
 
 	/**
 	 * Image source for under parent item child icons.
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setGridIconSrcP(String gridIconSrcP) {
 		this.gridIconSrcP = gridIconSrcP;
@@ -402,7 +401,7 @@ public class Tree extends ClosingUIBean {
 
 	/**
 	 * Image source for vertical line.
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setGridIconSrcV(String gridIconSrcV) {
 		this.gridIconSrcV = gridIconSrcV;
@@ -414,7 +413,7 @@ public class Tree extends ClosingUIBean {
 
 	/**
 	 * Image source for grid for sole root item.
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setGridIconSrcX(String gridIconSrcX) {
 		this.gridIconSrcX = gridIconSrcX;
@@ -426,7 +425,7 @@ public class Tree extends ClosingUIBean {
 
 	/**
 	 * Image source for grid for last root item.
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setGridIconSrcY(String gridIconSrcY) {
 		this.gridIconSrcY = gridIconSrcY;
@@ -439,7 +438,7 @@ public class Tree extends ClosingUIBean {
 	
 	/**
 	 * Icon height (default 18 pixels).
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setIconHeight(String iconHeight) {
 		this.iconHeight = iconHeight;
@@ -451,7 +450,7 @@ public class Tree extends ClosingUIBean {
 
 	/**
 	 * Icon width (default 19 pixels).
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setIconWidth(String iconWidth) {
 		this.iconWidth = iconWidth;
@@ -465,7 +464,7 @@ public class Tree extends ClosingUIBean {
 
 	/**
 	 * Template css path (default {contextPath}/struts/tree.css.
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setTemplateCssPath(String templateCssPath) {
 		this.templateCssPath = templateCssPath;
@@ -477,7 +476,7 @@ public class Tree extends ClosingUIBean {
 
 	/**
 	 * Toggle duration (default 150 ms)
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setToggleDuration(String toggleDuration) {
 		this.toggleDuration = toggleDuration;
@@ -489,7 +488,7 @@ public class Tree extends ClosingUIBean {
 
 	/**
 	 * Show grid (default true).
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setShowGrid(String showGrid) {
 		this.showGrid = showGrid;

@@ -17,13 +17,13 @@
  */
 package org.apache.struts2.views.jsp;
 
-import javax.servlet.RequestDispatcher;
+import com.mockobjects.servlet.MockRequestDispatcher;
 
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.Include;
 import org.easymock.MockControl;
 
-import com.mockobjects.servlet.MockRequestDispatcher;
+import javax.servlet.RequestDispatcher;
 
 /**
  * Unit test of {@link IncludeTag}.
@@ -99,7 +99,7 @@ public class IncludeTagTest extends AbstractTagTest {
         tag = new IncludeTag();
 
         controlRequestDispatcher = MockControl.createNiceControl(RequestDispatcher.class);
-        // use always matcher as we can not determine the excact objects used in mock.include(req, res) call
+        // use always matcher as we can not determine the excact objects used in mock.include(request, response) call
         controlRequestDispatcher.setDefaultMatcher(MockControl.ALWAYS_MATCHER);
         mockRequestDispatcher = (RequestDispatcher) controlRequestDispatcher.getMock();
 

@@ -17,19 +17,17 @@
  */
 package org.apache.struts2.components.template;
 
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.PageContext;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.components.Include;
 import org.apache.struts2.components.UIBean;
-
 import com.opensymphony.xwork2.util.OgnlValueStack;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.PageContext;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * JSP based template engine.

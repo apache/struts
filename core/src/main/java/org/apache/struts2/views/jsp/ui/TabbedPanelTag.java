@@ -17,16 +17,14 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.Panel;
 import org.apache.struts2.components.TabbedPanel;
-
 import com.opensymphony.xwork2.util.OgnlValueStack;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @see TabbedPanel

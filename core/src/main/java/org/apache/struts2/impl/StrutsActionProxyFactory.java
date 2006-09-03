@@ -2,11 +2,11 @@
 
 package org.apache.struts2.impl;
 
-import java.util.Map;
-
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
 import com.opensymphony.xwork2.config.Configuration;
+
+import java.util.Map;
 
 public class StrutsActionProxyFactory extends DefaultActionProxyFactory {
 

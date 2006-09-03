@@ -19,14 +19,13 @@ package org.apache.struts2.views.jsp;
 
 import javax.servlet.jsp.tagext.TagSupport;
 
-import junit.framework.TestCase;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.components.If;
-
 import com.mockobjects.servlet.MockJspWriter;
 import com.mockobjects.servlet.MockPageContext;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.components.If;
 import com.opensymphony.xwork2.util.OgnlValueStack;
+
+import junit.framework.TestCase;
 
 /**
  * 

@@ -17,14 +17,13 @@
  */
 package org.apache.struts2.util;
 
+import org.apache.struts2.ServletActionContext;
+
+import javax.servlet.jsp.PageContext;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.jsp.PageContext;
-
-import org.apache.struts2.ServletActionContext;
 
 
 /**

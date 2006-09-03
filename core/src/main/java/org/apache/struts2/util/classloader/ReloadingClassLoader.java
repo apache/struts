@@ -17,23 +17,21 @@
  */
 package org.apache.struts2.util.classloader;
 
-import java.io.File;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.util.classloader.listeners.CompilingListener;
 import org.apache.struts2.util.classloader.listeners.ReloadingListener;
+import org.apache.struts2.util.classloader.listeners.CompilingListener;
 import org.apache.struts2.util.classloader.monitor.FilesystemAlterationMonitor;
 import org.apache.struts2.util.classloader.readers.FileResourceReader;
 import org.apache.struts2.util.classloader.readers.ResourceReader;
 import org.apache.struts2.util.classloader.stores.MemoryResourceStore;
 import org.apache.struts2.util.classloader.stores.ResourceStore;
 import org.apache.struts2.util.classloader.stores.ResourceStoreClassLoader;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.*;
 
 /**
  */

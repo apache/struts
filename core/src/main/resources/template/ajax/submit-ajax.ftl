@@ -11,7 +11,7 @@
  name="${parameters.name?html}"<#rt/>
 </#if>
 <#if parameters.nameValue?exists>
- value="<@saf.property value="parameters.nameValue"/>"<#rt/>
+ value="<@s.property value="parameters.nameValue"/>"<#rt/>
 </#if>
 <#if parameters.cssClass?exists>
  class="${parameters.cssClass?html}"<#rt/>
@@ -35,7 +35,7 @@
  listenTopics="${parameters.listenTopics}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl"/>
-><#if parameters.nameValue?exists><@saf.property value="parameters.nameValue"/><#rt/></#if></button>
+><#if parameters.nameValue?exists><@s.property value="parameters.nameValue"/><#rt/></#if></button>
 <#--include "/${parameters.templateDir}/xhtml/controlfooter.ftl" /-->
 <#include "/${parameters.templateDir}/${themeProperties.parent}/controlfooter.ftl" />
 

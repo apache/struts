@@ -17,15 +17,15 @@
  */
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.util.OgnlValueStack;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
  *
- * Render action errors if they exists the specific layout of the rendering depends on 
+ * Render action errors if they exists the specific layout of the rendering depends on
  * the theme itself.
  *
  * <!-- END SNIPPET: javadoc -->
@@ -34,16 +34,16 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * 
- *    &lt;a:actionerror /&gt;
- *    &lt;a:form .... &gt;>
+ *
+ *    &lt;s:actionerror /&gt;
+ *    &lt;s:form .... &gt;>
  *       ....
- *    &lt;/a:form&gt;
- *    
+ *    &lt;/s:form&gt;
+ *
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @a2.tag name="actionerror" tld-body-content="empty" tld-tag-class="org.apache.struts2.views.jsp.ui.ActionErrorTag"
+ * @s.tag name="actionerror" tld-body-content="empty" tld-tag-class="org.apache.struts2.views.jsp.ui.ActionErrorTag"
  * description="Render action errors if they exists"
  */
 public class ActionError extends UIBean {

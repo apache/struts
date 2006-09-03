@@ -17,21 +17,19 @@
  */
 package org.apache.struts2.components;
 
-import java.util.Map;
+import org.apache.struts2.util.TokenHelper;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.util.TokenHelper;
-
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->
  * Stop double-submission of forms.</p>
  *
  * The token tag is used to help with the "double click" submission problem. It is needed if you are using the
- * TokenInterceptor or the TokenSessionInterceptor. The a:token tag merely places a hidden element that contains
+ * TokenInterceptor or the TokenSessionInterceptor. The s:token tag merely places a hidden element that contains
  * the unique token.</p>
  * <!-- END SNIPPET: javadoc -->
  *
@@ -39,14 +37,14 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;a:token /&gt;
+ * &lt;s:token /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
  * @see org.apache.struts2.interceptor.TokenInterceptor
  * @see org.apache.struts2.interceptor.TokenSessionStoreInterceptor
  *
- * @a2.tag name="token" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TokenTag"
+ * @s.tag name="token" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TokenTag"
  * description="Stop double-submission of forms"
  */
 public class Token extends UIBean {

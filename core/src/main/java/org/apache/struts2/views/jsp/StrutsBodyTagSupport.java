@@ -17,14 +17,12 @@
  */
 package org.apache.struts2.views.jsp;
 
-import java.io.PrintWriter;
-
-import javax.servlet.jsp.tagext.BodyTagSupport;
-
 import org.apache.struts2.util.FastByteArrayOutputStream;
 import org.apache.struts2.views.util.ContextUtil;
-
 import com.opensymphony.xwork2.util.OgnlValueStack;
+
+import javax.servlet.jsp.tagext.BodyTagSupport;
+import java.io.PrintWriter;
 
 
 /**
@@ -36,7 +34,7 @@ public class StrutsBodyTagSupport extends BodyTagSupport {
     private static final long serialVersionUID = -1201668454354226175L;
 
     /**
-     * @ww.tagattribute required="false" type="String"
+     * @s.tagattribute required="false" type="String"
      * description="The id of the tag element."
      */
     public void setId(String string) {

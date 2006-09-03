@@ -17,7 +17,6 @@
  */
 package org.apache.struts2.portlet.util;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -34,7 +33,6 @@ import javax.portlet.WindowState;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.StrutsException;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.context.PortletActionContext;
 
@@ -49,7 +47,6 @@ import org.apache.struts2.portlet.context.PortletActionContext;
 public class PortletUrlHelper {
     private static final Log LOG = LogFactory.getLog(PortletUrlHelper.class);
 
-    public static final String ENCODING = "UTF-8";
     /**
      * Create a portlet URL with for the specified action and namespace.
      * 
@@ -196,18 +193,14 @@ public class PortletUrlHelper {
         if(params != null && params.size() > 0) {
             sb.append("?");
             Iterator it = params.keySet().iterator();
-            try {
-                while(it.hasNext()) {
-                    String key = (String)it.next();
-                    String val = (String)params.get(key);
-                    sb.append(URLEncoder.encode(key, ENCODING)).append("=");
-                    sb.append(URLEncoder.encode(val, ENCODING));
-                    if(it.hasNext()) {
-                        sb.append("&");
-                    }
+            while(it.hasNext()) {
+                String key = (String)it.next();
+                String val = (String)params.get(key);
+                sb.append(URLEncoder.encode(key)).append("=");
+                sb.append(URLEncoder.encode(val));
+                if(it.hasNext()) {
+                    sb.append("&");
                 }
-            } catch (UnsupportedEncodingException e) {
-                throw new StrutsException(ENCODING + " encoding not supported");
             }
         }
         RenderResponse resp = PortletActionContext.getRenderResponse();

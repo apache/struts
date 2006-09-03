@@ -17,9 +17,9 @@
  */
 package org.apache.struts2.util;
 
-import java.util.Comparator;
-
 import com.opensymphony.xwork2.util.OgnlValueStack;
+
+import java.util.Comparator;
 
 
 /**

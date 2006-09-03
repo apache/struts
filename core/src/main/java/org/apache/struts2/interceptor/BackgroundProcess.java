@@ -17,9 +17,9 @@
  */
 package org.apache.struts2.interceptor;
 
-import java.io.Serializable;
-
 import com.opensymphony.xwork2.ActionInvocation;
+
+import java.io.Serializable;
 
 /**
  * Background thread to be executed by the ExecuteAndWaitInterceptor.

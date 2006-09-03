@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.util.OgnlValueStack;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -33,7 +33,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <pre>
  * <!-- START SNIPPET: example -->
  * 
- * &lt;a:select label="Pets"
+ * &lt;s:select label="Pets"
  *        name="petIds"
  *        list="petDao.pets"
  *        listKey="id"
@@ -43,7 +43,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  *        required="true"
  * /&gt;
  *
- * &lt;a:select label="Months"
+ * &lt;s:select label="Months"
  *        name="months"
  *        headerKey="-1" headerValue="Select Month"
  *        list="#{'01':'Jan', '02':'Feb', [...]}"
@@ -70,7 +70,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * 
  * <!-- END SNIPPET: exnote -->
  *
- * @a2.tag name="select" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.SelectTag"
+ * @s.tag name="select" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.SelectTag"
  * description="Render a select element"
  */
 public class Select extends ListUIBean {
@@ -113,7 +113,7 @@ public class Select extends ListUIBean {
 
     /**
      * Whether or not to add an empty (--) option after the header option
-     * @a2.tagattribute required="false" type="Boolean" default="false"
+     * @s.tagattribute required="false" type="Boolean" default="false"
      */
     public void setEmptyOption(String emptyOption) {
         this.emptyOption = emptyOption;
@@ -121,7 +121,7 @@ public class Select extends ListUIBean {
 
     /**
      * Key for first item in list. Must not be empty! "'-1'" and "''" is correct, "" is bad.
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setHeaderKey(String headerKey) {
         this.headerKey = headerKey;
@@ -129,7 +129,7 @@ public class Select extends ListUIBean {
 
     /**
      * Value expression for first item in list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setHeaderValue(String headerValue) {
         this.headerValue = headerValue;
@@ -137,7 +137,7 @@ public class Select extends ListUIBean {
 
     /**
      * Creates a multiple select. The tag will pre-select multiple values if the values are passed as an Array (of appropriate types) via the value attribute. Passing a Collection may work too? Haven't tested this.
-     * @a2.tagattribute required="false"  type="Boolean" default="false"
+     * @s.tagattribute required="false"  type="Boolean" default="false"
      */
     public void setMultiple(String multiple) {
         this.multiple = multiple;
@@ -145,7 +145,7 @@ public class Select extends ListUIBean {
 
     /**
      * Size of the element box (# of elements to show)
-     * @a2.tagattribute required="false" type="Integer"
+     * @s.tagattribute required="false" type="Integer"
      */
     public void setSize(String size) {
         this.size = size;

@@ -17,17 +17,10 @@
  */
 package org.apache.struts2.dispatcher;
 
-import java.io.Serializable;
-import java.util.AbstractMap;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.Serializable;
+import java.util.*;
 
 
 /**

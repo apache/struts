@@ -17,10 +17,9 @@
  */
 package org.apache.struts2.views.jsp;
 
+import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 import java.io.StringWriter;
-
-import javax.servlet.jsp.JspWriter;
 
 
 /**

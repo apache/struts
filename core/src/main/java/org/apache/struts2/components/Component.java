@@ -17,6 +17,21 @@
  */
 package org.apache.struts2.components;
 
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.util.FastByteArrayOutputStream;
+import org.apache.struts2.views.jsp.TagUtils;
+import org.apache.struts2.views.util.ContextUtil;
+import org.apache.struts2.views.util.UrlHelper;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
+import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.TextParseUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -25,21 +40,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.util.FastByteArrayOutputStream;
-import org.apache.struts2.views.jsp.TagUtils;
-import org.apache.struts2.views.util.ContextUtil;
-import org.apache.struts2.views.util.UrlHelper;
-
-import com.opensymphony.xwork2.util.OgnlValueStack;
-import com.opensymphony.xwork2.util.TextParseUtil;
-
 /**
  * Base class to extend for UI components.
  * <p/>
@@ -47,6 +47,8 @@ import com.opensymphony.xwork2.util.TextParseUtil;
  *
  */
 public class Component {
+    private static final Log LOG = LogFactory.getLog(Component.class);
+
     public static final String COMPONENT_STACK = "__component_stack";
 
     protected OgnlValueStack stack;
@@ -322,6 +324,7 @@ public class Component {
      * @param scheme      http or https
      * @param includeContext  should the context path be included or not
      * @param encodeResult    should the url be encoded
+     * @deprecated Since Struts 2.0.0
      * @return the action url.
      */
     protected String determineActionURL(String action, String namespace, String method,
@@ -333,6 +336,25 @@ public class Component {
         ActionMapper mapper = ActionMapperFactory.getMapper();
         String uri = mapper.getUriFromActionMapping(mapping);
         return UrlHelper.buildUrl(uri, req, res, parameters, scheme, includeContext, encodeResult);
+    }
+
+    /**
+     * Renders an action URL by consulting the {@link org.apache.struts2.dispatcher.mapper.ActionMapper}.
+     * @param action      the action
+     * @param namespace   the namespace
+     * @param req         HTTP request
+     * @param res         HTTP response
+     * @param parameters  parameters
+     * @param scheme      http or https
+     * @param includeContext  should the context path be included or not
+     * @param encodeResult    should the url be encoded
+     * @return the action url.
+     */
+    protected String determineActionURL(String action, String namespace,
+                                        HttpServletRequest req, HttpServletResponse res, Map parameters, String scheme,
+                                        boolean includeContext, boolean encodeResult) {
+        return determineActionURL(action, namespace, null, req, res, parameters,
+                scheme, includeContext, encodeResult);
     }
 
     /**
@@ -442,7 +464,7 @@ public class Component {
 
     /**
      * id for referencing element. For UI and form tags it will be used as HTML id attribute
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setId(String id) {
     	if (id != null) {

@@ -47,6 +47,7 @@ public class TokenHelperTest extends TestCase {
 
     public void testValidToken() {
         String tokenName = "validTokenTest";
+        Map params = new HashMap();
 
         String token = TokenHelper.setToken(tokenName);
         assertEquals(token, session.get(tokenName));

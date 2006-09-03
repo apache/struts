@@ -28,10 +28,10 @@ import javax.portlet.RenderResponse;
 
 import junit.textui.TestRunner;
 
-import org.apache.struts2.portlet.PortletActionConstants;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
 
+import org.apache.struts2.portlet.PortletActionConstants;
 import com.opensymphony.xwork2.ActionContext;
 
 /**

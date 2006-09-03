@@ -17,15 +17,14 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.mockobjects.dynamic.C;
+import com.mockobjects.dynamic.Mock;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
-import com.mockobjects.dynamic.C;
-import com.mockobjects.dynamic.Mock;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * JspTemplateTest

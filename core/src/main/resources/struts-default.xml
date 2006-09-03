@@ -19,10 +19,10 @@
             <result-type name="xslt" class="org.apache.struts2.views.xslt.XSLTResult"/>
             <result-type name="plaintext" class="org.apache.struts2.dispatcher.PlainTextResult" />
 
-            <!-- third party integration -->
+            <!-- third party integration
             <result-type name="jasper" class="org.apache.struts2.views.jasperreports.JasperReportsResult"/>
-            
             <result-type name="jsf" class="org.apache.struts2.jsf.FacesResult" />
+            -->
         </result-types>
 
         <interceptors>
@@ -50,6 +50,7 @@
             <interceptor name="token-session" class="org.apache.struts2.interceptor.TokenSessionStoreInterceptor"/>
             <interceptor name="validation" class="com.opensymphony.xwork2.validator.ValidationInterceptor"/>
             <interceptor name="workflow" class="com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor"/>
+            <interceptor name="store" class="org.apache.struts2.interceptor.MessageStoreInterceptor" />
             
             <!-- JSF interceptors, one per lifecycle phase -->
             <interceptor class="org.apache.struts2.jsf.FacesSetupInterceptor" name="jsfSetup" />

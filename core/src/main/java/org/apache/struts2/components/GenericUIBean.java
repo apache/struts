@@ -17,12 +17,11 @@
  */
 package org.apache.struts2.components;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.struts2.util.ContainUtil;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -34,7 +33,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * Objects provided can be retrieve from within the template via $parameters._paramname_.<p/>
  * 
  * <b>Jsp:</b><p/>
- * Objects provided can be retrieve from within the template via &lt;saf:property value="%{parameters._paramname_}" /&gt;<p/>
+ * Objects provided can be retrieve from within the template via &lt;s:property value="%{parameters._paramname_}" /&gt;<p/>
  *
  *
  * In the bottom JSP and Velocity samples, two parameters are being passed in to the component. From within the
@@ -44,8 +43,8 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * $parameters.get('key1') and $parameters.get('key2') or $parameters.key1 and $parameters.key2<p/>
  * 
  * <b>Jsp:</b><p/>
- * &lt;saf:property value="%{parameters.key1}" /&gt; and &lt;saf:property value="%{'parameters.key2'}" /&gt; or
- * &lt;saf:property value="%{parameters.get('key1')}" /&gt; and &lt;saf:property value="%{parameters.get('key2')}" /&gt;<p/>
+ * &lt;s:property value="%{parameters.key1}" /&gt; and &lt;s:property value="%{'parameters.key2'}" /&gt; or
+ * &lt;s:property value="%{parameters.get('key1')}" /&gt; and &lt;s:property value="%{parameters.get('key2')}" /&gt;<p/>
  *
  * Currently, your custom UI components can be written in Velocity, JSP, or Freemarker, and the correct rendering
  * engine will be found based on file extension.<p/>
@@ -62,34 +61,34 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <pre>
  * <!-- START SNIPPET: example -->
  * JSP
- *     &lt;a:component template="/my/custom/component.vm"/&gt;
+ *     &lt;s:component template="/my/custom/component.vm"/&gt;
  *     
  *       or
  *
- *     &lt;a:component template="/my/custom/component.vm"&gt;
- *       &lt;a:param name="key1" value="value1"/&gt;
- *       &lt;a:param name="key2" value="value2"/&gt;
- *     &lt;/a:component&gt;
+ *     &lt;s:component template="/my/custom/component.vm"&gt;
+ *       &lt;s:param name="key1" value="value1"/&gt;
+ *       &lt;s:param name="key2" value="value2"/&gt;
+ *     &lt;/s:component&gt;
  *
  * Velocity
- *     #safcomponent( "template=/my/custom/component.vm" )
+ *     #s-component( "template=/my/custom/component.vm" )
  *
  *       or
  *
- *     #safcomponent( "template=/my/custom/component.vm" )
- *       #safparam( "name=key1" "value=value1" )
- *       #safparam( "name=key2" "value=value2" )
+ *     #s-component( "template=/my/custom/component.vm" )
+ *       #s-param( "name=key1" "value=value1" )
+ *       #s-param( "name=key2" "value=value2" )
  *     #end
  *     
  * Freemarker
- *    &lt;@saf.component template="/my/custom/component.ftl" />
+ *    &lt;@s..component template="/my/custom/component.ftl" />
  *    
  *      or
  *      
- *    &lt;@saf.component template="/my/custom/component.ftl"&gt;
- *       &lt;@saf.param name="key1" value="%{'value1'}" /&gt;
- *       &lt;@saf.param name="key2" value="%{'value2'}" /&gt;
- *    &lt;/@saf.component&gt;
+ *    &lt;@s..component template="/my/custom/component.ftl"&gt;
+ *       &lt;@s..param name="key1" value="%{'value1'}" /&gt;
+ *       &lt;@s..param name="key2" value="%{'value2'}" /&gt;
+ *    &lt;/@s..component&gt;
  *     
  * <!-- END SNIPPET: example -->
  * </pre>
@@ -105,7 +104,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * 
  * <!-- END SNIPPET: note -->
  *
- * @a2.tag name="component" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.ComponentTag"
+ * @s.tag name="component" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.ComponentTag"
  * description="Render a custom ui widget"
  */
 public class GenericUIBean extends UIBean {

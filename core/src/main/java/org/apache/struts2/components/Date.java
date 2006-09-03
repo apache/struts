@@ -17,6 +17,12 @@
  */
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.util.OgnlValueStack;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.text.DateFormat;
@@ -24,13 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -123,16 +122,16 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <p/> <b>Examples</b>
  * <pre>
  *  <!-- START SNIPPET: example -->
- *  &lt;a:date name="person.birthday" format="dd/MM/yyyy" /&gt;
- *  &lt;a:date name="person.birthday" format="%{getText('some.i18n.key')}" /&gt;
- *  &lt;a:date name="person.birthday" nice="true" /&gt;
- *  &lt;a:date name="person.birthday" /&gt;
+ *  &lt;s:date name="person.birthday" format="dd/MM/yyyy" /&gt;
+ *  &lt;s:date name="person.birthday" format="%{getText('some.i18n.key')}" /&gt;
+ *  &lt;s:date name="person.birthday" nice="true" /&gt;
+ *  &lt;s:date name="person.birthday" /&gt;
  *  <!-- END SNIPPET: example -->
  * </pre>
  *
  * <code>Date</code>
  *
- * @a2.tag name="date" tld-body-content="empty"
+ * @s.tag name="date" tld-body-content="empty"
  *         tld-tag-class="org.apache.struts2.views.jsp.DateTag"
  *         description="Render a formatted date."
  */
@@ -336,7 +335,7 @@ public class Date extends Component {
     /**
      * Date or DateTime format pattern
      *
-     * @a2.tagattribute required="false" rtexprvalue="false"
+     * @s.tagattribute required="false" rtexprvalue="false"
      */
     public void setFormat(String format) {
         this.format = format;
@@ -345,7 +344,7 @@ public class Date extends Component {
     /**
      * Whether to print out the date nicely
      *
-     * @a2.tagattribute required="false" type="Boolean" default="false"
+     * @s.tagattribute required="false" type="Boolean" default="false"
      */
     public void setNice(boolean nice) {
         this.nice = nice;
@@ -361,7 +360,7 @@ public class Date extends Component {
     /**
      * The date value to format
      *
-     * @a2.tagattribute required="true" type="String"
+     * @s.tagattribute required="true" type="String"
      */
     public void setName(String name) {
         this.name = name;

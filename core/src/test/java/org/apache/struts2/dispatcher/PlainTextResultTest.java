@@ -21,17 +21,16 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import junit.framework.TestCase;
-
+import com.opensymphony.util.ClassLoaderUtil;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
-
-import com.opensymphony.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
 import com.opensymphony.xwork2.util.OgnlValueStack;
+
+import junit.framework.TestCase;
 
 /**
  * Test case for PlainTextResult.

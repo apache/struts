@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.util.OgnlValueStack;
+
 import java.io.Writer;
 import java.util.Map;
-
-import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -39,19 +39,19 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- *  &lt;a:if test="%{false}"&gt;
+ *  &lt;s:if test="%{false}"&gt;
  * 	    &lt;div&gt;Will Not Be Executed&lt;/div&gt;
- *  &lt;/a:if&gt;
- * 	&lt;a:elseif test="%{true}"&gt;
+ *  &lt;/s:if&gt;
+ * 	&lt;s:elseif test="%{true}"&gt;
  * 	    &lt;div&gt;Will Be Executed&lt;/div&gt;
- *  &lt;/a:elseif&gt;
- *  &lt;a:else&gt;
+ *  &lt;/s:elseif&gt;
+ *  &lt;s:else&gt;
  * 	    &lt;div&gt;Will Not Be Executed&lt;/div&gt;
- *  &lt;/a:else&gt;
+ *  &lt;/s:else&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @a2.tag name="else" bodycontent="JSP" description="Else tag"  tld-tag-class="org.apache.struts2.views.jsp.ElseTag"
+ * @s.tag name="else" bodycontent="JSP" description="Else tag"  tld-tag-class="org.apache.struts2.views.jsp.ElseTag"
  */
 public class Else extends Component {
     public Else(OgnlValueStack stack) {
@@ -65,6 +65,5 @@ public class Else extends Component {
         context.remove(If.ANSWER);
 
         return !((ifResult == null) || (ifResult.booleanValue()));
-
     }
 }

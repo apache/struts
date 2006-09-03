@@ -33,7 +33,7 @@
 <#if parameters.emptyOption?default(false)>
     <option value=""></option>
 </#if>
-<@saf.iterator value="parameters.list">
+<@s.iterator value="parameters.list">
         <#if parameters.listKey?exists>
             <#assign itemKey = stack.findValue(parameters.listKey)/>
         <#else>
@@ -50,7 +50,7 @@
  selected="selected"<#rt/>
         </#if>
     >${itemValue?html}</option><#lt/>
-</@saf.iterator>
+</@s.iterator>
 
 <#include "/${parameters.templateDir}/simple/optgroup.ftl" />
 

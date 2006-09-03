@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.components.template;
 
+import org.apache.struts2.config.Settings;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.struts2.config.Settings;
 
 /**
  * The TemplateEngineManager will return a template engine for the template

@@ -17,30 +17,23 @@
  */
 package org.apache.struts2.validators;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.dispatcher.ApplicationMap;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
-
-import uk.ltd.getahead.dwr.WebContextFactory;
-
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.DefaultActionInvocation;
-import com.opensymphony.xwork2.DefaultActionProxy;
-import com.opensymphony.xwork2.ValidationAware;
-import com.opensymphony.xwork2.ValidationAwareSupport;
+import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import uk.ltd.getahead.dwr.ExecutionContext;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p/>
@@ -63,9 +56,9 @@ public class DWRValidator {
     private static final Log LOG = LogFactory.getLog(DWRValidator.class);
 
     public ValidationAwareSupport doPost(String namespace, String action, Map params) throws Exception {
-        HttpServletRequest req = WebContextFactory.get().getHttpServletRequest();
-        ServletContext servletContext = WebContextFactory.get().getServletContext();
-        HttpServletResponse res = WebContextFactory.get().getHttpServletResponse();
+        HttpServletRequest req = ExecutionContext.get().getHttpServletRequest();
+        ServletContext servletContext = ExecutionContext.get().getServletContext();
+        HttpServletResponse res = ExecutionContext.get().getHttpServletResponse();
 
         Map requestParams = new HashMap(req.getParameterMap());
         if (params != null) {
@@ -109,11 +102,6 @@ public class DWRValidator {
     }
 
     public static class ValidatorActionInvocation extends DefaultActionInvocation {
-        /**
-         * 
-         */
-        private static final long serialVersionUID = -7645433725470191275L;
-
         protected ValidatorActionInvocation(ActionProxy proxy, Map extraContext) throws Exception {
             super(proxy, extraContext, true);
         }
@@ -124,11 +112,6 @@ public class DWRValidator {
     }
 
     public static class ValidatorActionProxy extends DefaultActionProxy {
-        /**
-         * 
-         */
-        private static final long serialVersionUID = 5754781916414047963L;
-
         protected ValidatorActionProxy(Configuration config, String namespace, String actionName, Map extraContext) throws Exception {
             super(config, namespace, actionName, extraContext, false, true);
         }

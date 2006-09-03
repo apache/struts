@@ -17,14 +17,10 @@
  */
 package org.apache.struts2.views.xslt;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.w3c.dom.*;
 
-import org.w3c.dom.Attr;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.TypeInfo;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * AbstractAdapterElement extends the abstract Node type and implements

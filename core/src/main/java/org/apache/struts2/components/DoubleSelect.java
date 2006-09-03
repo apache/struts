@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.util.OgnlValueStack;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -31,12 +31,12 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;a:doubleselect label="doubleselect test1" name="menu" list="{'fruit','other'}" doubleName="dishes" doubleList="top == 'fruit' ? {'apple', 'orange'} : {'monkey', 'chicken'}" /&gt;
- * &lt;a:doubleselect label="doubleselect test2" name="menu" list="#{'fruit':'Nice Fruits', 'other':'Other Dishes'}" doubleName="dishes" doubleList="top == 'fruit' ? {'apple', 'orange'} : {'monkey', 'chicken'}" /&gt;
+ * &lt;s:doubleselect label="doubleselect test1" name="menu" list="{'fruit','other'}" doubleName="dishes" doubleList="top == 'fruit' ? {'apple', 'orange'} : {'monkey', 'chicken'}" /&gt;
+ * &lt;s:doubleselect label="doubleselect test2" name="menu" list="#{'fruit':'Nice Fruits', 'other':'Other Dishes'}" doubleName="dishes" doubleList="top == 'fruit' ? {'apple', 'orange'} : {'monkey', 'chicken'}" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @a2.tag name="doubleselect" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.DoubleSelectTag"
+ * @s.tag name="doubleselect" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.DoubleSelectTag"
  * description="Renders two HTML select elements with second one changing displayed values depending on selected entry of first one."
  */
 public class DoubleSelect extends DoubleListUIBean {

@@ -17,15 +17,10 @@
  */
 package org.apache.struts2.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-
+import com.opensymphony.xwork2.Action;
 import org.apache.commons.logging.LogFactory;
 
-import com.opensymphony.xwork2.Action;
+import java.util.*;
 
 
 /**

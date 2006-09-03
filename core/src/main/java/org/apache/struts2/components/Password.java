@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.util.OgnlValueStack;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -35,11 +35,11 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <!-- END SNIPPET: exdescription -->
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;a:password label="%{text('password')}" name="password" size="10" maxlength="15" /&gt;
+ * &lt;s:password label="%{text('password')}" name="password" size="10" maxlength="15" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @a2.tag name="password" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.PasswordTag"
+ * @s.tag name="password" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.PasswordTag"
  * description="Render an HTML input tag of type password"
  */
 public class Password extends TextField {
@@ -65,7 +65,7 @@ public class Password extends TextField {
 
     /**
      * Whether to show input
-     * @a2.tagattribute required="false" type="Boolean" default="false"
+     * @s.tagattribute required="false" type="Boolean" default="false"
      */
     public void setShowPassword(String showPassword) {
         this.showPassword = showPassword;
@@ -73,7 +73,7 @@ public class Password extends TextField {
 
     /**
      * Deprecated. Use showPassword instead.
-     * @a2.tagattribute required="false" rtexprvalue="true"
+     * @s.tagattribute required="false" rtexprvalue="true"
      * @deprecated use {@link #setShowPassword(String)}
      */
     public void setShow(String showPassword) {

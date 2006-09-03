@@ -17,22 +17,21 @@
  */
 package org.apache.struts2.components.template;
 
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.views.velocity.VelocityManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.context.Context;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.views.velocity.VelocityManager;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.context.Context;
 
 /**
  * Velocity based template engine.

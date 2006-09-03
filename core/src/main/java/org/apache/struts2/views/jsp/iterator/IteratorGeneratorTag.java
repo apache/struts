@@ -17,13 +17,14 @@
  */
 package org.apache.struts2.views.jsp.iterator;
 
+import org.apache.struts2.util.IteratorGenerator;
+import org.apache.struts2.util.IteratorGenerator.Converter;
+import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
+
 import javax.servlet.jsp.JspException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.util.IteratorGenerator;
-import org.apache.struts2.util.IteratorGenerator.Converter;
-import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
 
 
 /**
@@ -51,22 +52,22 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  * Example One:
  * <pre>
  * Generate a simple iterator
- * &lt;a:generator val="%{'aaa,bbb,ccc,ddd,eee'}"&gt;
- *	&lt;a:iterator&gt;
- *		&lt;a:property /&gt;&lt;br/&gt;
- *	&lt;/a:iterator&gt;
- * &lt;/a:generator&gt;
+ * &lt;s:generator val="%{'aaa,bbb,ccc,ddd,eee'}"&gt;
+ *	&lt;s:iterator&gt;
+ *		&lt;s:property /&gt;&lt;br/&gt;
+ *	&lt;/s:iterator&gt;
+ * &lt;/s:generator&gt;
  * </pre>
  * This generates an iterator and print it out using the iterator tag.
  *
  * Example Two:
  * <pre>
  * Generate an iterator with count attribute
- * &lt;a:generator val="%{'aaa,bbb,ccc,ddd,eee'}" count="3"&gt;
- *	&lt;a:iterator&gt;
- *		&lt;a:property /&gt;&lt;br/&gt;
- *	&lt;/a:iterator&gt;
- * &lt;/a:generator&gt;
+ * &lt;s:generator val="%{'aaa,bbb,ccc,ddd,eee'}" count="3"&gt;
+ *	&lt;s:iterator&gt;
+ *		&lt;s:property /&gt;&lt;br/&gt;
+ *	&lt;/s:iterator&gt;
+ * &lt;/s:generator&gt;
  * </pre>
  * This generates an iterator, but only 3 entries will be available in the iterator
  * generated, namely aaa, bbb and ccc respectively because count attribute is set to 3
@@ -74,7 +75,7 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  * Example Three:
  * <pre>
  * Generate an iterator with id attribute
- * &lt;a:generator val="%{'aaa,bbb,ccc,ddd,eee'}" count="4" separator="," id="myAtt" /&gt;
+ * &lt;s:generator val="%{'aaa,bbb,ccc,ddd,eee'}" count="4" separator="," id="myAtt" /&gt;
  * &lt;%
  * 	Iterator i = (Iterator) pageContext.getAttribute("myAtt");
  * 	while(i.hasNext()) {
@@ -90,11 +91,11 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  * Example Four:
  * <pre>
  * Generate an iterator with comparator attribute
- * &lt;a:generator val="%{'aaa,bbb,ccc,ddd,eee'}" converter="%{myConverter}"&gt;
- *	&lt;a:iterator&gt;
- * 		&lt;a:property /&gt;&lt;br/&gt;
- * 	&lt;/a:iterator&gt;
- * &lt;/a:generator&gt;
+ * &lt;s:generator val="%{'aaa,bbb,ccc,ddd,eee'}" converter="%{myConverter}"&gt;
+ *	&lt;s:iterator&gt;
+ * 		&lt;s:property /&gt;&lt;br/&gt;
+ * 	&lt;/s:iterator&gt;
+ * &lt;/s:generator&gt;
  *
  *
  * public class GeneratorTagAction extends ActionSupport {
@@ -119,7 +120,7 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  *
  * @see org.apache.struts2.util.IteratorGenerator
  *
- * @ww.tag name="generator" tld-body-content="JSP"
+ * @s.tag name="generator" tld-body-content="JSP"
  * description="Generate an iterator for a iterable source."
  */
 public class IteratorGeneratorTag extends StrutsBodyTagSupport {
@@ -138,7 +139,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
     IteratorGenerator iteratorGenerator = null;
 
     /**
-     * @ww.tagattribute required="false" type="Integer"
+     * @s.tagattribute required="false" type="Integer"
      * description="the max number entries to be in the iterator"
      */
     public void setCount(String count) {
@@ -146,7 +147,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
     }
 
     /**
-     * @ww.tagattribute required="true" type="String"
+     * @s.tagattribute required="true" type="String"
      * description="the separator to be used in separating the <i>val</i> into entries of the iterator"
      */
     public void setSeparator(String separator) {
@@ -154,7 +155,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
     }
 
     /**
-     * @ww.tagattribute required="true"
+     * @s.tagattribute required="true"
      * description="the source to be parsed into an iterator"
      */
     public void setVal(String val) {
@@ -162,7 +163,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
     }
 
     /**
-     * @ww.tagattribute required="false" type="org.apache.struts2.util.IteratorGenerator.Converter"
+     * @s.tagattribute required="false" type="org.apache.struts2.util.IteratorGenerator.Converter"
      * description="the converter to convert the String entry parsed from <i>val</i> into an object"
      */
     public void setConverter(String aConverter) {
@@ -170,7 +171,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
     }
 
     /**
-     * @ww.tagattribute required="false" type="String"
+     * @s.tagattribute required="false" type="String"
      * description="the id to store the resultant iterator into page context, if such id is supplied"
      */
     public void setId(String string) {

@@ -17,13 +17,12 @@
  */
 package org.apache.struts2.config;
 
+import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.StrutsConstants;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
+
 import java.util.Iterator;
 import java.util.Locale;
-
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsTestCase;
-
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 
 /**
@@ -44,7 +43,7 @@ public class SettingsTest extends StrutsTestCase {
         assertEquals("de", locale.getLanguage());
 
         int count = getKeyCount();
-        assertEquals(29, count);
+        assertEquals(30, count);
     }
 
     public void testDefaultResourceBundlesLoaded() {

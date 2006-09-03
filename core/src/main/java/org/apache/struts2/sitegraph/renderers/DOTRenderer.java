@@ -17,32 +17,19 @@
  */
 package org.apache.struts2.sitegraph.renderers;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.Settings;
 import org.apache.struts2.sitegraph.StrutsConfigRetriever;
 import org.apache.struts2.sitegraph.entities.Target;
 import org.apache.struts2.sitegraph.entities.View;
-import org.apache.struts2.sitegraph.model.ActionNode;
-import org.apache.struts2.sitegraph.model.Graph;
-import org.apache.struts2.sitegraph.model.IndentWriter;
-import org.apache.struts2.sitegraph.model.Link;
-import org.apache.struts2.sitegraph.model.SiteGraphNode;
-import org.apache.struts2.sitegraph.model.SubGraph;
-import org.apache.struts2.sitegraph.model.ViewNode;
-
+import org.apache.struts2.sitegraph.model.*;
+import org.apache.struts2.StrutsConstants;
 import com.opensymphony.xwork2.ActionChainResult;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.*;
 
 /**
  * Renders flow diagram to the console at info level

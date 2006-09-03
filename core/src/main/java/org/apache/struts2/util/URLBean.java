@@ -17,13 +17,12 @@
  */
 package org.apache.struts2.util;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.apache.struts2.views.util.UrlHelper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.views.util.UrlHelper;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**

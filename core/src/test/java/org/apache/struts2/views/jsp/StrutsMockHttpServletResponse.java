@@ -17,12 +17,12 @@
  */
 package org.apache.struts2.views.jsp;
 
+import com.mockobjects.servlet.MockHttpServletResponse;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Locale;
-
-import com.mockobjects.servlet.MockHttpServletResponse;
 
 
 /**

@@ -2,22 +2,17 @@
 
 package org.apache.struts2.impl;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.Callable;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionContext;
+import junit.framework.TestCase;
+import static org.easymock.EasyMock.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-
-import junit.framework.TestCase;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
+import java.util.Arrays;
+import java.util.List;
+import java.util.HashMap;
+import java.util.concurrent.Callable;
 
 public class RequestContextTest extends TestCase {
 

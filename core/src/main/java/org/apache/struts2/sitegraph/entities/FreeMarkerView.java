@@ -11,10 +11,10 @@ public class FreeMarkerView extends FileBasedView {
     }
 
     protected Pattern getActionPattern() {
-        return Pattern.compile("<\\@ww.action [^>]*name=\"([^\"]+)\"[^>]*>");
+        return Pattern.compile("<\\@s.action [^>]*name=\"([^\"]+)\"[^>]*>");
     }
 
     protected Pattern getFormPattern() {
-        return Pattern.compile("<\\@ww.form [^>]*action=\"([^\"]+)\"[^>]*>");
+        return Pattern.compile("<\\@s.form [^>]*action=\"([^\"]+)\"[^>]*>");
     }
 }

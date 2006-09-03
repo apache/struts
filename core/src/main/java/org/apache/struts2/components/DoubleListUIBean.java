@@ -19,10 +19,10 @@ package org.apache.struts2.components;
 
 import java.util.Map;
 
+import com.opensymphony.xwork2.util.OgnlValueStack;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * DoubleListUIBean is the standard superclass of all Struts double list handling components.
@@ -257,7 +257,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
     /**
      * The second iterable source to populate from.
-     * @a2.tagattribute required="true"
+     * @s.tagattribute required="true"
      */
     public void setDoubleList(String doubleList) {
         this.doubleList = doubleList;
@@ -265,7 +265,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
     /**
      * The key expression to use for second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setDoubleListKey(String doubleListKey) {
         this.doubleListKey = doubleListKey;
@@ -273,7 +273,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
     /**
      * The value expression to use for second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setDoubleListValue(String doubleListValue) {
         this.doubleListValue = doubleListValue;
@@ -281,7 +281,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
     /**
      * The name for complete component
-     * @a2.tagattribute required="true"
+     * @s.tagattribute required="true"
      */
     public void setDoubleName(String doubleName) {
         this.doubleName = doubleName;
@@ -289,7 +289,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
     /**
      * The value expression for complete component
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setDoubleValue(String doubleValue) {
         this.doubleValue = doubleValue;
@@ -297,7 +297,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
     /**
      * The form name this component resides in and populates to
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setFormName(String formName) {
         this.formName = formName;
@@ -309,7 +309,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
     
     /**
      * The css class for the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setDoubleCssClass(String doubleCssClass) {
     	this.doubleCssClass = doubleCssClass;
@@ -321,7 +321,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
     
     /**
      * The css style for the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setDoubleCssStyle(String doubleCssStyle) {
     	this.doubleCssStyle = doubleCssStyle;
@@ -333,7 +333,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
     
     /**
      * The header key for the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setDoubleHeaderKey(String doubleHeaderKey) {
     	this.doubleHeaderKey = doubleHeaderKey;
@@ -345,7 +345,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
     
     /**
      * The header value for the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setDoubleHeaderValue(String doubleHeaderValue) {
     	this.doubleHeaderValue = doubleHeaderValue;
@@ -357,7 +357,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
     /**
      * Decides if the second list will add an empty option
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setDoubleEmptyOption(String doubleEmptyOption) {
     	this.doubleEmptyOption = doubleEmptyOption;
@@ -374,7 +374,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
 	/**
      * Decides if a disable attribute should be added to the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
 	public void setDoubleDisabled(String doubleDisabled) {
 		this.doubleDisabled = doubleDisabled;
@@ -386,7 +386,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
 	/**
      * The id of the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
 	public void setDoubleId(String doubleId) {
 		this.doubleId = doubleId;
@@ -398,7 +398,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
 	/**
      * Decides if multiple attribute should be set on the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
 	public void setDoubleMultiple(String doubleMultiple) {
 		this.doubleMultiple = doubleMultiple;
@@ -410,7 +410,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
 	/**
      * Set the onblur attribute of the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
 	public void setDoubleOnblur(String doubleOnblur) {
 		this.doubleOnblur = doubleOnblur;
@@ -422,7 +422,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
 	/**
      * Set the onchange attribute of the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
 	public void setDoubleOnchange(String doubleOnchange) {
 		this.doubleOnchange = doubleOnchange;
@@ -434,7 +434,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
 	/**
      * Set the onclick attribute of the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
 	public void setDoubleOnclick(String doubleOnclick) {
 		this.doubleOnclick = doubleOnclick;
@@ -446,7 +446,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
 	/**
      * Set the ondbclick attribute of the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
 	public void setDoubleOndblclick(String doubleOndblclick) {
 		this.doubleOndblclick = doubleOndblclick;
@@ -458,7 +458,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
 	/**
      * Set the onfocus attribute of the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
 	public void setDoubleOnfocus(String doubleOnfocus) {
 		this.doubleOnfocus = doubleOnfocus;
@@ -470,7 +470,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
 	/**
      * Set the onkeydown attribute of the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
 	public void setDoubleOnkeydown(String doubleOnkeydown) {
 		this.doubleOnkeydown = doubleOnkeydown;
@@ -482,7 +482,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
 	/**
      * Set the onkeypress attribute of the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
 	public void setDoubleOnkeypress(String doubleOnkeypress) {
 		this.doubleOnkeypress = doubleOnkeypress;
@@ -494,7 +494,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
 	/**
      * Set the onkeyup attribute of the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
 	public void setDoubleOnkeyup(String doubleOnkeyup) {
 		this.doubleOnkeyup = doubleOnkeyup;
@@ -506,7 +506,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
 	/**
      * Set the onmousedown attribute of the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
 	public void setDoubleOnmousedown(String doubleOnmousedown) {
 		this.doubleOnmousedown = doubleOnmousedown;
@@ -518,7 +518,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
 	/**
      * Set the onmousemove attribute of the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
 	public void setDoubleOnmousemove(String doubleOnmousemove) {
 		this.doubleOnmousemove = doubleOnmousemove;
@@ -530,7 +530,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
 	/**
      * Set the onmouseout attribute of the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
 	public void setDoubleOnmouseout(String doubleOnmouseout) {
 		this.doubleOnmouseout = doubleOnmouseout;
@@ -542,7 +542,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
 	/**
      * Set the onmouseover attribute of the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
 	public void setDoubleOnmouseover(String doubleOnmouseover) {
 		this.doubleOnmouseover = doubleOnmouseover;
@@ -554,7 +554,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
 	/**
      * Set the onmouseup attribute of the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
 	public void setDoubleOnmouseup(String doubleOnmouseup) {
 		this.doubleOnmouseup = doubleOnmouseup;
@@ -566,7 +566,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
 	/**
      * Set the onselect attribute of the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
 	public void setDoubleOnselect(String doubleOnselect) {
 		this.doubleOnselect = doubleOnselect;
@@ -578,7 +578,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
 	/**
      * Set the size attribute of the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
 	public void setDoubleSize(String doubleSize) {
 		this.doubleSize = doubleSize;
@@ -590,7 +590,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
 	/**
      * Set the list key of the second attribute
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
 	public String getDoubleListKey() {
 		return doubleListKey;
@@ -610,7 +610,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 	
 	/**
      * Decides of an empty option is to be inserted in the second list
-     * @a2.tagattribute required="false" default="false" type="Boolean"
+     * @s.tagattribute required="false" default="false" type="Boolean"
      */
     public void setEmptyOption(String emptyOption) {
         this.emptyOption = emptyOption;
@@ -618,7 +618,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
     /**
      * Set the header key of the second list. Must not be empty! "'-1'" and "''" is correct, "" is bad.
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setHeaderKey(String headerKey) {
         this.headerKey = headerKey;
@@ -626,7 +626,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
     /**
      * Set the header value of the second list
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setHeaderValue(String headerValue) {
         this.headerValue = headerValue;
@@ -634,7 +634,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
     /**
      * Creates a multiple select. The tag will pre-select multiple values if the values are passed as an Array (of appropriate types) via the value attribute.
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setMultiple(String multiple) {
         // TODO: Passing a Collection may work too?
@@ -643,7 +643,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
     /**
      * Size of the element box (# of elements to show)
-     * @a2.tagattribute required="false" type="Integer"
+     * @s.tagattribute required="false" type="Integer"
      */
     public void setSize(String size) {
         this.size = size;
@@ -651,7 +651,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
     
     /**
      * Set the html accesskey attribute.
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setDoubleAccesskey(String doubleAccesskey) {
     	this.doubleAccesskey = doubleAccesskey;

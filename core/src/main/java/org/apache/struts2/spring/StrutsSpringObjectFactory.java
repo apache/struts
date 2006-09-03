@@ -17,18 +17,17 @@
  */
 package org.apache.struts2.spring;
 
-import javax.servlet.ServletContext;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.Settings;
 import org.apache.struts2.util.ObjectFactoryInitializable;
+import org.apache.struts2.StrutsConstants;
+import com.opensymphony.xwork2.spring.SpringObjectFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import com.opensymphony.xwork2.spring.SpringObjectFactory;
+import javax.servlet.ServletContext;
 
 
 

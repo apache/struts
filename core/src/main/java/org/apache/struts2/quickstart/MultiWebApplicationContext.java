@@ -17,18 +17,18 @@
  */
 package org.apache.struts2.quickstart;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.List;
-import java.util.Map;
-
 import org.mortbay.jetty.servlet.WebApplicationContext;
-import org.mortbay.util.FileResource;
-import org.mortbay.util.JarResource;
 import org.mortbay.util.Resource;
+import org.mortbay.util.JarResource;
+import org.mortbay.util.FileResource;
+
+import java.io.IOException;
+import java.io.File;
+import java.net.URLClassLoader;
+import java.net.URL;
+import java.lang.reflect.Constructor;
+import java.util.Map;
+import java.util.List;
 
 /**
  */

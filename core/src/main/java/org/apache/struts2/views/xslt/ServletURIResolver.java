@@ -17,20 +17,19 @@
  */
 package org.apache.struts2.views.xslt;
 
-import java.io.InputStream;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.ServletContext;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.InputStream;
 
 
 /**
- * ServletURIResolver is a URIResolver that can retrieve resources from the servlet context using the scheme "res".
+ * ServletURIResolver is a URIResolver that can retrieve resources from the servlet context using the scheme "response".
  * e.g.
  *
  * A URI resolver is called when a stylesheet uses an xsl:include, xsl:import, or document() function to find the
@@ -39,7 +38,7 @@ import org.apache.commons.logging.LogFactory;
 public class ServletURIResolver implements URIResolver {
 
     private Log log = LogFactory.getLog(getClass());
-    static final String PROTOCOL = "res:";
+    static final String PROTOCOL = "response:";
 
     private ServletContext sc;
 

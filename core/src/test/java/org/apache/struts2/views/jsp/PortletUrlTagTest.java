@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
+import javax.portlet.PortletSession;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
@@ -36,17 +37,19 @@ import javax.servlet.jsp.PageContext;
 
 import junit.textui.TestRunner;
 
-import org.apache.struts2.config.Settings;
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.portlet.PortletActionConstants;
-import org.apache.struts2.portlet.util.PortletUrlHelper;
+
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import org.jmock.core.Constraint;
 
 import com.mockobjects.servlet.MockJspWriter;
+import org.apache.struts2.portlet.PortletActionConstants;
+import org.apache.struts2.portlet.util.PortletUrlHelper;
+import org.apache.struts2.views.jsp.ParamTag;
+import org.apache.struts2.dispatcher.Dispatcher;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.OgnlValueStack;
+import org.apache.struts2.config.Settings;
 
 /**
  */
@@ -183,6 +186,9 @@ public class PortletUrlTagTest extends MockObjectTestCase {
 	public void testSetPortletMode() throws Exception  {
 	    
 	    PortletMode mode = PortletMode.HELP;
+	    WindowState state = WindowState.NORMAL;
+	    
+	    Mock mockSession = mock(PortletSession.class);
 	    
 		mockHttpReq.stubs().method("getQueryString").will(returnValue(""));
 

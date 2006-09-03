@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.util.OgnlValueStack;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -35,11 +35,11 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <!-- END SNIPPET: exdescription -->
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;a:textfield label="%{text('user_name')}" name="user" /&gt;
+ * &lt;s:textfield label="%{text('user_name')}" name="user" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @a2.tag name="textfield" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TextFieldTag"
+ * @s.tag name="textfield" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TextFieldTag"
  * description="Render an HTML input field of type text"
  */
 public class TextField extends UIBean {
@@ -79,7 +79,7 @@ public class TextField extends UIBean {
 
     /**
      * HTML maxlength attribute
-     * @a2.tagattribute required="false" type="Integer"
+     * @s.tagattribute required="false" type="Integer"
      */
     public void setMaxlength(String maxlength) {
         this.maxlength = maxlength;
@@ -87,7 +87,7 @@ public class TextField extends UIBean {
 
     /**
      * Deprecated. Use maxlength instead.
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setMaxLength(String maxlength) {
         this.maxlength = maxlength;
@@ -95,7 +95,7 @@ public class TextField extends UIBean {
 
     /**
      * Whether the input is readonly
-     * @a2.tagattribute required="false" type="Boolean" default="false"
+     * @s.tagattribute required="false" type="Boolean" default="false"
      */
     public void setReadonly(String readonly) {
         this.readonly = readonly;
@@ -103,7 +103,7 @@ public class TextField extends UIBean {
 
     /**
      * HTML size attribute
-     * @a2.tagattribute required="false" type="Integer"
+     * @s.tagattribute required="false" type="Integer"
      */
     public void setSize(String size) {
         this.size = size;

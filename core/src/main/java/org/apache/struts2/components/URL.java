@@ -17,25 +17,26 @@
  */
 package org.apache.struts2.components;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsException;
-import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
 import org.apache.struts2.views.util.UrlHelper;
-
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.dispatcher.Dispatcher;
 import com.opensymphony.xwork2.util.OgnlValueStack;
 import com.opensymphony.xwork2.util.XWorkContinuationConfig;
+import com.opensymphony.xwork2.ActionContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpUtils;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -80,26 +81,26 @@ import com.opensymphony.xwork2.util.XWorkContinuationConfig;
  * <!-- START SNIPPET: example -->
  * 
  * &lt;-- Example 1 --&gt;
- * &lt;a:url value="editGadget.action"&gt;
- *     &lt;a:param name="id" value="%{selected}" /&gt;
- * &lt;/a:url&gt;
+ * &lt;s:url value="editGadget.action"&gt;
+ *     &lt;s:param name="id" value="%{selected}" /&gt;
+ * &lt;/s:url&gt;
  *
  * &lt;-- Example 2 --&gt;
- * &lt;a:url action="editGadget"&gt;
- *     &lt;a:param name="id" value="%{selected}" /&gt;
- * &lt;/a:url&gt;
+ * &lt;s:url action="editGadget"&gt;
+ *     &lt;s:param name="id" value="%{selected}" /&gt;
+ * &lt;/s:url&gt;
  * 
  * &lt;-- Example 3--&gt;
- * &lt;a:url includeParams="get"  &gt;
+ * &lt;s:url includeParams="get"  &gt;
  *     &lt:param name="id" value="%{'22'}" /&gt;
- * &lt;/a:url&gt;
+ * &lt;/s:url&gt;
  * 
  * <!-- END SNIPPET: example -->
  * </pre>
  *
  * @see Param
  *
- * @a2.tag name="url" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.URLTag"
+ * @s.tag name="url" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.URLTag"
  * description="This tag is used to create a URL"
  */
 public class URL extends Component {
@@ -158,9 +159,10 @@ public class URL extends Component {
             }
 
             if (NONE.equalsIgnoreCase(includeParams)) {
+            	mergeRequestParameters(value, parameters, Collections.EMPTY_MAP);
                 ActionContext.getContext().put(XWorkContinuationConfig.CONTINUE_KEY, null);
             } else if (ALL.equalsIgnoreCase(includeParams)) {
-                mergeRequestParameters(parameters, req.getParameterMap());
+                mergeRequestParameters(value, parameters, req.getParameterMap());
 
                 // for ALL also include GET parameters
                 includeGetParameters();
@@ -180,10 +182,7 @@ public class URL extends Component {
     private void includeGetParameters() {
         if(!(Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest())) {
             String query = extractQueryString();
-            if (query != null) {
-                //mergeRequestParameters(parameters, HttpUtils.parseQueryString(query));
-            	mergeRequestParameters(parameters, UrlHelper.parseQueryString(query));
-            }
+            mergeRequestParameters(value, parameters, UrlHelper.parseQueryString(query));
         }
     }
 
@@ -222,7 +221,14 @@ public class URL extends Component {
                 result = PortletUrlHelper.buildResourceUrl(value, parameters);
             }
             else {
-                result = UrlHelper.buildUrl(value, req, res, parameters, scheme, includeContext, encode);
+            	String _value = value;
+            	
+            	// We don't include the request parameters cause they would have been 
+            	// prioritised before this [in start(Writer) method]
+            	if (_value != null && _value.indexOf("?") > 0) {
+            		_value = _value.substring(0, _value.indexOf("?"));
+            	}
+                result = UrlHelper.buildUrl(_value, req, res, parameters, scheme, includeContext, encode);
             }
         }
         if ( anchor != null && anchor.length() > 0 ) {
@@ -248,7 +254,7 @@ public class URL extends Component {
 
     /**
      * The includeParams attribute may have the value 'none', 'get' or 'all'.
-     * @a2.tagattribute required="false" default="get"
+     * @s.tagattribute required="false" default="get"
      */
     public void setIncludeParams(String includeParams) {
         this.includeParams = includeParams;
@@ -256,7 +262,7 @@ public class URL extends Component {
 
     /**
      * Set scheme attribute
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setScheme(String scheme) {
         this.scheme = scheme;
@@ -264,7 +270,7 @@ public class URL extends Component {
 
     /**
      * The target value to use, if not using action
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setValue(String value) {
         this.value = value;
@@ -272,7 +278,7 @@ public class URL extends Component {
 
     /**
      * The action generate url for, if not using value
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setAction(String action) {
         this.action = action;
@@ -280,7 +286,7 @@ public class URL extends Component {
 
     /**
      * The namespace to use
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setNamespace(String namespace) {
         this.namespace = namespace;
@@ -288,7 +294,8 @@ public class URL extends Component {
 
     /**
      * The method of action to use
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
+     * @deprecated Since Struts 2.0.0
      */
     public void setMethod(String method) {
         this.method = method;
@@ -296,7 +303,7 @@ public class URL extends Component {
 
     /**
      * whether to encode parameters
-     * @a2.tagattribute required="false" type="Boolean" default="true"
+     * @s.tagattribute required="false" type="Boolean" default="true"
      */
     public void setEncode(boolean encode) {
         this.encode = encode;
@@ -304,7 +311,7 @@ public class URL extends Component {
 
     /**
      * whether actual context should be included in url
-     * @a2.tagattribute required="false" type="Boolean" default="true"
+     * @s.tagattribute required="false" type="Boolean" default="true"
      */
     public void setIncludeContext(boolean includeContext) {
         this.includeContext = includeContext;
@@ -312,7 +319,7 @@ public class URL extends Component {
     
     /**
      * The resulting portlet mode
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setPortletMode(String portletMode) {
         this.portletMode = portletMode;
@@ -320,7 +327,7 @@ public class URL extends Component {
 
     /**
      * The resulting portlet window state
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setWindowState(String windowState) {
         this.windowState = windowState;
@@ -328,7 +335,7 @@ public class URL extends Component {
 
     /**
      * Specifies if this should be a portlet render or action url
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setPortletUrlType(String portletUrlType) {
         this.portletUrlType = portletUrlType;
@@ -336,7 +343,7 @@ public class URL extends Component {
 
     /**
      * The anchor for this URL
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setAnchor(String anchor) {
         this.anchor = anchor;
@@ -345,13 +352,52 @@ public class URL extends Component {
 
     /**
      * Merge request parameters into current parameters. If a parameter is
-     * already present, than the request parameter will not override its value.
+     * already present, than the request parameter in the current request and value atrribute 
+     * will not override its value.
      * 
+     * The priority is as follows:-
+     * <ul>
+     * 	<li>parameter from the current request (least priority)</li>
+     *  <li>parameter form the value attribute (more priority)</li>
+     *  <li>parameter from the param tag (most priority)</li>
+     * </ul>
+     * 
+     * @param value the value attribute (url to be generated by this component)
      * @param parameters component parameters
      * @param contextParameters request parameters
      */
-    protected void mergeRequestParameters(Map parameters, Map contextParameters){
-        for (Iterator iterator = contextParameters.entrySet().iterator(); iterator.hasNext();) {
+    protected void mergeRequestParameters(String value, Map parameters, Map contextParameters){
+    	
+    	Map mergedParams = new LinkedHashMap(contextParameters);
+    	
+    	// Merge contextParameters (from current request) with parameters specified in value attribute
+    	// eg. value="someAction.action?id=someId&venue=someVenue" 
+    	// where the parameters specified in value attribute takes priority.
+    	
+    	if (value != null && value.trim().length() > 0 && value.indexOf("?") > 0) {
+    		mergedParams = new LinkedHashMap();
+    		
+    		String queryString = value.substring(value.indexOf("?")+1);
+    		
+    		mergedParams = UrlHelper.parseQueryString(queryString);
+    		for (Iterator iterator = contextParameters.entrySet().iterator(); iterator.hasNext();) {
+    			Map.Entry entry = (Map.Entry) iterator.next();
+    			Object key = entry.getKey();
+    			
+    			if (!mergedParams.containsKey(key)) {
+    				mergedParams.put(key, entry.getValue());
+    			}
+    		}
+    	}
+    	
+    	
+    	// Merge parameters specified in value attribute 
+    	// eg. value="someAction.action?id=someId&venue=someVenue" 
+    	// with parameters specified though param tag 
+    	// eg. <param name="id" value="%{'someId'}" />
+    	// where parameters specified through param tag takes priority.
+    	
+        for (Iterator iterator = mergedParams.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
             Object key = entry.getKey();
             

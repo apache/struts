@@ -17,9 +17,9 @@
  */
 package org.apache.struts2.util;
 
-import java.util.Map;
-
 import ognl.DefaultTypeConverter;
+
+import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->

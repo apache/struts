@@ -2,16 +2,14 @@
 
 package org.apache.struts2.impl;
 
+import com.opensymphony.xwork2.DefaultActionProxy;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.config.Configuration;
+
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.DefaultActionProxy;
-import com.opensymphony.xwork2.config.Configuration;
-
 public class StrutsActionProxy extends DefaultActionProxy {
-
-    private static final long serialVersionUID = -2434901249671934080L;
 
     public StrutsActionProxy(Configuration cfg, String namespace, String actionName, Map extraContext,
                              boolean executeResult, boolean cleanupContext) throws Exception {

@@ -17,19 +17,19 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.mockobjects.servlet.MockHttpServletRequest;
+import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.ServletRedirectResult;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
 
-import com.mockobjects.servlet.MockHttpServletRequest;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * DefaultActionMapper test case.
@@ -79,7 +79,8 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         ActionMapping mapping = mapper.getMapping(req, config);
 
         assertEquals("/my/namespace", mapping.getNamespace());
-        assertEquals("actionName!add", mapping.getName());
+        assertEquals("actionName", mapping.getName());
+        assertEquals("add", mapping.getMethod());
     }
     
     public void testGetMappingWithSlashedName() throws Exception {
@@ -266,7 +267,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         actionMapping.setNamespace("/myNamespace");
         String uri = mapper.getUriFromActionMapping(actionMapping);
 
-        assertEquals("/myNamespace/myActionName.action", uri);
+        assertEquals("/myNamespace/myActionName!myMethod.action", uri);
     }
 
     public void testGetUriFromActionMapper2() throws Exception {
@@ -277,7 +278,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         actionMapping.setNamespace("/");
         String uri = mapper.getUriFromActionMapping(actionMapping);
 
-        assertEquals("/myActionName.action", uri);
+        assertEquals("/myActionName!myMethod.action", uri);
     }
 
     public void testGetUriFromActionMapper3() throws Exception {
@@ -288,7 +289,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         actionMapping.setNamespace("");
         String uri = mapper.getUriFromActionMapping(actionMapping);
 
-        assertEquals("/myActionName.action", uri);
+        assertEquals("/myActionName!myMethod.action", uri);
     }
 
 
@@ -321,7 +322,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         actionMapping.setNamespace("/myNamespace");
         String uri = mapper.getUriFromActionMapping(actionMapping);
 
-        assertEquals("/myNamespace/myActionName.action?test=bla", uri);
+        assertEquals("/myNamespace/myActionName!myMethod.action?test=bla", uri);
     }
 
     public void testGetUriFromActionMapper7() throws Exception {
@@ -332,7 +333,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         actionMapping.setNamespace("/");
         String uri = mapper.getUriFromActionMapping(actionMapping);
 
-        assertEquals("/myActionName.action?test=bla", uri);
+        assertEquals("/myActionName!myMethod.action?test=bla", uri);
     }
 
     public void testGetUriFromActionMapper8() throws Exception {
@@ -343,7 +344,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         actionMapping.setNamespace("");
         String uri = mapper.getUriFromActionMapping(actionMapping);
 
-        assertEquals("/myActionName.action?test=bla", uri);
+        assertEquals("/myActionName!myMethod.action?test=bla", uri);
     }
 
 
@@ -374,24 +375,17 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         actionMapping.setNamespace("/");
         String uri = mapper.getUriFromActionMapping(actionMapping);
 
-        assertEquals("/myActionName.action.action", uri);
+        assertEquals("/myActionName.action", uri);
     }
     
     public void testGetUriFromActionMapper12() throws Exception {
-        String old = org.apache.struts2.config.Settings.get(StrutsConstants.STRUTS_COMPATIBILITY_MODE);
-        org.apache.struts2.config.Settings.set(StrutsConstants.STRUTS_COMPATIBILITY_MODE, "true");
-        try {
-            DefaultActionMapper mapper = new DefaultActionMapper();
-            ActionMapping actionMapping = new ActionMapping();
-            actionMapping.setName("myActionName.action");
-            actionMapping.setNamespace("/");
-            String uri = mapper.getUriFromActionMapping(actionMapping);
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        ActionMapping actionMapping = new ActionMapping();
+        actionMapping.setName("myActionName.action");
+        actionMapping.setNamespace("/");
+        String uri = mapper.getUriFromActionMapping(actionMapping);
 
-            assertEquals("/myActionName.action", uri);
-        }
-        finally {
-            org.apache.struts2.config.Settings.set(StrutsConstants.STRUTS_COMPATIBILITY_MODE, old);
-        }
+        assertEquals("/myActionName.action", uri);
     }
 
 }

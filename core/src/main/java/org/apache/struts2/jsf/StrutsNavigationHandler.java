@@ -19,6 +19,7 @@ package org.apache.struts2.jsf;
 
 import java.util.Map;
 
+import javax.faces.FactoryFinder;
 import javax.faces.application.NavigationHandler;
 import javax.faces.context.FacesContext;
 

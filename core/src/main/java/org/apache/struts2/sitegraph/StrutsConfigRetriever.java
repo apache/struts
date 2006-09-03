@@ -3,25 +3,25 @@
  */
 package org.apache.struts2.sitegraph;
 
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.ResultConfig;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.config.StrutsXMLConfigurationProvider;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.sitegraph.entities.FreeMarkerView;
+import org.apache.struts2.sitegraph.entities.JspView;
+import org.apache.struts2.sitegraph.entities.VelocityView;
+import org.apache.struts2.sitegraph.entities.View;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.config.StrutsXMLConfigurationProvider;
-import org.apache.struts2.sitegraph.entities.FreeMarkerView;
-import org.apache.struts2.sitegraph.entities.JspView;
-import org.apache.struts2.sitegraph.entities.VelocityView;
-import org.apache.struts2.sitegraph.entities.View;
-
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
 
 /**
  * Initializes and retrieves XWork config elements

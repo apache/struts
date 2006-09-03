@@ -2,14 +2,13 @@
 
 package org.apache.struts2.impl;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.opensymphony.xwork2.ActionInvocation;
 import org.apache.struts2.spi.ActionContext;
 import org.apache.struts2.spi.Result;
 
-import com.opensymphony.xwork2.ActionInvocation;
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.ArrayList;
 
 public class ActionContextImpl implements ActionContext {
 

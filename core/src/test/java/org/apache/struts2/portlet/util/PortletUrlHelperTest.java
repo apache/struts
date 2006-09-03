@@ -28,9 +28,9 @@ import javax.portlet.WindowState;
 
 import junit.framework.TestCase;
 
-import org.apache.struts2.portlet.context.PortletActionContext;
 import org.easymock.MockControl;
 
+import org.apache.struts2.portlet.context.PortletActionContext;
 import com.opensymphony.xwork2.ActionContext;
 
 /**

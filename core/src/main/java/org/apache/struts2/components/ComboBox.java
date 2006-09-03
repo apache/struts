@@ -17,16 +17,18 @@
  */
 package org.apache.struts2.components;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.util.MakeIterator;
-
-import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -38,7 +40,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * span from first to last. The population is done via javascript, and requires that this tag be surrounded by a
  * &lt;form&gt;.<p/>
  *
- * Note that unlike the &lt;a:select/&gt; tag, there is no ability to define the individual &lt;option&gt; tags' id attribute
+ * Note that unlike the &lt;s:select/&gt; tag, there is no ability to define the individual &lt;option&gt; tags' id attribute
  * or content separately. Each of these is simply populated from the toString() method of the list item. Presumably
  * this is because the select box isn't intended to actually submit useful data, but to assist the user in filling
  * out the text field.<p/>
@@ -50,15 +52,15 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <!-- START SNIPPET: example -->
  * JSP:
  * &lt;-- Example One --&gt;
- * &lt;a:bean name="struts.util.Counter" id="year"&gt;
- *   &lt;a:param name="first" value="text('firstBirthYear')"/&gt;
- *   &lt;a:param name="last" value="2000"/&gt;
+ * &lt;s:bean name="struts.util.Counter" id="year"&gt;
+ *   &lt;s:param name="first" value="text('firstBirthYear')"/&gt;
+ *   &lt;s:param name="last" value="2000"/&gt;
  *
- *   &lt;a:combobox label="Birth year" size="6" maxlength="4" name="birthYear" list="#year"/&gt;
- * &lt;/a:bean&gt;
+ *   &lt;s:combobox label="Birth year" size="6" maxlength="4" name="birthYear" list="#year"/&gt;
+ * &lt;/s:bean&gt;
  * 
  * &lt;-- Example Two --&gt;
- * <a:combobox 
+ * <s:combobox
  *     label="My Favourite Fruit"
  *     name="myFavouriteFruit"
  *     list="{'apple','banana','grape','pear'}"
@@ -68,7 +70,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  *     value="banana" />
  *     
  * &lt;-- Example Two --&gt;
- * <a:combobox
+ * <s:combobox
  *    label="My Favourite Color"
  *    name="myFavouriteColor"
  *    list="#{'red':'red','green':'green','blue':'blue'}"
@@ -82,7 +84,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @a2.tag name="combobox" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.ComboBoxTag"
+ * @s.tag name="combobox" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.ComboBoxTag"
  * description="Widget that fills a text box from a select"
   */
 public class ComboBox extends TextField {
@@ -161,7 +163,7 @@ public class ComboBox extends TextField {
 
     /**
      * Iteratable source to populate from. If this is missing, the select widget is simply not displayed.
-     * @a2.tagattribute required="true"
+     * @s.tagattribute required="true"
       */
     public void setList(String list) {
         this.list = list;
@@ -169,7 +171,7 @@ public class ComboBox extends TextField {
 
     /**
      * Decide if an empty option is to be inserted. Default false.
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
 	public void setEmptyOption(String emptyOption) {
 		this.emptyOption = emptyOption;
@@ -177,7 +179,7 @@ public class ComboBox extends TextField {
 
 	/**
 	 * set the header key for the header option. 
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setHeaderKey(String headerKey) {
 		this.headerKey = headerKey;
@@ -185,7 +187,7 @@ public class ComboBox extends TextField {
 
 	/**
 	 * set the header value for the header option.
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setHeaderValue(String headerValue) {
 		this.headerValue = headerValue;
@@ -193,7 +195,7 @@ public class ComboBox extends TextField {
 
 	/**
 	 * set the key used to retrive the option key.
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setListKey(String listKey) {
 		this.listKey = listKey;
@@ -201,7 +203,7 @@ public class ComboBox extends TextField {
 
 	/**
 	 * set the value used to retrive the option value.
-	 * @a2.tagattribute required="false"
+	 * @s.tagattribute required="false"
 	 */
 	public void setListValue(String listValue) {
 		this.listValue = listValue;

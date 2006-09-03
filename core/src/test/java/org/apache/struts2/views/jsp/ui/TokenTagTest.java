@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import javax.servlet.jsp.JspException;
-
 import org.apache.struts2.util.TokenHelper;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
+
+import javax.servlet.jsp.JspException;
 
 
 /**

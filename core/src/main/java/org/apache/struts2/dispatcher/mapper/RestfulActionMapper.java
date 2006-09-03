@@ -17,19 +17,19 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.apache.struts2.RequestUtils;
+
+import com.opensymphony.xwork2.config.Configuration;
+
+import javax.servlet.http.HttpServletRequest;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.RequestUtils;
-
-import com.opensymphony.xwork2.config.Configuration;
 
 /**
  * A custom action mapper using the following format:

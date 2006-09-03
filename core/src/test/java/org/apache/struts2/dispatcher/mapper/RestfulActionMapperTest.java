@@ -17,11 +17,11 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
+import junit.framework.TestCase;
+
+import java.util.Map;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
-
-import junit.framework.TestCase;
 
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
 

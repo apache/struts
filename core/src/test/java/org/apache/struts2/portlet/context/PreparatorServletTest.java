@@ -22,9 +22,12 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.easymock.MockControl;
+
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
-import org.easymock.MockControl;
+
+import junit.framework.TestCase;
 
 /**
  * 

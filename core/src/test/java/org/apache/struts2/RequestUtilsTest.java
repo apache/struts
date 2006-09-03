@@ -21,9 +21,9 @@ package org.apache.struts2;
  * <code>RequestUtilsTest</code>
  *
  */
-import javax.servlet.http.HttpServletRequest;
-
 import junit.framework.TestCase;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.easymock.MockControl;
 

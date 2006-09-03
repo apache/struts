@@ -2,19 +2,11 @@
 
 package org.apache.struts2.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.DefaultTextProvider;
 import org.apache.struts2.Messages;
 
-import com.opensymphony.xwork2.DefaultTextProvider;
-import com.opensymphony.xwork2.TextProvider;
+import java.util.*;
 
 public class MessagesImpl implements Messages {
 

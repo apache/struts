@@ -17,15 +17,14 @@
  */
 package org.apache.struts2.components;
 
-import java.io.Writer;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.util.OgnlUtil;
 import com.opensymphony.xwork2.util.OgnlValueStack;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.io.Writer;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -51,16 +50,16 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <pre>
  * <!-- START SNIPPET: examples -->
  * &lt;-- in freemarker form --&gt;
- * [ww.bean name="org.apache.struts2.example.counter.SimpleCounter" id="counter"]
- *   [a:param name="foo" value="BAR"/]
- *   The value of foo is : [a:property value="foo"/], when inside the bean tag.<br />
- * [/a:bean]
+ * [@s.bean name="org.apache.struts2.example.counter.SimpleCounter" id="counter"]
+ *   [s:param name="foo" value="BAR"/]
+ *   The value of foo is : [s:property value="foo"/], when inside the bean tag.<br />
+ * [/s:bean]
  *
  * &lt;-- in jsp form --&gt;
- * &lt;a:bean name="org.apache.struts2.example.counter.SimpleCounter" id="counter"&gt;
- * 	 &lt;a:param name="foo" value="BAR" /&gt;
- *   The value of foot is : &lt;a:property value="foo"/&gt;, when inside the bean tag &lt;br /&gt;
- * &lt;/a:bean&gt;
+ * &lt;s:bean name="org.apache.struts2.example.counter.SimpleCounter" id="counter"&gt;
+ * 	 &lt;s:param name="foo" value="BAR" /&gt;
+ *   The value of foot is : &lt;s:property value="foo"/&gt;, when inside the bean tag &lt;br /&gt;
+ * &lt;/s:bean&gt;
  * <!-- END SNIPPET: examples -->
  * </pre>
  * <p/>
@@ -71,14 +70,14 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * with the Property tag and get their values.</p>
  * <p/>
  * <p>In the above example, the id has been set to a value of <i>counter</i>. This means that the SimpleCounter class
- * will be placed into the stack's context. You can access the SimpleCounter class using WW's tag:</p>
+ * will be placed into the stack's context. You can access the SimpleCounter class using a Struts tag:</p>
  * <p/>
  * <pre>
  * &lt;-- jsp form --&gt;
- * &lt;a:property value="#counter" /&gt;
+ * &lt;s:property value="#counter" /&gt;
  *
  * &lt;-- freemarker form --&gt;
- * [a:property value="#counter.foo"/]
+ * [s:property value="#counter.foo"/]
  * </pre>
  * <p/>
  * <p>In the property tag example, the <i>#</i> tells Ognl to search the context for the SimpleCounter class which has
@@ -87,7 +86,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  *
  * @see Param
  *
- * @a2.tag name="bean" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.BeanTag"
+ * @s.tag name="bean" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.BeanTag"
  * description="Instantiate a JavaBean and place it in the context."
  */
 public class Bean extends Component {
@@ -138,7 +137,7 @@ public class Bean extends Component {
 
     /**
      * the class name of the bean to be instantiated (must respect JavaBean specification)
-     * @a2.tagattribute required="true" type="String"
+     * @s.tagattribute required="true" type="String"
      */
     public void setName(String name) {
         this.name = name;

@@ -17,19 +17,14 @@
  */
 package org.apache.struts2.util.classloader.monitor;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
+import org.apache.struts2.util.classloader.utils.ThreadUtils;
 import org.apache.commons.collections.MultiHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.util.classloader.utils.ThreadUtils;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.util.*;
 
 /**
  */

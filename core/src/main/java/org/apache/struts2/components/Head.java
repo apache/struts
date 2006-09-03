@@ -17,13 +17,12 @@
  */
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.util.OgnlValueStack;
+import org.apache.struts2.config.Settings;
+import org.apache.struts2.StrutsConstants;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
-
-import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -48,7 +47,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <!-- START SNIPPET: example1 -->
  * &lt;head&gt;
  *   &lt;title&gt;My page&lt;/title&gt;
- *   &lt;a:head/&gt;
+ *   &lt;s:head/&gt;
  * &lt;/head&gt;
  * <!-- END SNIPPET: example1 -->
  * </pre>
@@ -57,7 +56,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <!-- START SNIPPET: example2 -->
  * &lt;head&gt;
  *   &lt;title&gt;My page&lt;/title&gt;
- *   &lt;a:head theme="ajax" calendarcss="calendar-green"/&gt;
+ *   &lt;s:head theme="ajax" calendarcss="calendar-green"/&gt;
  * &lt;/head&gt;
  * <!-- END SNIPPET: example2 -->
  * </pre>
@@ -66,12 +65,12 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <!-- START SNIPPET: example3 -->
  * &lt;head&gt;
  *   &lt;title&gt;My page&lt;/title&gt;
- *   &lt;a:head theme="ajax" debug="true"/&gt;
+ *   &lt;s:head theme="ajax" debug="true"/&gt;
  * &lt;/head&gt;
  * <!-- END SNIPPET: example3 -->
  * </pre>
  *
- * @a2.tag name="head" tld-body-content="empty" tld-tag-class="org.apache.struts2.views.jsp.ui.HeadTag"
+ * @s.tag name="head" tld-body-content="empty" tld-tag-class="org.apache.struts2.views.jsp.ui.HeadTag"
  * description="Render a chunk of HEAD for your HTML file"
  */
 public class Head extends UIBean {
@@ -112,7 +111,7 @@ public class Head extends UIBean {
 
     /**
      * The jscalendar css theme to use" default="calendar-blue.css
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setCalendarcss(String calendarcss) {
         this.calendarcss = calendarcss;
@@ -124,7 +123,7 @@ public class Head extends UIBean {
 
     /**
      * Set to true to enable debugging mode for AJAX themes
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setDebug(boolean debug) {
         this.debug = debug;

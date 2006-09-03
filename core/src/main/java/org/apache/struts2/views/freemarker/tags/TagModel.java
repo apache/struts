@@ -17,25 +17,23 @@
  */
 package org.apache.struts2.views.freemarker.tags;
 
+import org.apache.struts2.components.Component;
+import com.opensymphony.xwork2.util.OgnlValueStack;
+import freemarker.template.SimpleNumber;
+import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateTransformModel;
+import freemarker.template.SimpleSequence;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.components.Component;
-
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
-import freemarker.template.SimpleNumber;
-import freemarker.template.SimpleSequence;
-import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateTransformModel;
 
 public abstract class TagModel implements TemplateTransformModel {
     private static final Log LOG = LogFactory.getLog(TagModel.class);

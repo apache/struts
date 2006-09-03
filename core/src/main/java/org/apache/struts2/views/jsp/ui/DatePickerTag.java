@@ -17,13 +17,12 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.DatePicker;
-
 import com.opensymphony.xwork2.util.OgnlValueStack;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @see DatePicker
@@ -65,7 +64,7 @@ public class DatePickerTag extends TextFieldTag {
     }
     
     public void setTemplateCssPath(String templateCsspath) {
-    	this.templateCssPath = templateCsspath;
+    	this.templateCssPath = templateCssPath;
     }
 
 }

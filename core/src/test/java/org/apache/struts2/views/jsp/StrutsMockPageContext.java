@@ -17,14 +17,13 @@
  */
 package org.apache.struts2.views.jsp;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.mockobjects.servlet.MockPageContext;
 
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import com.mockobjects.servlet.MockPageContext;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**

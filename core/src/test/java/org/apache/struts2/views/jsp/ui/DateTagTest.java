@@ -17,15 +17,14 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
+import org.apache.struts2.views.jsp.AbstractTagTest;
+import org.apache.struts2.views.jsp.DateTag;
+import com.opensymphony.xwork2.ActionContext;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import org.apache.struts2.views.jsp.AbstractTagTest;
-import org.apache.struts2.views.jsp.DateTag;
-
-import com.opensymphony.xwork2.ActionContext;
 
 /**
  * Unit test for {@link org.apache.struts2.components.Date}.

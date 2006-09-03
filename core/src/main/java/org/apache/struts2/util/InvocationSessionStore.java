@@ -17,13 +17,13 @@
  */
 package org.apache.struts2.util;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.OgnlValueStack;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**

@@ -4,9 +4,9 @@
 </head>
 
 <body>
-<@ww.form action="guess" method="post">
-    <@ww.textfield label="Guess a number" name="guess"/>
-    <@ww.submit value="Guess"/>
-</@ww.form>
+<@s.form action="guess" method="post">
+    <@s.textfield label="Guess a number" name="guess"/>
+    <@s.submit value="Guess"/>
+</@s.form>
 </body>
 </html>

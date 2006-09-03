@@ -17,13 +17,12 @@
  */
 package org.apache.struts2.components;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -38,24 +37,24 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <!-- END SNIPPET: exdesc -->
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;a:tabbedPanel id="test2" theme="simple" &gt;
- *     &lt;a:panel id="left" tabName="left" theme="ajax"&gt;
+ * &lt;s:tabbedPanel id="test2" theme="simple" &gt;
+ *     &lt;s:panel id="left" tabName="left" theme="ajax"&gt;
  *         This is the left pane&lt;br/&gt;
- *         &lt;a:form &gt;
- *             &lt;a:textfield name="tt" label="Test Text" /&gt;  &lt;br/&gt;
- *             &lt;a:textfield name="tt2" label="Test Text2" /&gt;
- *         &lt;/a:form&gt;
- *     &lt;/a:panel&gt;
- *     &lt;a:panel remote="true" href="/AjaxTest.action" id="ryh1" theme="ajax" tabName="remote one" /&gt;
- *     &lt;a:panel id="middle" tabName="middle" theme="ajax"&gt;
+ *         &lt;s:form &gt;
+ *             &lt;s:textfield name="tt" label="Test Text" /&gt;  &lt;br/&gt;
+ *             &lt;s:textfield name="tt2" label="Test Text2" /&gt;
+ *         &lt;/s:form&gt;
+ *     &lt;/s:panel&gt;
+ *     &lt;s:panel remote="true" href="/AjaxTest.action" id="ryh1" theme="ajax" tabName="remote one" /&gt;
+ *     &lt;s:panel id="middle" tabName="middle" theme="ajax"&gt;
  *         middle tab&lt;br/&gt;
- *         &lt;a:form &gt;
- *             &lt;a:textfield name="tt" label="Test Text44" /&gt;  &lt;br/&gt;
- *             &lt;a:textfield name="tt2" label="Test Text442" /&gt;
- *         &lt;/a:form&gt;
- *     &lt;/a:panel&gt;
- *     &lt;a:panel remote="true" href="/AjaxTest.action"  id="ryh21" theme="ajax" tabName="remote right" /&gt;
- * &lt;/a:tabbedPanel&gt;
+ *         &lt;s:form &gt;
+ *             &lt;s:textfield name="tt" label="Test Text44" /&gt;  &lt;br/&gt;
+ *             &lt;s:textfield name="tt2" label="Test Text442" /&gt;
+ *         &lt;/s:form&gt;
+ *     &lt;/s:panel&gt;
+ *     &lt;s:panel remote="true" href="/AjaxTest.action"  id="ryh21" theme="ajax" tabName="remote right" /&gt;
+ * &lt;/s:tabbedPanel&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
@@ -69,10 +68,10 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  *
  * <pre>
  * <!-- START SNIPPET: example2 -->
- * &lt;link rel="stylesheet" type="text/css" href="&lt;a:url value="/struts/tabs.css"/&gt;"&gt;
- * &lt;link rel="stylesheet" type="text/css" href="&lt;a:url value="/struts/niftycorners/niftyCorners.css"/&gt;"&gt;
- * &lt;link rel="stylesheet" type="text/css" href="&lt;a:url value="/struts/niftycorners/niftyPrint.css"/&gt;" media="print"&gt;
- * &lt;script type="text/javascript" src="&lt;a:url value="/struts/niftycorners/nifty.js"/&gt;"&gt;&lt;/script&gt;
+ * &lt;link rel="stylesheet" type="text/css" href="&lt;s:url value="/struts/tabs.css"/&gt;"&gt;
+ * &lt;link rel="stylesheet" type="text/css" href="&lt;s:url value="/struts/niftycorners/niftyCorners.css"/&gt;"&gt;
+ * &lt;link rel="stylesheet" type="text/css" href="&lt;s:url value="/struts/niftycorners/niftyPrint.css"/&gt;" media="print"&gt;
+ * &lt;script type="text/javascript" src="&lt;s:url value="/struts/niftycorners/nifty.js"/&gt;"&gt;&lt;/script&gt;
  * &lt;script type="text/javascript"&gt;
  *     dojo.event.connect(window, "onload", function() {
  *         if (!NiftyCheck())
@@ -89,7 +88,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  *
  * @see Panel
  *
- * @a2.tag name="tabbedPanel" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TabbedPanelTag"
+ * @s.tag name="tabbedPanel" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TabbedPanelTag"
  * description="Render a tabbedPanel widget."
  */
 public class TabbedPanel extends ClosingUIBean {
@@ -147,7 +146,7 @@ public class TabbedPanel extends ClosingUIBean {
 
     /**
      * The id to assign to the component.
-     * @a2.tagattribute required="true" type="String"
+     * @s.tagattribute required="true" type="String"
      */
     public void setId(String id) {
         // This is required to override tld generation attributes to required=true

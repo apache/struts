@@ -17,15 +17,14 @@
  */
 package org.apache.struts2.config;
 
+import com.opensymphony.xwork2.ObjectFactory;
+import org.apache.struts2.StrutsConstants;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.StringTokenizer;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.StrutsConstants;
-
-import com.opensymphony.xwork2.ObjectFactory;
 
 
 /**

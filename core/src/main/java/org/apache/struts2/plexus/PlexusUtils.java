@@ -17,14 +17,14 @@
  */
 package org.apache.struts2.plexus;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.configuration.PlexusConfigurationResourceException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.ByteArrayInputStream;
 
 /**
  * Utility methods for dealing with Plexus

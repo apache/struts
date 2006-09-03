@@ -17,11 +17,10 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import java.util.Locale;
-
 import org.apache.struts2.views.jsp.AbstractUITagTest;
-
 import com.opensymphony.xwork2.ActionContext;
+
+import java.util.Locale;
 
 /**
  * Unit test for {@link DatePickerTag}.

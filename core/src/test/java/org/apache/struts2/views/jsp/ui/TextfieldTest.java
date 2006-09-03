@@ -17,14 +17,13 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.freemarker.tags.TextFieldModel;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
-
 import freemarker.template.TransformControl;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**

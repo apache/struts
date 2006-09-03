@@ -17,19 +17,17 @@
  */
 package org.apache.struts2.util;
 
-import java.io.CharArrayWriter;
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.struts2.views.velocity.VelocityManager;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.CharArrayWriter;
+import java.io.IOException;
 
 
 /**

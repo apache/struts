@@ -107,6 +107,9 @@ import com.opensymphony.xwork2.ActionContext;
  * database access credentials.
  *
  * <p/>
+ * 
+ * To use a custom {@link Dispatcher}, the <code>createDispatcher()</code> method could be overriden by 
+ * the subclass.
  *
  * @see org.apache.struts2.lifecycle.LifecycleListener
  * @see ActionMapper
@@ -154,9 +157,9 @@ public class FilterDispatcher implements Filter, StrutsStatics {
             packages = param + " " + packages;
         }
         this.pathPrefixes = parse(packages);
-        dispatcher = new Dispatcher(filterConfig.getServletContext());
+        dispatcher = createDispatcher();
     }
-
+    
     /**
      * Parses the list of packages
      * 
@@ -230,7 +233,7 @@ public class FilterDispatcher implements Filter, StrutsStatics {
                 // this is a normal request, let it pass through
                 chain.doFilter(request, response);
             }
-            // WW did its job here
+            // The framework did its job here
             return;
         }
 
@@ -364,5 +367,15 @@ public class FilterDispatcher implements Filter, StrutsStatics {
         resourcePath = URLDecoder.decode(resourcePath, enc);
 
         return ClassLoaderUtil.getResourceAsStream(resourcePath, getClass());
+    }
+    
+    /**
+     * Create a {@link Dispatcher}, this serves as a hook for subclass to overried
+     * such that a custom {@link Dispatcher} could be created. 
+     * 
+     * @return Dispatcher
+     */
+    protected Dispatcher createDispatcher() {
+    	return new Dispatcher(filterConfig.getServletContext());
     }
 }

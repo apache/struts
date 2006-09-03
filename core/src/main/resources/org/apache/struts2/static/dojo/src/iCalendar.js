@@ -179,8 +179,8 @@ dojo.iCalendar.VJOURNAL = function () {}
 dojo.iCalendar.VFREEBUSY = function () {}
 dojo.iCalendar.VTIMEZONE = function () {}
 
-var _ = function (n, oc, req) {
-	return {name: n, required: (req) ? true : false,
+var _ = function (n, oc, request) {
+	return {name: n, required: (request) ? true : false,
 		occurance: (oc == '*' || !oc) ? -1 : oc}
 }
 

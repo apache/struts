@@ -17,17 +17,6 @@
  */
 package org.apache.struts2.components;
 
-import java.io.Writer;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
@@ -35,9 +24,18 @@ import org.apache.struts2.components.template.TemplateEngineManager;
 import org.apache.struts2.components.template.TemplateRenderingContext;
 import org.apache.struts2.config.Settings;
 import org.apache.struts2.views.util.ContextUtil;
-
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.util.OgnlValueStack;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.Writer;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * UIBean is the standard superclass of all Struts UI componentns.
@@ -334,50 +332,50 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <!-- START SNIPPET: tooltipexample -->
  *
  * &lt;!-- Example 1: --&gt;
- * &lt;a:form
+ * &lt;s:form
  * 			tooltipConfig="#{'tooltipDelay':'500',
  *                           'tooltipIcon='/myImages/myIcon.gif'}" .... &gt;
  *   ....
- *     &lt;a:textfield label="Customer Name" tooltip="Enter the customer name" .... /&gt;
+ *     &lt;s:textfield label="Customer Name" tooltip="Enter the customer name" .... /&gt;
  *   ....
- * &lt;/a:form&gt;
+ * &lt;/s:form&gt;
  *
  * &lt;!-- Example 2: --&gt;
- * &lt;a:form
+ * &lt;s:form
  *         tooltipConfig="#{'tooltipDelay':'500',
  *          				'tooltipIcon':'/myImages/myIcon.gif'}" ... &gt;
  *   ....
- *     &lt;a:textfield label="Address"
+ *     &lt;s:textfield label="Address"
  *          tooltip="Enter your address"
  *          tooltipConfig="#{'tooltipDelay':'5000'}" /&gt;
  *   ....
- * &lt;/a:form&gt;
+ * &lt;/s:form&gt;
  *
  *
  * &lt;-- Example 3: --&gt;
- * &lt;a:textfield
+ * &lt;s:textfield
  *        label="Customer Name"
  *	      tooltip="One of our customer Details'"&gt;
- *        &lt;a:param name="tooltipConfig"&gt;
+ *        &lt;s:param name="tooltipConfig"&gt;
  *             tooltipDelay = 500 |
  *             tooltipIcon = /myImages/myIcon.gif 
- *        &lt;/a:param&gt;
- * &lt;/a:textfield&gt;
+ *        &lt;/s:param&gt;
+ * &lt;/s:textfield&gt;
  *
  *
  * &lt;-- Example 4: --&gt;
- * &lt;a:textfield
+ * &lt;s:textfield
  *	        label="Customer Address"
  *	        tooltip="Enter The Customer Address" &gt;
- *	        &lt;a:param
+ *	        &lt;s:param
  *              name="tooltipConfig"
  *              value="#{'tooltipDelay':'500',
  *                       'tooltipIcon':'/myImages/myIcon.gif'}" /&gt;
- * &lt;/a:textfield&gt;
+ * &lt;/s:textfield&gt;
  *
  *
  * &lt;-- Example 5: --&gt;
- * &lt;a:textfield
+ * &lt;s:textfield
  *          label="Customer Telephone Number"
  *          tooltip="Enter customer Telephone Number"
  *          tooltipConfig="#{'tooltipDelay':'500',
@@ -691,18 +689,8 @@ public abstract class UIBean extends Component {
 
         final Form form = (Form) findAncestor(Form.class);
 
-        if (id != null) {
-            // this check is needed for backwards compatibility with 2.1.x
-            if (altSyntax()) {
-                addParameter("id", findString(id));
-            } else {
-                addParameter("id", id);
-            }
-        } else if (form != null) {
-            addParameter("id", form.getParameters().get("id") + "_" + escape(name));
-        } else {
-            addParameter("id", escape(name));
-        }
+        // create HTML id element
+        populateComponentHtmlId(form);
 
         if (form != null ) {
             addParameter("form", form.getParameters());
@@ -817,10 +805,38 @@ public abstract class UIBean extends Component {
     	return tooltipConfig;
     }
 
+    /**
+     * Create HTML id element for the component and populate this component parmaeter
+     * map.
+     * 
+     * The order is as follows :-
+     * <ol>
+     *   <li>This component id attribute</li>
+     *   <li>[containing_form_id]_[this_component_name]</li>
+     *   <li>[this_component_name]</li>
+     * </ol>
+     * 
+     * @param form
+     */
+    protected void populateComponentHtmlId(Form form) {
+    	if (id != null) {
+            // this check is needed for backwards compatibility with 2.1.x
+            if (altSyntax()) {
+                addParameter("id", findString(id));
+            } else {
+                addParameter("id", id);
+            }
+        } else if (form != null) {
+            addParameter("id", form.getParameters().get("id") + "_" + escape(name));
+        } else {
+            addParameter("id", escape(name));
+        }
+    }
+    
 
     /**
      * The template directory.
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setTemplateDir(String templateDir) {
     	this.templateDir = templateDir;
@@ -828,7 +844,7 @@ public abstract class UIBean extends Component {
 
     /**
      * The theme (other than default) to use for rendering the element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
       */
     public void setTheme(String theme) {
         this.theme = theme;
@@ -840,7 +856,7 @@ public abstract class UIBean extends Component {
 
     /**
      * The template (other than default) to use for rendering the element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setTemplate(String template) {
         this.template = template;
@@ -848,7 +864,7 @@ public abstract class UIBean extends Component {
 
     /**
      * The css class to use for element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setCssClass(String cssClass) {
         this.cssClass = cssClass;
@@ -856,7 +872,7 @@ public abstract class UIBean extends Component {
 
     /**
      * The css style definitions for element ro use
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setCssStyle(String cssStyle) {
         this.cssStyle = cssStyle;
@@ -864,7 +880,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Set the html title attribute on rendered html element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setTitle(String title) {
         this.title = title;
@@ -872,7 +888,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Set the html disabled attribute on rendered html element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setDisabled(String disabled) {
         this.disabled = disabled;
@@ -880,7 +896,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Label expression used for rendering a element specific label
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setLabel(String label) {
         this.label = label;
@@ -888,7 +904,7 @@ public abstract class UIBean extends Component {
 
     /**
      * deprecated.
-     * @a2.tagattribute required="false" default="left"
+     * @s.tagattribute required="false" default="left"
      * @deprecated please use {@link #setLabelposition(String)} instead
      */
     public void setLabelPosition(String labelPosition) {
@@ -897,7 +913,7 @@ public abstract class UIBean extends Component {
 
     /**
      * define label position of form element (top/left)
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setLabelposition(String labelPosition) {
         this.labelPosition = labelPosition;
@@ -905,7 +921,7 @@ public abstract class UIBean extends Component {
 
     /**
      * define required position of required form element (left|right)
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setRequiredposition(String requiredposition) {
         this.requiredposition = requiredposition;
@@ -913,7 +929,7 @@ public abstract class UIBean extends Component {
 
     /**
      * The name to set for element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setName(String name) {
         this.name = name;
@@ -921,7 +937,7 @@ public abstract class UIBean extends Component {
 
     /**
      * If set to true, the rendered element will indicate that input is required
-     * @a2.tagattribute  required="false" type="Boolean" default="false"
+     * @s.tagattribute  required="false" type="Boolean" default="false"
      */
     public void setRequired(String required) {
         this.required = required;
@@ -929,7 +945,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Set the html tabindex attribute on rendered html element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setTabindex(String tabindex) {
         this.tabindex = tabindex;
@@ -937,7 +953,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Preset the value of input element.
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setValue(String value) {
         this.value = value;
@@ -945,7 +961,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Set the html onclick attribute on rendered html element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setOnclick(String onclick) {
         this.onclick = onclick;
@@ -953,7 +969,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Set the html ondblclick attribute on rendered html element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setOndblclick(String ondblclick) {
         this.ondblclick = ondblclick;
@@ -961,7 +977,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Set the html onmousedown attribute on rendered html element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setOnmousedown(String onmousedown) {
         this.onmousedown = onmousedown;
@@ -969,7 +985,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Set the html onmouseup attribute on rendered html element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setOnmouseup(String onmouseup) {
         this.onmouseup = onmouseup;
@@ -977,7 +993,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Set the html onmouseover attribute on rendered html element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setOnmouseover(String onmouseover) {
         this.onmouseover = onmouseover;
@@ -985,7 +1001,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Set the html onmousemove attribute on rendered html element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setOnmousemove(String onmousemove) {
         this.onmousemove = onmousemove;
@@ -993,7 +1009,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Set the html onmouseout attribute on rendered html element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setOnmouseout(String onmouseout) {
         this.onmouseout = onmouseout;
@@ -1001,7 +1017,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Set the html onfocus attribute on rendered html element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setOnfocus(String onfocus) {
         this.onfocus = onfocus;
@@ -1009,7 +1025,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Set the html onblur attribute on rendered html element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setOnblur(String onblur) {
         this.onblur = onblur;
@@ -1017,7 +1033,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Set the html onkeypress attribute on rendered html element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setOnkeypress(String onkeypress) {
         this.onkeypress = onkeypress;
@@ -1025,7 +1041,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Set the html onkeydown attribute on rendered html element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setOnkeydown(String onkeydown) {
         this.onkeydown = onkeydown;
@@ -1033,7 +1049,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Set the html onkeyup attribute on rendered html element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setOnkeyup(String onkeyup) {
         this.onkeyup = onkeyup;
@@ -1041,7 +1057,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Set the html onselect attribute on rendered html element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setOnselect(String onselect) {
         this.onselect = onselect;
@@ -1049,7 +1065,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Set the html onchange attribute on rendered html element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setOnchange(String onchange) {
         this.onchange = onchange;
@@ -1057,7 +1073,7 @@ public abstract class UIBean extends Component {
     
     /**
      * Set the html accesskey attribute on rendered html element
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setAccesskey(String accesskey) {
     	this.accesskey = accesskey;
@@ -1065,7 +1081,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Set the tooltip of this particular component
-     * @a2.tagattribute required="false" type="String" default=""
+     * @s.tagattribute required="false" type="String" default=""
      */
     public void setTooltip(String tooltip) {
     	this.tooltip = tooltip;
@@ -1073,7 +1089,7 @@ public abstract class UIBean extends Component {
 
     /**
      * Set the tooltip configuration
-     * @a2.tagattribute required="false" type="String" default=""
+     * @s.tagattribute required="false" type="String" default=""
      */
     public void setTooltipConfig(String tooltipConfig) {
     	this.tooltipConfig = tooltipConfig;

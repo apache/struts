@@ -20,7 +20,6 @@ package org.apache.struts2.interceptor;
 import java.util.Map;
 
 import org.apache.struts2.util.TokenHelper;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;

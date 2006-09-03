@@ -17,12 +17,10 @@
  */
 package org.apache.struts2.views.util;
 
-import junit.framework.TestCase;
-
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.Settings;
-
+import org.apache.struts2.StrutsConstants;
 import com.opensymphony.xwork2.util.OgnlValueStack;
+import junit.framework.TestCase;
 
 /**
  * Test case for ContextUtil

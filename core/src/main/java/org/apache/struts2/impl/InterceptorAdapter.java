@@ -3,15 +3,13 @@
 package org.apache.struts2.impl;
 
 import static org.apache.struts2.impl.RequestContextImpl.ILLEGAL_PROCEED;
+import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.ActionInvocation;
 
 import java.util.concurrent.Callable;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.Interceptor;
-
 public class InterceptorAdapter implements Interceptor {
 
-    private static final long serialVersionUID = 8020658947818231684L;
     final org.apache.struts2.spi.Interceptor delegate;
 
     public InterceptorAdapter(org.apache.struts2.spi.Interceptor delegate) {

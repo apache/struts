@@ -17,15 +17,15 @@
  */
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.util.OgnlValueStack;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
  *
- * Creates a series of checkboxes from a list. Setup is like &lt;a:select /&gt; or &lt;a:radio /&gt;, but creates checkbox tags.
+ * Creates a series of checkboxes from a list. Setup is like &lt;s:select /&gt; or &lt;s:radio /&gt;, but creates checkbox tags.
  *
  * <!-- END SNIPPET: javadoc -->
  *
@@ -33,11 +33,11 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;a:checkboxlist name="foo" list="bar"/&gt;
+ * &lt;s:checkboxlist name="foo" list="bar"/&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @a2.tag name="checkboxlist" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.CheckboxListTag"
+ * @s.tag name="checkboxlist" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.CheckboxListTag"
  * description="Render a list of checkboxes"
   */
 public class CheckboxList extends ListUIBean {

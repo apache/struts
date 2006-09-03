@@ -17,9 +17,9 @@
  */
 package org.apache.struts2.components;
 
-import java.io.Writer;
-
 import com.opensymphony.xwork2.util.OgnlValueStack;
+
+import java.io.Writer;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -43,19 +43,19 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- *  &lt;a:if test="%{false}"&gt;
+ *  &lt;s:if test="%{false}"&gt;
  * 	    &lt;div&gt;Will Not Be Executed&lt;/div&gt;
- *  &lt;/a:if&gt;
- * 	&lt;a:elseif test="%{true}"&gt;
+ *  &lt;/s:if&gt;
+ * 	&lt;s:elseif test="%{true}"&gt;
  * 	    &lt;div&gt;Will Be Executed&lt;/div&gt;
- *  &lt;/a:elseif&gt;
- *  &lt;a:else&gt;
+ *  &lt;/s:elseif&gt;
+ *  &lt;s:else&gt;
  * 	    &lt;div&gt;Will Not Be Executed&lt;/div&gt;
- *  &lt;/a:else&gt;
+ *  &lt;/s:else&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @a2.tag name="elseif" tld-body-content="JSP" description="Elseif tag"  tld-tag-class="org.apache.struts2.views.jsp.ElseIfTag"
+ * @s.tag name="elseif" tld-body-content="JSP" description="Elseif tag"  tld-tag-class="org.apache.struts2.views.jsp.ElseIfTag"
  */
 public class ElseIf extends Component {
     public ElseIf(OgnlValueStack stack) {
@@ -67,7 +67,7 @@ public class ElseIf extends Component {
 
     public boolean start(Writer writer) {
         Boolean ifResult = (Boolean) stack.getContext().get(If.ANSWER);
-
+        
         if ((ifResult == null) || (ifResult.booleanValue())) {
             return false;
         }
@@ -85,13 +85,18 @@ public class ElseIf extends Component {
     }
 
     public boolean end(Writer writer, String body) {
-
+        if (answer == null) {
+            answer = Boolean.FALSE;
+        }
+        if (answer.booleanValue()) {
+            stack.getContext().put(If.ANSWER, answer);
+        }
         return super.end(writer, "");
     }
 
     /**
      * Expression to determine if body of tag is to be displayed
-     * @a2.tagattribute required="true" type="Boolean"
+     * @s.tagattribute required="true" type="Boolean"
      */
     public void setTest(String test) {
         this.test = test;

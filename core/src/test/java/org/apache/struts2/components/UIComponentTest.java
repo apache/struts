@@ -17,30 +17,10 @@
  */
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
-import org.apache.struts2.views.jsp.ui.ActionErrorTag;
-import org.apache.struts2.views.jsp.ui.ActionMessageTag;
-import org.apache.struts2.views.jsp.ui.AnchorTag;
-import org.apache.struts2.views.jsp.ui.CheckboxTag;
-import org.apache.struts2.views.jsp.ui.ComboBoxTag;
-import org.apache.struts2.views.jsp.ui.DivTag;
-import org.apache.struts2.views.jsp.ui.DoubleSelectTag;
-import org.apache.struts2.views.jsp.ui.FieldErrorTag;
-import org.apache.struts2.views.jsp.ui.FileTag;
-import org.apache.struts2.views.jsp.ui.FormTag;
-import org.apache.struts2.views.jsp.ui.HiddenTag;
-import org.apache.struts2.views.jsp.ui.LabelTag;
-import org.apache.struts2.views.jsp.ui.OptionTransferSelectTag;
-import org.apache.struts2.views.jsp.ui.PasswordTag;
-import org.apache.struts2.views.jsp.ui.RadioTag;
-import org.apache.struts2.views.jsp.ui.SelectTag;
-import org.apache.struts2.views.jsp.ui.SubmitTag;
-import org.apache.struts2.views.jsp.ui.TextFieldTag;
-import org.apache.struts2.views.jsp.ui.TextareaTag;
-import org.apache.struts2.views.jsp.ui.TokenTag;
-
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.views.jsp.ui.*;
 
 
 /**

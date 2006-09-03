@@ -17,25 +17,23 @@
  */
 package org.apache.struts2.views.jsp;
 
-import java.io.File;
-import java.io.StringWriter;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.JspWriter;
-
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.TestAction;
+import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.ApplicationMap;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
-
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.OgnlValueStack;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.JspWriter;
+import java.io.File;
+import java.io.StringWriter;
+import java.util.Map;
 
 
 /**

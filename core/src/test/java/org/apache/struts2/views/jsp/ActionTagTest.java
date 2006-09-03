@@ -17,21 +17,14 @@
  */
 package org.apache.struts2.views.jsp;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.TestAction;
-import org.apache.struts2.TestActionTagResult;
-import org.apache.struts2.TestConfigurationProvider;
+import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.util.OgnlValueStack;
+import org.apache.struts2.*;
 import org.apache.struts2.components.ActionComponent;
 
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
 
 
 /**
@@ -200,6 +193,7 @@ public class ActionTagTest extends AbstractTagTest {
         }
     }
 
+    // FIXME: Logging the error seems to cause the standard Maven build to fail
     public void testUnknownNameDefined() throws Exception {
         ActionTag tag = new ActionTag();
         tag.setPageContext(pageContext);
@@ -209,7 +203,7 @@ public class ActionTagTest extends AbstractTagTest {
 
         tag.doStartTag();
         tag.doEndTag();
-        // will just log it to ERROR but we run th code to test that it works somehow
+        // will just log it to ERROR but we run the code to test that it works somehow
     }
 
     public void testActionMethodWithExecuteResult() throws Exception {

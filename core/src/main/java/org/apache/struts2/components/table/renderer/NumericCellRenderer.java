@@ -17,9 +17,9 @@
  */
 package org.apache.struts2.components.table.renderer;
 
-import java.text.DecimalFormat;
-
 import org.apache.struts2.components.table.WebTable;
+
+import java.text.DecimalFormat;
 
 
 /**

@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.util.OgnlValueStack;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -37,11 +37,11 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <!-- END SNIPPET: exdescription -->
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;a:label label="%{text('user_name')}" name="userName" /&gt;
+ * &lt;s:label label="%{text('user_name')}" name="userName" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @a2.tag name="label" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.LabelTag"
+ * @s.tag name="label" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.LabelTag"
  * description="Render a label that displays read-only information"
  */
 public class Label extends UIBean {
@@ -79,7 +79,7 @@ public class Label extends UIBean {
 
     /**
      * HTML for attribute
-     * @a2.tagattribute required="false"
+     * @s.tagattribute required="false"
      */
     public void setFor(String forAttr) {
         this.forAttr = forAttr;

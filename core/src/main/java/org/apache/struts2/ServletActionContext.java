@@ -17,15 +17,14 @@
  */
 package org.apache.struts2;
 
-import java.util.Map;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
-
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import java.util.Map;
 
 
 /**
@@ -39,7 +38,6 @@ public class ServletActionContext extends ActionContext implements StrutsStatics
 	
 	public static final String STRUTS_VALUESTACK_KEY = "struts.valueStack";
 
-    @SuppressWarnings("unused")
     private ServletActionContext(Map context) {
         super(context);
     }

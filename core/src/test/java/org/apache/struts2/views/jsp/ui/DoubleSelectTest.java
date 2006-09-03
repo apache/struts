@@ -17,12 +17,12 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import org.apache.struts2.TestAction;
-import org.apache.struts2.views.jsp.AbstractUITagTest;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import org.apache.struts2.TestAction;
+import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 /**
  * Test case for DoubleSelectTag.

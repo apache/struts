@@ -1,5 +1,5 @@
 <#if !stack.findValue("#optiontransferselect_js_included")?exists><#t/>
-	<script language="javascript" src="<@s.url value="/struts/optiontransferselect.js" encode='false' />"></script>
+	<script language="javascript" src="<@saf.url value="/struts/optiontransferselect.js" encode='false' />"></script>
 	<#assign temporaryVariable = stack.setValue("#optiontransferselect_js_included", "true") /><#t/>
 </#if><#t/>
 <table border="0">
@@ -239,7 +239,7 @@
 	<#if parameters.doubleEmptyOption?default(false)><#t/>
     <option value=""></option>
 	</#if><#t/>
-	<@s.iterator value="parameters.doubleList"><#t/>
+	<@saf.iterator value="parameters.doubleList"><#t/>
         <#if parameters.doubleListKey?exists><#t/>
             <#assign doubleItemKey = stack.findValue(parameters.doubleListKey) /><#t/>
         <#else><#t/>
@@ -256,7 +256,7 @@
  		selected="selected"<#rt/>
         </#if><#t/>
     	>${doubleItemValue?html}</option><#lt/>
-	</@s.iterator><#t/>
+	</@saf.iterator><#t/>
 </select>
 <#if parameters.allowUpDownOnRight?default(true)>
 <input type="button" 

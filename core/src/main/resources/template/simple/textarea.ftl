@@ -30,6 +30,6 @@
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 ><#rt/>
 <#if parameters.nameValue?exists>
-<@s.property value="parameters.nameValue"/><#t/>
+<@saf.property value="parameters.nameValue"/><#t/>
 </#if>
 </textarea>

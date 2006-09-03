@@ -17,9 +17,15 @@
  */
 package org.apache.struts2.views;
 
-import org.apache.struts2.components.template.*;
-import org.apache.struts2.config.Settings;
 import junit.framework.TestCase;
+
+import org.apache.struts2.components.template.FreemarkerTemplateEngine;
+import org.apache.struts2.components.template.JspTemplateEngine;
+import org.apache.struts2.components.template.Template;
+import org.apache.struts2.components.template.TemplateEngine;
+import org.apache.struts2.components.template.TemplateEngineManager;
+import org.apache.struts2.components.template.VelocityTemplateEngine;
+import org.apache.struts2.config.Settings;
 
 /**
  * TemplateEngineManagerTest

@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -31,13 +31,13 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;s:textarea label="Comments" name="comments" cols="30" rows="8"/&gt;
+ * &lt;a:textarea label="Comments" name="comments" cols="30" rows="8"/&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
  * @see TabbedPanel
  *
- * @s.tag name="textarea" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TextareaTag"
+ * @a2.tag name="textarea" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TextareaTag"
  * description="Render HTML textarea tag."
  */
 public class TextArea extends UIBean {
@@ -78,7 +78,7 @@ public class TextArea extends UIBean {
 
     /**
      * HTML cols attribute
-     * @s.tagattribute required="false" type="Integer"
+     * @a2.tagattribute required="false" type="Integer"
      */
     public void setCols(String cols) {
         this.cols = cols;
@@ -86,7 +86,7 @@ public class TextArea extends UIBean {
 
     /**
      * Whether the textarea is readonly
-     * @s.tagattribute required="false" type="Boolean" default="false"
+     * @a2.tagattribute required="false" type="Boolean" default="false"
      */
     public void setReadonly(String readonly) {
         this.readonly = readonly;
@@ -94,7 +94,7 @@ public class TextArea extends UIBean {
 
     /**
      * HTML rows attribute
-     * @s.tagattribute required="false" type="Integer"
+     * @a2.tagattribute required="false" type="Integer"
      */
     public void setRows(String rows) {
         this.rows = rows;
@@ -102,7 +102,7 @@ public class TextArea extends UIBean {
 
     /**
      * HTML wrap attribute
-     * @s.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setWrap(String wrap) {
         this.wrap = wrap;

@@ -17,12 +17,13 @@
  */
 package org.apache.struts2.views.jsp;
 
-import org.apache.struts2.views.jsp.ui.AnchorTag;
-import org.apache.struts2.views.jsp.ui.StrutsBodyContent;
+import java.io.StringWriter;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-import java.io.StringWriter;
+
+import org.apache.struts2.views.jsp.ui.AnchorTag;
+import org.apache.struts2.views.jsp.ui.StrutsBodyContent;
 
 
 /**

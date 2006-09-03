@@ -17,19 +17,26 @@
  */
 package org.apache.struts2.views.tiles;
 
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.ServletDispatcherResult;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.LocaleProvider;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.tiles.*;
+import java.util.Locale;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Locale;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.ServletDispatcherResult;
+import org.apache.tiles.ComponentContext;
+import org.apache.tiles.ComponentDefinition;
+import org.apache.tiles.ComponentDefinitions;
+import org.apache.tiles.Controller;
+import org.apache.tiles.DefinitionsFactory;
+import org.apache.tiles.TilesUtilImpl;
+
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.LocaleProvider;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -37,38 +44,36 @@ import java.util.Locale;
  * <!-- END SNIPPET: description -->
  *
  * <!-- START SNIPPET: webxml -->
- * In your web.xml file, you need to add a servlet entry for TilesServlet to load the tiles
- * definitions into the ServletContext.
+ * In your web.xml file, you need to add a servlet entry for TilesServlet to load the tiles definitions into the ServletContext.
  *
- * &lt;servlet&gt;
- *      &lt;servlet-name&gt;tiles&lt;/servlet-name&gt;
- *      &lt;servlet-class&gt;org.apache.tiles.servlets.TilesServlet&lt;/servlet-class&gt;
- *      &lt;init-param&gt;
- *          &lt;param-name&gt;definitions-config&lt;/param-name&gt;
- *          &lt;param-value&gt;/WEB-INF/tiles-config.xml&lt;/param-value&gt;
- *      &lt;/init-param&gt;
- *      &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- * &lt;/servlet&gt;
+ * <servlet>
+ *      <servlet-name>tiles</servlet-name>
+ *      <servlet-class>org.apache.tiles.servlets.TilesServlet</servlet-class>
+ *      <init-param>
+ *          <param-name>definitions-config</param-name>
+ *          <param-value>/WEB-INF/tiles-config.xml</param-value>
+ *      </init-param>
+ *      <load-on-startup>1</load-on-startup>
+ * </servlet>
  * <!-- END SNIPPET: webxml -->
  *
- * <!-- START SNIPPET: strutsxml -->
- * In struts.xml, use type="tiles" on your &lt;result&gt;.
+ * <!-- START SNIPPET: xworkxml -->
+ * In struts.xml, use type="tiles" on your <result>.
  *
- * &lt;action name="editUser" class="userAction" method="edit"&gt;
- *      &lt;result name="success" type="tiles"&gt;userForm&lt;/result&gt;
- *      &lt;result name="input" type="tiles"&gt;userList&lt;/result&gt;
- * &lt;/action&gt;
- * <!-- END SNIPPET: strutsxml -->
+ * <action name="editUser" class="userAction" method="edit">
+ *      <result name="success" type="tiles">userForm</result>
+ *      <result name="input" type="tiles">userList</result>
+ * </action>
+ * <!-- END SNIPPET: xworkxml -->
  *
  *
  * <!-- START SNIPPET: packageconfig -->
  *
  * Making this result type the default for the current package.
  *
- * &lt;result-types&gt;
- *      &lt;result-type name="tiles"
- * class="org.apache.struts2.views.tiles.TilesResult" default="true" /&gt;
- * &lt;/result-types&gt;
+ * <result-types>
+ *      <result-type name="tiles" class="org.apache.struts2.views.tiles.TilesResult" default="true" />
+ * </result-types>
  * <!-- END SNIPPET: packageconfig -->
  *
  */

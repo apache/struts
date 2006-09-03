@@ -17,10 +17,12 @@
  */
 package org.apache.struts2.dispatcher;
 
+import junit.framework.Assert;
+
 import org.apache.struts2.TestAction;
+
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
-import junit.framework.Assert;
 
 
 /**

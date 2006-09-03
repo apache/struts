@@ -17,13 +17,15 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.Writer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.Writer;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * ClosingUIBean is the standard superclass for UI components such as div etc.
@@ -41,7 +43,7 @@ public abstract class ClosingUIBean extends UIBean {
 
     /**
      * Set template to use for opening the rendered html.
-     * @s.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setOpenTemplate(String openTemplate) {
         this.openTemplate = openTemplate;

@@ -17,11 +17,12 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import java.io.Writer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.Writer;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -34,7 +35,7 @@ import java.io.Writer;
  *
  * @see TabbedPanel
  *
- * @s.tag name="panel" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.PanelTag"
+ * @a2.tag name="panel" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.PanelTag"
  * description="Render a panel for tabbedPanel"
  */
 public class Panel extends Div {
@@ -95,7 +96,7 @@ public class Panel extends Div {
 
     /**
      * The text of the tab to display in the header tab list
-     * @s.tagattribute required="true"
+     * @a2.tagattribute required="true"
      */
     public void setTabName(String tabName) {
         this.tabName = tabName;
@@ -103,7 +104,7 @@ public class Panel extends Div {
 
     /**
      * Set subscribeTopicName attribute
-     * @s.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setSubscribeTopicName(String subscribeTopicName) {
         this.subscribeTopicName = subscribeTopicName;
@@ -111,7 +112,7 @@ public class Panel extends Div {
 
     /**
      * determines whether this is a remote panel (ajax) or a local panel (content loaded into visible/hidden containers)
-     * @s.tagattribute required="false" type="Boolean" default="false"
+     * @a2.tagattribute required="false" type="Boolean" default="false"
      */
     public void setRemote(String remote) {
         this.remote = remote;

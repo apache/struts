@@ -17,16 +17,18 @@
  */
 package org.apache.struts2.dispatcher;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import junit.framework.TestCase;
+
 import com.mockobjects.constraint.Constraint;
 import com.mockobjects.constraint.IsAnything;
 import com.mockobjects.constraint.IsEqual;
 import com.mockobjects.dynamic.Mock;
-import junit.framework.TestCase;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**

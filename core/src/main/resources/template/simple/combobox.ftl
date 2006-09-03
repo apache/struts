@@ -27,7 +27,7 @@
 	<#if parameters.emptyOption?default(false)>
 	    <option value=""></option>
 	</#if>
-    <@s.iterator value="parameters.list">
+    <@saf.iterator value="parameters.list">
     <#if parameters.listKey?exists>
     	<#assign tmpListKey = stack.findString(parameters.listKey) />
     <#else>
@@ -45,6 +45,6 @@
     ><#t/>
             ${tmpListValue?html}<#t/>
     </option><#lt/>
-    </@s.iterator>
+    </@saf.iterator>
 </select>
 </#if>

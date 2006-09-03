@@ -17,9 +17,9 @@
  */
 package org.apache.struts2.views.xslt;
 
+import org.w3c.dom.DOMException;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.DOMException;
 
 /**
  * A NamedNodeMap that wraps the Nodes returned in their proxies.

@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
  * <pre>
  * <!-- START SNIPPET: example -->
  * JSP:
- * &lt;s:checkbox label="checkbox test" name="checkboxField1" value="aBoolean" fieldValue="true"/&gt;
+ * &lt;a:checkbox label="checkbox test" name="checkboxField1" value="aBoolean" fieldValue="true"/&gt;
  *
  * Velocity:
  * #tag( Checkbox "label=checkbox test" "name=checkboxField1" "value=aBoolean" )
@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="checkbox" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.CheckboxTag"
+ * @a2.tag name="checkbox" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.CheckboxTag"
  * description="Render a checkbox input field"
   */
 public class Checkbox extends UIBean {
@@ -73,7 +73,7 @@ public class Checkbox extends UIBean {
 
     /**
      * The actual HTML value attribute of the checkbox.
-     * @s.tagattribute required="false" default="'true'"
+     * @a2.tagattribute required="false" default="'true'"
      */
     public void setFieldValue(String fieldValue) {
         this.fieldValue = fieldValue;

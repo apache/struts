@@ -17,9 +17,9 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
 import java.io.Writer;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -43,22 +43,22 @@ import java.io.Writer;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- *  &lt;s:if test="%{false}"&gt;
+ *  &lt;a:if test="%{false}"&gt;
  *	    &lt;div&gt;Will Not Be Executed&lt;/div&gt;
- *  &lt;/s:if&gt;
- * 	&lt;s:elseif test="%{true}"&gt;
+ *  &lt;/a:if&gt;
+ * 	&lt;a:elseif test="%{true}"&gt;
  *	    &lt;div&gt;Will Be Executed&lt;/div&gt;
- *  &lt;s:else&gt;
- *  &lt;/s:elseif&gt;
+ *  &lt;/a:elseif&gt;
+ *  &lt;a:else&gt;
  *	    &lt;div&gt;Will Not Be Executed&lt;/div&gt;
- *  &lt;/s:else&gt;
+ *  &lt;/a:else&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
  * @see Else
  * @see ElseIf
  *
- * @s.tag name="if" tld-body-content="JSP" description="If tag" tld-tag-class="org.apache.struts2.views.jsp.IfTag"
+ * @a2.tag name="if" tld-body-content="JSP" description="If tag" tld-tag-class="org.apache.struts2.views.jsp.IfTag"
  */
 public class If extends Component {
     public static final String ANSWER = "struts.if.answer";
@@ -68,7 +68,7 @@ public class If extends Component {
 
     /**
      * Expression to determine if body of tag is to be displayed
-     * @s.tagattribute required="true" type="Boolean"
+     * @a2.tagattribute required="true" type="Boolean"
      */
     public void setTest(String test) {
         this.test = test;
@@ -84,12 +84,13 @@ public class If extends Component {
         if (answer == null) {
             answer = Boolean.FALSE;
         }
+        
         stack.getContext().put(ANSWER, answer);
         return answer.booleanValue();
     }
 
     public boolean end(Writer writer, String body) {
-    	stack.getContext().put(ANSWER, answer);
+
         return super.end(writer, body);
     }
 }

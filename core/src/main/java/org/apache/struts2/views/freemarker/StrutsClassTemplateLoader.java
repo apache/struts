@@ -17,10 +17,11 @@
  */
 package org.apache.struts2.views.freemarker;
 
-import com.opensymphony.util.ClassLoaderUtil;
-import freemarker.cache.URLTemplateLoader;
-
 import java.net.URL;
+
+import com.opensymphony.util.ClassLoaderUtil;
+
+import freemarker.cache.URLTemplateLoader;
 
 /**
  */

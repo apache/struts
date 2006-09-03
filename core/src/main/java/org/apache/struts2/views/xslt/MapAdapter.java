@@ -17,11 +17,11 @@
  */
 package org.apache.struts2.views.xslt;
 
-import org.w3c.dom.Node;
-
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.w3c.dom.Node;
 
 /**
  * MapAdapter adapters a java.util.Map type to an XML DOM with the following

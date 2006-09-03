@@ -17,6 +17,23 @@
  */
 package org.apache.struts2.views.velocity;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.StringTokenizer;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
@@ -24,12 +41,48 @@ import org.apache.struts2.config.Settings;
 import org.apache.struts2.util.VelocityStrutsUtil;
 import org.apache.struts2.views.jsp.ui.OgnlTool;
 import org.apache.struts2.views.util.ContextUtil;
-import org.apache.struts2.views.velocity.components.*;
-
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.util.OgnlValueStack;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.views.velocity.components.ActionDirective;
+import org.apache.struts2.views.velocity.components.ActionErrorDirective;
+import org.apache.struts2.views.velocity.components.ActionMessageDirective;
+import org.apache.struts2.views.velocity.components.AnchorDirective;
+import org.apache.struts2.views.velocity.components.BeanDirective;
+import org.apache.struts2.views.velocity.components.CheckBoxDirective;
+import org.apache.struts2.views.velocity.components.CheckBoxListDirective;
+import org.apache.struts2.views.velocity.components.ComboBoxDirective;
+import org.apache.struts2.views.velocity.components.ComponentDirective;
+import org.apache.struts2.views.velocity.components.DateDirective;
+import org.apache.struts2.views.velocity.components.DatePickerDirective;
+import org.apache.struts2.views.velocity.components.DivDirective;
+import org.apache.struts2.views.velocity.components.DoubleSelectDirective;
+import org.apache.struts2.views.velocity.components.FieldErrorDirective;
+import org.apache.struts2.views.velocity.components.FileDirective;
+import org.apache.struts2.views.velocity.components.FormDirective;
+import org.apache.struts2.views.velocity.components.HeadDirective;
+import org.apache.struts2.views.velocity.components.HiddenDirective;
+import org.apache.struts2.views.velocity.components.I18nDirective;
+import org.apache.struts2.views.velocity.components.IncludeDirective;
+import org.apache.struts2.views.velocity.components.LabelDirective;
+import org.apache.struts2.views.velocity.components.OptionTransferSelectDirective;
+import org.apache.struts2.views.velocity.components.PanelDirective;
+import org.apache.struts2.views.velocity.components.ParamDirective;
+import org.apache.struts2.views.velocity.components.PasswordDirective;
+import org.apache.struts2.views.velocity.components.PropertyDirective;
+import org.apache.struts2.views.velocity.components.PushDirective;
+import org.apache.struts2.views.velocity.components.RadioDirective;
+import org.apache.struts2.views.velocity.components.ResetDirective;
+import org.apache.struts2.views.velocity.components.SelectDirective;
+import org.apache.struts2.views.velocity.components.SetDirective;
+import org.apache.struts2.views.velocity.components.SubmitDirective;
+import org.apache.struts2.views.velocity.components.TabbedPanelDirective;
+import org.apache.struts2.views.velocity.components.TextAreaDirective;
+import org.apache.struts2.views.velocity.components.TextDirective;
+import org.apache.struts2.views.velocity.components.TextFieldDirective;
+import org.apache.struts2.views.velocity.components.TokenDirective;
+import org.apache.struts2.views.velocity.components.TreeDirective;
+import org.apache.struts2.views.velocity.components.TreeNodeDirective;
+import org.apache.struts2.views.velocity.components.URLDirective;
+import org.apache.struts2.views.velocity.components.UpDownSelectDirective;
+import org.apache.struts2.views.velocity.components.WebTableDirective;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
@@ -38,14 +91,8 @@ import org.apache.velocity.tools.view.ToolboxManager;
 import org.apache.velocity.tools.view.context.ChainedContext;
 import org.apache.velocity.tools.view.servlet.ServletToolboxManager;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 
 /**
@@ -128,8 +175,8 @@ public class VelocityManager {
      * following context parameters are defined:
      * <p/>
      * <ul>
-     * <li><strong>request</strong> - the current HttpServletRequest</li>
-     * <li><strong>response</strong> - the current HttpServletResponse</li>
+     * <li><strong>req</strong> - the current HttpServletRequest</li>
+     * <li><strong>res</strong> - the current HttpServletResponse</li>
      * <li><strong>stack</strong> - the current {@link OgnlValueStack}</li>
      * <li><strong>ognl</strong> - an {@link OgnlTool}</li>
      * <li><strong>struts</strong> - an instance of {@link org.apache.struts2.util.StrutsUtil}</li>
@@ -476,30 +523,30 @@ public class VelocityManager {
          * Ben Hall (22/08/2003)
          */
         if (p.getProperty(Velocity.RESOURCE_LOADER) == null) {
-            p.setProperty(Velocity.RESOURCE_LOADER, "strutsfile, strutsclass");
+            p.setProperty(Velocity.RESOURCE_LOADER, "saffile, safclass");
         }
 
         /**
-         * If there's a "real" path add it for the strutsfile resource loader.
+         * If there's a "real" path add it for the saffile resource loader.
          * If there's no real path and they haven't configured a loader then we change
-         * resource loader property to just use the strutsclass loader
+         * resource loader property to just use the safclass loader
          * Ben Hall (22/08/2003)
          */
         if (context.getRealPath("") != null) {
-            p.setProperty("strutsfile.resource.loader.description", "Velocity File Resource Loader");
-            p.setProperty("strutsfile.resource.loader.class", "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
-            p.setProperty("strutsfile.resource.loader.path", context.getRealPath(""));
-            p.setProperty("strutsfile.resource.loader.modificationCheckInterval", "2");
-            p.setProperty("strutsfile.resource.loader.cache", "true");
+            p.setProperty("saffile.resource.loader.description", "Velocity File Resource Loader");
+            p.setProperty("saffile.resource.loader.class", "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
+            p.setProperty("saffile.resource.loader.path", context.getRealPath(""));
+            p.setProperty("saffile.resource.loader.modificationCheckInterval", "2");
+            p.setProperty("saffile.resource.loader.cache", "true");
         } else {
-            // remove strutsfile from resource loader property
+            // remove saffile from resource loader property
             String prop = p.getProperty(Velocity.RESOURCE_LOADER);
-            if (prop.indexOf("strutsfile,") != -1) {
-                prop = replace(prop, "strutsfile,", "");
-            } else if (prop.indexOf(", strutsfile") != -1) {
-                prop = replace(prop, ", strutsfile", "");
-            } else if (prop.indexOf("strutsfile") != -1) {
-                prop = replace(prop, "strutsfile", "");
+            if (prop.indexOf("saffile,") != -1) {
+                prop = replace(prop, "saffile,", "");
+            } else if (prop.indexOf(", saffile") != -1) {
+                prop = replace(prop, ", saffile", "");
+            } else if (prop.indexOf("saffile") != -1) {
+                prop = replace(prop, "saffile", "");
             }
 
             p.setProperty(Velocity.RESOURCE_LOADER, prop);
@@ -511,10 +558,10 @@ public class VelocityManager {
          * Unfortunately, there does not appear to be a macro for the class loader keywords
          * Matt Ho - Mon Mar 17 00:21:46 PST 2003
          */
-        p.setProperty("strutsclass.resource.loader.description", "Velocity Classpath Resource Loader");
-        p.setProperty("strutsclass.resource.loader.class", "org.apache.struts2.views.velocity.StrutsResourceLoader");
-        p.setProperty("strutsclass.resource.loader.modificationCheckInterval", "2");
-        p.setProperty("strutsclass.resource.loader.cache", "true");
+        p.setProperty("safclass.resource.loader.description", "Velocity Classpath Resource Loader");
+        p.setProperty("safclass.resource.loader.class", "org.apache.struts2.views.velocity.StrutsResourceLoader");
+        p.setProperty("safclass.resource.loader.modificationCheckInterval", "2");
+        p.setProperty("safclass.resource.loader.cache", "true");
 
         // components
         StringBuffer sb = new StringBuffer();

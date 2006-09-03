@@ -17,12 +17,13 @@
  */
 package org.apache.struts2.views.velocity.components;
 
-import org.apache.struts2.components.Component;
-import org.apache.struts2.components.Hidden;
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.components.Component;
+import org.apache.struts2.components.Hidden;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * @see Hidden

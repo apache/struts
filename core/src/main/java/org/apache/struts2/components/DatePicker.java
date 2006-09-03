@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -72,9 +72,9 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- START SNIPPET: expl1 -->
  *
  * Example 1:
- *     &lt;s:datepicker name="order.date" label="Order Date" /&gt;
+ *     &lt;a:datepicker name="order.date" label="Order Date" /&gt;
  * Example 2:
- *     &lt;s:datepicker name="delivery.date" label="Delivery Date" format="#yyyy-#MM-#dd"  /&gt;
+ *     &lt;a:datepicker name="delivery.date" label="Delivery Date" format="#yyyy-#MM-#dd"  /&gt;
  *     
  * <!-- END SNIPPET: expl1 -->
  * </pre>
@@ -89,12 +89,12 @@ import javax.servlet.http.HttpServletResponse;
  * <pre>
  * <!-- START SNIPPET: expl2 -->
  * 
- * &lt;s:datepicker name="birthday" label="Birthday" templateCss="...." /&gt;
+ * &lt;a:datepicker name="birthday" label="Birthday" templateCss="...." /&gt;
  * 
  * <!-- END SNIPPET: expl2 -->
  * </pre>
  *
- * @s.tag name="datepicker" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.DatePickerTag"
+ * @a2.tag name="datepicker" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.DatePickerTag"
  * description="Render datepicker"
  */
 public class DatePicker extends TextField {
@@ -137,7 +137,7 @@ public class DatePicker extends TextField {
 
     /**
      * The format to use for date field.
-     * @s.tagattribute required="false" type="String" default="Dateformat specified by language preset (%Y/%m/%d for en)"
+     * @a2.tagattribute required="false" type="String" default="Dateformat specified by language preset (%Y/%m/%d for en)"
      */
     public void setFormat(String format) {
         this.format = format;
@@ -145,7 +145,7 @@ public class DatePicker extends TextField {
     
     /**
      * The date picker icon path
-     * @s.tagattribute required="false" type="String" default="/struts/dojo/struts/widgets/dateIcon.gif"
+     * @a2.tagattribute required="false" type="String" default="/struts/dojo/struts/widgets/dateIcon.gif"
      */
     public void setDateIconPath(String dateIconPath) {
     	this.dateIconPath = dateIconPath;
@@ -153,7 +153,7 @@ public class DatePicker extends TextField {
     
     /**
      * The datepicker template path.
-     * @s.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String" 
      */
     public void setTemplatePath(String templatePath) {
     	this.templatePath = templatePath;
@@ -161,7 +161,7 @@ public class DatePicker extends TextField {
     
     /**
      * The datepicker template css path.
-     * @s.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setTemplateCssPath(String templateCssPath) {
     	this.templateCssPath = templateCssPath;
@@ -169,7 +169,7 @@ public class DatePicker extends TextField {
     
     /**
      * The datepicker text field size.
-     * @s.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setSize(String size) {
     	this.size = size;

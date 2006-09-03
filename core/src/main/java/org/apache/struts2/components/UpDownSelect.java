@@ -43,7 +43,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <!-- START SNIPPET: example -->
  * 
  * &lt;!-- Example 1: simple example --&gt;
- * &lt;s:updownselect
+ * &lt;a:updownselect 
  * list="#{'england':'England', 'america':'America', 'germany':'Germany'}" 
  * name="prioritisedFavouriteCountries" 
  * headerKey="-1" 
@@ -51,7 +51,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * emptyOption="true" /&gt;
  *
  * &lt;!-- Example 2: more complex example --&gt;
- * &lt;s:updownselect
+ * &lt;a:updownselect 
  * list="defaultFavouriteCartoonCharacters" 
  * name="prioritisedFavouriteCartoonCharacters" 
  * headerKey="-1" 
@@ -69,7 +69,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * 
  * @version $Date$ $Id$
  * 
- * @s.tag name="updownselect" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.UpDownSelectTag"
+ * @a2.tag name="updownselect" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.UpDownSelectTag"
  * description="Render a up down select element"
  */
 public class UpDownSelect extends Select {
@@ -148,7 +148,7 @@ public class UpDownSelect extends Select {
 			ancestorForm.getParameters().put("updownselectIds", m);
 		}
 		else {
-			_log.warn("no ancestor form found for updownselect "+this+", therefore autoselect of all elements upon form submission will not work ");
+			_log.warn("no ancestor form found for updownselect "+this+", therefore autoselect of all elements unpon form submission will not work ");
 		}
 	}
 
@@ -158,7 +158,7 @@ public class UpDownSelect extends Select {
 	}
 	/**
      * Whether move up button should be displayed
-	 * @s.tagattribute required="false" type="Boolean" default="true"
+	 * @a2.tagattribute required="false" type="Boolean" default="true"
 	 */
 	public void setAllowMoveUp(String allowMoveUp) {
 		this.allowMoveUp = allowMoveUp;
@@ -171,7 +171,7 @@ public class UpDownSelect extends Select {
 	}
 	/**
      * Whether move down button should be displayed
-	 * @s.tagattribute required="false" type="Boolean" default="true"
+	 * @a2.tagattribute required="false" type="Boolean" default="true"
 	 */
 	public void setAllowMoveDown(String allowMoveDown) {
 		this.allowMoveDown = allowMoveDown;
@@ -184,7 +184,7 @@ public class UpDownSelect extends Select {
 	}
 	/**
      * Whether or not select all button should be displayed
-	 * @s.tagattribute required="false" type="Boolean" default="true"
+	 * @a2.tagattribute required="false" type="Boolean" default="true"
 	 */
 	public void setAllowSelectAll(String allowSelectAll) {
 		this.allowSelectAll = allowSelectAll;
@@ -196,7 +196,7 @@ public class UpDownSelect extends Select {
 	}
 	/**
      * Text to display on the move up button
-	 * @s.tagattribute required="false" type="String" default="^"
+	 * @a2.tagattribute required="false" type="String" default="^"
 	 */
 	public void setMoveUpLabel(String moveUpLabel) {
 		this.moveUpLabel = moveUpLabel;
@@ -209,7 +209,7 @@ public class UpDownSelect extends Select {
 	}
 	/**
      * Text to display on the move down button
-	 * @s.tagattribute required="false" type="String" default="v"
+	 * @a2.tagattribute required="false" type="String" default="v"
 	 */
 	public void setMoveDownLabel(String moveDownLabel) {
 		this.moveDownLabel = moveDownLabel;
@@ -222,7 +222,7 @@ public class UpDownSelect extends Select {
 	}
 	/**
      * Text to display on the select all button
-	 * @s.tagattribute required="false" type="String" default="*"
+	 * @a2.tagattribute required="false" type="String" default="*"
 	 */
 	public void setSelectAllLabel(String selectAllLabel) {
 		this.selectAllLabel = selectAllLabel;

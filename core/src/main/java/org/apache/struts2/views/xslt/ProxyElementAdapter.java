@@ -17,12 +17,17 @@
  */
 package org.apache.struts2.views.xslt;
 
-import org.w3c.dom.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.util.List;
-import java.util.ArrayList;
+import org.w3c.dom.Attr;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.TypeInfo;
 
 /**
  * ProxyElementAdapter is a pass-through adapter for objects which already

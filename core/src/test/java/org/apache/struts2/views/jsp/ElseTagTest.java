@@ -17,16 +17,16 @@
  */
 package org.apache.struts2.views.jsp;
 
-import com.mockobjects.servlet.MockJspWriter;
-import com.mockobjects.servlet.MockPageContext;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.components.If;
-import com.opensymphony.xwork2.util.OgnlValueStack;
-import junit.framework.TestCase;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.TagSupport;
+import com.mockobjects.servlet.MockJspWriter;
+import com.mockobjects.servlet.MockPageContext;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 
 /**
@@ -93,7 +93,7 @@ public class ElseTagTest extends StrutsTestCase {
         // create the mock http servlet request
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         
-        // NOTE: in Struts Tag library, TagUtil gets stack from request, which will be set
+        // NOTE: in WW Tag library, TagUtil gets stack from request, which will be set
         //       when request going through the FilterDispatcher --> DispatcherUtil etc. route
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
 

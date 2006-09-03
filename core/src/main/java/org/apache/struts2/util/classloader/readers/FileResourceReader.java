@@ -17,9 +17,9 @@
  */
 package org.apache.struts2.util.classloader.readers;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
+
+import org.apache.commons.io.FileUtils;
 
 /**
  */

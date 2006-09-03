@@ -17,11 +17,11 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
 import java.io.Writer;
 
 import org.apache.struts2.StrutsException;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -72,9 +72,9 @@ import org.apache.struts2.StrutsException;
  * This second example demonstrates how the text tag can use parameters from this param tag.
  * <!-- START SNIPPET: example2 -->
  * <pre>
- * &lt;s:text name="cart.total.cost"&gt;
- *     &lt;s:param value="#session.cartTotal"/&gt;
- * &lt;/s:text&gt;
+ * &lt;a:text name="cart.total.cost"&gt;
+ *     &lt;a:param value="#session.cartTotal"/&gt;
+ * &lt;/a:text&gt;
  * </pre>
  * <!-- END SNIPPET: example2 -->
  * <p/>
@@ -83,7 +83,7 @@ import org.apache.struts2.StrutsException;
  * @see Bean
  * @see Text
  *
- * @s.tag name="param" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ParamTag"
+ * @a2.tag name="param" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ParamTag"
  * description="Parametrize other tags"
  */
 public class Param extends Component {
@@ -126,7 +126,7 @@ public class Param extends Component {
 
     /**
      * Name of Parameter to set
-     * @s.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setName(String name) {
         this.name = name;
@@ -134,7 +134,7 @@ public class Param extends Component {
 
     /**
      * Value expression for Parameter to set
-     * @s.tagattribute required="false" default="The value of evaluating provided name against stack"
+     * @a2.tagattribute required="false" default="The value of evaluating provided name against stack"
      */
     public void setValue(String value) {
         this.value = value;

@@ -112,7 +112,7 @@ public class TimePicker extends TextField {
 	
 	/**
      * The format to use for time field.
-     * @s.tagattribute required="false" type="String" default="Dateformat specified by language preset (%Y/%m/%d for en)"
+     * @a2.tagattribute required="false" type="String" default="Dateformat specified by language preset (%Y/%m/%d for en)"
      */
     public void setFormat(String format) {
         this.format = format;
@@ -120,7 +120,7 @@ public class TimePicker extends TextField {
     
     /**
      * The time picker icon path
-     * @s.tagattribute required="false" type="String" default="/struts/dojo/struts/widgets/dateIcon.gif"
+     * @a2.tagattribute required="false" type="String" default="/struts/dojo/struts/widgets/dateIcon.gif"
      */
     public void setTimeIconPath(String timeIconPath) {
     	this.timeIconPath = timeIconPath;
@@ -128,7 +128,7 @@ public class TimePicker extends TextField {
     
     /**
      * The time picker template path.
-     * @s.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String" 
      */
     public void setTemplatePath(String templatePath) {
     	this.templatePath = templatePath;
@@ -136,7 +136,7 @@ public class TimePicker extends TextField {
     
     /**
      * The time picker template css path.
-     * @s.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setTemplateCssPath(String templateCssPath) {
     	this.templateCssPath = templateCssPath;
@@ -144,7 +144,7 @@ public class TimePicker extends TextField {
     
     /**
      * The time picker text field size.
-     * @s.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setSize(String size) {
     	this.size = size;

@@ -17,15 +17,16 @@
  */
 package org.apache.struts2.util.classloader;
 
+import java.io.File;
+
 import org.apache.struts2.util.classloader.compilers.JavaCompiler;
 import org.apache.struts2.util.classloader.compilers.eclipse.EclipseJavaCompiler;
 import org.apache.struts2.util.classloader.listeners.CompilingListener;
 import org.apache.struts2.util.classloader.monitor.FilesystemAlterationMonitor;
 import org.apache.struts2.util.classloader.stores.MemoryResourceStore;
 import org.apache.struts2.util.classloader.stores.TransactionalResourceStore;
-import com.uwyn.rife.continuations.ClassByteAware;
 
-import java.io.File;
+import com.uwyn.rife.continuations.ClassByteAware;
 
 /**
  */

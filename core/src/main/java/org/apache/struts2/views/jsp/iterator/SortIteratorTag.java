@@ -17,13 +17,13 @@
  */
 package org.apache.struts2.views.jsp.iterator;
 
-import org.apache.struts2.util.MakeIterator;
-import org.apache.struts2.util.SortIteratorFilter;
-import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
+import java.util.Comparator;
 
 import javax.servlet.jsp.JspException;
 
-import java.util.Comparator;
+import org.apache.struts2.util.MakeIterator;
+import org.apache.struts2.util.SortIteratorFilter;
+import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
 
 
 /**
@@ -55,15 +55,15 @@ import java.util.Comparator;
  * <!-- START SNIPPET: example -->
  *
  * USAGE 1:
- * &lt;s:sort comparator="myComparator" source="myList"&gt;
- *      &lt;s:iterator&gt;
+ * &lt;a:sort comparator="myComparator" source="myList"&gt;
+ *      &lt;a:iterator&gt;
  * 		&lt;!-- do something with each sorted elements --&gt;
- * 		&lt;s:property value="..." /&gt;
- *      &lt;/s:iterator&gt;
- * &lt;/s:sort&gt;
+ * 		&lt;a:property value="..." /&gt;
+ *      &lt;/a:iterator&gt;
+ * &lt;/a:sort&gt;
  *
  * USAGE 2:
- * &lt;s:sort id="mySortedList" comparator="myComparator" source="myList" /&gt;
+ * &lt;a:sort id="mySortedList" comparator="myComparator" source="myList" /&gt;
  *
  * &lt;%
  *    Iterator sortedIterator = (Iterator) pageContext.getAttribute("mySortedList");
@@ -78,7 +78,7 @@ import java.util.Comparator;
  *
  * @see org.apache.struts2.util.SortIteratorFilter
  *
- * @s.tag name="sort" tld-body-content="JSP"
+ * @ww.tag name="sort" tld-body-content="JSP"
  * description="Sort a List using a Comparator both passed in as the tag attribute."
  */
 public class SortIteratorTag extends StrutsBodyTagSupport {
@@ -91,7 +91,7 @@ public class SortIteratorTag extends StrutsBodyTagSupport {
     SortIteratorFilter sortIteratorFilter = null;
 
     /**
-     * @s.tagattribute required="true" type="java.util.Comparator"
+     * @ww.tagattribute required="true" type="java.util.Comparator"
      * description="The comparator to use"
      */
     public void setComparator(String comparator) {
@@ -99,7 +99,7 @@ public class SortIteratorTag extends StrutsBodyTagSupport {
     }
 
     /**
-     * @s.tagattribute required="false"
+     * @ww.tagattribute required="false"
      * description="The iterable source to sort"
      */
     public void setSource(String source) {

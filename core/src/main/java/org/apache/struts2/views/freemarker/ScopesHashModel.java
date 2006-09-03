@@ -17,15 +17,16 @@
  */
 package org.apache.struts2.views.freemarker;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import com.opensymphony.xwork2.util.OgnlValueStack;
+
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 
 /**
@@ -40,7 +41,6 @@ public class ScopesHashModel extends SimpleHash {
 	private static final long serialVersionUID = 5551686380141886764L;
 	
 	private HttpServletRequest request;
-    private ObjectWrapper objectWraper;
     private ServletContext servletContext;
     private OgnlValueStack stack;
 

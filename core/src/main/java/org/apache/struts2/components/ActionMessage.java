@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -34,14 +34,14 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- *    &lt;s:actionmessage /&gt;
- *    &lt;s:form .... &gt;
+ *    &lt;a:actionmessage /&gt;
+ *    &lt;a:form .... &gt;
  *       ....
- *    &lt;/s:form&gt;
+ *    &lt;/a:form&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="actionmessage" tld-body-content="empty" tld-tag-class="org.apache.struts2.views.jsp.ui.ActionMessageTag"
+ * @a2.tag name="actionmessage" tld-body-content="empty" tld-tag-class="org.apache.struts2.views.jsp.ui.ActionMessageTag"
  * description="Render action messages if they exists"
  */
 public class ActionMessage extends UIBean {

@@ -17,24 +17,23 @@
  */
 package org.apache.struts2.spring.lifecycle;
 
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ExternalReferenceResolver;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-
-import org.apache.struts2.dispatcher.DispatcherListener;
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.util.ServletContextAware;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.DispatcherListener;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ExternalReferenceResolver;
+import com.opensymphony.xwork2.config.entities.PackageConfig;
 
 /**
  * Setup any {@link com.opensymphony.xwork2.config.ExternalReferenceResolver}s

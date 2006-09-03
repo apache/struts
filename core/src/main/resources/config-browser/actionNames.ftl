@@ -6,10 +6,10 @@
 		<td>
 			<ul>
 			<#list actionNames as name>
-                <@s.url id="showConfig" action="showConfig" includeParams="none">
-                    <@s.param name="namespace">${namespace}</@s.param>
-                    <@s.param name="actionName">${name}</@s.param>
-                </@s.url>
+                <@saf.url id="showConfig" action="showConfig" includeParams="none">
+                    <@saf.param name="namespace">${namespace}</@saf.param>
+                    <@saf.param name="actionName">${name}</@saf.param>
+                </@saf.url>
                 <li><a href="${showConfig}">${name}</a></li>
 			</#list>
 			</ul>

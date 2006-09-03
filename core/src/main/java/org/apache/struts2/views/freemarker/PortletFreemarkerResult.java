@@ -33,7 +33,7 @@ import org.apache.struts2.dispatcher.StrutsResultSupport;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.views.util.ResourceUtil;
-import com.opensymphony.xwork2.ActionContext;
+
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.OgnlValueStack;
 
@@ -125,10 +125,8 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
         this.wrapper = getObjectWrapper();
 
         HttpServletRequest req = ServletActionContext.getRequest();
-        HttpServletResponse res = ServletActionContext.getResponse();
 
         if (!location.startsWith("/")) {
-            ActionContext ctx = invocation.getInvocationContext();
             String base = ResourceUtil.getResourceBase(req);
             location = base + "/" + location;
         }
@@ -198,8 +196,8 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
      * <li>JspTaglibs - jsp tag lib factory model
      * <li>Request - request attributes hash model
      * <li>Session - session attributes hash model
-     * <li>request - the HttpServletRequst object for direct access
-     * <li>response - the HttpServletResponse object for direct access
+     * <li>req - the HttpServletRequst object for direct access
+     * <li>res - the HttpServletResponse object for direct access
      * <li>stack - the OgnLValueStack instance for direct access
      * <li>ognl - the instance of the OgnlTool
      * <li>action - the action itself

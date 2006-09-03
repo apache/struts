@@ -110,7 +110,7 @@ import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
  *     &lt;result name="success"&gt;longRunningAction-success.jsp&lt;/result&gt;
  * &lt;/action&gt;
  *
- * &lt;%@ taglib prefix="s" uri="/struts" %&gt;
+ * &lt;%@ taglib prefix="ww" uri="/struts" %&gt;
  * &lt;html&gt;
  *   &lt;head&gt;
  *     &lt;title&gt;Please wait&lt;/title&gt;

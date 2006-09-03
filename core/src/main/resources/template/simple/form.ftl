@@ -26,8 +26,7 @@
 </#if>
 <#if parameters.method?exists>
  method="${parameters.method?html}"<#rt/>
-<#else>
- method="POST"<#rt/>
+<#else>method="POST"<#rt/>
 </#if>
 <#if parameters.enctype?exists>
  enctype="${parameters.enctype?html}"<#rt/>

@@ -17,25 +17,28 @@
  */
 package org.apache.struts2.components.template;
 
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.views.freemarker.FreemarkerManager;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.OgnlValueStack;
-import com.opensymphony.util.ClassLoaderUtil;
-import freemarker.template.Configuration;
-import freemarker.template.SimpleHash;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
+
+import com.opensymphony.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.OgnlValueStack;
+
+import freemarker.template.Configuration;
+import freemarker.template.SimpleHash;
 
 /**
  * Freemarker based template engine.

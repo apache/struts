@@ -17,13 +17,15 @@
  */
 package org.apache.struts2.components;
 
-import org.apache.struts2.components.Param.UnnamedParametric;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.apache.struts2.components.Param.UnnamedParametric;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -38,26 +40,26 @@ import java.util.List;
  * <!-- START SNIPPET: example -->
  * 
  *    &lt;!-- example 1 --&gt;
- *    &lt;s:fielderror /&gt;
+ *    &lt;a:fielderror /&gt;
  *
  *    &lt;!-- example 2 --&gt;
- *    &lt;s:fielderror&gt;
- *         &lt;s:param&gt;field1&lt;/s:param&gt;
- *         &lt;s:param&gt;field2&lt;/s:param&gt;
- *    &lt;/s:fielderror&gt;
- *    &lt;s:form .... &gt;>
+ *    &lt;a:fielderror&gt;
+ *         &lt;a:param&gt;field1&lt;/a:param&gt;
+ *         &lt;a:param&gt;field2&lt;/a:param&gt;
+ *    &lt;/a:fielderror&gt;
+ *    &lt;a:form .... &gt;>
  *       ....
- *    &lt;/s:form&gt;
+ *    &lt;/a:form&gt;
  *
  *    OR
  *
- *    &lt;s:fielderror&gt;
- *    		&lt;s:param value="%{'field1'}" /&gt;
- *    		&lt;s:param value="%{'field2'}" /&gt;
- *    &lt;/s:fielderror&gt;
- *    &lt;s:form .... &gt;>
+ *    &lt;a:fielderror&gt;
+ *    		&lt;a:param value="%{'field1'}" /&gt;
+ *    		&lt;a:param value="%{'field2'}" /&gt;
+ *    &lt;/a:fielderror&gt;
+ *    &lt;a:form .... &gt;>
  *       ....
- *    &lt;/s:form&gt;
+ *    &lt;/a:form&gt;
  *    
  * <!-- END SNIPPET: example -->
  * </pre>
@@ -75,7 +77,7 @@ import java.util.List;
  * <!-- END SNIPPET: description -->
  * </pre>
  *
- * @s.tag name="fielderror" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.FieldErrorTag"
+ * @a2.tag name="fielderror" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.FieldErrorTag"
  * description="Render field error (all or partial depending on param tag nested)if they exists"
  */
 public class FieldError extends UIBean implements UnnamedParametric {

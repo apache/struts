@@ -17,28 +17,29 @@
  */
 package org.apache.struts2.components;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.PageContext;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.views.jsp.TagUtils;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.util.OgnlValueStack;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.servlet.ServletContext;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -92,20 +93,20 @@ import java.util.Map;
  * <!-- START SNIPPET: example -->
  *  <div>The following action tag will execute result and include it in this page</div>
  *	<br />
- *	<s:action name="actionTagAction" executeResult="true" />
+ *	<a:action name="actionTagAction" executeResult="true" />
  *  <br />
  *  <div>The following action tag will do the same as above, but invokes method specialMethod in action</div>
  *	<br />
- *	<s:action name="actionTagAction!specialMethod" executeResult="true" />
+ *	<a:action name="actionTagAction!specialMethod" executeResult="true" />
  *  <br />
  *  <div>The following action tag will not execute result, but put a String in request scope
  *       under an id "stringByAction" which will be retrieved using property tag</div>
- *  <s:action name="actionTagAction!default" executeResult="false" />
- *  <s:property value="#attr.stringByAction" />
+ *  <a:action name="actionTagAction!default" executeResult="false" />
+ *  <a:property value="#attr.stringByAction" />
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="action" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ActionTag"
+ * @a2.tag name="action" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ActionTag"
  * description="Execute an action from within a view"
  */
 public class ActionComponent extends Component {
@@ -143,7 +144,7 @@ public class ActionComponent extends Component {
 		} finally {
 			popComponentStack();
 		}
-        return end;
+        return end; 
     }
 
     private Map createExtraContext() {
@@ -252,7 +253,7 @@ public class ActionComponent extends Component {
 
     /**
      * the id (if speficied) to put the action under stack's context.
-     * @s.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setId(String id) {
         super.setId(id);
@@ -260,7 +261,7 @@ public class ActionComponent extends Component {
 
     /**
      * name of the action to be executed (without the extension suffix eg. .action)
-     * @s.tagattribute required="true" type="String"
+     * @a2.tagattribute required="true" type="String"
      */
     public void setName(String name) {
         this.name = name;
@@ -268,7 +269,7 @@ public class ActionComponent extends Component {
 
     /**
      * namespace for action to call
-     * @s.tagattribute required="false" type="String" default="namespace from where tag is used"
+     * @a2.tagattribute required="false" type="String" default="namespace from where tag is used"
      */
     public void setNamespace(String namespace) {
         this.namespace = namespace;
@@ -276,7 +277,7 @@ public class ActionComponent extends Component {
 
     /**
      * whether the result of this action (probably a view) should be executed/rendered
-     * @s.tagattribute required="false" type="Boolean" default="false"
+     * @a2.tagattribute required="false" type="Boolean" default="false"
      */
     public void setExecuteResult(boolean executeResult) {
         this.executeResult = executeResult;
@@ -284,7 +285,7 @@ public class ActionComponent extends Component {
 
     /**
      * whether the request parameters are to be included when the action is invoked
-     * @s.tagattribute required="false" type="Boolean" default="false"
+     * @a2.tagattribute required="false" type="Boolean" default="false"
      */
     public void setIgnoreContextParams(boolean ignoreContextParams) {
         this.ignoreContextParams = ignoreContextParams;

@@ -17,14 +17,14 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
-import com.opensymphony.util.TextUtils;
-
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.opensymphony.util.TextUtils;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -51,13 +51,13 @@ import org.apache.commons.logging.LogFactory;
  * <pre>
  * <!-- START SNIPPET: example -->
  * 
- * <s:push value="myBean">
+ * <a:push value="myBean">
  *     <!-- Example 1: -->
- *     <s:property value="myBeanProperty" />
+ *     <a:property value="myBeanProperty" />
  *
  *     <!-- Example 2: -->
- *     <s:property value="myBeanProperty" default="a default value" />
- * </s:push>
+ *     <a:property value="myBeanProperty" default="a default value" />
+ * </a:push>
  * 
  * <!-- END SNIPPET: example -->
  * </pre>
@@ -75,12 +75,12 @@ import org.apache.commons.logging.LogFactory;
  * <pre>
  * <!-- START SNIPPET: i18nExample -->
  * 
- * &lt;s:property value="getText('some.key')" /&gt;
+ * &lt;a:property value="getText('some.key')" /&gt;
  * 
  * <!-- END SNIPPET: i18nExample -->
  * </pre>
  *
- * @s.tag name="property" tld-body-content="empty" tld-tag-class="org.apache.struts2.views.jsp.PropertyTag"
+ * @a2.tag name="property" tld-body-content="empty" tld-tag-class="org.apache.struts2.views.jsp.PropertyTag"
  * description="Print out expression which evaluates against the stack"
  */
 public class Property extends Component {
@@ -96,7 +96,7 @@ public class Property extends Component {
 
     /**
      * The default value to be used if <u>value</u> attribute is null
-     * @s.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setDefault(String defaultValue) {
         this.defaultValue = defaultValue;
@@ -104,7 +104,7 @@ public class Property extends Component {
 
     /**
      * Whether to escape HTML
-     * @s.tagattribute required="false" type="Boolean" default="true"
+     * @a2.tagattribute required="false" type="Boolean" default="true"
      */
     public void setEscape(boolean escape) {
         this.escape = escape;
@@ -112,7 +112,7 @@ public class Property extends Component {
 
     /**
      * value to be displayed
-     * @s.tagattribute required="false" type="Object" default="&lt;top of stack&gt;"
+     * @a2.tagattribute required="false" type="Object" default="&lt;top of stack&gt;"
      */
     public void setValue(String value) {
         this.value = value;

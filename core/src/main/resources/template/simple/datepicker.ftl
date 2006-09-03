@@ -8,7 +8,7 @@
 <#else>
 <#--
     <div dojoType="dropdowncontainer"
-        dateIconPath="<@s.url includeParams='none' value='/struts/dojo/struts/widgets/dateIcon.gif' encode='false'/>"
+        dateIconPath="<@saf.url includeParams='none' value='/struts/dojo/struts/widgets/dateIcon.gif' encode='false'/>"
         <#if parameters.format?exists>
             dateFormat="${parameters.format}"
         </#if>
@@ -38,7 +38,7 @@
         <#if parameters.dateIconPath?exists>
             iconPath="${parameters.dateIconPath}"
         <#else>
-        	iconPath="<@s.url includeParams='none' value='/struts/dojo/struts/widgets/dateIcon.gif' encode='false' includeParams="none" />"
+        	iconPath="<@saf.url includeParams='none' value='/struts/dojo/struts/widgets/dateIcon.gif' encode='false' includeParams="none" />"
         </#if>
         <#if parameters.nameValue?exists>
         	value="${parameters.nameValue?html}"

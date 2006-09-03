@@ -17,16 +17,15 @@
  */
 package org.apache.struts2.sitegraph;
 
-import com.opensymphony.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-
-import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.dispatcher.Dispatcher;
-
 import java.io.File;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URL;
+
+import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.dispatcher.Dispatcher;
+
+import com.opensymphony.util.ClassLoaderUtil;
 
 /**
  */

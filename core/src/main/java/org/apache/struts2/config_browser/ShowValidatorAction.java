@@ -17,13 +17,6 @@
  */
 package org.apache.struts2.config_browser;
 
-import com.opensymphony.xwork2.util.OgnlUtil;
-import com.opensymphony.xwork2.validator.Validator;
-import ognl.Ognl;
-import ognl.OgnlException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -33,11 +26,22 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import ognl.Ognl;
+import ognl.OgnlException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.opensymphony.xwork2.util.OgnlUtil;
+import com.opensymphony.xwork2.validator.Validator;
+
 /**
  * ShowValidatorAction
  *
  */
 public class ShowValidatorAction extends ListValidatorsAction {
+    private static final long serialVersionUID = 4061534149317835177L;
+
     private static Log log = LogFactory.getLog(ShowValidatorAction.class);
 
     Set properties = Collections.EMPTY_SET;

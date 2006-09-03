@@ -17,6 +17,24 @@
  */
 package org.apache.struts2.components;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.portlet.context.PortletActionContext;
+import org.apache.struts2.portlet.util.PortletUrlHelper;
+import org.apache.struts2.views.util.UrlHelper;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ObjectFactory;
@@ -30,20 +48,6 @@ import com.opensymphony.xwork2.validator.ActionValidatorManagerFactory;
 import com.opensymphony.xwork2.validator.FieldValidator;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
 import com.opensymphony.xwork2.validator.Validator;
-import org.apache.commons.lang.StringUtils;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.portlet.context.PortletActionContext;
-import org.apache.struts2.portlet.util.PortletUrlHelper;
-import org.apache.struts2.views.util.UrlHelper;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
-import java.util.Set;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -78,20 +82,18 @@ import java.util.Set;
  * <pre>
  * <!-- START SNIPPET: example -->
  * <p/>
- * &lt;s:form ... /&gt;
+ * &lt;a:form ... /&gt;
  * <p/>
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="form" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.FormTag"
+ * @a2.tag name="form" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.FormTag"
  * description="Renders an input form"
  */
 public class Form extends ClosingUIBean {
     public static final String OPEN_TEMPLATE = "form";
     public static final String TEMPLATE = "form-close";
 
-    private int sequence = 0;
-    
     protected String onsubmit;
     protected String action;
     protected String target;
@@ -102,6 +104,13 @@ public class Form extends ClosingUIBean {
     protected String portletMode;
     protected String windowState;
     protected String acceptcharset;
+    protected static boolean compatibilityMode = false;
+    
+    static {
+        if (org.apache.struts2.config.Settings.isSet(StrutsConstants.STRUTS_COMPATIBILITY_MODE)) {
+            compatibilityMode = "true".equals(org.apache.struts2.config.Settings.get(StrutsConstants.STRUTS_COMPATIBILITY_MODE));
+        }
+    }
 
     public Form(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -127,14 +136,14 @@ public class Form extends ClosingUIBean {
     protected void evaluateExtraParams() {
         super.evaluateExtraParams();
 
-        //boolean isAjax = "ajax".equalsIgnoreCase(this.theme);
+        boolean isAjax = "ajax".equalsIgnoreCase(this.theme);
 
         if (validate != null) {
             addParameter("validate", findValue(validate, Boolean.class));
         }
 
         // calculate the action and namespace
-        /*String action = null;
+        String action = null;
         if (this.action != null) {
             // if it isn't specified, we'll make somethig up
             action = findString(this.action);
@@ -146,7 +155,7 @@ public class Form extends ClosingUIBean {
             String namespace = determineNamespace(this.namespace, getStack(),
                     request);
             evaluateExtraParamsServletRequest(action, namespace, isAjax);
-        }*/
+        }
 
         if (onsubmit != null) {
             addParameter("onsubmit", findString(onsubmit));
@@ -175,34 +184,6 @@ public class Form extends ClosingUIBean {
             addParameter("tagNames", new ArrayList());
         }
     }
-    
-    /**
-     * Form component determine the its HTML element id as follows:-
-     * <ol>
-     *    <li>if an 'id' attribute is specified.</li>
-     *    <li>if an 'action' attribute is specified, it will be used as the id.</li>
-     * </ol>
-     */
-    protected void populateComponentHtmlId(Form form) {
-    	boolean isAjax = "ajax".equalsIgnoreCase(this.theme);
-    	
-    	String action = null;
-        if (this.action != null) {
-            // if it isn't specified, we'll make somethig up
-            action = findString(this.action);
-        }
-
-        if (id != null) {
-        	addParameter("id", escape(id));
-        }
-        if (Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
-            evaluateExtraParamsPortletRequest(namespace, action);
-        } else {
-            String namespace = determineNamespace(this.namespace, getStack(),
-                    request);
-            evaluateExtraParamsServletRequest(action, namespace, isAjax);
-        }
-    }
 
     /**
      * @param isAjax
@@ -224,16 +205,10 @@ public class Form extends ClosingUIBean {
         }
 
         String actionMethod = "";
-        // FIXME: our implementation is flawed - the only concept of ! should be in DefaultActionMapper
-        boolean allowDynamicMethodCalls = "true".equals(Settings.get(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION));
-
-        // handle "name!method" convention.
-        if (allowDynamicMethodCalls) {
-            if (action.indexOf("!") != -1) {
-                int endIdx = action.lastIndexOf("!");
-                actionMethod = action.substring(endIdx + 1, action.length());
-                action = action.substring(0, endIdx);
-            }
+        if (compatibilityMode && action.indexOf("!") != -1) {
+            int endIdx = action.lastIndexOf("!");
+            actionMethod = action.substring(endIdx + 1, action.length());
+            action = action.substring(0, endIdx);
         }
 
         Configuration config = Dispatcher.getInstance().getConfigurationManager().getConfiguration();
@@ -399,23 +374,12 @@ public class Form extends ClosingUIBean {
 
         return validators;
     }
-    
-    /**
-     * Get a incrementing sequence unique to this <code>Form</code> component.
-     * It is used by <code>Form</code> component's child that might need a 
-     * sequence to make them unique.
-     * 
-     * @return int
-     */
-    protected int getSequence() {
-    	return sequence++;
-    }
 
 
     /**
      * HTML onsubmit attribute
      *
-     * @s.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setOnsubmit(String onsubmit) {
         this.onsubmit = onsubmit;
@@ -424,7 +388,7 @@ public class Form extends ClosingUIBean {
     /**
      * Set action nane to submit to, without .action suffix
      *
-     * @s.tagattribute required="false" default="current action"
+     * @a2.tagattribute required="false" default="current action"
      */
     public void setAction(String action) {
         this.action = action;
@@ -433,7 +397,7 @@ public class Form extends ClosingUIBean {
     /**
      * HTML form target attribute
      *
-     * @s.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setTarget(String target) {
         this.target = target;
@@ -442,7 +406,7 @@ public class Form extends ClosingUIBean {
     /**
      * HTML form enctype attribute
      *
-     * @s.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setEnctype(String enctype) {
         this.enctype = enctype;
@@ -451,7 +415,7 @@ public class Form extends ClosingUIBean {
     /**
      * HTML form method attribute
      *
-     * @s.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setMethod(String method) {
         this.method = method;
@@ -460,7 +424,7 @@ public class Form extends ClosingUIBean {
     /**
      * namespace for action to submit to
      *
-     * @s.tagattribute required="false" default="current namespace"
+     * @a2.tagattribute required="false" default="current namespace"
      */
     public void setNamespace(String namespace) {
         this.namespace = namespace;
@@ -469,7 +433,7 @@ public class Form extends ClosingUIBean {
     /**
      * Whether client side/remote validation should be performed. Only useful with theme xhtml/ajax
      *
-     * @s.tagattribute required="false" type="Boolean" default="false"
+     * @a2.tagattribute required="false" type="Boolean" default="false"
      */
     public void setValidate(String validate) {
         this.validate = validate;
@@ -478,7 +442,7 @@ public class Form extends ClosingUIBean {
     /**
      * The portlet mode to display after the form submit
      *
-     * @s.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setPortletMode(String portletMode) {
         this.portletMode = portletMode;
@@ -487,7 +451,7 @@ public class Form extends ClosingUIBean {
     /**
      * The window state to display after the form submit
      *
-     * @s.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setWindowState(String windowState) {
         this.windowState = windowState;
@@ -496,7 +460,7 @@ public class Form extends ClosingUIBean {
     /**
      * The accepted charsets for this form. The values may be comma or blank delimited.
      *
-     * @s.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setAcceptcharset(String acceptcharset) {
         this.acceptcharset = acceptcharset;

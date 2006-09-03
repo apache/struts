@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -39,21 +39,21 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;s:submit value="%{'Submit'}" /&gt;
+ * &lt;a:submit value="%{'Submit'}" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  * 
  * <pre>
  * <!-- START SNIPPET: example2 -->
  * Render an image submit:
- * &lt;s:submit type="image" value="%{'Submit'}" label="Submit the form" src="submit.gif"/&gt;
+ * &lt;a:submit type="image" value="%{'Submit'}" label="Submit the form" src="submit.gif"/&gt;
  * <!-- END SNIPPET: example2 -->
  * </pre>
  *
  * <pre>
  * <!-- START SNIPPET: example3 -->
  * Render an button submit:
- * &lt;s:submit type="button" value="%{'Submit'}" label="Submit the form"/&gt;
+ * &lt;a:submit type="button" value="%{'Submit'}" label="Submit the form"/&gt;
  * <!-- END SNIPPET: example3 -->
  * </pre>
  *
@@ -82,7 +82,7 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- START SNIPPET: ajxExample1 -->
  * Remote form replacing another div:
  * &lt;div id='two' style="border: 1px solid yellow;"&gt;Initial content&lt;/div&gt;
- * &lt;s:form
+ * &lt;a:form
  *       id='theForm2'
  *       cssStyle="border: 1px solid green;"
  *       action='/AjaxRemoteForm.action'
@@ -90,9 +90,9 @@ import javax.servlet.http.HttpServletResponse;
  *       theme="ajax"&gt;
  *
  *   &lt;input type='text' name='data' value='Struts User' /&gt;
- *   &lt;s:submit value="GO2" theme="ajax" resultDivId="two" /&gt;
+ *   &lt;a:submit value="GO2" theme="ajax" resultDivId="two" /&gt;
  *
- * &lt;/s:form &gt;
+ * &lt;/a:form &gt;
  * <!-- END SNIPPET: ajxExample1 -->
  * </pre>
  * 
@@ -108,15 +108,15 @@ import javax.servlet.http.HttpServletResponse;
  * 
  * <pre>
  * <!-- START SNIPPET: ajxExample2 -->
- * &lt;s:form id="frm1" action="newPersonWithXMLResult" theme="ajax"  &gt;
- *     &lt;s:textfield label="Name" name="person.name" value="person.name" size="20" required="true" /&gt;
- *     &lt;s:submit id="submitBtn" value="Save" theme="ajax"  cssClass="primary"  notifyTopics="personUpdated, systemWorking" /&gt;
- * &lt;/s:form &gt;
+ * &lt;a:form id="frm1" action="newPersonWithXMLResult" theme="ajax"  &gt;
+ *     &lt;a:textfield label="Name" name="person.name" value="person.name" size="20" required="true" /&gt;
+ *     &lt;a:submit id="submitBtn" value="Save" theme="ajax"  cssClass="primary"  notifyTopics="personUpdated, systemWorking" /&gt;
+ * &lt;/a:form &gt;
  * 
- * &lt;s:div href="/listPeople.action" theme="ajax" errorText="error opps"
+ * &lt;a:div href="/listPeople.action" theme="ajax" errorText="error opps"
  *         loadingText="loading..." id="cart-body" &gt;
- *     &lt;s:action namespace="" name="listPeople" executeResult="true" /&gt;
- * &lt;/s:div&gt;
+ *     &lt;a:action namespace="" name="listPeople" executeResult="true" /&gt;
+ * &lt;/a:div&gt;
  * <!-- END SNIPPET: ajxExample2 -->
  * </pre>
  *
@@ -150,14 +150,14 @@ import javax.servlet.http.HttpServletResponse;
  *     }
  * &lt;/script&gt;
  *
- * &lt;s:form id="frm1" action="newPersonWithXMLResult" theme="ajax"  &gt;
- *     &lt;s:textfield label="Name" name="person.name" value="person.name" size="20" required="true" /&gt;
- *     &lt;s:submit id="submitBtn" value="Save" theme="ajax"  cssClass="primary"  onLoadJS="doGreatThings(data, type)" /&gt;
- * &lt;/s:form&gt;
+ * &lt;a:form id="frm1" action="newPersonWithXMLResult" theme="ajax"  &gt;
+ *     &lt;a:textfield label="Name" name="person.name" value="person.name" size="20" required="true" /&gt;
+ *     &lt;a:submit id="submitBtn" value="Save" theme="ajax"  cssClass="primary"  onLoadJS="doGreatThings(data, type)" /&gt; 
+ * &lt;/a:form&gt;
  * <!-- END SNIPPET: ajxExample3 -->
  * </pre>
  *
- * @s.tag name="submit" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.SubmitTag"
+ * @a2.tag name="submit" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.SubmitTag"
  * description="Render a submit button"
  */
 public class Submit extends FormButton {
@@ -179,20 +179,12 @@ public class Submit extends FormButton {
     }
 
     public void evaluateParams() {
-    	if (value == null) {
+
+        if (value == null) {
             value = "Submit";
         }
-    	super.evaluateParams();
-    }
-    
-    public void evaluateExtraParams() {
-    	super.evaluateExtraParams();
 
-       /* if (value == null) {
-            value = "Submit";
-        }*/
-
-        //super.evaluateParams();
+        super.evaluateParams();
 
         if (null != src) {
             addParameter("src", findString(src));
@@ -231,7 +223,7 @@ public class Submit extends FormButton {
 
     /**
      * The id of the HTML element to place the result (this can the the form's id or any id on the page.
-     * @s.tagattribute required="false"  type="String"
+     * @a2.tagattribute required="false"  type="String"
      */
     public void setResultDivId(String resultDivId) {
         this.resultDivId = resultDivId;
@@ -239,7 +231,7 @@ public class Submit extends FormButton {
 
     /**
      * Javascript code that will be executed after the form has been submitted. The format is onLoadJS='yourMethodName(data,type)'. NOTE: the words data and type must be left like that if you want the event type and the returned data.
-     * @s.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setOnLoadJS(String onLoadJS) {
         this.onLoadJS = onLoadJS;
@@ -247,7 +239,7 @@ public class Submit extends FormButton {
 
     /**
      * Topic names to post an event to after the form has been submitted.
-     * @s.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setNotifyTopics(String notifyTopics) {
         this.notifyTopics = notifyTopics;
@@ -255,7 +247,7 @@ public class Submit extends FormButton {
 
     /**
      * Set listenTopics attribute.
-     * @s.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setListenTopics(String listenTopics) {
         this.listenTopics = listenTopics;
@@ -263,7 +255,7 @@ public class Submit extends FormButton {
 
     /**
      * Javascript code that will be executed before invokation. The format is preInvokeJS='yourMethodName(data,type)'.
-     * @s.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setPreInvokeJS(String preInvokeJS) {
         this.preInvokeJS = preInvokeJS;
@@ -271,7 +263,7 @@ public class Submit extends FormButton {
 
     /**
      * Supply a submit button text apart from submit value. Will have no effect for <i>input</i> type submit, since button text will always be the value parameter. For the type <i>image</i>, alt parameter will be set to this value.
-     * @s.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setLabel(String label) {
         super.setLabel(label);
@@ -279,7 +271,7 @@ public class Submit extends FormButton {
 
     /**
      * Supply an image src for <i>image</i> type submit button. Will have no effect for types <i>input</i> and <i>button</i>.
-     * @s.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setSrc(String src) {
         this.src = src;

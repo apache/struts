@@ -5,7 +5,7 @@
 <body>
     <h2>Struts Problem Report</h2>
     <p>
-    Struts has detected an unhandled exception:
+    The Struts has detected an unhandled exception:
     </p>
 
 <#assign msgs = [] />

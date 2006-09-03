@@ -17,13 +17,13 @@
  */
 package org.apache.struts2.config_browser;
 
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.struts2.dispatcher.Dispatcher;
+
+import com.opensymphony.xwork2.config.entities.ActionConfig;
 
 /**
  * ConfigurationHelper

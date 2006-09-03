@@ -17,13 +17,10 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.RuntimeConfiguration;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
-import com.opensymphony.xwork2.validator.ValidationInterceptor;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.TestConfigurationProvider;
@@ -32,9 +29,13 @@ import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ActionTag;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.config.RuntimeConfiguration;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.validator.ValidationInterceptor;
 
 
 /**
@@ -43,8 +44,6 @@ import java.util.Map;
 public class FormTagTest extends AbstractUITagTest {
 
     public void testFormWithActionAttributeContainingBothActionAndMethod() throws Exception {
-        TestAction testAction = (TestAction) action;
-
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
         tag.setName("myForm");
@@ -63,8 +62,6 @@ public class FormTagTest extends AbstractUITagTest {
 
 
     public void testFormWithActionAttributeContainingBothActionAndMethodAndNamespace() throws Exception {
-        TestAction testAction = (TestAction) action;
-
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
         tag.setName("myForm");

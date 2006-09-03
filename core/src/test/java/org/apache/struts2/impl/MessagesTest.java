@@ -3,6 +3,7 @@
 package org.apache.struts2.impl;
 
 import junit.framework.TestCase;
+
 import org.apache.struts2.Messages;
 
 public class MessagesTest extends TestCase {

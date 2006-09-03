@@ -17,14 +17,15 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.opensymphony.xwork2.ActionInvocation;
-
-import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.opensymphony.xwork2.ActionInvocation;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -79,7 +80,7 @@ public class StreamResult extends StrutsResultSupport {
 	protected static final Log log = LogFactory.getLog(StreamResult.class);
 
     protected String contentType = "text/plain";
-    protected String contentLength;
+    protected int contentLength;
     protected String contentDisposition = "inline";
     protected String inputName = "inputStream";
     protected int bufferSize = 1024;
@@ -115,14 +116,14 @@ public class StreamResult extends StrutsResultSupport {
     /**
      * @return Returns the contentLength.
      */
-    public String getContentLength() {
+    public int getContentLength() {
         return contentLength;
     }
 
     /**
      * @param contentLength The contentLength to set.
      */
-    public void setContentLength(String contentLength) {
+    public void setContentLength(int contentLength) {
         this.contentLength = contentLength;
     }
 
@@ -154,7 +155,7 @@ public class StreamResult extends StrutsResultSupport {
         this.inputName = inputName;
     }
 
-    /**
+    /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.StrutsResultSupport#doExecute(java.lang.String, com.opensymphony.xwork2.ActionInvocation)
      */
     protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
@@ -180,18 +181,8 @@ public class StreamResult extends StrutsResultSupport {
             oResponse.setContentType(conditionalParse(contentType, invocation));
 
             // Set the content length
-            if (contentLength != null) {
-            	String _contentLength = conditionalParse(contentLength, invocation);
-            	int _contentLengthAsInt = -1;
-            	try {
-            		_contentLengthAsInt = Integer.parseInt(_contentLength);
-            		if (_contentLengthAsInt >= 0) {
-                		oResponse.setContentLength(_contentLengthAsInt);
-                	}
-            	}
-            	catch(NumberFormatException e) {
-            		log.warn("failed to recongnize "+_contentLength+" as a number, contentLength header will not be set", e);
-            	}
+            if (contentLength != 0) {
+                 oResponse.setContentLength(contentLength);
             }
 
             // Set the content-disposition

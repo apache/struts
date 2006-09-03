@@ -17,33 +17,21 @@
  */
 package org.apache.struts2.dispatcher;
 
-import com.mockobjects.servlet.MockFilterChain;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletContext;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.config.Settings;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.apache.struts2.util.ObjectFactoryInitializable;
 import org.apache.struts2.util.ObjectFactoryLifecycle;
 import org.springframework.mock.web.MockFilterConfig;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import com.opensymphony.xwork2.ObjectFactory;
 
 /**
  * FilterDispatcher TestCase.
@@ -129,155 +117,9 @@ public class FilterDispatcherTest extends StrutsTestCase {
         filterDispatcher.destroy();
         assertTrue(((InnerInitailizableDestroyableObjectFactory) ObjectFactory.getObjectFactory()).destroyable);
     }
-    
-    public void testIfActionMapperIsNullDontServiceAction() throws Exception {
-    	try {
-    		MockServletContext servletContext = new MockServletContext();
-    		MockFilterConfig filterConfig = new MockFilterConfig(servletContext);
-    		MockHttpServletRequest req = new MockHttpServletRequest(servletContext);
-    		MockHttpServletResponse res = new MockHttpServletResponse();
-    		MockFilterChain chain = new MockFilterChain();
-    		final NoOpDispatcher dispatcher = new NoOpDispatcher(servletContext);
-    		Dispatcher.setInstance(null);
-
-    		ConfigurationManager confManager = new ConfigurationManager();
-    		confManager.setConfiguration(new DefaultConfiguration());
-    		dispatcher.setConfigurationManager(confManager);
-    		
-    		
-    		ObjectFactory.setObjectFactory(new InnerObjectFactory());
-    		
-    		Map settings = new HashMap();
-    		settings.put(StrutsConstants.STRUTS_MAPPER_CLASS, "org.apache.struts2.dispatcher.FilterDispatcherTest$NullActionMapper");
-    		Settings.setInstance(new InnerConfiguration(settings));
-    	
-    		FilterDispatcher filter = new FilterDispatcher() {
-    			protected Dispatcher createDispatcher() {
-    				return dispatcher;
-    			}
-    		};
-    		filter.init(filterConfig);
-    		filter.doFilter(req, res, chain);
-    	
-    		assertFalse(dispatcher.serviceRequest);
-    	}
-    	finally {
-    		Settings.reset();
-    	}
-    }
-    
-    public void testCharacterEncodingSetBeforeRequestWrappingAndActionService() throws Exception { 
-    	try {
-    		MockServletContext servletContext = new MockServletContext();
-    		MockFilterConfig filterConfig = new MockFilterConfig(servletContext);
-    		MockHttpServletRequest req = new MockHttpServletRequest(servletContext);
-    		MockHttpServletResponse res = new MockHttpServletResponse();
-    		MockFilterChain chain = new MockFilterChain();
-    		final InnerDispatcher dispatcher = new InnerDispatcher(servletContext);
-    		Dispatcher.setInstance(null);
-
-    		ConfigurationManager confManager = new ConfigurationManager();
-    		confManager.setConfiguration(new DefaultConfiguration());
-    		dispatcher.setConfigurationManager(confManager);
-    		
-    		
-    		ObjectFactory.setObjectFactory(new InnerObjectFactory());
-    		
-    		Map settings = new HashMap();
-    		settings.put(StrutsConstants.STRUTS_I18N_ENCODING, "UTF-16_DUMMY");
-    		settings.put(StrutsConstants.STRUTS_MAPPER_CLASS, "org.apache.struts2.dispatcher.FilterDispatcherTest$InnerActionMapper");
-    		Settings.setInstance(new InnerConfiguration(settings));
-    	
-    		FilterDispatcher filter = new FilterDispatcher() {
-    			protected Dispatcher createDispatcher() {
-    				return dispatcher;
-    			}
-    		};
-    		filter.init(filterConfig);
-    		filter.doFilter(req, res, chain);
-    	
-    		assertTrue(dispatcher.wrappedRequest);
-    		assertTrue(dispatcher.serviceRequest);
-    	}
-    	finally {
-    		Settings.reset();
-    	}
-    }
 
 
     // === inner class ========
-    public static class InnerObjectFactory extends ObjectFactory {
-    	
-    }
-    
-    public static class NoOpDispatcher extends Dispatcher {
-    	protected boolean wrappedRequest = false;
-    	protected boolean serviceRequest = false;
-
-		public NoOpDispatcher(ServletContext servletContext) {
-			super(servletContext);
-		}
-
-		public HttpServletRequest wrapRequest(HttpServletRequest request, ServletContext servletContext) throws IOException {
-			wrappedRequest = true;
-			return request;
-		}
-		
-		public void serviceAction(HttpServletRequest request, HttpServletResponse response, ServletContext context, ActionMapping mapping) throws ServletException {
-			serviceRequest = true;
-		}
-    }
-    
-    public static class InnerDispatcher extends Dispatcher {
-    	
-    	protected boolean wrappedRequest = false;
-    	protected boolean serviceRequest = false;
-
-		public InnerDispatcher(ServletContext servletContext) {
-			super(servletContext);
-		}
-
-		public HttpServletRequest wrapRequest(HttpServletRequest request, ServletContext servletContext) throws IOException {
-			wrappedRequest = true;
-			// if we set the chracter encoding AFTER we do wrap request, we will get
-			// a failing test
-			assertNotNull(request.getCharacterEncoding());
-			assertEquals(request.getCharacterEncoding(), "UTF-16_DUMMY");
-			
-			return request;
-		}
-		
-		public void serviceAction(HttpServletRequest request, HttpServletResponse response, ServletContext context, ActionMapping mapping) throws ServletException {
-			serviceRequest = true;
-			// if we set the chracter encoding AFTER we do wrap request, we will get
-			// a failing test
-			assertNotNull(request.getCharacterEncoding());
-			assertEquals(request.getCharacterEncoding(), "UTF-16_DUMMY");
-		}
-    }
-    
-    public static class InnerActionMapper implements ActionMapper {
-
-		public ActionMapping getMapping(HttpServletRequest request, Configuration config) {
-			return new ActionMapping();
-		}
-
-		public String getUriFromActionMapping(ActionMapping mapping) {
-			return null;
-		}
-    }
-    
-    public static class NullActionMapper implements ActionMapper {
-    	public ActionMapping getMapping(HttpServletRequest request, Configuration config) {
-			return null;
-		}
-
-		public String getUriFromActionMapping(ActionMapping mapping) {
-			return null;
-		}
-    }
-    
-    
     public static class InnerConfiguration extends Settings {
         Map<String,String> m;
 
@@ -299,6 +141,7 @@ public class FilterDispatcherTest extends StrutsTestCase {
                 return m.get(aName);
         }
     }
+
 
     public static class InnerDestroyableObjectFactory extends ObjectFactory implements ObjectFactoryDestroyable {
         public boolean destroyed = false;

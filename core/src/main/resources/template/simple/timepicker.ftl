@@ -16,7 +16,7 @@
         <#if parameters.timeIconPath?exists>
             iconPath="${parameters.timeIconPath}"
         <#else>
-        	iconPath="<@s.url includeParams='none' value='/struts/dojo/struts/widgets/timeIcon.gif' encode='false' includeParams="none" />"
+        	iconPath="<@saf.url includeParams='none' value='/struts/dojo/struts/widgets/timeIcon.gif' encode='false' includeParams="none" />"
         </#if>
         <#if parameters.templatePath?exists>
             templatePath="${parameters.templatePath}"

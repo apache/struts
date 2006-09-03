@@ -4,7 +4,7 @@
  name="${parameters.name?html}"<#rt/>
 </#if>
 <#if parameters.nameValue?exists>
- value="<@s.property value="parameters.nameValue"/>"<#rt/>
+ value="<@saf.property value="parameters.nameValue"/>"<#rt/>
 </#if>
 <#if parameters.cssClass?exists>
  class="${parameters.cssClass?html}"<#rt/>
@@ -14,14 +14,14 @@
 </#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl"/>
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
-><#if parameters.label?exists><@s.property value="parameters.label"/><#rt/></#if></button>
+><#if parameters.label?exists><@saf.property value="parameters.label"/><#rt/></#if></button>
 <#else>
 <input type="reset"<#rt/>
 <#if parameters.name?exists>
  name="${parameters.name?html}"<#rt/>
 </#if>
 <#if parameters.nameValue?exists>
- value="<@s.property value="parameters.nameValue"/>"<#rt/>
+ value="<@saf.property value="parameters.nameValue"/>"<#rt/>
 </#if>
 <#if parameters.cssClass?exists>
  class="${parameters.cssClass?html}"<#rt/>

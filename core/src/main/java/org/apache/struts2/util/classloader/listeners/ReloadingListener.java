@@ -17,17 +17,17 @@
  */
 package org.apache.struts2.util.classloader.listeners;
 
-import org.apache.struts2.util.classloader.monitor.FilesystemAlterationListener;
-import org.apache.struts2.util.classloader.stores.ResourceStore;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.util.classloader.monitor.FilesystemAlterationListener;
+import org.apache.struts2.util.classloader.stores.ResourceStore;
 
 
 public class ReloadingListener implements FilesystemAlterationListener {

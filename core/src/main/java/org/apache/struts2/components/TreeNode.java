@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -52,17 +52,17 @@ import javax.servlet.http.HttpServletResponse;
  * <!-- START SNIPPET: example -->
  * 
  * &lt-- statically --&gt;
- * &lt;s:tree id="..." label="..."&gt;
- *    &lt;s:treenode id="..." label="..." /&gt;
- *    &lt;s:treenode id="..." label="..."&gt;
- *        &lt;s:treenode id="..." label="..." /&gt;
- *        &lt;s:treenode id="..." label="..." /&gt;
- *    &;lt;/s:treenode&gt;
- *    &lt;s:treenode id="..." label="..." /&gt;
- * &lt;/s:tree&gt;
+ * &lt;ww:tree id="..." label="..."&gt;
+ *    &lt;ww:treenode id="..." label="..." /&gt;
+ *    &lt;ww:treenode id="..." label="..."&gt;
+ *        &lt;ww:treenode id="..." label="..." /&gt;
+ *        &lt;ww:treenode id="..." label="..." /&gt;
+ *    &;lt;/ww:treenode&gt;
+ *    &lt;ww:treenode id="..." label="..." /&gt;
+ * &lt;/ww:tree&gt;
  * 
  * &lt;-- dynamically --&gt;
- * &lt;s:tree
+ * &lt;ww:tree 
  *          id="..."
  *          rootNode="..."
  *          nodeIdProperty="..."
@@ -73,7 +73,7 @@ import javax.servlet.http.HttpServletResponse;
  * </pre>
  *
  *
- * @s.tag name="treenode" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TreeNodeTag"
+ * @a2.tag name="treenode" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TreeNodeTag"
  * description="Render a tree node within a tree widget."
  */
 public class TreeNode extends ClosingUIBean {
@@ -94,7 +94,7 @@ public class TreeNode extends ClosingUIBean {
 
     /**
      * Label expression used for rendering tree node label.
-     * @s.tagattribute required="true"
+     * @a2.tagattribute required="true"
      */
     public void setLabel(String label) {
         super.setLabel(label);

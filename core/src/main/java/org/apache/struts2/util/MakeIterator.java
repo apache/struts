@@ -18,7 +18,12 @@
 package org.apache.struts2.util;
 
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -74,7 +79,6 @@ public class MakeIterator {
         } else if (value.getClass().isArray()) {
             //need ability to support primitives; therefore, cannot
             //use Object[] casting.
-            Object a = Array.newInstance(value.getClass().getComponentType(), (Array.getLength(value)));
             ArrayList list = new ArrayList(Array.getLength(value));
 
             for (int j = 0; j < Array.getLength(value); j++) {

@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -35,10 +35,10 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <pre>
  * <!-- START SNIPPET: example1 -->
- * &lt;s:a id="link1" theme="ajax" href="/DoIt.action" errorText="An error ocurred" showErrorTransportText="true"&gt;
+ * &lt;a:a id="link1" theme="ajax" href="/DoIt.action" errorText="An error ocurred" showErrorTransportText="true"&gt;
  *     &lt;img border="none" src="&lt;%=request.getContextPath()%&gt;/images/delete.gif"/&gt;
- *     &lt;s:param name="id" value="1"/&gt;
- * &lt;/s:a&gt;
+ *     &lt;a:param name="id" value="1"/&gt;
+ * &lt;/a:a&gt;
  * <!-- END SNIPPET: example1 -->
  * </pre>
  *
@@ -71,13 +71,13 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <pre>
  * <!-- START SNIPPET: example3 -->
- * &lt;s:a id="test" theme="ajax" href="/simpeResult.action" preInvokeJS="confirm(\'You sure\')"&gt;
+ * &lt;a:a id="test" theme="ajax" href="/simpeResult.action" preInvokeJS="confirm(\'You sure\')"&gt;
  * 	A
- * &lt;/s:a&gt;
+ * &lt;/a:a&gt;
  * <!-- END SNIPPET: example3 -->
  * </pre>
  *
- * @s.tag name="a" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.AnchorTag"
+ * @a2.tag name="a" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.AnchorTag"
  * description="Render a HTML href element that when clicked calls a URL via remote XMLHttpRequest"
  * 
  */
@@ -115,7 +115,7 @@ public class Anchor extends RemoteCallUIBean {
 
     /**
      * The id to assign the component
-     * @s.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setId(String id) {
         super.setId(id);
@@ -123,7 +123,7 @@ public class Anchor extends RemoteCallUIBean {
 
     /**
      * Topic names to post an event to after the remote call has been made
-     * @s.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setNotifyTopics(String notifyTopics) {
         this.notifyTopics = notifyTopics;
@@ -131,7 +131,7 @@ public class Anchor extends RemoteCallUIBean {
 
     /**
      * A javascript snippet that will be invoked prior to the execution of the target href. If provided must return true or false. True indicates to continue executing target, false says do not execute link target. Possible uses are for confirm dialogs.
-     * @s.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setPreInvokeJS(String preInvokeJS) {
         this.preInvokeJS = preInvokeJS;

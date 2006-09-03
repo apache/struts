@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -31,19 +31,19 @@ import javax.servlet.http.HttpServletResponse;
  * <p/>
  * <!-- START SNIPPET: exdescription -->
  * In this example, a radio control is displayed with a list of genders. The gender list is built from attribute
- * id=genders. The framework calls getGenders() which will return a Map. For examples using listKey and listValue attributes,
+ * id=genders. WW calls getGenders() which will return a Map. For examples using listKey and listValue attributes,
  * see the section select tag. The default selected one will be determined (in this case) by the getMale() method 
  * in the action class which should retun a value similar to the key of the getGenters() map if that particular 
  * gender is to be selected.<p/>
  * <!-- END SNIPPET: exdescription -->
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;s:action name="GenderMap" id="genders"/&gt;
- * &lt;s:radio label="Gender" name="male" list="#genders.genders"/&gt;
+ * &lt;a:action name="GenderMap" id="genders"/&gt;
+ * &lt;a:radio label="Gender" name="male" list="#genders.genders"/&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="radio" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.RadioTag"
+ * @a2.tag name="radio" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.RadioTag"
  * description="Renders a radio button input field"
  */
 public class Radio extends ListUIBean {

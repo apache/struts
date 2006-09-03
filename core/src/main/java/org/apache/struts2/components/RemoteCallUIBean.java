@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * RemoteCallUIBean is superclass for all components dealing with remote calls.
@@ -59,7 +59,7 @@ public abstract class RemoteCallUIBean extends ClosingUIBean {
 
     /**
      * The theme to use for the element. <b>This tag will usually use the ajax theme.</b>
-     * @s.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setTheme(String theme) {
         super.setTheme(theme);
@@ -67,7 +67,7 @@ public abstract class RemoteCallUIBean extends ClosingUIBean {
 
     /**
      * The URL to call to obtain the content
-     * @s.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setHref(String href) {
         this.href = href;
@@ -75,7 +75,7 @@ public abstract class RemoteCallUIBean extends ClosingUIBean {
 
     /**
      * The text to display to the user if the is an error fetching the content
-     * @s.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setErrorText(String errorText) {
         this.errorText = errorText;
@@ -83,7 +83,7 @@ public abstract class RemoteCallUIBean extends ClosingUIBean {
 
     /**
      * when to show the error message as content when the URL had problems
-     * @s.tagattribute required="false" type="Boolean" default="false"
+     * @a2.tagattribute required="false" type="Boolean" default="false"
      */
     public void setShowErrorTransportText(String showErrorTransportText) {
         this.showErrorTransportText = showErrorTransportText;
@@ -91,7 +91,7 @@ public abstract class RemoteCallUIBean extends ClosingUIBean {
 
     /**
      * Javascript code that will be executed after the content has been fetched
-     * @s.tagattribute required="false" type="String"
+     * @a2.tagattribute required="false" type="String"
      */
     public void setAfterLoading(String afterLoading) {
         this.afterLoading = afterLoading;

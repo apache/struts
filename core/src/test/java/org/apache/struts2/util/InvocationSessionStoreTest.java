@@ -17,15 +17,16 @@
  */
 package org.apache.struts2.util;
 
-import com.mockobjects.dynamic.Mock;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.struts2.StrutsTestCase;
+
+import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.util.OgnlValueStack;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**

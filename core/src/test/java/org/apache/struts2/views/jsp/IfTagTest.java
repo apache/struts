@@ -17,15 +17,17 @@
  */
 package org.apache.struts2.views.jsp;
 
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+
+import junit.framework.TestCase;
+
+import org.apache.struts2.ServletActionContext;
+
 import com.mockobjects.servlet.MockJspWriter;
 import com.mockobjects.servlet.MockPageContext;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.OgnlValueStack;
-import org.apache.struts2.ServletActionContext;
-import junit.framework.TestCase;
-
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.TagSupport;
 
 
 /**
@@ -255,60 +257,6 @@ public class IfTagTest extends TestCase {
     	assertEquals(TagSupport.EVAL_BODY_INCLUDE, r5);
     }
     
-    
-    public void testNestedIfElse1() throws Exception {
-    	IfTag ifTag = new IfTag();
-    	ifTag.setPageContext(pageContext);
-    	ifTag.setTest("true");
-    	
-    	IfTag nestedIfTag = new IfTag();
-    	nestedIfTag.setPageContext(pageContext);
-    	nestedIfTag.setTest("true");
-    	
-    	ElseTag elseTag = new ElseTag();
-    	elseTag.setPageContext(pageContext);
-    	
-    	int r1 = ifTag.doStartTag();
-    	int r2 = nestedIfTag.doStartTag();
-    	int r3 = nestedIfTag.doEndTag();
-    	int r4 = ifTag.doEndTag();
-    	int r5 = elseTag.doStartTag();
-    	int r6 = elseTag.doEndTag();
-    	
-    	assertEquals(TagSupport.EVAL_BODY_INCLUDE, r1);
-    	assertEquals(TagSupport.EVAL_BODY_INCLUDE, r2);
-    	assertEquals(TagSupport.EVAL_PAGE, r3);
-    	assertEquals(TagSupport.EVAL_PAGE, r4);
-    	assertEquals(TagSupport.SKIP_BODY, r5);
-    	assertEquals(TagSupport.EVAL_PAGE, r6);
-    }
-    
-    public void testNestedIfElse2() throws Exception {
-    	IfTag ifTag = new IfTag();
-    	ifTag.setPageContext(pageContext);
-    	ifTag.setTest("true");
-    	
-    	IfTag nestedIfTag = new IfTag();
-    	nestedIfTag.setPageContext(pageContext);
-    	nestedIfTag.setTest("false");
-    	
-    	ElseTag elseTag = new ElseTag();
-    	elseTag.setPageContext(pageContext);
-    	
-    	int r1 = ifTag.doStartTag();
-    	int r2 = nestedIfTag.doStartTag();
-    	int r3 = nestedIfTag.doEndTag();
-    	int r4 = ifTag.doEndTag();
-    	int r5 = elseTag.doStartTag();
-    	int r6 = elseTag.doEndTag();
-    	
-    	assertEquals(TagSupport.EVAL_BODY_INCLUDE, r1);
-    	assertEquals(TagSupport.SKIP_BODY, r2);
-    	assertEquals(TagSupport.EVAL_PAGE, r3);
-    	assertEquals(TagSupport.EVAL_PAGE, r4);
-    	assertEquals(TagSupport.SKIP_BODY, r5);
-    	assertEquals(TagSupport.EVAL_PAGE, r6);
-    }
     
     
     

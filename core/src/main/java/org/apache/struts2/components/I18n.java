@@ -17,18 +17,17 @@
  */
 package org.apache.struts2.components;
 
+import java.io.Writer;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import org.apache.struts2.StrutsException;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.TextProviderSupport;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.OgnlValueStack;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.StrutsException;
-
-import java.io.Writer;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -56,9 +55,9 @@ import java.util.ResourceBundle;
  * <pre>
  * <!-- START SNIPPET: example -->
  * 
- * &lt;s:i18n name="myCustomBundle"&gt;
- *    The i18n value for key aaa.bbb.ccc in myCustomBundle is &lt;s:property value="text('aaa.bbb.ccc')" /&gt;
- * &lt;/s:i18n&gt;
+ * &lt;a:i18n name="myCustomBundle"&gt;
+ *    The i18n value for key aaa.bbb.ccc in myCustomBundle is &lt;a:property value="text('aaa.bbb.ccc')" /&gt;
+ * &lt;/a:i18n&gt;
  * 
  * <!-- END SNIPPET: example -->
  * </pre>
@@ -67,19 +66,17 @@ import java.util.ResourceBundle;
  * <pre>
  * <!-- START SNIPPET: i18nExample -->
  * 
- * &lt;s:i18n name="some.package.bundle" &gt;
- *      &lt;s:text name="some.key" /&gt;
- * &lt;/s:i18n&gt;
+ * &lt;a:i18n name="some.package.bundle" &gt;
+ *      &lt;a:text name="some.key" /&gt;
+ * &lt;/a:i18n&gt;
  * 
  * <!-- END SNIPPET: i18nExample -->
  * </pre>
  * 
- * @s.tag name="i18n" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.I18nTag"
+ * @a2.tag name="i18n" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.I18nTag"
  * description="Get a resource bundle and place it on the value stack"
  */
 public class I18n extends Component {
-    private static final Log LOG = LogFactory.getLog(I18n.class);
-
     protected boolean pushed;
     protected String name;
 
@@ -125,7 +122,7 @@ public class I18n extends Component {
 
     /**
      * Name of ressource bundle to use (eg foo/bar/customBundle)
-     * @s.tagattribute required="true" default="String"
+     * @a2.tagattribute required="true" default="String"
      */
     public void setName(String name) {
         this.name = name;

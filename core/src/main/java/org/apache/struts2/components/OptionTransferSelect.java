@@ -56,7 +56,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <!-- START SNIPPET: example -->
  * 
  * &lt;-- minimum configuration --&gt;
- * &lt;s:optiontransferselect
+ * &lt;a:optiontransferselect 
  *   	label="Favourite Cartoons Characters"
  *		name="leftSideCartoonCharacters" 
  *		list="{'Popeye', 'He-Man', 'Spiderman'}" 
@@ -65,7 +65,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  *	/&gt;
  *
  *  &lt;-- possible configuration --&gt;
- *  &lt;s:optiontransferselect
+ *  &lt;a:optiontransferselect 
  *   	label="Favourite Cartoons Characters"
  *		name="leftSideCartoonCharacters" 
  *		leftTitle="Left Title"
@@ -86,7 +86,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  * 
- * @s.tag name="optiontransferselect" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.OptionTransferSelectTag"
+ * @a2.tag name="optiontransferselect" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.OptionTransferSelectTag"
  * description="Renders an input form"
  */
 public class OptionTransferSelect extends DoubleListUIBean {
@@ -302,7 +302,7 @@ public class OptionTransferSelect extends DoubleListUIBean {
 
 	/**
      * set Add To Left button label
-	 * @s.tagattribute required="false"
+	 * @a2.tagattribute required="false"
 	 */
 	public void setAddAllToLeftLabel(String addAllToLeftLabel) {
 		this.addAllToLeftLabel = addAllToLeftLabel;
@@ -314,7 +314,7 @@ public class OptionTransferSelect extends DoubleListUIBean {
 
 	/**
      * set Add All To Right button label
-	 * @s.tagattribute required="false"
+	 * @a2.tagattribute required="false"
 	 */
 	public void setAddAllToRightLabel(String addAllToRightLabel) {
 		this.addAllToRightLabel = addAllToRightLabel;
@@ -326,7 +326,7 @@ public class OptionTransferSelect extends DoubleListUIBean {
 
 	/**
      * set Add To Left button label
-	 * @s.tagattribute required="false"
+	 * @a2.tagattribute required="false"
 	 */
 	public void setAddToLeftLabel(String addToLeftLabel) {
 		this.addToLeftLabel = addToLeftLabel;
@@ -338,7 +338,7 @@ public class OptionTransferSelect extends DoubleListUIBean {
 
 	/**
      * set Add To Right button label
-	 * @s.tagattribute required="false"
+	 * @a2.tagattribute required="false"
 	 */
 	public void setAddToRightLabel(String addToRightLabel) {
 		this.addToRightLabel = addToRightLabel;
@@ -350,7 +350,7 @@ public class OptionTransferSelect extends DoubleListUIBean {
 
 	/**
      * enable Add All To Left button
-	 * @s.tagattribute required="false"
+	 * @a2.tagattribute required="false"
 	 */
 	public void setAllowAddAllToLeft(String allowAddAllToLeft) {
 		this.allowAddAllToLeft = allowAddAllToLeft;
@@ -362,7 +362,7 @@ public class OptionTransferSelect extends DoubleListUIBean {
 
 	/**
      * enable Add All To Right button
-	 * @s.tagattribute required="false"
+	 * @a2.tagattribute required="false"
 	 */
 	public void setAllowAddAllToRight(String allowAddAllToRight) {
 		this.allowAddAllToRight = allowAddAllToRight;
@@ -374,7 +374,7 @@ public class OptionTransferSelect extends DoubleListUIBean {
 
 	/**
      * enable Add To Left button
-	 * @s.tagattribute required="false"
+	 * @a2.tagattribute required="false"
 	 */
 	public void setAllowAddToLeft(String allowAddToLeft) {
 		this.allowAddToLeft = allowAddToLeft;
@@ -386,7 +386,7 @@ public class OptionTransferSelect extends DoubleListUIBean {
 
 	/**
      * enable Add To Right button
-	 * @s.tagattribute required="false"
+	 * @a2.tagattribute required="false"
 	 */
 	public void setAllowAddToRight(String allowAddToRight) {
 		this.allowAddToRight = allowAddToRight;
@@ -425,7 +425,7 @@ public class OptionTransferSelect extends DoubleListUIBean {
 
 	/**
      * set Left title
-	 * @s.tagattribute required="false"
+	 * @a2.tagattribute required="false"
 	 */
 	public void setLeftTitle(String leftTitle) {
 		this.leftTitle = leftTitle;
@@ -437,7 +437,7 @@ public class OptionTransferSelect extends DoubleListUIBean {
 
 	/**
      * set Right title
-	 * @s.tagattribute required="false"
+	 * @a2.tagattribute required="false"
 	 */
 	public void setRightTitle(String rightTitle) {
 		this.rightTitle = rightTitle;
@@ -446,7 +446,7 @@ public class OptionTransferSelect extends DoubleListUIBean {
 	
 	/**
      * enable Select All button
-	 * @s.tagattribute required="false"
+	 * @a2.tagattribute required="false"
 	 */
 	public void setAllowSelectAll(String allowSelectAll) {
 		this.allowSelectAll = allowSelectAll;
@@ -459,7 +459,7 @@ public class OptionTransferSelect extends DoubleListUIBean {
 	
 	/**
      * set Select All button label
-	 * @s.tagattribute required="false"
+	 * @a2.tagattribute required="false"
 	 */
 	public void setSelectAllLabel(String selectAllLabel) {
 		this.selectAllLabel = selectAllLabel;
@@ -472,7 +472,7 @@ public class OptionTransferSelect extends DoubleListUIBean {
 
     /**
      * set buttons css class
-	 * @s.tagattribute required="false"
+	 * @a2.tagattribute required="false"
 	 */
 	public void setButtonCssClass(String buttonCssClass) {
 		this.buttonCssClass = buttonCssClass;
@@ -485,7 +485,7 @@ public class OptionTransferSelect extends DoubleListUIBean {
 	
 	/**
      * set button css style
-	 * @s.tagattribute required="false"
+	 * @a2.tagattribute required="false"
 	 */
 	public void setButtonCssStyle(String buttonCssStyle) {
 		this.buttonCssStyle = buttonCssStyle;

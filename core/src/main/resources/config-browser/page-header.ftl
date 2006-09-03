@@ -27,12 +27,12 @@
 -->				<div id="projecttools" class="toolgroup">
 					<#if namespaces?exists>					<div class="label"><strong>Namespaces</strong></div>
 					<div class="body">
-						<#foreach namespace in namespaces>						<div><@s.url id="namespaceLink" action="actionNames" includeParams="none"><@s.param name="namespace">${namespace}</@s.param></@s.url><a href="${namespaceLink}"><#if namespace == ""> default <#else> ${namespace} </#if></a></div>
+						<#foreach namespace in namespaces>						<div><@saf.url id="namespaceLink" action="actionNames" includeParams="none"><@saf.param name="namespace">${namespace}</@saf.param></@saf.url><a href="${namespaceLink}"><#if namespace == ""> default <#else> ${namespace} </#if></a></div>
 						</#foreach>					</div>
 					</#if>				</div>				
 				<div class="toolgroup">
 					<#if actionNames?exists>					<div class="label"><strong>Actions in <#if namespace == ""> default <#else> ${namespace} </#if></strong></div>
-                        <#foreach name in actionNames>                        <div><@s.url id="actionLink" action="showConfig" includeParams="none"><@s.param name="namespace">${namespace}</@s.param><@s.param name="actionName">${name}</@s.param></@s.url><a href="${actionLink}">${name}</a></div>
+                        <#foreach name in actionNames>                        <div><@saf.url id="actionLink" action="showConfig" includeParams="none"><@saf.param name="namespace">${namespace}</@saf.param><@saf.param name="actionName">${name}</@saf.param></@saf.url><a href="${actionLink}">${name}</a></div>
 						</#foreach>					</#if>				</div>
 			</div>
 		</td>

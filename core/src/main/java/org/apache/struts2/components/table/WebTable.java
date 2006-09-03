@@ -17,23 +17,25 @@
  */
 package org.apache.struts2.components.table;
 
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.components.GenericUIBean;
-import org.apache.struts2.components.table.renderer.CellRenderer;
-import com.opensymphony.xwork2.util.OgnlValueStack;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.swing.table.TableModel;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.swing.table.TableModel;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.components.GenericUIBean;
+import org.apache.struts2.components.table.renderer.CellRenderer;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
+
 /**
- * @s.tag name="table" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.table.WebTableTag"
+ * @a2.tag name="table" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.table.WebTableTag"
  * description="Instantiate a JavaBean and place it in the context."
  */
 public class WebTable extends GenericUIBean {
@@ -204,7 +206,7 @@ public class WebTable extends GenericUIBean {
 
     /**
      * The name of model to use
-     * @s.tagattribute required="true" type="String"
+     * @a2.tagattribute required="true" type="String"
      */
     public void setModelName(String modelName) {
         this.modelName = modelName;
@@ -244,7 +246,7 @@ public class WebTable extends GenericUIBean {
 
     /**
      * Index of column to sort data by
-     * @s.tagattribute required="false" type="Integer"
+     * @a2.tagattribute required="false" type="Integer"
      */
     public void setSortColumn(int sortColumn) {
         this.sortColumn = sortColumn;
@@ -264,7 +266,7 @@ public class WebTable extends GenericUIBean {
 
     /**
      * Set sort order. Allowed values are NONE, ASC and DESC
-     * @s.tagattribute required="false" type="String" default="NONE"
+     * @a2.tagattribute required="false" type="String" default="NONE"
      */
     public void setSortOrder(String sortOrder) {
         if (sortOrder.equals(SortableTableModel.NONE)) {
@@ -292,7 +294,7 @@ public class WebTable extends GenericUIBean {
 
     /**
      * Whether the table should be sortable. Requires that model implements org.apache.struts2.components.table.SortableTableModel if set to true.
-     * @s.tagattribute required="false" type="Boolean" default="false"
+     * @a2.tagattribute required="false" type="Boolean" default="false"
      */
     public void setSortable(boolean sortable) {
         sortableAttr = sortable;

@@ -17,11 +17,11 @@
  */
 package org.apache.struts2.views.velocity;
 
+import java.io.InputStream;
+
 import org.apache.struts2.util.ClassLoaderUtils;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
-
-import java.io.InputStream;
 
 
 /**

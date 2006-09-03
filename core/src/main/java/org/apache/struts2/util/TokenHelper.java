@@ -17,13 +17,14 @@
  */
 package org.apache.struts2.util;
 
-import com.opensymphony.util.GUID;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.Map;
+import com.opensymphony.util.GUID;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 /**
  * TokenHelper

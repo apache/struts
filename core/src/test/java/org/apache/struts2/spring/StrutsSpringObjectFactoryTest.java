@@ -17,17 +17,16 @@
  */
 package org.apache.struts2.spring;
 
+import javax.servlet.ServletContext;
+
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.config.Settings;
-import junit.framework.TestCase;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.XmlWebApplicationContext;
-
-import javax.servlet.ServletContext;
 
 /**
  * Unit test for {@link StrutsSpringObjectFactory}.

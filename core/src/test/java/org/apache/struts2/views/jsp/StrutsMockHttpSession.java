@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.views.jsp;
 
-import com.mockobjects.servlet.MockHttpSession;
-
 import java.util.Enumeration;
 import java.util.Hashtable;
+
+import com.mockobjects.servlet.MockHttpSession;
 
 
 /**

@@ -22,7 +22,7 @@
 <#if false>
                                                  <img src="images/sorted_asc.gif" border="0" align="bottom"/>
 <#else>
-                                                <a href="<@s.url><@s.param name="${webTable.sortColumnLinkName}" value="${curColumn.offset}"/><@s.param name="${webTable.sortOrderLinkName}" value="ASC"/></@s.url>"><img src="images/unsorted_asc.gif" border="0" align="bottom"/></a>
+                                                <a href="<@saf.url><@saf.param name="${webTable.sortColumnLinkName}" value="${curColumn.offset}"/><@saf.param name="${webTable.sortOrderLinkName}" value="ASC"/></@saf.url>"><img src="images/unsorted_asc.gif" border="0" align="bottom"/></a>
 </#if>
                                             </td>
                                         </tr>

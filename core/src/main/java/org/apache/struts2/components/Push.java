@@ -17,9 +17,9 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
 import java.io.Writer;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -36,10 +36,10 @@ import java.io.Writer;
  * <p/> <b>Examples</b>
  * <pre>
  * <!-- START SNIPPET: example1 -->
- * &lt;s:push value="user"&gt;
- *     &lt;s:propery value="firstName" /&gt;
- *     &lt;s:propery value="lastName" /&gt;
- * &lt;/s:push&gt;
+ * &lt;a:push value="user"&gt;
+ *     &lt;a:propery value="firstName" /&gt;
+ *     &lt;a:propery value="lastName" /&gt;
+ * &lt;/a:push&gt;
  * <!-- END SNIPPET: example1 -->
  * </pre>
  * 
@@ -50,11 +50,11 @@ import java.io.Writer;
  * 
  * <pre>
  * <!-- START SNIPPET: example2 -->
- *  &lt;s:push value="myObject"&gt;                              ----- (1)
- *       &lt;s:bean name="jp.SomeBean" id="myBean"/&gt;        ----- (2)
- * 		    &lt;s:param name="myParam" value="top"/&gt;        ----- (3)
- *       &lt;/s:bean&gt;
- *   &lt;/s:push&gt;
+ *  &lt;a:push value="myObject"&gt;                              ----- (1)
+ *       &lt;a:bean name="jp.SomeBean" id="myBean"/&gt;        ----- (2)
+ * 		    &lt;a:param name="myParam" value="top"/&gt;        ----- (3)
+ *       &lt;/a:bean&gt;
+ *   &lt;/a:push&gt;
  * <!-- END SNIPPET: example2 -->
  * </pre>
  * 
@@ -68,11 +68,11 @@ import java.io.Writer;
  * 
  * <pre>
  * <!-- START SNIPPET: example3 -->
- * &lt;s:push value="myObject"&gt;                                       ---(A)
- *    &lt;s:bean name="jp.SomeBean" id="myBean"/&gt;                   ---(B)
- *       &lt;s:param name="myParam" value="top.mySomeOtherValue"/&gt;  ---(C)
- *    &lt;/s:bean&gt;
- * &lt;/s:push&gt;
+ * &lt;a:push value="myObject"&gt;                                       ---(A)
+ *    &lt;a:bean name="jp.SomeBean" id="myBean"/&gt;                   ---(B)
+ *       &lt;a:param name="myParam" value="top.mySomeOtherValue"/&gt;  ---(C)
+ *    &lt;/a:bean&gt;
+ * &lt;/a:push&gt;
  * <!-- END SNIPPET: example3 -->
  * </pre>
  * 
@@ -86,11 +86,11 @@ import java.io.Writer;
  * 
  * <pre>
  * <!-- START SNIPPET: example4 -->       
- * &lt;s:push value="myObject"&gt;                                 ---- (i)
- *    &lt;s:bean name="jp.SomeBean" id="myBean"/&gt;             ---- (ii)
- *       &lt;s:param name="myParam" value="[1].top"/&gt;         -----(iii)
- *    &lt;/s:bean&gt;
- * &lt;/s:push&gt;
+ * &lt;a:push value="myObject"&gt;                                 ---- (i)
+ *    &lt;a:bean name="jp.SomeBean" id="myBean"/&gt;             ---- (ii)
+ *       &lt;a:param name="myParam" value="[1].top"/&gt;         -----(iii)
+ *    &lt;/a:bean&gt;
+ * &lt;/a:push&gt;
  * <!-- END SNIPPET: example4 -->
  * </pre>
  * 
@@ -102,7 +102,7 @@ import java.io.Writer;
  * <!-- END SNIPPET: example4description -->
  * </pre>
  * 
- * @s.tag name="push" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.PushTag"
+ * @a2.tag name="push" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.PushTag"
  * description="Push value on stack for simplified usage."
  */
 public class Push extends Component {
@@ -140,7 +140,7 @@ public class Push extends Component {
 
     /**
      * Value to push on stack
-     * @s.tagattribute required="true"
+     * @a2.tagattribute required="true"
      */
     public void setValue(String value) {
         this.value = value;

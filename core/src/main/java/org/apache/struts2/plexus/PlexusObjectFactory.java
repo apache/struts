@@ -17,6 +17,16 @@
  */
 package org.apache.struts2.plexus;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletContext;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.util.ObjectFactoryInitializable;
+import org.codehaus.plexus.PlexusContainer;
+
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.Result;
@@ -27,14 +37,6 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.OgnlUtil;
 import com.opensymphony.xwork2.validator.Validator;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.util.ObjectFactoryInitializable;
-import org.codehaus.plexus.PlexusContainer;
-
-import javax.servlet.ServletContext;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Plexus integartion. You need three optional files: plexus-request.xml, plexus-session.xml, and

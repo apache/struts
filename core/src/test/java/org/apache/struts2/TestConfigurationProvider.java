@@ -17,23 +17,24 @@
  */
 package org.apache.struts2;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
 import org.apache.struts2.interceptor.TokenInterceptor;
 import org.apache.struts2.interceptor.TokenSessionStoreInterceptor;
+
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionChainResult;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 /**

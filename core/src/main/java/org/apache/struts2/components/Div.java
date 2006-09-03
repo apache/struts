@@ -17,14 +17,14 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.util.UrlHelper;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -44,11 +44,11 @@ import javax.servlet.http.HttpServletResponse;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;s:div ... /&gt;
+ * &lt;a:div ... /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="div" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.DivTag"
+ * @a2.tag name="div" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.DivTag"
  * description="Render HTML div providing content from remote call via AJAX"
   */
 public class Div extends RemoteCallUIBean {
@@ -126,7 +126,7 @@ public class Div extends RemoteCallUIBean {
 
     /**
      * How often to re-fetch the content (in milliseconds)
-     * @s.tagattribute required="false" type="Integer" default="0"
+     * @a2.tagattribute required="false" type="Integer" default="0"
      */
     public void setUpdateFreq(String updateFreq) {
         this.updateFreq = updateFreq;
@@ -134,7 +134,7 @@ public class Div extends RemoteCallUIBean {
 
     /**
      * How long to wait before fetching the content (in milliseconds)
-     * @s.tagattribute required="false" type="Integer" default="0"
+     * @a2.tagattribute required="false" type="Integer" default="0"
      */
     public void setDelay(String delay) {
         this.delay = delay;
@@ -142,7 +142,7 @@ public class Div extends RemoteCallUIBean {
 
     /**
      * The text to display to the user while the new content is being fetched (especially good if the content will take awhile)
-     * @s.tagattribute required="false" rtexprvalue="true"
+     * @a2.tagattribute required="false" rtexprvalue="true"
      */
     public void setLoadingText(String loadingText) {
         this.loadingText = loadingText;
@@ -150,7 +150,7 @@ public class Div extends RemoteCallUIBean {
 
     /**
      * Topic name to listen to (comma delimited), that will cause the DIV's content to be re-fetched
-     * @s.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setListenTopics(String listenTopics) {
         this.listenTopics = listenTopics;

@@ -1,4 +1,4 @@
-<@s.iterator value="parameters.list">
+<@saf.iterator value="parameters.list">
     <#if parameters.listKey?exists>
         <#assign itemKey = stack.findString(parameters.listKey)/>
     <#else>
@@ -37,4 +37,4 @@
 <label for="${parameters.id?html}${itemKey?html}"><#rt/>
     ${itemValue}<#t/>
 </label>
-</@s.iterator>
+</@saf.iterator>

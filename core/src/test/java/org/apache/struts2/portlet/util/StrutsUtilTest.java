@@ -24,17 +24,15 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.TestAction;
+import org.apache.struts2.util.ListEntry;
+import org.apache.struts2.util.StrutsUtil;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockRequestDispatcher;
 
-import org.apache.struts2.TestAction;
-import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.util.ListEntry;
-import org.apache.struts2.util.StrutsUtil;
 import com.opensymphony.xwork2.util.OgnlValueStack;
-
-import junit.framework.TestCase;
 
 /**
  * Test case for StrutsUtil.

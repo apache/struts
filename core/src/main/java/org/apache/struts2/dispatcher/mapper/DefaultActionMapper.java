@@ -17,20 +17,20 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.ServletRedirectResult;
 import org.apache.struts2.util.PrefixTrie;
 
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -149,33 +149,36 @@ public class DefaultActionMapper implements ActionMapper {
     static final String REDIRECT_PREFIX = "redirect:";
     static final String REDIRECT_ACTION_PREFIX = "redirect-action:";
 
-    private static boolean allowDynamicMethodCalls = "true".equals(Settings.get(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION));
-
     private PrefixTrie prefixTrie = null;
+    private boolean compatibilityMode = false;
     public DefaultActionMapper() {
+        if (org.apache.struts2.config.Settings.isSet(StrutsConstants.STRUTS_COMPATIBILITY_MODE)) {
+            compatibilityMode = "true".equals(org.apache.struts2.config.Settings.get(StrutsConstants.STRUTS_COMPATIBILITY_MODE));
+        }
         prefixTrie = new PrefixTrie() {
             {
-                put(METHOD_PREFIX, new ParameterAction() {
-                    public void execute(String key, ActionMapping mapping) {
-                        mapping.setMethod(key.substring(METHOD_PREFIX.length()));
-                    }
-                });
-
+                if (compatibilityMode) {
+                    put(METHOD_PREFIX, new ParameterAction() {
+                        public void execute(String key, ActionMapping mapping) {
+                            mapping.setMethod(key.substring(METHOD_PREFIX.length()));
+                        }
+                    });
+                }
+    
                 put(ACTION_PREFIX, new ParameterAction() {
                     public void execute(String key, ActionMapping mapping) {
                         String name = key.substring(ACTION_PREFIX.length());
-                        if (allowDynamicMethodCalls) {
-                            int bang = name.indexOf('!');
-                            if (bang != -1) {
-                                String method = name.substring(bang + 1);
-                                mapping.setMethod(method);
-                                name = name.substring(0, bang);
-                            }
+                        int bang = name.indexOf('!');
+                        if (bang != -1) {
+                            String method = name.substring(bang + 1);
+                            mapping.setMethod(method);
+                            name = name.substring(0, bang);
                         }
+                        
                         mapping.setName(name);
                     }
                 });
-
+    
                 put(REDIRECT_PREFIX, new ParameterAction() {
                     public void execute(String key, ActionMapping mapping) {
                         ServletRedirectResult redirect = new ServletRedirectResult();
@@ -215,7 +218,7 @@ public class DefaultActionMapper implements ActionMapper {
             return null;
         }
 
-        if (allowDynamicMethodCalls) {
+        if (compatibilityMode) {
             // handle "name!method" convention.
             String name = mapping.getName();
             int exclamation = name.lastIndexOf("!");
@@ -224,7 +227,6 @@ public class DefaultActionMapper implements ActionMapper {
                 mapping.setMethod(name.substring(exclamation + 1));
             }
         }
-
         return mapping;
     }
 
@@ -371,13 +373,18 @@ public class DefaultActionMapper implements ActionMapper {
         }
         uri.append(name);
 
-        if (null != mapping.getMethod() && !"".equals(mapping.getMethod())) {
-            uri.append("!").append(mapping.getMethod());
+        if (compatibilityMode) {
+            if (null != mapping.getMethod() && !"".equals(mapping.getMethod())) {
+                uri.append("!").append(mapping.getMethod());
+            }
         }
 
         String extension = getDefaultExtension();
         if ( extension != null) {
-            if (uri.indexOf( '.' + extension) == -1  ) {
+            
+            // When in compatibility mode, we don't add an extension if it exists already
+            // otherwise, we always add it
+            if (!compatibilityMode || (compatibilityMode && uri.indexOf( '.' + extension) == -1  )) {
                 uri.append(".").append(extension);
                 if ( params.length() > 0) {
                     uri.append(params);

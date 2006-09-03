@@ -17,15 +17,17 @@
  */
 package org.apache.struts2.components;
 
-import org.apache.struts2.util.ContainUtil;
-import org.apache.struts2.util.MakeIterator;
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.util.ContainUtil;
+import org.apache.struts2.util.MakeIterator;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * DoubleListUIBean is the standard superclass of all Struts list handling components.
@@ -118,7 +120,7 @@ public abstract class ListUIBean extends UIBean {
 
     /**
      * Iterable source to populate from. If the list is a Map (key, value), the Map key will become the option "value" parameter and the Map value will become the option body.
-     * @s.tagattribute required="true"
+     * @a2.tagattribute required="true"
      */
     public void setList(Object list) {
         this.list = list;
@@ -126,7 +128,7 @@ public abstract class ListUIBean extends UIBean {
 
     /**
      * Property of list objects to get field value from
-     * @s.tagattribute required="false"
+     * @a2.tagattribute required="false"
      */
     public void setListKey(String listKey) {
         this.listKey = listKey;
@@ -134,7 +136,7 @@ public abstract class ListUIBean extends UIBean {
 
     /**
      * Property of list objects to get field content from
-     * @s.tagattribute required="false"
+     * @a2.tagattribute required="false"
       */
     public void setListValue(String listValue) {
         this.listValue = listValue;

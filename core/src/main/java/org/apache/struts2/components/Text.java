@@ -66,7 +66,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <pre>
  * <!-- START SNIPPET: exdescription -->
  * 
- * Accessing messages from a given bundle (the i18n Shop example bundle in the first example) and using bundle defined through the framework in the second example.</p>
+ * Accessing messages from a given bundle (the i18n Shop example bundle in the first example) and using bundle defined through ww in the second example.</p>
  * 
  * <!-- END SNIPPET: exdescription -->
  * </pre>
@@ -75,17 +75,12 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <!-- START SNIPPET: example -->
  * 
  * &lt;!-- First Example --&gt;
- * &lt;s:i18n name="struts.action.test.i18n.Shop"&gt;
- *     &lt;s:text name="main.title"/&gt;
- * &lt;/s:i18n&gt;
+ * &lt;a:i18n name="struts.action.test.i18n.Shop"&gt;
+ *     &lt;a:text name="main.title"/&gt;
+ * &lt;/a:i18n&gt;
  *
  * &lt;!-- Second Example --&gt;
- * &lt;s:text name="main.title" /&gt;
- * 
- * &lt;!-- Third Examlpe --&gt;
- * &lt;s:text name="i18n.label.greetings"&gt;
- *    &lt;s:param &gt;Mr Smith&lt;/s:param&gt;
- * &lt;/s:text&gt;
+ * &lt;a:text name="main.title" /&gt;
  * 
  * <!-- END SNIPPET: example -->
  * </pre>
@@ -94,20 +89,20 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <pre>
  * <!-- START SNIPPET: i18nExample -->
  * 
- * &lt;-- Fourth Example --&gt;
- * &lt;s:text name="some.key" /&gt;
+ * &lt;-- Third Example --&gt;
+ * &lt;a:text name="some.key" /&gt;
  * 
- * &lt;-- Fifth Example --&gt;
- * &lt;s:text name="some.invalid.key" &gt;
+ * &lt;-- Fourth Example --&gt;
+ * &lt;a:text name="some.invalid.key" &gt;
  *    The Default Message That Will Be Displayed
- * &lt;/s:text&gt;
+ * &lt;/a:text&gt;
  * 
  * <!-- END SNIPPET: i18nExample -->
  * </pre>
  * 
  * @see Param
  *
- * @s.tag name="text" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.TextTag"
+ * @a2.tag name="text" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.TextTag"
  * description="Render a I18n text message."
  */
 public class Text extends Component implements Param.UnnamedParametric {
@@ -123,7 +118,7 @@ public class Text extends Component implements Param.UnnamedParametric {
 
     /**
      *  Name of resource property to fetch
-     * @s.tagattribute required="true"
+     * @a2.tagattribute required="true"
      */
     public void setName(String name) {
         this.name = name;

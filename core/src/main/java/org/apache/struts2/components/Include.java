@@ -17,14 +17,17 @@
  */
 package org.apache.struts2.components;
 
-import org.apache.struts2.config.Settings;
-import org.apache.struts2.util.FastByteArrayOutputStream;
-import org.apache.struts2.RequestUtils;
-import org.apache.struts2.StrutsConstants;
-import com.opensymphony.xwork2.util.OgnlValueStack;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
+import java.util.StringTokenizer;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -33,12 +36,15 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.net.URLEncoder;
-import java.util.*;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.RequestUtils;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.config.Settings;
+import org.apache.struts2.util.FastByteArrayOutputStream;
+
+import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -57,19 +63,19 @@ import java.util.*;
  * <pre>
  * <!-- START SNIPPET: example -->
  * &lt;-- One: --&gt;
- * &lt;s:include value="myJsp.jsp" /&gt;
+ * &lt;a:include value="myJsp.jsp" /&gt;
  *
  * &lt;-- Two: --&gt;
- * &lt;s:include value="myJsp.jsp"&gt;
- *    &lt;s:param name="param1" value="value2" /&gt;
- *    &lt;s:param name="param2" value="value2" /&gt;
- * &lt;/s:include&gt;
+ * &lt;a:include value="myJsp.jsp"&gt;
+ *    &lt;a:param name="param1" value="value2" /&gt;
+ *    &lt;a:param name="param2" value="value2" /&gt;
+ * &lt;/a:include&gt;
  *
  * &lt;-- Three: --&gt;
- * &lt;s:include value="myJsp.jsp"&gt;
- *    &lt;s:param name="param1"&gt;value1&lt;/s:param&gt;
- *    &lt;s:param name="param2"&gt;value2&lt;s:param&gt;
- * &lt;/s:include&gt;
+ * &lt;a:include value="myJsp.jsp"&gt;
+ *    &lt;a:param name="param1"&gt;value1&lt;/a:param&gt;
+ *    &lt;a:param name="param2"&gt;value2&lt;a:param&gt;
+ * &lt;/a:include&gt;
  * <!-- END SNIPPET: example -->
  *
  * <!-- START SNIPPET: exampledescription -->
@@ -79,7 +85,7 @@ import java.util.*;
  * <!-- END SNIPPET: exampledescription -->
  * </pre>
  *
- * @s.tag name="include" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.IncludeTag"
+ * @a2.tag name="include" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.IncludeTag"
  * description="Include a servlet's output (result of servlet or a JSP page)"
  */
 public class Include extends Component {
@@ -150,7 +156,7 @@ public class Include extends Component {
 
     /**
      * The jsp/servlet output to include
-     * @s.tagattribute required="true" type="String"
+     * @a2.tagattribute required="true" type="String"
      */
     public void setValue(String value) {
         this.value = value;

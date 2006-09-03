@@ -17,15 +17,6 @@
  */
 package org.apache.struts2.interceptor;
 
-import com.opensymphony.util.ClassLoaderUtil;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.mock.MockActionInvocation;
-import org.springframework.mock.web.MockHttpServletRequest;
-
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -34,6 +25,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
+import org.springframework.mock.web.MockHttpServletRequest;
+
+import com.opensymphony.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ValidationAwareSupport;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
 
 
 /**

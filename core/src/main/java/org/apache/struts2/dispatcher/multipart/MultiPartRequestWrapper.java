@@ -17,18 +17,25 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import org.apache.struts2.config.Settings;
-import org.apache.struts2.dispatcher.StrutsRequestWrapper;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.util.ClassLoaderUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.config.Settings;
+import org.apache.struts2.dispatcher.StrutsRequestWrapper;
+import org.apache.struts2.util.ClassLoaderUtils;
 
 
 /**

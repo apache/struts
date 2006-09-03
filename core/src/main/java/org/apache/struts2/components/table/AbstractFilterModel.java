@@ -17,10 +17,11 @@
  */
 package org.apache.struts2.components.table;
 
+import java.util.Vector;
+
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
-import java.util.Vector;
 
 
 /**

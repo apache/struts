@@ -5,12 +5,10 @@
 <struts>
     <include file="struts-default.xml"/>
 
-    <package name="default" extends="struts-default">
+    <package name="example" extends="struts-default">
 
-        <default-action-ref name="home" />
-
-        <action name="home" class="org.apache.struts2.example.HomeAction">
-            <result>/WEB-INF/pages/home.jsp</result>
+        <action name="*" class="example.{1}">
+            <result>/example/{1}.jsp</result>
         </action>
 
         <!-- Add your actions here -->

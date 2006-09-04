@@ -5,6 +5,6 @@
         <title>Welcome</title>
     </head>
     <body>
-        <h1>Struts is up and running...</h1>
+        <h2><s:property value="message" /></h2>
     </body>
 </html>

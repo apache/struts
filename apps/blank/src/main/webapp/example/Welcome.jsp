@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>Welcome</title>
-    <link href="<s:url value="/css/tutorial.css"/>" rel="stylesheet"
+    <link href="<s:url value="/css/examplecss"/>" rel="stylesheet"
           type="text/css"/>
 </head>
 

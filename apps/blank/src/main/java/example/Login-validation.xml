@@ -5,12 +5,12 @@
 <validators>
     <field name="username">
         <field-validator type="requiredstring">
-            <message key="username.required"/>
+            <message key="requiredstring"/>
         </field-validator>
     </field>
     <field name="password">
         <field-validator type="requiredstring">
-            <message key="password.required"/>
+            <message key="requiredstring"/>
         </field-validator>
     </field>
 </validators>

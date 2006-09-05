@@ -1,9 +1,9 @@
-package tutorial;
+package example;
 
 /**
  * <code>Set welcome message.</code>
  */
-public class HelloWorld extends TutorialSupport {
+public class HelloWorld extends ExampleSupport {
 
     public static final String MESSAGE = "HelloWorld.message";
 

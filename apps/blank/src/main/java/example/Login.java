@@ -1,6 +1,6 @@
-package tutorial;
+package example;
 
-public class Login extends TutorialSupport {
+public class Login extends ExampleSupport {
 
     public String execute() throws Exception {
 

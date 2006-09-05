@@ -6,7 +6,7 @@
 
     <include file="struts-default.xml"/>
 
-    <include file="tutorial.xml"/>
+    <include file="example.xml"/>
 
     <!-- Add packages here -->
 

@@ -1,4 +1,4 @@
-package tutorial;
+package example;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.XWorkTestCase;

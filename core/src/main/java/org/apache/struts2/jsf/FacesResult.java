@@ -17,13 +17,11 @@
  */
 package org.apache.struts2.jsf;
 
-import java.io.IOException;
-
-import javax.faces.FacesException;
-import javax.faces.application.Application;
 import javax.faces.application.ViewHandler;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-import javax.faces.event.PhaseId;
+
+import org.apache.struts2.dispatcher.StrutsResultSupport;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
@@ -31,58 +29,46 @@ import com.opensymphony.xwork2.Result;
 /**
  * Executes the JSF render phase
  */
-public class FacesResult extends FacesSupport implements Result {
+public class FacesResult extends StrutsResultSupport implements Result {
 
     private static final long serialVersionUID = -3548970638740937804L;
 
     /**
-     * Executes the result
+     * Checks to see if we need to build a new JSF ViewId from the Struts Result
+     * config and then renders the result by delegating to the
+     * FacesRender.render().
+     * 
+     * @see org.apache.struts2.dispatcher.StrutsResultSupport#doExecute(java.lang.String,
+     *      com.opensymphony.
      */
-    public void execute(ActionInvocation invocation) throws Exception {
-        render(FacesContext.getCurrentInstance());
+    protected void doExecute(String finalLocation, ActionInvocation invocation)
+            throws Exception {
+        performNavigation(finalLocation, FacesContext.getCurrentInstance());
+        new FacesRender().render(FacesContext.getCurrentInstance());
     }
 
     /**
-     * Executes the render phase, borrowed from MyFaces
+     * Compares the Struts Result uri to the faces viewId. If they are different
+     * use the Struts uri to build a new faces viewId.
      * 
+     * @param finalLocation
+     *            The result uri
      * @param facesContext
-     *            The faces context
-     * @throws FacesException
-     *             If anything goes wrong
+     *            The FacesContext
      */
-    public void render(FacesContext facesContext) throws FacesException {
-        // if the response is complete we should not be invoking the phase
-        // listeners
-        if (isResponseComplete(facesContext, "render", true)) {
-            return;
-        }
-        if (log.isTraceEnabled())
-            log.trace("entering renderResponse");
-
-        informPhaseListenersBefore(facesContext, PhaseId.RENDER_RESPONSE);
-        try {
-            // also possible that one of the listeners completed the response
-            if (isResponseComplete(facesContext, "render", true)) {
-                return;
+    private void performNavigation(String finalLocation,
+            FacesContext facesContext) {
+        String facesViewId = facesContext.getViewRoot().getViewId();
+        if (finalLocation != null) {
+            if (finalLocation.equals(facesViewId) == false) {
+                ViewHandler viewHandler = facesContext.getApplication()
+                        .getViewHandler();
+                UIViewRoot viewRoot = viewHandler.createView(facesContext,
+                        finalLocation);
+                facesContext.setViewRoot(viewRoot);
+                facesContext.renderResponse();
             }
-            Application application = facesContext.getApplication();
-            ViewHandler viewHandler = application.getViewHandler();
-            try {
-                viewHandler
-                        .renderView(facesContext, facesContext.getViewRoot());
-            } catch (IOException e) {
-                throw new FacesException(e.getMessage(), e);
-            }
-        } finally {
-            informPhaseListenersAfter(facesContext, PhaseId.RENDER_RESPONSE);
         }
-        if (log.isTraceEnabled()) {
-            // Note: DebugUtils Logger must also be in trace level
-            // DebugUtils.traceView("View after rendering");
-        }
-
-        if (log.isTraceEnabled())
-            log.trace("exiting renderResponse");
     }
 
 }

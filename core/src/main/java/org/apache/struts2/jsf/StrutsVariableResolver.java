@@ -21,50 +21,59 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.EvaluationException;
 import javax.faces.el.VariableResolver;
 
+import com.opensymphony.xwork2.util.OgnlValueStack;
 import com.opensymphony.xwork2.ActionContext;
 
 /**
- * Adds the current Action instance to the variable lookups. All other requests
- * delegate to underlying resolver.
+ * Will return a reference to the current action if the action name matches the
+ * requested variable name. Otherwise it will attempt to resolve the name from
+ * the value stack. Otherwise it will delegate to the original jsf resolver.
  */
 public class StrutsVariableResolver extends VariableResolver {
 
-	/** The original <code>VariableResolver</code> passed to our constructor. */
-	private VariableResolver original = null;
+    /** The original <code>VariableResolver</code> passed to our constructor. */
+    private VariableResolver original = null;
 
-	/** The variable name of our Struts action */
-	private static final String STRUTS_VARIABLE_NAME = "action";
+    /** The variable name of our Struts action */
+    private static final String STRUTS_VARIABLE_NAME = "action";
 
-	/**
-	 * Constructor
-	 * 
-	 * @param original
-	 *            Original resolver to delegate to.
-	 */
-	public StrutsVariableResolver(VariableResolver original) {
+    /**
+     * Constructor
+     * 
+     * @param original
+     *            Original resolver to delegate to.
+     */
+    public StrutsVariableResolver(VariableResolver original) {
 
-		this.original = original;
+        this.original = original;
 
-	}
+    }
 
-	/**
-	 * <p>
-	 * Resolve variable names known to this resolver; otherwise, delegate to the
-	 * original resolver passed to our constructor.
-	 * </p>
-	 * 
-	 * @param name
-	 *            Variable name to be resolved
-	 */
-	public Object resolveVariable(FacesContext context, String name)
-			throws EvaluationException {
+    /**
+     * <p>
+     * Will return a reference to the current action if the action name matches
+     * the requested variable name. Otherwise it will attempt to resolve the
+     * name from the value stack. Otherwise it will delegate to the original jsf
+     * resolver.
+     * </p>
+     * 
+     * @param name
+     *            Variable name to be resolved
+     */
+    public Object resolveVariable(FacesContext context, String name)
+            throws EvaluationException {
 
-		if (STRUTS_VARIABLE_NAME.equals(name)) {
-			return ActionContext.getContext().getActionInvocation().getAction();
-		} else {
-			return original.resolveVariable(context, name);
-		}
+        if (STRUTS_VARIABLE_NAME.equals(name)) {
+            return ActionContext.getContext().getActionInvocation().getAction();
+        }
+        
+        Object obj = ActionContext.getContext().getValueStack().findValue(name);
+        if (obj != null) {
+            return obj;
+        } else {
+            return original.resolveVariable(context, name);
+        }
 
-	}
+    }
 
 }

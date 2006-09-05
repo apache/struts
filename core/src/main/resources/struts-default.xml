@@ -187,7 +187,10 @@
             
             <!-- Sample JSF stack, can be combined with other stacks easily -->
             <interceptor-stack name="jsfStack">
-                <interceptor-ref name="jsfSetup" />
+                <interceptor-ref name="jsfSetup">
+                    <param name="variableResolver">org.apache.struts2.jsf.StrutsVariableResolver</param>
+                    <param name="navigationHandler">org.apache.struts2.jsf.StrutsNavigationHandler</param>
+                </interceptor-ref>
                 <interceptor-ref name="jsfRestore" />
                 <interceptor-ref name="jsfApply" />
                 <interceptor-ref name="jsfValidate" />

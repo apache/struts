@@ -28,9 +28,9 @@ import com.opensymphony.xwork2.ActionSupport;
 public class WelcomeTest extends TestCase {
 
     public void testWelcome() throws Exception {
-        Action welcome = new Welcome();
+        Welcome welcome = new Welcome();
         String result = welcome.execute();
-        assertTrue(ActionSupport.SUCCESS.equals(result));
-        assertTrue(welcome.equals(Welcome.MESSAGE));
+        assertEquals(ActionSupport.SUCCESS, result);
+        assertEquals(welcome.getMessage(), Welcome.MESSAGE);
     }
 }

@@ -44,8 +44,6 @@
     
     <include file="struts-freemarker.xml" />
 
-    <include file="org/apache/struts2/showcase/tutorial/struts-tutorial.xml" />
-
     <package name="default" extends="struts-default">
         <interceptors>
             <interceptor-stack name="crudStack">

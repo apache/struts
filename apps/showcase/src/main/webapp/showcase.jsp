@@ -72,9 +72,6 @@
         <!--  Hangman (AJAX and Non AJAX) Example -->
         <li><s:url id="url" action="hangmanMenu" namespace="/hangman"/><s:a href="%{#url}">Hangman (AJAX and Non AJAX) Example</s:a>
 
-        <!--  Tutorial -->
-        <li><s:url id="url" action="Welcome" namespace="/tutorial"/><s:a href="%{#url}">Source code for the Tutorial</s:a>
-
     </ul>
 </p>
 

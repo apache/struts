@@ -80,7 +80,6 @@
                     <li><a href="<s:url value="/freemarker/index.jsp"/>">Freemarker</a>
                     <li><a href="<s:url value="/chat/index.jsp"/>">Chat (AJAX)</a>
                     <li><a href="<s:url action="hangmanMenu" namespace="/hangman"/>">Hangman</a></li>
-                    <li><a href="<s:url action="Welcome" namespace="/tutorial"/>">Tutorial</a></li>
                     <li class="last"><a href="<s:url value="/help.jsp"/>">Help</a></li>
                 </ul>
             </div>

@@ -4,15 +4,15 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <title><s:text name="logon.title"/></title>
+    <title><s:text name="login.title"/></title>
     <link href="<s:url value="/css/mailreader.css"/>" rel="stylesheet"
           type="text/css"/>
 </head>
 
-<body onLoad="self.focus();document.Logon.username.focus()">
+<body onLoad="self.focus();document.Login.username.focus()">
 
 <s:actionerror />
-<s:form action="Logon" validate="true">
+<s:form action="Login" validate="true">
     <s:textfield label="%{getText('username')}" name="username"/>
 
     <s:password label="%{getText('password')}" name="password" showPassword="true"/>
@@ -21,7 +21,7 @@
 
     <s:reset value="%{getText('button.reset')}"/>
 
-    <s:submit action="Logon!cancel" value="%{getText('button.cancel')}"
+    <s:submit action="Login!cancel" value="%{getText('button.cancel')}"
                 onclick="form.onsubmit=null"/>
 </s:form>
 

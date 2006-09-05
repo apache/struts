@@ -1,5 +1,5 @@
 /*
- * $Id: LogonAction.java 360442 2005-12-31 20:10:04Z husted $
+ * $Id: LoginAction.java 360442 2005-12-31 20:10:04Z husted $
  *
  * Copyright 2000-2004 Apache Software Foundation
  *
@@ -21,7 +21,7 @@ package mailreader2;
 /**
  * <p> Log user out of the current session. </p>
  */
-public class Logoff extends MailreaderSupport {
+public class Logout extends MailreaderSupport {
 
     public String execute() {
 

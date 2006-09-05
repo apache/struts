@@ -1,5 +1,5 @@
 /*
- * $Id: LogonAction.java 360442 2005-12-31 20:10:04Z husted $
+ * $Id: LoginAction.java 360442 2005-12-31 20:10:04Z husted $
  *
  * Copyright 2000-2004 Apache Software Foundation
  *
@@ -22,9 +22,9 @@ import org.apache.struts.apps.mailreader.dao.User;
 import org.apache.struts.apps.mailreader.dao.ExpiredPasswordException;
 
 /**
- * <p> Validate a user logon. </p>
+ * <p> Validate a user login. </p>
  */
-public final class Logon extends MailreaderSupport {
+public final class Login extends MailreaderSupport {
 
     public String execute() throws ExpiredPasswordException  {
 

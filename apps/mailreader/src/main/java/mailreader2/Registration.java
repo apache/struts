@@ -9,9 +9,9 @@ import org.apache.struts.apps.mailreader.dao.User;
 public class Registration extends MailreaderSupport {
 
     /**
-     * <p>Double check that there is not a valid User logon. </p>
+     * <p>Double check that there is not a valid User login. </p>
      *
-     * @return True if there is not a valid User logon
+     * @return True if there is not a valid User login
      */
     private boolean isCreating() {
         User user = getUser();

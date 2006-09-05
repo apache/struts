@@ -16,8 +16,8 @@
 <ul>
     <li><a href="<s:url action="Registration!input"/>"><s:text
             name="index.registration"/></a></li>
-    <li><a href="<s:url action="Logon!input"/>"><s:text
-            name="index.logon"/></a></li>
+    <li><a href="<s:url action="Login!input"/>"><s:text
+            name="index.login"/></a></li>
 </ul>
 
 <h3>Language Options</h3>

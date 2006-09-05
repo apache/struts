@@ -4,22 +4,22 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <title><s:text name="change.title"/></title>
+    <title><s:text name="mainMenu.title"/></title>
     <link href="<s:url value="/css/mailreader.css"/>" rel="stylesheet"
           type="text/css"/>
 </head>
 
 <body>
-
-<p>
-    <s:text name="change.message"/>
-</p>
-
-<p>
-    <a href="<s:url action="Logon!input"/>">
-        <s:text name="change.try"/>
+<h3><s:text name="mainMenu.heading"/> <s:property
+        value="user.fullName"/></h3>
+<ul>
+    <li><a href="<s:url action="Registration!input" />">
+        <s:text name="mainMenu.registration"/>
     </a>
-</p>
-
+    </li>
+    <li><a href="<s:url action="Logout"/>">
+        <s:text name="mainMenu.logout"/>
+    </a>
+</ul>
 </body>
 </html>

@@ -62,18 +62,18 @@
 
 <ul>
     <li>
-        <a href="#Logon">Logon</a>
+        <a href="#Login">Login</a>
         <ul>
 
-            <li><a href="#Logon.jsp">Logon Page</a></li>
+            <li><a href="#Login.jsp">Login Page</a></li>
 
-            <li><a href="#Logon-validation.xml">Logon-validation.xml</a></li>
+            <li><a href="#Login-validation.xml">Login-validation.xml</a></li>
 
-            <li><a href="#Logon.java">Logon.java</a></li>
+            <li><a href="#Login.java">Login.java</a></li>
 
             <li><a href="#MailreaderSupport.java">MailreaderSupport.java</a></li>
 
-            <li><a href="#Logon.xml">Logon Configuration</a></li>
+            <li><a href="#Login.xml">Login Configuration</a></li>
 
         </ul>
     </li>
@@ -450,7 +450,7 @@ public class Welcome extends MailreaderSupport {
 <pre><code> &lt;global-results>
   &lt;result name=<strong>"error"</strong>><strong>/pages/Error.jsp</strong>&lt;/result>
   &lt;result name="invalid.token">/pages/Error.jsp&lt;/result>
-  &lt;result name="login" type="redirect-action">Logon!input&lt;/result>
+  &lt;result name="login" type="redirect-action">Login!input&lt;/result>
 &lt;/global-results></code></pre>
 <hr/>
 
@@ -534,7 +534,7 @@ public class Welcome extends MailreaderSupport {
 <hr/>
 <h5>Message Resource entries used by the Welcome page</h5>
 <pre><code><strong>index.heading=</strong>MailReader Application Options
-<strong>index.logon=</strong>Log on to the MailReader Application
+<strong>index.login=</strong>Log on to the MailReader Application
 <strong>index.registration=</strong>Register with the MailReader Application
 <strong>index.title=</strong>MailReader Demonstration Application
 <strong>index.tour=</strong>A Walking Tour of the MailReader Demonstration Application</code></pre>
@@ -574,8 +574,8 @@ public class Welcome extends MailreaderSupport {
       &lt;ul>
         &lt;li>&lt;a href="&lt;s:url action="Registration!input"/>">&lt;s:text
           name="index.registration"/>&lt;/a>&lt;/li>
-        &lt;li>&lt;a href="&lt;s:url action="Logon!input"/>">&lt;s:text
-          name="index.logon"/>&lt;/a>&lt;/li>
+        &lt;li>&lt;a href="&lt;s:url action="Login!input"/>">&lt;s:text
+          name="index.login"/>&lt;/a>&lt;/li>
       &lt;/ul>
 
       &lt;h3>Language Options&lt;/h3>
@@ -693,21 +693,21 @@ public class Welcome extends MailreaderSupport {
     When rendered, the Welcome page lists two menu options:
     one to register with the application and one to log on (if you have
     already registered).
-    Let's follow the Logon link first.
+    Let's follow the Login link first.
 </p>
 
-<h3><a name="Logon" id="Logon">Logon</a></h3>
+<h3><a name="Login" id="Login">Login</a></h3>
 
 <p>
-    If you choose the Logon link, and all goes well, the Logon action forwards
-    control to the Logon page.
+    If you choose the Login link, and all goes well, the Login action forwards
+    control to the Login page.
 </p>
 
-<h4><a name="Logon.jsp" id="Logon.jsp">Logon Page</a></h4>
+<h4><a name="Login.jsp" id="Login.jsp">Login Page</a></h4>
 
 <p>
-    The Logon page displays a form that accepts a username and password.
-    You can use the default username and password to logon
+    The Login page displays a form that accepts a username and password.
+    You can use the default username and password to login
     (<strong>user</strong> and <strong>pass</strong>), if
     you like. Try omitting or misspelling the username and password in
     various combinations to see how the application reacts.
@@ -722,18 +722,18 @@ public class Welcome extends MailreaderSupport {
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   &lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   &lt;head>
-    &lt;title>&lt;s:text name="logon.title"/>&lt;/title>
+    &lt;title>&lt;s:text name="login.title"/>&lt;/title>
       &lt;link href="&lt;s:url value="/css/mailreader.css"/>" rel="stylesheet"
         type="text/css"/>
   &lt;/head>
-  &lt;body onLoad="self.focus();document.Logon.username.focus()">
+  &lt;body onLoad="self.focus();document.Login.username.focus()">
     <strong>&lt;s:actionerror/></strong>
-    <strong>&lt;s:form action="Logon" validate="true"></strong>
+    <strong>&lt;s:form action="Login" validate="true"></strong>
       <strong>&lt;s:textfield label="%{getText('username')}" name="username"/></strong>
       <strong>&lt;s:password label="%{getText('password')}" name="password"/></strong>
       <strong>&lt;s:submit value="%{getText('button.save')}"/></strong>
       <strong>&lt;s:reset value="%{getText('button.reset')}"/></strong>
-      &lt;s:submit <strong>action="Logon!cancel" onclick="form.onsubmit=null"</strong>
+      &lt;s:submit <strong>action="Login!cancel" onclick="form.onsubmit=null"</strong>
         value="%{getText('button.cancel')}"/>
     &lt;/s:form>
     &lt;jsp:include page="Footer.jsp"/>
@@ -742,12 +742,12 @@ public class Welcome extends MailreaderSupport {
 <hr/>
 
 <p>
-    We already saw some of the tags used by the Logon page on the Welcome page.
+    We already saw some of the tags used by the Login page on the Welcome page.
     Let's focus on the new tags.
 </p>
 
 <p>
-    The first new tag on the Logon page is <strong>actionerrors</strong>.
+    The first new tag on the Login page is <strong>actionerrors</strong>.
     Most of the possible validation errors are related to a single field.
     If you don't enter a username,
     the framework can place an error message near the tag prompting you to
@@ -803,10 +803,10 @@ public class Welcome extends MailreaderSupport {
 <hr/>
 <pre><code>&lt;tr>
   &lt;td class="tdLabel">
-    &lt;label for="Logon_username" class="label">Username:&lt;/label>
+    &lt;label for="Login_username" class="label">Username:&lt;/label>
   &lt;/td>
   &lt;td>
-    &lt;input type="text" name="username" value="" id="Logon_username"/>
+    &lt;input type="text" name="username" value="" id="Login_username"/>
   &lt;/td>
 &lt;/tr></code></pre>
 <hr/>
@@ -875,14 +875,14 @@ public class Welcome extends MailreaderSupport {
     The second submit button is more interesting.
 </p>
 
-<pre><code>  &lt;s:submit <strong>action="Logon!cancel" onclick="form.onsubmit=null"</strong>
+<pre><code>  &lt;s:submit <strong>action="Login!cancel" onclick="form.onsubmit=null"</strong>
     value="%{getText('button.cancel')}"/>
 </code></pre>
 
 <p>
     Here we are creating the Cancel button for the form.
-    The button's attribute <em>action="Logon<strong>!</strong>cancel"</em>
-    tells the framework to submit to the Logon's "cancel" method
+    The button's attribute <em>action="Login<strong>!</strong>cancel"</em>
+    tells the framework to submit to the Login's "cancel" method
     instead of the usual "execute" method.
     The <em>onclick="form.onsubmit=null"</em> script defeats client-side validation.
     On the server side, "cancel" is on a special list of methods that bypass validation,
@@ -911,7 +911,7 @@ public class Welcome extends MailreaderSupport {
     the "validation" file.
 </p>
 
-<h4><a name="Logon-validation.xml" id="Logon-validation.xml">Logon-validation.xml</a>
+<h4><a name="Login-validation.xml" id="Login-validation.xml">Login-validation.xml</a>
 </h4>
 
 <p>
@@ -921,11 +921,11 @@ public class Welcome extends MailreaderSupport {
 
 <p>
     The validation framework is configured through another XML document, the <strong>
-    Logon-validation.xml</strong>.
+    Login-validation.xml</strong>.
 </p>
 
 <hr/>
-<h5>Validation file for Logon Action</h5>
+<h5>Validation file for Login Action</h5>
 <pre><code>&lt;!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN"
   "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
 &lt;validators>
@@ -976,19 +976,19 @@ public class Welcome extends MailreaderSupport {
 </p>
 -->
 
-<h4><a name="Logon.java" id="Logon.java">Logon Action</a></h4>
+<h4><a name="Login.java" id="Login.java">Login Action</a></h4>
 
 <p>
-    If validation passes, the framework invokes the "execute" method of the Logon Action.
-    The actual Logon Action is brief, since most of the functionality derives
+    If validation passes, the framework invokes the "execute" method of the Login Action.
+    The actual Login Action is brief, since most of the functionality derives
     from the base class, <strong>MailreaderSupport</strong>.
 </p>
 
 <hr/>
-<h5>Logon.java</h5>
+<h5>Login.java</h5>
 <pre><code>package mailreader2;
 import org.apache.struts.apps.mailreader.dao.User;
-public final class <strong>Logon</strong> extends MailreaderSupport {
+public final class <strong>Login</strong> extends MailreaderSupport {
 public String <strong>execute()</strong> throws ExpiredPasswordException {
   User user = <strong>findUser(getUsername(), getPassword());</strong>
   if (user != null) {
@@ -1003,7 +1003,7 @@ public String <strong>execute()</strong> throws ExpiredPasswordException {
 <hr/>
 
 <p>
-    Logon lays out what we do to authenticate a user.
+    Login lays out what we do to authenticate a user.
     We try to find the user using the credentials provided.
     If the user is found, we cache a reference.
     If the user is not found, we return "input" so the client can try again.
@@ -1099,7 +1099,7 @@ public void setPassword(String password) {
 
 <p>
     When "findUser" returns,
-    the Logon Action looks to see if a valid (non-null) User object is returned.
+    the Login Action looks to see if a valid (non-null) User object is returned.
     A valid User is passed to the <strong>User property</strong>.
     Although it is still a JavaBean property, 
     the User property is not implemented in quite the same way as Username and Password.
@@ -1213,7 +1213,7 @@ public void <strong>setSession(Map value)</strong> {
     If a valid User is not found, or the password doesn't match,
     the "findUser" method invokes the <strong>addFieldError</strong> method to note the
     problem.
-    When "findUser" returns, the Logon Action checks for errors,
+    When "findUser" returns, the Login Action checks for errors,
     and then it returns either INPUT or SUCCESS.
 </p>
 
@@ -1241,29 +1241,29 @@ public void <strong>setSession(Map value)</strong> {
 <hr/>
 
 <p>
-    But, what happens if Logon returns INPUT instead of SUCCESS.
+    But, what happens if Login returns INPUT instead of SUCCESS.
     How does the framework know what to do next?
 </p>
 
 <p>
     To answer that question,
     we need to turn back to the Struts configuration
-    and look at how Logon is declared.
+    and look at how Login is declared.
 </p>
 
 
-<h4><a name="Logon.xml" id="Logon.xml">Logon Configuration</a></h4>
+<h4><a name="Login.xml" id="Login.xml">Login Configuration</a></h4>
 
 <p>
-    The Logon action element outlines how the Logon workflow operates,
+    The Login action element outlines how the Login workflow operates,
     including what to do when the Action returns "input",
     or the default result name "success".
 </p>
 
 <hr/>
-<h5>mailreader-support.xml Logon</h5>
-<pre><code>&lt;action name="<strong>Logon!*</strong>" class="mailreader2.Logon" method="{1}">
-  &lt;result name="<strong>input</strong>">/pages/Logon.jsp&lt;/result>
+<h5>mailreader-support.xml Login</h5>
+<pre><code>&lt;action name="<strong>Login!*</strong>" class="mailreader2.Login" method="{1}">
+  &lt;result name="<strong>input</strong>">/pages/Login.jsp&lt;/result>
   &lt;result name="<strong>cancel</strong>" type="redirect-action">Welcome&lt;/result>
   &lt;result type="redirect-action">MainMenu&lt;/result>
   &lt;result name="<strong>expired</strong>" type="chain">ChangePassword&lt;/result>
@@ -1275,14 +1275,14 @@ public void <strong>setSession(Map value)</strong> {
 <hr/>
 
 <p>
-    You might notice that the name of the Logon action element is not "Logon"
-    but "Logon<strong>!*</strong>".
+    You might notice that the name of the Login action element is not "Login"
+    but "Login<strong>!*</strong>".
     The asterisk is a special "wildcard" notation that tells the framework to match any series
     of character at this point.
     In the method attribute,
     the "{1}" notation indicates that framework should substitute whatever characters match
     the asterisk at runtime.
-    When we cite actions like "Logon!cancel" or "Logon!input",
+    When we cite actions like "Login!cancel" or "Login!input",
     the framework matches "cancel" or "input" with the wildcard and fills in the blanks.
 </p>
 
@@ -1304,19 +1304,19 @@ public void <strong>setSession(Map value)</strong> {
     Using wildcards with a exclamation point (or "bang") is not the only way we can use
     wilcards to invoke methods.
     If we wanted to use actions like "inputLogin",
-    we could move the asterisk and use an action name like "*Logon".
+    we could move the asterisk and use an action name like "*Login".
 </p>
 
 <p>
-    Within the Logon action element, the first result element is named "input".
+    Within the Login action element, the first result element is named "input".
     If validation or authentification fail,
     the Action class will return "input" and the framework will transfer control to the 
-    "Logon.jsp" page.
+    "Login.jsp" page.
 </p>
 
 <p>
     The second result element is named <strong>cancel</strong>.
-    If someone presses the cancel button on the Logon page,
+    If someone presses the cancel button on the Login page,
     the Action class will return "cancel", this result will be selected,
     and the framework will issue a redirect to the Welcome action.
 </p>
@@ -1324,7 +1324,7 @@ public void <strong>setSession(Map value)</strong> {
 <p>
     The third result has no name,
     so it will be called if the default <strong>success</strong> token is returned.
-    So, if the Logon succeeds,
+    So, if the Login succeeds,
     control will transfer to the MainMenu action.
 </p>
 
@@ -1397,7 +1397,7 @@ public void <strong>setSession(Map value)</strong> {
 </p>
 
 <p>
-    Finally, the Logon action specifies an <strong>InterceptorStack</strong>
+    Finally, the Login action specifies an <strong>InterceptorStack</strong>
     named <strong>defaultStack.</strong>
     If you've worked with Struts 2 or WebWork 2 before, that might seem strange,
     since "defaultStack" is the factory default.
@@ -1406,7 +1406,7 @@ public void <strong>setSession(Map value)</strong> {
 <p>
     In the MailReader application, most of the actions are only available
     to authenticated users.
-    The exceptions are the Welcome, Logon, and Register actions
+    The exceptions are the Welcome, Login, and Register actions
     which are available to everyone.
     To authenticate clients,
     the MailReader uses a custom Interceptor and a custom Interceptor stack.
@@ -1444,7 +1444,7 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
     If so, it returns normally, and the next Interceptor in the set would be invoked.
     If the User object is missing, the Interceptors returns "login".
     The framework would match "login" to the global result,
-    and transfer control to the Logon action.
+    and transfer control to the Login action.
 </p>
 
 <p>
@@ -1519,7 +1519,7 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
 <p>
     Because the default interceptor stack will now authenticate the client,
     we need to specify the standard "defaultStack" for the three 
-    "guest actions", Welcome, Logon, and Register. 
+    "guest actions", Welcome, Login, and Register.
     Requiring authentification by default is the better practice, since it 
     means that we won't forget to enable it when creating new actions. 
     Meanwhile, those pesky users will ensure that we don't forget to disable 
@@ -1529,7 +1529,7 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
 <h3><a name="MainMenu" id="MainMenu">MainMenu</a></h3>
 
 <p>
-    On a successful logon, the Main Menu page displays.
+    On a successful login, the Main Menu page displays.
     If you logged in using the demo account,
     the page title should be "Main Menu Options for John Q. User".
     Below this legend should be two links:
@@ -1575,8 +1575,8 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
         &lt;s:text name="mainMenu.registration"/>
       &lt;/a>
     &lt;/li>
-    &lt;li>&lt;a href="&lt;s:url <strong>action="Logoff"</strong> />">
-      &lt;s:text name="mainMenu.logoff"/>
+    &lt;li>&lt;a href="&lt;s:url <strong>action="Logout"</strong> />">
+      &lt;s:text name="mainMenu.logout"/>
       &lt;/a>
     &lt;/ul>
   &lt;/body>
@@ -1602,7 +1602,7 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
 <p>
     The customized MainMenu page offers two standard links.
     One is to "Edit your user registration profile".
-    The other is to "Logoff the MailReader Demonstration Application".
+    The other is to "Logout the MailReader Demonstration Application".
 </p>
 
 <h3><a name="Registration.jsp" id="Registration.jsp">Registration page</a>
@@ -2054,7 +2054,7 @@ public Subscription findSubscription(String host) {
     Likewise, the AuthentificationInterceptor will ensure that only clients
     with a valid User object can try to edit a Subscription.
     If the session expired, or someone bookmarked the page,
-    the client will be redirected to the Logon page automatically.
+    the client will be redirected to the Login page automatically.
 </p>
 
 <p>

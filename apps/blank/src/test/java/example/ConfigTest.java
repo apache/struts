@@ -8,12 +8,33 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 
 import java.util.Map;
+import java.util.List;
 
 public class ConfigTest extends XWorkTestCase {
 
-    protected void AssertSuccess(String result) throws Exception {
+    protected void assertSuccess(String result) throws Exception {
         assertTrue("Expected a success result!",
                 ActionSupport.SUCCESS.equals(result));
+    }
+
+    protected void assertInput(String result) throws Exception {
+        assertTrue("Expected an input result!",
+                ActionSupport.INPUT.equals(result));
+    }
+
+    protected Map assertFieldErrors(ActionSupport action) throws Exception {
+        assertTrue(action.hasFieldErrors());
+        return action.getFieldErrors();
+    }
+
+    protected void assertFieldError(Map field_errors, String field_name, String error_message) {
+
+        List errors = (List) field_errors.get(field_name);
+        assertNotNull("Expected errors for " + field_name, errors);
+        assertTrue("Expected errors for " + field_name, errors.size()>0);
+        // TODO: Should be a loop
+        assertEquals(error_message,errors.get(0));
+
     }
 
     protected void setUp() throws Exception {
@@ -23,13 +44,17 @@ public class ConfigTest extends XWorkTestCase {
         configurationManager.reload();
     }
 
-    protected ActionConfig assertClass(String action_name, String class_name) {
+    protected ActionConfig assertClass(String namespace, String action_name, String class_name) {
         RuntimeConfiguration configuration = configurationManager.getConfiguration().getRuntimeConfiguration();
-        ActionConfig config = configuration.getActionConfig("", action_name);
+        ActionConfig config = configuration.getActionConfig(namespace, action_name);
         assertNotNull("Mssing action", config);
         assertTrue("Wrong class name: [" + config.getClassName() + "]",
                 class_name.equals(config.getClassName()));
         return config;
+    }
+
+    protected ActionConfig assertClass(String action_name, String class_name) {
+        return assertClass("", action_name, class_name);
     }
 
     protected void assertResult(ActionConfig config, String result_name, String result_value) {

@@ -1,5 +1,5 @@
 /*
- * $Id: JasperReportsResult.java 392647 2006-04-09 00:41:12Z plightbo $
+ * $Id$
  *
  * Copyright 2006 The Apache Software Foundation.
  *

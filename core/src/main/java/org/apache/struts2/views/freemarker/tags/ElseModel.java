@@ -1,5 +1,5 @@
 /*
- * $Id: I18nModel.java 420385 2006-07-10 00:57:05Z tmjee $
+ * $Id$
  *
  * Copyright 2006 The Apache Software Foundation.
  *

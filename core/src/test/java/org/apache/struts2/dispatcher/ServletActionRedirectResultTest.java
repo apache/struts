@@ -1,5 +1,5 @@
 /*
- * $Id: ServletActionRedirectResult.java 421742 2006-07-13 23:48:46Z tmjee $
+ * $Id$
  *
  * Copyright 2006 The Apache Software Foundation.
  *

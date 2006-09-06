@@ -1,5 +1,5 @@
 /*
- * $Id: DatePicker.java 424152 2006-07-21 01:04:41Z husted $
+ * $Id$
  *
  * Copyright 2006 The Apache Software Foundation.
  *

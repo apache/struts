@@ -1,5 +1,5 @@
 /*
- * $Id: FileUploadInterceptor.java 421776 2006-07-14 00:47:56Z tmjee $
+ * $Id$
  *
  * Copyright 2006 The Apache Software Foundation.
  *

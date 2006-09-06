@@ -1,5 +1,5 @@
 /*
- * $Id: BaseAction.java 360442 2005-12-31 20:10:04Z husted $
+ * $Id$
  *
  * Copyright 1999-2004 The Apache Software Foundation.
  *

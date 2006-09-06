@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * $Id: ApplicationListener.java 372087 2006-01-25 03:38:42Z craigmcc $
+ * $Id$
  */
 
 package mailreader2;

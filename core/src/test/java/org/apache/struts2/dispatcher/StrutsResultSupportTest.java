@@ -1,5 +1,5 @@
 /*
- * $Id: StrutsResultSupport.java 394468 2006-04-16 12:16:03Z tmjee $
+ * $Id$
  *
  * Copyright 2006 The Apache Software Foundation.
  *

@@ -1,5 +1,5 @@
 /*
- * $Id: SelectTest.java 418521 2006-07-01 23:36:50Z mrdon $
+ * $Id$
  *
  * Copyright 2006 The Apache Software Foundation.
  *

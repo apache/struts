@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractUITagTest.java 394477 2006-04-16 12:50:53Z tmjee $
+ * $Id$
  *
  * Copyright 2006 The Apache Software Foundation.
  *

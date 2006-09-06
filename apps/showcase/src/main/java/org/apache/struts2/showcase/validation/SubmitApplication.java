@@ -1,5 +1,5 @@
 /*
- * $Id: QuizAction.java 420385 2006-07-10 00:57:05Z mrdon $
+ * $Id$
  *
  * Copyright 2006 The Apache Software Foundation.
  *

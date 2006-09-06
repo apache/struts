@@ -1,5 +1,5 @@
 /*
- * $Id: StrutsTestCase.java 425615 2006-07-26 04:33:53Z tmjee $
+ * $Id$
  *
  * Copyright 2006 The Apache Software Foundation.
  *

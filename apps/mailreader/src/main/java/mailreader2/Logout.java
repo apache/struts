@@ -1,5 +1,5 @@
 /*
- * $Id: LoginAction.java 360442 2005-12-31 20:10:04Z husted $
+ * $Id$
  *
  * Copyright 2000-2004 Apache Software Foundation
  *

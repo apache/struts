@@ -16,7 +16,6 @@
         <module>mailreader</module>
         <module>portlet</module>
         <module>showcase</module>
-        <module>starter</module>
     </modules>
     
      <distributionManagement>

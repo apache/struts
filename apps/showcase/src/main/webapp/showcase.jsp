@@ -1,7 +1,7 @@
 <%-- 
     showcase.jsp
     
-    @version $Date: 2006/03/20 16:04:09 $ $Id: showcase.jsp,v 1.17 2006/03/20 16:04:09 tmjee Exp $
+    @version $Date$ $Id$
 --%>
 
 <%@ taglib prefix="s" uri="/struts-tags" %>

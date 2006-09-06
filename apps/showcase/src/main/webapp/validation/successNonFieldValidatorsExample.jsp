@@ -2,7 +2,7 @@
     successNonFieldValidatorsExample.jsp
     
     @author tm_jee
-    @version $Date: 2005/12/22 09:17:59 $ $Id: successNonFieldValidatorsExample.jsp,v 1.1 2005/12/22 09:17:59 tmjee Exp $
+    @version $Date$ $Id$
 --%>
 
 

@@ -2,7 +2,7 @@
     index.jsp
 
     @author tm_jee
-    @version $Date: 2006/01/13 16:23:44 $ $Id: index.jsp,v 1.4 2006/01/13 16:23:44 rainerh Exp $
+    @version $Date$ $Id$
 --%>
 
 <%@taglib prefix="s" uri="/struts-tags" %>

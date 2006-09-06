@@ -2,7 +2,7 @@
     successVisitorValidatorsExample.jsp
     
     @author tm_jee
-    @version $Date: 2005/12/22 09:18:00 $ $Id: successVisitorValidatorsExample.jsp,v 1.1 2005/12/22 09:18:00 tmjee Exp $
+    @version $Date$ $Id$
 --%>
 
 

@@ -2,7 +2,7 @@
     successFieldValidatorsExample.jsp
 
     @author tm_jee
-    @version $Date: 2006/01/13 16:23:45 $ $Id: successClientSideValidationExample.jsp,v 1.1 2006/01/13 16:23:45 rainerh Exp $
+    @version $Date$ $Id$
 --%>
 
 <%@taglib prefix="s" uri="/struts-tags" %>

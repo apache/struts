@@ -14,7 +14,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 
- $Id: welcome.jsp 371852 2006-01-24 07:25:10Z craigmcc $
+ $Id$
 
 --%>
 

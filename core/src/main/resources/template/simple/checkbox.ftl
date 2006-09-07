@@ -11,9 +11,6 @@
 <#if parameters.tabindex?exists>
  tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
-<#if parameters.tabindex?exists>
- tabindex="${parameters.tabindex?html}"<#rt/>
-</#if>
 <#if parameters.id?exists>
  id="${parameters.id?html}"<#rt/>
 </#if>

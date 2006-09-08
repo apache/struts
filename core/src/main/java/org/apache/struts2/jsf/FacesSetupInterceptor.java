@@ -133,11 +133,6 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
             log.debug("Unable to initialize faces", ex);
         }
 
-        if (facesContextFactory == null) {
-            log
-                    .info("Unable to initialize jsf interceptors probably due missing JSF framework initialization");
-            return;
-        }
         // Javadoc says: Lifecycle instance is shared across multiple
         // simultaneous requests, it must be implemented in a thread-safe
         // manner.
@@ -213,26 +208,30 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
      *            The action invocation
      */
     public String intercept(ActionInvocation invocation) throws Exception {
-        if (facesContextFactory != null && isFacesAction(invocation)) {
+        if (facesContextFactory != null)
+        {
+            if (isFacesAction(invocation)) {
 
-            invocation.getInvocationContext().put(
-                    FacesInterceptor.FACES_ENABLED, Boolean.TRUE);
+                invocation.getInvocationContext().put(
+                        FacesInterceptor.FACES_ENABLED, Boolean.TRUE);
 
-            FacesContext facesContext = facesContextFactory.getFacesContext(
-                    ServletActionContext.getServletContext(),
-                    ServletActionContext.getRequest(), ServletActionContext
-                            .getResponse(), lifecycle);
+                FacesContext facesContext = facesContextFactory.getFacesContext(
+                        ServletActionContext.getServletContext(),
+                        ServletActionContext.getRequest(), ServletActionContext
+                                .getResponse(), lifecycle);
 
-            setLifecycle(lifecycle);
+                setLifecycle(lifecycle);
 
-            try {
-                return invocation.invoke();
-            } finally {
-                facesContext.release();
+                try {
+                    return invocation.invoke();
+                } finally {
+                    facesContext.release();
+                }
             }
         } else {
-            return invocation.invoke();
+            log.error("Unable to initialize jsf interceptors probably due missing JSF implementation libraries");
         }
+        return invocation.invoke();
     }
 
     /**

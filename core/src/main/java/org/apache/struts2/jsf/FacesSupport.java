@@ -38,14 +38,20 @@ public class FacesSupport {
 	/** Log instance for each class */
 	protected Log log;
 
-	/** Initializes log instance for the instance object */
-	protected FacesSupport() {
-		log = LogFactory.getLog(getClass());
-	}
+    /**
+     * Marker key for the ActionContext to dictate whether to treat the request
+     * as a JSF faces request and therefore process the Faces phases
+     */
+    protected static final String FACES_ENABLED = "facesEnabled";
+
+    /** Initializes log instance for the instance object */
+    protected FacesSupport() {
+        log = LogFactory.getLog(getClass());
+    }
 
 	/**
 	 * Gets the shared lifecycle for this request
-	 * 
+	 *
 	 * @return The lifecycle
 	 */
 	private Lifecycle getLifecycle() {
@@ -54,7 +60,7 @@ public class FacesSupport {
 
 	/**
 	 * Sets the lifecycle for this request
-	 * 
+	 *
 	 * @param lifecycle
 	 *            The lifecycle
 	 */
@@ -64,7 +70,7 @@ public class FacesSupport {
 
 	/**
 	 * Informs phase listeners before a phase is executed
-	 * 
+	 *
 	 * @param facesContext
 	 *            The current faces context
 	 * @param phaseId
@@ -88,7 +94,7 @@ public class FacesSupport {
 
 	/**
 	 * Informs phase listeners after a phase is executed
-	 * 
+	 *
 	 * @param facesContext
 	 *            The current faces context
 	 * @param phaseId
@@ -113,7 +119,7 @@ public class FacesSupport {
 	/**
 	 * Checks to see if the response has been completed. Mainly used for better
 	 * debugging messages.
-	 * 
+	 *
 	 * @param facesContext
 	 *            The current faces context
 	 * @param phase
@@ -140,7 +146,7 @@ public class FacesSupport {
 	/**
 	 * Checks to see the render phase should be executed next. Mainly used for
 	 * better debugging messages.
-	 * 
+	 *
 	 * @param facesContext
 	 *            The current faces context
 	 * @param phase

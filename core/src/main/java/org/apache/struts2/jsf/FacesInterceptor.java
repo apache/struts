@@ -31,12 +31,6 @@ public class FacesInterceptor extends FacesSupport implements Interceptor {
 
     private static final long serialVersionUID = -5418255964277566516L;
 
-    /** 
-     * Marker key for the ActionContext to dictate whether to treat the request
-     * as a JSF faces request and therefore process the Faces phases
-     */
-    protected static final String FACES_ENABLED = "facesEnabled";
-
     /**
      * Not used
      */

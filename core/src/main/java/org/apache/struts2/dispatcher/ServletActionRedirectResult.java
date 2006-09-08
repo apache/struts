@@ -40,6 +40,23 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
  * configuration files. This means you can change your URL patterns at any point and your application will still work.
  * It is strongly recommended that if you are redirecting to another action, you use this result rather than the
  * standard redirect result.
+ * 
+ * <p/>
+ * 
+ * To pass parameters, the &lt;param&gt; ... &lt;/param&gt; tag. The following parameters will not be 
+ * passable becuase they are part of the config param for this particular result.
+ * 
+ * <ul>
+ * 	<li>actionName</li>
+ *  <li>namespace</li>
+ *  <li>method</li>
+ *  <li>encode</li>
+ *  <li>parse</li>
+ *  <li>location</li>
+ *  <li>prependServletContext</li>
+ * </ul>
+ * 
+ * See examples below for an example of how request parameters could be passed in.
  *
  * <!-- END SNIPPET: description -->
  *
@@ -82,6 +99,25 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
  *         &lt;result&gt;error.jsp&lt;/result&gt;
  *     &lt;/action&gt;
  * &lt;/package&gt;
+ * 
+ * &lt;package name="passingRequestParameters" extends="webwork-default" namespace="/passingRequestParameters"&gt;
+ * 	  &lt;-- Pass parameters (reportType, width and height) --&gt;
+ *    &lt;!-- 
+ *    The redirect-action url generated will be : 
+ *    /genReport/generateReport.action?reportType=pie&width=100&height=100
+ *    --&gt;
+ *    &lt;action name="gatherReportInfo" class="..."&gt;
+ *       &lt;result name="showReportResult" type="redirect-action"&gt;
+ *       	&lt;param name="actionName"&gt;generateReport&lt;/param&gt;
+ *          &lt;param name="namespace="&gt;/genReport&lt;/param&gt;
+ *          &lt;param name="reportType"&gt;pie&lt;/param&gt;
+ *          &lt;param name="width"&gt;100&lt;/param&gt;
+ *          &lt;param name="height"&gt;100&lt;/param&gt;
+ *       &lt;/result&gt;
+ *    &lt;/action&gt;
+ * &lt;/package&gt;
+ * 
+ * 
  * <!-- END SNIPPET: example --></pre>
  *
  * @see ActionMapper

@@ -66,6 +66,9 @@
                                 <include>**/*.xml</include>
                              </includes>
                      </resource>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                    </resource>
                 </resources>
                 <plugins>
                     <plugin>
@@ -99,32 +102,11 @@
                             </dependency>
                         </dependencies>
                     </plugin>
-         <!-- Include source code under WEB-INF/src/java -->
-         <plugin>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <executions>
-               <execution>
-                  <id>copy-sources</id>
-                  <phase>process-sources</phase>
-                  <configuration>
-                     <tasks>
-                        <copy todir="${project.build.directory}/${pom.artifactId}/WEB-INF/src/java"
-                              failonerror="false">
-                           <fileset dir="${basedir}/src/main/java"/>
-                        </copy>
-                     </tasks>
-                  </configuration>
-                  <goals>
-                     <goal>run</goal>
-                  </goals>
-               </execution>
-            </executions>
-         </plugin>
                 </plugins>
             </build>
         </profile>
     </profiles>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -141,6 +123,31 @@
                         <home>${project.build.directory}/tomcat5x</home>
                     </configuration>
                 </configuration>
+            </plugin>
+            <!-- Include source code under WEB-INF/src/java -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-sources</id>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <tasks>
+                                <copy todir="${project.build.directory}/${pom.artifactId}/WEB-INF/src/java"
+                                      failonerror="false">
+                                    <fileset dir="${basedir}/src/main/java"/>
+                                </copy>
+                                <copy todir="${project.build.directory}/${pom.artifactId}/WEB-INF/src/java"
+                                      failonerror="false">
+                                    <fileset dir="${basedir}/src/main/resources"/>
+                                </copy>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         

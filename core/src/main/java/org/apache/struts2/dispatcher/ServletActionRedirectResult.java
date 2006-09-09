@@ -40,12 +40,12 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
  * configuration files. This means you can change your URL patterns at any point and your application will still work.
  * It is strongly recommended that if you are redirecting to another action, you use this result rather than the
  * standard redirect result.
- * 
+ *
  * <p/>
- * 
- * To pass parameters, the &lt;param&gt; ... &lt;/param&gt; tag. The following parameters will not be 
+ *
+ * To pass parameters, the &lt;param&gt; ... &lt;/param&gt; tag. The following parameters will not be
  * passable becuase they are part of the config param for this particular result.
- * 
+ *
  * <ul>
  * 	<li>actionName</li>
  *  <li>namespace</li>
@@ -55,7 +55,7 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
  *  <li>location</li>
  *  <li>prependServletContext</li>
  * </ul>
- * 
+ *
  * See examples below for an example of how request parameters could be passed in.
  *
  * <!-- END SNIPPET: description -->
@@ -99,11 +99,11 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
  *         &lt;result&gt;error.jsp&lt;/result&gt;
  *     &lt;/action&gt;
  * &lt;/package&gt;
- * 
- * &lt;package name="passingRequestParameters" extends="webwork-default" namespace="/passingRequestParameters"&gt;
+ *
+ * &lt;package name="passingRequestParameters" extends="struts-default" namespace="/passingRequestParameters"&gt;
  * 	  &lt;-- Pass parameters (reportType, width and height) --&gt;
- *    &lt;!-- 
- *    The redirect-action url generated will be : 
+ *    &lt;!--
+ *    The redirect-action url generated will be :
  *    /genReport/generateReport.action?reportType=pie&width=100&height=100
  *    --&gt;
  *    &lt;action name="gatherReportInfo" class="..."&gt;
@@ -116,14 +116,14 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
  *       &lt;/result&gt;
  *    &lt;/action&gt;
  * &lt;/package&gt;
- * 
- * 
+ *
+ *
  * <!-- END SNIPPET: example --></pre>
  *
  * @see ActionMapper
  */
 public class ServletActionRedirectResult extends ServletRedirectResult {
-	
+
 	private static final long serialVersionUID = -9042425229314584066L;
 
     /** The default parameter */
@@ -132,11 +132,11 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
     protected String actionName;
     protected String namespace;
     protected String method;
-    
-    protected List<String> prohibitedResultParam = Arrays.asList(new String[] { 
-    		DEFAULT_PARAM, "namespace", "method", "encode", "parse", "location", 
+
+    protected List<String> prohibitedResultParam = Arrays.asList(new String[] {
+    		DEFAULT_PARAM, "namespace", "method", "encode", "parse", "location",
     		"prependServletContext" });
-    
+
     /**
      * @see com.opensymphony.xwork2.Result#execute(com.opensymphony.xwork2.ActionInvocation)
      */
@@ -161,24 +161,24 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
         for (Iterator i = resultConfigParams.entrySet().iterator(); i.hasNext(); ) {
         	Map.Entry e = (Map.Entry) i.next();
         	if (! prohibitedResultParam.contains(e.getKey())) {
-        		requestParameters.put(e.getKey().toString(), 
-        				e.getValue() == null ? "": 
+        		requestParameters.put(e.getKey().toString(),
+        				e.getValue() == null ? "":
         					conditionalParse(e.getValue().toString(), invocation));
         	}
         }
-        
+
         ActionMapper mapper = ActionMapperFactory.getMapper();
         StringBuffer tmpLocation = new StringBuffer(mapper.getUriFromActionMapping(new ActionMapping(actionName, namespace, method, null)));
         UrlHelper.buildParametersString(requestParameters, tmpLocation, "&");
-        
+
         location = tmpLocation.toString();
-        
+
         super.execute(invocation);
     }
 
     /**
      * Sets the action name
-     * 
+     *
      * @param actionName The name
      */
     public void setActionName(String actionName) {
@@ -187,16 +187,16 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
 
     /**
      * Sets the namespace
-     * 
+     *
      * @param namespace The namespace
      */
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
-    
+
     /**
      * Sets the method
-     * 
+     *
      * @param method The method
      */
     public void setMethod(String method) {

@@ -30,15 +30,15 @@ import ognl.DefaultTypeConverter;
  * <p/> Type converters do not have to use this class. It is merely a helper base class, although it is recommended that
  * you use this class as it provides the common type conversion contract required for all web-based type conversion.
  *
- * <p/> There's a hook (fall back method) called <code>performFallbackConversion</code> of which 
- * could be used to perform some fallback conversion if <code>convertValue</code> method of this 
+ * <p/> There's a hook (fall back method) called <code>performFallbackConversion</code> of which
+ * could be used to perform some fallback conversion if <code>convertValue</code> method of this
  * failed. By default it just ask its super class (Ognl's DefaultTypeConverter) to do the conversion.
  *
- * <p/> To allow WebWork to recongnize that a converison error has occurred, throw an XWorkException or 
+ * <p/> To allow the framework to recognize that a conversion error has occurred, throw an XWorkException or
  * preferable a TypeConversionException.
  *
  * <!-- END SNIPPET: javadoc -->
- * 
+ *
  */
 public abstract class StrutsTypeConverter extends DefaultTypeConverter {
     public Object convertValue(Map context, Object o, Class toClass) {
@@ -52,12 +52,12 @@ public abstract class StrutsTypeConverter extends DefaultTypeConverter {
         	return performFallbackConversion(context, o, toClass);
         }
     }
-    
+
     /**
      * Hook to perform a fallback conversion if every default options failed. By default
-     * this will ask Ognl's DefaultTypeConverter (of which this class extends) to 
+     * this will ask Ognl's DefaultTypeConverter (of which this class extends) to
      * perform the conversion.
-     * 
+     *
      * @param context
      * @param o
      * @param toClass
@@ -66,7 +66,7 @@ public abstract class StrutsTypeConverter extends DefaultTypeConverter {
     protected Object performFallbackConversion(Map context, Object o, Class toClass) {
     	return super.convertValue(context, o, toClass);
     }
-    
+
 
     /**
      * Converts one or more String values to the specified class.

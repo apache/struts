@@ -33,7 +33,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="debug" tld-body-content="JSP" tld-tag-class="com.opensymphony.webwork.views.jsp.ui.DebugTag"
+ * @s.tag name="debug" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.DebugTag"
  * description="Render debug tag"
   */
 public class Debug extends UIBean {

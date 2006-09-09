@@ -66,13 +66,8 @@
 
             <item
                     name="Tag Reference"
-                    href="tagreference.html"
+                    href="http://cwiki.apache.org/WW/tag-reference.html"
                     />        
-
-            <item
-                    name="Struts Tags API"
-                    href="tlddoc/index.html"
-                    />
 
             <item
                     name="Source Repository"

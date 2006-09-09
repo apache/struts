@@ -250,17 +250,15 @@ public class Dispatcher {
             LOG.debug("Parameter access work-around disabled.");
         }
 
-        // Check wether portlet support is active or not by trying to get "javax.portlet.PortletRequest"
+        // Check whether portlet support is active or not by trying to get "javax.portlet.PortletRequest"
         try {
             ClassLoaderUtil.loadClass("javax.portlet.PortletRequest", Dispatcher.class);
             portletSupportActive = true;
             if (LOG.isInfoEnabled()) {
                 LOG.info("Found portlet-api. Activating Struts's portlet support");
             }
-        } catch (Exception e) {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("Could not load portlet-api, disabling Struts's portlet support.");
-            }
+        } catch (ClassNotFoundException e) {
+            LOG.debug("Unable to locate the portlet libraries.  Disabling portlet support.");
         }
         
         configurationManager = new ConfigurationManager();

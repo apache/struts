@@ -65,9 +65,9 @@
     <ciManagement/>
     <distributionManagement>
         <repository>
-           <id>apache-maven-test-builds</id>
-           <name>Apache Maven Repository (Test Builds)</name>
-           <url>scp://people.apache.org/www/cvs.apache.org/maven-snapshot-repository</url>
+           <id>apache.snapshots</id>
+           <name>Apache Maven Repository (Snapshots and Test Builds)</name>
+           <url>scp://people.apache.org/www/people.apache.org/repo/m2-snapshot-repository</url>
         </repository>
         <site>
             <id>apache-site</id>
@@ -278,23 +278,9 @@
             <url>http://snapshots.maven.codehaus.org/maven2</url>
         </repository>
         <repository>
-            <id>apache</id>
-            <name>apache</name>
-            <layout>legacy</layout>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <url>http://cvs.apache.org/repository</url>
-        </repository>
-        <repository>
             <id>apache.snapshots</id>
             <name>Apache Maven Repository (Snapshots and Test Builds)</name>
-            <url>http://cvs.apache.org/maven-snapshot-repository</url>
+            <url>http://people.apache.org/repo/m2-snapshot-repository</url>
             <releases><enabled>true</enabled></releases>
             <snapshots><enabled>true</enabled></snapshots>
         </repository>

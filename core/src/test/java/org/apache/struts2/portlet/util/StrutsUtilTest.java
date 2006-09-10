@@ -91,12 +91,6 @@ public class StrutsUtilTest extends StrutsTestCase {
 	}
 	
 	
-	public void testTextToHtmlMethod() throws Exception {
-		assertEquals(
-				strutsUtil.textToHtml("<html><head><title>some title</title><body>some content</body></html>"), 
-				"&lt;html&gt;&lt;head&gt;&lt;title&gt;some title&lt;/title&gt;&lt;body&gt;some content&lt;/body&gt;&lt;/html&gt;");
-	}
-	
 	public void testUrlEncodeMethod() throws Exception {
 		assertEquals(
 				strutsUtil.urlEncode("http://www.opensymphony.com/action2/index.jsp?param1=value1"), 

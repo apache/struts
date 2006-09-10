@@ -23,8 +23,8 @@ import java.io.Writer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.opensymphony.util.TextUtils;
 import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.TextUtils;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -55,7 +55,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  *     <!-- Example 1: -->
  *     <s:property value="myBeanProperty" />
  *
- *     <!-- Example 2: -->
+ *     <!-- Example 2: -->TextUtils
  *     <s:property value="myBeanProperty" default="a default value" />
  * </s:push>
  * 

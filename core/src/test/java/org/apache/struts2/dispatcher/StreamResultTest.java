@@ -28,7 +28,7 @@ import junit.framework.TestCase;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import com.opensymphony.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;

@@ -131,6 +131,7 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
                     .getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
         } catch (Exception ex) {
             log.debug("Unable to initialize faces", ex);
+            return;
         }
 
         // Javadoc says: Lifecycle instance is shared across multiple

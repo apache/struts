@@ -6,8 +6,14 @@ package org.apache.struts2.config;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -57,21 +63,26 @@ public class StrutsXMLConfigurationProvider extends XmlConfigurationProvider {
      * @param fileName The file name to retrieve
      * @see com.opensymphony.xwork2.config.providers.XmlConfigurationProvider#getInputStream(java.lang.String)
      */
-    protected InputStream getInputStream(String fileName) {
-        InputStream is = null;
+    @Override
+    protected Iterator<URL> getConfigurationUrls(String fileName) throws IOException {
+        URL url = null;
         if (baseDir != null) {
-            is = findInFileSystem(fileName);
-            if (is == null) {
-                is = super.getInputStream(fileName);
+            url = findInFileSystem(fileName);
+            if (url == null) {
+                return super.getConfigurationUrls(fileName);
             }
+        } 
+        if (url != null) {
+            List<URL> list = new ArrayList<URL>();
+            list.add(url);
+            return list.iterator();
         } else {
-            is = super.getInputStream(fileName);
+            return super.getConfigurationUrls(fileName);
         }
-        return is;
     }
     
-    protected InputStream findInFileSystem(String fileName) {
-        InputStream is = null;
+    protected URL findInFileSystem(String fileName) throws IOException {
+        URL url = null;
         File file = new File(fileName);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Trying to load file " + file);
@@ -83,13 +94,11 @@ public class StrutsXMLConfigurationProvider extends XmlConfigurationProvider {
         }
         if (file.exists()) {
             try {
-                is = new FileInputStream(file);
-            } catch (FileNotFoundException ex) {
-                throw new StrutsException("File not found: "+file, ex);
+                url = file.toURL();
+            } catch (MalformedURLException e) {
+                throw new IOException("Unable to convert "+file+" to a URL");
             }
-        } else {
-            
-        }
-        return is;
+        } 
+        return url;
     }
 }

@@ -53,8 +53,8 @@ import org.apache.struts2.portlet.context.ServletContextHolderListener;
 import org.apache.struts2.util.AttributeMap;
 import org.apache.struts2.util.ObjectFactoryInitializable;
 
-import com.opensymphony.util.ClassLoaderUtil;
-import com.opensymphony.util.FileManager;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;

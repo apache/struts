@@ -18,6 +18,7 @@
 package org.apache.struts2.views.xslt;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,9 +28,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsException;
 import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.opensymphony.util.XMLUtils;
+import com.opensymphony.xwork2.util.DomHelper;
 
 /**
  * StringAdapter adapts a Java String value to a DOM Element with the specified
@@ -74,15 +76,7 @@ public class StringAdapter extends AbstractAdapterElement {
         if (getParseStringAsXML()) {
             log.debug("parsing string as xml: " + getStringValue());
             // Parse the String to a DOM, then proxy that as our child
-            try {
-                node = XMLUtils.parse(getStringValue());
-            } catch (ParserConfigurationException e) {
-                throw new StrutsException(e);
-            } catch (IOException e) {
-                throw new StrutsException(e);
-            } catch (SAXException e) {
-                throw new StrutsException(e);
-            }
+            node = DomHelper.parse(new InputSource(new StringReader(getStringValue())));
             node = getAdapterFactory().proxyNode(this, node);
         } else {
             log.debug("using string as is: " + getStringValue());

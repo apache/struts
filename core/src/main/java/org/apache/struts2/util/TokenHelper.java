@@ -17,12 +17,13 @@
  */
 package org.apache.struts2.util;
 
+import java.math.BigInteger;
 import java.util.Map;
+import java.util.Random;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.opensymphony.util.GUID;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
@@ -36,12 +37,13 @@ public class TokenHelper {
      * The default name to map the token value
      */
     public static final String DEFAULT_TOKEN_NAME = "struts.token";
-
+    
     /**
      * The name of the field which will hold the token name
      */
     public static final String TOKEN_NAME_FIELD = "struts.token.name";
     private static final Log LOG = LogFactory.getLog(TokenHelper.class);
+    private static final Random RANDOM = new Random();
 
 
     /**
@@ -61,7 +63,7 @@ public class TokenHelper {
      */
     public static String setToken(String tokenName) {
         Map session = ActionContext.getContext().getSession();
-        String token = GUID.generateGUID();
+        String token = generateGUID();
         try {
         	session.put(tokenName, token);
         }
@@ -173,5 +175,9 @@ public class TokenHelper {
         session.remove(tokenName);
 
         return true;
+    }
+    
+    public static String generateGUID() {
+        return new BigInteger(165, RANDOM).toString(36).toUpperCase();
     }
 }

@@ -17,28 +17,34 @@
  */
 package org.apache.struts2.sitegraph.entities;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.Settings;
 import org.apache.struts2.sitegraph.model.Link;
-
-import com.opensymphony.util.FileUtils;
 
 /**
  */
 public abstract class FileBasedView implements View {
     private String name;
     private String contents;
+    
+    private static final Log log = LogFactory.getLog(FileBasedView.class);
 
     public FileBasedView(File file) {
         this.name = file.getName();
         // get the contents as a single line
-        this.contents = FileUtils.readFile(file).replaceAll("[\r\n ]+", " ");
+        this.contents = readFile(file).replaceAll("[\r\n ]+", " ");
     }
 
     public String getName() {
@@ -77,4 +83,27 @@ public abstract class FileBasedView implements View {
     protected abstract Pattern getActionPattern();
 
     protected abstract Pattern getFormPattern();
+    
+    protected String readFile(File file) {
+        try {
+            BufferedReader in = new BufferedReader(new FileReader(file));
+
+            String s = new String();
+            StringBuffer buffer = new StringBuffer();
+
+            while ((s = in.readLine()) != null) {
+                buffer.append(s + "\n");
+            }
+
+            in.close();
+
+            return buffer.toString();
+        } catch (FileNotFoundException e) {
+            log.warn("File not found");
+        } catch (IOException e) {
+            log.error(e);
+        }
+
+        return null;
+    }
 }

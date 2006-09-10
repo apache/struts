@@ -41,7 +41,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.jsp.ui.OgnlTool;
 import org.apache.struts2.views.util.UrlHelper;
 
-import com.opensymphony.util.TextUtils;
+import com.opensymphony.xwork2.util.TextUtils;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.util.OgnlValueStack;
 
@@ -118,10 +118,6 @@ public class StrutsUtil {
             e.printStackTrace();
             throw e;
         }
-    }
-
-    public String textToHtml(String s) {
-        return TextUtils.plainTextToHtml(s);
     }
 
     public String urlEncode(String s) {

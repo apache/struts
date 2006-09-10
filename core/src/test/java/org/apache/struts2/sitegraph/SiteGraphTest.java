@@ -25,7 +25,7 @@ import java.net.URL;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.Dispatcher;
 
-import com.opensymphony.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
 
 /**
  */

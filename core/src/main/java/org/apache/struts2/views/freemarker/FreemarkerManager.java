@@ -37,7 +37,7 @@ import org.apache.struts2.views.JspSupportServlet;
 import org.apache.struts2.views.freemarker.tags.StrutsModels;
 import org.apache.struts2.views.util.ContextUtil;
 
-import com.opensymphony.util.FileManager;
+import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.util.OgnlValueStack;
 

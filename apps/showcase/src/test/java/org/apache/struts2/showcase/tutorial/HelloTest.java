@@ -1,3 +1,5 @@
+package org.apache.struts2.showcase.tutorial;
+
 import junit.framework.TestCase;
 
 /**

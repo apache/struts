@@ -49,8 +49,10 @@ import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
+import com.opensymphony.module.sitemesh.RequestConstants;
 import com.opensymphony.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.XWorkException;
 
 /**
  * Master filter for Struts that handles four distinct 
@@ -214,8 +216,16 @@ public class FilterDispatcher implements Filter, StrutsStatics {
             Dispatcher.setInstance(du);
         }
 
-        ActionMapper mapper = ActionMapperFactory.getMapper();
-        ActionMapping mapping = mapper.getMapping(request, du.getConfigurationManager().getConfiguration());
+        ActionMapper mapper = null;
+        ActionMapping mapping = null;
+        try {
+            mapper = ActionMapperFactory.getMapper();
+            mapping = mapper.getMapping(request, du.getConfigurationManager().getConfiguration());
+        } catch (Exception ex) {
+            du.sendError(request, response, servletContext, response.SC_INTERNAL_SERVER_ERROR, ex);
+            ActionContextCleanUp.cleanUp(req);
+            return;
+        }
 
         if (mapping == null) {
             // there is no action in this request, should we look for a static resource?

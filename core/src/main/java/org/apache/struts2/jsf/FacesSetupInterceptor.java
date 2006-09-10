@@ -229,7 +229,8 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
                 }
             }
         } else {
-            log.error("Unable to initialize jsf interceptors probably due missing JSF implementation libraries");
+            throw new StrutsException("Unable to initialize jsf interceptors probably due missing JSF implementation libraries",
+                    invocation.getProxy().getConfig());
         }
         return invocation.invoke();
     }

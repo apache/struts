@@ -555,7 +555,7 @@ public class Dispatcher {
      * @param code     the HttpServletResponse error code (see {@link javax.servlet.http.HttpServletResponse} for possible error codes).
      * @param e        the Exception that is reported.
      */
-    private void sendError(HttpServletRequest request, HttpServletResponse response, 
+    public void sendError(HttpServletRequest request, HttpServletResponse response, 
             ServletContext ctx, int code, Exception e) {
         if (devMode) {
             response.setContentType("text/html");
@@ -613,8 +613,12 @@ public class Dispatcher {
     
     /** Simple accessor for a static method */
     public class Locator {
-        public Location getLocation(Throwable t) {
-            return LocationUtils.getLocation(t);
+        public Location getLocation(Object obj) {
+            Location loc = LocationUtils.getLocation(obj);
+            if (loc == null) {
+                return Location.UNKNOWN;
+            } 
+            return loc;
         }
     }
 

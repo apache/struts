@@ -18,6 +18,28 @@
             <url>scp://people.apache.org/www/struts.apache.org/2.x/struts-core</url>
         </site>
     </distributionManagement>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.0</version>
+                <configuration>
+                    <sourcepath>src/main/java;../../xwork/src/java</sourcepath>
+                    <groups>
+                        <group>
+                            <title>Struts Packages</title>
+                            <packages>org.apache.struts2*</packages>
+                        </group>
+                        <group>
+                            <title>XWork Packages</title>
+                            <packages>com.opensymphony.xwork2*</packages>
+                        </group>
+                    </groups>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+ 
     
     <dependencies>
         <!-- unreferenced dependencies:

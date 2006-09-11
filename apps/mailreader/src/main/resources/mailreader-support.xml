@@ -37,7 +37,7 @@
             <interceptor-ref name="guest"/>
         </action>
 
-        <action name="Subscription!save" class="mailreader2.SubscriptionSave">
+        <action name="Subscription!save" class="mailreader2.Subscription">
             <result name="input">/Subscription.jsp</result>
             <result type="redirect-action">Registration!input</result>
             <interceptor-ref name="user-submit" />

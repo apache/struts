@@ -59,21 +59,21 @@ import com.opensymphony.xwork2.interceptor.Interceptor;
  * <b>Example struts.xml configuration:</b>
  * 
  * <pre>
- *  &lt;interceptor-ref name=&quot;jsfSetup&quot;&gt;
- *      &lt;param name=&quot;actionListener&quot;&gt;&lt;/param&gt;
- *      &lt;param name=&quot;defaultRenderKitId&quot;&gt;&lt;/param&gt;
- *      &lt;param name=&quot;supportedLocale&quot;&gt;&lt;/param&gt;
- *      &lt;param name=&quot;defaultLocale&quot;&gt;&lt;/param&gt;
- *      &lt;param name=&quot;messageBundle&quot;&gt;&lt;/param&gt;
- *      &lt;param name=&quot;navigationHandler&quot;&gt;org.apache.struts2.jsf.StrutsNavigationHandler&lt;/param&gt;
- *      &lt;param name=&quot;propertyResolver&quot;&gt;&lt;/param&gt;
- *      &lt;param name=&quot;stateManager&quot;&gt;&lt;/param&gt;
- *      &lt;param name=&quot;variableResolver&quot;&gt;
- *          org.apache.myfaces.el.VariableResolverImpl
- *         ,org.apache.struts2.jsf.StrutsVariableResolver
- *      &lt;/param&gt;
- *      &lt;param name=&quot;viewHandler;&quot;&gt;org.apache.shale.tiles.TilesViewHandler&lt;/param&gt;
- *  &lt;/interceptor-ref&gt;
+ *   &lt;interceptor-ref name=&quot;jsfSetup&quot;&gt;
+ *       &lt;param name=&quot;actionListener&quot;&gt;&lt;/param&gt;
+ *       &lt;param name=&quot;defaultRenderKitId&quot;&gt;&lt;/param&gt;
+ *       &lt;param name=&quot;supportedLocale&quot;&gt;&lt;/param&gt;
+ *       &lt;param name=&quot;defaultLocale&quot;&gt;&lt;/param&gt;
+ *       &lt;param name=&quot;messageBundle&quot;&gt;&lt;/param&gt;
+ *       &lt;param name=&quot;navigationHandler&quot;&gt;org.apache.struts2.jsf.StrutsNavigationHandler&lt;/param&gt;
+ *       &lt;param name=&quot;propertyResolver&quot;&gt;&lt;/param&gt;
+ *       &lt;param name=&quot;stateManager&quot;&gt;&lt;/param&gt;
+ *       &lt;param name=&quot;variableResolver&quot;&gt;
+ *           org.apache.myfaces.el.VariableResolverImpl
+ *          ,org.apache.struts2.jsf.StrutsVariableResolver
+ *       &lt;/param&gt;
+ *       &lt;param name=&quot;viewHandler;&quot;&gt;org.apache.shale.tiles.TilesViewHandler&lt;/param&gt;
+ *   &lt;/interceptor-ref&gt;
  * </pre>
  * 
  * <p>
@@ -209,16 +209,16 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
      *            The action invocation
      */
     public String intercept(ActionInvocation invocation) throws Exception {
-        if (facesContextFactory != null)
-        {
+        if (facesContextFactory != null) {
             if (isFacesAction(invocation)) {
 
                 invocation.getInvocationContext().put(
                         FacesInterceptor.FACES_ENABLED, Boolean.TRUE);
 
-                FacesContext facesContext = facesContextFactory.getFacesContext(
-                        ServletActionContext.getServletContext(),
-                        ServletActionContext.getRequest(), ServletActionContext
+                FacesContext facesContext = facesContextFactory
+                        .getFacesContext(ServletActionContext
+                                .getServletContext(), ServletActionContext
+                                .getRequest(), ServletActionContext
                                 .getResponse(), lifecycle);
 
                 setLifecycle(lifecycle);
@@ -230,7 +230,8 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
                 }
             }
         } else {
-            throw new StrutsException("Unable to initialize jsf interceptors probably due missing JSF implementation libraries",
+            throw new StrutsException(
+                    "Unable to initialize jsf interceptors probably due missing JSF implementation libraries",
                     invocation.getProxy().getConfig());
         }
         return invocation.invoke();

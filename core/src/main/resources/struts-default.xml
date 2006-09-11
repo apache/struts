@@ -51,6 +51,7 @@
             <interceptor name="validation" class="com.opensymphony.xwork2.validator.ValidationInterceptor"/>
             <interceptor name="workflow" class="com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor"/>
             <interceptor name="store" class="org.apache.struts2.interceptor.MessageStoreInterceptor" />
+            <interceptor name="checkbox" class="org.apache.struts2.interceptor.CheckboxInterceptor" />
             
             <!-- JSF interceptors, one per lifecycle phase -->
             <interceptor class="org.apache.struts2.jsf.FacesSetupInterceptor" name="jsfSetup" />
@@ -156,6 +157,7 @@
                 <interceptor-ref name="model-driven"/>
                 <interceptor-ref name="fileUpload"/>
                 <interceptor-ref name="static-params"/>
+                <interceptor-ref name="checkbox"/>
                 <interceptor-ref name="params"/>
                 <interceptor-ref name="conversionError"/>
                 <interceptor-ref name="validation">

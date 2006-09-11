@@ -4,5 +4,6 @@
 	</td>
     <td valign="top" align="left">
 		<input type="checkbox" name="foo" value="baz" checked="checked" id="someId" title="mytitle" onfocus="test();"/>
+		<input type="hidden" name="__checkbox_foo" value="baz"/>
     </td>
 </tr>

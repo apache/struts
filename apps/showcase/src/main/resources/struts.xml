@@ -47,6 +47,7 @@
     <package name="default" extends="struts-default">
         <interceptors>
             <interceptor-stack name="crudStack">
+            	<interceptor-ref name="checkbox" />
                 <interceptor-ref name="params" />
 				<interceptor-ref name="static-params" />
                 <interceptor-ref name="defaultStack" />

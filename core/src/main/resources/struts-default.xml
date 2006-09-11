@@ -66,7 +66,7 @@
                 <interceptor-ref name="exception"/>
                 <interceptor-ref name="servlet-config"/>
                 <interceptor-ref name="prepare"/>
-                <interceptor-ref name="static-params"/>
+                <interceptor-ref name="checkbox"/>
                 <interceptor-ref name="params"/>
                 <interceptor-ref name="conversionError"/>
             </interceptor-stack>
@@ -124,6 +124,7 @@
                 <interceptor-ref name="chain"/>
                 <interceptor-ref name="model-driven"/>
                 <interceptor-ref name="fileUpload"/>
+                <interceptor-ref name="checkbox"/>
                 <interceptor-ref name="static-params"/>
                 <interceptor-ref name="params"/>
                 <interceptor-ref name="conversionError"/>
@@ -156,8 +157,8 @@
                 <interceptor-ref name="debugging"/>
                 <interceptor-ref name="model-driven"/>
                 <interceptor-ref name="fileUpload"/>
-                <interceptor-ref name="static-params"/>
                 <interceptor-ref name="checkbox"/>
+                <interceptor-ref name="static-params"/>
                 <interceptor-ref name="params"/>
                 <interceptor-ref name="conversionError"/>
                 <interceptor-ref name="validation">

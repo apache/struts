@@ -61,6 +61,12 @@
          <artifactId>rife-continuations</artifactId>
          <version>0.0.2</version>
      </dependency>
+     <dependency>
+         <groupId>commons-fileupload</groupId>
+         <artifactId>commons-fileupload</artifactId>
+         <version>1.1</version>
+     </dependency>
+
  
     </dependencies>
     

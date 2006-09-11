@@ -18,7 +18,6 @@
 
 package mailreader2;
 
-import com.opensymphony.util.BeanUtils;
 import org.apache.struts2.interceptor.ApplicationAware;
 import org.apache.struts2.interceptor.SessionAware;
 import com.opensymphony.xwork2.ActionSupport;
@@ -30,6 +29,7 @@ import org.apache.struts.apps.mailreader.dao.User;
 import org.apache.struts.apps.mailreader.dao.UserDatabase;
 import org.apache.struts.apps.mailreader.dao.impl.memory.MemorySubscription;
 import org.apache.struts.apps.mailreader.dao.impl.memory.MemoryUser;
+import org.springframework.beans.BeanUtils;
 
 import java.util.Map;
 
@@ -432,7 +432,7 @@ public class MailreaderSupport extends ActionSupport
         input.setPassword(_password);
         User user = createUser(_username, _password);
         if (null != user) {
-            BeanUtils.setValues(user, input, null);
+            BeanUtils.copyProperties(input,user);
             setUser(user);
         }
     }
@@ -529,7 +529,7 @@ public class MailreaderSupport extends ActionSupport
         Subscription input = getSubscription();
         Subscription sub = createSubscription(host);
         if (null != sub) {
-            BeanUtils.setValues(sub, input, null);
+            BeanUtils.copyProperties(input, sub);
             setSubscription(sub);
             setHost(sub.getHost());
         }

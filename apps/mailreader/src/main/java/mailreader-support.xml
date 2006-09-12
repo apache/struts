@@ -20,7 +20,7 @@
             <result type="redirect-action">Welcome</result>
         </action>
 
-        <action name="Login!*" class="mailreader2.Login" method="{1}">
+        <action name="Login!*"  method="{1}" class="mailreader2.Login">
             <result name="input">/Login.jsp</result>
             <result name="cancel" type="redirect-action">Welcome</result>
             <result type="redirect-action">MainMenu</result>
@@ -31,23 +31,29 @@
             <interceptor-ref name="guest"/>
         </action>
 
-        <action name="Registration!*" class="mailreader2.Registration" method="{1}">
+        <action name="Registration!*" method="{1}" class="mailreader2.Registration">
             <result name="input">/Registration.jsp</result>
             <result type="redirect-action">MainMenu</result>
             <interceptor-ref name="guest"/>
         </action>
+    </package>
 
-        <action name="Subscription!save" class="mailreader2.Subscription">
+    <package name="subscription" namespace="/" extends="mailreader-support">
+
+        <global-results>
             <result name="input">/Subscription.jsp</result>
             <result type="redirect-action">Registration!input</result>
+        </global-results>
+
+        <action name="Subscription!save" method="save" class="mailreader2.Subscription">
             <interceptor-ref name="user-submit" />
         </action>
 
-        <action name="Subscription!*" class="mailreader2.Subscription" method="{1}">
-            <result name="input">/Subscription.jsp</result>
-            <result type="redirect-action">Registration!input</result>
-            <interceptor-ref name="user" />
-        </action>
+        <action name="Subscription!*" method="{1}" class="mailreader2.Subscription" />
+
+    </package>
+
+    <package name="wildcard" namespace="/" extends="mailreader-support">
 
         <action name="*" class="mailreader2.MailreaderSupport">
             <result>/{1}.jsp</result>

@@ -1262,7 +1262,7 @@ public void <strong>setSession(Map value)</strong> {
 
 <hr/>
 <h5>mailreader-support.xml Login</h5>
-<pre><code>&lt;action name="<strong>Login!*</strong>" class="mailreader2.Login" method="{1}">
+<pre><code>&lt;action name="<strong>Login!*</strong>" method="{1}" class="mailreader2.Login">
   &lt;result name="<strong>input</strong>">/pages/Login.jsp&lt;/result>
   &lt;result name="<strong>cancel</strong>" type="redirect-action">Welcome&lt;/result>
   &lt;result type="redirect-action">MainMenu&lt;/result>
@@ -1967,7 +1967,7 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
 
 <hr />
 <h5>mailreader-support.xml Subscription element</h5>
-<pre><code>&lt;action name="Subscription!*" class="mailreader2.Subscription" method="{1}">
+<pre><code>&lt;action name="Subscription!*" method="{1}" class="mailreader2.Subscription">
   &lt;result name="input">/pages/Subscription.jsp&lt;/result>
   &lt;result type="redirect-action">Registration!input&lt;/result>
 &lt;/action></code></pre>
@@ -2260,96 +2260,39 @@ public Subscription findSubscription(String host) {
 <p>
     Like many applications, the MailReader uses mainly String properties.
     One exception is the AutoConnect property of the Subscription object.
-    On the HTML form, the AutoConnect property is represented by a checkbox,
-    and checkboxes need to be handled differently that other controls.
+    On the HTML form, the AutoConnect property is represented by a checkbox.
 </p>
 
 <p>
-    The <strong>checkbox</strong> starts out as a simple enough control.
-</p>
-
-<pre><code>  &lt;s:checkbox label="%{getText('autoConnect')}"
-  name="subscription.autoConnect"/></code></pre>
-
-<p>
+    When writing web applications, the checkbox can be a tricky control.
     The Subscription object has a boolean AutoConnect property,
     and the checkbox simply has to represent its state.
     The problem is, if you clear a checkbox, the browser client will not submit <em>anything</em>.
     Nada. Zip.
     It is as if the checkbox control never existed.
-    The HTTP protocol has no way to affirm "false". 
+    The HTTP protocol has no way to affirm "false".
     If the control is missing, we need to figure out it's been unclicked.
 </p>
 
-<hr/>
-<h5>Tip:</h5>
-<blockquote>
-    <p class="hint">
-        <strong>Checkboxes</strong> -
-        The HTML checkbox is a tricky control.
-        The problem is that, according to the W3C specification, a value is
-        only guaranteed to be sent
-        if the control is checked.
-        If the control is not checked, then the control may be omitted from
-        the request, as if it was on the page.
-        This can cause a problem with session-scope checkboxes.
-        Once you set the checkbox to true, the control can't set it to false
-        again,
-        because if you uncheck the box, nothing is sent, and so the control
-        stays checked.
-    </p>
-</blockquote>
-<hr/>
-
 <p>
-    The simplest solution is to employ our old friend Preparable again,
-    and reset the checkbox just before a Subscription is saved.
-    If the control is not submitted, then the property remains false.
-    If the control is submitted, then the property is set to true.
+    In Struts 1,
+    we use the <code>reset</code> method to work around checkbox issues.
+    In Struts 2, checkbox state is handled automatically.
+    The framework can detect when a checkbox tag has not been sent  back,
+    and when that happens,
+    a default "false" value is used for the checkbox value.
+    No worries, mate.
 </p>
-
-<p>
-    But, we only want to reset the checkbox when we are about to save
-    a Subscription.
-    If we add it to the Subscription class,
-    all of the aliases will reset the checkbox,
-    which isn't what we want.
-    As an alternative, we can give Subscription!save its own class,
-    so that it can have it's own preparable method.
-</p>
-
-<hr />
-<h5>mailreader-support.xml Subscription!save element</h5>
-<pre><code>&lt;action name="Subscription!save" class="mailreader2.SubscriptionSave">
-        &lt;result name="input">/pages/Subscription.jsp&lt;/result>
-        &lt;result type="redirect-action">Registration!input&lt;/result>
-        &lt;interceptor-ref name="user-submit" />
-    &lt;/action></code></pre>
-<hr />
-<h5>SubscriptionSave</h5>
-<pre><code>public final class SubscriptionSave extends Subscription {
-
-  public void prepare() {
-    super.prepare();
-    // checkbox workaround
-    <strong>getSubscription().setAutoConnect(false);</strong>
-  }
-
-  public String execute() throws Exception {
-    return save();
-  }
-}</code></pre>
-<hr />
 
 <p>
     If we press the SAVE button,
     the form will be submitted to the Subscription!save action.
-    Since the action has it's own class,
-    it can also have its own set of validators.
+    Since the save method needs some additional validation,
+    we can add a validation file.
 </p>
 
 <hr />
-<h5>SubscriptionSave-validation.xml</h5>
+<h5>Subscription-Subscription!save-validation.xml</h5>
 <pre><code>&lt;!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN"
     "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
 &lt;validators>
@@ -2369,17 +2312,9 @@ public Subscription findSubscription(String host) {
 </p>
 
 <p>
-    If validation succeeds, the execute method of SubscriptionSave will fire.
-    Just to keep all the code together,
-    all the execute method does is call save on the parent Subscription class.
+    If validation succeeds, the <code>save</code> method of Subscription will fire.
 </p>
 
-<hr />
-<h5>SubscriptionSave</h5>
-
-<pre><code>public String execute() throws Exception {
-    return save();
-}</code></pre>
 <hr />
 <h5>Subscription</h5>
 
@@ -2470,6 +2405,59 @@ public Subscription findSubscription(String host) {
     Of course, this is not a preferred solution,
     but merely a way to work around an issue in the MailReader DAO API
     that would not be easy for us change.
+</p>
+
+<h4>Subscription Submit</h4>
+
+<p>
+    When we pressed the SAVE button, there was one step that we overlooked.
+    The Mailreader application uses a "double submit" guard to keep people
+    from clicking the SAVE button multiple times and submitting the form again.
+</p>
+
+<p>
+    To add the double-submit guard, we can change the actions default processing
+    stack to <code>user-submit</code>.
+    But, we don't want to just copy and paste the other action settings from
+    the main Subscription action.
+    What we can do is put the subscription actions in their own package,
+    so that they can share result types.
+</p>
+
+<hr />
+<h5>mailreader-support.xml</h5>
+<pre><code><!-- ... -->
+&lt;/package>
+
+&lt;package name="subscription" namespace="/" extends="mailreader-support">
+
+    &lt;global-results>
+        &lt;result name="input">/Subscription.jsp&lt;/result>
+        &lt;result type="redirect-action">Registration!input&lt;/result>
+    &lt;/global-results>
+
+    &lt;action name="Subscription!save" method="save" class="mailreader2.Subscription">
+        &lt;interceptor-ref name="user-submit" />
+    &lt;/action>
+
+    &lt;action name="Subscription!*" method="{1}" class="mailreader2.Subscription" />
+
+&lt;/package>
+
+&lt;package name="wildcard" namespace="/" extends="mailreader-support">
+
+    &lt;action name="*" class="mailreader2.MailreaderSupport">
+        &lt;result>/{1}.jsp&lt;/result>
+    &lt;/action>
+
+&lt;/package>
+}</code></pre>
+<hr />
+
+<p>
+    Aftering a successful save,
+    the Subscription Action will return "success",
+    and the framework will redirect us back to Registration input.
 </p>
 
 <h3>Summary</h3>

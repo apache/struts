@@ -27,7 +27,7 @@
             <optional>true</optional>
         </dependency>            
         <dependency>
-            <groupId>easymock</groupId>
+            <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
             <scope>test</scope>
             <version>2.0</version>

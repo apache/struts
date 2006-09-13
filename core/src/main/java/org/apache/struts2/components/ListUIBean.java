@@ -104,6 +104,13 @@ public abstract class ListUIBean extends UIBean {
         }
 
         if (listValue != null) {
+            if (altSyntax()) {
+                // the same logic as with findValue(String)
+                // if value start with %{ and end with }, just cut it off!
+                if (listValue.startsWith("%{") && listValue.endsWith("}")) {
+                    listValue = listValue.substring(2, listValue.length() - 1);
+                }
+            }
             addParameter("listValue", listValue);
         } else if (value instanceof Map) {
             addParameter("listValue", "value");

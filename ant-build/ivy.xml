@@ -53,8 +53,8 @@
         <dependency org="mockobjects" name="mockobjects-alt-jdk1.3-j2ee1.3" rev="0.09" conf="build->*"/>
         <dependency org="mockobjects" name="mockobjects-jdk1.3-j2ee1.3" rev="0.09" conf="build->*"/>
 
-        <dependency org="easymock" name="easymock" rev="1.2_Java1.3" conf="build->*"/>
-        <dependency org="easymock" name="easymockclassextension" rev="1.1" conf="build->*"/>
+        <dependency org="easymock" name="easymock" rev="2.0" conf="build->*"/>
+        <!--dependency org="easymock" name="easymockclassextension" rev="1.1" conf="build->*"/-->
 
         <dependency org="clover" name="clover" rev="1.3.11" conf="build->*"/>
         <dependency org="junit" name="junit" rev="3.8.1" conf="build->*"/>

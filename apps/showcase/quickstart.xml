@@ -41,7 +41,9 @@
     -->
 
     <!--
-    The classDirs directories can be a jar or a directory of classes
+    The classDirs directories can be a jar or a directory of classes.
+    The WEB-INF/classes directory for each webDir (below) will automatically
+    be added if it exists.
     -->
     <classDirs>
         <dir>src/main/resources</dir>

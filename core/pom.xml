@@ -305,23 +305,23 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>easymock</groupId>
+            <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
             <version>2.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>easymock</groupId>
+        <!--dependency>
+            <groupId>org.easymock</groupId>
             <artifactId>easymockclassextension</artifactId>
             <version>1.1</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
-                    <groupId>easymock</groupId>
+                    <groupId>org.easymock</groupId>
                     <artifactId>easymock</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency-->
       <dependency>
          <groupId>org.rifers</groupId>
          <artifactId>rife-continuations</artifactId>

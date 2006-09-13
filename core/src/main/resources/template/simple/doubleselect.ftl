@@ -57,12 +57,13 @@
         <#else>
             <#assign doubleItemKey = stack.findValue('top')/>
         </#if>
+        <#assign doubleItemKeyStr = doubleItemKey.toString() />
         <#if parameters.doubleListValue?exists>
             <#assign doubleItemValue = stack.findString(parameters.doubleListValue)/>
         <#else>
             <#assign doubleItemValue = stack.findString('top')/>
         </#if>
-    ${parameters.name}Group[${itemCount}][${doubleItemCount}] = new Option("${doubleItemValue}", "${doubleItemKey}");
+    ${parameters.name}Group[${itemCount}][${doubleItemCount}] = new Option("${doubleItemValue}", "${doubleItemKeyStr}");
 
         <#assign doubleItemCount = doubleItemCount + 1/>
     </@s.iterator>

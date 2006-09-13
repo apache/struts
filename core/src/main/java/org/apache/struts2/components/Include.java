@@ -49,6 +49,8 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
 /**
  * <!-- START SNIPPET: javadoc -->
  * <p>Include a servlet's output (result of servlet or a JSP page).</p>
+ * <p>Note: Any additional params supplied to the included page are <b>not</b> accessible within the rendered page
+ * through the &lt;s:property...&gt; tag!</p>
  * <!-- END SNIPPET: javadoc -->
  *
  *

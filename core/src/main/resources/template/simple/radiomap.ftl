@@ -1,20 +1,21 @@
 <@s.iterator value="parameters.list">
     <#if parameters.listKey?exists>
-        <#assign itemKey = stack.findString(parameters.listKey)/>
+        <#assign itemKey = stack.findValue(parameters.listKey)/>
     <#else>
-        <#assign itemKey = stack.findString('top')/>
+        <#assign itemKey = stack.findValue('top')/>
     </#if>
+    <#assign itemKeyStr = itemKey.toString() />
     <#if parameters.listValue?exists>
         <#assign itemValue = stack.findString(parameters.listValue)/>
     <#else>
         <#assign itemValue = stack.findString('top')/>
     </#if>
-<input type="radio" name="${parameters.name?html}" id="${parameters.id?html}${itemKey?html}"<#rt/>
+<input type="radio" name="${parameters.name?html}" id="${parameters.id?html}${itemKeyStr?html}"<#rt/>
 <#if tag.contains(parameters.nameValue, itemKey)>
  checked="checked"<#rt/>
 </#if>
 <#if itemKey?exists>
- value="${itemKey?html}"<#rt/>
+ value="${itemKeyStr?html}"<#rt/>
 </#if>
 <#if parameters.disabled?default(false)>
  disabled="disabled"<#rt/>
@@ -34,7 +35,7 @@
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 /><#rt/>
-<label for="${parameters.id?html}${itemKey?html}"><#rt/>
+<label for="${parameters.id?html}${itemKeyStr?html}"><#rt/>
     ${itemValue}<#t/>
 </label>
 </@s.iterator>

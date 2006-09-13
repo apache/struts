@@ -118,7 +118,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         }
         
         if (doubleDisabled != null) {
-        	addParameter("doubleDisbled", findValue(doubleDisabled, Boolean.class));
+        	addParameter("doubleDisabled", findValue(doubleDisabled, Boolean.class));
         }
 
         if (doubleName != null) {
@@ -137,6 +137,14 @@ public abstract class DoubleListUIBean extends ListUIBean {
         }
         
         if (doubleListValue != null) {
+            if (altSyntax()) {
+                // the same logic as with findValue(String)
+                // if value start with %{ and end with }, just cut it off!
+                if (doubleListValue.startsWith("%{") && doubleListValue.endsWith("}")) {
+                    doubleListValue = doubleListValue.substring(2, doubleListValue.length() - 1);
+                }
+            }
+
             addParameter("doubleListValue", doubleListValue);
         }else if (tmpDoubleList instanceof Map) {
         	addParameter("doubleListValue", "value");

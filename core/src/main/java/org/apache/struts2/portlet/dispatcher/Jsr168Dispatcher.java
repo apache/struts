@@ -238,7 +238,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
             }
         }
         
-        dispatcherUtils = new Dispatcher(null);
+        dispatcherUtils = new Dispatcher(ServletContextHolderListener.getServletContext());
     }
 
     /**
@@ -279,14 +279,13 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
 
     /**
      * Service an action from the <tt>event</tt> phase.
-     * 
+     *
      * @see javax.portlet.Portlet#processAction(javax.portlet.ActionRequest,
      *      javax.portlet.ActionResponse)
      */
     public void processAction(ActionRequest request, ActionResponse response)
             throws PortletException, IOException {
         LOG.debug("Entering processAction");
-        Dispatcher.setInstance(dispatcherUtils);
         resetActionContext();
         try {
             serviceAction(request, response, getActionMapping(request),
@@ -301,7 +300,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
 
     /**
      * Service an action from the <tt>render</tt> phase.
-     * 
+     *
      * @see javax.portlet.Portlet#render(javax.portlet.RenderRequest,
      *      javax.portlet.RenderResponse)
      */
@@ -333,7 +332,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
     /**
      * Merges all application and portlet attributes into a single
      * <tt>HashMap</tt> to represent the entire <tt>Action</tt> context.
-     * 
+     *
      * @param requestMap a Map of all request attributes.
      * @param parameterMap a Map of all request parameters.
      * @param sessionMap a Map of all session attributes.
@@ -360,11 +359,12 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         if (Settings.isSet(StrutsConstants.STRUTS_LOCALE)) {
             locale = LocalizedTextUtil.localeFromString(Settings.get(StrutsConstants.STRUTS_LOCALE), request.getLocale());
         } else {
-            locale = request.getLocale(); 
+            locale = request.getLocale();
         }
         extraContext.put(ActionContext.LOCALE, locale);
 
         extraContext.put(StrutsStatics.STRUTS_PORTLET_CONTEXT, getPortletContext());
+        extraContext.put(ActionContext.DEV_MODE, Boolean.valueOf(Settings.get(StrutsConstants.STRUTS_DEVMODE)));
         extraContext.put(REQUEST, request);
         extraContext.put(RESPONSE, response);
         extraContext.put(PORTLET_CONFIG, portletConfig);
@@ -390,7 +390,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
      * context from the given parameters then loads an <tt>ActionProxy</tt>
      * from the given action name and namespace. After that, the action is
      * executed and output channels throught the response object.
-     * 
+     *
      * @param request the HttpServletRequest object.
      * @param response the HttpServletResponse object.
      * @param mapping the action mapping.
@@ -407,6 +407,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
             Map sessionMap, Map applicationMap, String portletNamespace,
             Integer phase) throws PortletException {
         LOG.debug("serviceAction");
+        Dispatcher.setInstance(dispatcherUtils);
         HashMap extraContext = createContextMap(requestMap, parameterMap,
                 sessionMap, applicationMap, request, response,
                 getPortletConfig(), phase);

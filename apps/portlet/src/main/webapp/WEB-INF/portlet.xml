@@ -52,9 +52,9 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http:
     <supported-locale>en</supported-locale>
 
     <portlet-info>
-      <title>My PortletWork portlet</title>
-      <short-title>PW</short-title>
-      <keywords>struts,portletwork</keywords>
+      <title>My StrutsPortlet portlet</title>
+      <short-title>SP</short-title>
+      <keywords>struts,portlet</keywords>
     </portlet-info>
   </portlet>
   
@@ -109,9 +109,9 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http:
     <supported-locale>en</supported-locale>
 
     <portlet-info>
-      <title>My PortletWork portlet2</title>
-      <short-title>PW2</short-title>
-      <keywords>struts,portletwork</keywords>
+      <title>My StrutsPortlet portlet2</title>
+      <short-title>SP2</short-title>
+      <keywords>struts,portlet</keywords>
     </portlet-info>
   </portlet>
 

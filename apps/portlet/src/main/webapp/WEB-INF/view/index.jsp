@@ -1,7 +1,7 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <H2>Welcome to the Struts example portlet</H2>
 <p/>
-Here you'll find examples of what is possible with the PortletWork framework.
+Here you'll find examples of what is possible with the Struts Portlet integration framework.
 <ul>
 <li><a href="<s:url action="formExample"/>">A simple form</a></li>
 <li><a href="<s:url action="validationExample"/>">Validation</a></li>

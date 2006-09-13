@@ -1,5 +1,5 @@
-<%@ taglib prefix="pw" uri="/portletwork" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 
 The preferences has been saved.
 
-<a href="<pw:url value="index.action"/>">Back</a>
+<a href="<s:url value="index.action"/>">Back</a>

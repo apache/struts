@@ -14,11 +14,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
     <title><decorator:title default="Struts Showcase"/></title>
-    <link href="<s:url value='/styles/main.css'/>" rel="stylesheet" type="text/css" media="all"/>
-    <link href="<s:url value='/struts/niftycorners/niftyCorners.css'/>" rel="stylesheet" type="text/css"/>
-    <link href="<s:url value='/struts/niftycorners/niftyPrint.css'/>" rel="stylesheet" type="text/css" media="print"/>
+    <link href="<s:url value='/styles/main.css' encode='false' includeParams='none'/>" rel="stylesheet" type="text/css" media="all"/>
+    <link href="<s:url value='/struts/niftycorners/niftyCorners.css' encode='false' includeParams='none'/>" rel="stylesheet" type="text/css"/>
+    <link href="<s:url value='/struts/niftycorners/niftyPrint.css' encode='false' includeParams='none'/>" rel="stylesheet" type="text/css" media="print"/>
 
-    <script language="JavaScript" type="text/javascript" src="<s:url value='/struts/niftycorners/nifty.js'/>"></script>
+    <script language="JavaScript" type="text/javascript" src="<s:url value='/struts/niftycorners/nifty.js' encode='false' includeParams='none'/>"></script>
 
     <script language="JavaScript" type="text/javascript">
 
@@ -47,7 +47,7 @@
             </div><!-- end branding -->
 
             <div id="search">
-                <img src="<s:url value='/images/struts-power.gif'/>" alt="Powered by Struts"/>
+                <img src="<s:url value='/images/struts-power.gif' encode='false' includeParams='none'/>" alt="Powered by Struts"/>
             </div><!-- end search -->
 
             <hr/>

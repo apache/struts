@@ -66,7 +66,7 @@ ${parameters.label?html}<#t/>
 </#if>
 :<#t/>
 <#if parameters.tooltip?exists>
-    <img src='<@s.url value="/struts/tooltip/tooltip.gif" />' alt="${parameters.tooltip}" title="${parameters.tooltip}" onmouseover="return escape('${parameters.tooltip?js_string}');" />
+    <img src='<@s.url value="/struts/tooltip/tooltip.gif" includeParams="none" encode="false"/>' alt="${parameters.tooltip}" title="${parameters.tooltip}" onmouseover="return escape('${parameters.tooltip?js_string}');" />
 </#if>
 </label><#t/>
 </#if>
@@ -76,7 +76,7 @@ ${parameters.label?html}<#t/>
         <span class="required">*</span><#t/>
     </#if>
     <#if parameters.tooltip?exists>
-        <img src='<@s.url value="/struts/tooltip/tooltip.gif" />' alt="${parameters.tooltip}" title="${parameters.tooltip}" onmouseover="return escape('${parameters.tooltip?js_string}');" />
+        <img src='<@s.url value="/struts/tooltip/tooltip.gif" includeParams="none" encode="false"/>' alt="${parameters.tooltip}" title="${parameters.tooltip}" onmouseover="return escape('${parameters.tooltip?js_string}');" />
     </#if>
 </#if>
     </td>

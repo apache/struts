@@ -47,7 +47,10 @@ public final class StrutsConstants {
     /** The HTTPS port used by Struts URLs */
     public static final String STRUTS_URL_HTTPS_PORT = "struts.url.https.port";
 
-    /** The com.opensymphony.xwork.ObjectFactory implementation class */ 
+    /** The default includeParams method to generate Struts URLs */
+    public static final String STRUTS_URL_INCLUDEPARAMS = "struts.url.includeParams";
+
+    /** The com.opensymphony.xwork.ObjectFactory implementation class */
     public static final String STRUTS_OBJECTFACTORY = "struts.objectFactory";
     
     /** The com.opensymphony.xwork.util.ObjectTypeDeterminer implementation class */

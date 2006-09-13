@@ -33,6 +33,7 @@ import com.opensymphony.xwork2.util.LocalizedTextUtil;
 public class SettingsTest extends StrutsTestCase {
 
     public void testSettings() {
+        assertEquals("get", Settings.get(StrutsConstants.STRUTS_URL_INCLUDEPARAMS));
         assertEquals("12345", Settings.get(StrutsConstants.STRUTS_MULTIPART_MAXSIZE));
         assertEquals("\temp", Settings.get(StrutsConstants.STRUTS_MULTIPART_SAVEDIR));
 
@@ -44,7 +45,7 @@ public class SettingsTest extends StrutsTestCase {
         assertEquals("de", locale.getLanguage());
 
         int count = getKeyCount();
-        assertEquals(30, count);
+        assertEquals(31, count);
     }
 
     public void testDefaultResourceBundlesLoaded() {

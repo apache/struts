@@ -30,6 +30,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
@@ -153,7 +155,10 @@ public class URL extends Component {
         // this at start so body params can override any of these they wish.
         try {
         	// ww-1266
-            String includeParams = GET;
+            String includeParams =
+                    Settings.isSet(StrutsConstants.STRUTS_URL_INCLUDEPARAMS) ?
+                    Settings.get(StrutsConstants.STRUTS_URL_INCLUDEPARAMS).toLowerCase() : GET;
+
 
             if (this.includeParams != null) {
                 includeParams = findString(this.includeParams);

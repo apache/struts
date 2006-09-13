@@ -10,6 +10,7 @@
 <ul>
     <li><s:url id="url" action="showActionTagDemo" namespace="/tags/non-ui/actionTag"/><s:a href="%{url}">Action Tag</s:a></li>
     <li><s:url id="url" value="date.jsp" /><s:a href="%{url}">Date Tag</s:a></li>
+    <li><s:url id="url" value="debug.jsp" /><s:a href="%{url}">Debug Tag</s:a></li>
     <li><s:url id="url" action="showGeneratorTagDemo" namespace="/tags/non-ui/iteratorGeneratorTag" /><s:a href="%{url}">Iterator Generator Tag</s:a></li>
     <li><s:url id="url" action="showAppendTagDemo" namespace="/tags/non-ui/appendIteratorTag" /><s:a href="%{#url}">Append Iterator Tag</s:a>
     <li><s:url id="url" action="showMergeTagDemo" namespace="/tags/non-ui/mergeIteratorTag" /><s:a href="%{#url}">Merge Iterator Demo</s:a>

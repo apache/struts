@@ -15,8 +15,8 @@
 </script>
 <p/>
 
-<a href="#" onclick="toggleDebug('${parameters.id?default("debug")}');return false;">[Debug]</a>
-<div style="display:none" id="${parameters.id?default("debug")}">
+<a href="#" onclick="toggleDebug('<#if parameters.id?if_exists != "">${parameters.id?html}<#else>debug</#if>');return false;">[Debug]</a>
+<div style="display:none" id="<#if parameters.id?if_exists != "">${parameters.id?html}<#else>debug</#if>">
 <h2>Struts ValueStack Debug</h2>
 <p/>
 

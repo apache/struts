@@ -183,9 +183,9 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
     private String getKey(ActionInvocation invocation) {
         ActionProxy proxy = invocation.getProxy();
         if (key == null || "CLASS".equals(key)) {
-            key = "struts.ScopeInterceptor:" + proxy.getAction().getClass();
+            return "struts.ScopeInterceptor:" + proxy.getAction().getClass();
         } else if ("ACTION".equals(key)) {
-            key = "struts.ScopeInterceptor:" + proxy.getNamespace() + ":" + proxy.getActionName();
+            return "struts.ScopeInterceptor:" + proxy.getNamespace() + ":" + proxy.getActionName();
         }
         return key;
     }

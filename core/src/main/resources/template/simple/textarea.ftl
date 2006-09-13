@@ -8,7 +8,7 @@
 <#if parameters.disabled?default(false)>
  disabled="disabled"<#rt/>
 </#if>
-<#if parameters.readonly?exists>
+<#if parameters.readonly?default(false)>
  readonly="readonly"<#rt/>
 </#if>
 <#if parameters.tabindex?exists>

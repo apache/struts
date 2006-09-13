@@ -2,7 +2,7 @@
     dojo.require("struts.widgets.*");
 </script>
 
-<#if parameters.readonly?exists>
+<#if parameters.readonly?default(false)>
     <#include "/${parameters.templateDir}/simple/text.ftl" />
 <#else>
 	<div dojoType="dropdowntimepicker"

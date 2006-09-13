@@ -17,7 +17,7 @@
 <br/>
 <#if parameters.list?exists>
 <select onChange="autoPopulate_${parameters.name?html}(this);"<#rt/>
-    <#if parameters.disabled?exists && parameters.disabled>
+    <#if parameters.disabled?default(false)>
  disabled="disabled"<#rt/>
     </#if>
 >

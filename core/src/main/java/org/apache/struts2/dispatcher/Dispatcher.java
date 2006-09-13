@@ -90,7 +90,7 @@ public class Dispatcher {
         new ArrayList<DispatcherListener>();
     
     private ConfigurationManager configurationManager;
-    private boolean portletSupportActive;
+    private static boolean portletSupportActive;
     private boolean devMode = false;
 
     // used to get WebLogic to play nice
@@ -250,17 +250,6 @@ public class Dispatcher {
             LOG.debug("Parameter access work-around disabled.");
         }
 
-        // Check whether portlet support is active or not by trying to get "javax.portlet.PortletRequest"
-        try {
-            ClassLoaderUtil.loadClass("javax.portlet.PortletRequest", Dispatcher.class);
-            portletSupportActive = true;
-            if (LOG.isInfoEnabled()) {
-                LOG.info("Found portlet-api. Activating Struts's portlet support");
-            }
-        } catch (ClassNotFoundException e) {
-            LOG.debug("Unable to locate the portlet libraries.  Disabling portlet support.");
-        }
-        
         configurationManager = new ConfigurationManager();
         
         // Load old xwork files
@@ -610,7 +599,15 @@ public class Dispatcher {
     public boolean isPortletSupportActive() {
         return portletSupportActive;
     }
-    
+
+    /**
+     * Set the flag that portlet support is active or not.
+     * @param portletSupportActive <tt>true</tt> or <tt>false</tt>
+     */
+    public static void setPortletSupportActive(boolean portletSupportActive) {
+        Dispatcher.portletSupportActive = portletSupportActive;
+    }
+
     /** Simple accessor for a static method */
     public class Locator {
         public Location getLocation(Object obj) {

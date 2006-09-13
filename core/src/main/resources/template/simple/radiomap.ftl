@@ -11,7 +11,7 @@
         <#assign itemValue = stack.findString('top')/>
     </#if>
 <input type="radio" name="${parameters.name?html}" id="${parameters.id?html}${itemKeyStr?html}"<#rt/>
-<#if tag.contains(parameters.nameValue, itemKey)>
+<#if tag.contains(parameters.nameValue, itemKeyStr)>
  checked="checked"<#rt/>
 </#if>
 <#if itemKey?exists>

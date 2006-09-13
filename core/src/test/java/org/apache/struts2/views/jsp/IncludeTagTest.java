@@ -42,7 +42,7 @@ public class IncludeTagTest extends AbstractTagTest {
             tag.doEndTag();
             fail("Should have thrown exception as no URL is specified in setValue");
         } catch (StrutsException e) {
-            assertEquals("tag include, field value: You must specify the URL to include. Example: /foo.jsp", e.getMessage());
+            assertEquals("tag 'include', field 'value': You must specify the URL to include. Example: /foo.jsp", e.getMessage());
         }
     }
 

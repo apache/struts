@@ -231,7 +231,7 @@ public class TextTagTest extends AbstractTagTest {
     }
 
     public void testNoNameDefined() throws Exception {
-        String msg = "tag text, field name: You must specify the i18n key. Example: welcome.header";
+        String msg = "tag 'text', field 'name': You must specify the i18n key. Example: welcome.header";
         try {
             tag.doStartTag();
             tag.doEndTag();

@@ -215,7 +215,9 @@ public class Component {
      * @return  the constructed <code>StrutsException</code>.
      */
     protected StrutsException fieldError(String field, String errorMsg, Exception e) {
-        String msg = "tag " + getComponentName() + ", field " + field + ": " + errorMsg;
+        String msg = "tag '" + getComponentName() + "', field '" + field + ( id != null ?"', id '" + id:"") +
+                ( parameters != null && parameters.containsKey("name")?"', name '" + parameters.get("name"):"") +
+                "': " + errorMsg;
         throw new StrutsException(msg, e);
     }
 

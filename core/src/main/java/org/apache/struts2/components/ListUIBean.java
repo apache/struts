@@ -73,7 +73,7 @@ public abstract class ListUIBean extends UIBean {
         	if (throwExceptionOnNullValueAttribute) {
         		// will throw an exception if not found
         		value = findValue((list == null) ? (String) list : list.toString(), "list",
-                    "You must specify a collection/array/map/enumeration/iterator. " +
+                    "The requested list key '" + list + "' could not be resolved as a collection/array/map/enumeration/iterator type. " +
                     "Example: people or people.{name}");
         	}
         	else {

@@ -196,7 +196,7 @@ public class ActionTagTest extends AbstractTagTest {
             tag.doEndTag();
             fail("Should have thrown RuntimeException");
         } catch (StrutsException e) {
-            assertEquals("tag actioncomponent, field name: Action name is required. Example: updatePerson", e.getMessage());
+             assertEquals("tag 'actioncomponent', field 'name': Action name is required. Example: updatePerson", e.getMessage());
         }
     }
 

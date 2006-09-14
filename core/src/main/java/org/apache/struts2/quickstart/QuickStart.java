@@ -30,8 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.struts2.util.classloader.CompilingClassLoader;
-
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
@@ -139,13 +137,7 @@ public class QuickStart {
                 Thread.currentThread().getContextClassLoader());
 
         if (c.getSources() != null) {
-            for (Iterator iterator = c.getSources().iterator(); iterator.hasNext();) {
-                String source = (String) iterator.next();
-                File file = new File(source);
-                CompilingClassLoader ccl = new CompilingClassLoader(parent, file);
-                ccl.start();
-                parent = ccl;
-            }
+            System.out.print("Automatic compiling of classes no longer supported.");
         }
         URLClassLoader url = new MyURLClassLoader(parent);
         Thread.currentThread().setContextClassLoader(url);

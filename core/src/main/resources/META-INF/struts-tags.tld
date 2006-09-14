@@ -106,14 +106,6 @@
 
         </attribute>
         <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
-
-        </attribute>
-        <attribute>
             <name>labelposition</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -441,14 +433,6 @@
 
         </attribute>
         <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
-
-        </attribute>
-        <attribute>
             <name>labelposition</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -717,14 +701,6 @@
 
         </attribute>
         <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
-
-        </attribute>
-        <attribute>
             <name>labelposition</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -990,14 +966,6 @@
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[Label expression used for rendering a element specific label]]></description>
-
-        </attribute>
-        <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
 
         </attribute>
         <attribute>
@@ -1300,14 +1268,6 @@
 
         </attribute>
         <attribute>
-            <name>show</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[Deprecated. Use showPassword instead.]]></description>
-
-        </attribute>
-        <attribute>
             <name>maxlength</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -1402,14 +1362,6 @@
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[Label expression used for rendering a element specific label]]></description>
-
-        </attribute>
-        <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
 
         </attribute>
         <attribute>
@@ -1764,14 +1716,6 @@
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[Set the html disabled attribute on rendered html element]]></description>
-
-        </attribute>
-        <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
 
         </attribute>
         <attribute>
@@ -2130,14 +2074,6 @@
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[Label expression used for rendering a element specific label]]></description>
-
-        </attribute>
-        <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
 
         </attribute>
         <attribute>
@@ -2512,14 +2448,6 @@
 
         </attribute>
         <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
-
-        </attribute>
-        <attribute>
             <name>labelposition</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -2793,14 +2721,6 @@
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[Label expression used for rendering a element specific label]]></description>
-
-        </attribute>
-        <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
 
         </attribute>
         <attribute>
@@ -3242,14 +3162,6 @@
 
         </attribute>
         <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
-
-        </attribute>
-        <attribute>
             <name>labelposition</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -3551,14 +3463,6 @@
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[Label expression used for rendering a element specific label]]></description>
-
-        </attribute>
-        <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
 
         </attribute>
         <attribute>
@@ -3923,14 +3827,6 @@
 
         </attribute>
         <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
-
-        </attribute>
-        <attribute>
             <name>labelposition</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -4230,14 +4126,6 @@
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[Set the html disabled attribute on rendered html element]]></description>
-
-        </attribute>
-        <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
 
         </attribute>
         <attribute>
@@ -4642,14 +4530,6 @@
 
         </attribute>
         <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
-
-        </attribute>
-        <attribute>
             <name>labelposition</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -4932,14 +4812,6 @@
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[Label expression used for rendering a element specific label]]></description>
-
-        </attribute>
-        <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
 
         </attribute>
         <attribute>
@@ -5664,14 +5536,6 @@
 
         </attribute>
         <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
-
-        </attribute>
-        <attribute>
             <name>labelposition</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -5969,14 +5833,6 @@
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[Label expression used for rendering a element specific label]]></description>
-
-        </attribute>
-        <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
 
         </attribute>
         <attribute>
@@ -6564,14 +6420,6 @@
 
         </attribute>
         <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
-
-        </attribute>
-        <attribute>
             <name>labelposition</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -6869,14 +6717,6 @@
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[Label expression used for rendering a element specific label]]></description>
-
-        </attribute>
-        <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
 
         </attribute>
         <attribute>
@@ -7205,14 +7045,6 @@
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[Label expression used for rendering a element specific label]]></description>
-
-        </attribute>
-        <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
 
         </attribute>
         <attribute>
@@ -7595,14 +7427,6 @@
 
         </attribute>
         <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
-
-        </attribute>
-        <attribute>
             <name>labelposition</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -7875,14 +7699,6 @@
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[Label expression used for rendering a element specific label]]></description>
-
-        </attribute>
-        <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
 
         </attribute>
         <attribute>
@@ -8294,14 +8110,6 @@
 
         </attribute>
         <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
-
-        </attribute>
-        <attribute>
             <name>labelposition</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -8611,14 +8419,6 @@
 
         </attribute>
         <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
-
-        </attribute>
-        <attribute>
             <name>labelposition</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -8909,14 +8709,6 @@
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[Label expression used for rendering a element specific label]]></description>
-
-        </attribute>
-        <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
 
         </attribute>
         <attribute>
@@ -9290,14 +9082,6 @@
 
         </attribute>
         <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
-
-        </attribute>
-        <attribute>
             <name>labelposition</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -9563,14 +9347,6 @@
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[Label expression used for rendering a element specific label]]></description>
-
-        </attribute>
-        <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
 
         </attribute>
         <attribute>
@@ -10034,14 +9810,6 @@
 
         </attribute>
         <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
-
-        </attribute>
-        <attribute>
             <name>labelposition</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -10368,14 +10136,6 @@
 
         </attribute>
         <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
-
-        </attribute>
-        <attribute>
             <name>labelposition</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -10640,14 +10400,6 @@
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[Set the html disabled attribute on rendered html element]]></description>
-
-        </attribute>
-        <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
 
         </attribute>
         <attribute>
@@ -10917,14 +10669,6 @@
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[Label expression used for rendering a element specific label]]></description>
-
-        </attribute>
-        <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
 
         </attribute>
         <attribute>
@@ -11362,14 +11106,6 @@
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[Label expression used for rendering a element specific label]]></description>
-
-        </attribute>
-        <attribute>
-            <name>labelPosition</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[deprecated.]]></description>
 
         </attribute>
         <attribute>

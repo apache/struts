@@ -905,15 +905,6 @@ public abstract class UIBean extends Component {
     }
 
     /**
-     * deprecated.
-     * @s.tagattribute required="false" default="left"
-     * @deprecated please use {@link #setLabelposition(String)} instead
-     */
-    public void setLabelPosition(String labelPosition) {
-        this.labelPosition = labelPosition;
-    }
-
-    /**
      * define label position of form element (top/left)
      * @s.tagattribute required="false"
      */

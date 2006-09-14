@@ -119,13 +119,6 @@ public abstract class AbstractUITag extends ComponentTagSupport {
         this.label = label;
     }
 
-    /**
-     * @deprecated please use {@link #setLabelposition} instead
-     */
-    public void setLabelPosition(String labelPosition) {
-        this.labelPosition = labelPosition;
-    }
-
     public void setLabelposition(String labelPosition) {
         this.labelPosition = labelPosition;
     }

@@ -71,12 +71,4 @@ public class Password extends TextField {
         this.showPassword = showPassword;
     }
 
-    /**
-     * Deprecated. Use showPassword instead.
-     * @s.tagattribute required="false" rtexprvalue="true"
-     * @deprecated use {@link #setShowPassword(String)}
-     */
-    public void setShow(String showPassword) {
-        this.showPassword = showPassword;
-    }
 }

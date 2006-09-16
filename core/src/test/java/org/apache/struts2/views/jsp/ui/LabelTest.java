@@ -54,7 +54,7 @@ public class LabelTest extends AbstractUITagTest {
         tag.setLabel("mylabel");
         tag.setName("myname");
         tag.setValue("%{foo}");
-        tag.setLabelPosition("top");
+        tag.setLabelposition("top");
 
         tag.doStartTag();
         tag.doEndTag();

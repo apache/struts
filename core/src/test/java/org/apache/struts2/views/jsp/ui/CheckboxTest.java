@@ -90,7 +90,7 @@ public class CheckboxTest extends AbstractUITagTest {
         tag.setFieldValue("baz");
         tag.setOnfocus("test();");
         tag.setTitle("mytitle");
-        tag.setLabelPosition("top");
+        tag.setLabelposition("top");
 
         tag.doStartTag();
         tag.doEndTag();
@@ -110,7 +110,7 @@ public class CheckboxTest extends AbstractUITagTest {
         tag.setFieldValue("baz");
         tag.setOnfocus("test();");
         tag.setTitle("mytitle");
-        tag.setLabelPosition("left");
+        tag.setLabelposition("left");
 
         tag.doStartTag();
         tag.doEndTag();

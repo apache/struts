@@ -19,6 +19,7 @@ package org.apache.struts2.dispatcher;
 
 import java.io.Serializable;
 import java.util.AbstractMap;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -84,14 +85,13 @@ public class SessionMap extends AbstractMap implements Serializable {
         }
 
         synchronized (session) {
-            if (entries != null ) {
-                for ( Iterator iter = entries.iterator(); iter.hasNext(); ) {
-                    Object key = iter.next();
-                    session.removeAttribute(key.toString());
-                }
-                entries = null;
+        	Enumeration<String> attributeNamesEnum = session.getAttributeNames();
+            String[] attributeNames = Collections.<String>list(attributeNamesEnum).toArray(new String[0]);
+            for (int a=0; a< attributeNames.length; a++) {
+            	session.removeAttribute(attributeNames[a]);
             }
         }
+        
     }
 
     /**

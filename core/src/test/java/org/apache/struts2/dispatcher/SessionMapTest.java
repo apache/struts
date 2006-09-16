@@ -17,7 +17,12 @@
  */
 package org.apache.struts2.dispatcher;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +33,7 @@ import junit.framework.TestCase;
 import com.mockobjects.constraint.Constraint;
 import com.mockobjects.constraint.IsAnything;
 import com.mockobjects.constraint.IsEqual;
+import com.mockobjects.dynamic.ConstraintMatcher;
 import com.mockobjects.dynamic.Mock;
 
 
@@ -40,8 +46,34 @@ public class SessionMapTest extends TestCase {
 
 
     public void testClearInvalidatesTheSession() throws Exception {
+    	List<String> attributeNames = new ArrayList<String>();
+    	attributeNames.add("test");
+    	attributeNames.add("anotherTest");
+    	Enumeration attributeNamesEnum = Collections.enumeration(attributeNames);
+    	
         MockSessionMap sessionMap = new MockSessionMap((HttpServletRequest) requestMock.proxy());
+        sessionMock.expect("setAttribute", 
+        		new Constraint[] {
+        			new IsEqual("test"), new IsEqual("test value")
+        		});
+        sessionMock.expect("setAttribute", 
+        		new Constraint[] {
+        			new IsEqual("anotherTest"), new IsEqual("another test value")
+        		});
+        sessionMock.expectAndReturn("getAttributeNames", attributeNamesEnum);
+        sessionMock.expect("removeAttribute", 
+        		new Constraint[]{
+        			new IsEqual("test")
+        		});
+        sessionMock.expect("removeAttribute", 
+        		new Constraint[]{
+        			new IsEqual("anotherTest")
+        		});
+        sessionMap.put("test", "test value");
+        sessionMap.put("anotherTest", "another test value");
         sessionMap.clear();
+        assertNull(sessionMap.get("test"));
+        assertNull(sessionMap.get("anotherTest"));
         sessionMock.verify();
     }
 
@@ -149,6 +181,11 @@ public class SessionMapTest extends TestCase {
             map.put(key, value); //put the value into our map after putting it in the superclass map to avoid polluting the get call.
 
             return originalValue;
+        }
+        
+        public void clear() {
+        	super.clear();
+        	map.clear();
         }
     }
 }

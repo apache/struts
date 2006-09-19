@@ -28,7 +28,11 @@
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 >
 <#if parameters.headerKey?exists && parameters.headerValue?exists>
-    <option value="${parameters.headerKey?html}">${parameters.headerValue?html}</option>
+    <option value="${parameters.headerKey?html}"
+    <#if tag.contains(parameters.nameValue, parameters.headerKey) == true>
+    selected="selected"
+    </#if>
+    >${parameters.headerValue?html}</option>
 </#if>
 <#if parameters.emptyOption?default(false)>
     <option value=""></option>

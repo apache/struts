@@ -8,7 +8,7 @@
         <version>2.0.0-SNAPSHOT</version>
     </parent>
     <groupId>org.apache.struts</groupId>
-    <artifactId>struts2-legacy</artifactId>
+    <artifactId>struts2-integration</artifactId>
     <packaging>jar</packaging>
     <name>Struts Legacy</name>
     

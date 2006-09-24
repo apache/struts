@@ -25,9 +25,9 @@ import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 /**
  * Override Xwork class so we can use an arbitrary config file
  */
-public class StrutsXMLConfigurationProvider extends XmlConfigurationProvider {
+public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
 
-    private static final Log LOG = LogFactory.getLog(StrutsXMLConfigurationProvider.class);
+    private static final Log LOG = LogFactory.getLog(StrutsXmlConfigurationProvider.class);
     private File baseDir = null;
 
     /** 
@@ -35,7 +35,7 @@ public class StrutsXMLConfigurationProvider extends XmlConfigurationProvider {
      * 
      * @param errorIfMissing If we should throw an exception if the file can't be found
      */
-    public StrutsXMLConfigurationProvider(boolean errorIfMissing) {
+    public StrutsXmlConfigurationProvider(boolean errorIfMissing) {
         this("struts.xml", errorIfMissing);
     }
     
@@ -45,7 +45,7 @@ public class StrutsXMLConfigurationProvider extends XmlConfigurationProvider {
      * @param filename The filename to look for
      * @param errorIfMissing If we should throw an exception if the file can't be found
      */
-    public StrutsXMLConfigurationProvider(String filename, boolean errorIfMissing) {
+    public StrutsXmlConfigurationProvider(String filename, boolean errorIfMissing) {
         super(filename, errorIfMissing);
         
         Map<String,String> dtdMappings = new HashMap<String,String>(getDtdMappings());

@@ -18,7 +18,7 @@
 package org.apache.struts2;
 
 import org.apache.struts2.config.Settings;
-import org.apache.struts2.config.StrutsXMLConfigurationProvider;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.springframework.mock.web.MockServletContext;
 
@@ -44,7 +44,7 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         Dispatcher.setInstance(du);
         configurationManager = new ConfigurationManager();
         configurationManager.addConfigurationProvider(
-                new StrutsXMLConfigurationProvider("struts.xml", false));
+                new StrutsXmlConfigurationProvider("struts.xml", false));
         du.setConfigurationManager(configurationManager);
         
     }

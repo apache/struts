@@ -1,22 +1,26 @@
 package org.apache.struts2.legacy;
 
-import junit.framework.*;
-import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-import com.opensymphony.xwork2.config.ConfigurationManager;
+import java.lang.reflect.InvocationTargetException;
+
+import junit.framework.TestCase;
+
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.config.ActionConfig;
+import org.apache.struts.config.ExceptionConfig;
+import org.apache.struts.config.ForwardConfig;
+import org.apache.struts.config.ModuleConfig;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
+
+import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
-import com.opensymphony.xwork2.ActionSupport;
-import org.apache.struts.action.*;
-import org.apache.struts.config.*;
-import org.apache.struts2.config.StrutsXMLConfigurationProvider;
-
-import java.io.InputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * Test of StrutsFactory, which creates Struts 1.x wrappers around XWork config objects.
@@ -42,7 +46,7 @@ public class StrutsFactoryTest extends TestCase {
      */
     public void setUp() {
         ConfigurationManager manager = new ConfigurationManager();
-        ConfigurationProvider provider = new StrutsXMLConfigurationProvider(PACKAGE_NAME + "/test-struts-factory.xml", true);
+        ConfigurationProvider provider = new StrutsXmlConfigurationProvider(PACKAGE_NAME + "/test-struts-factory.xml", true);
         manager.addConfigurationProvider(provider);
         config = manager.getConfiguration();
         factory = new StrutsFactory(config);

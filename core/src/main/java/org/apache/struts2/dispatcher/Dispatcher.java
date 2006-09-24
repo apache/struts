@@ -36,7 +36,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.config.Settings;
-import org.apache.struts2.config.StrutsXMLConfigurationProvider;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
@@ -256,7 +256,7 @@ public class Dispatcher {
         configurationManager.addConfigurationProvider(new XmlConfigurationProvider("xwork.xml", false));
         
         // Load Struts config files
-        configurationManager.addConfigurationProvider(new StrutsXMLConfigurationProvider(false));
+        configurationManager.addConfigurationProvider(new StrutsXmlConfigurationProvider(false));
         
         synchronized(Dispatcher.class) {
             if (dispatcherListeners.size() > 0) {

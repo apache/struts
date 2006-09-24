@@ -12,7 +12,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.config.StrutsXMLConfigurationProvider;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.sitegraph.entities.FreeMarkerView;
 import org.apache.struts2.sitegraph.entities.JspView;
 import org.apache.struts2.sitegraph.entities.VelocityView;
@@ -50,7 +50,7 @@ public class StrutsConfigRetriever {
         String configFilePath = configDir + "/struts.xml";
         File configFile = new File(configFilePath);
         try {
-            ConfigurationProvider configProvider = new StrutsXMLConfigurationProvider(configFile.getCanonicalPath(), true);
+            ConfigurationProvider configProvider = new StrutsXmlConfigurationProvider(configFile.getCanonicalPath(), true);
             cm = new ConfigurationManager();
             cm.addConfigurationProvider(configProvider);
             isXWorkStarted = true;

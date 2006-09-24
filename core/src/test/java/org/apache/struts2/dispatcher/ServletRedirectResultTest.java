@@ -27,7 +27,7 @@ import ognl.Ognl;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.config.StrutsXMLConfigurationProvider;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.springframework.mock.web.MockServletContext;
 
 import com.mockobjects.dynamic.C;
@@ -100,7 +100,7 @@ public class ServletRedirectResultTest extends StrutsTestCase implements StrutsS
         Dispatcher du = new Dispatcher(new MockServletContext());
         Dispatcher.setInstance(du);
         ConfigurationManager cm = new ConfigurationManager();
-        cm.addConfigurationProvider(new StrutsXMLConfigurationProvider("struts.xml", false));
+        cm.addConfigurationProvider(new StrutsXmlConfigurationProvider("struts.xml", false));
         du.setConfigurationManager(cm);
         du.getConfigurationManager().getConfiguration().
             addPackageConfig("foo", new PackageConfig("foo", "/namespace", false, null));

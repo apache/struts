@@ -176,7 +176,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         ActionMapping actionMapping = new ActionMapping();
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
-        defaultActionMapper.parseNameAndNamespace("someAction.action", actionMapping, config);
+        defaultActionMapper.parseNameAndNamespace("someAction", actionMapping, config);
 
         assertEquals(actionMapping.getName(), "someAction");
         assertEquals(actionMapping.getNamespace(), "");
@@ -186,7 +186,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         ActionMapping actionMapping = new ActionMapping();
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
-        defaultActionMapper.parseNameAndNamespace("/someAction.action", actionMapping, config);
+        defaultActionMapper.parseNameAndNamespace("/someAction", actionMapping, config);
 
         assertEquals(actionMapping.getName(), "someAction");
         assertEquals(actionMapping.getNamespace(), "/");
@@ -196,7 +196,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         ActionMapping actionMapping = new ActionMapping();
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
-        defaultActionMapper.parseNameAndNamespace("/my/someAction.action", actionMapping, config);
+        defaultActionMapper.parseNameAndNamespace("/my/someAction", actionMapping, config);
 
         assertEquals(actionMapping.getName(), "someAction");
         assertEquals(actionMapping.getNamespace(), "/my");

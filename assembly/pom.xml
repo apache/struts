@@ -33,7 +33,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>2.0.0-SNAPSHOT</version>
+        <version>2.0.1-SNAPSHOT</version>
     </parent>
 
     <scm>
@@ -65,25 +65,19 @@
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.apache.struts</groupId>
+                                    <artifactId>struts2-mailreader</artifactId>
+                                    <version>${version}</version>
+                                    <type>war</type>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.struts</groupId>
                                     <artifactId>struts2-portlet</artifactId>
                                     <version>${version}</version>
                                     <type>war</type>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.apache.struts</groupId>
-                                    <artifactId>struts2-shopping-cart</artifactId>
-                                    <version>${version}</version>
-                                    <type>war</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.apache.struts</groupId>
                                     <artifactId>struts2-showcase</artifactId>
-                                    <version>${version}</version>
-                                    <type>war</type>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.apache.struts</groupId>
-                                    <artifactId>struts2-starter</artifactId>
                                     <version>${version}</version>
                                     <type>war</type>
                                 </artifactItem>

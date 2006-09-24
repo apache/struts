@@ -32,7 +32,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-parent</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Struts 2</name>
     <url>http://struts.apache.org/struts2</url>
@@ -77,7 +77,7 @@
 
     <modules>
         <module>core</module>
-        <module>legacy</module>
+        <module>integration</module>
         <!--<module>assembly</module>-->
         <module>api</module>
     </modules>
@@ -217,11 +217,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
              </plugin>
-              <plugin>
-                <groupId>net.sourceforge.maven-taglib</groupId>
-                <artifactId>maven-taglib-plugin</artifactId>
-                 <version>2.3</version>
-              </plugin>
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.0</version>

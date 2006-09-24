@@ -38,6 +38,7 @@ import org.apache.struts2.dispatcher.Dispatcher;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.interceptor.ScopedModelDriven;
 
 /**
  * Wraps legacy Struts 1.3 Actions.  Supports the following features:

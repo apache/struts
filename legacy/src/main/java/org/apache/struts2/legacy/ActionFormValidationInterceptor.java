@@ -28,6 +28,7 @@ import org.apache.struts2.dispatcher.Dispatcher;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import com.opensymphony.xwork2.interceptor.ScopedModelDriven;
 
 /**
  *  Calls the validate() method on the ActionForm, if it exists.  The errors are handled

@@ -15,7 +15,7 @@
  *
  * $Header:$
  */
-package org.apache.struts2.legacy;
+package org.apache.struts2.s1;
 
 import java.util.HashMap;
 import java.util.Iterator;

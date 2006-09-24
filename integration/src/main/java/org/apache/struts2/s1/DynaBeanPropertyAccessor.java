@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.struts2.legacy;
+package org.apache.struts2.s1;
 
 import java.io.Serializable;
 import org.apache.commons.beanutils.DynaBean;

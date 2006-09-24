@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.struts2.legacy;
+package org.apache.struts2.s1;
 
 import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.Configuration;

@@ -26,7 +26,7 @@
         
         <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-legacy</artifactId>
+            <artifactId>struts2-integration</artifactId>
             <version>${pom.version}</version>
         </dependency>
 

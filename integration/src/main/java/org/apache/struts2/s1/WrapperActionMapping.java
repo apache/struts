@@ -15,7 +15,7 @@
  *
  * $Header:$
  */
-package org.apache.struts2.legacy;
+package org.apache.struts2.s1;
 
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionForward;

@@ -1,4 +1,4 @@
-package org.apache.struts2.legacy;
+package org.apache.struts2.s1;
 
 import junit.framework.*;
 import java.io.*;

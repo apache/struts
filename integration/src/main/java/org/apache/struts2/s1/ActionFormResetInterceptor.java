@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.struts2.legacy;
+package org.apache.struts2.s1;
 
 import javax.servlet.http.HttpServletRequest;
 

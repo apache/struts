@@ -38,7 +38,7 @@
     
     <include file="struts-model-driven.xml" />
     
-    <include file="struts-legacy.xml" />
+    <include file="struts-integration.xml" />
     
     <include file="struts-filedownload.xml" />
     

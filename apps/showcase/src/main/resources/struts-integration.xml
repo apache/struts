@@ -5,14 +5,14 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 
 <struts>
-	<package name="legacy" extends="struts-default,struts-legacy-default" namespace="/legacy">
+	<package name="integration" extends="struts-default,struts-integration-default" namespace="/integration">
 	    
 	    <interceptors>
 	        <interceptor name="gangsterForm" class="com.opensymphony.xwork2.interceptor.ScopedModelDrivenInterceptor">
-	        	<param name="className">org.apache.struts2.showcase.legacy.GangsterForm</param>
+	        	<param name="className">org.apache.struts2.showcase.integration.GangsterForm</param>
 	        </interceptor>
 	    
-	    	<interceptor-stack name="legacy">
+	    	<interceptor-stack name="integration">
 	    		<interceptor-ref name="static-params"/>
 	    		<interceptor-ref name="gangsterForm"/>
 	    		<interceptor-ref name="model-driven"/>
@@ -23,18 +23,18 @@
 	    	</interceptor-stack>
 	    </interceptors>
 	    
-	    <default-interceptor-ref name="legacy" />
+	    <default-interceptor-ref name="integration" />
 	    <default-action-ref name="editGangster" />
 	    
 	    <!-- Diplay entry page that uses Model-Driven technique -->
-		<action name="editGangster" class="org.apache.struts2.legacy.LegacyAction">
-	    	<param name="className">org.apache.struts2.showcase.legacy.EditGangsterAction</param>
+		<action name="editGangster" class="org.apache.struts2.s1.LegacyAction">
+	    	<param name="className">org.apache.struts2.showcase.integration.EditGangsterAction</param>
 			<result>modelDriven.jsp</result>
 		</action>
 		
 		<!-- Display the result page whose content is populated using the Model-Driven technique -->
-		<action name="saveGangster" class="org.apache.struts2.legacy.LegacyAction">
-	    	<param name="className">org.apache.struts2.showcase.legacy.SaveGangsterAction</param>
+		<action name="saveGangster" class="org.apache.struts2.s1.LegacyAction">
+	    	<param name="className">org.apache.struts2.showcase.integration.SaveGangsterAction</param>
 	    	<param name="validate">true</param>
 			<result name="input">modelDriven.jsp</result>
 			<result>modelDrivenResult.jsp</result>

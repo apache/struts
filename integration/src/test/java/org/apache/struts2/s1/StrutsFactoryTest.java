@@ -1,4 +1,4 @@
-package org.apache.struts2.legacy;
+package org.apache.struts2.s1;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -27,7 +27,7 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
  */
 public class StrutsFactoryTest extends TestCase {
 
-    private static final String PACKAGE_NAME = "org/apache/struts2/legacy";
+    private static final String PACKAGE_NAME = "org/apache/struts2/s1";
     
     protected StrutsFactory factory = null;
     protected Configuration config;

@@ -66,8 +66,8 @@
         <!--  JavaServer Faces -->
         <li><s:url id="url" value="/jsf" /><s:a href="%{#url}">JavaServer Faces Example</s:a></li>
         
-        <!--  Legacy -->
-        <li><s:url id="url" value="/legacy" /><s:a href="%{#url}">Legacy Struts 1.3 Example</s:a></li>
+        <!--  Integration -->
+        <li><s:url id="url" action="editGangster" namespace="/integration"/><s:a href="%{#url}">Struts 1.3 Integration Example</s:a></li>
         
         <!--  Chat (AJAX) Example -->
         <li><s:url id="url" value="/chat" /><s:a href="%{#url}">Chat (AJAX) Example</s:a></li>

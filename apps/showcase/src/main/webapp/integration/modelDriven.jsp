@@ -2,12 +2,12 @@
 
 <html>
 <head>
-<title>Showcase - Legacy Example</title>
+<title>Showcase - Struts 1 Integration Example</title>
 <s:head/>
 </head>
 <body>
 
-<s:form action="saveGangster" method="POST" namespace="/legacy">
+<s:form action="saveGangster" method="POST" namespace="/integration">
     
     <s:textfield 
             label="Gangster Name"

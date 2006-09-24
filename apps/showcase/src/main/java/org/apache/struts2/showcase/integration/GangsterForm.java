@@ -1,4 +1,4 @@
-package org.apache.struts2.showcase.legacy;
+package org.apache.struts2.showcase.integration;
 
 import javax.servlet.http.HttpServletRequest;
 

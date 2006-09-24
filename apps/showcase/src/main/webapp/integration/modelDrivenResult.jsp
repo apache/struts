@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>Showcase - Legacy Example</title>
+<title>Showcase - Struts 1 Integration  Example</title>
 <s:head/>
 </head>
 <body>

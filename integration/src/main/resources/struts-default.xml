@@ -8,8 +8,8 @@
     <package name="struts-legacy-default">
 
         <interceptors>
-            <interceptor name="actionForm-reset" class="org.apache.struts2.legacy.ActionFormResetInterceptor"/>
-            <interceptor name="actionForm-validation" class="org.apache.struts2.legacy.ActionFormValidationInterceptor"/>
+            <interceptor name="actionForm-reset" class="org.apache.struts2.s1.ActionFormResetInterceptor"/>
+            <interceptor name="actionForm-validation" class="org.apache.struts2.s1.ActionFormValidationInterceptor"/>
         </interceptors>
     </package>
 

@@ -77,6 +77,7 @@
 
     <modules>
         <module>core</module>
+        <module>legacy</module>
         <!--<module>assembly</module>-->
         <module>api</module>
     </modules>

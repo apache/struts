@@ -38,6 +38,8 @@
     
     <include file="struts-model-driven.xml" />
     
+    <include file="struts-legacy.xml" />
+    
     <include file="struts-filedownload.xml" />
     
     <include file="struts-conversion.xml" />

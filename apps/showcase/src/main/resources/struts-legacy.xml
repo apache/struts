@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<package name="legacy" extends="struts-default,struts-legacy-default" namespace="/legacy">
+	    
+	    <interceptors>
+	        <interceptor name="gangsterForm" class="org.apache.struts2.legacy.ScopedModelDrivenInterceptor">
+	        	<param name="scope">request</param>
+	        	<param name="name">gangsterForm</param>
+	        	<param name="className">org.apache.struts2.showcase.legacy.GangsterForm</param>
+	        </interceptor>
+	    
+	    	<interceptor-stack name="legacy">
+	    		<interceptor-ref name="static-params"/>
+	    		<interceptor-ref name="gangsterForm"/>
+	    		<interceptor-ref name="model-driven"/>
+                <interceptor-ref name="actionForm-reset"/>
+                <interceptor-ref name="basicStack"/>
+                <interceptor-ref name="actionForm-validation"/>
+                <interceptor-ref name="workflow"/>
+	    	</interceptor-stack>
+	    </interceptors>
+	    
+	    <default-interceptor-ref name="legacy" />
+	    <default-action-ref name="editGangster" />
+	    
+	    <!-- Diplay entry page that uses Model-Driven technique -->
+		<action name="editGangster" class="org.apache.struts2.legacy.LegacyAction">
+	    	<param name="className">org.apache.struts2.showcase.legacy.EditGangsterAction</param>
+			<result>modelDriven.jsp</result>
+		</action>
+		
+		<!-- Display the result page whose content is populated using the Model-Driven technique -->
+		<action name="saveGangster" class="org.apache.struts2.legacy.LegacyAction">
+	    	<param name="className">org.apache.struts2.showcase.legacy.SaveGangsterAction</param>
+	    	<param name="validate">true</param>
+			<result name="input">modelDriven.jsp</result>
+			<result>modelDrivenResult.jsp</result>
+		</action>
+	    
+	</package>
+</struts>	
+	

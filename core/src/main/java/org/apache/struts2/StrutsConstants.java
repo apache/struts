@@ -50,10 +50,10 @@ public final class StrutsConstants {
     /** The default includeParams method to generate Struts URLs */
     public static final String STRUTS_URL_INCLUDEPARAMS = "struts.url.includeParams";
 
-    /** The com.opensymphony.xwork.ObjectFactory implementation class */
+    /** The com.opensymphony.xwork2.ObjectFactory implementation class */
     public static final String STRUTS_OBJECTFACTORY = "struts.objectFactory";
     
-    /** The com.opensymphony.xwork.util.ObjectTypeDeterminer implementation class */
+    /** The com.opensymphony.xwork2.util.ObjectTypeDeterminer implementation class */
     public static final String STRUTS_OBJECTTYPEDETERMINER = "struts.objectTypeDeterminer";
 
     /** The package containing actions that use Rife continuations */

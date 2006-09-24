@@ -36,130 +36,146 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- *
- * Default action mapper implementation, using the standard *.[ext] (where ext usually "action") pattern. The extension
- * is looked up from the Struts configuration key <b>struts.action.exection</b>.
- *
- * <p/> To help with dealing with buttons and other related requirements, this mapper (and other {@link ActionMapper}s,
- * we hope) has the ability to name a button with some predefined prefix and have that button name alter the execution
- * behaviour. The four prefixes are:
- *
+ * 
+ * Default action mapper implementation, using the standard *.[ext] (where ext
+ * usually "action") pattern. The extension is looked up from the Struts
+ * configuration key <b>struts.action.exection</b>.
+ * 
+ * <p/> To help with dealing with buttons and other related requirements, this
+ * mapper (and other {@link ActionMapper}s, we hope) has the ability to name a
+ * button with some predefined prefix and have that button name alter the
+ * execution behaviour. The four prefixes are:
+ * 
  * <ul>
- *
+ * 
  * <li>Method prefix - <i>method:default</i></li>
- *
+ * 
  * <li>Action prefix - <i>action:dashboard</i></li>
- *
+ * 
  * <li>Redirect prefix - <i>redirect:cancel.jsp</i></li>
- *
+ * 
  * <li>Redirect-action prefix - <i>redirect-action:cancel</i></li>
- *
+ * 
  * </ul>
- *
- * <p/> In addition to these four prefixes, this mapper also understands the action naming pattern of <i>foo!bar</i> in
- * either the extension form (eg: foo!bar.action) or in the prefix form (eg: action:foo!bar). This syntax tells this mapper
- * to map to the action named <i>foo</i> and the method <i>bar</i>.
- *
+ * 
+ * <p/> In addition to these four prefixes, this mapper also understands the
+ * action naming pattern of <i>foo!bar</i> in either the extension form (eg:
+ * foo!bar.action) or in the prefix form (eg: action:foo!bar). This syntax tells
+ * this mapper to map to the action named <i>foo</i> and the method <i>bar</i>.
+ * 
  * <!-- END SNIPPET: javadoc -->
- *
+ * 
  * <p/> <b>Method Prefix</b> <p/>
- *
+ * 
  * <!-- START SNIPPET: method -->
- *
- * With method-prefix, instead of calling baz action's execute() method (by default if it isn't overriden in struts.xml
- * to be something else), the baz action's anotherMethod() will be called. A very elegant way determine which button is
- * clicked. Alternatively, one would have submit button set a particular value on the action when clicked, and the
- * execute() method decides on what to do with the setted value depending on which button is clicked.
- *
+ * 
+ * With method-prefix, instead of calling baz action's execute() method (by
+ * default if it isn't overriden in struts.xml to be something else), the baz
+ * action's anotherMethod() will be called. A very elegant way determine which
+ * button is clicked. Alternatively, one would have submit button set a
+ * particular value on the action when clicked, and the execute() method decides
+ * on what to do with the setted value depending on which button is clicked.
+ * 
  * <!-- END SNIPPET: method -->
- *
+ * 
  * <pre>
- * <!-- START SNIPPET: method-example -->
- * &lt;a:form action="baz"&gt;
- *     &lt;a:textfield label="Enter your name" name="person.name"/&gt;
- *     &lt;a:submit value="Create person"/&gt;
- *     &lt;a:submit name="method:anotherMethod" value="Cancel"/&gt;
- * &lt;/a:form&gt;
- * <!-- END SNIPPET: method-example -->
+ *  &lt;!-- START SNIPPET: method-example --&gt;
+ *  &lt;a:form action=&quot;baz&quot;&gt;
+ *      &lt;a:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
+ *      &lt;a:submit value=&quot;Create person&quot;/&gt;
+ *      &lt;a:submit name=&quot;method:anotherMethod&quot; value=&quot;Cancel&quot;/&gt;
+ *  &lt;/a:form&gt;
+ *  &lt;!-- END SNIPPET: method-example --&gt;
  * </pre>
- *
+ * 
  * <p/> <b>Action prefix</b> <p/>
- *
+ * 
  * <!-- START SNIPPET: action -->
- *
- * With action-prefix, instead of executing baz action's execute() method (by default if it isn't overriden in struts.xml
- * to be something else), the anotherAction action's execute() method (assuming again if it isn't overriden with
- * something else in struts.xml) will be executed.
- *
+ * 
+ * With action-prefix, instead of executing baz action's execute() method (by
+ * default if it isn't overriden in struts.xml to be something else), the
+ * anotherAction action's execute() method (assuming again if it isn't overriden
+ * with something else in struts.xml) will be executed.
+ * 
  * <!-- END SNIPPET: action -->
- *
+ * 
  * <pre>
- * <!-- START SNIPPET: action-example -->
- * &lt;a:form action="baz"&gt;
- *     &lt;a:textfield label="Enter your name" name="person.name"/&gt;
- *     &lt;a:submit value="Create person"/&gt;
- *     &lt;a:submit name="action:anotherAction" value="Cancel"/&gt;
- * &lt;/a:form&gt;
- * <!-- END SNIPPET: action-example -->
+ *  &lt;!-- START SNIPPET: action-example --&gt;
+ *  &lt;a:form action=&quot;baz&quot;&gt;
+ *      &lt;a:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
+ *      &lt;a:submit value=&quot;Create person&quot;/&gt;
+ *      &lt;a:submit name=&quot;action:anotherAction&quot; value=&quot;Cancel&quot;/&gt;
+ *  &lt;/a:form&gt;
+ *  &lt;!-- END SNIPPET: action-example --&gt;
  * </pre>
- *
+ * 
  * <p/> <b>Redirect prefix</b> <p/>
- *
+ * 
  * <!-- START SNIPPET: redirect -->
- *
- * With redirect-prefix, instead of executing baz action's execute() method (by default it isn't overriden in struts.xml
- * to be something else), it will get redirected to, in this case to www.google.com. Internally it uses
+ * 
+ * With redirect-prefix, instead of executing baz action's execute() method (by
+ * default it isn't overriden in struts.xml to be something else), it will get
+ * redirected to, in this case to www.google.com. Internally it uses
  * ServletRedirectResult to do the task.
- *
+ * 
  * <!-- END SNIPPET: redirect -->
- *
+ * 
  * <pre>
- * <!-- START SNIPPET: redirect-example -->
- * &lt;a:form action="baz"&gt;
- *     &lt;a:textfield label="Enter your name" name="person.name"/&gt;
- *     &lt;a:submit value="Create person"/&gt;
- *     &lt;a:submit name="redirect:www.google.com" value="Cancel"/&gt;
- * &lt;/a:form&gt;
- * <!-- END SNIPPET: redirect-example -->
+ *  &lt;!-- START SNIPPET: redirect-example --&gt;
+ *  &lt;a:form action=&quot;baz&quot;&gt;
+ *      &lt;a:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
+ *      &lt;a:submit value=&quot;Create person&quot;/&gt;
+ *      &lt;a:submit name=&quot;redirect:www.google.com&quot; value=&quot;Cancel&quot;/&gt;
+ *  &lt;/a:form&gt;
+ *  &lt;!-- END SNIPPET: redirect-example --&gt;
  * </pre>
- *
+ * 
  * <p/> <b>Redirect-action prefix</b> <p/>
- *
+ * 
  * <!-- START SNIPPET: redirect-action -->
- *
- * With redirect-action-prefix, instead of executing baz action's execute() method (by default it isn't overriden in
- * struts.xml to be something else), it will get redirected to, in this case 'dashboard.action'. Internally it uses
- * ServletRedirectResult to do the task and read off the extension from the struts.properties.
- *
+ * 
+ * With redirect-action-prefix, instead of executing baz action's execute()
+ * method (by default it isn't overriden in struts.xml to be something else), it
+ * will get redirected to, in this case 'dashboard.action'. Internally it uses
+ * ServletRedirectResult to do the task and read off the extension from the
+ * struts.properties.
+ * 
  * <!-- END SNIPPET: redirect-action -->
- *
+ * 
  * <pre>
- * <!-- START SNIPPET: redirect-action-example -->
- * &lt;a:form action="baz"&gt;
- *     &lt;a:textfield label="Enter your name" name="person.name"/&gt;
- *     &lt;a:submit value="Create person"/&gt;
- *     &lt;a:submit name="redirect-action:dashboard" value="Cancel"/&gt;
- * &lt;/a:form&gt;
- * <!-- END SNIPPET: redirect-action-example -->
+ *  &lt;!-- START SNIPPET: redirect-action-example --&gt;
+ *  &lt;a:form action=&quot;baz&quot;&gt;
+ *      &lt;a:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
+ *      &lt;a:submit value=&quot;Create person&quot;/&gt;
+ *      &lt;a:submit name=&quot;redirect-action:dashboard&quot; value=&quot;Cancel&quot;/&gt;
+ *  &lt;/a:form&gt;
+ *  &lt;!-- END SNIPPET: redirect-action-example --&gt;
  * </pre>
- *
+ * 
  */
 public class DefaultActionMapper implements ActionMapper {
 
     static final String METHOD_PREFIX = "method:";
+
     static final String ACTION_PREFIX = "action:";
+
     static final String REDIRECT_PREFIX = "redirect:";
+
     static final String REDIRECT_ACTION_PREFIX = "redirect-action:";
 
-    private static boolean allowDynamicMethodCalls = "true".equals(Settings.get(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION));
+    private static boolean allowDynamicMethodCalls = "true".equals(Settings
+            .get(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION));
 
     private PrefixTrie prefixTrie = null;
+
     public DefaultActionMapper() {
         prefixTrie = new PrefixTrie() {
             {
                 put(METHOD_PREFIX, new ParameterAction() {
                     public void execute(String key, ActionMapping mapping) {
-                        mapping.setMethod(key.substring(METHOD_PREFIX.length()));
+                        mapping
+                                .setMethod(key
+                                        .substring(METHOD_PREFIX.length()));
                     }
                 });
 
@@ -181,14 +197,16 @@ public class DefaultActionMapper implements ActionMapper {
                 put(REDIRECT_PREFIX, new ParameterAction() {
                     public void execute(String key, ActionMapping mapping) {
                         ServletRedirectResult redirect = new ServletRedirectResult();
-                        redirect.setLocation(key.substring(REDIRECT_PREFIX.length()));
+                        redirect.setLocation(key.substring(REDIRECT_PREFIX
+                                .length()));
                         mapping.setResult(redirect);
                     }
                 });
-    
+
                 put(REDIRECT_ACTION_PREFIX, new ParameterAction() {
                     public void execute(String key, ActionMapping mapping) {
-                        String location = key.substring(REDIRECT_ACTION_PREFIX.length());
+                        String location = key.substring(REDIRECT_ACTION_PREFIX
+                                .length());
                         ServletRedirectResult redirect = new ServletRedirectResult();
                         String extension = getDefaultExtension();
                         if (extension != null) {
@@ -202,10 +220,13 @@ public class DefaultActionMapper implements ActionMapper {
         };
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(javax.servlet.http.HttpServletRequest)
      */
-    public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
+    public ActionMapping getMapping(HttpServletRequest request,
+            ConfigurationManager configManager) {
         ActionMapping mapping = new ActionMapping();
         String uri = getUri(request);
 
@@ -213,7 +234,7 @@ public class DefaultActionMapper implements ActionMapper {
         if (uri == null) {
             return null;
         }
-            
+
         parseNameAndNamespace(uri, mapping, configManager.getConfiguration());
 
         handleSpecialParameters(request, mapping);
@@ -236,18 +257,23 @@ public class DefaultActionMapper implements ActionMapper {
     }
 
     /**
-     * Special parameters, as described in the class-level comment, are searched for
-     * and handled.
+     * Special parameters, as described in the class-level comment, are searched
+     * for and handled.
      * 
-     * @param request The request
-     * @param mapping The action mapping
+     * @param request
+     *            The request
+     * @param mapping
+     *            The action mapping
      */
-    public void handleSpecialParameters(HttpServletRequest request, ActionMapping mapping) {
+    public void handleSpecialParameters(HttpServletRequest request,
+            ActionMapping mapping) {
         // handle special parameter prefixes.
         Map parameterMap = request.getParameterMap();
-        for (Iterator iterator = parameterMap.keySet().iterator(); iterator.hasNext();) {
+        for (Iterator iterator = parameterMap.keySet().iterator(); iterator
+                .hasNext();) {
             String key = (String) iterator.next();
-            ParameterAction parameterAction = (ParameterAction) prefixTrie.get(key);
+            ParameterAction parameterAction = (ParameterAction) prefixTrie
+                    .get(key);
             if (parameterAction != null) {
                 parameterAction.execute(key, mapping);
                 break;
@@ -258,17 +284,21 @@ public class DefaultActionMapper implements ActionMapper {
     /**
      * Parses the name and namespace from the uri
      * 
-     * @param uri The uri
-     * @param mapping The action mapping to populate
+     * @param uri
+     *            The uri
+     * @param mapping
+     *            The action mapping to populate
      */
-    void parseNameAndNamespace(String uri, ActionMapping mapping, Configuration config) {
+    void parseNameAndNamespace(String uri, ActionMapping mapping,
+            Configuration config) {
         String namespace, name;
         int lastSlash = uri.lastIndexOf("/");
         if (lastSlash == -1) {
             namespace = "";
             name = uri;
         } else if (lastSlash == 0) {
-            // ww-1046, assume it is the root namespace, it will fallback to default
+            // ww-1046, assume it is the root namespace, it will fallback to
+            // default
             // namespace anyway if not found in root namespace.
             namespace = "/";
             name = uri.substring(lastSlash + 1);
@@ -276,15 +306,16 @@ public class DefaultActionMapper implements ActionMapper {
             String prefix = uri.substring(0, lastSlash);
             namespace = "";
             // Find the longest matching namespace, defaulting to the default
-            for (Iterator i = config.getPackageConfigs().values().iterator(); i.hasNext(); ) {
-                String ns = ((PackageConfig)i.next()).getNamespace();
+            for (Iterator i = config.getPackageConfigs().values().iterator(); i
+                    .hasNext();) {
+                String ns = ((PackageConfig) i.next()).getNamespace();
                 if (ns != null && prefix.startsWith(ns)) {
                     if (ns.length() > namespace.length()) {
                         namespace = ns;
                     }
                 }
             }
-            
+
             name = uri.substring(namespace.length() + 1);
         }
         mapping.setNamespace(namespace);
@@ -294,23 +325,24 @@ public class DefaultActionMapper implements ActionMapper {
     /**
      * Drops the extension from the action name
      * 
-     * @param name The action name
+     * @param name
+     *            The action name
      * @return The action name without its extension
      */
     String dropExtension(String name) {
-    		List extensions = getExtensions();
-		if (extensions == null) {
-		    return name;
-		}
-        	Iterator it = extensions.iterator();
-        	while (it.hasNext()) {
-        		String extension = "." + (String) it.next();
-        		if ( name.endsWith(extension)) {
-        			name = name.substring(0, name.length() - extension.length());
-        			return name;
-        		}
-        	}
-        	return null;
+        List extensions = getExtensions();
+        if (extensions == null) {
+            return name;
+        }
+        Iterator it = extensions.iterator();
+        while (it.hasNext()) {
+            String extension = "." + (String) it.next();
+            if (name.endsWith(extension)) {
+                name = name.substring(0, name.length() - extension.length());
+                return name;
+            }
+        }
+        return null;
     }
 
     /**
@@ -319,34 +351,37 @@ public class DefaultActionMapper implements ActionMapper {
     static String getDefaultExtension() {
         List extensions = getExtensions();
         if (extensions == null) {
-        	return null;
+            return null;
         } else {
-        	return (String) extensions.get(0);
+            return (String) extensions.get(0);
         }
     }
-    
+
     /**
      * Returns null if no extension is specified.
      */
     static List getExtensions() {
-        String extensions = (String) org.apache.struts2.config.Settings.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
+        String extensions = (String) org.apache.struts2.config.Settings
+                .get(StrutsConstants.STRUTS_ACTION_EXTENSION);
 
         if ("".equals(extensions)) {
-        	return null;
+            return null;
         } else {
-        	return Arrays.asList(extensions.split(","));        	
-        } 
+            return Arrays.asList(extensions.split(","));
+        }
     }
 
     /**
      * Gets the uri from the request
      * 
-     * @param request The request
+     * @param request
+     *            The request
      * @return The uri
      */
     String getUri(HttpServletRequest request) {
         // handle http dispatcher includes.
-        String uri = (String) request.getAttribute("javax.servlet.include.servlet_path");
+        String uri = (String) request
+                .getAttribute("javax.servlet.include.servlet_path");
         if (uri != null) {
             return uri;
         }
@@ -360,19 +395,21 @@ public class DefaultActionMapper implements ActionMapper {
         return uri.substring(request.getContextPath().length());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getUriFromActionMapping(org.apache.struts2.dispatcher.mapper.ActionMapping)
      */
     public String getUriFromActionMapping(ActionMapping mapping) {
         StringBuffer uri = new StringBuffer();
 
         uri.append(mapping.getNamespace());
-        if(!"/".equals(mapping.getNamespace())) {
+        if (!"/".equals(mapping.getNamespace())) {
             uri.append("/");
         }
         String name = mapping.getName();
         String params = "";
-        if ( name.indexOf('?') != -1) {
+        if (name.indexOf('?') != -1) {
             params = name.substring(name.indexOf('?'));
             name = name.substring(0, name.indexOf('?'));
         }
@@ -383,10 +420,10 @@ public class DefaultActionMapper implements ActionMapper {
         }
 
         String extension = getDefaultExtension();
-        if ( extension != null) {
-            if (uri.indexOf( '.' + extension) == -1  ) {
+        if (extension != null) {
+            if (uri.indexOf('.' + extension) == -1) {
                 uri.append(".").append(extension);
-                if ( params.length() > 0) {
+                if (params.length() > 0) {
                     uri.append(params);
                 }
             }

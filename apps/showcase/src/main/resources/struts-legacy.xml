@@ -9,8 +9,6 @@
 	    
 	    <interceptors>
 	        <interceptor name="gangsterForm" class="org.apache.struts2.legacy.ScopedModelDrivenInterceptor">
-	        	<param name="scope">request</param>
-	        	<param name="name">gangsterForm</param>
 	        	<param name="className">org.apache.struts2.showcase.legacy.GangsterForm</param>
 	        </interceptor>
 	    

@@ -33,6 +33,7 @@ public class EditGangsterAction extends Action {
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         // Some code to load the gangster from the db as necessary
+        
         return mapping.findForward("success");
     }
 

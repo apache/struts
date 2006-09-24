@@ -1,0 +1,1 @@
+<a dojoType="BindAnchor" evalResult="true" id="mylink" href="a" notifyTopics="g" errorHtml="c" showTransportError="true" onLoad="h"></a>

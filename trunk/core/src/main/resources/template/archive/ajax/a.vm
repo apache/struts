@@ -1,0 +1,13 @@
+<a dojoType="BindAnchor" evalResult="true"
+#if ($parameters.id) id="$!struts.htmlEncode($parameters.id)" #end
+#if ($parameters.href) href="$!struts.htmlEncode($parameters.href)" #end
+#if ($parameters.notifyTopics) notifyTopics="$!struts.htmlEncode($parameters.notifyTopics)" #end
+#if ($parameters.errorText) errorHtml="$!struts.htmlEncode($parameters.errorText)" #end
+#if ($parameters.showErrorTransportText)  showTransportError="true" #end
+#if ($parameters.afterLoading) onLoad="$!parameters.afterLoading" #end
+#if ($parameters.preInvokeJS) preInvokeJS="$!parameters.preInvokeJS" #end
+#if ($parameters.tabindex) tabindex="$!struts.htmlEncode($parameters.tabindex)" #end
+#if ($parameters.cssClass) class="$!struts.htmlEncode($parameters.cssClass)" #end
+#if ($parameters.cssStyle) style="$!struts.htmlEncode($parameters.cssStyle)" #end
+#parse("/$parameters.templateDir/simple/scripting-events.vm")
+>

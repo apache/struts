@@ -1,0 +1,8 @@
+.wwFormTable {}
+.label {font-style:italic; }
+.errorLabel {font-style:italic; color:red; }
+.errorMessage {font-weight:bold; text-align: center; color:red; }
+.checkboxLabel {}
+.checkboxErrorLabel {color:red; }
+.required {color:red;}
+.tdLabel {text-align:right; vertical-align:top; } 

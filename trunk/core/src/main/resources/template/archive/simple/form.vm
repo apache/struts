@@ -1,0 +1,12 @@
+<form
+#if ($parameters.namespace) namespace="$!parameters.namespace"                  #end
+#if ($parameters.id)        id="$!struts.htmlEncode($parameters.id)"           #end
+#if ($parameters.name)      name="$!struts.htmlEncode($parameters.name)"       #end
+#if ($parameters.action)    action="$!struts.htmlEncode($parameters.action)"   #end
+#if ($parameters.target)    target="$!struts.htmlEncode($parameters.target)"   #end
+#if ($parameters.method)    method="$!struts.htmlEncode($parameters.method)"   #end
+#if ($parameters.enctype)   enctype="$!struts.htmlEncode($parameters.enctype)" #end
+#if ($parameters.cssClass)  class="$!struts.htmlEncode($parameters.cssClass)"  #end
+#if ($parameters.cssStyle)  style="$!struts.htmlEncode($parameters.cssStyle)"  #end
+>
+

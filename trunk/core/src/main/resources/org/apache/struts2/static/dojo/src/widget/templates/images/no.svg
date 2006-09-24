@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") --><svg height="400pt" id="svg548" sodipodi:docbase="/home/nicu/svg_gal/misc" sodipodi:docname="/home/nicu/svg_gal/misc/no.svg" sodipodi:version="0.32" width="400pt" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <metadata>
+    <rdf:RDF xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <cc:Work rdf:about="">
+        <dc:title>Clipart by Nicu Buculei - nosmoke</dc:title>
+        <dc:description></dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li></rdf:li>
+            <rdf:li>roadsign</rdf:li>
+            <rdf:li>transportation</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://www.openclipart.org">
+            <dc:title>Nicu Buculei</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Nicu Buculei</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Nicu Buculei</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date></dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://web.resource.org/cc/PublicDomain"/>
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution"/>
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs id="defs550"/>
+  <sodipodi:namedview id="base" showgrid="true"/>
+  <path d="M 652.532959 241.644196 A 213.328094 219.971527 0 1 0 225.876770,241.644196 A 213.328 219.972 0 1 0 652.533 241.644 L 439.204865 241.644196 z" id="path566" sodipodi:cx="439.204865" sodipodi:cy="241.644196" sodipodi:rx="213.328094" sodipodi:ry="219.971527" sodipodi:type="arc" style="font-size:12;fill:none;fill-rule:evenodd;stroke:#bf0000;stroke-width:37.1167;" transform="matrix(1.069204,0.000000,0.000000,1.030201,-219.3637,2.298203)"/>
+  <path d="M 472.422058 280.766663 A 181.587234 183.801697 0 1 0 109.247604,280.766663 A 181.587 183.802 0 1 0 472.422 280.767 L 290.834839 280.766663 z" id="path575" sodipodi:cx="290.834839" sodipodi:cy="280.766663" sodipodi:rx="181.587234" sodipodi:ry="183.801697" sodipodi:type="arc" style="fill-rule:evenodd;stroke:none;fill:#ffffff;fill-opacity:1;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;" transform="matrix(1.154471,0.000000,0.000000,1.136546,-84.78633,-67.86404)"/>
+  <path d="M 114.506 300.977 C 114.506 299.159 102.693 234.636 114.506 209.19 C 136.317 170.112 146.313 134.671 148.131 104.68 C 149.04 105.589 149.949 152.845 146.313 158.298 C 135.408 179.2 124.503 202.829 117.233 225.548 C 117.233 270.078 115.415 304.612 114.506 300.977 z " id="path564" sodipodi:nodetypes="cccccc" style="fill:#ffffff;fill-rule:evenodd;stroke:none;stroke-opacity:1;stroke-width:1pt;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:0.577778;" transform="translate(3.063965,38.16154)"/>
+  <path d="M 109.248 76.2965 L 401.559 383.371 " id="path567" sodipodi:nodetypes="cc" style="font-size:12;fill:none;fill-rule:evenodd;stroke:#bf0000;stroke-width:37.5;" transform="translate(2.952785,14.76315)"/>
+</svg>

@@ -1,0 +1,19 @@
+.wc-results {
+    overflow: auto; 
+    margin: 0px; 
+    padding: 5px; 
+    font-family: courier; 
+    color: white; 
+    background-color: black; 
+    height: 400px;
+}
+.wc-results pre {
+    display: inline;
+}
+.wc-command {
+    margin: 0px; 
+    font-family: courier; 
+    color: white; 
+    background-color: black; 
+    width: 100%;
+}

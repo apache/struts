@@ -1,0 +1,17 @@
+#macro(bean $bean_name $name)
+   #set ($name = $struts.bean($bean_name))
+#end
+
+#macro(includeservlet $name)
+  $struts.include($name,$req,$res)
+#end
+
+#macro(url $name)
+   #set ($name = $struts.bean("org.apache.struts2.util.URLBean"))
+   $name.setRequest($req)
+   $name.setResponse($res)
+#end
+
+#macro(property $object $property)
+$!{ognl.findValue($property, $object)}
+#end

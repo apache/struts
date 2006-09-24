@@ -1,0 +1,15 @@
+<div dojoType='BindDiv'
+#if ($parameters.id) id="$!struts.htmlEncode($parameters.id)" #end
+#if ($parameters.href) href="$!parameters.href" #end
+#if ($parameters.loadingText) loadingHtml="$!struts.htmlEncode($parameters.loadingText)" #end
+#if ($parameters.errorText) errorHtml="$!struts.htmlEncode($parameters.errorText)" #end
+#if ($parameters.showErrorTransportText) showTransportError="true" #end
+#if ($parameters.delay) delay="$!parameters.delay" #end
+#if ($parameters.updateFreq) refresh="$!parameters.updateFreq" #end
+#if ($parameters.listenTopics) listenTopics="$!parameters.listenTopics" #end
+#if ($parameters.afterLoading) onLoad="$!parameters.afterLoading" #end
+#if ($parameters.tabindex) tabindex="$!struts.htmlEncode($parameters.tabindex)" #end
+#if ($parameters.cssClass) class="$!struts.htmlEncode($parameters.cssClass)" #end
+#if ($parameters.cssStyle) style="$!struts.htmlEncode($parameters.cssStyle)" #end
+#parse("/$parameters.templateDir/simple/scripting-events.vm")
+>

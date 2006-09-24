@@ -1,0 +1,129 @@
+
+.dojoPopupMenu2 {
+	position: absolute;
+	border: 1px solid;
+	border-color: ThreeDLightShadow ThreeDDarkShadow ThreeDDarkShadow ThreeDLightShadow;
+}
+
+.dojoPopupMenu2Client {
+	border: 1px solid;
+	border-color: ThreeDHighlight ThreeDShadow ThreeDShadow ThreeDHighlight;
+	background-color: ThreeDFace;
+	padding: 1px;
+}
+
+.dojoMenuItem2 {
+	position: relative;
+	white-space: nowrap;
+	font: menu;
+	color: WindowText;
+	margin: 0;
+}
+
+.dojoMenuItem2 span {
+	margin: 0;
+}
+
+.dojoMenuItem2Hover {
+	background-color: Highlight;
+	color: HighlightText;
+}
+
+.dojoMenuItem2Icon {
+	position: absolute;
+	background-position: center center;
+	background-repeat: no-repeat;
+	z-index: 1;
+}
+
+.dojoMenuItem2Label {
+	position: absolute;
+	vertical-align: middle;
+	z-index: 1;
+}
+
+.dojoMenuItem2Label span {
+	position: relative;
+	vertical-align: middle;
+	z-index: 2;
+}
+
+.dojoMenuItem2Label span span {
+	position: absolute;
+	color: ThreeDHighlight;
+	display: none;
+	left: 1px;
+	top: 1px;
+	z-index: -2;
+}
+
+.dojoMenuItem2Accel {
+	position: absolute;
+	vertical-align: middle;
+	z-index: 1;
+}
+
+.dojoMenuItem2Accel span {
+	position: relative;
+	vertical-align: middle;
+	z-index: 2;
+}
+
+.dojoMenuItem2Accel span span {
+	position: absolute;
+	color: ThreeDHighlight;
+	display: none;
+	left: 1px;
+	top: 1px;
+	z-index: -2;
+}
+
+.dojoMenuItem2Disabled .dojoMenuItem2Label span,
+.dojoMenuItem2Disabled .dojoMenuItem2Accel span {
+	color: ThreeDShadow;
+}
+
+.dojoMenuItem2Disabled .dojoMenuItem2Label span span,
+.dojoMenuItem2Disabled .dojoMenuItem2Accel span span {
+	color: ThreeDHighlight;
+	display: block;
+}
+
+.dojoMenuItem2Hover .dojoMenuItem2Label span span,
+.dojoMenuItem2Hover .dojoMenuItem2Accel span span {
+	display: none;
+}
+
+.dojoMenuItem2Submenu {
+	position: absolute;
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
+.dojoMenuItem2Target {
+	position: absolute;
+	z-index: 10;
+	font-size: 1px;
+	background-image: url('images/transparent.gif');
+	cursor: pointer;
+	_cursor: hand;
+}
+
+.dojoMenuSeparator2 {
+	font-size: 1px;
+	margin: 0;
+}
+
+.dojoMenuSeparator2Top {
+	height: 50%;
+	border-bottom: 1px solid ThreeDShadow;
+	margin: 0px 2px;
+	font-size: 1px;
+}
+
+.dojoMenuSeparator2Bottom {
+	height: 50%;
+	border-top: 1px solid ThreeDHighlight;
+	margin: 0px 2px;
+	font-size: 1px;
+}

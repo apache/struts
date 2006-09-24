@@ -1,0 +1,11 @@
+.wwFormTable {}
+.label {
+    font-style:italic;
+    float:left;
+    width:30%
+}
+.errorLabel {font-style:italic; color:red; }
+.errorMessage {font-weight:bold; text-align: center; color:red; }
+.checkboxLabel {}
+.checkboxErrorLabel {color:red; }
+.required {color:red;}

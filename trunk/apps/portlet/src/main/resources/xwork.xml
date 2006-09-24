@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE xwork PUBLIC
+    "-//OpenSymphony Group//XWork 1.1.1//EN"
+    "http://www.opensymphony.com/xwork/xwork-1.1.1.dtd">
+<xwork>
+	<include file="struts-portlet-default.xml" />
+
+	<package name="view" extends="struts-portlet-default"
+		namespace="/view">
+		<action name="index"
+			class="com.opensymphony.xwork2.ActionSupport">
+			<result name="success">/WEB-INF/view/index.jsp</result>
+		</action>
+
+		<action name="formExample"
+			class="org.apache.struts2.portlet.example.FormExample" method="input">
+			<result name="input">
+				/WEB-INF/view/formExampleInput.jsp
+			</result>
+		</action>
+
+		<action name="processFormExample"
+			class="org.apache.struts2.portlet.example.FormExample">
+			<result name="input">
+				/WEB-INF/view/formExampleInput.jsp
+			</result>
+			<result name="success">
+				/WEB-INF/view/formExample.jsp
+			</result>
+		</action>
+
+		<action name="validationExample"
+			class="org.apache.struts2.portlet.example.FormExample" method="input">
+			<result name="input">
+				/WEB-INF/view/formExampleInputValidation.jsp
+			</result>
+		</action>
+
+		<action name="processValidationExample"
+			class="org.apache.struts2.portlet.example.FormExample">
+			<result name="success">
+				/WEB-INF/view/formExample.jsp
+			</result>
+			<result name="input">
+				/WEB-INF/view/formExampleInputValidation.jsp
+			</result>
+			<interceptor-ref name="validationWorkflowStack" />
+		</action>
+
+		<action name="tokenExample"
+			class="com.opensymphony.xwork2.ActionSupport" method="input">
+			<result name="input">
+				/WEB-INF/view/tokenExampleInput.jsp
+			</result>
+		</action>
+
+		<action name="processTokenExample"
+			class="com.opensymphony.xwork2.ActionSupport">
+			<result name="input">
+				/WEB-INF/view/tokenExampleInput.jsp
+			</result>
+			<result name="invalid.token">
+				/WEB-INF/view/tokenExampleInput.jsp
+			</result>
+			<result name="success">
+				/WEB-INF/view/tokenExample.jsp
+			</result>
+			<interceptor-ref name="token" />
+			<interceptor-ref name="defaultStack" />
+		</action>
+
+		<action name="springExample" class="springAction">
+			<result name="success">
+				/WEB-INF/view/springExample.jsp
+			</result>
+		</action>
+
+		<action name="ajaxExample"
+			class="com.opensymphony.xwork2.ActionSupport">
+			<result name="success">
+				/WEB-INF/view/ajaxExample.jsp
+			</result>
+		</action>
+
+		<action name="ajaxData"
+			class="com.opensymphony.xwork2.ActionSupport">
+			<result name="success">/WEB-INF/view/ajaxData.jsp</result>
+		</action>
+
+		<action name="freeMarkerExample"
+			class="com.opensymphony.xwork2.ActionSupport" method="input">
+			<result type="freemarker" name="input">
+				/WEB-INF/view/freeMarkerExampleInput.ftl
+			</result>
+		</action>
+
+		<action name="processFreeMarkerExample"
+			class="org.apache.struts2.portlet.example.FormExample">
+			<result name="success">/view/processFreeMarkerView.action?firstName=${firstName}&amp;lastName=${lastName}</result>
+		</action>
+		
+		<action name="processFreeMarkerView" class="org.apache.struts2.portlet.example.FormExample">
+			<result type="freemarker" name="success">/WEB-INF/view/freeMarkerExample.ftl</result>
+		</action>
+		
+		<action name="velocityHelloWorld" class="com.opensymphony.xwork2.ActionSupport">
+			<result type="velocity" name="success">/WEB-INF/view/helloWorld.vm</result>
+		</action>
+
+	</package>
+
+	<package name="edit" extends="struts-portlet-default"
+		namespace="/edit">
+		<action name="index"
+			class="com.opensymphony.xwork2.ActionSupport">
+			<result name="success">/WEB-INF/edit/index.jsp</result>
+		</action>
+		<action name="test"
+			class="com.opensymphony.xwork2.ActionSupport">
+			<result name="success">/WEB-INF/edit/test.jsp</result>
+		</action>
+		<action name="formExampleEdit"
+			class="org.apache.struts2.portlet.example.FormExample" method="input">
+			<result name="input">
+				/WEB-INF/edit/formExampleInput.jsp
+			</result>
+		</action>
+
+		<action name="processFormExampleEdit"
+			class="org.apache.struts2.portlet.example.FormExample">
+			<result name="input">
+				/WEB-INF/edtt/formExampleInput.jsp
+			</result>
+			<result name="success">
+				/edit/processFormExampleForward.action?firstName=${firstName}&amp;lastName=${lastName}
+			</result>
+		</action>
+
+		<action name="processFormExampleForward"
+			class="org.apache.struts2.portlet.example.FormExample">
+			<result name="success">
+				/WEB-INF/edit/formExample.jsp
+			</result>
+		</action>
+	</package>
+
+	<package name="editTest" extends="edit" namespace="/edit/dummy/test">
+		<action name="testAction"
+			class="com.opensymphony.xwork2.ActionSupport">
+			<result name="success">/WEB-INF/edit/namespaceTest.jsp</result>
+		</action>
+	</package>
+
+	<package name="help" extends="struts-portlet-default"
+		namespace="/help">
+		<action name="index"
+			class="com.opensymphony.xwork2.ActionSupport">
+			<result name="success">/WEB-INF/help/index.jsp</result>
+		</action>
+	</package>
+</xwork>

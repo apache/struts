@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.apache.struts</groupId>
+        <artifactId>struts2-parent</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
+    </parent>
+    <groupId>org.apache.struts</groupId>
+    <artifactId>struts2-apps</artifactId>
+    <packaging>pom</packaging>
+    <name>Webapps</name>
+    <modules>
+        <module>blank</module>
+        <module>mailreader</module>
+        <module>portlet</module>
+        <module>showcase</module>
+    </modules>
+    
+     <distributionManagement>
+        <site>
+            <id>apache-site</id>
+            <url>scp://people.apache.org/www/struts.apache.org/struts2/apps</url>
+        </site>
+    </distributionManagement>
+    
+    <profiles>
+        <profile>
+            <id>hostedqa</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.hostedqa</groupId>
+                    <artifactId>hostedqa-remote-ant</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <repositories>
+                <repository>
+                    <id>codehaus</id>
+                    <name>codehaus</name>
+                    <url>http://repository.codehaus.org</url>
+                </repository>
+                <repository>
+                    <id>maven-hostedqa</id>
+                    <name>maven-hostedqa</name>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>always</updatePolicy>
+                        <checksumPolicy>ignore</checksumPolicy>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <url>http://maven.hostedqa.com</url>
+                </repository>
+            </repositories>
+            <build>
+                <resources>
+                    <!-- Include resources under src/main/java in WEB-INF/classes -->
+                    <resource>
+                        <directory>src/main/java</directory>
+                            <includes>
+                                <include>**/*.properties</include>
+                                <include>**/*.xml</include>
+                             </includes>
+                     </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <taskdef resource="hostedqatasks" classpathref="maven.plugin.classpath"/>
+                                        <upload file="${project.build.directory}/${project.build.finalName}.war"
+                                                account="struts" email="${email}"
+                                                password="${password}" resourceId="${resourceId}"/>
+
+                                        <playsuite suiteId="${suiteId}" clientConfigs="${clientConfigs}" appConfigs="${appConfigs}" account="struts"
+                                                   email="${email}"
+                                                   password="${password}"/>
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.hostedqa</groupId>
+                                <artifactId>hostedqa-remote-ant</artifactId>
+                                <version>1.0-SNAPSHOT</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
+                <configuration>
+                    <container>
+                        <containerId>tomcat5x</containerId>
+                        <home>${cargo.tomcat5x.home}</home>
+                        <log>${project.build.directory}/tomcat5x.log</log>
+                        <output>${project.build.directory}/tomcat5x.out</output>
+                    </container>
+                    <configuration>
+                        <home>${project.build.directory}/tomcat5x</home>
+                    </configuration>
+                </configuration>
+            </plugin>
+            <!-- Include source code under WEB-INF/src/java -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-sources</id>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <tasks>
+                                <copy todir="${project.build.directory}/${pom.artifactId}/WEB-INF/src/java"
+                                      failonerror="false">
+                                    <fileset dir="${basedir}/src/main/java"/>
+                                </copy>
+                                <copy todir="${project.build.directory}/${pom.artifactId}/WEB-INF/src/java"
+                                      failonerror="false">
+                                    <fileset dir="${basedir}/src/main/resources"/>
+                                </copy>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        
+        <finalName>${pom.artifactId}</finalName>
+              
+    </build>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-core</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+      <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>1.2.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>1.2.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>1.2.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>1.2.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-mock</artifactId>
+            <version>1.2.8</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    
+</project>

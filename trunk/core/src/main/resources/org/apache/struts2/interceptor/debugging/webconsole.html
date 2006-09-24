@@ -1,0 +1,21 @@
+<html>
+<head>
+        <link rel="stylesheet" type="text/css" href="webconsole.css" />
+<script src="webconsole.js"></script>
+<script src="dojo/dojo.js"></script>
+<script src="dojo/src/event/__package__.js"></script>
+<title>OGNL Console</title>
+</head>
+<body>
+<div id="shell" >
+   <form onsubmit="return false">
+        <div class="wc-results" id="wc-result">
+             Welcome to the OGNL console!
+             <br />
+             :-&gt;
+        </div>
+        <input onkeyup="keyEvent(event)" class="wc-command" id="wc-command" type="text" />
+    </form>
+</div>
+</body>
+</html>

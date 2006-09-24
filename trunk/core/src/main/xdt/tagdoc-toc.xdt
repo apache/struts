@@ -1,0 +1,40 @@
+<html>
+<head>
+<title>Struts <XDtConfig:configParameterValue paramName="Taglibversion"/> Taglib Index</title>
+</head>
+
+<body>
+
+<h1>Struts <XDtConfig:configParameterValue paramName="Taglibversion"/> Taglib Index</h1>
+<p>
+<table width="100%">
+
+
+<XDtClass:forAllClasses>
+
+<XDtClass:ifHasClassTag tagName="a2:tag">
+
+<tr>
+<td align="left" valign="top" width="20%">
+<a href="<XDtClass:className/>.html">&lt;<XDtClass:classTagValue tagName="a2:tag" paramName="name"/> /&gt;</a>
+</td>
+<td align="left" valign="top" width="*">
+<XDtClass:ifHasClassTag tagName="a2:tag" paramName="description">
+<XDtClass:classTagValue tagName="a2:tag" paramName="description"/>
+</XDtClass:ifHasClassTag>
+<XDtClass:ifDoesntHaveClassTag tagName="a2:tag" paramName="description">
+<b>No Description</b>
+</XDtClass:ifDoesntHaveClassTag>
+</td>
+</tr>
+
+</XDtClass:ifHasClassTag>
+
+</XDtClass:forAllClasses>
+
+</table>
+
+</p>
+
+</body>
+</html>

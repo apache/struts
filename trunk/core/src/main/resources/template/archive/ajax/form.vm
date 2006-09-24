@@ -1,0 +1,19 @@
+#if ($parameters.validate)
+<script src="$!base/struts/validationClient.js"></script>
+<script src="$!base/dwr/interface/validator.js"></script>
+<script src="$!base/dwr/engine.js"></script>
+<script src="$!base/struts/template/xhtml/validation.js"></script>
+#end
+<form
+#if ($parameters.namespace) namespace="$!struts.htmlEncode($parameters.namespace)" #end
+#if ($parameters.id) id="$!struts.htmlEncode($parameters.id)" #end
+#if ($parameters.name) name="$!struts.htmlEncode($parameters.name)" #end
+#if ($parameters.action) action="$!struts.htmlEncode($parameters.action)" #end
+#if ($parameters.target) target="$!struts.htmlEncode($parameters.target)" #end
+#if ($parameters.method) method="$!struts.htmlEncode($parameters.method)" #end
+#if ($parameters.enctype) enctype="$!struts.htmlEncode($parameters.enctype)" #end
+#if ($parameters.cssClass) class="$!struts.htmlEncode($parameters.cssClass)" #end
+#if ($parameters.cssStyle) style="$!struts.htmlEncode($parameters.cssStyle)" #end
+onSubmit="return false;"
+>
+<table class="wwFormTable">

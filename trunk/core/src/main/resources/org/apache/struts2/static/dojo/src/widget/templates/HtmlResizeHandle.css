@@ -1,0 +1,19 @@
+.dojoHtmlResizeHandle {
+	position: absolute;
+	right: 2px;
+	bottom: 2px;
+	width: 13px;
+	height: 13px;
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+	z-index: 20;
+	background-color: ThreeDFace;
+	cursor: nw-resize;
+}
+
+.dojoHtmlResizeHandle img {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}

@@ -1,0 +1,463 @@
+<project name="common" default="jar" basedir=".">
+    <!--
+    OpenSymphony Common Build
+    =========================
+    TODO (Introduction)
+
+    Layout
+    =========================
+    TODO
+
+    Overriding
+    =========================
+    TODO
+    Example: <target name="compile" depends="myPreCompile,common.compile,myPostCompile"/>
+
+    -->
+    <!-- NOTE: this property is purely here to make a clear distinction in IDEA where the common build is -->
+    <property name="------common-properties-below------" value="Common properties below:"/>
+
+    <property name="compile.version" value="1.3"/>
+    <property name="test.compile.version" value="1.3"/>
+
+    <dirname property="common.dir" file="${ant.file.common}"/>
+    <property file="ant-build/build.properties"/>
+    <property file="ant-build/release.properties"/>
+    <property file="ant-build/ivyrep.properties"/>
+
+    <property name="lib" location="lib"/>
+    <property name="lib.core" value="${lib}/core"/>
+    <property name="lib.build" value="${lib}/build"/>
+    <property name="lib.optional" value="${lib}/optional"/>
+
+    <property name="src" location="core/src"/>
+    <property name="src.java" value="${src}/main/java"/>
+    <property name="src.test" value="${src}/test/java/"/>
+
+    <property name="src.resources" value="${src}/main/resources"/>
+
+    <property name="build" location="build"/>
+    <property name="build.test" value="${build}/test/java"/>
+    <property name="build.java-test" value="${build}/java-test"/>
+    <property name="build.java" value="${build}/java"/>
+    <property name="build.clover" value="${build}/clover"/>
+    <property name="dist" location="dist"/>
+
+    <property name="docs" location="docs"/>
+    <property name="docs.packages" value="org.apache.struts2.*"/>
+
+    <property name="jar.manifest" value="${common.dir}/EMPTY.MF"/>
+    <property name="jar.excludes" value=""/>
+
+    <property name="testcase" value="*"/>
+    <patternset id="src.test.pattern">
+        <exclude name="**/Abstract*.java"/>
+        <include name="**/${testcase}Test.java"/>
+        <include name="**/${testcase}TestCase.java"/>
+
+    </patternset>
+
+    <path id="cp">
+        <fileset dir="lib">
+            <include name="**/*.jar"/>
+            <include name="**/*.zip"/>
+            <exclude name="**/jalopy/**"/>
+        </fileset>
+    </path>
+
+    <path id="junit.cp">
+        <pathelement location="${build.java}"/>
+        <pathelement location="${build.test}"/>
+        <pathelement location="${src.test}/../resources"/>
+        <pathelement location="${build.java-test}"/>
+        <path refid="cp"/>
+    </path>
+
+    <path id="javadoc.path">
+        <path path="${src.java}"/>
+    </path>
+
+    <available property="junit.available" classname="junit.framework.TestCase"/>
+    <available property="clover.available" classname="org.apache.tools.ant.taskdefs.CloverCompilerAdapter"/>
+
+    <target name="init" depends="init-anthill, init-standalone">
+        <tstamp/>
+    </target>
+
+    <!-- in Anthill, the docs should be the Intranet copyDir -->
+    <target name="init-anthill" if="anthill.copyDir">
+        <property name="dist.docs" value="${anthill.copyDir}"/>
+    </target>
+
+    <!-- when building Standalone, the docs should be the normal place -->
+    <target name="init-standalone" unless="anthill.copyDir">
+        <property name="dist.docs" value="${dist}/docs"/>
+    </target>
+
+    <target name="junit-check" depends="init" unless="junit.available">
+        <fail message="Cannot run test cases. Please copy lib/build/junit.jar to ${ant.home}/lib"/>
+    </target>
+
+    <target name="clover-check" depends="init" unless="clover.available">
+        <fail message="Cannot run coverage tests. Please copy lib/build/clover.jar and lib/build/clover.license (if it exists) to ${ant.home}/lib"/>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build}"/>
+        <delete dir="${dist}"/>
+    </target>
+
+    <target name="precompile"/>
+
+    <macrodef name="compile">
+        <attribute name="srcdir"/>
+        <attribute name="destdir"/>
+        <attribute name="classpath" default=""/>
+        <attribute name="classpathref" default="cp"/>
+        <attribute name="includes" default="**/*.java"/>
+        <attribute name="excludes" default=""/>
+        <attribute name="source" default="${compile.version}"/>
+        <attribute name="target" default="${compile.version}"/>
+        <sequential>
+            <mkdir dir="@{destdir}"/>
+            <javac srcdir="@{srcdir}" destdir="@{destdir}" classpath="@{classpath}" classpathref="@{classpathref}"
+                   debug="on" source="@{source}" target="@{target}" excludes="@{excludes}" />
+            <copy filtering="no" todir="@{destdir}">
+                <fileset dir="@{srcdir}">
+                    <exclude name="**/*.java"/>
+                    <exclude name="**/package.html"/>
+                </fileset>
+            </copy>
+        </sequential>
+    </macrodef>
+
+    <target name="compile" depends="init,precompile" description="compile project">
+        <compile srcdir="${src.java}" destdir="${build.java}" excludes="${optional.sources}" />
+        <copy filtering="no" todir="${build.java}"  includeemptydirs="false">
+            <fileset dir="${src.resources}" >
+                <exclude name="java/*"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="jar" depends="compile" description="build the project jar file">
+        <mkdir dir="${build}"/>
+
+        <jar basedir="${build.java}" excludes="${jar.excludes}" jarfile="${build}/${name}-${version}.jar">
+            <manifest>
+                <attribute name="Implementation-Title" value="${fullname}"/>
+                <attribute name="Implementation-Version" value="${version}"/>
+                <attribute name="Implementation-Vendor" value="OpenSymphony"/>
+            </manifest>
+        </jar>
+        <jar basedir="${src.java}" jarfile="${build}/${name}-src-${version}.jar">
+            <manifest>
+                <attribute name="Implementation-Title" value="${fullname}"/>
+                <attribute name="Implementation-Version" value="${version}"/>
+                <attribute name="Implementation-Vendor" value="OpenSymphony"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="src-jar" depends="init" description="build a jar of the project source code">
+        <mkdir dir="${build}"/>
+        <jar basedir="${src.java}" jarfile="${build}/${name}-src-${version}.jar">
+            <manifest>
+                <attribute name="Implementation-Title" value="${fullname}"/>
+                <attribute name="Implementation-Version" value="${version}"/>
+                <attribute name="Implementation-Vendor" value="OpenSymphony"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="test-compile" unless="skip.tests">
+        <compile srcdir="${src.test}" destdir="${build.test}" classpath="${build.java}"
+                 source="${test.compile.version}" target="${test.compile.version}" />
+
+        <taskdef resource="clovertasks"/>
+        <taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
+
+        <mkdir dir="${build.clover}"/>
+        <clover-setup initString="${build.clover}/coverage.db">
+            <statementContext name="logIsDebugEnabled" regexp="[\s]*if[\s]*\([\s]*(log|_log|LOG|_LOG)\.isDebugEnabled.*"/>
+            <statementContext name="logDebug" regexp="[\s]*(log|_log|LOG|_LOG)\.debug[\s]*\(.*"/>
+            <files>
+                <exclude name="${src.test}/**/*.java"/>
+            </files>
+        </clover-setup>
+
+        <!-- compile srcdir="${src.java}" destdir="${build.java-test}" / -->
+    </target>
+
+    <target name="test" depends="junit-check, clover-check, compile, test-compile" description="run tests"
+            unless="skip.tests">
+        <run-junit />
+    </target>
+
+    <macrodef name="run-junit">
+        <attribute name="classpathref" default="junit.cp" />
+        <attribute name="includes" default="**/${testcase}Test.java"/>
+        <attribute name="excludes" default=""/>
+        <sequential>
+          <mkdir dir="${dist.docs}/junit"/>
+          <junit haltonfailure="no" haltonerror="yes" fork="yes" forkmode="once" failureproperty="test.failure">
+              <jvmarg value="-Djava.awt.headless=true"/>
+              <jvmarg value="-Dorg.xml.sax.driver=org.apache.crimson.parser.XMLReaderImpl"/>
+              <classpath>
+                  <path refid="@{classpathref}"/>
+              </classpath>
+
+              <formatter type="plain" useFile="false"/>
+              <formatter type="xml"/>
+                
+                
+              <batchtest todir="${dist.docs}/junit">
+                  <fileset dir="${src.test}">
+                      <exclude name="@{excludes}" />
+                      <patternset refid="src.test.pattern"/>
+                      <include name="@{includes}" />
+                  </fileset>
+              </batchtest>
+          </junit>
+        </sequential>
+    </macrodef>
+
+    <target name="javadocs" description="generate javadocs">
+        <mkdir dir="${dist.docs}/api"/>
+        <javadoc sourcepathref="javadoc.path"
+                 destdir="${dist.docs}/api"
+                 packagenames="${docs.packages}"
+                 classpathref="cp"
+                 author="true"
+                 version="true"
+                 overview="${src.java}/overview.html"
+                 windowTitle="${fullname} API - ${version}"
+                 doctitle="${fullname} API (${version})"
+                 footer="&lt;a href=&quot;http://www.opensymphony.com/${name}/&quot; target=&quot;_top&quot;&gt;${fullname} Project Page&lt;/a&gt;"
+                 use="true"
+                 verbose="false"
+                 source="${compile.version}">
+            <tag name="s.tag" description="s.tag" enabled="false"/>
+            <tag name="s.tagattribute" description="s.tagattribute" enabled="false"/>
+            <link href="http://java.sun.com/j2se/${compile.version}/docs/api/"/>
+            <link href="http://java.sun.com/j2ee/${compile.version}/docs/api/"/>
+        </javadoc>
+        <!-- <copy overwrite="yes" file="${docs}/main.css" tofile="${docs}/api/stylesheet.css"/> -->
+    </target>
+
+    <target name="docs.impl">
+        <copy todir="${dist.docs}">
+            <fileset dir="${docs}"/>
+        </copy>
+    </target>
+
+    <target name="reports" depends="junit.report, clover.report, javadocs"
+            description="generate javadocs and junit and coverage reports"/>
+
+    <target name="docs" depends="reports, docs.impl"/>
+
+    <target name="clover.report" depends="test" description="generate coverage reports" unless="skip.tests">
+        <clover-report>
+            <current outfile="${dist.docs}/clover">
+                <format type="html" filter="logDebug,logIsDebugEnabled"/>
+            </current>
+        </clover-report>
+        <clover-log filter="logDebug,logIsDebugEnabled"/>
+    </target>
+
+    <target name="clover.historical" depends="clover.report" description="generate coverage historical reports"
+            unless="skip.tests">
+        <clover-historypoint historyDir="${build.clover}"/>
+
+        <clover-report>
+            <historical outfile="${dist.docs}/clover" historyDir="${build.clover}">
+                <format type="html" filter="logDebug,logIsDebugEnabled"/>
+            </historical>
+        </clover-report>
+        <clover-log filter="logDebug,logIsDebugEnabled"/>
+    </target>
+
+    <target name="junit.report" depends="test" description="generate junit reports" unless="skip.tests">
+        <junitreport todir="${dist.docs}/junit">
+            <fileset dir="${dist.docs}/junit">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${dist.docs}/junit"/>
+        </junitreport>
+
+        <!-- we fail here (instead of in the test target) so that the reports get generated first) -->
+        <fail if="test.failure" message="Tests did not all pass, failing!"/>
+    </target>
+
+    <target name="predist"/>
+
+    <target name="predist.zip"/>
+
+    <target name="dist" depends="jar, docs, predist" description="generate distribution zip file">
+        <copy todir="${dist}">
+            <fileset dir="${build}">
+                <include name="*.jar"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${dist}/src">
+            <fileset dir="${src}"/>
+        </copy>
+
+        <mkdir dir="${dist}/lib"/>
+        <copy todir="${dist}/lib">
+            <fileset dir="${lib}">
+                <exclude name="**/no_dist/**"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${dist}">
+            <fileset dir="${basedir}">
+                <include name="build.*"/>
+                <include name="osbuild.*"/>
+                <include name="ivy.*"/>
+                <include name="pom.*"/>
+                <include name="readme.txt"/>
+                <include name="license.txt"/>
+            </fileset>
+        </copy>
+
+        <!-- give a chance for project builds to do more before the zip is made. -->
+        <antcall target="predist.zip"/>
+
+        <zip destfile="${build}/${name}-${version}.zip">
+					<zipfileset prefix="${name}-${version}" dir="${dist}">
+            <exclude name="docs/clover/**/*"/>
+            <exclude name="docs/junit/**/*"/>
+        	</zipfileset>
+        </zip>
+        
+        <move file="${build}/${name}-${version}.zip" todir="${dist}" />
+    </target>
+
+    <target name="website" depends="javadocs, docs.impl"/>
+
+    <!-- =================================================================== -->
+    <!-- Fix carriage-return line feeds                                      -->
+    <!-- =================================================================== -->
+    <target name="fixcrlf" description="Fixed CR/LF problems">
+        <echo>Running fixcrlf....</echo>
+         <fixcrlf eol="lf" srcdir="${basedir}/core/src"
+                 includes="**/*.sh,
+                      **/*.properties,
+                      **/*.sql,
+                      **/*.script,
+                      **/*.java,
+                      **/*.css,
+                      **/*.js,
+                      **/*.jsp,
+                      **/*.ftl,
+                      **/*.txt,
+                      **/*.vm,
+                      **/*.xml,
+                      **/*.dtd,
+                      **/*.xsl,
+                      **/*.xslt,
+                      **/*.html" />
+        <fixcrlf eol="lf" srcdir="${basedir}/apps"
+                 includes="**/*.sh,
+                      **/*.properties,
+                      **/*.sql,
+                      **/*.script,
+                      **/*.java,
+                      **/*.css,
+                      **/*.js,
+                      **/*.jsp,
+                      **/*.ftl,
+                      **/*.txt,
+                      **/*.vm,
+                      **/*.xml,
+                      **/*.dtd,
+                      **/*.xsl,
+                      **/*.xslt,
+                      **/*.html" />
+    </target>
+
+    <target name="ivyrep" depends="jar, ivyrep.impl"/>
+
+    <target name="ivyrep.impl">
+        <tstamp>
+            <format property="TIME" pattern="yyyyMMddHHmmss"/>
+        </tstamp>
+
+        <!-- make sure we have the latest -->
+        <echo>svn update</echo>
+        <exec executable="svn">
+            <arg value="update"/>
+            <arg line="${ivyrep.path}/opensymphony/${name}"/>
+        </exec>
+
+        <!-- delete the old timestamped builds and commit -->
+        <fileset dir="${ivyrep.path}/opensymphony/${name}" id="filesref">
+            <include name="${name}-${version}-*"/>
+            <include name="ivy-${version}-*"/>
+        </fileset>
+        <pathconvert property="files" refid="filesref" pathsep=" "/>
+        <echo>svn delete: ${files}</echo>
+        <exec executable="svn">
+            <arg value="delete"/>
+            <arg line="${files}"/>
+        </exec>
+
+        <!-- copy over the new build and source -->
+        <copy file="${build}/${name}-${version}.jar"
+              tofile="${ivyrep.path}/opensymphony/${name}/${name}-${version}-${TIME}.jar"/>
+        <copy file="${build}/${name}-src-${version}.jar"
+              tofile="${ivyrep.path}/opensymphony/${name}/${name}-src-${version}-${TIME}.jar"/>
+        <echo>svn add (jar)</echo>
+        <exec executable="svn">
+            <arg value="add"/>
+            <arg value="${ivyrep.path}/opensymphony/${name}/${name}-${version}-${TIME}.jar"/>
+        </exec>
+        <exec executable="svn">
+            <arg value="add"/>
+            <arg value="${ivyrep.path}/opensymphony/${name}/${name}-src-${version}-${TIME}.jar"/>
+        </exec>
+
+        <antcall target="ivyrep.copy-ivy"/>
+        <exec executable="svn">
+            <arg value="add"/>
+            <arg value="${ivyrep.path}/opensymphony/${name}/ivy-${version}-${TIME}.xml"/>
+        </exec>
+
+        <!-- now commit everything -->
+        <echo>svn commit</echo>
+        <exec executable="svn">
+            <arg value="commit"/>
+            <arg value="--username"/>
+            <arg value="${ivyrep.username}"/>
+            <arg value="--password"/>
+            <arg value="${ivyrep.password}"/>
+            <arg value="--non-interactive"/>
+            <arg value="-m"/>
+            <arg value="automatic commit"/>
+            <arg value="${ivyrep.path}/opensymphony/${name}"/>
+        </exec>
+    </target>
+
+    <target name="ivyrep.copy-ivy">
+        <!--
+        Note: Default implementation does not use Ivy itself to generate these files.
+              However, Ivy is really the best way to generate these, so projects that
+              do use Ivy should override this target like so:
+
+              <ivy-deliver deliverpattern="${ivyrep.path}/opensymphony/${name}/[artifact]-[revision].[ext]"
+                           pubrevision="${version}-${TIME}" pubdate="${TIME}"/>
+
+              Over time as more projects adopt Ivy, this may become built in to the
+              common build.
+        -->
+        <copy file="ivy.xml" tofile="${ivyrep.path}/opensymphony/${name}/ivy-${version}-${TIME}.xml">
+            <filterset id="ivy.filter">
+                <filter token="VERSION" value="${version}-${TIME}"/>
+                <filter token="STATUS" value="${status}"/>
+                <filter token="PUBLICATION" value="${TIME}"/>
+            </filterset>
+        </copy>
+    </target>
+</project>

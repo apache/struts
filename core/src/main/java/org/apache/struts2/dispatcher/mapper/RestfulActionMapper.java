@@ -29,7 +29,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.RequestUtils;
 
-import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationManager;
+
 
 /**
  * A custom action mapper using the following format:
@@ -60,7 +61,7 @@ public class RestfulActionMapper implements ActionMapper {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(javax.servlet.http.HttpServletRequest)
      */
-    public ActionMapping getMapping(HttpServletRequest request, Configuration config) {
+    public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
         String uri = RequestUtils.getServletPath(request);
 
         int nextSlash = uri.indexOf('/', 1);

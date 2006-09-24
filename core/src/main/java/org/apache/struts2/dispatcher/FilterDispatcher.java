@@ -220,7 +220,7 @@ public class FilterDispatcher implements Filter, StrutsStatics {
         ActionMapping mapping = null;
         try {
             mapper = ActionMapperFactory.getMapper();
-            mapping = mapper.getMapping(request, du.getConfigurationManager().getConfiguration());
+            mapping = mapper.getMapping(request, du.getConfigurationManager());
         } catch (Exception ex) {
             du.sendError(request, response, servletContext, response.SC_INTERNAL_SERVER_ERROR, ex);
             ActionContextCleanUp.cleanUp(req);

@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsException;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 
 /**
@@ -29,6 +30,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
 
     private static final Log LOG = LogFactory.getLog(StrutsXmlConfigurationProvider.class);
     private File baseDir = null;
+    private String filename;
 
     /** 
      * Constructs the configuration provider
@@ -47,7 +49,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
      */
     public StrutsXmlConfigurationProvider(String filename, boolean errorIfMissing) {
         super(filename, errorIfMissing);
-        
+        this.filename = filename;
         Map<String,String> dtdMappings = new HashMap<String,String>(getDtdMappings());
         dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.0//EN", "struts-2.0.dtd");
         setDtdMappings(dtdMappings);
@@ -101,4 +103,21 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
         } 
         return url;
     }
+
+    /**
+     * Overrides needs reload to ensure it is only checked once per request
+     */
+    @Override
+    public boolean needsReload() {
+        ActionContext ctx = ActionContext.getContext();
+        String key = "configurationReload-"+filename;
+        if (ctx.get(key) == null) {
+            ctx.put(key, Boolean.TRUE);
+            return super.needsReload();
+        }
+        return false;
+        
+    }
+    
+    
 }

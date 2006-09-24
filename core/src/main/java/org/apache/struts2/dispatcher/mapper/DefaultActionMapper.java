@@ -31,6 +31,7 @@ import org.apache.struts2.dispatcher.ServletRedirectResult;
 import org.apache.struts2.util.PrefixTrie;
 
 import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 
 /**
@@ -204,11 +205,16 @@ public class DefaultActionMapper implements ActionMapper {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(javax.servlet.http.HttpServletRequest)
      */
-    public ActionMapping getMapping(HttpServletRequest request, Configuration config) {
+    public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
         ActionMapping mapping = new ActionMapping();
         String uri = getUri(request);
 
-        parseNameAndNamespace(uri, mapping, config);
+        uri = dropExtension(uri);
+        if (uri == null) {
+            return null;
+        }
+            
+        parseNameAndNamespace(uri, mapping, configManager.getConfiguration());
 
         handleSpecialParameters(request, mapping);
 
@@ -282,7 +288,7 @@ public class DefaultActionMapper implements ActionMapper {
             name = uri.substring(namespace.length() + 1);
         }
         mapping.setNamespace(namespace);
-        mapping.setName(dropExtension(name));
+        mapping.setName(name);
     }
 
     /**

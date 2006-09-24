@@ -84,7 +84,7 @@ public class TagUtils {
         if (invocation == null) {
             ActionMapper mapper = ActionMapperFactory.getMapper();
             ActionMapping mapping = mapper.getMapping(request,
-                    Dispatcher.getInstance().getConfigurationManager().getConfiguration());
+                    Dispatcher.getInstance().getConfigurationManager());
 
             if (mapping != null) {
                 return mapping.getNamespace();

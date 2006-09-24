@@ -41,7 +41,6 @@ import org.springframework.mock.web.MockServletContext;
 
 import com.mockobjects.servlet.MockFilterChain;
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 
@@ -258,7 +257,7 @@ public class FilterDispatcherTest extends StrutsTestCase {
     
     public static class InnerActionMapper implements ActionMapper {
 
-		public ActionMapping getMapping(HttpServletRequest request, Configuration config) {
+		public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager config) {
 			return new ActionMapping();
 		}
 
@@ -268,7 +267,7 @@ public class FilterDispatcherTest extends StrutsTestCase {
     }
     
     public static class NullActionMapper implements ActionMapper {
-    	public ActionMapping getMapping(HttpServletRequest request, Configuration config) {
+    	public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager config) {
 			return null;
 		}
 

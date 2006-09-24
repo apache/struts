@@ -55,8 +55,8 @@
         </menu>
         <menu name="Reference">
             <item
-                    name="Struts API"
-                    href="apidocs/index.html"
+                    name="Struts Core API"
+                    href="core-apidocs/index.html"
                     />        
 
             <item
@@ -65,10 +65,19 @@
                     />        
 
             <item
+                    name="Struts Extras API"
+                    href="extras-apidocs/index.html"
+                    />        
+
+            <item
                     name="Tag Reference"
                     href="http://cwiki.apache.org/WW/tag-reference.html"
                     />        
 
+            <item
+                    name="New API (experimental)"
+                    href="api-apidocs/index.html"
+                    />        
             <item
                     name="Source Repository"
                     href="http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/?root=Apache-SVN"

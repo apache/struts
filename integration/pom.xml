@@ -10,12 +10,12 @@
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-integration</artifactId>
     <packaging>jar</packaging>
-    <name>Struts Legacy</name>
+    <name>Struts 2 Integration</name>
     
     <distributionManagement>
         <site>
             <id>apache-site</id>
-            <url>scp://people.apache.org/www/struts.apache.org/2.x/struts-legacy</url>
+            <url>scp://people.apache.org/www/struts.apache.org/2.x/struts-integration</url>
         </site>
     </distributionManagement>
     

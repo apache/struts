@@ -42,7 +42,7 @@ public class ActionFormResetInterceptor extends AbstractInterceptor {
             ScopedModelDriven modelDriven = (ScopedModelDriven) action;
             Object model = modelDriven.getModel();
             if (model != null && model instanceof ActionForm) {
-                StrutsFactory factory = new StrutsFactory(Dispatcher.getInstance().getConfigurationManager().getConfiguration());
+                Struts1Factory factory = new Struts1Factory(Dispatcher.getInstance().getConfigurationManager().getConfiguration());
                 ActionMapping mapping = factory.createActionMapping(invocation.getProxy().getConfig());
                 HttpServletRequest req = ServletActionContext.getRequest();
                 ((ActionForm)model).reset(mapping, req);

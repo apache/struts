@@ -40,13 +40,13 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
  */
 class WrapperModuleConfig implements ModuleConfig {
 
-    private StrutsFactory strutsFactory;
+    private Struts1Factory strutsFactory;
     private PackageConfig delegate;
     private Map _actionMappings;
     private Map _exceptionConfigs;
     private Map _actionForwards;
 
-    public WrapperModuleConfig(StrutsFactory factory, PackageConfig config) {
+    public WrapperModuleConfig(Struts1Factory factory, PackageConfig config) {
         delegate = config;
         this.strutsFactory = factory;
     }

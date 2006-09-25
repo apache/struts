@@ -33,7 +33,7 @@ import com.opensymphony.xwork2.interceptor.ScopedModelDriven;
 /**
  *  Calls the validate() method on the ActionForm, if it exists.  The errors are handled
  *  like regular XWork validation errors.  Action-level validation flag supported if the
- *  action is a subclass of LegacyAction.
+ *  action is a subclass of Struts1Action.
  */
 public class ActionFormValidationInterceptor extends AbstractInterceptor {
 
@@ -43,11 +43,11 @@ public class ActionFormValidationInterceptor extends AbstractInterceptor {
 
         
         if ((action instanceof ScopedModelDriven) &&
-            (!(action instanceof LegacyAction) || ((LegacyAction)action).isValidate())) {
+            (!(action instanceof Struts1Action) || ((Struts1Action)action).isValidate())) {
             ScopedModelDriven modelDriven = (ScopedModelDriven) action;
             Object model = modelDriven.getModel();
             if (model != null) {
-                StrutsFactory strutsFactory = new StrutsFactory(Dispatcher.getInstance().getConfigurationManager().getConfiguration());
+                Struts1Factory strutsFactory = new Struts1Factory(Dispatcher.getInstance().getConfigurationManager().getConfiguration());
                 ActionMapping mapping = strutsFactory.createActionMapping(invocation.getProxy().getConfig());
                 HttpServletRequest req = ServletActionContext.getRequest();
                 ActionErrors errors = ((ActionForm)model).validate(mapping, req);

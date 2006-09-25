@@ -39,16 +39,16 @@ class WrapperActionMapping extends ActionMapping {
 
     private ActionConfig delegate;
     private String actionPath;
-    private StrutsFactory strutsFactory;
+    private Struts1Factory strutsFactory;
 
-    public WrapperActionMapping(StrutsFactory factory, ActionConfig delegate) {
+    public WrapperActionMapping(Struts1Factory factory, ActionConfig delegate) {
         this.delegate = delegate;
         this.strutsFactory = factory;
         forwards = null;
         exceptions = null;
     }
 
-    public WrapperActionMapping(StrutsFactory factory, ActionConfig delegate, String actionPath, ModuleConfig moduleConfig) {
+    public WrapperActionMapping(Struts1Factory factory, ActionConfig delegate, String actionPath, ModuleConfig moduleConfig) {
         this(factory, delegate);
         this.moduleConfig = moduleConfig;
         this.actionPath = actionPath;

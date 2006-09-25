@@ -39,6 +39,7 @@ class WrapperActionMapping extends ActionMapping {
 
     private ActionConfig delegate;
     private String actionPath;
+    private String attribute;
     private Struts1Factory strutsFactory;
 
     public WrapperActionMapping(Struts1Factory factory, ActionConfig delegate) {
@@ -135,11 +136,11 @@ class WrapperActionMapping extends ActionMapping {
     }
 
     public String getAttribute() {
-        throw new UnsupportedOperationException("NYI");
+        return attribute;
     }
 
     public void setAttribute(String attribute) {
-        throw new UnsupportedOperationException("Not implemented - immutable");
+        this.attribute = attribute;
     }
 
     public String getForward() {

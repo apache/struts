@@ -6,8 +6,9 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.apache.struts.validator.ValidatorForm;
 
-public class GangsterForm extends ActionForm {
+public class GangsterForm extends ValidatorForm {
     
     private String name;
     private String age;
@@ -26,11 +27,12 @@ public class GangsterForm extends ActionForm {
      * @see org.apache.struts.action.ActionForm#validate(org.apache.struts.action.ActionMapping, javax.servlet.http.HttpServletRequest)
      */
     @Override
-    public ActionErrors validate(ActionMapping arg0, HttpServletRequest arg1) {
-        ActionErrors errors = new ActionErrors();
+    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+        ActionErrors errors = super.validate(mapping, request);
         if (name == null || name.length() == 0) {
             errors.add("name", new ActionMessage("The name must not be blank"));
         }
+        
         return errors;
     }
     

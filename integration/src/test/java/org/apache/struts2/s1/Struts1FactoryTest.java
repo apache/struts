@@ -23,22 +23,22 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 
 /**
- * Test of StrutsFactory, which creates Struts 1.x wrappers around XWork config objects.
+ * Test of Struts1Factory, which creates Struts 1.x wrappers around XWork config objects.
  */
-public class StrutsFactoryTest extends TestCase {
+public class Struts1FactoryTest extends TestCase {
 
     private static final String PACKAGE_NAME = "org/apache/struts2/s1";
     
-    protected StrutsFactory factory = null;
+    protected Struts1Factory factory = null;
     protected Configuration config;
 
-    public StrutsFactoryTest(String name) throws Exception {
+    public Struts1FactoryTest(String name) throws Exception {
         super(name);
     }
 
 
     public static void main(String args[]) {
-        junit.textui.TestRunner.run(StrutsFactoryTest.class);
+        junit.textui.TestRunner.run(Struts1FactoryTest.class);
     }
 
     /**
@@ -49,7 +49,7 @@ public class StrutsFactoryTest extends TestCase {
         ConfigurationProvider provider = new StrutsXmlConfigurationProvider(PACKAGE_NAME + "/test-struts-factory.xml", true);
         manager.addConfigurationProvider(provider);
         config = manager.getConfiguration();
-        factory = new StrutsFactory(config);
+        factory = new Struts1Factory(config);
     }
 
     /**
@@ -137,7 +137,6 @@ public class StrutsFactoryTest extends TestCase {
         
         // These methods are currently not implemented -- replace as functionality is added.
         assertNYI(mapping, "getInputForward", null);
-        assertNYI(mapping, "getAttribute", null);
         assertNYI(mapping, "getForward", null);
         assertNYI(mapping, "getInclude", null);
         assertNYI(mapping, "getInput", null);

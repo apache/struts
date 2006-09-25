@@ -55,11 +55,12 @@ import com.opensymphony.xwork2.interceptor.ScopedModelDriven;
  *  <li>Most everything else...</li>
  * </ul>
  */
-public class LegacyAction extends DefaultActionSupport implements ScopedModelDriven<ActionForm> {
+public class Struts1Action extends DefaultActionSupport implements ScopedModelDriven<ActionForm> {
 
     private ActionForm actionForm;
     private String className;
     private boolean validate;
+    private String scopeKey;
     
     public String execute() throws Exception {
         ActionContext ctx = ActionContext.getContext();
@@ -73,7 +74,7 @@ public class LegacyAction extends DefaultActionSupport implements ScopedModelDri
         
         // We should call setServlet() here, but let's stub that out later
         
-        StrutsFactory strutsFactory = new StrutsFactory(Dispatcher.getInstance().getConfigurationManager().getConfiguration());
+        Struts1Factory strutsFactory = new Struts1Factory(Dispatcher.getInstance().getConfigurationManager().getConfiguration());
         ActionMapping mapping = strutsFactory.createActionMapping(actionConfig);
         HttpServletRequest request = ServletActionContext.getRequest();
         HttpServletResponse response = ServletActionContext.getResponse();
@@ -125,5 +126,13 @@ public class LegacyAction extends DefaultActionSupport implements ScopedModelDri
      */
     public void setClassName(String className) {
         this.className = className;
+    }
+
+    public String getScopeKey() {
+        return scopeKey;
+    }
+
+    public void setScopeKey(String key) {
+        this.scopeKey = key;
     }
 }

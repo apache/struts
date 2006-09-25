@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 package org.apache.struts2.s1;
 
 import com.opensymphony.xwork2.*;
@@ -23,22 +22,27 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.entities.ExceptionMappingConfig;
+
+import org.apache.struts.Globals;
 import org.apache.struts.action.*;
 import org.apache.struts.config.*;
 
 import java.util.Iterator;
 import java.util.Arrays;
+import java.util.Map;
+
+import javax.servlet.ServletContext;
 
 
 /**
  *  Provides conversion methods between the Struts Action 1.x and XWork
  *  classes.
  */
-public class StrutsFactory {
+public class Struts1Factory {
     
     private Configuration configuration;
 
-    public StrutsFactory(Configuration config) {
+    public Struts1Factory(Configuration config) {
         this.configuration = config;
     }
     
@@ -53,7 +57,7 @@ public class StrutsFactory {
         assert packageName != null;
         return new WrapperModuleConfig(this, configuration.getPackageConfig(packageName));
     }
-
+    
     /**
      * Create a Struts 1.x ActionMapping from an XWork ActionConfig.
      * 

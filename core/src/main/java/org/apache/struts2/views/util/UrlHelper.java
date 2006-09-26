@@ -124,8 +124,17 @@ public class UrlHelper {
                     link.append(contextPath);
                 }
             } else if (changedScheme) {
-                String uri = request.getRequestURI();
-                link.append(uri.substring(0, uri.lastIndexOf('/')));
+                
+                // (Applicable to Servlet 2.4 containers)
+                // If the request was forwarded, the attribute below will be set with the original URL
+                String uri = (String) request.getAttribute("javax.servlet.forward.request_uri");
+                
+                // If the attribute wasn't found, default to the value in the request object
+                if (uri == null) {
+                    uri = request.getRequestURI();
+                }
+                
+                link.append(uri.substring(0, uri.lastIndexOf('/') + 1));
             }
 
             // Add page
@@ -134,6 +143,13 @@ public class UrlHelper {
             // Go to "same page"
             String requestURI = (String) request.getAttribute("struts.request_uri");
 
+            // (Applicable to Servlet 2.4 containers)
+            // If the request was forwarded, the attribute below will be set with the original URL
+            if (requestURI == null) {
+                requestURI = (String) request.getAttribute("javax.servlet.forward.request_uri");
+            }
+            
+            // If neither request attributes were found, default to the value in the request object
             if (requestURI == null) {
                 requestURI = request.getRequestURI();
             }

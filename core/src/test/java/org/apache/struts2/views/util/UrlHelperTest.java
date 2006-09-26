@@ -249,25 +249,27 @@ public class UrlHelperTest extends StrutsTestCase {
     }
 
     /**
-     * A check to verify that the scheme, server, and port number are omitted when the scheme of the current request
-     * matches the scheme supplied when building the URL.
+     * The UrlHelper should build a URL that starts with "https" followed by the server name when the scheme of the
+     * current request is "http" and the port for the "https" scheme is 443. When the request has been forwarded
+     * in a Servlet 2.4 container, the UrlHelper should use the javax.servlet.forward.request_uri request attribute
+     * instead of a call to HttpServletRequest#getRequestURI().
      */
-    public void testBuildWithSameScheme() {
-        String expectedString = "/mywebapp/MyAction.action?foo=bar&amp;hello=earth&amp;hello=mars";
+    public void testForwardedRequest() {
+        String expectedString = "https://www.example.com/mywebapp/product/widget/promo.html";
 
         Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
-        mockHttpServletRequest.expectAndReturn("getServerName", "www.mydomain.com");
-        mockHttpServletRequest.expectAndReturn("getScheme", "https");
-        mockHttpServletRequest.expectAndReturn("getServerPort", 443);
+        mockHttpServletRequest.expectAndReturn("getServerName", "www.example.com");
+        mockHttpServletRequest.expectAndReturn("getScheme", "http");
+        mockHttpServletRequest.expectAndReturn("getServerPort", 80);
         mockHttpServletRequest.expectAndReturn("getContextPath", "/mywebapp");
+        mockHttpServletRequest.expectAndReturn("getAttribute", "javax.servlet.forward.request_uri", "/mywebapp/product/widget/");
+        mockHttpServletRequest.expectAndReturn("getRequestURI", "/mywebapp/");
 
         Mock mockHttpServletResponse = new Mock(HttpServletResponse.class);
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedString, expectedString);
 
-        String actionName = "/MyAction.action";
-        TreeMap params = new TreeMap();
-        params.put("hello", new String[]{"earth", "mars"});
-        params.put("foo", "bar");
+        String actionName = "promo.html";
+        Map params = new TreeMap();
 
         String urlString = UrlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params, "https", true, true);
         assertEquals(expectedString, urlString);

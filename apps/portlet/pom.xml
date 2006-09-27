@@ -18,13 +18,14 @@
             <version>1.0</version>
             <scope>provided</scope>
         </dependency>
-
+        
+        <!--
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-portlet-plugin</artifactId>
             <version>${pom.version}</version>
         </dependency>
-
+        -->
 
         <dependency>
            <groupId>javax.servlet</groupId>

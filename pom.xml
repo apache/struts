@@ -77,7 +77,6 @@
 
     <modules>
         <module>core</module>
-        <module>integration</module>
         <!--<module>assembly</module>-->
         <module>api</module>
     </modules>
@@ -109,9 +108,9 @@
             </modules>
         </profile>
         <profile>
-            <id>extras</id>
+            <id>plugins</id>
             <modules>
-                <module>extras</module>
+                <module>plugins</module>
             </modules>
         </profile>
         <profile>

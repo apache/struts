@@ -42,6 +42,11 @@
             <version>${pom.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-sitemesh-plugin</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
  
         <dependency>
            <groupId>javax.servlet</groupId>

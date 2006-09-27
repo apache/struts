@@ -4,42 +4,22 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.apache.struts</groupId>
-        <artifactId>struts2-parent</artifactId>
+        <artifactId>struts2-plugins</artifactId>
         <version>2.0.1-SNAPSHOT</version>
     </parent>
     <groupId>org.apache.struts</groupId>
-    <artifactId>struts2-integration</artifactId>
+    <artifactId>struts2-struts1-plugin</artifactId>
     <packaging>jar</packaging>
-    <name>Struts 2 Integration</name>
+    <name>Struts 2 Struts 1 Plugin</name>
     
     <distributionManagement>
         <site>
             <id>apache-site</id>
-            <url>scp://people.apache.org/www/struts.apache.org/2.x/struts-integration</url>
+            <url>scp://people.apache.org/www/struts.apache.org/2.x/plugins/struts1</url>
         </site>
     </distributionManagement>
     
     <dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
-		</dependency>
-    
-        <dependency>
-           <groupId>javax.servlet</groupId>
-           <artifactId>servlet-api</artifactId>
-           <version>2.4</version>
-           <scope>provided</scope>
-        </dependency>
-    
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-core</artifactId>
-            <version>${pom.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts-core</artifactId>

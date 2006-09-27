@@ -5,7 +5,7 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 
 <struts>
-	<package name="integration" extends="struts-default,struts-integration-default" namespace="/integration">
+	<package name="integration" extends="struts1-default" namespace="/integration">
 	    
 	    <interceptors>
 	        <interceptor name="gangsterForm" class="com.opensymphony.xwork2.interceptor.ScopedModelDrivenInterceptor">

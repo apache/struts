@@ -251,9 +251,9 @@ public class Dispatcher {
         }
 
         configurationManager = new ConfigurationManager();
-        String configFiles = Settings.get(StrutsConstants.STRUTS_CONFIGURATION_FILES);
-        if (configFiles == null) {
-            configFiles = "struts-default.xml,struts-plugins.xml,struts.xml";
+        String configFiles = "struts-default.xml,struts-plugin.xml,struts.xml";
+        if (Settings.isSet(StrutsConstants.STRUTS_CONFIGURATION_FILES)) {
+            configFiles = Settings.get(StrutsConstants.STRUTS_CONFIGURATION_FILES);
         }
         String[] files = configFiles.split("\\s*[,]\\s*");
         for (String file : files) {

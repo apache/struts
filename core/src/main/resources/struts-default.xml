@@ -20,7 +20,6 @@
             <result-type name="plaintext" class="org.apache.struts2.dispatcher.PlainTextResult" />
 
             <!-- third party integration
-            <result-type name="jasper" class="org.apache.struts2.views.jasperreports.JasperReportsResult"/>
             <result-type name="jsf" class="org.apache.struts2.jsf.FacesResult" />
             -->
         </result-types>

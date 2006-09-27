@@ -251,12 +251,18 @@ public class Dispatcher {
         }
 
         configurationManager = new ConfigurationManager();
-        
-        // Load old xwork files
-        configurationManager.addConfigurationProvider(new XmlConfigurationProvider("xwork.xml", false));
-        
-        // Load Struts config files
-        configurationManager.addConfigurationProvider(new StrutsXmlConfigurationProvider(false));
+        String configFiles = Settings.get(StrutsConstants.STRUTS_CONFIGURATION_FILES);
+        if (configFiles == null) {
+            configFiles = "struts-default.xml,struts-plugins.xml,struts.xml";
+        }
+        String[] files = configFiles.split("\\s*[,]\\s*");
+        for (String file : files) {
+            if ("xwork.xml".equals(file)) {
+                configurationManager.addConfigurationProvider(new XmlConfigurationProvider(file, false));
+            } else {
+                configurationManager.addConfigurationProvider(new StrutsXmlConfigurationProvider(file, false));
+            }
+        }
         
         synchronized(Dispatcher.class) {
             if (dispatcherListeners.size() > 0) {

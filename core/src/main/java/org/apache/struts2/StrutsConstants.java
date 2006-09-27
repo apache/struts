@@ -127,4 +127,7 @@ public final class StrutsConstants {
 
     /** Allows one to disable dynamic method invocation from the URL */
     public static final String STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION = "struts.enable.DynamicMethodInvocation";
+
+    /** A list of configuration files automatically loaded by Struts */
+    public static final String STRUTS_CONFIGURATION_FILES = "struts.configuration.files";
 }

@@ -184,9 +184,9 @@ public class Dispatcher {
                 //       dependencies on spring, since it isn't technically required.
                 className = "org.apache.struts2.spring.StrutsSpringObjectFactory";
             } else if (className.equals("plexus")) {
-                // note: this class name needs to be in string form so we don't put hard
-                //       dependencies on spring, since it isn't technically required.
                 className = "org.apache.struts2.plexus.PlexusObjectFactory";
+                LOG.warn("The 'plexus' shorthand for the Plexus ObjectFactory is deprecated.  Please "
+                        +"use the full class name: "+className);
             }
 
             try {

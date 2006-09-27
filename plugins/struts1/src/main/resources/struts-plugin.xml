@@ -13,7 +13,7 @@
             <interceptor name="actionForm-commonsValidation" class="org.apache.struts2.s1.ActionFormValidationInterceptor">
             	<param name="pathnames">/org/apache/struts/validator/validator-rules.xml,/WEB-INF/validation.xml</param>
             </interceptor>
-            <interceptor-stack name="struts1-default">
+            <interceptor-stack name="struts1Stack">
 	    		<interceptor-ref name="static-params"/>
 	    		<interceptor-ref name="scoped-model-driven"/>
 	    		<interceptor-ref name="model-driven"/>
@@ -24,6 +24,7 @@
 	    	</interceptor-stack>
         </interceptors>
         
+        <default-interceptor-ref name="struts1Stack"/>
     </package>
 
 </struts>

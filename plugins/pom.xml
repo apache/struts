@@ -16,6 +16,7 @@
         <module>pell-multipart</module>
         <module>jasperreports</module>
         <module>jfreechart</module>
+        <module>jsf</module>
     </modules>
     
      <distributionManagement>

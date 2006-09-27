@@ -18,10 +18,6 @@
             <result-type name="velocity" class="org.apache.struts2.dispatcher.VelocityResult"/>
             <result-type name="xslt" class="org.apache.struts2.views.xslt.XSLTResult"/>
             <result-type name="plaintext" class="org.apache.struts2.dispatcher.PlainTextResult" />
-
-            <!-- third party integration
-            <result-type name="jsf" class="org.apache.struts2.jsf.FacesResult" />
-            -->
         </result-types>
 
         <interceptors>
@@ -53,14 +49,6 @@
             <interceptor name="store" class="org.apache.struts2.interceptor.MessageStoreInterceptor" />
             <interceptor name="checkbox" class="org.apache.struts2.interceptor.CheckboxInterceptor" />
             
-            <!-- JSF interceptors, one per lifecycle phase -->
-            <interceptor class="org.apache.struts2.jsf.FacesSetupInterceptor" name="jsfSetup" />
-            <interceptor class="org.apache.struts2.jsf.RestoreViewInterceptor" name="jsfRestore" />
-            <interceptor class="org.apache.struts2.jsf.ApplyRequestValuesInterceptor" name="jsfApply" />
-            <interceptor class="org.apache.struts2.jsf.ProcessValidationsInterceptor" name="jsfValidate" />
-            <interceptor class="org.apache.struts2.jsf.UpdateModelValuesInterceptor" name="jsfUpdate" />
-            <interceptor class="org.apache.struts2.jsf.InvokeApplicationInterceptor" name="jsfInvoke" />
-			
             <!-- Basic stack -->
             <interceptor-stack name="basicStack">
                 <interceptor-ref name="exception"/>
@@ -189,19 +177,7 @@
                 </interceptor-ref>
             </interceptor-stack>
             
-            <!-- Sample JSF stack, can be combined with other stacks easily -->
-            <interceptor-stack name="jsfStack">
-                <interceptor-ref name="jsfSetup">
-                    <param name="variableResolver">org.apache.struts2.jsf.StrutsVariableResolver</param>
-                    <param name="navigationHandler">org.apache.struts2.jsf.StrutsNavigationHandler</param>
-                </interceptor-ref>
-                <interceptor-ref name="jsfRestore" />
-                <interceptor-ref name="jsfApply" />
-                <interceptor-ref name="jsfValidate" />
-                <interceptor-ref name="jsfUpdate" />
-                <interceptor-ref name="jsfInvoke" />
-            </interceptor-stack>
-        </interceptors>
+       </interceptors>
         
         <default-interceptor-ref name="defaultStack"/>
     </package>

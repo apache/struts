@@ -4,7 +4,7 @@
 <struts>
   <include file="struts-default.xml"/>
 
-  <package name="jsf" extends="struts-default" namespace="/jsf">
+  <package name="jsf" extends="jsf-default" namespace="/jsf">
 
       <result-types>
           <result-type name="jsf" class="org.apache.struts2.jsf.FacesResult" />

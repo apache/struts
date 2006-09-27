@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN"
-    "${req.contextPath}/template-tigris/css/tigris_transitional.dtd">
+    "${request.contextPath}/template-tigris/css/tigris_transitional.dtd">
 <html>
 <head>
 <title>${pageTitle}</title>

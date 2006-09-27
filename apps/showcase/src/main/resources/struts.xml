@@ -10,8 +10,6 @@
 
     <include file="struts-default.xml"/>
 
-    <include file="config-browser.xml"/>
-    
     <include file="struts-chat.xml" />
     
     <include file="struts-hangman.xml" />

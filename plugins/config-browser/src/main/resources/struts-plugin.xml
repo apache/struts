@@ -5,9 +5,7 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">
     
 <struts>
-    <include file="struts-default.xml"/>
-
-    <package name="config" extends="struts-default" namespace="/config-browser">
+    <package name="config-browser" extends="struts-default" namespace="/config-browser">
         <interceptors>
             <interceptor-stack name="config-browser-default">
                 <interceptor-ref name="validationWorkflowStack"/>

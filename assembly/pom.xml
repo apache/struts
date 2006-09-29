@@ -140,11 +140,61 @@
             <artifactId>struts2-core</artifactId>
             <version>${version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-extras</artifactId>
+            <artifactId>struts2-config-browser-plugin</artifactId>
             <version>${version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-jasperreports-plugin</artifactId>
+            <version>${version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-jfreechart-plugin</artifactId>
+            <version>${version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-jsf-plugin</artifactId>
+            <version>${version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-pell-multipart-plugin</artifactId>
+            <version>${version}</version>
+        </dependency> 
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-plexus-plugin</artifactId>
+            <version>${version}</version>
+        </dependency> 
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-sitemesh-plugin</artifactId>
+            <version>${version}</version>
+        </dependency> 
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-struts1-plugin</artifactId>
+            <version>${version}</version>
+        </dependency> 
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-tiles-plugin</artifactId>
+            <version>${version}</version>
+        </dependency> 
+
 
         <!-- Include optional dependencies -->
         <dependency>

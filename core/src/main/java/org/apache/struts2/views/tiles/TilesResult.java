@@ -28,12 +28,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
-import org.apache.tiles.ComponentContext;
-import org.apache.tiles.ComponentDefinition;
-import org.apache.tiles.ComponentDefinitions;
-import org.apache.tiles.Controller;
-import org.apache.tiles.DefinitionsFactory;
-import org.apache.tiles.TilesUtilImpl;
+import org.apache.tiles.*;
+import org.apache.tiles.context.servlet.ServletTilesContext;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.LocaleProvider;
@@ -104,6 +100,7 @@ public class TilesResult extends ServletDispatcherResult {
         HttpServletRequest request = ServletActionContext.getRequest();
         HttpServletResponse response = ServletActionContext.getResponse();
         ServletContext servletContext = ServletActionContext.getServletContext();
+        TilesContext tilesContext = new ServletTilesContext(servletContext, request, response);
 
         this.definitionsFactory =
                 (DefinitionsFactory) servletContext.getAttribute(TilesUtilImpl.DEFINITIONS_FACTORY);
@@ -115,8 +112,8 @@ public class TilesResult extends ServletDispatcherResult {
         }
 
         // get current component context
-        ComponentContext context = getComponentContext(definition, request);
-        ComponentContext.setContext(context, request);
+        ComponentContext context = getComponentContext(definition, tilesContext);
+        ComponentContext.setContext(context, tilesContext);
 
         // execute component controller associated with definition, if any
         Controller controller = getController(definition, request);
@@ -124,7 +121,7 @@ public class TilesResult extends ServletDispatcherResult {
             if (log.isDebugEnabled()) {
                 log.debug("Executing Tiles controller [" + controller + "]");
             }
-            executeController(controller, context, request, response);
+            executeController(controller, context, tilesContext);
         }
 
         // determine the path of the definition
@@ -163,16 +160,16 @@ public class TilesResult extends ServletDispatcherResult {
      * Determine the Tiles component context for the given Tiles definition.
      *
      * @param definition the Tiles definition to render
-     * @param request    current HTTP request
+     * @param tilesContext    current TilesContext
      * @return the component context
      * @throws Exception if preparations failed
      */
-    protected ComponentContext getComponentContext(ComponentDefinition definition, HttpServletRequest request)
+    protected ComponentContext getComponentContext(ComponentDefinition definition, TilesContext tilesContext)
             throws Exception {
-        ComponentContext context = ComponentContext.getContext(request);
+        ComponentContext context = ComponentContext.getContext(tilesContext);
         if (context == null) {
             context = new ComponentContext(definition.getAttributes());
-            ComponentContext.setContext(context, request);
+            ComponentContext.setContext(context, tilesContext);
         } else {
             context.addMissing(definition.getAttributes());
         }
@@ -198,14 +195,13 @@ public class TilesResult extends ServletDispatcherResult {
      *
      * @param controller the component controller to execute
      * @param context    the component context
-     * @param request    current HTTP request
-     * @param response   current HTTP response
+     * @param tilesContext   current tilesContext
      * @throws Exception if controller execution failed
      */
     protected void executeController(
-            Controller controller, ComponentContext context, HttpServletRequest request, HttpServletResponse response)
+            Controller controller, ComponentContext context, TilesContext tilesContext)
             throws Exception {
-        controller.execute(context, request, response, ServletActionContext.getServletContext());
+        controller.execute(tilesContext, context);
     }
 
     /**

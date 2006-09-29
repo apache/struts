@@ -47,13 +47,13 @@
       </includes>
     </fileSet>
 
-    <!-- Include the XWork Javadoc in the unijar -->
+    <!-- Include the XWork Javadoc in the assembly -->
     <fileSet>
       <directory>target/xwork-apidocs</directory>
       <outputDirectory>docs/xwork-apidocs</outputDirectory>
     </fileSet>
 
-      <!-- Include the website in the unijar -->
+      <!-- Include the website in the assembly -->
       <fileSet>
         <directory>../target/site</directory>
         <outputDirectory>docs</outputDirectory>
@@ -71,7 +71,7 @@
         <outputDirectory>docs/struts2-extras</outputDirectory>
       </fileSet>
 
-    <!-- Include the source code in the unijar -->
+    <!-- Include the source code in the assembly -->
     <fileSet>
       <directory>../</directory>
       <outputDirectory>src/</outputDirectory>

@@ -18,7 +18,7 @@
     <context>/showcase</context>
 
     <!-- The port in which to deploy the web application -->
-    <port>8090</port>
+    <port>8080</port>
 
     <!--
     The libs directories can be a jar, a directory of jars, or even

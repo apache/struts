@@ -77,7 +77,7 @@
 
     <modules>
         <module>core</module>
-        <!--<module>assembly</module>-->
+        <!--<module>unijar</module>-->
         <module>api</module>
     </modules>
 

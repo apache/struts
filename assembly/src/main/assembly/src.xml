@@ -51,7 +51,7 @@
           </includes>
       </fileSet>
 
-      <!-- Include the source code in the assembly -->
+      <!-- Include the source code in the unijar -->
       <fileSet>
         <directory>../</directory>
         <outputDirectory>src/</outputDirectory>

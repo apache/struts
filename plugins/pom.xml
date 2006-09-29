@@ -17,8 +17,11 @@
         <module>jasperreports</module>
         <module>jfreechart</module>
         <module>jsf</module>
+        <module>config-browser</module>
+        <module>plexus</module>
+        <module>sitemesh</module>
+        <module>tiles</module>
     </modules>
-    
      <distributionManagement>
         <site>
             <id>apache-site</id>

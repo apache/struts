@@ -200,14 +200,7 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Tiles -->
-        <dependency>
-            <groupId>org.apache.struts.tiles</groupId>
-            <artifactId>tiles-core</artifactId>
-            <version>2.0-SNAPSHOT</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
+       <dependency>
             <groupId>commons-digester</groupId>
             <artifactId>commons-digester</artifactId>
             <version>1.7</version>

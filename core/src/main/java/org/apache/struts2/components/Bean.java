@@ -25,7 +25,8 @@ import org.apache.commons.logging.LogFactory;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.util.OgnlUtil;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -96,14 +97,14 @@ public class Bean extends Component {
     protected Object bean;
     protected String name;
 
-    public Bean(OgnlValueStack stack) {
+    public Bean(ValueStack stack) {
         super(stack);
     }
 
     public boolean start(Writer writer) {
         boolean result = super.start(writer);
 
-        OgnlValueStack stack = getStack();
+        ValueStack stack = getStack();
 
         try {
             String beanName = findString(name, "name", "Bean name is required. Example: com.acme.FooBean");
@@ -126,7 +127,7 @@ public class Bean extends Component {
     }
 
     public boolean end(Writer writer, String body) {
-        OgnlValueStack stack = getStack();
+        ValueStack stack = getStack();
         stack.pop();
 
         return super.end(writer, body);

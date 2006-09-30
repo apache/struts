@@ -19,7 +19,7 @@ package org.apache.struts2.components;
 
 import java.io.Writer;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -58,7 +58,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * @s.tag name="elseif" tld-body-content="JSP" description="Elseif tag"  tld-tag-class="org.apache.struts2.views.jsp.ElseIfTag"
  */
 public class ElseIf extends Component {
-    public ElseIf(OgnlValueStack stack) {
+    public ElseIf(ValueStack stack) {
         super(stack);
     }
 

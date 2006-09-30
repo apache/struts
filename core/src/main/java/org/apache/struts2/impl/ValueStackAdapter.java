@@ -6,13 +6,13 @@ import java.util.Iterator;
 
 import org.apache.struts2.spi.ValueStack;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 public class ValueStackAdapter implements ValueStack {
 
-    final OgnlValueStack delegate;
+    final com.opensymphony.xwork2.util.ValueStack delegate;
 
-    public ValueStackAdapter(OgnlValueStack delegate) {
+    public ValueStackAdapter(com.opensymphony.xwork2.util.ValueStack delegate) {
         this.delegate = delegate;
     }
 
@@ -29,7 +29,7 @@ public class ValueStackAdapter implements ValueStack {
     }
 
     public ValueStack clone() {
-        return new ValueStackAdapter(new OgnlValueStack(delegate));
+        return new ValueStackAdapter(ValueStackFactory.getFactory().createValueStack(delegate));
     }
 
     public Object get(String expr) {

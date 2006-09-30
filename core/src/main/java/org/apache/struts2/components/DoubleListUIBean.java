@@ -22,7 +22,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * DoubleListUIBean is the standard superclass of all Struts double list handling components.
@@ -82,7 +82,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
     protected String doubleAccesskey;
     
 
-    public DoubleListUIBean(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public DoubleListUIBean(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 

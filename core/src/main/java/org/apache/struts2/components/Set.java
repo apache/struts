@@ -19,7 +19,8 @@ package org.apache.struts2.components;
 
 import java.io.Writer;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -76,12 +77,12 @@ public class Set extends Component {
     protected String scope;
     protected String value;
 
-    public Set(OgnlValueStack stack) {
+    public Set(ValueStack stack) {
         super(stack);
     }
 
     public boolean end(Writer writer, String body) {
-        OgnlValueStack stack = getStack();
+        ValueStack stack = getStack();
 
         if (value == null) {
             value = "top";

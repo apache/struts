@@ -31,7 +31,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -269,7 +269,7 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
 
         String key = getKey(invocation);
         Map app = ActionContext.getContext().getApplication();
-        final OgnlValueStack stack = ActionContext.getContext().getValueStack();
+        final ValueStack stack = ActionContext.getContext().getValueStack();
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("scope interceptor before");
@@ -325,7 +325,7 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
     public void beforeResult(ActionInvocation invocation, String resultCode) {
         String key = getKey(invocation);
         Map app = ActionContext.getContext().getApplication();
-        final OgnlValueStack stack = ActionContext.getContext().getValueStack();
+        final ValueStack stack = ActionContext.getContext().getValueStack();
 
         if (application != null)
             for (int i = 0; i < application.length; i++) {

@@ -20,7 +20,7 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * FormButton.
@@ -36,7 +36,7 @@ public abstract class FormButton extends UIBean {
     protected String align;
     protected String type;
 
-    public FormButton(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public FormButton(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 

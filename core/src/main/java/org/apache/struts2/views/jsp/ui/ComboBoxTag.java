@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.ComboBox;
 import org.apache.struts2.components.Component;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see ComboBox
@@ -59,7 +59,7 @@ public class ComboBoxTag extends TextFieldTag {
 		this.listValue = listValue;
 	}
 
-	public Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+	public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new ComboBox(stack, req, res);
     }
 

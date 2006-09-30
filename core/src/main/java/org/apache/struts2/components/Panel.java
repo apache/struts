@@ -22,7 +22,7 @@ import java.io.Writer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -48,7 +48,7 @@ public class Panel extends Div {
     protected String subscribeTopicName;
     protected String remote;
 
-    public Panel(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public Panel(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 

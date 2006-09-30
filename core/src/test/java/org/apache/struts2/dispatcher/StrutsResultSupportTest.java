@@ -22,7 +22,9 @@ import org.easymock.EasyMock;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  * Test case for StrutsResultSupport.
@@ -31,7 +33,7 @@ public class StrutsResultSupportTest extends StrutsTestCase {
 
 	
 	public void testParse() throws Exception {
-		OgnlValueStack stack = new OgnlValueStack();
+		ValueStack stack = ValueStackFactory.getFactory().createValueStack();
 		stack.push(new ActionSupport() {
 			public String getMyLocation() {
 				return "ThisIsMyLocation";
@@ -56,7 +58,7 @@ public class StrutsResultSupportTest extends StrutsTestCase {
 	}
 	
 	public void testParseAndEncode() throws Exception {
-		OgnlValueStack stack = new OgnlValueStack();
+		ValueStack stack = ValueStackFactory.getFactory().createValueStack();
 		stack.push(new ActionSupport() {
 			public String getMyLocation() {
 				return "/myPage?param=value&param1=value1";
@@ -82,7 +84,7 @@ public class StrutsResultSupportTest extends StrutsTestCase {
 	
 	
 	public void testNoParseAndEncode() throws Exception {
-		OgnlValueStack stack = new OgnlValueStack();
+		ValueStack stack = ValueStackFactory.getFactory().createValueStack();
 		stack.push(new ActionSupport() {
 			public String getMyLocation() {
 				return "myLocation.jsp";

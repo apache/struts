@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.util.ContainUtil;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -50,7 +50,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * Currently, your custom UI components can be written in Velocity, JSP, or Freemarker, and the correct rendering
  * engine will be found based on file extension.<p/>
  *
- * <b>Remember:</b> the value params will always be resolved against the OgnlValueStack so if you mean to pass a
+ * <b>Remember:</b> the value params will always be resolved against the ValueStack so if you mean to pass a
  * string literal to your component, make sure to wrap it in quotes i.e. value="'value1'" otherwise, the the value
  * stack will search for an Object on the stack with a method of getValue1(). (now that i've written this, i'm not
  * entirely sure this is the case. i should verify this manana)<p/>
@@ -111,7 +111,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
 public class GenericUIBean extends UIBean {
     private final static String TEMPLATE = "empty";
 
-    public GenericUIBean(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public GenericUIBean(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 

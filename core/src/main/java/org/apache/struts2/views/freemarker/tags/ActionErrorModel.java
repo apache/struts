@@ -23,13 +23,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.ActionError;
 import org.apache.struts2.components.Component;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see ActionError
  */
 public class ActionErrorModel extends TagModel {
-    public ActionErrorModel(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public ActionErrorModel(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack, req, res);
     }
 

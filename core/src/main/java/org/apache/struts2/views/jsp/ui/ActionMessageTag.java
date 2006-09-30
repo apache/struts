@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.ActionMessage;
 import org.apache.struts2.components.Component;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * ActionMessage Tag.
@@ -33,7 +33,7 @@ public class ActionMessageTag extends AbstractUITag {
 
 	private static final long serialVersionUID = 243396927554182506L;
 
-	public Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+	public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
 		return new ActionMessage(stack, req, res);
 	}
 }

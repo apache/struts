@@ -38,8 +38,9 @@ import org.apache.struts2.views.freemarker.tags.StrutsModels;
 import org.apache.struts2.views.util.ContextUtil;
 
 import com.opensymphony.xwork2.util.FileManager;
+import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
@@ -162,7 +163,7 @@ public class FreemarkerManager {
         return config;
     }
 
-    protected ScopesHashModel buildScopesHashModel(ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, ObjectWrapper wrapper, OgnlValueStack stack) {
+    protected ScopesHashModel buildScopesHashModel(ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, ObjectWrapper wrapper, ValueStack stack) {
         ScopesHashModel model = new ScopesHashModel(wrapper, servletContext, request, stack);
 
         // Create hash model wrapper for servlet context (the application)
@@ -219,7 +220,7 @@ public class FreemarkerManager {
         return model;
     }
 
-    protected void populateContext(ScopesHashModel model, OgnlValueStack stack, Object action, HttpServletRequest request, HttpServletResponse response) {
+    protected void populateContext(ScopesHashModel model, ValueStack stack, Object action, HttpServletRequest request, HttpServletResponse response) {
         // put the same objects into the context that the velocity result uses
         Map standard = ContextUtil.getStandardContext(stack, request, response);
         model.putAll(standard);
@@ -333,7 +334,7 @@ public class FreemarkerManager {
         }
     }
 
-    public SimpleHash buildTemplateModel(OgnlValueStack stack, Object action, ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, ObjectWrapper wrapper) {
+    public SimpleHash buildTemplateModel(ValueStack stack, Object action, ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, ObjectWrapper wrapper) {
         ScopesHashModel model = buildScopesHashModel(servletContext, request, response, wrapper, stack);
         populateContext(model, stack, action, request, response);
         model.put("s", new StrutsModels(stack, request, response));

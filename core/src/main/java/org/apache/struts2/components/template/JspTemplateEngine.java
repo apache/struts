@@ -29,7 +29,7 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.components.Include;
 import org.apache.struts2.components.UIBean;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * JSP based template engine.
@@ -44,7 +44,7 @@ public class JspTemplateEngine extends BaseTemplateEngine {
             LOG.debug("Trying to render template " + template + ", repeating through parents until we succeed");
         }
         UIBean tag = templateContext.getTag();
-        OgnlValueStack stack = templateContext.getStack();
+        ValueStack stack = templateContext.getStack();
         stack.push(tag);
         PageContext pageContext = (PageContext) stack.getContext().get(ServletActionContext.PAGE_CONTEXT);
         List templates = template.getPossibleTemplates(this);

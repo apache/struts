@@ -44,7 +44,7 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.Settings;
 import org.apache.struts2.util.FastByteArrayOutputStream;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -101,7 +101,7 @@ public class Include extends Component {
     private HttpServletRequest req;
     private HttpServletResponse res;
 
-    public Include(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public Include(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack);
         this.req = req;
         this.res = res;

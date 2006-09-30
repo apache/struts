@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.Date;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <code>DateDirective</code>
@@ -34,7 +34,7 @@ public class DateDirective extends AbstractDirective {
         return "date";
     }
 
-    protected Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    protected Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Date(stack);
     }
 }

@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.components.Param.UnnamedParametric;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -84,7 +84,7 @@ public class FieldError extends UIBean implements UnnamedParametric {
 
     private List errorFieldNames = new ArrayList();
 
-    public FieldError(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public FieldError(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 

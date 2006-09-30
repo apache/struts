@@ -23,13 +23,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.DoubleSelect;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see DoubleSelect
  */
 public class DoubleSelectModel extends TagModel {
-    public DoubleSelectModel(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public DoubleSelectModel(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack, req, res);
     }
 

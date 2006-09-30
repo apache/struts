@@ -31,7 +31,9 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 
 /**
@@ -249,7 +251,7 @@ public class ActionTagTest extends AbstractTagTest {
     protected void tearDown() throws Exception {
         configurationManager.destroyConfiguration();
 
-        OgnlValueStack stack = new OgnlValueStack();
+        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
         ActionContext.setContext(new ActionContext(stack.getContext()));
         super.tearDown();
     }

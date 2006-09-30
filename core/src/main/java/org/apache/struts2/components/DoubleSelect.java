@@ -20,7 +20,7 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -43,7 +43,7 @@ public class DoubleSelect extends DoubleListUIBean {
     final public static String TEMPLATE = "doubleselect";
 
 
-    public DoubleSelect(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public DoubleSelect(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 

@@ -29,9 +29,10 @@ import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
 
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * Test case for PlainTextResult.
@@ -39,7 +40,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  */
 public class PlainTextResultTest extends TestCase {
 	
-	OgnlValueStack stack;
+	ValueStack stack;
 	MockActionInvocation invocation;
 	ActionContext context;
 	StrutsMockHttpServletResponse response;
@@ -129,7 +130,7 @@ public class PlainTextResultTest extends TestCase {
 		response = new StrutsMockHttpServletResponse();
 		response.setWriter(writer);
 		servletContext = new StrutsMockServletContext();
-		stack = new OgnlValueStack();
+		stack = ValueStackFactory.getFactory().createValueStack();
 		context = new ActionContext(stack.getContext());
 		context.put(StrutsStatics.HTTP_RESPONSE, response);
 		context.put(StrutsStatics.SERVLET_CONTEXT, servletContext);

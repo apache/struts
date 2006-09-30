@@ -12,7 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.StrutsException;
 
 import com.opensymphony.xwork2.util.OgnlUtil;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -39,7 +40,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
 public class Debug extends UIBean {
     public static final String TEMPLATE = "debug";
 
-    public Debug(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public Debug(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 
@@ -50,7 +51,7 @@ public class Debug extends UIBean {
     public boolean start(Writer writer) {
         boolean result = super.start(writer);
 
-        OgnlValueStack stack = getStack();
+        ValueStack stack = getStack();
         Iterator iter = stack.getRoot().iterator();
         List stackValues = new ArrayList(stack.getRoot().size());
         while (iter.hasNext()) {

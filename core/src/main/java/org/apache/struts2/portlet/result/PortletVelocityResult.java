@@ -47,7 +47,8 @@ import org.apache.velocity.context.Context;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -137,7 +138,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
     public void executeRenderResult(String finalLocation,
             ActionInvocation invocation) throws Exception {
         prepareServletActionContext();
-        OgnlValueStack stack = ActionContext.getContext().getValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
 
         HttpServletRequest request = ServletActionContext.getRequest();
         HttpServletResponse response = ServletActionContext.getResponse();
@@ -245,7 +246,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
      * @return the template to render
      * @throws Exception when the requested template could not be found
      */
-    protected Template getTemplate(OgnlValueStack stack,
+    protected Template getTemplate(ValueStack stack,
             VelocityEngine velocity, ActionInvocation invocation,
             String location, String encoding) throws Exception {
         if (!location.startsWith("/")) {
@@ -267,7 +268,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
      * @return the a minted Velocity context.
      */
     protected Context createContext(VelocityManager velocityManager,
-            OgnlValueStack stack, HttpServletRequest request,
+            ValueStack stack, HttpServletRequest request,
             HttpServletResponse response, String location) {
         return velocityManager.createContext(stack, request, response);
     }

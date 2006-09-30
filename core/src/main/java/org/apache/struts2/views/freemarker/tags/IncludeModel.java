@@ -23,13 +23,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.Include;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see Include
  */
 public class IncludeModel extends TagModel {
-    public IncludeModel(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public IncludeModel(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack, req, res);
     }
 

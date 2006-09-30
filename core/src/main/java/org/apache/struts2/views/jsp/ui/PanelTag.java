@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.Panel;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see Panel
@@ -36,7 +36,7 @@ public class PanelTag extends DivTag {
     protected String subscribeTopicName;
     protected String remote;
 
-    public Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Panel(stack, req, res);
     }
 

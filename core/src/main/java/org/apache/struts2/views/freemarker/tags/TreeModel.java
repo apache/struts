@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.Tree;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * TreeModel
@@ -31,7 +31,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  *
  */
 public class TreeModel extends TagModel {
-    public TreeModel(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public TreeModel(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack, req, res);
     }
 

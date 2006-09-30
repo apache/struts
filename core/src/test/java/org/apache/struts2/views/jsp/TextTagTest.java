@@ -36,7 +36,9 @@ import org.apache.struts2.views.jsp.ui.TestAction1;
 import com.mockobjects.servlet.MockJspWriter;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 
 /**
@@ -168,7 +170,7 @@ public class TextTagTest extends AbstractTagTest {
         assertEquals(value1, writer.toString());
         final StringBuffer buffer = writer.getBuffer();
         buffer.delete(0, buffer.length());
-        OgnlValueStack newStack = new OgnlValueStack();
+        ValueStack newStack = ValueStackFactory.getFactory().createValueStack();
         newStack.getContext().put(ActionContext.LOCALE, foreignLocale);
         newStack.push(new TestAction1());
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, newStack);
@@ -199,7 +201,7 @@ public class TextTagTest extends AbstractTagTest {
         buffer.delete(0, buffer.length());
         String value_int = getLocalizedMessage(foreignLocale);
         assertFalse(value_default.equals(value_int));
-        OgnlValueStack newStack = new OgnlValueStack(stack);
+        ValueStack newStack = ValueStackFactory.getFactory().createValueStack(stack);
         newStack.getContext().put(ActionContext.LOCALE, foreignLocale);
         assertNotSame(newStack.getContext().get(ActionContext.LOCALE), ActionContext.getContext().getLocale());
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, newStack);
@@ -271,7 +273,7 @@ public class TextTagTest extends AbstractTagTest {
     }
 
     protected void tearDown() throws Exception {
-        OgnlValueStack valueStack = new OgnlValueStack();
+        ValueStack valueStack = ValueStackFactory.getFactory().createValueStack();
         ActionContext.setContext(new ActionContext(valueStack.getContext()));
     }
 }

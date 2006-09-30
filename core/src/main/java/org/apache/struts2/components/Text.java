@@ -28,8 +28,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.opensymphony.xwork2.util.TextUtils;
+import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -117,7 +118,7 @@ public class Text extends Component implements Param.UnnamedParametric {
     protected String actualName;
     protected String name;
 
-    public Text(OgnlValueStack stack) {
+    public Text(ValueStack stack) {
         super(stack);
     }
 
@@ -146,7 +147,7 @@ public class Text extends Component implements Param.UnnamedParametric {
             defaultMessage = actualName;
         }
         String msg = null;
-        OgnlValueStack stack = getStack();
+        ValueStack stack = getStack();
 
         for (Iterator iterator = getStack().getRoot().iterator();
              iterator.hasNext();) {

@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -71,7 +71,7 @@ public class StrutsRequestWrapper extends HttpServletRequestWrapper {
             try {
                 // If not found, then try the ValueStack
                 ActionContext.getContext().put("__requestWrapper.getAttribute", Boolean.TRUE);
-                OgnlValueStack stack = ActionContext.getContext().getValueStack();
+                ValueStack stack = ActionContext.getContext().getValueStack();
                 if (stack != null) {
                     attribute = stack.findValue(s);
                 }

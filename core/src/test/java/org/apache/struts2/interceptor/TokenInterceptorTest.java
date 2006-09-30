@@ -34,7 +34,9 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 
 /**
@@ -118,7 +120,7 @@ public class TokenInterceptorTest extends StrutsTestCase {
         request.setParameterMap(params);
         extraContext.put(ServletActionContext.HTTP_REQUEST, request);
 
-        OgnlValueStack stack = new OgnlValueStack();
+        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
         stack.getContext().putAll(extraContext);
         oldContext = new ActionContext(stack.getContext());
         ActionContext.setContext(oldContext);

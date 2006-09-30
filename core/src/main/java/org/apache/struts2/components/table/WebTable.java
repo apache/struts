@@ -32,7 +32,7 @@ import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.GenericUIBean;
 import org.apache.struts2.components.table.renderer.CellRenderer;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @s.tag name="table" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.table.WebTableTag"
@@ -51,7 +51,7 @@ public class WebTable extends GenericUIBean {
     protected int sortColumn = -1;
     protected int curRow = 0;
 
-    public WebTable(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public WebTable(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 

@@ -32,7 +32,8 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**
@@ -57,7 +58,7 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
 		
 		
 		ActionContext context = ActionContext.getContext();
-		OgnlValueStack stack = context.getValueStack();
+		ValueStack stack = context.getValueStack();
 		context.getContextMap().put("value1", "value 1");
 		context.getContextMap().put("value2", "value 2");
 		context.getContextMap().put("value3", "value 3");

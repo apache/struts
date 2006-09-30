@@ -23,13 +23,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.Div;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see Div
  */
 public class DivModel extends TagModel {
-    public DivModel(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public DivModel(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack, req, res);
     }
 

@@ -44,8 +44,8 @@ import org.apache.struts2.config.Settings;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.util.OgnlValueStack;
 import com.opensymphony.xwork2.util.TextParseUtil;
+import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**
@@ -234,7 +234,7 @@ public class XSLTResult implements Result {
         String location = getStylesheetLocation();
 
         if (parse) {
-            OgnlValueStack stack = ActionContext.getContext().getValueStack();
+            ValueStack stack = ActionContext.getContext().getValueStack();
             location = TextParseUtil.translateVariables(location, stack);
         }
 

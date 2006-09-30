@@ -21,7 +21,7 @@ import java.io.Writer;
 
 import org.apache.struts2.StrutsException;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -66,7 +66,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <p/>
  * <!-- START SNIPPET: exampledescription -->
  * where the key will be the identifier and the value the result of an OGNL expression run against the current
- * OgnlValueStack.
+ * ValueStack.
  * <!-- END SNIPPET: exampledescription -->
  * <p/>
  * This second example demonstrates how the text tag can use parameters from this param tag.
@@ -90,7 +90,7 @@ public class Param extends Component {
     protected String name;
     protected String value;
 
-    public Param(OgnlValueStack stack) {
+    public Param(ValueStack stack) {
         super(stack);
     }
 

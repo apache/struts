@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**
@@ -76,7 +76,7 @@ public class TestResult implements Result {
 
         if ((expectedValues != null) && (expectedValues.size() > 0) && (propertyNames != null) && (propertyNames.size() > 0))
         {
-            OgnlValueStack stack = ActionContext.getContext().getValueStack();
+            ValueStack stack = ActionContext.getContext().getValueStack();
 
             for (int i = 0; i < propertyNames.size(); i++) {
                 String propertyName = (String) propertyNames.get(i);

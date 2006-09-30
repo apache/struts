@@ -24,7 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.util.UrlHelper;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -65,7 +65,7 @@ public class Div extends RemoteCallUIBean {
     protected String loadingText;
     protected String listenTopics;
 
-    public Div(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public Div(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 

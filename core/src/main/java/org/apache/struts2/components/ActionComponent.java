@@ -39,7 +39,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -121,7 +122,7 @@ public class ActionComponent extends Component {
     protected boolean executeResult;
     protected boolean ignoreContextParams;
 
-    public ActionComponent(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public ActionComponent(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack);
         this.req = req;
         this.res = res;
@@ -175,7 +176,7 @@ public class ActionComponent extends Component {
                 res,
                 servletContext);
 
-        OgnlValueStack newStack = new OgnlValueStack(stack);
+        ValueStack newStack = ValueStackFactory.getFactory().createValueStack(stack);
         extraContext.put(ActionContext.VALUE_STACK, newStack);
 
         // add page context, such that ServletDispatcherResult will do an include
@@ -225,7 +226,7 @@ public class ActionComponent extends Component {
         }
 
         // get the old value stack from the request
-        OgnlValueStack stack = getStack();
+        ValueStack stack = getStack();
         // execute at this point, after params have been set
         try {
             Configuration config = Dispatcher.getInstance().getConfigurationManager().getConfiguration();

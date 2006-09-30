@@ -20,14 +20,15 @@ package org.apache.struts2.views.freemarker.tags;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * Provides @s.tag access for various tags.
  *
  */
 public class StrutsModels {
-    protected OgnlValueStack stack;
+    protected ValueStack stack;
     protected HttpServletRequest req;
     protected HttpServletResponse res;
 
@@ -80,7 +81,7 @@ public class StrutsModels {
     protected TimePickerModel timePickerModel;
     
 
-    public StrutsModels(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public StrutsModels(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         this.stack = stack;
         this.req = req;
         this.res = res;

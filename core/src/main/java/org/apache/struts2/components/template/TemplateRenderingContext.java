@@ -22,14 +22,14 @@ import java.util.Map;
 
 import org.apache.struts2.components.UIBean;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * Context used when rendering templates.
  */
 public class TemplateRenderingContext {
     Template template;
-    OgnlValueStack stack;
+    ValueStack stack;
     Map parameters;
     UIBean tag;
     Writer writer;
@@ -43,7 +43,7 @@ public class TemplateRenderingContext {
      * @param params    parameters to this template.
      * @param tag       the tag UI component.
      */
-    public TemplateRenderingContext(Template template, Writer writer, OgnlValueStack stack, Map params, UIBean tag) {
+    public TemplateRenderingContext(Template template, Writer writer, ValueStack stack, Map params, UIBean tag) {
         this.template = template;
         this.writer = writer;
         this.stack = stack;
@@ -55,7 +55,7 @@ public class TemplateRenderingContext {
         return template;
     }
 
-    public OgnlValueStack getStack() {
+    public ValueStack getStack() {
         return stack;
     }
 

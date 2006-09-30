@@ -27,7 +27,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.TextProviderSupport;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -80,7 +80,7 @@ public class I18n extends Component {
     protected boolean pushed;
     protected String name;
 
-    public I18n(OgnlValueStack stack) {
+    public I18n(ValueStack stack) {
         super(stack);
     }
 

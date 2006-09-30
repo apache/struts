@@ -37,7 +37,7 @@ import org.apache.struts2.config.Settings;
 import org.apache.struts2.views.util.ContextUtil;
 
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * UIBean is the standard superclass of all Struts UI componentns.
@@ -393,7 +393,7 @@ public abstract class UIBean extends Component {
     protected HttpServletRequest request;
     protected HttpServletResponse response;
 
-    public UIBean(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public UIBean(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack);
         this.request = request;
         this.response = response;

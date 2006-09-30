@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -120,7 +120,7 @@ public class OptionTransferSelect extends DoubleListUIBean {
 	protected String rightDownLabel;
 	
 	
-	public OptionTransferSelect(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+	public OptionTransferSelect(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
 		super(stack, request, response);
 	}
 

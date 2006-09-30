@@ -40,7 +40,8 @@ import org.apache.velocity.context.Context;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**
@@ -96,7 +97,7 @@ public class VelocityResult extends StrutsResultSupport {
      *                   the template or writing output to the servlet response stream.
      */
     public void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
-        OgnlValueStack stack = ActionContext.getContext().getValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
 
         HttpServletRequest request = ServletActionContext.getRequest();
         HttpServletResponse response = ServletActionContext.getResponse();
@@ -191,7 +192,7 @@ public class VelocityResult extends StrutsResultSupport {
      * @return the template to render
      * @throws Exception when the requested template could not be found
      */
-    protected Template getTemplate(OgnlValueStack stack, VelocityEngine velocity, ActionInvocation invocation, String location, String encoding) throws Exception {
+    protected Template getTemplate(ValueStack stack, VelocityEngine velocity, ActionInvocation invocation, String location, String encoding) throws Exception {
         if (!location.startsWith("/")) {
             location = invocation.getProxy().getNamespace() + "/" + location;
         }
@@ -209,7 +210,7 @@ public class VelocityResult extends StrutsResultSupport {
      * @param location        the name of the template that is being used
      * @return the a minted Velocity context.
      */
-    protected Context createContext(VelocityManager velocityManager, OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response, String location) {
+    protected Context createContext(VelocityManager velocityManager, ValueStack stack, HttpServletRequest request, HttpServletResponse response, String location) {
         return velocityManager.createContext(stack, request, response);
     }
 }

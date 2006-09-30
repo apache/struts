@@ -26,7 +26,9 @@ import org.apache.struts2.components.If;
 
 import com.mockobjects.servlet.MockJspWriter;
 import com.mockobjects.servlet.MockPageContext;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 
 /**
@@ -35,7 +37,7 @@ public class ElseTagTest extends StrutsTestCase {
 
     ElseTag elseTag;
     MockPageContext pageContext;
-    OgnlValueStack stack;
+    ValueStack stack;
 
 
     public void testTestFalse() {
@@ -88,7 +90,7 @@ public class ElseTagTest extends StrutsTestCase {
     protected void setUp() throws Exception {
         // create the needed objects
         elseTag = new ElseTag();
-        stack = new OgnlValueStack();
+        stack = ValueStackFactory.getFactory().createValueStack();
 
         // create the mock http servlet request
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();

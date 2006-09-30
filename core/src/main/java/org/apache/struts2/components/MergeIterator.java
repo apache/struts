@@ -28,7 +28,7 @@ import org.apache.struts2.components.Param.UnnamedParametric;
 import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.util.MergeIteratorFilter;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -132,7 +132,7 @@ public class MergeIterator extends Component implements UnnamedParametric {
 	private MergeIteratorFilter mergeIteratorFilter = null;
 	private List _parameters;
 
-	public MergeIterator(OgnlValueStack stack) {
+	public MergeIterator(ValueStack stack) {
 		super(stack);
 	}
 	

@@ -6,11 +6,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.TimePicker;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 public class TimePickerModel extends TagModel {
 
-	public TimePickerModel(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+	public TimePickerModel(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
 		super(stack, req, res);
 	}
 

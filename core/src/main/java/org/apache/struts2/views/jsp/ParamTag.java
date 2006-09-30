@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.Param;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see Param
@@ -35,7 +35,7 @@ public class ParamTag extends ComponentTagSupport {
 	protected String name;
     protected String value;
 
-    public Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Param(stack);
     }
 

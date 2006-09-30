@@ -30,7 +30,8 @@ import org.apache.commons.logging.LogFactory;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.TextProvider;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -188,7 +189,7 @@ public class Date extends Component {
 
     private boolean nice;
 
-    public Date(OgnlValueStack stack) {
+    public Date(ValueStack stack) {
         super(stack);
     }
 
@@ -269,7 +270,7 @@ public class Date extends Component {
 
     public boolean end(Writer writer, String body) {
         String msg = null;
-        OgnlValueStack stack = getStack();
+        ValueStack stack = getStack();
         java.util.Date date = null;
         // find the name on the valueStack, and cast it to a date
         try {

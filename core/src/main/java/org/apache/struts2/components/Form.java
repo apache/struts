@@ -44,7 +44,7 @@ import com.opensymphony.xwork2.config.RuntimeConfiguration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptorUtil;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.ActionValidatorManagerFactory;
 import com.opensymphony.xwork2.validator.FieldValidator;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
@@ -108,7 +108,7 @@ public class Form extends ClosingUIBean {
     protected String windowState;
     protected String acceptcharset;
 
-    public Form(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public Form(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 

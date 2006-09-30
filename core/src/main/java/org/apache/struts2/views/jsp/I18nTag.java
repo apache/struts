@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.I18n;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**
@@ -35,7 +35,7 @@ public class I18nTag extends ComponentTagSupport {
 	
 	protected String name;
 
-    public Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new I18n(stack);
     }
 

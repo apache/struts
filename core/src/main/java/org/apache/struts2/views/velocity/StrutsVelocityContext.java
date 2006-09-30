@@ -19,7 +19,7 @@ package org.apache.struts2.views.velocity;
 
 import org.apache.velocity.VelocityContext;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**
@@ -27,15 +27,15 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
 public class StrutsVelocityContext extends VelocityContext {
 
     private static final long serialVersionUID = 8497212428904436963L;
-    OgnlValueStack stack;
+    ValueStack stack;
     VelocityContext[] chainedContexts;
 
 
-    public StrutsVelocityContext(OgnlValueStack stack) {
+    public StrutsVelocityContext(ValueStack stack) {
         this(null, stack);
     }
 
-    public StrutsVelocityContext(VelocityContext[] chainedContexts, OgnlValueStack stack) {
+    public StrutsVelocityContext(VelocityContext[] chainedContexts, ValueStack stack) {
         this.chainedContexts = chainedContexts;
         this.stack = stack;
     }

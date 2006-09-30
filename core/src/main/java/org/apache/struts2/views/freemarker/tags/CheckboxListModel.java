@@ -23,13 +23,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.CheckboxList;
 import org.apache.struts2.components.Component;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see CheckboxList
  */
 public class CheckboxListModel extends TagModel {
-    public CheckboxListModel(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public CheckboxListModel(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack, req, res);
     }
 

@@ -17,7 +17,7 @@
  */
 package org.apache.struts2.views.jasperreports;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -27,14 +27,14 @@ import java.util.Set;
  * Ported to Struts:
  *
  */
-public class OgnlValueStackShadowMap extends HashMap {
+public class ValueStackShadowMap extends HashMap {
 
 	private static final long serialVersionUID = -167109778490907240L;
 
 	/**
      * valueStack reference
      */
-    OgnlValueStack valueStack;
+    ValueStack valueStack;
 
     /**
      * entries reference
@@ -43,11 +43,11 @@ public class OgnlValueStackShadowMap extends HashMap {
 
 
     /**
-     * Constructs an instance of OgnlValueStackShadowMap.
+     * Constructs an instance of ValueStackShadowMap.
      *
      * @param valueStack - the underlying valuestack
      */
-    public OgnlValueStackShadowMap(OgnlValueStack valueStack) {
+    public ValueStackShadowMap(ValueStack valueStack) {
         this.valueStack = valueStack;
     }
 

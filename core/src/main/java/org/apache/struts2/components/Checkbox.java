@@ -20,11 +20,11 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * Renders an HTML input element of type checkbox, populated by the specified property from the OgnlValueStack.
+ * Renders an HTML input element of type checkbox, populated by the specified property from the ValueStack.
  * <!-- END SNIPPET: javadoc -->
  *
  * <p/> <b>Examples</b>
@@ -51,7 +51,7 @@ public class Checkbox extends UIBean {
 
     protected String fieldValue;
 
-    public Checkbox(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public Checkbox(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 

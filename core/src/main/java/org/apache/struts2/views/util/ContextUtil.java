@@ -30,7 +30,8 @@ import org.apache.struts2.views.jsp.ui.OgnlTool;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * Value Stack's Context related Utilities.
@@ -48,7 +49,7 @@ public class ContextUtil {
     public static final String STRUTS = "struts";
     public static final String ACTION = "action";
 
-    public static Map getStandardContext(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public static Map getStandardContext(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         HashMap map = new HashMap();
         map.put(REQUEST, req);
         map.put(REQUEST2, req);

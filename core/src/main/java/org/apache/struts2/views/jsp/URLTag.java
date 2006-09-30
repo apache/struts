@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.URL;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**
@@ -46,7 +46,7 @@ public class URLTag extends ComponentTagSupport {
     protected String portletUrlType;
     protected String anchor;
 
-    public Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new URL(stack, req, res);
     }
 

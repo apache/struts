@@ -28,7 +28,7 @@ import org.apache.struts2.components.Param.UnnamedParametric;
 import org.apache.struts2.util.AppendIteratorFilter;
 import org.apache.struts2.util.MakeIterator;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -119,7 +119,7 @@ public class AppendIterator extends Component implements UnnamedParametric {
 	private AppendIteratorFilter appendIteratorFilter= null;
 	private List _parameters;
 	
-	public AppendIterator(OgnlValueStack stack) {
+	public AppendIterator(ValueStack stack) {
 		super(stack);
 	}
 	

@@ -28,7 +28,9 @@ import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 
 /**
@@ -38,7 +40,7 @@ public class VelocityResultTest extends TestCase {
 
     ActionInvocation actionInvocation;
     Mock mockActionProxy;
-    OgnlValueStack stack;
+    ValueStack stack;
     String namespace;
     TestVelocityEngine velocity;
     VelocityResult result;
@@ -51,7 +53,7 @@ public class VelocityResultTest extends TestCase {
         Bean bean = new Bean();
         bean.setLocation(location);
 
-        OgnlValueStack stack = ActionContext.getContext().getValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(bean);
 
         assertEquals(location, stack.findValue("location"));
@@ -89,7 +91,7 @@ public class VelocityResultTest extends TestCase {
     protected void setUp() throws Exception {
         namespace = "/html";
         result = new VelocityResult();
-        stack = new OgnlValueStack();
+        stack = ValueStackFactory.getFactory().createValueStack();
         ActionContext.getContext().setValueStack(stack);
         velocity = new TestVelocityEngine();
         mockActionProxy = new Mock(ActionProxy.class);

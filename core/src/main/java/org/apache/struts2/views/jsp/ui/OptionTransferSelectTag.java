@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.OptionTransferSelect;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * OptionTransferSelect jsp tag.
@@ -57,7 +57,7 @@ public class OptionTransferSelectTag extends AbstractDoubleListTag {
 	protected String rightDownLabel;
 	
 	
-	public Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+	public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
 		return new OptionTransferSelect(stack, req, res);
 	}
 	

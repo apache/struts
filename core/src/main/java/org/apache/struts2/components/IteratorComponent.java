@@ -23,7 +23,8 @@ import java.util.Iterator;
 import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.views.jsp.IteratorStatus;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -187,7 +188,7 @@ public class IteratorComponent extends Component {
     protected String statusAttr;
     protected String value;
 
-    public IteratorComponent(OgnlValueStack stack) {
+    public IteratorComponent(ValueStack stack) {
         super(stack);
     }
 
@@ -198,7 +199,7 @@ public class IteratorComponent extends Component {
             status = new IteratorStatus(statusState);
         }
 
-        OgnlValueStack stack = getStack();
+        ValueStack stack = getStack();
 
         if (value == null) {
             value = "top";
@@ -233,7 +234,7 @@ public class IteratorComponent extends Component {
     }
 
     public boolean end(Writer writer, String body) {
-        OgnlValueStack stack = getStack();
+        ValueStack stack = getStack();
         if (iterator != null) {
             stack.pop();
         }

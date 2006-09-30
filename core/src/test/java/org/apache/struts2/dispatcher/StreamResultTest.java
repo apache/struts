@@ -29,10 +29,11 @@ import org.apache.struts2.ServletActionContext;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * Unit test for {@link StreamResult}.
@@ -44,7 +45,7 @@ public class StreamResultTest extends TestCase {
     private MockHttpServletResponse response;
 
     private MockActionInvocation mai;
-    private OgnlValueStack stack;
+    private ValueStack stack;
     private int contentLength = 0;
 
     public void testStreamResultNoInputName() throws Exception {
@@ -165,7 +166,7 @@ public class StreamResultTest extends TestCase {
         response = new MockHttpServletResponse();
 
         result = new StreamResult();
-        stack = new OgnlValueStack();
+        stack = ValueStackFactory.getFactory().createValueStack();
         ActionContext.getContext().setValueStack(stack);
 
         MyImageAction action = new MyImageAction();

@@ -46,7 +46,8 @@ import org.jmock.core.Constraint;
 
 import com.mockobjects.servlet.MockJspWriter;
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  */
@@ -68,7 +69,7 @@ public class PortletUrlTagTest extends MockObjectTestCase {
 	
 	MockJspWriter mockJspWriter = null;
 
-	OgnlValueStack stack = null;
+	ValueStack stack = null;
 
 	public static void main(String[] args) {
 		TestRunner.run(PortletUrlTagTest.class);
@@ -82,7 +83,7 @@ public class PortletUrlTagTest extends MockObjectTestCase {
         
         mockPortletApiAvailable();
 		
-		stack = new OgnlValueStack();
+		stack = ValueStackFactory.getFactory().createValueStack();
 
 		
 		mockHttpReq = mock(HttpServletRequest.class);

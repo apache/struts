@@ -18,7 +18,7 @@
 package org.apache.struts2.views.jasperreports;
 
 import org.apache.struts2.util.MakeIterator;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
@@ -31,16 +31,16 @@ import java.util.Iterator;
  * Ported to Struts.
  *
  */
-public class OgnlValueStackDataSource implements JRDataSource {
+public class ValueStackDataSource implements JRDataSource {
 
     /**
      * Logger for this class
      */
-    private static Log log = LogFactory.getLog(OgnlValueStackDataSource.class);
+    private static Log log = LogFactory.getLog(ValueStackDataSource.class);
 
 
     Iterator iterator;
-    OgnlValueStack valueStack;
+    ValueStack valueStack;
     boolean firstTimeThrough = true;
 
 
@@ -50,7 +50,7 @@ public class OgnlValueStackDataSource implements JRDataSource {
      * @param valueStack The value stack to base the data source on
      * @param dataSource The property to iterate over for the report
      */
-    public OgnlValueStackDataSource(OgnlValueStack valueStack, String dataSource) {
+    public ValueStackDataSource(ValueStack valueStack, String dataSource) {
         this.valueStack = valueStack;
 
         Object dataSourceValue = valueStack.findValue(dataSource);
@@ -76,12 +76,12 @@ public class OgnlValueStackDataSource implements JRDataSource {
      *              of the field is either taken from the description property or from the name of the field
      *              if the description is <code>null</code>.
      * @return an <code>Object</code> containing the field value or a new
-     *         <code>OgnlValueStackDataSource</code> object if the field value evaluates to
+     *         <code>ValueStackDataSource</code> object if the field value evaluates to
      *         an object that can be iterated over.
      * @throws JRException if there is a problem obtaining the value
      */
     public Object getFieldValue(JRField field) throws JRException {
-        //TODO: move the code to return a OgnlValueStackDataSource to a seperate
+        //TODO: move the code to return a ValueStackDataSource to a seperate
         //      method when and if the JRDataSource interface is updated to support
         //      this.
         String expression = field.getDescription();
@@ -98,8 +98,8 @@ public class OgnlValueStackDataSource implements JRDataSource {
         }
 
         if (MakeIterator.isIterable(value)) {
-            //                return new OgnlValueStackDataSource(this.valueStack, field.getName());
-            return new OgnlValueStackDataSource(this.valueStack, expression);
+            //                return new ValueStackDataSource(this.valueStack, field.getName());
+            return new ValueStackDataSource(this.valueStack, expression);
         } else {
             return value;
         }

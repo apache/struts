@@ -28,7 +28,8 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 
 /**
@@ -41,7 +42,7 @@ public class StrutsConversionErrorInterceptorTest extends StrutsTestCase {
     protected ActionInvocation invocation;
     protected Map conversionErrors;
     protected Mock mockInvocation;
-    protected OgnlValueStack stack;
+    protected ValueStack stack;
     protected StrutsConversionErrorInterceptor interceptor;
 
 
@@ -82,7 +83,7 @@ public class StrutsConversionErrorInterceptorTest extends StrutsTestCase {
         interceptor = new StrutsConversionErrorInterceptor();
         mockInvocation = new Mock(ActionInvocation.class);
         invocation = (ActionInvocation) mockInvocation.proxy();
-        stack = new OgnlValueStack();
+        stack = ValueStackFactory.getFactory().createValueStack();
         context = new ActionContext(stack.getContext());
         conversionErrors = new HashMap();
         context.setConversionErrors(conversionErrors);

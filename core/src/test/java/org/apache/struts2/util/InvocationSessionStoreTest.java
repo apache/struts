@@ -26,7 +26,8 @@ import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 
 /**
@@ -42,7 +43,7 @@ public class InvocationSessionStoreTest extends StrutsTestCase {
     private ActionInvocation invocation;
     private Map session;
     private Mock invocationMock;
-    private OgnlValueStack stack;
+    private ValueStack stack;
 
 
     public void testStore() {
@@ -63,7 +64,7 @@ public class InvocationSessionStoreTest extends StrutsTestCase {
     }
 
     protected void setUp() throws Exception {
-        stack = new OgnlValueStack();
+        stack = ValueStackFactory.getFactory().createValueStack();
 
         ActionContext actionContext = new ActionContext(stack.getContext());
         ActionContext.setContext(actionContext);

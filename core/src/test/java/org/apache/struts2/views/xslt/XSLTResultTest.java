@@ -32,7 +32,8 @@ import org.springframework.mock.web.MockServletContext;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  * Unit test for {@link XSLTResult}.
@@ -45,7 +46,7 @@ public class XSLTResultTest extends StrutsTestCase {
     private MockHttpServletRequest request;
     private MockServletContext servletContext;
     private MockActionInvocation mai;
-    private OgnlValueStack stack;
+    private ValueStack stack;
 
     public void testNoLocation() throws Exception {
         try {
@@ -119,7 +120,7 @@ public class XSLTResultTest extends StrutsTestCase {
         servletContext = new MockServletContext(new DefaultResourceLoader());
 
         result = new XSLTResult();
-        stack = new OgnlValueStack();
+        stack = ValueStackFactory.getFactory().createValueStack();
         ActionContext.getContext().setValueStack(stack);
 
         MyAction action = new MyAction();

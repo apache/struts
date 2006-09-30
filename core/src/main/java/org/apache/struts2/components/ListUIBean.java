@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.util.ContainUtil;
 import org.apache.struts2.util.MakeIterator;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * DoubleListUIBean is the standard superclass of all Struts list handling components.
@@ -51,7 +51,7 @@ public abstract class ListUIBean extends UIBean {
     // indicate if an exception is to be thrown when value attribute is null
     protected boolean throwExceptionOnNullValueAttribute = false; 
 
-    protected ListUIBean(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    protected ListUIBean(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 

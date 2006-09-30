@@ -23,13 +23,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.ActionMessage;
 import org.apache.struts2.components.Component;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see ActionMessage
  */
 public class ActionMessageModel extends TagModel {
-    public ActionMessageModel(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public ActionMessageModel(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack, req, res);
     }
 

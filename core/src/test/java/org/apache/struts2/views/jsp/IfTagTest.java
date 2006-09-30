@@ -27,7 +27,8 @@ import org.apache.struts2.ServletActionContext;
 import com.mockobjects.servlet.MockJspWriter;
 import com.mockobjects.servlet.MockPageContext;
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 
 /**
@@ -36,7 +37,7 @@ public class IfTagTest extends TestCase {
 
     IfTag tag;
     MockPageContext pageContext;
-    OgnlValueStack stack;
+    ValueStack stack;
 
 
     public void testNonBooleanTest() {
@@ -318,7 +319,7 @@ public class IfTagTest extends TestCase {
     protected void setUp() throws Exception {
         // create the needed objects
         tag = new IfTag();
-        stack = new OgnlValueStack();
+        stack = ValueStackFactory.getFactory().createValueStack();
 
         // create the mock http servlet request
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();

@@ -19,7 +19,7 @@ package org.apache.struts2.components;
 
 import java.io.Writer;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -74,7 +74,7 @@ public class If extends Component {
         this.test = test;
     }
 
-    public If(OgnlValueStack stack) {
+    public If(ValueStack stack) {
         super(stack);
     }
 

@@ -23,7 +23,7 @@ import java.io.Writer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.TextUtils;
 
 /**
@@ -86,7 +86,7 @@ import com.opensymphony.xwork2.util.TextUtils;
 public class Property extends Component {
     private static final Log LOG = LogFactory.getLog(Property.class);
 
-    public Property(OgnlValueStack stack) {
+    public Property(ValueStack stack) {
         super(stack);
     }
 

@@ -19,7 +19,9 @@ package org.apache.struts2.util;
 
 import java.util.Comparator;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 
 /**
@@ -47,7 +49,7 @@ public class Sorter {
 
     public Comparator getAscending(final String anExpression) {
         return new Comparator() {
-            private OgnlValueStack stack = new OgnlValueStack();
+            private ValueStack stack = ValueStackFactory.getFactory().createValueStack();
 
             public int compare(Object o1, Object o2) {
                 // Get value for first object
@@ -109,7 +111,7 @@ public class Sorter {
 
     public Comparator getDescending(final String anExpression) {
         return new Comparator() {
-            private OgnlValueStack stack = new OgnlValueStack();
+            private ValueStack stack = ValueStackFactory.getFactory().createValueStack();
 
             public int compare(Object o1, Object o2) {
                 // Get value for first object

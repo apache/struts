@@ -21,7 +21,8 @@ import org.apache.struts2.StrutsTestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  * 
@@ -30,7 +31,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
 public class UIBeanTest extends StrutsTestCase {
 	
 	public void testPopulateComponentHtmlId1() throws Exception {
-		OgnlValueStack stack = new OgnlValueStack();
+		ValueStack stack = ValueStackFactory.getFactory().createValueStack();
 		MockHttpServletRequest req = new MockHttpServletRequest();
 		MockHttpServletResponse res = new MockHttpServletResponse();
 		
@@ -46,7 +47,7 @@ public class UIBeanTest extends StrutsTestCase {
 	}
 	
 	public void testPopulateComponentHtmlId2() throws Exception {
-		OgnlValueStack stack = new OgnlValueStack();
+		ValueStack stack = ValueStackFactory.getFactory().createValueStack();
 		MockHttpServletRequest req = new MockHttpServletRequest();
 		MockHttpServletResponse res = new MockHttpServletResponse();
 		

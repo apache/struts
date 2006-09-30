@@ -60,7 +60,8 @@ import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ObjectTypeDeterminer;
 import com.opensymphony.xwork2.util.ObjectTypeDeterminerFactory;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.XWorkContinuationConfig;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
@@ -290,9 +291,9 @@ public class Dispatcher {
         Map<String, Object> extraContext = createContextMap(request, response, mapping, context);
 
         // If there was a previous value stack, then create a new copy and pass it in to be used by the new Action
-        OgnlValueStack stack = (OgnlValueStack) request.getAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY);
+        ValueStack stack = (ValueStack) request.getAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY);
         if (stack != null) {
-            extraContext.put(ActionContext.VALUE_STACK, new OgnlValueStack(stack));
+            extraContext.put(ActionContext.VALUE_STACK, ValueStackFactory.getFactory().createValueStack(stack));
         }
 
         try {

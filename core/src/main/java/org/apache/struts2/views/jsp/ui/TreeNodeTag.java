@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.TreeNode;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see TreeNode
@@ -33,7 +33,7 @@ public class TreeNodeTag extends AbstractClosingTag {
 	private static final long serialVersionUID = 7340746943017900803L;
 	
 
-    public Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new TreeNode(stack,req,res);
     }
 

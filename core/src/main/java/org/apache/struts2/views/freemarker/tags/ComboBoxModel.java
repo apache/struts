@@ -23,13 +23,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.ComboBox;
 import org.apache.struts2.components.Component;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see ComboBox
  */
 public class ComboBoxModel extends TagModel {
-    public ComboBoxModel(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public ComboBoxModel(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack, req, res);
     }
 

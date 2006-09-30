@@ -21,7 +21,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
@@ -42,10 +42,10 @@ public class ScopesHashModel extends SimpleHash {
 	
 	private HttpServletRequest request;
     private ServletContext servletContext;
-    private OgnlValueStack stack;
+    private ValueStack stack;
 
 
-    public ScopesHashModel(ObjectWrapper objectWrapper, ServletContext context, HttpServletRequest request, OgnlValueStack stack) {
+    public ScopesHashModel(ObjectWrapper objectWrapper, ServletContext context, HttpServletRequest request, ValueStack stack) {
         super(objectWrapper);
         this.servletContext = context;
         this.request = request;

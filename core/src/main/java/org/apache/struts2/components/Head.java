@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.Settings;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -80,7 +80,7 @@ public class Head extends UIBean {
     private String calendarcss = "calendar-blue.css";
     private boolean debug;
 
-    public Head(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public Head(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 

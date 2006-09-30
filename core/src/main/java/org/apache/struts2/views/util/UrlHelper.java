@@ -35,8 +35,8 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.Settings;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.OgnlValueStack;
 import com.opensymphony.xwork2.util.TextParseUtil;
+import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.XWorkContinuationConfig;
 
 
@@ -265,7 +265,7 @@ public class UrlHelper {
     }
     
     private static String translateVariable(String input) {
-    	OgnlValueStack valueStack = ServletActionContext.getContext().getValueStack();
+    	ValueStack valueStack = ServletActionContext.getContext().getValueStack();
         String output = TextParseUtil.translateVariables(input, valueStack);
         return output;
     }

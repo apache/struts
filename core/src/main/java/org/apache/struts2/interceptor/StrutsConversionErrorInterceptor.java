@@ -19,7 +19,7 @@ package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.ConversionErrorInterceptor;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**
@@ -71,7 +71,7 @@ public class StrutsConversionErrorInterceptor extends ConversionErrorInterceptor
 	private static final long serialVersionUID = 2759744840082921602L;
 
 	protected Object getOverrideExpr(ActionInvocation invocation, Object value) {
-        OgnlValueStack stack = invocation.getStack();
+        ValueStack stack = invocation.getStack();
 
         try {
             stack.push(value);

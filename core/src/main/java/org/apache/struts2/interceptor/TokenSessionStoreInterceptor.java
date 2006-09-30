@@ -28,7 +28,8 @@ import org.apache.struts2.util.TokenHelper;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**
@@ -119,7 +120,7 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
 
             if (savedInvocation != null) {
                 // set the valuestack to the request scope
-                OgnlValueStack stack = savedInvocation.getStack();
+                ValueStack stack = savedInvocation.getStack();
                 request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
 
                 Result result = savedInvocation.getResult();

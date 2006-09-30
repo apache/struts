@@ -23,13 +23,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.IteratorComponent;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see IteratorComponent
  */
 public class IteratorModel extends TagModel {
-    public IteratorModel(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public IteratorModel(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack, req, res);
     }
 

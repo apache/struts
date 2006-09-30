@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * ClosingUIBean is the standard superclass for UI components such as div etc.
@@ -33,7 +33,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
 public abstract class ClosingUIBean extends UIBean {
     private static final Log LOG = LogFactory.getLog(ClosingUIBean.class);
 
-    protected ClosingUIBean(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    protected ClosingUIBean(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 

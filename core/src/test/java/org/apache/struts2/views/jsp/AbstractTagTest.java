@@ -35,7 +35,8 @@ import org.apache.struts2.dispatcher.SessionMap;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 
 /**
@@ -46,7 +47,7 @@ public abstract class AbstractTagTest extends StrutsTestCase {
     protected Action action;
     protected Map context;
     protected Map session;
-    protected OgnlValueStack stack;
+    protected ValueStack stack;
 
     /**
      * contains the buffer that our unit test will write to.  we can later verify this buffer for correctness.
@@ -61,7 +62,7 @@ public abstract class AbstractTagTest extends StrutsTestCase {
      * Constructs the action that we're going to test against.  For most UI tests, this default action should be enough.
      * However, simply override getAction to return a custom Action if you need something more sophisticated.
      *
-     * @return the Action to be added to the OgnlValueStack as part of the unit test
+     * @return the Action to be added to the ValueStack as part of the unit test
      */
     public Action getAction() {
         return new TestAction();
@@ -74,7 +75,7 @@ public abstract class AbstractTagTest extends StrutsTestCase {
          * create our standard mock objects
          */
         action = this.getAction();
-        stack = new OgnlValueStack();
+        stack = ValueStackFactory.getFactory().createValueStack();
         context = stack.getContext();
         stack.push(action);
 

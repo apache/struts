@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.util.MakeIterator;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -96,7 +96,7 @@ public class ComboBox extends TextField {
     protected String emptyOption;
     
 
-    public ComboBox(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public ComboBox(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 

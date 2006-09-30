@@ -20,7 +20,7 @@ package org.apache.struts2.components;
 import java.io.Writer;
 import java.util.Map;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -54,7 +54,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * @s.tag name="else" bodycontent="JSP" description="Else tag"  tld-tag-class="org.apache.struts2.views.jsp.ElseTag"
  */
 public class Else extends Component {
-    public Else(OgnlValueStack stack) {
+    public Else(ValueStack stack) {
         super(stack);
     }
 

@@ -24,7 +24,8 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import org.apache.struts2.util.FastByteArrayOutputStream;
 import org.apache.struts2.views.util.ContextUtil;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**
@@ -47,7 +48,7 @@ public class StrutsBodyTagSupport extends BodyTagSupport {
         return ContextUtil.isUseAltSyntax(getStack().getContext());
     }
 
-    protected OgnlValueStack getStack() {
+    protected ValueStack getStack() {
         return TagUtils.getStack(pageContext);
     }
 
@@ -98,7 +99,7 @@ public class StrutsBodyTagSupport extends BodyTagSupport {
         }
     }
     
-    public static String translateVariables(String expression, OgnlValueStack stack) {
+    public static String translateVariables(String expression, ValueStack stack) {
         while (true) {
             int x = expression.indexOf("%{");
             int y = expression.indexOf("}", x);

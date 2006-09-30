@@ -20,7 +20,7 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -80,7 +80,7 @@ public class TreeNode extends ClosingUIBean {
     private static final String TEMPLATE = "treenode-close";
     private static final String OPEN_TEMPLATE = "treenode";
 
-    public TreeNode(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public TreeNode(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 

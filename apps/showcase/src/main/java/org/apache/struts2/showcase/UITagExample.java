@@ -20,7 +20,7 @@ package org.apache.struts2.showcase;
 import org.apache.struts2.ServletActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Validateable;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -123,7 +123,7 @@ public class UITagExample extends ActionSupport implements Validateable {
     }
     
     public List getVehicalSpecificList() {
-    	OgnlValueStack stack = ServletActionContext.getValueStack(ServletActionContext.getRequest());
+    	ValueStack stack = ServletActionContext.getValueStack(ServletActionContext.getRequest());
     	Object vehicalType = stack.findValue("top");
     	if (vehicalType != null && vehicalType instanceof VehicalType) {
     		List l = (List) vehicalSpecificMap.get(vehicalType);

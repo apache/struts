@@ -42,8 +42,8 @@ import org.apache.struts2.views.jsp.ui.OgnlTool;
 import org.apache.struts2.views.util.UrlHelper;
 
 import com.opensymphony.xwork2.util.TextUtils;
+import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.util.OgnlValueStack;
 
 
 /**
@@ -59,10 +59,10 @@ public class StrutsUtil {
     protected HttpServletResponse response;
     protected Map classes = new Hashtable();
     protected OgnlTool ognl = OgnlTool.getInstance();
-    protected OgnlValueStack stack;
+    protected ValueStack stack;
 
 
-    public StrutsUtil(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public StrutsUtil(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         this.stack = stack;
         this.request = request;
         this.response = response;

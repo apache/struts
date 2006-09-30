@@ -19,7 +19,8 @@ package org.apache.struts2.components;
 
 import java.io.Writer;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -109,14 +110,14 @@ public class Push extends Component {
     protected String value;
     protected boolean pushed;
 
-    public Push(OgnlValueStack stack) {
+    public Push(ValueStack stack) {
         super(stack);
     }
 
     public boolean start(Writer writer) {
         boolean result = super.start(writer);
 
-        OgnlValueStack stack = getStack();
+        ValueStack stack = getStack();
 
         if (stack != null) {
             stack.push(findValue(value, "value", "You must specify a value to push on the stack. Example: person"));
@@ -129,7 +130,7 @@ public class Push extends Component {
     }
 
     public boolean end(Writer writer, String body) {
-        OgnlValueStack stack = getStack();
+        ValueStack stack = getStack();
 
         if (pushed && (stack != null)) {
             stack.pop();

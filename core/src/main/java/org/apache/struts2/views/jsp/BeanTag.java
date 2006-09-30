@@ -25,7 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.components.Bean;
 import org.apache.struts2.components.Component;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**
@@ -39,7 +39,7 @@ public class BeanTag extends ComponentTagSupport {
 
     protected String name;
 
-    public Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Bean(stack);
     }
 

@@ -49,7 +49,8 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  * Jsr168DispatcherTest. Insert description.
@@ -89,7 +90,7 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         }));
     }
 
-    private void setupActionFactory(String namespace, String actionName, String result, OgnlValueStack stack) {
+    private void setupActionFactory(String namespace, String actionName, String result, ValueStack stack) {
         if(mockActionFactory == null) {
             mockActionFactory = mock(ActionProxyFactory.class);
         }
@@ -128,7 +129,7 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
 
         initPortletConfig(initParams, new HashMap());
         initRequest(requestParams, new HashMap(), sessionMap, new HashMap(), PortletMode.VIEW, WindowState.NORMAL, false, null);
-        setupActionFactory("/view", "testAction", "success", new OgnlValueStack());
+        setupActionFactory("/view", "testAction", "success", ValueStackFactory.getFactory().createValueStack());
 
         mockInvocation.expects(once()).method("getStack").will(
                 returnValue(null));
@@ -159,7 +160,7 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         
         initPortletConfig(initParams, new HashMap());
         initRequest(requestParams, new HashMap(), new HashMap(), new HashMap(), PortletMode.VIEW, WindowState.NORMAL, true, null);
-        setupActionFactory("/view", "testAction", "success", new OgnlValueStack());
+        setupActionFactory("/view", "testAction", "success", ValueStackFactory.getFactory().createValueStack());
         Constraint[] paramConstraints = new Constraint[] {
                 eq(PortletActionConstants.EVENT_ACTION), same(mockActionProxy.proxy()) };
 
@@ -270,7 +271,7 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
 
         initPortletConfig(initParams, new HashMap());
         initRequest(requestParams, new HashMap(), sessionMap, new HashMap(), mode, WindowState.NORMAL, false, null);
-        setupActionFactory("/edit", "default", "success", new OgnlValueStack());
+        setupActionFactory("/edit", "default", "success", ValueStackFactory.getFactory().createValueStack());
 
         mockInvocation.expects(once()).method("getStack").will(
                 returnValue(null));

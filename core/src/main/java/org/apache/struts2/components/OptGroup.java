@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -76,7 +76,7 @@ public class OptGroup extends Component {
 
 	protected ListUIBean internalUiBean;
 
-	public OptGroup(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+	public OptGroup(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
 		super(stack);
 		this.req = req;
 		this.res = res;

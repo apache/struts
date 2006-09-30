@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**
@@ -51,7 +51,7 @@ public class ServletActionContext extends ActionContext implements StrutsStatics
      * @return The current action context
      */
     public static ActionContext getActionContext(HttpServletRequest req) {
-        OgnlValueStack vs = getValueStack(req);
+        ValueStack vs = getValueStack(req);
         if (vs != null) {
             return new ActionContext(vs.getContext());
         } else {
@@ -65,8 +65,8 @@ public class ServletActionContext extends ActionContext implements StrutsStatics
      * @param req The request
      * @return The value stack
      */
-    public static OgnlValueStack getValueStack(HttpServletRequest req) {
-        return (OgnlValueStack) req.getAttribute(STRUTS_VALUESTACK_KEY);
+    public static ValueStack getValueStack(HttpServletRequest req) {
+        return (ValueStack) req.getAttribute(STRUTS_VALUESTACK_KEY);
     }
 
     /**

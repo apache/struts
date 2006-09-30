@@ -55,6 +55,7 @@ import org.apache.struts2.util.ObjectFactoryInitializable;
 
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.FileManager;
+import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
@@ -62,7 +63,6 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import com.opensymphony.xwork2.util.OgnlValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -437,7 +437,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
                 ActionProxy action = (ActionProxy) request.getPortletSession()
                         .getAttribute(EVENT_ACTION);
                 if (action != null) {
-                    OgnlValueStack stack = proxy.getInvocation().getStack();
+                    ValueStack stack = proxy.getInvocation().getStack();
                     Object top = stack.pop();
                     stack.push(action.getInvocation().getAction());
                     stack.push(top);

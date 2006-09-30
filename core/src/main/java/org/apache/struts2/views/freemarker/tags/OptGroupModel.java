@@ -23,14 +23,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.OptGroup;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * Freemarker's TransformModel for OptGroup component.
  *
  */
 public class OptGroupModel extends TagModel {
-	public OptGroupModel(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+	public OptGroupModel(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
 		super(stack, req, res);
 	}
 

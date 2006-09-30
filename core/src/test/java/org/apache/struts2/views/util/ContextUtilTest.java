@@ -22,7 +22,9 @@ import junit.framework.TestCase;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.Settings;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  * Test case for ContextUtil
@@ -31,7 +33,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
 public class ContextUtilTest extends TestCase {
 
     public void testAltSyntaxMethod1() throws Exception {
-        OgnlValueStack stack = new OgnlValueStack();
+        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
         stack.getContext().put("useAltSyntax", "true");
         
         Settings.reset();
@@ -42,7 +44,7 @@ public class ContextUtilTest extends TestCase {
     }
     
     public void testAltSyntaxMethod2() throws Exception {
-        OgnlValueStack stack = new OgnlValueStack();
+        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
         stack.getContext().put("useAltSyntax", "false");
         
         Settings.reset();
@@ -53,7 +55,7 @@ public class ContextUtilTest extends TestCase {
     }
     
     public void testAltSyntaxMethod3() throws Exception {
-        OgnlValueStack stack = new OgnlValueStack();
+        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
         stack.getContext().put("useAltSyntax", "true");
         
         Settings.reset();
@@ -64,7 +66,7 @@ public class ContextUtilTest extends TestCase {
     }
     
     public void testAltSyntaxMethod4() throws Exception {
-        OgnlValueStack stack = new OgnlValueStack();
+        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
         stack.getContext().put("useAltSyntax", "false");
         
         Settings.reset();
@@ -77,7 +79,7 @@ public class ContextUtilTest extends TestCase {
     //========================================================
     
     public void testAltSyntaxMethod5() throws Exception {
-        OgnlValueStack stack = new OgnlValueStack();
+        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
         stack.getContext().put("useAltSyntax", Boolean.TRUE);
         
         Settings.reset();
@@ -87,7 +89,7 @@ public class ContextUtilTest extends TestCase {
         assertTrue(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
     public void testAltSyntaxMethod6() throws Exception {
-        OgnlValueStack stack = new OgnlValueStack();
+        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
         stack.getContext().put("useAltSyntax", Boolean.FALSE);
         
         Settings.reset();
@@ -97,7 +99,7 @@ public class ContextUtilTest extends TestCase {
         assertTrue(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
     public void testAltSyntaxMethod7() throws Exception {
-        OgnlValueStack stack = new OgnlValueStack();
+        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
         stack.getContext().put("useAltSyntax", Boolean.TRUE);
         
         Settings.reset();
@@ -107,7 +109,7 @@ public class ContextUtilTest extends TestCase {
         assertTrue(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
     public void testAltSyntaxMethod8() throws Exception {
-        OgnlValueStack stack = new OgnlValueStack();
+        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
         stack.getContext().put("useAltSyntax", Boolean.FALSE);
         
         Settings.reset();
@@ -119,7 +121,7 @@ public class ContextUtilTest extends TestCase {
     
     // ==========================================
     public void testAltSyntaxMethod9() throws Exception {
-        OgnlValueStack stack = new OgnlValueStack();
+        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
         stack.getContext().put("useAltSyntax", null);
         
         Settings.reset();

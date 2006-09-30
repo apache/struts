@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.util.TokenHelper;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -53,7 +53,7 @@ public class Token extends UIBean {
     
     public static final String TEMPLATE = "token";
 
-    public Token(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public Token(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 

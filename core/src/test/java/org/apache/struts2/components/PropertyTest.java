@@ -25,7 +25,8 @@ import ognl.Ognl;
 
 import org.apache.struts2.util.StrutsTypeConverter;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.XWorkConverter;
  
 /**
@@ -33,7 +34,7 @@ import com.opensymphony.xwork2.util.XWorkConverter;
  */
 public class PropertyTest extends TestCase {
     public void testNormalBehaviour() {
-        final OgnlValueStack stack = new OgnlValueStack();
+        final ValueStack stack = ValueStackFactory.getFactory().createValueStack();
         stack.push(new FooBar("foo-value", "bar-value"));
         final Property property = new Property(stack);
         property.setDefault("default");
@@ -42,7 +43,7 @@ public class PropertyTest extends TestCase {
     }
  
     public void testDefaultShouldBeOutputIfBeanNotAvailable() {
-        final OgnlValueStack stack = new OgnlValueStack();
+        final ValueStack stack = ValueStackFactory.getFactory().createValueStack();
         final Property property = new Property(stack);
         property.setDefault("default");
         property.setValue("foo");
@@ -50,7 +51,7 @@ public class PropertyTest extends TestCase {
     }
  
     public void testDefaultShouldBeOutputIfPropertyIsNull() {
-        final OgnlValueStack stack = new OgnlValueStack();
+        final ValueStack stack = ValueStackFactory.getFactory().createValueStack();
         stack.push(new FooBar(null, "bar-value"));
         final Property property = new Property(stack);
         property.setDefault("default");
@@ -59,7 +60,7 @@ public class PropertyTest extends TestCase {
     }
  
     public void testTopValueShouldReturnTopOfValueStack() {
-        final OgnlValueStack stack = new OgnlValueStack();
+        final ValueStack stack = ValueStackFactory.getFactory().createValueStack();
         stack.push(new FooBar("foo-value", "bar-value"));
         final Property property = new Property(stack);
         property.setDefault("default");
@@ -68,7 +69,7 @@ public class PropertyTest extends TestCase {
     }
  
     public void testTypeConverterShouldBeUsed() {
-        final OgnlValueStack stack = new OgnlValueStack();
+        final ValueStack stack = ValueStackFactory.getFactory().createValueStack();
         Ognl.setTypeConverter(stack.getContext(), new TestDefaultConverter());
  
         stack.push(new FooBar("foo-value", "bar-value"));
@@ -79,7 +80,7 @@ public class PropertyTest extends TestCase {
     }
  
     public void testTypeConverterReturningNullShouldLeadToDisplayOfDefaultValue() {
-        final OgnlValueStack stack = new OgnlValueStack();
+        final ValueStack stack = ValueStackFactory.getFactory().createValueStack();
         Ognl.setTypeConverter(stack.getContext(), new TestDefaultConverter());
  
         stack.push(new FooBar("foo-value", null));

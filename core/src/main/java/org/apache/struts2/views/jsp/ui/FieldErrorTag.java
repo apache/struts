@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.FieldError;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * FieldError Tag.
@@ -32,7 +32,7 @@ public class FieldErrorTag extends AbstractUITag {
 
 	private static final long serialVersionUID = -182532967507726323L;
 
-	public Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+	public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
 		return new FieldError(stack, req, res);
 	}
 }

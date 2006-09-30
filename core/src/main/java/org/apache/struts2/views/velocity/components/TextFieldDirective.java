@@ -23,13 +23,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.TextField;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see TextField
  */
 public class TextFieldDirective extends AbstractDirective {
-    protected Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    protected Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new TextField(stack, req, res);
     }
 

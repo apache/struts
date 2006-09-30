@@ -37,7 +37,8 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.mock.MockActionInvocation;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 
 /**
@@ -119,6 +120,6 @@ public class ServletRedirectResultTest extends StrutsTestCase implements StrutsS
         MockActionInvocation ai = new MockActionInvocation();
         ai.setInvocationContext(ac);
         this.ai = ai;
-        ai.setStack(new OgnlValueStack());
+        ai.setStack(ValueStackFactory.getFactory().createValueStack());
     }
 }

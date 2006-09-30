@@ -26,7 +26,7 @@ import org.apache.struts2.components.Component;
 import org.apache.struts2.components.Panel;
 import org.apache.struts2.components.TabbedPanel;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see TabbedPanel
@@ -35,7 +35,7 @@ public class TabbedPanelTag extends AbstractClosingTag {
 	
 	private static final long serialVersionUID = -4719930205515386252L;
 
-	public Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+	public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new TabbedPanel(stack, req, res);
     }
 

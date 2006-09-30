@@ -92,7 +92,8 @@ import org.apache.velocity.tools.view.context.ChainedContext;
 import org.apache.velocity.tools.view.servlet.ServletToolboxManager;
 
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**
@@ -177,7 +178,7 @@ public class VelocityManager {
      * <ul>
      * <li><strong>request</strong> - the current HttpServletRequest</li>
      * <li><strong>response</strong> - the current HttpServletResponse</li>
-     * <li><strong>stack</strong> - the current {@link OgnlValueStack}</li>
+     * <li><strong>stack</strong> - the current {@link ValueStack}</li>
      * <li><strong>ognl</strong> - an {@link OgnlTool}</li>
      * <li><strong>struts</strong> - an instance of {@link org.apache.struts2.util.StrutsUtil}</li>
      * <li><strong>action</strong> - the current Struts action</li>
@@ -185,7 +186,7 @@ public class VelocityManager {
      *
      * @return a new StrutsVelocityContext
      */
-    public Context createContext(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public Context createContext(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         VelocityContext[] chainedContexts = prepareChainedContexts(req, res, stack.getContext());
         StrutsVelocityContext context = new StrutsVelocityContext(chainedContexts, stack);
         Map standardMap = ContextUtil.getStandardContext(stack, req, res);

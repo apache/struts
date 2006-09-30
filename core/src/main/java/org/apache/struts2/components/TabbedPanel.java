@@ -23,7 +23,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -99,7 +99,7 @@ public class TabbedPanel extends ClosingUIBean {
 
     protected List tabs = new ArrayList();
 
-    public TabbedPanel(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public TabbedPanel(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 

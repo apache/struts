@@ -29,7 +29,7 @@ import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**
@@ -40,7 +40,7 @@ public class VelocityStrutsUtil extends StrutsUtil {
 
     private Context ctx;
 
-    public VelocityStrutsUtil(Context ctx, OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public VelocityStrutsUtil(Context ctx, ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
         this.ctx = ctx;
     }

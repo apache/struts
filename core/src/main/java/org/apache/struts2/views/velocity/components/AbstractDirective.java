@@ -34,7 +34,7 @@ import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.parser.node.Node;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 public abstract class AbstractDirective extends Directive {
     public String getName() {
@@ -50,11 +50,11 @@ public abstract class AbstractDirective extends Directive {
         return LINE;
     }
 
-    protected abstract Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res);
+    protected abstract Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res);
 
     public boolean render(InternalContextAdapter ctx, Writer writer, Node node) throws IOException, ResourceNotFoundException, ParseErrorException, MethodInvocationException {
         // get the bean
-        OgnlValueStack stack = (OgnlValueStack) ctx.get("stack");
+        ValueStack stack = (ValueStack) ctx.get("stack");
         HttpServletRequest req = (HttpServletRequest) stack.getContext().get(ServletActionContext.HTTP_REQUEST);
         HttpServletResponse res = (HttpServletResponse) stack.getContext().get(ServletActionContext.HTTP_RESPONSE);
         Component bean = getBean(stack, req, res);

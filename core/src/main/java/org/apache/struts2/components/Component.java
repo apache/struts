@@ -37,8 +37,9 @@ import org.apache.struts2.views.jsp.TagUtils;
 import org.apache.struts2.views.util.ContextUtil;
 import org.apache.struts2.views.util.UrlHelper;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.TextParseUtil;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * Base class to extend for UI components.
@@ -49,7 +50,7 @@ import com.opensymphony.xwork2.util.TextParseUtil;
 public class Component {
     public static final String COMPONENT_STACK = "__component_stack";
 
-    protected OgnlValueStack stack;
+    protected ValueStack stack;
     protected Map parameters;
     protected String id;
 
@@ -58,7 +59,7 @@ public class Component {
      *
      * @param stack  OGNL value stack.
      */
-    public Component(OgnlValueStack stack) {
+    public Component(ValueStack stack) {
         this.stack = stack;
         this.parameters = new HashMap();
         getComponentStack().push(this);
@@ -80,7 +81,7 @@ public class Component {
      * Get's the OGNL value stack assoicated with this component.
      * @return the OGNL value stack assoicated with this component.
      */
-    public OgnlValueStack getStack() {
+    public ValueStack getStack() {
         return stack;
     }
 
@@ -344,7 +345,7 @@ public class Component {
      * @param req        HTTP request
      * @return  the namepsace of the current page being rendered, is never <tt>null</tt>.
      */
-    protected String determineNamespace(String namespace, OgnlValueStack stack, HttpServletRequest req) {
+    protected String determineNamespace(String namespace, ValueStack stack, HttpServletRequest req) {
         String result;
 
         if (namespace == null) {

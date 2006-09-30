@@ -38,7 +38,7 @@ import org.apache.struts2.portlet.util.PortletUrlHelper;
 import org.apache.struts2.views.util.UrlHelper;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.XWorkContinuationConfig;
 
 /**
@@ -138,7 +138,7 @@ public class URL extends Component {
     protected String portletUrlType;
     protected String anchor;
 
-    public URL(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public URL(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack);
         this.req = req;
         this.res = res;

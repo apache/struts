@@ -23,13 +23,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.TextArea;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see TextArea
  */
 public class TextAreaModel extends TagModel {
-    public TextAreaModel(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public TextAreaModel(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack, req, res);
     }
 

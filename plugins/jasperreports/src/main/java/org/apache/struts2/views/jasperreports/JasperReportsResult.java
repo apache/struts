@@ -45,7 +45,7 @@ import com.opensymphony.xwork2.util.TextUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -64,11 +64,11 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
  * <li><b>location (default)</b> - the location where the compiled jasper report
  * definition is (foo.jasper), relative from current URL.</li>
  *
- * <li><b>dataSource (required)</b> - the Ognl expression used to retrieve the
+ * <li><b>dataSource (required)</b> - the EL expression used to retrieve the
  * datasource from the value stack (usually a List).</li>
  *
  * <li><b>parse</b> - true by default. If set to false, the location param will
- * not be parsed for Ognl expressions.</li>
+ * not be parsed for EL expressions.</li>
  *
  * <li><b>format</b> - the format in which the report should be generated. Valid
  * values can be found in {@link JasperReportConstants}. If no format is
@@ -176,8 +176,8 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         HttpServletResponse response = (HttpServletResponse) invocation.getInvocationContext().get(ServletActionContext.HTTP_RESPONSE);
 
         //construct the data source for the report
-        OgnlValueStack stack = invocation.getStack();
-        OgnlValueStackDataSource stackDataSource = new OgnlValueStackDataSource(stack, dataSource);
+        ValueStack stack = invocation.getStack();
+        ValueStackDataSource stackDataSource = new ValueStackDataSource(stack, dataSource);
 
         format = conditionalParse(format, invocation);
         dataSource = conditionalParse(dataSource, invocation);
@@ -201,7 +201,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
             //  ServletContext servletContext = ((ServletConfig) invocation.getInvocationContext().get(ServletActionContext.SERVLET_CONFIG)).getServletContext();
             ServletContext servletContext = (ServletContext) invocation.getInvocationContext().get(ServletActionContext.SERVLET_CONTEXT);
             String systemId = servletContext.getRealPath(finalLocation);
-            Map parameters = new OgnlValueStackShadowMap(stack);
+            Map parameters = new ValueStackShadowMap(stack);
             File directory = new File(systemId.substring(0, systemId.lastIndexOf(File.separator)));
             parameters.put("reportDirectory", directory);
             parameters.put(JRParameter.REPORT_LOCALE, invocation.getInvocationContext().getLocale());

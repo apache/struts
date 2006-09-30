@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.ActionComponent;
 import org.apache.struts2.components.Component;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see ActionComponent
@@ -33,7 +33,7 @@ public class ActionDirective extends AbstractDirective {
         return "action";
     }
 
-    protected Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    protected Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new ActionComponent(stack, req, res);
     }
 }

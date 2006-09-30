@@ -23,7 +23,8 @@ import java.util.Map;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**
@@ -55,7 +56,7 @@ public class InvocationSessionStore {
             return null;
         }
 
-        OgnlValueStack stack = invocationContext.invocation.getStack();
+        ValueStack stack = invocationContext.invocation.getStack();
         ActionContext.getContext().setValueStack(stack);
 
         return invocationContext.invocation;

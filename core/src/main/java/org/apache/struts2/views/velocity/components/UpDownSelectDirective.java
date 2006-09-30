@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.UpDownSelect;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see UpDownSelect
@@ -35,7 +35,7 @@ public class UpDownSelectDirective extends AbstractDirective {
 		return "updownselect";
 	}
 
-	protected Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+	protected Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
 		return new UpDownSelect(stack, req, res);
 	}
 }

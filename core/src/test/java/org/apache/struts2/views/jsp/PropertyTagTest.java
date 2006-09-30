@@ -27,7 +27,8 @@ import org.apache.struts2.config.Settings;
 import com.mockobjects.servlet.MockJspWriter;
 import com.mockobjects.servlet.MockPageContext;
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 
 /**
@@ -37,7 +38,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
 public class PropertyTagTest extends StrutsTestCase {
 
     StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
-    OgnlValueStack stack = new OgnlValueStack();
+    ValueStack stack = ValueStackFactory.getFactory().createValueStack();
 
 
     public void testDefaultValue() {

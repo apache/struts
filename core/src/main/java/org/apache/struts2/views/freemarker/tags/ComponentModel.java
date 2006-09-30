@@ -23,13 +23,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.GenericUIBean;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see ComponentModel
  */
 public class ComponentModel extends TagModel {
-    public ComponentModel(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public ComponentModel(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack, req, res);
     }
 

@@ -26,7 +26,9 @@ import org.apache.struts2.components.If;
 
 import com.mockobjects.servlet.MockJspWriter;
 import com.mockobjects.servlet.MockPageContext;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  * 
@@ -35,7 +37,7 @@ public class ElseIfTagTest extends TestCase {
 
 	protected MockPageContext pageContext;
 	protected MockJspWriter jspWriter;
-	protected OgnlValueStack stack;
+	protected ValueStack stack;
 	
 	
 	public void testIfIsFalseElseIfIsTrue() throws Exception {
@@ -92,7 +94,7 @@ public class ElseIfTagTest extends TestCase {
 	
 	
 	protected void setUp() throws Exception {
-		stack = new OgnlValueStack();
+		stack = ValueStackFactory.getFactory().createValueStack();
 		
 		jspWriter = new MockJspWriter();
 		

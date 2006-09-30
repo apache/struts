@@ -23,13 +23,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.FieldError;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see FieldError
  */
 public class FieldErrorModel extends TagModel {
-    public FieldErrorModel(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public FieldErrorModel(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack, req, res);
     }
 

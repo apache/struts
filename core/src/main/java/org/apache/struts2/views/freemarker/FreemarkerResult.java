@@ -32,7 +32,8 @@ import org.apache.struts2.views.util.ResourceUtil;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.LocaleProvider;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
@@ -212,7 +213,7 @@ public class FreemarkerResult extends StrutsResultSupport {
         ServletContext servletContext = ServletActionContext.getServletContext();
         HttpServletRequest request = ServletActionContext.getRequest();
         HttpServletResponse response = ServletActionContext.getResponse();
-        OgnlValueStack stack = ServletActionContext.getContext().getValueStack();
+        ValueStack stack = ServletActionContext.getContext().getValueStack();
 
         Object action = null;
         if(invocation!= null ) action = invocation.getAction(); //Added for NullPointException

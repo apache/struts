@@ -28,8 +28,8 @@ import org.apache.struts2.ServletActionContext;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.util.OgnlValueStack;
 import com.opensymphony.xwork2.util.TextParseUtil;
+import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**
@@ -127,7 +127,7 @@ public class HttpHeaderResult implements Result {
         }
 
         if (headers != null) {
-            OgnlValueStack stack = ActionContext.getContext().getValueStack();
+            ValueStack stack = ActionContext.getContext().getValueStack();
 
             for (Iterator iterator = headers.entrySet().iterator();
                  iterator.hasNext();) {

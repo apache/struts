@@ -30,7 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.components.Component;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 import freemarker.template.SimpleNumber;
 import freemarker.template.SimpleSequence;
@@ -40,11 +40,11 @@ import freemarker.template.TemplateTransformModel;
 public abstract class TagModel implements TemplateTransformModel {
     private static final Log LOG = LogFactory.getLog(TagModel.class);
 
-    protected OgnlValueStack stack;
+    protected ValueStack stack;
     protected HttpServletRequest req;
     protected HttpServletResponse res;
 
-    public TagModel(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+    public TagModel(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         this.stack = stack;
         this.req = req;
         this.res = res;

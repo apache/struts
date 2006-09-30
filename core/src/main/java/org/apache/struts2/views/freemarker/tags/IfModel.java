@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.If;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @version $Date$ $Id$
@@ -31,7 +31,7 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
 public class IfModel extends TagModel {
 
 	
-	public IfModel(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+	public IfModel(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
 		super(stack, req, res);
 	}
 

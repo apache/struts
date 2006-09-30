@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -50,7 +50,7 @@ public class File extends UIBean {
     protected String accept;
     protected String size;
 
-    public File(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public File(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 

@@ -20,7 +20,7 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -82,7 +82,7 @@ public class TimePicker extends TextField {
 	protected String timeIconPath;
 	protected String size;
 	
-	public TimePicker(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+	public TimePicker(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
 		super(stack, request, response);
 	}
 

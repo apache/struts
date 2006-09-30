@@ -24,7 +24,7 @@ import org.apache.struts2.components.AppendIterator;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.views.jsp.ComponentTagSupport;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**
@@ -37,7 +37,7 @@ public class AppendIteratorTag extends ComponentTagSupport {
 
 	private static final long serialVersionUID = -6017337859763283691L;
 
-	public Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+	public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
 		return new AppendIterator(stack);
 	}
 	

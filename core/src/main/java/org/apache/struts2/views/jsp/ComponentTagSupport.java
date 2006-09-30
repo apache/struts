@@ -23,14 +23,14 @@ import javax.servlet.jsp.JspException;
 
 import org.apache.struts2.components.Component;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  */
 public abstract class ComponentTagSupport extends StrutsBodyTagSupport {
     protected Component component;
 
-    public abstract Component getBean(OgnlValueStack stack, HttpServletRequest req, HttpServletResponse res);
+    public abstract Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res);
 
     public int doEndTag() throws JspException {
         component.end(pageContext.getOut(), getBody());

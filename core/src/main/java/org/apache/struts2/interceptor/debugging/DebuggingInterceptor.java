@@ -43,7 +43,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * Provides several different debugging screens to provide insight into the
@@ -147,7 +147,7 @@ public class DebuggingInterceptor implements Interceptor {
                             }
                         });
             } else if (COMMAND_MODE.equals(type)) {
-                OgnlValueStack stack = (OgnlValueStack) ctx.getSession().get(SESSION_KEY);
+                ValueStack stack = (ValueStack) ctx.getSession().get(SESSION_KEY);
                 String cmd = getParameter(EXPRESSION_PARAM);
 
                 HttpServletResponse res = ServletActionContext.getResponse();
@@ -243,7 +243,7 @@ public class DebuggingInterceptor implements Interceptor {
         serializeIt(ctx.getSession(), "request", writer, new ArrayList<Object>());
         serializeIt(ctx.getSession(), "session", writer, new ArrayList<Object>());
 
-        OgnlValueStack stack = (OgnlValueStack) ctx.get(ActionContext.VALUE_STACK);
+        ValueStack stack = (ValueStack) ctx.get(ActionContext.VALUE_STACK);
         serializeIt(stack.getRoot(), "valueStack", writer, new ArrayList<Object>());
         writer.endNode();
     }

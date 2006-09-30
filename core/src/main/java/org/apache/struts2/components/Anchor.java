@@ -20,7 +20,7 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -89,7 +89,7 @@ public class Anchor extends RemoteCallUIBean {
     protected String notifyTopics;
     protected String preInvokeJS;
 
-    public Anchor(OgnlValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public Anchor(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 

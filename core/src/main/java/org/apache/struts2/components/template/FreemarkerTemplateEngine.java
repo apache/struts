@@ -35,7 +35,7 @@ import org.apache.struts2.views.freemarker.FreemarkerManager;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
@@ -62,7 +62,7 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
 
     public void renderTemplate(TemplateRenderingContext templateContext) throws Exception {
         // get the various items required from the stack
-        OgnlValueStack stack = templateContext.getStack();
+        ValueStack stack = templateContext.getStack();
         Map context = stack.getContext();
         ServletContext servletContext = (ServletContext) context.get(ServletActionContext.SERVLET_CONTEXT);
         HttpServletRequest req = (HttpServletRequest) context.get(ServletActionContext.HTTP_REQUEST);

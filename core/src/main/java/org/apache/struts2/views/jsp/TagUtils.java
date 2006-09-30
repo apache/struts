@@ -36,19 +36,21 @@ import org.apache.struts2.util.AttributeMap;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 
 /**
  */
 public class TagUtils {
 
-    public static OgnlValueStack getStack(PageContext pageContext) {
+    public static ValueStack getStack(PageContext pageContext) {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
-        OgnlValueStack stack = (OgnlValueStack) req.getAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY);
+        ValueStack stack = (ValueStack) req.getAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY);
 
         if (stack == null) {
-            stack = new OgnlValueStack();
+            stack = ValueStackFactory.getFactory().createValueStack();
 
             HttpServletResponse res = (HttpServletResponse) pageContext.getResponse();
             Dispatcher du = Dispatcher.getInstance();
@@ -77,7 +79,7 @@ public class TagUtils {
         return stack;
     }
 
-    public static String buildNamespace(OgnlValueStack stack, HttpServletRequest request) {
+    public static String buildNamespace(ValueStack stack, HttpServletRequest request) {
         ActionContext context = new ActionContext(stack.getContext());
         ActionInvocation invocation = context.getActionInvocation();
 

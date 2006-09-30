@@ -35,7 +35,7 @@ import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.views.util.ResourceUtil;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
@@ -211,7 +211,7 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
                 .getServletContext();
         HttpServletRequest request = ServletActionContext.getRequest();
         HttpServletResponse response = ServletActionContext.getResponse();
-        OgnlValueStack stack = ServletActionContext.getContext()
+        ValueStack stack = ServletActionContext.getContext()
                 .getValueStack();
         return FreemarkerManager.getInstance().buildTemplateModel(stack,
                 invocation.getAction(), servletContext, request, response,

@@ -11,7 +11,7 @@ An example populating a list of object (Person.java) into Struts' action (Person
 
 <p/>
 
-See the jsp code <s:url id="url" action="showJspCode" namespace="/conversion" /><s:a href="%{#url}">here.</s:a><br/>
+See the jsp code <s:url id="url" action="showPersonJspCode" namespace="/conversion" /><s:a href="%{#url}">here.</s:a><br/>
 See the code for PersonAction.java <s:url id="url" action="showPersonActionJavaCode" namespace="/conversion" /><s:a href="%{#url}">here.</s:a><br/>
 See the code for Person.java <s:url id="url" action="showPersonJavaCode" namespace="/conversion" /><s:a href="%{#url}">here.</s:a><br/>
 

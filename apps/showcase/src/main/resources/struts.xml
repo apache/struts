@@ -8,8 +8,6 @@
 
 <struts>
 
-    <include file="struts-default.xml"/>
-
     <include file="struts-chat.xml" />
     
     <include file="struts-hangman.xml" />
@@ -56,6 +54,10 @@
 		
         <action name="showcase">
             <result>showcase.jsp</result>
+        </action>
+        
+        <action name="viewSource" class="org.apache.struts2.showcase.source.ViewSourceAction">
+            <result>viewSource.jsp</result>
         </action>
 
         <action name="date" class="org.apache.struts2.showcase.DateAction">

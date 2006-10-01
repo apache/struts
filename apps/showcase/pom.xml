@@ -47,7 +47,7 @@
             <artifactId>struts2-sitemesh-plugin</artifactId>
             <version>${pom.version}</version>
         </dependency>
- 
+        
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-tiles-plugin</artifactId>
@@ -61,6 +61,22 @@
            <scope>provided</scope>
         </dependency>
         
+        <!-- Velocity -->
+        <dependency>
+            <groupId>velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.4</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>velocity-tools</groupId>
+            <artifactId>velocity-tools</artifactId>
+            <version>1.1</version>
+            <optional>true</optional>
+        </dependency>
+
+
         <dependency>
             <groupId>opensymphony</groupId>
             <artifactId>sitemesh</artifactId>
@@ -128,5 +144,15 @@
                 </dependencies>
             </plugin>
         </plugins>
+                <resources>
+                    <!-- Include resources under src/main/java in WEB-INF/classes -->
+                    <resource>
+                        <directory>src/main/java</directory>
+                            <includes>
+                                <include>**/*.java</include>
+                             </includes>
+                     </resource>
+                </resources>
+
     </build>
 </project>

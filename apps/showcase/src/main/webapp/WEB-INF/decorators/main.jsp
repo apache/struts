@@ -5,6 +5,18 @@
     response.setHeader("Pragma", "no-cache");
     response.setHeader("Cache-Control", "no-cache");
     response.setDateHeader("Expires", 0);
+    
+    // Calculate the view sources url
+    String sourceUrl = request.getContextPath()+"/viewSource.action";
+    com.opensymphony.xwork2.ActionInvocation inv = com.opensymphony.xwork2.ActionContext.getContext().getActionInvocation();
+    org.apache.struts2.dispatcher.mapper.ActionMapping mapping = org.apache.struts2.ServletActionContext.getActionMapping();
+    if (inv != null) {
+        sourceUrl += "?config="+inv.getProxy().getConfig().getLocation().getURI()+":"+inv.getProxy().getConfig().getLocation().getLineNumber();
+        sourceUrl += "&className="+inv.getProxy().getConfig().getClassName();
+        sourceUrl += "&page="+mapping.getNamespace()+"/"+((org.apache.struts2.dispatcher.StrutsResultSupport)inv.getResult()).getLastFinalLocation();
+    } else {
+        sourceUrl += "?page="+request.getServletPath();
+    }
 %>
 
 <%@ taglib uri="sitemesh-decorator" prefix="decorator" %>
@@ -89,7 +101,11 @@
 
     </div><!-- end content -->
 
-
+	<div>
+    	<p>
+    		<a href="<%=sourceUrl %>">View Sources</a>
+    	</p>
+	</div>
     <div id="footer" class="clearfix">
         <p>Copyright &copy; 2003-<s:property value="#dateAction.now.year + 1900" /> The Apache Software Foundation.</p>
     </div><!-- end footer -->

@@ -168,7 +168,8 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
     public static final String WAIT = "wait";
     protected int delay;
     protected int delaySleepInterval = 100; // default sleep 100 millis before checking if background process is done
-
+    protected boolean executeAfterValidationPass = false;
+    
     private int threadPriority = Thread.NORM_PRIORITY;
 
     /* (non-Javadoc)
@@ -198,12 +199,15 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
         ActionContext context = actionInvocation.getInvocationContext();
         Map session = context.getSession();
 
-        Boolean secondTime = (Boolean) context.get(KEY);
-        if (secondTime == null) {
-            context.put(KEY, true);
-            secondTime = false;
-        } else {
-            secondTime = true;
+        Boolean secondTime  = true;
+        if (executeAfterValidationPass) {
+            secondTime = (Boolean) context.get(KEY);
+            if (secondTime == null) {
+                context.put(KEY, true);
+                secondTime = false;
+            } else {
+                secondTime = true;
+            }
         }
 
         synchronized (session) {
@@ -314,4 +318,16 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
     public void setDelaySleepInterval(int delaySleepInterval) {
         this.delaySleepInterval = delaySleepInterval;
     }
+
+    /**
+     * Whether to start the background process after the second pass (first being validation)
+     * or not
+     * 
+     * @param executeAfterValidationPass the executeAfterValidationPass to set
+     */
+    public void setExecuteAfterValidationPass(boolean executeAfterValidationPass) {
+        this.executeAfterValidationPass = executeAfterValidationPass;
+    }
+    
+    
 }

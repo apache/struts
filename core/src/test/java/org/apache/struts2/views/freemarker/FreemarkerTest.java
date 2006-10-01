@@ -26,7 +26,6 @@ import org.apache.struts2.util.StrutsUtil;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 
 import freemarker.ext.beans.CollectionModel;

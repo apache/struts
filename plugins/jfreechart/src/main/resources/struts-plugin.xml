@@ -5,7 +5,7 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">
     
 <struts>
-    <package name="extras-default">
+    <package name="jfreechart-default">
     
     	<result-types>
     		<result-type name="chart" class="org.apache.struts2.dispatcher.ChartResult">

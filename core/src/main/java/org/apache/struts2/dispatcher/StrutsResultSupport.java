@@ -107,6 +107,7 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
     protected boolean parse = true;
     protected boolean encode = false;
     protected String location;
+    protected String lastFinalLocation;
 
     /**
      * The location to go to after action execution. This could be a JSP page or another action.
@@ -118,6 +119,13 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
      */
     public void setLocation(String location) {
         this.location = location;
+    }
+    
+    /**
+     * Returns the last parsed and encoded location value
+     */
+    public String getLastFinalLocation() {
+        return lastFinalLocation;
     }
 
     /**
@@ -149,7 +157,8 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
      * @throws Exception if an error occurs while executing the result.
      */
     public void execute(ActionInvocation invocation) throws Exception {
-        doExecute(conditionalParse(location, invocation), invocation);
+        lastFinalLocation = conditionalParse(location, invocation);
+        doExecute(lastFinalLocation, invocation);
     }
     
     /**

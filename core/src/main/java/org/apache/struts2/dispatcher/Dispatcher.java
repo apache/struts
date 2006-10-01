@@ -375,7 +375,9 @@ public class Dispatcher {
         // application map wrapping the ServletContext
         Map application = new ApplicationMap(context);
 
-        return createContextMap(requestMap, params, session, application, request, response, context);
+        Map<String,Object> extraContext = createContextMap(requestMap, params, session, application, request, response, context);
+        extraContext.put(ServletActionContext.ACTION_MAPPING, mapping);
+        return extraContext;
     }
 
     /**
@@ -388,7 +390,7 @@ public class Dispatcher {
      * @param applicationMap a Map of all servlet context attributes.
      * @param request        the HttpServletRequest object.
      * @param response       the HttpServletResponse object.
-     * @param servletContext the ServletContext object.
+     * @param servletContext the ServletContextmapping object.
      * @return a HashMap representing the <tt>Action</tt> context.
      */
     public HashMap<String,Object> createContextMap(Map requestMap,

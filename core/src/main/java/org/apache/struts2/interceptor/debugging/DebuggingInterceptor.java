@@ -85,6 +85,8 @@ public class DebuggingInterceptor implements Interceptor {
 
     private final static String DEBUG_PARAM = "debug";
     private final static String EXPRESSION_PARAM = "expression";
+    
+    private boolean enableXmlWithConsole = false;
 
 
     /**
@@ -126,13 +128,15 @@ public class DebuggingInterceptor implements Interceptor {
                 inv.addPreResultListener(
                         new PreResultListener() {
                             public void beforeResult(ActionInvocation inv, String actionResult) {
-                                StringWriter writer = new StringWriter();
-                                printContext(new PrettyPrintWriter(writer));
-                                String xml = writer.toString();
-                                xml = xml.replaceAll("&", "&amp;");
-                                xml = xml.replaceAll(">", "&gt;");
-                                xml = xml.replaceAll("<", "&lt;");
-                                ActionContext.getContext().put("debugXML", xml);
+                                if (enableXmlWithConsole) {
+                                    StringWriter writer = new StringWriter();
+                                    printContext(new PrettyPrintWriter(writer));
+                                    String xml = writer.toString();
+                                    xml = xml.replaceAll("&", "&amp;");
+                                    xml = xml.replaceAll(">", "&gt;");
+                                    xml = xml.replaceAll("<", "&lt;");
+                                    ActionContext.getContext().put("debugXML", xml);
+                                }
 
                                 FreemarkerResult result = new FreemarkerResult();
                                 result.setContentType("text/html");
@@ -339,5 +343,15 @@ public class DebuggingInterceptor implements Interceptor {
         stack.remove(bean);
     }
 
+
+    /**
+     * @param enableXmlWithConsole the enableXmlWithConsole to set
+     */
+    public void setEnableXmlWithConsole(boolean enableXmlWithConsole) {
+        this.enableXmlWithConsole = enableXmlWithConsole;
+    }
+
+    
+    
 }
 

@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -38,6 +40,7 @@ public class ServletActionContext extends ActionContext implements StrutsStatics
 	private static final long serialVersionUID = -666854718275106687L;
 	
 	public static final String STRUTS_VALUESTACK_KEY = "struts.valueStack";
+    public static final String ACTION_MAPPING = "struts.actionMapping";
 
     @SuppressWarnings("unused")
     private ServletActionContext(Map context) {
@@ -67,6 +70,15 @@ public class ServletActionContext extends ActionContext implements StrutsStatics
      */
     public static ValueStack getValueStack(HttpServletRequest req) {
         return (ValueStack) req.getAttribute(STRUTS_VALUESTACK_KEY);
+    }
+    
+    /**
+     * Gets the action mapping for this context
+     * 
+     * @return The action mapping
+     */
+    public static ActionMapping getActionMapping() {
+        return (ActionMapping) ActionContext.getContext().get(ACTION_MAPPING);
     }
 
     /**

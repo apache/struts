@@ -65,6 +65,7 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.XWorkContinuationConfig;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
+import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 
 import freemarker.template.Template;
 
@@ -296,7 +297,9 @@ public class Dispatcher {
             extraContext.put(ActionContext.VALUE_STACK, ValueStackFactory.getFactory().createValueStack(stack));
         }
 
+        String timerKey = "Handling request from Dispatcher";
         try {
+            UtilTimerStack.push(timerKey);
             String namespace = mapping.getNamespace();
             String name = mapping.getName();
             String method = mapping.getMethod();
@@ -335,6 +338,8 @@ public class Dispatcher {
         } catch (Exception e) {
             LOG.error("Could not execute action", e);
             sendError(request, response, context, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);
+        } finally {
+            UtilTimerStack.pop(timerKey);
         }
     }
 
@@ -643,4 +648,19 @@ public class Dispatcher {
     public void setConfigurationManager(ConfigurationManager mgr) {
         this.configurationManager = mgr;
     }
+
+    /**
+     * @return the devMode
+     */
+    public boolean isDevMode() {
+        return devMode;
+    }
+
+    /**
+     * @param devMode the devMode to set
+     */
+    public void setDevMode(boolean devMode) {
+        this.devMode = devMode;
+    }
+    
 }

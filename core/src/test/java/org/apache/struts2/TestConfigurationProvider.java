@@ -35,6 +35,7 @@ import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
+import com.opensymphony.xwork2.mock.MockResult;
 
 
 /**
@@ -98,6 +99,8 @@ public class TestConfigurationProvider implements ConfigurationProvider {
         results = new HashMap();
 
         ActionConfig tokenActionConfig = new ActionConfig(null, TestAction.class, null, results, interceptors);
+        tokenActionConfig.addResultConfig(new ResultConfig("invalid.token", MockResult.class.getName()));
+        tokenActionConfig.addResultConfig(new ResultConfig("success", MockResult.class.getName()));
         defaultPackageConfig.addActionConfig(TOKEN_ACTION_NAME, tokenActionConfig);
 
         interceptors = new ArrayList();
@@ -115,6 +118,8 @@ public class TestConfigurationProvider implements ConfigurationProvider {
         // empty results for token session unit test
         results = new HashMap();
         ActionConfig tokenSessionActionConfig = new ActionConfig(null, TestAction.class, null, results, interceptors);
+        tokenSessionActionConfig.addResultConfig(new ResultConfig("invalid.token", MockResult.class.getName()));
+        tokenSessionActionConfig.addResultConfig(new ResultConfig("success", MockResult.class.getName()));
         defaultPackageConfig.addActionConfig(TOKEN_SESSION_ACTION_NAME, tokenSessionActionConfig);
 
         configurationManager.addPackageConfig("", defaultPackageConfig);

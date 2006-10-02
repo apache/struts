@@ -13,7 +13,10 @@
     if (inv != null) {
         sourceUrl += "?config="+inv.getProxy().getConfig().getLocation().getURI()+":"+inv.getProxy().getConfig().getLocation().getLineNumber();
         sourceUrl += "&className="+inv.getProxy().getConfig().getClassName();
-        sourceUrl += "&page="+mapping.getNamespace()+"/"+((org.apache.struts2.dispatcher.StrutsResultSupport)inv.getResult()).getLastFinalLocation();
+        
+        if (inv.getResult() != null && inv.getResult() instanceof org.apache.struts2.dispatcher.StrutsResultSupport) {
+	        sourceUrl += "&page="+mapping.getNamespace()+"/"+((org.apache.struts2.dispatcher.StrutsResultSupport)inv.getResult()).getLastFinalLocation();
+        }
     } else {
         sourceUrl += "?page="+request.getServletPath();
     }

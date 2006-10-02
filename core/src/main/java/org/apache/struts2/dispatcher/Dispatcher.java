@@ -333,7 +333,7 @@ public class Dispatcher {
                 request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
             }
         } catch (ConfigurationException e) {
-            LOG.error("Could not find action", e);
+            LOG.error("Could not find action or result", e);
             sendError(request, response, context, HttpServletResponse.SC_NOT_FOUND, e);
         } catch (Exception e) {
             LOG.error("Could not execute action", e);

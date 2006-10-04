@@ -35,6 +35,11 @@
                                     <artifactId>struts2-api</artifactId>
                                     <version>${version}</version>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.struts</groupId>
+                                    <artifactId>struts2-toolbox</artifactId>
+                                    <version>${version}</version>
+                                </artifactItem>
                            </artifactItems>
                             <outputDirectory>${project.build.directory}/classes</outputDirectory>
                         </configuration>

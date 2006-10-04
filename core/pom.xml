@@ -133,57 +133,6 @@
             <version>1.1.1</version>
             <optional>true</optional>
         </dependency>
-
-        <!-- Quickstart -->
-        <dependency>
-            <groupId>jetty</groupId>
-            <artifactId>org.mortbay.jetty</artifactId>
-            <version>5.1.4</version>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>eclipse</groupId>
-            <artifactId>jdtcore</artifactId>
-            <version>3.1.0</version>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>ant</groupId>
-            <artifactId>ant</artifactId>
-            <version>1.6.5</version>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>tomcat</groupId>
-            <artifactId>jasper-compiler</artifactId>
-            <version>5.5.12</version>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>tomcat</groupId>
-            <artifactId>jasper-runtime</artifactId>
-            <version>5.5.12</version>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>tomcat</groupId>
-            <artifactId>jasper-compiler-jdt</artifactId>
-            <version>5.5.12</version>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-el</groupId>
-            <artifactId>commons-el</artifactId>
-            <version>1.0</version>
-            <optional>true</optional>
-        </dependency>
-
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -195,21 +144,6 @@
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.1</version>
-            <optional>true</optional>
-        </dependency>
-
-        <!-- QuickStart -->
-        <dependency>
-            <groupId>xstream</groupId>
-            <artifactId>xstream</artifactId>
-            <version>1.1.2</version>
-            <optional>true</optional>
-        </dependency>
-
-       <dependency>
-            <groupId>commons-digester</groupId>
-            <artifactId>commons-digester</artifactId>
-            <version>1.7</version>
             <optional>true</optional>
         </dependency>
 

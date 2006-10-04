@@ -44,7 +44,7 @@ public class Main {
     public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("Usage:");
-            System.out.println("  java -jar struts.jar [command] (optional command args)");
+            System.out.println("  java -jar struts-toolbox.jar [command] (optional command args)");
             System.out.println("");
             System.out.println("Where [command] is one of the following:");
             System.out.println("  quickstart");

@@ -116,7 +116,9 @@
         <profile>
             <id>all</id>
             <modules>
-                <module>uber</module>
+                <module>all</module>
+                <module>plugins</module>
+                <module>apps</module>
             </modules>
         </profile>
         <profile>

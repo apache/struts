@@ -10,7 +10,7 @@
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-all</artifactId>
     <packaging>jar</packaging>
-    <name>Uber Jar</name>
+    <name>Combined Struts 2 Jar</name>
     <build>
         <plugins>
             <plugin>

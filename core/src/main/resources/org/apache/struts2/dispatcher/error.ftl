@@ -1,6 +1,12 @@
 <html>
 <head>
     <title>Struts Problem Report</title>
+    <style>
+    	pre {
+	    	margin: 0;
+	        padding: 0;
+	    }    
+    </style>
 </head>
 <body>
     <h2>Struts Problem Report</h2>

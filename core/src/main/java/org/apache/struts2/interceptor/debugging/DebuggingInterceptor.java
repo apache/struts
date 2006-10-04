@@ -128,15 +128,16 @@ public class DebuggingInterceptor implements Interceptor {
                 inv.addPreResultListener(
                         new PreResultListener() {
                             public void beforeResult(ActionInvocation inv, String actionResult) {
+                                String xml = "";
                                 if (enableXmlWithConsole) {
                                     StringWriter writer = new StringWriter();
                                     printContext(new PrettyPrintWriter(writer));
-                                    String xml = writer.toString();
+                                    xml = writer.toString();
                                     xml = xml.replaceAll("&", "&amp;");
                                     xml = xml.replaceAll(">", "&gt;");
                                     xml = xml.replaceAll("<", "&lt;");
-                                    ActionContext.getContext().put("debugXML", xml);
                                 }
+                                ActionContext.getContext().put("debugXML", xml);
 
                                 FreemarkerResult result = new FreemarkerResult();
                                 result.setContentType("text/html");

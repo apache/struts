@@ -144,14 +144,5 @@
         <include>src/</include>
       </includes>
    </fileSet>
-   <fileSet>
-     <directory>../uber</directory>
-     <outputDirectory>src/uber</outputDirectory>
-     <includes>
-        <include>pom.xml</include>
-        <include>src/</include>
-      </includes>
-   </fileSet>
-
   </fileSets>
 </assembly>

@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<s:form action="saveGangster" method="POST" namespace="/integration">
+<s:form action="saveGangster" namespace="/integration">
     
     <s:textfield 
             label="Gangster Name"

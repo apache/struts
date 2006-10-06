@@ -65,8 +65,8 @@
                     />        
 
             <item
-                    name="Struts Extras API"
-                    href="extras-apidocs/index.html"
+                    name="Struts Plugins API"
+                    href="plugins-apidocs/index.html"
                     />        
 
             <item

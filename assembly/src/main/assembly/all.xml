@@ -66,10 +66,6 @@
         <directory>../core/target/site</directory>
         <outputDirectory>docs/struts2-core</outputDirectory>
       </fileSet>
-      <fileSet>
-        <directory>../extras/target/site</directory>
-        <outputDirectory>docs/struts2-extras</outputDirectory>
-      </fileSet>
 
     <!-- Include the source code in the assembly -->
     <fileSet>

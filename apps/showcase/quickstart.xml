@@ -12,7 +12,7 @@
     users who don't have a single directory in their project that
     contains all the libraries they need.
     -->
-    <ideaConfig>../../../xwork/xwork.iml,../../core/struts2-core.iml,../../extras/struts2-extras.iml,struts2-showcase.iml</ideaConfig>
+    <ideaConfig>../../../xwork/xwork.iml,../../core/struts2-core.iml,struts2-showcase.iml</ideaConfig>
 
     <!-- The context in which to deploy the web application -->
     <context>/showcase</context>
@@ -49,7 +49,6 @@
         <dir>src/main/resources</dir>
         <dir>target/classes</dir>
         <dir>../../core/target/classes</dir>
-        <dir>../../extras/target/classes</dir>
     </classDirs>
 
     <!--

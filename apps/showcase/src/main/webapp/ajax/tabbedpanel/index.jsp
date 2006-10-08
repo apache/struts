@@ -18,6 +18,10 @@
             <s:url id="url" action="example4" />
             <s:a href="%{#url}">Only remove tabbed panel</s:a>
         </li>
+        <li>
+        	<s:url id="url" value="/ajax/tabbedpanel/example5.jsp" />
+        	<s:a href="%{#url}">Remote form validation inside tabbed panel</s:a>
+        </li>
     </ol>
 
 

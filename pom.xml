@@ -79,7 +79,6 @@
         <module>core</module>
         <!--<module>assembly</module>-->
         <module>api</module>
-        <module>toolbox</module>
     </modules>
 
     <licenses>

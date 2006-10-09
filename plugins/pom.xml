@@ -12,13 +12,15 @@
     <packaging>pom</packaging>
     <name>Struts Plugins</name>
     <modules>
-        <module>struts1</module>
-        <module>pell-multipart</module>
+        <module>config-browser</module>
         <module>jasperreports</module>
         <module>jfreechart</module>
         <module>jsf</module>
-        <module>config-browser</module>
+        <module>pell-multipart</module>
         <module>plexus</module>
+        <module>quickstart</module>
+        <module>struts1</module>
+        <module>sitegraph</module>
         <module>sitemesh</module>
         <module>tiles</module>
     </modules>

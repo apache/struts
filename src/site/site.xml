@@ -72,13 +72,10 @@
                     />
         </menu>
         <menu name="Plugins">
-            <item
-                    name="JavaServer Faces"
-                    href="struts2-plugins/struts2-jsf-plugin/index.html"
-                    />
+
            <item
-                    name="Struts 1"
-                    href="struts2-plugins/struts2-struts1-plugin/index.html"
+                    name="Config Browser"
+                    href="struts2-plugins/struts2-config-browser-plugin/index.html"
                     />
 
            <item
@@ -86,9 +83,9 @@
                     href="struts2-plugins/struts2-jasperreports-plugin/index.html"
                     />
 
-           <item
-                    name="Pell Multipart"
-                    href="struts2-plugins/struts2-pell-multipart-plugin/index.html"
+            <item
+                    name="JavaServer Faces"
+                    href="struts2-plugins/struts2-jsf-plugin/index.html"
                     />
 
            <item
@@ -97,8 +94,23 @@
                     />
 
            <item
-                    name="Tiles"
-                    href="struts2-plugins/struts2-tiles-plugin/index.html"
+                    name="Pell Multipart"
+                    href="struts2-plugins/struts2-pell-multipart-plugin/index.html"
+                    />
+
+           <item
+                    name="Plexus"
+                    href="struts2-plugins/struts2-plexus-plugin/index.html"
+                    />
+
+           <item
+                    name="QuickStart"
+                    href="struts2-plugins/struts2-quickstart-plugin/index.html"
+                    />
+
+           <item
+                    name="Sitegraph"
+                    href="struts2-plugins/struts2-sitegraph-plugin/index.html"
                     />
 
            <item
@@ -106,17 +118,17 @@
                     href="struts2-plugins/struts2-sitemesh-plugin/index.html"
                     />
 
-
            <item
-                    name="Config Browser"
-                    href="struts2-plugins/struts2-config-browser-plugin/index.html"
+                    name="Struts 1"
+                    href="struts2-plugins/struts2-struts1-plugin/index.html"
                     />
 
 
            <item
-                    name="Plexus"
-                    href="struts2-plugins/struts2-plexus-plugin/index.html"
+                    name="Tiles"
+                    href="struts2-plugins/struts2-tiles-plugin/index.html"
                     />
+
 
         </menu>
         ${reports}

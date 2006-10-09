@@ -47,16 +47,12 @@ public class Main {
             System.out.println("  java -jar struts-toolbox.jar [command] (optional command args)");
             System.out.println("");
             System.out.println("Where [command] is one of the following:");
-            System.out.println("  quickstart");
-            System.out.println("  quickstart:xxx");
             System.out.println("  sitegraph");
             System.out.println("  sitegraph:xxx");
             System.out.println("");
             System.out.println("Execute the commands for additional usage instructions.");
             System.out.println("Note: the *:xxx commands are just shortcuts for ");
             System.out.println("      running the command on a webapp in the apps dir.");
-            System.out.println("      For example, 'quickstart:sandbox' will start QuickStart");
-            System.out.println("      automatically for the webapp 'sandbox'.");
             return;
         }
 
@@ -127,27 +123,6 @@ public class Main {
         String command = args[0];
         String[] programArgs = new String[args.length - 1];
         System.arraycopy(args, 1, programArgs, 0, programArgs.length);
-        if (command.startsWith("quickstart:")) {
-            command = "quickstart";
-            String name = checkWebAppArgs(args);
-            programArgs = new String[]{"/" + name,
-                    "apps/" + name + "/src/main/webapp",
-                    "apps/" + name + "/src/main/java",
-                    "apps/" + name + "/src/main/resources"};
-        }
-
-        if ("quickstart".equals(command)) {
-            if (!jdk15) {
-                System.out.println("Sorry, but QuickStart only runs on Java 1.5.");
-                System.out.println("You are running: " + version);
-                System.out.println("Please try again with Java 1.5, or deploy");
-                System.out.println("  as a normal J2EE webapp to use Java 1.4.");
-                return;
-            }
-
-            launch("org.apache.struts2.quickstart.QuickStart", programArgs, urls);
-            return;
-        }
 
         if (command.startsWith("sitegraph:")) {
             command = "sitegraph";
@@ -201,7 +176,7 @@ public class Main {
         if (files == null) {
             return;
         }
-        
+
         for (int i = 0; i < files.length; i++) {
             File f = files[i];
             if (f.isDirectory()) {

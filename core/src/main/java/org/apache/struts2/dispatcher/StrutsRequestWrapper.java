@@ -57,10 +57,11 @@ public class StrutsRequestWrapper extends HttpServletRequestWrapper {
             return super.getAttribute(s);
         }
 
+        ActionContext ctx = ActionContext.getContext();
         Object attribute = super.getAttribute(s);
 
         boolean alreadyIn = false;
-        Boolean b = (Boolean) ActionContext.getContext().get("__requestWrapper.getAttribute");
+        Boolean b = (Boolean) ctx.get("__requestWrapper.getAttribute");
         if (b != null) {
             alreadyIn = b.booleanValue();
         }
@@ -70,13 +71,13 @@ public class StrutsRequestWrapper extends HttpServletRequestWrapper {
         if (!alreadyIn && attribute == null && s.indexOf("#") == -1) {
             try {
                 // If not found, then try the ValueStack
-                ActionContext.getContext().put("__requestWrapper.getAttribute", Boolean.TRUE);
-                ValueStack stack = ActionContext.getContext().getValueStack();
+                ctx.put("__requestWrapper.getAttribute", Boolean.TRUE);
+                ValueStack stack = ctx.getValueStack();
                 if (stack != null) {
                     attribute = stack.findValue(s);
                 }
             } finally {
-                ActionContext.getContext().put("__requestWrapper.getAttribute", Boolean.FALSE);
+                ctx.put("__requestWrapper.getAttribute", Boolean.FALSE);
             }
         }
         return attribute;

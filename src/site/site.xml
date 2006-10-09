@@ -56,17 +56,15 @@
         <menu name="Reference">
             <item
                     name="Struts Core API"
-                    href="core/apidocs/index.html"
+                    href="struts2-core/apidocs/index.html"
                     />        
-
+            <item
+                    name="New API (experimental)"
+                    href="struts2-api/apidocs/index.html"
+                    />        
             <item
                     name="Tag Reference"
                     href="http://cwiki.apache.org/WW/tag-reference.html"
-                    />        
-
-            <item
-                    name="New API (experimental)"
-                    href="api/apidocs/index.html"
                     />        
             <item
                     name="Source Repository"
@@ -76,48 +74,48 @@
         <menu name="Plugins">
             <item
                     name="JavaServer Faces"
-                    href="plugins/jsf"
+                    href="struts2-plugins/struts2-jsf-plugin/index.html"
                     />
            <item
                     name="Struts 1"
-                    href="plugins/struts1"
+                    href="struts2-plugins/struts2-struts1-plugin/index.html"
                     />
 
            <item
                     name="JasperReports"
-                    href="plugins/jasperreports"
+                    href="struts2-plugins/struts2-jasperreports-plugin/index.html"
                     />
 
            <item
                     name="Pell Multipart"
-                    href="plugins/pellmultipart"
+                    href="struts2-plugins/struts2-pell-multipart-plugin/index.html"
                     />
 
            <item
                     name="JFreeChart"
-                    href="plugins/jfreechart"
+                    href="struts2-plugins/struts2-freechart-plugin/index.html"
                     />
 
            <item
                     name="Tiles"
-                    href="plugins/tiles"
+                    href="struts2-plugins/struts2-tiles-plugin/index.html"
                     />
 
            <item
                     name="Sitemesh"
-                    href="plugins/sitemesh"
+                    href="struts2-plugins/struts2-sitemesh-plugin/index.html"
                     />
 
 
            <item
                     name="Config Browser"
-                    href="plugins/config-browser"
+                    href="struts2-plugins/struts2-config-browser-plugin/index.html"
                     />
 
 
            <item
                     name="Plexus"
-                    href="plugins/plexus"
+                    href="struts2-plugins/struts2-plexus-plugin/index.html"
                     />
 
         </menu>

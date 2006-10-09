@@ -22,12 +22,6 @@
         <module>sitemesh</module>
         <module>tiles</module>
     </modules>
-     <distributionManagement>
-        <site>
-            <id>apache-site</id>
-            <url>scp://people.apache.org/www/struts.apache.org/2.x/plugins</url>
-        </site>
-    </distributionManagement>
     
     <dependencies>
 

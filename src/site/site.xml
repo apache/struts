@@ -71,62 +71,62 @@
                     href="http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/?root=Apache-SVN"
                     />
         </menu>
-        <menu name="Plugins">
+        <menu name="Plugin API's">
 
            <item
                     name="Config Browser"
-                    href="struts2-plugins/struts2-config-browser-plugin/index.html"
+                    href="struts2-plugins/struts2-config-browser-plugin/apidocs/"
                     />
 
            <item
                     name="JasperReports"
-                    href="struts2-plugins/struts2-jasperreports-plugin/index.html"
+                    href="struts2-plugins/struts2-jasperreports-plugin/apidocs/"
                     />
 
             <item
                     name="JavaServer Faces"
-                    href="struts2-plugins/struts2-jsf-plugin/index.html"
+                    href="struts2-plugins/struts2-jsf-plugin/apidocs/"
                     />
 
            <item
                     name="JFreeChart"
-                    href="struts2-plugins/struts2-freechart-plugin/index.html"
+                    href="struts2-plugins/struts2-freechart-plugin/apidocs/"
                     />
 
            <item
                     name="Pell Multipart"
-                    href="struts2-plugins/struts2-pell-multipart-plugin/index.html"
+                    href="struts2-plugins/struts2-pell-multipart-plugin/apidocs/"
                     />
 
            <item
                     name="Plexus"
-                    href="struts2-plugins/struts2-plexus-plugin/index.html"
+                    href="struts2-plugins/struts2-plexus-plugin/apidocs/"
                     />
 
            <item
                     name="QuickStart"
-                    href="struts2-plugins/struts2-quickstart-plugin/index.html"
+                    href="struts2-plugins/struts2-quickstart-plugin/apidocs/"
                     />
 
            <item
                     name="Sitegraph"
-                    href="struts2-plugins/struts2-sitegraph-plugin/index.html"
+                    href="struts2-plugins/struts2-sitegraph-plugin/apidocs/"
                     />
 
            <item
                     name="Sitemesh"
-                    href="struts2-plugins/struts2-sitemesh-plugin/index.html"
+                    href="struts2-plugins/struts2-sitemesh-plugin/apidocs/"
                     />
 
            <item
                     name="Struts 1"
-                    href="struts2-plugins/struts2-struts1-plugin/index.html"
+                    href="struts2-plugins/struts2-struts1-plugin/apidocs/"
                     />
 
 
            <item
                     name="Tiles"
-                    href="struts2-plugins/struts2-tiles-plugin/index.html"
+                    href="struts2-plugins/struts2-tiles-plugin/apidocs/"
                     />
 
 

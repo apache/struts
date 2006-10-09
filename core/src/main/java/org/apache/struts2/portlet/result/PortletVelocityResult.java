@@ -95,6 +95,14 @@ public class PortletVelocityResult extends StrutsResultSupport {
 	private static final Log log = LogFactory
             .getLog(PortletVelocityResult.class);
 
+	public PortletVelocityResult() {
+		super();
+	}
+	
+	public PortletVelocityResult(String location) {
+		super(location);
+	}
+	
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.StrutsResultSupport#doExecute(java.lang.String, com.opensymphony.xwork2.ActionInvocation)
      */

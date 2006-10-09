@@ -88,7 +88,14 @@ public class ServletDispatcherResult extends StrutsResultSupport {
 	
 	private static final Log log = LogFactory.getLog(ServletDispatcherResult.class);
 
-
+	public ServletDispatcherResult() {
+		super();
+	}
+	
+	public ServletDispatcherResult(String location) {
+		super(location);
+	}
+	
     /**
      * Dispatches to the given location. Does its forward via a RequestDispatcher. If the
      * dispatch fails a 404 error will be sent back in the http response.

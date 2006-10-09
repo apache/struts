@@ -42,15 +42,25 @@ public class ChartResult implements Result {
     private int height;
     private int width;
 
+    public ChartResult() {
+    	super();
+    }
+    
+    public ChartResult(JFreeChart chart, int height, int width) {
+    	setChart(chart);
+    	this.height = height;
+    	this.width = width;
+    }
 
     /**
      * Sets the JFreeChart to use.
      *
      * @param chart a JFreeChart object.
      */
-    public void setChart(JFreeChart chart) {
+    public ChartResult setChart(JFreeChart chart) {
         this.chart = chart;
         chartSet = true;
+        return this;
     }
 
     /**
@@ -58,8 +68,9 @@ public class ChartResult implements Result {
      *
      * @param height the height of the chart in pixels.
      */
-    public void setHeight(int height) {
+    public ChartResult setHeight(int height) {
         this.height = height;
+        return this;
     }
 
     /**
@@ -67,8 +78,9 @@ public class ChartResult implements Result {
      *
      * @param width the width of the chart in pixels.
      */
-    public void setWidth(int width) {
+    public ChartResult setWidth(int width) {
         this.width = width;
+        return this;
     }
 
     /**

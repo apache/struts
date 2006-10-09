@@ -79,6 +79,13 @@ public class PlainTextResult extends StrutsResultSupport {
 	
 	private String charSet;
 	
+	public PlainTextResult() {
+		super();
+	}
+	
+	public PlainTextResult(String location) {
+		super(location);
+	}
 	
     /**
      * Set the character set
@@ -94,8 +101,9 @@ public class PlainTextResult extends StrutsResultSupport {
      * 
      * @param charSet The character set
      */
-	public void setCharSet(String charSet) {
+	public PlainTextResult setCharSet(String charSet) {
 		this.charSet = charSet;
+		return this;
 	}
 	
 	/* (non-Javadoc)
@@ -132,13 +140,13 @@ public class PlainTextResult extends StrutsResultSupport {
 		InputStreamReader reader = null;
 		try {
 			if (charset != null) {
-				reader = new InputStreamReader(servletContext.getResourceAsStream(location), charset);
+				reader = new InputStreamReader(servletContext.getResourceAsStream(finalLocation), charset);
 			}
 			else {
-				reader = new InputStreamReader(servletContext.getResourceAsStream(location));
+				reader = new InputStreamReader(servletContext.getResourceAsStream(finalLocation));
 			}
 			if (reader == null) {
-				_log.warn("resource at location ["+location+"] cannot be obtained (return null) from ServletContext !!! ");
+				_log.warn("resource at location ["+finalLocation+"] cannot be obtained (return null) from ServletContext !!! ");
 			}
 			else {
 				char[] buffer = new char[BUFFER_SIZE];

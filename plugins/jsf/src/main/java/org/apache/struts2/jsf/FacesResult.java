@@ -33,6 +33,13 @@ public class FacesResult extends StrutsResultSupport implements Result {
 
     private static final long serialVersionUID = -3548970638740937804L;
 
+    public FacesResult() {
+    	super();
+    }
+    
+    public FacesResult(String location) {
+    	super(location);
+    }
     /**
      * Checks to see if we need to build a new JSF ViewId from the Struts Result
      * config and then renders the result by delegating to the

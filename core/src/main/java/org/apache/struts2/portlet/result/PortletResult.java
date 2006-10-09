@@ -57,6 +57,14 @@ public class PortletResult extends StrutsResultSupport {
     private String contentType = "text/html";
 
     private String title;
+    
+    public PortletResult() {
+    	super();
+    }
+    
+    public PortletResult(String location) {
+    	super(location);
+    }
 
     /**
      * Execute the result. Obtains the

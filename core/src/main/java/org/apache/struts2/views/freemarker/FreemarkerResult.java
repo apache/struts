@@ -106,9 +106,17 @@ public class FreemarkerResult extends StrutsResultSupport {
     protected String location;
     private String pContentType = "text/html";
 
+    public FreemarkerResult() {
+    	super();
+    }
+    
+    public FreemarkerResult(String location) {
+    	super(location);
+    }
 
-    public void setContentType(String aContentType) {
+    public FreemarkerResult setContentType(String aContentType) {
         pContentType = aContentType;
+        return this;
     }
 
     /**

@@ -201,6 +201,11 @@ public class XSLTResult implements Result {
         templatesCache = new HashMap<String, Templates>();
         noCache = Settings.get("struts.xslt.nocache").trim().equalsIgnoreCase("true");
     }
+    
+    public XSLTResult(String stylesheetLocation) {
+    	this();
+    	setStylesheetLocation(stylesheetLocation);
+    }
 
     /**
      * @deprecated Use #setStylesheetLocation(String)
@@ -209,11 +214,11 @@ public class XSLTResult implements Result {
         setStylesheetLocation(location);
     }
 
-    public void setStylesheetLocation(String location) {
+    public XSLTResult setStylesheetLocation(String location) {
         if (location == null)
             throw new IllegalArgumentException("Null location");
-        System.out.println("location = " + location);
         this.stylesheetLocation = location;
+        return this;
     }
 
     public String getStylesheetLocation() {
@@ -225,8 +230,9 @@ public class XSLTResult implements Result {
      *
      * @param parse
      */
-    public void setParse(boolean parse) {
+    public XSLTResult setParse(boolean parse) {
         this.parse = parse;
+        return this;
     }
 
     public void execute(ActionInvocation invocation) throws Exception {

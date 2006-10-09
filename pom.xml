@@ -256,16 +256,6 @@
         </plugins>
     </reporting>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>opensymphony</groupId>
-                <artifactId>xwork</artifactId>
-                <version>2.0-SNAPSHOT</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <repositories>
         <repository>
             <id>snapshots-maven-codehaus</id>
@@ -297,7 +287,7 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </snapshots>
             <releases>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </releases>
             <url>http://maven.opensymphony.com</url>
         </repository>

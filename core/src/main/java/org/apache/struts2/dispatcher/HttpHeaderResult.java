@@ -75,8 +75,19 @@ public class HttpHeaderResult implements Result {
 
 
     private boolean parse = true;
-    private Map headers;
+    private Map<String,String> headers;
     private int status = -1;
+    
+    public HttpHeaderResult() {
+    	super();
+    	headers = new HashMap<String,String>();
+    }
+    
+    public HttpHeaderResult(int status) {
+    	this();
+    	this.status = status;
+    	this.parse = false;
+    }
 
 
     /**
@@ -85,10 +96,6 @@ public class HttpHeaderResult implements Result {
      * @return a Map of all HTTP headers.
      */
     public Map getHeaders() {
-        if (headers == null) {
-            headers = new HashMap();
-        }
-
         return headers;
     }
 
@@ -98,8 +105,9 @@ public class HttpHeaderResult implements Result {
      * @param parse <tt>true</tt> if HTTP header values should be evaluated agains the ValueStack, <tt>false</tt>
      *              otherwise.
      */
-    public void setParse(boolean parse) {
+    public HttpHeaderResult setParse(boolean parse) {
         this.parse = parse;
+        return this;
     }
 
     /**
@@ -108,8 +116,19 @@ public class HttpHeaderResult implements Result {
      * @param status the Http status code
      * @see javax.servlet.http.HttpServletResponse#setStatus(int)
      */
-    public void setStatus(int status) {
+    public HttpHeaderResult setStatus(int status) {
         this.status = status;
+        return this;
+    }
+    
+    /**
+     * Adds an HTTP header to the response
+     * @param name
+     * @param value
+     */
+    public HttpHeaderResult addHeader(String name, String value) {
+    	headers.put(name, value);
+    	return this;
     }
 
     /**

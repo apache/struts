@@ -65,8 +65,17 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
 
     private String pContentType = "text/html";
 
-    public void setContentType(String aContentType) {
+    public PortletFreemarkerResult() {
+    	super();
+    }
+    
+    public PortletFreemarkerResult(String location) {
+    	super(location);
+    }
+    
+    public PortletFreemarkerResult setContentType(String aContentType) {
         pContentType = aContentType;
+        return this;
     }
 
     /**

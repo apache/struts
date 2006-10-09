@@ -24,6 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
+import org.springframework.beans.factory.config.SetFactoryBean;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -80,14 +81,23 @@ public class ServletRedirectResult extends StrutsResultSupport {
 
     protected boolean prependServletContext = true;
 
+    public ServletRedirectResult() {
+    	super();
+    }
+    
+    public ServletRedirectResult(String location) {
+    	super(location);
+    }
+    
     /**
      * Sets whether or not to prepend the servlet context path to the redirected URL.
      *
      * @param prependServletContext <tt>true</tt> to prepend the location with the servlet context path,
      *                              <tt>false</tt> otherwise.
      */
-    public void setPrependServletContext(boolean prependServletContext) {
+    public ServletRedirectResult setPrependServletContext(boolean prependServletContext) {
         this.prependServletContext = prependServletContext;
+        return this;
     }
 
     /**

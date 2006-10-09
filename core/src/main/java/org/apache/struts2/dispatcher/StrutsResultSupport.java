@@ -104,11 +104,25 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
     /** The default parameter */
     public static final String DEFAULT_PARAM = "location";
 
-    protected boolean parse = true;
-    protected boolean encode = false;
-    protected String location;
-    protected String lastFinalLocation;
+    private boolean parse;
+    private boolean encode;
+    private String location;
+    private String lastFinalLocation;
 
+    public StrutsResultSupport() {
+    	this(null, true, false);
+    }
+    
+    public StrutsResultSupport(String location) {
+    	this(location, false, false);
+    }
+    
+    public StrutsResultSupport(String location, boolean parse, boolean encode) {
+    	this.location = location;
+    	this.parse = parse;
+    	this.encode = encode;
+    }
+    
     /**
      * The location to go to after action execution. This could be a JSP page or another action.
      * The location can contain OGNL expressions which will be evaulated if the <tt>parse</tt>

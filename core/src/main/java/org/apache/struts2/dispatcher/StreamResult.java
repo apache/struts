@@ -83,8 +83,17 @@ public class StreamResult extends StrutsResultSupport {
     protected String contentLength;
     protected String contentDisposition = "inline";
     protected String inputName = "inputStream";
+    protected InputStream inputStream;
     protected int bufferSize = 1024;
 
+    public StreamResult() {
+    	super();
+    }
+    
+    public StreamResult(InputStream in) {
+    	this.inputStream = in;
+    }
+    
     /**
      * @return Returns the bufferSize.
      */
@@ -95,8 +104,9 @@ public class StreamResult extends StrutsResultSupport {
     /**
      * @param bufferSize The bufferSize to set.
      */
-    public void setBufferSize(int bufferSize) {
+    public StreamResult setBufferSize(int bufferSize) {
         this.bufferSize = bufferSize;
+        return this;
     }
 
     /**
@@ -109,8 +119,9 @@ public class StreamResult extends StrutsResultSupport {
     /**
      * @param contentType The contentType to set.
      */
-    public void setContentType(String contentType) {
+    public StreamResult setContentType(String contentType) {
         this.contentType = contentType;
+        return this;
     }
 
     /**
@@ -123,8 +134,9 @@ public class StreamResult extends StrutsResultSupport {
     /**
      * @param contentLength The contentLength to set.
      */
-    public void setContentLength(String contentLength) {
+    public StreamResult setContentLength(String contentLength) {
         this.contentLength = contentLength;
+        return this;
     }
 
     /**
@@ -137,8 +149,9 @@ public class StreamResult extends StrutsResultSupport {
     /**
      * @param contentDisposition the Content-disposition header value to use.
      */
-    public void setContentDisposition(String contentDisposition) {
+    public StreamResult setContentDisposition(String contentDisposition) {
         this.contentDisposition = contentDisposition;
+        return this;
     }
 
     /**
@@ -151,8 +164,9 @@ public class StreamResult extends StrutsResultSupport {
     /**
      * @param inputName The inputName to set.
      */
-    public void setInputName(String inputName) {
+    public StreamResult setInputName(String inputName) {
         this.inputName = inputName;
+        return this;
     }
 
     /**
@@ -160,14 +174,15 @@ public class StreamResult extends StrutsResultSupport {
      */
     protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
 
-        InputStream oInput = null;
         OutputStream oOutput = null;
 
         try {
-            // Find the inputstream from the invocation variable stack
-            oInput = (InputStream) invocation.getStack().findValue(conditionalParse(inputName, invocation));
-
-            if (oInput == null) {
+        	if (inputStream == null) {
+        		// Find the inputstream from the invocation variable stack
+        		inputStream = (InputStream) invocation.getStack().findValue(conditionalParse(inputName, invocation));
+        	}
+        		
+            if (inputStream == null) {
                 String msg = ("Can not find a java.io.InputStream with the name [" + inputName + "] in the invocation stack. " +
                     "Check the <param name=\"inputName\"> tag specified for this action.");
                 log.error(msg);
@@ -212,7 +227,7 @@ public class StreamResult extends StrutsResultSupport {
             log.debug("Streaming to output buffer +++ START +++");
             byte[] oBuff = new byte[bufferSize];
             int iSize;
-            while (-1 != (iSize = oInput.read(oBuff))) {
+            while (-1 != (iSize = inputStream.read(oBuff))) {
                 oOutput.write(oBuff, 0, iSize);
             }
             log.debug("Streaming to output buffer +++ END +++");
@@ -221,7 +236,7 @@ public class StreamResult extends StrutsResultSupport {
             oOutput.flush();
         }
         finally {
-            if (oInput != null) oInput.close();
+            if (inputStream != null) inputStream.close();
             if (oOutput != null) oOutput.close();
         }
     }

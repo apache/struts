@@ -132,7 +132,28 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
     protected String actionName;
     protected String namespace;
     protected String method;
+    
+    private Map<String, String> requestParameters = new HashMap<String, String>();
 
+    public ServletActionRedirectResult() {
+    	super();
+    }
+    
+    public ServletActionRedirectResult(String actionName) {
+    	this(null, actionName, null);
+    }
+    
+    public ServletActionRedirectResult(String actionName, String method) {
+    	this(null, actionName, method);
+    }
+    
+	public ServletActionRedirectResult(String namespace, String actionName, String method) {
+		super(null);
+		this.namespace = namespace;
+		this.actionName = actionName;
+		this.method = method;
+	}
+    
     protected List<String> prohibitedResultParam = Arrays.asList(new String[] {
     		DEFAULT_PARAM, "namespace", "method", "encode", "parse", "location",
     		"prependServletContext" });
@@ -154,24 +175,26 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
         	method = conditionalParse(method, invocation);
         }
 
-        Map<String, String> requestParameters = new HashMap<String, String>();
-        ResultConfig resultConfig = invocation.getProxy().getConfig().getResults().get(
-        		invocation.getResultCode());
-        Map resultConfigParams = resultConfig.getParams();
-        for (Iterator i = resultConfigParams.entrySet().iterator(); i.hasNext(); ) {
-        	Map.Entry e = (Map.Entry) i.next();
-        	if (! prohibitedResultParam.contains(e.getKey())) {
-        		requestParameters.put(e.getKey().toString(),
-        				e.getValue() == null ? "":
-        					conditionalParse(e.getValue().toString(), invocation));
-        	}
+        String resultCode = invocation.getResultCode();
+        if (resultCode != null) {
+	        ResultConfig resultConfig = invocation.getProxy().getConfig().getResults().get(
+	        		resultCode);
+	        Map resultConfigParams = resultConfig.getParams();
+	        for (Iterator i = resultConfigParams.entrySet().iterator(); i.hasNext(); ) {
+	        	Map.Entry e = (Map.Entry) i.next();
+	        	if (! prohibitedResultParam.contains(e.getKey())) {
+	        		requestParameters.put(e.getKey().toString(),
+	        				e.getValue() == null ? "":
+	        					conditionalParse(e.getValue().toString(), invocation));
+	        	}
+	        }
         }
 
         ActionMapper mapper = ActionMapperFactory.getMapper();
         StringBuffer tmpLocation = new StringBuffer(mapper.getUriFromActionMapping(new ActionMapping(actionName, namespace, method, null)));
         UrlHelper.buildParametersString(requestParameters, tmpLocation, "&");
 
-        location = tmpLocation.toString();
+        setLocation(tmpLocation.toString());
 
         super.execute(invocation);
     }
@@ -181,8 +204,9 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
      *
      * @param actionName The name
      */
-    public void setActionName(String actionName) {
+    public ServletActionRedirectResult setActionName(String actionName) {
         this.actionName = actionName;
+        return this;
     }
 
     /**
@@ -190,8 +214,9 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
      *
      * @param namespace The namespace
      */
-    public void setNamespace(String namespace) {
+    public ServletActionRedirectResult setNamespace(String namespace) {
         this.namespace = namespace;
+        return this;
     }
 
     /**
@@ -199,7 +224,20 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
      *
      * @param method The method
      */
-    public void setMethod(String method) {
+    public ServletActionRedirectResult setMethod(String method) {
     	this.method = method;
+    	return this;
     }
+    
+    /**
+     * Adds a request parameter to be added to the redirect url
+     * 
+     * @param key The parameter name
+     * @param value The parameter value
+     */
+    public ServletActionRedirectResult addParameter(String key, Object value) {
+    	requestParameters.put(key, String.valueOf(value));
+    	return this;
+    }
+
 }

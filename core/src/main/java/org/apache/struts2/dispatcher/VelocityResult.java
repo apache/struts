@@ -86,6 +86,13 @@ public class VelocityResult extends StrutsResultSupport {
 	
 	private static final Log log = LogFactory.getLog(VelocityResult.class);
 
+	public VelocityResult() {
+		super();
+	}
+	
+	public VelocityResult(String location) {
+		super(location);
+	}
 
     /**
      * Creates a Velocity context from the action, loads a Velocity template and executes the

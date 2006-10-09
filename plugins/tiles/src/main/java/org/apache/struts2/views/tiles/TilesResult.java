@@ -84,6 +84,13 @@ public class TilesResult extends ServletDispatcherResult {
     protected ActionInvocation invocation;
     private DefinitionsFactory definitionsFactory;
 
+    public TilesResult() {
+    	super();
+    }
+    
+    public TilesResult(String location) {
+    	super(location);
+    }
     /**
      * Dispatches to the given location. Does its forward via a RequestDispatcher. If the
      * dispatch fails a 404 error will be sent back in the http response.
@@ -94,7 +101,7 @@ public class TilesResult extends ServletDispatcherResult {
      *                   HTTP request.
      */
     public void doExecute(String location, ActionInvocation invocation) throws Exception {
-        this.location = location;
+        setLocation(location);
         this.invocation = invocation;
 
         HttpServletRequest request = ServletActionContext.getRequest();
@@ -106,7 +113,7 @@ public class TilesResult extends ServletDispatcherResult {
                 (DefinitionsFactory) servletContext.getAttribute(TilesUtilImpl.DEFINITIONS_FACTORY);
 
         // get component definition
-        ComponentDefinition definition = getComponentDefinition(this.definitionsFactory, request);
+        ComponentDefinition definition = getComponentDefinition(location, this.definitionsFactory, request);
         if (definition == null) {
             throw new ServletException("No Tiles definition found for name '" + location + "'");
         }
@@ -150,7 +157,7 @@ public class TilesResult extends ServletDispatcherResult {
      * @param request current HTTP request
      * @return the component definition
      */
-    protected ComponentDefinition getComponentDefinition(DefinitionsFactory factory, HttpServletRequest request)
+    protected ComponentDefinition getComponentDefinition(String location, DefinitionsFactory factory, HttpServletRequest request)
             throws Exception {
         ComponentDefinitions definitions = factory.readDefinitions();
         return definitions.getDefinition(location, deduceLocale(request));

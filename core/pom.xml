@@ -15,7 +15,7 @@
     <distributionManagement>
         <site>
             <id>apache-site</id>
-            <url>scp://people.apache.org/www/struts.apache.org/2.x/struts-core</url>
+            <url>scp://people.apache.org/www/struts.apache.org/2.x/core</url>
         </site>
     </distributionManagement>
     <build>

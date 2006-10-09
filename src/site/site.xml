@@ -56,17 +56,7 @@
         <menu name="Reference">
             <item
                     name="Struts Core API"
-                    href="core-apidocs/index.html"
-                    />        
-
-            <item
-                    name="XWork API"
-                    href="xwork-apidocs/index.html"
-                    />        
-
-            <item
-                    name="Struts Plugins API"
-                    href="plugins-apidocs/index.html"
+                    href="core/apidocs/index.html"
                     />        
 
             <item
@@ -76,12 +66,60 @@
 
             <item
                     name="New API (experimental)"
-                    href="api-apidocs/index.html"
+                    href="api/apidocs/index.html"
                     />        
             <item
                     name="Source Repository"
                     href="http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/?root=Apache-SVN"
                     />
+        </menu>
+        <menu name="Plugins">
+            <item
+                    name="JavaServer Faces"
+                    href="plugins/jsf"
+                    />
+           <item
+                    name="Struts 1"
+                    href="plugins/struts1"
+                    />
+
+           <item
+                    name="JasperReports"
+                    href="plugins/jasperreports"
+                    />
+
+           <item
+                    name="Pell Multipart"
+                    href="plugins/pellmultipart"
+                    />
+
+           <item
+                    name="JFreeChart"
+                    href="plugins/jfreechart"
+                    />
+
+           <item
+                    name="Tiles"
+                    href="plugins/tiles"
+                    />
+
+           <item
+                    name="Sitemesh"
+                    href="plugins/sitemesh"
+                    />
+
+
+           <item
+                    name="Config Browser"
+                    href="plugins/config-browser"
+                    />
+
+
+           <item
+                    name="Plexus"
+                    href="plugins/plexus"
+                    />
+
         </menu>
         ${reports}
     </body>

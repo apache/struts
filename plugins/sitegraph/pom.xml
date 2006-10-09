@@ -8,23 +8,11 @@
         <version>2.0.1-SNAPSHOT</version>
     </parent>
     <groupId>org.apache.struts</groupId>
-    <artifactId>struts2-sitegraph</artifactId>
+    <artifactId>struts2-sitegraph-plugin</artifactId>
     <packaging>jar</packaging>
-    <name>Struts 2 - sitegraph</name>
-    
-    <distributionManagement>
-        <site>
-            <id>apache-site</id>
-            <url>scp://people.apache.org/www/struts.apache.org/2.x/struts-sitegraph</url>
-        </site>
-    </distributionManagement>
+    <name>Struts 2 Sitegraph Plugin</name>
     
     <dependencies>
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-core</artifactId>
-            <version>${pom.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>

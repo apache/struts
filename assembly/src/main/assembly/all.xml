@@ -31,8 +31,8 @@
   </dependencySets>
   <fileSets>
     <fileSet>
-    	<directory>src/main/resources</directory>
-    	<outputDirectory></outputDirectory>
+        <directory>src/main/resources</directory>
+        <outputDirectory></outputDirectory>
       <includes>
         <include>README*</include>
         <include>LICENSE*</include>
@@ -128,14 +128,6 @@
       <directory>../core</directory>
       <outputDirectory>src/core</outputDirectory>
       <includes>
-        <include>pom.xml</include>
-        <include>src/</include>
-      </includes>
-   </fileSet>
-   <fileSet>
-     <directory>../extras</directory>
-     <outputDirectory>src/extras</outputDirectory>
-     <includes>
         <include>pom.xml</include>
         <include>src/</include>
       </includes>

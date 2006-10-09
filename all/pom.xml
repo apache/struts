@@ -35,11 +35,85 @@
                                     <artifactId>struts2-api</artifactId>
                                     <version>${version}</version>
                                 </artifactItem>
+
                                 <artifactItem>
                                     <groupId>org.apache.struts</groupId>
-                                    <artifactId>struts2-toolbox</artifactId>
+                                    <artifactId>
+                                        struts2-config-browser-plugin
+                                    </artifactId>
                                     <version>${version}</version>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.struts</groupId>
+                                    <artifactId>
+                                        struts2-jasperreports-plugin
+                                    </artifactId>
+                                    <version>${version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.struts</groupId>
+                                    <artifactId>
+                                        struts2-jfreechart-plugin
+                                    </artifactId>
+                                    <version>${version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.struts</groupId>
+                                    <artifactId>
+                                        struts2-jsf-plugin
+                                    </artifactId>
+                                    <version>${version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.struts</groupId>
+                                    <artifactId>
+                                        struts2-pell-multipart-plugin
+                                    </artifactId>
+                                    <version>${version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.struts</groupId>
+                                    <artifactId>
+                                        struts2-plexus-plugin
+                                    </artifactId>
+                                    <version>${version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.struts</groupId>
+                                    <artifactId>
+                                        struts2-quickstart-plugin
+                                    </artifactId>
+                                    <version>${version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.struts</groupId>
+                                    <artifactId>
+                                        struts2-sitegraph-plugin
+                                    </artifactId>
+                                    <version>${version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.struts</groupId>
+                                    <artifactId>
+                                        struts2-sitemesh-plugin
+                                    </artifactId>
+                                    <version>${version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.struts</groupId>
+                                    <artifactId>
+                                        struts2-struts1-plugin
+                                    </artifactId>
+                                    <version>${version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.struts</groupId>
+                                    <artifactId>
+                                        struts2-tiles-plugin
+                                    </artifactId>
+                                    <version>${version}</version>
+                                </artifactItem>
+                                
                            </artifactItems>
                             <outputDirectory>${project.build.directory}/classes</outputDirectory>
                         </configuration>

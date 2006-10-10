@@ -78,7 +78,7 @@
             
             <#list snippet as line>
                 <#if (line_index == 2)>
-                	<#if (rootloc.columnNumber >= 0)>
+                	<#if (rootloc.columnNumber >= 3)>
                         <pre style="background:yellow">${(line[0..(rootloc.columnNumber-3)]?html)}<span style="background:red">${(line[(rootloc.columnNumber-2)]?html)}</span><#if ((rootloc.columnNumber)<line.length())>${(line[(rootloc.columnNumber-1)..]?html)}</#if></pre>
                     <#else>
                        	<pre style="background:yellow">${line?html}</pre>

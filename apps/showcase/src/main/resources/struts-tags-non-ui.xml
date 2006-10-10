@@ -4,8 +4,6 @@
 	
 <struts>
 	
-	<include file="struts-default.xml" />
-	
 	<!-- ================================== -->
 	<!-- === Package for ActionTag Demo === -->
 	<!-- ================================== -->

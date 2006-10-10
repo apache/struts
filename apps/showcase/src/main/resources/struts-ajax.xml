@@ -3,8 +3,6 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 
 <struts>
-    <include file="struts-default.xml"/>
-
     <package name="ajax" extends="struts-default">
         <action name="AjaxTest" class="org.apache.struts2.showcase.ajax.AjaxTestAction">
             <result>/ajax/AjaxResult.jsp</result>

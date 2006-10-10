@@ -6,8 +6,6 @@
 	
 
 <struts>
-	<include file="struts-default.xml" />
-
 	<package name="freemarker" namespace="/freemarker" extends="struts-default">
 		<action name="customFreemarkerManagerDemo">
 			<result type="freemarker">/freemarker/customFreemarkerManagerUsage.ftl</result>

@@ -5,7 +5,6 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 
 <!-- START SNIPPET: xworkSample -->
-
 <struts>
 
     <include file="struts-chat.xml" />

@@ -100,7 +100,7 @@ public final class ApplicationListener implements ServletContextListener {
      * <p>The web application resource path of our persistent database storage
      * file.</p>
      */
-    private String pathname = "/WEB-INF/classes/database.xml";
+    private String pathname = "/WEB-INF/database.xml";
 
     /**
      * <p>Return the application resource path to the database.</p>

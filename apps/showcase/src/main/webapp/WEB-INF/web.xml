@@ -148,14 +148,4 @@
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
-    <taglib>
-        <taglib-uri>sitemesh-page</taglib-uri>
-        <taglib-location>/WEB-INF/sitemesh-page.tld</taglib-location>
-    </taglib>
-
-    <taglib>
-        <taglib-uri>sitemesh-decorator</taglib-uri>
-        <taglib-location>/WEB-INF/sitemesh-decorator.tld</taglib-location>
-    </taglib>
-
 </web-app>

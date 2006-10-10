@@ -21,10 +21,9 @@
         sourceUrl += "?page="+request.getServletPath();
     }
 %>
-
-<%@ taglib uri="sitemesh-decorator" prefix="decorator" %>
-<%@ taglib uri="sitemesh-page" prefix="page" %>
-<%@ taglib prefix="s" uri="/struts-tags" %>
+<%@taglib prefix="decorator" uri="http://www.opensymphony.com/sitemesh/decorator" %>
+<%@taglib prefix="page" uri="http://www.opensymphony.com/sitemesh/page" %>
+<%@taglib prefix="s" uri="/struts-tags" %>
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>

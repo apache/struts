@@ -35,6 +35,7 @@ import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 
 import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
@@ -117,7 +118,11 @@ public class FreeMarkerPageFilter extends TemplatePageFilter {
                                   HttpServletRequest req, HttpServletResponse res,
                                   ServletContext servletContext, ActionContext ctx)
             throws ServletException, IOException {
+    	
+    	String timerKey = "FreemarkerPageFilter_applyDecorator: ";
         try {
+        	UtilTimerStack.push(timerKey);
+        	
             FreemarkerManager fmm = FreemarkerManager.getInstance();
 
             // get the configuration and template
@@ -143,6 +148,9 @@ public class FreeMarkerPageFilter extends TemplatePageFilter {
             String msg = "Error applying decorator: " + e.getMessage();
             LOG.error(msg, e);
             throw new ServletException(msg, e);
+        }
+        finally {
+        	UtilTimerStack.pop(timerKey);
         }
     }
     

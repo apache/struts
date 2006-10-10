@@ -75,62 +75,60 @@
 
            <item
                     name="Config Browser"
-                    href="struts2-plugins/struts2-config-browser-plugin/apidocs/"
+                    href="struts2-plugins/struts2-config-browser-plugin/apidocs/index.html"
                     />
 
            <item
                     name="JasperReports"
-                    href="struts2-plugins/struts2-jasperreports-plugin/apidocs/"
+                    href="struts2-plugins/struts2-jasperreports-plugin/apidocs/index.html"
                     />
 
             <item
                     name="JavaServer Faces"
-                    href="struts2-plugins/struts2-jsf-plugin/apidocs/"
+                    href="struts2-plugins/struts2-jsf-plugin/apidocs/index.html"
                     />
 
            <item
                     name="JFreeChart"
-                    href="struts2-plugins/struts2-jfreechart-plugin/apidocs/"
+                    href="struts2-plugins/struts2-jfreechart-plugin/apidocs/index.html"
                     />
 
            <item
                     name="Pell Multipart"
-                    href="struts2-plugins/struts2-pell-multipart-plugin/apidocs/"
+                    href="struts2-plugins/struts2-pell-multipart-plugin/apidocs/index.html"
                     />
 
            <item
                     name="Plexus"
-                    href="struts2-plugins/struts2-plexus-plugin/apidocs/"
+                    href="struts2-plugins/struts2-plexus-plugin/apidocs/index.html"
                     />
 
            <item
                     name="QuickStart"
-                    href="struts2-plugins/struts2-quickstart-plugin/apidocs/"
+                    href="struts2-plugins/struts2-quickstart-plugin/apidocs/index.html"
                     />
 
            <item
                     name="Sitegraph"
-                    href="struts2-plugins/struts2-sitegraph-plugin/apidocs/"
+                    href="struts2-plugins/struts2-sitegraph-plugin/apidocs/index.html"
                     />
 
            <item
                     name="Sitemesh"
-                    href="struts2-plugins/struts2-sitemesh-plugin/apidocs/"
+                    href="struts2-plugins/struts2-sitemesh-plugin/apidocs/index.html"
                     />
 
            <item
                     name="Struts 1"
-                    href="struts2-plugins/struts2-struts1-plugin/apidocs/"
+                    href="struts2-plugins/struts2-struts1-plugin/apidocs/index.html"
                     />
-
 
            <item
                     name="Tiles"
-                    href="struts2-plugins/struts2-tiles-plugin/apidocs/"
+                    href="struts2-plugins/struts2-tiles-plugin/apidocs/index.html"
                     />
 
 
         </menu>
-        ${reports}
     </body>
 </project>

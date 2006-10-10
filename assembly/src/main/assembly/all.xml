@@ -67,6 +67,58 @@
         <outputDirectory>docs/struts2-core</outputDirectory>
       </fileSet>
 
+      <!-- Plugins -->
+      <!-- 
+      <fileSet>
+        <directory>../plugins/$plugin/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-$plugin-plugin</outputDirectory>
+      </fileSet>
+      -->
+      <fileSet>
+        <directory>../plugins/config-browser/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-config-browser-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/jasperreports/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-jasperreports-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/jfreechart/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-jfreechart-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/jsf/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-jsf-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/pell-multipart/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-pell-multipart-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/plexus/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-plexus-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/quickstart/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-quickstart-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/struts1/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-struts1-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/sitegraph/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-sitegraph-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/sitemesh/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-sitemesh-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/tiles/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-tiles-plugin</outputDirectory>
+      </fileSet>
+
     <!-- Include the source code in the assembly -->
     <fileSet>
       <directory>../</directory>

@@ -19,7 +19,6 @@ package org.apache.struts2.components;
 
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.Stack;
 
 import javax.servlet.jsp.tagext.TagSupport;
@@ -436,7 +435,6 @@ public class ComponentTest extends AbstractTagTest {
 		t.setPageContext(pageContext);
 		t.setName("textFieldName");
 		
-        ResourceBundle bundle = ResourceBundle.getBundle("org.apache.struts2.components.tempo");
 		LocalizedTextUtil.addDefaultResourceBundle("org.apache.struts2.components.temp");
 		
 		I18nTag tag = new I18nTag();

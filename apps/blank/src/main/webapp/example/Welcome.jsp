@@ -11,24 +11,8 @@
 <h3>Commands</h3>
 <ul>
     <li><a href="<s:url action="Login!input"/>">Sign On</a></li>
-</ul>
-
-<h3>Languages</h3>
-<ul>
-    <li>
-        <s:url id="url" action="Welcome">
-            <s:param name="request_locale">en</s:param>
-        </s:url>
-        <s:a href="%{url}">English</s:a>
-    </li>
-    <li>
-        <s:url id="url" action="Welcome">
-            <s:param name="request_locale">es</s:param>
-        </s:url>
-        <s:a href="%{url}">Español</s:a>
-    </li>
+    <li><a href="<s:url action="Register"/>">Register</a></li>
 </ul>
 
 </body>
 </html>
-

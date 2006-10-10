@@ -4,8 +4,6 @@
 
 <struts>
 
-    <include file="struts-default.xml"/>
-
     <include file="example.xml"/>
 
     <!-- Add packages here -->

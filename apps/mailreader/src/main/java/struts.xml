@@ -5,8 +5,6 @@
 
 <struts>
 
-    <include file="struts-default.xml"/>
-
     <include file="mailreader-default.xml"/>
 
     <include file="mailreader-support.xml"/>

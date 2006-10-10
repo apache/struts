@@ -88,9 +88,9 @@ public class Dispatcher {
     private static final Log LOG = LogFactory.getLog(Dispatcher.class);
 
     private static ThreadLocal<Dispatcher> instance = new ThreadLocal<Dispatcher>();
-    private static List<DispatcherListener> dispatcherListeners = 
+    private static List<DispatcherListener> dispatcherListeners =
         new ArrayList<DispatcherListener>();
-    
+
     private ConfigurationManager configurationManager;
     private static boolean portletSupportActive;
     private boolean devMode = false;
@@ -100,34 +100,34 @@ public class Dispatcher {
 
     /**
      * Gets the current instance for this thread
-     * 
+     *
      * @return The dispatcher instance
      */
     public static Dispatcher getInstance() {
         return (Dispatcher) instance.get();
     }
 
-    /** 
+    /**
      * Sets the dispatcher instance for this thread
-     * 
+     *
      * @param instance The instance
      */
     public static void setInstance(Dispatcher instance) {
         Dispatcher.instance.set(instance);
     }
-    
+
     /**
      * Adds a dispatcher lifecycle listener
-     * 
+     *
      * @param l The listener
      */
     public static synchronized void addDispatcherListener(DispatcherListener l) {
         dispatcherListeners.add(l);
     }
-    
-    /** 
+
+    /**
      * Removes a dispatcher lifecycle listener
-     * 
+     *
      * @param l The listener
      */
     public static synchronized void removeDispatcherListener(DispatcherListener l) {
@@ -136,14 +136,14 @@ public class Dispatcher {
 
     /**
      * The constructor with its servlet context instance (optional)
-     * 
+     *
      * @param servletContext The servlet context
      */
     public Dispatcher(ServletContext servletContext) {
         init(servletContext);
     }
 
-    /** 
+    /**
      * Cleans up thread local variables
      */
     public void cleanup() {
@@ -172,7 +172,7 @@ public class Dispatcher {
 
     /**
      * Initializes the instance
-     * 
+     *
      * @param servletContext The servlet context
      */
     private void init(ServletContext servletContext) {
@@ -242,7 +242,7 @@ public class Dispatcher {
         }
 
         // test wether param-access workaround needs to be enabled
-        if (servletContext != null && servletContext.getServerInfo() != null 
+        if (servletContext != null && servletContext.getServerInfo() != null
                 && servletContext.getServerInfo().indexOf("WebLogic") >= 0) {
             LOG.info("WebLogic server detected. Enabling Struts parameter access work-around.");
             paramsWorkaroundEnabled = true;
@@ -253,7 +253,6 @@ public class Dispatcher {
         }
 
         configurationManager = new ConfigurationManager();
-        String configFiles = "struts-default.xml,struts-plugin.xml,struts.xml";
         if (Settings.isSet(StrutsConstants.STRUTS_CONFIGURATION_FILES)) {
             configFiles = Settings.get(StrutsConstants.STRUTS_CONFIGURATION_FILES);
         }
@@ -265,7 +264,7 @@ public class Dispatcher {
                 configurationManager.addConfigurationProvider(new StrutsXmlConfigurationProvider(file, false));
             }
         }
-        
+
         synchronized(Dispatcher.class) {
             if (dispatcherListeners.size() > 0) {
                 for (DispatcherListener l : dispatcherListeners) {
@@ -345,14 +344,14 @@ public class Dispatcher {
 
     /**
      * Creates a context map containing all the wrapped request objects
-     * 
+     *
      * @param request The servlet request
      * @param response The servlet response
      * @param mapping The action mapping
      * @param context The servlet context
      * @return A map of context objects
      */
-    public Map<String,Object> createContextMap(HttpServletRequest request, HttpServletResponse response, 
+    public Map<String,Object> createContextMap(HttpServletRequest request, HttpServletResponse response,
             ActionMapping mapping, ServletContext context) {
         // request map wrapping the http request objects
         Map requestMap = new RequestMap(request);
@@ -493,7 +492,7 @@ public class Dispatcher {
 
     /**
      * Prepares a request, including setting the encoding and locale
-     * 
+     *
      * @param request The request
      * @param response The response
      */
@@ -558,22 +557,22 @@ public class Dispatcher {
      * @param code     the HttpServletResponse error code (see {@link javax.servlet.http.HttpServletResponse} for possible error codes).
      * @param e        the Exception that is reported.
      */
-    public void sendError(HttpServletRequest request, HttpServletResponse response, 
+    public void sendError(HttpServletRequest request, HttpServletResponse response,
             ServletContext ctx, int code, Exception e) {
         if (devMode) {
             response.setContentType("text/html");
-            
+
             try {
                 freemarker.template.Configuration config = FreemarkerManager.getInstance().getConfiguration(ctx);
                 Template template = config.getTemplate("/org/apache/struts2/dispatcher/error.ftl");
-                
+
                 List<Throwable> chain = new ArrayList<Throwable>();
                 Throwable cur = e;
                 chain.add(cur);
                 while ((cur = cur.getCause()) != null) {
                     chain.add(cur);
                 }
-                
+
                 HashMap<String,Object> data = new HashMap<String,Object>();
                 data.put("exception", e);
                 data.put("unknown", Location.UNKNOWN);
@@ -593,10 +592,10 @@ public class Dispatcher {
                 // send a http error response to use the servlet defined error handler
                 // make the exception availible to the web.xml defined error page
                 request.setAttribute("javax.servlet.error.exception", e);
-    
+
                 // for compatibility
                 request.setAttribute("javax.servlet.jsp.jspException", e);
-    
+
                 // send the error response
                 response.sendError(code, e.getMessage());
             } catch (IOException e1) {
@@ -628,14 +627,14 @@ public class Dispatcher {
             Location loc = LocationUtils.getLocation(obj);
             if (loc == null) {
                 return Location.UNKNOWN;
-            } 
+            }
             return loc;
         }
     }
 
     /**
      * Gets the current configuration manager instance
-     * 
+     *
      * @return The instance
      */
     public ConfigurationManager getConfigurationManager() {
@@ -644,7 +643,7 @@ public class Dispatcher {
 
     /**
      * Sets the current configuration manager instance
-     * 
+     *
      * @param mgr The configuration manager
      */
     public void setConfigurationManager(ConfigurationManager mgr) {
@@ -664,5 +663,5 @@ public class Dispatcher {
     public void setDevMode(boolean devMode) {
         this.devMode = devMode;
     }
-    
+
 }

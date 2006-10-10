@@ -35,6 +35,9 @@ public class ServletContextHolderListenerTest extends TestCase {
         ServletContextHolderListener listener = new ServletContextHolderListener();
         listener.contextInitialized(event);
         assertSame(ServletContextHolderListener.getServletContext(), context);
+        
+        listener.contextDestroyed(event);
+        assertNull(ServletContextHolderListener.getServletContext());
     }
 
 }

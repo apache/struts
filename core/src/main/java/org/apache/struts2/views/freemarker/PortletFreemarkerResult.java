@@ -73,9 +73,8 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
     	super(location);
     }
     
-    public PortletFreemarkerResult setContentType(String aContentType) {
+    public void setContentType(String aContentType) {
         pContentType = aContentType;
-        return this;
     }
 
     /**

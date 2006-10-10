@@ -101,9 +101,8 @@ public class PlainTextResult extends StrutsResultSupport {
      * 
      * @param charSet The character set
      */
-	public PlainTextResult setCharSet(String charSet) {
+	public void setCharSet(String charSet) {
 		this.charSet = charSet;
-		return this;
 	}
 	
 	/* (non-Javadoc)

@@ -104,9 +104,8 @@ public class StreamResult extends StrutsResultSupport {
     /**
      * @param bufferSize The bufferSize to set.
      */
-    public StreamResult setBufferSize(int bufferSize) {
+    public void setBufferSize(int bufferSize) {
         this.bufferSize = bufferSize;
-        return this;
     }
 
     /**
@@ -119,9 +118,8 @@ public class StreamResult extends StrutsResultSupport {
     /**
      * @param contentType The contentType to set.
      */
-    public StreamResult setContentType(String contentType) {
+    public void setContentType(String contentType) {
         this.contentType = contentType;
-        return this;
     }
 
     /**
@@ -134,9 +132,8 @@ public class StreamResult extends StrutsResultSupport {
     /**
      * @param contentLength The contentLength to set.
      */
-    public StreamResult setContentLength(String contentLength) {
+    public void setContentLength(String contentLength) {
         this.contentLength = contentLength;
-        return this;
     }
 
     /**
@@ -149,9 +146,8 @@ public class StreamResult extends StrutsResultSupport {
     /**
      * @param contentDisposition the Content-disposition header value to use.
      */
-    public StreamResult setContentDisposition(String contentDisposition) {
+    public void setContentDisposition(String contentDisposition) {
         this.contentDisposition = contentDisposition;
-        return this;
     }
 
     /**
@@ -164,9 +160,8 @@ public class StreamResult extends StrutsResultSupport {
     /**
      * @param inputName The inputName to set.
      */
-    public StreamResult setInputName(String inputName) {
+    public void setInputName(String inputName) {
         this.inputName = inputName;
-        return this;
     }
 
     /**

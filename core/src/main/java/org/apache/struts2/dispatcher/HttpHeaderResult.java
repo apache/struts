@@ -105,9 +105,8 @@ public class HttpHeaderResult implements Result {
      * @param parse <tt>true</tt> if HTTP header values should be evaluated agains the ValueStack, <tt>false</tt>
      *              otherwise.
      */
-    public HttpHeaderResult setParse(boolean parse) {
+    public void setParse(boolean parse) {
         this.parse = parse;
-        return this;
     }
 
     /**
@@ -116,9 +115,8 @@ public class HttpHeaderResult implements Result {
      * @param status the Http status code
      * @see javax.servlet.http.HttpServletResponse#setStatus(int)
      */
-    public HttpHeaderResult setStatus(int status) {
+    public void setStatus(int status) {
         this.status = status;
-        return this;
     }
     
     /**
@@ -126,9 +124,8 @@ public class HttpHeaderResult implements Result {
      * @param name
      * @param value
      */
-    public HttpHeaderResult addHeader(String name, String value) {
+    public void addHeader(String name, String value) {
     	headers.put(name, value);
-    	return this;
     }
 
     /**

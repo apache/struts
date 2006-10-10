@@ -11,7 +11,7 @@ public class HelloWorld extends ExampleSupport {
     }
 
     /**
-     * Provide default value for Message property.
+     * Provide default valuie for Message property.
      */
     public static final String MESSAGE = "HelloWorld.message";
 

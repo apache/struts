@@ -44,6 +44,10 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         Dispatcher.setInstance(du);
         configurationManager = new ConfigurationManager();
         configurationManager.addConfigurationProvider(
+                new StrutsXmlConfigurationProvider("struts-default.xml", false));
+        configurationManager.addConfigurationProvider(
+                new StrutsXmlConfigurationProvider("struts-plugin.xml", false));
+        configurationManager.addConfigurationProvider(
                 new StrutsXmlConfigurationProvider("struts.xml", false));
         du.setConfigurationManager(configurationManager);
         

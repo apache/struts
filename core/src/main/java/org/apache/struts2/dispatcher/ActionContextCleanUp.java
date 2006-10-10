@@ -33,6 +33,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 
 /**
  * <!-- SNIPPET START: description -->
@@ -54,6 +55,8 @@ import com.opensymphony.xwork2.ActionContext;
  * <li>{@link FilterDispatcher}</li>
  * </ul>
  * <!-- SNIPPET END: description -->
+ *
+ * @version $Date$ $Id$
  *
  * @see FilterDispatcher
  */
@@ -77,7 +80,7 @@ public class ActionContextCleanUp implements Filter {
     }
 
     
-    /* (non-Javadoc)
+    /**
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
      */
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
@@ -85,35 +88,43 @@ public class ActionContextCleanUp implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
-        // prepare the request no matter what - this ensures that the proper character encoding
-        // is used before invoking the mapper (see WW-9127)
-        Dispatcher.setInstance(dispatcher);
-        dispatcher.prepare(request, response);
-
-        ServletContext servletContext = filterConfig.getServletContext();
+        String timerKey = "ActionContextCleanUp_doFilter: ";
         try {
-            request = dispatcher.wrapRequest(request, servletContext);
-        } catch (IOException e) {
-            String message = "Could not wrap servlet request with MultipartRequestWrapper!";
-            LOG.error(message, e);
-            throw new ServletException(message, e);
+        	UtilTimerStack.push(timerKey);
+        	
+        	// prepare the request no matter what - this ensures that the proper character encoding
+        	// is used before invoking the mapper (see WW-9127)
+        	Dispatcher.setInstance(dispatcher);
+        	dispatcher.prepare(request, response);
+
+        	ServletContext servletContext = filterConfig.getServletContext();
+        	try {
+        		request = dispatcher.wrapRequest(request, servletContext);
+        	} catch (IOException e) {
+        		String message = "Could not wrap servlet request with MultipartRequestWrapper!";
+        		LOG.error(message, e);
+        		throw new ServletException(message, e);
+        	}
+
+        	try {
+        		Integer count = (Integer)request.getAttribute(COUNTER);
+        		if (count == null) {
+        			count = new Integer(1);
+        		}
+        		else {
+        			count = new Integer(count.intValue()+1);
+        		}
+        		request.setAttribute(COUNTER, count);
+        		chain.doFilter(request, response);
+        	} finally {
+        		int counterVal = ((Integer)request.getAttribute(COUNTER)).intValue();
+        		counterVal -= 1;
+        		request.setAttribute(COUNTER, new Integer(counterVal));
+        		cleanUp(request);
+        	}
         }
-
-        try {
-            Integer count = (Integer)request.getAttribute(COUNTER);
-            if (count == null) {
-                count = new Integer(1);
-            }
-            else {
-                count = new Integer(count.intValue()+1);
-            }
-            request.setAttribute(COUNTER, count);
-            chain.doFilter(request, response);
-        } finally {
-            int counterVal = ((Integer)request.getAttribute(COUNTER)).intValue();
-            counterVal -= 1;
-            request.setAttribute(COUNTER, new Integer(counterVal));
-            cleanUp(request);
+        finally {
+        	UtilTimerStack.pop(timerKey);
         }
     }
 

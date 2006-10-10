@@ -50,6 +50,7 @@ import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 import com.opensymphony.xwork2.ActionContext;
 
 /**
@@ -114,6 +115,8 @@ import com.opensymphony.xwork2.ActionContext;
  * @see org.apache.struts2.lifecycle.LifecycleListener
  * @see ActionMapper
  * @see ActionContextCleanUp
+ * 
+ * @version $Date$ $Id$
  */
 public class FilterDispatcher implements Filter, StrutsStatics {
     private static final Log LOG = LogFactory.getLog(FilterDispatcher.class);
@@ -193,63 +196,70 @@ public class FilterDispatcher implements Filter, StrutsStatics {
         HttpServletResponse response = (HttpServletResponse) res;
         ServletContext servletContext = filterConfig.getServletContext();
 
-        Dispatcher du = Dispatcher.getInstance();
+        String timerKey = "FilterDispatcher_doFilter: ";
+        try {
+        	UtilTimerStack.push(timerKey);
+        	Dispatcher du = Dispatcher.getInstance();
         
-        // Prepare and wrap the request if the cleanup filter hasn't already
-        if (du == null) {
-            du = dispatcher;
-            // prepare the request no matter what - this ensures that the proper character encoding
-            // is used before invoking the mapper (see WW-9127)
-            du.prepare(request, response);
+        	// Prepare and wrap the request if the cleanup filter hasn't already
+        	if (du == null) {
+        		du = dispatcher;
+        		// prepare the request no matter what - this ensures that the proper character encoding
+        		// is used before invoking the mapper (see WW-9127)
+        		du.prepare(request, response);
 
-            try {
-                // Wrap request first, just in case it is multipart/form-data 
-                // parameters might not be accessible through before encoding (ww-1278)
-                request = du.wrapRequest(request, servletContext);
-            } catch (IOException e) {
-                String message = "Could not wrap servlet request with MultipartRequestWrapper!";
-                LOG.error(message, e);
-                throw new ServletException(message, e);
-            }
-            Dispatcher.setInstance(du);
-        }
+        		try {
+        			// Wrap request first, just in case it is multipart/form-data 
+        			// parameters might not be accessible through before encoding (ww-1278)
+        			request = du.wrapRequest(request, servletContext);
+        		} catch (IOException e) {
+        			String message = "Could not wrap servlet request with MultipartRequestWrapper!";
+        			LOG.error(message, e);
+        			throw new ServletException(message, e);
+        		}
+        		Dispatcher.setInstance(du);
+        	}
 
-        ActionMapper mapper = null;
-        ActionMapping mapping = null;
-        try {
-            mapper = ActionMapperFactory.getMapper();
-            mapping = mapper.getMapping(request, du.getConfigurationManager());
-        } catch (Exception ex) {
-            du.sendError(request, response, servletContext, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
-            ActionContextCleanUp.cleanUp(req);
-            return;
-        }
+        	ActionMapper mapper = null;
+        	ActionMapping mapping = null;
+        	try {
+        		mapper = ActionMapperFactory.getMapper();
+        		mapping = mapper.getMapping(request, du.getConfigurationManager());
+        	} catch (Exception ex) {
+        		du.sendError(request, response, servletContext, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
+        		ActionContextCleanUp.cleanUp(req);
+        		return;
+        	}
 
-        if (mapping == null) {
-            // there is no action in this request, should we look for a static resource?
-            String resourcePath = RequestUtils.getServletPath(request);
+        	if (mapping == null) {
+        		// there is no action in this request, should we look for a static resource?
+        		String resourcePath = RequestUtils.getServletPath(request);
 
-            if ("".equals(resourcePath) && null != request.getPathInfo()) {
-                resourcePath = request.getPathInfo();
-            }
+        		if ("".equals(resourcePath) && null != request.getPathInfo()) {
+        			resourcePath = request.getPathInfo();
+        		}
 
-            if ("true".equals(Settings.get(StrutsConstants.STRUTS_SERVE_STATIC_CONTENT)) 
+        		if ("true".equals(Settings.get(StrutsConstants.STRUTS_SERVE_STATIC_CONTENT)) 
                     && resourcePath.startsWith("/struts")) {
-                String name = resourcePath.substring("/struts".length());
-                findStaticResource(name, response);
-            } else {
-                // this is a normal request, let it pass through
-                chain.doFilter(request, response);
-            }
-            // The framework did its job here
-            return;
+        			String name = resourcePath.substring("/struts".length());
+        			findStaticResource(name, response);
+        		} else {
+        			// this is a normal request, let it pass through
+        			chain.doFilter(request, response);
+        		}
+        		// The framework did its job here
+        		return;
+        	}
+
+
+        	try {
+        		dispatcher.serviceAction(request, response, servletContext, mapping);
+        	} finally {
+        		ActionContextCleanUp.cleanUp(req);
+        	}
         }
-
-
-        try {
-            dispatcher.serviceAction(request, response, servletContext, mapping);
-        } finally {
-            ActionContextCleanUp.cleanUp(req);
+        finally {
+        	UtilTimerStack.pop(timerKey);
         }
     }
 

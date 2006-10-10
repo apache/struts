@@ -214,11 +214,10 @@ public class XSLTResult implements Result {
         setStylesheetLocation(location);
     }
 
-    public XSLTResult setStylesheetLocation(String location) {
+    public void setStylesheetLocation(String location) {
         if (location == null)
             throw new IllegalArgumentException("Null location");
         this.stylesheetLocation = location;
-        return this;
     }
 
     public String getStylesheetLocation() {
@@ -230,9 +229,8 @@ public class XSLTResult implements Result {
      *
      * @param parse
      */
-    public XSLTResult setParse(boolean parse) {
+    public void setParse(boolean parse) {
         this.parse = parse;
-        return this;
     }
 
     public void execute(ActionInvocation invocation) throws Exception {

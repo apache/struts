@@ -1,5 +1,0 @@
-<ul>
-	<li><span class="actionMessage">action message number 1</span></li>
-	<li><span class="actionMessage">action message number 2</span></li>
-	<li><span class="actionMessage">action message number 3</span></li>
-</ul>

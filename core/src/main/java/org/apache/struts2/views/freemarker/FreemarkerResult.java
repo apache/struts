@@ -113,9 +113,8 @@ public class FreemarkerResult extends StrutsResultSupport {
     	super(location);
     }
 
-    public FreemarkerResult setContentType(String aContentType) {
+    public void setContentType(String aContentType) {
         pContentType = aContentType;
-        return this;
     }
 
     /**

@@ -94,9 +94,8 @@ public class ServletRedirectResult extends StrutsResultSupport {
      * @param prependServletContext <tt>true</tt> to prepend the location with the servlet context path,
      *                              <tt>false</tt> otherwise.
      */
-    public ServletRedirectResult setPrependServletContext(boolean prependServletContext) {
+    public void setPrependServletContext(boolean prependServletContext) {
         this.prependServletContext = prependServletContext;
-        return this;
     }
 
     /**

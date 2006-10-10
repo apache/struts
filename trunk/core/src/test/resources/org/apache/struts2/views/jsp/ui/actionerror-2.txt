@@ -1,5 +1,0 @@
-<ul>
-	<li><span class="errorMessage">action error number 1</span></li>
-	<li><span class="errorMessage">action error number 2</span></li>
-	<li><span class="errorMessage">action error number 3</span></li>
-</ul>

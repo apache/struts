@@ -204,9 +204,8 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
      *
      * @param actionName The name
      */
-    public ServletActionRedirectResult setActionName(String actionName) {
+    public void setActionName(String actionName) {
         this.actionName = actionName;
-        return this;
     }
 
     /**
@@ -214,9 +213,8 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
      *
      * @param namespace The namespace
      */
-    public ServletActionRedirectResult setNamespace(String namespace) {
+    public void setNamespace(String namespace) {
         this.namespace = namespace;
-        return this;
     }
 
     /**
@@ -224,9 +222,8 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
      *
      * @param method The method
      */
-    public ServletActionRedirectResult setMethod(String method) {
+    public void setMethod(String method) {
     	this.method = method;
-    	return this;
     }
     
     /**

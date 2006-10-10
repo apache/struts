@@ -1,2 +1,0 @@
-</table>
-#parse("/$parameters.templateDir/simple/form-close.vm")

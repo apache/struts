@@ -1,3 +1,0 @@
-<tr>
-    <td colspan="2"><div #if ($parameters.align) align="$!struts.htmlEncode($parameters.align)" #end
->#parse("/$parameters.templateDir/simple/submit.vm")</div>#parse( "/$parameters.templateDir/xhtml/controlfooter.vm" )

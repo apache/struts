@@ -1,7 +1,0 @@
-<tr>
-    <td class="tdLabel"><label for="myname" class="label">mylabel:</label></td>
-    <td>
-<input type="radio" name="myname" id="mynametrue" checked="checked" value="true"/><label for="mynametrue">male</label>
-<input type="radio" name="myname" id="mynamefalse" value="false"/><label for="mynamefalse">female</label>
-    </td>
-</tr>

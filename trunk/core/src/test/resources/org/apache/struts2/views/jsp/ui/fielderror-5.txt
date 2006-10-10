@@ -1,3 +1,0 @@
-<ul>
-	<li><span class="errorMessage">field error message number 2</span></li>
-</ul>

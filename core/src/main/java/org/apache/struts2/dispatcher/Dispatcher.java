@@ -253,16 +253,19 @@ public class Dispatcher {
         }
 
         configurationManager = new ConfigurationManager();
+        String configFiles = null;
         if (Settings.isSet(StrutsConstants.STRUTS_CONFIGURATION_FILES)) {
             configFiles = Settings.get(StrutsConstants.STRUTS_CONFIGURATION_FILES);
         }
-        String[] files = configFiles.split("\\s*[,]\\s*");
-        for (String file : files) {
-            if ("xwork.xml".equals(file)) {
-                configurationManager.addConfigurationProvider(new XmlConfigurationProvider(file, false));
-            } else {
-                configurationManager.addConfigurationProvider(new StrutsXmlConfigurationProvider(file, false));
-            }
+        if (configFiles != null) {
+	        String[] files = configFiles.split("\\s*[,]\\s*");
+	        for (String file : files) {
+	            if ("xwork.xml".equals(file)) {
+	                configurationManager.addConfigurationProvider(new XmlConfigurationProvider(file, false));
+	            } else {
+	                configurationManager.addConfigurationProvider(new StrutsXmlConfigurationProvider(file, false));
+	            }
+	        }
         }
 
         synchronized(Dispatcher.class) {

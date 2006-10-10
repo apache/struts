@@ -45,7 +45,7 @@ public class SettingsTest extends StrutsTestCase {
         assertEquals("de", locale.getLanguage());
 
         int count = getKeyCount();
-        assertEquals(30, count);
+        assertEquals(31, count);
     }
 
     public void testDefaultResourceBundlesLoaded() {

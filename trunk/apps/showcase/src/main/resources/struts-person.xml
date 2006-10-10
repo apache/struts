@@ -1,0 +1,31 @@
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<!-- START SNIPPET: xworkSample -->
+
+<struts>
+    <package name="person" extends="struts-default" namespace="/person">
+        <action name="listPeople" class="org.apache.struts2.showcase.person.ListPeople">
+            <interceptor-ref name="validationWorkflowStack"/>
+            <result type="freemarker">listPeople.ftl</result>
+        </action>
+
+        <action name="newPerson!*" class="org.apache.struts2.showcase.person.CreatePerson" method="{1}">
+            <result type="redirect">listPeople.action</result>
+            <result name="input" type="freemarker">newPerson.ftl</result>
+        </action>
+
+        <action name="editPerson" class="org.apache.struts2.showcase.person.EditPerson">
+            <result>editPeople.jsp</result>
+        </action>
+
+        <action name="doEditPerson" class="org.apache.struts2.showcase.person.EditPerson" method="save">
+            <result name="error">editPeople.jsp</result>
+            <result type="redirect">listPeople.action</result>
+        </action>
+    </package>
+</struts>
+
+<!--  END SNIPPET: xworkSample -->
+

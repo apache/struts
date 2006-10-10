@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<package name="hangman" extends="struts-default" namespace="/hangman">
+		<action name="hangmanMenu">
+			<result type="freemarker">/hangman/hangmanMenu.ftl</result>
+		</action>
+		<action name="hangmanAjax" class="startHangmanAction">
+			<result type="freemarker">/hangman/hangmanAjax.ftl</result>		
+		</action>
+		<action name="hangmanNonAjax" class="startHangmanAction">
+			<result type="freemarker">/hangman/hangmanNonAjax.ftl</result>
+		</action>
+		<action name="test">
+			<result type="freemarker">/hangman/test.ftl</result>
+		</action>
+		<action name="guessCharacter" class="guessCharacterAction">
+			<result type="freemarker">/hangman/blank.ftl</result>
+		</action>
+		<action name="guessCharacterNonAjax" class="guessCharacterAction">
+			<result type="freemarker">/hangman/hangmanNonAjax.ftl</result>
+		</action>
+	</package>
+	
+	
+	
+	<package name="hangman-ajax" extends="struts-default" namespace="/hangman/ajax">
+		<action name="blank">
+			<result type="freemarker">/hangman/blank.ftl</result>
+		</action>
+		<action name="updateVocabCharacters" class="getUpdatedHangmanAction">
+			<result type="freemarker">/hangman/updateVocabCharacters.ftl</result>
+		</action>
+		<action name="updateCharacterAvailable" class="getUpdatedHangmanAction">
+			<result type="freemarker">/hangman/updateCharacterAvailable.ftl</result>
+		</action>
+		<action name="updateScaffold" class="getUpdatedHangmanAction">
+			<result type="freemarker">/hangman/updateScaffold.ftl</result>
+		</action>
+		<action name="updateGuessLeft" class="getUpdatedHangmanAction">
+			<result type="freemarker">/hangman/updateGuessLeft.ftl</result>
+		</action>
+	</package>
+</struts>	

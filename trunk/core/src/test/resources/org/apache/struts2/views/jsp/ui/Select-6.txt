@@ -1,0 +1,8 @@
+<tr>
+    <td class="tdLabel"><label for="myId" class="label">media2:</label></td>
+    <td><select name="myName" id="myId">
+    <option value=""></option>
+    <option value="aaa">aaa</option>
+    <option value="bbb">bbb</option>
+</select></td>
+</tr>

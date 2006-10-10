@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.apache.struts</groupId>
+        <artifactId>struts2-apps</artifactId>
+        <version>2.0.1</version>
+    </parent>
+    <groupId>org.apache.struts</groupId>
+    <artifactId>struts2-showcase</artifactId>
+    <packaging>war</packaging>
+    <name>Showcase Webapp</name>
+    <profiles>
+        <profile>
+            <id>hostedqa</id>
+            <properties>
+                <resourceId>12</resourceId>
+                <suiteId>9</suiteId>
+                <clientConfigs>8</clientConfigs>
+                <appConfigs>7</appConfigs>
+            </properties>
+        </profile>
+    </profiles>
+    <dependencies>
+        
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-struts1-plugin</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-jsf-plugin</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-config-browser-plugin</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-sitemesh-plugin</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-tiles-plugin</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+ 
+        <dependency>
+           <groupId>javax.servlet</groupId>
+           <artifactId>servlet-api</artifactId>
+           <version>2.4</version>
+           <scope>provided</scope>
+        </dependency>
+        
+        <!-- Velocity -->
+        <dependency>
+            <groupId>velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.4</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>velocity-tools</groupId>
+            <artifactId>velocity-tools</artifactId>
+            <version>1.1</version>
+            <optional>true</optional>
+        </dependency>
+
+
+        <dependency>
+            <groupId>opensymphony</groupId>
+            <artifactId>sitemesh</artifactId>
+            <version>2.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.9</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.ltd.getahead</groupId>
+            <artifactId>dwr</artifactId>
+            <version>1.1-beta-3</version>
+        </dependency>
+        <dependency>
+         <groupId>org.apache.myfaces.core</groupId>
+         <artifactId>myfaces-impl</artifactId>
+         <version>1.1.2</version>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.myfaces.core</groupId>
+         <artifactId>myfaces-api</artifactId>
+         <version>1.1.2</version>
+      </dependency>
+      <dependency>
+         <groupId>org.rifers</groupId>
+         <artifactId>rife-continuations</artifactId>
+         <version>0.0.2</version>
+     </dependency>
+     <dependency>
+         <groupId>commons-fileupload</groupId>
+         <artifactId>commons-fileupload</artifactId>
+         <version>1.1.1</version>
+     </dependency>
+
+ 
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>maven-jetty-plugin</artifactId>
+                <version>6.0.1</version>
+                <configuration>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                     <groupId>org.apache.myfaces.core</groupId>
+                     <artifactId>myfaces-impl</artifactId>
+                     <version>1.1.2</version>
+                    </dependency>
+                    <dependency>
+                     <groupId>org.apache.myfaces.core</groupId>
+                     <artifactId>myfaces-api</artifactId>
+                     <version>1.1.2</version>
+                   </dependency>
+                   <dependency>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                        <version>1.2.9</version>
+                   </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+                <resources>
+                    <!-- Include resources under src/main/java in WEB-INF/classes -->
+                    <resource>
+                        <directory>src/main/resources</directory>
+                    </resource>
+                    <resource>
+                        <directory>src/main/java</directory>
+                            <includes>
+                                <include>**/*.java</include>
+                             </includes>
+                     </resource>
+                </resources>
+
+    </build>
+</project>

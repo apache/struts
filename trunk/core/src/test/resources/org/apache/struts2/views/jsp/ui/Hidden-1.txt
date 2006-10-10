@@ -1,0 +1,1 @@
+<input type="hidden" name="myname" value="bar" id="myname"/>

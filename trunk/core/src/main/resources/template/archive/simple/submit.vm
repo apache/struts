@@ -1,0 +1,7 @@
+<input type="submit"
+#if ($parameters.name)       name="$!struts.htmlEncode($parameters.name)"           #end
+#if ($parameters.nameValue)  value="$!struts.htmlEncode($parameters.nameValue)"     #end
+#if ($parameters.cssClass)   class="$!struts.htmlEncode($parameters.cssClass)"      #end
+#if ($parameters.cssStyle)   style="$!struts.htmlEncode($parameters.cssStyle)"      #end
+#parse("/$parameters.templateDir/simple/scripting-events.vm")
+/>

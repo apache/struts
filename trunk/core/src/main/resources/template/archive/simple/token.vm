@@ -1,0 +1,2 @@
+<input type="hidden" name="$!{parameters.tokenNameField}" value="$struts.htmlEncode($!parameters.name)"/>
+<input type="hidden" name="$!parameters.name" value="$struts.htmlEncode($!parameters.token)"/>

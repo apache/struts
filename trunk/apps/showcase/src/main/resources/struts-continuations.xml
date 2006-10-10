@@ -1,0 +1,10 @@
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="continuations" extends="struts-default" namespace="/continuations">
+        <action name="guess" class="org.apache.struts2.showcase.Guess">
+            <result type="freemarker">guess.ftl</result>
+        </action>
+    </package>
+</struts>

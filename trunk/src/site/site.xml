@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Struts 2">
+    <bannerLeft>
+        <name>Apache Software Foundation</name>
+        <src>http://www.apache.org/images/asf-logo.gif</src>
+        <href>http://www.apache.org</href>
+    </bannerLeft>
+    <bannerRight>
+        <name>Apache Struts</name>
+        <src>http://struts.apache.org/images/struts.gif</src>
+        <href>http://struts.apache.org</href>
+    </bannerRight>     
+    <body>
+        <links>
+            <item name="Apache" href="http://www.apache.org" /> 
+            <item name="Struts 1" href="http://struts.apache.org/1.x" />
+            <item name="Struts 2" href="http://struts.apache.org/2.x" />
+        </links>
+        <menu name="Struts 2">
+            <item
+                    name="Welcome"
+                    href="index.html"
+                    />
+            <item
+                    name="Download"
+                    href="http://struts.apache.org/downloads.html"/>
+        </menu>
+
+        <menu name="Documentation">
+        
+            <item
+                    name="Getting Started"
+                    href="http://cwiki.apache.org/WW/home.html"
+                    />        
+            <item
+                    name="Tutorials"
+                    href="http://cwiki.apache.org/WW/tutorials.html"
+                    />        
+
+            <item
+                    name="FAQs"
+                    href="http://cwiki.apache.org/WW/faqs.html"
+                    />        
+
+            <item
+                    name="Guides"
+                    href="http://cwiki.apache.org/WW/guides.html"
+                    />        
+
+            <item
+                    name="Release Notes"
+                    href="http://cwiki.apache.org/WW/release-notes-200.html"
+                    />        
+
+        </menu>
+        <menu name="Reference">
+            <item
+                    name="Struts Core API"
+                    href="struts2-core/apidocs/index.html"
+                    />        
+            <item
+                    name="New API (experimental)"
+                    href="struts2-api/apidocs/index.html"
+                    />        
+            <item
+                    name="Tag Reference"
+                    href="http://cwiki.apache.org/WW/tag-reference.html"
+                    />        
+            <item
+                    name="Source Repository"
+                    href="http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/?root=Apache-SVN"
+                    />
+        </menu>
+        <menu name="Plugin API's">
+
+           <item
+                    name="Config Browser"
+                    href="struts2-plugins/struts2-config-browser-plugin/apidocs/index.html"
+                    />
+
+           <item
+                    name="JasperReports"
+                    href="struts2-plugins/struts2-jasperreports-plugin/apidocs/index.html"
+                    />
+
+            <item
+                    name="JavaServer Faces"
+                    href="struts2-plugins/struts2-jsf-plugin/apidocs/index.html"
+                    />
+
+           <item
+                    name="JFreeChart"
+                    href="struts2-plugins/struts2-jfreechart-plugin/apidocs/index.html"
+                    />
+
+           <item
+                    name="Pell Multipart"
+                    href="struts2-plugins/struts2-pell-multipart-plugin/apidocs/index.html"
+                    />
+
+           <item
+                    name="Plexus"
+                    href="struts2-plugins/struts2-plexus-plugin/apidocs/index.html"
+                    />
+
+           <item
+                    name="QuickStart"
+                    href="struts2-plugins/struts2-quickstart-plugin/apidocs/index.html"
+                    />
+
+           <item
+                    name="Sitegraph"
+                    href="struts2-plugins/struts2-sitegraph-plugin/apidocs/index.html"
+                    />
+
+           <item
+                    name="Sitemesh"
+                    href="struts2-plugins/struts2-sitemesh-plugin/apidocs/index.html"
+                    />
+
+           <item
+                    name="Struts 1"
+                    href="struts2-plugins/struts2-struts1-plugin/apidocs/index.html"
+                    />
+
+           <item
+                    name="Tiles"
+                    href="struts2-plugins/struts2-tiles-plugin/apidocs/index.html"
+                    />
+
+
+        </menu>
+    </body>
+</project>

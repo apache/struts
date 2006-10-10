@@ -1,0 +1,14 @@
+<input type="text"
+                                   name="$!struts.htmlEncode($parameters.name)"
+#if ($parameters.size)             size="$!struts.htmlEncode($parameters.size)"            #end
+#if ($parameters.maxlength)        maxlength="$!struts.htmlEncode($parameters.maxlength)"  #end
+#if ($parameters.nameValue)        value="$!struts.htmlEncode($parameters.nameValue)"      #end
+#if ($parameters.disabled && $parameters.disabled == true)
+                                   disabled="disabled"                                      #end
+#if ($parameters.readonly)         readonly="readonly"                                      #end
+#if ($parameters.tabindex)         tabindex="$!struts.htmlEncode($parameters.tabindex)"    #end
+#if ($parameters.id)               id="$!struts.htmlEncode($parameters.id)"                #end
+#if ($parameters.cssClass)         class="$!struts.htmlEncode($parameters.cssClass)"       #end
+#if ($parameters.cssStyle)         style="$!struts.htmlEncode($parameters.cssStyle)"       #end
+#parse("/$parameters.templateDir/simple/scripting-events.vm")
+/>

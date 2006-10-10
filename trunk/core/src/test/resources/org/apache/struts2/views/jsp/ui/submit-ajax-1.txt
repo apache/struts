@@ -1,0 +1,1 @@
+<tr> <td class="tdLabel"></td><td align="right"><button type="submit" dojoType="BindButton" value="submit" targetDiv="formId" onLoad="alert('form submitted');" notifyTopics="b" listenTopics="a">submit</button></td> </tr>

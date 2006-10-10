@@ -1,0 +1,8 @@
+#set ($name = $parameters.name)
+#set ($label = $parameters.label)
+#set ($size = $parameters.mysize)
+#set ($yearsize = $parameters.yearsize)
+$label:
+<input type="text" name="${name}.day" size="$size" /> /
+<input type="text" name="${name}.month" size="$size" /> /
+<input type="text" name="${name}.year" size="$yearsize" /> (dd/mm/yyyy)

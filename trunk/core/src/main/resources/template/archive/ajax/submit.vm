@@ -1,0 +1,13 @@
+<button type="submit" dojoType="BindButton"<#rt/>
+#if ($parameters.form && $parameters.form.id)  formId="$parameters.form.id" #end
+#if ($parameters.name) name="$!struts.htmlEncode($parameters.name)" #end
+#if ($parameters.nameValue) value="$!struts.htmlEncode($parameters.nameValue)" #end
+#if ($parameters.cssClass) class="$!struts.htmlEncode($parameters.cssClass)" #end
+#if ($parameters.cssStyle) style="$!struts.htmlEncode($parameters.cssStyle)" #end
+#if ($parameters.resultDivId) targetDiv="$!struts.htmlEncode($parameters.resultDivId)" #end
+#if ($parameters.onLoadJS) onLoad="$!parameters.onLoadJS" #end
+#if ($parameters.preInvokeJS) preInvokeJS="$!parameters.preInvokeJS" #end
+#if ($parameters.notifyTopics) notifyTopics="$!struts.htmlEncode($parameters.notifyTopics)" #end
+#if ($parameters.listenTopics) listenTopics="$!struts.htmlEncode($parameters.listenTopics)" #end
+#parse("/$parameters.templateDir/simple/scripting-events.vm")
+/>

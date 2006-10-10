@@ -1,0 +1,35 @@
+#set( $items = $parameters.list )
+#if( $items )
+    #foreach( $item in $items )
+        $stack.push($item)
+
+        #if( $parameters.listKey )
+            #set( $itemKey = $stack.findValue($parameters.listKey) )
+        #else
+            #set( $itemKey = $item )
+        #end
+
+        #if( $parameters.listValue )
+            #set( $itemValue  = $stack.findValue($parameters.listValue) )
+        #else
+            #set( $itemValue = $item )
+        #end
+
+        <input
+            type="radio"
+            #if( $tag.contains($parameters.nameValue, $itemKey) )checked="checked"#end
+            #if ($parameters.name)
+                                        name="$!struts.htmlEncode($parameters.name)"
+                                        id="$!struts.htmlEncode($parameters.name)$!struts.htmlEncode($itemKey)"
+            #end
+            #if ($itemKey)              value="$!struts.htmlEncode($itemKey)"                #end
+            #if ($parameters.disabled)  disabled="disabled"                                   #end
+            #if ($parameters.tabindex)  tabindex="$!struts.htmlEncode($parameters.tabindex)" #end
+            #if ($parameters.cssClass)  class="$!struts.htmlEncode($parameters.cssClass)"    #end
+            #if ($parameters.cssStyle)  style="$!struts.htmlEncode($parameters.cssStyle)"    #end
+            #parse("/$parameters.templateDir/simple/scripting-events.vm")
+        /><label for="$!struts.htmlEncode($parameters.name)$!struts.htmlEncode($itemKey)">$!itemValue</label>
+
+        #set ($trash = $stack.pop())
+    #end
+#end

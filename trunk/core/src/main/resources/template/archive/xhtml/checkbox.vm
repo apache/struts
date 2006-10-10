@@ -1,0 +1,19 @@
+#if( $fieldErrors.get($parameters.name) )
+  #set ($hasFieldErrors = $fieldErrors.get($parameters.name))
+  #foreach ($error in $fieldErrors.get($parameters.name))
+    <tr>
+        <td align="left" valign="top" colspan="2"><span class="errorMessage">$!error</span></td>
+    </tr>
+  #end
+#end
+
+<tr>
+    <td valign="top" colspan="2">
+#* Use an extra table so that the checkbox doesn't align with the other columns. *#
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td valign="middle">#parse("$!{tag.templateDir}/simple/checkbox.vm")</td>
+        <td width="100%" valign="middle"><label #if ($parameters.id) for="$!struts.htmlEncode($parameters.id)"#end#if ($hasFieldErrors) class="checkboxErrorLabel"#else class="checkboxLabel"#end>$!struts.htmlEncode($parameters.label)</label></td>
+    </tr>
+</table>
+#parse("/$parameters.templateDir/xhtml/controlfooter.vm")

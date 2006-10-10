@@ -1,0 +1,15 @@
+<tr>
+    <td class="tdLabel"></td>
+    <td>
+<script type="text/javascript">
+    dojo.require("dojo.widget.html.DatePicker");
+    dojo.require("struts.widgets.*");
+</script>
+
+    <div dojoType="dropdowndatepicker"
+        iconPath="/struts/dojo/struts/widgets/dateIcon.gif"
+    >
+<input type="text" name="" id=""/>
+    </div>
+</td>
+</tr>

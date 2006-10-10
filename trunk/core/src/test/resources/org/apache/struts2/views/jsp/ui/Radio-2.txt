@@ -1,0 +1,7 @@
+<tr>
+    <td class="tdLabel"><label for="myname" class="label">mylabel:</label></td>
+    <td>
+<input type="radio" name="myname" id="myname2" value="2"/><label for="myname2">Two</label>
+<input type="radio" name="myname" id="myname1" checked="checked" value="1"/><label for="myname1">One</label>
+    </td>
+</tr>

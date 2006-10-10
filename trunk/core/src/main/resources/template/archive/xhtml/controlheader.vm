@@ -1,0 +1,27 @@
+## Only show message if errors are available.
+## This will be done if ActionSupport is used.
+#if( $fieldErrors.get($parameters.name) )
+  #set ($hasFieldErrors = $fieldErrors.get($parameters.name))
+  #foreach ($error in $fieldErrors.get($parameters.name))
+    <tr errorFor="$parameters.id">
+        #if ($parameters.labelposition == 'top')<td align="left" valign="top" colspan="2">#else<td align="center" valign="top" colspan="2">#end<span class="errorMessage">$!struts.htmlEncode($error)</span></td>
+    </tr>
+  #end
+#end
+## if the label position is top,
+## then give the label it's own row in the table
+<tr>
+#if ($parameters.labelposition && $parameters.labelposition == 'top')<td align="left" valign="top" colspan="2">#else<td align="right" valign="top">#end#if ($parameters.label)<label #if ($parameters.id) for="$!struts.htmlEncode($parameters.id)"#end#if ($hasFieldErrors) class="errorLabel"#else class="label"#end>#if ($parameters.required)<span class="required">*</span>#end$!struts.htmlEncode($parameters.label):</label>#end</td>
+## add the extra row
+#if ($parameters.labelposition && $parameters.labelposition == 'top')
+</tr>
+<tr>
+#end
+#if ($parameters.form.validate && $parameters.form.validate == true)
+    #if ($parameters.onblur)
+        #set ($parameters.onblur = "validate(this);${parameters.onblur}")
+    #else
+        #set ($parameters.onblur = "validate(this)")
+    #end
+#end
+    <td>

@@ -1,0 +1,1 @@
+#parse("/$parameters.templateDir/xhtml/controlheader.vm")#parse("/$parameters.templateDir/simple/file.vm")#parse("/$parameters.templateDir/xhtml/controlfooter.vm")

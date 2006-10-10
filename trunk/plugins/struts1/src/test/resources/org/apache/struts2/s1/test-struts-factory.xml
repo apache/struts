@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+        
+<!-- Used by the TestStrutsFactory TestCase. -->
+<struts>
+  <package name="org/apache/struts2/s1" namespace="/org/apache/struts2/s1">
+    <result-types>
+      <result-type class="org.apache.struts2.dispatcher.ServletDispatcherResult" name="servletDispatcherResult"/>
+    </result-types>
+    <global-results>
+      <result name="globalResult" type="servletDispatcherResult">
+        <param name="location">noexist.jsp</param>
+      </result>
+    </global-results>
+    <global-exception-mappings>
+      <exception-mapping
+        name="globalException"
+        exception="java.lang.Exception"
+        result="globalResult"/>
+    </global-exception-mappings>
+    <action class="com.opensymphony.xwork2.ActionSupport" name="action1">
+      <result name="result1" type="servletDispatcherResult">
+        <param name="location">result1.jsp</param>
+      </result>
+      <result name="result2" type="servletDispatcherResult">
+        <param name="location">result1.jsp</param>
+      </result>
+      <exception-mapping
+        name="exception1"
+        exception="java.lang.NullPointerException"
+        result="someResult"/>
+      <exception-mapping
+        name="exception2"
+        exception="java.lang.IllegalStateException"
+        result="anotherResult"/>
+    </action>
+    <action class="com.opensymphony.xwork2.ActionSupport" name="action2"/>
+  </package>
+</struts>
+

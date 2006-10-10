@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<package name="fileupload" extends="struts-default" namespace="/fileupload">
+        
+        <default-action-ref name="upload"/>
+
+        <action name="upload" class="org.apache.struts2.showcase.fileupload.FileUploadAction" method="input">
+			<result>upload.jsp</result>
+		</action>
+
+        <action name="doUpload" class="org.apache.struts2.showcase.fileupload.FileUploadAction" method="upload">
+			<result>upload-success.jsp</result>
+		</action>
+
+    </package>
+</struts>
+
+

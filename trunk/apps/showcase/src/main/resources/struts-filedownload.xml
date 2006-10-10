@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<package name="filedownload" extends="struts-default" namespace="/filedownload">
+
+        <default-action-ref name="download"/>
+
+        <action name="download" class="org.apache.struts2.showcase.filedownload.FileDownloadAction">
+			<result name="success" type="stream">
+                <param name="contentType">image/jpeg</param>
+                <param name="inputName">imageStream</param>
+                <param name="contentDisposition">filename="logo.png"</param>
+                <param name="bufferSize">4096</param>
+            </result>
+        </action>
+
+    </package>
+</struts>
+
+

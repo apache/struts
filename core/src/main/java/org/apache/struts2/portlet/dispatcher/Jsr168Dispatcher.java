@@ -61,7 +61,6 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 /**
@@ -169,8 +168,6 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
     
     private Dispatcher dispatcherUtils;
 
-    private boolean devMode = false;
-
     /**
      * Initialize the portlet with the init parameters from <tt>portlet.xml</tt>
      */
@@ -212,7 +209,6 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         }
 
         if ("true".equalsIgnoreCase(Settings.get(StrutsConstants.STRUTS_DEVMODE))) {
-            devMode = true;
             Settings.set(StrutsConstants.STRUTS_I18N_RELOAD, "true");
             Settings.set(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "true");
         }

@@ -25,7 +25,6 @@ import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.ServletRedirectResult;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
 
-import com.mockobjects.dynamic.Mock;
 import com.mockobjects.servlet.MockHttpServletRequest;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.config.Configuration;

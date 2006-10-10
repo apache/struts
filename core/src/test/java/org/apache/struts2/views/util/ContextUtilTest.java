@@ -23,7 +23,6 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.config.Settings;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**

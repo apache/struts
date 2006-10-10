@@ -20,7 +20,6 @@ package org.apache.struts2.components;
 import java.io.Writer;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->

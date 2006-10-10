@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * Provides @s.tag access for various tags.

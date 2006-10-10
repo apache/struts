@@ -26,7 +26,6 @@ import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.util.OgnlUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->

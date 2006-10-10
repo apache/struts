@@ -33,7 +33,6 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStack;
 
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;

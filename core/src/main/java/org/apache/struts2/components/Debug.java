@@ -13,7 +13,6 @@ import org.apache.struts2.StrutsException;
 
 import com.opensymphony.xwork2.util.OgnlUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->

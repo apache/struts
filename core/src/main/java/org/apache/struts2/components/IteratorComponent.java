@@ -24,7 +24,6 @@ import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.views.jsp.IteratorStatus;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->

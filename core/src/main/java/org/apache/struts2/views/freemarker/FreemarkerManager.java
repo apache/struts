@@ -40,7 +40,6 @@ import org.apache.struts2.views.util.ContextUtil;
 import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.util.ValueStack;
 
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;

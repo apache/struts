@@ -25,7 +25,6 @@ import org.apache.struts2.util.FastByteArrayOutputStream;
 import org.apache.struts2.views.util.ContextUtil;
 
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**

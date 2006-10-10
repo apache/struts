@@ -39,7 +39,6 @@ import org.apache.struts2.views.util.UrlHelper;
 
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.TextParseUtil;
-import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * Base class to extend for UI components.

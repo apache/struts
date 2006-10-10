@@ -18,7 +18,6 @@
 package org.apache.struts2.dispatcher;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -33,7 +32,6 @@ import junit.framework.TestCase;
 import com.mockobjects.constraint.Constraint;
 import com.mockobjects.constraint.IsAnything;
 import com.mockobjects.constraint.IsEqual;
-import com.mockobjects.dynamic.ConstraintMatcher;
 import com.mockobjects.dynamic.Mock;
 
 

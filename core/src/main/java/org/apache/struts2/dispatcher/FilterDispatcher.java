@@ -51,7 +51,6 @@ import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.XWorkException;
 
 /**
  * Master filter for Struts that handles four distinct 
@@ -221,7 +220,7 @@ public class FilterDispatcher implements Filter, StrutsStatics {
             mapper = ActionMapperFactory.getMapper();
             mapping = mapper.getMapping(request, du.getConfigurationManager());
         } catch (Exception ex) {
-            du.sendError(request, response, servletContext, response.SC_INTERNAL_SERVER_ERROR, ex);
+            du.sendError(request, response, servletContext, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
             ActionContextCleanUp.cleanUp(req);
             return;
         }

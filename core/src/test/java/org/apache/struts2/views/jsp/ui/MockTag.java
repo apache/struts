@@ -95,7 +95,7 @@ public class MockTag extends BodyTagSupport {
     }
 
     public Map getParameters() {
-        return this.params;
+        return MockTag.params;
     }
 
     public void setString(String s) {
@@ -107,7 +107,7 @@ public class MockTag extends BodyTagSupport {
     }
 
     public void addParameter(String key, Object value) {
-        this.params.put(key, value);
+        MockTag.params.put(key, value);
     }
 
     /**

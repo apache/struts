@@ -147,6 +147,9 @@
                 <resources>
                     <!-- Include resources under src/main/java in WEB-INF/classes -->
                     <resource>
+                        <directory>src/main/resources</directory>
+                    </resource>
+                    <resource>
                         <directory>src/main/java</directory>
                             <includes>
                                 <include>**/*.java</include>

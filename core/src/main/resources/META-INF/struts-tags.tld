@@ -10979,14 +10979,6 @@
         <description><![CDATA[Render datepicker]]></description>
 
         <attribute>
-            <name>language</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[The language to use for the widget texts and localization presets.]]></description>
-
-        </attribute>
-        <attribute>
             <name>format</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -10995,36 +10987,11 @@
 
         </attribute>
         <attribute>
-            <name>showstime</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description>
-                <![CDATA[Whether time selector is to be shown. Valid values are &quot;true&quot;, &quot;false&quot;, &quot;24&quot; and &quot;12&quot;.]]></description>
-
-        </attribute>
-        <attribute>
-            <name>singleclick</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[Whether to use selected value after single or double click.]]></description>
-
-        </attribute>
-        <attribute>
             <name>maxlength</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[HTML maxlength attribute]]></description>
-
-        </attribute>
-        <attribute>
-            <name>maxLength</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[Deprecated. Use maxlength instead.]]></description>
 
         </attribute>
         <attribute>

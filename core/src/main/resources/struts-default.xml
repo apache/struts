@@ -48,6 +48,7 @@
             <interceptor name="store" class="org.apache.struts2.interceptor.MessageStoreInterceptor" />
             <interceptor name="checkbox" class="org.apache.struts2.interceptor.CheckboxInterceptor" />
             <interceptor name="profiling" class="org.apache.struts2.interceptor.ProfilingActivationInterceptor" />
+            <interceptor name="roles" class="org.apache.struts2.interceptor.RolesInterceptor" />
             
             <!-- Basic stack -->
             <interceptor-stack name="basicStack">

@@ -36,6 +36,7 @@ public class ActionTag extends ComponentTagSupport {
     protected String namespace;
     protected boolean executeResult;
     protected boolean ignoreContextParams;
+    protected boolean flush = true;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new ActionComponent(stack, req, res);
@@ -49,6 +50,7 @@ public class ActionTag extends ComponentTagSupport {
         action.setNamespace(namespace);
         action.setExecuteResult(executeResult);
         action.setIgnoreContextParams(ignoreContextParams);
+        action.setFlush(flush);
         action.start(pageContext.getOut());
     }
 
@@ -71,5 +73,13 @@ public class ActionTag extends ComponentTagSupport {
 
     public void setIgnoreContextParams(boolean ignoreContextParams) {
         this.ignoreContextParams = ignoreContextParams;
+    }
+    
+    public void setFlush(boolean flush) {
+    	this.flush = flush;
+    }
+    
+    public boolean getFlush() {
+    	return this.flush;
     }
 }

@@ -2969,7 +2969,14 @@
                 <![CDATA[whether the request parameters are to be included when the action is invoked]]></description>
 
         </attribute>
-
+		<attribute>
+         <name>flush</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+         
+         	<description><![CDATA[whether the writer should be flush upon end of the action tag, default to true.]]></description>
+         	
+      </attribute>
     </tag>
     <tag>
 

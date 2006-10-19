@@ -19,7 +19,7 @@ limitations under the License.
 <document>
 
     <properties>
-        <title>Struts 2</title>
+        <title>Welcome</title>
     </properties>
 
     <body>
@@ -27,17 +27,49 @@ limitations under the License.
         <section name="About Struts 2">
             <a name="Welcome"/>
 
+        <div style="text-align:center">
+        <img src="images/struts2-merger.png" alt="Struts 2 and WebWork merger" />
+        </div>
         <p>
-        Apache Struts 2 is a flexible control layer based on standard
-        technologies like Java Filters, JavaBeans, ResourceBundles, Locales,
-        and XML, as well as various 
-        <a href="http://www.OpenSymphony.com/">
-          OpenSymphony</a>
-        packages, like OGNL and XWork. The framework helps you create an
-        extensible development environment for your application, based on
-        industry standards and proven design patterns.
+        Apache Struts 2 is an open source Java web framework that seeks to make it easy to build, deploy, and maintain modern web applications.  Struts 2 is the successor to the popular <a href="../1.x/">
+        Struts 1</a> web application framework, as well as a product of a merger between the <a href="../">Apache Struts</a> and <a href="http://www.opensymphony.com/webwork">OpenSymphony WebWork</a> projects.  
         </p>
-
+        <section name="Key Features">
+            <a name="KeyFeatures"/>
+        <p>
+        How does Struts 2 make web development easier both to develop and maintain?  The framework has:
+        </p>
+        <ul>
+          <li>A flexible, plain old Java object (POJO)-based architecture to structure your code and pages, yet stay out of your way</li>
+          <li>A theme-enabled tag library supporting JSP, Velocity, and Freemarker</li>
+          <li>Built in support for complex Javascript and Ajax widgets</li>
+          <li>A simple plugin framework to integrate with third-party libraries like JavaServer Faces, JasperReports, and JFreeChart.</li>
+          <li>Built-in debugging tools supporting profiling, problem reports, and interactive object model queries.</li>
+          <li>Automatic portlet support allowing portal and servlet deployments with no code changes</li>
+          <li>Quick start development tools like Maven archetypes, automatic reloading configuration files, and bootstrap tutorials.</li>
+        </ul>
+        
+        <section name="Architecture in a Nutshell">
+        
+        </section>
+        <p>Struts 2 provides a flexible control layer based on standard
+        technologies like Java Filters, JavaBeans, ResourceBundles, Locales,
+        and XML.  In a nutshell, it looks like this:
+        </p>
+        <div style="text-align:center">
+        <img src="images/struts2-arch.png" alt="Struts 2 Architecture" />
+        </div>
+        <p>
+        And it flows like this:
+        </p>
+        <ol>
+          <li>The user's browser requests the page</li>
+          <li>The Filter Dispatcher looks at the request and determines the appropriate Action</li>
+          <li>The Interceptors apply common functionality to the request like workflow, validation, and file upload handling</li>
+          <li>The Action executes, usually storing and/or retrieving information from the database</li>
+          <li>The Result renders the output, be it HTML, images, or PDF, to the browser</li>
+        </ol>
+ 
         <p>
         For more About Struts 2 see
         <a href="http://cwiki.apache.org/WW/home.html">
@@ -45,6 +77,7 @@ limitations under the License.
         </a>
         </p>
         </section>
+      </section>
 
     </body>
 </document>

@@ -33,16 +33,37 @@ limitations under the License.
         </div>
         
         <p>
-        Apache Struts 2 helps you build and maintain modern, enterprise-grade 
-        web applications. 
+        Apache Struts 2 is an open source Java web framework that seeks to make
+        it easy to build, deploy, and maintain modern web applications. Struts 2
+        is the successor to the popular <a href="../1.x/"> Struts 1</a> web
+        application framework, as well as a product of a merger between the <a
+        href="../">Apache Struts</a> and <a
+        href="http://www.opensymphony.com/webwork">OpenSymphony WebWork</a>
+        projects.  
         </p>
+        </section>
+        <section name="Key Features">
+        <a name="KeyFeatures"/>
         
         <p>
-        For more about Apache Struts 2 see
-        <a href="http://cwiki.apache.org/WW/home.html">
-          Getting Started.
-        </a>
+        How does Struts 2 make web applications easier to develop, deploy, and
+        maintain?  Struts 2 provides:
         </p>
+        <ul>
+          <li>A flexible, plain old Java object (POJO)-based architecture to
+          structure your code and pages, yet stay out of your way</li>
+          <li>A theme-enabled tag library supporting JSP, Velocity, and
+          Freemarker</li>
+          <li>Built in support for complex Javascript and Ajax widgets</li>
+          <li>A simple plugin framework to integrate with third-party libraries
+          like JavaServer Faces, JasperReports, and JFreeChart.</li>
+          <li>Built-in debugging tools supporting profiling, problem reports, and
+          interactive object model queries.</li>
+          <li>Automatic portlet support allowing portal and servlet deployments
+          with no code changes</li>
+          <li>Quick start development tools like Maven archetypes, automatic
+          reloading configuration files, and bootstrap tutorials.</li>
+        </ul>
         
         </section>        
         <section name="Distributions">
@@ -50,7 +71,6 @@ limitations under the License.
         <p>For your convenience, a one-stop <strong>all</strong> 
         distribution is available. Individual elements of the distribution 
         may also be downloaded separately.</p>
-        
         <table>
             <tr>
             <td><a href="http://people.apache.org/builds/struts/2.0.1/struts-2.0.1-all.zip">all</a></td>
@@ -92,7 +112,7 @@ limitations under the License.
         </p>
         
         <p><pre><code>
-         &lt;repositories>
+        &lt;repositories>
           &lt;repository>
             &lt;id>ASF_SNAPSHOT_M2&lt;/id>
             &lt;name>ASF Maven 2 Snapshot&lt;/name>

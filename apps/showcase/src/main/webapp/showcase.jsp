@@ -28,7 +28,7 @@
         <li><s:url id="url" value="/tags"/><s:a href="%{url}">Tags Examples</s:a></li>
         
         <!-- fileupload -->
-        <li><s:url id="url" namespace="/fileupload" action="upload"/><s:a href="%{url}">File Upload Example</s:a></li>
+        <li><s:url id="url" value="/fileupload" /><s:a href="%{url}">File Upload Example</s:a></li>
 
         <!-- crud -->
         <li><s:url id="url" value="/empmanager"/><s:a href="%{url}">CRUD Examples</s:a></li>

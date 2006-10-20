@@ -7,8 +7,6 @@
 <struts>
 	<package name="fileupload" extends="struts-default" namespace="/fileupload">
         
-        <default-action-ref name="upload"/>
-
         <action name="upload" class="org.apache.struts2.showcase.fileupload.FileUploadAction" method="input">
 			<result>upload.jsp</result>
 		</action>
@@ -16,6 +14,24 @@
         <action name="doUpload" class="org.apache.struts2.showcase.fileupload.FileUploadAction" method="upload">
 			<result>upload-success.jsp</result>
 		</action>
+		
+		<action name="multipleUploadUsingList">
+			<result>multipleUploadUsingList.jsp</result>
+		</action>
+		
+		<action name="doMultipleUploadUsingList" class="org.apache.struts2.showcase.fileupload.MultipleFileUploadUsingListAction" method="upload">
+			<result>multipleUploadUsingList-success.jsp</result>
+		</action>
+
+
+		<action name="multipleUploadUsingArray">
+			<result>multipleUploadUsingArray.jsp</result>
+		</action>
+
+		<action name="doMultipleUploadUsingArray" class="org.apache.struts2.showcase.fileupload.MultipleFileUploadUsingArrayAction" method="upload">
+			<result>multipleUploadUsingArray-success.jsp</result>
+		</action>
+
 
     </package>
 </struts>

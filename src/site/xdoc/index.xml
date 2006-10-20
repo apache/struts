@@ -33,39 +33,96 @@ limitations under the License.
         </div>
         
         <p>
-        Apache Struts 2 is an open source Java web framework that seeks to make
-        it easy to build, deploy, and maintain modern web applications. Struts 2
-        is the successor to the popular <a href="../1.x/"> Struts 1</a> web
-        application framework, as well as a product of a merger between the <a
-        href="../">Apache Struts</a> and <a
-        href="http://www.opensymphony.com/webwork">OpenSymphony WebWork</a>
-        projects.  
+        Struts 2 was originally known as WebWork 2. After working independently 
+        for several years, the WebWork and Struts communities joined forces to 
+        create Struts 2. This new version of Struts is designed to be simpler to 
+        use and closer to how Struts was always meant to be.
         </p>
+        
         </section>
-        <section name="Key Features">
-        <a name="KeyFeatures"/>
         
-        <p>
-        How does Struts 2 make web applications easier to develop, deploy, and
-        maintain?  Struts 2 provides:
-        </p>
-        <ul>
-          <li>A flexible, plain old Java object (POJO)-based architecture to
-          structure your code and pages, yet stay out of your way</li>
-          <li>A theme-enabled tag library supporting JSP, Velocity, and
-          Freemarker</li>
-          <li>Built in support for complex Javascript and Ajax widgets</li>
-          <li>A simple plugin framework to integrate with third-party libraries
-          like JavaServer Faces, JasperReports, and JFreeChart.</li>
-          <li>Built-in debugging tools supporting profiling, problem reports, and
-          interactive object model queries.</li>
-          <li>Automatic portlet support allowing portal and servlet deployments
-          with no code changes</li>
-          <li>Quick start development tools like Maven archetypes, automatic
-          reloading configuration files, and bootstrap tutorials.</li>
-        </ul>
-        
-        </section>        
+        <section name="Key Changes">
+            <ul>
+            <li>
+                <em>Smarter!</em> 
+                <ul><li>
+                    <strong>Improved Design</strong> - All Struts 2 classes are based on interfaces. 
+                    Core interfaces are HTTP independent.
+                </li>
+                <li>
+                    <strong>Intelligent Defaults</strong> - Most configuration elements have a default 
+                    value that we can set and forget. 
+                </li>
+                <li>
+                    <strong>Enhanced Results</strong> - Unlike ActionForwards, Struts 2 Results can
+                    actually help prepare the response. 
+                </li>
+                <li>
+                    <strong>Enhanced Tags</strong> - Struts 2 tags don't just output data, but provide 
+                    stylesheet-driven markup, so that we can create consistent pages 
+                    with less code.
+                </li>
+                <li>
+                    <strong>First-class AJAX support</strong> - The AJAX theme gives interactive 
+                    applications a significant boost. 
+                </li>
+                <li>
+                    <strong>Stateful Checkboxes</strong> - Struts 2 checkboxes do not require special 
+                    handling for false values.
+                </li>
+                <li>
+                    <strong>QuickStart</strong> - Many changes can be made on the fly without restarting 
+                    a web container. 
+                </li></ul></li>
+                <li>
+                    <em>Easier!</em> 
+                <ul>
+                <li>
+                    <strong>Easy-to-test Actions</strong> - Struts 2 Actions are HTTP independent and 
+                    can be tested without resorting to mock objects. 
+                </li>
+                <li>
+                    <strong>Easy-to-customize controller</strong> - Struts 1 lets us customize the request 
+                    processor per module, Struts 2 lets us customize the request handling 
+                    per action, if desired. 
+                </li>
+                <li>
+                    <strong>Easy-to-tweak tags</strong> - Struts 2 tag markup can be altered by changing 
+                    an underlying stylesheet. Individual tag markup can be changed by 
+                    editing a FreeMarker template. No need to grok the taglib API!
+                    <em>JSP, FreeMarker, and Velocity tags are fully supported.</em>
+                </li>
+                <li>
+                    <strong>Easy cancel handling</strong> - The Struts 2 Cancel button can go directly to 
+                    a different action. 
+                </li>
+                <li>
+                    <strong>Easy Spring integration</strong> - Struts 2 Actions are Spring-aware. Just 
+                    add Spring beans!
+                </li>
+                <li>
+                    <strong>Easy plugins</strong> - Struts 2 extensions can be added by dropping in a JAR. 
+                    No manual configuration required! Bundled plugins add support for JavaServer Faces, 
+                JasperReports, JFreeChart, Tiles, and more ...
+                </li></ul></li>
+                <li>
+                <em>POJO-ier!</em> 
+                <ul>
+                <li>
+                    <strong>POJO forms</strong> - No more ActionForms! We can use any JavaBean we like or 
+                    put properties directly on our Action classes. No need to use all 
+                    String properties! 
+                </li>
+                <li>
+                    <strong>POJO Actions</strong> - Any class can be used as an Action class. We don't 
+            even have to implement an interface! 
+                </li></ul></li></ul>
+
+            <p>
+                For more, <a href="http://cwiki.apache.org/WW/home.html"><strong>visit Getting Started</strong></a>.
+            </p>
+            
+        </section> 
         <section name="Distributions">
 
         <p>For your convenience, a one-stop <strong>all</strong> 

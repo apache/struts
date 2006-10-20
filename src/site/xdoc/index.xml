@@ -28,73 +28,87 @@ limitations under the License.
             <a name="Welcome"/>
 
         <div style="text-align:center">
-        <img src="images/struts2-merger.png" alt="Struts 2 and WebWork merger"
-        />
+        <a href="http://cwiki.apache.org/WW/home.html"><img src="images/struts2-merger.png" alt="Struts 2 and WebWork merger"
+        /></a>
         </div>
-        <p>
-        Apache Struts 2 is an open source Java web framework that seeks to make
-        it easy to build, deploy, and maintain modern web applications. Struts 2
-        is the successor to the popular <a href="../1.x/"> Struts 1</a> web
-        application framework, as well as a product of a merger between the <a
-        href="../">Apache Struts</a> and <a
-        href="http://www.opensymphony.com/webwork">OpenSymphony WebWork</a>
-        projects.  
-        </p>
-        <section name="Key Features">
-            <a name="KeyFeatures"/>
-        <p>
-        How does Struts 2 make web development easier both to develop and
-        maintain?  The framework has:
-        </p>
-        <ul>
-        <li>A flexible, plain old Java object (POJO)-based architecture to
-        structure your code and pages, yet stay out of your way</li>
-        <li>A theme-enabled tag library supporting JSP, Velocity, and
-        Freemarker</li>
-        <li>Built in support for complex Javascript and Ajax widgets</li>
-        <li>A simple plugin framework to integrate with third-party libraries
-        like JavaServer Faces, JasperReports, and JFreeChart.</li>
-        <li>Built-in debugging tools supporting profiling, problem reports, and
-        interactive object model queries.</li>
-        <li>Automatic portlet support allowing portal and servlet deployments
-        with no code changes</li>
-        <li>Quick start development tools like Maven archetypes, automatic
-        reloading configuration files, and bootstrap tutorials.</li>
-        </ul>
         
-        <section name="Architecture in a Nutshell">
+        <p>
+        Apache Struts 2 helps you build and maintain modern, enterprise-grade 
+        web applications. 
+        </p>
         
-        </section>
-        <p>Struts 2 provides a flexible control layer based on standard
-        technologies like Java Filters, JavaBeans, ResourceBundles, Locales,
-        and XML.  In a nutshell, it looks like this:
-        </p>
-        <div style="text-align:center">
-        <img src="images/struts2-arch.png" alt="Struts 2 Architecture" />
-        </div>
         <p>
-        And it flows like this:
-        </p>
-        <ol>
-          <li>The user's browser requests the page</li>
-          <li>The Filter Dispatcher looks at the request and determines the
-          appropriate Action</li>
-          <li>The Interceptors apply common functionality to the request like
-          workflow, validation, and file upload handling</li>
-          <li>The Action executes, usually storing and/or retrieving information
-          from the database</li>
-          <li>The Result renders the output, be it HTML, images, or PDF, to the
-          browser</li>
-        </ol>
- 
-        <p>
-        For more About Struts 2 see
+        For more about Apache Struts 2 see
         <a href="http://cwiki.apache.org/WW/home.html">
           Getting Started.
         </a>
         </p>
-        </section>
-      </section>
+        
+        </section>        
+        <section name="Distributions">
+
+        <p>For your convenience, a one-stop <strong>all</strong> 
+        distribution is available. Individual elements of the distribution 
+        may also be downloaded separately.</p>
+        
+        <table>
+            <tr>
+            <td><a href="http://people.apache.org/builds/struts/2.0.1/struts-2.0.1-all.zip">all</a></td>
+            <td>The entire distribution, including all the elements. (43mb)</td>
+            </tr>
+            <tr>
+            <td><a href="http://people.apache.org/builds/struts/2.0.1/struts-2.0.1-apps.zip">apps</a></td>
+            <td>The example applications, as ready-to-deploy WARs. (22mb) </td>
+            </tr>
+            <tr>
+            <td><a href="http://people.apache.org/builds/struts/2.0.1/struts2-blank-2.0.1.war">blank</a></td>
+            <td>Just the blank application, ready to deploy as a template for new development. (Also included in apps.) (3mb)</td>
+            </tr>
+            <tr>
+            <td><a href="http://people.apache.org/builds/struts/2.0.1/struts-2.0.1-docs.zip">docs</a></td>
+            <td>The documentation, as provided on the website. (11mb)</td>
+            </tr>
+            <tr>
+            <td><a href="http://people.apache.org/builds/struts/2.0.1/struts-2.0.1-lib.zip">lib</a></td>
+            <td>The essential dependencies, including the Struts 2 JARs. (3mb)</td>
+            </tr>
+            <tr>
+            <td><a href="http://people.apache.org/builds/struts/2.0.1/struts-2.0.1-src.zip">src</a></td>
+            <td>The source code for the framework, ready to build as a Maven project. (18mb)</td>
+            </tr>
+            <tr>
+            <td><a href="http://people.apache.org/builds/struts/2.0.1/struts-2.0.1-j4.zip">sj4</a></td>
+            <td>The Java 1.4 versions of the Struts and XWork JARs (prepared using RetoTranslator). (2mb)</td>
+            </tr>
+         </table>
+            
+            <ul><li>The Struts 2 distributions are classified "test-build" quality but are suitable for new development by early adopters.</li></ul>
+
+        </section>        
+                
+        <section name="Maven Snapshots">
+        <p>
+            When a distribution is first made available, it is rated as a development build or "snapshot". Later, the quality of the distribution may be upgraded to "Beta" or "General Availability", based on feedback from the community, and then made available through ibiblio and other public Maven repositories. To obtain an early distribution via Maven, you can specify the ASF Snapshot repository in your POM. 
+        </p>
+        
+        <p><pre><code>
+         &lt;repositories>
+          &lt;repository>
+            &lt;id>ASF_SNAPSHOT_M2&lt;/id>
+            &lt;name>ASF Maven 2 Snapshot&lt;/name>
+            &lt;url>http://people.apache.org/repo/m2-snapshot-repository&lt;/url>
+          &lt;/repository>
+        &lt;/repositories>
+        </code></pre></p>
+                
+        <p>
+        For more about Apache Struts 2 see
+        <a href="http://cwiki.apache.org/WW/home.html">
+          Getting Started.
+        </a>
+        </p>
+        
+        </section>        
 
     </body>
 </document>

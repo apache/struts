@@ -10,7 +10,7 @@ import java.util.List;
 public class LoginTest extends ConfigTest {
 
     public void FIXME_testLoginConfig() throws Exception {
-        ActionConfig config = assertClass("example", "Login!input", "example.Login");
+        ActionConfig config = assertClass("example", "Login_input", "example.Login");
         assertResult(config, ActionSupport.SUCCESS, "Menu");
         assertResult(config, ActionSupport.INPUT, "/example/Login.jsp");
     }

@@ -10,7 +10,7 @@
             <result>/example/HelloWorld.jsp</result>
         </action>
 
-        <action name="Login!*" method="{1}" class="example.Login">
+        <action name="Login_*" method="{1}" class="example.Login">
             <result name="input">/example/Login.jsp</result>
             <result type="redirect-action">Menu</result>
         </action>

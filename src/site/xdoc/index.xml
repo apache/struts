@@ -28,8 +28,7 @@ limitations under the License.
             <a name="Welcome"/>
 
         <div style="text-align:center">
-        <a href="http://cwiki.apache.org/WW/home.html"><img src="images/struts2-merger.png" alt="Struts 2 and WebWork merger"
-        /></a>
+        <a href="http://cwiki.apache.org/WW/home.html"><img src="images/struts2-merger.png" alt="Struts 2 and WebWork merger"/></a>
         </div>
         
         <p>
@@ -54,6 +53,10 @@ limitations under the License.
                     value that we can set and forget. 
                 </li>
                 <li>
+                    <strong>Integrating Debugging</strong> - Built-in debugging tools supporting profiling, 
+                    problem reports, and interactive object model queries.
+                </li>
+                <li>
                     <strong>Enhanced Results</strong> - Unlike ActionForwards, Struts 2 Results can
                     actually help prepare the response. 
                 </li>
@@ -71,8 +74,8 @@ limitations under the License.
                     handling for false values.
                 </li>
                 <li>
-                    <strong>QuickStart</strong> - Many changes can be made on the fly without restarting 
-                    a web container. 
+                    <strong>QuickStart</strong> - Configuration files are reloadable so many changes 
+                    can be made on the fly without restarting a web container. 
                 </li></ul></li>
                 <li>
                     <em>Easier!</em> 
@@ -97,6 +100,10 @@ limitations under the License.
                     a different action. 
                 </li>
                 <li>
+                    <strong>Easy portlets</strong> - Automatic portlet support allowing portal and servlet 
+                    deployments with no code changes.
+                </li>
+                <li>
                     <strong>Easy Spring integration</strong> - Struts 2 Actions are Spring-aware. Just 
                     add Spring beans!
                 </li>
@@ -104,7 +111,12 @@ limitations under the License.
                     <strong>Easy plugins</strong> - Struts 2 extensions can be added by dropping in a JAR. 
                     No manual configuration required! Bundled plugins add support for JavaServer Faces, 
                 JasperReports, JFreeChart, Tiles, and more ...
-                </li></ul></li>
+                </li>
+                <li>
+                    <strong>Easy startup</strong> - Maven archetypes, template applications, and bootstrap 
+                    tutorials help jumpstart new projects.               
+                </li>
+                </ul></li>
                 <li>
                 <em>POJO-ier!</em> 
                 <ul>
@@ -125,9 +137,10 @@ limitations under the License.
         </section> 
         <section name="Distributions">
 
-        <p>For your convenience, a one-stop <strong>all</strong> 
+        <ul><li>For your convenience, a one-stop <strong>all</strong> 
         distribution is available. Individual elements of the distribution 
-        may also be downloaded separately.</p>
+        may also be downloaded separately.</li></ul>
+        
         <table>
             <tr>
             <td><a href="http://people.apache.org/builds/struts/2.0.1/struts-2.0.1-all.zip">all</a></td>
@@ -165,7 +178,13 @@ limitations under the License.
                 
         <section name="Maven Snapshots">
         <p>
-            When a distribution is first made available, it is rated as a development build or "snapshot". Later, the quality of the distribution may be upgraded to "Beta" or "General Availability", based on feedback from the community, and then made available through ibiblio and other public Maven repositories. To obtain an early distribution via Maven, you can specify the ASF Snapshot repository in your POM. 
+            When a distribution is first made available, 
+            it is rated as a development build or "snapshot". 
+            Later, the quality of the distribution may be upgraded to "Beta" or 
+            "General Availability", based on feedback from the community, 
+            and then made available through ibiblio and other public Maven repositories. 
+            To obtain an early distribution via Maven, 
+            specify the ASF Snapshot repository in the project's POM. 
         </p>
         
         <p><pre><code>

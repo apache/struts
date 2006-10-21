@@ -32,7 +32,11 @@ limitations under the License.
         </div>
         
         <p>
-        Struts 2 was originally known as WebWork 2. After working independently 
+        Apache Struts 2 is an open source Java web framework that seeks to make
+        it easy to build, deploy, and maintain modern web applications. Struts 2
+        is the successor to the popular <a href="../1.x/"> Struts 1</a> web
+        application framework, and was originally known as <a
+        href="http://www.opensymphony.com/webwork">WebWork 2</a>. After working independently 
         for several years, the WebWork and Struts communities joined forces to 
         create Struts 2. This new version of Struts is designed to be simpler to 
         use and closer to how Struts was always meant to be.

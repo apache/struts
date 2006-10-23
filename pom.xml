@@ -36,18 +36,17 @@
     <packaging>pom</packaging>
     <name>Struts 2</name>
     <url>http://struts.apache.org/struts2</url>
-    <description>Apache Struts Framework 2</description>
+    <description>Apache Struts 2</description>
 
     <inceptionYear>2000</inceptionYear>
     
     <!--
     <description>
-        Struts 2 is a Java web-application development framework.
-        It is built specifically with developer productivity and
-        code simplicity in mind, providing robust support for building
-        reusable UI templates, such as form controls, UI themes,
-        internationalization, dynamic form parameter mapping to JavaBeans,
-        robust client and server side validation, and much more.
+        Apache Struts 2 is an elegant, extensible framework, 
+        well suited for creating moderate to large-scale Java web 
+        applications. The framework is designed to streamline the 
+        full development cycle, from building, to deploying, 
+        to maintaining applications over time.
     </description>
     -->
 

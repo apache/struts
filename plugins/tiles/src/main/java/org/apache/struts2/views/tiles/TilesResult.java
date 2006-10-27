@@ -29,7 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
 import org.apache.tiles.*;
-import org.apache.tiles.context.servlet.ServletTilesContext;
+import org.apache.tiles.context.BasicTilesContextFactory;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.LocaleProvider;
@@ -107,7 +107,9 @@ public class TilesResult extends ServletDispatcherResult {
         HttpServletRequest request = ServletActionContext.getRequest();
         HttpServletResponse response = ServletActionContext.getResponse();
         ServletContext servletContext = ServletActionContext.getServletContext();
-        TilesContext tilesContext = new ServletTilesContext(servletContext, request, response);
+        TilesRequestContext tilesContext =
+            new BasicTilesContextFactory().createRequestContext(servletContext,
+                                                                request, response);
 
         this.definitionsFactory =
                 (DefinitionsFactory) servletContext.getAttribute(TilesUtilImpl.DEFINITIONS_FACTORY);
@@ -123,7 +125,7 @@ public class TilesResult extends ServletDispatcherResult {
         ComponentContext.setContext(context, tilesContext);
 
         // execute component controller associated with definition, if any
-        Controller controller = getController(definition, request);
+        ViewPreparer controller = getController(definition, request);
         if (controller != null) {
             if (log.isDebugEnabled()) {
                 log.debug("Executing Tiles controller [" + controller + "]");
@@ -171,7 +173,7 @@ public class TilesResult extends ServletDispatcherResult {
      * @return the component context
      * @throws Exception if preparations failed
      */
-    protected ComponentContext getComponentContext(ComponentDefinition definition, TilesContext tilesContext)
+    protected ComponentContext getComponentContext(ComponentDefinition definition, TilesRequestContext tilesContext)
             throws Exception {
         ComponentContext context = ComponentContext.getContext(tilesContext);
         if (context == null) {
@@ -192,9 +194,9 @@ public class TilesResult extends ServletDispatcherResult {
      * @return the component controller to execute, or <code>null</code> if none
      * @throws Exception if preparations failed
      */
-    protected Controller getController(ComponentDefinition definition, HttpServletRequest request)
+    protected ViewPreparer getController(ComponentDefinition definition, HttpServletRequest request)
             throws Exception {
-        return definition.getOrCreateController();
+        return definition.getOrCreatePreparer();
     }
 
     /**
@@ -206,7 +208,7 @@ public class TilesResult extends ServletDispatcherResult {
      * @throws Exception if controller execution failed
      */
     protected void executeController(
-            Controller controller, ComponentContext context, TilesContext tilesContext)
+            ViewPreparer controller, ComponentContext context, TilesRequestContext tilesContext)
             throws Exception {
         controller.execute(tilesContext, context);
     }

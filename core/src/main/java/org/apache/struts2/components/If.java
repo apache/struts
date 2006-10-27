@@ -48,8 +48,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  *  &lt;/s:if&gt;
  * 	&lt;s:elseif test="%{true}"&gt;
  *	    &lt;div&gt;Will Be Executed&lt;/div&gt;
- *  &lt;s:else&gt;
  *  &lt;/s:elseif&gt;
+ *  &lt;s:else&gt;
  *	    &lt;div&gt;Will Not Be Executed&lt;/div&gt;
  *  &lt;/s:else&gt;
  * <!-- END SNIPPET: example -->

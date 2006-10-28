@@ -130,4 +130,8 @@ public final class StrutsConstants {
 
     /** A list of configuration files automatically loaded by Struts */
     public static final String STRUTS_CONFIGURATION_FILES = "struts.configuration.files";
+    
+    /** Whether slashes in action names are allowed or not */ 
+    public static final String STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES = "struts.enable.SlashesInActionNames";
+     
 }

@@ -163,12 +163,23 @@ public class DefaultActionMapper implements ActionMapper {
 
     static final String REDIRECT_ACTION_PREFIX = "redirect-action:";
 
-    private static boolean allowDynamicMethodCalls = "true".equals(Settings
-            .get(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION));
+    private boolean allowDynamicMethodCalls = true;
+    
+    private boolean allowSlashesInActionNames = false;
 
     private PrefixTrie prefixTrie = null;
 
     public DefaultActionMapper() {
+        if (Settings.isSet(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION)) {
+            allowDynamicMethodCalls = "true".equals(Settings
+                    .get(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION));
+        }
+        
+        if (Settings.isSet(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES)) {
+            allowSlashesInActionNames = "true".equals(Settings
+                    .get(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES));
+        }
+        
         prefixTrie = new PrefixTrie() {
             {
                 put(METHOD_PREFIX, new ParameterAction() {
@@ -318,6 +329,14 @@ public class DefaultActionMapper implements ActionMapper {
 
             name = uri.substring(namespace.length() + 1);
         }
+        
+        if (!allowSlashesInActionNames && name != null) {
+            int pos = name.lastIndexOf('/');
+            if (pos > -1 && pos < name.length() - 1) {
+                name = name.substring(pos + 1);
+            }
+        }
+        
         mapping.setNamespace(namespace);
         mapping.setName(name);
     }

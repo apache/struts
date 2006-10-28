@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.ServletRedirectResult;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
 
@@ -91,18 +92,25 @@ public class DefaultActionMapperTest extends StrutsTestCase {
     }
     
     public void testGetMappingWithSlashedName() throws Exception {
-        setUp();
-        req.setupGetRequestURI("/my/foo/actionName.action");
-        req.setupGetServletPath("/my/foo/actionName.action");
-        req.setupGetAttribute(null);
-        req.addExpectedGetAttributeName("javax.servlet.include.servlet_path");
+        
+        String old = Settings.get(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES);
+        Settings.set(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES, "true");
+        try {
+            req.setupGetRequestURI("/my/foo/actionName.action");
+            req.setupGetServletPath("/my/foo/actionName.action");
+            req.setupGetAttribute(null);
+            req.addExpectedGetAttributeName("javax.servlet.include.servlet_path");
 
-        DefaultActionMapper mapper = new DefaultActionMapper();
-        ActionMapping mapping = mapper.getMapping(req, configManager);
+            DefaultActionMapper mapper = new DefaultActionMapper();
+            ActionMapping mapping = mapper.getMapping(req, configManager);
 
-        assertEquals("/my", mapping.getNamespace());
-        assertEquals("foo/actionName", mapping.getName());
-        assertNull(mapping.getMethod());
+            assertEquals("/my", mapping.getNamespace());
+            assertEquals("foo/actionName", mapping.getName());
+            assertNull(mapping.getMethod());        }
+        finally {
+            Settings.set(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES, old);
+        }
+
     }
     
     public void testGetMappingWithUnknownNamespace() throws Exception {
@@ -116,7 +124,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
         assertEquals("", mapping.getNamespace());
-        assertEquals("bo/foo/actionName", mapping.getName());
+        assertEquals("actionName", mapping.getName());
         assertNull(mapping.getMethod());
     }
 
@@ -199,6 +207,40 @@ public class DefaultActionMapperTest extends StrutsTestCase {
 
         assertEquals(actionMapping.getName(), "someAction");
         assertEquals(actionMapping.getNamespace(), "/my");
+    }
+    
+    public void testParseNameAndNamespace_NoSlashes() throws Exception {
+        String old = Settings.get(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES);
+        Settings.set(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES, "false");
+        try {
+            ActionMapping actionMapping = new ActionMapping();
+
+            DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
+            defaultActionMapper.parseNameAndNamespace("/foo/someAction", actionMapping, config);
+
+            assertEquals(actionMapping.getName(), "someAction");
+            assertEquals(actionMapping.getNamespace(), "");
+        }
+        finally {
+            Settings.set(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES, old);
+        }
+    }
+    
+    public void testParseNameAndNamespace_AllowSlashes() throws Exception {
+        String old = Settings.get(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES);
+        Settings.set(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES, "true");
+        try {
+            ActionMapping actionMapping = new ActionMapping();
+
+            DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
+            defaultActionMapper.parseNameAndNamespace("/foo/someAction", actionMapping, config);
+
+            assertEquals(actionMapping.getName(), "foo/someAction");
+            assertEquals(actionMapping.getNamespace(), "");
+        }
+        finally {
+            Settings.set(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES, old);
+        }
     }
 
 

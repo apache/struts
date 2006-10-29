@@ -17,6 +17,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 
 /**
@@ -27,6 +28,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
     private static final Log LOG = LogFactory.getLog(StrutsXmlConfigurationProvider.class);
     private File baseDir = null;
     private String filename;
+    private String reloadKey;
 
     /** 
      * Constructs the configuration provider
@@ -46,6 +48,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
     public StrutsXmlConfigurationProvider(String filename, boolean errorIfMissing) {
         super(filename, errorIfMissing);
         this.filename = filename;
+        reloadKey = "configurationReload-"+filename;
         Map<String,String> dtdMappings = new HashMap<String,String>(getDtdMappings());
         dtdMappings.put("-//Apache Software Foundation//DTD Struts Configuration 2.0//EN", "struts-2.0.dtd");
         setDtdMappings(dtdMappings);
@@ -53,6 +56,18 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
         if (file.getParent() != null) {
             this.baseDir = file.getParentFile();
         }
+    }
+    
+    
+
+    /* (non-Javadoc)
+     * @see com.opensymphony.xwork2.config.providers.XmlConfigurationProvider#init(com.opensymphony.xwork2.config.Configuration)
+     */
+    @Override
+    public void init(Configuration configuration) {
+        ActionContext ctx = ActionContext.getContext();
+        ctx.put(reloadKey, Boolean.TRUE);
+        super.init(configuration);
     }
 
     /**
@@ -106,9 +121,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
     @Override
     public boolean needsReload() {
         ActionContext ctx = ActionContext.getContext();
-        String key = "configurationReload-"+filename;
-        if (ctx.get(key) == null) {
-            ctx.put(key, Boolean.TRUE);
+        if (ctx.get(reloadKey) == null) {
             return super.needsReload();
         }
         return false;

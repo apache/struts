@@ -208,7 +208,7 @@ limitations under the License.
         <p><pre><code>
         &lt;repositories>
           &lt;repository>
-            &lt;id>ASF_SNAPSHOT_M2&lt;/id>
+            &lt;id>apache.snapshots&lt;/id>
             &lt;name>ASF Maven 2 Snapshot&lt;/name>
             &lt;url>http://people.apache.org/repo/m2-snapshot-repository&lt;/url>
           &lt;/repository>

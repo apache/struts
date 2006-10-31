@@ -24,8 +24,44 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 
 /**
+ * <!-- START SNIPPET: description -->
+ * 
  * Allows profiling to be enabled or disabled via request parameters, when
  * devMode is enabled.
+ * 
+ * <!-- END SNIPPET: description -->
+ * 
+ * 
+ * <!-- START SNIPPET: parameters -->
+ * 
+ * <ul>
+ *  <li>profilingKey</li>
+ * </ul>
+ * 
+ * <!-- END SNIPPET: parameters -->
+ * 
+ * <!-- START SNIPPET: extending -->
+ * 
+ * none
+ * 
+ * <!-- END SNIPPET: extending -->
+ * 
+ * <pre>
+ * <!-- START SNIPPET: example -->
+ * 
+ * // to change the profiling key
+ * <action ...>
+ *   ...
+ *   <interceptor-ref name="profiling">
+ *      <param name="profilingKey">profilingKey</param>
+ *   </interceptor-ref>
+ *   ...
+ * </action>
+ * 
+ * <!-- END SNIPPET: example -->
+ * </pre>
+ * 
+ * @version $Date$ $Id$
  */
 public class ProfilingActivationInterceptor extends AbstractInterceptor {
 

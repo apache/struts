@@ -82,9 +82,8 @@ public class DateAction extends ActionSupport {
     }
 
     /**
-     * @see com.opensymphony.xwork2.ActionSupport#execute()
      */
-    public String execute() throws Exception {
+    public String browse() throws Exception {
         Calendar cal = GregorianCalendar.getInstance();
         now = cal.getTime();
         cal.roll(Calendar.DATE, -1);

@@ -59,7 +59,7 @@
             <result>viewSource.jsp</result>
         </action>
 
-        <action name="date" class="org.apache.struts2.showcase.DateAction">
+        <action name="date" class="org.apache.struts2.showcase.DateAction" method="browse">
             <result name="success">/date.jsp</result>
         </action>
 

@@ -12,6 +12,7 @@
 		</action>
 
         <action name="doUpload" class="org.apache.struts2.showcase.fileupload.FileUploadAction" method="upload">
+        	<result name="input">upload.jsp</result>
 			<result>upload-success.jsp</result>
 		</action>
 		

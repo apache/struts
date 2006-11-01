@@ -11,6 +11,8 @@
 <body>
     <h1>Fileupload sample</h1>
 
+	<s:actionerror />
+	<s:fielderror />
     <s:form action="doUpload" method="POST" enctype="multipart/form-data">
         <s:file name="upload" label="File"/>
         <s:textfield name="caption" label="Caption"/>

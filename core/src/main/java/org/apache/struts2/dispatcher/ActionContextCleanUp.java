@@ -43,7 +43,7 @@ import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
  * However, sometimes you may wish to access Struts features, including the
  * value stack, from within your SiteMesh decorators. Because {@link FilterDispatcher}
  * cleans up the {@link ActionContext}, your decorator won't have access to the
- * date you want.
+ * data you want.
  * <p/>
  * <p/>
  * By adding this filter, the {@link FilterDispatcher} will know to not clean up and

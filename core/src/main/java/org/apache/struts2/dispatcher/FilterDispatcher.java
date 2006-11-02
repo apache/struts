@@ -276,7 +276,7 @@ public class FilterDispatcher implements Filter, StrutsStatics {
     }
 
     /**
-     * Fins a static resource
+     * Finds a static resource
      * 
      * @param name The resource name
      * @param response The request

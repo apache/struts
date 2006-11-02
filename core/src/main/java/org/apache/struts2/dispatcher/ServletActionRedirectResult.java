@@ -42,9 +42,9 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
  * standard redirect result.
  *
  * <p/>
- *
- * To pass parameters, the &lt;param&gt; ... &lt;/param&gt; tag. The following parameters will not be
- * passable becuase they are part of the config param for this particular result.
+ * @TODO - the below sentence is confusing and seems to be contradictory -- FIX ME
+ * To pass parameters, use the &lt;param&gt; ... &lt;/param&gt; tag. The following parameters will not be
+ * passed because they are part of the config param for this particular result.
  *
  * <ul>
  * 	<li>actionName</li>
@@ -109,7 +109,7 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
  *    &lt;action name="gatherReportInfo" class="..."&gt;
  *       &lt;result name="showReportResult" type="redirect-action"&gt;
  *       	&lt;param name="actionName"&gt;generateReport&lt;/param&gt;
- *          &lt;param name="namespace="&gt;/genReport&lt;/param&gt;
+ *          &lt;param name="namespace"&gt;/genReport&lt;/param&gt;
  *          &lt;param name="reportType"&gt;pie&lt;/param&gt;
  *          &lt;param name="width"&gt;100&lt;/param&gt;
  *          &lt;param name="height"&gt;100&lt;/param&gt;

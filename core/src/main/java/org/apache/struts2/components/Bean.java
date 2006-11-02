@@ -67,7 +67,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <!-- START SNIPPET: examplesdescription -->
  * <p>This example instantiates a bean called SimpleCounter and sets the foo property (setFoo('BAR')). The
- * SimpleCounter object is then pushed onto the Valuestack, which means that we can called its accessor methods (getFoo())
+ * SimpleCounter object is then pushed onto the Valuestack, which means that we can call its accessor methods (getFoo())
  * with the Property tag and get their values.</p>
  * <p/>
  * <p>In the above example, the id has been set to a value of <i>counter</i>. This means that the SimpleCounter class

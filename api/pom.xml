@@ -11,6 +11,13 @@
     <artifactId>struts2-api</artifactId>
     <packaging>jar</packaging>
     <name>Struts 2 API</name>
+
+    <scm>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/api/</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/api/</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/api/</url>
+    </scm>
+
    <dependencies>
         <dependency>
            <groupId>javax.servlet</groupId>

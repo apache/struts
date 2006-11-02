@@ -11,6 +11,13 @@
     <artifactId>struts2-blank</artifactId>
     <packaging>war</packaging>
     <name>Blank Webapp</name>
+
+    <scm>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/blank/</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/apps/blank/</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/apps/blank/</url>
+    </scm>
+
     <dependencies>
 
         <dependency>

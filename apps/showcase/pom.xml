@@ -11,6 +11,14 @@
     <artifactId>struts2-showcase</artifactId>
     <packaging>war</packaging>
     <name>Showcase Webapp</name>
+
+    <scm>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/showcase/</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/apps/showcase/</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/apps/showcase/</url>
+    </scm>
+    
+
     <profiles>
         <profile>
             <id>hostedqa</id>

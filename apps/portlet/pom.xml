@@ -11,6 +11,13 @@
     <artifactId>struts2-portlet</artifactId>
     <packaging>war</packaging>
     <name>Portlet Webapp</name>
+
+    <scm>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/apps/portlet/</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/apps/portlet/</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/apps/portlet/</url>
+    </scm>
+
     <dependencies>
         <dependency>
             <groupId>portlet-api</groupId>

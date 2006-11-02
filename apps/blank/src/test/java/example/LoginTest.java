@@ -4,8 +4,6 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 
 import java.util.Map;
-import java.util.Collection;
-import java.util.List;
 
 public class LoginTest extends ConfigTest {
 

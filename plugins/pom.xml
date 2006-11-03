@@ -11,6 +11,13 @@
     <artifactId>struts2-plugins</artifactId>
     <packaging>pom</packaging>
     <name>Struts Plugins</name>
+
+   <scm>
+     <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/plugins/</connection>
+     <developerConnection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/plugins/</developerConnection>
+     <url>http://svn.apache.org/repos/asf/struts/struts2/trunk/plugins/</url>
+   </scm>
+
     <modules>
         <module>config-browser</module>
         <module>jasperreports</module>

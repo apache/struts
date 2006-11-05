@@ -19,10 +19,8 @@ package org.apache.struts2.dispatcher;
 
 import java.io.IOException;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -56,29 +54,28 @@ import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
  * </ul>
  * <!-- SNIPPET END: description -->
  *
- * @version $Date$ $Id$
  *
  * @see FilterDispatcher
+ * @see AbstractFilter
+ * @see Dispatcher
+ * 
+ * @version $Date$ $Id$
  */
-public class ActionContextCleanUp implements Filter {
+public class ActionContextCleanUp extends AbstractFilter {
 
     private static final Log LOG = LogFactory.getLog(ActionContextCleanUp.class);
 
     private static final String COUNTER = "__cleanup_recursion_counter";
 
     protected FilterConfig filterConfig;
-    protected Dispatcher dispatcher;
+
 
     /**
-     * Initializes the filter
-     * 
-     * @param filterConfig The filter configuration
+     * Empty implementation.
      */
-    public void init(FilterConfig filterConfig) throws ServletException {
-        this.filterConfig = filterConfig;
-        dispatcher = new Dispatcher(filterConfig.getServletContext());
+    protected void postInit(FilterConfig filterConfig) throws ServletException {
+    	// does nothing.
     }
-
     
     /**
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
@@ -92,19 +89,7 @@ public class ActionContextCleanUp implements Filter {
         try {
         	UtilTimerStack.push(timerKey);
         	
-        	// prepare the request no matter what - this ensures that the proper character encoding
-        	// is used before invoking the mapper (see WW-9127)
-        	Dispatcher.setInstance(dispatcher);
-        	dispatcher.prepare(request, response);
-
-        	ServletContext servletContext = filterConfig.getServletContext();
-        	try {
-        		request = dispatcher.wrapRequest(request, servletContext);
-        	} catch (IOException e) {
-        		String message = "Could not wrap servlet request with MultipartRequestWrapper!";
-        		LOG.error(message, e);
-        		throw new ServletException(message, e);
-        	}
+        	request = prepareDispatcherAndWrapRequest(request, response);
 
         	try {
         		Integer count = (Integer)request.getAttribute(COUNTER);
@@ -115,6 +100,11 @@ public class ActionContextCleanUp implements Filter {
         			count = new Integer(count.intValue()+1);
         		}
         		request.setAttribute(COUNTER, count);
+        		
+        		if (LOG.isDebugEnabled()) {
+            		LOG.debug("filtering counter="+count);
+            	}
+        		
         		chain.doFilter(request, response);
         	} finally {
         		int counterVal = ((Integer)request.getAttribute(COUNTER)).intValue();
@@ -135,21 +125,20 @@ public class ActionContextCleanUp implements Filter {
      */
     protected static void cleanUp(ServletRequest req) {
         // should we clean up yet?
-        if (req.getAttribute(COUNTER) != null &&
-                 ((Integer)req.getAttribute(COUNTER)).intValue() > 0 ) {
-             return;
-         }
+    	Integer count = (Integer) req.getAttribute(COUNTER);
+        if (count != null && count > 0 ) {
+        	if (LOG.isDebugEnabled()) {
+        		LOG.debug("skipping cleanup counter="+count);
+        	}
+            return;
+        }
 
         // always dontClean up the thread request, even if an action hasn't been executed
         ActionContext.setContext(null);
-        
         Dispatcher.setInstance(null);
-    }
-
-    
-    /* (non-Javadoc)
-     * @see javax.servlet.Filter#destroy()
-     */
-    public void destroy() {
+        
+        if (LOG.isDebugEnabled()) {
+    		LOG.debug("clean up ");
+    	}
     }
 }

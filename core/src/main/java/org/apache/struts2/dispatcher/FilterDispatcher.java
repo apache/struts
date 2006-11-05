@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -37,7 +36,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -118,49 +116,30 @@ import com.opensymphony.xwork2.ActionContext;
  * 
  * @version $Date$ $Id$
  */
-public class FilterDispatcher implements Filter, StrutsStatics {
+public class FilterDispatcher extends AbstractFilter implements StrutsStatics {
+	
     private static final Log LOG = LogFactory.getLog(FilterDispatcher.class);
 
-    private FilterConfig filterConfig;
     private String[] pathPrefixes;
-    private Dispatcher dispatcher;
 
     private SimpleDateFormat df = new SimpleDateFormat("E, d MMM yyyy HH:mm:ss");
     private final Calendar lastModifiedCal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
     private final String lastModified = df.format(lastModifiedCal.getTime());
 
-    /** 
-     * Gets this filter's configuration
+    
+    /**
+     * Look for "packages" defined through filter-config's parameters.
      * 
-     * @return The filter config
+     * @param FilterConfig
+     * @throws ServletException
      */
-    protected FilterConfig getFilterConfig() {
-        return filterConfig;
-    }
-
-    /**
-     * Cleans up the dispatcher
-     */
-    public void destroy() {
-        	if (dispatcher == null) {
-        		LOG.warn("something is seriously wrong, DispatcherUtil is not initialized (null) ");
-        	} else {
-        	    dispatcher.cleanup();
-        }
-    }
-
-    /**
-     * Initializes the dispatcher and filter
-     */
-    public void init(FilterConfig filterConfig) throws ServletException {
-        this.filterConfig = filterConfig;
-        String param = filterConfig.getInitParameter("packages");
+    protected void postInit(FilterConfig filterConfig) throws ServletException {
+    	String param = filterConfig.getInitParameter("packages");
         String packages = "org.apache.struts2.static template org.apache.struts2.interceptor.debugging";
         if (param != null) {
             packages = param + " " + packages;
         }
         this.pathPrefixes = parse(packages);
-        dispatcher = createDispatcher();
     }
     
     /**
@@ -188,45 +167,29 @@ public class FilterDispatcher implements Filter, StrutsStatics {
     }
 
 
-    /* (non-Javadoc)
+    /**
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
      */
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
-        ServletContext servletContext = filterConfig.getServletContext();
+        ServletContext servletContext = getServletContext();
 
         String timerKey = "FilterDispatcher_doFilter: ";
         try {
         	UtilTimerStack.push(timerKey);
-        	Dispatcher du = Dispatcher.getInstance();
         
-        	// Prepare and wrap the request if the cleanup filter hasn't already
-        	if (du == null) {
-        		du = dispatcher;
-        		// prepare the request no matter what - this ensures that the proper character encoding
-        		// is used before invoking the mapper (see WW-9127)
-        		du.prepare(request, response);
+			request = prepareDispatcherAndWrapRequest(request, response);
 
-        		try {
-        			// Wrap request first, just in case it is multipart/form-data 
-        			// parameters might not be accessible through before encoding (ww-1278)
-        			request = du.wrapRequest(request, servletContext);
-        		} catch (IOException e) {
-        			String message = "Could not wrap servlet request with MultipartRequestWrapper!";
-        			LOG.error(message, e);
-        			throw new ServletException(message, e);
-        		}
-        		Dispatcher.setInstance(du);
-        	}
 
         	ActionMapper mapper = null;
         	ActionMapping mapping = null;
         	try {
         		mapper = ActionMapperFactory.getMapper();
-        		mapping = mapper.getMapping(request, du.getConfigurationManager());
+        		mapping = mapper.getMapping(request, dispatcher.getConfigurationManager());
         	} catch (Exception ex) {
-        		du.sendError(request, response, servletContext, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
+        		LOG.error("error getting ActionMapping", ex);
+        		dispatcher.sendError(request, response, servletContext, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
         		ActionContextCleanUp.cleanUp(req);
         		return;
         	}
@@ -261,18 +224,6 @@ public class FilterDispatcher implements Filter, StrutsStatics {
         finally {
         	UtilTimerStack.pop(timerKey);
         }
-    }
-
-    /**
-     * Servlet 2.3 specifies that the servlet context can be retrieved from the session. Unfortunately, some versions of
-     * WebLogic can only retrieve the servlet context from the filter config. Hence, this method enables subclasses to
-     * retrieve the servlet context from other sources.
-     *
-     * @param session the HTTP session where, in Servlet 2.3, the servlet context can be retrieved
-     * @return the servlet context.
-     */
-    protected ServletContext getServletContext(HttpSession session) {
-        return filterConfig.getServletContext();
     }
 
     /**
@@ -385,15 +336,5 @@ public class FilterDispatcher implements Filter, StrutsStatics {
         resourcePath = URLDecoder.decode(resourcePath, enc);
 
         return ClassLoaderUtil.getResourceAsStream(resourcePath, getClass());
-    }
-    
-    /**
-     * Create a {@link Dispatcher}, this serves as a hook for subclass to overried
-     * such that a custom {@link Dispatcher} could be created. 
-     * 
-     * @return Dispatcher
-     */
-    protected Dispatcher createDispatcher() {
-    	return new Dispatcher(filterConfig.getServletContext());
     }
 }

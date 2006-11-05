@@ -47,11 +47,13 @@ import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 /**
  * FilterDispatcher TestCase.
  *
+ * @version $Date$ $Id$
  */
 public class FilterDispatcherTest extends StrutsTestCase {
 
 
     public void testParsePackages() throws Exception {
+    	
         FilterDispatcher filterDispatcher = new FilterDispatcher();
         String[] result1 = filterDispatcher.parse("foo.bar.package1 foo.bar.package2 foo.bar.package3");
         String[] result2 = filterDispatcher.parse("foo.bar.package1\tfoo.bar.package2\tfoo.bar.package3");
@@ -136,12 +138,12 @@ public class FilterDispatcherTest extends StrutsTestCase {
     		MockHttpServletRequest req = new MockHttpServletRequest(servletContext);
     		MockHttpServletResponse res = new MockHttpServletResponse();
     		MockFilterChain chain = new MockFilterChain();
-    		final NoOpDispatcher dispatcher = new NoOpDispatcher(servletContext);
+    		final NoOpDispatcher _dispatcher = new NoOpDispatcher(servletContext);
     		Dispatcher.setInstance(null);
 
     		ConfigurationManager confManager = new ConfigurationManager();
     		confManager.setConfiguration(new DefaultConfiguration());
-    		dispatcher.setConfigurationManager(confManager);
+    		_dispatcher.setConfigurationManager(confManager);
     		
     		
     		ObjectFactory.setObjectFactory(new InnerObjectFactory());
@@ -152,13 +154,13 @@ public class FilterDispatcherTest extends StrutsTestCase {
     	
     		FilterDispatcher filter = new FilterDispatcher() {
     			protected Dispatcher createDispatcher() {
-    				return dispatcher;
+    				return _dispatcher;
     			}
     		};
     		filter.init(filterConfig);
     		filter.doFilter(req, res, chain);
     	
-    		assertFalse(dispatcher.serviceRequest);
+    		assertFalse(_dispatcher.serviceRequest);
     	}
     	finally {
     		Settings.reset();
@@ -172,12 +174,12 @@ public class FilterDispatcherTest extends StrutsTestCase {
     		MockHttpServletRequest req = new MockHttpServletRequest(servletContext);
     		MockHttpServletResponse res = new MockHttpServletResponse();
     		MockFilterChain chain = new MockFilterChain();
-    		final InnerDispatcher dispatcher = new InnerDispatcher(servletContext);
+    		final InnerDispatcher _dispatcher = new InnerDispatcher(servletContext);
     		Dispatcher.setInstance(null);
 
     		ConfigurationManager confManager = new ConfigurationManager();
     		confManager.setConfiguration(new DefaultConfiguration());
-    		dispatcher.setConfigurationManager(confManager);
+    		_dispatcher.setConfigurationManager(confManager);
     		
     		
     		ObjectFactory.setObjectFactory(new InnerObjectFactory());
@@ -189,14 +191,14 @@ public class FilterDispatcherTest extends StrutsTestCase {
     	
     		FilterDispatcher filter = new FilterDispatcher() {
     			protected Dispatcher createDispatcher() {
-    				return dispatcher;
+    				return _dispatcher;
     			}
     		};
     		filter.init(filterConfig);
     		filter.doFilter(req, res, chain);
     	
-    		assertTrue(dispatcher.wrappedRequest);
-    		assertTrue(dispatcher.serviceRequest);
+    		assertTrue(_dispatcher.wrappedRequest);
+    		assertTrue(_dispatcher.serviceRequest);
     	}
     	finally {
     		Settings.reset();

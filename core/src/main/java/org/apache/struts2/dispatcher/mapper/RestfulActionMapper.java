@@ -33,6 +33,8 @@ import com.opensymphony.xwork2.config.ConfigurationManager;
 
 
 /**
+ * <!-- START SNIPPET: description -->
+ * 
  * A custom action mapper using the following format:
  * <p/>
  * <p/>
@@ -53,6 +55,8 @@ import com.opensymphony.xwork2.config.ConfigurationManager;
  * <p/>
  * Your action just needs a setArticleId() method, and requests such as /article/1, /article/2, etc will all map
  * to that URL pattern.
+ * 
+ * <!-- END SNIPPET: description -->
  *
  */
 public class RestfulActionMapper implements ActionMapper {

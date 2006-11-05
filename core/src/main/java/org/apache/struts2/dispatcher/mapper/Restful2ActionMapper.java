@@ -28,6 +28,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * <!-- START SNIPPET: description --> 
+ * 
  * Improved restful action mapper that adds several ReST-style improvements to
  * action mapping, but supports fully-customized URL's via XML.  The two primary
  * ReST enhancements are:
@@ -72,6 +74,8 @@ import org.apache.commons.logging.LogFactory;
  * http://ryandaigle.com/articles/2006/08/01/whats-new-in-edge-rails-simply-restful-support-and-how-to-use-it
  * </a>
  * </p>
+ * 
+ * <!-- END SNIPPET: description -->
  */
 public class Restful2ActionMapper extends DefaultActionMapper {
 

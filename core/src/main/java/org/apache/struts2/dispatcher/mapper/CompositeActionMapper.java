@@ -35,18 +35,22 @@ import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.util.FileManager;
 
 /**
+ * <!-- START SNIPPET: description -->
+ * 
  * A composite action mapper that is capable of delegating to a series of {@link ActionMapper} if the former 
  * failed to obtained a valid {@link ActionMapping} or uri.
  * <p/>
  * It is configured through struts.properties. 
  * <p/>
  * For example, with the following entries in struts.properties
+ * <p/>
  * <pre>
  * struts.mapper.class=org.apache.struts2.dispatcher.mapper.CompositeActionMapper
  * struts.mapper.composite.1=org.apache.struts2.dispatcher.mapper.DefaultActionMapper
  * struts.mapper.composite.2=org.apache.struts2.dispatcher.mapper.RestfulActionMapper
  * struts.mapper.composite.3=org.apache.struts2.dispatcher.mapper.Restful2ActionMapper
  * </pre>
+ * <p/>
  * When {@link CompositeActionMapper#getMapping(HttpServletRequest, ConfigurationManager)} or 
  * {@link CompositeActionMapper#getUriFromActionMapping(ActionMapping)} is invoked, 
  * {@link CompositeActionMapper} would go through these {@link ActionMapper}s in sequence 
@@ -56,8 +60,21 @@ import com.opensymphony.xwork2.util.FileManager;
  * in which case it will just return null for both 
  * {@link CompositeActionMapper#getMapping(HttpServletRequest, ConfigurationManager)} and 
  * {@link CompositeActionMapper#getUriFromActionMapping(ActionMapping)} methods.
- * 
  * <p/>
+ * 
+ * For example with the following in struts.properties :-
+ * <pre>
+ * struts.mapper.class=org.apache.struts2.dispatcher.mapper.CompositeActionMapper
+ * struts.mapper.composite.1=org.apache.struts2.dispatcher.mapper.DefaultActionMapper
+ * struts.mapper.composite.2=foo.bar.MyActionMapper
+ * struts.mapper.composite.3=foo.bar.MyAnotherActionMapper
+ * </pre>
+ * <p/>
+ * <code>CompositeActionMapper</code> will be configured with 3 ActionMapper, namely
+ * "DefaultActionMapper", "MyActionMapper" and "MyAnotherActionMapper".  
+ * <code>CompositeActionMapper</code> would consult each of them in order described above.
+ * 
+ * <!-- END SNIPPET: description -->
  * 
  * @see ActionMapper
  * @see ActionMapperFactory

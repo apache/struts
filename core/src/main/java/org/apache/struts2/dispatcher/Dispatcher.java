@@ -19,6 +19,8 @@ package org.apache.struts2.dispatcher;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,8 +37,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.config.ClasspathConfigurationProvider;
 import org.apache.struts2.config.Settings;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
+import org.apache.struts2.config.ClasspathConfigurationProvider.ClasspathPageLocator;
+import org.apache.struts2.config.ClasspathConfigurationProvider.PageLocator;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
@@ -175,7 +180,7 @@ public class Dispatcher {
      *
      * @param servletContext The servlet context
      */
-    private void init(ServletContext servletContext) {
+    private void init(final ServletContext servletContext) {
         boolean reloadi18n = Boolean.valueOf((String) Settings.get(StrutsConstants.STRUTS_I18N_RELOAD)).booleanValue();
         LocalizedTextUtil.setReloadBundles(reloadi18n);
 
@@ -258,14 +263,26 @@ public class Dispatcher {
             configFiles = Settings.get(StrutsConstants.STRUTS_CONFIGURATION_FILES);
         }
         if (configFiles != null) {
+            List<String> packages = new ArrayList<String>();
 	        String[] files = configFiles.split("\\s*[,]\\s*");
 	        for (String file : files) {
-	            if ("xwork.xml".equals(file)) {
-	                configurationManager.addConfigurationProvider(new XmlConfigurationProvider(file, false));
-	            } else {
-	                configurationManager.addConfigurationProvider(new StrutsXmlConfigurationProvider(file, false));
-	            }
+                if (file.endsWith(".xml")) {
+    	            if ("xwork.xml".equals(file)) {
+    	                configurationManager.addConfigurationProvider(new XmlConfigurationProvider(file, false));
+    	            } else {
+    	                configurationManager.addConfigurationProvider(new StrutsXmlConfigurationProvider(file, false));
+    	            }
+                } else {
+                    packages.add(file);
+                }
 	        }
+            
+            // Initialize the classloader scanner with the configured paths
+            if (packages.size() > 0) {
+                ClasspathConfigurationProvider provider = new ClasspathConfigurationProvider((String[])packages.toArray(new String[]{}));
+                provider.setPageLocator(new ServletContextPageLocator(servletContext));
+                configurationManager.addConfigurationProvider(provider);
+            }
         }
 
         synchronized(Dispatcher.class) {
@@ -622,6 +639,33 @@ public class Dispatcher {
      */
     public static void setPortletSupportActive(boolean portletSupportActive) {
         Dispatcher.portletSupportActive = portletSupportActive;
+    }
+
+    /**
+     * Resolves pages from the servlet context, failing over to the classpath
+     */
+    private final class ServletContextPageLocator implements PageLocator {
+        private final ServletContext context;
+        private ClasspathPageLocator classpathPageLocator = new ClasspathPageLocator();
+
+        private ServletContextPageLocator(ServletContext context) {
+            this.context = context;
+        }
+
+        public URL locate(String path) {
+            URL url = null;
+            try {
+                url = context.getResource(path);
+                if (url == null) {
+                    url = classpathPageLocator.locate(path);
+                }
+            } catch (MalformedURLException e) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Unable to resolve path "+path+" against the servlet context");
+                }
+            }
+            return url;
+        }
     }
 
     /** Simple accessor for a static method */

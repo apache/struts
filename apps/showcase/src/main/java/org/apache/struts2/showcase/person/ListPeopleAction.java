@@ -17,14 +17,16 @@
  */
 package org.apache.struts2.showcase.person;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.struts2.config.Result;
+import org.apache.struts2.views.freemarker.FreemarkerResult;
+
 import com.opensymphony.xwork2.ActionSupport;
 
-import java.util.List;
-import java.util.ArrayList;
-
-/**
- */
-public class ListPeople extends ActionSupport {
+@Result(value="listPeople.ftl", type=FreemarkerResult.class)
+public class ListPeopleAction extends ActionSupport {
 	
 	private static final long serialVersionUID = 3608017189783645371L;
 	

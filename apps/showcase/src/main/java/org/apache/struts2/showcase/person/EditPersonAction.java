@@ -17,17 +17,26 @@
  */
 package org.apache.struts2.showcase.person;
 
-import com.opensymphony.xwork2.ActionSupport;
-
-import java.util.List;
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.struts2.config.Result;
+import org.apache.struts2.config.Results;
+import org.apache.struts2.dispatcher.ServletRedirectResult;
+
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * <code>EditPerson</code>
  *
  */
-public class EditPerson extends ActionSupport {
+@Results({
+    @Result(value="editPeople.jsp"),
+    @Result(name="error",value="editPeople.jsp"),
+    @Result(name="list", value="listPeople.action", type=ServletRedirectResult.class)
+})
+public class EditPersonAction extends ActionSupport {
 
 	private static final long serialVersionUID = 7699491775215130850L;
 	
@@ -70,7 +79,7 @@ public class EditPerson extends ActionSupport {
             personManager.getPeople().remove(p);
             personManager.getPeople().add(p);
         }
-        return SUCCESS;
+        return "list";
     }
 
 }

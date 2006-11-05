@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: CreatePerson.java 420385 2006-07-10 00:57:05Z mrdon $
  *
  * Copyright 2006 The Apache Software Foundation.
  *
@@ -17,11 +17,21 @@
  */
 package org.apache.struts2.showcase.person;
 
+import org.apache.struts2.config.ParentPackage;
+import org.apache.struts2.config.Result;
+import org.apache.struts2.config.Results;
+import org.apache.struts2.views.freemarker.FreemarkerResult;
+
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
  */
-public class CreatePerson extends ActionSupport {
+@ParentPackage("person")
+@Results({
+    @Result(value="newPerson.ftl", type=FreemarkerResult.class),
+    @Result(name="input", value="newPerson.ftl", type=FreemarkerResult.class)
+})
+public class NewPersonAction extends ActionSupport {
 	
 	private static final long serialVersionUID = 200410824352645515L;
 	

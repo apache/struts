@@ -11,7 +11,8 @@
     com.opensymphony.xwork2.ActionInvocation inv = com.opensymphony.xwork2.ActionContext.getContext().getActionInvocation();
     org.apache.struts2.dispatcher.mapper.ActionMapping mapping = org.apache.struts2.ServletActionContext.getActionMapping();
     if (inv != null) {
-        sourceUrl += "?config="+inv.getProxy().getConfig().getLocation().getURI()+":"+inv.getProxy().getConfig().getLocation().getLineNumber();
+        com.opensymphony.xwork2.util.location.Location loc = inv.getProxy().getConfig().getLocation();
+        sourceUrl += "?config="+(loc != null ? loc.getURI()+":"+loc.getLineNumber() : "");
         sourceUrl += "&className="+inv.getProxy().getConfig().getClassName();
         
         if (inv.getResult() != null && inv.getResult() instanceof org.apache.struts2.dispatcher.StrutsResultSupport) {

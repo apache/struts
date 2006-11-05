@@ -6,7 +6,7 @@
 </head>
 
 <body>
-<s:form action="doEditPerson" theme="simple" validate="false">
+<s:form action="editPerson" theme="simple" validate="false">
 
     <table>
         <tr>
@@ -29,7 +29,7 @@
         </s:iterator>
     </table>
 
-    <s:submit value="Save all persons"/>
+    <s:submit method="save" value="Save all persons"/>
 </s:form>
 
 <ul>

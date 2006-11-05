@@ -17,6 +17,8 @@
  */
 package org.apache.struts2;
 
+import org.apache.struts2.dispatcher.mapper.CompositeActionMapper;
+
 /**
  * This class provides a central location for framework configuration keys
  * used to retrieve and store Struts configuration settings.
@@ -134,4 +136,6 @@ public final class StrutsConstants {
     /** Whether slashes in action names are allowed or not */ 
     public static final String STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES = "struts.enable.SlashesInActionNames";
      
+    /** Prefix used by {@link CompositeActionMapper} to identified its containing {@link ActionMapper} class. */
+    public static final String STRUTS_MAPPER_COMPOSITE = "struts.mapper.composite.";
 }

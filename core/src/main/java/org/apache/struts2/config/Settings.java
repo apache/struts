@@ -135,7 +135,7 @@ public class Settings {
 
         return val;
     }
-
+    
     /**
      * Returns an Iterator of all properties names.
      *

@@ -33,7 +33,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
 
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.VoidResult;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;

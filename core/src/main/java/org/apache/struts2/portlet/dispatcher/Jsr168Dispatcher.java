@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.portlet.dispatcher;
 
@@ -70,55 +73,55 @@ import com.opensymphony.xwork2.util.LocalizedTextUtil;
  * but adjusted to a portal environment. The portlet is configured through the <tt>portlet.xml</tt>
  * descriptor. Examples and descriptions follow below:
  * </p>
- * <!-- END SNIPPET: javadoc --> 
- * 
+ * <!-- END SNIPPET: javadoc -->
+ *
  * @author <a href="nils-helge.garli@bekk.no">Nils-Helge Garli </a>
  * @author Rainer Hermanns
- * 
+ *
  * <p><b>Init parameters</b></p>
  * <!-- START SNIPPET: params -->
  * <table class="confluenceTable">
  * <tr>
- * 	<th class="confluenceTh">Name</th>
+ *  <th class="confluenceTh">Name</th>
  * <th class="confluenceTh">Description</th>
  * <th class="confluenceTh">Default value</th>
  * </tr>
  * <tr>
- * 	<td class="confluenceTd">portletNamespace</td><td class="confluenceTd">The namespace for the portlet in the xwork configuration. This 
- * 		namespace is prepended to all action lookups, and makes it possible to host multiple 
- * 		portlets in the same portlet application. If this parameter is set, the complete namespace 
- * 		will be <tt>/portletNamespace/modeNamespace/actionName</tt></td><td class="confluenceTd">The default namespace</td>
+ *  <td class="confluenceTd">portletNamespace</td><td class="confluenceTd">The namespace for the portlet in the xwork configuration. This
+ *      namespace is prepended to all action lookups, and makes it possible to host multiple
+ *      portlets in the same portlet application. If this parameter is set, the complete namespace
+ *      will be <tt>/portletNamespace/modeNamespace/actionName</tt></td><td class="confluenceTd">The default namespace</td>
  * </tr>
  * <tr>
- *  <td class="confluenceTd">viewNamespace</td><td class="confluenceTd">Base namespace in the xwork configuration for the <tt>view</tt> portlet 
- * 		mode</td><td class="confluenceTd">The default namespace</td>
+ *  <td class="confluenceTd">viewNamespace</td><td class="confluenceTd">Base namespace in the xwork configuration for the <tt>view</tt> portlet
+ *      mode</td><td class="confluenceTd">The default namespace</td>
  * </tr>
  * <tr>
- *  <td class="confluenceTd">editNamespace</td><td class="confluenceTd">Base namespace in the xwork configuration for the <tt>edit</tt> portlet 
- * 		mode</td><td class="confluenceTd">The default namespace</td>
+ *  <td class="confluenceTd">editNamespace</td><td class="confluenceTd">Base namespace in the xwork configuration for the <tt>edit</tt> portlet
+ *      mode</td><td class="confluenceTd">The default namespace</td>
  * </tr>
  * <tr>
- *  <td class="confluenceTd">helpNamespace</td><td class="confluenceTd">Base namespace in the xwork configuration for the <tt>help</tt> portlet 
- * 		mode</td><td class="confluenceTd">The default namespace</td>
+ *  <td class="confluenceTd">helpNamespace</td><td class="confluenceTd">Base namespace in the xwork configuration for the <tt>help</tt> portlet
+ *      mode</td><td class="confluenceTd">The default namespace</td>
  * </tr>
  * <tr>
  *  <td class="confluenceTd">defaultViewAction</td><td class="confluenceTd">Default action to invoke in the <tt>view</tt> portlet mode if no action is
- * 		specified</td><td class="confluenceTd"><tt>default</tt></td>
+ *      specified</td><td class="confluenceTd"><tt>default</tt></td>
  * </tr>
  * <tr>
  *  <td class="confluenceTd">defaultEditAction</td><td class="confluenceTd">Default action to invoke in the <tt>edit</tt> portlet mode if no action is
- * 		specified</td><td class="confluenceTd"><tt>default</tt></td>
+ *      specified</td><td class="confluenceTd"><tt>default</tt></td>
  * </tr>
  * <tr>
  *  <td class="confluenceTd">defaultHelpAction</td><td class="confluenceTd">Default action to invoke in the <tt>help</tt> portlet mode if no action is
- * 		specified</td><td class="confluenceTd"><tt>default</tt></td>
+ *      specified</td><td class="confluenceTd"><tt>default</tt></td>
  * </tr>
  * </table>
  * <!-- END SNIPPET: params -->
  * <p><b>Example:</b></p>
  * <pre>
  * <!-- START SNIPPET: example -->
- * 
+ *
  * &lt;init-param&gt;
  *     &lt;!-- The view mode namespace. Maps to a namespace in the xwork config file --&gt;
  *     &lt;name&gt;viewNamespace&lt;/name&gt;
@@ -126,7 +129,7 @@ import com.opensymphony.xwork2.util.LocalizedTextUtil;
  * &lt;/init-param&gt;
  * &lt;init-param&gt;
  *    &lt;!-- The default action to invoke in view mode --&gt;
- *	  &lt;name&gt;defaultViewAction&lt;/name&gt;
+ *    &lt;name&gt;defaultViewAction&lt;/name&gt;
  *    &lt;value&gt;index&lt;/value&gt;
  * &lt;/init-param&gt;
  * &lt;init-param&gt;
@@ -137,7 +140,7 @@ import com.opensymphony.xwork2.util.LocalizedTextUtil;
  * &lt;init-param&gt;
  *     &lt;!-- The default action to invoke in view mode --&gt;
  *     &lt;name&gt;defaultEditAction&lt;/name&gt;
- *	   &lt;value&gt;index&lt;/value&gt;
+ *     &lt;value&gt;index&lt;/value&gt;
  * &lt;/init-param&gt;
  * &lt;init-param&gt;
  *     &lt;!-- The view mode namespace. Maps to a namespace in the xwork config file --&gt;
@@ -149,7 +152,7 @@ import com.opensymphony.xwork2.util.LocalizedTextUtil;
  *     &lt;name&gt;defaultHelpAction&lt;/name&gt;
  *     &lt;value&gt;index&lt;/value&gt;
  * &lt;/init-param&gt;
- *   
+ *
  * <!-- END SNIPPET: example -->
  * </pre>
  */
@@ -165,7 +168,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
     private Map<PortletMode,ActionMapping> actionMap = new HashMap<PortletMode,ActionMapping>(3);
 
     private String portletNamespace = null;
-    
+
     private Dispatcher dispatcherUtils;
 
     /**
@@ -460,7 +463,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
     /**
      * Returns a Map of all application attributes. Copies all attributes from
      * the {@link PortletActionContext}into an {@link ApplicationMap}.
-     * 
+     *
      * @return a Map of all application attributes.
      */
     protected Map getApplicationMap() {
@@ -472,7 +475,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
      * same as the portlet mode. E.g, view mode is mapped to namespace
      * <code>view</code>, and edit mode is mapped to the namespace
      * <code>edit</code>
-     * 
+     *
      * @param request the PortletRequest object.
      * @return the namespace of the action.
      */
@@ -531,7 +534,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
     /**
      * Returns a Map of all request parameters. This implementation just calls
      * {@link PortletRequest#getParameterMap()}.
-     * 
+     *
      * @param request the PortletRequest object.
      * @return a Map of all request parameters.
      * @throws IOException if an exception occurs while retrieving the parameter
@@ -545,7 +548,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
      * Returns a Map of all request attributes. The default implementation is to
      * wrap the request in a {@link RequestMap}. Override this method to
      * customize how request attributes are mapped.
-     * 
+     *
      * @param request the PortletRequest object.
      * @return a Map of all request attributes.
      */
@@ -557,7 +560,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
      * Returns a Map of all session attributes. The default implementation is to
      * wrap the reqeust in a {@link SessionMap}. Override this method to
      * customize how session attributes are mapped.
-     * 
+     *
      * @param request the PortletRequest object.
      * @return a Map of all session attributes.
      */
@@ -576,7 +579,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
     /**
      * Check to see if the action parameter is valid for the current portlet mode. If the portlet
      * mode has been changed with the portal widgets, the action name is invalid, since the
-     * action name belongs to the previous executing portlet mode. If this method evaluates to 
+     * action name belongs to the previous executing portlet mode. If this method evaluates to
      * <code>true</code> the <code>default&lt;Mode&gt;Action</code> is used instead.
      * @param request The portlet request.
      * @return <code>true</code> if the action should be reset.

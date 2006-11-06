@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.components;
 
@@ -30,29 +33,29 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <p/>
  *
  * <!-- START SNIPPET: javadoc -->
- * 
+ *
  * Note that the doublelistkey and doublelistvalue attribute will default to "key" and "value"
  * respectively only when the doublelist attribute is evaluated to a Map or its decendant.
  * Other thing else, will result in doublelistkey and doublelistvalue to be null and not used.
- * 
+ *
  * <!-- END SNIPPET: javadoc -->
  *
  */
 public abstract class DoubleListUIBean extends ListUIBean {
-	
-	protected String emptyOption;
+
+    protected String emptyOption;
     protected String headerKey;
     protected String headerValue;
     protected String multiple;
     protected String size;
-	
+
     protected String doubleList;
     protected String doubleListKey;
     protected String doubleListValue;
     protected String doubleName;
     protected String doubleValue;
     protected String formName;
-    
+
     protected String doubleId;
     protected String doubleDisabled;
     protected String doubleMultiple;
@@ -60,10 +63,10 @@ public abstract class DoubleListUIBean extends ListUIBean {
     protected String doubleHeaderKey;
     protected String doubleHeaderValue;
     protected String doubleEmptyOption;
-    
+
     protected String doubleCssClass;
     protected String doubleCssStyle;
-    
+
     protected String doubleOnclick;
     protected String doubleOndblclick;
     protected String doubleOnmousedown;
@@ -78,9 +81,9 @@ public abstract class DoubleListUIBean extends ListUIBean {
     protected String doubleOnkeyup;
     protected String doubleOnselect;
     protected String doubleOnchange;
-    
+
     protected String doubleAccesskey;
-    
+
 
     public DoubleListUIBean(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -90,7 +93,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         super.evaluateExtraParams();
 
         //Object doubleName = null;
-        
+
         if (emptyOption != null) {
             addParameter("emptyOption", findValue(emptyOption, Boolean.class));
         }
@@ -107,18 +110,18 @@ public abstract class DoubleListUIBean extends ListUIBean {
             addParameter("headerKey", findString(headerKey));
             addParameter("headerValue", findString(headerValue));
         }
-        
-        
+
+
         if (doubleMultiple != null) {
-        	addParameter("doubleMultiple", findValue(doubleMultiple, Boolean.class));
+            addParameter("doubleMultiple", findValue(doubleMultiple, Boolean.class));
         }
-        
+
         if (doubleSize != null) {
-        	addParameter("doubleSize", findString(doubleSize));
+            addParameter("doubleSize", findString(doubleSize));
         }
-        
+
         if (doubleDisabled != null) {
-        	addParameter("doubleDisabled", findValue(doubleDisabled, Boolean.class));
+            addParameter("doubleDisabled", findValue(doubleDisabled, Boolean.class));
         }
 
         if (doubleName != null) {
@@ -128,14 +131,14 @@ public abstract class DoubleListUIBean extends ListUIBean {
         if (doubleList != null) {
             addParameter("doubleList", doubleList);
         }
-        
+
         Object tmpDoubleList = findValue(doubleList);
         if (doubleListKey != null) {
             addParameter("doubleListKey", doubleListKey);
         }else if (tmpDoubleList instanceof Map) {
-        	addParameter("doubleListKey", "key");
+            addParameter("doubleListKey", "key");
         }
-        
+
         if (doubleListValue != null) {
             if (altSyntax()) {
                 // the same logic as with findValue(String)
@@ -147,7 +150,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
 
             addParameter("doubleListValue", doubleListValue);
         }else if (tmpDoubleList instanceof Map) {
-        	addParameter("doubleListValue", "value");
+            addParameter("doubleListValue", "value");
         }
 
 
@@ -176,7 +179,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
                 addParameter("doubleNameValue", findValue(doubleName.toString()));
             }
         }
-        
+
         Form form = (Form) findAncestor(Form.class);
         if (doubleId != null) {
             // this check is needed for backwards compatibility with 2.1.x
@@ -188,78 +191,78 @@ public abstract class DoubleListUIBean extends ListUIBean {
         } else if (form != null) {
             addParameter("doubleId", form.getParameters().get("id") + "_" +escape(this.doubleName));
         }
-        
+
         if (doubleOnclick != null) {
-        	addParameter("doubleOnclick", findString(doubleOnclick));
+            addParameter("doubleOnclick", findString(doubleOnclick));
         }
-        
+
         if (doubleOndblclick != null) {
-        	addParameter("doubleOndblclick", findString(doubleOndblclick));
+            addParameter("doubleOndblclick", findString(doubleOndblclick));
         }
-        
+
         if (doubleOnmousedown != null) {
-        	addParameter("doubleOnmousedown", findString(doubleOnmousedown));
+            addParameter("doubleOnmousedown", findString(doubleOnmousedown));
         }
-        
+
         if (doubleOnmouseup != null) {
-        	addParameter("doubleOnmouseup", findString(doubleOnmouseup));
+            addParameter("doubleOnmouseup", findString(doubleOnmouseup));
         }
-        
+
         if (doubleOnmouseover != null) {
-        	addParameter("doubleOnmouseover", findString(doubleOnmouseover));
+            addParameter("doubleOnmouseover", findString(doubleOnmouseover));
         }
-        
+
         if (doubleOnmousemove != null) {
-        	addParameter("doubleOnmousemove", findString(doubleOnmousemove));
+            addParameter("doubleOnmousemove", findString(doubleOnmousemove));
         }
-        
+
         if (doubleOnmouseout != null) {
-        	addParameter("doubleOnmouseout", findString(doubleOnmouseout));
+            addParameter("doubleOnmouseout", findString(doubleOnmouseout));
         }
-        
+
         if (doubleOnfocus != null) {
-        	addParameter("doubleOnfocus", findString(doubleOnfocus));
+            addParameter("doubleOnfocus", findString(doubleOnfocus));
         }
-        
+
         if (doubleOnblur != null) {
-        	addParameter("doubleOnblur", findString(doubleOnblur));
+            addParameter("doubleOnblur", findString(doubleOnblur));
         }
-        
+
         if (doubleOnkeypress != null) {
-        	addParameter("doubleOnkeypress", findString(doubleOnkeypress));
+            addParameter("doubleOnkeypress", findString(doubleOnkeypress));
         }
-        
+
         if (doubleOnkeydown != null) {
-        	addParameter("doubleOnkeydown", findString(doubleOnkeydown));
+            addParameter("doubleOnkeydown", findString(doubleOnkeydown));
         }
-        
+
         if (doubleOnselect != null) {
-        	addParameter("doubleOnselect", findString(doubleOnselect));
+            addParameter("doubleOnselect", findString(doubleOnselect));
         }
-        
+
         if (doubleOnchange != null) {
-        	addParameter("doubleOnchange", findString(doubleOnchange));
+            addParameter("doubleOnchange", findString(doubleOnchange));
         }
-        
+
         if (doubleCssClass != null) {
-        	addParameter("doubleCss", findString(doubleCssClass));
+            addParameter("doubleCss", findString(doubleCssClass));
         }
-        
+
         if (doubleCssStyle != null) {
-        	addParameter("doubleStyle", findString(doubleCssStyle));
+            addParameter("doubleStyle", findString(doubleCssStyle));
         }
-        
+
         if (doubleHeaderKey != null && doubleHeaderValue != null) {
-        	addParameter("doubleHeaderKey", findString(doubleHeaderKey));
-        	addParameter("doubleHeaderValue", findString(doubleHeaderValue));
+            addParameter("doubleHeaderKey", findString(doubleHeaderKey));
+            addParameter("doubleHeaderValue", findString(doubleHeaderValue));
         }
-        
+
         if (doubleEmptyOption != null) {
-        	addParameter("doubleEmptyOption", findValue(doubleEmptyOption, Boolean.class));
+            addParameter("doubleEmptyOption", findValue(doubleEmptyOption, Boolean.class));
         }
-        
+
         if (doubleAccesskey != null) {
-        	addParameter("doubleAccesskey", findString(doubleAccesskey));
+            addParameter("doubleAccesskey", findString(doubleAccesskey));
         }
     }
 
@@ -310,57 +313,57 @@ public abstract class DoubleListUIBean extends ListUIBean {
     public void setFormName(String formName) {
         this.formName = formName;
     }
-    
+
     public String getFormName() {
-    	return formName;
+        return formName;
     }
-    
+
     /**
      * The css class for the second list
      * @s.tagattribute required="false"
      */
     public void setDoubleCssClass(String doubleCssClass) {
-    	this.doubleCssClass = doubleCssClass;
+        this.doubleCssClass = doubleCssClass;
     }
-    
+
     public String getDoubleCssClass() {
-    	return doubleCssClass;
+        return doubleCssClass;
     }
-    
+
     /**
      * The css style for the second list
      * @s.tagattribute required="false"
      */
     public void setDoubleCssStyle(String doubleCssStyle) {
-    	this.doubleCssStyle = doubleCssStyle;
+        this.doubleCssStyle = doubleCssStyle;
     }
-    
+
     public String getDoubleCssStyle() {
-    	return doubleCssStyle;
+        return doubleCssStyle;
     }
-    
+
     /**
      * The header key for the second list
      * @s.tagattribute required="false"
      */
     public void setDoubleHeaderKey(String doubleHeaderKey) {
-    	this.doubleHeaderKey = doubleHeaderKey;
+        this.doubleHeaderKey = doubleHeaderKey;
     }
-    
+
     public String getDoubleHeaderKey() {
-    	return doubleHeaderKey;
+        return doubleHeaderKey;
     }
-    
+
     /**
      * The header value for the second list
      * @s.tagattribute required="false"
      */
     public void setDoubleHeaderValue(String doubleHeaderValue) {
-    	this.doubleHeaderValue = doubleHeaderValue;
+        this.doubleHeaderValue = doubleHeaderValue;
     }
-    
+
     public String getDoubleHeaderValue() {
-    	return doubleHeaderValue;
+        return doubleHeaderValue;
     }
 
     /**
@@ -368,255 +371,255 @@ public abstract class DoubleListUIBean extends ListUIBean {
      * @s.tagattribute required="false"
      */
     public void setDoubleEmptyOption(String doubleEmptyOption) {
-    	this.doubleEmptyOption = doubleEmptyOption;
+        this.doubleEmptyOption = doubleEmptyOption;
     }
-    
+
     public String getDoubleEmptyOption() {
-    	return this.doubleEmptyOption;
+        return this.doubleEmptyOption;
     }
 
-    
-	public String getDoubleDisabled() {
-		return doubleDisabled;
-	}
 
-	/**
+    public String getDoubleDisabled() {
+        return doubleDisabled;
+    }
+
+    /**
      * Decides if a disable attribute should be added to the second list
      * @s.tagattribute required="false"
      */
-	public void setDoubleDisabled(String doubleDisabled) {
-		this.doubleDisabled = doubleDisabled;
-	}
+    public void setDoubleDisabled(String doubleDisabled) {
+        this.doubleDisabled = doubleDisabled;
+    }
 
-	public String getDoubleId() {
-		return doubleId;
-	}
+    public String getDoubleId() {
+        return doubleId;
+    }
 
-	/**
+    /**
      * The id of the second list
      * @s.tagattribute required="false"
      */
-	public void setDoubleId(String doubleId) {
-		this.doubleId = doubleId;
-	}
+    public void setDoubleId(String doubleId) {
+        this.doubleId = doubleId;
+    }
 
-	public String getDoubleMultiple() {
-		return doubleMultiple;
-	}
+    public String getDoubleMultiple() {
+        return doubleMultiple;
+    }
 
-	/**
+    /**
      * Decides if multiple attribute should be set on the second list
      * @s.tagattribute required="false"
      */
-	public void setDoubleMultiple(String doubleMultiple) {
-		this.doubleMultiple = doubleMultiple;
-	}
+    public void setDoubleMultiple(String doubleMultiple) {
+        this.doubleMultiple = doubleMultiple;
+    }
 
-	public String getDoubleOnblur() {
-		return doubleOnblur;
-	}
+    public String getDoubleOnblur() {
+        return doubleOnblur;
+    }
 
-	/**
+    /**
      * Set the onblur attribute of the second list
      * @s.tagattribute required="false"
      */
-	public void setDoubleOnblur(String doubleOnblur) {
-		this.doubleOnblur = doubleOnblur;
-	}
+    public void setDoubleOnblur(String doubleOnblur) {
+        this.doubleOnblur = doubleOnblur;
+    }
 
-	public String getDoubleOnchange() {
-		return doubleOnchange;
-	}
+    public String getDoubleOnchange() {
+        return doubleOnchange;
+    }
 
-	/**
+    /**
      * Set the onchange attribute of the second list
      * @s.tagattribute required="false"
      */
-	public void setDoubleOnchange(String doubleOnchange) {
-		this.doubleOnchange = doubleOnchange;
-	}
+    public void setDoubleOnchange(String doubleOnchange) {
+        this.doubleOnchange = doubleOnchange;
+    }
 
-	public String getDoubleOnclick() {
-		return doubleOnclick;
-	}
+    public String getDoubleOnclick() {
+        return doubleOnclick;
+    }
 
-	/**
+    /**
      * Set the onclick attribute of the second list
      * @s.tagattribute required="false"
      */
-	public void setDoubleOnclick(String doubleOnclick) {
-		this.doubleOnclick = doubleOnclick;
-	}
+    public void setDoubleOnclick(String doubleOnclick) {
+        this.doubleOnclick = doubleOnclick;
+    }
 
-	public String getDoubleOndblclick() {
-		return doubleOndblclick;
-	}
+    public String getDoubleOndblclick() {
+        return doubleOndblclick;
+    }
 
-	/**
+    /**
      * Set the ondbclick attribute of the second list
      * @s.tagattribute required="false"
      */
-	public void setDoubleOndblclick(String doubleOndblclick) {
-		this.doubleOndblclick = doubleOndblclick;
-	}
+    public void setDoubleOndblclick(String doubleOndblclick) {
+        this.doubleOndblclick = doubleOndblclick;
+    }
 
-	public String getDoubleOnfocus() {
-		return doubleOnfocus;
-	}
+    public String getDoubleOnfocus() {
+        return doubleOnfocus;
+    }
 
-	/**
+    /**
      * Set the onfocus attribute of the second list
      * @s.tagattribute required="false"
      */
-	public void setDoubleOnfocus(String doubleOnfocus) {
-		this.doubleOnfocus = doubleOnfocus;
-	}
+    public void setDoubleOnfocus(String doubleOnfocus) {
+        this.doubleOnfocus = doubleOnfocus;
+    }
 
-	public String getDoubleOnkeydown() {
-		return doubleOnkeydown;
-	}
+    public String getDoubleOnkeydown() {
+        return doubleOnkeydown;
+    }
 
-	/**
+    /**
      * Set the onkeydown attribute of the second list
      * @s.tagattribute required="false"
      */
-	public void setDoubleOnkeydown(String doubleOnkeydown) {
-		this.doubleOnkeydown = doubleOnkeydown;
-	}
+    public void setDoubleOnkeydown(String doubleOnkeydown) {
+        this.doubleOnkeydown = doubleOnkeydown;
+    }
 
-	public String getDoubleOnkeypress() {
-		return doubleOnkeypress;
-	}
+    public String getDoubleOnkeypress() {
+        return doubleOnkeypress;
+    }
 
-	/**
+    /**
      * Set the onkeypress attribute of the second list
      * @s.tagattribute required="false"
      */
-	public void setDoubleOnkeypress(String doubleOnkeypress) {
-		this.doubleOnkeypress = doubleOnkeypress;
-	}
+    public void setDoubleOnkeypress(String doubleOnkeypress) {
+        this.doubleOnkeypress = doubleOnkeypress;
+    }
 
-	public String getDoubleOnkeyup() {
-		return doubleOnkeyup;
-	}
+    public String getDoubleOnkeyup() {
+        return doubleOnkeyup;
+    }
 
-	/**
+    /**
      * Set the onkeyup attribute of the second list
      * @s.tagattribute required="false"
      */
-	public void setDoubleOnkeyup(String doubleOnkeyup) {
-		this.doubleOnkeyup = doubleOnkeyup;
-	}
+    public void setDoubleOnkeyup(String doubleOnkeyup) {
+        this.doubleOnkeyup = doubleOnkeyup;
+    }
 
-	public String getDoubleOnmousedown() {
-		return doubleOnmousedown;
-	}
+    public String getDoubleOnmousedown() {
+        return doubleOnmousedown;
+    }
 
-	/**
+    /**
      * Set the onmousedown attribute of the second list
      * @s.tagattribute required="false"
      */
-	public void setDoubleOnmousedown(String doubleOnmousedown) {
-		this.doubleOnmousedown = doubleOnmousedown;
-	}
+    public void setDoubleOnmousedown(String doubleOnmousedown) {
+        this.doubleOnmousedown = doubleOnmousedown;
+    }
 
-	public String getDoubleOnmousemove() {
-		return doubleOnmousemove;
-	}
+    public String getDoubleOnmousemove() {
+        return doubleOnmousemove;
+    }
 
-	/**
+    /**
      * Set the onmousemove attribute of the second list
      * @s.tagattribute required="false"
      */
-	public void setDoubleOnmousemove(String doubleOnmousemove) {
-		this.doubleOnmousemove = doubleOnmousemove;
-	}
+    public void setDoubleOnmousemove(String doubleOnmousemove) {
+        this.doubleOnmousemove = doubleOnmousemove;
+    }
 
-	public String getDoubleOnmouseout() {
-		return doubleOnmouseout;
-	}
+    public String getDoubleOnmouseout() {
+        return doubleOnmouseout;
+    }
 
-	/**
+    /**
      * Set the onmouseout attribute of the second list
      * @s.tagattribute required="false"
      */
-	public void setDoubleOnmouseout(String doubleOnmouseout) {
-		this.doubleOnmouseout = doubleOnmouseout;
-	}
+    public void setDoubleOnmouseout(String doubleOnmouseout) {
+        this.doubleOnmouseout = doubleOnmouseout;
+    }
 
-	public String getDoubleOnmouseover() {
-		return doubleOnmouseover;
-	}
+    public String getDoubleOnmouseover() {
+        return doubleOnmouseover;
+    }
 
-	/**
+    /**
      * Set the onmouseover attribute of the second list
      * @s.tagattribute required="false"
      */
-	public void setDoubleOnmouseover(String doubleOnmouseover) {
-		this.doubleOnmouseover = doubleOnmouseover;
-	}
+    public void setDoubleOnmouseover(String doubleOnmouseover) {
+        this.doubleOnmouseover = doubleOnmouseover;
+    }
 
-	public String getDoubleOnmouseup() {
-		return doubleOnmouseup;
-	}
+    public String getDoubleOnmouseup() {
+        return doubleOnmouseup;
+    }
 
-	/**
+    /**
      * Set the onmouseup attribute of the second list
      * @s.tagattribute required="false"
      */
-	public void setDoubleOnmouseup(String doubleOnmouseup) {
-		this.doubleOnmouseup = doubleOnmouseup;
-	}
+    public void setDoubleOnmouseup(String doubleOnmouseup) {
+        this.doubleOnmouseup = doubleOnmouseup;
+    }
 
-	public String getDoubleOnselect() {
-		return doubleOnselect;
-	}
+    public String getDoubleOnselect() {
+        return doubleOnselect;
+    }
 
-	/**
+    /**
      * Set the onselect attribute of the second list
      * @s.tagattribute required="false"
      */
-	public void setDoubleOnselect(String doubleOnselect) {
-		this.doubleOnselect = doubleOnselect;
-	}
+    public void setDoubleOnselect(String doubleOnselect) {
+        this.doubleOnselect = doubleOnselect;
+    }
 
-	public String getDoubleSize() {
-		return doubleSize;
-	}
+    public String getDoubleSize() {
+        return doubleSize;
+    }
 
-	/**
+    /**
      * Set the size attribute of the second list
      * @s.tagattribute required="false"
      */
-	public void setDoubleSize(String doubleSize) {
-		this.doubleSize = doubleSize;
-	}
+    public void setDoubleSize(String doubleSize) {
+        this.doubleSize = doubleSize;
+    }
 
-	public String getDoubleList() {
-		return doubleList;
-	}
+    public String getDoubleList() {
+        return doubleList;
+    }
 
-	/**
+    /**
      * Set the list key of the second attribute
      * @s.tagattribute required="false"
      */
-	public String getDoubleListKey() {
-		return doubleListKey;
-	}
+    public String getDoubleListKey() {
+        return doubleListKey;
+    }
 
-	public String getDoubleListValue() {
-		return doubleListValue;
-	}
+    public String getDoubleListValue() {
+        return doubleListValue;
+    }
 
-	public String getDoubleName() {
-		return doubleName;
-	}
+    public String getDoubleName() {
+        return doubleName;
+    }
 
-	public String getDoubleValue() {
-		return doubleValue;
-	}
-	
-	/**
+    public String getDoubleValue() {
+        return doubleValue;
+    }
+
+    /**
      * Decides of an empty option is to be inserted in the second list
      * @s.tagattribute required="false" default="false" type="Boolean"
      */
@@ -656,12 +659,12 @@ public abstract class DoubleListUIBean extends ListUIBean {
     public void setSize(String size) {
         this.size = size;
     }
-    
+
     /**
      * Set the html accesskey attribute.
      * @s.tagattribute required="false"
      */
     public void setDoubleAccesskey(String doubleAccesskey) {
-    	this.doubleAccesskey = doubleAccesskey;
+        this.doubleAccesskey = doubleAccesskey;
     }
 }

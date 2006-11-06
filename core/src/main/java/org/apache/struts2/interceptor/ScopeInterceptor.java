@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.interceptor;
 
@@ -135,9 +138,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 public class ScopeInterceptor extends AbstractInterceptor implements PreResultListener {
 
-	private static final long serialVersionUID = 9120762699600054395L;
+    private static final long serialVersionUID = 9120762699600054395L;
 
-	private static final Log LOG = LogFactory.getLog(ScopeInterceptor.class);
+    private static final Log LOG = LogFactory.getLog(ScopeInterceptor.class);
 
     private String[] application = null;
     private String[] session = null;
@@ -149,7 +152,7 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
 
     /**
      * Sets a list of application scoped properties
-     * 
+     *
      * @param s A comma-delimited list
      */
     public void setApplication(String s) {
@@ -160,7 +163,7 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
 
     /**
      * Sets a list of session scoped properties
-     * 
+     *
      * @param s A comma-delimited list
      */
     public void setSession(String s) {
@@ -171,7 +174,7 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
 
     /**
      * Sets if the session should be automatically created
-     * 
+     *
      * @param value True if it should be created
      */
     public void setAutoCreateSession(String value) {
@@ -373,14 +376,14 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
 
     /**
      * @return The type of scope operation, "start" or "end"
-     */      
+     */
     public String getType() {
         return type;
     }
 
     /**
      * Sets the type of scope operation
-     * 
+     *
      * @param type Either "start" or "end"
      */
     public void setType(String type) {

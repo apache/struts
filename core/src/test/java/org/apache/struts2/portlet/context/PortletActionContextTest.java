@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.portlet.context;
 
@@ -37,23 +40,23 @@ import com.opensymphony.xwork2.ActionContext;
 /**
  */
 public class PortletActionContextTest extends MockObjectTestCase {
-    
+
     Mock mockRenderRequest;
     Mock mockRenderResponse;
     Mock mockPortletConfig;
     Mock mockActionRequest;
     Mock mockActionResponse;
-    
+
     RenderRequest renderRequest;
     RenderResponse renderResponse;
-    
+
     ActionRequest actionRequest;
     ActionResponse actionResponse;
-    
+
     PortletConfig portletConfig;
-    
+
     Map context = new HashMap();
-    
+
     public void setUp() throws Exception {
         super.setUp();
         mockRenderRequest = mock(RenderRequest.class);
@@ -61,42 +64,42 @@ public class PortletActionContextTest extends MockObjectTestCase {
         mockActionRequest = mock(ActionRequest.class);
         mockActionResponse = mock(ActionResponse.class);
         mockPortletConfig = mock(PortletConfig.class);
-        
+
         renderRequest = (RenderRequest)mockRenderRequest.proxy();
         renderResponse = (RenderResponse)mockRenderResponse.proxy();
         actionRequest = (ActionRequest)mockActionRequest.proxy();
         actionResponse = (ActionResponse)mockActionResponse.proxy();
         portletConfig = (PortletConfig)mockPortletConfig.proxy();
-        
-        
+
+
         ActionContext.setContext(new ActionContext(context));
     }
-    
+
     public void testGetPhase() {
         context.put(PortletActionConstants.PHASE, PortletActionConstants.RENDER_PHASE);
-        
+
         assertEquals(PortletActionConstants.RENDER_PHASE, PortletActionContext.getPhase());
     }
-    
+
     public void testIsRender() {
         context.put(PortletActionConstants.PHASE, PortletActionConstants.RENDER_PHASE);
-        
+
         assertTrue(PortletActionContext.isRender());
         assertFalse(PortletActionContext.isEvent());
     }
-    
+
     public void testIsEvent() {
         context.put(PortletActionConstants.PHASE, PortletActionConstants.EVENT_PHASE);
-        
+
         assertTrue(PortletActionContext.isEvent());
         assertFalse(PortletActionContext.isRender());
     }
-    
+
     public void testGetPortletConfig() {
         context.put(PortletActionConstants.PORTLET_CONFIG, portletConfig);
         assertSame(portletConfig, PortletActionContext.getPortletConfig());
     }
-    
+
     public void testGetRenderRequestAndResponse() {
         context.put(PortletActionConstants.REQUEST, renderRequest);
         context.put(PortletActionConstants.RESPONSE, renderResponse);
@@ -106,7 +109,7 @@ public class PortletActionContextTest extends MockObjectTestCase {
         assertSame(renderRequest, PortletActionContext.getRequest());
         assertSame(renderResponse, PortletActionContext.getResponse());
     }
-    
+
     public void testGetRenderRequestAndResponseInEventPhase() {
         context.put(PortletActionConstants.REQUEST, renderRequest);
         context.put(PortletActionConstants.RESPONSE, renderResponse);
@@ -126,7 +129,7 @@ public class PortletActionContextTest extends MockObjectTestCase {
             assertTrue(true);
         }
     }
-    
+
     public void testGetActionRequestAndResponse() {
         context.put(PortletActionConstants.REQUEST, actionRequest);
         context.put(PortletActionConstants.RESPONSE, actionResponse);
@@ -136,7 +139,7 @@ public class PortletActionContextTest extends MockObjectTestCase {
         assertSame(actionRequest, PortletActionContext.getRequest());
         assertSame(actionResponse, PortletActionContext.getResponse());
     }
-    
+
     public void testGetActionRequestAndResponseInRenderPhase() {
         context.put(PortletActionConstants.REQUEST, actionRequest);
         context.put(PortletActionConstants.RESPONSE, actionResponse);
@@ -156,22 +159,22 @@ public class PortletActionContextTest extends MockObjectTestCase {
             assertTrue(true);
         }
     }
-    
+
     public void testGetNamespace() {
         context.put(PortletActionConstants.PORTLET_NAMESPACE, "testNamespace");
         assertEquals("testNamespace", PortletActionContext.getPortletNamespace());
     }
-    
+
     public void testGetDefaultActionForMode() {
         context.put(PortletActionConstants.DEFAULT_ACTION_FOR_MODE, "testAction");
         assertEquals("testAction", PortletActionContext.getDefaultActionForMode());
     }
-    
+
     public void tearDown() throws Exception {
         ActionContext.setContext(null);
         super.tearDown();
     }
-    
+
     public static void main(String[] args) {
         TestRunner.run(PortletActionContextTest.class);
     }

@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.dispatcher;
 
@@ -47,7 +50,7 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
  * passed because they are part of the config param for this particular result.
  *
  * <ul>
- * 	<li>actionName</li>
+ *  <li>actionName</li>
  *  <li>namespace</li>
  *  <li>method</li>
  *  <li>encode</li>
@@ -101,14 +104,14 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
  * &lt;/package&gt;
  *
  * &lt;package name="passingRequestParameters" extends="struts-default" namespace="/passingRequestParameters"&gt;
- * 	  &lt;-- Pass parameters (reportType, width and height) --&gt;
+ *    &lt;-- Pass parameters (reportType, width and height) --&gt;
  *    &lt;!--
  *    The redirect-action url generated will be :
  *    /genReport/generateReport.action?reportType=pie&width=100&height=100
  *    --&gt;
  *    &lt;action name="gatherReportInfo" class="..."&gt;
  *       &lt;result name="showReportResult" type="redirect-action"&gt;
- *       	&lt;param name="actionName"&gt;generateReport&lt;/param&gt;
+ *          &lt;param name="actionName"&gt;generateReport&lt;/param&gt;
  *          &lt;param name="namespace"&gt;/genReport&lt;/param&gt;
  *          &lt;param name="reportType"&gt;pie&lt;/param&gt;
  *          &lt;param name="width"&gt;100&lt;/param&gt;
@@ -124,39 +127,39 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
  */
 public class ServletActionRedirectResult extends ServletRedirectResult {
 
-	private static final long serialVersionUID = -9042425229314584066L;
+    private static final long serialVersionUID = -9042425229314584066L;
 
     /** The default parameter */
-	public static final String DEFAULT_PARAM = "actionName";
+    public static final String DEFAULT_PARAM = "actionName";
 
     protected String actionName;
     protected String namespace;
     protected String method;
-    
+
     private Map<String, String> requestParameters = new HashMap<String, String>();
 
     public ServletActionRedirectResult() {
-    	super();
+        super();
     }
-    
+
     public ServletActionRedirectResult(String actionName) {
-    	this(null, actionName, null);
+        this(null, actionName, null);
     }
-    
+
     public ServletActionRedirectResult(String actionName, String method) {
-    	this(null, actionName, method);
+        this(null, actionName, method);
     }
-    
-	public ServletActionRedirectResult(String namespace, String actionName, String method) {
-		super(null);
-		this.namespace = namespace;
-		this.actionName = actionName;
-		this.method = method;
-	}
-    
+
+    public ServletActionRedirectResult(String namespace, String actionName, String method) {
+        super(null);
+        this.namespace = namespace;
+        this.actionName = actionName;
+        this.method = method;
+    }
+
     protected List<String> prohibitedResultParam = Arrays.asList(new String[] {
-    		DEFAULT_PARAM, "namespace", "method", "encode", "parse", "location",
-    		"prependServletContext" });
+            DEFAULT_PARAM, "namespace", "method", "encode", "parse", "location",
+            "prependServletContext" });
 
     /**
      * @see com.opensymphony.xwork2.Result#execute(com.opensymphony.xwork2.ActionInvocation)
@@ -169,25 +172,25 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
             namespace = conditionalParse(namespace, invocation);
         }
         if (method == null) {
-        	method = "";
+            method = "";
         }
         else {
-        	method = conditionalParse(method, invocation);
+            method = conditionalParse(method, invocation);
         }
 
         String resultCode = invocation.getResultCode();
         if (resultCode != null) {
-	        ResultConfig resultConfig = invocation.getProxy().getConfig().getResults().get(
-	        		resultCode);
-	        Map resultConfigParams = resultConfig.getParams();
-	        for (Iterator i = resultConfigParams.entrySet().iterator(); i.hasNext(); ) {
-	        	Map.Entry e = (Map.Entry) i.next();
-	        	if (! prohibitedResultParam.contains(e.getKey())) {
-	        		requestParameters.put(e.getKey().toString(),
-	        				e.getValue() == null ? "":
-	        					conditionalParse(e.getValue().toString(), invocation));
-	        	}
-	        }
+            ResultConfig resultConfig = invocation.getProxy().getConfig().getResults().get(
+                    resultCode);
+            Map resultConfigParams = resultConfig.getParams();
+            for (Iterator i = resultConfigParams.entrySet().iterator(); i.hasNext(); ) {
+                Map.Entry e = (Map.Entry) i.next();
+                if (! prohibitedResultParam.contains(e.getKey())) {
+                    requestParameters.put(e.getKey().toString(),
+                            e.getValue() == null ? "":
+                                conditionalParse(e.getValue().toString(), invocation));
+                }
+            }
         }
 
         ActionMapper mapper = ActionMapperFactory.getMapper();
@@ -223,18 +226,18 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
      * @param method The method
      */
     public void setMethod(String method) {
-    	this.method = method;
+        this.method = method;
     }
-    
+
     /**
      * Adds a request parameter to be added to the redirect url
-     * 
+     *
      * @param key The parameter name
      * @param value The parameter value
      */
     public ServletActionRedirectResult addParameter(String key, Object value) {
-    	requestParameters.put(key, String.valueOf(value));
-    	return this;
+        requestParameters.put(key, String.valueOf(value));
+        return this;
     }
 
 }

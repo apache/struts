@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.portlet.dispatcher;
 
@@ -54,10 +57,10 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  * Jsr168DispatcherTest. Insert description.
- * 
+ *
  */
 public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletActionConstants {
- 
+
     Jsr168Dispatcher dispatcher = null;
     Mock mockConfig = null;
     Mock mockCtx = null;
@@ -67,11 +70,11 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
     Mock mockActionProxy = null;
     Mock mockAction = null;
     Mock mockInvocation = null;
-    
+
     public void setUp() {
         dispatcher = new Jsr168Dispatcher();
     }
-    
+
     private void initPortletConfig(final Map initParams, final Map attributes) {
         mockConfig = mock(PortletConfig.class);
         mockCtx = mock(PortletContext.class);
@@ -82,7 +85,7 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         mockConfig.stubs().method("getPortletContext").will(returnValue(mockCtx.proxy()));
         mockCtx.stubs().method("getInitParameterNames").will(returnValue(Collections.enumeration(initParams.keySet())));
         setupStub(initParams, mockCtx, "getInitParameter");
-        
+
         mockConfig.stubs().method("getResourceBundle").will(returnValue(new ListResourceBundle() {
             protected Object[][] getContents() {
                 return new String[][]{{"javax.portlet.title", "MyTitle"}};
@@ -97,13 +100,13 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         mockAction = mock(Action.class);
         mockActionProxy = mock(ActionProxy.class);
         mockInvocation = mock(ActionInvocation.class);
-        
+
         mockActionFactory.expects(once()).method("createActionProxy").with(new Constraint[]{isA(Configuration.class), eq(namespace), eq(actionName), isA(Map.class)}).will(returnValue(mockActionProxy.proxy()));
         mockActionProxy.stubs().method("getAction").will(returnValue(mockAction.proxy()));
         mockActionProxy.expects(once()).method("execute").will(returnValue(result));
         mockActionProxy.expects(once()).method("getInvocation").will(returnValue(mockInvocation.proxy()));
         mockInvocation.stubs().method("getStack").will(returnValue(stack));
-    	
+
     }
 
     public void testRender_ok() {
@@ -119,11 +122,11 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         requestParams.put(PortletActionConstants.ACTION_PARAM, new String[]{"/view/testAction"});
         requestParams.put(EVENT_ACTION, new String[]{"true"});
         requestParams.put(PortletActionConstants.MODE_PARAM, new String[]{mode.toString()});
-        
+
         Map sessionMap = new HashMap();
-        
-        
-        
+
+
+
         Map initParams = new HashMap();
         initParams.put("viewNamespace", "/view");
 
@@ -153,11 +156,11 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         PortletMode mode = PortletMode.VIEW;
         Map initParams = new HashMap();
         initParams.put("viewNamespace", "/view");
-        
+
         Map requestParams = new HashMap();
         requestParams.put(PortletActionConstants.ACTION_PARAM, new String[]{"/view/testAction"});
         requestParams.put(PortletActionConstants.MODE_PARAM, new String[]{mode.toString()});
-        
+
         initPortletConfig(initParams, new HashMap());
         initRequest(requestParams, new HashMap(), new HashMap(), new HashMap(), PortletMode.VIEW, WindowState.NORMAL, true, null);
         setupActionFactory("/view", "testAction", "success", ValueStackFactory.getFactory().createValueStack());
@@ -184,7 +187,7 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
             fail("Error occured");
         }
     }
-    
+
     /**
      * Initialize the mock request (and as a result, the mock session)
      * @param requestParams The request parameters
@@ -197,28 +200,28 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
      * @param locale The locale. If <code>null</code>, the request will return <code>Locale.getDefault()</code>
      */
     private void initRequest(Map requestParams, Map requestAttributes, Map sessionParams, Map renderParams, PortletMode mode, WindowState state, boolean isEvent, Locale locale) {
-    	mockRequest = isEvent ? mock(ActionRequest.class) : mock(RenderRequest.class);
-    	mockSession = mock(PortletSession.class);
-    	mockSession.stubs().method(ANYTHING);
-    	mockRequest.stubs().method(ANYTHING);
-    	setupStub(sessionParams, mockSession, "getAttribute");
-    	mockSession.stubs().method("getAttributeNames").will(returnValue(Collections.enumeration(sessionParams.keySet())));
-    	setupParamStub(requestParams, mockRequest, "getParameter");
-    	setupStub(requestAttributes, mockRequest, "getAttribute");
-    	mockRequest.stubs().method("getAttributeNames").will(returnValue(Collections.enumeration(requestAttributes.keySet())));
-    	mockRequest.stubs().method("getParameterMap").will(returnValue(requestParams));
-    	mockRequest.stubs().method("getParameterNames").will(returnValue(Collections.enumeration(requestParams.keySet())));
-    	mockRequest.stubs().method("getPortletSession").will(returnValue(mockSession.proxy()));
-    	if(locale != null) {
-    		mockRequest.stubs().method("getLocale").will(returnValue(locale));
-    	}
-    	else {
-    		mockRequest.stubs().method("getLocale").will(returnValue(Locale.getDefault()));
-    	}
-    	mockRequest.stubs().method("getPortletMode").will(returnValue(mode));
-    	mockRequest.stubs().method("getWindowState").will(returnValue(state));
+        mockRequest = isEvent ? mock(ActionRequest.class) : mock(RenderRequest.class);
+        mockSession = mock(PortletSession.class);
+        mockSession.stubs().method(ANYTHING);
+        mockRequest.stubs().method(ANYTHING);
+        setupStub(sessionParams, mockSession, "getAttribute");
+        mockSession.stubs().method("getAttributeNames").will(returnValue(Collections.enumeration(sessionParams.keySet())));
+        setupParamStub(requestParams, mockRequest, "getParameter");
+        setupStub(requestAttributes, mockRequest, "getAttribute");
+        mockRequest.stubs().method("getAttributeNames").will(returnValue(Collections.enumeration(requestAttributes.keySet())));
+        mockRequest.stubs().method("getParameterMap").will(returnValue(requestParams));
+        mockRequest.stubs().method("getParameterNames").will(returnValue(Collections.enumeration(requestParams.keySet())));
+        mockRequest.stubs().method("getPortletSession").will(returnValue(mockSession.proxy()));
+        if(locale != null) {
+            mockRequest.stubs().method("getLocale").will(returnValue(locale));
+        }
+        else {
+            mockRequest.stubs().method("getLocale").will(returnValue(Locale.getDefault()));
+        }
+        mockRequest.stubs().method("getPortletMode").will(returnValue(mode));
+        mockRequest.stubs().method("getWindowState").will(returnValue(state));
     }
-    
+
     /**
      * @param requestParams
      * @param mockRequest2
@@ -233,26 +236,26 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
             newMap.put(key, val[0]);
         }
         setupStub(newMap, mockRequest, method);
-        
+
     }
 
     /**
      * Set up stubs for the mock.
-     * @param map The map containing the <code>key</code> and <code>values</code>. The key is the 
+     * @param map The map containing the <code>key</code> and <code>values</code>. The key is the
      * expected parameter to <code>method</code>, and value is the value that should be returned from
      * the stub.
      * @param mock The mock to initialize.
      * @param method The name of the method to stub.
      */
     private void setupStub(Map map, Mock mock, String method) {
-    	Iterator it = map.keySet().iterator();
-    	while(it.hasNext()) {
-    		Object key = it.next();
-    		Object val = map.get(key);
-    		mock.stubs().method(method).with(eq(key)).will(returnValue(val));
-    	}
+        Iterator it = map.keySet().iterator();
+        while(it.hasNext()) {
+            Object key = it.next();
+            Object val = map.get(key);
+            mock.stubs().method(method).with(eq(key)).will(returnValue(val));
+        }
     }
-    
+
     public void testModeChangeUsingPortletWidgets() {
         final Mock mockResponse = mock(RenderResponse.class);
         mockResponse.stubs().method(ANYTHING);
@@ -262,9 +265,9 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         requestParams.put(PortletActionConstants.ACTION_PARAM, new String[]{"/view/testAction"});
         requestParams.put(EVENT_ACTION, new String[]{"false"});
         requestParams.put(PortletActionConstants.MODE_PARAM, new String[]{PortletMode.VIEW.toString()});
-        
+
         Map sessionMap = new HashMap();
-        
+
         Map initParams = new HashMap();
         initParams.put("viewNamespace", "/view");
         initParams.put("editNamespace", "/edit");
@@ -288,9 +291,9 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
             fail("Error occured");
         }
     }
-    
+
     public static void main(String[] args) {
-    	TestRunner.run(Jsr168DispatcherTest.class);
+        TestRunner.run(Jsr168DispatcherTest.class);
     }
 
 }

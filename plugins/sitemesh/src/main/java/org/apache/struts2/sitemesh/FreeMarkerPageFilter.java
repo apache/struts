@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.sitemesh;
 
@@ -43,9 +46,9 @@ import freemarker.template.Template;
 
 /**
  *  Applies FreeMarker-based sitemesh decorators.
- *  
+ *
  *  <!-- START SNIPPET: javadoc -->
- *  
+ *
  *  The following variables are available to the decorating freemarker page :-
  *  <ul>
  *      <li>${title}           - content of &lt;title&gt; tag in the decorated page</li>
@@ -96,9 +99,9 @@ import freemarker.template.Template;
  *          <td>tm_jee</td>
  *      </tr>
  *  </table>
- *  
+ *
  *  <!-- END SNIPPET: javadoc -->
- *  
+ *
  *  @version $Date$ $Id$
  */
 public class FreeMarkerPageFilter extends TemplatePageFilter {
@@ -106,7 +109,7 @@ public class FreeMarkerPageFilter extends TemplatePageFilter {
 
     /**
      *  Applies the decorator, using the relevent contexts
-     * 
+     *
      * @param page The page
      * @param decorator The decorator
      * @param req The servlet request
@@ -118,11 +121,11 @@ public class FreeMarkerPageFilter extends TemplatePageFilter {
                                   HttpServletRequest req, HttpServletResponse res,
                                   ServletContext servletContext, ActionContext ctx)
             throws ServletException, IOException {
-    	
-    	String timerKey = "FreemarkerPageFilter_applyDecorator: ";
+
+        String timerKey = "FreemarkerPageFilter_applyDecorator: ";
         try {
-        	UtilTimerStack.push(timerKey);
-        	
+            UtilTimerStack.push(timerKey);
+
             FreemarkerManager fmm = FreemarkerManager.getInstance();
 
             // get the configuration and template
@@ -150,10 +153,10 @@ public class FreeMarkerPageFilter extends TemplatePageFilter {
             throw new ServletException(msg, e);
         }
         finally {
-        	UtilTimerStack.pop(timerKey);
+            UtilTimerStack.pop(timerKey);
         }
     }
-    
+
     /**
      * Returns the locale used for the {@link Configuration#getTemplate(String, Locale)} call. The base implementation
      * simply returns the locale setting of the action (assuming the action implements {@link LocaleProvider}) or, if
@@ -166,5 +169,5 @@ public class FreeMarkerPageFilter extends TemplatePageFilter {
             return configuration.getLocale();
         }
     }
- 
+
 }

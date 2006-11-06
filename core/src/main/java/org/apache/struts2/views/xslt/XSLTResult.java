@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.views.xslt;
 
@@ -51,7 +54,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  * <!-- START SNIPPET: description -->
  *
- * XSLTResult uses XSLT to transform action object to XML. Recent version has 
+ * XSLTResult uses XSLT to transform action object to XML. Recent version has
  * been specifically modified to deal with Xalan flaws. When using Xalan you may
  * notice that even though you have very minimal stylesheet like this one
  * <pre>
@@ -70,7 +73,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * them all. It's becouse current Xalan eagerly and extensively converts
  * everything to it's internal DTM model before further processing.
  * </p>
- * 
+ *
  * <p>
  * Thet's why there's a loop eliminator added that works by indexing every
  * object-property combination during processing. If it notices that some
@@ -112,7 +115,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * Sometimes the object mesh is still very dense and you may notice that even
  * though you have relatively simple stylesheet execution takes a tremendous
  * amount of time. To help you to deal with that obstacle of Xalan you may
- * attach regexp filters to elements paths (xpath). 
+ * attach regexp filters to elements paths (xpath).
  * </p>
  *
  * <p>
@@ -155,7 +158,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <li><b>location (default)</b> - the location to go to after execution.</li>
  *
- * <li><b>parse</b> - true by default. If set to false, the location param will 
+ * <li><b>parse</b> - true by default. If set to false, the location param will
  * not be parsed for Ognl expressions.</li>
  *
  * <li><b>matchingPattern</b> - Pattern that matches only desired elements, by
@@ -201,10 +204,10 @@ public class XSLTResult implements Result {
         templatesCache = new HashMap<String, Templates>();
         noCache = Settings.get("struts.xslt.nocache").trim().equalsIgnoreCase("true");
     }
-    
+
     public XSLTResult(String stylesheetLocation) {
-    	this();
-    	setStylesheetLocation(stylesheetLocation);
+        this();
+        setStylesheetLocation(stylesheetLocation);
     }
 
     /**
@@ -343,5 +346,5 @@ public class XSLTResult implements Result {
     protected Source getDOMSourceForStack(Object action)
             throws IllegalAccessException, InstantiationException {
         return new DOMSource(getAdapterFactory().adaptDocument("result", action) );
-	}
+    }
 }

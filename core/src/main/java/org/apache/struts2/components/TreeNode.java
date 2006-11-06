@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.components;
 
@@ -27,21 +30,21 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * Renders a tree node within a tree widget with AJAX support.<p/>
  *
- * Either of the following combinations should be used depending on if the tree 
+ * Either of the following combinations should be used depending on if the tree
  * is to be constrcted dynamically or statically. <p/>
- * 
+ *
  * <b>Dynamically</b>
  * <ul>
- * 		<li>id - id of this tree node</li>
- * 		<li>title - label to be displayed for this tree node</li>
+ *      <li>id - id of this tree node</li>
+ *      <li>title - label to be displayed for this tree node</li>
  * </ul>
- * 
+ *
  * <b>Statically</b>
  * <ul>
- * 		<li>rootNode - the parent node of which this tree is derived from</li>
- * 		<li>nodeIdProperty - property to obtained this current tree node's id</li>
- * 		<li>nodeTitleProperty - property to obtained this current tree node's title</li>
- * 		<li>childCollectionProperty - property that returnds this current tree node's children</li>
+ *      <li>rootNode - the parent node of which this tree is derived from</li>
+ *      <li>nodeIdProperty - property to obtained this current tree node's id</li>
+ *      <li>nodeTitleProperty - property to obtained this current tree node's title</li>
+ *      <li>childCollectionProperty - property that returnds this current tree node's children</li>
  * </ul>
  *
  * <!-- END SNIPPET: javadoc -->
@@ -50,7 +53,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * 
+ *
  * &lt-- statically --&gt;
  * &lt;s:tree id="..." label="..."&gt;
  *    &lt;s:treenode id="..." label="..." /&gt;
@@ -60,7 +63,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *    &;lt;/s:treenode&gt;
  *    &lt;s:treenode id="..." label="..." /&gt;
  * &lt;/s:tree&gt;
- * 
+ *
  * &lt;-- dynamically --&gt;
  * &lt;s:tree
  *          id="..."
@@ -68,7 +71,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *          nodeIdProperty="..."
  *          nodeTitleProperty="..."
  *          childCollectionProperty="..." /&gt;
- * 
+ *
  * <!-- END SNIPPET: example -->
  * </pre>
  *

@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.components;
 
@@ -52,8 +55,8 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
  * <!-- START SNIPPET: params -->
  * <ul>
  *      <li>id (String) - the id (if specified) to put the action under stack's context.
- * 		<li>name* (String) - name of the action to be executed (without the extension suffix eg. .action)</li>
- * 		<li>namespace (String) - default to the namespace where this action tag is invoked</li>
+ *      <li>name* (String) - name of the action to be executed (without the extension suffix eg. .action)</li>
+ *      <li>namespace (String) - default to the namespace where this action tag is invoked</li>
  *      <li>executeResult (Boolean) -  default is false. Decides wheather the result of this action is to be executed or not</li>
  *      <li>ignoreContextParams (Boolean) - default to false. Decides wheather the request parameters are to be included when the action is invoked</li>
  * </ul>
@@ -63,14 +66,14 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
  * <!-- START SNIPPET: javacode -->
  * public class ActionTagAction extends ActionSupport {
  *
- *	public String execute() throws Exception {
- *		return "done";
- *	}
+ *  public String execute() throws Exception {
+ *      return "done";
+ *  }
  *
- *	public String doDefault() throws Exception {
- *		ServletActionContext.getRequest().setAttribute("stringByAction", "This is a String put in by the action's doDefault()");
- *		return "done";
- *	}
+ *  public String doDefault() throws Exception {
+ *      ServletActionContext.getRequest().setAttribute("stringByAction", "This is a String put in by the action's doDefault()");
+ *      return "done";
+ *  }
  * }
  * <!-- END SNIPPET: javacode -->
  * </pre>
@@ -93,12 +96,12 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
  * <pre>
  * <!-- START SNIPPET: example -->
  *  <div>The following action tag will execute result and include it in this page</div>
- *	<br />
- *	<s:action name="actionTagAction" executeResult="true" />
+ *  <br />
+ *  <s:action name="actionTagAction" executeResult="true" />
  *  <br />
  *  <div>The following action tag will do the same as above, but invokes method specialMethod in action</div>
- *	<br />
- *	<s:action name="actionTagAction!specialMethod" executeResult="true" />
+ *  <br />
+ *  <s:action name="actionTagAction!specialMethod" executeResult="true" />
  *  <br />
  *  <div>The following action tag will not execute result, but put a String in request scope
  *       under an id "stringByAction" which will be retrieved using property tag</div>
@@ -130,24 +133,24 @@ public class ActionComponent extends Component {
     }
 
     public boolean end(Writer writer, String body) {
-    	boolean end = super.end(writer, "", false);
-		try {
-			if (flush) {
-				try {
-					writer.flush();
-				} catch (IOException e) {
-					LOG.warn("error while trying to flush writer ", e);
-				}
-			}
-			executeAction();
+        boolean end = super.end(writer, "", false);
+        try {
+            if (flush) {
+                try {
+                    writer.flush();
+                } catch (IOException e) {
+                    LOG.warn("error while trying to flush writer ", e);
+                }
+            }
+            executeAction();
 
-			if ((getId() != null) && (proxy != null)) {
-				getStack().setValue("#attr['" + getId() + "']",
-						proxy.getAction());
-			}
-		} finally {
-			popComponentStack();
-		}
+            if ((getId() != null) && (proxy != null)) {
+                getStack().setValue("#attr['" + getId() + "']",
+                        proxy.getAction());
+            }
+        } finally {
+            popComponentStack();
+        }
         return end;
     }
 
@@ -294,12 +297,12 @@ public class ActionComponent extends Component {
     public void setIgnoreContextParams(boolean ignoreContextParams) {
         this.ignoreContextParams = ignoreContextParams;
     }
-    
+
     /**
      * whether the writer should be flush upon end of action component tag, default to true.
      * @s.tagattribute required="false" type="Boolean" default="true"
      */
     public void setFlush(boolean flush) {
-    	this.flush = flush;
+        this.flush = flush;
     }
 }

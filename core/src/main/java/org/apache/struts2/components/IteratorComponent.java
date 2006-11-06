@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.components;
 
@@ -71,11 +74,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  * colours:</p>
  *
  * <!-- END SNIPPET: example2description -->
- * 
- * 
+ *
+ *
  * <pre>
  * <!-- START SNIPPET: example2code -->
- * 
+ *
  * &lt;s:bean name="org.apache.struts2.example.IteratorExample" id="it"&gt;
  *   &lt;s:param name="day" value="'foo'"/&gt;
  *   &lt;s:param name="day" value="'bar'"/&gt;
@@ -97,7 +100,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *   &lt;/tr&gt;
  * &lt;/s:iterator&gt;
  * &lt;/table&gt;
- * 
+ *
  * <!-- END SNIPPET: example2code -->
  * </pre>
  *
@@ -111,19 +114,19 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <pre>
  * <!-- START SNIPPET: example3code -->
- * 
- * 	&lt;s:iterator value="groupDao.groups" status="groupStatus"&gt;
- * 		&lt;tr class="&lt;s:if test="#groupStatus.odd == true "&gt;odd&lt;/s:if&gt;&lt;s:else&gt;even&lt;/s:else&gt;"&gt;
- * 			&lt;td&gt;&lt;s:property value="name" /&gt;&lt;/td&gt;
- * 			&lt;td&gt;&lt;s:property value="description" /&gt;&lt;/td&gt;
- * 			&lt;td&gt;
- * 				&lt;s:iterator value="users" status="userStatus"&gt;
- * 					&lt;s:property value="fullName" /&gt;&lt;s:if test="!#userStatus.last"&gt;,&lt;/s:if&gt;
- * 				&lt;/s:iterator&gt;
- * 			&lt;/td&gt;
- * 		&lt;/tr&gt;
- * 	&lt;/s:iterator&gt;
- * 
+ *
+ *  &lt;s:iterator value="groupDao.groups" status="groupStatus"&gt;
+ *      &lt;tr class="&lt;s:if test="#groupStatus.odd == true "&gt;odd&lt;/s:if&gt;&lt;s:else&gt;even&lt;/s:else&gt;"&gt;
+ *          &lt;td&gt;&lt;s:property value="name" /&gt;&lt;/td&gt;
+ *          &lt;td&gt;&lt;s:property value="description" /&gt;&lt;/td&gt;
+ *          &lt;td&gt;
+ *              &lt;s:iterator value="users" status="userStatus"&gt;
+ *                  &lt;s:property value="fullName" /&gt;&lt;s:if test="!#userStatus.last"&gt;,&lt;/s:if&gt;
+ *              &lt;/s:iterator&gt;
+ *          &lt;/td&gt;
+ *      &lt;/tr&gt;
+ *  &lt;/s:iterator&gt;
+ *
  * <!-- END SNIPPET: example3code -->
  * </pre>
  * <p>
@@ -139,43 +142,43 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <pre>
  * <!-- START SNIPPET: example4code -->
- * 
- * 		&lt;s:action name="entries" id="entries"/&gt;
- * 		&lt;s:iterator value="#entries.entries" &gt;
- * 			&lt;s:property value="name" /&gt;
- * 			&lt;s:property /&gt;
- * 			&lt;s:push value="..."&gt;
- * 				&lt;s:action name="edit" id="edit" &gt;
- * 					&lt;s:param name="entry" value="[0]" /&gt;
- * 				&lt;/s:action&gt;
- * 			&lt;/push&gt;
- * 		&lt;/s:iterator&gt;
- * 
+ *
+ *      &lt;s:action name="entries" id="entries"/&gt;
+ *      &lt;s:iterator value="#entries.entries" &gt;
+ *          &lt;s:property value="name" /&gt;
+ *          &lt;s:property /&gt;
+ *          &lt;s:push value="..."&gt;
+ *              &lt;s:action name="edit" id="edit" &gt;
+ *                  &lt;s:param name="entry" value="[0]" /&gt;
+ *              &lt;/s:action&gt;
+ *          &lt;/push&gt;
+ *      &lt;/s:iterator&gt;
+ *
  * <!-- END SNIPPET: example4code -->
  * </pre>
- * 
+ *
  * <!-- START SNIPPET: example5description -->
- * 
- * </p>To simulate a simple loop with iterator tag, the following could be done. 
+ *
+ * </p>To simulate a simple loop with iterator tag, the following could be done.
  * It does the loop 5 times.
- * 
+ *
  * <!-- END SNIPPET: example5description -->
- * 
+ *
  * <pre>
  * <!-- START SNIPPET: example5code -->
- * 
+ *
  * &lt;s:iterator status="stat" value="{1,2,3,4,5}" &gt;
  *    &lt;!-- grab the index (start with 0 ... ) --&gt;
  *    &lt;s:property value="#stat.index" /&gt;
- *    
+ *
  *    &lt;!-- grab the top of the stack which should be the --&gt;
  *    &lt;!-- current iteration value (0, 1, ... 5) --&gt;
  *    &lt;s:property value="top" /&gt;
  * &lt;/s:iterator&gt;
- * 
+ *
  * <!-- END SNIPPET: example5code -->
  * </pre>
- * 
+ *
  * @s.tag name="iterator" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.IteratorTag"
  * description="Iterate over a iterable value"
  */
@@ -204,18 +207,18 @@ public class IteratorComponent extends Component {
             value = "top";
         }
         iterator = MakeIterator.convert(findValue(value));
-        
+
         // get the first
         if ((iterator != null) && iterator.hasNext()) {
             Object currentValue = iterator.next();
             stack.push(currentValue);
 
             String id = getId();
-            
+
             if ((id != null) && (currentValue != null)) {
                 //pageContext.setAttribute(id, currentValue);
                 //pageContext.setAttribute(id, currentValue, PageContext.REQUEST_SCOPE);
-            	stack.getContext().put(id, currentValue);
+                stack.getContext().put(id, currentValue);
             }
 
             // Status object
@@ -227,7 +230,7 @@ public class IteratorComponent extends Component {
 
             return true;
         } else {
-        	super.end(writer, "");
+            super.end(writer, "");
             return false;
         }
     }
@@ -247,7 +250,7 @@ public class IteratorComponent extends Component {
             if ((id != null) && (currentValue != null)) {
                 //pageContext.setAttribute(id, currentValue);
                 //pageContext.setAttribute(id, currentValue, PageContext.REQUEST_SCOPE);
-            	stack.getContext().put(id, currentValue);
+                stack.getContext().put(id, currentValue);
             }
 
             // Update status

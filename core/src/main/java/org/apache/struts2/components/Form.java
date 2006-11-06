@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.components;
 
@@ -96,7 +99,7 @@ public class Form extends ClosingUIBean {
     public static final String TEMPLATE = "form-close";
 
     private int sequence = 0;
-    
+
     protected String onsubmit;
     protected String action;
     protected String target;
@@ -180,7 +183,7 @@ public class Form extends ClosingUIBean {
             addParameter("tagNames", new ArrayList());
         }
     }
-    
+
     /**
      * Form component determine the its HTML element id as follows:-
      * <ol>
@@ -189,16 +192,16 @@ public class Form extends ClosingUIBean {
      * </ol>
      */
     protected void populateComponentHtmlId(Form form) {
-    	boolean isAjax = "ajax".equalsIgnoreCase(this.theme);
-    	
-    	String action = null;
+        boolean isAjax = "ajax".equalsIgnoreCase(this.theme);
+
+        String action = null;
         if (this.action != null) {
             // if it isn't specified, we'll make somethig up
             action = findString(this.action);
         }
 
         if (id != null) {
-        	addParameter("id", escape(id));
+            addParameter("id", escape(id));
         }
         if (Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
             evaluateExtraParamsPortletRequest(namespace, action);
@@ -301,7 +304,7 @@ public class Form extends ClosingUIBean {
         }
 
         // WW-1284
-        // evaluate if client-side js is to be enabled. (if validation interceptor 
+        // evaluate if client-side js is to be enabled. (if validation interceptor
         // does allow validation eg. method is not filtered out)
         evaluateClientSideJsEnablement(actionName, namespace, actionMethod);
     }
@@ -404,16 +407,16 @@ public class Form extends ClosingUIBean {
 
         return validators;
     }
-    
+
     /**
      * Get a incrementing sequence unique to this <code>Form</code> component.
-     * It is used by <code>Form</code> component's child that might need a 
+     * It is used by <code>Form</code> component's child that might need a
      * sequence to make them unique.
-     * 
+     *
      * @return int
      */
     protected int getSequence() {
-    	return sequence++;
+        return sequence++;
     }
 
 

@@ -1,19 +1,22 @@
 /*
- * $Id: CreatePerson.java 420385 2006-07-10 00:57:05Z mrdon $
+ * $Id: $
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.showcase.source;
 
@@ -42,23 +45,23 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
     private String page;
     private String className;
     private String config;
-    
+
     private List pageLines;
     private List classLines;
     private List configLines;
-    
+
     private int configLine;
     private int padding = 10;
-    
+
     private ServletContext servletContext;
-    
+
     public String execute() throws MalformedURLException, IOException {
-        
+
         if (page != null) {
-            
+
             InputStream in = ClassLoaderUtil.getResourceAsStream(page.substring(page.indexOf("//")+1), getClass());
             page = page.replace("//", "/");
-            
+
             if (in == null) {
                 in = servletContext.getResourceAsStream(page);
                 while (in == null && page.indexOf('/', 1) > 0) {
@@ -68,7 +71,7 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
             }
             pageLines = read(in, -1);
         }
-        
+
         if (className != null) {
             className = "/"+className.replace('.', '/') + ".java";
             InputStream in = getClass().getResourceAsStream(className);
@@ -77,7 +80,7 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
             }
             classLines = read(in, -1);
         }
-        
+
         if (config != null) {
             int pos = config.lastIndexOf(':');
             configLine = Integer.parseInt(config.substring(pos+1));
@@ -107,15 +110,15 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
     public void setPage(String page) {
         this.page = page;
     }
-    
+
     /**
      * @param padding the padding to set
      */
     public void setPadding(int padding) {
         this.padding = padding;
     }
-    
-    
+
+
 
     /**
      * @return the classLines
@@ -137,7 +140,7 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
     public List getPageLines() {
         return pageLines;
     }
-    
+
     /**
      * @return the className
      */
@@ -158,14 +161,14 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
     public String getPage() {
         return page;
     }
-    
+
     /**
      * @return the configLine
      */
     public int getConfigLine() {
         return configLine;
     }
-    
+
     /**
      * @return the padding
      */
@@ -176,7 +179,7 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
     /**
      * Reads in a strea, optionally only including the target line number
      * and its padding
-     * 
+     *
      * @param in The input stream
      * @param targetLineNumber The target line number, negative to read all
      * @return A list of lines
@@ -193,7 +196,7 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
             }
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                
+
                 int lineno = 0;
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -212,6 +215,6 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
     public void setServletContext(ServletContext arg0) {
         this.servletContext = arg0;
     }
-    
+
 
 }

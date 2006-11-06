@@ -1,18 +1,22 @@
-package org.apache.struts2.interceptor.debugging;
-
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.util.Stack;
-
-/**
- * A simple writer that outputs XML in a pretty-printed indented stream.
+/*
+ * $Id$
  *
- * <p>By default, the chars <code><xmp>& < > " ' \r</xmp></code> are escaped and replaced with a suitable XML entity.
- * To alter this behavior, override the the {@link #writeText(com.thoughtworks.xstream.core.util.QuickWriter, String)}
- * and {@link #writeAttributeValue(com.thoughtworks.xstream.core.util.QuickWriter, String)} methods.</p>
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * <p>This code was taken from the XStream project under the BSD license.</p>
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 public class PrettyPrintWriter {
 

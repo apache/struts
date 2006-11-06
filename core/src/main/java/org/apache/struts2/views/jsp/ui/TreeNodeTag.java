@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.views.jsp.ui;
 
@@ -29,9 +32,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  * @see TreeNode
  */
 public class TreeNodeTag extends AbstractClosingTag {
-	
-	private static final long serialVersionUID = 7340746943017900803L;
-	
+
+    private static final long serialVersionUID = 7340746943017900803L;
+
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new TreeNode(stack,req,res);
@@ -41,7 +44,7 @@ public class TreeNodeTag extends AbstractClosingTag {
         this.label = label;
     }
 
-    // NOTE: not necessary, label property is inherited, will be populated 
+    // NOTE: not necessary, label property is inherited, will be populated
     // by super-class
     /*protected void populateParams() {
         if (label != null) {

@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.components;
 
@@ -56,7 +59,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  *   &lt;s:combobox label="Birth year" size="6" maxlength="4" name="birthYear" list="#year"/&gt;
  * &lt;/s:bean&gt;
- * 
+ *
  * &lt;-- Example Two --&gt;
  * <s:combobox
  *     label="My Favourite Fruit"
@@ -66,7 +69,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *     headerValue="--- Please Select ---"
  *     emptyOption="true"
  *     value="banana" />
- *     
+ *
  * &lt;-- Example Two --&gt;
  * <s:combobox
  *    label="My Favourite Color"
@@ -94,7 +97,7 @@ public class ComboBox extends TextField {
     protected String headerKey;
     protected String headerValue;
     protected String emptyOption;
-    
+
 
     public ComboBox(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -107,55 +110,55 @@ public class ComboBox extends TextField {
     public void evaluateExtraParams() {
         super.evaluateExtraParams();
 
-        Object value = findValue(list, "list", 
-        		"You must specify a collection/array/map/enumeration/iterator. " +
+        Object value = findValue(list, "list",
+                "You must specify a collection/array/map/enumeration/iterator. " +
                 "Example: people or people.{name}");
-        
+
         if (headerKey != null) {
-        	addParameter("headerKey", findString(headerKey));
+            addParameter("headerKey", findString(headerKey));
         }
         if (headerValue != null) {
-        	addParameter("headerValue", findString(headerValue));
+            addParameter("headerValue", findString(headerValue));
         }
         if (emptyOption != null) {
-        	addParameter("emptyOption", findValue(emptyOption, Boolean.class));
+            addParameter("emptyOption", findValue(emptyOption, Boolean.class));
         }
-        
+
         if (value instanceof Collection) {
-        	Collection tmp = (Collection) value;
-        	addParameter("list", tmp);
-        	if (listKey != null) {
-        		addParameter("listKey", listKey);
-        	}
-        	if (listValue != null) {
-        		addParameter("listValue", listValue);
-        	}
+            Collection tmp = (Collection) value;
+            addParameter("list", tmp);
+            if (listKey != null) {
+                addParameter("listKey", listKey);
+            }
+            if (listValue != null) {
+                addParameter("listValue", listValue);
+            }
         }
         else if (value instanceof Map) {
-        	Map tmp = (Map) value;
-        	addParameter("list", MakeIterator.convert(tmp));
-        	addParameter("listKey", "key");
-        	addParameter("listValue", "value");
+            Map tmp = (Map) value;
+            addParameter("list", MakeIterator.convert(tmp));
+            addParameter("listKey", "key");
+            addParameter("listValue", "value");
         }
         else if (value.getClass().isArray()) {
-        	Iterator i = MakeIterator.convert(value);
-        	addParameter("list", i);
-        	if (listKey != null) {
-        		addParameter("listKey", listKey);
-        	}
-        	if (listValue != null) {
-        		addParameter("listValue", listValue);
-        	}
+            Iterator i = MakeIterator.convert(value);
+            addParameter("list", i);
+            if (listKey != null) {
+                addParameter("listKey", listKey);
+            }
+            if (listValue != null) {
+                addParameter("listValue", listValue);
+            }
         }
         else {
-        	Iterator i = MakeIterator.convert(value);
-        	addParameter("list", i);
-        	if (listKey != null) {
-        		addParameter("listKey", listKey);
-        	}
-        	if (listValue != null) {
-        		addParameter("listValue", listValue);
-        	}
+            Iterator i = MakeIterator.convert(value);
+            addParameter("list", i);
+            if (listKey != null) {
+                addParameter("listKey", listKey);
+            }
+            if (listValue != null) {
+                addParameter("listValue", listValue);
+            }
         }
     }
 
@@ -171,41 +174,41 @@ public class ComboBox extends TextField {
      * Decide if an empty option is to be inserted. Default false.
      * @s.tagattribute required="false"
      */
-	public void setEmptyOption(String emptyOption) {
-		this.emptyOption = emptyOption;
-	}
+    public void setEmptyOption(String emptyOption) {
+        this.emptyOption = emptyOption;
+    }
 
-	/**
-	 * set the header key for the header option. 
-	 * @s.tagattribute required="false"
-	 */
-	public void setHeaderKey(String headerKey) {
-		this.headerKey = headerKey;
-	}
+    /**
+     * set the header key for the header option.
+     * @s.tagattribute required="false"
+     */
+    public void setHeaderKey(String headerKey) {
+        this.headerKey = headerKey;
+    }
 
-	/**
-	 * set the header value for the header option.
-	 * @s.tagattribute required="false"
-	 */
-	public void setHeaderValue(String headerValue) {
-		this.headerValue = headerValue;
-	}
+    /**
+     * set the header value for the header option.
+     * @s.tagattribute required="false"
+     */
+    public void setHeaderValue(String headerValue) {
+        this.headerValue = headerValue;
+    }
 
-	/**
-	 * set the key used to retrive the option key.
-	 * @s.tagattribute required="false"
-	 */
-	public void setListKey(String listKey) {
-		this.listKey = listKey;
-	}
+    /**
+     * set the key used to retrive the option key.
+     * @s.tagattribute required="false"
+     */
+    public void setListKey(String listKey) {
+        this.listKey = listKey;
+    }
 
-	/**
-	 * set the value used to retrive the option value.
-	 * @s.tagattribute required="false"
-	 */
-	public void setListValue(String listValue) {
-		this.listValue = listValue;
-	}
-    
-    
+    /**
+     * set the value used to retrive the option value.
+     * @s.tagattribute required="false"
+     */
+    public void setListValue(String listValue) {
+        this.listValue = listValue;
+    }
+
+
 }

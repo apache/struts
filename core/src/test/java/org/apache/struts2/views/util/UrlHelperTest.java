@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.views.util;
 
@@ -34,61 +37,61 @@ import com.mockobjects.dynamic.Mock;
 
 /**
  * Test case for UrlHelper.
- * 
+ *
  */
 public class UrlHelperTest extends StrutsTestCase {
-	
-	
-	
-	public void testForceAddSchemeHostAndPort() throws Exception {
-		String expectedUrl = "http://localhost/contextPath/path1/path2/myAction.action";
-		
-		Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
-		mockHttpServletRequest.expectAndReturn("getScheme", "http");
-		mockHttpServletRequest.expectAndReturn("getServerName", "localhost");
+
+
+
+    public void testForceAddSchemeHostAndPort() throws Exception {
+        String expectedUrl = "http://localhost/contextPath/path1/path2/myAction.action";
+
+        Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
+        mockHttpServletRequest.expectAndReturn("getScheme", "http");
+        mockHttpServletRequest.expectAndReturn("getServerName", "localhost");
         mockHttpServletRequest.expectAndReturn("getContextPath", "/contextPath");
 
         Mock mockHttpServletResponse = new Mock(HttpServletResponse.class);
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedUrl, expectedUrl);
-		
-		String result = UrlHelper.buildUrl("/path1/path2/myAction.action", (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse)mockHttpServletResponse.proxy(), null, "http", true, true, true);
-		assertEquals(expectedUrl, result);
-		mockHttpServletRequest.verify();
-	}
-	
-	public void testDoNotForceAddSchemeHostAndPort() throws Exception {
-		String expectedUrl = "/contextPath/path1/path2/myAction.action";
-		
-		Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
-		mockHttpServletRequest.expectAndReturn("getScheme", "http");
-		mockHttpServletRequest.expectAndReturn("getServerName", "localhost");
+
+        String result = UrlHelper.buildUrl("/path1/path2/myAction.action", (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse)mockHttpServletResponse.proxy(), null, "http", true, true, true);
+        assertEquals(expectedUrl, result);
+        mockHttpServletRequest.verify();
+    }
+
+    public void testDoNotForceAddSchemeHostAndPort() throws Exception {
+        String expectedUrl = "/contextPath/path1/path2/myAction.action";
+
+        Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
+        mockHttpServletRequest.expectAndReturn("getScheme", "http");
+        mockHttpServletRequest.expectAndReturn("getServerName", "localhost");
         mockHttpServletRequest.expectAndReturn("getContextPath", "/contextPath");
 
         Mock mockHttpServletResponse = new Mock(HttpServletResponse.class);
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedUrl, expectedUrl);
-		
-		String result = UrlHelper.buildUrl("/path1/path2/myAction.action", (HttpServletRequest)mockHttpServletRequest.proxy(), (HttpServletResponse)mockHttpServletResponse.proxy(), null, "http", true, true, false);
-		
-		assertEquals(expectedUrl, result);
-	}
-	
-	
-	public void testBuildParametersStringWithUrlHavingSomeExistingParameters() throws Exception {
-		String expectedUrl = "http://localhost:8080/myContext/myPage.jsp?initParam=initValue&amp;param1=value1&amp;param2=value2";
-		
-		Map parameters = new LinkedHashMap();
-		parameters.put("param1", "value1");
-		parameters.put("param2", "value2");
-		
-		StringBuffer url = new StringBuffer("http://localhost:8080/myContext/myPage.jsp?initParam=initValue");
-		
-		UrlHelper.buildParametersString(parameters, url);
-		
-		assertEquals(
-		   expectedUrl, url.toString());
-	}
-	
-	
+
+        String result = UrlHelper.buildUrl("/path1/path2/myAction.action", (HttpServletRequest)mockHttpServletRequest.proxy(), (HttpServletResponse)mockHttpServletResponse.proxy(), null, "http", true, true, false);
+
+        assertEquals(expectedUrl, result);
+    }
+
+
+    public void testBuildParametersStringWithUrlHavingSomeExistingParameters() throws Exception {
+        String expectedUrl = "http://localhost:8080/myContext/myPage.jsp?initParam=initValue&amp;param1=value1&amp;param2=value2";
+
+        Map parameters = new LinkedHashMap();
+        parameters.put("param1", "value1");
+        parameters.put("param2", "value2");
+
+        StringBuffer url = new StringBuffer("http://localhost:8080/myContext/myPage.jsp?initParam=initValue");
+
+        UrlHelper.buildParametersString(parameters, url);
+
+        assertEquals(
+           expectedUrl, url.toString());
+    }
+
+
 
     public void testBuildWithRootContext() {
         String expectedUrl = "/MyAction.action";
@@ -274,56 +277,56 @@ public class UrlHelperTest extends StrutsTestCase {
         String urlString = UrlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params, "https", true, true);
         assertEquals(expectedString, urlString);
     }
-    
-    
+
+
     public void testParseQuery() throws Exception {
-    	Map result = UrlHelper.parseQueryString("aaa=aaaval&bbb=bbbval&ccc=");
-    	
-    	assertEquals(result.get("aaa"), "aaaval");
-    	assertEquals(result.get("bbb"), "bbbval");
-    	assertEquals(result.get("ccc"), "");
+        Map result = UrlHelper.parseQueryString("aaa=aaaval&bbb=bbbval&ccc=");
+
+        assertEquals(result.get("aaa"), "aaaval");
+        assertEquals(result.get("bbb"), "bbbval");
+        assertEquals(result.get("ccc"), "");
     }
-    
+
     public void testParseEmptyQuery() throws Exception {
-    	Map result = UrlHelper.parseQueryString("");
-    	
-    	assertNotNull(result);
-    	assertEquals(result.size(), 0);
+        Map result = UrlHelper.parseQueryString("");
+
+        assertNotNull(result);
+        assertEquals(result.size(), 0);
     }
-    
+
     public void testParseNullQuery() throws Exception {
-    	Map result = UrlHelper.parseQueryString(null);
-    	
-    	assertNotNull(result);
-    	assertEquals(result.size(), 0);
+        Map result = UrlHelper.parseQueryString(null);
+
+        assertNotNull(result);
+        assertEquals(result.size(), 0);
     }
-    
-    
+
+
     public void testTranslateAndEncode() throws Exception {
-    	String defaultI18nEncoding = Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
-    	try {
-    		Settings.set(StrutsConstants.STRUTS_I18N_ENCODING, "UTF-8");
-    		String result = UrlHelper.translateAndEncode("\u65b0\u805e");
-    		String expectedResult = "%E6%96%B0%E8%81%9E";
-    	
-    		assertEquals(result, expectedResult);
-    	}
-    	finally {
-    		Settings.set(StrutsConstants.STRUTS_I18N_ENCODING, defaultI18nEncoding);
-    	}
+        String defaultI18nEncoding = Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
+        try {
+            Settings.set(StrutsConstants.STRUTS_I18N_ENCODING, "UTF-8");
+            String result = UrlHelper.translateAndEncode("\u65b0\u805e");
+            String expectedResult = "%E6%96%B0%E8%81%9E";
+
+            assertEquals(result, expectedResult);
+        }
+        finally {
+            Settings.set(StrutsConstants.STRUTS_I18N_ENCODING, defaultI18nEncoding);
+        }
     }
-    
+
     public void testTranslateAndDecode() throws Exception {
-    	String defaultI18nEncoding = Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
-    	try {
-    		Settings.set(StrutsConstants.STRUTS_I18N_ENCODING, "UTF-8");
-    		String result = UrlHelper.translateAndDecode("%E6%96%B0%E8%81%9E");
-    		String expectedResult = "\u65b0\u805e";
-    	
-    		assertEquals(result, expectedResult);
-    	}
-    	finally {
-    		Settings.set(StrutsConstants.STRUTS_I18N_ENCODING, defaultI18nEncoding);
-    	}
+        String defaultI18nEncoding = Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
+        try {
+            Settings.set(StrutsConstants.STRUTS_I18N_ENCODING, "UTF-8");
+            String result = UrlHelper.translateAndDecode("%E6%96%B0%E8%81%9E");
+            String expectedResult = "\u65b0\u805e";
+
+            assertEquals(result, expectedResult);
+        }
+        finally {
+            Settings.set(StrutsConstants.STRUTS_I18N_ENCODING, defaultI18nEncoding);
+        }
     }
 }

@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.views.jsp;
 
@@ -31,74 +34,74 @@ import com.mockobjects.servlet.MockJspWriter;
 
 
 /**
- * Test Case for Iterator Tag 
- * 
+ * Test Case for Iterator Tag
+ *
  */
 public class IteratorTagTest extends AbstractUITagTest {
 
     IteratorTag tag;
 
-    
-    public void testIteratingWithIdSpecified() throws Exception {
-    	List list = new ArrayList();
-    	list.add("one");
-    	list.add("two");
-    	list.add("three");
-    	list.add("four");
-    	list.add("five");
-    	
-    	Foo foo = new Foo();
-    	foo.setList(list);
-    	
-    	stack.push(foo);
-    	
-    	tag.setValue("list");
-    	tag.setId("myId");
-    	
-    	// one
-    	int result = tag.doStartTag();
-    	assertEquals(result, TagSupport.EVAL_BODY_INCLUDE);
-    	assertEquals(stack.peek(), "one");
-    	assertEquals(stack.getContext().get("myId"), "one");
-    	
 
-    	tag.doInitBody();
-    	
-    	// two
-    	result = tag.doAfterBody();
-    	assertEquals(result, TagSupport.EVAL_BODY_AGAIN);
-    	assertEquals(stack.peek(), "two");
-    	assertEquals(stack.getContext().get("myId"), "two");
-    	
-    	
-    	// three
-    	result = tag.doAfterBody();
-    	assertEquals(result, TagSupport.EVAL_BODY_AGAIN);
-    	assertEquals(stack.peek(), "three");
-    	assertEquals(stack.getContext().get("myId"), "three");
-    	
-    	
-    	// four
-    	result = tag.doAfterBody();
-    	assertEquals(result, TagSupport.EVAL_BODY_AGAIN);
-    	assertEquals(stack.peek(), "four");
-    	assertEquals(stack.getContext().get("myId"), "four");
-    	
-    	
-    	// five
-    	result = tag.doAfterBody();
-    	assertEquals(result, TagSupport.EVAL_BODY_AGAIN);
-    	assertEquals(stack.peek(), "five");
-    	assertEquals(stack.getContext().get("myId"), "five");
-    	
-    	
-    	result = tag.doAfterBody();
-    	assertEquals(result, TagSupport.SKIP_BODY);
-    	
-    	result = tag.doEndTag();
-    	assertEquals(result, TagSupport.EVAL_PAGE);
+    public void testIteratingWithIdSpecified() throws Exception {
+        List list = new ArrayList();
+        list.add("one");
+        list.add("two");
+        list.add("three");
+        list.add("four");
+        list.add("five");
+
+        Foo foo = new Foo();
+        foo.setList(list);
+
+        stack.push(foo);
+
+        tag.setValue("list");
+        tag.setId("myId");
+
+        // one
+        int result = tag.doStartTag();
+        assertEquals(result, TagSupport.EVAL_BODY_INCLUDE);
+        assertEquals(stack.peek(), "one");
+        assertEquals(stack.getContext().get("myId"), "one");
+
+
+        tag.doInitBody();
+
+        // two
+        result = tag.doAfterBody();
+        assertEquals(result, TagSupport.EVAL_BODY_AGAIN);
+        assertEquals(stack.peek(), "two");
+        assertEquals(stack.getContext().get("myId"), "two");
+
+
+        // three
+        result = tag.doAfterBody();
+        assertEquals(result, TagSupport.EVAL_BODY_AGAIN);
+        assertEquals(stack.peek(), "three");
+        assertEquals(stack.getContext().get("myId"), "three");
+
+
+        // four
+        result = tag.doAfterBody();
+        assertEquals(result, TagSupport.EVAL_BODY_AGAIN);
+        assertEquals(stack.peek(), "four");
+        assertEquals(stack.getContext().get("myId"), "four");
+
+
+        // five
+        result = tag.doAfterBody();
+        assertEquals(result, TagSupport.EVAL_BODY_AGAIN);
+        assertEquals(stack.peek(), "five");
+        assertEquals(stack.getContext().get("myId"), "five");
+
+
+        result = tag.doAfterBody();
+        assertEquals(result, TagSupport.SKIP_BODY);
+
+        result = tag.doEndTag();
+        assertEquals(result, TagSupport.EVAL_PAGE);
     }
-    
+
 
     public void testArrayIterator() {
         Foo foo = new Foo();

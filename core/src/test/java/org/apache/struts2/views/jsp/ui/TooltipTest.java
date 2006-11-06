@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.views.jsp.ui;
 
@@ -78,7 +81,7 @@ public class TooltipTest extends AbstractUITagTest {
         formTag.setAction("testAction");
 
         formTag.setTooltipConfig(
-        		"#{" +
+                "#{" +
                 "'tooltipIcon':'/struts/tooltip/myTooltip.gif', " +
                 "'tooltipDelay':'500', " +
                 "'jsTooltipEnabled':'true' "+
@@ -113,7 +116,7 @@ public class TooltipTest extends AbstractUITagTest {
         formTag.setAction("testAction");
 
         formTag.setTooltipConfig(
-        		"#{" +
+                "#{" +
                 "'tooltipIcon':'/struts/tooltip/myTooltip.gif', " +
                 "'tooltipDelay':'500', " +
                 "'jsTooltipEnabled':'true' "+
@@ -128,7 +131,7 @@ public class TooltipTest extends AbstractUITagTest {
 
         tag.setTooltip("myTooltip");
         tag.setTooltipConfig(
-        		"#{" +
+                "#{" +
                 "'tooltipIcon':'/struts/tooltip/myTooltip2.gif', " +
                 "'tooltipDelay':'5000' " +
                 "}"
@@ -158,7 +161,7 @@ public class TooltipTest extends AbstractUITagTest {
         formParamTag.setPageContext(pageContext);
         formParamTag.setName("tooltipConfig");
         formParamTag.setValue(
-        		"#{" +
+                "#{" +
                 "'tooltipIcon':'/struts/tooltip/myTooltip.gif', " +
                 "'tooltipDelay':'500', " +
                 "'jsTooltipEnabled':'true' "+
@@ -176,7 +179,7 @@ public class TooltipTest extends AbstractUITagTest {
         textFieldParamTag.setPageContext(pageContext);
         textFieldParamTag.setName("tooltipConfig");
         textFieldParamTag.setValue(
-        		"#{" +
+                "#{" +
                 "'tooltipIcon':'/struts/tooltip/myTooltip2.gif', " +
                 "'tooltipDelay':'5000' "+
                 "}"
@@ -242,7 +245,7 @@ public class TooltipTest extends AbstractUITagTest {
         textFieldParamTag.doEndTag();
         tag.doEndTag();
         formTag.doEndTag();
-        
+
         System.out.println(writer.toString());
 
         verify(TooltipTest.class.getResource("tooltip-3.txt"));

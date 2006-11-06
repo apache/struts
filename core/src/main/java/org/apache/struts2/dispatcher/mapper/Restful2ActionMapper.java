@@ -1,19 +1,22 @@
 /*
- * $Id: RestfulActionMapper.java 449367 2006-09-24 06:49:04Z mrdon $
+ * $Id:  $
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.dispatcher.mapper;
 
@@ -28,8 +31,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * <!-- START SNIPPET: description --> 
- * 
+ * <!-- START SNIPPET: description -->
+ *
  * Improved restful action mapper that adds several ReST-style improvements to
  * action mapping, but supports fully-customized URL's via XML.  The two primary
  * ReST enhancements are:
@@ -74,7 +77,7 @@ import org.apache.commons.logging.LogFactory;
  * http://ryandaigle.com/articles/2006/08/01/whats-new-in-edge-rails-simply-restful-support-and-how-to-use-it
  * </a>
  * </p>
- * 
+ *
  * <!-- END SNIPPET: description -->
  */
 public class Restful2ActionMapper extends DefaultActionMapper {

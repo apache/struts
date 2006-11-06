@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.dispatcher;
 
@@ -44,29 +47,29 @@ public class SessionMapTest extends TestCase {
 
 
     public void testClearInvalidatesTheSession() throws Exception {
-    	List<String> attributeNames = new ArrayList<String>();
-    	attributeNames.add("test");
-    	attributeNames.add("anotherTest");
-    	Enumeration attributeNamesEnum = Collections.enumeration(attributeNames);
-    	
+        List<String> attributeNames = new ArrayList<String>();
+        attributeNames.add("test");
+        attributeNames.add("anotherTest");
+        Enumeration attributeNamesEnum = Collections.enumeration(attributeNames);
+
         MockSessionMap sessionMap = new MockSessionMap((HttpServletRequest) requestMock.proxy());
-        sessionMock.expect("setAttribute", 
-        		new Constraint[] {
-        			new IsEqual("test"), new IsEqual("test value")
-        		});
-        sessionMock.expect("setAttribute", 
-        		new Constraint[] {
-        			new IsEqual("anotherTest"), new IsEqual("another test value")
-        		});
+        sessionMock.expect("setAttribute",
+                new Constraint[] {
+                    new IsEqual("test"), new IsEqual("test value")
+                });
+        sessionMock.expect("setAttribute",
+                new Constraint[] {
+                    new IsEqual("anotherTest"), new IsEqual("another test value")
+                });
         sessionMock.expectAndReturn("getAttributeNames", attributeNamesEnum);
-        sessionMock.expect("removeAttribute", 
-        		new Constraint[]{
-        			new IsEqual("test")
-        		});
-        sessionMock.expect("removeAttribute", 
-        		new Constraint[]{
-        			new IsEqual("anotherTest")
-        		});
+        sessionMock.expect("removeAttribute",
+                new Constraint[]{
+                    new IsEqual("test")
+                });
+        sessionMock.expect("removeAttribute",
+                new Constraint[]{
+                    new IsEqual("anotherTest")
+                });
         sessionMap.put("test", "test value");
         sessionMap.put("anotherTest", "another test value");
         sessionMap.clear();
@@ -161,10 +164,10 @@ public class SessionMapTest extends TestCase {
      * putting new data into the map.
      */
     private class MockSessionMap extends SessionMap {
-    	
-		private static final long serialVersionUID = 8783604360786273764L;
-		
-		private Map map = new HashMap();
+
+        private static final long serialVersionUID = 8783604360786273764L;
+
+        private Map map = new HashMap();
 
         public MockSessionMap(HttpServletRequest request) {
             super(request);
@@ -180,10 +183,10 @@ public class SessionMapTest extends TestCase {
 
             return originalValue;
         }
-        
+
         public void clear() {
-        	super.clear();
-        	map.clear();
+            super.clear();
+            map.clear();
         }
     }
 }

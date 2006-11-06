@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.views.velocity;
 
@@ -127,7 +130,7 @@ public class VelocityManager {
      * Names of contexts that will be chained on every request
      */
     private String[] chainedContextNames;
-    
+
     private Properties velocityProperties;
 
     protected VelocityManager() {
@@ -282,7 +285,7 @@ public class VelocityManager {
 
         // now apply our systemic defaults, then allow user to override
         applyDefaultConfiguration(context, properties);
-        
+
 
         String defaultUserDirective = properties.getProperty("userdirective");
 
@@ -355,14 +358,14 @@ public class VelocityManager {
                 }
             }
         }
-        
+
         // overide with programmatically set properties
         if (this.velocityProperties != null) {
-        	Iterator keys = this.velocityProperties.keySet().iterator();
-        	while (keys.hasNext()) {
-        		String key = (String) keys.next();
-        		properties.setProperty(key, this.velocityProperties.getProperty(key));
-			}
+            Iterator keys = this.velocityProperties.keySet().iterator();
+            while (keys.hasNext()) {
+                String key = (String) keys.next();
+                properties.setProperty(key, this.velocityProperties.getProperty(key));
+            }
         }
 
         String userdirective = properties.getProperty("userdirective");
@@ -375,7 +378,7 @@ public class VelocityManager {
 
         properties.setProperty("userdirective", userdirective);
 
-        
+
         // for debugging purposes, allows users to dump out the properties that have been configured
         if (log.isDebugEnabled()) {
             log.debug("Initializing Velocity with the following properties ...");
@@ -488,8 +491,8 @@ public class VelocityManager {
         Properties p = loadConfiguration(context);
 
         VelocityEngine velocityEngine = new VelocityEngine();
-        
-        //	Set the velocity attribute for the servlet context
+
+        //  Set the velocity attribute for the servlet context
         //  if this is not set the webapp loader WILL NOT WORK
         velocityEngine.setApplicationAttribute(ServletContext.class.getName(),
                 context);
@@ -656,17 +659,17 @@ public class VelocityManager {
         return string;
     }
 
-	/**
-	 * @return the velocityProperties
-	 */
-	public Properties getVelocityProperties() {
-		return velocityProperties;
-	}
+    /**
+     * @return the velocityProperties
+     */
+    public Properties getVelocityProperties() {
+        return velocityProperties;
+    }
 
-	/**
-	 * @param velocityProperties the velocityProperties to set
-	 */
-	public void setVelocityProperties(Properties velocityProperties) {
-		this.velocityProperties = velocityProperties;
-	}
+    /**
+     * @param velocityProperties the velocityProperties to set
+     */
+    public void setVelocityProperties(Properties velocityProperties) {
+        this.velocityProperties = velocityProperties;
+    }
 }

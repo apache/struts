@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.spring.lifecycle;
 
@@ -44,9 +47,9 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
  */
 public class SpringExternalReferenceResolverSetupListener implements
         ServletContextListener {
-    
+
     private Map<ServletContext,Listener> listeners = new HashMap<ServletContext,Listener>();
-    
+
     /* (non-Javadoc)
      * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
      */
@@ -64,7 +67,7 @@ public class SpringExternalReferenceResolverSetupListener implements
         Dispatcher.addDispatcherListener(l);
         listeners.put(event.getServletContext(), l);
     }
-    
+
     /**
      * Handles initializing and cleaning up the dispatcher
      * @author brownd
@@ -73,16 +76,16 @@ public class SpringExternalReferenceResolverSetupListener implements
     private class Listener implements DispatcherListener {
 
         private ServletContext servletContext;
-        
+
         /**
          * Constructs the listener
-         * 
+         *
          * @param ctx The servlet context
          */
         public Listener(ServletContext ctx) {
             this.servletContext = ctx;
         }
-        
+
         /* (non-Javadoc)
          * @see org.apache.struts2.dispatcher.DispatcherListener#dispatcherInitialized(org.apache.struts2.dispatcher.Dispatcher)
          */
@@ -93,7 +96,7 @@ public class SpringExternalReferenceResolverSetupListener implements
             Configuration xworkConfig = du.getConfigurationManager().getConfiguration();
             Map packageConfigs = xworkConfig.getPackageConfigs();
             Iterator i = packageConfigs.values().iterator();
-        
+
             while (i.hasNext()) {
                 PackageConfig packageConfig = (PackageConfig) i.next();
                 ExternalReferenceResolver resolver = packageConfig.getExternalRefResolver();
@@ -102,7 +105,7 @@ public class SpringExternalReferenceResolverSetupListener implements
                 ApplicationContextAware contextAware = (ApplicationContextAware) resolver;
                 contextAware.setApplicationContext(appContext);
             }
-            
+
         }
 
         /* (non-Javadoc)

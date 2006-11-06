@@ -1,5 +1,22 @@
 /*
- * Created on Aug 12, 2004 by mgreer
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.config;
 
@@ -30,18 +47,18 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
     private String filename;
     private String reloadKey;
 
-    /** 
+    /**
      * Constructs the configuration provider
-     * 
+     *
      * @param errorIfMissing If we should throw an exception if the file can't be found
      */
     public StrutsXmlConfigurationProvider(boolean errorIfMissing) {
         this("struts.xml", errorIfMissing);
     }
-    
-    /** 
+
+    /**
      * Constructs the configuration provider
-     * 
+     *
      * @param filename The filename to look for
      * @param errorIfMissing If we should throw an exception if the file can't be found
      */
@@ -57,8 +74,8 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
             this.baseDir = file.getParentFile();
         }
     }
-    
-    
+
+
 
     /* (non-Javadoc)
      * @see com.opensymphony.xwork2.config.providers.XmlConfigurationProvider#init(com.opensymphony.xwork2.config.Configuration)
@@ -84,7 +101,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
             if (url == null) {
                 return super.getConfigurationUrls(fileName);
             }
-        } 
+        }
         if (url != null) {
             List<URL> list = new ArrayList<URL>();
             list.add(url);
@@ -93,14 +110,14 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
             return super.getConfigurationUrls(fileName);
         }
     }
-    
+
     protected URL findInFileSystem(String fileName) throws IOException {
         URL url = null;
         File file = new File(fileName);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Trying to load file " + file);
         }
-        
+
         // Trying relative path to original file
         if (!file.exists()) {
             file = new File(baseDir, fileName);
@@ -111,7 +128,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
             } catch (MalformedURLException e) {
                 throw new IOException("Unable to convert "+file+" to a URL");
             }
-        } 
+        }
         return url;
     }
 
@@ -125,8 +142,8 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
             return super.needsReload();
         }
         return false;
-        
+
     }
-    
-    
+
+
 }

@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.dispatcher;
 
@@ -31,7 +34,7 @@ import com.opensymphony.xwork2.util.TextParseUtil;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * 
+ *
  * A base class for all Struts action execution results.
  * The "location" param is the default parameter, meaning the most common usage of this result would be:
  * <p/>
@@ -44,16 +47,16 @@ import com.opensymphony.xwork2.util.TextParseUtil;
  * <li>parse - true by default. If set to false, the location param will not be parsed for expressions</li>
  * <li>encode - false by default. If set to false, the location param will not be url encoded. This only have effect when parse is true</li>
  * </ul>
- * 
+ *
  * <b>NOTE:</b>
  * The encode param will only have effect when parse is true
- * 
+ *
  * <!-- END SNIPPET: javadoc -->
- * 
+ *
  * <p/>
- * 
+ *
  * <!-- START SNIPPET: example -->
- * 
+ *
  * <p/>
  * In the struts.xml configuration file, these would be included as:
  * <p/>
@@ -71,7 +74,7 @@ import com.opensymphony.xwork2.util.TextParseUtil;
  *      &lt;param name="<b>encode</b>"&gt;true&lt;/param&gt;
  *  &lt;/result&gt;</pre>
  * <p/>
- * In the above case, myUrl will be parsed against Ognl Value Stack and then 
+ * In the above case, myUrl will be parsed against Ognl Value Stack and then
  * URL encoded.
  * <p/>
  * or when using the default parameter feature
@@ -94,13 +97,13 @@ import com.opensymphony.xwork2.util.TextParseUtil;
  * Please see the {@link com.opensymphony.xwork2.Result} class for more info on Results in general.
  *
  * <!-- END SNIPPET: example -->
- * 
+ *
  * @see com.opensymphony.xwork2.Result
  */
 public abstract class StrutsResultSupport implements Result, StrutsStatics {
-	
-	private static final Log _log = LogFactory.getLog(StrutsResultSupport.class);
-	
+
+    private static final Log _log = LogFactory.getLog(StrutsResultSupport.class);
+
     /** The default parameter */
     public static final String DEFAULT_PARAM = "location";
 
@@ -110,19 +113,19 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
     private String lastFinalLocation;
 
     public StrutsResultSupport() {
-    	this(null, true, false);
+        this(null, true, false);
     }
-    
+
     public StrutsResultSupport(String location) {
-    	this(location, false, false);
+        this(location, false, false);
     }
-    
+
     public StrutsResultSupport(String location, boolean parse, boolean encode) {
-    	this.location = location;
-    	this.parse = parse;
-    	this.encode = encode;
+        this.location = location;
+        this.parse = parse;
+        this.encode = encode;
     }
-    
+
     /**
      * The location to go to after action execution. This could be a JSP page or another action.
      * The location can contain OGNL expressions which will be evaulated if the <tt>parse</tt>
@@ -134,7 +137,7 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
     public void setLocation(String location) {
         this.location = location;
     }
-    
+
     /**
      * Returns the last parsed and encoded location value
      */
@@ -151,15 +154,15 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
     public void setParse(boolean parse) {
         this.parse = parse;
     }
-    
+
     /**
      * Set encode to <tt>true</tt> to indicate that the location should be url encoded. This is set to
      * <tt>true</tt> by default
-     * 
+     *
      * @param encode <tt>true</tt> if the location parameter should be url encode, <tt>false</tt> otherwise.
      */
     public void setEncode(boolean encode) {
-    	this.encode = encode;
+        this.encode = encode;
     }
 
     /**
@@ -174,36 +177,36 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
         lastFinalLocation = conditionalParse(location, invocation);
         doExecute(lastFinalLocation, invocation);
     }
-    
+
     /**
      * Parses the parameter for OGNL expressions against the valuestack
-     * 
+     *
      * @param param The parameter value
      * @param invocation The action invocation instance
      * @return The resulting string
      */
     protected String conditionalParse(String param, ActionInvocation invocation) {
         if (parse && param != null && invocation != null) {
-            return TextParseUtil.translateVariables(param, invocation.getStack(), 
-            		new TextParseUtil.ParsedValueEvaluator() {
-						public Object evaluate(Object parsedValue) {
-							if (encode) {
-								if (parsedValue != null) {
-									try {
-										// use UTF-8 as this is the recommended encoding by W3C to 
-										// avoid incompatibilities.
-										return URLEncoder.encode(parsedValue.toString(), "UTF-8");
-									}
-									catch(UnsupportedEncodingException e) {
-										_log.warn("error while trying to encode ["+parsedValue+"]", e);
-									}
-								}
-							}
-							return parsedValue;
-						}
+            return TextParseUtil.translateVariables(param, invocation.getStack(),
+                    new TextParseUtil.ParsedValueEvaluator() {
+                        public Object evaluate(Object parsedValue) {
+                            if (encode) {
+                                if (parsedValue != null) {
+                                    try {
+                                        // use UTF-8 as this is the recommended encoding by W3C to
+                                        // avoid incompatibilities.
+                                        return URLEncoder.encode(parsedValue.toString(), "UTF-8");
+                                    }
+                                    catch(UnsupportedEncodingException e) {
+                                        _log.warn("error while trying to encode ["+parsedValue+"]", e);
+                                    }
+                                }
+                            }
+                            return parsedValue;
+                        }
             });
         } else {
-        	return param;
+            return param;
         }
     }
 

@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.components;
 
@@ -42,7 +45,7 @@ public abstract class FormButton extends UIBean {
 
     //public void evaluateParams() {
     public void evaluateExtraParams() {
-    	super.evaluateExtraParams();
+        super.evaluateExtraParams();
         if (align == null) {
             align = "right";
         }
@@ -80,12 +83,12 @@ public abstract class FormButton extends UIBean {
         addParameter("align", findString(align));
 
     }
-    
+
     /**
      * Override UIBean's implementation, such that component Html id is determined
      * in the following order :-
      * <ol>
-     * 	 <li>This component id attribute</li>
+     *   <li>This component id attribute</li>
      *   <li>[containing_form_id]_[this_component_name]</li>
      *   <li>[containing_form_id]_[this_component_action]_[this_component_method]</li>
      *   <li>[containing_form_id]_[this_component_method]</li>
@@ -100,40 +103,40 @@ public abstract class FormButton extends UIBean {
         if (id != null) {
             // this check is needed for backwards compatibility with 2.1.x
             if (altSyntax()) {
-            	_tmp_id = findString(id);
+                _tmp_id = findString(id);
             } else {
-            	_tmp_id = id;
+                _tmp_id = id;
             }
         }
         else {
-        	if (form != null && form.getParameters().get("id") != null) {
-				_tmp_id = _tmp_id + form.getParameters().get("id").toString() + "_";
-        	}
-			if (name != null) {
-				_tmp_id = _tmp_id + escape(name);
-			} else if (action != null || method != null){
-				if (action != null) {
-					_tmp_id = _tmp_id + escape(action);
-				}
-				if (method != null) {
-					_tmp_id = _tmp_id + "_" + escape(method);
-				}
-			} else {
-				// if form is null, this component is used, without a form, i guess
-				// there's not much we could do then.
-				if (form != null) {
-					_tmp_id = _tmp_id + form.getSequence();
-				}
-			}
+            if (form != null && form.getParameters().get("id") != null) {
+                _tmp_id = _tmp_id + form.getParameters().get("id").toString() + "_";
+            }
+            if (name != null) {
+                _tmp_id = _tmp_id + escape(name);
+            } else if (action != null || method != null){
+                if (action != null) {
+                    _tmp_id = _tmp_id + escape(action);
+                }
+                if (method != null) {
+                    _tmp_id = _tmp_id + "_" + escape(method);
+                }
+            } else {
+                // if form is null, this component is used, without a form, i guess
+                // there's not much we could do then.
+                if (form != null) {
+                    _tmp_id = _tmp_id + form.getSequence();
+                }
+            }
         }
-		addParameter("id", _tmp_id);
+        addParameter("id", _tmp_id);
     }
 
     /**
-	 * Indicate whether the concrete button supports the type "image".
-	 * 
-	 * @return <tt>true</tt> if type image is supported.
-	 */
+     * Indicate whether the concrete button supports the type "image".
+     *
+     * @return <tt>true</tt> if type image is supported.
+     */
     protected abstract boolean supportsImageType();
 
     /**

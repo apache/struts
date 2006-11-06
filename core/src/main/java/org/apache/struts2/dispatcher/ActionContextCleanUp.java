@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.dispatcher;
 
@@ -58,7 +61,7 @@ import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
  * @see FilterDispatcher
  * @see AbstractFilter
  * @see Dispatcher
- * 
+ *
  * @version $Date$ $Id$
  */
 public class ActionContextCleanUp extends AbstractFilter {
@@ -74,9 +77,9 @@ public class ActionContextCleanUp extends AbstractFilter {
      * Empty implementation.
      */
     protected void postInit(FilterConfig filterConfig) throws ServletException {
-    	// does nothing.
+        // does nothing.
     }
-    
+
     /**
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
      */
@@ -87,58 +90,58 @@ public class ActionContextCleanUp extends AbstractFilter {
 
         String timerKey = "ActionContextCleanUp_doFilter: ";
         try {
-        	UtilTimerStack.push(timerKey);
-        	
-        	request = prepareDispatcherAndWrapRequest(request, response);
+            UtilTimerStack.push(timerKey);
 
-        	try {
-        		Integer count = (Integer)request.getAttribute(COUNTER);
-        		if (count == null) {
-        			count = new Integer(1);
-        		}
-        		else {
-        			count = new Integer(count.intValue()+1);
-        		}
-        		request.setAttribute(COUNTER, count);
-        		
-        		if (LOG.isDebugEnabled()) {
-            		LOG.debug("filtering counter="+count);
-            	}
-        		
-        		chain.doFilter(request, response);
-        	} finally {
-        		int counterVal = ((Integer)request.getAttribute(COUNTER)).intValue();
-        		counterVal -= 1;
-        		request.setAttribute(COUNTER, new Integer(counterVal));
-        		cleanUp(request);
-        	}
+            request = prepareDispatcherAndWrapRequest(request, response);
+
+            try {
+                Integer count = (Integer)request.getAttribute(COUNTER);
+                if (count == null) {
+                    count = new Integer(1);
+                }
+                else {
+                    count = new Integer(count.intValue()+1);
+                }
+                request.setAttribute(COUNTER, count);
+
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("filtering counter="+count);
+                }
+
+                chain.doFilter(request, response);
+            } finally {
+                int counterVal = ((Integer)request.getAttribute(COUNTER)).intValue();
+                counterVal -= 1;
+                request.setAttribute(COUNTER, new Integer(counterVal));
+                cleanUp(request);
+            }
         }
         finally {
-        	UtilTimerStack.pop(timerKey);
+            UtilTimerStack.pop(timerKey);
         }
     }
 
     /**
      * Clean up the request of threadlocals if this is the last execution
-     * 
+     *
      * @param req The servlet request
      */
     protected static void cleanUp(ServletRequest req) {
         // should we clean up yet?
-    	Integer count = (Integer) req.getAttribute(COUNTER);
+        Integer count = (Integer) req.getAttribute(COUNTER);
         if (count != null && count > 0 ) {
-        	if (LOG.isDebugEnabled()) {
-        		LOG.debug("skipping cleanup counter="+count);
-        	}
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("skipping cleanup counter="+count);
+            }
             return;
         }
 
         // always dontClean up the thread request, even if an action hasn't been executed
         ActionContext.setContext(null);
         Dispatcher.setInstance(null);
-        
+
         if (LOG.isDebugEnabled()) {
-    		LOG.debug("clean up ");
-    	}
+            LOG.debug("clean up ");
+        }
     }
 }

@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.portlet.util;
 
@@ -41,19 +44,19 @@ import org.apache.struts2.portlet.context.PortletActionContext;
 /**
  * Helper class for creating Portlet URLs. Portlet URLs are fundamentally different from regular
  * servlet URLs since they never target the application itself; all requests go through the portlet
- * container and must therefore be programatically constructed using the 
- * {@link javax.portlet.RenderResponse#createActionURL()} and 
+ * container and must therefore be programatically constructed using the
+ * {@link javax.portlet.RenderResponse#createActionURL()} and
  * {@link javax.portlet.RenderResponse#createRenderURL()} APIs.
- * 
+ *
  */
 public class PortletUrlHelper {
     public static final String ENCODING = "UTF-8";
-    
+
     private static final Log LOG = LogFactory.getLog(PortletUrlHelper.class);
 
     /**
      * Create a portlet URL with for the specified action and namespace.
-     * 
+     *
      * @param action The action the URL should invoke.
      * @param namespace The namespace of the action to invoke.
      * @param params The parameters of the URL.
@@ -69,8 +72,8 @@ public class PortletUrlHelper {
     }
 
     /**
-     * Create a portlet URL with for the specified action and namespace. 
-     * 
+     * Create a portlet URL with for the specified action and namespace.
+     *
      * @see #buildUrl(String, String, Map, String, String, String)
      */
     public static String buildUrl(String action, String namespace, Map params,
@@ -144,12 +147,12 @@ public class PortletUrlHelper {
     }
 
     /**
-     * 
+     *
      * Prepend the namespace configuration for the specified namespace and PortletMode.
-     * 
+     *
      * @param namespace The base namespace.
      * @param portletMode The PortletMode.
-     * 
+     *
      * @return prepended namespace.
      */
     private static String prependNamespace(String namespace, String portletMode) {
@@ -183,7 +186,7 @@ public class PortletUrlHelper {
     /**
      * Encode an url to a non Struts action resource, like stylesheet, image or
      * servlet.
-     * 
+     *
      * @param value
      * @return encoded url to non Struts action resources.
      */
@@ -201,7 +204,7 @@ public class PortletUrlHelper {
             while(it.hasNext()) {
                 String key = (String)it.next();
                 String val = (String)params.get(key);
-                
+
                 sb.append(URLEncoder.encode(key, ENCODING)).append("=");
                 sb.append(URLEncoder.encode(val, ENCODING));
                 if(it.hasNext()) {
@@ -220,7 +223,7 @@ public class PortletUrlHelper {
     /**
      * Will ensure that all entries in <code>params</code> are String arrays,
      * as requried by the setParameters on the PortletURL.
-     * 
+     *
      * @param params The parameters to the URL.
      * @return A Map with all parameters as String arrays.
      */
@@ -244,7 +247,7 @@ public class PortletUrlHelper {
 
     /**
      * Convert the given String to a WindowState object.
-     * 
+     *
      * @param portletReq The RenderRequest.
      * @param windowState The WindowState as a String.
      * @return The WindowState that mathces the <tt>windowState</tt> String, or if
@@ -271,7 +274,7 @@ public class PortletUrlHelper {
 
     /**
      * Convert the given String to a PortletMode object.
-     * 
+     *
      * @param portletReq The RenderRequest.
      * @param portletMode The PortletMode as a String.
      * @return The PortletMode that mathces the <tt>portletMode</tt> String, or if

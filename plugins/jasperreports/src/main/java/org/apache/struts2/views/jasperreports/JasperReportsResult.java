@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.views.jasperreports;
 
@@ -90,7 +93,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <p>
  * This result follows the same rules from {@link StrutsResultSupport}.
- * Specifically, all parameters will be parsed if the "parse" parameter is not 
+ * Specifically, all parameters will be parsed if the "parse" parameter is not
  * set to false.
  * </p>
  * <!-- END SNIPPET: params -->
@@ -114,11 +117,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  */
 public class JasperReportsResult extends StrutsResultSupport implements JasperReportConstants {
-	
-	private static final long serialVersionUID = -2523174799621182907L;
+
+    private static final long serialVersionUID = -2523174799621182907L;
 
 
-	private final static Log LOG = LogFactory.getLog(JasperReportsResult.class);
+    private final static Log LOG = LogFactory.getLog(JasperReportsResult.class);
 
 
     protected String dataSource;
@@ -126,16 +129,16 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
     protected String documentName;
     protected String contentDisposition;
     protected String delimiter;
-    protected String imageServletUrl = "/images/"; 
-    
+    protected String imageServletUrl = "/images/";
+
     public JasperReportsResult() {
-    	super();
+        super();
     }
-    
+
     public JasperReportsResult(String location) {
-    	super(location);
+        super(location);
     }
-    
+
     public String getImageServletUrl() {
         return imageServletUrl;
     }
@@ -266,7 +269,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
                         response.setContentType("text/html");
 
                         // IMAGES_MAPS seems to be only supported as "backward compatible" from JasperReports 1.1.0
-                
+
                         Map imagesMap = new HashMap();
 
                         request.getSession(true).setAttribute("IMAGES_MAP", imagesMap);

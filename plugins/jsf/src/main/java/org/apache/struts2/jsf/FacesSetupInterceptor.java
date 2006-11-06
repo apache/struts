@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.jsf;
 
@@ -57,7 +60,7 @@ import com.opensymphony.xwork2.interceptor.Interceptor;
  * <p>
  * </p>
  * <b>Example struts.xml configuration:</b>
- * 
+ *
  * <pre>
  *   &lt;interceptor-ref name=&quot;jsfSetup&quot;&gt;
  *       &lt;param name=&quot;actionListener&quot;&gt;&lt;/param&gt;
@@ -75,7 +78,7 @@ import com.opensymphony.xwork2.interceptor.Interceptor;
  *       &lt;param name=&quot;viewHandler;&quot;&gt;org.apache.shale.tiles.TilesViewHandler&lt;/param&gt;
  *   &lt;/interceptor-ref&gt;
  * </pre>
- * 
+ *
  * <p>
  * </p>
  * <b>Note: None of the parameters are required but all are shown in the example
@@ -114,7 +117,7 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
 
     /**
      * Sets the lifecycle id
-     * 
+     *
      * @param id
      *            The id
      */
@@ -204,7 +207,7 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
 
     /**
      * Creates the faces context for other phases.
-     * 
+     *
      * @param invocation
      *            The action invocation
      */
@@ -247,7 +250,7 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
 
     /**
      * Determines if this action mapping will be have a JSF view
-     * 
+     *
      * @param inv
      *            The action invocation
      * @return True if the JSF interceptors should fire
@@ -278,7 +281,7 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
      * creating the objects using constructor delegation, if the requested class
      * supports it. Classes will be imbedded from top to bottom in the list with
      * the last class listed being the one that will be returned.
-     * 
+     *
      * @param interfaceClass
      *            The Class type that is expected to be returned
      * @param classNamesIterator
@@ -363,7 +366,7 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
      * Takes a comma delimited string of class names and stores the names in an
      * <code>ArrayList</code>. The incoming <code>String</code> will be
      * cleaned of any whitespace characters before the class names are stored.
-     * 
+     *
      * @param actionListener
      *            A comma delimited string of class names
      */
@@ -383,7 +386,7 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
      * A <code>String</code> to be used as the defaultRenderKitId for the jsf
      * application. The incoming <code>String</code> will be cleaned of
      * whitespace characters.
-     * 
+     *
      * @param defaultRenderKitId
      *            The defaultRenderKitId
      */
@@ -396,7 +399,7 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
      * Takes a comma delimited string of local names and stores the names in an
      * <code>ArrayList</code>. The incoming <code>String</code> will be
      * cleaned of any whitespace characters before the class names are stored.
-     * 
+     *
      * @param supportedLocale
      *            A comma delimited string of local names
      */
@@ -416,7 +419,7 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
      * Stores a String representation of the defaultLocale. The incoming
      * <code>String</code> will be cleaned of any whitespace characters before
      * the class names are stored.
-     * 
+     *
      * @param defaultLocale
      *            The default local
      */
@@ -427,7 +430,7 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
 
     /**
      * Stores the messageBundle to be used to configure the jsf Application.
-     * 
+     *
      * @param messageBundle
      *            The messageBundle
      */
@@ -440,7 +443,7 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
      * Takes a comma delimited string of class names and stores the names in an
      * <code>ArrayList</code>. The incoming <code>String</code> will be
      * cleaned of any whitespace characters before the class names are stored.
-     * 
+     *
      * @param navigationHandlerName
      *            A comma delimited string of class names
      */
@@ -460,7 +463,7 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
      * Takes a comma delimited string of class names and stores the names in an
      * <code>ArrayList</code>. The incoming <code>String</code> will be
      * cleaned of any whitespace characters before the class names are stored.
-     * 
+     *
      * @param propertyResolverName
      *            A comma delimited string of class names
      */
@@ -480,7 +483,7 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
      * Takes a comma delimited string of class names and stores the names in an
      * <code>ArrayList</code>. The incoming <code>String</code> will be
      * cleaned of any whitespace characters before the class names are stored.
-     * 
+     *
      * @param stateManagerName
      *            A comma delimited string of class names
      */
@@ -500,7 +503,7 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
      * Takes a comma delimited string of class names and stores the names in an
      * <code>ArrayList</code>. The incoming <code>String</code> will be
      * cleaned of any whitespace characters before the class names are stored.
-     * 
+     *
      * @param variableResolverName
      *            A comma delimited string of class names
      */
@@ -520,7 +523,7 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
      * Takes a comma delimited string of class names and stores the names in an
      * <code>ArrayList</code>. The incoming <code>String</code> will be
      * cleaned of any whitespace characters before the class names are stored.
-     * 
+     *
      * @param viewHandlerName
      *            A comma delimited string of class names
      */
@@ -539,7 +542,7 @@ public class FacesSetupInterceptor extends FacesSupport implements Interceptor {
     /**
      * Converts a locale string to <code>Locale</code> class. Accepts both '_'
      * and '-' as separators for locale components.
-     * 
+     *
      * @param localeString
      *            string representation of a locale
      * @return Locale instance, compatible with the string representation

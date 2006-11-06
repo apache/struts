@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.components;
 
@@ -272,10 +275,10 @@ import com.opensymphony.xwork2.util.ValueStack;
  *     <td>Description</td>
  *  </tr>
  *  <tr>
- *  	<td>tooltip</td>
- *  	<td>String</td>
- *  	<td>none</td>
- *  	<td>Set the tooltip of this particular component</td>
+ *      <td>tooltip</td>
+ *      <td>String</td>
+ *      <td>none</td>
+ *      <td>Set the tooltip of this particular component</td>
  *  </tr>
  *  <tr>
  *      <td>jsTooltipEnabled</td>
@@ -284,15 +287,15 @@ import com.opensymphony.xwork2.util.ValueStack;
  *      <td>Enable js tooltip rendering</td>
  *  </tr>
  *    <tr>
- *   	<td>tooltipIcon</td>
- *   	<td>String</td>
- *   	<td>/struts/static/tooltip/tooltip.gif</td>
- *   	<td>The url to the tooltip icon</td>
+ *      <td>tooltipIcon</td>
+ *      <td>String</td>
+ *      <td>/struts/static/tooltip/tooltip.gif</td>
+ *      <td>The url to the tooltip icon</td>
  *   <tr>
- *   	<td>tooltipDelay</td>
- *   	<td>String</td>
- *   	<td>500</td>
- *   	<td>Tooltip shows up after the specified timeout (miliseconds). A behavior similar to that of OS based tooltips.</td>
+ *      <td>tooltipDelay</td>
+ *      <td>String</td>
+ *      <td>500</td>
+ *      <td>Tooltip shows up after the specified timeout (miliseconds). A behavior similar to that of OS based tooltips.</td>
  *   </tr>
  * </table>
  *
@@ -335,7 +338,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * &lt;!-- Example 1: --&gt;
  * &lt;s:form
- * 			tooltipConfig="#{'tooltipDelay':'500',
+ *          tooltipConfig="#{'tooltipDelay':'500',
  *                           'tooltipIcon='/myImages/myIcon.gif'}" .... &gt;
  *   ....
  *     &lt;s:textfield label="Customer Name" tooltip="Enter the customer name" .... /&gt;
@@ -345,7 +348,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;!-- Example 2: --&gt;
  * &lt;s:form
  *         tooltipConfig="#{'tooltipDelay':'500',
- *          				'tooltipIcon':'/myImages/myIcon.gif'}" ... &gt;
+ *                          'tooltipIcon':'/myImages/myIcon.gif'}" ... &gt;
  *   ....
  *     &lt;s:textfield label="Address"
  *          tooltip="Enter your address"
@@ -357,19 +360,19 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;-- Example 3: --&gt;
  * &lt;s:textfield
  *        label="Customer Name"
- *	      tooltip="One of our customer Details'"&gt;
+ *        tooltip="One of our customer Details'"&gt;
  *        &lt;s:param name="tooltipConfig"&gt;
  *             tooltipDelay = 500 |
- *             tooltipIcon = /myImages/myIcon.gif 
+ *             tooltipIcon = /myImages/myIcon.gif
  *        &lt;/s:param&gt;
  * &lt;/s:textfield&gt;
  *
  *
  * &lt;-- Example 4: --&gt;
  * &lt;s:textfield
- *	        label="Customer Address"
- *	        tooltip="Enter The Customer Address" &gt;
- *	        &lt;s:param
+ *          label="Customer Address"
+ *          tooltip="Enter The Customer Address" &gt;
+ *          &lt;s:param
  *              name="tooltipConfig"
  *              value="#{'tooltipDelay':'500',
  *                       'tooltipIcon':'/myImages/myIcon.gif'}" /&gt;
@@ -437,7 +440,7 @@ public abstract class UIBean extends Component {
     protected String onkeyup;
     protected String onselect;
     protected String onchange;
-    
+
     // common html attributes
     protected String accesskey;
 
@@ -455,7 +458,7 @@ public abstract class UIBean extends Component {
             LOG.error("error when rendering", e);
         }
         finally {
-        	popComponentStack();
+            popComponentStack();
         }
 
         return false;
@@ -645,9 +648,9 @@ public abstract class UIBean extends Component {
         }
 
         if (accesskey != null) {
-        	addParameter("accesskey", findString(accesskey));
+            addParameter("accesskey", findString(accesskey));
         }
-        
+
         if (cssClass != null) {
             addParameter("cssClass", findString(cssClass));
         }
@@ -698,7 +701,7 @@ public abstract class UIBean extends Component {
             addParameter("form", form.getParameters());
 
             if ( name != null ) {
-            	// list should have been created by the form component
+                // list should have been created by the form component
                 List tags = (List) form.getParameters().get("tagNames");
                 tags.add(name);
             }
@@ -710,29 +713,29 @@ public abstract class UIBean extends Component {
 
         // tooltip & tooltipConfig
         if (tooltipConfig != null) {
-    		addParameter("tooltipConfig", findValue(tooltipConfig));
-    	}
+            addParameter("tooltipConfig", findValue(tooltipConfig));
+        }
         if (tooltip != null) {
-        	addParameter("tooltip", findString(tooltip));
+            addParameter("tooltip", findString(tooltip));
 
-        	Map tooltipConfigMap = getTooltipConfig(this);
+            Map tooltipConfigMap = getTooltipConfig(this);
 
-        	if (form != null) { // inform the containing form that we need tooltip javascript included
-        		form.addParameter("hasTooltip", Boolean.TRUE);
+            if (form != null) { // inform the containing form that we need tooltip javascript included
+                form.addParameter("hasTooltip", Boolean.TRUE);
 
-        		// tooltipConfig defined in component itseilf will take precedence
-        		// over those defined in the containing form
-        		Map overallTooltipConfigMap = getTooltipConfig(form);
-        		overallTooltipConfigMap.putAll(tooltipConfigMap); // override parent form's tooltip config
+                // tooltipConfig defined in component itseilf will take precedence
+                // over those defined in the containing form
+                Map overallTooltipConfigMap = getTooltipConfig(form);
+                overallTooltipConfigMap.putAll(tooltipConfigMap); // override parent form's tooltip config
 
-        		for (Iterator i = overallTooltipConfigMap.entrySet().iterator(); i.hasNext(); ) {
-        			Map.Entry entry = (Map.Entry) i.next();
-        			addParameter((String) entry.getKey(), entry.getValue());
-        		}
-        	}
-        	else {
-        		LOG.warn("No ancestor Form found, javascript based tooltip will not work, however standard HTML tooltip using alt and title attribute will still work ");
-        	}
+                for (Iterator i = overallTooltipConfigMap.entrySet().iterator(); i.hasNext(); ) {
+                    Map.Entry entry = (Map.Entry) i.next();
+                    addParameter((String) entry.getKey(), entry.getValue());
+                }
+            }
+            else {
+                LOG.warn("No ancestor Form found, javascript based tooltip will not work, however standard HTML tooltip using alt and title attribute will still work ");
+            }
         }
         evaluateExtraParams();
 
@@ -766,62 +769,62 @@ public abstract class UIBean extends Component {
     }
 
     protected void enableAncestorFormCustomOnsubmit() {
-    	Form form = (Form) findAncestor(Form.class);
-    	if (form != null) {
-    		form.addParameter("customOnsubmitEnabled", Boolean.TRUE);
-    	} else {
-    		LOG.warn("Cannot find an Ancestor form, custom onsubmit is NOT enabled");
-    	}
+        Form form = (Form) findAncestor(Form.class);
+        if (form != null) {
+            form.addParameter("customOnsubmitEnabled", Boolean.TRUE);
+        } else {
+            LOG.warn("Cannot find an Ancestor form, custom onsubmit is NOT enabled");
+        }
     }
 
     protected Map getTooltipConfig(UIBean component) {
-    	Object tooltipConfigObj = component.getParameters().get("tooltipConfig");
-    	Map tooltipConfig = new LinkedHashMap();
+        Object tooltipConfigObj = component.getParameters().get("tooltipConfig");
+        Map tooltipConfig = new LinkedHashMap();
 
-    	if (tooltipConfigObj instanceof Map) {
-    		// we get this if its configured using
-    		// 1] UI component's tooltipConfig attribute  OR
-    		// 2] <param name="tooltip" value="" /> param tag value attribute
+        if (tooltipConfigObj instanceof Map) {
+            // we get this if its configured using
+            // 1] UI component's tooltipConfig attribute  OR
+            // 2] <param name="tooltip" value="" /> param tag value attribute
 
-    		tooltipConfig = new LinkedHashMap((Map)tooltipConfigObj);
-    	} else if (tooltipConfigObj instanceof String) {
+            tooltipConfig = new LinkedHashMap((Map)tooltipConfigObj);
+        } else if (tooltipConfigObj instanceof String) {
 
-    		// we get this if its configured using
-    		// <param name="tooltipConfig"> ... </param> tag's body
-    		String tooltipConfigStr = (String) tooltipConfigObj;
-    		String[] tooltipConfigArray = tooltipConfigStr.split("\\|");
+            // we get this if its configured using
+            // <param name="tooltipConfig"> ... </param> tag's body
+            String tooltipConfigStr = (String) tooltipConfigObj;
+            String[] tooltipConfigArray = tooltipConfigStr.split("\\|");
 
-    		for (int a=0; a<tooltipConfigArray.length; a++) {
-    			String[] configEntry = ((String)tooltipConfigArray[a].trim()).split("=");
-    			String key = configEntry[0].trim();
-    			String value = null;
-    			if (configEntry.length > 1) {
-    				value = configEntry[1].trim();
-    				tooltipConfig.put(key, value.toString());
-    			}
-    			else {
-    				LOG.warn("component "+component+" tooltip config param "+key+" has no value defined, skipped");
-    			}
-    		}
-    	}
-    	return tooltipConfig;
+            for (int a=0; a<tooltipConfigArray.length; a++) {
+                String[] configEntry = ((String)tooltipConfigArray[a].trim()).split("=");
+                String key = configEntry[0].trim();
+                String value = null;
+                if (configEntry.length > 1) {
+                    value = configEntry[1].trim();
+                    tooltipConfig.put(key, value.toString());
+                }
+                else {
+                    LOG.warn("component "+component+" tooltip config param "+key+" has no value defined, skipped");
+                }
+            }
+        }
+        return tooltipConfig;
     }
 
     /**
      * Create HTML id element for the component and populate this component parmaeter
      * map.
-     * 
+     *
      * The order is as follows :-
      * <ol>
      *   <li>This component id attribute</li>
      *   <li>[containing_form_id]_[this_component_name]</li>
      *   <li>[this_component_name]</li>
      * </ol>
-     * 
+     *
      * @param form
      */
     protected void populateComponentHtmlId(Form form) {
-    	if (id != null) {
+        if (id != null) {
             // this check is needed for backwards compatibility with 2.1.x
             if (altSyntax()) {
                 addParameter("id", findString(id));
@@ -834,14 +837,14 @@ public abstract class UIBean extends Component {
             addParameter("id", escape(name));
         }
     }
-    
+
 
     /**
      * The template directory.
      * @s.tagattribute required="false"
      */
     public void setTemplateDir(String templateDir) {
-    	this.templateDir = templateDir;
+        this.templateDir = templateDir;
     }
 
     /**
@@ -1063,13 +1066,13 @@ public abstract class UIBean extends Component {
     public void setOnchange(String onchange) {
         this.onchange = onchange;
     }
-    
+
     /**
      * Set the html accesskey attribute on rendered html element
      * @s.tagattribute required="false"
      */
     public void setAccesskey(String accesskey) {
-    	this.accesskey = accesskey;
+        this.accesskey = accesskey;
     }
 
     /**
@@ -1077,7 +1080,7 @@ public abstract class UIBean extends Component {
      * @s.tagattribute required="false" type="String" default=""
      */
     public void setTooltip(String tooltip) {
-    	this.tooltip = tooltip;
+        this.tooltip = tooltip;
     }
 
     /**
@@ -1085,6 +1088,6 @@ public abstract class UIBean extends Component {
      * @s.tagattribute required="false" type="String" default=""
      */
     public void setTooltipConfig(String tooltipConfig) {
-    	this.tooltipConfig = tooltipConfig;
+        this.tooltipConfig = tooltipConfig;
     }
 }

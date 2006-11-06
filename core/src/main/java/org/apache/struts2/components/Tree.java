@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.components;
 
@@ -28,7 +31,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- START SNIPPET: javadoc -->
  *
  * Renders a tree widget with AJAX support.<p/>
- * 
+ *
  * The id attribute is normally specified, such that it could be looked up using
  * javascript if necessary.<p/>
  *
@@ -38,7 +41,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * 
+ *
  * &lt-- statically --&gt;
  * &lt;s:tree id="..." label="..."&gt;
  *    &lt;s:treenode id="..." label="..." /&gt;
@@ -48,27 +51,27 @@ import com.opensymphony.xwork2.util.ValueStack;
  *    &;lt;/s:treenode&gt;
  *    &lt;s:treenode id="..." label="..." /&gt;
  * &lt;/s:tree&gt;
- * 
+ *
  * &lt;-- dynamically --&gt;
  * &lt;s:tree
- * 			id="..."
+ *          id="..."
  *          rootNode="..."
  *          nodeIdProperty="..."
  *          nodeTitleProperty="..."
  *          childCollectionProperty="..." /&gt;
- * 
+ *
  * <!-- END SNIPPET: example -->
  * </pre>
- * 
+ *
  *
  * @s.tag name="tree" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TreeTag"
  * description="Render a tree widget."
  */
 public class Tree extends ClosingUIBean {
-    
-	private static final String TEMPLATE = "tree-close";
+
+    private static final String TEMPLATE = "tree-close";
     private static final String OPEN_TEMPLATE = "tree";
-    
+
     private String toggle = "fade";
     private String treeSelectedTopic;
     private String treeExpandedTopic;
@@ -78,20 +81,20 @@ public class Tree extends ClosingUIBean {
     protected String nodeTitleProperty;
     protected String nodeIdProperty;
     private String showRootGrid;
-    
+
     private String showGrid;
     private String blankIconSrc;
-	private String gridIconSrcL;
-	private String gridIconSrcV;
-	private String gridIconSrcP;
-	private String gridIconSrcC;
-	private String gridIconSrcX;
-	private String gridIconSrcY;
-	private String expandIconSrcPlus;
-	private String expandIconSrcMinus;
-	private String iconWidth;
-	private String iconHeight;
-	private String toggleDuration;
+    private String gridIconSrcL;
+    private String gridIconSrcV;
+    private String gridIconSrcP;
+    private String gridIconSrcC;
+    private String gridIconSrcX;
+    private String gridIconSrcY;
+    private String expandIconSrcPlus;
+    private String expandIconSrcMinus;
+    private String iconWidth;
+    private String iconHeight;
+    private String toggleDuration;
     private String templateCssPath;
 
     public Tree(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
@@ -147,63 +150,63 @@ public class Tree extends ClosingUIBean {
         if (nodeIdProperty != null) {
             addParameter("nodeIdProperty", findString(nodeIdProperty));
         }
-        
+
         if (showRootGrid != null) {
-        	addParameter("showRootGrid", findValue(showRootGrid, Boolean.class));
+            addParameter("showRootGrid", findValue(showRootGrid, Boolean.class));
         }
-        
-        
+
+
         if (showGrid != null) {
-        	addParameter("showGrid", findValue(showGrid, Boolean.class));
+            addParameter("showGrid", findValue(showGrid, Boolean.class));
         }
-        
+
         if (blankIconSrc != null) {
-        	addParameter("blankIconSrc", findString(blankIconSrc));
+            addParameter("blankIconSrc", findString(blankIconSrc));
         }
-        
-    	if (gridIconSrcL != null) {
-    		addParameter("gridIconSrcL", findString(gridIconSrcL));
-    	}
-    	
-    	if (gridIconSrcV != null) {
-    		addParameter("gridIconSrcV", findString(gridIconSrcV));
-    	}
-    	
-    	if (gridIconSrcP != null)  {
-    		addParameter("gridIconSrcP", findString(gridIconSrcP));
-    	}
-    	
-    	if (gridIconSrcC != null) {
-    		addParameter("gridIconSrcC", findString(gridIconSrcC));
-    	}
-    	
-    	if (gridIconSrcX != null) {
-    		addParameter("gridIconSrcX", findString(gridIconSrcX));
-    	}
-    	
-    	if (gridIconSrcY != null) {
-    		addParameter("gridIconSrcY", findString(gridIconSrcY));
-    	}
-    	
-    	if (expandIconSrcPlus != null) {
-    		addParameter("expandIconSrcPlus", findString(expandIconSrcPlus));
-    	}
-    	
-    	if (expandIconSrcMinus != null) {
-    		addParameter("expandIconSrcMinus", findString(expandIconSrcMinus));
-    	}
-    	
-    	if (iconWidth != null) {
-    		addParameter("iconWidth", findValue(iconWidth, Integer.class));
-    	}
-    	if (iconHeight != null) {
-    		addParameter("iconHeight", findValue(iconHeight, Integer.class));
-    	}
-    	if (toggleDuration != null) {
-    		addParameter("toggleDuration", findValue(toggleDuration, Integer.class));
-    	}
+
+        if (gridIconSrcL != null) {
+            addParameter("gridIconSrcL", findString(gridIconSrcL));
+        }
+
+        if (gridIconSrcV != null) {
+            addParameter("gridIconSrcV", findString(gridIconSrcV));
+        }
+
+        if (gridIconSrcP != null)  {
+            addParameter("gridIconSrcP", findString(gridIconSrcP));
+        }
+
+        if (gridIconSrcC != null) {
+            addParameter("gridIconSrcC", findString(gridIconSrcC));
+        }
+
+        if (gridIconSrcX != null) {
+            addParameter("gridIconSrcX", findString(gridIconSrcX));
+        }
+
+        if (gridIconSrcY != null) {
+            addParameter("gridIconSrcY", findString(gridIconSrcY));
+        }
+
+        if (expandIconSrcPlus != null) {
+            addParameter("expandIconSrcPlus", findString(expandIconSrcPlus));
+        }
+
+        if (expandIconSrcMinus != null) {
+            addParameter("expandIconSrcMinus", findString(expandIconSrcMinus));
+        }
+
+        if (iconWidth != null) {
+            addParameter("iconWidth", findValue(iconWidth, Integer.class));
+        }
+        if (iconHeight != null) {
+            addParameter("iconHeight", findValue(iconHeight, Integer.class));
+        }
+        if (toggleDuration != null) {
+            addParameter("toggleDuration", findValue(toggleDuration, Integer.class));
+        }
         if (templateCssPath != null) {
-        	addParameter("templateCssPath", findString(templateCssPath));
+            addParameter("templateCssPath", findString(templateCssPath));
         }
     }
 
@@ -310,189 +313,189 @@ public class Tree extends ClosingUIBean {
     public void setNodeIdProperty(String nodeIdProperty) {
         this.nodeIdProperty = nodeIdProperty;
     }
-    
+
     /**
      * The showRootGrid property (default true).
      * @s.tagattribute required="false"
      */
     public void setShowRootGrid(String showRootGrid) {
-    	this.showRootGrid = showRootGrid;
+        this.showRootGrid = showRootGrid;
     }
-    
+
     public String getShowRootGrid() {
-    	return showRootGrid;
+        return showRootGrid;
     }
 
-	public String getBlankIconSrc() {
-		return blankIconSrc;
-	}
+    public String getBlankIconSrc() {
+        return blankIconSrc;
+    }
 
-	/**
-	 * Blank icon image source.
-	 * @s.tagattribute required="false"
-	 */
-	public void setBlankIconSrc(String blankIconSrc) {
-		this.blankIconSrc = blankIconSrc;
-	}
+    /**
+     * Blank icon image source.
+     * @s.tagattribute required="false"
+     */
+    public void setBlankIconSrc(String blankIconSrc) {
+        this.blankIconSrc = blankIconSrc;
+    }
 
-	public String getExpandIconSrcMinus() {
-		return expandIconSrcMinus;
-	}
+    public String getExpandIconSrcMinus() {
+        return expandIconSrcMinus;
+    }
 
-	/**
-	 * Expand icon (-) image source.
-	 * @s.tagattribute required="false"
-	 */
-	public void setExpandIconSrcMinus(String expandIconSrcMinus) {
-		this.expandIconSrcMinus = expandIconSrcMinus;
-	}
+    /**
+     * Expand icon (-) image source.
+     * @s.tagattribute required="false"
+     */
+    public void setExpandIconSrcMinus(String expandIconSrcMinus) {
+        this.expandIconSrcMinus = expandIconSrcMinus;
+    }
 
-	public String getExpandIconSrcPlus() {
-		return expandIconSrcPlus;
-	}
+    public String getExpandIconSrcPlus() {
+        return expandIconSrcPlus;
+    }
 
-	/**
-	 * Expand Icon (+) image source.
-	 * @s.tagattribute required="false"
-	 */
-	public void setExpandIconSrcPlus(String expandIconSrcPlus) {
-		this.expandIconSrcPlus = expandIconSrcPlus;
-	}
+    /**
+     * Expand Icon (+) image source.
+     * @s.tagattribute required="false"
+     */
+    public void setExpandIconSrcPlus(String expandIconSrcPlus) {
+        this.expandIconSrcPlus = expandIconSrcPlus;
+    }
 
-	public String getGridIconSrcC() {
-		return gridIconSrcC;
-	}
+    public String getGridIconSrcC() {
+        return gridIconSrcC;
+    }
 
-	/**
-	 * Image source for under child item child icons.
-	 * @s.tagattribute required="false"
-	 */
-	public void setGridIconSrcC(String gridIconSrcC) {
-		this.gridIconSrcC = gridIconSrcC;
-	}
+    /**
+     * Image source for under child item child icons.
+     * @s.tagattribute required="false"
+     */
+    public void setGridIconSrcC(String gridIconSrcC) {
+        this.gridIconSrcC = gridIconSrcC;
+    }
 
-	public String getGridIconSrcL() {
-		return gridIconSrcL;
-	}
+    public String getGridIconSrcL() {
+        return gridIconSrcL;
+    }
 
-	
-	/**
-	 * Image source for last child grid.
-	 * @s.tagattribute required="false"
-	 */
-	public void setGridIconSrcL(String gridIconSrcL) {
-		this.gridIconSrcL = gridIconSrcL;
-	}
 
-	public String getGridIconSrcP() {
-		return gridIconSrcP;
-	}
+    /**
+     * Image source for last child grid.
+     * @s.tagattribute required="false"
+     */
+    public void setGridIconSrcL(String gridIconSrcL) {
+        this.gridIconSrcL = gridIconSrcL;
+    }
 
-	/**
-	 * Image source for under parent item child icons.
-	 * @s.tagattribute required="false"
-	 */
-	public void setGridIconSrcP(String gridIconSrcP) {
-		this.gridIconSrcP = gridIconSrcP;
-	}
+    public String getGridIconSrcP() {
+        return gridIconSrcP;
+    }
 
-	public String getGridIconSrcV() {
-		return gridIconSrcV;
-	}
+    /**
+     * Image source for under parent item child icons.
+     * @s.tagattribute required="false"
+     */
+    public void setGridIconSrcP(String gridIconSrcP) {
+        this.gridIconSrcP = gridIconSrcP;
+    }
 
-	/**
-	 * Image source for vertical line.
-	 * @s.tagattribute required="false"
-	 */
-	public void setGridIconSrcV(String gridIconSrcV) {
-		this.gridIconSrcV = gridIconSrcV;
-	}
+    public String getGridIconSrcV() {
+        return gridIconSrcV;
+    }
 
-	public String getGridIconSrcX() {
-		return gridIconSrcX;
-	}
+    /**
+     * Image source for vertical line.
+     * @s.tagattribute required="false"
+     */
+    public void setGridIconSrcV(String gridIconSrcV) {
+        this.gridIconSrcV = gridIconSrcV;
+    }
 
-	/**
-	 * Image source for grid for sole root item.
-	 * @s.tagattribute required="false"
-	 */
-	public void setGridIconSrcX(String gridIconSrcX) {
-		this.gridIconSrcX = gridIconSrcX;
-	}
+    public String getGridIconSrcX() {
+        return gridIconSrcX;
+    }
 
-	public String getGridIconSrcY() {
-		return gridIconSrcY;
-	}
+    /**
+     * Image source for grid for sole root item.
+     * @s.tagattribute required="false"
+     */
+    public void setGridIconSrcX(String gridIconSrcX) {
+        this.gridIconSrcX = gridIconSrcX;
+    }
 
-	/**
-	 * Image source for grid for last root item.
-	 * @s.tagattribute required="false"
-	 */
-	public void setGridIconSrcY(String gridIconSrcY) {
-		this.gridIconSrcY = gridIconSrcY;
-	}
+    public String getGridIconSrcY() {
+        return gridIconSrcY;
+    }
 
-	public String getIconHeight() {
-		return iconHeight;
-	}
+    /**
+     * Image source for grid for last root item.
+     * @s.tagattribute required="false"
+     */
+    public void setGridIconSrcY(String gridIconSrcY) {
+        this.gridIconSrcY = gridIconSrcY;
+    }
 
-	
-	/**
-	 * Icon height (default 18 pixels).
-	 * @s.tagattribute required="false"
-	 */
-	public void setIconHeight(String iconHeight) {
-		this.iconHeight = iconHeight;
-	}
+    public String getIconHeight() {
+        return iconHeight;
+    }
 
-	public String getIconWidth() {
-		return iconWidth;
-	}
 
-	/**
-	 * Icon width (default 19 pixels).
-	 * @s.tagattribute required="false"
-	 */
-	public void setIconWidth(String iconWidth) {
-		this.iconWidth = iconWidth;
-	}
+    /**
+     * Icon height (default 18 pixels).
+     * @s.tagattribute required="false"
+     */
+    public void setIconHeight(String iconHeight) {
+        this.iconHeight = iconHeight;
+    }
 
-	
+    public String getIconWidth() {
+        return iconWidth;
+    }
 
-	public String getTemplateCssPath() {
-		return templateCssPath;
-	}
+    /**
+     * Icon width (default 19 pixels).
+     * @s.tagattribute required="false"
+     */
+    public void setIconWidth(String iconWidth) {
+        this.iconWidth = iconWidth;
+    }
 
-	/**
-	 * Template css path (default {contextPath}/struts/tree.css.
-	 * @s.tagattribute required="false"
-	 */
-	public void setTemplateCssPath(String templateCssPath) {
-		this.templateCssPath = templateCssPath;
-	}
 
-	public String getToggleDuration() {
-		return toggleDuration;
-	}
 
-	/**
-	 * Toggle duration (default 150 ms)
-	 * @s.tagattribute required="false"
-	 */
-	public void setToggleDuration(String toggleDuration) {
-		this.toggleDuration = toggleDuration;
-	}
+    public String getTemplateCssPath() {
+        return templateCssPath;
+    }
 
-	public String getShowGrid() {
-		return showGrid;
-	}
+    /**
+     * Template css path (default {contextPath}/struts/tree.css.
+     * @s.tagattribute required="false"
+     */
+    public void setTemplateCssPath(String templateCssPath) {
+        this.templateCssPath = templateCssPath;
+    }
 
-	/**
-	 * Show grid (default true).
-	 * @s.tagattribute required="false"
-	 */
-	public void setShowGrid(String showGrid) {
-		this.showGrid = showGrid;
-	}
+    public String getToggleDuration() {
+        return toggleDuration;
+    }
+
+    /**
+     * Toggle duration (default 150 ms)
+     * @s.tagattribute required="false"
+     */
+    public void setToggleDuration(String toggleDuration) {
+        this.toggleDuration = toggleDuration;
+    }
+
+    public String getShowGrid() {
+        return showGrid;
+    }
+
+    /**
+     * Show grid (default true).
+     * @s.tagattribute required="false"
+     */
+    public void setShowGrid(String showGrid) {
+        this.showGrid = showGrid;
+    }
 }
 

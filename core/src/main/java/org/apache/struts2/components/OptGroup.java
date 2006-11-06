@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.components;
 
@@ -67,83 +70,83 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 public class OptGroup extends Component {
 
-	public static final String INTERNAL_LIST_UI_BEAN_LIST_PARAMETER_KEY = "optGroupInternalListUiBeanList";
+    public static final String INTERNAL_LIST_UI_BEAN_LIST_PARAMETER_KEY = "optGroupInternalListUiBeanList";
 
-	private static Log _log = LogFactory.getLog(OptGroup.class);
+    private static Log _log = LogFactory.getLog(OptGroup.class);
 
-	protected HttpServletRequest req;
-	protected HttpServletResponse res;
+    protected HttpServletRequest req;
+    protected HttpServletResponse res;
 
-	protected ListUIBean internalUiBean;
+    protected ListUIBean internalUiBean;
 
-	public OptGroup(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
-		super(stack);
-		this.req = req;
-		this.res = res;
-		internalUiBean = new ListUIBean(stack, req, res) {
-			protected String getDefaultTemplate() {
-				return "empty";
-			}
-		};
-	}
+    public OptGroup(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+        super(stack);
+        this.req = req;
+        this.res = res;
+        internalUiBean = new ListUIBean(stack, req, res) {
+            protected String getDefaultTemplate() {
+                return "empty";
+            }
+        };
+    }
 
-	public boolean end(Writer writer, String body) {
-		Select select = (Select) findAncestor(Select.class);
-		if (select == null) {
-			_log.error("incorrect use of OptGroup component, this component must be used within a Select component",
-					new IllegalStateException("incorrect use of OptGroup component, this component must be used within a Select component"));
-			return false;
-		}
-		internalUiBean.start(writer);
-		internalUiBean.end(writer, body);
+    public boolean end(Writer writer, String body) {
+        Select select = (Select) findAncestor(Select.class);
+        if (select == null) {
+            _log.error("incorrect use of OptGroup component, this component must be used within a Select component",
+                    new IllegalStateException("incorrect use of OptGroup component, this component must be used within a Select component"));
+            return false;
+        }
+        internalUiBean.start(writer);
+        internalUiBean.end(writer, body);
 
-		List listUiBeans = (List) select.getParameters().get(INTERNAL_LIST_UI_BEAN_LIST_PARAMETER_KEY);
-		if (listUiBeans == null) {
-			listUiBeans = new ArrayList();
-		}
-		listUiBeans.add(internalUiBean);
-		select.addParameter(INTERNAL_LIST_UI_BEAN_LIST_PARAMETER_KEY, listUiBeans);
+        List listUiBeans = (List) select.getParameters().get(INTERNAL_LIST_UI_BEAN_LIST_PARAMETER_KEY);
+        if (listUiBeans == null) {
+            listUiBeans = new ArrayList();
+        }
+        listUiBeans.add(internalUiBean);
+        select.addParameter(INTERNAL_LIST_UI_BEAN_LIST_PARAMETER_KEY, listUiBeans);
 
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 * Set the label attribute.
-	 * @s.tagattribute required="false"
-	 */
-	public void setLabel(String label) {
-		internalUiBean.setLabel(label);
-	}
+    /**
+     * Set the label attribute.
+     * @s.tagattribute required="false"
+     */
+    public void setLabel(String label) {
+        internalUiBean.setLabel(label);
+    }
 
-	/**
-	 * Set the disable attribute.
-	 * @s.tagattribute required="false"
-	 */
-	public void setDisabled(String disabled) {
-		internalUiBean.setDisabled(disabled);
-	}
+    /**
+     * Set the disable attribute.
+     * @s.tagattribute required="false"
+     */
+    public void setDisabled(String disabled) {
+        internalUiBean.setDisabled(disabled);
+    }
 
-	/**
-	 * Set the list attribute.
-	 * @s.tagattribute required="false"
-	 */
-	public void setList(String list) {
-		internalUiBean.setList(list);
-	}
+    /**
+     * Set the list attribute.
+     * @s.tagattribute required="false"
+     */
+    public void setList(String list) {
+        internalUiBean.setList(list);
+    }
 
-	/**
-	 * Set the listKey attribute.
-	 * @s.tagattribute required="false"
-	 */
-	public void setListKey(String listKey) {
-		internalUiBean.setListKey(listKey);
-	}
+    /**
+     * Set the listKey attribute.
+     * @s.tagattribute required="false"
+     */
+    public void setListKey(String listKey) {
+        internalUiBean.setListKey(listKey);
+    }
 
-	/**
-	 * Set the listValue attribute.
-	 * @s.tagattribute required="false"
-	 */
-	public void setListValue(String listValue) {
-		internalUiBean.setListValue(listValue);
-	}
+    /**
+     * Set the listValue attribute.
+     * @s.tagattribute required="false"
+     */
+    public void setListValue(String listValue) {
+        internalUiBean.setListValue(listValue);
+    }
 }

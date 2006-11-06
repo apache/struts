@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.components;
 
@@ -34,7 +37,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * 
+ *
  * Format Date object in different ways.
  * <p>
  * The date tag will allow you to format a Date in a quick and easy way.
@@ -47,77 +50,77 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <b>Note</b>: If the requested Date object isn't found on the stack, a blank will be returned.
  * </p>
- * 
+ *
  * Configurable attributes are :-
  * <ul>
  *    <li>name</li>
  *    <li>nice</li>
  *    <li>format</li>
  * </ul>
- * 
+ *
  * <p/>
- * 
- * Following how the date component will work, depending on the value of nice attribute 
+ *
+ * Following how the date component will work, depending on the value of nice attribute
  * (which by default is false) and the format attribute.
- * 
+ *
  * <p/>
- * 
+ *
  * <b><u>Condition 1: With nice attribute as true</u></b>
  * <table border="1">
  *   <tr>
  *      <td>i18n key</td>
  *      <td>default</td>
- *   </tr>	
- *   <tr>
- *   	<td>struts.date.format.past</td>
- *   	<td>{0} ago</td>
  *   </tr>
  *   <tr>
- *   	<td>struts.date.format.future</td>
+ *      <td>struts.date.format.past</td>
+ *      <td>{0} ago</td>
+ *   </tr>
+ *   <tr>
+ *      <td>struts.date.format.future</td>
  *      <td>in {0}</td>
  *   </tr>
  *   <tr>
- *   	<td>struts.date.format.seconds</td>
+ *      <td>struts.date.format.seconds</td>
  *      <td>an instant</td>
  *   </tr>
  *   <tr>
- *   	<td>struts.date.format.minutes</td>
+ *      <td>struts.date.format.minutes</td>
  *      <td>{0,choice,1#one minute|1<{0} minutes}</td>
  *   </tr>
  *   <tr>
- *   	<td>struts.date.format.hours</td>
- *   	<td>{0,choice,1#one hour|1<{0} hours}{1,choice,0#|1#, one minute|1<, {1} minutes}</td>
+ *      <td>struts.date.format.hours</td>
+ *      <td>{0,choice,1#one hour|1<{0} hours}{1,choice,0#|1#, one minute|1<, {1} minutes}</td>
  *   </tr>
  *   <tr>
- *   	<td>struts.date.format.days</td>
- *   	<td>{0,choice,1#one day|1<{0} days}{1,choice,0#|1#, one hour|1<, {1} hours}</td>
+ *      <td>struts.date.format.days</td>
+ *      <td>{0,choice,1#one day|1<{0} days}{1,choice,0#|1#, one hour|1<, {1} hours}</td>
  *   </tr>
  *   <tr>
- *   	<td>struts.date.format.years</td>
- *   	<td>{0,choice,1#one year|1<{0} years}{1,choice,0#|1#, one day|1<, {1} days}</td>
+ *      <td>struts.date.format.years</td>
+ *      <td>{0,choice,1#one year|1<{0} years}{1,choice,0#|1#, one day|1<, {1} days}</td>
  *   </tr>
  * </table>
- * 
+ *
  * <p/>
- * 
+ *
  * <b><u>Condition 2: With nice attribute as false and format attribute is specified eg. dd/MM/yyyyy </u></b>
  * <p>In this case the format attribute will be used.</p>
- * 
+ *
  * <p/>
- * 
+ *
  * <b><u>Condition 3: With nice attribute as false and no format attribute is specified </u></b>
  * <table border="1">
  *    <tr>
  *      <td>i18n key</td>
  *      <td>default</td>
- *   </tr>	
+ *   </tr>
  *   <tr>
- *   	<td>struts.date.format</td>
+ *      <td>struts.date.format</td>
  *      <td>if one is not found DateFormat.MEDIUM format will be used</td>
  *   </tr>
  * </table>
- * 
- * 
+ *
+ *
  * <!-- END SNIPPET: javadoc -->
  *
  * <p/> <b>Examples</b>
@@ -379,5 +382,5 @@ public class Date extends Component {
      */
     public boolean isNice() {
         return nice;
-	}
+    }
 }

@@ -1,20 +1,24 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
+
 package org.apache.struts2.views.util;
 
 import java.io.UnsupportedEncodingException;
@@ -62,9 +66,9 @@ public class UrlHelper {
     public static String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map params) {
         return buildUrl(action, request, response, params, null, true, true);
     }
-    
+
     public static String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map params, String scheme, boolean includeContext, boolean encodeResult) {
-    	return buildUrl(action, request, response, params, scheme, includeContext, encodeResult, false);
+        return buildUrl(action, request, response, params, scheme, includeContext, encodeResult, false);
     }
 
     public static String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map params, String scheme, boolean includeContext, boolean encodeResult, boolean forceAddSchemeHostAndPort) {
@@ -89,19 +93,19 @@ public class UrlHelper {
         // only append scheme if it is different to the current scheme *OR*
         // if we explicity want it to be appended by having forceAddSchemeHostAndPort = true
         if (forceAddSchemeHostAndPort) {
-        	String reqScheme = request.getScheme();
-        	changedScheme = true;
-        	link.append(scheme != null ? scheme : reqScheme);
-        	link.append("://");
-        	link.append(request.getServerName());
-        	
-        	if ((scheme.equals("http") && (httpPort != DEFAULT_HTTP_PORT)) || (scheme.equals("https") && httpsPort != DEFAULT_HTTPS_PORT))
+            String reqScheme = request.getScheme();
+            changedScheme = true;
+            link.append(scheme != null ? scheme : reqScheme);
+            link.append("://");
+            link.append(request.getServerName());
+
+            if ((scheme.equals("http") && (httpPort != DEFAULT_HTTP_PORT)) || (scheme.equals("https") && httpsPort != DEFAULT_HTTPS_PORT))
             {
                 link.append(":");
                 link.append(scheme.equals("http") ? httpPort : httpsPort);
             }
         }
-        else if (  
+        else if (
            (scheme != null) && !scheme.equals(request.getScheme())) {
             changedScheme = true;
             link.append(scheme);
@@ -124,16 +128,16 @@ public class UrlHelper {
                     link.append(contextPath);
                 }
             } else if (changedScheme) {
-                
+
                 // (Applicable to Servlet 2.4 containers)
                 // If the request was forwarded, the attribute below will be set with the original URL
                 String uri = (String) request.getAttribute("javax.servlet.forward.request_uri");
-                
+
                 // If the attribute wasn't found, default to the value in the request object
                 if (uri == null) {
                     uri = request.getRequestURI();
                 }
-                
+
                 link.append(uri.substring(0, uri.lastIndexOf('/') + 1));
             }
 
@@ -148,7 +152,7 @@ public class UrlHelper {
             if (requestURI == null) {
                 requestURI = (String) request.getAttribute("javax.servlet.forward.request_uri");
             }
-            
+
             // If neither request attributes were found, default to the value in the request object
             if (requestURI == null) {
                 requestURI = request.getRequestURI();
@@ -184,9 +188,9 @@ public class UrlHelper {
     }
 
     public static void buildParametersString(Map params, StringBuffer link) {
-    	buildParametersString(params, link, AMP);
+        buildParametersString(params, link, AMP);
     }
-    
+
     public static void buildParametersString(Map params, StringBuffer link, String paramSeparator) {
         if ((params != null) && (params.size() > 0)) {
             if (link.toString().indexOf("?") == -1) {
@@ -251,10 +255,10 @@ public class UrlHelper {
             return translatedInput;
         }
     }
-    
+
     public static String translateAndDecode(String input) {
-    	String translatedInput = translateVariable(input);
-    	String encoding = getEncodingFromConfiguration();
+        String translatedInput = translateVariable(input);
+        String encoding = getEncodingFromConfiguration();
 
         try {
             return URLDecoder.decode(translatedInput, encoding);
@@ -263,15 +267,15 @@ public class UrlHelper {
             return translatedInput;
         }
     }
-    
+
     private static String translateVariable(String input) {
-    	ValueStack valueStack = ServletActionContext.getContext().getValueStack();
+        ValueStack valueStack = ServletActionContext.getContext().getValueStack();
         String output = TextParseUtil.translateVariables(input, valueStack);
         return output;
     }
-    
+
     private static String getEncodingFromConfiguration() {
-    	final String encoding;
+        final String encoding;
         if (Settings.isSet(StrutsConstants.STRUTS_I18N_ENCODING)) {
             encoding = Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
         } else {
@@ -279,29 +283,29 @@ public class UrlHelper {
         }
         return encoding;
     }
-    
+
     public static Map parseQueryString(String queryString) {
-    	Map queryParams = new LinkedHashMap();
-    	if (queryString != null) {
-    		String[] params = queryString.split("&");
-    		for (int a=0; a< params.length; a++) {
-    			if (params[a].trim().length() > 0) {
-    				String[] tmpParams = params[a].split("=");
-    				String paramName = null;
-    				String paramValue = "";
-    				if (tmpParams.length > 0) {
-    					paramName = tmpParams[0];
-    				}
-    				if (tmpParams.length > 1) {
-    					paramValue = tmpParams[1];
-    				}
-    				if (paramName != null) {
-    					String translatedParamValue = translateAndDecode(paramValue);
-    					queryParams.put(paramName, translatedParamValue);
-    				}
-    			}
-    		}
-    	}
-    	return queryParams;
+        Map queryParams = new LinkedHashMap();
+        if (queryString != null) {
+            String[] params = queryString.split("&");
+            for (int a=0; a< params.length; a++) {
+                if (params[a].trim().length() > 0) {
+                    String[] tmpParams = params[a].split("=");
+                    String paramName = null;
+                    String paramValue = "";
+                    if (tmpParams.length > 0) {
+                        paramName = tmpParams[0];
+                    }
+                    if (tmpParams.length > 1) {
+                        paramValue = tmpParams[1];
+                    }
+                    if (paramName != null) {
+                        String translatedParamValue = translateAndDecode(paramValue);
+                        queryParams.put(paramName, translatedParamValue);
+                    }
+                }
+            }
+        }
+        return queryParams;
     }
 }

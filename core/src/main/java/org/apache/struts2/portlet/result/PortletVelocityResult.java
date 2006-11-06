@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.portlet.result;
 
@@ -51,33 +54,33 @@ import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: description -->
- * 
+ *
  * Using the Servlet container's {@link JspFactory}, this result mocks a JSP
  * execution environment and then displays a Velocity template that will be
  * streamed directly to the servlet output.
- * 
+ *
  * <!-- END SNIPPET: description --> <p/><b>This result type takes the
  * following parameters: </b>
- * 
+ *
  * <!-- START SNIPPET: params -->
- * 
+ *
  * <ul>
- * 
+ *
  * <li><b>location (default) </b>- the location of the template to process.
  * </li>
- * 
+ *
  * <li><b>parse </b>- true by default. If set to false, the location param
  * will not be parsed for Ognl expressions.</li>
- * 
+ *
  * </ul>
  * <p>
  * This result follows the same rules from {@link StrutsResultSupport}.
  * </p>
- * 
+ *
  * <!-- END SNIPPET: params -->
- * 
+ *
  * <b>Example: </b>
- * 
+ *
  * <pre>
  * &lt;!-- START SNIPPET: example --&gt;
  *  &lt;result name=&quot;success&quot; type=&quot;velocity&quot;&gt;
@@ -85,23 +88,23 @@ import com.opensymphony.xwork2.util.ValueStack;
  *  &lt;/result&gt;
  *  &lt;!-- END SNIPPET: example --&gt;
  * </pre>
- * 
+ *
  */
 public class PortletVelocityResult extends StrutsResultSupport {
 
-	private static final long serialVersionUID = -8241086555872212274L;
-	
-	private static final Log log = LogFactory
+    private static final long serialVersionUID = -8241086555872212274L;
+
+    private static final Log log = LogFactory
             .getLog(PortletVelocityResult.class);
 
-	public PortletVelocityResult() {
-		super();
-	}
-	
-	public PortletVelocityResult(String location) {
-		super(location);
-	}
-	
+    public PortletVelocityResult() {
+        super();
+    }
+
+    public PortletVelocityResult(String location) {
+        super(location);
+    }
+
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.StrutsResultSupport#doExecute(java.lang.String, com.opensymphony.xwork2.ActionInvocation)
      */
@@ -116,7 +119,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
 
     /**
      * Executes the result
-     * 
+     *
      * @param location The location string
      * @param invocation The action invocation
      */
@@ -135,7 +138,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
     /**
      * Creates a Velocity context from the action, loads a Velocity template and
      * executes the template. Output is written to the servlet output stream.
-     * 
+     *
      * @param finalLocation the location of the Velocity template
      * @param invocation an encapsulation of the action execution state.
      * @throws Exception if an error occurs when creating the Velocity context,
@@ -213,7 +216,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
      * Retrieve the content type for this template. <p/>People can override
      * this method if they want to provide specific content types for specific
      * templates (eg text/xml).
-     * 
+     *
      * @return The content type associated with this template (default
      *         "text/html")
      */
@@ -224,7 +227,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
     /**
      * Retrieve the encoding for this template. <p/>People can override this
      * method if they want to provide specific encodings for specific templates.
-     * 
+     *
      * @return The encoding associated with this template (defaults to the value
      *         of 'struts.i18n.encoding' property)
      */
@@ -243,7 +246,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
     /**
      * Given a value stack, a Velocity engine, and an action invocation, this
      * method returns the appropriate Velocity template to render.
-     * 
+     *
      * @param stack the value stack to resolve the location again (when parse
      *        equals true)
      * @param velocity the velocity engine to process the request against
@@ -267,7 +270,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
 
     /**
      * Creates the VelocityContext that we'll use to render this page.
-     * 
+     *
      * @param velocityManager a reference to the velocityManager to use
      * @param stack the value stack to resolve the location against (when parse
      *        equals true)

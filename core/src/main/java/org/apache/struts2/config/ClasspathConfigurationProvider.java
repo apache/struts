@@ -1,19 +1,22 @@
 /*
- * $Id: DefaultSettings.java 439747 2006-09-03 09:22:46Z mrdon $
+ * $Id:  $
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.config;
 
@@ -44,7 +47,7 @@ import com.opensymphony.xwork2.util.TextUtils;
 
 /**
  * Loads the configuration by scanning the classpath looking for classes that end in
- * 'Action'.  
+ * 'Action'.
  */
 public class ClasspathConfigurationProvider implements ConfigurationProvider {
 
@@ -58,34 +61,34 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
     private String defaultPagePrefix = "";
     private PageLocator pageLocator = new ClasspathPageLocator();
     private boolean initialized = false;
-    
-    private Map<String,PackageConfig> loadedPackageConfigs = new HashMap<String,PackageConfig>(); 
-    
+
+    private Map<String,PackageConfig> loadedPackageConfigs = new HashMap<String,PackageConfig>();
+
     private static final Log LOG = LogFactory.getLog(ClasspathConfigurationProvider.class);
-    
+
     private Configuration configuration;
-    
+
     public ClasspathConfigurationProvider(String[] pkgs) {
         this.packages = pkgs;
-        
+
         if (Settings.isSet(DEFAULT_PARENT_PACKAGE)) {
             defaultParentPackage = Settings.get(DEFAULT_PARENT_PACKAGE);
         }
-        
+
         if (Settings.isSet(DEFAULT_PAGE_EXTENSION)) {
             defaultPageExtension = Settings.get(DEFAULT_PAGE_EXTENSION);
         }
-        
+
         if (Settings.isSet(DEFAULT_PAGE_PREFIX)) {
             defaultPagePrefix = Settings.get(DEFAULT_PAGE_PREFIX);
         }
-        
+
     }
-    
+
     public static interface PageLocator {
         public URL locate(String path);
     }
-    
+
     public static class ClasspathPageLocator implements PageLocator {
         public URL locate(String path) {
             return ClassLoaderUtil.getResource(path, getClass());
@@ -98,7 +101,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
     public void setDefaultParentPackage(String defaultParentPackage) {
         this.defaultParentPackage = defaultParentPackage;
     }
-    
+
     /**
      * @param defaultPageExtension the defaultPageExtension to set
      */
@@ -112,7 +115,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
     public void setDefaultPagePrefix(String defaultPagePrefix) {
         this.defaultPagePrefix = defaultPagePrefix;
     }
-    
+
     public void setPageLocator(PageLocator locator) {
         this.pageLocator = locator;
     }
@@ -130,12 +133,12 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
                processActionClass(cls, pkgs);
            }
         }
-        
+
         for (String key : loadedPackageConfigs.keySet()) {
             configuration.addPackageConfig(key, loadedPackageConfigs.get(key));
         }
     }
-    
+
     protected void processActionClass(Class cls, String[] pkgs) {
         String name = cls.getName();
         String actionPackage = cls.getPackage().getName();
@@ -147,7 +150,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
                     LOG.debug("Processing class "+name);
                 }
                 name = name.substring(pkg.length() + 1);
-                
+
                 actionNamespace = "";
                 actionName = name;
                 int pos = name.lastIndexOf('.');
@@ -158,9 +161,9 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
                 break;
             }
         }
-        
+
         PackageConfig pkgConfig = loadPackageConfig(actionNamespace, actionPackage, cls);
-        
+
         Annotation annotation = cls.getAnnotation(ParentPackage.class);
         if (annotation != null) {
             String parent = ((ParentPackage)annotation).value();
@@ -169,14 +172,14 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
                 throw new ConfigurationException("Unable to locate parent package "+parent, annotation);
             }
             pkgConfig.addParent(parentPkg);
-            
+
             if (!TextUtils.stringSet(pkgConfig.getNamespace()) && TextUtils.stringSet(parentPkg.getNamespace())) {
                 pkgConfig.setNamespace(parentPkg.getNamespace());
             }
         }
-        
+
         actionName = actionName.substring(0, actionName.length() - ACTION.length());
-        
+
         if (actionName.length() > 1) {
             int lowerPos = actionName.lastIndexOf('/') + 1;
             StringBuilder sb = new StringBuilder();
@@ -185,13 +188,13 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
             sb.append(actionName.substring(lowerPos + 1));
             actionName = sb.toString();
         }
-        
+
         ActionConfig actionConfig = new ActionConfig();
         actionConfig.setClassName(cls.getName());
         actionConfig.setPackageName(actionPackage);
-        
+
         actionConfig.setResults(new ResultMap<String,ResultConfig>(cls, actionName, pkgConfig));
-        
+
         pkgConfig.addActionConfig(actionName, actionConfig);
     }
 
@@ -200,7 +203,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
      */
     protected PackageConfig loadPackageConfig(String actionNamespace, String actionPackage, Class actionClass) {
         PackageConfig parent = null;
-        
+
         if (actionClass != null) {
             Namespace ns = (Namespace) actionClass.getAnnotation(Namespace.class);
             if (ns != null) {
@@ -209,7 +212,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
                 actionPackage = actionClass.getName();
             }
         }
-        
+
         PackageConfig pkgConfig = loadedPackageConfigs.get(actionPackage);
         if (pkgConfig == null) {
             pkgConfig = new PackageConfig();
@@ -218,22 +221,22 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
             if (parent == null) {
                 parent = configuration.getPackageConfig(defaultParentPackage);
             }
-            
+
             if (parent == null) {
                 throw new ConfigurationException("Unable to locate default parent package: " +
                         defaultParentPackage);
             }
             pkgConfig.addParent(parent);
-            
+
             pkgConfig.setNamespace(actionNamespace);
-            
+
             loadedPackageConfigs.put(actionPackage, pkgConfig);
         }
         return pkgConfig;
     }
 
     public void destroy() {
-        
+
     }
 
     public void init(Configuration configuration) throws ConfigurationException {
@@ -246,7 +249,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
     public boolean needsReload() {
         return !initialized;
     }
-    
+
     /**
      * Creates result configs from result annotations, and if a result isn't found,
      * creates them on the fly.
@@ -260,7 +263,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
             this.actionClass = actionClass;
             this.actionName = actionName;
             this.pkgConfig = pkgConfig;
-            
+
             // check if any annotations are around
             while (!actionClass.getName().equals(Object.class.getName())) {
                 //noinspection unchecked
@@ -283,9 +286,9 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
 
                 actionClass = actionClass.getSuperclass();
             }
-            
+
         }
-        
+
         protected ResultConfig createResultConfig(Result result) {
             Class cls = result.type();
             if (cls == NullResult.class) {
@@ -295,16 +298,16 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
         }
 
         public V get(Object key) {
-            
+
             Object result = super.get(key);
             if (result != null) {
                 return (V) result;
             } else {
-                
+
                 // TODO: This code never is actually used, do to how the runtime configuration
                 // is created.
                 String actionPath = pkgConfig.getNamespace() + "/" + actionName;
-                
+
                 String fileName = actionPath + "-" + key + defaultPageExtension;
                 if (pageLocator.locate(defaultPagePrefix + fileName) == null) {
                     fileName = actionPath + defaultPageExtension;
@@ -334,7 +337,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
                     throw new ConfigurationException("Unable to locate result class "+className, actionClass);
                 }
             }
-   
+
             String defaultParam;
             try {
                 defaultParam = (String) resultClass.getField("DEFAULT_PARAM").get(null);
@@ -342,7 +345,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
                 // not sure why this happened, but let's just use a sensible choice
                 defaultParam = "location";
             }
-   
+
             HashMap params = new HashMap();
             if (configParams != null) {
                 params.putAll(configParams);

@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.components;
 
@@ -43,25 +46,25 @@ import com.opensymphony.xwork2.util.XWorkContinuationConfig;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * 
+ *
  * <p>This tag is used to create a URL.</p>
  *
  * <p>You can use the "param" tag inside the body to provide
  * additional request parameters.</p>
- * 
+ *
  * <b>NOTE:</b>
  * <p>When includeParams is 'all' or 'get', the parameter defined in param tag will take
- * precedence and will not be overriden if they exists in the parameter submitted. For 
+ * precedence and will not be overriden if they exists in the parameter submitted. For
  * example, in Example 3 below, if there is a id parameter in the url where the page this
  * tag is included like http://<host>:<port>/<context>/editUser.action?id=3333&name=John
  * the generated url will be http://<host>:<port>/context>/editUser.action?id=22&name=John
  * cause the parameter defined in the param tag will take precedence.</p>
- * 
+ *
  * <!-- END SNIPPET: javadoc -->
  *
  *
  * <!-- START SNIPPET: params -->
- * 
+ *
  * <ul>
  *      <li>action (String) - (value or action choose either one, if both exist value takes precedence) action's name (alias) <li>
  *      <li>value (String) - (value or action choose either one, if both exist value takes precedence) the url itself</li>
@@ -76,13 +79,13 @@ import com.opensymphony.xwork2.util.XWorkContinuationConfig;
  *      </li>
  *      <li>includeContext (Boolean) - determine wheather to include the web app context path. Default is true.</li>
  * </ul>
- * 
+ *
  * <!-- END SNIPPET: params -->
  *
  * <p/> <b>Examples</b>
  * <pre>
  * <!-- START SNIPPET: example -->
- * 
+ *
  * &lt;-- Example 1 --&gt;
  * &lt;s:url value="editGadget.action"&gt;
  *     &lt;s:param name="id" value="%{selected}" /&gt;
@@ -92,12 +95,12 @@ import com.opensymphony.xwork2.util.XWorkContinuationConfig;
  * &lt;s:url action="editGadget"&gt;
  *     &lt;s:param name="id" value="%{selected}" /&gt;
  * &lt;/s:url&gt;
- * 
+ *
  * &lt;-- Example 3--&gt;
  * &lt;s:url includeParams="get"  &gt;
  *     &lt:param name="id" value="%{'22'}" /&gt;
  * &lt;/s:url&gt;
- * 
+ *
  * <!-- END SNIPPET: example -->
  * </pre>
  *
@@ -154,7 +157,7 @@ public class URL extends Component {
         // no explicit url set so attach params from current url, do
         // this at start so body params can override any of these they wish.
         try {
-        	// ww-1266
+            // ww-1266
             String includeParams =
                     Settings.isSet(StrutsConstants.STRUTS_URL_INCLUDEPARAMS) ?
                     Settings.get(StrutsConstants.STRUTS_URL_INCLUDEPARAMS).toLowerCase() : GET;
@@ -165,7 +168,7 @@ public class URL extends Component {
             }
 
             if (NONE.equalsIgnoreCase(includeParams)) {
-            	mergeRequestParameters(value, parameters, Collections.EMPTY_MAP);
+                mergeRequestParameters(value, parameters, Collections.EMPTY_MAP);
                 ActionContext.getContext().put(XWorkContinuationConfig.CONTINUE_KEY, null);
             } else if (ALL.equalsIgnoreCase(includeParams)) {
                 mergeRequestParameters(value, parameters, req.getParameterMap());
@@ -227,13 +230,13 @@ public class URL extends Component {
                 result = PortletUrlHelper.buildResourceUrl(value, parameters);
             }
             else {
-            	String _value = value;
-            	
-            	// We don't include the request parameters cause they would have been 
-            	// prioritised before this [in start(Writer) method]
-            	if (_value != null && _value.indexOf("?") > 0) {
-            		_value = _value.substring(0, _value.indexOf("?"));
-            	}
+                String _value = value;
+
+                // We don't include the request parameters cause they would have been
+                // prioritised before this [in start(Writer) method]
+                if (_value != null && _value.indexOf("?") > 0) {
+                    _value = _value.substring(0, _value.indexOf("?"));
+                }
                 result = UrlHelper.buildUrl(_value, req, res, parameters, scheme, includeContext, encode);
             }
         }
@@ -321,7 +324,7 @@ public class URL extends Component {
     public void setIncludeContext(boolean includeContext) {
         this.includeContext = includeContext;
     }
-    
+
     /**
      * The resulting portlet mode
      * @s.tagattribute required="false"
@@ -357,55 +360,55 @@ public class URL extends Component {
 
     /**
      * Merge request parameters into current parameters. If a parameter is
-     * already present, than the request parameter in the current request and value atrribute 
+     * already present, than the request parameter in the current request and value atrribute
      * will not override its value.
-     * 
+     *
      * The priority is as follows:-
      * <ul>
-     * 	<li>parameter from the current request (least priority)</li>
+     *  <li>parameter from the current request (least priority)</li>
      *  <li>parameter form the value attribute (more priority)</li>
      *  <li>parameter from the param tag (most priority)</li>
      * </ul>
-     * 
+     *
      * @param value the value attribute (url to be generated by this component)
      * @param parameters component parameters
      * @param contextParameters request parameters
      */
     protected void mergeRequestParameters(String value, Map parameters, Map contextParameters){
-    	
-    	Map mergedParams = new LinkedHashMap(contextParameters);
-    	
-    	// Merge contextParameters (from current request) with parameters specified in value attribute
-    	// eg. value="someAction.action?id=someId&venue=someVenue" 
-    	// where the parameters specified in value attribute takes priority.
-    	
-    	if (value != null && value.trim().length() > 0 && value.indexOf("?") > 0) {
-    		mergedParams = new LinkedHashMap();
-    		
-    		String queryString = value.substring(value.indexOf("?")+1);
-    		
-    		mergedParams = UrlHelper.parseQueryString(queryString);
-    		for (Iterator iterator = contextParameters.entrySet().iterator(); iterator.hasNext();) {
-    			Map.Entry entry = (Map.Entry) iterator.next();
-    			Object key = entry.getKey();
-    			
-    			if (!mergedParams.containsKey(key)) {
-    				mergedParams.put(key, entry.getValue());
-    			}
-    		}
-    	}
-    	
-    	
-    	// Merge parameters specified in value attribute 
-    	// eg. value="someAction.action?id=someId&venue=someVenue" 
-    	// with parameters specified though param tag 
-    	// eg. <param name="id" value="%{'someId'}" />
-    	// where parameters specified through param tag takes priority.
-    	
+
+        Map mergedParams = new LinkedHashMap(contextParameters);
+
+        // Merge contextParameters (from current request) with parameters specified in value attribute
+        // eg. value="someAction.action?id=someId&venue=someVenue"
+        // where the parameters specified in value attribute takes priority.
+
+        if (value != null && value.trim().length() > 0 && value.indexOf("?") > 0) {
+            mergedParams = new LinkedHashMap();
+
+            String queryString = value.substring(value.indexOf("?")+1);
+
+            mergedParams = UrlHelper.parseQueryString(queryString);
+            for (Iterator iterator = contextParameters.entrySet().iterator(); iterator.hasNext();) {
+                Map.Entry entry = (Map.Entry) iterator.next();
+                Object key = entry.getKey();
+
+                if (!mergedParams.containsKey(key)) {
+                    mergedParams.put(key, entry.getValue());
+                }
+            }
+        }
+
+
+        // Merge parameters specified in value attribute
+        // eg. value="someAction.action?id=someId&venue=someVenue"
+        // with parameters specified though param tag
+        // eg. <param name="id" value="%{'someId'}" />
+        // where parameters specified through param tag takes priority.
+
         for (Iterator iterator = mergedParams.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
             Object key = entry.getKey();
-            
+
             if (!parameters.containsKey(key)) {
                 parameters.put(key, entry.getValue());
             }

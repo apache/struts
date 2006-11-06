@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.portlet.result;
 
@@ -43,13 +46,13 @@ import com.opensymphony.xwork2.ActionInvocation;
 
 /**
  * Result type that includes a JSP to render.
- * 
+ *
  */
 public class PortletResult extends StrutsResultSupport {
 
-	private static final long serialVersionUID = 434251393926178567L;
+    private static final long serialVersionUID = 434251393926178567L;
 
-	/**
+    /**
      * Logger instance.
      */
     private static final Log LOG = LogFactory.getLog(PortletResult.class);
@@ -57,20 +60,20 @@ public class PortletResult extends StrutsResultSupport {
     private String contentType = "text/html";
 
     private String title;
-    
+
     public PortletResult() {
-    	super();
+        super();
     }
-    
+
     public PortletResult(String location) {
-    	super(location);
+        super(location);
     }
 
     /**
      * Execute the result. Obtains the
      * {@link javax.portlet.PortletRequestDispatcher}from the
      * {@link PortletActionContext}and includes the JSP.
-     * 
+     *
      * @see com.opensymphony.xwork2.Result#execute(com.opensymphony.xwork2.ActionInvocation)
      */
     public void doExecute(String finalLocation,
@@ -179,7 +182,7 @@ public class PortletResult extends StrutsResultSupport {
                 .getNamedDispatcher("preparator");
         if(preparator == null) {
             throw new PortletException("Cannot look up 'preparator' servlet. Make sure that you" +
-            		"have configured it correctly in the web.xml file.");
+                    "have configured it correctly in the web.xml file.");
         }
         new IncludeTemplate() {
             protected void when(PortletException e) {
@@ -220,7 +223,7 @@ public class PortletResult extends StrutsResultSupport {
     public void setTitle(String title) {
         this.title = title;
     }
-    
+
     static class IncludeTemplate {
         protected void include(PortletRequestDispatcher dispatcher, RenderRequest req, RenderResponse res) throws PortletException, IOException{
             try {
@@ -235,9 +238,9 @@ public class PortletResult extends StrutsResultSupport {
                 throw e;
             }
         }
-        
+
         protected void when(PortletException e) {}
-        
+
         protected void when(IOException e) {}
     }
 }

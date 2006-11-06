@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.interceptor;
 
@@ -26,10 +29,10 @@ import com.opensymphony.xwork2.ActionInvocation;
  *
  */
 public class BackgroundProcess implements Serializable {
-	
-	private static final long serialVersionUID = 3884464776311686443L;
-	
-	protected Object action;
+
+    private static final long serialVersionUID = 3884464776311686443L;
+
+    protected Object action;
     protected ActionInvocation invocation;
     protected String result;
     protected Exception exception;
@@ -37,7 +40,7 @@ public class BackgroundProcess implements Serializable {
 
     /**
      * Constructs a background process
-     * 
+     *
      * @param threadName The thread name
      * @param invocation The action invocation
      * @param threadPriority The thread priority
@@ -97,7 +100,7 @@ public class BackgroundProcess implements Serializable {
 
     /**
      * Retrieves the action invocation.
-     * 
+     *
      * @return the action invocation
      */
     public ActionInvocation getInvocation() {
@@ -106,7 +109,7 @@ public class BackgroundProcess implements Serializable {
 
     /**
      * Gets the result of the background process.
-     * 
+     *
      * @return  the result; <tt>null</tt> if not done.
      */
     public String getResult() {
@@ -115,7 +118,7 @@ public class BackgroundProcess implements Serializable {
 
     /**
      * Gets the exception if any was thrown during the execution of the background process.
-     * 
+     *
      * @return the exception or <tt>null</tt> if no exception was thrown.
      */
     public Exception getException() {
@@ -124,7 +127,7 @@ public class BackgroundProcess implements Serializable {
 
     /**
      * Returns the status of the background process.
-     * 
+     *
      * @return <tt>true</tt> if finished, <tt>false</tt> otherwise
      */
     public boolean isDone() {

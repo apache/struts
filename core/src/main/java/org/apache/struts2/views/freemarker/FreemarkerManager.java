@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.views.freemarker;
 
@@ -211,8 +214,8 @@ public class FreemarkerManager {
         // Create hash model wrapper for request parameters
         HttpRequestParametersHashModel reqParametersModel = (HttpRequestParametersHashModel) request.getAttribute(ATTR_REQUEST_PARAMETERS_MODEL);
         if (reqParametersModel == null || requestModel.getRequest() != request) {
-        	reqParametersModel = new HttpRequestParametersHashModel(request);
-        	request.setAttribute(ATTR_REQUEST_PARAMETERS_MODEL, reqParametersModel);
+            reqParametersModel = new HttpRequestParametersHashModel(request);
+            request.setAttribute(ATTR_REQUEST_PARAMETERS_MODEL, reqParametersModel);
         }
         model.put(KEY_REQUEST_PARAMETER_MODEL, reqParametersModel);
 
@@ -295,7 +298,7 @@ public class FreemarkerManager {
      * @param servletContext
      */
     protected freemarker.template.Configuration createConfiguration(ServletContext servletContext) throws TemplateException {
-    	freemarker.template.Configuration configuration = new freemarker.template.Configuration();
+        freemarker.template.Configuration configuration = new freemarker.template.Configuration();
 
         configuration.setTemplateLoader(getTemplateLoader(servletContext));
 
@@ -304,7 +307,7 @@ public class FreemarkerManager {
         configuration.setObjectWrapper(getObjectWrapper());
 
         if (Settings.isSet(StrutsConstants.STRUTS_I18N_ENCODING)) {
-        	configuration.setDefaultEncoding(Settings.get(StrutsConstants.STRUTS_I18N_ENCODING));
+            configuration.setDefaultEncoding(Settings.get(StrutsConstants.STRUTS_I18N_ENCODING));
         }
 
         loadSettings(servletContext, configuration);

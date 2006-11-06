@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.dispatcher.mapper;
 
@@ -36,48 +39,48 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * 
+ *
  * Default action mapper implementation, using the standard *.[ext] (where ext
  * usually "action") pattern. The extension is looked up from the Struts
  * configuration key <b>struts.action.exection</b>.
- * 
+ *
  * <p/> To help with dealing with buttons and other related requirements, this
  * mapper (and other {@link ActionMapper}s, we hope) has the ability to name a
  * button with some predefined prefix and have that button name alter the
  * execution behaviour. The four prefixes are:
- * 
+ *
  * <ul>
- * 
+ *
  * <li>Method prefix - <i>method:default</i></li>
- * 
+ *
  * <li>Action prefix - <i>action:dashboard</i></li>
- * 
+ *
  * <li>Redirect prefix - <i>redirect:cancel.jsp</i></li>
- * 
+ *
  * <li>Redirect-action prefix - <i>redirect-action:cancel</i></li>
- * 
+ *
  * </ul>
- * 
+ *
  * <p/> In addition to these four prefixes, this mapper also understands the
  * action naming pattern of <i>foo!bar</i> in either the extension form (eg:
  * foo!bar.action) or in the prefix form (eg: action:foo!bar). This syntax tells
  * this mapper to map to the action named <i>foo</i> and the method <i>bar</i>.
- * 
+ *
  * <!-- END SNIPPET: javadoc -->
- * 
+ *
  * <p/> <b>Method Prefix</b> <p/>
- * 
+ *
  * <!-- START SNIPPET: method -->
- * 
+ *
  * With method-prefix, instead of calling baz action's execute() method (by
  * default if it isn't overriden in struts.xml to be something else), the baz
  * action's anotherMethod() will be called. A very elegant way determine which
  * button is clicked. Alternatively, one would have submit button set a
  * particular value on the action when clicked, and the execute() method decides
  * on what to do with the setted value depending on which button is clicked.
- * 
+ *
  * <!-- END SNIPPET: method -->
- * 
+ *
  * <pre>
  *  &lt;!-- START SNIPPET: method-example --&gt;
  *  &lt;a:form action=&quot;baz&quot;&gt;
@@ -87,18 +90,18 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
  *  &lt;/a:form&gt;
  *  &lt;!-- END SNIPPET: method-example --&gt;
  * </pre>
- * 
+ *
  * <p/> <b>Action prefix</b> <p/>
- * 
+ *
  * <!-- START SNIPPET: action -->
- * 
+ *
  * With action-prefix, instead of executing baz action's execute() method (by
  * default if it isn't overriden in struts.xml to be something else), the
  * anotherAction action's execute() method (assuming again if it isn't overriden
  * with something else in struts.xml) will be executed.
- * 
+ *
  * <!-- END SNIPPET: action -->
- * 
+ *
  * <pre>
  *  &lt;!-- START SNIPPET: action-example --&gt;
  *  &lt;a:form action=&quot;baz&quot;&gt;
@@ -108,18 +111,18 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
  *  &lt;/a:form&gt;
  *  &lt;!-- END SNIPPET: action-example --&gt;
  * </pre>
- * 
+ *
  * <p/> <b>Redirect prefix</b> <p/>
- * 
+ *
  * <!-- START SNIPPET: redirect -->
- * 
+ *
  * With redirect-prefix, instead of executing baz action's execute() method (by
  * default it isn't overriden in struts.xml to be something else), it will get
  * redirected to, in this case to www.google.com. Internally it uses
  * ServletRedirectResult to do the task.
- * 
+ *
  * <!-- END SNIPPET: redirect -->
- * 
+ *
  * <pre>
  *  &lt;!-- START SNIPPET: redirect-example --&gt;
  *  &lt;a:form action=&quot;baz&quot;&gt;
@@ -129,19 +132,19 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
  *  &lt;/a:form&gt;
  *  &lt;!-- END SNIPPET: redirect-example --&gt;
  * </pre>
- * 
+ *
  * <p/> <b>Redirect-action prefix</b> <p/>
- * 
+ *
  * <!-- START SNIPPET: redirect-action -->
- * 
+ *
  * With redirect-action-prefix, instead of executing baz action's execute()
  * method (by default it isn't overriden in struts.xml to be something else), it
  * will get redirected to, in this case 'dashboard.action'. Internally it uses
  * ServletRedirectResult to do the task and read off the extension from the
  * struts.properties.
- * 
+ *
  * <!-- END SNIPPET: redirect-action -->
- * 
+ *
  * <pre>
  *  &lt;!-- START SNIPPET: redirect-action-example --&gt;
  *  &lt;a:form action=&quot;baz&quot;&gt;
@@ -151,7 +154,7 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
  *  &lt;/a:form&gt;
  *  &lt;!-- END SNIPPET: redirect-action-example --&gt;
  * </pre>
- * 
+ *
  */
 public class DefaultActionMapper implements ActionMapper {
 
@@ -164,7 +167,7 @@ public class DefaultActionMapper implements ActionMapper {
     static final String REDIRECT_ACTION_PREFIX = "redirect-action:";
 
     private boolean allowDynamicMethodCalls = true;
-    
+
     private boolean allowSlashesInActionNames = false;
 
     private PrefixTrie prefixTrie = null;
@@ -174,12 +177,12 @@ public class DefaultActionMapper implements ActionMapper {
             allowDynamicMethodCalls = "true".equals(Settings
                     .get(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION));
         }
-        
+
         if (Settings.isSet(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES)) {
             allowSlashesInActionNames = "true".equals(Settings
                     .get(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES));
         }
-        
+
         prefixTrie = new PrefixTrie() {
             {
                 put(METHOD_PREFIX, new ParameterAction() {
@@ -233,7 +236,7 @@ public class DefaultActionMapper implements ActionMapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(javax.servlet.http.HttpServletRequest)
      */
     public ActionMapping getMapping(HttpServletRequest request,
@@ -270,7 +273,7 @@ public class DefaultActionMapper implements ActionMapper {
     /**
      * Special parameters, as described in the class-level comment, are searched
      * for and handled.
-     * 
+     *
      * @param request
      *            The request
      * @param mapping
@@ -294,7 +297,7 @@ public class DefaultActionMapper implements ActionMapper {
 
     /**
      * Parses the name and namespace from the uri
-     * 
+     *
      * @param uri
      *            The uri
      * @param mapping
@@ -329,21 +332,21 @@ public class DefaultActionMapper implements ActionMapper {
 
             name = uri.substring(namespace.length() + 1);
         }
-        
+
         if (!allowSlashesInActionNames && name != null) {
             int pos = name.lastIndexOf('/');
             if (pos > -1 && pos < name.length() - 1) {
                 name = name.substring(pos + 1);
             }
         }
-        
+
         mapping.setNamespace(namespace);
         mapping.setName(name);
     }
 
     /**
      * Drops the extension from the action name
-     * 
+     *
      * @param name
      *            The action name
      * @return The action name without its extension
@@ -392,7 +395,7 @@ public class DefaultActionMapper implements ActionMapper {
 
     /**
      * Gets the uri from the request
-     * 
+     *
      * @param request
      *            The request
      * @return The uri
@@ -416,7 +419,7 @@ public class DefaultActionMapper implements ActionMapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getUriFromActionMapping(org.apache.struts2.dispatcher.mapper.ActionMapping)
      */
     public String getUriFromActionMapping(ActionMapping mapping) {

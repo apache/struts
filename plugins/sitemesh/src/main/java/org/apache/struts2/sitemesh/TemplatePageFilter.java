@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.sitemesh;
 
@@ -44,10 +47,10 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
 /**
  *  An abstract template page filter that sets up the proper contexts for
  *  template processing.
- * 
+ *
  */
 public abstract class TemplatePageFilter extends PageFilter {
-    
+
     private FilterConfig filterConfig;
 
     public void init(FilterConfig filterConfig) {
@@ -57,7 +60,7 @@ public abstract class TemplatePageFilter extends PageFilter {
 
     /**
      *  Applies the decorator, using the relevent contexts
-     * 
+     *
      * @param page The page
      * @param decorator The decorator
      * @param req The servlet request
@@ -69,11 +72,11 @@ public abstract class TemplatePageFilter extends PageFilter {
                                   HttpServletRequest req, HttpServletResponse res,
                                   ServletContext servletContext, ActionContext ctx)
             throws ServletException, IOException;
-    
+
     /**
      *  Applies the decorator, creating the relevent contexts and delegating to
      *  the extended applyDecorator().
-     * 
+     *
      * @param page The page
      * @param decorator The decorator
      * @param req The servlet request
@@ -82,7 +85,7 @@ public abstract class TemplatePageFilter extends PageFilter {
     protected void applyDecorator(Page page, Decorator decorator,
                                   HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
-            
+
         ServletContext servletContext = filterConfig.getServletContext();
         ActionContext ctx = ServletActionContext.getActionContext(req);
         if (ctx == null) {
@@ -102,7 +105,7 @@ public abstract class TemplatePageFilter extends PageFilter {
         applyDecorator(page, decorator, req, res, servletContext, ctx);
     }
 
-    
+
     /**
      *  Gets the L18N encoding of the system.  The default is UTF-8.
      */
@@ -118,10 +121,10 @@ public abstract class TemplatePageFilter extends PageFilter {
     }
 
     static class DummyActionInvocation implements ActionInvocation {
-    	
-		private static final long serialVersionUID = -4808072199157363028L;
-		
-		ActionSupport action;
+
+        private static final long serialVersionUID = -4808072199157363028L;
+
+        ActionSupport action;
 
         public DummyActionInvocation(ActionSupport action) {
             this.action = action;

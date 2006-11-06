@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.components;
 
@@ -42,7 +45,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;s:submit value="%{'Submit'}" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
- * 
+ *
  * <pre>
  * <!-- START SNIPPET: example2 -->
  * Render an image submit:
@@ -60,24 +63,24 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- START SNIPPET: ajaxJavadoc -->
  * <B>THE FOLLOWING IS ONLY VALID WHEN AJAX IS CONFIGURED</B>
  * <ul>
- * 		<li>resultDivId</li>
- * 		<li>notifyTopics</li>
- * 		<li>onLoadJS</li>
- * 		<li>preInvokeJS</li>
+ *      <li>resultDivId</li>
+ *      <li>notifyTopics</li>
+ *      <li>onLoadJS</li>
+ *      <li>preInvokeJS</li>
  * </ul>
- * The remote form has three basic modes of use, using the resultDivId, 
- * the notifyTopics, or the onLoadJS. You can mix and match any combination of 
- * them to get your desired result. All of these examples are contained in the 
+ * The remote form has three basic modes of use, using the resultDivId,
+ * the notifyTopics, or the onLoadJS. You can mix and match any combination of
+ * them to get your desired result. All of these examples are contained in the
  * Ajax example webapp. Lets go through some scenarios to see how you might use it:
  * <!-- END SNIPPET: ajaxJavadoc -->
- * 
+ *
  * <!-- START SNIPPET: ajxExDescription1 -->
- * Show the results in another div. If you want your results to be shown in 
- * a div, use the resultDivId where the id is the id of the div you want them 
- * shown in. This is an inner HTML approah. Your results get jammed into 
+ * Show the results in another div. If you want your results to be shown in
+ * a div, use the resultDivId where the id is the id of the div you want them
+ * shown in. This is an inner HTML approah. Your results get jammed into
  * the div for you. Here is a sample of this approach:
  * <!-- END SNIPPET: ajxExDescription1 -->
- * 
+ *
  * <pre>
  * <!-- START SNIPPET: ajxExample1 -->
  * Remote form replacing another div:
@@ -95,24 +98,24 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;/s:form &gt;
  * <!-- END SNIPPET: ajxExample1 -->
  * </pre>
- * 
- * 
+ *
+ *
  * <!-- START SNIPPET: ajxExDescription2 -->
- * Notify other controls(divs) of a change. Using an pub-sub model you can 
- * notify others that your control changed and they can take the appropriate action. 
- * Most likely they will execute some action to refresh. The notifyTopics does this 
- * for you. You can have many topic names in a comma delimited list. 
+ * Notify other controls(divs) of a change. Using an pub-sub model you can
+ * notify others that your control changed and they can take the appropriate action.
+ * Most likely they will execute some action to refresh. The notifyTopics does this
+ * for you. You can have many topic names in a comma delimited list.
  * eg: notifyTopics="newPerson, dataChanged" .
  * Here is an example of this approach:
  * <!-- END SNIPPET: ajxExDescription2 -->
- * 
+ *
  * <pre>
  * <!-- START SNIPPET: ajxExample2 -->
  * &lt;s:form id="frm1" action="newPersonWithXMLResult" theme="ajax"  &gt;
  *     &lt;s:textfield label="Name" name="person.name" value="person.name" size="20" required="true" /&gt;
  *     &lt;s:submit id="submitBtn" value="Save" theme="ajax"  cssClass="primary"  notifyTopics="personUpdated, systemWorking" /&gt;
  * &lt;/s:form &gt;
- * 
+ *
  * &lt;s:div href="/listPeople.action" theme="ajax" errorText="error opps"
  *         loadingText="loading..." id="cart-body" &gt;
  *     &lt;s:action namespace="" name="listPeople" executeResult="true" /&gt;
@@ -122,12 +125,12 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <!-- START SNIPPET: ajxExDescription3 -->
  * Massage the results with JavaScript. Say that your result returns some h
- * appy XML and you want to parse it and do lots of cool things with it. 
+ * appy XML and you want to parse it and do lots of cool things with it.
  * The way to do this is with a onLoadJS handler. Here you provide the name of
  * a JavaScript function to be called back with the result and the event type.
- * The only key is that you must use the variable names 'data' and 'type' when 
+ * The only key is that you must use the variable names 'data' and 'type' when
  * defining the callback. For example: onLoadJS="myFancyDancyFunction(data, type)".
- * While I talked about XML in this example, your not limited to XML, the data in 
+ * While I talked about XML in this example, your not limited to XML, the data in
  * the callback will be exactly whats returned as your result.
  * Here is an example of this approach:
  * <!-- END SNIPPET: ajxExDescription3 -->
@@ -136,7 +139,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- START SNIPPET: ajxExample3 -->
  * &lt;script language="JavaScript" type="text/javascript"&gt;
  *     function doGreatThings(data, type) {
- *         //Do whatever with your returned fragment... 
+ *         //Do whatever with your returned fragment...
  *         //Perhapps.... if xml...
  *               var xml = dojo.xml.domUtil.createDocumentFromText(data);
  *               var people = xml.getElementsByTagName("person");
@@ -179,14 +182,14 @@ public class Submit extends FormButton {
     }
 
     public void evaluateParams() {
-    	if (value == null) {
+        if (value == null) {
             value = "Submit";
         }
-    	super.evaluateParams();
+        super.evaluateParams();
     }
-    
+
     public void evaluateExtraParams() {
-    	super.evaluateExtraParams();
+        super.evaluateExtraParams();
 
        /* if (value == null) {
             value = "Submit";

@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.components;
 
@@ -56,7 +59,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <!-- START SNIPPET: params -->
  * <ul>
- * 		<li>value* (String) - jsp page to be included</li>
+ *      <li>value* (String) - jsp page to be included</li>
  * </ul>
  * <!-- END SNIPPET: params -->
  *
@@ -92,7 +95,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 public class Include extends Component {
 
-	private static final Log _log = LogFactory.getLog(Include.class);
+    private static final Log _log = LogFactory.getLog(Include.class);
 
     private static String encoding;
     private static boolean encodingDefined = true;
@@ -136,7 +139,7 @@ public class Include extends Component {
                     try {
                         urlBuf.append(URLEncoder.encode(values.get(i).toString(), "UTF-8"));
                     } catch (Exception e) {
-                    	_log.warn("unable to url-encode "+values.get(i).toString()+", it will be ignored");
+                        _log.warn("unable to url-encode "+values.get(i).toString()+", it will be ignored");
                     }
 
                     concat = "&";
@@ -215,7 +218,7 @@ public class Include extends Component {
     public void addParameter(String key, Object value) {
         // don't use the default implementation of addParameter,
         // instead, include tag requires that each parameter be a list of objects,
-        // just like the HTTP servlet interfaces are (String[]) 
+        // just like the HTTP servlet interfaces are (String[])
         if (value != null) {
             List currentValues = (List) parameters.get(key);
 

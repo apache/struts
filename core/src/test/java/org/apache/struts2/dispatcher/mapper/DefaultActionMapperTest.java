@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.dispatcher.mapper;
 
@@ -48,7 +51,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         req = new MockHttpServletRequest();
         req.setupGetParameterMap(new HashMap());
         req.setupGetContextPath("/my/namespace");
-        
+
         config = new DefaultConfiguration();
         PackageConfig pkg = new PackageConfig("myns", "/my/namespace", false, null);
         PackageConfig pkg2 = new PackageConfig("my", "/my", false, null);
@@ -90,9 +93,9 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         assertEquals("actionName", mapping.getName());
         assertEquals("add", mapping.getMethod());
     }
-    
+
     public void testGetMappingWithSlashedName() throws Exception {
-        
+
         String old = Settings.get(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES);
         Settings.set(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES, "true");
         try {
@@ -112,7 +115,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         }
 
     }
-    
+
     public void testGetMappingWithUnknownNamespace() throws Exception {
         setUp();
         req.setupGetRequestURI("/bo/foo/actionName.action");
@@ -174,7 +177,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
             org.apache.struts2.config.Settings.set(StrutsConstants.STRUTS_ACTION_EXTENSION, old);
         }
     }
-    
+
     // =============================
     // === test name & namespace ===
     // =============================
@@ -208,7 +211,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         assertEquals(actionMapping.getName(), "someAction");
         assertEquals(actionMapping.getNamespace(), "/my");
     }
-    
+
     public void testParseNameAndNamespace_NoSlashes() throws Exception {
         String old = Settings.get(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES);
         Settings.set(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES, "false");
@@ -225,7 +228,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
             Settings.set(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES, old);
         }
     }
-    
+
     public void testParseNameAndNamespace_AllowSlashes() throws Exception {
         String old = Settings.get(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES);
         Settings.set(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES, "true");
@@ -297,15 +300,15 @@ public class DefaultActionMapperTest extends StrutsTestCase {
 
         // TODO: need to test location but there's noaccess to the property/method, unless we use reflection
     }
-    
+
     public void testDropExtension() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         String name = mapper.dropExtension("foo.action");
         assertTrue("Name not right: "+name, "foo".equals(name));
-        
+
         name = mapper.dropExtension("foo.action.action");
         assertTrue("Name not right: "+name, "foo.action".equals(name));
-        
+
     }
 
     public void testGetUriFromActionMapper1() throws Exception {
@@ -416,7 +419,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
 
         assertEquals("/myActionName.action?test=bla", uri);
     }
-    
+
     public void testGetUriFromActionMapper11() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping actionMapping = new ActionMapping();
@@ -426,7 +429,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
 
         assertEquals("/myActionName.action", uri);
     }
-    
+
     public void testGetUriFromActionMapper12() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();
         ActionMapping actionMapping = new ActionMapping();

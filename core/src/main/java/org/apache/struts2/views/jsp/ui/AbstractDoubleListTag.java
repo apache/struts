@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.views.jsp.ui;
 
@@ -23,20 +26,20 @@ import org.apache.struts2.components.DoubleListUIBean;
 /**
  */
 public abstract class AbstractDoubleListTag extends AbstractRequiredListTag {
-	
+
     protected String doubleList;
     protected String doubleListKey;
     protected String doubleListValue;
     protected String doubleName;
     protected String doubleValue;
     protected String formName;
-    
+
     protected String emptyOption;
     protected String headerKey;
     protected String headerValue;
     protected String multiple;
     protected String size;
-    
+
     protected String doubleId;
     protected String doubleDisabled;
     protected String doubleMultiple;
@@ -44,10 +47,10 @@ public abstract class AbstractDoubleListTag extends AbstractRequiredListTag {
     protected String doubleHeaderKey;
     protected String doubleHeaderValue;
     protected String doubleEmptyOption;
-    
+
     protected String doubleCssClass;
     protected String doubleCssStyle;
-    
+
     protected String doubleOnclick;
     protected String doubleOndblclick;
     protected String doubleOnmousedown;
@@ -62,7 +65,7 @@ public abstract class AbstractDoubleListTag extends AbstractRequiredListTag {
     protected String doubleOnkeyup;
     protected String doubleOnselect;
     protected String doubleOnchange;
-    
+
     protected String doubleAccesskey;
 
     protected void populateParams() {
@@ -75,7 +78,7 @@ public abstract class AbstractDoubleListTag extends AbstractRequiredListTag {
         bean.setDoubleName(doubleName);
         bean.setDoubleValue(doubleValue);
         bean.setFormName(formName);
-        
+
         bean.setDoubleId(doubleId);
         bean.setDoubleDisabled(doubleDisabled);
         bean.setDoubleMultiple(doubleMultiple);
@@ -83,10 +86,10 @@ public abstract class AbstractDoubleListTag extends AbstractRequiredListTag {
         bean.setDoubleHeaderKey(doubleHeaderKey);
         bean.setDoubleHeaderValue(doubleHeaderValue);
         bean.setDoubleEmptyOption(doubleEmptyOption);
-        
+
         bean.setDoubleCssClass(doubleCssClass);
         bean.setDoubleCssStyle(doubleCssStyle);
-        
+
         bean.setDoubleOnclick(doubleOnclick);
         bean.setDoubleOndblclick(doubleOndblclick);
         bean.setDoubleOnmousedown(doubleOnmousedown);
@@ -101,9 +104,9 @@ public abstract class AbstractDoubleListTag extends AbstractRequiredListTag {
         bean.setDoubleOnkeyup(doubleOnkeyup);
         bean.setDoubleOnselect(doubleOnselect);
         bean.setDoubleOnchange(doubleOnchange);
-        
+
         bean.setDoubleAccesskey(doubleAccesskey);
-        
+
         bean.setEmptyOption(emptyOption);
         bean.setHeaderKey(headerKey);
         bean.setHeaderValue(headerValue);
@@ -135,215 +138,215 @@ public abstract class AbstractDoubleListTag extends AbstractRequiredListTag {
         this.formName = formName;
     }
 
-	public String getDoubleCssClass() {
-		return doubleCssClass;
-	}
+    public String getDoubleCssClass() {
+        return doubleCssClass;
+    }
 
-	public void setDoubleCssClass(String doubleCssClass) {
-		this.doubleCssClass = doubleCssClass;
-	}
+    public void setDoubleCssClass(String doubleCssClass) {
+        this.doubleCssClass = doubleCssClass;
+    }
 
-	public String getDoubleCssStyle() {
-		return doubleCssStyle;
-	}
+    public String getDoubleCssStyle() {
+        return doubleCssStyle;
+    }
 
-	public void setDoubleCssStyle(String doubleCssStyle) {
-		this.doubleCssStyle = doubleCssStyle;
-	}
+    public void setDoubleCssStyle(String doubleCssStyle) {
+        this.doubleCssStyle = doubleCssStyle;
+    }
 
-	public String getDoubleDisabled() {
-		return doubleDisabled;
-	}
+    public String getDoubleDisabled() {
+        return doubleDisabled;
+    }
 
-	public void setDoubleDisabled(String doubleDisabled) {
-		this.doubleDisabled = doubleDisabled;
-	}
+    public void setDoubleDisabled(String doubleDisabled) {
+        this.doubleDisabled = doubleDisabled;
+    }
 
-	public String getDoubleEmptyOption() {
-		return doubleEmptyOption;
-	}
+    public String getDoubleEmptyOption() {
+        return doubleEmptyOption;
+    }
 
-	public void setDoubleEmptyOption(String doubleEmptyOption) {
-		this.doubleEmptyOption = doubleEmptyOption;
-	}
+    public void setDoubleEmptyOption(String doubleEmptyOption) {
+        this.doubleEmptyOption = doubleEmptyOption;
+    }
 
-	public String getDoubleHeaderKey() {
-		return doubleHeaderKey;
-	}
+    public String getDoubleHeaderKey() {
+        return doubleHeaderKey;
+    }
 
-	public void setDoubleHeaderKey(String doubleHeaderKey) {
-		this.doubleHeaderKey = doubleHeaderKey;
-	}
+    public void setDoubleHeaderKey(String doubleHeaderKey) {
+        this.doubleHeaderKey = doubleHeaderKey;
+    }
 
-	public String getDoubleHeaderValue() {
-		return doubleHeaderValue;
-	}
+    public String getDoubleHeaderValue() {
+        return doubleHeaderValue;
+    }
 
-	public void setDoubleHeaderValue(String doubleHeaderValue) {
-		this.doubleHeaderValue = doubleHeaderValue;
-	}
+    public void setDoubleHeaderValue(String doubleHeaderValue) {
+        this.doubleHeaderValue = doubleHeaderValue;
+    }
 
-	public String getDoubleId() {
-		return doubleId;
-	}
+    public String getDoubleId() {
+        return doubleId;
+    }
 
-	public void setDoubleId(String doubleId) {
-		this.doubleId = doubleId;
-	}
+    public void setDoubleId(String doubleId) {
+        this.doubleId = doubleId;
+    }
 
-	public String getDoubleMultiple() {
-		return doubleMultiple;
-	}
+    public String getDoubleMultiple() {
+        return doubleMultiple;
+    }
 
-	public void setDoubleMultiple(String doubleMultiple) {
-		this.doubleMultiple = doubleMultiple;
-	}
+    public void setDoubleMultiple(String doubleMultiple) {
+        this.doubleMultiple = doubleMultiple;
+    }
 
-	public String getDoubleOnblur() {
-		return doubleOnblur;
-	}
+    public String getDoubleOnblur() {
+        return doubleOnblur;
+    }
 
-	public void setDoubleOnblur(String doubleOnblur) {
-		this.doubleOnblur = doubleOnblur;
-	}
+    public void setDoubleOnblur(String doubleOnblur) {
+        this.doubleOnblur = doubleOnblur;
+    }
 
-	public String getDoubleOnchange() {
-		return doubleOnchange;
-	}
+    public String getDoubleOnchange() {
+        return doubleOnchange;
+    }
 
-	public void setDoubleOnchange(String doubleOnchange) {
-		this.doubleOnchange = doubleOnchange;
-	}
+    public void setDoubleOnchange(String doubleOnchange) {
+        this.doubleOnchange = doubleOnchange;
+    }
 
-	public String getDoubleOnclick() {
-		return doubleOnclick;
-	}
+    public String getDoubleOnclick() {
+        return doubleOnclick;
+    }
 
-	public void setDoubleOnclick(String doubleOnclick) {
-		this.doubleOnclick = doubleOnclick;
-	}
+    public void setDoubleOnclick(String doubleOnclick) {
+        this.doubleOnclick = doubleOnclick;
+    }
 
-	public String getDoubleOndblclick() {
-		return doubleOndblclick;
-	}
+    public String getDoubleOndblclick() {
+        return doubleOndblclick;
+    }
 
-	public void setDoubleOndblclick(String doubleOndblclick) {
-		this.doubleOndblclick = doubleOndblclick;
-	}
+    public void setDoubleOndblclick(String doubleOndblclick) {
+        this.doubleOndblclick = doubleOndblclick;
+    }
 
-	public String getDoubleOnfocus() {
-		return doubleOnfocus;
-	}
+    public String getDoubleOnfocus() {
+        return doubleOnfocus;
+    }
 
-	public void setDoubleOnfocus(String doubleOnfocus) {
-		this.doubleOnfocus = doubleOnfocus;
-	}
+    public void setDoubleOnfocus(String doubleOnfocus) {
+        this.doubleOnfocus = doubleOnfocus;
+    }
 
-	public String getDoubleOnkeydown() {
-		return doubleOnkeydown;
-	}
+    public String getDoubleOnkeydown() {
+        return doubleOnkeydown;
+    }
 
-	public void setDoubleOnkeydown(String doubleOnkeydown) {
-		this.doubleOnkeydown = doubleOnkeydown;
-	}
+    public void setDoubleOnkeydown(String doubleOnkeydown) {
+        this.doubleOnkeydown = doubleOnkeydown;
+    }
 
-	public String getDoubleOnkeypress() {
-		return doubleOnkeypress;
-	}
+    public String getDoubleOnkeypress() {
+        return doubleOnkeypress;
+    }
 
-	public void setDoubleOnkeypress(String doubleOnkeypress) {
-		this.doubleOnkeypress = doubleOnkeypress;
-	}
+    public void setDoubleOnkeypress(String doubleOnkeypress) {
+        this.doubleOnkeypress = doubleOnkeypress;
+    }
 
-	public String getDoubleOnkeyup() {
-		return doubleOnkeyup;
-	}
+    public String getDoubleOnkeyup() {
+        return doubleOnkeyup;
+    }
 
-	public void setDoubleOnkeyup(String doubleOnkeyup) {
-		this.doubleOnkeyup = doubleOnkeyup;
-	}
+    public void setDoubleOnkeyup(String doubleOnkeyup) {
+        this.doubleOnkeyup = doubleOnkeyup;
+    }
 
-	public String getDoubleOnmousedown() {
-		return doubleOnmousedown;
-	}
+    public String getDoubleOnmousedown() {
+        return doubleOnmousedown;
+    }
 
-	public void setDoubleOnmousedown(String doubleOnmousedown) {
-		this.doubleOnmousedown = doubleOnmousedown;
-	}
+    public void setDoubleOnmousedown(String doubleOnmousedown) {
+        this.doubleOnmousedown = doubleOnmousedown;
+    }
 
-	public String getDoubleOnmousemove() {
-		return doubleOnmousemove;
-	}
+    public String getDoubleOnmousemove() {
+        return doubleOnmousemove;
+    }
 
-	public void setDoubleOnmousemove(String doubleOnmousemove) {
-		this.doubleOnmousemove = doubleOnmousemove;
-	}
+    public void setDoubleOnmousemove(String doubleOnmousemove) {
+        this.doubleOnmousemove = doubleOnmousemove;
+    }
 
-	public String getDoubleOnmouseout() {
-		return doubleOnmouseout;
-	}
+    public String getDoubleOnmouseout() {
+        return doubleOnmouseout;
+    }
 
-	public void setDoubleOnmouseout(String doubleOnmouseout) {
-		this.doubleOnmouseout = doubleOnmouseout;
-	}
+    public void setDoubleOnmouseout(String doubleOnmouseout) {
+        this.doubleOnmouseout = doubleOnmouseout;
+    }
 
-	public String getDoubleOnmouseover() {
-		return doubleOnmouseover;
-	}
+    public String getDoubleOnmouseover() {
+        return doubleOnmouseover;
+    }
 
-	public void setDoubleOnmouseover(String doubleOnmouseover) {
-		this.doubleOnmouseover = doubleOnmouseover;
-	}
+    public void setDoubleOnmouseover(String doubleOnmouseover) {
+        this.doubleOnmouseover = doubleOnmouseover;
+    }
 
-	public String getDoubleOnmouseup() {
-		return doubleOnmouseup;
-	}
+    public String getDoubleOnmouseup() {
+        return doubleOnmouseup;
+    }
 
-	public void setDoubleOnmouseup(String doubleOnmouseup) {
-		this.doubleOnmouseup = doubleOnmouseup;
-	}
+    public void setDoubleOnmouseup(String doubleOnmouseup) {
+        this.doubleOnmouseup = doubleOnmouseup;
+    }
 
-	public String getDoubleOnselect() {
-		return doubleOnselect;
-	}
+    public String getDoubleOnselect() {
+        return doubleOnselect;
+    }
 
-	public void setDoubleOnselect(String doubleOnselect) {
-		this.doubleOnselect = doubleOnselect;
-	}
+    public void setDoubleOnselect(String doubleOnselect) {
+        this.doubleOnselect = doubleOnselect;
+    }
 
-	public String getDoubleSize() {
-		return doubleSize;
-	}
+    public String getDoubleSize() {
+        return doubleSize;
+    }
 
-	public void setDoubleSize(String doubleSize) {
-		this.doubleSize = doubleSize;
-	}
+    public void setDoubleSize(String doubleSize) {
+        this.doubleSize = doubleSize;
+    }
 
-	public String getDoubleList() {
-		return doubleList;
-	}
+    public String getDoubleList() {
+        return doubleList;
+    }
 
-	public String getDoubleListKey() {
-		return doubleListKey;
-	}
+    public String getDoubleListKey() {
+        return doubleListKey;
+    }
 
-	public String getDoubleListValue() {
-		return doubleListValue;
-	}
+    public String getDoubleListValue() {
+        return doubleListValue;
+    }
 
-	public String getDoubleName() {
-		return doubleName;
-	}
+    public String getDoubleName() {
+        return doubleName;
+    }
 
-	public String getDoubleValue() {
-		return doubleValue;
-	}
+    public String getDoubleValue() {
+        return doubleValue;
+    }
 
-	public String getFormName() {
-		return formName;
-	}
-	
-	public void setEmptyOption(String emptyOption) {
+    public String getFormName() {
+        return formName;
+    }
+
+    public void setEmptyOption(String emptyOption) {
         this.emptyOption = emptyOption;
     }
 
@@ -362,8 +365,8 @@ public abstract class AbstractDoubleListTag extends AbstractRequiredListTag {
     public void setSize(String size) {
         this.size = size;
     }
-    
+
     public void setDoubleAccesskey(String doubleAccesskey) {
-    	this.doubleAccesskey = doubleAccesskey;
+        this.doubleAccesskey = doubleAccesskey;
     }
 }

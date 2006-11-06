@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.views.jsp.iterator;
 
@@ -30,7 +33,7 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  * <!-- START SNIPPET: javadoc -->
  *
  * <b>NOTE: JSP-TAG</b>
- * 
+ *
  * <p>A Tag that sorts a List using a Comparator both passed in as the tag attribute.
  * If 'id' attribute is specified, the sorted list will be placed into the PageContext
  * attribute using the key specified by 'id'. The sorted list will ALWAYS be
@@ -42,9 +45,9 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  * <!-- START SNIPPET: params -->
  *
  * <ul>
- * 		<li>id (String) - if specified, the sorted iterator will be place with this id under page context</li>
- * 		<li>source (Object) - the source for the sort to take place (should be iteratable) else JspException will be thrown</li>
- * 		<li>comparator* (Object) - the comparator used to do sorting (should be a type of Comparator or its decendent) else JspException will be thrown</li>
+ *      <li>id (String) - if specified, the sorted iterator will be place with this id under page context</li>
+ *      <li>source (Object) - the source for the sort to take place (should be iteratable) else JspException will be thrown</li>
+ *      <li>comparator* (Object) - the comparator used to do sorting (should be a type of Comparator or its decendent) else JspException will be thrown</li>
  * </ul>
  *
  * <!-- END SNIPPET: params -->
@@ -57,8 +60,8 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  * USAGE 1:
  * &lt;s:sort comparator="myComparator" source="myList"&gt;
  *      &lt;s:iterator&gt;
- * 		&lt;!-- do something with each sorted elements --&gt;
- * 		&lt;s:property value="..." /&gt;
+ *      &lt;!-- do something with each sorted elements --&gt;
+ *      &lt;s:property value="..." /&gt;
  *      &lt;/s:iterator&gt;
  * &lt;/s:sort&gt;
  *
@@ -68,7 +71,7 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  * &lt;%
  *    Iterator sortedIterator = (Iterator) pageContext.getAttribute("mySortedList");
  *    for (Iterator i = sortedIterator; i.hasNext(); ) {
- *    	// do something with each of the sorted elements
+ *      // do something with each of the sorted elements
  *    }
  * %&gt;
  *
@@ -83,9 +86,9 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  */
 public class SortIteratorTag extends StrutsBodyTagSupport {
 
-	private static final long serialVersionUID = -7835719609764092235L;
+    private static final long serialVersionUID = -7835719609764092235L;
 
-	String comparatorAttr;
+    String comparatorAttr;
     String sourceAttr;
 
     SortIteratorFilter sortIteratorFilter = null;
@@ -107,7 +110,7 @@ public class SortIteratorTag extends StrutsBodyTagSupport {
     }
 
     public int doStartTag() throws JspException {
-    	// Source
+        // Source
         Object srcToSort;
         if (sourceAttr == null) {
             srcToSort = findValue("top");
@@ -115,13 +118,13 @@ public class SortIteratorTag extends StrutsBodyTagSupport {
             srcToSort = findValue(sourceAttr);
         }
         if (! MakeIterator.isIterable(srcToSort)) { // see if source is Iteratable
-        	throw new JspException("source ["+srcToSort+"] is not iteratable");
+            throw new JspException("source ["+srcToSort+"] is not iteratable");
         }
 
         // Comparator
         Object comparatorObj = findValue(comparatorAttr);
         if (! (comparatorObj instanceof Comparator)) {
-        	throw new JspException("comparator ["+comparatorObj+"] does not implements Comparator interface");
+            throw new JspException("comparator ["+comparatorObj+"] does not implements Comparator interface");
         }
         Comparator c = (Comparator) findValue(comparatorAttr);
 
@@ -132,21 +135,21 @@ public class SortIteratorTag extends StrutsBodyTagSupport {
         sortIteratorFilter.execute();
 
         // push sorted iterator into stack, so nexted tag have access to it
-    	getStack().push(sortIteratorFilter);
+        getStack().push(sortIteratorFilter);
         if (getId() != null && getId().length() > 0) {
-        	pageContext.setAttribute(getId(), sortIteratorFilter);
+            pageContext.setAttribute(getId(), sortIteratorFilter);
         }
 
         return EVAL_BODY_INCLUDE;
     }
 
     public int doEndTag() throws JspException {
-    	int returnVal =  super.doEndTag();
+        int returnVal =  super.doEndTag();
 
-   		// pop sorted list from stack at the end of tag
-   		getStack().pop();
-   		sortIteratorFilter = null;
+        // pop sorted list from stack at the end of tag
+        getStack().pop();
+        sortIteratorFilter = null;
 
-    	return returnVal;
+        return returnVal;
     }
 }

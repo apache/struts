@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.dispatcher;
 
@@ -52,7 +55,7 @@ import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 import com.opensymphony.xwork2.ActionContext;
 
 /**
- * Master filter for Struts that handles four distinct 
+ * Master filter for Struts that handles four distinct
  * responsibilities:
  *
  * <ul>
@@ -106,18 +109,18 @@ import com.opensymphony.xwork2.ActionContext;
  * database access credentials.
  *
  * <p/>
- * 
- * To use a custom {@link Dispatcher}, the <code>createDispatcher()</code> method could be overriden by 
+ *
+ * To use a custom {@link Dispatcher}, the <code>createDispatcher()</code> method could be overriden by
  * the subclass.
  *
  * @see org.apache.struts2.lifecycle.LifecycleListener
  * @see ActionMapper
  * @see ActionContextCleanUp
- * 
+ *
  * @version $Date$ $Id$
  */
 public class FilterDispatcher extends AbstractFilter implements StrutsStatics {
-	
+
     private static final Log LOG = LogFactory.getLog(FilterDispatcher.class);
 
     private String[] pathPrefixes;
@@ -126,26 +129,26 @@ public class FilterDispatcher extends AbstractFilter implements StrutsStatics {
     private final Calendar lastModifiedCal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
     private final String lastModified = df.format(lastModifiedCal.getTime());
 
-    
+
     /**
      * Look for "packages" defined through filter-config's parameters.
-     * 
+     *
      * @param FilterConfig
      * @throws ServletException
      */
     protected void postInit(FilterConfig filterConfig) throws ServletException {
-    	String param = filterConfig.getInitParameter("packages");
+        String param = filterConfig.getInitParameter("packages");
         String packages = "org.apache.struts2.static template org.apache.struts2.interceptor.debugging";
         if (param != null) {
             packages = param + " " + packages;
         }
         this.pathPrefixes = parse(packages);
     }
-    
+
     /**
      * Parses the list of packages
-     * 
-     * @param packages A comma-delimited String 
+     *
+     * @param packages A comma-delimited String
      * @return A string array of packages
      */
     protected String[] parse(String packages) {
@@ -177,58 +180,58 @@ public class FilterDispatcher extends AbstractFilter implements StrutsStatics {
 
         String timerKey = "FilterDispatcher_doFilter: ";
         try {
-        	UtilTimerStack.push(timerKey);
-        
-			request = prepareDispatcherAndWrapRequest(request, response);
+            UtilTimerStack.push(timerKey);
+
+            request = prepareDispatcherAndWrapRequest(request, response);
 
 
-        	ActionMapper mapper = null;
-        	ActionMapping mapping = null;
-        	try {
-        		mapper = ActionMapperFactory.getMapper();
-        		mapping = mapper.getMapping(request, dispatcher.getConfigurationManager());
-        	} catch (Exception ex) {
-        		LOG.error("error getting ActionMapping", ex);
-        		dispatcher.sendError(request, response, servletContext, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
-        		ActionContextCleanUp.cleanUp(req);
-        		return;
-        	}
+            ActionMapper mapper = null;
+            ActionMapping mapping = null;
+            try {
+                mapper = ActionMapperFactory.getMapper();
+                mapping = mapper.getMapping(request, dispatcher.getConfigurationManager());
+            } catch (Exception ex) {
+                LOG.error("error getting ActionMapping", ex);
+                dispatcher.sendError(request, response, servletContext, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
+                ActionContextCleanUp.cleanUp(req);
+                return;
+            }
 
-        	if (mapping == null) {
-        		// there is no action in this request, should we look for a static resource?
-        		String resourcePath = RequestUtils.getServletPath(request);
+            if (mapping == null) {
+                // there is no action in this request, should we look for a static resource?
+                String resourcePath = RequestUtils.getServletPath(request);
 
-        		if ("".equals(resourcePath) && null != request.getPathInfo()) {
-        			resourcePath = request.getPathInfo();
-        		}
+                if ("".equals(resourcePath) && null != request.getPathInfo()) {
+                    resourcePath = request.getPathInfo();
+                }
 
-        		if ("true".equals(Settings.get(StrutsConstants.STRUTS_SERVE_STATIC_CONTENT)) 
+                if ("true".equals(Settings.get(StrutsConstants.STRUTS_SERVE_STATIC_CONTENT))
                     && resourcePath.startsWith("/struts")) {
-        			String name = resourcePath.substring("/struts".length());
-        			findStaticResource(name, response);
-        		} else {
-        			// this is a normal request, let it pass through
-        			chain.doFilter(request, response);
-        		}
-        		// The framework did its job here
-        		return;
-        	}
+                    String name = resourcePath.substring("/struts".length());
+                    findStaticResource(name, response);
+                } else {
+                    // this is a normal request, let it pass through
+                    chain.doFilter(request, response);
+                }
+                // The framework did its job here
+                return;
+            }
 
 
-        	try {
-        		dispatcher.serviceAction(request, response, servletContext, mapping);
-        	} finally {
-        		ActionContextCleanUp.cleanUp(req);
-        	}
+            try {
+                dispatcher.serviceAction(request, response, servletContext, mapping);
+            } finally {
+                ActionContextCleanUp.cleanUp(req);
+            }
         }
         finally {
-        	UtilTimerStack.pop(timerKey);
+            UtilTimerStack.pop(timerKey);
         }
     }
 
     /**
      * Finds a static resource
-     * 
+     *
      * @param name The resource name
      * @param response The request
      * @throws IOException If anything goes wrong
@@ -243,9 +246,9 @@ public class FilterDispatcher extends AbstractFilter implements StrutsStatics {
                     if (contentType != null) {
                         response.setContentType(contentType);
                     }
-                    
+
                     if ("true".equals(Settings.get(StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE))) {
-                    	// set heading information for caching static content
+                        // set heading information for caching static content
                         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
                         response.setHeader("Date",df.format(cal.getTime())+" GMT");
                         cal.add(Calendar.DAY_OF_MONTH,1);
@@ -255,7 +258,7 @@ public class FilterDispatcher extends AbstractFilter implements StrutsStatics {
                         response.setHeader("Last-Modified",lastModified+" GMT");
                     }
                     else {
-                    	response.setHeader("Cache-Control","no-cache");
+                        response.setHeader("Cache-Control","no-cache");
                         response.setHeader("Pragma","no-cache");
                         response.setHeader("Expires","-1");
                     }
@@ -275,7 +278,7 @@ public class FilterDispatcher extends AbstractFilter implements StrutsStatics {
 
     /**
      * Determines the content type for the resource name
-     * 
+     *
      * @param name The resource name
      * @return The mime type
      */
@@ -303,7 +306,7 @@ public class FilterDispatcher extends AbstractFilter implements StrutsStatics {
 
     /**
      * Copies the from the input stream to the output stream
-     * 
+     *
      * @param input The input stream
      * @param output The output stream
      * @throws IOException If anything goes wrong
@@ -318,7 +321,7 @@ public class FilterDispatcher extends AbstractFilter implements StrutsStatics {
 
     /**
      * Looks for a static resource in the classpath
-     * 
+     *
      * @param name The resource name
      * @param packagePrefix The package prefix to use to locate the resource
      * @return The inputstream of the resource

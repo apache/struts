@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.views.freemarker.tags;
 
@@ -78,7 +81,7 @@ public class StrutsModels {
     protected ElseModel elseModel;
     protected ElseIfModel elseIfModel;
     protected TimePickerModel timePickerModel;
-    
+
 
     public StrutsModels(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         this.stack = stack;
@@ -404,12 +407,12 @@ public class StrutsModels {
 
         return fielderror;
     }
-    
+
     public OptionTransferSelectModel getOptiontransferselect() {
-    	if (optiontransferselect == null) {
-    		optiontransferselect = new OptionTransferSelectModel(stack, req, res);
-    	}
-    	return optiontransferselect;
+        if (optiontransferselect == null) {
+            optiontransferselect = new OptionTransferSelectModel(stack, req, res);
+        }
+        return optiontransferselect;
     }
 
     public TreeModel getTree() {
@@ -418,46 +421,46 @@ public class StrutsModels {
         }
         return treeModel;
     }
-    
+
     public UpDownSelectModel getUpdownselect() {
-    	if (updownselect == null)  {
-    		updownselect = new UpDownSelectModel(stack, req, res);
-    	}
-    	return updownselect;
+        if (updownselect == null)  {
+            updownselect = new UpDownSelectModel(stack, req, res);
+        }
+        return updownselect;
     }
-    
+
     public OptGroupModel getOptgroup() {
-    	if (optGroupModel == null) {
-    		optGroupModel = new OptGroupModel(stack, req, res);
-    	}
-    	return optGroupModel;
+        if (optGroupModel == null) {
+            optGroupModel = new OptGroupModel(stack, req, res);
+        }
+        return optGroupModel;
     }
-    
+
     public IfModel getIf() {
-    	if (ifModel == null) {
-    		ifModel = new IfModel(stack, req, res);
-    	}
-    	return ifModel;
+        if (ifModel == null) {
+            ifModel = new IfModel(stack, req, res);
+        }
+        return ifModel;
     }
-    
+
     public ElseModel getElse() {
-    	if (elseModel == null) {
-    		elseModel = new ElseModel(stack, req, res);
-    	}
-    	return elseModel;
+        if (elseModel == null) {
+            elseModel = new ElseModel(stack, req, res);
+        }
+        return elseModel;
     }
-    
+
     public ElseIfModel getElseif() {
-    	if (elseIfModel == null) {
-    		elseIfModel = new ElseIfModel(stack, req, res);
-    	}
-    	return elseIfModel;
+        if (elseIfModel == null) {
+            elseIfModel = new ElseIfModel(stack, req, res);
+        }
+        return elseIfModel;
     }
-    
+
     public TimePickerModel getTimepicker() {
-    	if (timePickerModel == null) {
-    		timePickerModel = new TimePickerModel(stack, req, res);
-    	}
-    	return timePickerModel;
+        if (timePickerModel == null) {
+            timePickerModel = new TimePickerModel(stack, req, res);
+        }
+        return timePickerModel;
     }
 }

@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.dispatcher;
 
@@ -111,9 +114,9 @@ public class StreamResultTest extends TestCase {
     }
 
     public void testStreamResultParse1() throws Exception {
-    	///////////////////
+        ///////////////////
         result.setParse(true);
-        // ${...} conditionalParse of Result, returns String, 
+        // ${...} conditionalParse of Result, returns String,
         // which gets evaluated to the stack, that's how it works.
         // We use ${streamForImageAsString} that returns "streamForImage"
         // which is a property that returns an InputStream object.
@@ -135,13 +138,13 @@ public class StreamResultTest extends TestCase {
         assertEquals(contentLength, response.getContentLength());
         assertEquals("filename=\"logo.png\"", response.getHeader("Content-disposition"));
     }
-    
+
     public void testStreamResultParse2() throws Exception {
-    	///////////////////
+        ///////////////////
         result.setParse(true);
         // This time we dun use ${...}, so streamForImage will
         // be evaluated to the stack, which should reaturn an
-        // InputStream object, cause there's such a property in 
+        // InputStream object, cause there's such a property in
         // the action object itself.
         result.setInputName("streamForImage");
         result.setBufferSize(128);
@@ -180,8 +183,8 @@ public class StreamResultTest extends TestCase {
 
         ActionContext.getContext().put(ServletActionContext.HTTP_RESPONSE, response);
     }
-    
-    
+
+
 
     protected void tearDown() {
         response = null;
@@ -194,7 +197,7 @@ public class StreamResultTest extends TestCase {
     public class MyImageAction implements Action {
 
         public InputStream getStreamForImage() throws Exception {
-            // just use src/test/log4j.properties as test file 
+            // just use src/test/log4j.properties as test file
             URL url = ClassLoaderUtil.getResource("log4j.properties", StreamResultTest.class);
             File file = new File(new URI(url.toString()));
             FileInputStream fis = new FileInputStream(file);
@@ -210,9 +213,9 @@ public class StreamResultTest extends TestCase {
             File file = new File(new URI(url.toString()));
             return file.length();
         }
-        
+
         public String getStreamForImageAsString() {
-        	return "streamForImage";
+            return "streamForImage";
         }
     }
 

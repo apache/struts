@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.interceptor;
 
@@ -36,24 +39,24 @@ import com.opensymphony.xwork2.util.LocalizedTextUtil;
  * invalid token is found: it returns the result <b>invalid.token</b>, which can be mapped in your action configuration.
  * A more complex implementation, {@link TokenSessionStoreInterceptor}, can provide much better logic for when invalid
  * tokens are found.
- * 
+ *
  * <p/>
  *
  * <b>Note:</b> To set a token in your form, you should use the <b>token tag</b>. This tag is required and must be used
  * in the forms that submit to actions protected by this interceptor. Any request that does not provide a token (using
  * the token tag) will be processed as a request with an invalid token.
- * 
+ *
  * <p/>
- * 
+ *
  * <b>Internationalization Note:</b> The following key could be used to internationalized the action errors generated
  * by this token interceptor
- * 
+ *
  * <ul>
  *    <li>struts.messages.invalid.token</li>
  * </ul>
- * 
+ *
  * <p/>
- * 
+ *
  * <b>NOTE:</b> As this method extends off MethodFilterInterceptor, it is capable of
  * deciding if it is applicable only to selective methods in the action class. See
  * <code>MethodFilterInterceptor</code> for more info.
@@ -88,23 +91,23 @@ import com.opensymphony.xwork2.util.LocalizedTextUtil;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * 
+ *
  * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
  *     &lt;interceptor-ref name="token"/&gt;
  *     &lt;interceptor-ref name="basicStack"/&gt;
  *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;
- * 
- * &lt;-- In this case, myMethod of the action class will not 
+ *
+ * &lt;-- In this case, myMethod of the action class will not
  *        get checked for invalidity of token --&gt;
  * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
  *     &lt;interceptor-ref name="token"&gt;
- *     	  &lt;param name="excludeMethods"&gt;myMethod&lt;/param&gt;
+ *        &lt;param name="excludeMethods"&gt;myMethod&lt;/param&gt;
  *     &lt;/interceptor-ref name="token"/&gt;
  *     &lt;interceptor-ref name="basicStack"/&gt;
  *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;
- * 
+ *
  * <!-- END SNIPPET: example -->
  * </pre>
  *
@@ -112,10 +115,10 @@ import com.opensymphony.xwork2.util.LocalizedTextUtil;
  * @see TokenHelper
  */
 public class TokenInterceptor extends MethodFilterInterceptor {
-	
-	private static final long serialVersionUID = -6680894220590585506L;
-	
-	public static final String INVALID_TOKEN_CODE = "invalid.token";
+
+    private static final long serialVersionUID = -6680894220590585506L;
+
+    public static final String INVALID_TOKEN_CODE = "invalid.token";
 
     /**
      * @see com.opensymphony.xwork2.interceptor.MethodFilterInterceptor#doIntercept(com.opensymphony.xwork2.ActionInvocation)

@@ -1,19 +1,22 @@
 /*
  * $Id$
  *
- * Copyright 2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.struts2.views.freemarker;
 
@@ -45,7 +48,7 @@ import freemarker.template.TemplateModelException;
 /**
  * <!-- START SNIPPET: description -->
  *
- * Renders a view using the Freemarker template engine. 
+ * Renders a view using the Freemarker template engine.
  * <p>
  * The FreemarkarManager class configures the template loaders so that the
  * template location can be either
@@ -55,7 +58,7 @@ import freemarker.template.TemplateModelException;
  *
  * <li>relative to the web root folder. eg <code>/WEB-INF/views/home.ftl</code>
  * </li>
- * 
+ *
  * <li>a classpath resuorce. eg <code>com/company/web/views/home.ftl</code></li>
  *
  * </ul>
@@ -70,7 +73,7 @@ import freemarker.template.TemplateModelException;
  *
  * <li><b>location (default)</b> - the location of the template to process.</li>
  *
- * <li><b>parse</b> - true by default. If set to false, the location param will 
+ * <li><b>parse</b> - true by default. If set to false, the location param will
  * not be parsed for Ognl expressions.</li>
  *
  * <li><b>contentType</b> - defaults to "text/html" unless specified.</li>
@@ -83,17 +86,17 @@ import freemarker.template.TemplateModelException;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * 
+ *
  * &lt;result name="success" type="freemarker"&gt;foo.ftl&lt;/result&gt;
- * 
+ *
  * <!-- END SNIPPET: example -->
  * </pre>
  */
 public class FreemarkerResult extends StrutsResultSupport {
 
-	private static final long serialVersionUID = -3778230771704661631L;
-	
-	protected ActionInvocation invocation;
+    private static final long serialVersionUID = -3778230771704661631L;
+
+    protected ActionInvocation invocation;
     protected Configuration configuration;
     protected ObjectWrapper wrapper;
 
@@ -106,11 +109,11 @@ public class FreemarkerResult extends StrutsResultSupport {
     private String pContentType = "text/html";
 
     public FreemarkerResult() {
-    	super();
+        super();
     }
-    
+
     public FreemarkerResult(String location) {
-    	super(location);
+        super(location);
     }
 
     public void setContentType(String aContentType) {
@@ -146,7 +149,7 @@ public class FreemarkerResult extends StrutsResultSupport {
             String base = ResourceUtil.getResourceBase(req);
             location = base + "/" + location;
         }
-        
+
         Template template = configuration.getTemplate(location, deduceLocale());
         TemplateModel model = createModel();
 

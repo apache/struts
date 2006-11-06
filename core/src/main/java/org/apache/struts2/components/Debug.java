@@ -18,6 +18,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.struts2.components;
+
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.OgnlUtil;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import java.io.Writer;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.struts2.StrutsException;
+
+
 public class Debug extends UIBean {
     public static final String TEMPLATE = "debug";
 

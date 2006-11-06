@@ -18,6 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.struts2.interceptor.debugging;
+
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.Stack;
+
 public class PrettyPrintWriter {
 
     private final PrintWriter writer;

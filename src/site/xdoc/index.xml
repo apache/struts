@@ -1,19 +1,5 @@
 <?xml version="1.0"?>
 <!--
-Copyright 1999-2005 The Apache Software Foundation
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
--->
-<!--
 // ======================================================================== 78
 -->
 <document>
@@ -32,7 +18,7 @@ limitations under the License.
         
         <p>       
          <strong>Apache Struts 2 is an elegant, extensible framework,</strong> well suited 
-         for creating moderate to large-scale Java web applications. 
+         for creating enterprise-ready Java web applications. 
          The framework is designed to streamline the full development cycle, 
          from building, to deploying, to maintaining applications over time.
         </p>     
@@ -47,7 +33,13 @@ limitations under the License.
         <p>
          For more about Apache Struts 2, visit
          <a href="http://cwiki.apache.org/WW/home.html">
-         Getting Started.
+            Getting Started.
+         </a>
+        </p>
+        <p>
+         To download Apache Struts 2, visit
+         <a href="http://struts.apache.org/downloads.html">
+            Apache Struts Distributions
          </a>
         </p>
         </div>
@@ -146,7 +138,8 @@ limitations under the License.
                     problem reports, and interactive object model queries.
                 </li>
                 </ul></li></ul>
-
+                
+            <subsection>
             <p>
             For more about Apache Struts 2, visit
             <a href="http://cwiki.apache.org/WW/home.html">
@@ -154,76 +147,43 @@ limitations under the License.
             </a>
             </p>
             
+            <p>
+            To download Apache Struts 2, visit
+            <a href="http://struts.apache.org/downloads.html">
+               Apache Struts Distributions
+            </a>
+            </p>
+            </subsection>
         </section> 
-        <section name="Distributions">
-
-        <ul><li>For your convenience, a one-stop <strong>all</strong> 
-        distribution is available. Individual elements of the distribution 
-        may also be downloaded separately.</li></ul>
         
-        <table>
-            <tr>
-            <td><a href="http://people.apache.org/builds/struts/2.0.1/struts-2.0.1-all.zip">all</a></td>
-            <td>The entire distribution, including all the elements. (43mb)</td>
-            </tr>
-            <tr>
-            <td><a href="http://people.apache.org/builds/struts/2.0.1/struts-2.0.1-apps.zip">apps</a></td>
-            <td>The example applications, as ready-to-deploy WARs. (22mb) </td>
-            </tr>
-            <tr>
-            <td><a href="http://people.apache.org/builds/struts/2.0.1/struts2-blank-2.0.1.war">blank</a></td>
-            <td>Just the blank application, ready to deploy as a template for new development. (Also included in apps.) (3mb)</td>
-            </tr>
-            <tr>
-            <td><a href="http://people.apache.org/builds/struts/2.0.1/struts-2.0.1-docs.zip">docs</a></td>
-            <td>The documentation, as provided on the website. (11mb)</td>
-            </tr>
-            <tr>
-            <td><a href="http://people.apache.org/builds/struts/2.0.1/struts-2.0.1-lib.zip">lib</a></td>
-            <td>The essential dependencies, including the Struts<sup>2</sup> JARs. (3mb)</td>
-            </tr>
-            <tr>
-            <td><a href="http://people.apache.org/builds/struts/2.0.1/struts-2.0.1-src.zip">src</a></td>
-            <td>The source code for the framework, ready to build as a Maven project. (18mb)</td>
-            </tr>
-            <tr>
-            <td><a href="http://people.apache.org/builds/struts/2.0.1/struts-2.0.1-j4.zip">sj4</a></td>
-            <td>The Java 1.4 versions of the Struts and XWork JARs (prepared using RetoTranslator). (2mb)</td>
-            </tr>
-         </table>
-            
-            <ul><li>The Struts<sup>2</sup> distributions are classified "test-build" quality but are suitable for new development by early adopters.</li></ul>
-
-        <subsection name="Maven Snapshots">
-        <p>
-            When a distribution is first made available, 
-            it is rated as a development build or "snapshot". 
-            Later, the quality of the distribution may be upgraded to "Beta" or 
-            "General Availability", based on feedback from the community, 
-            and then made available through ibiblio and other public Maven repositories. 
-            To obtain an early distribution via Maven, 
-            specify the ASF Snapshot repository in the project's POM. 
+        <section name="Licensing of Apache Struts Distributions">
+        <p>        
+            Apache Struts 2 source code and documentation is 
+            licensed to the Apache Software Foundation (ASF) under one
+            or more contributor license agreements. See the NOTICE file
+            included in distribution for additional information
+            regarding copyright ownership. The ASF licenses the source 
+            code and documentation files in our Apache Struts distribution 
+            to you under the Apache License, Version 2.0 (the "License"); 
+            you may not use the Apache Struts product except in compliance
+            with the License. 
         </p>
-        
-        <p><pre><code>
-        &lt;repositories>
-          &lt;repository>
-            &lt;id>apache.snapshots&lt;/id>
-            &lt;name>ASF Maven 2 Snapshot&lt;/name>
-            &lt;url>http://people.apache.org/repo/m2-snapshot-repository&lt;/url>
-          &lt;/repository>
-        &lt;/repositories>
-        </code></pre></p>
-                
+
         <p>
-        For more about Apache Struts 2, visit
-        <a href="http://cwiki.apache.org/WW/home.html">
-          Getting Started.
-        </a>
-        </p>
+            You may obtain a copy of the License at
+            <a href="http://www.apache.org/licenses/LICENSE-2.0">
+            http://www.apache.org/licenses/LICENSE-2.0</a>.
+        </p> 
+
+        <p>
+            Unless required by applicable law or agreed to in writing,
+            software distributed under the License is distributed on an
+            "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+            KIND, either express or implied.  See the License for the
+            specific language governing permissions and limitations
+            under the License.  
+        </p> 
         
-        </subsection>                        
         </section>        
-
     </body>
 </document>

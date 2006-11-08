@@ -49,9 +49,13 @@ import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
+ * <!-- START SNIPPET: description -->
  * Provides several different debugging screens to provide insight into the
- * data behind the page. The value of the 'debug' request parameter determines
+ * data behind the page.
+ * <!-- END SNIPPET: description -->
+ * The value of the 'debug' request parameter determines
  * the screen:
+ * <!-- START SNIPPET: parameters -->
  * <ul>
  * <li> <code>xml</code> - Dumps the parameters, context, session, and value
  * stack as an XML document.</li>
@@ -61,12 +65,19 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <li> <code>command</code> - Tests an OGNL expression and returns the
  * string result. Only used by the OGNL console.</li>
  * </ul>
+ * <!-- END SNIPPET: parameters -->
  * <p/>
+ *  Example:
+ * <!-- START SNIPPET: example -->
+ *  http://localhost:8080/Welcome.action?debug=xml
+ * <!-- END SNIPPET: example -->
  * <p/>
+ * <!-- START SNIPPET: remarks -->
  * This interceptor only is activated when devMode is enabled in
  * struts.properties. The 'debug' parameter is removed from the parameter list
  * before the action is executed. All operations occur before the natural
- * Result has a chance to execute. </p>
+ * Result has a chance to execute.
+ * <!-- END SNIPPET: remarks -->
  */
 public class DebuggingInterceptor implements Interceptor {
 

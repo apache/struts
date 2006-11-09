@@ -16,6 +16,7 @@
         <pattern>/chat/ajax/*</pattern>
         <pattern>/hangman/ajax/*</pattern>
         <pattern>/nodecorate/*</pattern>
+        <pattern>/tiles/*</pattern>
     </excludes>
 
     <decorator name="main" page="main.jsp">

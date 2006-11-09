@@ -96,6 +96,7 @@
                     <li><a href="<s:url value="/chat/index.jsp"/>">Chat (AJAX)</a>
                     <li><a href="<s:url action="hangmanMenu" namespace="/hangman"/>">Hangman</a></li>
                     <li><a href="<s:url value="/fileupload" />">Fileupload</a></li>
+                    <li><a href="<s:url value="/tiles/index.action" />">Tiles</a></li>
                     <li class="last"><a href="<s:url value="/help.jsp"/>">Help</a></li>
                 </ul>
             </div>

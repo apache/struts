@@ -20,11 +20,13 @@
  */
 package org.apache.struts2.tiles;
 
-import org.apache.tiles.TilesUtilImpl;
+import org.apache.tiles.context.TilesRequestContext;
+import org.apache.tiles.context.TilesRequestContextWrapper;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
 import org.apache.struts2.ServletActionContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import javax.servlet.jsp.PageContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -45,7 +47,10 @@ import freemarker.template.TemplateException;
  * @version $Id$
  *
  */
-public class StrutsTilesUtilImpl extends TilesUtilImpl {
+public class StrutsTilesRequestContext extends TilesRequestContextWrapper {
+
+    private static final Log LOG =
+        LogFactory.getLog(StrutsTilesRequestContext.class);
 
     /**
      * The mask used to detect requests which should be intercepted.
@@ -55,16 +60,20 @@ public class StrutsTilesUtilImpl extends TilesUtilImpl {
     /**
      * Default constructor.
      * Sets the mask to '.ftl'
+     * @param context
      */
-    public StrutsTilesUtilImpl() {
-        mask = ".ftl";
+    public StrutsTilesRequestContext(TilesRequestContext context) {
+        this(context, ".ftl");
     }
 
     /**
      * Optional constructor used to specify a specific mask.
      * @param mask
+     * @param context
      */
-    public StrutsTilesUtilImpl(String mask) {
+    public StrutsTilesRequestContext(TilesRequestContext context,
+                                     String mask) {
+        super(context);
         this.mask = mask;
     }
 
@@ -73,27 +82,28 @@ public class StrutsTilesUtilImpl extends TilesUtilImpl {
      * templates to be intercepted so that the FreemarkerResult can
      * be used in order to setup the appropriate model.
      *
-     * @param string the included resource
-     * @param pageContext the current page context
-     * @param b whether or not a flush should occur
      * @throws IOException
      * @throws ServletException
      * @throws Exception
      */
-    public void doInclude(String string, PageContext pageContext, boolean b) throws Exception {
-        if(string.endsWith(".ftl")) {
-            HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-            ActionInvocation invocation = ServletActionContext.getActionContext(request).getActionInvocation();
+    public void include(String include) throws Exception {
+        if(include.endsWith(mask)) {
+            HttpServletRequest request = (HttpServletRequest)getRequest();
+
+            ActionInvocation invocation =
+                ServletActionContext.getActionContext(request).getActionInvocation();
+
             FreemarkerResult result = new FreemarkerResult();
+
             try {
-                result.doExecute(string, invocation);
+                result.doExecute(include, invocation);
             } catch (TemplateException e) {
-                log.error("Error invoking Freemarker template", e);
-                throw new ServletException("Error invoking Freemarker template.", e);
+                LOG.error("Error invoking Freemarker template", e);
+                throw new Exception("Error invoking Freemarker template.", e);
             }
         }
         else {
-            super.doInclude(string, pageContext, b);
+            super.include(include);
         }
     }
 }

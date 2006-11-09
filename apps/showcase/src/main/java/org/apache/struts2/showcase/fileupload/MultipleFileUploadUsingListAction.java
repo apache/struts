@@ -18,7 +18,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.struts2.showcase.fileupload;
 import com.opensymphony.xwork2.ActionSupport;
+
+import java.io.File;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Showcase action - multiple file upload using List

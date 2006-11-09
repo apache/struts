@@ -32,6 +32,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
 import org.apache.tiles.*;
+import org.apache.tiles.access.TilesAccess;
 import org.apache.tiles.context.BasicTilesContextFactory;
 
 import com.opensymphony.xwork2.ActionInvocation;
@@ -80,12 +81,7 @@ import com.opensymphony.xwork2.LocaleProvider;
  */
 public class TilesResult extends ServletDispatcherResult {
 
-    private static final long serialVersionUID = -3806939435493086243L;
-
-    private static final Log log = LogFactory.getLog(TilesResult.class);
-
-    protected ActionInvocation invocation;
-    private DefinitionsFactory definitionsFactory;
+    private static final long serialVersionUID = -3806939435493086244L;
 
     public TilesResult() {
         super();
@@ -105,128 +101,13 @@ public class TilesResult extends ServletDispatcherResult {
      */
     public void doExecute(String location, ActionInvocation invocation) throws Exception {
         setLocation(location);
-        this.invocation = invocation;
+
+        ServletContext servletContext = ServletActionContext.getServletContext();
+        TilesContainer container = TilesAccess.getContainer(servletContext);
 
         HttpServletRequest request = ServletActionContext.getRequest();
         HttpServletResponse response = ServletActionContext.getResponse();
-        ServletContext servletContext = ServletActionContext.getServletContext();
-        TilesRequestContext tilesContext =
-            new BasicTilesContextFactory().createRequestContext(servletContext,
-                                                                request, response);
 
-        this.definitionsFactory =
-                (DefinitionsFactory) servletContext.getAttribute(TilesUtilImpl.DEFINITIONS_FACTORY);
-
-        // get component definition
-        ComponentDefinition definition = getComponentDefinition(location, this.definitionsFactory, request);
-        if (definition == null) {
-            throw new ServletException("No Tiles definition found for name '" + location + "'");
-        }
-
-        // get current component context
-        ComponentContext context = getComponentContext(definition, tilesContext);
-        ComponentContext.setContext(context, tilesContext);
-
-        // execute component controller associated with definition, if any
-        ViewPreparer controller = getController(definition, request);
-        if (controller != null) {
-            if (log.isDebugEnabled()) {
-                log.debug("Executing Tiles controller [" + controller + "]");
-            }
-            executeController(controller, context, tilesContext);
-        }
-
-        // determine the path of the definition
-        String path = getDispatcherPath(definition, request);
-        if (path == null) {
-            throw new ServletException(
-                    "Could not determine a path for Tiles definition '" + definition.getName() + "'");
-        }
-
-        super.doExecute(path, invocation);
-    }
-
-    protected Locale deduceLocale(HttpServletRequest request) {
-        if (invocation.getAction() instanceof LocaleProvider) {
-            return ((LocaleProvider) invocation.getAction()).getLocale();
-        } else {
-            return request.getLocale();
-        }
-    }
-
-    /**
-     * Determine the Tiles component definition for the given Tiles
-     * definitions factory.
-     *
-     * @param factory the Tiles definitions factory
-     * @param request current HTTP request
-     * @return the component definition
-     */
-    protected ComponentDefinition getComponentDefinition(String location, DefinitionsFactory factory, HttpServletRequest request)
-            throws Exception {
-        ComponentDefinitions definitions = factory.readDefinitions();
-        return definitions.getDefinition(location, deduceLocale(request));
-    }
-
-    /**
-     * Determine the Tiles component context for the given Tiles definition.
-     *
-     * @param definition the Tiles definition to render
-     * @param tilesContext    current TilesContext
-     * @return the component context
-     * @throws Exception if preparations failed
-     */
-    protected ComponentContext getComponentContext(ComponentDefinition definition, TilesRequestContext tilesContext)
-            throws Exception {
-        ComponentContext context = ComponentContext.getContext(tilesContext);
-        if (context == null) {
-            context = new ComponentContext(definition.getAttributes());
-            ComponentContext.setContext(context, tilesContext);
-        } else {
-            context.addMissing(definition.getAttributes());
-        }
-        return context;
-    }
-
-    /**
-     * Determine and initialize the Tiles component controller for the
-     * given Tiles definition, if any.
-     *
-     * @param definition the Tiles definition to render
-     * @param request    current HTTP request
-     * @return the component controller to execute, or <code>null</code> if none
-     * @throws Exception if preparations failed
-     */
-    protected ViewPreparer getController(ComponentDefinition definition, HttpServletRequest request)
-            throws Exception {
-        return definition.getOrCreatePreparer();
-    }
-
-    /**
-     * Execute the given Tiles controller.
-     *
-     * @param controller the component controller to execute
-     * @param context    the component context
-     * @param tilesContext   current tilesContext
-     * @throws Exception if controller execution failed
-     */
-    protected void executeController(
-            ViewPreparer controller, ComponentContext context, TilesRequestContext tilesContext)
-            throws Exception {
-        controller.execute(tilesContext, context);
-    }
-
-    /**
-     * Determine the dispatcher path for the given Tiles definition,
-     * i.e. the request dispatcher path of the layout page.
-     * @param definition the Tiles definition to render
-     * @param request current HTTP request
-     * @return the path of the layout page to render
-     * @throws Exception if preparations failed
-     */
-    protected String getDispatcherPath(ComponentDefinition definition, HttpServletRequest request)
-            throws Exception {
-        Object pathAttr = null;
-        return (pathAttr != null ? pathAttr.toString() : definition.getPath());
+        container.render(request, response, location);
     }
 }

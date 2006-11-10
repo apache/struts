@@ -20,37 +20,34 @@
  */
 package org.apache.struts2.tiles;
 
-import org.apache.tiles.context.TilesRequestContext;
-import org.apache.tiles.context.TilesRequestContextWrapper;
-import org.apache.struts2.views.freemarker.FreemarkerResult;
-import org.apache.struts2.ServletActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import freemarker.template.TemplateException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.views.freemarker.FreemarkerResult;
+import org.apache.tiles.context.TilesRequestContext;
+import org.apache.tiles.context.TilesRequestContextWrapper;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import freemarker.template.TemplateException;
-
 /**
- *
  * Default implementation of TilesUtil.
  * This class contains default implementation of utilities. This implementation
  * is intended to be used without Struts.
- *
+ * <p/>
  * TilesUtilImpl implementation used to intercept .ftl requests and
  * ensure that they are setup properly to take advantage of the
  * {@link FreemarkerResult}.
  *
  * @version $Id$
- *
  */
 public class StrutsTilesRequestContext extends TilesRequestContextWrapper {
 
     private static final Log LOG =
-        LogFactory.getLog(StrutsTilesRequestContext.class);
+            LogFactory.getLog(StrutsTilesRequestContext.class);
 
     /**
      * The mask used to detect requests which should be intercepted.
@@ -60,6 +57,7 @@ public class StrutsTilesRequestContext extends TilesRequestContextWrapper {
     /**
      * Default constructor.
      * Sets the mask to '.ftl'
+     *
      * @param context
      */
     public StrutsTilesRequestContext(TilesRequestContext context) {
@@ -68,6 +66,7 @@ public class StrutsTilesRequestContext extends TilesRequestContextWrapper {
 
     /**
      * Optional constructor used to specify a specific mask.
+     *
      * @param mask
      * @param context
      */
@@ -75,6 +74,10 @@ public class StrutsTilesRequestContext extends TilesRequestContextWrapper {
                                      String mask) {
         super(context);
         this.mask = mask;
+    }
+
+    public void dispatch(String include) throws IOException {
+        include(include);
     }
 
     /**
@@ -86,12 +89,15 @@ public class StrutsTilesRequestContext extends TilesRequestContextWrapper {
      * @throws ServletException
      * @throws Exception
      */
-    public void include(String include) throws Exception {
-        if(include.endsWith(mask)) {
-            HttpServletRequest request = (HttpServletRequest)getRequest();
+    public void include(String include) throws IOException {
+        if (include.endsWith(mask)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Intercepting tiles include '" + include + "'. Processing as freemarker result.");
+            }
+            HttpServletRequest request = (HttpServletRequest) getRequest();
 
             ActionInvocation invocation =
-                ServletActionContext.getActionContext(request).getActionInvocation();
+                    ServletActionContext.getActionContext(request).getActionInvocation();
 
             FreemarkerResult result = new FreemarkerResult();
 
@@ -99,10 +105,9 @@ public class StrutsTilesRequestContext extends TilesRequestContextWrapper {
                 result.doExecute(include, invocation);
             } catch (TemplateException e) {
                 LOG.error("Error invoking Freemarker template", e);
-                throw new Exception("Error invoking Freemarker template.", e);
+                throw new IOException("Error invoking Freemarker template."+ e.getMessage());
             }
-        }
-        else {
+        } else {
             super.include(include);
         }
     }

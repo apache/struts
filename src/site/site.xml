@@ -30,26 +30,26 @@
         
             <item
                     name="Getting Started"
-                    href="http://cwiki.apache.org/WW/home.html"
+                    href="http://struts.apache.org/WW/home.html"
                     />        
             <item
                     name="Tutorials"
-                    href="http://cwiki.apache.org/WW/tutorials.html"
+                    href="http://struts.apache.org/WW/tutorials.html"
                     />        
 
             <item
                     name="FAQs"
-                    href="http://cwiki.apache.org/WW/faqs.html"
+                    href="http://struts.apache.org/WW/faqs.html"
                     />        
 
             <item
                     name="Guides"
-                    href="http://cwiki.apache.org/WW/guides.html"
+                    href="http://struts.apache.org/WW/guides.html"
                     />        
 
             <item
                     name="Release Notes"
-                    href="http://cwiki.apache.org/WW/release-notes-200.html"
+                    href="http://struts.apache.org/WW/release-notes-202.html"
                     />        
 
         </menu>
@@ -64,7 +64,7 @@
                     />        
             <item
                     name="Tag Reference"
-                    href="http://cwiki.apache.org/WW/tag-reference.html"
+                    href="http://struts.apache.org/WW/tag-reference.html"
                     />        
             <item
                     name="Source Repository"

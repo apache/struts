@@ -1,1 +1,14 @@
-<tr> <td class="tdLabel"></td><td align="right"><button type="submit" dojoType="BindButton" value="submit" targetDiv="formId" onLoad="alert('form submitted');" notifyTopics="b" listenTopics="a">submit</button></td> </tr>
+<input
+  type="submit"
+  dojoType="struts:Bind"
+  event="onclick"
+  value="Submit"
+  id="a"
+  label="i"
+  href="b"
+  loadingText="c"
+  errorText="d"
+  refreshListenTopic="e"
+  beforeLoading="f"
+  afterLoading="g"
+  handler="h"/>

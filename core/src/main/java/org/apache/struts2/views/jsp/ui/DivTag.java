@@ -28,19 +28,17 @@ import org.apache.struts2.components.Div;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
-public class DivTag extends AbstractClosingTag {
+public class DivTag extends AbstractRemoteCallUITag {
 
     private static final long serialVersionUID = 5309231035916461758L;
 
-    protected String href;
-    protected String updateFreq;
-    protected String delay="1";
-    protected String loadingText;
-    protected String errorText;
-    protected String showErrorTransportText;
-    protected String listenTopics;
-    protected String afterLoading;
-
+    protected String updateInterval;
+    protected String autoStart;
+    protected String delay;
+    protected String startTimerListenTopic;
+    protected String stopTimerListenTopic;
+    protected String refreshOnShow;
+    
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Div(stack, req, res);
     }
@@ -49,45 +47,34 @@ public class DivTag extends AbstractClosingTag {
         super.populateParams();
 
         Div div = (Div) component;
-        div.setHref(href);
-        div.setUpdateFreq(updateFreq);
+        div.setUpdateInterval(updateInterval);
+        div.setAutoStart(autoStart);
         div.setDelay(delay);
-        div.setLoadingText(loadingText);
-        div.setErrorText(errorText);
-        div.setShowErrorTransportText(showErrorTransportText);
-        div.setListenTopics(listenTopics);
-        div.setAfterLoading(afterLoading);
+        div.setStartTimerListenTopic(startTimerListenTopic);
+        div.setStopTimerListenTopic(stopTimerListenTopic);
     }
 
-    public void setHref(String href) {
-        this.href = href;
-    }
-
-    public void setUpdateFreq(String updateFreq) {
-        this.updateFreq = updateFreq;
+    public void setAutoStart(String autoStart) {
+        this.autoStart = autoStart;
     }
 
     public void setDelay(String delay) {
         this.delay = delay;
     }
 
-    public void setLoadingText(String loadingText) {
-        this.loadingText = loadingText;
+    public void setUpdateInterval(String updateInterval) {
+        this.updateInterval = updateInterval;
     }
 
-    public void setErrorText(String errorText) {
-        this.errorText = errorText;
+    public void setStartTimerListenTopic(String startTimerListenTopic) {
+        this.startTimerListenTopic = startTimerListenTopic;
     }
 
-    public void setShowErrorTransportText(String showErrorTransportText) {
-        this.showErrorTransportText = showErrorTransportText;
+    public void setStopTimerListenTopic(String stopTimerListenTopic) {
+        this.stopTimerListenTopic = stopTimerListenTopic;
     }
 
-    public void setListenTopics(String listenTopics) {
-        this.listenTopics = listenTopics;
-    }
-
-    public void setAfterLoading(String afterLoading) {
-        this.afterLoading = afterLoading;
+    public void setRefreshOnShow(String refreshOnShow) {
+        this.refreshOnShow = refreshOnShow;
     }
 }

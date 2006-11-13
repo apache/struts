@@ -23,50 +23,48 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.views.util.UrlHelper;
-
-import com.opensymphony.xwork2.util.ValueStack;
 
 /**
- * <!-- START SNIPPET: javadoc -->
- * The div tag is primarily an AJAX tag, providing a remote call from the current page to update a section
- * of content without having to refresh the entire page.<p/>
+ * <!-- START SNIPPET: javadoc --> The div tag is primarily an AJAX tag, providing a remote call
+ * from the current page to update a section of content without having to refresh the entire page.<p/>
  *
- * It creates a HTML &lt;DIV /&gt; that obtains it's content via a remote XMLHttpRequest call
- * via the dojo framework.<p/>
+ * It creates a HTML &lt;DIV /&gt; that obtains it's content via a remote XMLHttpRequest call via
+ * the dojo framework.<p/>
  *
- * If a "listenTopics" is supplied, it will listen to that topic and refresh it's content when any message
- * is received.<p/>
- * <!-- END SNIPPET: javadoc -->
+ * If a "refreshListenTopic" is supplied, it will listen to that topic and refresh it's content when any
+ * message is received.<p/> <!-- END SNIPPET: javadoc -->
  *
- * <b>Important:</b> Be sure to setup the page containing this tag to be Configured for AJAX</p>
+ * <b>Important:</b> Be sure to setup the page containing this tag to be Configured for AJAX
+ * </p>
  *
  * <p/> <b>Examples</b>
  *
  * <pre>
- * <!-- START SNIPPET: example -->
- * &lt;s:div ... /&gt;
- * <!-- END SNIPPET: example -->
+ *       &lt;!-- START SNIPPET: example --&gt;
+ *       &lt;s:div ... /&gt;
+ *       &lt;!-- END SNIPPET: example --&gt;
  * </pre>
  *
  * @s.tag name="div" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.DivTag"
- * description="Render HTML div providing content from remote call via AJAX"
-  */
-public class Div extends RemoteCallUIBean {
+ *        description="Render HTML div providing content from remote call via AJAX"
+ */
+public class Div extends AbstractRemoteCallUIBean {
 
     private static final Log _log = LogFactory.getLog(Div.class);
-
 
     public static final String TEMPLATE = "div";
     public static final String TEMPLATE_CLOSE = "div-close";
     public static final String COMPONENT_NAME = Div.class.getName();
 
-    protected String updateFreq;
+    protected String updateInterval;
+    protected String autoStart;
     protected String delay;
-    protected String loadingText;
-    protected String listenTopics;
+    protected String startTimerListenTopic;
+    protected String stopTimerListenTopic;
+    protected String refreshOnShow;
 
     public Div(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -83,60 +81,32 @@ public class Div extends RemoteCallUIBean {
     public void evaluateExtraParams() {
         super.evaluateExtraParams();
 
-        if (null != updateFreq && !"".equals(updateFreq)) {
-            addParameter("updateFreq", findString(updateFreq));
-        } else {
-            addParameter("updateFreq", "0");
-        }
-
-        if (null != delay && !"".equals(delay)) {
-            addParameter("delay", findString(delay));
-        } else {
-            addParameter("delay", "0");
-        }
-
-        String tmpUpdateFreq = (String) getParameters().get("delay");
-        String tmpDelay = (String) getParameters().get("updateFreq");
-        try {
-            int _updateFreq = Integer.parseInt(tmpUpdateFreq);
-            int _delay = Integer.parseInt(tmpDelay);
-
-            if (_updateFreq <= 0 && _delay <= 0) {
-                addParameter("autoStart", "false");
-            }
-        }
-        catch(NumberFormatException e) {
-            // too bad, invalid updateFreq or delay provided, we
-            // can't determine autoStart mode.
-            _log.info("error while parsing updateFreq ["+tmpUpdateFreq+"] or delay ["+tmpDelay+"] to integer, cannot determine autoStart mode", e);
-        }
-
-        if (loadingText != null) {
-            addParameter("loadingText", findString(loadingText));
-        }
-
-        if (listenTopics != null) {
-            addParameter("listenTopics", findString(listenTopics));
-        }
-
-        if (href != null) {
-
-            // This is needed for portal and DOJO ajax stuff!
-            addParameter("href", null);
-            addParameter("href", UrlHelper.buildUrl(findString(href), request, response, null));
-        }
+        if (updateInterval != null)
+            addParameter("updateInterval", findValue(updateInterval, Integer.class));
+        if (autoStart != null)
+            addParameter("autoStart", findValue(autoStart, Boolean.class));
+        if (refreshOnShow != null)
+            addParameter("refreshOnShow", findValue(refreshOnShow, Boolean.class));
+        if (delay != null)
+            addParameter("delay", findValue(delay, Integer.class));
+        if (startTimerListenTopic != null)
+            addParameter("startTimerListenTopic", findValue(startTimerListenTopic, String.class));
+        if (stopTimerListenTopic != null)
+            addParameter("stopTimerListenTopic", findValue(stopTimerListenTopic, String.class));
     }
 
     /**
-     * How often to re-fetch the content (in milliseconds)
-     * @s.tagattribute required="false" type="Integer" default="0"
+     * Start timer automatically
+     *
+     * @s.tagattribute required="false" type="Boolean" default="true"
      */
-    public void setUpdateFreq(String updateFreq) {
-        this.updateFreq = updateFreq;
+    public void setAutoStart(String autoStart) {
+        this.autoStart = autoStart;
     }
 
     /**
      * How long to wait before fetching the content (in milliseconds)
+     *
      * @s.tagattribute required="false" type="Integer" default="0"
      */
     public void setDelay(String delay) {
@@ -144,19 +114,38 @@ public class Div extends RemoteCallUIBean {
     }
 
     /**
-     * The text to display to the user while the new content is being fetched (especially good if the content will take awhile)
-     * @s.tagattribute required="false" rtexprvalue="true"
+     * How often to re-fetch the content (in milliseconds)
+     *
+     * @s.tagattribute required="false" type="Integer" default="0"
      */
-    public void setLoadingText(String loadingText) {
-        this.loadingText = loadingText;
+    public void setUpdateInterval(String updateInterval) {
+        this.updateInterval = updateInterval;
     }
 
     /**
-     * Topic name to listen to (comma delimited), that will cause the DIV's content to be re-fetched
-     * @s.tagattribute required="false"
+     * Topic that will start the timer (for autoupdate)
+     *
+     * @s.tagattribute required="false" type="String"
      */
-    public void setListenTopics(String listenTopics) {
-        this.listenTopics = listenTopics;
+    public void setStartTimerListenTopic(String startTimerListenTopic) {
+        this.startTimerListenTopic = startTimerListenTopic;
     }
 
+    /**
+     * Topic that will stop the timer (for autoupdate)
+     *
+     * @s.tagattribute required="false" type="String"
+     */
+    public void setStopTimerListenTopic(String stopTimerListenTopic) {
+        this.stopTimerListenTopic = stopTimerListenTopic;
+    }
+
+    /**
+     * Content will be loaded when div becomes visible
+     *
+     * @s.tagattribute required="false" type="String" default="false"
+     */
+    public void setRefreshOnShow(String refreshOnShow) {
+        this.refreshOnShow = refreshOnShow;
+    }
 }

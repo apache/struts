@@ -42,6 +42,7 @@ public class StrutsModels {
     protected ComponentModel component;
     protected DateModel date;
     protected DatePickerModel datepicker;
+    protected DropdownDateTimePickerModel dropdownDateTimePicker;
     protected DivModel div;
     protected DoubleSelectModel doubleselect;
     protected FileModel file;
@@ -52,7 +53,6 @@ public class StrutsModels {
     protected I18nModel i18n;
     protected IncludeModel include;
     protected LabelModel label;
-    protected PanelModel panel;
     protected PasswordModel password;
     protected PushModel push;
     protected ParamModel param;
@@ -232,12 +232,20 @@ public class StrutsModels {
         return date;
     }
 
-    public DatePickerModel getDatepicker() {
+    public DatePickerModel getDatePicker() {
         if (datepicker == null) {
             datepicker = new DatePickerModel(stack, req, res);
         }
 
         return datepicker;
+    }
+
+    public DropdownDateTimePickerModel getDropdownDateTimePicker() {
+        if (dropdownDateTimePicker == null) {
+            dropdownDateTimePicker = new DropdownDateTimePickerModel(stack, req, res);
+        }
+
+        return dropdownDateTimePicker;
     }
 
     public TokenModel getToken() {
@@ -326,14 +334,6 @@ public class StrutsModels {
         }
 
         return tabbedPanel;
-    }
-
-    public PanelModel getPanel() {
-        if (panel == null) {
-            panel = new PanelModel(stack, req, res);
-        }
-
-        return panel;
     }
 
     public BeanModel getBean() {

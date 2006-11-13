@@ -30,17 +30,17 @@ public class DivTest extends AbstractUITagTest {
 
 
     public void testGenericSimple() throws Exception {
-        DivTag tag = new DivTag();
+        AbstractRemoteCallUITag tag = new DivTag();
         verifyGenericProperties(tag, "simple", new String[]{"value","tabindex","disabled"});
     }
 
     public void testGenericXhtml() throws Exception {
-        DivTag tag = new DivTag();
+        AbstractRemoteCallUITag tag = new DivTag();
         verifyGenericProperties(tag, "xhtml", new String[]{"value","tabindex","disabled"});
     }
 
     public void testGenericAjax() throws Exception {
-        DivTag tag = new DivTag();
+        AbstractRemoteCallUITag tag = new DivTag();
         verifyGenericProperties(tag, "ajax", new String[]{"value","tabindex","disabled"});
     }
 
@@ -56,12 +56,16 @@ public class DivTest extends AbstractUITagTest {
         tag.setHref("a");
         tag.setLoadingText("b");
         tag.setErrorText("c");
-        tag.setShowErrorTransportText("true");
+        tag.setAutoStart("true");
         tag.setDelay("4000");
-        tag.setUpdateFreq("1000");
-        tag.setListenTopics("g");
-        tag.setAfterLoading("h");
-
+        tag.setUpdateInterval("1000");
+        tag.setRefreshListenTopic("g");
+        tag.setStartTimerListenTopic("h");
+        tag.setStopTimerListenTopic("i");
+        tag.setBeforeLoading("j");
+        tag.setAfterLoading("k");
+        tag.setRefreshOnShow("true");
+        tag.setHandler("l");
         tag.doStartTag();
         tag.doEndTag();
 

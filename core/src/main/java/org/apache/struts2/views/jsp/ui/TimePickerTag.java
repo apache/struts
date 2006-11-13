@@ -33,40 +33,34 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 public class TimePickerTag extends TextFieldTag {
 
-    private static final long serialVersionUID = 3527737048468381376L;
+	private static final long serialVersionUID = 3527737048468381376L;
 
-    protected String format;
-    protected String timeIconPath;
-    protected String templatePath;
-    protected String templateCssPath;
+    protected String useDefaultTime;
+    protected String useDefaultMinutes;
+    protected String language;
 
-    public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
-        return new TimePicker(stack, req, res);
+	public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+		return new TimePicker(stack, req, res);
+	}
+
+	protected void populateParams() {
+		super.populateParams();
+
+		final TimePicker timePicker = (TimePicker) component;
+        timePicker.setUseDefaultMinutes(useDefaultMinutes);
+        timePicker.setUseDefaultTime(useDefaultTime);
+        timePicker.setLanguage(language);
+	}
+
+    public void setUseDefaultMinutes(String useDefaultMinutes) {
+        this.useDefaultMinutes = useDefaultMinutes;
     }
 
-    protected void populateParams() {
-        super.populateParams();
-
-        final TimePicker timePicker = (TimePicker) component;
-        timePicker.setFormat(format);
-        timePicker.setTimeIconPath(timeIconPath);
-        timePicker.setTemplatePath(templatePath);
-        timePicker.setTemplateCssPath(templateCssPath);
+    public void setUseDefaultTime(String useDefaultTime) {
+        this.useDefaultTime = useDefaultTime;
     }
 
-    public void setFormat(String format) {
-        this.format = format;
-    }
-
-    public void setTimeIconPath(String timeIconPath) {
-        this.timeIconPath = timeIconPath;
-    }
-
-    public void setTemplatePath(String templatePath) {
-        this.templatePath = templatePath;
-    }
-
-    public void setTemplateCssPath(String templateCssPath) {
-        this.templateCssPath = templateCssPath;
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }

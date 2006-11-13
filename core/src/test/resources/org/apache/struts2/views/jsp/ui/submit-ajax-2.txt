@@ -1,0 +1,14 @@
+<input
+  type="button"
+  dojoType="struts:Bind"
+  event="onclick"
+  id="a"
+  label="i"
+  href="b"
+  loadingText="c"
+  errorText="d"
+  refreshListenTopic="e"
+  beforeLoading="f"
+  afterLoading="g"
+  handler="h"
+  value="i"/>

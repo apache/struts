@@ -20,9 +20,6 @@
  */
 package org.apache.struts2.components;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -90,8 +87,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <b>Important:</b> Be sure to setup the page containing this tag to be Configured for AJAX
  *
- * @see Panel
- *
  * @s.tag name="tabbedPanel" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TabbedPanelTag"
  * description="Render a tabbedPanel widget."
  */
@@ -100,40 +95,32 @@ public class TabbedPanel extends ClosingUIBean {
     public static final String TEMPLATE_CLOSE = "tabbedpanel-close";
     final private static String COMPONENT_NAME = TabbedPanel.class.getName();
 
-    protected List tabs = new ArrayList();
+    protected String selectedTab;
+    protected String closeButton;
+    protected String doLayout ;
 
     public TabbedPanel(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 
-    /**
-     * Add a new panel to be rendered.
-     *
-     * @param pane a new panel to be rendered
-     */
-    public void addTab(Panel pane) {
-        tabs.add(pane);
-    }
-
-    /**
-     * Get the list of panel tabs for this tab panel.
-     *
-     * @return the list of panel tabs for this tab panel
-     */
-    public List getTabs() {
-        return tabs;
-    }
-
-    public String getTopicName() {
-        return "topic_tab_" + id + "_selected";
-    }
 
     protected void evaluateExtraParams() {
         super.evaluateExtraParams();
 
-        addParameter("topicName", "topic_tab_" + id + "_selected");
-        addParameter("tabs", tabs);
-
+        if(selectedTab != null)
+            addParameter("selectedTab", findString(selectedTab));
+        if(closeButton != null)
+            addParameter("closeButton", findString(closeButton));
+        addParameter("doLayout", doLayout != null ? findValue(doLayout, Boolean.class) : Boolean.FALSE);
+        if(labelPosition != null) {
+            //dojo has some weird name for label positions
+            if(labelPosition.equalsIgnoreCase("left"))
+               labelPosition = "left-h";
+            if(labelPosition.equalsIgnoreCase("right"))
+                labelPosition = "right-h";
+            addParameter("labelPosition", null);
+            addParameter("labelPosition", labelPosition);
+        }
     }
 
     public String getDefaultOpenTemplate() {
@@ -155,5 +142,30 @@ public class TabbedPanel extends ClosingUIBean {
     public void setId(String id) {
         // This is required to override tld generation attributes to required=true
         super.setId(id);
+    }
+
+
+    /**
+     * The id of the tab that will be selected by default
+     * @s.tagattribute required="false" type="String"
+     */
+    public void setSelectedTab(String selectedTab) {
+      this.selectedTab = selectedTab;
+    }
+
+    /**
+     * Where the close button will be placed, possible values are "tab" and "pane"
+     * @s.tagattribute required="false" type="String"
+     */
+    public void setCloseButton(String closeButton) {
+        this.closeButton = closeButton;
+    }
+
+    /**
+     * If doLayout is false, the tab container's height equals the height of the currently selected tab
+     * @s.tagattribute required="false" default="false" type="Boolean"
+     */
+    public void setDoLayout(String doLayout) {
+        this.doLayout = doLayout;
     }
 }

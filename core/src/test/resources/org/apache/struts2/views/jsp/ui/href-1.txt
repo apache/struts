@@ -1,1 +1,12 @@
-<a dojoType="BindAnchor" evalResult="true" id="mylink" href="a" notifyTopics="g" errorHtml="c" showTransportError="true" onLoad="h"></a>
+<a
+ dojoType="struts:BindAnchor"
+ id="mylink"
+ href="a"
+ loadingText="d"
+ errorText="c"
+ refreshListenTopic="g"
+ beforeLoading="f"
+ afterLoading="e"
+ targets="h"
+ handler="i">
+</a>

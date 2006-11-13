@@ -1,12 +1,16 @@
-<div dojoType='BindDiv'
-	id="mylabel"
-	href="a"
-	loadingHtml="b"
-	errorHtml="c"
-	showTransportError='true'
-	delay='4000'
-	refresh='1000'
-	listenTopics='g'
-	onLoad='h'
-
-></div>
+<div
+  dojoType="struts:BindDiv"
+  delay="4000"
+  updateInterval="1000"
+  autoStart="true"
+  startTimerListenTopic="h"
+  stopTimerListenTopic="i"
+  id="mylabel"
+  href="a"
+  loadingText="b"
+  errorText="c"
+  refreshListenTopic="g"
+  beforeLoading="j"
+  afterLoading="k"
+  handler="l">
+</div>

@@ -20,82 +20,49 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import java.util.Locale;
-
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
-import com.opensymphony.xwork2.ActionContext;
 
 /**
- * Unit test for {@link DatePickerTag}.
- *
  */
 public class DatePickerTagTest extends AbstractUITagTest {
 
-    private DatePickerTag tag;
 
-    public void testDefault() throws Exception {
+    public void testGenericSimple() throws Exception {
+        AbstractRemoteCallUITag tag = new DivTag();
+        verifyGenericProperties(tag, "simple", new String[]{"value","tabindex","disabled"});
+    }
+
+    public void testGenericXhtml() throws Exception {
+        AbstractRemoteCallUITag tag = new DivTag();
+        verifyGenericProperties(tag, "xhtml", new String[]{"value","tabindex","disabled"});
+    }
+
+    public void testGenericAjax() throws Exception {
+        AbstractRemoteCallUITag tag = new DivTag();
+        verifyGenericProperties(tag, "ajax", new String[]{"value","tabindex","disabled"});
+    }
+
+    public void testSimple() throws Exception {
+        DatePickerTag tag = new DatePickerTag();
+        tag.setPageContext(pageContext);
+
+        tag.setId("id");
+        tag.setTheme("ajax");
+
+        tag.setAdjustWeeks("true");
+        tag.setDayWidth("b");
+        tag.setDisplayWeeks("true");
+        tag.setEndDate("d");
+        tag.setStartDate("e");
+        tag.setStaticDisplay("false");
+        tag.setWeekStartsOn("g");
+        tag.setName("h");
+        tag.setLanguage("i");
         tag.doStartTag();
         tag.doEndTag();
 
         verify(DatePickerTagTest.class.getResource("DatePickerTagTest-1.txt"));
-    }
-
-    public void testLocaleInStack() throws Exception {
-        stack.getContext().put(ActionContext.LOCALE, Locale.FRANCE);
-
-        tag.doStartTag();
-        tag.doEndTag();
-
-        verify(DatePickerTagTest.class.getResource("DatePickerTagTest-2.txt"));
-    }
-
-    public void testFormat() throws Exception {
-        tag.setFormat("#yyyy/#MM/#dd #hh:#mm:#ss");
-
-        tag.doStartTag();
-        tag.doEndTag();
-        assertTrue("Should contain format", writer.toString().indexOf("#yyyy/#MM/#dd #hh:#mm:#ss") > -1);
-    }
-
-    // NOTE: Switching to Dojo's DatePicker, i18n is not supported,
-    //       Commenting out this test case
-    /*public void testLanguage() throws Exception {
-        tag.setLanguage("da");
-
-        tag.doStartTag();
-        tag.doEndTag();
-        assertTrue("Should contain danish language", writer.toString().indexOf("/struts/jscalendar/lang/calendar-da.js") > -1);
-    }*/
-
-
-    // NOTE: Switching to Dojo's DatePicker, showing time is not supported.
-    //       Commenting this test case
-    /*public void testShowstime() throws Exception {
-        tag.setShowstime("24");
-
-        tag.doStartTag();
-        tag.doEndTag();
-        assertTrue("Should contain showsTime 24", writer.toString().indexOf("showsTime      :    \"24\"") > -1);
-    }*/
-
-    // NOTE: Switching to Dojo's DatePickuer, single / double click to popup
-    //       is not supported. Commenting out this test case.
-    /*public void testSingleclick() throws Exception {
-        tag.setSingleclick("true");
-
-        tag.doStartTag();
-        tag.doEndTag();
-    }*/
-
-    protected void setUp() throws Exception {
-        super.setUp();
-        tag = new DatePickerTag();
-        tag.setPageContext(pageContext);
-    }
-
-    protected void tearDown() throws Exception {
-        super.tearDown();
     }
 
 }

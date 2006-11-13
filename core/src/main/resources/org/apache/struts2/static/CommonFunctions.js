@@ -24,51 +24,6 @@ function mouseOut(tab) {
     }
 }
 
-/*
- * An object that represents a tabbed page.
- *
- * @param htmlId the id of the element that represents the tab page
- * @param remote whether this is a remote element and needs refreshing
- */
-function TabContent( htmlId, remote ) {
-
-    this.elementId = htmlId;
-    this.isRemote = remote;
-    var selected = false;
-    var self = this;
-
-    /*
-     * Shows or hides this page depending on whether the visible
-     * tab id matches this objects id.
-     *
-     * @param visibleTabId the id of the tab that was selected
-     */
-    this.updateVisibility = function( visibleTabId ) {
-        var thElement = document.getElementById( 'tab_header_'+self.elementId );
-        var tcElement = document.getElementById( 'tab_contents_'+self.elementId );
-        if (!selected && visibleTabId==self.elementId) {
-            thElement.className = selectedClass;
-            tcElement.className = selectedContentsClass;
-            self.selected = true;
-
-        } else {
-            thElement.className = unselectedClass;
-            tcElement.className = unselectedContentsClass;
-            self.selected = false;
-        }
-        if (self.isRemote==true && visibleTabId==self.elementId) {
-            var rel = window['tab_contents_update_'+self.elementId];
-            // If the first tab is a remote tab, rel is null on initial loading...
-            //  so don't try to call a method that doesn't exist.  This is only
-            //  for IE, and the workaround is to use a <a:action name="" executeResults="true" />
-            //  as the content of the DIV.
-            if (rel.bind)
-                rel.bind();
-        }
-    }
-
-}
-
 /**
  * Checks whether the current form include an ajax-ified submit button, if so
  * we return true (otherwise false).

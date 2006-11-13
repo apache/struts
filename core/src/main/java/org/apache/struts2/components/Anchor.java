@@ -29,8 +29,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- START SNIPPET: javadoc -->
  *
  * A tag that creates a HTML &lt;a href='' /&gt; that when clicked calls a URL remote XMLHttpRequest call via the dojo
- * framework. The result from the URL is executed as JavaScript. If a "listenTopics" is supplied, it will publish a
- * 'click' message to that topic when the result is returned.
+ * framework. The 'targets' attribute can hold a comma-delimited list of ids of the elements whose
+ * content will be replaced with the response of the request.The result from the URL is executed as JavaScript is executeScripts is set to 'true'. If a
+ * 'refreshListenTopic' is supplied, it will listen to that event and update its targets contents.
  *
  * <!-- END SNIPPET: javadoc -->
  *
@@ -38,7 +39,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <pre>
  * <!-- START SNIPPET: example1 -->
- * &lt;s:a id="link1" theme="ajax" href="/DoIt.action" errorText="An error ocurred" showErrorTransportText="true"&gt;
+ * &lt;s:a id="link1" theme="ajax" href="/DoIt.action" errorText="An error ocurred" loadingText="Loading..."&gt;
  *     &lt;img border="none" src="&lt;%=request.getContextPath()%&gt;/images/delete.gif"/&gt;
  *     &lt;s:param name="id" value="1"/&gt;
  * &lt;/s:a&gt;
@@ -57,8 +58,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <pre>
  * <!-- START SNIPPET: example2 -->
- * &lt;a dojoType="BindAnchor" evalResult="true" id="link1" href="/DoIt.action?id=1" errorHtml="An error ocurred"
- * showTransportError="true"&gt;&lt;/a&gt;
+ * &lt;a dojoType="BindAnchor" executeScripts="true" id="link1" href="/DoIt.action?id=1" errorText="An error ocurred"&gt;&lt;/a&gt;
  * <!-- END SNIPPET: example2 -->
  * </pre>
  *
@@ -66,7 +66,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <!-- START SNIPPET: exampledescription2 -->
  *
- * Here is an example that uses the postInvokeJS. This example is in altSyntax=true:
+ * Here is an example that uses the beforeLoading. This example is in altSyntax=true:
  *
  * <!-- END SNIPPET: exampledescription2 -->
  *
@@ -74,23 +74,22 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <pre>
  * <!-- START SNIPPET: example3 -->
- * &lt;s:a id="test" theme="ajax" href="/simpeResult.action" preInvokeJS="confirm(\'You sure\')"&gt;
+ * &lt;s:a id="test" theme="ajax" href="/simpeResult.action" beforeLoading="confirm(\'You sure\')"&gt;
  *  A
  * &lt;/s:a&gt;
  * <!-- END SNIPPET: example3 -->
  * </pre>
  *
  * @s.tag name="a" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.AnchorTag"
- * description="Render a HTML href element that when clicked calls a URL via remote XMLHttpRequest"
+ * description="Render a HTML href element that when clicked calls a URL via remote XMLHttpRequest and updates its targets"
  *
  */
-public class Anchor extends RemoteCallUIBean {
+public class Anchor extends AbstractRemoteCallUIBean {
     final public static String OPEN_TEMPLATE = "a";
     final public static String TEMPLATE = "a-close";
     final public static String COMPONENT_NAME = Anchor.class.getName();
 
-    protected String notifyTopics;
-    protected String preInvokeJS;
+    protected String targets;
 
     public Anchor(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -107,13 +106,8 @@ public class Anchor extends RemoteCallUIBean {
     public void evaluateExtraParams() {
         super.evaluateExtraParams();
 
-        if (notifyTopics != null) {
-            addParameter("notifyTopics", findString(notifyTopics));
-        }
-
-        if (preInvokeJS != null) {
-            addParameter("preInvokeJS", findString(preInvokeJS));
-        }
+        if(targets != null)
+            addParameter("targets", findString(targets));
     }
 
     /**
@@ -125,18 +119,11 @@ public class Anchor extends RemoteCallUIBean {
     }
 
     /**
-     * Topic names to post an event to after the remote call has been made
-     * @s.tagattribute required="false"
-     */
-    public void setNotifyTopics(String notifyTopics) {
-        this.notifyTopics = notifyTopics;
-    }
-
-    /**
-     * A javascript snippet that will be invoked prior to the execution of the target href. If provided must return true or false. True indicates to continue executing target, false says do not execute link target. Possible uses are for confirm dialogs.
+     * Comma delimited list of ids of the elements whose content will be updated
      * @s.tagattribute required="false" type="String"
      */
-    public void setPreInvokeJS(String preInvokeJS) {
-        this.preInvokeJS = preInvokeJS;
+    public void setTargets(String targets) {
+        this.targets = targets;
     }
+
 }

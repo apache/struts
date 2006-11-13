@@ -28,129 +28,64 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  * <!-- START SNIPPET: javadoc -->
  * Renders timepicker element.</p>
- * Format supported by this component are:-
- * <table border="1">
- *   <tr>
- *      <td>Format</td>
- *      <td>Description</td>
- *   </tr>
- *   <tr>
- *      <td>#HH</td>
- *      <td>Display hour in two digit format</td>
- *   </tr>
- *   <tr>
- *      <td>#H</td>
- *      <td>Try to display hour in one digit format, if cannot use 2 digits</td>
- *   </tr>
- *   <tr>
- *      <td>#hh</td>
- *      <td>Display hour in two digit format</td>
- *   </tr>
- *   <tr>
- *      <td>#h</td>
- *      <td>Try to display hour in one digit format, if cannot use 2 digits</td>
- *   </tr>
- *   <tr>
- *      <td>#mm</td>
- *      <td>Display minutes in 2 digits format</td>
- *   </tr>
- *   <tr>
- *      <td>#m</td>
- *      <td>Try to display minutes in 2 digits fomrat, if cannot use 2 digits</td>
- *   </tr>
- * </table>
- *
  * <!-- END SNIPPET: javadoc -->
- *
- *
- * <pre>
- * <!-- START SNIPPET: example -->
- *
- * &lt;s:timepicker label="Show Time" name="showTime" value="05:00" format="#hh:#mm" /&gt;
- *
- * &lt;s:timepicker label="Dinner Time" name="dinnerTime" format="#hh-#mm" /&gt;
- *
- * <!-- END SNIPPET: example -->
- * </pre>
  *
  * @version $Date$ $Id$
  */
 public class TimePicker extends TextField {
 
-    final public static String TEMPLATE = "timepicker";
+  	final public static String TEMPLATE = "timepicker";
 
-    protected String format;
-    protected String templatePath;
-    protected String templateCssPath;
-    protected String timeIconPath;
-    protected String size;
+     protected String useDefaultTime;
+     protected String useDefaultMinutes;
+     protected String language;
 
-    public TimePicker(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
-        super(stack, request, response);
-    }
+     public TimePicker(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+  		super(stack, request, response);
+  	}
 
-    protected void evaluateExtraParams() {
-        super.evaluateExtraParams();
+  	protected void evaluateExtraParams() {
+  		super.evaluateExtraParams();
 
-        if (format != null) {
-            addParameter("format", findString(format));
-        }
-        if (timeIconPath != null) {
-            addParameter("timeIconPath", timeIconPath);
-        }
-        if (templatePath != null) {
-            addParameter("templatePath", templatePath);
-        }
-        if (templateCssPath != null) {
-            addParameter("templateCssPath", templateCssPath);
-        }
-        if (size != null) {
-            addParameter("size", findValue(size, Integer.class));
-        }
-    }
+ 		if(useDefaultTime != null)
+             addParameter("useDefaultTime", findValue(useDefaultTime, Boolean.class));
+         if(useDefaultMinutes != null)
+             addParameter("useDefaultMinutes", findValue(useDefaultMinutes, Boolean.class));
+         if(language != null)
+             addParameter("language", findString(language));
+         if(value != null)
+             addParameter("value", findString(value));
+  	}
 
-    protected String getDefaultTemplate() {
-        return TEMPLATE;
-    }
+  	protected String getDefaultTemplate() {
+          return TEMPLATE;
+      }
 
-    /**
-     * The format to use for time field.
-     * @s.tagattribute required="false" type="String" default="Dateformat specified by language preset (%Y/%m/%d for en)"
-     */
-    public void setFormat(String format) {
-        this.format = format;
-    }
+      /**
+      * Set default minutes to current time
+      *
+      * @s.tagattribute required="false" type="Boolean" default="false"
+       */
+     public void setUseDefaultMinutes(String useDefaultMinutes) {
+         this.useDefaultMinutes = useDefaultMinutes;
+      }
 
-    /**
-     * The time picker icon path
-     * @s.tagattribute required="false" type="String" default="/struts/dojo/struts/widgets/dateIcon.gif"
-     */
-    public void setTimeIconPath(String timeIconPath) {
-        this.timeIconPath = timeIconPath;
-    }
+      /**
+      * Set default time
+      *
+      * @s.tagattribute required="false" type="Boolean" default="true"
+       */
+     public void setUseDefaultTime(String useDefaultTime) {
+         this.useDefaultTime = useDefaultTime;
+      }
 
-    /**
-     * The time picker template path.
-     * @s.tagattribute required="false" type="String"
-     */
-    public void setTemplatePath(String templatePath) {
-        this.templatePath = templatePath;
-    }
-
-    /**
-     * The time picker template css path.
-     * @s.tagattribute required="false" type="String"
-     */
-    public void setTemplateCssPath(String templateCssPath) {
-        this.templateCssPath = templateCssPath;
-    }
-
-    /**
-     * The time picker text field size.
-     * @s.tagattribute required="false" type="String"
-     */
-    public void setSize(String size) {
-        this.size = size;
-    }
+      /**
+      * Language to display this widget in (like en-us).
+      *
+      * @s.tagattribute required="false" type="String" default="brower's specified preferred language"
+       */
+     public void setLanguage(String language) {
+         this.language = language;
+      }
 
 }

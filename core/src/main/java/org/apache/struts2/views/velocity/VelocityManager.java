@@ -56,6 +56,7 @@ import org.apache.struts2.views.velocity.components.DateDirective;
 import org.apache.struts2.views.velocity.components.DatePickerDirective;
 import org.apache.struts2.views.velocity.components.DivDirective;
 import org.apache.struts2.views.velocity.components.DoubleSelectDirective;
+import org.apache.struts2.views.velocity.components.DropdownDateTimePickerDirective;
 import org.apache.struts2.views.velocity.components.FieldErrorDirective;
 import org.apache.struts2.views.velocity.components.FileDirective;
 import org.apache.struts2.views.velocity.components.FormDirective;
@@ -65,7 +66,6 @@ import org.apache.struts2.views.velocity.components.I18nDirective;
 import org.apache.struts2.views.velocity.components.IncludeDirective;
 import org.apache.struts2.views.velocity.components.LabelDirective;
 import org.apache.struts2.views.velocity.components.OptionTransferSelectDirective;
-import org.apache.struts2.views.velocity.components.PanelDirective;
 import org.apache.struts2.views.velocity.components.ParamDirective;
 import org.apache.struts2.views.velocity.components.PasswordDirective;
 import org.apache.struts2.views.velocity.components.PropertyDirective;
@@ -134,7 +134,7 @@ public class VelocityManager {
     private Properties velocityProperties;
 
     private String customConfigFile;
-    
+
     public VelocityManager() {
     }
 
@@ -398,17 +398,17 @@ public class VelocityManager {
 
         return properties;
     }
-    
+
     @Inject(StrutsConstants.STRUTS_VELOCITY_CONFIGFILE)
     public void setCustomConfigFile(String val) {
         this.customConfigFile = val;
     }
-    
+
     @Inject(StrutsConstants.STRUTS_VELOCITY_TOOLBOXLOCATION)
     public void setToolBoxLocation(String toolboxLocation) {
         this.toolBoxLocation = toolboxLocation;
     }
-    
+
     /**
      * allow users to specify via the struts.properties file a set of additional VelocityContexts to chain to the
      * the StrutsVelocityContext.  The intent is to allow these contexts to store helper objects that the ui
@@ -446,7 +446,7 @@ public class VelocityManager {
     }
 
 
-    
+
 
     /**
      * <p/>
@@ -569,6 +569,7 @@ public class VelocityManager {
         addDirective(sb, ComponentDirective.class);
         addDirective(sb, DateDirective.class);
         addDirective(sb, DatePickerDirective.class);
+        addDirective(sb, DropdownDateTimePickerDirective.class);
         addDirective(sb, DivDirective.class);
         addDirective(sb, DoubleSelectDirective.class);
         addDirective(sb, FileDirective.class);
@@ -579,7 +580,6 @@ public class VelocityManager {
         addDirective(sb, I18nDirective.class);
         addDirective(sb, IncludeDirective.class);
         addDirective(sb, LabelDirective.class);
-        addDirective(sb, PanelDirective.class);
         addDirective(sb, ParamDirective.class);
         addDirective(sb, PasswordDirective.class);
         addDirective(sb, PushDirective.class);

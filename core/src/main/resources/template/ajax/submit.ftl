@@ -1,7 +1,32 @@
-<#if parameters.resultDivId?exists || parameters.onLoadJS?exists>
-<#include "/${parameters.templateDir}/ajax/submit-ajax.ftl" />
-${tag.addFormParameter("ajaxSubmit", "false")}
+<#if parameters.type?exists && parameters.type=="button">
+  <input type="button" dojoType="struts:Bind" event="onclick"<#rt/>
+  <#include "/${parameters.templateDir}/ajax/ajax-common.ftl"/>
+  <#include "/${parameters.templateDir}/simple/scripting-events.ftl"/>
+  <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
+  <#if parameters.label?if_exists != "">
+     value="${parameters.label?html}"<#rt/>
+  </#if>
+ />
 <#else>
-<#--include "/${parameters.templateDir}/xhtml/submit.ftl" /-->
-<#include "/${parameters.templateDir}/${themeProperties.parent}/submit.ftl" />
+  <#if parameters.type?exists && parameters.type=="image">
+    <input type="image" dojoType="struts:Bind" event="onclick"<#rt/>
+    <#if parameters.label?if_exists != "">
+     alt="${parameters.label?html}"<#rt/>
+    </#if>
+    <#if parameters.src?if_exists != "">
+     src="${parameters.src?html}"<#rt/>
+    </#if>
+  <#else>
+    <input type="submit" dojoType="struts:Bind" event="onclick"<#rt/>
+  </#if>
+    <#if parameters.nameValue?if_exists != "">
+     value="${parameters.nameValue?html}"<#rt/>
+    </#if>
+    <#if parameters.value?if_exists != "">
+     value="${parameters.value?html}"<#rt/>
+    </#if>
+    <#include "/${parameters.templateDir}/ajax/ajax-common.ftl"/>
+    <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
+    <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
+  />
 </#if>

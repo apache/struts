@@ -20,13 +20,10 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.components.Component;
-import org.apache.struts2.components.Panel;
 import org.apache.struts2.components.TabbedPanel;
 
 import com.opensymphony.xwork2.util.ValueStack;
@@ -38,16 +35,32 @@ public class TabbedPanelTag extends AbstractClosingTag {
 
     private static final long serialVersionUID = -4719930205515386252L;
 
+    private String selectedTab;
+    private String closeButton;
+    private String doLayout;
+
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new TabbedPanel(stack, req, res);
     }
 
-    public List getTabs() {
-        return ((TabbedPanel) component).getTabs();
+    protected void populateParams() {
+        super.populateParams();
+        TabbedPanel tabbedPanel = (TabbedPanel) component;
+        tabbedPanel.setSelectedTab(selectedTab);
+        tabbedPanel.setCloseButton(closeButton);
+        tabbedPanel.setDoLayout(doLayout);
+        tabbedPanel.setLabelposition(labelPosition);
     }
 
-    public void addTab(Panel pane) {
-        ((TabbedPanel) component).addTab(pane);
+    public void setSelectedTab(String selectedTab) {
+        this.selectedTab = selectedTab;
     }
 
+    public void setCloseButton(String closeButton) {
+        this.closeButton = closeButton;
+    }
+
+    public void setDoLayout(String doLayout) {
+        this.doLayout = doLayout;
+    }
 }

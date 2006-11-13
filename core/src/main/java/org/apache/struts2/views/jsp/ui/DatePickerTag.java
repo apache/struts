@@ -31,15 +31,18 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  * @see DatePicker
  */
-public class DatePickerTag extends TextFieldTag {
+public class DatePickerTag extends AbstractUITag {
 
     private static final long serialVersionUID = 4054114507143447232L;
 
-    protected String format;
-    protected String dateIconPath;
-    protected String templatePath;
-    protected String templateCssPath;
-
+    protected String displayWeeks;
+    protected String adjustWeeks;
+    protected String startDate;
+    protected String endDate;
+    protected String weekStartsOn;
+    protected String staticDisplay;
+    protected String dayWidth;
+    protected String language;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new DatePicker(stack, req, res);
@@ -49,26 +52,45 @@ public class DatePickerTag extends TextFieldTag {
         super.populateParams();
 
         final DatePicker datePicker = (DatePicker) component;
-        datePicker.setFormat(format);
-        datePicker.setDateIconPath(dateIconPath);
-        datePicker.setTemplatePath(templatePath);
-        datePicker.setTemplateCssPath(templateCssPath);
+        datePicker.setAdjustWeeks(adjustWeeks);
+        datePicker.setDayWidth(dayWidth);
+        datePicker.setDisplayWeeks(displayWeeks);
+        datePicker.setEndDate(endDate);
+        datePicker.setStartDate(startDate);
+        datePicker.setStaticDisplay(staticDisplay);
+        datePicker.setWeekStartsOn(weekStartsOn);
+        datePicker.setLanguage(language);
     }
 
-    public void setFormat(String format) {
-        this.format = format;
+    public void setAdjustWeeks(String adjustWeeks) {
+        this.adjustWeeks = adjustWeeks;
     }
 
-    public void setDateIconPath(String dateIconPath) {
-        this.dateIconPath = dateIconPath;
+    public void setDayWidth(String dayWidth) {
+        this.dayWidth = dayWidth;
     }
 
-    public void setTemplatePath(String templatePath) {
-        this.templatePath = templatePath;
+    public void setDisplayWeeks(String displayWeeks) {
+        this.displayWeeks = displayWeeks;
     }
 
-    public void setTemplateCssPath(String templateCsspath) {
-        this.templateCssPath = templateCsspath;
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setStaticDisplay(String staticDisplay) {
+        this.staticDisplay = staticDisplay;
+    }
+
+    public void setWeekStartsOn(String weekStartsOn) {
+        this.weekStartsOn = weekStartsOn;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
 }

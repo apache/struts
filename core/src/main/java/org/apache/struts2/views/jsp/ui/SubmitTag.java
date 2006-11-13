@@ -38,13 +38,19 @@ public class SubmitTag extends AbstractUITag {
     protected String action;
     protected String method;
     protected String align;
-    protected String resultDivId;
-    protected String onLoadJS;
-    protected String notifyTopics;
-    protected String listenTopics;
-    protected String preInvokeJS;
     protected String type;
+    protected String href;
+    protected String refreshListenTopic;
+    protected String loadingText;
+    protected String errorText;
+    protected String beforeLoading;
+    protected String afterLoading;
+    protected String executeScripts;
+    protected String handler;
+    protected String formId;
+    protected String formFilter;
     protected String src;
+    protected String targets;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Submit(stack, req, res);
@@ -57,13 +63,19 @@ public class SubmitTag extends AbstractUITag {
         submit.setAction(action);
         submit.setMethod(method);
         submit.setAlign(align);
-        submit.setResultDivId(resultDivId);
-        submit.setOnLoadJS(onLoadJS);
-        submit.setNotifyTopics(notifyTopics);
-        submit.setListenTopics(listenTopics);
-        submit.setPreInvokeJS(preInvokeJS);
         submit.setType(type);
+        submit.setHref(href);
+        submit.setRefreshListenTopic(refreshListenTopic);
+        submit.setLoadingText(loadingText);
+        submit.setErrorText(errorText);
+        submit.setAfterLoading(afterLoading);
+        submit.setBeforeLoading(beforeLoading);
+        submit.setExecuteScripts(executeScripts);
+        submit.setHandler(handler);
+        submit.setFormFilter(formFilter);
+        submit.setFormId(formId);
         submit.setSrc(src);
+        submit.setTargets(targets);
     }
 
     public void setAction(String action) {
@@ -78,26 +90,6 @@ public class SubmitTag extends AbstractUITag {
         this.align = align;
     }
 
-    public void setResultDivId(String resultDivId) {
-        this.resultDivId = resultDivId;
-    }
-
-    public void setOnLoadJS(String onLoadJS) {
-        this.onLoadJS = onLoadJS;
-    }
-
-    public void setNotifyTopics(String notifyTopics) {
-        this.notifyTopics = notifyTopics;
-    }
-
-    public void setListenTopics(String listenTopics) {
-        this.listenTopics = listenTopics;
-    }
-
-    public void setPreInvokeJS(String preInvokeJS) {
-        this.preInvokeJS = preInvokeJS;
-    }
-
     public String getType() {
         return type;
     }
@@ -106,11 +98,51 @@ public class SubmitTag extends AbstractUITag {
         this.type = type;
     }
 
-    public String getSrc() {
-        return src;
+    public void setHref(String href) {
+        this.href = href;
+    }
+
+    public void setErrorText(String errorText) {
+        this.errorText = errorText;
+    }
+
+    public void setLoadingText(String loadingText) {
+        this.loadingText = loadingText;
+    }
+
+    public void setRefreshListenTopic(String refreshListenTopic) {
+        this.refreshListenTopic = refreshListenTopic;
+    }
+
+    public void setAfterLoading(String afterLoading) {
+        this.afterLoading = afterLoading;
+    }
+
+    public void setBeforeLoading(String beforeLoading) {
+        this.beforeLoading = beforeLoading;
+    }
+
+    public void setExecuteScripts(String executeScripts) {
+        this.executeScripts = executeScripts;
+    }
+
+    public void setHandler(String handler) {
+        this.handler = handler;
+    }
+
+    public void setFormFilter(String formFilter) {
+        this.formFilter = formFilter;
+    }
+
+    public void setFormId(String formId) {
+        this.formId = formId;
     }
 
     public void setSrc(String src) {
         this.src = src;
+    }
+
+    public void setTargets(String targets) {
+        this.targets = targets;
     }
 }

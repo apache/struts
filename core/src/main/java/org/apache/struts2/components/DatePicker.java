@@ -27,6 +27,14 @@ import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
+ * <p>
+ * Renders datepicker element.
+ * </p>
+ * <p>
+ * A stand-alone DatePicker widget that makes it easy to select a date, or increment by week, month,
+ * and/or year.
+ * </p>
+ * Dates attributes passed in the `RFC 3339` format:
  *
  * Renders datepicker element.</p>
  * Format supported by this component are:-
@@ -100,15 +108,18 @@ import com.opensymphony.xwork2.util.ValueStack;
  * @s.tag name="datepicker" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.DatePickerTag"
  * description="Render datepicker"
  */
-public class DatePicker extends TextField {
+public class DatePicker extends UIBean {
 
     final public static String TEMPLATE = "datepicker";
 
-    protected String format;
-    protected String dateIconPath;
-    protected String templatePath;
-    protected String templateCssPath;
-    protected String size;
+    protected String displayWeeks;
+    protected String adjustWeeks;
+    protected String startDate;
+    protected String endDate;
+    protected String weekStartsOn;
+    protected String staticDisplay;
+    protected String dayWidth;
+    protected String language;
 
     public DatePicker(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -121,60 +132,97 @@ public class DatePicker extends TextField {
     public void evaluateParams() {
         super.evaluateParams();
 
-        if (format != null) {
-            addParameter("format", findString(format));
-        }
-        if (dateIconPath != null) {
-            addParameter("dateIconPath", dateIconPath);
-        }
-        if (templatePath != null) {
-            addParameter("templatePath", templatePath);
-        }
-        if (templateCssPath != null) {
-            addParameter("templateCssPath", templateCssPath);
-        }
-        if (size != null) {
-            addParameter("size", findValue(size, Integer.class));
-        }
+        if(displayWeeks != null)
+            addParameter("displayWeeks", findString(displayWeeks));
+        if(adjustWeeks != null)
+            addParameter("adjustWeeks", findValue(adjustWeeks, Boolean.class));
+        if(startDate != null)
+            addParameter("startDate", findString(startDate));
+        if(endDate != null)
+            addParameter("endDate", findString(endDate));
+        if(weekStartsOn != null)
+            addParameter("weekStartsOn", findString(weekStartsOn));
+        if(staticDisplay != null)
+            addParameter("staticDisplay", findValue(staticDisplay, Boolean.class));
+        if(dayWidth != null)
+            addParameter("dayWidth", findValue(dayWidth, Integer.class));
+        if(language != null)
+            addParameter("language", findString(language));
+        if(value != null)
+            addParameter("value", findString(value));
     }
 
     /**
-     * The format to use for date field.
-     * @s.tagattribute required="false" type="String" default="Dateformat specified by language preset (%Y/%m/%d for en)"
+     * If true, weekly size of calendar changes to acomodate the month if false, 42 day format is
+     * used
+     *
+     * @s.tagattribute required="false" type="Boolean" default="false"
      */
-    public void setFormat(String format) {
-        this.format = format;
+    public void setAdjustWeeks(String adjustWeeks) {
+        this.adjustWeeks = adjustWeeks;
     }
 
     /**
-     * The date picker icon path
-     * @s.tagattribute required="false" type="String" default="/struts/dojo/struts/widgets/dateIcon.gif"
+     * How to render the names of the days in the header(narrow, abbr or wide)
+     *
+     * @s.tagattribute required="false" type="String" default="narrow"
      */
-    public void setDateIconPath(String dateIconPath) {
-        this.dateIconPath = dateIconPath;
+    public void setDayWidth(String dayWidth) {
+        this.dayWidth = dayWidth;
     }
 
     /**
-     * The datepicker template path.
-     * @s.tagattribute required="false" type="String"
+     * Total weeks to display
+     *
+     * @s.tagattribute required="false" type="Integer" default="6"
      */
-    public void setTemplatePath(String templatePath) {
-        this.templatePath = templatePath;
+    public void setDisplayWeeks(String displayWeeks) {
+        this.displayWeeks = displayWeeks;
     }
 
     /**
-     * The datepicker template css path.
-     * @s.tagattribute required="false" type="String"
+     * Last available date in the calendar set
+     *
+     * @s.tagattribute required="false" type="Date" default="2941-10-12"
      */
-    public void setTemplateCssPath(String templateCssPath) {
-        this.templateCssPath = templateCssPath;
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
     /**
-     * The datepicker text field size.
-     * @s.tagattribute required="false" type="String"
+     * First available date in the calendar set
+     *
+     * @s.tagattribute required="false" type="Date" default="1492-10-12"
      */
-    public void setSize(String size) {
-        this.size = size;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
+
+    /**
+     * Disable all incremental controls, must pick a date in the current display
+     *
+     * @s.tagattribute required="false" type="Boolean" default="false"
+     */
+    public void setStaticDisplay(String staticDisplay) {
+        this.staticDisplay = staticDisplay;
+    }
+
+    /**
+     * Adjusts the first day of the week 0==Sunday..6==Saturday
+     *
+     * @s.tagattribute required="false" type="Integer" default="0"
+     */
+    public void setWeekStartsOn(String weekStartsOn) {
+        this.weekStartsOn = weekStartsOn;
+    }
+
+    /**
+     * Language to display this widget in (like en-us).
+     *
+     * @s.tagattribute required="false" type="String" default="brower's specified preferred language"
+     */
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
 }

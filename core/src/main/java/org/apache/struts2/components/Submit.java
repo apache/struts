@@ -23,6 +23,8 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts2.views.util.UrlHelper;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -163,15 +165,21 @@ import com.opensymphony.xwork2.util.ValueStack;
  * @s.tag name="submit" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.SubmitTag"
  * description="Render a submit button"
  */
-public class Submit extends FormButton {
+public class Submit extends FormButton implements RemoteUICallBean{
     final public static String TEMPLATE = "submit";
 
-    protected String resultDivId;
-    protected String onLoadJS;
-    protected String notifyTopics;
-    protected String listenTopics;
-    protected String preInvokeJS;
+    protected String href;
+    protected String errorText;
+    protected String afterLoading;
+    protected String beforeLoading;
+    protected String executeScripts;
+    protected String loadingText;
+    protected String refreshListenTopic;
+    protected String handler;
+    protected String formId;
+    protected String formFilter;
     protected String src;
+    protected String targets;
 
     public Submit(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -191,36 +199,30 @@ public class Submit extends FormButton {
     public void evaluateExtraParams() {
         super.evaluateExtraParams();
 
-       /* if (value == null) {
-            value = "Submit";
-        }*/
-
-        //super.evaluateParams();
-
-        if (null != src) {
+        if (href != null)
+            addParameter("href", UrlHelper.buildUrl(findString(href), request, response, null));
+        if (errorText != null)
+            addParameter("errorText", findString(errorText));
+        if (loadingText != null)
+            addParameter("loadingText", findString(loadingText));
+        if (afterLoading != null)
+            addParameter("afterLoading", findString(afterLoading));
+        if (beforeLoading != null)
+            addParameter("beforeLoading", findString(beforeLoading));
+        if (executeScripts != null)
+            addParameter("executeScripts", findValue(executeScripts, Boolean.class));
+        if (refreshListenTopic != null)
+            addParameter("refreshListenTopic", findValue(refreshListenTopic, String.class));
+        if (handler != null)
+            addParameter("handler", findString(handler));
+        if (formId != null)
+            addParameter("formId", findString(formId));
+        if (formFilter != null)
+            addParameter("formFilter", findString(formFilter));
+        if (src != null)
             addParameter("src", findString(src));
-        }
-
-        if (null != resultDivId) {
-            addParameter("resultDivId", findString(resultDivId));
-        }
-
-        if (null != onLoadJS) {
-            addParameter("onLoadJS", findString(onLoadJS));
-        }
-
-        if (null != notifyTopics) {
-            addParameter("notifyTopics", findString(notifyTopics));
-        }
-
-        if (null != listenTopics) {
-            addParameter("listenTopics", findString(listenTopics));
-        }
-
-        if (preInvokeJS != null) {
-            addParameter("preInvokeJS", findString(preInvokeJS));
-        }
-
+        if (targets != null)
+            addParameter("targets", findString(targets));
     }
 
     /**
@@ -232,52 +234,82 @@ public class Submit extends FormButton {
         return true;
     }
 
-    /**
-     * The id of the HTML element to place the result (this can the the form's id or any id on the page.
-     * @s.tagattribute required="false"  type="String"
+    /* (non-Javadoc)
+     * @see org.apache.struts2.components.RemoteUICallBean#setRefreshListenTopic(java.lang.String)
      */
-    public void setResultDivId(String resultDivId) {
-        this.resultDivId = resultDivId;
+    public void setRefreshListenTopic(String refreshListenTopic) {
+        this.refreshListenTopic = refreshListenTopic;
     }
 
     /**
-     * Javascript code that will be executed after the form has been submitted. The format is onLoadJS='yourMethodName(data,type)'. NOTE: the words data and type must be left like that if you want the event type and the returned data.
+     * The theme to use for the element. <b>This tag will usually use the ajax theme.</b>
      * @s.tagattribute required="false" type="String"
      */
-    public void setOnLoadJS(String onLoadJS) {
-        this.onLoadJS = onLoadJS;
+    public void setTheme(String theme) {
+        super.setTheme(theme);
     }
 
-    /**
-     * Topic names to post an event to after the form has been submitted.
-     * @s.tagattribute required="false" type="String"
+    /* (non-Javadoc)
+     * @see org.apache.struts2.components.RemoteUICallBean#setHref(java.lang.String)
      */
-    public void setNotifyTopics(String notifyTopics) {
-        this.notifyTopics = notifyTopics;
+    public void setHref(String href) {
+        this.href = href;
     }
 
-    /**
-     * Set listenTopics attribute.
-     * @s.tagattribute required="false" type="String"
+    /* (non-Javadoc)
+     * @see org.apache.struts2.components.RemoteUICallBean#setErrorText(java.lang.String)
      */
-    public void setListenTopics(String listenTopics) {
-        this.listenTopics = listenTopics;
+    public void setErrorText(String errorText) {
+        this.errorText = errorText;
     }
 
-    /**
-     * Javascript code that will be executed before invokation. The format is preInvokeJS='yourMethodName(data,type)'.
-     * @s.tagattribute required="false" type="String"
+    /* (non-Javadoc)
+     * @see org.apache.struts2.components.RemoteUICallBean#setAfterLoading(java.lang.String)
      */
-    public void setPreInvokeJS(String preInvokeJS) {
-        this.preInvokeJS = preInvokeJS;
+    public void setAfterLoading(String afterLoading) {
+        this.afterLoading = afterLoading;
     }
 
-    /**
-     * Supply a submit button text apart from submit value. Will have no effect for <i>input</i> type submit, since button text will always be the value parameter. For the type <i>image</i>, alt parameter will be set to this value.
-     * @s.tagattribute required="false"
+    /* (non-Javadoc)
+     * @see org.apache.struts2.components.RemoteUICallBean#setBeforeLoading(java.lang.String)
      */
-    public void setLabel(String label) {
-        super.setLabel(label);
+    public void setBeforeLoading(String beforeLoading) {
+        this.beforeLoading = beforeLoading;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.struts2.components.RemoteUICallBean#setExecuteScripts(java.lang.String)
+     */
+    public void setExecuteScripts(String executeScripts) {
+        this.executeScripts = executeScripts;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.struts2.components.RemoteUICallBean#setLoadingText(java.lang.String)
+     */
+    public void setLoadingText(String loadingText) {
+        this.loadingText = loadingText;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.struts2.components.RemoteUICallBean#setHandler(java.lang.String)
+     */
+    public void setHandler(String handler) {
+        this.handler = handler;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.struts2.components.RemoteUICallBean#setFormFilter(java.lang.String)
+     */
+    public void setFormFilter(String formFilter) {
+        this.formFilter = formFilter;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.struts2.components.RemoteUICallBean#setFormId(java.lang.String)
+     */
+    public void setFormId(String formId) {
+        this.formId = formId;
     }
 
     /**
@@ -286,5 +318,13 @@ public class Submit extends FormButton {
      */
     public void setSrc(String src) {
         this.src = src;
+    }
+
+    /**
+     * Comma delimited list of ids of the elements whose content will be updated
+     * @s.tagattribute required="false" type="String"
+     */
+    public void setTargets(String targets) {
+        this.targets = targets;
     }
 }

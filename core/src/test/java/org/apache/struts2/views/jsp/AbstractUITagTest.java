@@ -234,7 +234,7 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
             while (it.hasNext()) {
                 PropertyHolder propertyHolder = (PropertyHolder) it.next();
                 if (! excludeList.contains(propertyHolder.getName())) {
-                    assertTrue("Expected to find: " + propertyHolder.getExpectation(), writerString.indexOf(propertyHolder.getExpectation()) > -1);
+                    assertTrue("Expected to find: " + propertyHolder.getExpectation() + " in resulting String: " + writerString, writerString.indexOf(propertyHolder.getExpectation()) > -1);
                 }
             }
         }

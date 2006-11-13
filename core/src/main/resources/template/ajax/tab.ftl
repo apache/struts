@@ -1,17 +1,23 @@
-<div class="tab_contents_hidden" id="tab_contents_${parameters.id}">
-    <div class="tab_contents"
-         id="tab_contents_update_${parameters.id}"
-    <#if parameters.remote?exists>
-            dojoType='BindDiv' 
-            <#if parameters.href?if_exists != "">href="${parameters.href}"</#if>
-        <#if parameters.loadingText?if_exists != "">loadingHtml="${parameters.loadingText?html}"</#if>
-            <#if parameters.errorText?if_exists != "">errorHtml="${parameters.errorText?html}"</#if>
-                <#if parameters.showErrorTransportText?exists>showTransportError='true'</#if>
-                     delay='1'
-                        <#if parameters.updateFreq?exists>refresh='${parameters.updateFreq}'</#if>
-                            <#if parameters.listenTopics?exists>listenTopics='${parameters.listenTopics}'</#if>
-                                <#if parameters.afterLoading?exists>onLoad='${parameters.afterLoading}'</#if>
-                                </#if>
-                                <#if parameters.cssStyle?exists>style="${parameters.cssStyle?html}"</#if>
-                                    <#if parameters.cssClass?exists>class="${parameters.cssClass?html}"</#if>
-                                        >
+<div id="${parameters.id}" cacheContent="false"
+  <#if parameters.title?if_exists != "">
+    label="${parameters.title?html}"<#rt/>
+  </#if>
+  <#if parameters.href?if_exists != "">
+    dojoType="LinkPane" <#rt/>
+    href="${parameters.href}"<#rt/>
+    <#else>
+    dojoType="ContentPane"<#rt/>
+  </#if>
+  <#if parameters.cssStyle?if_exists != "">
+    style="${parameters.cssStyle?html}"<#rt/>
+  </#if>
+  <#if parameters.cssClass?if_exists != "">
+    class="${parameters.cssClass?html}"<#rt/>
+  </#if>
+  <#if parameters.closeButton?if_exists != "">
+    closeButton="${parameters.closeButton?html}"<#rt/>
+  </#if>
+  <#if parameters.refreshOnShow?if_exists != "">
+    refreshOnShow="${parameters.refreshOnShow?html}"<#rt/>
+  </#if>
+>

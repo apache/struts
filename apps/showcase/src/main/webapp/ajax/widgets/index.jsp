@@ -8,11 +8,14 @@
 </head>
 
 <body>
+
+<br/>
 NOTES:
 <ul>
     <li>Make sure that there is a 'value' attribute in the textarea with the content for the editor</li>
     <li>This is experimental</li>
 </ul>
+
 
 Default Editor configuration:<br/>
 <s:form id="form1" action="AjaxRemoteForm" method="post">

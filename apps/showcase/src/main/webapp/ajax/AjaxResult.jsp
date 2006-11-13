@@ -7,4 +7,6 @@
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 %>
 
-Result: <s:property value="count"/> @ <s:property value="serverTime"/>
+Result: <s:property value="count"/> @ <s:property value="serverTime"/> 
+<br/>
+<s:property value="data"/>

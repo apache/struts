@@ -23,14 +23,14 @@
 <h1>View Sources</h1>
 
 <s:tabbedPanel id="test" theme="ajax">
-	<s:panel id="one" tabName="Page" theme="ajax">
+	<s:div id="one" label="Page" theme="ajax">
         <h3>${empty page ? "Unknown page" : page}</h3>
 <pre>
 <s:iterator value="pageLines" status="row">
 ${row.count}: <s:property/></s:iterator>
 </pre>
-    </s:panel>
-    <s:panel id="two" tabName="Configuration" theme="ajax" >
+    </s:div>
+    <s:div id="two" label="Configuration" theme="ajax" >
         <h3>${empty config ? "Unknown configuration" : config}</h3>
 <pre>
 
@@ -38,14 +38,14 @@ ${row.count}: <s:property/></s:iterator>
 <span style="background-color:yellow">${configLine - padding + row.count - 1}: <s:property/></span></s:if><s:else>
 ${configLine - padding + row.count - 1}: <s:property/></s:else></s:iterator>
 </pre>
-    </s:panel>
-    <s:panel id="three" tabName="Java Action" theme="ajax">
+    </s:div>
+    <s:div id="three" label="Java Action" theme="ajax">
         <h3>${empty className ? "Unknown or unavailable Action class" : className}</h3>
 <pre>
 <s:iterator value="classLines" status="row">
 ${row.count}: <s:property/></s:iterator>
 </pre>
-    </s:panel>
+    </s:div>
     
 </s:tabbedPanel>
 

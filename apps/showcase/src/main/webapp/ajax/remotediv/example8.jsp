@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
 
@@ -10,18 +9,46 @@
 
 <body>
 
+<script>
+	var controller = {
+		refresh : function() {},
+		start : function() {},
+		stop : function() {}
+	};
+	
+	
+	dojo.event.topic.registerPublisher("/refresh", controller, "refresh");
+	dojo.event.topic.registerPublisher("/startTimer", controller, "start");
+	dojo.event.topic.registerPublisher("/stopTimer", controller, "stop");
+	
+</script>
+<form id="form">
+	<label for="textInput"">Text to be echoed</label>
+	<input type=textbox id="textInput" name="data">
+</form>
+
+<br/><br/>
+
+<input type=button value="refresh" onclick="controller.refresh()">
+<input type=button value="start timer" onclick="controller.start()">
+<input type=button value="stop timer" onclick="controller.stop()">
+
 <s:div
         id="once"
         theme="ajax"
         cssStyle="border: 1px solid yellow;"
         href="/AjaxTest.action"
-        updateFreq="0"
-        delay="0">
-    Initial Content ... should not change</s:div>
+        loadingText="Loading..."
+		refreshListenTopic="/refresh"
+		startTimerListenTopic="/startTimer"
+		stopTimerListenTopic="/stopTimer"
+		updateInterval="3000"
+		autoStart="true"
+		formId="form"
+		>
+    Initial Content</s:div>
 
 <s:include value="../footer.jsp"/>
 
 </body>
 </html>
-
-

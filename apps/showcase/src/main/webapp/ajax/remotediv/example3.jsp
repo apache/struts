@@ -15,7 +15,7 @@
         href="/AjaxTest.action"
         theme="ajax"
         delay="2000"
-        updateFreq="%{#parameters.period}"
+        updateInterval="%{#parameters.period}"
         errorText="There was an error">Initial Content</s:div>
 
 <s:include value="../footer.jsp"/>

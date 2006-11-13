@@ -14,35 +14,34 @@
         <li>
             <a href="example1.jsp">A simple DIV that refreshes only once</a>
         </li>
+		
+		<li>
+            <a href="example10.jsp">A simple DIV that uses a custom handler</a>
+        </li>
 
         <li>
             <a href="example2.jsp?url=/AjaxTest.action">A simple DIV that updates every 2 seconds</a>
         </li>
 
         <li>
-            <a href="example3.jsp?period=3000">A simple DIV that obtains the update freq (3 secs) from the value
-                stack/action</a>
+            <a href="example4.jsp">A simple DIV that updates every 5 seconds with loading text and reloading text and delay</a>
         </li>
 
         <li>
-            <a href="example4.jsp">A simple DIV that updates every 5 seconds with loading text and reloading text</a>
+            <a href="example5.jsp">A simple DIV's that cannot contact the serverm, with fixed error message</a>
         </li>
 
-        <li>
-            <a href="example5.jsp">A simple DIV's that cannot contact the server</a>
-        </li>
-
-        <li>
-            <a href="example6.jsp">A simple DIV's that cannot contact the server and displays the transport error
-                message</a>
-        </li>
 
         <li>
             <a href="example7.jsp">A div that calls the server, and JS in the resulting page is executed</a>
         </li>
         
         <li>
-            <a href="example8.jsp">A div that will not update itself (updateFreq=0 and delay=0)</a>
+            <a href="example8.jsp">A div that will listen to events to refresh and start/stop autoupdate</a>
+        </li>
+		
+		<li>
+            <a href="example9.jsp">A div that will listen to events to refresh and start/stop autoupdate and will call beforeLoading and afterLoading functions</a>
         </li>
 
     </ol>

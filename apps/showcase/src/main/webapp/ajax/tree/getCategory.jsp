@@ -13,12 +13,12 @@
     </s:if>
     <s:else>
         <s:set name="display" value="''"/>
-    </s:else>
+    </s:else>                                                                                     ›
 
     <s:div theme="ajax"
             id="children_%{id}"
             cssStyle="display: %{display}"
             href="getCategory.action?catId=%{id}"
-            listenTopics="children_%{id}"/>
+            refreshListenTopic="children_%{id}"/>
 </s:iterator>
 </ul>

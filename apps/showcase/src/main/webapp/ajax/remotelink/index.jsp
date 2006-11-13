@@ -7,105 +7,85 @@
     <jsp:include page="/ajax/commonInclude.jsp"/>
 </head>
 
+<script type="text/javascript">
+   function before() {alert("before request");}
+   function after() {alert("after request");}
+   function handler(widget, node) {
+     alert('I will handle this myself!');
+	 dojo.byId(widget.targetsArray[0]).innerHTML = "Done";
+   }
+</script>
+
 <body>
 
-One Component:
-<s:div
-        id="one"
-        cssStyle="border: 1px solid yellow;"
+<div id="t1">Div 1</div>
+
+<br/>
+
+<div id="t2">Div 2</div>
+
+<br/><br/>
+
+<s:a  id="link1"
+        theme="ajax"
         href="/AjaxTest.action"
-        theme="ajax"
-        listenTopics="mylink1_click"
-        delay="1000">Initial Content</s:div>
+		targets="t1,t2">Update 'Div 1' and 'Div 2'</s:a>
 
 <br/><br/>
 
-Two Component:
-<s:div
-        id="two"
-        cssStyle="border: 1px solid yellow;"
+<s:a  id="link2"
+        theme="ajax"
+        href="/AjaxNoUrl.jsp"
+		errorText="Error Loading"
+		targets="t1">Try to update 'Div 1', use custom error message</s:a>
+		
+<br/><br/>
+
+<s:a  id="link3"
+        theme="ajax"
         href="/AjaxTest.action"
-        theme="ajax"
-        listenTopics="mylink1_click,mylink2_click"
-        delay="1000">Initial Content</s:div>
+		loadingText="Loading!!!"
+		beforeLoading="before()"
+		afterLoading="after()"
+		targets="t1">Update 'Div 1', use custom loading message, execute javascript functions before and after the request is made</s:a>
+
 <br/><br/>
 
-Three Component:
-<s:div
-        id="three"
-        cssStyle="border: 1px solid yellow;"
+<s:a  id="link4"
+        theme="ajax"
+        href="/Test3.action"
+		executeScripts="true"
+		targets="t2">Update 'Div 2' and execute returned javascript </s:a>
+
+<br/><br/>
+
+<s:a  id="link5"
+        theme="ajax"
         href="/AjaxTest.action"
+		handler="handler"
+		targets="t2">Update 'Div 2' using a custom handler </s:a>
+
+
+<br/><br/>
+
+<label for="textInput">Text to be echoed</label>
+
+<form id="form">
+  <input type=textbox name="data">
+</form>
+
+<br/><br/>
+
+<s:a  id="link6"
         theme="ajax"
-        listenTopics="mylink2_click"
-        delay="1000">Initial Content</s:div>
-<br/><br/>
-
-Fourth Component:
-<s:div
-       id="four"
-       theme="ajax"
-       cssStyle="border: 1px solid yellow;"
-       href="/AjaxTest.action"
-       listenTopics="myLink3_click"
-       delay="0"
-       updateFreq="0">Initial Content</s:div>
-<br/><br/>
-
-
-<s:url id="remoteLink" value   ="/AjaxRemoteLink.action" />
-<s:url id="testLink" value   ="/AjaxTest.action" />
-
-Remote link 1 updating "One Component" and "Two Component"<br/>
-
-<s:a
-        id="link1"
-        theme="ajax"
-        href="%{remoteLink}"
-        notifyTopics="mylink1_click"
-        showErrorTransportText="true"
-        errorText="An Error ocurred">Update</s:a>
-<br/><br/>
-
-Remote link 2 updating "Two Component" and "Three Component"<br/>
-<s:a
-        id="link2"
-        theme="ajax"
-        href="%{remoteLink}"
-        notifyTopics="mylink2_click"
-        showErrorTransportText="true"
-        errorText="An Error ocurred">Update</s:a>
-<br/><br/>
-
-Remote DIV that is not connected to any remote links:
-<s:div
-        id="five"
-        cssStyle="border: 1px solid yellow;"
         href="/AjaxTest.action"
-        theme="ajax"
-        delay="1000">Initial Content</s:div>
+		targets="t2"
+		formId="form"
+		>Update 'Div 2' with the content of the textbox </s:a>
+
+		
 <br/><br/>
-
-A Remote link that doesn't trigger any remote DIV updates<br/>
-
-<s:a
-        id="link3"
-        theme="ajax"
-        href="%{remoteLink}"
-        showErrorTransportText="true"
-        errorText="An Error ocurred">Update
-</s:a>
-<br/><br/>
-
-A Remote link that will update "Fourth Component"
-<s:a 
-        id="link4"
-        theme="ajax"
-        href="%{remoteLink}"
-        notifyTopics="myLink3_click"
-        showErrorTransportText="true"
-        errorText="An Error Ocurred">Update</s:a>
-<br/><br/>
-
+	
 <s:include value="../footer.jsp"/>
 
 </body>

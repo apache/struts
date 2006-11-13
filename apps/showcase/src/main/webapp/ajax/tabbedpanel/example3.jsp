@@ -28,23 +28,23 @@
         <tr>
             <td align="top">
                 <!--// START SNIPPET: tabbedpanel-tag-->
-                <s:tabbedPanel id="test2" theme="simple" >
-                      <s:panel id="left" tabName="left">
+                <s:tabbedPanel id="test2" theme="simple" cssStyle="width: 500px; height: 300px;" doLayout="true">
+                      <s:div theme="ajax"  id="left" label="left">
                           This is the left pane<br/>
                           <s:form >
                               <s:textfield name="tt" label="Test Text" />  <br/>
                               <s:textfield name="tt2" label="Test Text2" />
                           </s:form>
-                      </s:panel>
-                      <s:panel remote="true" href="/AjaxTest.action" id="ryh1" theme="ajax" tabName="remote one" />
-                      <s:panel id="middle" tabName="middle">
+                      </s:div>
+                      <s:div theme="ajax"  href="/AjaxTest.action" id="ryh1" theme="ajax" label="remote one" />
+                      <s:div theme="ajax"  id="middle" label="middle">
                           middle tab<br/>
                           <s:form >
                               <s:textfield name="tt" label="Test Text44" />  <br/>
                               <s:textfield name="tt2" label="Test Text442" />
                           </s:form>
-                      </s:panel>
-                      <s:panel remote="true" href="/AjaxTest.action"  id="ryh21" theme="ajax" tabName="remote right" />
+                      </s:div>
+                      <s:div theme="ajax" href="/AjaxTest.action"  id="ryh21" theme="ajax" label="remote right" />
                   </s:tabbedPanel>
                 <!--// END SNIPPET: tabbedpanel-tag-->
              </td>

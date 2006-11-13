@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
-
+ 
 <html>
 <head>
     <title>Ajax examples - tabbled panel</title>
@@ -28,79 +28,79 @@
         <tr>
             <td align="top">
                 <s:tabbedPanel id="test" >
-                    <s:panel id="one" tabName="one">
+                    <s:div id="one" label="one" theme="ajax">
                         This is the first pane<br/>
                         <s:form>
                             <s:textfield name="tt" label="Test Text"/>  <br/>
                             <s:textfield name="tt2" label="Test Text2"/>
                         </s:form>
-                    </s:panel>
-                    <s:panel id="two" tabName="two">
+                    </s:div>
+                    <s:div id="two" label="two" theme="ajax">
                         This is the second panel
-                    </s:panel>
-                    <s:panel id="three" tabName="three">
+                    </s:div>
+                    <s:div id="three" label="three" theme="ajax">
                         This is the three
-                    </s:panel>
+                    </s:div>
                 </s:tabbedPanel>
             </td>
             <td align="top">
                 <s:tabbedPanel id="test2" >
-                    <s:panel id="left" tabName="left">
+                    <s:div id="left" label="left" theme="ajax">
                         This is the left pane<br/>
                         <s:form>
                             <s:textfield name="tt" label="Test Text"/>  <br/>
                             <s:textfield name="tt2" label="Test Text2"/>
                         </s:form>
-                    </s:panel>
-                    <s:panel remote="true" href="/AjaxTest.action" id="ryh1" theme="ajax"
-                                    tabName="remote one"></s:panel>
-                    <s:panel id="middle" tabName="middle">
+                    </s:div>
+                    <s:div href="/AjaxTest.action" id="ryh1" theme="ajax"
+                                    label="remote one"></s:div>
+                    <s:div id="middle" label="middle" theme="ajax">
                         middle tab<br/>
                         <s:form>
                             <s:textfield name="tt" label="Test Text44"/>  <br/>
                             <s:textfield name="tt2" label="Test Text442"/>
                         </s:form>
-                    </s:panel>
-                    <s:panel remote="true" href="/AjaxTest.action" id="ryh21" theme="ajax" tabName="remote right"/>
+                    </s:div>
+                    <s:div  href="/AjaxTest.action" id="ryh21" theme="ajax" label="remote right"/>
                 </s:tabbedPanel>
             </td>
         </tr>
         <tr>
             <td align="top">
                 <s:tabbedPanel id="testremote">
-                    <s:panel remote="true" href="/AjaxTest.action" id="r1" theme="ajax" tabName="remote one">
+                    <s:div  href="/AjaxTest.action" id="r1" theme="ajax" label="remote one" theme="ajax">
                         <s:action name="AjaxTest" executeResult="true" />
-                    </s:panel>
-                    <s:panel remote="true" href="/AjaxTest.action" id="r2" theme="ajax" tabName="remote two"></s:panel>
-                    <s:panel remote="true" href="/AjaxTest.action" id="r3" theme="ajax" tabName="remote three"></s:panel>
+                    </s:div>
+                    <s:div  href="/AjaxTest.action" id="r2" theme="ajax" label="remote two" theme="ajax"></s:div>
+                    <s:div  href="/AjaxTest.action" id="r3" theme="ajax" label="remote three" theme="ajax"></s:div>
                 </s:tabbedPanel>
             </td>
             <td align="top">
                 <s:tabbedPanel id="test3" >
-                    <s:panel id="left1" tabName="out one">
+                    <s:div id="left1" label="out one" theme="ajax">
                         Outer one<br/>
                         <s:tabbedPanel id="test11">
-                            <s:panel id="i11" tabName="inner 1 one">Inner 1</s:panel>
-                            <s:panel id="112" tabName="inner 1 two">Inner 2</s:panel>
-                            <s:panel id="i13" tabName="inner 1 three">Inner 3</s:panel>
+                            <s:div id="i11" label="inner 1 one">Inner 1</s:div>
+                            <s:div id="112" label="inner 1 two">Inner 2</s:div>
+                            <s:div id="i13" label="inner 1 three">Inner 3</s:div>
                         </s:tabbedPanel>
-                    </s:panel>
-                    <s:panel id="middle1" tabName="out two">
+                    </s:div>
+                    <s:div id="middle1" label="out two" theme="ajax">
                         Outer two<br/>
                         <s:tabbedPanel id="test12" >
-                            <s:panel id="i21" tabName="inner 2 one">Inner 21</s:panel>
-                            <s:panel id="122" tabName="inner 2 two">Inner 22</s:panel>
-                            <s:panel id="i23" tabName="inner 2 three">Inner 23</s:panel>
+                            <s:div id="i21" label="inner 2 one" theme="ajax">Inner 21</s:div>
+                            <s:div id="122" label="inner 2 two" theme="ajax">Inner 22</s:div>
+                            <s:div id="i23" label="inner 2 three" theme="ajax">Inner 23</s:div>
                         </s:tabbedPanel>
-                    </s:panel>
-                    <s:panel id="right1" tabName="out three">
+                    </s:div>
+                    <s:div id="right1" label="out three" theme="ajax">
                         Outer three<br/>
                         <s:tabbedPanel id="test13">
-                            <s:panel id="i31" tabName="inner 3 one">Inner 31</s:panel>
-                            <s:panel id="132" tabName="inner 3 two">Inner 32</s:panel>
-                            <s:panel id="i33" tabName="inner 3 three">Inner 33</s:panel>
+                            <s:div id="i31" label="inner 3 one" theme="ajax">Inner 31</s:div>
+                            <s:div id="132" label="inner 3 two" theme="ajax">Inner 32</s:div>
+                            <s:div id="i33" label="inner 3 three" theme="ajax">Inner 33</s:div>
                         </s:tabbedPanel>
-                    </s:panel>
+                    </s:div>
                 </s:tabbedPanel>
             </td>
         </tr>

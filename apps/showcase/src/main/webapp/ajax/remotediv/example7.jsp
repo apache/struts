@@ -15,7 +15,7 @@
         href="/Test3.action"
         theme="ajax"
         delay="1000"
-        showErrorTransportText="true"
+		executeScripts="true"
         loadingText="reloading">loading now</s:div>
 
 <s:include value="../footer.jsp"/>

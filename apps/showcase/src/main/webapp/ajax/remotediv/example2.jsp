@@ -7,16 +7,17 @@
     <jsp:include page="/ajax/commonInclude.jsp"/>
 </head>
 
+
 <body>
-    <s:div
-            id="twoseconds"
-            cssStyle="border: 1px solid yellow;"
-            href="/AjaxTest.action"
-            theme="ajax"
-            updateFreq="2000"
-            errorText="There was an error"
-            loadingText="loading...">Initial Content
-    </s:div>
+
+<s:div
+        id="once"
+        theme="ajax"
+        cssStyle="border: 1px solid yellow;"
+        href="/AjaxTest.action"
+        updateInterval="2000"
+		>
+    Initial Content</s:div>
 
 <s:include value="../footer.jsp"/>
 

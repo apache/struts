@@ -25,15 +25,18 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Properties;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsException;
 
 
 /**
  * A class to handle settings via a properties file.
  */
-public class PropertiesSettings extends Settings {
+class PropertiesSettings extends Settings {
 
     Properties settings;
+    static Log LOG = LogFactory.getLog(PropertiesSettings.class);
 
 
     /**
@@ -49,7 +52,8 @@ public class PropertiesSettings extends Settings {
         URL settingsUrl = Thread.currentThread().getContextClassLoader().getResource(name + ".properties");
 
         if (settingsUrl == null) {
-            throw new IllegalStateException(name + ".properties missing");
+            LOG.debug(name + ".properties missing");
+            return;
         }
 
         // Load settings

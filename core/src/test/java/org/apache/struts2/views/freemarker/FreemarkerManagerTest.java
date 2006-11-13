@@ -22,7 +22,6 @@ package org.apache.struts2.views.freemarker;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.config.Settings;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
 
 /**
@@ -32,10 +31,11 @@ import org.apache.struts2.views.jsp.StrutsMockServletContext;
 public class FreemarkerManagerTest extends StrutsTestCase {
 
     public void testIfStrutsEncodingIsSetProperty() throws Exception {
-        Settings.set(StrutsConstants.STRUTS_I18N_ENCODING, "UTF-8");
+        FreemarkerManager mgr = new FreemarkerManager();
+        mgr.setEncoding("UTF-8");
         StrutsMockServletContext servletContext = new StrutsMockServletContext();
         servletContext.setAttribute(FreemarkerManager.CONFIG_SERVLET_CONTEXT_KEY, null);
-        freemarker.template.Configuration conf = FreemarkerManager.getInstance().getConfiguration(servletContext);
+        freemarker.template.Configuration conf = mgr.getConfiguration(servletContext);
         assertEquals(conf.getDefaultEncoding(), "UTF-8");
     }
 }

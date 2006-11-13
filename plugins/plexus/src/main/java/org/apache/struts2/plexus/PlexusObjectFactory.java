@@ -27,7 +27,6 @@ import javax.servlet.ServletContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.util.ObjectFactoryInitializable;
 import org.codehaus.plexus.PlexusContainer;
 
 import com.opensymphony.xwork2.Action;
@@ -37,6 +36,7 @@ import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.util.OgnlUtil;
 import com.opensymphony.xwork2.validator.Validator;
@@ -70,17 +70,17 @@ import com.opensymphony.xwork2.validator.Validator;
  *
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  */
-public class PlexusObjectFactory extends ObjectFactory implements ObjectFactoryInitializable {
+public class PlexusObjectFactory extends ObjectFactory {
     private static final Log log = LogFactory.getLog(PlexusObjectFactory.class);
 
     private static final String PLEXUS_COMPONENT_TYPE = "plexus.component.type";
 
     private PlexusContainer base;
+    
+    
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.util.ObjectFactoryInitializable#init(javax.servlet.ServletContext)
-     */
-    public void init(ServletContext servletContext) {
+    @Inject
+    public void setServletConfig(ServletContext servletContext) {
         if (!PlexusLifecycleListener.isLoaded() || !PlexusFilter.isLoaded()) {
             // uh oh! looks like the lifecycle listener wasn't installed. Let's inform the user
             String message = "********** FATAL ERROR STARTING UP PLEXUS-STRUTS INTEGRATION **********\n" +

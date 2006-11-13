@@ -21,6 +21,7 @@
 package org.apache.struts2.dispatcher.multipart;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -36,7 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.StrutsRequestWrapper;
 import org.apache.struts2.util.ClassLoaderUtils;
 
@@ -72,71 +72,19 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
      * @param saveDir directory to save the file(s) to
      * @param maxSize maximum file size allowed
      */
-    public MultiPartRequestWrapper(HttpServletRequest request, String saveDir, int maxSize) {
+    public MultiPartRequestWrapper(MultiPartRequest multiPartRequest, HttpServletRequest request, String saveDir) {
         super(request);
-
-        if (request instanceof MultiPartRequest) {
-            multi = (MultiPartRequest) request;
-        } else {
-            String parser = Settings.get(StrutsConstants.STRUTS_MULTIPART_PARSER);
-
-            // If it's not set, use Jakarta
-            if (parser.equals("")) {
-                log.warn("Property struts.multipart.parser not set." +
-                        " Using org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest");
-                parser = "org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest";
+        
+        multi = multiPartRequest;
+        try {
+            multi.parse(request, saveDir);
+            for (Iterator iter = multi.getErrors().iterator(); iter.hasNext();) {
+                String error = (String) iter.next();
+                addError(error);
             }
-            // legacy support for old style property values
-            else if (parser.equals("pell")) {
-                parser = "org.apache.struts2.dispatcher.multipart.PellMultiPartRequest";
-            } else if (parser.equals("cos")) {
-                parser = "org.apache.struts2.dispatcher.multipart.CosMultiPartRequest";
-            } else if (parser.equals("jakarta")) {
-                parser = "org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest";
-            }
-
-            try {
-                Class baseClazz = org.apache.struts2.dispatcher.multipart.MultiPartRequest.class;
-
-                Class clazz = ClassLoaderUtils.loadClass(parser, MultiPartRequestWrapper.class);
-
-                // make sure it extends MultiPartRequest
-                if (!baseClazz.isAssignableFrom(clazz)) {
-                    addError("Class '" + parser + "' does not extend MultiPartRequest");
-
-                    return;
-                }
-
-                // get the constructor
-                Constructor ctor = clazz.getDeclaredConstructor(new Class[]{
-                        ClassLoaderUtils.loadClass("javax.servlet.http.HttpServletRequest", MultiPartRequestWrapper.class),
-                        java.lang.String.class, int.class
-                });
-
-                // build the parameter list
-                Object[] parms = new Object[]{
-                        request, saveDir, new Integer(maxSize)
-                };
-
-                // instantiate it
-                multi = (MultiPartRequest) ctor.newInstance(parms);
-                for (Iterator iter = multi.getErrors().iterator(); iter.hasNext();) {
-                    String error = (String) iter.next();
-                    addError(error);
-                }
-            } catch (ClassNotFoundException e) {
-                addError("Class: " + parser + " not found.");
-            } catch (NoSuchMethodException e) {
-                addError("Constructor error for " + parser + ": " + e);
-            } catch (InstantiationException e) {
-                addError("Error instantiating " + parser + ": " + e);
-            } catch (IllegalAccessException e) {
-                addError("Access errror for " + parser + ": " + e);
-            } catch (InvocationTargetException e) {
-                // This is a wrapper for any exceptions thrown by the constructor called from newInstance
-                addError(e.getTargetException().toString());
-            }
-        }
+        } catch (IOException e) {
+            addError("Cannot parse request: "+e.toString());
+        } 
     }
 
     /**

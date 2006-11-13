@@ -20,6 +20,7 @@
  */
 package org.apache.struts2.dispatcher;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.config.Settings;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -58,10 +58,9 @@ public class DispatcherTest extends StrutsTestCase {
         HttpServletRequest req = new MockHttpServletRequest();
         HttpServletResponse res = new MockHttpServletResponse();
 
-        Settings.set(StrutsConstants.STRUTS_I18N_ENCODING, "utf-8");
-
-
-        Dispatcher du = Dispatcher.getInstance();
+        Dispatcher du = initDispatcher(new HashMap() {{
+            put(StrutsConstants.STRUTS_I18N_ENCODING, "utf-8");
+        }});
         du.prepare(req, res);
 
         assertEquals(req.getCharacterEncoding(), "utf-8");
@@ -72,12 +71,11 @@ public class DispatcherTest extends StrutsTestCase {
         MockHttpServletResponse res = new MockHttpServletResponse();
 
         req.setContentType("multipart/form-data");
-        Settings.set(StrutsConstants.STRUTS_I18N_ENCODING, "utf-8");
-
-
-        Dispatcher du = Dispatcher.getInstance();
+        Dispatcher du = initDispatcher(new HashMap() {{
+            put(StrutsConstants.STRUTS_I18N_ENCODING, "utf-8");
+        }});
         du.prepare(req, res);
 
-        assertEquals(req.getCharacterEncoding(), "utf-8");
+        assertEquals("utf-8", req.getCharacterEncoding());
     }
 }

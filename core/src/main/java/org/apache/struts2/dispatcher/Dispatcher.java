@@ -26,9 +26,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -40,8 +44,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.config.BeanSelectionProvider;
 import org.apache.struts2.config.ClasspathConfigurationProvider;
-import org.apache.struts2.config.Settings;
+import org.apache.struts2.config.LegacyPropertiesConfigurationProvider;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.config.ClasspathConfigurationProvider.ClasspathPageLocator;
 import org.apache.struts2.config.ClasspathConfigurationProvider.PageLocator;
@@ -51,8 +56,8 @@ import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.impl.StrutsActionProxyFactory;
 import org.apache.struts2.impl.StrutsObjectFactory;
 import org.apache.struts2.util.AttributeMap;
+import org.apache.struts2.util.ClassLoaderUtils;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
-import org.apache.struts2.util.ObjectFactoryInitializable;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
@@ -62,9 +67,14 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ObjectTypeDeterminer;
 import com.opensymphony.xwork2.util.ObjectTypeDeterminerFactory;
@@ -87,12 +97,6 @@ import freemarker.template.Template;
  */
 public class Dispatcher {
 
-    // Set Struts-specific factories.
-    static {
-        ObjectFactory.setObjectFactory(new StrutsObjectFactory());
-        ActionProxyFactory.setFactory(new StrutsActionProxyFactory());
-    }
-
     private static final Log LOG = LogFactory.getLog(Dispatcher.class);
 
     private static ThreadLocal<Dispatcher> instance = new ThreadLocal<Dispatcher>();
@@ -101,7 +105,12 @@ public class Dispatcher {
 
     private ConfigurationManager configurationManager;
     private static boolean portletSupportActive;
-    private boolean devMode = false;
+    private static boolean devMode;
+    private static String defaultEncoding;
+    private static String defaultLocale;
+    private static String multipartMaxSize;
+    private static String multipartSaveDir;
+    private static final String DEFAULT_CONFIGURATION_PATHS = "struts-default.xml,struts-plugin.xml,struts.xml"; 
 
     // used to get WebLogic to play nice
     private boolean paramsWorkaroundEnabled = false;
@@ -147,8 +156,33 @@ public class Dispatcher {
      *
      * @param servletContext The servlet context
      */
-    public Dispatcher(ServletContext servletContext) {
-        init(servletContext);
+    public Dispatcher(ServletContext servletContext, Map initParams) {
+        init(servletContext, initParams);
+    }
+    
+    @Inject(StrutsConstants.STRUTS_DEVMODE)
+    public static void setDevMode(String mode) {
+        devMode = "true".equals(mode);
+    }
+    
+    @Inject(value=StrutsConstants.STRUTS_LOCALE, required=false)
+    public static void setDefaultLocale(String val) {
+        defaultLocale = val;
+    }
+    
+    @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
+    public static void setDefaultEncoding(String val) {
+        defaultEncoding = val;
+    }
+    
+    @Inject(StrutsConstants.STRUTS_MULTIPART_MAXSIZE)
+    public static void setMultipartMaxSize(String val) {
+        multipartMaxSize = val;
+    }
+    
+    @Inject(StrutsConstants.STRUTS_MULTIPART_SAVEDIR)
+    public static void setMultipartSaveDir(String val) {
+        multipartSaveDir = val;
     }
 
     /**
@@ -183,69 +217,96 @@ public class Dispatcher {
      *
      * @param servletContext The servlet context
      */
-    private void init(final ServletContext servletContext) {
-        boolean reloadi18n = Boolean.valueOf((String) Settings.get(StrutsConstants.STRUTS_I18N_RELOAD)).booleanValue();
+    private void init(final ServletContext servletContext, final Map<String,String> initParams) {
+        
+        
+        configurationManager = new ConfigurationManager(BeanSelectionProvider.DEFAULT_BEAN_NAME);
+        
+        configurationManager.addConfigurationProvider(new LegacyPropertiesConfigurationProvider());
+        // Load traditional xml configuration
+        String configPaths = initParams.get("config");
+        if (configPaths == null) {
+            configPaths = DEFAULT_CONFIGURATION_PATHS;
+        }
+        if (configPaths != null) {
+            String[] files = configPaths.split("\\s*[,]\\s*");
+            for (String file : files) {
+                if (file.endsWith(".xml")) {
+                    if ("xwork.xml".equals(file)) {
+                        configurationManager.addConfigurationProvider(new XmlConfigurationProvider(file, false));
+                    } else {
+                        configurationManager.addConfigurationProvider(new StrutsXmlConfigurationProvider(file, false, servletContext));
+                    }
+                } else {
+                    throw new IllegalArgumentException("Invalid configuration file name");
+                }
+            }
+        }
+        
+        // Load configuration from a scan of the classloader
+        String packages = initParams.get("actionPackages");
+        if (packages != null) {
+            String[] names = packages.split("\\s*[,]\\s*");
+            // Initialize the classloader scanner with the configured packages
+            if (names.length > 0) {
+                ClasspathConfigurationProvider provider = new ClasspathConfigurationProvider(names);
+                provider.setPageLocator(new ServletContextPageLocator(servletContext));
+                configurationManager.addConfigurationProvider(provider);
+            }
+            configurationManager.addConfigurationProvider(new BeanSelectionProvider());
+        }
+        
+        String configProvs = initParams.get("configProviders");
+        if (configProvs != null) {
+            String[] classes = configProvs.split("\\s*[,]\\s*");
+            for (String cname : classes) {
+                try {
+                    Class cls = ClassLoaderUtils.loadClass(cname, this.getClass());
+                    ConfigurationProvider prov = (ConfigurationProvider)cls.newInstance();
+                    configurationManager.addConfigurationProvider(prov);
+                } catch (InstantiationException e) {
+                    throw new ConfigurationException("Unable to instantiate provider: "+cname, e);
+                } catch (IllegalAccessException e) {
+                    throw new ConfigurationException("Unable to access provider: "+cname, e);
+                } catch (ClassNotFoundException e) {
+                    throw new ConfigurationException("Unable to locate provider class: "+cname, e);
+                }
+            }
+        }
+        
+        // Load filter init params as constants
+        configurationManager.addConfigurationProvider(new ConfigurationProvider() {
+            public void destroy() {}
+            public void init(Configuration configuration) throws ConfigurationException {}
+            public void loadPackages() throws ConfigurationException {}
+            public boolean needsReload() { return false; }
+
+            public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
+                props.putAll(initParams);
+            }
+        });
+        
+        configurationManager.addConfigurationProvider(new BeanSelectionProvider());
+        // Preload the configuration
+        Configuration config = configurationManager.getConfiguration();
+        Container container = config.getContainer();
+        
+        
+        boolean reloadi18n = Boolean.valueOf(container.getInstance(String.class, StrutsConstants.STRUTS_I18N_RELOAD)).booleanValue();
         LocalizedTextUtil.setReloadBundles(reloadi18n);
 
-        if (Settings.isSet(StrutsConstants.STRUTS_OBJECTFACTORY)) {
-            String className = (String) Settings.get(StrutsConstants.STRUTS_OBJECTFACTORY);
-            if (className.equals("spring")) {
-                // note: this class name needs to be in string form so we don't put hard
-                //       dependencies on spring, since it isn't technically required.
-                className = "org.apache.struts2.spring.StrutsSpringObjectFactory";
-            } else if (className.equals("plexus")) {
-                className = "org.apache.struts2.plexus.PlexusObjectFactory";
-                LOG.warn("The 'plexus' shorthand for the Plexus ObjectFactory is deprecated.  Please "
-                        +"use the full class name: "+className);
-            }
+        ObjectTypeDeterminer objectTypeDeterminer = container.getInstance(ObjectTypeDeterminer.class);
+        ObjectTypeDeterminerFactory.setInstance(objectTypeDeterminer);
 
-            try {
-                Class clazz = ClassLoaderUtil.loadClass(className, Dispatcher.class);
-                ObjectFactory objectFactory = (ObjectFactory) clazz.newInstance();
-                if (servletContext != null) {
-                    if (objectFactory instanceof ObjectFactoryInitializable) {
-                        ((ObjectFactoryInitializable) objectFactory).init(servletContext);
-                    }
-                }
-                ObjectFactory.setObjectFactory(objectFactory);
-            } catch (Exception e) {
-                LOG.error("Could not load ObjectFactory named " + className + ". Using default ObjectFactory.", e);
-            }
-        }
-
-        if (Settings.isSet(StrutsConstants.STRUTS_OBJECTTYPEDETERMINER)) {
-            String className = (String) Settings.get(StrutsConstants.STRUTS_OBJECTTYPEDETERMINER);
-            if (className.equals("tiger")) {
-                // note: this class name needs to be in string form so we don't put hard
-                //       dependencies on xwork-tiger, since it isn't technically required.
-                className = "com.opensymphony.xwork2.util.GenericsObjectTypeDeterminer";
-            }
-            else if (className.equals("notiger")) {
-                className = "com.opensymphony.xwork2.util.DefaultObjectTypeDeterminer";
-            }
-
-            try {
-                Class clazz = ClassLoaderUtil.loadClass(className, Dispatcher.class);
-                ObjectTypeDeterminer objectTypeDeterminer = (ObjectTypeDeterminer) clazz.newInstance();
-                ObjectTypeDeterminerFactory.setInstance(objectTypeDeterminer);
-            } catch (Exception e) {
-                LOG.error("Could not load ObjectTypeDeterminer named " + className + ". Using default DefaultObjectTypeDeterminer.", e);
-            }
-        }
-
-        if ("true".equals(Settings.get(StrutsConstants.STRUTS_DEVMODE))) {
-            devMode = true;
-            Settings.set(StrutsConstants.STRUTS_I18N_RELOAD, "true");
-            Settings.set(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "true");
-        }
+//        devMode = "true".equals(container.getInstance(String.class, StrutsConstants.STRUTS_DEVMODE));
+//      Settings.set(StrutsConstants.STRUTS_I18N_RELOAD, "true");
+//      Settings.set(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "true");
 
         //check for configuration reloading
-        if ("true".equalsIgnoreCase(Settings.get(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD))) {
-            FileManager.setReloadingConfigs(true);
-        }
+        FileManager.setReloadingConfigs("true".equals(container.getInstance(String.class, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD)));
 
-        if (Settings.isSet(StrutsConstants.STRUTS_CONTINUATIONS_PACKAGE)) {
-            String pkg = Settings.get(StrutsConstants.STRUTS_CONTINUATIONS_PACKAGE);
+        String pkg = container.getInstance(String.class, StrutsConstants.STRUTS_CONTINUATIONS_PACKAGE);
+        if (pkg != null) {
             ObjectFactory.setContinuationPackage(pkg);
         }
 
@@ -254,39 +315,9 @@ public class Dispatcher {
                 && servletContext.getServerInfo().indexOf("WebLogic") >= 0) {
             LOG.info("WebLogic server detected. Enabling Struts parameter access work-around.");
             paramsWorkaroundEnabled = true;
-        } else if (Settings.isSet(StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND)) {
-            paramsWorkaroundEnabled = "true".equals(Settings.get(StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND));
         } else {
-            LOG.debug("Parameter access work-around disabled.");
-        }
-
-        configurationManager = new ConfigurationManager();
-        String configFiles = null;
-        if (Settings.isSet(StrutsConstants.STRUTS_CONFIGURATION_FILES)) {
-            configFiles = Settings.get(StrutsConstants.STRUTS_CONFIGURATION_FILES);
-        }
-        if (configFiles != null) {
-            List<String> packages = new ArrayList<String>();
-            String[] files = configFiles.split("\\s*[,]\\s*");
-            for (String file : files) {
-                if (file.endsWith(".xml")) {
-                    if ("xwork.xml".equals(file)) {
-                        configurationManager.addConfigurationProvider(new XmlConfigurationProvider(file, false));
-                    } else {
-                        configurationManager.addConfigurationProvider(new StrutsXmlConfigurationProvider(file, false));
-                    }
-                } else {
-                    packages.add(file);
-                }
-            }
-
-            // Initialize the classloader scanner with the configured paths
-            if (packages.size() > 0) {
-                ClasspathConfigurationProvider provider = new ClasspathConfigurationProvider((String[])packages.toArray(new String[]{}));
-                provider.setPageLocator(new ServletContextPageLocator(servletContext));
-                configurationManager.addConfigurationProvider(provider);
-            }
-        }
+            paramsWorkaroundEnabled = "true".equals(container.getInstance(String.class, StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND));
+        } 
 
         synchronized(Dispatcher.class) {
             if (dispatcherListeners.size() > 0) {
@@ -337,8 +368,9 @@ public class Dispatcher {
                 extraContext.put(XWorkContinuationConfig.CONTINUE_KEY, id);
             }
 
-            ActionProxy proxy = ActionProxyFactory.getFactory().createActionProxy(
-                    configurationManager.getConfiguration(), namespace, name, extraContext, true, false);
+            Configuration config = configurationManager.getConfiguration();
+            ActionProxy proxy = config.getContainer().getInstance(ActionProxyFactory.class).createActionProxy(
+                    config, namespace, name, extraContext, true, false);
             proxy.setMethod(method);
             request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, proxy.getInvocation().getStack());
 
@@ -428,14 +460,14 @@ public class Dispatcher {
         extraContext.put(ActionContext.APPLICATION, applicationMap);
 
         Locale locale = null;
-        if (Settings.isSet(StrutsConstants.STRUTS_LOCALE)) {
-            locale = LocalizedTextUtil.localeFromString(Settings.get(StrutsConstants.STRUTS_LOCALE), request.getLocale());
+        if (defaultLocale != null) {
+            locale = LocalizedTextUtil.localeFromString(defaultLocale, request.getLocale());
         } else {
             locale = request.getLocale();
         }
 
         extraContext.put(ActionContext.LOCALE, locale);
-        extraContext.put(ActionContext.DEV_MODE, Boolean.valueOf(devMode));
+        //extraContext.put(ActionContext.DEV_MODE, Boolean.valueOf(devMode));
 
         extraContext.put(StrutsStatics.HTTP_REQUEST, request);
         extraContext.put(StrutsStatics.HTTP_RESPONSE, response);
@@ -461,7 +493,7 @@ public class Dispatcher {
     private static int getMaxSize() {
         Integer maxSize = new Integer(Integer.MAX_VALUE);
         try {
-            String maxSizeStr = Settings.get(StrutsConstants.STRUTS_MULTIPART_MAXSIZE);
+            String maxSizeStr = multipartMaxSize;
 
             if (maxSizeStr != null) {
                 try {
@@ -489,7 +521,7 @@ public class Dispatcher {
      * @return the path to save uploaded files to
      */
     private String getSaveDir(ServletContext servletContext) {
-        String saveDir = Settings.get(StrutsConstants.STRUTS_MULTIPART_SAVEDIR).trim();
+        String saveDir = multipartSaveDir.trim();
 
         if (saveDir.equals("")) {
             File tempdir = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
@@ -521,13 +553,13 @@ public class Dispatcher {
      */
     public void prepare(HttpServletRequest request, HttpServletResponse response) {
         String encoding = null;
-        if (Settings.isSet(StrutsConstants.STRUTS_I18N_ENCODING)) {
-            encoding = Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
+        if (defaultEncoding != null) {
+            encoding = defaultEncoding;
         }
 
         Locale locale = null;
-        if (Settings.isSet(StrutsConstants.STRUTS_LOCALE)) {
-            locale = LocalizedTextUtil.localeFromString(Settings.get(StrutsConstants.STRUTS_LOCALE), request.getLocale());
+        if (defaultLocale != null) {
+            locale = LocalizedTextUtil.localeFromString(defaultLocale, request.getLocale());
         }
 
         if (encoding != null) {
@@ -563,8 +595,10 @@ public class Dispatcher {
             return request;
         }
 
-        if (MultiPartRequest.isMultiPart(request)) {
-            request = new MultiPartRequestWrapper(request, getSaveDir(servletContext), getMaxSize());
+        String content_type = request.getContentType();
+        if (content_type != null && content_type.indexOf("multipart/form-data") != -1) {
+            MultiPartRequest multi = getContainer().getInstance(MultiPartRequest.class);
+            request = new MultiPartRequestWrapper(multi, request, getSaveDir(servletContext));
         } else {
             request = new StrutsRequestWrapper(request);
         }
@@ -586,7 +620,9 @@ public class Dispatcher {
             response.setContentType("text/html");
 
             try {
-                freemarker.template.Configuration config = FreemarkerManager.getInstance().getConfiguration(ctx);
+                FreemarkerManager mgr = getContainer().getInstance(FreemarkerManager.class);
+                
+                freemarker.template.Configuration config = mgr.getConfiguration(ctx);
                 Template template = config.getTemplate("/org/apache/struts2/dispatcher/error.ftl");
 
                 List<Throwable> chain = new ArrayList<Throwable>();
@@ -700,18 +736,7 @@ public class Dispatcher {
         this.configurationManager = mgr;
     }
 
-    /**
-     * @return the devMode
-     */
-    public boolean isDevMode() {
-        return devMode;
+    public Container getContainer() {
+        return getConfigurationManager().getConfiguration().getContainer();
     }
-
-    /**
-     * @param devMode the devMode to set
-     */
-    public void setDevMode(boolean devMode) {
-        this.devMode = devMode;
-    }
-
 }

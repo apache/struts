@@ -133,12 +133,15 @@ public final class StrutsConstants {
     /** Allows one to disable dynamic method invocation from the URL */
     public static final String STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION = "struts.enable.DynamicMethodInvocation";
 
-    /** A list of configuration files automatically loaded by Struts */
-    public static final String STRUTS_CONFIGURATION_FILES = "struts.configuration.files";
-
     /** Whether slashes in action names are allowed or not */
     public static final String STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES = "struts.enable.SlashesInActionNames";
 
     /** Prefix used by {@link CompositeActionMapper} to identified its containing {@link ActionMapper} class. */
     public static final String STRUTS_MAPPER_COMPOSITE = "struts.mapper.composite.";
+
+    public static final String STRUTS_ACTIONPROXYFACTORY = "struts.actionProxyFactory";
+
+    public static final String STRUTS_TEMPLATE_ENGINES = "struts.templateEngines";
+
+    public static final String STRUTS_FREEMARKER_WRAPPER_ALT_MAP = "struts.freemarker.wrapper.altMap";
 }

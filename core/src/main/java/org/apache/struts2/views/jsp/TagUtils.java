@@ -33,7 +33,6 @@ import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.util.AttributeMap;
 
@@ -81,12 +80,11 @@ public class TagUtils {
         return stack;
     }
 
-    public static String buildNamespace(ValueStack stack, HttpServletRequest request) {
+    public static String buildNamespace(ActionMapper mapper, ValueStack stack, HttpServletRequest request) {
         ActionContext context = new ActionContext(stack.getContext());
         ActionInvocation invocation = context.getActionInvocation();
 
         if (invocation == null) {
-            ActionMapper mapper = ActionMapperFactory.getMapper();
             ActionMapping mapping = mapper.getMapping(request,
                     Dispatcher.getInstance().getConfigurationManager());
 

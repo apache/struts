@@ -22,7 +22,6 @@ package org.apache.struts2.dispatcher.mapper;
 
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
 import com.mockobjects.servlet.MockHttpServletRequest;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.Configuration;
@@ -33,6 +32,7 @@ import java.util.HashMap;
 
 public class Restful2ActionMapperTest extends StrutsTestCase {
 
+    private Restful2ActionMapper mapper;
     private MockHttpServletRequest req;
     private ConfigurationManager configManager;
     private Configuration config;
@@ -40,7 +40,8 @@ public class Restful2ActionMapperTest extends StrutsTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        Settings.set(StrutsConstants.STRUTS_ACTION_EXTENSION, "");
+        mapper = new Restful2ActionMapper();
+        mapper.setExtensions("");
         req = new MockHttpServletRequest();
         req.setupGetParameterMap(new HashMap());
         req.setupGetContextPath("/my/namespace");
@@ -56,7 +57,7 @@ public class Restful2ActionMapperTest extends StrutsTestCase {
             }
         };
     }
-
+    
     public void testGetIndex() throws Exception {
         req.setupGetRequestURI("/my/namespace/foo/");
         req.setupGetServletPath("/my/namespace/foo/");
@@ -64,7 +65,6 @@ public class Restful2ActionMapperTest extends StrutsTestCase {
         req.addExpectedGetAttributeName("javax.servlet.include.servlet_path");
         req.setupGetMethod("GET");
 
-        Restful2ActionMapper mapper = new Restful2ActionMapper();
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
         assertEquals("/my/namespace", mapping.getNamespace());
@@ -79,7 +79,6 @@ public class Restful2ActionMapperTest extends StrutsTestCase {
         req.addExpectedGetAttributeName("javax.servlet.include.servlet_path");
         req.setupGetMethod("GET");
 
-        Restful2ActionMapper mapper = new Restful2ActionMapper();
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
         assertEquals("/my/namespace", mapping.getNamespace());
@@ -96,7 +95,6 @@ public class Restful2ActionMapperTest extends StrutsTestCase {
         req.addExpectedGetAttributeName("javax.servlet.include.servlet_path");
         req.setupGetMethod("POST");
 
-        Restful2ActionMapper mapper = new Restful2ActionMapper();
         ActionMapping mapping = mapper.getMapping(req, configManager);
 
         assertEquals("/my/namespace", mapping.getNamespace());

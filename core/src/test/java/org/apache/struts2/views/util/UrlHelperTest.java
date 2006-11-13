@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.config.Settings;
 
 import com.mockobjects.dynamic.Mock;
 
@@ -201,8 +200,8 @@ public class UrlHelperTest extends StrutsTestCase {
 
         String expectedString = "https://www.mydomain.com:7002/mywebapp/MyAction.action?foo=bar&amp;hello=earth&amp;hello=mars";
 
-        Settings.set(StrutsConstants.STRUTS_URL_HTTP_PORT, "7001");
-        Settings.set(StrutsConstants.STRUTS_URL_HTTPS_PORT, "7002");
+        UrlHelper.setHttpPort("7001");
+        UrlHelper.setHttpsPort("7002");
 
         Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
         mockHttpServletRequest.expectAndReturn("getServerName", "www.mydomain.com");
@@ -230,8 +229,8 @@ public class UrlHelperTest extends StrutsTestCase {
 
         String expectedString = "http://www.mydomain.com:7001/mywebapp/MyAction.action?foo=bar&amp;hello=earth&amp;hello=mars";
 
-        Settings.set(StrutsConstants.STRUTS_URL_HTTP_PORT, "7001");
-        Settings.set(StrutsConstants.STRUTS_URL_HTTPS_PORT, "7002");
+        UrlHelper.setHttpPort("7001");
+        UrlHelper.setHttpsPort("7002");
 
         Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
         mockHttpServletRequest.expectAndReturn("getServerName", "www.mydomain.com");
@@ -303,30 +302,18 @@ public class UrlHelperTest extends StrutsTestCase {
 
 
     public void testTranslateAndEncode() throws Exception {
-        String defaultI18nEncoding = Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
-        try {
-            Settings.set(StrutsConstants.STRUTS_I18N_ENCODING, "UTF-8");
-            String result = UrlHelper.translateAndEncode("\u65b0\u805e");
-            String expectedResult = "%E6%96%B0%E8%81%9E";
+        UrlHelper.setCustomEncoding("UTF-8");
+        String result = UrlHelper.translateAndEncode("\u65b0\u805e");
+        String expectedResult = "%E6%96%B0%E8%81%9E";
 
-            assertEquals(result, expectedResult);
-        }
-        finally {
-            Settings.set(StrutsConstants.STRUTS_I18N_ENCODING, defaultI18nEncoding);
-        }
+        assertEquals(result, expectedResult);
     }
 
     public void testTranslateAndDecode() throws Exception {
-        String defaultI18nEncoding = Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
-        try {
-            Settings.set(StrutsConstants.STRUTS_I18N_ENCODING, "UTF-8");
-            String result = UrlHelper.translateAndDecode("%E6%96%B0%E8%81%9E");
-            String expectedResult = "\u65b0\u805e";
+        UrlHelper.setCustomEncoding("UTF-8");
+        String result = UrlHelper.translateAndDecode("%E6%96%B0%E8%81%9E");
+        String expectedResult = "\u65b0\u805e";
 
-            assertEquals(result, expectedResult);
-        }
-        finally {
-            Settings.set(StrutsConstants.STRUTS_I18N_ENCODING, defaultI18nEncoding);
-        }
+        assertEquals(result, expectedResult);
     }
 }

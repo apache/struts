@@ -28,50 +28,59 @@ import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
 import org.apache.struts2.components.template.TemplateEngineManager;
 import org.apache.struts2.components.template.VelocityTemplateEngine;
-import org.apache.struts2.config.Settings;
+import org.apache.struts2.dispatcher.mapper.CompositeActionMapper;
+
+import com.mockobjects.dynamic.C;
+import com.mockobjects.dynamic.Mock;
+import com.opensymphony.xwork2.inject.Container;
 
 /**
  * TemplateEngineManagerTest
  *
  */
 public class TemplateEngineManagerTest extends TestCase {
+    
+    TemplateEngineManager mgr;
+    Mock mockContainer;
+    
+    public void setUp() throws Exception {
+        mgr = new TemplateEngineManager();
+        mockContainer = new Mock(Container.class);
+        mockContainer.matchAndReturn("getInstance", C.args(C.eq(TemplateEngine.class), C.eq("jsp")), new JspTemplateEngine());
+        mockContainer.matchAndReturn("getInstance", C.args(C.eq(TemplateEngine.class), C.eq("vm")), new VelocityTemplateEngine());
+        mockContainer.matchAndReturn("getInstance", C.args(C.eq(TemplateEngine.class), C.eq("ftl")), new FreemarkerTemplateEngine());
+        
+        mgr.setContainer((Container)mockContainer.proxy());
+        mgr.setTemplateEngines("jsp,vm,ftl");
+        mgr.setDefaultTemplateType("jsp");
+    }
+    
     public void testTemplateTypeFromTemplateNameAndDefaults() {
-        Settings.setInstance(new Settings() {
-            public boolean isSetImpl(String name) {
-                return name.equals(TemplateEngineManager.DEFAULT_TEMPLATE_TYPE_CONFIG_KEY);
-            }
-
-            public String getImpl(String aName) throws IllegalArgumentException {
-                if (aName.equals(TemplateEngineManager.DEFAULT_TEMPLATE_TYPE_CONFIG_KEY)) {
-                    return "jsp";
-                }
-                return null;
-            }
-        });
-        TemplateEngine engine = TemplateEngineManager.getTemplateEngine(new Template("/template", "simple", "foo"), null);
+        
+        TemplateEngine engine = mgr.getTemplateEngine(new Template("/template", "simple", "foo"), null);
         assertTrue(engine instanceof JspTemplateEngine);
-        engine = TemplateEngineManager.getTemplateEngine(new Template("/template", "simple", "foo.vm"), null);
+        engine = mgr.getTemplateEngine(new Template("/template", "simple", "foo.vm"), null);
         assertTrue(engine instanceof VelocityTemplateEngine);
     }
 
     public void testTemplateTypeOverrides() {
-        TemplateEngine engine = TemplateEngineManager.getTemplateEngine(new Template("/template", "simple", "foo"), "ftl");
+        TemplateEngine engine = mgr.getTemplateEngine(new Template("/template", "simple", "foo"), "ftl");
         assertTrue(engine instanceof FreemarkerTemplateEngine);
-        engine = TemplateEngineManager.getTemplateEngine(new Template("/template", "simple", "foo.vm"), "ftl");
+        engine = mgr.getTemplateEngine(new Template("/template", "simple", "foo.vm"), "ftl");
         assertTrue(engine instanceof VelocityTemplateEngine);
-        engine = TemplateEngineManager.getTemplateEngine(new Template("/template", "simple", "foo.ftl"), "");
+        engine = mgr.getTemplateEngine(new Template("/template", "simple", "foo.ftl"), "");
         assertTrue(engine instanceof FreemarkerTemplateEngine);
     }
 
     public void testTemplateTypeUsesDefaultWhenNotSetInConfiguration() {
-        TemplateEngine engine = TemplateEngineManager.getTemplateEngine(new Template("/template", "simple", "foo"), null);
+        mgr.setDefaultTemplateType(null);
+        TemplateEngine engine = mgr.getTemplateEngine(new Template("/template", "simple", "foo"), null);
         Template template = new Template("/template", "simple", "foo." + TemplateEngineManager.DEFAULT_TEMPLATE_TYPE);
-        TemplateEngine defaultTemplateEngine = TemplateEngineManager.getTemplateEngine(template, null);
+        TemplateEngine defaultTemplateEngine = mgr.getTemplateEngine(template, null);
         assertTrue(engine.getClass().equals(defaultTemplateEngine.getClass()));
     }
 
     protected void tearDown() throws Exception {
         super.tearDown();
-        Settings.setInstance(null);
     }
 }

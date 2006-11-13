@@ -90,6 +90,7 @@ public class ElseTagTest extends StrutsTestCase {
     }
 
     protected void setUp() throws Exception {
+        super.setUp();
         // create the needed objects
         elseTag = new ElseTag();
         stack = ValueStackFactory.getFactory().createValueStack();

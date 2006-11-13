@@ -15,6 +15,7 @@ import org.apache.struts.config.ModuleConfig;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
@@ -46,7 +47,7 @@ public class Struts1FactoryTest extends TestCase {
      */
     public void setUp() {
         ConfigurationManager manager = new ConfigurationManager();
-        ConfigurationProvider provider = new StrutsXmlConfigurationProvider(PACKAGE_NAME + "/test-struts-factory.xml", true);
+        StrutsXmlConfigurationProvider provider = new StrutsXmlConfigurationProvider(PACKAGE_NAME + "/test-struts-factory.xml", true, null);
         manager.addConfigurationProvider(provider);
         config = manager.getConfiguration();
         factory = new Struts1Factory(config);

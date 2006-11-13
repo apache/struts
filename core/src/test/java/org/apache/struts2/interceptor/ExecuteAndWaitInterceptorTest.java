@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.http.HttpSession;
 
@@ -36,13 +37,17 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.DefaultActionProxyFactory;
+import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import com.opensymphony.xwork2.mock.MockResult;
 
@@ -164,14 +169,15 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
     }
 
     protected ActionProxy buildProxy(String actionName) throws Exception {
-        return ActionProxyFactory.getFactory().createActionProxy(
+        return container.getInstance(ActionProxyFactory.class).createActionProxy(
                 configurationManager.getConfiguration(), "", actionName, context);
     }
 
     protected void setUp() throws Exception {
-        configurationManager.clearConfigurationProviders();
+        configurationManager = new ConfigurationManager();
         configurationManager.addConfigurationProvider(new WaitConfigurationProvider());
         configurationManager.reload();
+        container = configurationManager.getConfiguration().getContainer();
 
         session = new HashMap();
         params = new HashMap();
@@ -194,6 +200,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
 
     private class WaitConfigurationProvider implements ConfigurationProvider {
 
+        Configuration configuration;
         public void destroy() {
             waitInterceptor.destroy();
         }
@@ -201,8 +208,12 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
         public boolean needsReload() {
             return false;
         }
-
+        
         public void init(Configuration configuration) throws ConfigurationException {
+            this.configuration = configuration;
+        }
+
+        public void loadPackages() throws ConfigurationException {
             PackageConfig wait = new PackageConfig("");
 
             Map results = new HashMap();
@@ -219,6 +230,11 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
             wait.addActionConfig("action1", ac);
 
             configuration.addPackageConfig("", wait);
+        }
+
+        public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
+            builder.factory(ObjectFactory.class);
+            builder.factory(ActionProxyFactory.class, DefaultActionProxyFactory.class);
         }
 
     }

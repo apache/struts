@@ -31,10 +31,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
 
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.FileManager;
 
 /**
@@ -90,19 +91,39 @@ public class CompositeActionMapper implements ActionMapper {
 
     private static final Log LOG = LogFactory.getLog(CompositeActionMapper.class);
 
-    protected List<IndividualActionMapperEntry> orderedActionMappers;
+    protected Container container;
+    
+    protected List<ActionMapper> actionMappers = new ArrayList<ActionMapper>();
+    
+    @Inject
+    public void setContainer(Container container) {
+        this.container = container;
+    }
+    
+    @Inject(StrutsConstants.STRUTS_MAPPER_COMPOSITE)
+    public void setActionMappers(String list) {
+        if (list != null) {
+            String[] arr = list.split(",");
+            for (String name : arr) {
+                Object obj = container.getInstance(ActionMapper.class, name);
+                if (obj != null) {
+                    actionMappers.add((ActionMapper) obj);
+                }
+            }
+        }
+    }
 
 
     public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
 
-        for (IndividualActionMapperEntry actionMapperEntry: getOrderedActionMapperEntries()) {
-            ActionMapping actionMapping = actionMapperEntry.actionMapper.getMapping(request, configManager);
+        for (ActionMapper actionMapper : actionMappers) {
+            ActionMapping actionMapping = actionMapper.getMapping(request, configManager);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Using ActionMapper from entry ["+actionMapperEntry.propertyName+"="+actionMapperEntry.propertyValue+"]");
+                LOG.debug("Using ActionMapper "+actionMapper);
             }
             if (actionMapping == null) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("ActionMapper from entry ["+actionMapperEntry.propertyName+"="+actionMapperEntry.propertyValue+"] failed to return an ActionMapping (null)");
+                    LOG.debug("ActionMapper "+actionMapper+" failed to return an ActionMapping (null)");
                 }
             }
             else {
@@ -117,14 +138,14 @@ public class CompositeActionMapper implements ActionMapper {
 
     public String getUriFromActionMapping(ActionMapping mapping) {
 
-        for (IndividualActionMapperEntry actionMapperEntry: getOrderedActionMapperEntries()) {
-            String uri = actionMapperEntry.actionMapper.getUriFromActionMapping(mapping);
+        for (ActionMapper actionMapper : actionMappers) {
+            String uri = actionMapper.getUriFromActionMapping(mapping);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Using ActionMapper from entry ["+actionMapperEntry.propertyName+"="+actionMapperEntry.propertyValue+"]");
+                LOG.debug("Using ActionMapper "+actionMapper);
             }
             if (uri == null) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("ActionMapper from entry ["+actionMapperEntry.propertyName+"="+actionMapperEntry.propertyValue+"] failed to return a uri (null)");
+                    LOG.debug("ActionMapper "+actionMapper+" failed to return an ActionMapping (null)");
                 }
             }
             else {
@@ -135,140 +156,5 @@ public class CompositeActionMapper implements ActionMapper {
             LOG.debug("exhausted from ActionMapper that could return a uri");
         }
         return null;
-    }
-
-
-    protected List<IndividualActionMapperEntry> getOrderedActionMapperEntries() {
-        if (this.orderedActionMappers == null || FileManager.isReloadingConfigs()) {
-
-            List<IndividualActionMapperEntry> actionMapperEntriesContainer = new ArrayList<IndividualActionMapperEntry>();
-            Iterator settings = Settings.list();
-            while(settings.hasNext()) {
-                String setting = settings.next().toString();
-                if (setting.startsWith(StrutsConstants.STRUTS_MAPPER_COMPOSITE)) {
-                    try {
-                        int order = Integer.valueOf(setting.substring(StrutsConstants.STRUTS_MAPPER_COMPOSITE.length(), setting.length()));
-                        String propertyValue = Settings.get(setting);
-                        if (propertyValue != null && propertyValue.trim().length() > 0) {
-                            actionMapperEntriesContainer.add(
-                                    new IndividualActionMapperEntry(order, setting, propertyValue));
-                        }
-                        else {
-                            LOG.warn("Ignoring property "+setting+" that contains no value");
-                        }
-                    }
-                    catch(NumberFormatException e) {
-                        LOG.warn("Ignoring malformed property "+setting);
-                    }
-                }
-            }
-
-            Collections.sort(actionMapperEntriesContainer, new Comparator<IndividualActionMapperEntry>() {
-                public int compare(IndividualActionMapperEntry o1, IndividualActionMapperEntry o2) {
-                    return o1.compareTo(o2);
-                }
-            });
-
-
-            ObjectFactory objectFactory = ObjectFactory.getObjectFactory();
-            List<IndividualActionMapperEntry> result = new ArrayList<IndividualActionMapperEntry>();
-            for (IndividualActionMapperEntry entry: actionMapperEntriesContainer) {
-                String actionMapperClassName = entry.propertyValue;
-                try {
-                    // Let us get ClassCastException if it does not implement ActionMapper
-                    ActionMapper actionMapper = (ActionMapper) objectFactory.buildBean(actionMapperClassName, null);
-                    result.add(new IndividualActionMapperEntry(entry.order, entry.propertyName, entry.propertyValue, actionMapper));
-                }
-                catch(Exception e) {
-                    LOG.warn("failed to create action mapper "+actionMapperClassName+", ignoring it", e);
-                }
-            }
-
-            this.orderedActionMappers = result;
-        }
-
-        return this.orderedActionMappers;
-    }
-
-
-    /**
-     * A value object (holder) that holds information regarding {@link ActionMapper} this {@link CompositeActionMapper}
-     * is capable of delegating to.
-     * <p/>
-     * The information stored are :-
-     * <ul>
-     *  <li> order</li>
-     *  <li> propertyValue</li>
-     *  <li> propertyName</li>
-     *  <li> actionMapper</li>
-     * </ul>
-     *
-     * eg. if we have the following entry in struts.properties
-     * <pre>
-     * struts.mapper.composite.1=foo.bar.ActionMapper1
-     * struts.mapper.composite.2=foo.bar.ActionMapper2
-     * struts.mapper.composite.3=foo.bar.ActionMapper3
-     * </pre>
-     *
-     * <table border="1">
-     *  <tr>
-     *      <td>order</td>
-     *      <td>propertyName</td>
-     *      <td>propertyValue</td>
-     *      <td>actionMapper</td>
-     *  </tr>
-     *  <tr>
-     *      <td>1</td>
-     *      <td>struts.mapper.composite.1</td>
-     *      <td>foo.bar.ActionMapper1</td>
-     *      <td>instance of foo.bar.ActionMapper1</td>
-     *  </tr>
-     *  <tr>
-     *      <td>2</td>
-     *      <td>struts.mapper.composite.2</td>
-     *      <td>foo.bar.ActionMapper2</td>
-     *      <td>instance of foo.bar.ActionMapper2</td>
-     *  </tr>
-     *  <tr>
-     *      <td>3</td>
-     *      <td>struts.mapper.composite.3</td>
-     *      <td>foo.bar.ActionMapper3</td>
-     *      <td>instance of foo.bar.ActionMapper3</td>
-     *  </tr>
-     * </table>
-     *
-     * @version $Date$ $Id$
-     */
-    public class IndividualActionMapperEntry implements Comparable<IndividualActionMapperEntry> {
-
-        public Integer order;
-        public String propertyValue;
-        public String propertyName;
-        public ActionMapper actionMapper;
-
-
-        private IndividualActionMapperEntry(Integer order, String propertyName, String propertyValue) {
-            assert(order != null);
-            assert(propertyValue != null);
-            assert(propertyName != null);
-            this.order = order;
-            this.propertyValue = propertyValue;
-            this.propertyName = propertyName;
-        }
-
-        public IndividualActionMapperEntry(Integer order, String propertyName, String propertyValue, ActionMapper actionMapper) {
-            assert(order != null);
-            assert(propertyValue != null);
-            assert(propertyName != null);
-            assert(actionMapper != null);
-            this.order = order;
-            this.propertyValue = propertyValue;
-            this.propertyName = propertyName;
-            this.actionMapper = actionMapper;
-        }
-
-        public int compareTo(IndividualActionMapperEntry o) {
-            return order - o.order;
-        }
     }
 }

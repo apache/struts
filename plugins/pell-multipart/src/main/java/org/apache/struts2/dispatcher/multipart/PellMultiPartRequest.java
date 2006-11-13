@@ -20,8 +20,12 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import org.apache.struts2.config.Settings;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
+
+import com.opensymphony.xwork2.inject.Inject;
+
 import http.utils.multipartrequest.ServletMultipartRequest;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,11 +42,18 @@ import java.util.List;
  * Multipart form data request adapter for Jason Pell's multipart utils package.
  *
  */
-public class PellMultiPartRequest extends MultiPartRequest {
+public class PellMultiPartRequest implements MultiPartRequest {
 
+    private static final Log LOG = LogFactory.getLog(PellMultiPartRequest.class);
     private ServletMultipartRequest multi;
 
-
+    private String defaultEncoding;
+    
+    @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
+    public void setDefaultEncoding(String enc) {
+        this.defaultEncoding = enc;
+    }
+    
     /**
      * Creates a new request wrapper to handle multi-part data using methods adapted from Jason Pell's
      * multipart classes (see class description).
@@ -51,16 +62,15 @@ public class PellMultiPartRequest extends MultiPartRequest {
      * @param saveDir        the directory to save off the file
      * @param servletRequest the request containing the multipart
      */
-    public PellMultiPartRequest(HttpServletRequest servletRequest, String saveDir, int maxSize) throws IOException {
+    public void parse(HttpServletRequest servletRequest, String saveDir) throws IOException {
         //this needs to be synchronised, as we should not change the encoding at the same time as
         //calling the constructor.  See javadoc for MultipartRequest.setEncoding().
         synchronized (this) {
             setEncoding();
-            multi = new ServletMultipartRequest(servletRequest, saveDir, maxSize);
+            multi = new ServletMultipartRequest(servletRequest, saveDir);
         }
     }
-
-
+    
     public Enumeration getFileParameterNames() {
         return multi.getFileParameterNames();
     }
@@ -120,11 +130,11 @@ public class PellMultiPartRequest extends MultiPartRequest {
      * The encoding is looked up from the configuration setting 'struts.i18n.encoding'.  This is usually set in
      * default.properties & struts.properties.
      */
-    private static void setEncoding() {
+    private void setEncoding() {
         String encoding = null;
 
         try {
-            encoding = Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
+            encoding = defaultEncoding;
 
             if (encoding != null) {
                 //NB: This should never be called at the same time as the constructor for
@@ -135,9 +145,9 @@ public class PellMultiPartRequest extends MultiPartRequest {
                 http.utils.multipartrequest.MultipartRequest.setEncoding("UTF-8");
             }
         } catch (IllegalArgumentException e) {
-            log.info("Could not get encoding property 'struts.i18n.encoding' for file upload.  Using system default");
+            LOG.info("Could not get encoding property 'struts.i18n.encoding' for file upload.  Using system default");
         } catch (UnsupportedEncodingException e) {
-            log.error("Encoding " + encoding + " is not a valid encoding.  Please check your struts.properties file.");
+            LOG.error("Encoding " + encoding + " is not a valid encoding.  Please check your struts.properties file.");
         }
     }
 }

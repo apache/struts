@@ -38,6 +38,7 @@ import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 
 import freemarker.template.Configuration;
@@ -106,6 +107,13 @@ import freemarker.template.Template;
  */
 public class FreeMarkerPageFilter extends TemplatePageFilter {
     private static final Log LOG = LogFactory.getLog(FreeMarkerPageFilter.class);
+    
+    private static FreemarkerManager freemarkerManager;
+    
+    @Inject
+    public void setFreemarkerManager(FreemarkerManager mgr) {
+        freemarkerManager = mgr;
+    }
 
     /**
      *  Applies the decorator, using the relevent contexts
@@ -126,14 +134,13 @@ public class FreeMarkerPageFilter extends TemplatePageFilter {
         try {
             UtilTimerStack.push(timerKey);
 
-            FreemarkerManager fmm = FreemarkerManager.getInstance();
 
             // get the configuration and template
-            Configuration config = fmm.getConfiguration(servletContext);
+            Configuration config = freemarkerManager.getConfiguration(servletContext);
             Template template = config.getTemplate(decorator.getPage(), getLocale(ctx.getActionInvocation(), config)); // WW-1181
 
             // get the main hash
-            SimpleHash model = fmm.buildTemplateModel(ctx.getValueStack(), null, servletContext, req, res, config.getObjectWrapper());
+            SimpleHash model = freemarkerManager.buildTemplateModel(ctx.getValueStack(), null, servletContext, req, res, config.getObjectWrapper());
 
             // populate the hash with the page
             model.put("page", page);

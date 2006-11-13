@@ -20,6 +20,7 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -29,13 +30,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.ServletRedirectResult;
 import org.apache.struts2.util.PrefixTrie;
 
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
+import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -171,18 +172,10 @@ public class DefaultActionMapper implements ActionMapper {
     private boolean allowSlashesInActionNames = false;
 
     private PrefixTrie prefixTrie = null;
+    
+    List extensions = new ArrayList() {{ add("action");}};
 
     public DefaultActionMapper() {
-        if (Settings.isSet(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION)) {
-            allowDynamicMethodCalls = "true".equals(Settings
-                    .get(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION));
-        }
-
-        if (Settings.isSet(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES)) {
-            allowSlashesInActionNames = "true".equals(Settings
-                    .get(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES));
-        }
-
         prefixTrie = new PrefixTrie() {
             {
                 put(METHOD_PREFIX, new ParameterAction() {
@@ -232,6 +225,16 @@ public class DefaultActionMapper implements ActionMapper {
                 });
             }
         };
+    }
+    
+    @Inject(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION)
+    public void setAllowDynamicMethodCalls(String allow) {
+        allowDynamicMethodCalls = "true".equals(allow);
+    }
+    
+    @Inject(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES)
+    public void setSlashesInActionNames(String allow) {
+        allowSlashesInActionNames = "true".equals(allow);
     }
 
     /*
@@ -352,7 +355,6 @@ public class DefaultActionMapper implements ActionMapper {
      * @return The action name without its extension
      */
     String dropExtension(String name) {
-        List extensions = getExtensions();
         if (extensions == null) {
             return name;
         }
@@ -370,8 +372,7 @@ public class DefaultActionMapper implements ActionMapper {
     /**
      * Returns null if no extension is specified.
      */
-    static String getDefaultExtension() {
-        List extensions = getExtensions();
+    String getDefaultExtension() {
         if (extensions == null) {
             return null;
         } else {
@@ -379,20 +380,15 @@ public class DefaultActionMapper implements ActionMapper {
         }
     }
 
-    /**
-     * Returns null if no extension is specified.
-     */
-    static List getExtensions() {
-        String extensions = (String) org.apache.struts2.config.Settings
-                .get(StrutsConstants.STRUTS_ACTION_EXTENSION);
-
-        if ("".equals(extensions)) {
-            return null;
+    @Inject(StrutsConstants.STRUTS_ACTION_EXTENSION)
+    public void setExtensions(String extensions) {
+        if (!"".equals(extensions)) {
+            this.extensions = Arrays.asList(extensions.split(","));
         } else {
-            return Arrays.asList(extensions.split(","));
+            this.extensions = null;
         }
     }
-
+    
     /**
      * Gets the uri from the request
      *

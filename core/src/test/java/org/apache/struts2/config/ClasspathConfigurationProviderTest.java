@@ -49,6 +49,7 @@ public class ClasspathConfigurationProviderTest extends TestCase {
         customPackage.setNamespace("/custom");
         config.addPackageConfig("custom-package", customPackage);
         provider.init(config);
+        provider.loadPackages();
     }
 
     public void testFoundRootPackages() {

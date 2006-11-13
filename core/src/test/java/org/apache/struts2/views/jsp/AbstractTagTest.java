@@ -22,6 +22,7 @@ package org.apache.struts2.views.jsp;
 
 import java.io.File;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -30,14 +31,15 @@ import javax.servlet.jsp.JspWriter;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.TestAction;
-import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.ApplicationMap;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 
+import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 
@@ -60,6 +62,8 @@ public abstract class AbstractTagTest extends StrutsTestCase {
     protected StrutsMockPageContext pageContext;
     protected HttpServletResponse response;
     protected StrutsMockServletContext servletContext;
+    
+    protected Mock mockContainer;
 
     /**
      * Constructs the action that we're going to test against.  For most UI tests, this default action should be enough.
@@ -102,7 +106,8 @@ public abstract class AbstractTagTest extends StrutsTestCase {
         pageContext.setJspWriter(jspWriter);
         pageContext.setServletContext(servletContext);
 
-        Dispatcher du = new Dispatcher(pageContext.getServletContext());
+        mockContainer = new Mock(Container.class);
+        Dispatcher du = new Dispatcher(pageContext.getServletContext(), new HashMap());
         Dispatcher.setInstance(du);
         du.setConfigurationManager(configurationManager);
         session = new SessionMap(request);
@@ -123,8 +128,6 @@ public abstract class AbstractTagTest extends StrutsTestCase {
         context.put(ServletActionContext.SERVLET_CONTEXT, servletContext);
 
         ActionContext.setContext(new ActionContext(context));
-
-        Settings.setInstance(null);
     }
 
     protected void tearDown() throws Exception {

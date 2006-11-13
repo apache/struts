@@ -33,7 +33,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
 import org.apache.struts2.sitegraph.model.Link;
 
 /**
@@ -70,7 +69,9 @@ public abstract class FileBasedView implements View {
     }
 
     protected Pattern getLinkPattern() {
-        Object ext = Settings.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
+        // FIXME: work with new configuration style
+        //Object ext = Settings.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
+        String ext = "action";
         String actionRegex = "([A-Za-z0-9\\._\\-\\!]+\\." + ext + ")";
         return Pattern.compile(actionRegex);
     }

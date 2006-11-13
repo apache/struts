@@ -24,10 +24,10 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * ActionNamesAction
@@ -53,6 +53,11 @@ public class ActionNamesAction extends ActionSupport {
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
+    
+    @Inject(StrutsConstants.STRUTS_ACTION_EXTENSION)
+    public void setExtension(String ext) {
+        this.extension = ext;
+    }
 
     public ActionConfig getConfig(String actionName) {
         return ConfigurationHelper.getActionConfig(namespace, actionName);
@@ -64,12 +69,7 @@ public class ActionNamesAction extends ActionSupport {
 
     public String getExtension() {
         if ( extension == null) {
-            String ext = (String) Settings.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
-            if ( ext == null || ext.equals("")) {
-                extension = "action";
-            } else {
-                extension = ext;
-            }
+            extension = "action";
         }
         return extension;
     }

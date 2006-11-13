@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
 import org.apache.struts2.interceptor.TokenInterceptor;
@@ -31,12 +32,17 @@ import org.apache.struts2.interceptor.TokenSessionStoreInterceptor;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionChainResult;
+import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.DefaultActionProxyFactory;
+import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import com.opensymphony.xwork2.mock.MockResult;
 
@@ -53,6 +59,7 @@ public class TestConfigurationProvider implements ConfigurationProvider {
     public static final String TOKEN_SESSION_ACTION_NAME = "tokenSessionAction";
     public static final String TEST_NAMESPACE = "/testNamespace";
     public static final String TEST_NAMESPACE_ACTION = "testNamespaceAction";
+    private Configuration configuration;
 
 
     /**
@@ -60,11 +67,15 @@ public class TestConfigurationProvider implements ConfigurationProvider {
      */
     public void destroy() {
     }
+    
+    public void init(Configuration config) {
+        this.configuration = config;
+    }
 
     /**
      * Initializes the configuration object.
      */
-    public void init(Configuration configurationManager) {
+    public void loadPackages() {
         PackageConfig defaultPackageConfig = new PackageConfig("");
 
         HashMap results = new HashMap();
@@ -125,7 +136,7 @@ public class TestConfigurationProvider implements ConfigurationProvider {
         tokenSessionActionConfig.addResultConfig(new ResultConfig("success", MockResult.class.getName()));
         defaultPackageConfig.addActionConfig(TOKEN_SESSION_ACTION_NAME, tokenSessionActionConfig);
 
-        configurationManager.addPackageConfig("", defaultPackageConfig);
+        configuration.addPackageConfig("", defaultPackageConfig);
 
         Map testActionTagResults = new HashMap();
         testActionTagResults.put(Action.SUCCESS, new ResultConfig(Action.SUCCESS, TestActionTagResult.class.getName(), new HashMap()));
@@ -140,7 +151,7 @@ public class TestConfigurationProvider implements ConfigurationProvider {
         ActionConfig namespaceAction = new ActionConfig(null, TestAction.class, null, null, null);
         namespacePackageConfig.addActionConfig(TEST_NAMESPACE_ACTION, namespaceAction);
 
-        configurationManager.addPackageConfig("namespacePackage", namespacePackageConfig);
+        configuration.addPackageConfig("namespacePackage", namespacePackageConfig);
     }
 
     /**
@@ -150,5 +161,14 @@ public class TestConfigurationProvider implements ConfigurationProvider {
      */
     public boolean needsReload() {
         return false;
+    }
+
+    public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
+        if (!builder.contains(ObjectFactory.class)) {
+            builder.factory(ObjectFactory.class);
+        }
+        if (!builder.contains(ActionProxyFactory.class)) {
+            builder.factory(ActionProxyFactory.class, DefaultActionProxyFactory.class);
+        }
     }
 }

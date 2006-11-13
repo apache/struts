@@ -31,8 +31,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.components.ActionComponent;
 import org.apache.struts2.components.Component;
+import org.apache.struts2.dispatcher.Dispatcher;
 
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
 
 import freemarker.template.SimpleNumber;
@@ -55,6 +58,8 @@ public abstract class TagModel implements TemplateTransformModel {
 
     public Writer getWriter(Writer writer, Map params) throws TemplateModelException, IOException {
         Component bean = getBean();
+        Container container = Dispatcher.getInstance().getConfigurationManager().getConfiguration().getContainer();
+        container.inject(bean);
         Map basicParams = convertParams(params);
         bean.copyParams(basicParams);
         bean.addAllParameters(getComplexParams(params));

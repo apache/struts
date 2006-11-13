@@ -39,7 +39,6 @@ import javax.servlet.jsp.PageContext;
 
 import junit.textui.TestRunner;
 
-import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
@@ -81,8 +80,7 @@ public class PortletUrlTagTest extends MockObjectTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        Settings.reset();
-        Dispatcher.setInstance(new Dispatcher(null));
+        Dispatcher.setInstance(new Dispatcher(null, new HashMap()));
 
         mockPortletApiAvailable();
 

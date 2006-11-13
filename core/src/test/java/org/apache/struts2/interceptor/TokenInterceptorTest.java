@@ -37,6 +37,7 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 
@@ -106,9 +107,10 @@ public class TokenInterceptorTest extends StrutsTestCase {
     }
 
     protected void setUp() throws Exception {
-        configurationManager.clearConfigurationProviders();
+        configurationManager = new ConfigurationManager();
         configurationManager.addConfigurationProvider(new TestConfigurationProvider());
         configurationManager.reload();
+        container = configurationManager.getConfiguration().getContainer();
 
         session = new HashMap();
         params = new HashMap();
@@ -129,7 +131,7 @@ public class TokenInterceptorTest extends StrutsTestCase {
     }
 
     protected ActionProxy buildProxy(String actionName) throws Exception {
-        return ActionProxyFactory.getFactory().createActionProxy(
+        return container.getInstance(ActionProxyFactory.class).createActionProxy(
                 configurationManager.getConfiguration(), "", actionName, extraContext, true, true);
     }
 

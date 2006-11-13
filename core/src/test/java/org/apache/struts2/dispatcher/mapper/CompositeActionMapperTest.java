@@ -28,11 +28,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
-import org.apache.struts2.dispatcher.mapper.CompositeActionMapper.IndividualActionMapperEntry;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import com.mockobjects.dynamic.C;
+import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Scope.Strategy;
 
 import junit.framework.TestCase;
 
@@ -42,253 +44,49 @@ import junit.framework.TestCase;
  */
 public class CompositeActionMapperTest extends TestCase {
 
-    /**
-     * Test with empty settings (settings with no entries of interest)
-     *
-     * @throws Exception
-     */
-    public void testGetOrderActionMapperEntries1() throws Exception {
-        CompositeActionMapper compositeActionMapper = new CompositeActionMapper();
-        List<IndividualActionMapperEntry> result =
-            compositeActionMapper.getOrderedActionMapperEntries();
-
-        assertEquals(result.size(), 0);
+    CompositeActionMapper compositeActionMapper;
+    Mock mockContainer;
+    
+    public void setUp() throws Exception {
+        compositeActionMapper = new CompositeActionMapper();
+        mockContainer = new Mock(Container.class);
+        compositeActionMapper.setContainer((Container)mockContainer.proxy());
     }
-
-    /**
-     * Test with a normal settings.
-     *
-     * @throws Exception
-     */
-    public void testGetOrderActionMapperEntries2() throws Exception {
-        CompositeActionMapper compositeActionMapper = new CompositeActionMapper();
-
-        Settings old = Settings.getInstance();
-        try {
-            Settings.setInstance(new InnerSettings());
-            Settings.set(StrutsConstants.STRUTS_MAPPER_COMPOSITE+"1", InnerActionMapper1.class.getName());
-            Settings.set(StrutsConstants.STRUTS_MAPPER_COMPOSITE+"2", InnerActionMapper2.class.getName());
-            Settings.set(StrutsConstants.STRUTS_MAPPER_COMPOSITE+"3", InnerActionMapper3.class.getName());
-
-            List<IndividualActionMapperEntry> result =
-                compositeActionMapper.getOrderedActionMapperEntries();
-
-            assertEquals(result.size(), 3);
-
-            IndividualActionMapperEntry e = null;
-            Iterator<IndividualActionMapperEntry> i = result.iterator();
-
-            // 1
-            e = i.next();
-
-            assertEquals(e.order, new Integer(1));
-            assertEquals(e.propertyName, StrutsConstants.STRUTS_MAPPER_COMPOSITE+"1");
-            assertEquals(e.propertyValue, InnerActionMapper1.class.getName());
-            assertEquals(e.actionMapper.getClass(), InnerActionMapper1.class);
-
-            // 2
-            e = i.next();
-
-            assertEquals(e.order, new Integer(2));
-            assertEquals(e.propertyName, StrutsConstants.STRUTS_MAPPER_COMPOSITE+"2");
-            assertEquals(e.propertyValue, InnerActionMapper2.class.getName());
-            assertEquals(e.actionMapper.getClass(), InnerActionMapper2.class);
-
-            // 3
-            e = i.next();
-            assertEquals(e.order, new Integer(3));
-            assertEquals(e.propertyName, StrutsConstants.STRUTS_MAPPER_COMPOSITE+"3");
-            assertEquals(e.propertyValue, InnerActionMapper3.class.getName());
-            assertEquals(e.actionMapper.getClass(), InnerActionMapper3.class);
-        }
-        finally {
-            Settings.setInstance(old);
-        }
-    }
-
-    /**
-     * Test with settings where entries are out-of-order, it needs to be able to retrieve them
-     * back in proper order.
-     *
-     * @throws Exception
-     */
-    public void testGetOrderActionMapperEntries3() throws Exception {
-        CompositeActionMapper compositeActionMapper = new CompositeActionMapper();
-
-        Settings old = Settings.getInstance();
-        try {
-            Settings.setInstance(new InnerSettings());
-            Settings.set(StrutsConstants.STRUTS_MAPPER_COMPOSITE+"3", InnerActionMapper3.class.getName());
-            Settings.set(StrutsConstants.STRUTS_MAPPER_COMPOSITE+"2", InnerActionMapper2.class.getName());
-            Settings.set(StrutsConstants.STRUTS_MAPPER_COMPOSITE+"1", InnerActionMapper1.class.getName());
-
-            List<IndividualActionMapperEntry> result =
-                compositeActionMapper.getOrderedActionMapperEntries();
-
-            assertEquals(result.size(), 3);
-
-            IndividualActionMapperEntry e = null;
-            Iterator<IndividualActionMapperEntry> i = result.iterator();
-
-            // 1
-            e = i.next();
-
-            assertEquals(e.order, new Integer(1));
-            assertEquals(e.propertyName, StrutsConstants.STRUTS_MAPPER_COMPOSITE+"1");
-            assertEquals(e.propertyValue, InnerActionMapper1.class.getName());
-            assertEquals(e.actionMapper.getClass(), InnerActionMapper1.class);
-
-            // 2
-            e = i.next();
-
-            assertEquals(e.order, new Integer(2));
-            assertEquals(e.propertyName, StrutsConstants.STRUTS_MAPPER_COMPOSITE+"2");
-            assertEquals(e.propertyValue, InnerActionMapper2.class.getName());
-            assertEquals(e.actionMapper.getClass(), InnerActionMapper2.class);
-
-            // 3
-            e = i.next();
-            assertEquals(e.order, new Integer(3));
-            assertEquals(e.propertyName, StrutsConstants.STRUTS_MAPPER_COMPOSITE+"3");
-            assertEquals(e.propertyValue, InnerActionMapper3.class.getName());
-            assertEquals(e.actionMapper.getClass(), InnerActionMapper3.class);
-        }
-        finally {
-            Settings.setInstance(old);
-        }
-    }
-
-    /**
-     * Test with a bad entry
-     *
-     * @throws Exception
-     */
-    public void testGetOrderActionMapperEntries4() throws Exception {
-        CompositeActionMapper compositeActionMapper = new CompositeActionMapper();
-
-        Settings old = Settings.getInstance();
-        try {
-            Settings.setInstance(new InnerSettings());
-            Settings.set(StrutsConstants.STRUTS_MAPPER_COMPOSITE+"1", InnerActionMapper1.class.getName());
-            Settings.set(StrutsConstants.STRUTS_MAPPER_COMPOSITE+"NotANumber", InnerActionMapper2.class.getName());
-            Settings.set(StrutsConstants.STRUTS_MAPPER_COMPOSITE+"3", InnerActionMapper3.class.getName());
-
-            List<IndividualActionMapperEntry> result =
-                compositeActionMapper.getOrderedActionMapperEntries();
-
-            assertEquals(result.size(), 2);
-
-            IndividualActionMapperEntry e = null;
-            Iterator<IndividualActionMapperEntry> i = result.iterator();
-
-            // 1
-            e = i.next();
-
-            assertEquals(e.order, new Integer(1));
-            assertEquals(e.propertyName, StrutsConstants.STRUTS_MAPPER_COMPOSITE+"1");
-            assertEquals(e.propertyValue, InnerActionMapper1.class.getName());
-            assertEquals(e.actionMapper.getClass(), InnerActionMapper1.class);
-
-            // 2
-            e = i.next();
-            assertEquals(e.order, new Integer(3));
-            assertEquals(e.propertyName, StrutsConstants.STRUTS_MAPPER_COMPOSITE+"3");
-            assertEquals(e.propertyValue, InnerActionMapper3.class.getName());
-            assertEquals(e.actionMapper.getClass(), InnerActionMapper3.class);
-        }
-        finally {
-            Settings.setInstance(old);
-        }
-    }
-
-    /**
-     * Test with an entry where the action mapper class is bogus.
-     * @throws Exception
-     */
-    public void testGetOrderActionMapperEntries5() throws Exception {
-        CompositeActionMapper compositeActionMapper = new CompositeActionMapper();
-
-        Settings old = Settings.getInstance();
-        try {
-            Settings.setInstance(new InnerSettings());
-            Settings.set(StrutsConstants.STRUTS_MAPPER_COMPOSITE+"1", InnerActionMapper1.class.getName());
-            Settings.set(StrutsConstants.STRUTS_MAPPER_COMPOSITE+"2", "bogus.class.name");
-            Settings.set(StrutsConstants.STRUTS_MAPPER_COMPOSITE+"3", InnerActionMapper3.class.getName());
-
-            List<IndividualActionMapperEntry> result =
-                compositeActionMapper.getOrderedActionMapperEntries();
-
-            assertEquals(result.size(), 2);
-
-            IndividualActionMapperEntry e = null;
-            Iterator<IndividualActionMapperEntry> i = result.iterator();
-
-            // 1
-            e = i.next();
-
-            assertEquals(e.order, new Integer(1));
-            assertEquals(e.propertyName, StrutsConstants.STRUTS_MAPPER_COMPOSITE+"1");
-            assertEquals(e.propertyValue, InnerActionMapper1.class.getName());
-            assertEquals(e.actionMapper.getClass(), InnerActionMapper1.class);
-
-
-            // 2
-            e = i.next();
-            assertEquals(e.order, new Integer(3));
-            assertEquals(e.propertyName, StrutsConstants.STRUTS_MAPPER_COMPOSITE+"3");
-            assertEquals(e.propertyValue, InnerActionMapper3.class.getName());
-            assertEquals(e.actionMapper.getClass(), InnerActionMapper3.class);
-        }
-        finally {
-            Settings.setInstance(old);
-        }
-    }
-
-
+    
 
     public void testGetActionMappingAndUri1() throws Exception {
-        CompositeActionMapper compositeActionMapper = new CompositeActionMapper();
-
-        Settings old = Settings.getInstance();
-        try {
-            Settings.setInstance(new InnerSettings());
-            Settings.set(StrutsConstants.STRUTS_MAPPER_COMPOSITE+"1", InnerActionMapper1.class.getName());
-            Settings.set(StrutsConstants.STRUTS_MAPPER_COMPOSITE+"2", InnerActionMapper2.class.getName());
-            Settings.set(StrutsConstants.STRUTS_MAPPER_COMPOSITE+"3", InnerActionMapper3.class.getName());
-
-
-            ActionMapping actionMapping = compositeActionMapper.getMapping(new MockHttpServletRequest(), new ConfigurationManager());
-            String uri = compositeActionMapper.getUriFromActionMapping(new ActionMapping());
-
-            assertNotNull(actionMapping);
-            assertNotNull(uri);
-            assertTrue(actionMapping == InnerActionMapper3.actionMapping);
-            assertTrue(uri == InnerActionMapper3.uri);
-        }
-        finally {
-            Settings.setInstance(old);
-        }
+        ActionMapper mapper1 = new InnerActionMapper1();
+        ActionMapper mapper2 = new InnerActionMapper2();
+        ActionMapper mapper3 = new InnerActionMapper3();
+        mockContainer.expectAndReturn("getInstance", C.args(C.eq(ActionMapper.class), C.eq("mapper1")), mapper1);
+        mockContainer.expectAndReturn("getInstance", C.args(C.eq(ActionMapper.class), C.eq("mapper2")), mapper3);
+        mockContainer.expectAndReturn("getInstance", C.args(C.eq(ActionMapper.class), C.eq("mapper3")), mapper2);
+        compositeActionMapper.setActionMappers("mapper1,mapper2,mapper3");
+        
+        ActionMapping actionMapping = compositeActionMapper.getMapping(new MockHttpServletRequest(), new ConfigurationManager());
+        String uri = compositeActionMapper.getUriFromActionMapping(new ActionMapping());
+        mockContainer.verify();
+        
+        assertNotNull(actionMapping);
+        assertNotNull(uri);
+        assertTrue(actionMapping == InnerActionMapper3.actionMapping);
+        assertTrue(uri == InnerActionMapper3.uri);
+        
     }
 
     public void testGetActionMappingAndUri2() throws Exception {
-        CompositeActionMapper compositeActionMapper = new CompositeActionMapper();
+        ActionMapper mapper1 = new InnerActionMapper1();
+        ActionMapper mapper2 = new InnerActionMapper2();
+        mockContainer.expectAndReturn("getInstance", C.args(C.eq(ActionMapper.class), C.eq("mapper1")), mapper1);
+        mockContainer.expectAndReturn("getInstance", C.args(C.eq(ActionMapper.class), C.eq("mapper2")), mapper2);
+        compositeActionMapper.setActionMappers("mapper1,mapper2");
 
-        Settings old = Settings.getInstance();
-        try {
-            Settings.setInstance(new InnerSettings());
-            Settings.set(StrutsConstants.STRUTS_MAPPER_COMPOSITE+"1", InnerActionMapper1.class.getName());
-            Settings.set(StrutsConstants.STRUTS_MAPPER_COMPOSITE+"2", InnerActionMapper2.class.getName());
+        ActionMapping actionMapping = compositeActionMapper.getMapping(new MockHttpServletRequest(), new ConfigurationManager());
+        String uri = compositeActionMapper.getUriFromActionMapping(new ActionMapping());
+        mockContainer.verify();
 
-
-            ActionMapping actionMapping = compositeActionMapper.getMapping(new MockHttpServletRequest(), new ConfigurationManager());
-            String uri = compositeActionMapper.getUriFromActionMapping(new ActionMapping());
-
-            assertNull(actionMapping);
-            assertNull(uri);
-        }
-        finally {
-            Settings.setInstance(old);
-        }
+        assertNull(actionMapping);
+        assertNull(uri);
     }
 
 
@@ -325,26 +123,4 @@ public class CompositeActionMapperTest extends TestCase {
             return uri;
         }
     }
-
-    class InnerSettings extends Settings {
-        private Map<String, String> _impl = new LinkedHashMap<String, String>();
-
-        @Override
-        public boolean isSetImpl(String name) {
-            return _impl.containsKey(name);
-        }
-        @Override
-        public void setImpl(String name, String value) throws IllegalArgumentException, UnsupportedOperationException {
-            _impl.put(name, value);
-        }
-        @Override
-        public String getImpl(String name) throws IllegalArgumentException {
-            return (String) _impl.get(name);
-        }
-        @Override
-        public Iterator listImpl() {
-            return _impl.keySet().iterator();
-        }
-    }
-
 }

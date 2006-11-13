@@ -27,12 +27,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.util.UrlHelper;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -135,6 +135,7 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
     protected String actionName;
     protected String namespace;
     protected String method;
+    protected ActionMapper actionMapper;
 
     private Map<String, String> requestParameters = new HashMap<String, String>();
 
@@ -155,6 +156,11 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
         this.namespace = namespace;
         this.actionName = actionName;
         this.method = method;
+    }
+    
+    @Inject
+    public void setActionMapper(ActionMapper mapper) {
+        this.actionMapper = mapper;
     }
 
     protected List<String> prohibitedResultParam = Arrays.asList(new String[] {
@@ -193,8 +199,7 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
             }
         }
 
-        ActionMapper mapper = ActionMapperFactory.getMapper();
-        StringBuffer tmpLocation = new StringBuffer(mapper.getUriFromActionMapping(new ActionMapping(actionName, namespace, method, null)));
+        StringBuffer tmpLocation = new StringBuffer(actionMapper.getUriFromActionMapping(new ActionMapping(actionName, namespace, method, null)));
         UrlHelper.buildParametersString(requestParameters, tmpLocation, "&");
 
         setLocation(tmpLocation.toString());

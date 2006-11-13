@@ -35,11 +35,11 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
 import org.apache.struts2.views.JspSupportServlet;
 import org.apache.struts2.views.freemarker.tags.StrutsModels;
 import org.apache.struts2.views.util.ContextUtil;
 
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.ObjectFactory;
@@ -114,40 +114,19 @@ public class FreemarkerManager {
     public static final String KEY_SESSION_MODEL = "Session";
     public static final String KEY_JSP_TAGLIBS = "JspTaglibs";
     public static final String KEY_REQUEST_PARAMETER_MODEL = "Parameters";
-    private static FreemarkerManager instance = null;
-
-
-    /**
-     * To allow for custom configuration of freemarker, sublcass this class "ConfigManager" and
-     * set the Struts configuration property
-     * <b>struts.freemarker.configmanager.classname</b> to the fully qualified classname.
-     * <p/>
-     * This allows you to override the protected methods in the ConfigMangaer
-     * to programatically create your own Configuration instance
-     */
-    public final static synchronized FreemarkerManager getInstance() {
-        if (instance == null) {
-            String classname = FreemarkerManager.class.getName();
-
-            if (Settings.isSet(StrutsConstants.STRUTS_FREEMARKER_MANAGER_CLASSNAME)) {
-                classname = Settings.get(StrutsConstants.STRUTS_FREEMARKER_MANAGER_CLASSNAME).trim();
-            }
-
-            try {
-                log.info("Instantiating Freemarker ConfigManager!, " + classname);
-                // singleton instances shouldn't be built accessing request or session-specific context data
-                instance = (FreemarkerManager) ObjectFactory.getObjectFactory().buildBean(classname, null);
-            } catch (Exception e) {
-                log.fatal("Fatal exception occurred while trying to instantiate a Freemarker ConfigManager instance, " + classname, e);
-            }
-        }
-
-        // if the instance creation failed, make sure there is a default instance
-        if (instance == null) {
-            instance = new FreemarkerManager();
-        }
-
-        return instance;
+    
+    private String encoding;
+    private boolean altMapWrapper;
+    
+    
+    @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+    
+    @Inject(StrutsConstants.STRUTS_FREEMARKER_WRAPPER_ALT_MAP)
+    public void setWrapperAltMap(String val) {
+        altMapWrapper = "true".equals(val);
     }
 
     public final synchronized freemarker.template.Configuration getConfiguration(ServletContext servletContext) throws TemplateException {
@@ -240,7 +219,7 @@ public class FreemarkerManager {
     }
 
     protected BeansWrapper getObjectWrapper() {
-        return new StrutsBeanWrapper();
+        return new StrutsBeanWrapper(altMapWrapper);
     }
 
     /**
@@ -306,8 +285,8 @@ public class FreemarkerManager {
 
         configuration.setObjectWrapper(getObjectWrapper());
 
-        if (Settings.isSet(StrutsConstants.STRUTS_I18N_ENCODING)) {
-            configuration.setDefaultEncoding(Settings.get(StrutsConstants.STRUTS_I18N_ENCODING));
+        if (encoding != null) {
+            configuration.setDefaultEncoding(encoding);
         }
 
         loadSettings(servletContext, configuration);

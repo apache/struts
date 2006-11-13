@@ -37,11 +37,20 @@ import org.apache.struts2.views.velocity.VelocityManager;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
 
+import com.opensymphony.xwork2.inject.Inject;
+
 /**
  * Velocity based template engine.
  */
 public class VelocityTemplateEngine extends BaseTemplateEngine {
     private static final Log LOG = LogFactory.getLog(VelocityTemplateEngine.class);
+    
+    private VelocityManager velocityManager;
+    
+    @Inject
+    public void setVelocityManager(VelocityManager mgr) {
+        this.velocityManager = mgr;
+    }
 
     public void renderTemplate(TemplateRenderingContext templateContext) throws Exception {
         // get the various items required from the stack
@@ -51,7 +60,6 @@ public class VelocityTemplateEngine extends BaseTemplateEngine {
         HttpServletResponse res = (HttpServletResponse) actionContext.get(ServletActionContext.HTTP_RESPONSE);
 
         // prepare velocity
-        VelocityManager velocityManager = VelocityManager.getInstance();
         velocityManager.init(servletContext);
         VelocityEngine velocityEngine = velocityManager.getVelocityEngine();
 

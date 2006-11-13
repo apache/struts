@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.components.Component;
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.velocity.context.InternalContextAdapter;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
@@ -37,6 +38,7 @@ import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.parser.node.Node;
 
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
 
 public abstract class AbstractDirective extends Directive {
@@ -61,7 +63,8 @@ public abstract class AbstractDirective extends Directive {
         HttpServletRequest req = (HttpServletRequest) stack.getContext().get(ServletActionContext.HTTP_REQUEST);
         HttpServletResponse res = (HttpServletResponse) stack.getContext().get(ServletActionContext.HTTP_RESPONSE);
         Component bean = getBean(stack, req, res);
-
+        Container container = Dispatcher.getInstance().getConfigurationManager().getConfiguration().getContainer();
+        container.inject(bean);
         // get the parameters
         Map params = createPropertyMap(ctx, node);
         bean.copyParams(params);

@@ -23,7 +23,11 @@ package org.apache.struts2.components.template;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.struts2.config.Settings;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.Dispatcher;
+
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * The TemplateEngineManager will return a template engine for the template
@@ -31,19 +35,38 @@ import org.apache.struts2.config.Settings;
 public class TemplateEngineManager {
     public static final String DEFAULT_TEMPLATE_TYPE_CONFIG_KEY = "struts.ui.templateSuffix";
 
-    private static final TemplateEngineManager MANAGER = new TemplateEngineManager();
-
     /** The default template extenstion is <code>ftl</code>. */
     public static final String DEFAULT_TEMPLATE_TYPE = "ftl";
 
     Map templateEngines = new HashMap();
-
-    private TemplateEngineManager() {
-        templateEngines.put("ftl", new FreemarkerTemplateEngine());
-        templateEngines.put("vm", new VelocityTemplateEngine());
-        templateEngines.put("jsp", new JspTemplateEngine());
+    Container container;
+    String defaultTemplateType;
+    
+    @Inject(DEFAULT_TEMPLATE_TYPE_CONFIG_KEY)
+    public void setDefaultTemplateType(String type) {
+        this.defaultTemplateType = type;
     }
-
+    
+    @Inject
+    public void setContainer(Container container) {
+        this.container = container;
+    }
+    
+    @Inject(StrutsConstants.STRUTS_TEMPLATE_ENGINES)
+    public void setTemplateEngines(String engines) {
+        if (engines != null) {
+            String[] list = engines.split(",");
+            for (String name : list) {
+                TemplateEngine eng = container.getInstance(TemplateEngine.class, name);
+                if (eng != null) {
+                    templateEngines.put(name, eng);
+                } else {
+                    throw new IllegalArgumentException("Invalid template engine name: "+name);
+                }
+            }
+        }
+    }
+    
     /**
      * Registers the given template engine.
      * <p/>
@@ -51,8 +74,8 @@ public class TemplateEngineManager {
      * @param templateExtension  filename extension (eg. .jsp, .ftl, .vm).
      * @param templateEngine     the engine.
      */
-    public static void registerTemplateEngine(String templateExtension, TemplateEngine templateEngine) {
-        MANAGER.templateEngines.put(templateExtension, templateEngine);
+    public void registerTemplateEngine(String templateExtension, TemplateEngine templateEngine) {
+        templateEngines.put(templateExtension, templateEngine);
     }
 
     /**
@@ -65,17 +88,20 @@ public class TemplateEngineManager {
      * @param templateTypeOverride Overrides the default template type
      * @return the engine.
      */
-    public static TemplateEngine getTemplateEngine(Template template, String templateTypeOverride) {
+    public TemplateEngine getTemplateEngine(Template template, String templateTypeOverride) {
         String templateType = DEFAULT_TEMPLATE_TYPE;
         String templateName = template.toString();
         if (templateName.indexOf(".") > 0) {
             templateType = templateName.substring(templateName.indexOf(".") + 1);
         } else if (templateTypeOverride !=null && templateTypeOverride.length() > 0) {
             templateType = templateTypeOverride;
-        } else if (Settings.isSet(DEFAULT_TEMPLATE_TYPE_CONFIG_KEY)) {
-            templateType = (String) Settings.get(DEFAULT_TEMPLATE_TYPE_CONFIG_KEY);
+        } else {
+            String type = defaultTemplateType;
+            if (type != null) {
+                templateType = type;
+            }
         }
-        return (TemplateEngine) MANAGER.templateEngines.get(templateType);
+        return (TemplateEngine) templateEngines.get(templateType);
     }
 
 

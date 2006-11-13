@@ -19,6 +19,10 @@
     <filter>
         <filter-name>struts</filter-name>
         <filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
+        <init-param>
+        	<param-name>actionPackages</param-name>
+        	<param-value>org.apache.struts2.showcase.person</param-value>
+        </init-param>
     </filter>
 
     <filter>

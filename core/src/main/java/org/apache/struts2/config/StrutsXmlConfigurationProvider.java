@@ -29,13 +29,22 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+
+import javax.servlet.ServletContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.inject.Context;
+import com.opensymphony.xwork2.inject.Factory;
 
 /**
  * Override Xwork class so we can use an arbitrary config file
@@ -46,6 +55,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
     private File baseDir = null;
     private String filename;
     private String reloadKey;
+    private Object servletContext;
 
     /**
      * Constructs the configuration provider
@@ -53,7 +63,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
      * @param errorIfMissing If we should throw an exception if the file can't be found
      */
     public StrutsXmlConfigurationProvider(boolean errorIfMissing) {
-        this("struts.xml", errorIfMissing);
+        this("struts.xml", errorIfMissing, null);
     }
 
     /**
@@ -62,8 +72,9 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
      * @param filename The filename to look for
      * @param errorIfMissing If we should throw an exception if the file can't be found
      */
-    public StrutsXmlConfigurationProvider(String filename, boolean errorIfMissing) {
+    public StrutsXmlConfigurationProvider(String filename, boolean errorIfMissing, ServletContext ctx) {
         super(filename, errorIfMissing);
+        this.servletContext = ctx;
         this.filename = filename;
         reloadKey = "configurationReload-"+filename;
         Map<String,String> dtdMappings = new HashMap<String,String>(getDtdMappings());
@@ -74,17 +85,31 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
             this.baseDir = file.getParentFile();
         }
     }
-
-
+    
+    /* (non-Javadoc)
+     * @see com.opensymphony.xwork2.config.providers.XmlConfigurationProvider#register(com.opensymphony.xwork2.inject.ContainerBuilder, java.util.Properties)
+     */
+    @Override
+    public void register(ContainerBuilder containerBuilder, Properties props) throws ConfigurationException {
+        if (servletContext != null && !containerBuilder.contains(ServletContext.class)) {
+            containerBuilder.factory(ServletContext.class, new Factory() {
+                public Object create(Context context) throws Exception {
+                    return servletContext;
+                }
+                
+            });
+        }
+        super.register(containerBuilder, props);
+    }
 
     /* (non-Javadoc)
      * @see com.opensymphony.xwork2.config.providers.XmlConfigurationProvider#init(com.opensymphony.xwork2.config.Configuration)
      */
     @Override
-    public void init(Configuration configuration) {
+    public void loadPackages() {
         ActionContext ctx = ActionContext.getContext();
         ctx.put(reloadKey, Boolean.TRUE);
-        super.init(configuration);
+        super.loadPackages();
     }
 
     /**
@@ -143,6 +168,10 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
         }
         return false;
 
+    }
+    
+    public String toString() {
+        return ("Struts XML configuration provider ("+filename+")");
     }
 
 

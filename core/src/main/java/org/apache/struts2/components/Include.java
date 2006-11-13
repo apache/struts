@@ -44,9 +44,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
 import org.apache.struts2.util.FastByteArrayOutputStream;
 
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -103,11 +103,17 @@ public class Include extends Component {
     protected String value;
     private HttpServletRequest req;
     private HttpServletResponse res;
+    private static String defaultEncoding;
 
     public Include(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack);
         this.req = req;
         this.res = res;
+    }
+    
+    @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
+    public static void setDefaultEncoding(String encoding) {
+        defaultEncoding = encoding;
     }
 
     public boolean end(Writer writer, String body) {
@@ -275,7 +281,7 @@ public class Include extends Component {
     private static String getEncoding() {
         if (encodingDefined) {
             try {
-                encoding = Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
+                encoding = defaultEncoding;
             } catch (IllegalArgumentException e) {
                 encoding = System.getProperty("file.encoding");
                 encodingDefined = false;

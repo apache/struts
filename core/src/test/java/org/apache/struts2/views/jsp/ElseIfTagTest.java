@@ -25,6 +25,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 import junit.framework.TestCase;
 
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.components.If;
 
 import com.mockobjects.servlet.MockJspWriter;
@@ -35,7 +36,7 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 /**
  *
  */
-public class ElseIfTagTest extends TestCase {
+public class ElseIfTagTest extends StrutsTestCase {
 
     protected MockPageContext pageContext;
     protected MockJspWriter jspWriter;
@@ -96,6 +97,7 @@ public class ElseIfTagTest extends TestCase {
 
 
     protected void setUp() throws Exception {
+        super.setUp();
         stack = ValueStackFactory.getFactory().createValueStack();
 
         jspWriter = new MockJspWriter();

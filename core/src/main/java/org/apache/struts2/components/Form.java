@@ -31,9 +31,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
@@ -46,6 +45,7 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.RuntimeConfiguration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptorUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.ActionValidatorManagerFactory;
@@ -110,6 +110,9 @@ public class Form extends ClosingUIBean {
     protected String portletMode;
     protected String windowState;
     protected String acceptcharset;
+    
+    protected boolean enableDynamicMethodInvocation = true;
+    protected Configuration configuration;
 
     public Form(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -125,6 +128,16 @@ public class Form extends ClosingUIBean {
 
     protected String getDefaultTemplate() {
         return TEMPLATE;
+    }
+    
+    @Inject(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION)
+    public void setEnableDynamicMethodInvocation(String enable) {
+        enableDynamicMethodInvocation = "true".equals(enable);
+    }
+    
+    @Inject
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
     }
 
 
@@ -233,10 +246,8 @@ public class Form extends ClosingUIBean {
 
         String actionMethod = "";
         // FIXME: our implementation is flawed - the only concept of ! should be in DefaultActionMapper
-        boolean allowDynamicMethodCalls = "true".equals(Settings.get(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION));
-
         // handle "name!method" convention.
-        if (allowDynamicMethodCalls) {
+        if (enableDynamicMethodInvocation) {
             if (action.indexOf("!") != -1) {
                 int endIdx = action.lastIndexOf("!");
                 actionMethod = action.substring(endIdx + 1, action.length());
@@ -244,13 +255,12 @@ public class Form extends ClosingUIBean {
             }
         }
 
-        Configuration config = Dispatcher.getInstance().getConfigurationManager().getConfiguration();
-        final ActionConfig actionConfig = config.getRuntimeConfiguration().getActionConfig(namespace, action);
+        final ActionConfig actionConfig = configuration.getRuntimeConfiguration().getActionConfig(namespace, action);
         String actionName = action;
         if (actionConfig != null) {
 
             ActionMapping mapping = new ActionMapping(action, namespace, actionMethod, parameters);
-            String result = UrlHelper.buildUrl(ActionMapperFactory.getMapper().getUriFromActionMapping(mapping), request, response, null);
+            String result = UrlHelper.buildUrl(actionMapper.getUriFromActionMapping(mapping), request, response, null);
             addParameter("action", result);
 
             // let's try to get the actual action class and name
@@ -317,7 +327,7 @@ public class Form extends ClosingUIBean {
 
             addParameter("performValidation", Boolean.FALSE);
 
-            RuntimeConfiguration runtimeConfiguration = Dispatcher.getInstance().getConfigurationManager().getConfiguration().getRuntimeConfiguration();
+            RuntimeConfiguration runtimeConfiguration = configuration.getRuntimeConfiguration();
             ActionConfig actionConfig = runtimeConfiguration.getActionConfig(namespace, actionName);
 
             if (actionConfig != null) {

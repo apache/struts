@@ -22,6 +22,7 @@ package org.apache.struts2.dispatcher;
 
 import java.io.IOException;
 
+import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
@@ -64,21 +65,11 @@ import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
  *
  * @version $Date$ $Id$
  */
-public class ActionContextCleanUp extends AbstractFilter {
+public class ActionContextCleanUp implements Filter {
 
     private static final Log LOG = LogFactory.getLog(ActionContextCleanUp.class);
 
     private static final String COUNTER = "__cleanup_recursion_counter";
-
-    protected FilterConfig filterConfig;
-
-
-    /**
-     * Empty implementation.
-     */
-    protected void postInit(FilterConfig filterConfig) throws ServletException {
-        // does nothing.
-    }
 
     /**
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
@@ -91,8 +82,6 @@ public class ActionContextCleanUp extends AbstractFilter {
         String timerKey = "ActionContextCleanUp_doFilter: ";
         try {
             UtilTimerStack.push(timerKey);
-
-            request = prepareDispatcherAndWrapRequest(request, response);
 
             try {
                 Integer count = (Integer)request.getAttribute(COUNTER);
@@ -143,5 +132,11 @@ public class ActionContextCleanUp extends AbstractFilter {
         if (LOG.isDebugEnabled()) {
             LOG.debug("clean up ");
         }
+    }
+
+    public void destroy() {
+    }
+
+    public void init(FilterConfig arg0) throws ServletException {
     }
 }

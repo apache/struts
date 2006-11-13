@@ -35,6 +35,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -48,6 +49,7 @@ import freemarker.template.SimpleHash;
  */
 public class FreemarkerTemplateEngine extends BaseTemplateEngine {
     static Class bodyContent = null;
+    private FreemarkerManager freemarkerManager;
 
     static {
         try {
@@ -63,6 +65,11 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
 
     private static final Log LOG = LogFactory.getLog(FreemarkerTemplateEngine.class);
 
+    @Inject
+    public void setFreemarkerManager(FreemarkerManager mgr) {
+        this.freemarkerManager = mgr;
+    }
+    
     public void renderTemplate(TemplateRenderingContext templateContext) throws Exception {
         // get the various items required from the stack
         ValueStack stack = templateContext.getStack();
@@ -72,7 +79,6 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
         HttpServletResponse res = (HttpServletResponse) context.get(ServletActionContext.HTTP_RESPONSE);
 
         // prepare freemarker
-        FreemarkerManager freemarkerManager = FreemarkerManager.getInstance();
         Configuration config = freemarkerManager.getConfiguration(servletContext);
 
         // get the list of templates we can use

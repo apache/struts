@@ -20,7 +20,9 @@
  */
 package org.apache.struts2;
 
-import org.apache.struts2.config.Settings;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.springframework.mock.web.MockServletContext;
@@ -41,23 +43,26 @@ public abstract class StrutsTestCase extends XWorkTestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        Settings.reset();
         LocalizedTextUtil.clearDefaultResourceBundles();
-        Dispatcher du = new Dispatcher(new MockServletContext());
-        Dispatcher.setInstance(du);
-        configurationManager = new ConfigurationManager();
-        configurationManager.addConfigurationProvider(
-                new StrutsXmlConfigurationProvider("struts-default.xml", false));
-        configurationManager.addConfigurationProvider(
-                new StrutsXmlConfigurationProvider("struts-plugin.xml", false));
-        configurationManager.addConfigurationProvider(
-                new StrutsXmlConfigurationProvider("struts.xml", false));
-        du.setConfigurationManager(configurationManager);
+        initDispatcher(null);
 
+    }
+    
+    protected Dispatcher initDispatcher(Map<String,String> params) {
+        if (params == null) {
+            params = new HashMap<String,String>();
+        }
+        Dispatcher du = new Dispatcher(new MockServletContext(), params);
+        Dispatcher.setInstance(du);
+        configurationManager = du.getConfigurationManager();
+        configuration = configurationManager.getConfiguration();
+        container = configuration.getContainer();
+        return du;
     }
 
     protected void tearDown() throws Exception {
         super.tearDown();
+        Dispatcher.setInstance(null);
     }
 
 }

@@ -42,6 +42,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 
@@ -119,6 +120,8 @@ public class ActionComponent extends Component {
     protected HttpServletResponse res;
     protected HttpServletRequest req;
 
+    protected ActionProxyFactory actionProxyFactory;
+    protected Configuration configuration;
     protected ActionProxy proxy;
     protected String name;
     protected String namespace;
@@ -131,6 +134,26 @@ public class ActionComponent extends Component {
         this.req = req;
         this.res = res;
     }
+    
+    /**
+     * @param actionProxyFactory the actionProxyFactory to set
+     */
+    @Inject
+    public void setActionProxyFactory(ActionProxyFactory actionProxyFactory) {
+        this.actionProxyFactory = actionProxyFactory;
+    }
+
+
+
+    /**
+     * @param configuration the configuration to set
+     */
+    @Inject
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
+
 
     public boolean end(Writer writer, String body) {
         boolean end = super.end(writer, "", false);
@@ -226,7 +249,7 @@ public class ActionComponent extends Component {
         String namespace;
 
         if (this.namespace == null) {
-            namespace = TagUtils.buildNamespace(getStack(), req);
+            namespace = TagUtils.buildNamespace(actionMapper, getStack(), req);
         } else {
             namespace = findString(this.namespace);
         }
@@ -235,8 +258,8 @@ public class ActionComponent extends Component {
         ValueStack stack = getStack();
         // execute at this point, after params have been set
         try {
-            Configuration config = Dispatcher.getInstance().getConfigurationManager().getConfiguration();
-            proxy = ActionProxyFactory.getFactory().createActionProxy(config, namespace, actionName, createExtraContext(), executeResult, true);
+            
+            proxy = actionProxyFactory.createActionProxy(configuration, namespace, actionName, createExtraContext(), executeResult, true);
             if (null != methodName) {
                 proxy.setMethod(methodName);
             }

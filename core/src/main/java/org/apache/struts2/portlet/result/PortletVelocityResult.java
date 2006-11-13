@@ -38,7 +38,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.context.PortletActionContext;
@@ -50,6 +49,7 @@ import org.apache.velocity.context.Context;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -96,13 +96,26 @@ public class PortletVelocityResult extends StrutsResultSupport {
 
     private static final Log log = LogFactory
             .getLog(PortletVelocityResult.class);
-
+    
+    private String defaultEncoding;
+    private VelocityManager velocityManager;
+    
     public PortletVelocityResult() {
         super();
     }
 
     public PortletVelocityResult(String location) {
         super(location);
+    }
+    
+    @Inject
+    public void setVelocityManager(VelocityManager mgr) {
+        this.velocityManager = mgr;
+    }
+    
+    @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
+    public void setDefaultEncoding(String encoding) {
+        this.defaultEncoding = encoding;
     }
 
     /* (non-Javadoc)
@@ -157,7 +170,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
                 .getServletContext();
         Servlet servlet = JspSupportServlet.jspSupportServlet;
 
-        VelocityManager.getInstance().init(servletContext);
+        velocityManager.init(servletContext);
 
         boolean usedJspFactory = false;
         PageContext pageContext = (PageContext) ActionContext.getContext().get(
@@ -180,7 +193,6 @@ public class PortletVelocityResult extends StrutsResultSupport {
                 contentType = contentType + ";charset=" + encoding;
             }
 
-            VelocityManager velocityManager = VelocityManager.getInstance();
             Template t = getTemplate(stack,
                     velocityManager.getVelocityEngine(), invocation,
                     finalLocation, encoding);
@@ -232,8 +244,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
      *         of 'struts.i18n.encoding' property)
      */
     protected String getEncoding(String templateLocation) {
-        String encoding = (String) Settings
-                .get(StrutsConstants.STRUTS_I18N_ENCODING);
+        String encoding = defaultEncoding;
         if (encoding == null) {
             encoding = System.getProperty("file.encoding");
         }

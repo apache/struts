@@ -21,6 +21,7 @@
 package org.apache.struts2.portlet.dispatcher;
 
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -41,7 +42,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.ApplicationMap;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
@@ -54,7 +54,6 @@ import org.apache.struts2.portlet.PortletSessionMap;
 import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.context.ServletContextHolderListener;
 import org.apache.struts2.util.AttributeMap;
-import org.apache.struts2.util.ObjectFactoryInitializable;
 
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.FileManager;
@@ -64,6 +63,7 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 /**
@@ -177,9 +177,20 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
     public void init(PortletConfig cfg) throws PortletException {
         super.init(cfg);
         LOG.debug("Initializing portlet " + getPortletName());
+        
+        Map<String,String> params = new HashMap<String,String>();
+        for (Enumeration e = cfg.getInitParameterNames(); e.hasMoreElements(); ) {
+            String name = (String) e.nextElement();
+            String value = cfg.getInitParameter(name);
+            params.put(name, value);
+        }
+        
+        Dispatcher.setPortletSupportActive(true);
+        dispatcherUtils = new Dispatcher(ServletContextHolderListener.getServletContext(), params);
+        
         // For testability
         if (factory == null) {
-            factory = ActionProxyFactory.getFactory();
+            factory = dispatcherUtils.getConfigurationManager().getConfiguration().getContainer().getInstance(ActionProxyFactory.class);
         }
         portletNamespace = cfg.getInitParameter("portletNamespace");
         LOG.debug("PortletNamespace: " + portletNamespace);
@@ -205,48 +216,11 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         LocalizedTextUtil
                 .addDefaultResourceBundle("org/apache/struts2/struts-messages");
 
+        Container container = dispatcherUtils.getContainer();
         //check for configuration reloading
-        if ("true".equalsIgnoreCase(Settings
-                .get(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD))) {
+        if ("true".equalsIgnoreCase(container.getInstance(String.class, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD))) {
             FileManager.setReloadingConfigs(true);
         }
-
-        if ("true".equalsIgnoreCase(Settings.get(StrutsConstants.STRUTS_DEVMODE))) {
-            Settings.set(StrutsConstants.STRUTS_I18N_RELOAD, "true");
-            Settings.set(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "true");
-        }
-
-        if (Settings.isSet(StrutsConstants.STRUTS_OBJECTFACTORY)) {
-            String className = (String) Settings
-                    .get(StrutsConstants.STRUTS_OBJECTFACTORY);
-            if (className.equals("spring")) {
-                // note: this class name needs to be in string form so we don't put hard
-                //       dependencies on spring, since it isn't technically required.
-                className = "org.apache.struts2.spring.StrutsSpringObjectFactory";
-            } else if (className.equals("plexus")) {
-                // note: this class name needs to be in string form so we don't put hard
-                //       dependencies on spring, since it isn't technically required.
-                className = "org.apache.struts2.plexus.PlexusObjectFactory";
-            }
-
-            try {
-                Class clazz = ClassLoaderUtil.loadClass(className,
-                        Jsr168Dispatcher.class);
-                ObjectFactory objectFactory = (ObjectFactory) clazz
-                        .newInstance();
-                if (objectFactory instanceof ObjectFactoryInitializable) {
-                    ((ObjectFactoryInitializable) objectFactory)
-                            .init(ServletContextHolderListener
-                                    .getServletContext());
-                }
-                ObjectFactory.setObjectFactory(objectFactory);
-            } catch (Exception e) {
-                LOG.error("Could not load ObjectFactory named " + className
-                        + ". Using default ObjectFactory.", e);
-            }
-        }
-        Dispatcher.setPortletSupportActive(true);
-        dispatcherUtils = new Dispatcher(ServletContextHolderListener.getServletContext());
     }
 
     /**
@@ -363,16 +337,16 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         extraContext.put(ActionContext.SESSION, sessionMap);
         extraContext.put(ActionContext.APPLICATION, applicationMap);
 
+        String defaultLocale = dispatcherUtils.getContainer().getInstance(String.class, StrutsConstants.STRUTS_LOCALE);
         Locale locale = null;
-        if (Settings.isSet(StrutsConstants.STRUTS_LOCALE)) {
-            locale = LocalizedTextUtil.localeFromString(Settings.get(StrutsConstants.STRUTS_LOCALE), request.getLocale());
+        if (defaultLocale != null) {
+            locale = LocalizedTextUtil.localeFromString(defaultLocale, request.getLocale());
         } else {
             locale = request.getLocale();
         }
         extraContext.put(ActionContext.LOCALE, locale);
 
         extraContext.put(StrutsStatics.STRUTS_PORTLET_CONTEXT, getPortletContext());
-        extraContext.put(ActionContext.DEV_MODE, Boolean.valueOf(Settings.get(StrutsConstants.STRUTS_DEVMODE)));
         extraContext.put(REQUEST, request);
         extraContext.put(RESPONSE, response);
         extraContext.put(PORTLET_CONFIG, portletConfig);

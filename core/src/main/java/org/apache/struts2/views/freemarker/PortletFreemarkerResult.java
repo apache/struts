@@ -38,6 +38,7 @@ import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.views.util.ResourceUtil;
 
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 
 import freemarker.template.Configuration;
@@ -58,6 +59,7 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
     protected Configuration configuration;
 
     protected ObjectWrapper wrapper;
+    protected FreemarkerManager freemarkerManager;
 
     /*
      * Struts results are constructed for each result execeution
@@ -74,6 +76,11 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
 
     public PortletFreemarkerResult(String location) {
         super(location);
+    }
+    
+    @Inject
+    public void setFreemarkerManager(FreemarkerManager mgr) {
+        this.freemarkerManager = mgr;
     }
 
     public void setContentType(String aContentType) {
@@ -177,7 +184,7 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
      * from the ConfigurationManager instance. </b>
      */
     protected Configuration getConfiguration() throws TemplateException {
-        return FreemarkerManager.getInstance().getConfiguration(
+        return freemarkerManager.getConfiguration(
                 ServletActionContext.getServletContext());
     }
 
@@ -224,7 +231,7 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
         HttpServletResponse response = ServletActionContext.getResponse();
         ValueStack stack = ServletActionContext.getContext()
                 .getValueStack();
-        return FreemarkerManager.getInstance().buildTemplateModel(stack,
+        return freemarkerManager.buildTemplateModel(stack,
                 invocation.getAction(), servletContext, request, response,
                 wrapper);
     }

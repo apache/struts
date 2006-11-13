@@ -26,6 +26,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 import junit.framework.TestCase;
 
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsTestCase;
 
 import com.mockobjects.servlet.MockJspWriter;
 import com.mockobjects.servlet.MockPageContext;
@@ -36,7 +37,7 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  */
-public class IfTagTest extends TestCase {
+public class IfTagTest extends StrutsTestCase {
 
     IfTag tag;
     MockPageContext pageContext;
@@ -320,6 +321,7 @@ public class IfTagTest extends TestCase {
 
 
     protected void setUp() throws Exception {
+        super.setUp();
         // create the needed objects
         tag = new IfTag();
         stack = ValueStackFactory.getFactory().createValueStack();

@@ -34,13 +34,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
 import org.apache.struts2.views.util.UrlHelper;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.XWorkContinuationConfig;
 
@@ -140,11 +140,17 @@ public class URL extends Component {
     protected String windowState;
     protected String portletUrlType;
     protected String anchor;
+    protected String urlIncludeParams;
 
     public URL(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack);
         this.req = req;
         this.res = res;
+    }
+    
+    @Inject(StrutsConstants.STRUTS_URL_INCLUDEPARAMS)
+    public void setUrlIncludeParams(String urlIncludeParams) {
+        this.urlIncludeParams = urlIncludeParams;
     }
 
     public boolean start(Writer writer) {
@@ -158,10 +164,7 @@ public class URL extends Component {
         // this at start so body params can override any of these they wish.
         try {
             // ww-1266
-            String includeParams =
-                    Settings.isSet(StrutsConstants.STRUTS_URL_INCLUDEPARAMS) ?
-                    Settings.get(StrutsConstants.STRUTS_URL_INCLUDEPARAMS).toLowerCase() : GET;
-
+            String includeParams = (urlIncludeParams != null ? urlIncludeParams.toLowerCase() : GET);
 
             if (this.includeParams != null) {
                 includeParams = findString(this.includeParams);

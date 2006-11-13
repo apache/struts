@@ -20,6 +20,8 @@
  */
 package org.apache.struts2.views.jsp;
 
+import java.util.HashMap;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 
@@ -241,9 +243,7 @@ public class ActionTagTest extends AbstractTagTest {
     protected void setUp() throws Exception {
         super.setUp();
 
-        configurationManager.clearConfigurationProviders();
-        configurationManager.addConfigurationProvider(new TestConfigurationProvider());
-        configurationManager.reload();
+        initDispatcher(new HashMap() {{ put("configProviders", TestConfigurationProvider.class.getName()); }});
 
         ActionContext actionContext = new ActionContext(context);
         actionContext.setValueStack(stack);

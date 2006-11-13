@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.velocity.VelocityManager;
 import org.apache.velocity.Template;
 import org.apache.velocity.context.Context;
@@ -38,6 +39,7 @@ import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.inject.Inject;
 
 
 /**
@@ -47,6 +49,13 @@ import com.opensymphony.xwork2.ActionContext;
 public class VelocityPageFilter extends TemplatePageFilter {
     private static final Log LOG = LogFactory.getLog(VelocityPageFilter.class);
 
+    private static VelocityManager velocityManager;
+    
+    @Inject
+    public void setVelocityManager(VelocityManager mgr) {
+        velocityManager = mgr;
+    }
+        
     /**
      *  Applies the decorator, using the relevent contexts
      *
@@ -62,17 +71,16 @@ public class VelocityPageFilter extends TemplatePageFilter {
                                   ServletContext servletContext, ActionContext ctx)
             throws ServletException, IOException {
         try {
-            VelocityManager vm = VelocityManager.getInstance();
 
             // init (if needed)
-            vm.init(servletContext);
+            velocityManager.init(servletContext);
 
             // get encoding
             String encoding = getEncoding();
 
             // get the template and context
-            Template template = vm.getVelocityEngine().getTemplate(decorator.getPage(), encoding);
-            Context context = vm.createContext(ctx.getValueStack(), req, res);
+            Template template = velocityManager.getVelocityEngine().getTemplate(decorator.getPage(), encoding);
+            Context context = velocityManager.createContext(ctx.getValueStack(), req, res);
 
             // put the page in the context
             context.put("page", page);

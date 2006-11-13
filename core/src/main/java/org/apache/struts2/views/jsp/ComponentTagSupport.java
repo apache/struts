@@ -25,7 +25,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 
 import org.apache.struts2.components.Component;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
 
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -43,6 +47,9 @@ public abstract class ComponentTagSupport extends StrutsBodyTagSupport {
 
     public int doStartTag() throws JspException {
         component = getBean(getStack(), (HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
+        Container container = Dispatcher.getInstance().getContainer();
+        container.inject(component);
+        
         populateParams();
         boolean evalBody = component.start(pageContext.getOut());
 

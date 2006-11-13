@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
 import org.apache.struts2.dispatcher.Dispatcher;
 
 import com.opensymphony.module.sitemesh.Decorator;
@@ -41,6 +40,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.OgnlValueStack;
 
@@ -52,6 +52,13 @@ import com.opensymphony.xwork2.util.OgnlValueStack;
 public abstract class TemplatePageFilter extends PageFilter {
 
     private FilterConfig filterConfig;
+    
+    private static String customEncoding;
+    
+    @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
+    public static void setCustomEncoding(String enc) {
+        customEncoding = enc;
+    }
 
     public void init(FilterConfig filterConfig) {
         super.init(filterConfig);
@@ -110,7 +117,7 @@ public abstract class TemplatePageFilter extends PageFilter {
      *  Gets the L18N encoding of the system.  The default is UTF-8.
      */
     protected String getEncoding() {
-        String encoding = (String) Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
+        String encoding = customEncoding;
         if (encoding == null) {
             encoding = System.getProperty("file.encoding");
         }

@@ -36,10 +36,10 @@ import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
 import org.apache.struts2.components.template.TemplateEngineManager;
 import org.apache.struts2.components.template.TemplateRenderingContext;
-import org.apache.struts2.config.Settings;
 import org.apache.struts2.views.util.ContextUtil;
 
 import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -447,7 +447,25 @@ public abstract class UIBean extends Component {
     // javascript tooltip attribute
     protected String tooltip;
     protected String tooltipConfig;
+    
+    protected String defaultTemplateDir;
+    protected String defaultUITheme;
+    protected TemplateEngineManager templateEngineManager;
 
+    @Inject(StrutsConstants.STRUTS_UI_TEMPLATEDIR)
+    public void setDefaultTemplateDir(String dir) {
+        this.defaultTemplateDir = dir;
+    }
+    
+    @Inject(StrutsConstants.STRUTS_UI_THEME)
+    public void setDefaultUITheme(String theme) {
+        this.defaultUITheme = theme;
+    }
+    
+    @Inject
+    public void setTemplateEngineManager(TemplateEngineManager mgr) {
+        this.templateEngineManager = mgr;
+    }
 
     public boolean end(Writer writer, String body) {
         evaluateParams();
@@ -489,7 +507,7 @@ public abstract class UIBean extends Component {
     }
 
     protected void mergeTemplate(Writer writer, Template template) throws Exception {
-        final TemplateEngine engine = TemplateEngineManager.getTemplateEngine(template, templateSuffix);
+        final TemplateEngine engine = templateEngineManager.getTemplateEngine(template, templateSuffix);
         if (engine == null) {
             throw new ConfigurationException("Unable to find a TemplateEngine for template " + template);
         }
@@ -517,7 +535,7 @@ public abstract class UIBean extends Component {
 
         // Default template set
         if ((templateDir == null) || (templateDir.equals(""))) {
-            templateDir = Settings.get(StrutsConstants.STRUTS_UI_TEMPLATEDIR);
+            templateDir = defaultTemplateDir;
         }
 
         // Defaults to 'template'
@@ -550,7 +568,7 @@ public abstract class UIBean extends Component {
 
         // Default theme set
         if ((theme == null) || (theme.equals(""))) {
-            theme = Settings.get(StrutsConstants.STRUTS_UI_THEME);
+            theme = defaultUITheme;
         }
 
         return theme;

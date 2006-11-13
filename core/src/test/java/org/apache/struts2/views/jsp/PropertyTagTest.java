@@ -20,12 +20,13 @@
  */
 package org.apache.struts2.views.jsp;
 
+import java.util.HashMap;
+
 import javax.servlet.jsp.JspException;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.config.Settings;
 
 import com.mockobjects.servlet.MockJspWriter;
 import com.mockobjects.servlet.MockPageContext;
@@ -165,8 +166,7 @@ public class PropertyTagTest extends StrutsTestCase {
 
     public void testWithAltSyntax1() throws Exception {
         // setups
-        Settings.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");
-        assertEquals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "true");
+        initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");}});
 
         Foo foo = new Foo();
         foo.setTitle("tm_jee");
@@ -194,8 +194,7 @@ public class PropertyTagTest extends StrutsTestCase {
 
     public void testWithAltSyntax2() throws Exception {
         // setups
-        Settings.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");
-        assertEquals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "true");
+        initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "true");}});
 
         Foo foo = new Foo();
         foo.setTitle("tm_jee");
@@ -223,8 +222,7 @@ public class PropertyTagTest extends StrutsTestCase {
 
     public void testWithoutAltSyntax1() throws Exception {
         //      setups
-        Settings.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");
-        assertEquals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "false");
+        initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");}});
 
         Foo foo = new Foo();
         foo.setTitle("tm_jee");
@@ -253,8 +251,7 @@ public class PropertyTagTest extends StrutsTestCase {
 
     public void testWithoutAltSyntax2() throws Exception {
         //      setups
-        Settings.set(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");
-        assertEquals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX), "false");
+        initDispatcher(new HashMap() {{ put(StrutsConstants.STRUTS_TAG_ALTSYNTAX, "false");}});
 
         Foo foo = new Foo();
         foo.setTitle("tm_jee");

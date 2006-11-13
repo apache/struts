@@ -27,12 +27,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
 import org.apache.struts2.util.StrutsUtil;
 import org.apache.struts2.views.jsp.ui.OgnlTool;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -50,6 +50,13 @@ public class ContextUtil {
     public static final String OGNL = "ognl";
     public static final String STRUTS = "struts";
     public static final String ACTION = "action";
+    
+    public static boolean altSyntax;
+    
+    @Inject(StrutsConstants.STRUTS_TAG_ALTSYNTAX)
+    public static void setAltSyntax(String val) {
+        altSyntax = "true".equals(val);
+    }
 
     public static Map getStandardContext(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         HashMap map = new HashMap();
@@ -79,7 +86,6 @@ public class ContextUtil {
         // We didn't make altSyntax static cause, if so, struts.configuration.xml.reload will not work
         // plus the Configuration implementation should cache the properties, which the framework's
         // configuration implementation does
-        boolean altSyntax = "true".equals(Settings.get(StrutsConstants.STRUTS_TAG_ALTSYNTAX));
         return altSyntax ||(
                 (context.containsKey("useAltSyntax") &&
                         context.get("useAltSyntax") != null &&

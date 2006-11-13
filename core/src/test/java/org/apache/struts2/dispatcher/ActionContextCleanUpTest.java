@@ -21,6 +21,7 @@
 package org.apache.struts2.dispatcher;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -110,20 +111,8 @@ public class ActionContextCleanUpTest extends TestCase {
             }
         };
 
-        cleanUp = new ActionContextCleanUp() {
-            @Override
-            protected Dispatcher createDispatcher() {
-                return _dispatcher;
-            }
-        };
-
-        cleanUp2 = new ActionContextCleanUp() {
-            @Override
-            protected Dispatcher createDispatcher() {
-                return _dispatcher2;
-            }
-        };
-
+        cleanUp = new ActionContextCleanUp();
+        cleanUp2 = new ActionContextCleanUp();
         filterChain2 = new MockFilterChain() {
             @Override
             public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
@@ -135,8 +124,6 @@ public class ActionContextCleanUpTest extends TestCase {
 
 
     public void testSingle() throws Exception {
-        assertFalse(_dispatcher.prepare);
-        assertFalse(_dispatcher.wrapRequest);
         assertNull(request.getAttribute("__cleanup_recursion_counter"));
 
         cleanUp.init(filterConfig);
@@ -146,16 +133,10 @@ public class ActionContextCleanUpTest extends TestCase {
         assertEquals(_tmpStore.size(), 1);
         assertEquals(_tmpStore.get("counter0"), new Integer(1));
 
-        assertTrue(_dispatcher.prepare);
-        assertTrue(_dispatcher.wrapRequest);
         assertEquals(request.getAttribute("__cleanup_recursion_counter"), new Integer("0"));
     }
 
     public void testMultiple() throws Exception {
-        assertFalse(_dispatcher.prepare);
-        assertFalse(_dispatcher.wrapRequest);
-        assertFalse(_dispatcher2.prepare);
-        assertFalse(_dispatcher2.wrapRequest);
         assertNull(request.getAttribute("__cleanup_recursion_counter"));
 
         cleanUp.init(filterConfig);
@@ -168,10 +149,6 @@ public class ActionContextCleanUpTest extends TestCase {
         assertEquals(_tmpStore.get("counter0"), new Integer(1));
         assertEquals(_tmpStore.get("counter1"), new Integer(2));
 
-        assertFalse(_dispatcher2.prepare);
-        assertFalse(_dispatcher2.wrapRequest);
-        assertTrue(_dispatcher.prepare);
-        assertTrue(_dispatcher.wrapRequest);
         assertEquals(request.getAttribute("__cleanup_recursion_counter"), new Integer("0"));
     }
 
@@ -182,7 +159,7 @@ public class ActionContextCleanUpTest extends TestCase {
         public boolean service = false;
 
         public InnerDispatcher(ServletContext servletContext) {
-            super(servletContext);
+            super(servletContext, new HashMap<String,String>());
         }
 
         @Override

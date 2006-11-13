@@ -34,7 +34,6 @@ import com.opensymphony.xwork2.util.ClassLoaderUtil;
  */
 public class SiteGraphTest extends StrutsTestCase {
     public void testWebFlow() throws Exception {
-        Dispatcher.getInstance().getConfigurationManager().clearConfigurationProviders();
         // use the classloader rather than relying on the
         // working directory being an assumed value when
         // running the test:  so let's get this class's parent dir

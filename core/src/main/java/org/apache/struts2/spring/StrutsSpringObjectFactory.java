@@ -25,12 +25,11 @@ import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
-import org.apache.struts2.util.ObjectFactoryInitializable;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.spring.SpringObjectFactory;
 
 
@@ -42,13 +41,24 @@ import com.opensymphony.xwork2.spring.SpringObjectFactory;
  * <code>org.springframework.web.context.ContextLoaderListener</code> defined in <code>web.xml</code>.
  *
  */
-public class StrutsSpringObjectFactory extends SpringObjectFactory implements ObjectFactoryInitializable {
+public class StrutsSpringObjectFactory extends SpringObjectFactory {
     private static final Log log = LogFactory.getLog(StrutsSpringObjectFactory.class);
-
-    /* (non-Javadoc)
-     * @see org.apache.struts2.util.ObjectFactoryInitializable#init(javax.servlet.ServletContext)
-     */
-    public void init(ServletContext servletContext) {
+    
+    private String autoWire;
+    private boolean useClassCache = true;
+    
+    @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE,required=false)
+    public void setAutoWire(String val) {
+        autoWire = val;
+    }
+    
+    @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE,required=false)
+    public void setUseClassCache(String val) {
+        useClassCache = "true".equals(val);
+    }
+    
+    @Inject
+    public void setServletContext(ServletContext servletContext) {
         log.info("Initializing Struts-Spring integration...");
 
         ApplicationContext appContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
@@ -67,7 +77,6 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory implements Ob
 
         this.setApplicationContext(appContext);
 
-        String autoWire = Settings.get(StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE);
         int type = AutowireCapableBeanFactory.AUTOWIRE_BY_NAME;   // default
         if ("name".equals(autoWire)) {
             type = AutowireCapableBeanFactory.AUTOWIRE_BY_NAME;
@@ -80,7 +89,6 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory implements Ob
         }
         this.setAutowireStrategy(type);
 
-        boolean useClassCache = "true".equals(Settings.get(StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE));
         this.setUseClassCache(useClassCache);
 
         log.info("... initialized Struts-Spring integration successfully");

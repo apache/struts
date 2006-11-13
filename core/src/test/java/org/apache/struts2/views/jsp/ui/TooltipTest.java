@@ -20,6 +20,8 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
+import java.util.HashMap;
+
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ParamTag;
@@ -33,9 +35,6 @@ import com.mockobjects.servlet.MockJspWriter;
 public class TooltipTest extends AbstractUITagTest {
 
     public void testWithoutFormOverriding() throws Exception {
-
-        configurationManager.clearConfigurationProviders();
-        configurationManager.addConfigurationProvider(new TestConfigurationProvider());
 
         // we test it on textfield component, but since the tooltip are common to
         // all components, it will be the same for other components as well.
@@ -71,9 +70,6 @@ public class TooltipTest extends AbstractUITagTest {
 
     public void testWithFormOverriding() throws Exception {
 
-        configurationManager.clearConfigurationProviders();
-        configurationManager.addConfigurationProvider(new TestConfigurationProvider());
-
         FormTag formTag = new FormTag();
         formTag.setPageContext(pageContext);
         formTag.setName("myForm");
@@ -105,9 +101,6 @@ public class TooltipTest extends AbstractUITagTest {
     }
 
     public void testWithPartialFormOverriding() throws Exception {
-
-        configurationManager.clearConfigurationProviders();
-        configurationManager.addConfigurationProvider(new TestConfigurationProvider());
 
         FormTag formTag = new FormTag();
         formTag.setName("myForm");
@@ -147,9 +140,6 @@ public class TooltipTest extends AbstractUITagTest {
 
 
     public void testUsingParamValueToSetConfigurations() throws Exception {
-        configurationManager.clearConfigurationProviders();
-        configurationManager.addConfigurationProvider(new TestConfigurationProvider());
-
         FormTag formTag = new FormTag();
         formTag.setName("myForm");
         formTag.setPageContext(pageContext);
@@ -199,8 +189,6 @@ public class TooltipTest extends AbstractUITagTest {
 
 
     public void testUsingParamBodyValueToSetConfigurations() throws Exception {
-        configurationManager.clearConfigurationProviders();
-        configurationManager.addConfigurationProvider(new TestConfigurationProvider());
 
         FormTag formTag = new FormTag();
         formTag.setName("myForm");
@@ -249,5 +237,16 @@ public class TooltipTest extends AbstractUITagTest {
         System.out.println(writer.toString());
 
         verify(TooltipTest.class.getResource("tooltip-3.txt"));
+    }
+
+    /**
+     * @throws Exception 
+     * 
+     */
+    public void setUp() throws Exception {
+        super.setUp();
+        initDispatcher(new HashMap<String,String>(){{ 
+            put("configProviders", TestConfigurationProvider.class.getName());
+        }});
     }
 }

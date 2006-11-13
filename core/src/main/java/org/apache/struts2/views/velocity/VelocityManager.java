@@ -40,7 +40,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
-import org.apache.struts2.config.Settings;
 import org.apache.struts2.util.VelocityStrutsUtil;
 import org.apache.struts2.views.jsp.ui.OgnlTool;
 import org.apache.struts2.views.util.ContextUtil;
@@ -95,6 +94,7 @@ import org.apache.velocity.tools.view.context.ChainedContext;
 import org.apache.velocity.tools.view.servlet.ServletToolboxManager;
 
 import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 
 
@@ -133,14 +133,15 @@ public class VelocityManager {
 
     private Properties velocityProperties;
 
-    protected VelocityManager() {
-        init();
+    private String customConfigFile;
+    
+    public VelocityManager() {
     }
 
     /**
      * retrieve an instance to the current VelocityManager
      */
-    public synchronized static VelocityManager getInstance() {
+    /*public synchronized static VelocityManager getInstance() {
         if (instance == null) {
             String classname = VelocityManager.class.getName();
 
@@ -164,6 +165,7 @@ public class VelocityManager {
 
         return instance;
     }
+    */
 
     /**
      * @return a reference to the VelocityEngine used by <b>all</b> struts velocity thingies with the exception of
@@ -196,7 +198,7 @@ public class VelocityManager {
             Map.Entry entry = (Map.Entry) iterator.next();
             context.put((String) entry.getKey(), entry.getValue());
         }
-        context.put(STRUTS, new VelocityStrutsUtil(context, stack, req, res));
+        context.put(STRUTS, new VelocityStrutsUtil(velocityEngine, context, stack, req, res));
 
 
         ServletContext ctx = null;
@@ -299,8 +301,8 @@ public class VelocityManager {
          */
         String configfile;
 
-        if (Settings.isSet(StrutsConstants.STRUTS_VELOCITY_CONFIGFILE)) {
-            configfile = Settings.get(StrutsConstants.STRUTS_VELOCITY_CONFIGFILE);
+        if (customConfigFile != null) {
+            configfile = customConfigFile;
         } else {
             configfile = "velocity.properties";
         }
@@ -396,22 +398,39 @@ public class VelocityManager {
 
         return properties;
     }
-
-    /**
-     * performs one-time initializations
-     */
-    protected void init() {
-
-        // read in the names of contexts to add to each request
-        initChainedContexts();
-
-
-        if (Settings.isSet(StrutsConstants.STRUTS_VELOCITY_TOOLBOXLOCATION)) {
-            toolBoxLocation = Settings.get(StrutsConstants.STRUTS_VELOCITY_TOOLBOXLOCATION).toString();
-        }
-
+    
+    @Inject(StrutsConstants.STRUTS_VELOCITY_CONFIGFILE)
+    public void setCustomConfigFile(String val) {
+        this.customConfigFile = val;
     }
+    
+    @Inject(StrutsConstants.STRUTS_VELOCITY_TOOLBOXLOCATION)
+    public void setToolBoxLocation(String toolboxLocation) {
+        this.toolBoxLocation = toolboxLocation;
+    }
+    
+    /**
+     * allow users to specify via the struts.properties file a set of additional VelocityContexts to chain to the
+     * the StrutsVelocityContext.  The intent is to allow these contexts to store helper objects that the ui
+     * developer may want access to.  Examples of reasonable VelocityContexts would be an IoCVelocityContext, a
+     * SpringReferenceVelocityContext, and a ToolboxVelocityContext
+     */
+    @Inject(StrutsConstants.STRUTS_VELOCITY_CONTEXTS)
+    public void setChainedContexts(String contexts) {
+        // we expect contexts to be a comma separated list of classnames
+        StringTokenizer st = new StringTokenizer(contexts, ",");
+        List contextList = new ArrayList();
 
+        while (st.hasMoreTokens()) {
+            String classname = st.nextToken();
+            contextList.add(classname);
+        }
+        if (contextList.size() > 0) {
+            String[] chainedContexts = new String[contextList.size()];
+            contextList.toArray(chainedContexts);
+            this.chainedContextNames = chainedContexts;
+        }
+    }
 
     /**
      * Initializes the ServletToolboxManager for this servlet's
@@ -427,34 +446,7 @@ public class VelocityManager {
     }
 
 
-    /**
-     * allow users to specify via the struts.properties file a set of additional VelocityContexts to chain to the
-     * the StrutsVelocityContext.  The intent is to allow these contexts to store helper objects that the ui
-     * developer may want access to.  Examples of reasonable VelocityContexts would be an IoCVelocityContext, a
-     * SpringReferenceVelocityContext, and a ToolboxVelocityContext
-     */
-    protected void initChainedContexts() {
-
-        if (Settings.isSet(StrutsConstants.STRUTS_VELOCITY_CONTEXTS)) {
-            // we expect contexts to be a comma separated list of classnames
-            String contexts = Settings.get(StrutsConstants.STRUTS_VELOCITY_CONTEXTS).toString();
-            StringTokenizer st = new StringTokenizer(contexts, ",");
-            List contextList = new ArrayList();
-
-            while (st.hasMoreTokens()) {
-                String classname = st.nextToken();
-                contextList.add(classname);
-            }
-            if (contextList.size() > 0) {
-                String[] chainedContexts = new String[contextList.size()];
-                contextList.toArray(chainedContexts);
-                this.chainedContextNames = chainedContexts;
-            }
-
-
-        }
-
-    }
+    
 
     /**
      * <p/>

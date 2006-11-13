@@ -31,7 +31,7 @@ import java.util.Set;
  * and call the method until successful.
  *
  */
-public class DelegatingSettings extends Settings {
+class DelegatingSettings extends Settings {
 
     Settings[] configList;
 

@@ -36,9 +36,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.XWorkContinuationConfig;
@@ -62,6 +62,25 @@ public class UrlHelper {
     private static final int DEFAULT_HTTPS_PORT = 443;
 
     private static final String AMP = "&amp;";
+    
+    private static int httpPort = DEFAULT_HTTP_PORT;
+    private static int httpsPort = DEFAULT_HTTPS_PORT;
+    private static String customEncoding;
+    
+    @Inject(StrutsConstants.STRUTS_URL_HTTP_PORT)
+    public static void setHttpPort(String val) {
+        httpPort = Integer.parseInt(val);
+    }
+    
+    @Inject(StrutsConstants.STRUTS_URL_HTTPS_PORT)
+    public static void setHttpsPort(String val) {
+        httpsPort = Integer.parseInt(val);
+    }
+    
+    @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
+    public static void setCustomEncoding(String val) {
+        customEncoding = val;
+    }
 
     public static String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map params) {
         return buildUrl(action, request, response, params, null, true, true);
@@ -75,20 +94,6 @@ public class UrlHelper {
         StringBuffer link = new StringBuffer();
 
         boolean changedScheme = false;
-
-        int httpPort = DEFAULT_HTTP_PORT;
-
-        try {
-            httpPort = Integer.parseInt((String) Settings.get(StrutsConstants.STRUTS_URL_HTTP_PORT));
-        } catch (Exception ex) {
-        }
-
-        int httpsPort = DEFAULT_HTTPS_PORT;
-
-        try {
-            httpsPort = Integer.parseInt((String) Settings.get(StrutsConstants.STRUTS_URL_HTTPS_PORT));
-        } catch (Exception ex) {
-        }
 
         // only append scheme if it is different to the current scheme *OR*
         // if we explicity want it to be appended by having forceAddSchemeHostAndPort = true
@@ -276,8 +281,8 @@ public class UrlHelper {
 
     private static String getEncodingFromConfiguration() {
         final String encoding;
-        if (Settings.isSet(StrutsConstants.STRUTS_I18N_ENCODING)) {
-            encoding = Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
+        if (customEncoding != null) {
+            encoding = customEncoding;
         } else {
             encoding = "UTF-8";
         }

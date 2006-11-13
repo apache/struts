@@ -35,6 +35,7 @@ import org.apache.struts2.views.util.ResourceUtil;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 
 import freemarker.template.Configuration;
@@ -99,6 +100,7 @@ public class FreemarkerResult extends StrutsResultSupport {
     protected ActionInvocation invocation;
     protected Configuration configuration;
     protected ObjectWrapper wrapper;
+    protected FreemarkerManager freemarkerManager;
 
     /*
      * Struts results are constructed for each result execution
@@ -114,6 +116,11 @@ public class FreemarkerResult extends StrutsResultSupport {
 
     public FreemarkerResult(String location) {
         super(location);
+    }
+    
+    @Inject
+    public void setFreemarkerManager(FreemarkerManager mgr) {
+        this.freemarkerManager = mgr;
     }
 
     public void setContentType(String aContentType) {
@@ -176,7 +183,7 @@ public class FreemarkerResult extends StrutsResultSupport {
      * </b>
      */
     protected Configuration getConfiguration() throws TemplateException {
-        return FreemarkerManager.getInstance().getConfiguration(ServletActionContext.getServletContext());
+        return freemarkerManager.getConfiguration(ServletActionContext.getServletContext());
     }
 
     /**
@@ -226,7 +233,7 @@ public class FreemarkerResult extends StrutsResultSupport {
 
         Object action = null;
         if(invocation!= null ) action = invocation.getAction(); //Added for NullPointException
-        return FreemarkerManager.getInstance().buildTemplateModel(stack, action, servletContext, request, response, wrapper);
+        return freemarkerManager.buildTemplateModel(stack, action, servletContext, request, response, wrapper);
     }
 
     /**

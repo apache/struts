@@ -33,13 +33,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
-import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.util.FastByteArrayOutputStream;
 import org.apache.struts2.views.jsp.TagUtils;
 import org.apache.struts2.views.util.ContextUtil;
 import org.apache.struts2.views.util.UrlHelper;
 
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.TextParseUtil;
 
@@ -55,6 +58,7 @@ public class Component {
     protected ValueStack stack;
     protected Map parameters;
     protected String id;
+    protected ActionMapper actionMapper;
 
     /**
      * Constructor.
@@ -78,7 +82,12 @@ public class Component {
 
         return name.substring(dot + 1).toLowerCase();
     }
-
+    
+    @Inject
+    public void setActionMapper(ActionMapper mapper) {
+        this.actionMapper = mapper;
+    }
+    
     /**
      * Get's the OGNL value stack assoicated with this component.
      * @return the OGNL value stack assoicated with this component.
@@ -335,8 +344,7 @@ public class Component {
         String finalAction = findString(action);
         String finalNamespace = determineNamespace(namespace, getStack(), req);
         ActionMapping mapping = new ActionMapping(finalAction, finalNamespace, method, parameters);
-        ActionMapper mapper = ActionMapperFactory.getMapper();
-        String uri = mapper.getUriFromActionMapping(mapping);
+        String uri = actionMapper.getUriFromActionMapping(mapping);
         return UrlHelper.buildUrl(uri, req, res, parameters, scheme, includeContext, encodeResult);
     }
 
@@ -351,7 +359,7 @@ public class Component {
         String result;
 
         if (namespace == null) {
-            result = TagUtils.buildNamespace(stack, req);
+            result = TagUtils.buildNamespace(actionMapper, stack, req);
         } else {
             result = findString(namespace);
         }

@@ -32,11 +32,11 @@ public class StrutsActionProxyFactory extends DefaultActionProxyFactory {
 
     public ActionProxy createActionProxy(Configuration config, String namespace, String actionName, Map extraContext)
             throws Exception {
-        return new StrutsActionProxy(config, namespace, actionName, extraContext, true, true);
+        return new StrutsActionProxy(objectFactory, config, namespace, actionName, extraContext, true, true);
     }
 
     public ActionProxy createActionProxy(Configuration config, String namespace, String actionName, Map extraContext,
             boolean executeResult, boolean cleanupContext) throws Exception {
-        return new StrutsActionProxy(config, namespace, actionName, extraContext, executeResult, cleanupContext);
+        return new StrutsActionProxy(objectFactory, config, namespace, actionName, extraContext, executeResult, cleanupContext);
     }
 }

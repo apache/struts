@@ -11,7 +11,7 @@
 	"http://struts.apache.org/dtds/struts-2.0.dtd">
 -->
 
-<!ELEMENT struts (package|include)*>
+<!ELEMENT struts (package|include|bean|constant)*>
 
 <!ELEMENT package (result-types?, interceptors?, default-interceptor-ref?, default-action-ref?, global-results?, global-exception-mappings?, action*)>
 <!ATTLIST package
@@ -98,6 +98,22 @@
 <!ELEMENT include (#PCDATA)>
 <!ATTLIST include
     file CDATA #REQUIRED
+>
+
+<!ELEMENT bean (#PCDATA)>
+<!ATTLIST bean
+    type CDATA #IMPLIED
+    name CDATA #IMPLIED
+    class CDATA #REQUIRED
+    scope CDATA #IMPLIED
+    static CDATA #IMPLIED
+    optional CDATA #IMPLIED
+>
+
+<!ELEMENT constant (#PCDATA)>
+<!ATTLIST constant
+    name CDATA #REQUIRED
+    value CDATA #REQUIRED    
 >
 
 <!-- END SNIPPET: strutsDtd -->

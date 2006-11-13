@@ -12,6 +12,8 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.config.BeanSelectionProvider;
+import org.apache.struts2.config.LegacyPropertiesConfigurationProvider;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.sitegraph.entities.FreeMarkerView;
 import org.apache.struts2.sitegraph.entities.JspView;
@@ -50,9 +52,12 @@ public class StrutsConfigRetriever {
         String configFilePath = configDir + "/struts.xml";
         File configFile = new File(configFilePath);
         try {
-            ConfigurationProvider configProvider = new StrutsXmlConfigurationProvider(configFile.getCanonicalPath(), true);
+            ConfigurationProvider configProvider = new StrutsXmlConfigurationProvider(configFile.getCanonicalPath(), true, null);
             cm = new ConfigurationManager();
+            cm.addConfigurationProvider(new StrutsXmlConfigurationProvider("struts-default.xml", false, null));
             cm.addConfigurationProvider(configProvider);
+            cm.addConfigurationProvider(new LegacyPropertiesConfigurationProvider());
+            cm.addConfigurationProvider(new BeanSelectionProvider());
             isXWorkStarted = true;
         } catch (IOException e) {
             LOG.error("IOException", e);

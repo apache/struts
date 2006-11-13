@@ -51,7 +51,7 @@ import com.opensymphony.xwork2.ObjectFactory;
  * <li>{@link #listImpl()}</li>
  * <li>{@link #isSetImpl(String)}</li></ul>
  */
-public class Settings {
+class Settings {
 
     static Settings settingsImpl;
     static Settings defaultImpl;

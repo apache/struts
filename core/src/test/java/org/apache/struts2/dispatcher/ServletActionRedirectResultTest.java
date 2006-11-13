@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -99,7 +100,7 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
         control.anyTimes();
 
         control.replay();
-
+        result.setActionMapper(container.getInstance(ActionMapper.class));
         result.execute(mockInvocation);
         assertEquals("/myNamespace/myAction.action?param2=value+2&param1=value+1&param3=value+3", res.getRedirectedUrl());
 
@@ -153,7 +154,7 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
         control.andReturn(context);
 
         control.replay();
-
+        result.setActionMapper(container.getInstance(ActionMapper.class));
         result.execute(mockInvocation);
         assertEquals("/myNamespace/myAction.action?param2=value+2&param1=value+1&param3=value+3", res.getRedirectedUrl());
 

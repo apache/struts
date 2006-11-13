@@ -41,9 +41,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
+import org.apache.struts2.StrutsConstants;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -101,7 +103,13 @@ public class DebuggingInterceptor implements Interceptor {
     private final static String EXPRESSION_PARAM = "expression";
 
     private boolean enableXmlWithConsole = false;
+    
+    private boolean devMode;
 
+    @Inject(StrutsConstants.STRUTS_DEVMODE)
+    public void setDevMode(String mode) {
+        this.devMode = "true".equals(mode);
+    }
 
     /**
      * Unused.
@@ -124,8 +132,6 @@ public class DebuggingInterceptor implements Interceptor {
      */
     public String intercept(ActionInvocation inv) throws Exception {
 
-        Boolean devMode = (Boolean) ActionContext.getContext().get(
-                ActionContext.DEV_MODE);
         boolean cont = true;
         if (devMode) {
             final ActionContext ctx = ActionContext.getContext();

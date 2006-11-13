@@ -24,8 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
 
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -82,6 +82,7 @@ public class Head extends UIBean {
 
     private String calendarcss = "calendar-blue.css";
     private boolean debug;
+    private String encoding;
 
     public Head(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -89,6 +90,11 @@ public class Head extends UIBean {
 
     protected String getDefaultTemplate() {
         return TEMPLATE;
+    }
+    
+    @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
     }
 
     public void evaluateParams() {
@@ -105,7 +111,7 @@ public class Head extends UIBean {
             }
         }
 
-        addParameter("encoding", Settings.get(StrutsConstants.STRUTS_I18N_ENCODING));
+        addParameter("encoding", encoding);
         addParameter("debug", Boolean.valueOf(debug).toString());
     }
 

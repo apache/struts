@@ -85,6 +85,8 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         mockConfig.stubs().method("getPortletContext").will(returnValue(mockCtx.proxy()));
         mockCtx.stubs().method("getInitParameterNames").will(returnValue(Collections.enumeration(initParams.keySet())));
         setupStub(initParams, mockCtx, "getInitParameter");
+        mockConfig.stubs().method("getInitParameterNames").will(returnValue(Collections.enumeration(initParams.keySet())));
+        setupStub(initParams, mockConfig, "getInitParameter");
 
         mockConfig.stubs().method("getResourceBundle").will(returnValue(new ListResourceBundle() {
             protected Object[][] getContents() {

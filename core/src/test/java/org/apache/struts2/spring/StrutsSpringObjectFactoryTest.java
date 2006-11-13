@@ -24,7 +24,6 @@ import javax.servlet.ServletContext;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.config.Settings;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
@@ -41,7 +40,7 @@ public class StrutsSpringObjectFactoryTest extends StrutsTestCase {
         // to cover situations where there will be logged an error
         StrutsSpringObjectFactory fac = new StrutsSpringObjectFactory();
         ServletContext msc = (ServletContext) new MockServletContext();
-        fac.init(msc);
+        fac.setServletContext(msc);
 
         assertEquals(AutowireCapableBeanFactory.AUTOWIRE_BY_NAME, fac.getAutowireStrategy());
     }
@@ -50,7 +49,7 @@ public class StrutsSpringObjectFactoryTest extends StrutsTestCase {
         StrutsSpringObjectFactory fac = new StrutsSpringObjectFactory();
 
         // autowire by constructure, we try a non default setting in this unit test
-        Settings.set(StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE, "constructor");
+        fac.setAutoWire("constructor");
 
         ConfigurableWebApplicationContext ac = new XmlWebApplicationContext();
         ServletContext msc = (ServletContext) new MockServletContext();
@@ -59,7 +58,7 @@ public class StrutsSpringObjectFactoryTest extends StrutsTestCase {
         ac.setConfigLocations(new String[] {"org/apache/struts2/spring/StrutsSpringObjectFactoryTest-applicationContext.xml"});
         ac.refresh();
 
-        fac.init(msc);
+        fac.setServletContext(msc);
 
         assertEquals(AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR, fac.getAutowireStrategy());
     }

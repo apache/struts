@@ -26,6 +26,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -40,6 +41,7 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ResolverUtil;
 import com.opensymphony.xwork2.util.TextUtils;
@@ -237,9 +239,12 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
     public void destroy() {
 
     }
+    
+    public void init(Configuration config) {
+        this.configuration = config;
+    }
 
-    public void init(Configuration configuration) throws ConfigurationException {
-        this.configuration = configuration;
+    public void loadPackages() throws ConfigurationException {
         loadedPackageConfigs.clear();
         loadPackages(packages);
         initialized = true;
@@ -352,5 +357,9 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
             params.put(defaultParam, location);
             return new ResultConfig((String) key, resultClass.getName(), params);
         }
+    }
+
+    public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
+        // Nothing
     }
 }

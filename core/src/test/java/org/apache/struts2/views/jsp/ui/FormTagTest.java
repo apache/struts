@@ -21,23 +21,32 @@
 package org.apache.struts2.views.jsp.ui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.TestConfigurationProvider;
-import org.apache.struts2.config.Settings;
+import org.apache.struts2.components.Component;
+import org.apache.struts2.components.Form;
+import org.apache.struts2.components.template.TemplateEngineManager;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.ActionTag;
 
+import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.RuntimeConfiguration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
+import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.inject.Scope.Strategy;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
 
 
@@ -117,8 +126,26 @@ public class FormTagTest extends AbstractUITagTest {
         ObjectFactory originalObjectFactory = ObjectFactory.getObjectFactory();
 
         try {
+            final Container cont = container;
             // used to determined if the form action needs js validation
             configurationManager.setConfiguration(new com.opensymphony.xwork2.config.impl.DefaultConfiguration() {
+                private DefaultConfiguration self = this;
+                public Container getContainer() {
+                    return new Container() {
+                        public <T> T inject(Class<T> implementation) {return null;}
+                        public void removeScopeStrategy() {}
+                        public void setScopeStrategy(Strategy scopeStrategy) {}
+                        public <T> T getInstance(Class<T> type, String name) {return null;}
+                        public <T> T getInstance(Class<T> type) {return null;}
+
+                        public void inject(Object o) {
+                            cont.inject(o);
+                            if (o instanceof Form) {
+                                ((Form)o).setConfiguration(self);
+                            }
+                        }
+                    };
+                }
                 public RuntimeConfiguration getRuntimeConfiguration() {
                     return new RuntimeConfiguration() {
                         public ActionConfig getActionConfig(String namespace, String name) {
@@ -199,9 +226,27 @@ public class FormTagTest extends AbstractUITagTest {
         com.opensymphony.xwork2.config.Configuration originalConfiguration = configurationManager.getConfiguration();
         ObjectFactory originalObjectFactory = ObjectFactory.getObjectFactory();
 
+        final Container cont = container;
         try {
             // used to determined if the form action needs js validation
-            configurationManager.setConfiguration(new com.opensymphony.xwork2.config.impl.DefaultConfiguration() {
+            configurationManager.setConfiguration(new DefaultConfiguration() {
+                private DefaultConfiguration self = this;
+                public Container getContainer() {
+                    return new Container() {
+                        public <T> T inject(Class<T> implementation) {return null;}
+                        public void removeScopeStrategy() {}
+                        public void setScopeStrategy(Strategy scopeStrategy) {}
+                        public <T> T getInstance(Class<T> type, String name) {return null;}
+                        public <T> T getInstance(Class<T> type) {return null;}
+
+                        public void inject(Object o) {
+                            cont.inject(o);
+                            if (o instanceof Form) {
+                                ((Form)o).setConfiguration(self);
+                            }
+                        }
+                    };
+                }
                 public RuntimeConfiguration getRuntimeConfiguration() {
                     return new RuntimeConfiguration() {
                         public ActionConfig getActionConfig(String namespace, String name) {
@@ -307,9 +352,11 @@ public class FormTagTest extends AbstractUITagTest {
      * config property is set to &quot;jspa&quot;.
      */
     public void testFormTagWithDifferentActionExtension() throws Exception {
+        initDispatcher(new HashMap<String,String>(){{ 
+            put(StrutsConstants.STRUTS_ACTION_EXTENSION, "jspa");
+            put("configProviders", TestConfigurationProvider.class.getName());
+        }});
         request.setupGetServletPath("/testNamespace/testNamespaceAction");
-        String oldConfiguration = (String) Settings.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
-        Settings.set(StrutsConstants.STRUTS_ACTION_EXTENSION, "jspa");
 
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
@@ -321,12 +368,7 @@ public class FormTagTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        Settings.set(StrutsConstants.STRUTS_ACTION_EXTENSION, oldConfiguration);
-
         verify(FormTag.class.getResource("Formtag-5.txt"));
-
-        // set it back to the default
-        Settings.set(StrutsConstants.STRUTS_ACTION_EXTENSION, "action");
     }
 
     /**
@@ -519,9 +561,7 @@ public class FormTagTest extends AbstractUITagTest {
 
     public void testFormWithActionAndExtension() throws Exception {
         request.setupGetServletPath("/BLA");
-        String oldConfiguration = (String) Settings.get(StrutsConstants.STRUTS_ACTION_EXTENSION);
-        Settings.set(StrutsConstants.STRUTS_ACTION_EXTENSION, "jspa");
-
+        
         FormTag tag = new FormTag();
         tag.setPageContext(pageContext);
         tag.setAction("/testNamespace/testNamespaceAction.jspa");
@@ -530,19 +570,17 @@ public class FormTagTest extends AbstractUITagTest {
 
         tag.doStartTag();
         tag.doEndTag();
-        Settings.set(StrutsConstants.STRUTS_ACTION_EXTENSION, oldConfiguration);
 
         verify(FormTag.class.getResource("Formtag-8.txt"));
 
-        // set it back to the default
-        Settings.set(StrutsConstants.STRUTS_ACTION_EXTENSION, "action");
-
     }
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
-        configurationManager.clearConfigurationProviders();
-        configurationManager.addConfigurationProvider(new TestConfigurationProvider());
+        initDispatcher(new HashMap<String,String>(){{ 
+            put("configProviders", TestConfigurationProvider.class.getName());
+        }});
         ActionContext.getContext().setValueStack(stack);
     }
 }

@@ -23,6 +23,8 @@ package org.apache.struts2.views.freemarker;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.struts2.StrutsConstants;
+
 import freemarker.core.CollectionAndSequence;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.MapModel;
@@ -51,8 +53,11 @@ import freemarker.template.TemplateModelException;
  * <!-- END SNIPPET: javadoc -->
  */
 public class StrutsBeanWrapper extends BeansWrapper {
-    private static final boolean altMapWrapper
-            = "true".equals(org.apache.struts2.config.Settings.get("struts.freemarker.wrapper.altMap"));
+    private boolean altMapWrapper;
+    
+    StrutsBeanWrapper(boolean altMapWrapper) {
+        this.altMapWrapper = altMapWrapper;
+    }
 
     public TemplateModel wrap(Object object) throws TemplateModelException {
         if (object instanceof TemplateBooleanModel) {

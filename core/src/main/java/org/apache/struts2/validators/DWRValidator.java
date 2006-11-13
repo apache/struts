@@ -40,6 +40,7 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.DefaultActionInvocation;
 import com.opensymphony.xwork2.DefaultActionProxy;
+import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.ValidationAwareSupport;
 import com.opensymphony.xwork2.config.Configuration;
@@ -90,7 +91,8 @@ public class DWRValidator {
 
         try {
             Configuration cfg = du.getConfigurationManager().getConfiguration();
-            ValidatorActionProxy proxy = new ValidatorActionProxy(cfg, namespace, action, ctx);
+            ObjectFactory of = cfg.getContainer().getInstance(ObjectFactory.class);
+            ValidatorActionProxy proxy = new ValidatorActionProxy(of, cfg, namespace, action, ctx);
             proxy.execute();
             Object a = proxy.getAction();
 
@@ -114,8 +116,8 @@ public class DWRValidator {
     public static class ValidatorActionInvocation extends DefaultActionInvocation {
         private static final long serialVersionUID = -7645433725470191275L;
 
-        protected ValidatorActionInvocation(ActionProxy proxy, Map extraContext) throws Exception {
-            super(proxy, extraContext, true);
+        protected ValidatorActionInvocation(ObjectFactory objectFactory, ActionProxy proxy, Map extraContext) throws Exception {
+            super(objectFactory, proxy, extraContext, true);
         }
 
         protected String invokeAction(Object action, ActionConfig actionConfig) throws Exception {
@@ -126,12 +128,12 @@ public class DWRValidator {
     public static class ValidatorActionProxy extends DefaultActionProxy {
         private static final long serialVersionUID = 5754781916414047963L;
 
-        protected ValidatorActionProxy(Configuration config, String namespace, String actionName, Map extraContext) throws Exception {
-            super(config, namespace, actionName, extraContext, false, true);
+        protected ValidatorActionProxy(ObjectFactory objectFactory, Configuration config, String namespace, String actionName, Map extraContext) throws Exception {
+            super(objectFactory, config, namespace, actionName, extraContext, false, true);
         }
 
         protected void prepare() throws Exception {
-            invocation = new ValidatorActionInvocation(this, extraContext);
+            invocation = new ValidatorActionInvocation(objectFactory, this, extraContext);
         }
     }
 }

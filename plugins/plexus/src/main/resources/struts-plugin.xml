@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+    
+<struts>
+    <bean type="com.opensymphony.xwork.ObjectFactory" name="plexus" class="org.apache.struts2.plexus.PlexusObjectFactory" />
+    
+    <!--  Make the Plexus object factory the automatic default -->
+    <constant name="struts.objectFactory" value="plexus" />
+</struts>

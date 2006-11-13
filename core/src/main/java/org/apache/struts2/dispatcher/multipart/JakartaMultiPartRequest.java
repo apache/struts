@@ -38,18 +38,33 @@ import org.apache.commons.fileupload.RequestContext;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.StrutsConstants;
+
+import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * Multipart form data request adapter for Jakarta Commons Fileupload package.
  *
  */
-public class JakartaMultiPartRequest extends MultiPartRequest {
+public class JakartaMultiPartRequest implements MultiPartRequest {
+    
+    static final Log log = LogFactory.getLog(MultiPartRequest.class);
+    
     // maps parameter name -> List of FileItem objects
     private Map<String,List<FileItem>> files = new HashMap<String,List<FileItem>>();
     // maps parameter name -> List of param values
     private Map<String,List<String>> params = new HashMap<String,List<String>>();
     // any errors while processing this request
     private List<String> errors = new ArrayList<String>();
+    
+    private long maxSize;
+    
+    @Inject(StrutsConstants.STRUTS_MULTIPART_MAXSIZE)
+    public void setMaxSize(String maxSize) {
+        this.maxSize = Long.parseLong(maxSize);
+    }
 
     /**
      * Creates a new request wrapper to handle multi-part data using methods adapted from Jason Pell's
@@ -60,10 +75,10 @@ public class JakartaMultiPartRequest extends MultiPartRequest {
      * @param servletRequest the request containing the multipart
      * @throws java.io.IOException  is thrown if encoding fails.
      */
-    public JakartaMultiPartRequest(HttpServletRequest servletRequest, String saveDir, int maxSize)
+    public void parse(HttpServletRequest servletRequest, String saveDir)
             throws IOException {
         DiskFileItemFactory fac = new DiskFileItemFactory();
-        fac.setSizeThreshold(0);
+        fac.setSizeThreshold((int)maxSize);
         if (saveDir != null) {
             fac.setRepository(new File(saveDir));
         }

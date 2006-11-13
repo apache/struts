@@ -33,6 +33,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest;
+import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -226,7 +228,7 @@ public class FileUploadInterceptorTest extends StrutsTestCase {
     }
 
     private MultiPartRequestWrapper createMultipartRequest(HttpServletRequest req, int maxsize) throws IOException {
-       return new MultiPartRequestWrapper(req, tempDir.getAbsolutePath(), maxsize);
+       return new MultiPartRequestWrapper(new JakartaMultiPartRequest(), req, tempDir.getAbsolutePath());
     }
 
     protected void setUp() throws Exception {

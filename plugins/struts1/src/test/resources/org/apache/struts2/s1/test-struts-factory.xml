@@ -6,6 +6,9 @@
         
 <!-- Used by the TestStrutsFactory TestCase. -->
 <struts>
+    <bean class="com.opensymphony.xwork2.ObjectFactory" name="default" />
+	<bean type="com.opensymphony.xwork2.ActionProxyFactory" name="default" class="com.opensymphony.xwork2.DefaultActionProxyFactory"/>
+	<constant name="devMode" value="false" />
   <package name="org/apache/struts2/s1" namespace="/org/apache/struts2/s1">
     <result-types>
       <result-type class="org.apache.struts2.dispatcher.ServletDispatcherResult" name="servletDispatcherResult"/>

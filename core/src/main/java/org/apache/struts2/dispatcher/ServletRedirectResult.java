@@ -26,10 +26,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.mapper.ActionMapperFactory;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
 
 
 /**
@@ -83,12 +84,19 @@ public class ServletRedirectResult extends StrutsResultSupport {
 
     protected boolean prependServletContext = true;
 
+    private ActionMapper actionMapper;
+
     public ServletRedirectResult() {
         super();
     }
 
     public ServletRedirectResult(String location) {
         super(location);
+    }
+    
+    @Inject
+    public void setActionMapper(ActionMapper mapper) {
+        this.actionMapper = mapper;
     }
 
     /**
@@ -115,7 +123,7 @@ public class ServletRedirectResult extends StrutsResultSupport {
 
         if (isPathUrl(finalLocation)) {
             if (!finalLocation.startsWith("/")) {
-                String namespace = ActionMapperFactory.getMapper().getMapping(
+                String namespace = actionMapper.getMapping(
                         request, Dispatcher.getInstance().getConfigurationManager()).getNamespace();
 
                 if ((namespace != null) && (namespace.length() > 0) && (!"/".equals(namespace))) {

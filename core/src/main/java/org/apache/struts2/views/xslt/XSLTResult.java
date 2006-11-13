@@ -42,11 +42,12 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.config.Settings;
+import org.apache.struts2.StrutsConstants;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -202,12 +203,16 @@ public class XSLTResult implements Result {
 
     public XSLTResult() {
         templatesCache = new HashMap<String, Templates>();
-        noCache = Settings.get("struts.xslt.nocache").trim().equalsIgnoreCase("true");
     }
 
     public XSLTResult(String stylesheetLocation) {
         this();
         setStylesheetLocation(stylesheetLocation);
+    }
+    
+    @Inject(StrutsConstants.STRUTS_XSLT_NOCACHE)
+    public void setNoCache(String val) {
+        noCache = "true".equals(val);
     }
 
     /**

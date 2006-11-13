@@ -34,7 +34,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.config.Settings;
 import org.apache.struts2.views.JspSupportServlet;
 import org.apache.struts2.views.velocity.VelocityManager;
 import org.apache.velocity.Template;
@@ -43,6 +42,7 @@ import org.apache.velocity.context.Context;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 
 
@@ -87,6 +87,9 @@ public class VelocityResult extends StrutsResultSupport {
     private static final long serialVersionUID = 7268830767762559424L;
 
     private static final Log log = LogFactory.getLog(VelocityResult.class);
+    
+    private String defaultEncoding;
+    private VelocityManager velocityManager;
 
     public VelocityResult() {
         super();
@@ -94,6 +97,16 @@ public class VelocityResult extends StrutsResultSupport {
 
     public VelocityResult(String location) {
         super(location);
+    }
+    
+    @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
+    public void setDefaultEncoding(String val) {
+        defaultEncoding = val;
+    }
+    
+    @Inject
+    public void setVelocityManager(VelocityManager mgr) {
+        this.velocityManager = mgr;
     }
 
     /**
@@ -114,7 +127,7 @@ public class VelocityResult extends StrutsResultSupport {
         ServletContext servletContext = ServletActionContext.getServletContext();
         Servlet servlet = JspSupportServlet.jspSupportServlet;
 
-        VelocityManager.getInstance().init(servletContext);
+        velocityManager.init(servletContext);
 
         boolean usedJspFactory = false;
         PageContext pageContext = (PageContext) ActionContext.getContext().get(ServletActionContext.PAGE_CONTEXT);
@@ -134,7 +147,6 @@ public class VelocityResult extends StrutsResultSupport {
                 contentType = contentType + ";charset=" + encoding;
             }
 
-            VelocityManager velocityManager = VelocityManager.getInstance();
             Template t = getTemplate(stack, velocityManager.getVelocityEngine(), invocation, finalLocation, encoding);
 
             Context context = createContext(velocityManager, stack, request, response, finalLocation);
@@ -179,7 +191,7 @@ public class VelocityResult extends StrutsResultSupport {
      * @return The encoding associated with this template (defaults to the value of 'struts.i18n.encoding' property)
      */
     protected String getEncoding(String templateLocation) {
-        String encoding = (String) Settings.get(StrutsConstants.STRUTS_I18N_ENCODING);
+        String encoding = defaultEncoding;
         if (encoding == null) {
             encoding = System.getProperty("file.encoding");
         }

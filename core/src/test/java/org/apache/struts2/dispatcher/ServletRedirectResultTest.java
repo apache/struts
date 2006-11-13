@@ -100,16 +100,12 @@ public class ServletRedirectResultTest extends StrutsTestCase implements StrutsS
 
     protected void setUp() throws Exception {
         super.setUp();
-        Dispatcher du = new Dispatcher(new MockServletContext());
-        Dispatcher.setInstance(du);
-        ConfigurationManager cm = new ConfigurationManager();
-        cm.addConfigurationProvider(new StrutsXmlConfigurationProvider("struts.xml", false));
-        du.setConfigurationManager(cm);
-        du.getConfigurationManager().getConfiguration().
+        configurationManager.getConfiguration().
             addPackageConfig("foo", new PackageConfig("foo", "/namespace", false, null));
 
 
         view = new ServletRedirectResult();
+        container.inject(view);
 
         responseMock = new Mock(HttpServletResponse.class);
 

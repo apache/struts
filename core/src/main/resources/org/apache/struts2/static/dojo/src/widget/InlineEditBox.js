@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -9,30 +9,25 @@
 */
 
 dojo.provide("dojo.widget.InlineEditBox");
-dojo.provide("dojo.widget.html.InlineEditBox");
 
 dojo.require("dojo.widget.*");
-dojo.require("dojo.fx.*");
-dojo.require("dojo.graphics.color");
+dojo.require("dojo.event.*");
+dojo.require("dojo.lfx.*");
+dojo.require("dojo.gfx.color");
 dojo.require("dojo.string");
-dojo.require("dojo.style");
-dojo.require("dojo.html");
+dojo.require("dojo.html.*");
+dojo.require("dojo.html.layout");
 
-dojo.widget.tags.addParseTreeHandler("dojo:inlineeditbox");
-
-dojo.widget.html.InlineEditBox = function(){
-	dojo.widget.HtmlWidget.call(this);
-	// mutable objects need to be in constructor to give each instance its own copy
-	this.history = [];
-	this.storage = document.createElement("span");
-}
-
-dojo.inherits(dojo.widget.html.InlineEditBox, dojo.widget.HtmlWidget);
-
-dojo.lang.extend(dojo.widget.html.InlineEditBox, {
-	templatePath: dojo.uri.dojoUri("src/widget/templates/HtmlInlineEditBox.html"),
-	templateCssPath: dojo.uri.dojoUri("src/widget/templates/HtmlInlineEditBox.css"),
-	widgetType: "InlineEditBox",
+dojo.widget.defineWidget(
+	"dojo.widget.InlineEditBox",
+	dojo.widget.HtmlWidget,
+	function(){
+		// mutable objects need to be in constructor to give each instance its own copy
+		this.history = [];
+	},
+{
+	templatePath: dojo.uri.dojoUri("src/widget/templates/InlineEditBox.html"),
+	templateCssPath: dojo.uri.dojoUri("src/widget/templates/InlineEditBox.css"),
 
 	form: null,
 	editBox: null,
@@ -42,7 +37,8 @@ dojo.lang.extend(dojo.widget.html.InlineEditBox, {
 	submitButton: null,
 	cancelButton: null,
 	mode: "text",
-
+	name: "",
+	
 	minWidth: 100, //px. minimum width of edit box
 	minHeight: 200, //px. minimum width of edit box, if it's a TA
 
@@ -50,89 +46,86 @@ dojo.lang.extend(dojo.widget.html.InlineEditBox, {
 	textValue: "",
 	defaultText: "",
 	doFade: false,
-
-	onSave: function(newValue, oldValue){},
+	
+	onSave: function(newValue, oldValue, name){},
 	onUndo: function(value){},
 
-	// overwrite buildRendering so we don't clobber our list
-	buildRendering: function(args, frag){
-		this.nodeRef = frag["dojo:"+this.widgetType.toLowerCase()]["nodeRef"];
-		var node = this.nodeRef;
-		if(node.normalize){ node.normalize(); }
+	postCreate: function(args, frag){
+		// put original node back in the document, and attach handlers
+		// which hide it and display the editor
+		this.editable = this.getFragNodeRef(frag);
+		dojo.html.insertAfter(this.editable, this.form);
+		dojo.event.connect(this.editable, "onmouseover", this, "onMouseOver");
+		dojo.event.connect(this.editable, "onmouseout", this, "onMouseOut");
+		dojo.event.connect(this.editable, "onclick", this, "beginEdit");
 
-		dojo.widget.buildAndAttachTemplate(this);
-
-		this.editable = document.createElement("span");
-		// this.editable.appendChild(node.firstChild);
-		while(node.firstChild){
-			this.editable.appendChild(node.firstChild);
-		}
-		// this.textValue = this.editable.firstChild.nodeValue;
 		this.textValue = dojo.string.trim(this.editable.innerHTML);
 		if(dojo.string.trim(this.textValue).length == 0){
 			this.editable.innerHTML = this.defaultText;
-		}
-		/*
-		if(node.hasChildNodes()) {
-			node.insertBefore(this.editable, node.firstChild);
-		} else {
-		}
-		*/
-		node.appendChild(this.editable);
-
-		// delay to try and show up before stylesheet
-		var _this = this;
-		setTimeout(function(){
-			_this.editable.appendChild(_this.edit);
-		}, 30);
-
-		dojo.event.connect(this.editable, "onmouseover", this, "mouseover");
-		dojo.event.connect(this.editable, "onmouseout", this, "mouseout");
-		dojo.event.connect(this.editable, "onclick", this, "beginEdit");
-
-		this.fillInTemplate(args, frag);
+		}		
 	},
-
-	mouseover: function(e){
+	
+	onMouseOver: function(){
 		if(!this.editing){
-			dojo.html.addClass(this.editable, "editableRegion");
-			if(this.mode == "textarea"){
-				dojo.html.addClass(this.editable, "editableTextareaRegion");
+			if (!this.isEnabled){
+				dojo.html.addClass(this.editable, "editableRegionDisabled");
+			} else {
+				dojo.html.addClass(this.editable, "editableRegion");
+				if(this.mode == "textarea"){
+					dojo.html.addClass(this.editable, "editableTextareaRegion");
+				}
 			}
 		}
+		
+		this.mouseover();
 	},
-
-	mouseout: function(e){
-		// if((e)&&(e.target != this.domNode)){ return; }
+	
+	mouseover: function(e){
+		// TODO: How do we deprecate a function without going into overkill with debug statements?
+		// dojo.deprecated("onMouseOver should be used instead of mouseover to listen for mouse events");
+	},
+	
+	onMouseOut: function(){
 		if(!this.editing){
 			dojo.html.removeClass(this.editable, "editableRegion");
 			dojo.html.removeClass(this.editable, "editableTextareaRegion");
+			dojo.html.removeClass(this.editable, "editableRegionDisabled");
 		}
+		
+		this.mouseout();
+	},
+	
+	mouseout: function(e){
+		// dojo.deprecated("onMouseOut should be used instead of mouseout to listen for mouse events");
 	},
 
+	// When user clicks the text, then start editing.
+	// Hide the text and display the form instead.
 	beginEdit: function(e){
-		if(this.editing){ return; }
-		this.mouseout();
+		if(this.editing || !this.isEnabled){ return; }
+		this.onMouseOut();
 		this.editing = true;
 
+		// setup the form's <input> or <textarea> field, as specified by mode
 		var ee = this[this.mode.toLowerCase()];
-
-		ee.style.display = "";
 		ee.value = dojo.string.trim(this.textValue);
-		ee.style.fontSize = dojo.style.getStyle(this.editable, "font-size");
-		ee.style.fontWeight = dojo.style.getStyle(this.editable, "font-weight");
-		ee.style.fontStyle = dojo.style.getStyle(this.editable, "font-style");
-		//this.text.style.fontFamily = dojo.dom.getStyle(this.editable, "font-family");
-
-		ee.style.width = Math.max(dojo.html.getInnerWidth(this.editable), this.minWidth) + "px";
-		// ee.style.width = "100%";
-
+		ee.style.fontSize = dojo.html.getStyle(this.editable, "font-size");
+		ee.style.fontWeight = dojo.html.getStyle(this.editable, "font-weight");
+		ee.style.fontStyle = dojo.html.getStyle(this.editable, "font-style");
+		var bb = dojo.html.getBorderBox(this.editable);
+		ee.style.width = Math.max(bb.width, this.minWidth) + "px";
 		if(this.mode.toLowerCase()=="textarea"){
 			ee.style.display = "block";
-			ee.style.height = Math.max(dojo.html.getInnerHeight(this.editable), this.minHeight) + "px";
+			ee.style.height = Math.max(bb.height, this.minHeight) + "px";
+		} else {
+			ee.style.display = "";
 		}
+
+		// show the edit form and hide the read only version of the text
+		this.form.style.display = "";
 		this.editable.style.display = "none";
-		this.nodeRef.appendChild(this.form);
+
+		ee.focus();
 		ee.select();
 		this.submitButton.disabled = true;
 	},
@@ -145,9 +138,11 @@ dojo.lang.extend(dojo.widget.html.InlineEditBox, {
 			(dojo.string.trim(ee.value) != "")){
 			this.doFade = true;
 			this.history.push(this.textValue);
-			this.onSave(ee.value, this.textValue);
+			this.onSave(ee.value, this.textValue, this.name);
 			this.textValue = ee.value;
-			this.editable.innerHTML = this.textValue;
+			this.editable.innerHTML = "";
+			var textNode = document.createTextNode( this.textValue );
+			this.editable.appendChild( textNode );
 		}else{
 			this.doFade = false;
 		}
@@ -157,7 +152,7 @@ dojo.lang.extend(dojo.widget.html.InlineEditBox, {
 	cancelEdit: function(e){
 		if(!this.editing){ return false; }
 		this.editing = false;
-		this.nodeRef.removeChild(this.form);
+		this.form.style.display="none";
 		this.editable.style.display = "";
 		return true;
 	},
@@ -165,13 +160,14 @@ dojo.lang.extend(dojo.widget.html.InlineEditBox, {
 	finishEdit: function(e){
 		if(!this.cancelEdit(e)){ return; }
 		if(this.doFade) {
-			dojo.fx.highlight(this.editable, dojo.graphics.color.hex2rgb("#ffc"), 700, 300);
+			dojo.lfx.highlight(this.editable, dojo.gfx.color.hex2rgb("#ffc"), 700).play(300);
 		}
 		this.doFade = false;
 	},
-
+	
 	setText: function(txt){
 		// sets the text without informing the server
+		txt = "" + txt;
 		var tt = dojo.string.trim(txt);
 		this.textValue = tt
 		this.editable.innerHTML = tt;
@@ -179,10 +175,12 @@ dojo.lang.extend(dojo.widget.html.InlineEditBox, {
 
 	undo: function(){
 		if(this.history.length > 0){
+			var curValue = this.textValue;
 			var value = this.history.pop();
 			this.editable.innerHTML = value;
 			this.textValue = value;
 			this.onUndo(value);
+			this.onSave(value, curValue, this.name);
 		}
 	},
 
@@ -192,5 +190,23 @@ dojo.lang.extend(dojo.widget.html.InlineEditBox, {
 			(dojo.string.trim(ee.value) != "")){
 			this.submitButton.disabled = false;
 		}
+	},
+	
+	disable: function(){
+		this.submitButton.disabled = true;
+		this.cancelButton.disabled = true;
+		var ee = this[this.mode.toLowerCase()];
+		ee.disabled = true;
+		
+		dojo.widget.Widget.prototype.disable.call(this);
+	},
+	
+	enable: function(){
+		this.checkForValueChange();
+		this.cancelButton.disabled = false;
+		var ee = this[this.mode.toLowerCase()];
+		ee.disabled = false;
+		
+		dojo.widget.Widget.prototype.enable.call(this);
 	}
 });

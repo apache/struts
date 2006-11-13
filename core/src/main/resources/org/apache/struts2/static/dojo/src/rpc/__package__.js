@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -8,7 +8,7 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
-dojo.hostenv.conditionalLoadModule({
-	common: ["dojo.rpc.JsonService", false, false]
+dojo.kwCompoundRequire({
+	common: [["dojo.rpc.JsonService", false, false]]
 });
-dojo.hostenv.moduleLoaded("dojo.rpc.*");
+dojo.provide("dojo.rpc.*");

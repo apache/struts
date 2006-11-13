@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -8,13 +8,16 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
-dojo.hostenv.conditionalLoadModule({
+dojo.kwCompoundRequire({
 	common: ["dojo.xml.Parse", 
 			 "dojo.widget.Widget", 
 			 "dojo.widget.Parse", 
 			 "dojo.widget.Manager"],
 	browser: ["dojo.widget.DomWidget",
 			  "dojo.widget.HtmlWidget"],
-	svg: 	 ["dojo.widget.SvgWidget"]
+	dashboard: ["dojo.widget.DomWidget",
+			  "dojo.widget.HtmlWidget"],
+	svg: 	 ["dojo.widget.SvgWidget"],
+	rhino: 	 ["dojo.widget.SwtWidget"]
 });
-dojo.hostenv.moduleLoaded("dojo.widget.*");
+dojo.provide("dojo.widget.*");

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -9,24 +9,16 @@
 */
 
 dojo.provide("dojo.widget.ResizableTextarea");
-dojo.require("dojo.html");
 dojo.require("dojo.widget.*");
-dojo.require("dojo.widget.LayoutPane");
+dojo.require("dojo.widget.LayoutContainer");
 dojo.require("dojo.widget.ResizeHandle");
 
-dojo.widget.tags.addParseTreeHandler("dojo:resizabletextarea");
-
-dojo.widget.ResizableTextarea = function(){
-	dojo.widget.HtmlWidget.call(this);
-}
-
-dojo.inherits(dojo.widget.ResizableTextarea, dojo.widget.HtmlWidget);
-
-dojo.lang.extend(dojo.widget.ResizableTextarea, {
-	templatePath: dojo.uri.dojoUri("src/widget/templates/HtmlResizableTextarea.html"),
-	templateCssPath: dojo.uri.dojoUri("src/widget/templates/HtmlResizableTextarea.css"),
-	widgetType: "ResizableTextarea",
-	tagName: "dojo:resizabletextarea",
+dojo.widget.defineWidget(
+	"dojo.widget.ResizableTextarea",
+	dojo.widget.HtmlWidget,
+{
+	templatePath: dojo.uri.dojoUri("src/widget/templates/ResizableTextarea.html"),
+	templateCssPath: dojo.uri.dojoUri("src/widget/templates/ResizableTextarea.css"),
 	isContainer: false,
 	textAreaNode: null,
 	textAreaContainer: null,
@@ -43,10 +35,10 @@ dojo.lang.extend(dojo.widget.ResizableTextarea, {
 		this.textAreaNode = this.getFragNodeRef(frag).cloneNode(true);
 
 		// FIXME: Safari apparently needs this!
-		document.body.appendChild(this.domNode);
+		dojo.body().appendChild(this.domNode);
 
 		this.rootLayout = dojo.widget.createWidget(
-			"LayoutPane",
+			"LayoutContainer",
 			{
 				minHeight: 50,
 				minWidth: 100
@@ -56,7 +48,7 @@ dojo.lang.extend(dojo.widget.ResizableTextarea, {
 
 
 		this.textAreaContainer = dojo.widget.createWidget(
-			"LayoutPane",
+			"LayoutContainer",
 			{ layoutAlign: "client" },
 			this.textAreaContainerNode
 		);
@@ -69,7 +61,7 @@ dojo.lang.extend(dojo.widget.ResizableTextarea, {
 		}
 
 		this.statusBar = dojo.widget.createWidget(
-			"LayoutPane",
+			"LayoutContainer",
 			{ 
 				layoutAlign: "bottom", 
 				minHeight: 28
@@ -79,7 +71,7 @@ dojo.lang.extend(dojo.widget.ResizableTextarea, {
 		this.rootLayout.addChild(this.statusBar);
 
 		this.statusLabel = dojo.widget.createWidget(
-			"LayoutPane",
+			"LayoutContainer",
 			{ 
 				layoutAlign: "client", 
 				minWidth: 50

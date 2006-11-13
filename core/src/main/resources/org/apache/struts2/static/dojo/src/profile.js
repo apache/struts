@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -10,27 +10,48 @@
 
 dojo.provide("dojo.profile");
 
-dojo.profile = new function(){
-	var profiles = {};
-	var pns = [];
+// summary:
+//		provides a manual profiling utility that can be used to gather relative
+//		timing data.
 
-	this.start = function(name){
-		if(!profiles[name]){
-			profiles[name] = {iters: 0, total: 0};
-			pns[pns.length] = name;
+
+// FIXME: need to tie into the event system or provide a closure-based way to
+// watch timings of functions without manually instrumenting them.
+// FIXME: need to make the dump() function work in command line environments
+
+dojo.profile = {
+	_profiles: {},
+	_pns: [],
+
+	start:function(/*String*/ name){
+		// summary:
+		//		start an iteration for the profiling target with the specified
+		//		name. If a previously started iteration has not yet been ended
+		//		for this name, it's automatically closed out and a new
+		//		iteration begun.
+		// name:
+		//		a unique name to identify the thing being profiled
+		if(!this._profiles[name]){
+			this._profiles[name] = {iters: 0, total: 0};
+			this._pns[this._pns.length] = name;
 		}else{
-			if(profiles[name]["start"]){
+			if(this._profiles[name]["start"]){
 				this.end(name);
 			}
 		}
-		profiles[name].end = null;
-		profiles[name].start = new Date();
-	}
+		this._profiles[name].end = null;
+		this._profiles[name].start = new Date();
+	},
 
-	this.end = function(name){
+	end:function(/*String*/ name){
+		// summary:
+		//		closes a timing loop for the named profiling target
+		// name:
+		//		a unique name to identify the thing being profiled. The name
+		//		passed to end() should be the same as that passed to start()
 		var ed = new Date();
-		if((profiles[name])&&(profiles[name]["start"])){
-			with(profiles[name]){
+		if((this._profiles[name])&&(this._profiles[name]["start"])){
+			with(this._profiles[name]){
 				end = ed;
 				total += (end - start);
 				start = null;
@@ -40,11 +61,17 @@ dojo.profile = new function(){
 			// oops! bad call to end(), what should we do here?
 			return true;
 		}
-	}
+	},
 
-	this.stop = this.end;
-
-	this.dump = function(appendToDoc){
+	dump:function(/*boolean*/ appendToDoc){
+		// summary:
+		//		output profiling data to an HTML table, optionally adding it to
+		//		the bottom of the document. If profiling data has already been
+		//		generated and appended to the document, it's replaced with the
+		//		new data.
+		// appendToDoc:
+		//		optional. Defautls to "false". Should profiling information be
+		//		added to the document?
 		var tbl = document.createElement("table");
 		with(tbl.style){
 			border = "1px solid black";
@@ -68,12 +95,12 @@ dojo.profile = new function(){
 			ntd.appendChild(document.createTextNode(cols[x]));
 		}
 
-		for(var x=0; x < pns.length; x++){
-			var prf = profiles[pns[x]];
-			this.end(pns[x]);
+		for(var x=0; x < this._pns.length; x++){
+			var prf = this._profiles[this._pns[x]];
+			this.end(this._pns[x]);
 			if(prf.iters>0){
 				var bdytr = tbl.insertRow(true);
-				var vals = [pns[x], prf.iters, prf.total, parseInt(prf.total/prf.iters)];
+				var vals = [this._pns[x], prf.iters, prf.total, parseInt(prf.total/prf.iters)];
 				for(var y=0; y<vals.length; y++){
 					var cc = bdytr.insertCell(y);
 					cc.appendChild(document.createTextNode(vals[y]));
@@ -105,13 +132,15 @@ dojo.profile = new function(){
 				padding = "10px";
 			}
 			if(document.getElementById("profileOutputTable")){
-				document.body.replaceChild(ne, document.getElementById("profileOutputTable"));
+				dojo.body().replaceChild(ne, document.getElementById("profileOutputTable"));
 			}else{
-				document.body.appendChild(ne);
+				dojo.body().appendChild(ne);
 			}
 			ne.appendChild(tbl);
 		}
 
-		return tbl;
+		return tbl; // DOMNode
 	}
 }
+
+dojo.profile.stop = dojo.profile.end;

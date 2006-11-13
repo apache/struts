@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -8,24 +8,24 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
-dojo.require("dojo.lang");
-dojo.provide("dojo.dnd.DragSource");
-dojo.provide("dojo.dnd.DropTarget");
-dojo.provide("dojo.dnd.DragObject");
-dojo.provide("dojo.dnd.DragManager");
+dojo.require("dojo.lang.common");
+dojo.require("dojo.lang.declare");
 dojo.provide("dojo.dnd.DragAndDrop");
 
-dojo.dnd.DragSource = function(){
-	dojo.dnd.dragManager.registerDragSource(this);
-}
-
-dojo.lang.extend(dojo.dnd.DragSource, {
+dojo.declare("dojo.dnd.DragSource", null, {
 	type: "",
-	
+
 	onDragEnd: function(){
 	},
-	
+
 	onDragStart: function(){
+	},
+
+	/*
+	 * This function gets called when the DOM element was 
+	 * selected for dragging by the HtmlDragAndDropManager.
+	 */
+	onSelected: function(){
 	},
 
 	unregister: function(){
@@ -35,20 +35,27 @@ dojo.lang.extend(dojo.dnd.DragSource, {
 	reregister: function(){
 		dojo.dnd.dragManager.registerDragSource(this);
 	}
+}, function(){
+
+	//dojo.profile.start("DragSource");
+
+	var dm = dojo.dnd.dragManager;
+	if(dm["registerDragSource"]){ // side-effect prevention
+		dm.registerDragSource(this);
+	}
+
+	//dojo.profile.end("DragSource");
+
 });
 
-dojo.dnd.DragObject = function(){
-	dojo.dnd.dragManager.registerDragObject(this);
-}
-
-dojo.lang.extend(dojo.dnd.DragObject, {
+dojo.declare("dojo.dnd.DragObject", null, {
 	type: "",
-	
+
 	onDragStart: function(){
 		// gets called directly after being created by the DragSource
 		// default action is to clone self as icon
 	},
-	
+
 	onDragMove: function(){
 		// this changes the UI for the drag icon
 		//	"it moves itself"
@@ -56,10 +63,10 @@ dojo.lang.extend(dojo.dnd.DragObject, {
 
 	onDragOver: function(){
 	},
-	
+
 	onDragOut: function(){
 	},
-	
+
 	onDragEnd: function(){
 	},
 
@@ -70,16 +77,14 @@ dojo.lang.extend(dojo.dnd.DragObject, {
 	// non-camel aliases
 	ondragout: this.onDragOut,
 	ondragover: this.onDragOver
+}, function(){
+	var dm = dojo.dnd.dragManager;
+	if(dm["registerDragObject"]){ // side-effect prevention
+		dm.registerDragObject(this);
+	}
 });
 
-dojo.dnd.DropTarget = function(){
-	if (this.constructor == dojo.dnd.DropTarget) { return; } // need to be subclassed
-	this.acceptedTypes = [];
-	dojo.dnd.dragManager.registerDropTarget(this);
-}
-
-dojo.lang.extend(dojo.dnd.DropTarget, {
-	acceptedTypes: [],
+dojo.declare("dojo.dnd.DropTarget", null, {
 
 	acceptsType: function(type){
 		if(!dojo.lang.inArray(this.acceptedTypes, "*")){ // wildcard
@@ -98,17 +103,31 @@ dojo.lang.extend(dojo.dnd.DropTarget, {
 		return true;
 	},
 
+	unregister: function(){
+		dojo.dnd.dragManager.unregisterDropTarget(this);
+	},
+
 	onDragOver: function(){
 	},
-	
+
 	onDragOut: function(){
 	},
-	
+
 	onDragMove: function(){
 	},
-	
+
+	onDropStart: function(){
+	},
+
 	onDrop: function(){
+	},
+
+	onDropEnd: function(){
 	}
+}, function(){
+	if (this.constructor == dojo.dnd.DropTarget) { return; } // need to be subclassed
+	this.acceptedTypes = [];
+	dojo.dnd.dragManager.registerDropTarget(this);
 });
 
 // NOTE: this interface is defined here for the convenience of the DragManager
@@ -118,23 +137,19 @@ dojo.dnd.DragEvent = function(){
 	this.dragSource = null;
 	this.dragObject = null;
 	this.target = null;
-	this.eventStatus = "success"; 
+	this.eventStatus = "success";
 	//
 	// can be one of:
-	//	[	"dropSuccess", "dropFailure", "dragMove", 
+	//	[	"dropSuccess", "dropFailure", "dragMove",
 	//		"dragStart", "dragEnter", "dragLeave"]
 	//
 }
-
-dojo.dnd.DragManager = function(){
-	/* 
-	 *	The DragManager handles listening for low-level events and dispatching
-	 *	them to higher-level primitives like drag sources and drop targets. In
-	 *	order to do this, it must keep a list of the items.
-	 */
-}
-
-dojo.lang.extend(dojo.dnd.DragManager, {
+/*
+ *	The DragManager handles listening for low-level events and dispatching
+ *	them to higher-level primitives like drag sources and drop targets. In
+ *	order to do this, it must keep a list of the items.
+ */
+dojo.declare("dojo.dnd.DragManager", null, {
 	selectedSources: [],
 	dragObjects: [],
 	dragSources: [],

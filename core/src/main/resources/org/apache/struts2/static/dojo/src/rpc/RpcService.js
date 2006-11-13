@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -11,8 +11,8 @@
 dojo.provide("dojo.rpc.RpcService");
 dojo.require("dojo.io.*");
 dojo.require("dojo.json");
-dojo.require("dojo.lang");
-dojo.require("dojo.rpc.Deferred");
+dojo.require("dojo.lang.func");
+dojo.require("dojo.Deferred");
 
 dojo.rpc.RpcService = function(url){
 	// summary
@@ -35,72 +35,80 @@ dojo.lang.extend(dojo.rpc.RpcService, {
 		return obj;
 	},
 
-	errorCallback: function(/* dojo.rpc.Deferred */ deferredRequestHandler){
+	errorCallback: function(/* dojo.Deferred */ deferredRequestHandler){
 		// summary
 		// create callback that calls the Deferres errback method
-		return function(type, obj, e){
-			deferredRequestHandler.errback(e);
+		return function(type, e){
+			deferredRequestHandler.errback(new Error(e.message));
 		}
 	},
 
-	resultCallback: function(/* dojo.rpc.Deferred */ deferredRequestHandler){
+	resultCallback: function(/* dojo.Deferred */ deferredRequestHandler){
 		// summary
 		// create callback that calls the Deferred's callback method
 		var tf = dojo.lang.hitch(this, 
 			function(type, obj, e){
-				var results = this.parseResults(obj);
-				deferredRequestHandler.callback(results); 
+				if (obj["error"]!=null) {
+					var err = new Error(obj.error);
+					err.id = obj.id;
+					deferredRequestHandler.errback(err);
+				} else {
+					var results = this.parseResults(obj);
+					deferredRequestHandler.callback(results); 
+				}
 			}
 		);
 		return tf;
 	},
 
 
-	generateMethod: function(/* string */ method, /* array */ parameters){
+	generateMethod: function(/*string*/ method, /*array*/ parameters, /*string*/ url){
 		// summary
 		// generate the local bind methods for the remote object
-		var _this = this;
-		return function(){
-			var deferredRequestHandler = new dojo.rpc.Deferred();
+		return dojo.lang.hitch(this, function(){
+			var deferredRequestHandler = new dojo.Deferred();
 
 			// if params weren't specified, then we can assume it's varargs
-			if(
-				(!_this.strictArgChecks)||
-				(
-					(parameters != null)&&
-					(arguments.length != parameters.length)
-				)
+			if( (this.strictArgChecks) &&
+				(parameters != null) &&
+				(arguments.length != parameters.length)
 			){
-				dojo.raise("Invalid number of parameters for remote method.");
 				// put error stuff here, no enough params
+				dojo.raise("Invalid number of parameters for remote method.");
 			} else {
-				_this.bind(method, arguments, deferredRequestHandler);
+				this.bind(method, arguments, deferredRequestHandler, url);
 			}
 
 			return deferredRequestHandler;
-		};
+		});
 	},
 
-	processSmd: function(/*json */object){
-
+	processSmd: function(/*json*/ object){
 		// summary
-		// callback method for reciept of a smd object.  Parse the smd and generate functions based on the description
+		// callback method for reciept of a smd object.  Parse the smd and
+		// generate functions based on the description
 		dojo.debug("RpcService: Processing returned SMD.");
-		for(var n = 0; n < object.methods.length; n++){
-			dojo.debug("RpcService: Creating Method: this.", object.methods[n].name, "()");
-  			this[object.methods[n].name] = this.generateMethod(object.methods[n].name,object.methods[n].parameters);
-			if (dojo.lang.isFunction(this[object.methods[n].name])) {
-				dojo.debug("RpcService: Successfully created", object.methods[n].name, "()");
-			} else {
-				dojo.debug("RpcService: Failed to create", object.methods[n].name, "()");
-			}
+		if(object.methods){
+			dojo.lang.forEach(object.methods, function(m){
+				if(m && m["name"]){
+					dojo.debug("RpcService: Creating Method: this.", m.name, "()");
+					this[m.name] = this.generateMethod(	m.name,
+														m.parameters, 
+														m["url"]||m["serviceUrl"]||m["serviceURL"]);
+					if(dojo.lang.isFunction(this[m.name])){
+						dojo.debug("RpcService: Successfully created", m.name, "()");
+					}else{
+						dojo.debug("RpcService: Failed to create", m.name, "()");
+					}
+				}
+			}, this);
 		}
 
 		this.serviceUrl = object.serviceUrl||object.serviceURL;
 		dojo.debug("RpcService: Dojo RpcService is ready for use.");
 	},
 
-	connect: function(/* string */smdUrl){
+	connect: function(/*String*/ smdUrl){
 		// summary
 		// connect to a remote url and retrieve a smd object
 		dojo.debug("RpcService: Attempting to load SMD document from:", smdUrl);

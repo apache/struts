@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -8,9 +8,10 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
-dojo.hostenv.conditionalLoadModule({
+dojo.kwCompoundRequire({
 	common: ["dojo.storage"],
-	browser: ["dojo.storage.browser"]
+	browser: ["dojo.storage.browser"],
+	dashboard: ["dojo.storage.dashboard"]
 });
-dojo.hostenv.moduleLoaded("dojo.storage.*");
+dojo.provide("dojo.storage.*");
 

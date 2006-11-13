@@ -1,0 +1,114 @@
+<table cellspacing="1" cellpadding="1" border="0" width="100%" height="100%">
+	<tr>
+		<td>
+			<table cellspacing="0" cellpadding="0" width="100%" border="0">
+				<tr>
+					<td width="100%">
+						<span>URL</span>
+					</td>
+					<td style="display: none" nowrap="nowrap" rowspan="2">
+						<!--input id="btnBrowse" onclick="BrowseServer();" type="button" value="Browse Server"/-->
+					</td>
+				</tr>
+				<tr>
+					<td valign="top">
+						<input dojoAttachPoint="image_src" style="width: 100%" type="text" />
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<span>Alternative Text</span><br />
+			<input dojoAttachPoint="image_alt" style="width: 100%" type="text" /><br />
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">
+			<table><tr><td>
+						<table cellspacing="0" cellpadding="0" border="0">
+							<tr>
+								<td nowrap="nowrap">
+									<span>Width</span>&nbsp;</td>
+								<td>
+									<input type="text" size="3" dojoAttachPoint="image_width" /></td>
+
+								<td rowspan="2">
+									<!--div id="btnLockSizes" class="BtnLocked" onmouseover="this.className = (bLockRatio ? 'BtnLocked' : 'BtnUnlocked' ) + ' BtnOver';"
+										onmouseout="this.className = (bLockRatio ? 'BtnLocked' : 'BtnUnlocked' );" title="Lock Sizes"
+										onclick="SwitchLock(this);">
+									</div-->
+								</td>
+								<td rowspan="2">
+									<!--div id="btnResetSize" class="BtnReset" onmouseover="this.className='BtnReset BtnOver';"
+										onmouseout="this.className='BtnReset';" title="Reset Size" onclick="ResetSizes();">
+									</div-->
+								</td>
+							</tr>
+
+							<tr>
+								<td nowrap="nowrap">
+									<span>Height</span>&nbsp;</td>
+								<td>
+									<input type="text" size="3" dojoAttachPoint="image_height" /></td>
+							</tr>
+						</table>
+					</td><td>
+
+						<table cellspacing="0" cellpadding="0" border="0">
+							<tr>
+
+								<td nowrap="nowrap">
+									<span >HSpace</span>&nbsp;</td>
+								<td>
+									<input type="text" size="2" dojoAttachPoint="image_hspace"/></td>
+							</tr>
+							<tr>
+								<td nowrap="nowrap">
+									<span >VSpace</span>&nbsp;</td>
+
+								<td>
+									<input type="text" size="2" dojoAttachPoint="image_vspace" /></td>
+							</tr>
+						</table>
+					</td></tr>
+					<tr><td colspan="2">
+						<table cellspacing="0" cellpadding="0" border="0">
+							<tr>
+								<td nowrap="nowrap">
+									<span>Border</span>&nbsp;</td>
+								<td>
+									<input type="text" size="2" value="" dojoAttachPoint="image_border" /></td>
+								<td>&nbsp;&nbsp;&nbsp;</td>
+								<td nowrap="nowrap">
+									<span >Align</span>&nbsp;</td>
+								<td>
+									<select dojoAttachPoint="image_align">
+
+										<option value="" selected="selected"></option>
+										<option value="left">Left</option>
+										<option value="absBottom">Abs Bottom</option>
+										<option value="absMiddle">Abs Middle</option>
+										<option value="baseline">Baseline</option>
+										<option value="bottom">Bottom</option>
+
+										<option value="middle">Middle</option>
+										<option value="right">Right</option>
+										<option value="textTop">Text Top</option>
+										<option value="top">Top</option>
+									</select>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr></table>
+		</td>
+	</tr>
+	<tr><td>
+		<table><tr>
+		<td><button dojoType='Button' dojoAttachEvent='onClick:ok'>OK</button></td>
+		<td><button dojoType='Button' dojoAttachEvent='onClick:cancel'>Cancel</button></td>
+		</tr></table>
+	</td></tr>
+</table>

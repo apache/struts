@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -10,15 +10,12 @@
 
 dojo.provide("dojo.io.BrowserIO");
 
-dojo.require("dojo.io");
-dojo.require("dojo.lang");
+dojo.require("dojo.io.common");
+dojo.require("dojo.lang.array");
+dojo.require("dojo.lang.func");
+dojo.require("dojo.string.extras");
 dojo.require("dojo.dom");
-
-try {
-	if((!djConfig["preventBackButtonFix"])&&(!dojo.hostenv.post_load_)){
-		document.write("<iframe style='border: 0px; width: 1px; height: 1px; position: absolute; bottom: 0px; right: 0px; visibility: visible;' name='djhistory' id='djhistory' src='"+(dojo.hostenv.getBaseScriptUri()+'iframe_history.html')+"'></iframe>");
-	}
-}catch(e){/* squelch */}
+dojo.require("dojo.undo.browser");
 
 dojo.io.checkChildrenForFile = function(node){
 	var hasFile = false;
@@ -36,19 +33,45 @@ dojo.io.formHasFile = function(formNode){
 	return dojo.io.checkChildrenForFile(formNode);
 }
 
+dojo.io.updateNode = function(node, urlOrArgs){
+	node = dojo.byId(node);
+	var args = urlOrArgs;
+	if(dojo.lang.isString(urlOrArgs)){
+		args = { url: urlOrArgs };
+	}
+	args.mimetype = "text/html";
+	args.load = function(t, d, e){
+		while(node.firstChild){
+			if(dojo["event"]){
+				try{
+					dojo.event.browser.clean(node.firstChild);
+				}catch(e){}
+			}
+			node.removeChild(node.firstChild);
+		}
+		node.innerHTML = d;
+	};
+	dojo.io.bind(args);
+}
+
+dojo.io.formFilter = function(node) {
+	var type = (node.type||"").toLowerCase();
+	return !node.disabled && node.name
+		&& !dojo.lang.inArray(["file", "submit", "image", "reset", "button"], type);
+}
+
 // TODO: Move to htmlUtils
-dojo.io.encodeForm = function(formNode, encoding){
+dojo.io.encodeForm = function(formNode, encoding, formFilter){
 	if((!formNode)||(!formNode.tagName)||(!formNode.tagName.toLowerCase() == "form")){
 		dojo.raise("Attempted to encode a non-form element.");
 	}
+	if(!formFilter) { formFilter = dojo.io.formFilter; }
 	var enc = /utf/i.test(encoding||"") ? encodeURIComponent : dojo.string.encodeAscii;
 	var values = [];
 
 	for(var i = 0; i < formNode.elements.length; i++){
 		var elm = formNode.elements[i];
-		if(elm.disabled || elm.tagName.toLowerCase() == "fieldset" || !elm.name){
-			continue;
-		}
+		if(!elm || elm.tagName.toLowerCase() == "fieldset" || !formFilter(elm)) { continue; }
 		var name = enc(elm.name);
 		var type = elm.type.toLowerCase();
 
@@ -58,11 +81,11 @@ dojo.io.encodeForm = function(formNode, encoding){
 					values.push(name + "=" + enc(elm.options[j].value));
 				}
 			}
-		}else if(dojo.lang.inArray(type, ["radio", "checkbox"])){
+		}else if(dojo.lang.inArray(["radio", "checkbox"], type)){
 			if(elm.checked){
 				values.push(name + "=" + enc(elm.value));
 			}
-		}else if(!dojo.lang.inArray(type, ["file", "submit", "reset", "button"])) {
+		}else{
 			values.push(name + "=" + enc(elm.value));
 		}
 	}
@@ -71,7 +94,8 @@ dojo.io.encodeForm = function(formNode, encoding){
 	var inputs = formNode.getElementsByTagName("input");
 	for(var i = 0; i < inputs.length; i++) {
 		var input = inputs[i];
-		if(input.type.toLowerCase() == "image" && input.form == formNode) {
+		if(input.type.toLowerCase() == "image" && input.form == formNode
+			&& formFilter(input)) {
 			var name = enc(input.name);
 			values.push(name + "=" + enc(input.value));
 			values.push(name + ".x=0");
@@ -81,69 +105,109 @@ dojo.io.encodeForm = function(formNode, encoding){
 	return values.join("&") + "&";
 }
 
-dojo.io.setIFrameSrc = function(iframe, src, replace){
-	try{
-		var r = dojo.render.html;
-		// dojo.debug(iframe);
-		if(!replace){
-			if(r.safari){
-				iframe.location = src;
-			}else{
-				frames[iframe.name].location = src;
-			}
-		}else{
-			// Fun with DOM 0 incompatibilities!
-			var idoc;
-			if(r.ie){
-				idoc = iframe.contentWindow.document;
-			}else if(r.moz){
-				idoc = iframe.contentWindow;
-			}else if(r.safari){
-				idoc = iframe.document;
-			}
-			idoc.location.replace(src);
-		}
-	}catch(e){ 
-		dojo.debug(e); 
-		dojo.debug("setIFrameSrc: "+e); 
+dojo.io.FormBind = function(args) {
+	this.bindArgs = {};
+
+	if(args && args.formNode) {
+		this.init(args);
+	} else if(args) {
+		this.init({formNode: args});
 	}
 }
+dojo.lang.extend(dojo.io.FormBind, {
+	form: null,
+
+	bindArgs: null,
+
+	clickedButton: null,
+
+	init: function(args) {
+		var form = dojo.byId(args.formNode);
+
+		if(!form || !form.tagName || form.tagName.toLowerCase() != "form") {
+			throw new Error("FormBind: Couldn't apply, invalid form");
+		} else if(this.form == form) {
+			return;
+		} else if(this.form) {
+			throw new Error("FormBind: Already applied to a form");
+		}
+
+		dojo.lang.mixin(this.bindArgs, args);
+		this.form = form;
+
+		this.connect(form, "onsubmit", "submit");
+
+		for(var i = 0; i < form.elements.length; i++) {
+			var node = form.elements[i];
+			if(node && node.type && dojo.lang.inArray(["submit", "button"], node.type.toLowerCase())) {
+				this.connect(node, "onclick", "click");
+			}
+		}
+
+		var inputs = form.getElementsByTagName("input");
+		for(var i = 0; i < inputs.length; i++) {
+			var input = inputs[i];
+			if(input.type.toLowerCase() == "image" && input.form == form) {
+				this.connect(input, "onclick", "click");
+			}
+		}
+	},
+
+	onSubmit: function(form) {
+		return true;
+	},
+
+	submit: function(e) {
+		e.preventDefault();
+		if(this.onSubmit(this.form)) {
+			dojo.io.bind(dojo.lang.mixin(this.bindArgs, {
+				formFilter: dojo.lang.hitch(this, "formFilter")
+			}));
+		}
+	},
+
+	click: function(e) {
+		var node = e.currentTarget;
+		if(node.disabled) { return; }
+		this.clickedButton = node;
+	},
+
+	formFilter: function(node) {
+		var type = (node.type||"").toLowerCase();
+		var accept = false;
+		if(node.disabled || !node.name) {
+			accept = false;
+		} else if(dojo.lang.inArray(["submit", "button", "image"], type)) {
+			if(!this.clickedButton) { this.clickedButton = node; }
+			accept = node == this.clickedButton;
+		} else {
+			accept = !dojo.lang.inArray(["file", "submit", "reset", "button"], type);
+		}
+		return accept;
+	},
+
+	// in case you don't have dojo.event.* pulled in
+	connect: function(srcObj, srcFcn, targetFcn) {
+		if(dojo.evalObjPath("dojo.event.connect")) {
+			dojo.event.connect(srcObj, srcFcn, this, targetFcn);
+		} else {
+			var fcn = dojo.lang.hitch(this, targetFcn);
+			srcObj[srcFcn] = function(e) {
+				if(!e) { e = window.event; }
+				if(!e.currentTarget) { e.currentTarget = e.srcElement; }
+				if(!e.preventDefault) { e.preventDefault = function() { window.event.returnValue = false; } }
+				fcn(e);
+			}
+		}
+	}
+});
 
 dojo.io.XMLHTTPTransport = new function(){
 	var _this = this;
 
-	this.initialHref = window.location.href;
-	this.initialHash = window.location.hash;
-
-	this.moveForward = false;
-
 	var _cache = {}; // FIXME: make this public? do we even need to?
 	this.useCache = false; // if this is true, we'll cache unless kwArgs.useCache = false
 	this.preventCache = false; // if this is true, we'll always force GET requests to cache
-	this.historyStack = [];
-	this.forwardStack = [];
-	this.historyIframe = null;
-	this.bookmarkAnchor = null;
-	this.locationTimer = null;
-
-	/* NOTES:
-	 *	Safari 1.2: 
-	 *		back button "works" fine, however it's not possible to actually
-	 *		DETECT that you've moved backwards by inspecting window.location.
-	 *		Unless there is some other means of locating.
-	 *		FIXME: perhaps we can poll on history.length?
-	 *	IE 5.5 SP2:
-	 *		back button behavior is macro. It does not move back to the
-	 *		previous hash value, but to the last full page load. This suggests
-	 *		that the iframe is the correct way to capture the back button in
-	 *		these cases.
-	 *	IE 6.0:
-	 *		same behavior as IE 5.5 SP2
-	 * Firefox 1.0:
-	 *		the back button will return us to the previous hash on the same
-	 *		page, thereby not requiring an iframe hack, although we do then
-	 *		need to run a timer to detect inter-page movement.
-	 */
 
 	// FIXME: Should this even be a function? or do we just hard code it in the next 2 functions?
 	function getCacheKey(url, query, method) {
@@ -164,7 +228,11 @@ dojo.io.XMLHTTPTransport = new function(){
 
 	// moved successful load stuff here
 	function doLoad(kwArgs, http, url, query, useCache) {
-		if((http.status==200)||(location.protocol=="file:" && http.status==0)) {
+		if(	((http.status>=200)&&(http.status<300))|| 	// allow any 2XX response code
+			(http.status==304)|| 						// get it out of the cache
+			(location.protocol=="file:" && (http.status==0 || http.status==undefined))||
+			(location.protocol=="chrome:" && (http.status==0 || http.status==undefined))
+		){
 			var ret;
 			if(kwArgs.method.toLowerCase() == "head"){
 				var headers = http.getAllResponseHeaders();
@@ -185,7 +253,7 @@ dojo.io.XMLHTTPTransport = new function(){
 					dojo.debug(http.responseText);
 					ret = null;
 				}
-			}else if(kwArgs.mimetype == "text/json"){
+			}else if(kwArgs.mimetype == "text/json" || kwArgs.mimetype == "application/json"){
 				try{
 					ret = dj_eval("("+http.responseText+")");
 				}catch(e){
@@ -196,7 +264,7 @@ dojo.io.XMLHTTPTransport = new function(){
 			}else if((kwArgs.mimetype == "application/xml")||
 						(kwArgs.mimetype == "text/xml")){
 				ret = http.responseXML;
-				if(!ret || typeof ret == "string") {
+				if(!ret || typeof ret == "string" || !http.getResponseHeader("Content-Type")) {
 					ret = dojo.dom.createDocumentFromText(http.responseText);
 				}
 			}else{
@@ -206,10 +274,10 @@ dojo.io.XMLHTTPTransport = new function(){
 			if(useCache){ // only cache successful responses
 				addToCache(url, query, kwArgs.method, http);
 			}
-			kwArgs[(typeof kwArgs.load == "function") ? "load" : "handle"]("load", ret, http);
+			kwArgs[(typeof kwArgs.load == "function") ? "load" : "handle"]("load", ret, http, kwArgs);
 		}else{
 			var errObj = new dojo.io.Error("XMLHttpTransport Error: "+http.status+" "+http.statusText);
-			kwArgs[(typeof kwArgs.error == "function") ? "error" : "handle"]("error", errObj, http);
+			kwArgs[(typeof kwArgs.error == "function") ? "error" : "handle"]("error", errObj, http, kwArgs);
 		}
 	}
 
@@ -226,197 +294,66 @@ dojo.io.XMLHTTPTransport = new function(){
 		}
 	}
 
-	this.addToHistory = function(args){
-		var callback = args["back"]||args["backButton"]||args["handle"];
-		var hash = null;
-		if(!this.historyIframe){
-			this.historyIframe = window.frames["djhistory"];
-		}
-		if(!this.bookmarkAnchor){
-			this.bookmarkAnchor = document.createElement("a");
-			(document.body||document.getElementsByTagName("body")[0]).appendChild(this.bookmarkAnchor);
-			this.bookmarkAnchor.style.display = "none";
-		}
-		if((!args["changeUrl"])||(dojo.render.html.ie)){
-			var url = dojo.hostenv.getBaseScriptUri()+"iframe_history.html?"+(new Date()).getTime();
-			this.moveForward = true;
-			dojo.io.setIFrameSrc(this.historyIframe, url, false);
-		}
-		if(args["changeUrl"]){
-			hash = "#"+ ((args["changeUrl"]!==true) ? args["changeUrl"] : (new Date()).getTime());
-			setTimeout("window.location.href = '"+hash+"';", 1);
-			this.bookmarkAnchor.href = hash;
-			if(dojo.render.html.ie){
-				// IE requires manual setting of the hash since we are catching
-				// events from the iframe
-				var oldCB = callback;
-				var lh = null;
-				var hsl = this.historyStack.length-1;
-				if(hsl>=0){
-					while(!this.historyStack[hsl]["urlHash"]){
-						hsl--;
-					}
-					lh = this.historyStack[hsl]["urlHash"];
-				}
-				if(lh){
-					callback = function(){
-						if(window.location.hash != ""){
-							setTimeout("window.location.href = '"+lh+"';", 1);
-						}
-						oldCB();
-					}
-				}
-				// when we issue a new bind(), we clobber the forward 
-				// FIXME: is this always a good idea?
-				this.forwardStack = []; 
-				var oldFW = args["forward"]||args["forwardButton"];;
-				var tfw = function(){
-					if(window.location.hash != ""){
-						window.location.href = hash;
-					}
-					if(oldFW){ // we might not actually have one
-						oldFW();
-					}
-				}
-				if(args["forward"]){
-					args.forward = tfw;
-				}else if(args["forwardButton"]){
-					args.forwardButton = tfw;
-				}
-			}else if(dojo.render.html.moz){
-				// start the timer
-				if(!this.locationTimer){
-					this.locationTimer = setInterval("dojo.io.XMLHTTPTransport.checkLocation();", 200);
-				}
-			}
-		}
-
-		this.historyStack.push({"url": url, "callback": callback, "kwArgs": args, "urlHash": hash});
-	}
-
-	this.checkLocation = function(){
-		var hsl = this.historyStack.length;
-
-		if((window.location.hash == this.initialHash)||(window.location.href == this.initialHref)&&(hsl == 1)){
-			// FIXME: could this ever be a forward button?
-			// we can't clear it because we still need to check for forwards. Ugg.
-			// clearInterval(this.locationTimer);
-			this.handleBackButton();
-			return;
-		}
-		// first check to see if we could have gone forward. We always halt on
-		// a no-hash item.
-		if(this.forwardStack.length > 0){
-			if(this.forwardStack[this.forwardStack.length-1].urlHash == window.location.hash){
-				this.handleForwardButton();
-				return;
-			}
-		}
-		// ok, that didn't work, try someplace back in the history stack
-		if((hsl >= 2)&&(this.historyStack[hsl-2])){
-			if(this.historyStack[hsl-2].urlHash==window.location.hash){
-				this.handleBackButton();
-				return;
-			}
-		}
-	}
-
-	this.iframeLoaded = function(evt, ifrLoc){
-		var isp = ifrLoc.href.split("?");
-		if(isp.length < 2){ 
-			// alert("iframeLoaded");
-			// we hit the end of the history, so we should go back
-			if(this.historyStack.length == 1){
-				this.handleBackButton();
-			}
-			return;
-		}
-		var query = isp[1];
-		if(this.moveForward){
-			// we were expecting it, so it's not either a forward or backward
-			// movement
-			this.moveForward = false;
-			return;
-		}
-
-		var last = this.historyStack.pop();
-		// we don't have anything in history, so it could be a forward button
-		if(!last){ 
-			if(this.forwardStack.length > 0){
-				var next = this.forwardStack[this.forwardStack.length-1];
-				if(query == next.url.split("?")[1]){
-					this.handleForwardButton();
-				}
-			}
-			// regardless, we didnt' have any history, so it can't be a back button
-			return;
-		}
-		// put it back on the stack so we can do something useful with it when
-		// we call handleBackButton()
-		this.historyStack.push(last);
-		if(this.historyStack.length >= 2){
-			if(isp[1] == this.historyStack[this.historyStack.length-2].url.split("?")[1]){
-				// looks like it IS a back button press, so handle it
-				this.handleBackButton();
-			}
-		}else{
-			this.handleBackButton();
-		}
-	}
-
-	this.handleBackButton = function(){
-		var last = this.historyStack.pop();
-		if(!last){ return; }
-		if(last["callback"]){
-			last.callback();
-		}else if(last.kwArgs["backButton"]){
-			last.kwArgs["backButton"]();
-		}else if(last.kwArgs["back"]){
-			last.kwArgs["back"]();
-		}else if(last.kwArgs["handle"]){
-			last.kwArgs.handle("back");
-		}
-		this.forwardStack.push(last);
-	}
-
-	this.handleForwardButton = function(){
-		// FIXME: should we build in support for re-issuing the bind() call here?
-		// alert("alert we found a forward button call");
-		var last = this.forwardStack.pop();
-		if(!last){ return; }
-		if(last.kwArgs["forward"]){
-			last.kwArgs.forward();
-		}else if(last.kwArgs["forwardButton"]){
-			last.kwArgs.forwardButton();
-		}else if(last.kwArgs["handle"]){
-			last.kwArgs.handle("forward");
-		}
-		this.historyStack.push(last);
-	}
-
 	this.inFlight = [];
 	this.inFlightTimer = null;
 
 	this.startWatchingInFlight = function(){
 		if(!this.inFlightTimer){
-			this.inFlightTimer = setInterval("dojo.io.XMLHTTPTransport.watchInFlight();", 10);
+			// setInterval broken in mozilla x86_64 in some circumstances, see
+			// https://bugzilla.mozilla.org/show_bug.cgi?id=344439
+			// using setTimeout instead
+			this.inFlightTimer = setTimeout("dojo.io.XMLHTTPTransport.watchInFlight();", 10);
 		}
 	}
 
 	this.watchInFlight = function(){
-		for(var x=this.inFlight.length-1; x>=0; x--){
-			var tif = this.inFlight[x];
-			if(!tif){ this.inFlight.splice(x, 1); continue; }
-			if(4==tif.http.readyState){
-				// remove it so we can clean refs
-				this.inFlight.splice(x, 1);
-				doLoad(tif.req, tif.http, tif.url, tif.query, tif.useCache);
-				if(this.inFlight.length == 0){
-					clearInterval(this.inFlightTimer);
-					this.inFlightTimer = null;
+		var now = null;
+		// make sure sync calls stay thread safe, if this callback is called during a sync call
+		// and this results in another sync call before the first sync call ends the browser hangs
+		if(!dojo.hostenv._blockAsync && !_this._blockAsync){
+			for(var x=this.inFlight.length-1; x>=0; x--){
+				try{
+					var tif = this.inFlight[x];
+					if(!tif || tif.http._aborted || !tif.http.readyState){
+						this.inFlight.splice(x, 1); continue; 
+					}
+					if(4==tif.http.readyState){
+						// remove it so we can clean refs
+						this.inFlight.splice(x, 1);
+						doLoad(tif.req, tif.http, tif.url, tif.query, tif.useCache);
+					}else if (tif.startTime){
+						//See if this is a timeout case.
+						if(!now){
+							now = (new Date()).getTime();
+						}
+						if(tif.startTime + (tif.req.timeoutSeconds * 1000) < now){
+							//Stop the request.
+							if(typeof tif.http.abort == "function"){
+								tif.http.abort();
+							}
+		
+							// remove it so we can clean refs
+							this.inFlight.splice(x, 1);
+							tif.req[(typeof tif.req.timeout == "function") ? "timeout" : "handle"]("timeout", null, tif.http, tif.req);
+						}
+					}
+				}catch(e){
+					try{
+						var errObj = new dojo.io.Error("XMLHttpTransport.watchInFlight Error: " + e);
+						tif.req[(typeof tif.req.error == "function") ? "error" : "handle"]("error", errObj, tif.http, tif.req);
+					}catch(e2){
+						dojo.debug("XMLHttpTransport error callback failed: " + e2);
+					}
 				}
-			} // FIXME: need to implement a timeout param here!
+			}
 		}
+
+		clearTimeout(this.inFlightTimer);
+		if(this.inFlight.length == 0){
+			this.inFlightTimer = null;
+			return;
+		}
+		this.inFlightTimer = setTimeout("dojo.io.XMLHTTPTransport.watchInFlight();", 10);
 	}
 
 	var hasXmlHttp = dojo.hostenv.getXmlhttpObject() ? true : false;
@@ -428,8 +365,7 @@ dojo.io.XMLHTTPTransport = new function(){
 		// multi-part mime encoded and avoid using this transport for those
 		// requests.
 		return hasXmlHttp
-			&& dojo.lang.inArray((kwArgs["mimetype"]||"".toLowerCase()), ["text/plain", "text/html", "application/xml", "text/xml", "text/javascript", "text/json"])
-			&& dojo.lang.inArray(kwArgs["method"].toLowerCase(), ["post", "get", "head"])
+			&& dojo.lang.inArray(["text/plain", "text/html", "application/xml", "text/xml", "text/javascript", "text/json", "application/json"], (kwArgs["mimetype"].toLowerCase()||""))
 			&& !( kwArgs["formNode"] && dojo.io.formHasFile(kwArgs["formNode"]) );
 	}
 
@@ -441,7 +377,9 @@ dojo.io.XMLHTTPTransport = new function(){
 			if( !kwArgs["formNode"]
 				&& (kwArgs["backButton"] || kwArgs["back"] || kwArgs["changeUrl"] || kwArgs["watchForURL"])
 				&& (!djConfig.preventBackButtonFix)) {
-				this.addToHistory(kwArgs);
+        dojo.deprecated("Using dojo.io.XMLHTTPTransport.bind() to add to browser history without doing an IO request",
+        				"Use dojo.undo.browser.addToHistory() instead.", "0.4");
+				dojo.undo.browser.addToHistory(kwArgs);
 				return true;
 			}
 		}
@@ -454,7 +392,7 @@ dojo.io.XMLHTTPTransport = new function(){
 			if((ta)&&(!kwArgs["url"])){ url = ta; }
 			var tp = kwArgs.formNode.getAttribute("method");
 			if((tp)&&(!kwArgs["method"])){ kwArgs.method = tp; }
-			query += dojo.io.encodeForm(kwArgs.formNode, kwArgs.encoding);
+			query += dojo.io.encodeForm(kwArgs.formNode, kwArgs.encoding, kwArgs["formFilter"]);
 		}
 
 		if(url.indexOf("#") > -1) {
@@ -471,7 +409,7 @@ dojo.io.XMLHTTPTransport = new function(){
 			kwArgs.method = "get";
 		}
 
-		// guess the multipart value		
+		// guess the multipart value
 		if(kwArgs.method.toLowerCase() == "get"){
 			// GET cannot use multipart
 			kwArgs.multipart = false;
@@ -486,7 +424,7 @@ dojo.io.XMLHTTPTransport = new function(){
 		}
 
 		if(kwArgs["backButton"] || kwArgs["back"] || kwArgs["changeUrl"]){
-			this.addToHistory(kwArgs);
+			dojo.undo.browser.addToHistory(kwArgs);
 		}
 
 		var content = kwArgs["content"] || {};
@@ -572,29 +510,45 @@ dojo.io.XMLHTTPTransport = new function(){
 
 		// much of this is from getText, but reproduced here because we need
 		// more flexibility
-		var http = dojo.hostenv.getXmlhttpObject();
+		var http = dojo.hostenv.getXmlhttpObject(kwArgs);	
 		var received = false;
 
 		// build a handler function that calls back to the handler obj
 		if(async){
+			var startTime = 
 			// FIXME: setting up this callback handler leaks on IE!!!
 			this.inFlight.push({
 				"req":		kwArgs,
 				"http":		http,
-				"url":		url,
+				"url":	 	url,
 				"query":	query,
-				"useCache":	useCache
+				"useCache":	useCache,
+				"startTime": kwArgs.timeoutSeconds ? (new Date()).getTime() : 0
 			});
 			this.startWatchingInFlight();
+		}else{
+			// block async callbacks until sync is in, needed in khtml, others?
+			_this._blockAsync = true;
 		}
 
 		if(kwArgs.method.toLowerCase() == "post"){
 			// FIXME: need to hack in more flexible Content-Type setting here!
-			http.open("POST", url, async);
+			if (!kwArgs.user) {
+				http.open("POST", url, async);
+			}else{
+        http.open("POST", url, async, kwArgs.user, kwArgs.password);
+			}
 			setHeaders(http, kwArgs);
 			http.setRequestHeader("Content-Type", kwArgs.multipart ? ("multipart/form-data; boundary=" + this.multipartBoundary) : 
 				(kwArgs.contentType || "application/x-www-form-urlencoded"));
-			http.send(query);
+			try{
+				http.send(query);
+			}catch(e){
+				if(typeof http.abort == "function"){
+					http.abort();
+				}
+				doLoad(kwArgs, {status: 404}, url, query, useCache);
+			}
 		}else{
 			var tmpUrl = url;
 			if(query != "") {
@@ -604,16 +558,31 @@ dojo.io.XMLHTTPTransport = new function(){
 				tmpUrl += (dojo.string.endsWithAny(tmpUrl, "?", "&")
 					? "" : (tmpUrl.indexOf("?") > -1 ? "&" : "?")) + "dojo.preventCache=" + new Date().valueOf();
 			}
-			http.open(kwArgs.method.toUpperCase(), tmpUrl, async);
+			if (!kwArgs.user) {
+				http.open(kwArgs.method.toUpperCase(), tmpUrl, async);
+			}else{
+				http.open(kwArgs.method.toUpperCase(), tmpUrl, async, kwArgs.user, kwArgs.password);
+			}
 			setHeaders(http, kwArgs);
-			http.send(null);
+			try {
+				http.send(null);
+			}catch(e)	{
+				if(typeof http.abort == "function"){
+					http.abort();
+				}
+				doLoad(kwArgs, {status: 404}, url, query, useCache);
+			}
 		}
 
 		if( !async ) {
 			doLoad(kwArgs, http, url, query, useCache);
+			_this._blockAsync = false;
 		}
 
 		kwArgs.abort = function(){
+			try{// khtml doesent reset readyState on abort, need this workaround
+				http._aborted = true; 
+			}catch(e){/*squelsh*/}
 			return http.abort();
 		}
 

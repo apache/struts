@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -10,6 +10,9 @@
 
 dojo.provide("dojo.crypto.SHA256");
 dojo.require("dojo.crypto");
+dojo.require("dojo.experimental");
+
+dojo.experimental("dojo.crypto.SHA256");
 
 dojo.crypto.SHA256 = new function(){
 	this.compute=function(s){

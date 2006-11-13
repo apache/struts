@@ -1,0 +1,61 @@
+.sliderMain {
+  border: 0px !important;
+  border-spacing: 0px !important;
+  line-height: 0px !important;
+  padding: 0px !important;
+  display: -moz-inline-table !important;
+  display: inline !important;
+  -moz-user-focus: normal !important;
+}
+
+.sliderComponent {
+  border: 0px;
+  padding: 0px;
+  margin: 0px;
+}
+
+.sliderHandle { 
+  top: 0px;
+  left: 0px;
+  z-index: 1000;
+  position: absolute !important;
+}
+
+.sliderOutsetButton { 
+  border-style: outset;
+  border-width: 0px 1px 1px 0px;
+  border-color: black;
+}
+
+.sliderInsetButton { 
+  border-style: inset;
+  border-width: 1px 0px 0px 1px;
+  border-color: black;
+}
+
+.sliderButtonY {
+  margin: 0px;
+  padding: 0px;
+  z-index: 900;
+}
+
+.sliderButtonX {
+  margin: 0px;
+  padding: 0px;
+  z-index: 900;
+}
+
+.sliderBackground { 
+  z-index: 0;
+  display: block !important;
+  position: relative !important;
+}
+
+.sliderProgressBackground { 
+  z-index: 800;
+  position: absolute !important;
+  clip: rect(0px,0px,0px,0px);
+}
+
+.sliderBackgroundSizeOnly { 
+}

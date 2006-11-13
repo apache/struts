@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -9,145 +9,328 @@
 */
 
 dojo.provide("dojo.widget.Widget");
-dojo.provide("dojo.widget.tags");
 
-dojo.require("dojo.lang");
+dojo.require("dojo.lang.func");
+dojo.require("dojo.lang.array");
+dojo.require("dojo.lang.extras");
+dojo.require("dojo.lang.declare");
+dojo.require("dojo.ns");
 dojo.require("dojo.widget.Manager");
 dojo.require("dojo.event.*");
-dojo.require("dojo.string");
+dojo.require("dojo.a11y");
 
-dojo.widget.Widget = function(){
-	// these properties aren't primitives and need to be created on a per-item
-	// basis.
-	this.children = [];
-	// this.selection = new dojo.widget.Selection();
-	// FIXME: need to replace this with context menu stuff
-	this.extraArgs = {};
-}
-// FIXME: need to be able to disambiguate what our rendering context is
-//        here!
-
-// needs to be a string with the end classname. Every subclass MUST
-// over-ride.
-dojo.lang.extend(dojo.widget.Widget, {
+dojo.declare("dojo.widget.Widget", null,
+	function(){
+		//dojo.debug("NEW "+this.widgetType);
+		// these properties aren't primitives and need to be created on a per-item
+		// basis.
+		this.children = [];
+		// this.selection = new dojo.widget.Selection();
+		// FIXME: need to replace this with context menu stuff
+		this.extraArgs = {};
+	},
+{
+	// FIXME: need to be able to disambiguate what our rendering context is
+	//        here!
+	//
+	// needs to be a string with the end classname. Every subclass MUST
+	// over-ride.
+	//
 	// base widget properties
-	parent: null,
+
+	// Widget: the parent of this widget
+	parent: null, 
+
+	// NOTE: "children" and "extraArgs" re-defined in the constructor as they need to be local to the widget
+
+	// Array:
+	//		a list of all of the widgets that have been added as children of
+	//		this component. Should only have values if isContainer is true.
+	children: [],
+
+	// Object:
+	//		a map of properties which the widget system tried to assign from
+	//		user input but did not correspond to any of the properties set on
+	//		the class prototype. These names will also be available in all
+	//		lower-case form in this map
+	extraArgs: {},
+
 	// obviously, top-level and modal widgets should set these appropriately
-	isTopLevel:  false,
-	isModal: false,
 
+	// Boolean: should this widget eat all events that bubble up to it?
+	isTopLevel:  false, 
+
+	// Boolean: should this widget block other widgets?
+	isModal: false, 
+
+	// Boolean: should this widget respond to user input?
 	isEnabled: true,
-	isHidden: false,
-	isContainer: false, // can we contain other widgets?
-	widgetId: "",
-	widgetType: "Widget", // used for building generic widgets
 
-	toString: function() {
-		return '[Widget ' + this.widgetType + ', ' + (this.widgetId || 'NO ID') + ']';
+	// Boolean: have we hidden the widget via hide()?
+	isHidden: false,
+
+	// Boolean: can this widget contain other widgets?
+	isContainer: false, 
+
+	// String:
+	//		a unique, opaque ID string that can be assigned by users or by the
+	//		system. If the developer passes an ID which is known not to be
+	//		unique, the specified ID is ignored and the system-generated ID is
+	//		used instead.
+	widgetId: "",
+
+	// String: used for building generic widgets
+	widgetType: "Widget",
+
+	// String: defaults to 'dojo'.  "namespace" is a reserved word in JavaScript, so we abbreviate
+	ns: "dojo",
+
+	getNamespacedType: function(){ 
+		// summary:
+		//		get the "full" name of the widget. If the widget comes from the
+		//		"dojo" namespace and is a Button, calling this method will
+		//		return "dojo:button", all lower-case
+		return (this.ns ? this.ns + ":" + this.widgetType : this.widgetType).toLowerCase(); // String
+	},
+	
+	toString: function(){
+		// summary:
+		//		returns a string that represents the widget. When a widget is
+		//		cast to a string, this method will be used to generate the
+		//		output. Currently, it does not implement any sort of reversable
+		//		serialization.
+		return '[Widget ' + this.getNamespacedType() + ', ' + (this.widgetId || 'NO ID') + ']'; // String
 	},
 
 	repr: function(){
-		return this.toString();
+		// summary: returns the string representation of the widget.
+		return this.toString(); // String
 	},
 
 	enable: function(){
-		// should be over-ridden
+		// summary:
+		//		enables the widget, usually involving unmasking inputs and
+		//		turning on event handlers. Not implemented here.
 		this.isEnabled = true;
 	},
 
 	disable: function(){
-		// should be over-ridden
+		// summary:
+		//		disables the widget, usually involves masking inputs and
+		//		unsetting event handlers. Not implemented here.
 		this.isEnabled = false;
 	},
 
 	hide: function(){
-		// should be over-ridden
+		// summary: hides the widget from view. Not implemented here.
 		this.isHidden = true;
 	},
 
 	show: function(){
-		// should be over-ridden
+		// summary: re-adds the widget to the view. Not implemented here.
 		this.isHidden = false;
 	},
 
-	create: function(args, fragment, parentComp){
+	onResized: function(){
+		// summary:
+		//		A signal that widgets will call when they have been resized.
+		//		Can be connected to for determining if a layout needs to be
+		//		reflowed. Clients should override this function to do special
+		//		processing, then call this.notifyChildrenOfResize() to notify
+		//		children of resize.
+		this.notifyChildrenOfResize();
+	},
+	
+	notifyChildrenOfResize: function(){
+		// summary: dispatches resized events to all children of this widget
+		for(var i=0; i<this.children.length; i++){
+			var child = this.children[i];
+			//dojo.debug(this.widgetId + " resizing child " + child.widgetId);
+			if( child.onResized ){
+				child.onResized();
+			}
+		}
+	},
+
+	create: function(/*Object*/ args, /*Object*/fragment, /*Widget, optional*/parent, /*String, optional*/ns){
+		// summary:
+		//		'create' manages the initialization part of the widget
+		//		lifecycle. It's called implicitly when any widget is created.
+		//		All other initialization functions for widgets, except for the
+		//		constructor, are called as a result of 'create' being fired.
+		// args:
+		//		a normalized view of the parameters that the widget should take
+		// fragment:
+		//		if the widget is being instantiated from markup, this object 
+		// parent:
+		//		the widget, if any, that this widget will be the child of.  If
+		//		none is passed, the global default widget is used.
+		// ns: what namespace the widget belongs to
+		// description:
+		//		to understand the process by which widgets are instantiated, it
+		//		is critical to understand what other methods 'create' calls and
+		//		which of them you'll want to over-ride. Of course, adventurous
+		//		developers could over-ride 'create' entirely, but this should
+		//		only be done as a last resort.
+		//
+		//		Below is a list of the methods that are called, in the order
+		//		they are fired, along with notes about what they do and if/when
+		//		you should over-ride them in your widget:
+		//			
+		//			mixInProperties:
+		//				takes the args and does lightweight type introspection
+		//				on pre-existing object properties to initialize widget
+		//				values by casting the values that are passed in args
+		//			postMixInProperties:
+		//				a stub function that you can over-ride to modify
+		//				variables that may have been naively assigned by
+		//				mixInProperties
+		//			# widget is added to manager object here
+		//			buildRendering
+		//				subclasses use this method to handle all UI initialization
+		//			initialize:
+		//				a stub function that you can over-ride.
+		//			postInitialize:
+		//				a stub function that you can over-ride.
+		//			postCreate
+		//				a stub function that you can over-ride to modify take
+		//				actions once the widget has been placed in the UI
+		//
+		//		all of these functions are passed the same arguments as are
+		//		passed to 'create'
+
+		//dojo.profile.start(this.widgetType + " create");
+		if(ns){
+			this.ns = ns;
+		}
 		// dojo.debug(this.widgetType, "create");
-		this.satisfyPropertySets(args, fragment, parentComp);
+		//dojo.profile.start(this.widgetType + " satisfyPropertySets");
+		this.satisfyPropertySets(args, fragment, parent);
+		//dojo.profile.end(this.widgetType + " satisfyPropertySets");
 		// dojo.debug(this.widgetType, "-> mixInProperties");
-		this.mixInProperties(args, fragment, parentComp);
+		//dojo.profile.start(this.widgetType + " mixInProperties");
+		this.mixInProperties(args, fragment, parent);
+		//dojo.profile.end(this.widgetType + " mixInProperties");
 		// dojo.debug(this.widgetType, "-> postMixInProperties");
-		this.postMixInProperties(args, fragment, parentComp);
+		//dojo.profile.start(this.widgetType + " postMixInProperties");
+		this.postMixInProperties(args, fragment, parent);
+		//dojo.profile.end(this.widgetType + " postMixInProperties");
 		// dojo.debug(this.widgetType, "-> dojo.widget.manager.add");
 		dojo.widget.manager.add(this);
 		// dojo.debug(this.widgetType, "-> buildRendering");
-		this.buildRendering(args, fragment, parentComp);
+		//dojo.profile.start(this.widgetType + " buildRendering");
+		this.buildRendering(args, fragment, parent);
+		//dojo.profile.end(this.widgetType + " buildRendering");
 		// dojo.debug(this.widgetType, "-> initialize");
-		this.initialize(args, fragment, parentComp);
+		//dojo.profile.start(this.widgetType + " initialize");
+		this.initialize(args, fragment, parent);
+		//dojo.profile.end(this.widgetType + " initialize");
 		// dojo.debug(this.widgetType, "-> postInitialize");
-		this.postInitialize(args, fragment, parentComp);
+		// postinitialize includes subcomponent creation
+		// profile is put directly to function
+		this.postInitialize(args, fragment, parent);
 		// dojo.debug(this.widgetType, "-> postCreate");
-		this.postCreate(args, fragment, parentComp);
+		//dojo.profile.start(this.widgetType + " postCreate");
+		this.postCreate(args, fragment, parent);
+		//dojo.profile.end(this.widgetType + " postCreate");
 		// dojo.debug(this.widgetType, "done!");
+		
+		//dojo.profile.end(this.widgetType + " create");
+		
 		return this;
 	},
 
-	destroy: function(finalize){
+	destroy: function(/*Boolean*/finalize){
+		// summary:
+		// 		Destroy this widget and it's descendants. This is the generic
+		// 		"destructor" function that all widget users should call to
+		// 		clealy discard with a widget. Once a widget is destroyed, it's
+		// 		removed from the manager object.
+		// finalize:
+		//		is this function being called part of global environment
+		//		tear-down?
+
 		// FIXME: this is woefully incomplete
+		this.destroyChildren();
 		this.uninitialize();
 		this.destroyRendering(finalize);
 		dojo.widget.manager.removeById(this.widgetId);
 	},
 
-	destroyChildren: function(testFunc){
-		testFunc = (!testFunc) ? function(){ return true; } : testFunc;
-		for(var x=0; x<this.children.length; x++){
-			var tc = this.children[x];
-			if((tc)&&(testFunc(tc))){
-				tc.destroy();
+	destroyChildren: function(){
+		// summary:
+		//		Recursively destroy the children of this widget and their
+		//		descendents.
+		var widget;
+		var i=0;
+		while(this.children.length > i){
+			widget = this.children[i];
+			if (widget instanceof dojo.widget.Widget) { // find first widget
+				this.removeChild(widget);
+				widget.destroy();
+				continue;
 			}
+			
+			i++; // skip data object
 		}
-		// this.children = [];
+				
 	},
 
-	destroyChildrenOfType: function(type){
-		type = type.toLowerCase();
-		this.destroyChildren(function(item){
-			if(item.widgetType.toLowerCase() == type){
-				return true;
-			}else{
-				return false;
-			}
-		});
-	},
-
-	getChildrenOfType: function(type, recurse){
+	getChildrenOfType: function(/*String*/type, /*Boolean*/recurse){
+		// summary: 
+		//		return an array of descendant widgets who match the passed type
+		// recurse:
+		//		should we try to get all descendants that match? Defaults to
+		//		false.
 		var ret = [];
-		type = type.toLowerCase();
+		var isFunc = dojo.lang.isFunction(type);
+		if(!isFunc){
+			type = type.toLowerCase();
+		}
 		for(var x=0; x<this.children.length; x++){
-			if(this.children[x].widgetType.toLowerCase() == type){
-				ret.push(this.children[x]);
+			if(isFunc){
+				if(this.children[x] instanceof type){
+					ret.push(this.children[x]);
+				}
+			}else{
+				if(this.children[x].widgetType.toLowerCase() == type){
+					ret.push(this.children[x]);
+				}
 			}
 			if(recurse){
 				ret = ret.concat(this.children[x].getChildrenOfType(type, recurse));
 			}
 		}
-		return ret;
+		return ret; // Array
 	},
 
 	getDescendants: function(){
-		// FIXME: this does not appear to be recursive. Shouldn't a function 
-		// with this signature get *all* descendants?
+		// summary: returns a flattened array of all direct descendants including self
 		var result = [];
 		var stack = [this];
 		var elem;
-		while (elem = stack.pop()){
+		while ((elem = stack.pop())){
 			result.push(elem);
-			dojo.lang.forEach(elem.children, function(elem) { stack.push(elem); });
+			// a child may be data object without children field set (not widget)
+			if (elem.children) {
+				dojo.lang.forEach(elem.children, function(elem) { stack.push(elem); });
+			}
 		}
-		return result;
+		return result; // Array
+	},
+
+
+	isFirstChild: function(){
+		return this === this.parent.children[0]; // Boolean
+	},
+
+	isLastChild: function() {
+		return this === this.parent.children[this.parent.children.length-1]; // Boolean
 	},
 
 	satisfyPropertySets: function(args){
+		// summary: not implemented!
+
 		// dojo.profile.start("satisfyPropertySets");
 		// get the default propsets for our component type
 		/*
@@ -168,7 +351,48 @@ dojo.lang.extend(dojo.widget.Widget, {
 		return args;
 	},
 
-	mixInProperties: function(args, frag){
+	mixInProperties: function(/*Object*/args, /*Object*/frag){
+		// summary:
+		// 		takes the list of properties listed in args and sets values of
+		// 		the current object based on existence of properties with the
+		// 		same name (case insensitive) and the type of the pre-existing
+		// 		property. This is a lightweight conversion and is not intended
+		// 		to capture custom type semantics.
+		// args:
+		//		A map of properties and values to set on the current object. By
+		//		default it is assumed that properties in args are in string
+		//		form and need to be converted. However, if there is a
+		//		'fastMixIn' property with the value 'true' in the args param,
+		//		this assumption is ignored and all values in args are copied
+		//		directly to the current object without any form of type
+		//		casting.
+		// description:
+		//		The mix-in code attempts to do some type-assignment based on
+		//		PRE-EXISTING properties of the "this" object. When a named
+		//		property of args is located, it is first tested to make
+		//		sure that the current object already "has one". Properties
+		//		which are undefined in the base widget are NOT settable here.
+		//		The next step is to try to determine type of the pre-existing
+		//		property. If it's a string, the property value is simply
+		//		assigned. If a function, it is first cast using "new
+		//		Function()" and the execution scope modified such that it
+		//		always evaluates in the context of the current object. This
+		//		listener is then added to the original function via
+		//		dojo.event.connect(). If an Array, the system attempts to split
+		//		the string value on ";" chars, and no further processing is
+		//		attempted (conversion of array elements to a integers, for
+		//		instance). If the property value is an Object
+		//		(testObj.constructor === Object), the property is split first
+		//		on ";" chars, secondly on ":" chars, and the resulting
+		//		key/value pairs are assigned to an object in a map style. The
+		//		onus is on the property user to ensure that all property values
+		//		are converted to the expected type before usage. Properties
+		//		which do not occur in the "this" object are assigned to the
+		//		this.extraArgs map using both the original name and the
+		//		lower-case name of the property. This allows for consistent
+		//		access semantics regardless of the case preservation of the
+		//		source of the property names.
+		
 		if((args["fastMixIn"])||(frag["fastMixIn"])){
 			// dojo.profile.start("mixInProperties_fastMixIn");
 			// fast mix in assumes case sensitivity, no type casting, etc...
@@ -180,24 +404,6 @@ dojo.lang.extend(dojo.widget.Widget, {
 			return;
 		}
 		// dojo.profile.start("mixInProperties");
-		/*
-		 * the actual mix-in code attempts to do some type-assignment based on
-		 * PRE-EXISTING properties of the "this" object. When a named property
-		 * of a propset is located, it is first tested to make sure that the
-		 * current object already "has one". Properties which are undefined in
-		 * the base widget are NOT settable here. The next step is to try to
-		 * determine type of the pre-existing property. If it's a string, the
-		 * property value is simply assigned. If a function, the property is
-		 * replaced with a "new Function()" declaration. If an Array, the
-		 * system attempts to split the string value on ";" chars, and no
-		 * further processing is attempted (conversion of array elements to a
-		 * integers, for instance). If the property value is an Object
-		 * (testObj.constructor === Object), the property is split first on ";"
-		 * chars, secondly on ":" chars, and the resulting key/value pairs are
-		 * assigned to an object in a map style. The onus is on the property
-		 * user to ensure that all property values are converted to the
-		 * expected type before usage.
-		 */
 
 		var undef;
 
@@ -262,8 +468,20 @@ dojo.lang.extend(dojo.widget.Widget, {
 						// that these event handlers should execute in the
 						// context of the widget, so that the "this" pointer
 						// takes correctly.
-						var tn = dojo.lang.nameAnonFunc(new Function(args[x]), this);
-						dojo.event.connect(this, x, this, tn);
+						
+						// argument that contains no punctuation other than . is 
+						// considered a function spec, not code
+						if(args[x].search(/[^\w\.]+/i) == -1){
+							this[x] = dojo.evalObjPath(args[x], false);
+						}else{
+							var tn = dojo.lang.nameAnonFunc(new Function(args[x]), this);
+							dojo.event.kwConnect({
+								srcObj: this, 
+								srcFunc: x, 
+								adviceObj: this, 
+								adviceFunc: tn
+							});
+						}
 					}else if(dojo.lang.isArray(this[x])){ // typeof [] == "object"
 						this[x] = args[x].split(";");
 					} else if (this[x] instanceof Date) {
@@ -272,13 +490,21 @@ dojo.lang.extend(dojo.widget.Widget, {
 						// FIXME: should we be allowing extension here to handle
 						// other object types intelligently?
 
-						// FIXME: unlike all other types, we do not replace the
-						// object with a new one here. Should we change that?
-						var pairs = args[x].split(";");
-						for(var y=0; y<pairs.length; y++){
-							var si = pairs[y].indexOf(":");
-							if((si != -1)&&(pairs[y].length>si)){
-								this[x][dojo.string.trim(pairs[y].substr(0, si))] = pairs[y].substr(si+1);
+						// if we defined a URI, we probably want to allow plain strings
+						// to override it
+						if (this[x] instanceof dojo.uri.Uri){
+
+							this[x] = args[x];
+						}else{
+
+							// FIXME: unlike all other types, we do not replace the
+							// object with a new one here. Should we change that?
+							var pairs = args[x].split(";");
+							for(var y=0; y<pairs.length; y++){
+								var si = pairs[y].indexOf(":");
+								if((si != -1)&&(pairs[y].length>si)){
+									this[x][pairs[y].substr(0, si).replace(/^\s+|\s+$/g, "")] = pairs[y].substr(si+1);
+								}
 							}
 						}
 					}else{
@@ -289,89 +515,109 @@ dojo.lang.extend(dojo.widget.Widget, {
 				}
 			}else{
 				// collect any extra 'non mixed in' args
-				this.extraArgs[x] = args[x];
+				this.extraArgs[x.toLowerCase()] = args[x];
 			}
 		}
 		// dojo.profile.end("mixInProperties");
 	},
 	
-	postMixInProperties: function(){
+	postMixInProperties: function(/*Object*/args, /*Object*/frag, /*Widget*/parent){
+		// summary:
+		//		stub function. Can be over-ridden to handle advanced property
+		//		casting and object configuration.
 	},
 
-	initialize: function(args, frag){
-		// dj_unimplemented("dojo.widget.Widget.initialize");
+	initialize: function(/*Object*/args, /*Object*/frag, /*Widget*/parent){
+		// summary: stub function.
+		return false;
+		// dojo.unimplemented("dojo.widget.Widget.initialize");
+	},
+
+	postInitialize: function(/*Object*/args, /*Object*/frag, /*Widget*/parent){
+		// summary: stub function.
 		return false;
 	},
 
-	postInitialize: function(args, frag){
-		return false;
-	},
-
-	postCreate: function(args, frag){
+	postCreate: function(/*Object*/args, /*Object*/frag, /*Widget*/parent){
+		// summary: stub function.
 		return false;
 	},
 
 	uninitialize: function(){
-		// dj_unimplemented("dojo.widget.Widget.uninitialize");
+		// summary: 
+		//		stub function. Over-ride to implement custom widget tear-down
+		//		behavior.
 		return false;
 	},
 
-	buildRendering: function(){
-		// SUBCLASSES MUST IMPLEMENT
-		dj_unimplemented("dojo.widget.Widget.buildRendering, on "+this.toString()+", ");
+	buildRendering: function(/*Object*/args, /*Object*/frag, /*Widget*/parent){
+		// summary: stub function. SUBCLASSES MUST IMPLEMENT
+		dojo.unimplemented("dojo.widget.Widget.buildRendering, on "+this.toString()+", ");
 		return false;
 	},
 
 	destroyRendering: function(){
-		// SUBCLASSES MUST IMPLEMENT
-		dj_unimplemented("dojo.widget.Widget.destroyRendering");
+		// summary: stub function. SUBCLASSES MUST IMPLEMENT
+		dojo.unimplemented("dojo.widget.Widget.destroyRendering");
 		return false;
 	},
 
 	cleanUp: function(){
-		// SUBCLASSES MUST IMPLEMENT
-		dj_unimplemented("dojo.widget.Widget.cleanUp");
+		// summary: 
+		//		stub function for destruction finalization. SUBCLASSES MUST
+		//		IMPLEMENT
+		dojo.unimplemented("dojo.widget.Widget.cleanUp");
 		return false;
 	},
 
-	addedTo: function(parent){
-		// this is just a signal that can be caught
+	addedTo: function(/*Widget*/parent){
+		// summary:
+		//		stub function this is just a signal that can be caught
+		// parent: instance of dojo.widget.Widget that we were added to
 	},
 
 	addChild: function(child){
-		// SUBCLASSES MUST IMPLEMENT
-		dj_unimplemented("dojo.widget.Widget.addChild");
+		// summary: stub function. SUBCLASSES MUST IMPLEMENT
+		dojo.unimplemented("dojo.widget.Widget.addChild");
 		return false;
 	},
 
-	addChildAtIndex: function(child, index){
-		// SUBCLASSES MUST IMPLEMENT
-		dj_unimplemented("dojo.widget.Widget.addChildAtIndex");
-		return false;
+	// Detach the given child widget from me, but don't destroy it
+	removeChild: function(/*Widget*/widget){
+		// summary: 
+		//		removes the passed widget instance from this widget but does
+		//		not destroy it
+		for(var x=0; x<this.children.length; x++){
+			if(this.children[x] === widget){
+				this.children.splice(x, 1);
+				break;
+			}
+		}
+		return widget; // Widget
 	},
 
-	removeChild: function(childRef){
-		// SUBCLASSES MUST IMPLEMENT
-		dj_unimplemented("dojo.widget.Widget.removeChild");
-		return false;
-	},
-
-	removeChildAtIndex: function(index){
-		// SUBCLASSES MUST IMPLEMENT
-		dj_unimplemented("dojo.widget.Widget.removeChildAtIndex");
-		return false;
-	},
-
-	resize: function(width, height){
-		// both width and height may be set as percentages. The setWidth and
-		// setHeight  functions attempt to determine if the passed param is
-		// specified in percentage or native units. Integers without a
-		// measurement are assumed to be in the native unit of measure.
+	resize: function(/*String or int*/width, /*String or int*/height){
+		// summary:
+		// 		both width and height may be set as percentages. The setWidth
+		// 		and setHeight  functions attempt to determine if the passed
+		// 		param is specified in percentage or native units. Integers
+		// 		without a measurement are assumed to be in the native unit of
+		// 		measure.
+		// width:
+		//		the width, either in native measures, or as a percentage. If as
+		//		percentage, pass it as a string in the form "30%".
+		// height:
+		//		the height, either in native measures, or as a percentage. If as
+		//		percentage, pass it as a string in the form "30%".
 		this.setWidth(width);
 		this.setHeight(height);
 	},
 
-	setWidth: function(width){
+	setWidth: function(/*String or int*/width){
+		// summary: like it says on the tin...
+		// width:
+		//		the width, either in native measures, or as a percentage. If as
+		//		percentage, pass it as a string in the form "30%".
 		if((typeof width == "string")&&(width.substr(-1) == "%")){
 			this.setPercentageWidth(width);
 		}else{
@@ -379,7 +625,11 @@ dojo.lang.extend(dojo.widget.Widget, {
 		}
 	},
 
-	setHeight: function(height){
+	setHeight: function(/*String or int*/height){
+		// summary: like it says on the tin...
+		// height:
+		//		the height, either in native measures, or as a percentage. If
+		//		as percentage, pass it as a string in the form "30%".
 		if((typeof height == "string")&&(height.substr(-1) == "%")){
 			this.setPercentageHeight(height);
 		}else{
@@ -387,36 +637,59 @@ dojo.lang.extend(dojo.widget.Widget, {
 		}
 	},
 
-	setPercentageHeight: function(height){
-		// SUBCLASSES MUST IMPLEMENT
+	setPercentageHeight: function(/*int*/height){
+		// summary: stub function. SUBCLASSES MUST IMPLEMENT
 		return false;
 	},
 
-	setNativeHeight: function(height){
-		// SUBCLASSES MUST IMPLEMENT
+	setNativeHeight: function(/*int*/height){
+		// summary: stub function. SUBCLASSES MUST IMPLEMENT
 		return false;
 	},
 
-	setPercentageWidth: function(width){
-		// SUBCLASSES MUST IMPLEMENT
+	setPercentageWidth: function(/*int*/width){
+		// summary: stub function. SUBCLASSES MUST IMPLEMENT
 		return false;
 	},
 
-	setNativeWidth: function(width){
-		// SUBCLASSES MUST IMPLEMENT
+	setNativeWidth: function(/*int*/width){
+		// summary: stub function. SUBCLASSES MUST IMPLEMENT
 		return false;
 	},
 
-	getDescendants: function() {
-		var result = [];
-		var stack = [this];
-		var elem;
-		while (elem = stack.pop()) {
-			result.push(elem);
-			dojo.lang.forEach(elem.children, function(elem) { stack.push(elem); });
-		}
+	getPreviousSibling: function(){
+		// summary:
+		//		returns null if this is the first child of the parent,
+		//		otherwise returns the next sibling to the "left".
+		var idx = this.getParentIndex();
  
-		return result;
+		 // first node is idx=0 not found is idx<0
+		if (idx<=0) return null;
+ 
+		return this.parent.children[idx-1]; // Widget
+	},
+ 
+	getSiblings: function(){
+		// summary: gets an array of all children of our parent, including "this"
+		return this.parent.children; // Array
+	},
+ 
+	getParentIndex: function(){
+		// summary: what index are we at in the parent's children array?
+		return dojo.lang.indexOf(this.parent.children, this, true); // int
+	},
+ 
+	getNextSibling: function(){
+		// summary:
+		//		returns null if this is the last child of the parent,
+		//		otherwise returns the next sibling to the "right".
+ 
+		var idx = this.getParentIndex();
+ 
+		if (idx == this.parent.children.length-1){return null;} // last node
+		if (idx < 0){return null;} // not found
+ 
+		return this.parent.children[idx+1]; // Widget
 	}
 });
 
@@ -432,13 +705,22 @@ dojo.widget.lcArgsCache = {};
 // TODO: parse subcomponents
 // TODO: copy/clone raw markup fragments/nodes as appropriate
 dojo.widget.tags = {};
-dojo.widget.tags.addParseTreeHandler = function(type){
+dojo.widget.tags.addParseTreeHandler = function(/*String*/type){
+	// summary: deprecated!
+	dojo.deprecated("addParseTreeHandler", ". ParseTreeHandlers are now reserved for components. Any unfiltered DojoML tag without a ParseTreeHandler is assumed to be a widget", "0.5");
+	/*
 	var ltype = type.toLowerCase();
-	this[ltype] = function(fragment, widgetParser, parentComp, insertionIndex, localProps){ 
-		return dojo.widget.buildWidgetFromParseTree(ltype, fragment, widgetParser, parentComp, insertionIndex, localProps);
+	this[ltype] = function(fragment, widgetParser, parentComp, insertionIndex, localProps){
+		var _ltype = ltype;
+		dojo.profile.start(_ltype);
+		var n = dojo.widget.buildWidgetFromParseTree(ltype, fragment, widgetParser, parentComp, insertionIndex, localProps);
+		dojo.profile.end(_ltype);
+		return n;
 	}
+	*/
 }
-dojo.widget.tags.addParseTreeHandler("dojo:widget");
+
+//dojo.widget.tags.addParseTreeHandler("dojo:widget");
 
 dojo.widget.tags["dojo:propertyset"] = function(fragment, widgetParser, parentComp){
 	// FIXME: Is this needed?
@@ -452,24 +734,115 @@ dojo.widget.tags["dojo:connect"] = function(fragment, widgetParser, parentComp){
 	var properties = widgetParser.parseProperties(fragment["dojo:connect"]);
 }
 
-dojo.widget.buildWidgetFromParseTree = function(type, frag, 
-												parser, parentComp, 
-												insertionIndex, localProps){
+// FIXME: if we know the insertion point (to a reasonable location), why then do we:
+//	- create a template node
+//	- clone the template node
+//	- render the clone and set properties
+//	- remove the clone from the render tree
+//	- place the clone
+// this is quite dumb
+dojo.widget.buildWidgetFromParseTree = function(/*String*/				type,
+												/*Object*/				frag, 
+												/*dojo.widget.Parse*/	parser,
+												/*Widget, optional*/	parentComp, 
+												/*int, optional*/		insertionIndex,
+												/*Object*/				localProps){
+
+	// summary: creates a tree of widgets from the data structure produced by the first-pass parser (frag)
+	
+	// test for accessibility mode 
+	dojo.a11y.setAccessibleMode();
+	//dojo.profile.start("buildWidgetFromParseTree");
+	// FIXME: for codepath from createComponentFromScript, we are now splitting a path 
+	// that we already split and then joined
 	var stype = type.split(":");
 	stype = (stype.length == 2) ? stype[1] : type;
+	
 	// FIXME: we don't seem to be doing anything with this!
 	// var propertySets = parser.getPropertySets(frag);
-	var localProperties = localProps || parser.parseProperties(frag["dojo:"+stype]);
-	// var tic = new Date();
-	var twidget = dojo.widget.manager.getImplementation(stype);
+	var localProperties = localProps || parser.parseProperties(frag[frag["ns"]+":"+stype]);
+	var twidget = dojo.widget.manager.getImplementation(stype,null,null,frag["ns"]);
 	if(!twidget){
-		throw new Error("cannot find \"" + stype + "\" widget");
+		throw new Error('cannot find "' + type + '" widget');
 	}else if (!twidget.create){
-		throw new Error("\"" + stype + "\" widget object does not appear to implement *Widget");
+		throw new Error('"' + type + '" widget object has no "create" method and does not appear to implement *Widget');
 	}
 	localProperties["dojoinsertionindex"] = insertionIndex;
-	// FIXME: we loose no less than 5ms in construction!
-	var ret = twidget.create(localProperties, frag, parentComp);
-	// dojo.debug(new Date() - tic);
+	// FIXME: we lose no less than 5ms in construction!
+	var ret = twidget.create(localProperties, frag, parentComp, frag["ns"]);
+	// dojo.profile.end("buildWidgetFromParseTree");
 	return ret;
+}
+
+dojo.widget.defineWidget = function(/*String*/			widgetClass, 
+									/*String*/			renderer,
+									/*function||array*/	superclasses, 
+									/*function*/		init,
+									/*Object*/			props){
+
+	// summary: Create a widget constructor function (aka widgetClass)
+	// widgetClass: the location in the object hierarchy to place the new widget class constructor
+	// renderer: usually "html", determines when this delcaration will be used
+	// superclasses:
+	//		can be either a single function or an array of functions to be
+	//		mixed in as superclasses. If an array, only the first will be used
+	//		to set prototype inheritance.
+	// init: an optional constructor function. Will be called after superclasses are mixed in.
+	// props: a map of properties and functions to extend the class prototype with
+
+	// This meta-function does parameter juggling for backward compat and overloading
+	// if 4th argument is a string, we are using the old syntax
+	// old sig: widgetClass, superclasses, props (object), renderer (string), init (function)
+	if(dojo.lang.isString(arguments[3])){
+		dojo.widget._defineWidget(arguments[0], arguments[3], arguments[1], arguments[4], arguments[2]);
+	}else{
+		// widgetClass
+		var args = [ arguments[0] ], p = 3;
+		if(dojo.lang.isString(arguments[1])){
+			// renderer, superclass
+			args.push(arguments[1], arguments[2]);
+		}else{
+			// superclass
+			args.push('', arguments[1]);
+			p = 2;
+		}
+		if(dojo.lang.isFunction(arguments[p])){
+			// init (function), props (object) 
+			args.push(arguments[p], arguments[p+1]);
+		}else{
+			// props (object) 
+			args.push(null, arguments[p]);
+		}
+		dojo.widget._defineWidget.apply(this, args);
+	}
+}
+
+dojo.widget.defineWidget.renderers = "html|svg|vml";
+
+dojo.widget._defineWidget = function(widgetClass /*string*/, renderer /*string*/, superclasses /*function||array*/, init /*function*/, props /*object*/){
+	// FIXME: uncomment next line to test parameter juggling ... remove when confidence improves
+	// dojo.debug('(c:)' + widgetClass + '\n\n(r:)' + renderer + '\n\n(i:)' + init + '\n\n(p:)' + props);
+	// widgetClass takes the form foo.bar.baz<.renderer>.WidgetName (e.g. foo.bar.baz.WidgetName or foo.bar.baz.html.WidgetName)
+	var module = widgetClass.split(".");
+	var type = module.pop(); // type <= WidgetName, module <= foo.bar.baz<.renderer>
+	var regx = "\\.(" + (renderer ? renderer + '|' : '') + dojo.widget.defineWidget.renderers + ")\\.";
+	var r = widgetClass.search(new RegExp(regx));
+	module = (r < 0 ? module.join(".") : widgetClass.substr(0, r));
+
+	// deprecated in favor of namespace system, remove for 0.5
+	dojo.widget.manager.registerWidgetPackage(module);
+	
+	var pos = module.indexOf(".");
+	var nsName = (pos > -1) ? module.substring(0,pos) : module;
+
+	// FIXME: hrm, this might make things simpler
+	//dojo.widget.tags.addParseTreeHandler(nsName+":"+type.toLowerCase());
+	
+	props=(props)||{};
+	props.widgetType = type;
+	if((!init)&&(props["classConstructor"])){
+		init = props.classConstructor;
+		delete props.classConstructor;
+	}
+	dojo.declare(widgetClass, superclasses, init, props);
 }

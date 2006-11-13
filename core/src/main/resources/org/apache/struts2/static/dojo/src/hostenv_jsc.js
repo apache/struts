@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -19,7 +19,7 @@ dojo.hostenv.name_ = 'jsc';
 // See the Rotor source code jscript/engine/globalobject.cs for what globals
 // are available.
 if((typeof ScriptEngineMajorVersion != 'function')||(ScriptEngineMajorVersion() < 7)){
-	dj_throw("attempt to use JScript .NET host environment with inappropriate ScriptEngine"); 
+	dojo.raise("attempt to use JScript .NET host environment with inappropriate ScriptEngine"); 
 }
 
 // for more than you wanted to know about why this import is required even if
@@ -29,7 +29,7 @@ import System;
 
 dojo.hostenv.getText = function(uri){
 	if(!System.IO.File.Exists(uri)){
-		// dj_throw("No such file '" + uri + "'");
+		// dojo.raise("No such file '" + uri + "'");
 		return 0;
 	}
 	var reader = new System.IO.StreamReader(uri);
@@ -40,7 +40,7 @@ dojo.hostenv.getText = function(uri){
 dojo.hostenv.loadUri = function(uri){
 	var contents = this.getText(uri);
 	if(!contents){
-		dj_throw("got no back contents from uri '" + uri + "': " + contents);
+		dojo.raise("got no back contents from uri '" + uri + "': " + contents);
 	}
 	// TODO: in JScript .NET, eval will not affect the symbol table of the current code?
 	var value = dj_eval(contents);

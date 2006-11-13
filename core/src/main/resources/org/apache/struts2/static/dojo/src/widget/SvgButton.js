@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -54,7 +54,7 @@ dojo.widget.SvgButton = function(){
 		//textNode.appendChild(labelNode);
 		//this.domNode.appendChild(textNode);
 		return textString;
-		alert(textNode.getComputedTextLength());
+		//alert(textNode.getComputedTextLength());
 	}
 
 	this.fillInTemplate = function(x, y, textSize, label, shape){
@@ -136,8 +136,6 @@ dojo.widget.SvgButton.prototype.labelString = function(x, y, textSize, label, sh
 	return textString;
 }
 
-//dojo.widget.SVGButton.prototype.templateString = "<g class='dojoButton' dojoAttachEvent='onClick; onMouseMove: onFoo;' dojoAttachPoint='labelNode'>"+ dojo.webui.widgets.SVGButton.prototype.shapeString("ellipse") + "</g>";
-
 dojo.widget.SvgButton.prototype.templateString = function(x, y, textSize, label, shape) {
-	return "<g class='dojoButton' dojoAttachEvent='onClick; onMouseMove: onFoo;' dojoAttachPoint='labelNode'>"+ dojo.webui.widgets.SVGButton.prototype.shapeString(x, y, textSize, label, shape) + dojo.widget.SVGButton.prototype.labelString(x, y, textSize, label, shape) + "</g>";
+	return "<g class='dojoButton' dojoAttachEvent='onClick; onMouseMove: onFoo;' dojoAttachPoint='labelNode'>"+ dojo.widgets.SVGButton.prototype.shapeString(x, y, textSize, label, shape) + dojo.widget.SVGButton.prototype.labelString(x, y, textSize, label, shape) + "</g>";
 }

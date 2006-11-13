@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -9,31 +9,8 @@
 */
 
 dojo.provide("dojo.animation.Timer");
-dojo.require("dojo.lang");
+dojo.require("dojo.lang.timing.Timer");
 
-dojo.animation.Timer = function(intvl){
-	var timer = null;
-	this.isRunning = false;
-	this.interval = intvl;
+dojo.deprecated("dojo.animation.Timer is now dojo.lang.timing.Timer", "0.5");
 
-	this.onTick = function(){};
-	this.onStart = null;
-	this.onStop = null;
-
-	this.setInterval = function(ms){
-		if (this.isRunning) window.clearInterval(timer);
-		this.interval = ms;
-		if (this.isRunning) timer = window.setInterval(dojo.lang.hitch(this, "onTick"), this.interval);
-	};
-
-	this.start = function(){
-		if (typeof this.onStart == "function") this.onStart();
-		this.isRunning = true;
-		timer = window.setInterval(this.onTick, this.interval);
-	};
-	this.stop = function(){
-		if (typeof this.onStop == "function") this.onStop();
-		this.isRunning = false;
-		window.clearInterval(timer);
-	};
-};
+dojo.animation.Timer = dojo.lang.timing.Timer;

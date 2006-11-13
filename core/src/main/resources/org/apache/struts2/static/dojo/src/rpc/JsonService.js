@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -12,7 +12,7 @@ dojo.provide("dojo.rpc.JsonService");
 dojo.require("dojo.rpc.RpcService");
 dojo.require("dojo.io.*");
 dojo.require("dojo.json");
-dojo.require("dojo.lang");
+dojo.require("dojo.lang.common");
 
 dojo.rpc.JsonService = function(args){
 	// passing just the URL isn't terribly useful. It's expected that at
@@ -48,7 +48,7 @@ dojo.rpc.JsonService = function(args){
 			if(args["serviceUrl"]){
 				this.serviceUrl = args.serviceUrl;
 			}
-			if(args["strictArgChecks"]){
+			if(typeof args["strictArgChecks"] != "undefined"){
 				this.strictArgChecks = args.strictArgChecks;
 			}
 		}
@@ -57,39 +57,61 @@ dojo.rpc.JsonService = function(args){
 
 dojo.inherits(dojo.rpc.JsonService, dojo.rpc.RpcService);
 
-dojo.lang.extend(dojo.rpc.JsonService, {
+dojo.extend(dojo.rpc.JsonService, {
 
 	bustCache: false,
+	
+	contentType: "application/json-rpc",
 
 	lastSubmissionId: 0,
 
 	callRemote: function(method, params){
-		var deferred = new dojo.rpc.Deferred();
+		//summary
+		// call an arbitrary remote method without requiring it
+		// to be predefined with SMD
+		var deferred = new dojo.Deferred();
 		this.bind(method, params, deferred);
 		return deferred;
 	},
 
-	bind: function(method, parameters, deferredRequestHandler){
+	bind: function(method, parameters, deferredRequestHandler, url){
+		//summary
+		//JSON-RPC bind method. Takes remote method, parameters, deferred,
+		//and a url, calls createRequest to make a JSON-RPC envelope and
+		//passes that off with bind.
+
 		dojo.io.bind({
-			url: this.serviceUrl,
+			url: url||this.serviceUrl,
 			postContent: this.createRequest(method, parameters),
 			method: "POST",
+			contentType: this.contentType,
 			mimetype: "text/json",
 			load: this.resultCallback(deferredRequestHandler),
+			error: this.errorCallback(deferredRequestHandler),
 			preventCache:this.bustCache 
 		});
 	},
 
 	createRequest: function(method, params){
-		var req = { "params": params, "method": method, "id": this.lastSubmissionId++ };
+		//summary
+		//create a JSON-RPC envelope for the request
+		var req = { "params": params, "method": method, "id": ++this.lastSubmissionId };
 		var data = dojo.json.serialize(req);
 		dojo.debug("JsonService: JSON-RPC Request: " + data);
 		return data;
 	},
 
 	parseResults: function(obj){
-		if(obj["result"]){
-			return obj["result"];
+		//summary
+		//parse the result envelope and pass the results back to 
+		// to the callback function
+		if(!obj){ return; }
+		if (obj["Result"]!=null){ 
+			return obj["Result"]; 
+		}else if(obj["result"]!=null){ 
+			return obj["result"]; 
+		}else if(obj["ResultSet"]){
+			return obj["ResultSet"];
 		}else{
 			return obj;
 		}

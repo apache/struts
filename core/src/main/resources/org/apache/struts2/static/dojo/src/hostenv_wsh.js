@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -23,7 +23,7 @@ var WScript;
 
 // make sure we are in right environment
 if(typeof WScript == 'undefined'){
-	dj_throw("attempt to use WSH host environment when no WScript global");
+	dojo.raise("attempt to use WSH host environment when no WScript global");
 }
 
 dojo.hostenv.println = WScript.Echo;

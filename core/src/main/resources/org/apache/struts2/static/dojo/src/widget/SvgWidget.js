@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -15,26 +15,23 @@ dojo.provide("dojo.widget.SVGWidget"); // back compat
 dojo.require("dojo.dom");
 
 // SVGWidget is a mixin ONLY
-dojo.widget.SvgWidget = function(args){
-	// mix in the parent type
-	// dojo.widget.DomWidget.call(this);
-}
-dojo.inherits(dojo.widget.SvgWidget, dojo.widget.DomWidget);
-
-dojo.lang.extend(dojo.widget.SvgWidget, {
+dojo.widget.declare(
+	"dojo.widget.SvgWidget",
+	dojo.widget.DomWidget,
+{
 	getContainerHeight: function(){
 		// NOTE: container height must be returned as the INNER height
-		dj_unimplemented("dojo.widget.SvgWidget.getContainerHeight");
+		dojo.unimplemented("dojo.widget.SvgWidget.getContainerHeight");
 	},
 
 	getContainerWidth: function(){
 		// return this.parent.domNode.offsetWidth;
-		dj_unimplemented("dojo.widget.SvgWidget.getContainerWidth");
+		dojo.unimplemented("dojo.widget.SvgWidget.getContainerWidth");
 	},
 
 	setNativeHeight: function(height){
 		// var ch = this.getContainerHeight();
-		dj_unimplemented("dojo.widget.SVGWidget.setNativeHeight");
+		dojo.unimplemented("dojo.widget.SVGWidget.setNativeHeight");
 	},
 
 	createNodesFromText: function(txt, wrap){

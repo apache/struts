@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -8,8 +8,9 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
-dojo.hostenv.conditionalLoadModule({
-	common: ["dojo.event", "dojo.event.topic"],
-	browser: ["dojo.event.browser"]
+dojo.kwCompoundRequire({
+	common: ["dojo.event.common", "dojo.event.topic"],
+	browser: ["dojo.event.browser"],
+	dashboard: ["dojo.event.browser"]
 });
-dojo.hostenv.moduleLoaded("dojo.event.*");
+dojo.provide("dojo.event.*");

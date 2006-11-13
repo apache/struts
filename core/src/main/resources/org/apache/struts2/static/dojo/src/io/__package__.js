@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -8,9 +8,10 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
-dojo.hostenv.conditionalLoadModule({
-	common: ["dojo.io", false, false],
-	rhino: ["dojo.io.RhinoIO", false, false],
-	browser: [["dojo.io.BrowserIO", false, false], ["dojo.io.cookie", false, false]]
+dojo.kwCompoundRequire({
+	common: ["dojo.io.common"],
+	rhino: ["dojo.io.RhinoIO"],
+	browser: ["dojo.io.BrowserIO", "dojo.io.cookie"],
+	dashboard: ["dojo.io.BrowserIO", "dojo.io.cookie"]
 });
-dojo.hostenv.moduleLoaded("dojo.io.*");
+dojo.provide("dojo.io.*");

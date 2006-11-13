@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -13,60 +13,79 @@
  * - test, bug fix, more features :)
 */
 dojo.provide("dojo.widget.Editor");
-dojo.provide("dojo.widget.html.Editor");
+dojo.deprecated("dojo.widget.Editor", "is replaced by dojo.widget.Editor2", "0.5");
+
+dojo.require("dojo.io.*");
 dojo.require("dojo.widget.*");
 dojo.require("dojo.widget.Toolbar");
 dojo.require("dojo.widget.RichText");
 dojo.require("dojo.widget.ColorPalette");
+dojo.require("dojo.string.extras");
 
 dojo.widget.tags.addParseTreeHandler("dojo:Editor");
 
-dojo.widget.html.Editor = function() {
+dojo.widget.Editor = function() {
 	dojo.widget.HtmlWidget.call(this);
 	this.contentFilters = [];
+	this._toolbars = [];
 }
-dojo.inherits(dojo.widget.html.Editor, dojo.widget.HtmlWidget);
+dojo.inherits(dojo.widget.Editor, dojo.widget.HtmlWidget);
 
-dojo.widget.html.Editor.itemGroups = {
+dojo.widget.Editor.itemGroups = {
 	textGroup: ["bold", "italic", "underline", "strikethrough"],
-	blockGroup: ["formatBlock", "fontName"],
+	blockGroup: ["formatBlock", "fontName", "fontSize"],
 	justifyGroup: ["justifyleft", "justifycenter", "justifyright"],
 	commandGroup: ["save", "cancel"],
 	colorGroup: ["forecolor", "hilitecolor"],
 	listGroup: ["insertorderedlist", "insertunorderedlist"],
 	indentGroup: ["outdent", "indent"],
-	linkGroup: ["createlink", "insertimage"]
+	linkGroup: ["createlink", "insertimage", "inserthorizontalrule"]
 };
 
-dojo.widget.html.Editor.formatBlockValues = {
+dojo.widget.Editor.formatBlockValues = {
 	"Normal": "p",
 	"Main heading": "h2",
 	"Sub heading": "h3",
-	"Sub sub headering": "h4",
+	"Sub sub heading": "h4",
 	"Preformatted": "pre"
 };
 
-dojo.widget.html.Editor.fontNameValues = {
+dojo.widget.Editor.fontNameValues = {
 	"Arial": "Arial, Helvetica, sans-serif",
 	"Verdana": "Verdana, sans-serif",
 	"Times New Roman": "Times New Roman, serif",
 	"Courier": "Courier New, monospace"
 };
 
-dojo.widget.html.Editor.defaultItems = [
-	"commandGroup", "|", "linkGroup", "|", "textGroup", "|", "justifyGroup", "|", "listGroup", "indentGroup", "|", "colorGroup"
+dojo.widget.Editor.fontSizeValues = {
+	"1 (8 pt)" : "1",
+	"2 (10 pt)": "2",
+	"3 (12 pt)": "3",
+	"4 (14 pt)": "4",
+	"5 (18 pt)": "5",
+	"6 (24 pt)": "6",
+	"7 (36 pt)": "7"
+};
+
+dojo.widget.Editor.defaultItems = [
+	"commandGroup", "|", "blockGroup", "|", "textGroup", "|", "colorGroup", "|", "justifyGroup", "|", "listGroup", "indentGroup", "|", "linkGroup"
 ];
 
 // ones we support by default without asking the RichText component
 // NOTE: you shouldn't put buttons like bold, italic, etc in here
-dojo.widget.html.Editor.supportedCommands = ["save", "cancel", "|", "-", "/", " "];
+dojo.widget.Editor.supportedCommands = ["save", "cancel", "|", "-", "/", " "];
 
-dojo.lang.extend(dojo.widget.html.Editor, {
+dojo.lang.extend(dojo.widget.Editor, {
 	widgetType: "Editor",
 
-	items: dojo.widget.html.Editor.defaultItems,
-	formatBlockItems: dojo.lang.shallowCopy(dojo.widget.html.Editor.formatBlockValues),
-	fontNameItems: dojo.lang.shallowCopy(dojo.widget.html.Editor.fontNameValues),
+	saveUrl: "",
+	saveMethod: "post",
+	saveArgName: "editorContent",
+	closeOnSave: false,
+	items: dojo.widget.Editor.defaultItems,
+	formatBlockItems: dojo.lang.shallowCopy(dojo.widget.Editor.formatBlockValues),
+	fontNameItems: dojo.lang.shallowCopy(dojo.widget.Editor.fontNameValues),
+	fontSizeItems: dojo.lang.shallowCopy(dojo.widget.Editor.fontSizeValues),
 
 	// used to get the properties of an item if it is given as a string
 	getItemProperties: function(name) {
@@ -109,6 +128,10 @@ dojo.lang.extend(dojo.widget.html.Editor, {
 			case "fontname":
 				props.name = "fontName";
 				props.values = this.fontNameItems;
+
+			case "fontsize":
+				props.name = "fontSize";
+				props.values = this.fontSizeItems;
 		}
 		return props;
 	},
@@ -194,7 +217,7 @@ dojo.lang.extend(dojo.widget.html.Editor, {
 
 	addToolbar: function(toolbar) {
 		this.initToolbar();
-		if(!(toolbar instanceof dojo.widget.html.Toolbar)) {
+		if(!(toolbar instanceof dojo.widget.Toolbar)) {
 			toolbar = dojo.widget.createWidget(this._toolbarType);
 		}
 		this._toolbarContainer.addChild(toolbar);
@@ -206,7 +229,7 @@ dojo.lang.extend(dojo.widget.html.Editor, {
 		if(!tb) { tb = this._toolbars[0]; }
 		var cmd = ((item)&&(!dojo.lang.isUndefined(item["getValue"]))) ?  cmd = item["getValue"](): item;
 
-		var groups = dojo.widget.html.Editor.itemGroups;
+		var groups = dojo.widget.Editor.itemGroups;
 		if(item instanceof dojo.widget.ToolbarItem) {
 			tb.addChild(item);
 		} else if(groups[cmd]) {
@@ -221,7 +244,15 @@ dojo.lang.extend(dojo.widget.html.Editor, {
 						worked = false;
 					}
 				}
-				if(btnGroup.length) {
+				if(btnGroup.length){
+					/*
+					// the addChild interface is assinine. Work around it.
+					var tprops = this.getItemProperties(cmd);
+					var tmpGroup = dojo.widget.createWidget("ToolbarButtonGroup", tprops);
+					dojo.debug(btnGroup);
+					dojo.event.connect(tmpGroup, "onClick", this, "_action");
+					dojo.event.connect(tmpGroup, "onChangeSelect", this, "_action");
+					*/
 					var btn = tb.addChild(btnGroup, null, this.getItemProperties(cmd));
 					dojo.event.connect(btn, "onClick", this, "_action");
 					dojo.event.connect(btn, "onChangeSelect", this, "_action");
@@ -260,12 +291,23 @@ dojo.lang.extend(dojo.widget.html.Editor, {
 					dojo.event.connect(select, "onSetValue", dojo.lang.hitch(this, function(item, value) {
 						this.onAction("fontName", value);
 					}));
+				} else if(cmd == "fontsize") {
+					var select = dojo.widget.createWidget("ToolbarSelect", {
+						name: "fontSize",
+						values: this.fontSizeItems
+					});
+					tb.addChild(select);
+					dojo.event.connect(select, "onSetValue", dojo.lang.hitch(this, function(item, value) {
+						this.onAction("fontSize", value);
+					}));
 				} else if(dojo.lang.inArray(cmd, ["forecolor", "hilitecolor"])) {
 					var btn = tb.addChild(dojo.widget.createWidget("ToolbarColorDialog", this.getItemProperties(cmd)));
 					dojo.event.connect(btn, "onSetValue", this, "_setValue");
 				} else {
 					var btn = tb.addChild(this.getCommandImage(cmd), null, this.getItemProperties(cmd));
-					if(dojo.lang.inArray(cmd, ["save", "cancel"])) {
+					if(cmd == "save"){
+						dojo.event.connect(btn, "onClick", this, "_save");
+					}else if(cmd == "cancel"){
 						dojo.event.connect(btn, "onClick", this, "_close");
 					} else {
 						dojo.event.connect(btn, "onClick", this, "_action");
@@ -321,7 +363,7 @@ dojo.lang.extend(dojo.widget.html.Editor, {
 		var items = this._toolbarContainer.getItems();
 		for(var i = 0; i < items.length; i++) {
 			var item = items[i];
-			if(item instanceof dojo.widget.html.ToolbarSeparator) { continue; }
+			if(item instanceof dojo.widget.ToolbarSeparator) { continue; }
 			var cmd = item._name;
 			if (cmd == "save" || cmd == "cancel") { continue; }
 			else if(cmd == "justifyGroup") {
@@ -376,14 +418,14 @@ dojo.lang.extend(dojo.widget.html.Editor, {
 		}
 	},
 
-	supportedCommands: dojo.widget.html.Editor.supportedCommands.concat(),
+	supportedCommands: dojo.widget.Editor.supportedCommands.concat(),
 
 	isSupportedCommand: function(cmd) {
 		// FIXME: how do we check for ActiveX?
 		var yes = dojo.lang.inArray(cmd, this.supportedCommands);
 		if(!yes) {
 			try {
-				var richText = this._richText || dojo.widget.html.RichText.prototype;
+				var richText = this._richText || dojo.widget.HtmlRichText.prototype;
 				yes = richText.queryCommandAvailable(cmd);
 			} catch(E) {}
 		}
@@ -399,14 +441,31 @@ dojo.lang.extend(dojo.widget.html.Editor, {
 	},
 
 	_action: function(e) {
-		// djConfig.isDebug = true;
-		// dojo.debug(e);
-		// dojo.debug(e.getValue());
 		this._fire("onAction", e.getValue());
 	},
 
 	_setValue: function(a, b) {
 		this._fire("onAction", a.getValue(), b);
+	},
+
+	_save: function(e){
+		// FIXME: how should this behave when there's a larger form in play?
+		if(!this._richText.isClosed){
+			if(this.saveUrl.length){
+				var content = {};
+				content[this.saveArgName] = this.getHtml();
+				dojo.io.bind({
+					method: this.saveMethod,
+					url: this.saveUrl,
+					content: content
+				});
+			}else{
+				dojo.debug("please set a saveUrl for the editor");
+			}
+			if(this.closeOnSave){
+				this._richText.close(e.getName().toLowerCase() == "save");
+			}
+		}
 	},
 
 	_close: function(e) {
@@ -450,7 +509,7 @@ dojo.lang.extend(dojo.widget.html.Editor, {
 	},
 
 	getHtml: function(){
-		this._richText.contentFilters = this.contentFilters;
+		this._richText.contentFilters = this._richText.contentFilters.concat(this.contentFilters);
 		return this._richText.getEditorContent();
 	},
 
@@ -473,147 +532,3 @@ dojo.lang.extend(dojo.widget.html.Editor, {
 	onCancel: function(){}
 });
 
-/*
-function dontRunMe() {
-function createToolbar() {
-	tick("createToolbar");
-	tick("ct-init");
-	tbCont = dojo.widget.createWidget("toolbarContainer");
-	tb = dojo.widget.createWidget("toolbar");
-	tbCont.addChild(tb);
-
-	var saveBtn = tb.addChild("Save");
-	dojo.event.connect(saveBtn, "onClick", function() { editor.close(true); });
-	var cancelBtn = tb.addChild("Cancel");
-	dojo.event.connect(cancelBtn, "onClick", function() { editor.close(false); });
-	tb.addChild("|");
-
-	var headings = dojo.widget.createWidget("ToolbarSelect", {
-		name: "formatBlock",
-		values: {
-			"Normal": "p",
-			"Main heading": "h2",
-			"Sub heading": "h3",
-			"Sub sub heading": "h4",
-			"Preformatted": "pre"
-		}
-	});
-	dojo.event.connect(headings, "onSetValue", function(item, val) {
-		editor.execCommand("formatBlock", val);
-	});
-	tb.addChild(headings);
-	tb.addChild("|");
-	tock("ct-init");
-
-	// toolbar layout (2 rows):
-	// Save Cancel | WikiWord | Link Img | Table
-	// Heading FontFace | B I U | Alignment | OL UL < > | FG BG
-	var rows = [
-		["save", "cancel", "|", "wikiword", "|", "createlink", "insertimage", "|", "table"],
-		["formatBlock", "font", "|", "bold", "italic", "underline", "|", "justification", "|", "ol", "ul", "forecolor", "hilitecolor"]
-	];
-
-	tick("command array");
-	var commands = [
-		{ values: ["bold", "italic", "underline", "strikethrough"], toggleItem: true },
-		{ values: [
-				dojo.widget.createWidget("ToolbarColorDialog", {toggleItem: true, name: "forecolor", icon: cmdImg("forecolor")}),
-				dojo.widget.createWidget("ToolbarColorDialog", {toggleItem: true, name: "hilitecolor", icon: cmdImg("hilitecolor")})
-		]},
-		{ values: ["justifyleft", "justifycenter", "justifyright"], name: "justify", defaultButton: "justifyleft", buttonGroup: true, preventDeselect: true },
-		{ values: ["createlink", "insertimage"] },
-		{ values: ["outdent", "indent"] },
-		{ values: ["insertorderedlist", "insertunorderedlist"], name: "list", buttonGroup: true },
-		{ values: ["undo", "redo"] },
-		{ values: ["wikiword"], title: "WikiWord" }
-	];
-	tock("command array");
-
-	tick("processCommands");
-	for(var i = 0; i < commands.length; i++) {
-		var set = commands[i];
-		var values = set.values;
-		var btnGroup = [set.name];
-		for(var j = 0; j < values.length; j++) {
-			if(typeof values[j] == "string") {
-				var cmd = values[j];
-				if(cmd == "wikiword") {
-					var btn = tb.addChild(cmdImg(cmd), null, {name:cmd, label:"WikiWord"});
-					//dojo.event.connect(bt, "onClick", listenWikiWord);
-					//dojo.event.connect(bt, "onChangeSelect", listenWikiWord);
-				} else if(dojo.widget.html.RichText.prototype.queryCommandAvailable(cmd)) {
-					if(set.buttonGroup) {
-						btnGroup.push(cmdImg(cmd));
-					} else {
-						var btn = tb.addChild(cmdImg(cmd), null, {name:cmd, toggleItem:set.toggleItem});
-						dojo.event.connect(btn, "onClick", listen);
-						dojo.event.connect(btn, "onChangeSelect", listen);
-					}
-				}
-			} else {
-				if(dojo.widget.html.RichText.prototype.queryCommandAvailable(values[j].getName())) {
-					var btn = tb.addChild(values[j]);
-					dojo.event.connect(btn, "onSetValue", colorListen, values[j].getName());
-				}
-			}
-		}
-		if(set.buttonGroup && btnGroup.length > 1) {
-			var btn = tb.addChild(btnGroup, null, {defaultButton:set.defaultButton});
-			dojo.event.connect(btn, "onClick", listen);
-			dojo.event.connect(btn, "onChangeSelect", listen);
-		}
-
-		if(i + 1 != commands.length
-			&& !(tb.children[tb.children.length-1] instanceof dojo.widget.html.ToolbarSeparator)) {
-			tb.addChild("|");
-		}
-	}
-	tock("processCommands");
-	tock("createToolbar");
-	return tbCont;
-}
-function cmdImg(cmd) {
-	return dojo.uri.dojoUri("src/widget/templates/buttons/" + cmd + ".gif");
-}
-function createWysiwyg(node) {
-	tick("createWysiwyg");
-	tick("editor");
-	editor = dojo.widget.createWidget("RichText", {}, node);
-	tock("editor");
-	dojo.event.connect(editor, "close", function(changed) {
-		if(changed) { setTimeout(save, 5); }
-		setTimeout(function() {
-			dojo.io.bind({
-				url: location,
-				content: {
-					edit: "0",
-					cancel: "Cancel"
-				},
-				handler: function() {
-					hideLoad();
-				}
-			});
-		}, 15);
-		finishEdit();
-	});
-	autolinkWikiWords(editor);
-	cleanupWord(editor);
-	//createToolbar();
-	dojo.event.connect(editor, "onDisplayChanged", updateToolbar);
-
-	if(editor && tbCont && tb) {
-		var top = document.getElementById("jot-topbar");
-		dojo.html.addClass(top, "hidden");
-		//placeToolbar(tbCont.domNode);
-		//top.appendChild(tbCont.domNode);
-		//document.getElementById("jot-bottombar").innerHTML = "&nbsp;";
-	} else {
-		alert("Something went wrong trying to create the toolbar + editor.");
-	}
-	tock("createWysiwyg");
-	
-	return editor;
-}
-
-}
-*/

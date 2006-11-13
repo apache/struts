@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -10,65 +10,115 @@
 
 dojo.provide("dojo.collections.Collections");
 
-dojo.collections = {Collections:true};
-dojo.collections.DictionaryEntry = function(k,v){
-	this.key = k;
-	this.value = v;
-	this.valueOf = function(){ return this.value; };
-	this.toString = function(){ return this.value; };
+dojo.collections.DictionaryEntry=function(/* string */k, /* object */v){
+	//	summary
+	//	return an object of type dojo.collections.DictionaryEntry
+	this.key=k;
+	this.value=v;
+	this.valueOf=function(){ 
+		return this.value; 	//	object
+	};
+	this.toString=function(){ 
+		return String(this.value);	//	string 
+	};
 }
 
-dojo.collections.Iterator = function(a){
-	var obj = a;
-	var position = 0;
-	this.atEnd = (position>=obj.length-1);
-	this.current = obj[position];
-	this.moveNext = function(){
-		if(++position>=obj.length){
-			this.atEnd = true;
+/*	Iterators
+ *	The collections.Iterators (Iterator and DictionaryIterator) are built to
+ *	work with the Collections included in this module.  However, they *can*
+ *	be used with arrays and objects, respectively, should one choose to do so.
+ */
+dojo.collections.Iterator=function(/* array */arr){
+	//	summary
+	//	return an object of type dojo.collections.Iterator
+	var a=arr;
+	var position=0;
+	this.element=a[position]||null;
+	this.atEnd=function(){
+		//	summary
+		//	Test to see if the internal cursor has reached the end of the internal collection.
+		return (position>=a.length);	//	bool
+	};
+	this.get=function(){
+		//	summary
+		//	Test to see if the internal cursor has reached the end of the internal collection.
+		if(this.atEnd()){
+			return null;		//	object
 		}
-		if(this.atEnd){
-			return false;
+		this.element=a[position++];
+		return this.element;	//	object
+	};
+	this.map=function(/* function */fn, /* object? */scope){
+		//	summary
+		//	Functional iteration with optional scope.
+		var s=scope||dj_global;
+		if(Array.map){
+			return Array.map(a,fn,s);	//	array
+		}else{
+			var arr=[];
+			for(var i=0; i<a.length; i++){
+				arr.push(fn.call(s,a[i]));
+			}
+			return arr;		//	array
 		}
-		this.current=obj[position];
-		return true;
-	}
-	this.reset = function(){
-		position = 0;
-		this.atEnd = false;
-		this.current = obj[position];
-	}
+	};
+	this.reset=function(){
+		//	summary
+		//	reset the internal cursor.
+		position=0;
+		this.element=a[position];
+	};
 }
 
-dojo.collections.DictionaryIterator = function(obj){
-	var arr = [] ;	//	Create an indexing array
-	for (var p in obj) arr.push(obj[p]) ;	//	fill it up
-	var position = 0 ;
-	this.atEnd = (position>=arr.length-1);
-	this.current = arr[position]||null ;
-	this.entry = this.current||null ;
-	this.key = (this.entry)?this.entry.key:null ;
-	this.value = (this.entry)?this.entry.value:null ;
-	this.moveNext = function() { 
-		if (++position>=arr.length) {
-			this.atEnd = true ;
+/*	Notes:
+ *	The DictionaryIterator no longer supports a key and value property;
+ *	the reality is that you can use this to iterate over a JS object
+ *	being used as a hashtable.
+ */
+dojo.collections.DictionaryIterator=function(/* object */obj){
+	//	summary
+	//	return an object of type dojo.collections.DictionaryIterator
+	var a=[];	//	Create an indexing array
+	var testObject={};
+	for(var p in obj){
+		if(!testObject[p]){
+			a.push(obj[p]);	//	fill it up
 		}
-		if(this.atEnd){
-			return false;
+	}
+	var position=0;
+	this.element=a[position]||null;
+	this.atEnd=function(){
+		//	summary
+		//	Test to see if the internal cursor has reached the end of the internal collection.
+		return (position>=a.length);	//	bool
+	};
+	this.get=function(){
+		//	summary
+		//	Test to see if the internal cursor has reached the end of the internal collection.
+		if(this.atEnd()){
+			return null;		//	object
 		}
-		this.entry = this.current = arr[position] ;
-		if (this.entry) {
-			this.key = this.entry.key ;
-			this.value = this.entry.value ;
+		this.element=a[position++];
+		return this.element;	//	object
+	};
+	this.map=function(/* function */fn, /* object? */scope){
+		//	summary
+		//	Functional iteration with optional scope.
+		var s=scope||dj_global;
+		if(Array.map){
+			return Array.map(a,fn,s);	//	array
+		}else{
+			var arr=[];
+			for(var i=0; i<a.length; i++){
+				arr.push(fn.call(s,a[i]));
+			}
+			return arr;		//	array
 		}
-		return true;
-	} ;
-	this.reset = function() { 
-		position = 0 ; 
-		this.atEnd = false ;
-		this.current = arr[position]||null ;
-		this.entry = this.current||null ;
-		this.key = (this.entry)?this.entry.key:null ;
-		this.value = (this.entry)?this.entry.value:null ;
-	} ;
+	};
+	this.reset=function() { 
+		//	summary
+		//	reset the internal cursor.
+		position=0; 
+		this.element=a[position];
+	};
 };

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -10,7 +10,7 @@
 
 //	hostenv_svg
 if(typeof window == 'undefined'){
-	dj_throw("attempt to use adobe svg hostenv when no window object");
+	dojo.raise("attempt to use adobe svg hostenv when no window object");
 }
 dojo.debug = function(){ 
 	if (!djConfig.isDebug) { return; }
@@ -85,8 +85,8 @@ dojo.hostenv.getLibaryScriptUri = function(){ };
 dojo.hostenv.loadUri = function(uri){ };
 dojo.hostenv.loadUriAndCheck = function(uri, module){ };
 
-//	aliased in bootstrap2, don't ignore
-//	we are going to kill loadModule for the first round of SVG stuff, and include shit manually.
+//	aliased in loader.js, don't ignore
+//	we are going to kill loadModule for the first round of SVG stuff, and include stuff manually.
 dojo.hostenv.loadModule = function(moduleName){
 	//	just like startPackage, but this time we're just checking to make sure it exists already.
 	var a = moduleName.split(".");
@@ -96,7 +96,7 @@ dojo.hostenv.loadModule = function(moduleName){
 		if (a[i] == "*") continue;
 		s.push(a[i]);
 		if (!currentObj[a[i]]){
-			dj_throw("dojo.require('" + moduleName + "'): module does not exist.");
+			dojo.raise("dojo.require('" + moduleName + "'): module does not exist.");
 		} else currentObj = currentObj[a[i]];
 	}
 	return; 

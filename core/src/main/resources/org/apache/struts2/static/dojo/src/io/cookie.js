@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -28,9 +28,14 @@ dojo.io.cookie.setCookie = function(name, value, days, path, domain, secure) {
 dojo.io.cookie.set = dojo.io.cookie.setCookie;
 
 dojo.io.cookie.getCookie = function(name) {
-	var idx = document.cookie.indexOf(name+'=');
+	// FIXME: Which cookie should we return?
+	//        If there are cookies set for different sub domains in the current
+	//        scope there could be more than one cookie with the same name.
+	//        I think taking the last one in the list takes the one from the
+	//        deepest subdomain, which is what we're doing here.
+	var idx = document.cookie.lastIndexOf(name+'=');
 	if(idx == -1) { return null; }
-	value = document.cookie.substring(idx+name.length+1);
+	var value = document.cookie.substring(idx+name.length+1);
 	var end = value.indexOf(';');
 	if(end == -1) { end = value.length; }
 	value = value.substring(0, end);

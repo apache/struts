@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -10,13 +10,17 @@
 
 dojo.provide("dojo.widget.DebugConsole");
 dojo.require("dojo.widget.Widget");
+dojo.require("dojo.widget.*");
+dojo.require("dojo.widget.FloatingPane");
 
-dojo.widget.DebugConsole= function(){
-	dojo.widget.Widget.call(this);
-
-	this.widgetType = "DebugConsole";
-	this.isContainer = true;
-}
-dojo.inherits(dojo.widget.DebugConsole, dojo.widget.Widget);
-dojo.widget.tags.addParseTreeHandler("dojo:debugconsole");
-dojo.requireAfterIf("html", "dojo.widget.html.DebugConsole");
+dojo.widget.defineWidget(
+	"dojo.widget.DebugConsole",
+	dojo.widget.FloatingPane,
+{
+	fillInTemplate: function() {
+		dojo.widget.DebugConsole.superclass.fillInTemplate.apply(this, arguments);
+		this.containerNode.id = "debugConsoleClientPane";
+		djConfig.isDebug = true;
+		djConfig.debugContainerId = this.containerNode.id;
+	}
+});

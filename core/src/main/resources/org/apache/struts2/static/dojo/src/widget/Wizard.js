@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -11,23 +11,18 @@
 dojo.provide("dojo.widget.Wizard");
 
 dojo.require("dojo.widget.*");
-dojo.require("dojo.widget.LayoutPane");
+dojo.require("dojo.widget.LayoutContainer");
+dojo.require("dojo.widget.ContentPane");
 dojo.require("dojo.event.*");
-dojo.require("dojo.html");
-dojo.require("dojo.style");
+dojo.require("dojo.html.style");
 
 //////////////////////////////////////////
-// Wizard -- a set of panels
+// WizardContainer -- a set of panels
 //////////////////////////////////////////
-dojo.widget.Wizard = function() {
-	dojo.widget.html.LayoutPane.call(this);
-}
-dojo.inherits(dojo.widget.Wizard, dojo.widget.html.LayoutPane);
-
-dojo.lang.extend(dojo.widget.Wizard, {
-
-	widgetType: "Wizard",
-
+dojo.widget.defineWidget(
+	"dojo.widget.WizardContainer",
+	dojo.widget.LayoutContainer,
+{
 	labelPosition: "top",
 
 	templatePath: dojo.uri.dojoUri("src/widget/templates/Wizard.html"),
@@ -91,7 +86,7 @@ dojo.lang.extend(dojo.widget.Wizard, {
 	},
 
 	registerChild: function(panel, insertionIndex){
-		dojo.widget.Wizard.superclass.registerChild.call(this, panel, insertionIndex);
+		dojo.widget.WizardContainer.superclass.registerChild.call(this, panel, insertionIndex);
 		this.wizardPanelContainerNode.appendChild(panel.domNode);
 		panel.hide();
 
@@ -161,19 +156,14 @@ dojo.lang.extend(dojo.widget.Wizard, {
 		this.selected.done();
 	}
 });
-dojo.widget.tags.addParseTreeHandler("dojo:Wizard");
 
 //////////////////////////////////////////
 // WizardPane -- a panel in a wizard
 //////////////////////////////////////////
-dojo.widget.WizardPane = function() {
-	dojo.widget.html.LayoutPane.call(this);
-}
-dojo.inherits(dojo.widget.WizardPane, dojo.widget.html.LayoutPane);
-
-dojo.lang.extend(dojo.widget.WizardPane, {
-	widgetType: "WizardPane",
-
+dojo.widget.defineWidget(
+	"dojo.widget.WizardPane",
+	dojo.widget.ContentPane,
+{
 	canGoBack: true,
 
 	passFunction: "",
@@ -205,5 +195,3 @@ dojo.lang.extend(dojo.widget.WizardPane, {
 		}
 	}
 });
-
-dojo.widget.tags.addParseTreeHandler("dojo:WizardPane");

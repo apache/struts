@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -14,15 +14,10 @@ dojo.require("dojo.event.*");
 
 // clicking on this node shows/hides another widget
 
-dojo.widget.Toggler = function(){
-	dojo.widget.DomWidget.call(this);
-}
-
-dojo.inherits(dojo.widget.Toggler, dojo.widget.DomWidget);
-
-dojo.lang.extend(dojo.widget.Toggler, {
-	widgetType: "Toggler",
-	
+dojo.widget.defineWidget(
+	"dojo.widget.Toggler",
+	dojo.widget.HtmlWidget,
+{
 	// Associated widget 
 	targetId: '',
 	
@@ -31,10 +26,9 @@ dojo.lang.extend(dojo.widget.Toggler, {
 	},
 	
 	onClick: function() {
-		var pane = dojo.widget.getWidgetById(this.targetId);
-		if ( !pane || !pane.toggle ) { return; }
+		var pane = dojo.widget.byId(this.targetId);
+		if(!pane){ return; }
 		pane.explodeSrc = this.domNode;
-		pane.doToggle();
+		pane.toggleShowing();
 	}
 });
-dojo.widget.tags.addParseTreeHandler("dojo:toggler");

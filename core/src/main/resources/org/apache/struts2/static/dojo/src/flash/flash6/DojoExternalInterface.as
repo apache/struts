@@ -1,3 +1,13 @@
+/*
+	Copyright (c) 2004-2006, The Dojo Foundation
+	All Rights Reserved.
+
+	Licensed under the Academic Free License version 2.1 or above OR the
+	modified BSD license. For more information on Dojo licensing, see:
+
+		http://dojotoolkit.org/community/licensing.shtml
+*/
+
 /** 
 		An implementation of Flash 8's ExternalInterface that works with Flash 6
 		and which is source-compatible with Flash 8. 
@@ -7,19 +17,40 @@
 
 class DojoExternalInterface{
 	public static var available:Boolean;
-	private static var callbacks = new Object();
+	public static var dojoPath = "";
 	
-	public static function initialize(){
-		// FIXME: Set available variable
-		// FIXME: do a test run to see if we can communicate from Flash to JavaScript
-		// and back again to make sure we can actually communicate (set 'available'
-		// variable)
+	public static var _fscommandReady = false;
+	public static var _callbacks = new Array();
+
+	public static function initialize(){ 
+		//getURL("javascript:dojo.debug('FLASH:DojoExternalInterface initialize')");
+		// FIXME: Set available variable by testing for capabilities
+		DojoExternalInterface.available = true;
 		
-		initializeFlashRunner();
+		// extract the dojo base path
+		DojoExternalInterface.dojoPath = DojoExternalInterface.getDojoPath();
+		//getURL("javascript:dojo.debug('FLASH:dojoPath="+DojoExternalInterface.dojoPath+"')");
+		
+		// Sometimes, on IE, the fscommand infrastructure can take a few hundred
+		// milliseconds the first time a page loads. Set a timer to keep checking
+		// to make sure we can issue fscommands; otherwise, our calls to fscommand
+		// for setCallback() and loaded() will just "disappear"
+		_root.fscommandReady = false;
+		var fsChecker = function(){
+			// issue a test fscommand
+			fscommand("fscommandReady");
+			
+			// JavaScript should set _root.fscommandReady if it got the call
+			if(_root.fscommandReady == "true"){
+				DojoExternalInterface._fscommandReady = true;
+				clearInterval(_root.fsTimer);
+			}
+		};
+		_root.fsTimer = setInterval(fsChecker, 100);
 	}
 	
 	public static function addCallback(methodName:String, instance:Object, 
-										 								 method:Function) : Boolean{
+											method:Function) : Boolean{
 		// A variable that indicates whether the call below succeeded
 		_root._succeeded = null;
 		
@@ -34,8 +65,8 @@ class DojoExternalInterface{
 		
 		// precede the method name with a _ character in case it starts
 		// with a number
-		callbacks["_" + methodName] = {_instance: instance, _method: method};
-		fscommand("addCallback", methodName);
+		_callbacks["_" + methodName] = {_instance: instance, _method: method};
+		_callbacks[_callbacks.length] = methodName;
 		
 		// The API for ExternalInterface says we have to make sure the call
 		// succeeded; check to see if there is a value 
@@ -47,7 +78,8 @@ class DojoExternalInterface{
 		}
 	}
 	
-	public static function call(methodName:String) : Object{
+	public static function call(methodName:String, 
+								resultsCallback:Function) : Void{
 		// FIXME: support full JSON serialization
 		
 		// First, we pack up all of the arguments to this call and set them
@@ -60,15 +92,29 @@ class DojoExternalInterface{
 		// retrieves the arguments using GetVariable, executes the method,
 		// and then places the return result in a Flash variable
 		// named "_returnResult".
-		_root._numArgs = arguments.length - 1;
-		for(var i = 1; i < arguments.length; i++){
-			var argIndex = i - 1;
+		_root._numArgs = arguments.length - 2;
+		for(var i = 2; i < arguments.length; i++){
+			var argIndex = i - 2;
 			_root["_" + argIndex] = arguments[i];
 		}
 		
 		_root._returnResult = undefined;
 		fscommand("call", methodName);
-		return _root.returnResult;
+		
+		// immediately return if the caller is not waiting for return results
+		if(resultsCallback == undefined || resultsCallback == null){
+			return;
+		}
+		
+		// check at regular intervals for return results	
+		var resultsChecker = function(){
+			if((typeof _root._returnResult != "undefined")&&
+				(_root._returnResult != "undefined")){
+				clearInterval(_root._callbackID);
+				resultsCallback.call(null, _root._returnResult);
+			}
+		};	
+		_root._callbackID = setInterval(resultsChecker, 100);
 	}
 	
 	/** 
@@ -79,44 +125,25 @@ class DojoExternalInterface{
 			interact with the Flash file.
 	*/
 	public static function loaded(){
-		call("dojo.flash.loaded");
-	}
-	
-	/** 
-			When JavaScript wants to communicate with Flash it simply sets
-			the Flash variable "_execute" to true; this method creates the
-			internal Movie Clip, called the Flash Runner, that makes this
-			magic happen.
-	*/
-	private static function initializeFlashRunner(){
-		// create our Flash runner movie clip and instance, and attach it to
-		// the root stage
-		_root.createEmptyMovieClip("_flashRunner_mc");
-		_root.attachMovie("_flashRunner_mc", "_flashRunner");
+		//getURL("javascript:dojo.debug('FLASH:loaded')");
 		
-		// get the actual object instance of the Flash runner movie clip and
-		// make it invisible
-		var _flashRunner:MovieClip = _root._flashRunner;
-		_flashRunner._visible = false;
-		
-		// ActionScript 2 has no way to dynamically add new script to a
-		// dynamic Movie Clip's keyframes or labels. Instead, we use the 
-		// onEnterFrame handler, which is called invoked continually at the frame 
-		// rate of the SWF file. When the JavaScript wants to tell the
-		// Flash Runner to execute, it simply sets the Flash variable
-		// "_execute" to true, and our onEnterFrame handler knows to execute
-		// a Flash method
-		_root._execute = "false";
-		_flashRunner.onEnterFrame = function(){
-			// SetVariable on the JavaScript side turns all values into strings,
-			// so this comes over as "true" not a Boolean true
-			if(_root._execute == "true"){
-				// reset the execution request
-				_root._execute = "false";
+		// one more step: see if fscommands are ready to be executed; if not,
+		// set an interval that will keep running until fscommands are ready;
+		// make sure the gateway is loaded as well
+		var execLoaded = function(){
+			if(DojoExternalInterface._fscommandReady == true){
+				clearInterval(_root.loadedInterval);
 				
-				// handle and execute it
-				DojoExternalInterface._handleJSCall();
-			}
+				// initialize the small Flash file that helps gateway JS to Flash
+				// calls
+				DojoExternalInterface._initializeFlashRunner();
+			}	
+		};
+		
+		if(_fscommandReady == true){
+			execLoaded();
+		}else{
+			_root.loadedInterval = setInterval(execLoaded, 50);
 		}
 	}
 	
@@ -139,15 +166,49 @@ class DojoExternalInterface{
 		// now get the actual instance and method object to execute on,
 		// using our lookup table that was constructed by calls to
 		// addCallback on initialization
-		var instance = callbacks["_" + functionName]._instance;
-		var method = callbacks["_" + functionName]._method;
+		var instance = _callbacks["_" + functionName]._instance;
+		var method = _callbacks["_" + functionName]._method;
 		
 		// execute it
 		var results = method.apply(instance, jsArgs);
-		getURL("javascript:dojo.debug('FLASH: result="+results+"')");
 		
 		// return the results
 		_root._returnResult = results;
+	}
+	
+	/** Called by the flash6_gateway.swf to indicate that it is loaded. */
+	public static function _gatewayReady(){
+		for(var i = 0; i < _callbacks.length; i++){
+			fscommand("addCallback", _callbacks[i]);
+		}
+		call("dojo.flash.loaded");
+	}
+	
+	/** 
+			When JavaScript wants to communicate with Flash it simply sets
+			the Flash variable "_execute" to true; this method creates the
+			internal Movie Clip, called the Flash Runner, that makes this
+			magic happen.
+	*/
+	public static function _initializeFlashRunner(){
+		// figure out where our Flash movie is
+		var swfLoc = DojoExternalInterface.dojoPath + "flash6_gateway.swf";
+		
+		// load our gateway helper file
+		_root.createEmptyMovieClip("_flashRunner", 5000);
+		_root._flashRunner._lockroot = true;
+		_root._flashRunner.loadMovie(swfLoc);
+	}
+	
+	private static function getDojoPath(){
+		var url = _root._url;
+		var start = url.indexOf("baseRelativePath=") + "baseRelativePath=".length;
+		var path = url.substring(start);
+		var end = path.indexOf("&");
+		if(end != -1){
+			path = path.substring(0, end);
+		}
+		return path;
 	}
 }
 

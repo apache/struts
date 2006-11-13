@@ -31,5 +31,5 @@ ul.dropdownButtons li .downArrow.pressed, ul.dropdownButtons li .downArrow:focus
 ul.dropdownButtons li a.disabled:hover,
 ul.dropdownButtons li span.downArrow.disabled:hover {
 	color : #999;
-	background-color : #f4f4f4;
+	background-color : #d2e4fd;
 }

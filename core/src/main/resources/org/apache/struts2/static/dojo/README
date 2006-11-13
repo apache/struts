@@ -5,14 +5,13 @@ Dojo is a portable JavaScript toolkit for web application developers and
 JavaScript professionals. Dojo solves real-world problems by providing powerful
 abstractions and solid, tested implementations.
 
-
 Getting Started
 ---------------
 
 To use Dojo in your application, download one of the pre-built editions from the
-Dojo website, http://dojotoolkit.org. Once you have downloaded the file you
-will need to unzip the archive in your website root. At a minimum, you will
-need to extract:
+Dojo website, http://dojotoolkit.org. Once you have downloaded the file you will
+need to unzip the archive in your website root. At a minimum, you will need to
+extract:
 
     src/ (folder)
     dojo.js
@@ -23,9 +22,11 @@ To begin using dojo, include dojo in your pages by using:
     <script type="text/javascript" src="/path/to/dojo.js"></script>
 
 Depending on the edition that you have downloaded, this base dojo.js file may or
-may not include the modules you wish to use in your application. To ensure that
-they are available, use dojo.require() to request them. A very rich application
-might include:
+may not include the modules you wish to use in your application. The files which
+have been "baked in" to the dojo.js that is part of your distribution are listed
+in the file build.txt that is part of the top-level directory that is created
+when you unpack the archive. To ensure modules you wish to use are available,
+use dojo.require() to request them. A very rich application might include:
 
     <script type="text/javascript" src="/path/to/dojo.js"></script>
     <script type="text/javascript">
@@ -34,8 +35,8 @@ might include:
         dojo.require("dojo.storage.*");     // a persistent local data cache
         dojo.require("dojo.json");          // serialization to JSON
         dojo.require("dojo.dnd.*");         // drag-and-drop
-        dojo.require("dojo.fx.*");          // animations and eye candy
-        dojo.require("dojo.widget.Editor"); // stable, portable HTML WYSIWYG
+        dojo.require("dojo.lfx.*");         // animations and eye candy
+        dojo.require("dojo.widget.Editor2");// stable, portable HTML WYSIWYG
     </script>
 
 Note that only those modules which are *not* already "baked in" to dojo.js by
@@ -51,12 +52,12 @@ In addition to it's suite of unit-tests for core system components, Dojo has
 been tested on almost every modern browser, including:
 
     - IE 5.5+
-    - Mozilla 1.2+, Firefox 1.0+
+    - Mozilla 1.5+, Firefox 1.0+
     - Safari 1.3.9+
     - Konqueror 3.4+
     - Opera 8.5+
 
-Note that some widgets and features may not preform exactly the same on every
+Note that some widgets and features may not perform exactly the same on every
 browser due to browser implementation differences.
 
 For those looking to use Dojo in non-browser environments, please see "Working
@@ -119,7 +120,7 @@ repository are available at:
 
 Anonymous Subversion access is also available:
 
-    %> svn co http://dojootoolkit.org/svn/dojo/trunk/
+    %> svn co http://svn.dojotoolkit.org/dojo/trunk/ dojo
 
 Each of these sources will include some extra directories not included in the
 pre-packaged editions, including command-line tests and build tools for
@@ -167,9 +168,9 @@ could then make a profile build using it by doing:
     %> ant -Dprofile=test -Ddocless=true release intern-strings
 
 If the build is successful, your newly minted and compressed  profile build will
-be placed in [dojo]/releae/dojo/
+be placed in [dojo]/release/dojo/
 
 -------------------------------------------------------------------------------
-Copyright (c) 2004-2005, The Dojo Foundation, All Rights Reserved
+Copyright (c) 2004-2006, The Dojo Foundation, All Rights Reserved
 
 vim:ts=4:et:tw=80:shiftwidth=4:

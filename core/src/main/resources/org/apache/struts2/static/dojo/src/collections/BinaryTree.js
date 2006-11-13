@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -10,25 +10,28 @@
 
 dojo.provide("dojo.collections.BinaryTree");
 dojo.require("dojo.collections.Collections");
+dojo.require("dojo.experimental");
 
-dojo.collections.BinaryTree = function(data){
+dojo.experimental("dojo.collections.BinaryTree");
+
+dojo.collections.BinaryTree=function(data){
 	function node(data, rnode, lnode){
-		this.value = data || null;
-		this.right = rnode || null;
-		this.left = lnode || null;
-		this.clone = function(){
-			var c = new node();
-			if (this.value.value) c.value = this.value.clone();
-			else c.value = this.value;
-			if (this.left) c.left = this.left.clone();
-			if (this.right) c.right = this.right.clone();
+		this.value=data||null;
+		this.right=rnode||null;
+		this.left=lnode||null;
+		this.clone=function(){
+			var c=new node();
+			if (this.value.value) c.value=this.value.clone();
+			else c.value=this.value;
+			if (this.left) c.left=this.left.clone();
+			if (this.right) c.right=this.right.clone();
 		}
-		this.compare = function(n){
+		this.compare=function(n){
 			if (this.value > n.value) return 1;
 			if (this.value < n.value) return -1;
 			return 0;
 		}
-		this.compareData = function(d){
+		this.compareData=function(d){
 			if (this.value > d) return 1;
 			if (this.value < d) return -1;
 			return 0;
@@ -44,27 +47,27 @@ dojo.collections.BinaryTree = function(data){
 	}
 
 	function preorderTraversal(current, sep){
-		var s = "";
+		var s="";
 		if (current){
-			s = current.value.toString() + sep;
+			s=current.value.toString() + sep;
 			s += preorderTraversal(current.left, sep);
 			s += preorderTraversal(current.right, sep);
 		}
 		return s;
 	}
 	function inorderTraversal(current, sep){
-		var s = "";
+		var s="";
 		if (current){
-			s = inorderTraversal(current.left, sep);
+			s=inorderTraversal(current.left, sep);
 			s += current.value.toString() + sep;
 			s += inorderTraversal(current.right, sep);
 		}
 		return s;
 	}
 	function postorderTraversal(current, sep){
-		var s = "";
+		var s="";
 		if (current){
-			s = postorderTraversal(current.left, sep);
+			s=postorderTraversal(current.left, sep);
 			s += postorderTraversal(current.right, sep);
 			s += current.value.toString() + sep;
 		}
@@ -73,128 +76,128 @@ dojo.collections.BinaryTree = function(data){
 	
 	function searchHelper(current, data){
 		if (!current) return null;
-		var i = current.compareData(data);
-		if (i == 0) return current;
-		if (result > 0) return searchHelper(current.left, data);
+		var i=current.compareData(data);
+		if (i==0) return current;
+		if (i>0) return searchHelper(current.left, data);
 		else return searchHelper(current.right, data);
 	}
 
-	this.add = function(data){
-		var n = new node(data);
+	this.add=function(data){
+		var n=new node(data);
 		var i;
-		var current = root;
-		var parent = null;
+		var current=root;
+		var parent=null;
 		while (current){
-			i = current.compare(n);
+			i=current.compare(n);
 			if (i == 0) return;
-			parent = current;
-			if (i > 0) current = current.left;
-			else current = current.right;
+			parent=current;
+			if (i > 0) current=current.left;
+			else current=current.right;
 		}
 		this.count++;
-		if (!parent) root = n;
+		if (!parent) root=n;
 		else {
-			i = parent.compare(n);
-			if (i > 0) parent.left = n;
-			else parent.right = n;
+			i=parent.compare(n);
+			if (i > 0) parent.left=n;
+			else parent.right=n;
 		}
 	};
-	this.clear = function(){
-		root = null;
-		this.count = 0;
+	this.clear=function(){
+		root=null;
+		this.count=0;
 	};
-	this.clone = function(){
-		var c = new dojo.collections.BinaryTree();
-		c.root = root.clone();
-		c.count = this.count;
+	this.clone=function(){
+		var c=new dojo.collections.BinaryTree();
+		c.root=root.clone();
+		c.count=this.count;
 		return c;
 	};
-	this.contains = function(data){
+	this.contains=function(data){
 		return this.search(data) != null;
 	};
-	this.deleteData = function(data){
-		var current = root;
-		var parent = null;
-		var i = current.compareData(data);
+	this.deleteData=function(data){
+		var current=root;
+		var parent=null;
+		var i=current.compareData(data);
 		while (i != 0 && current != null){
 			if (i > 0){
-				parent = current;
-				current = current.left;
+				parent=current;
+				current=current.left;
 			} else if (i < 0) {
-				parent = current;
-				current = current.right;
+				parent=current;
+				current=current.right;
 			}
-			i = current.compareData(data);
+			i=current.compareData(data);
 		}
 		if (!current) return;
 		this.count--;
 		if (!current.right) {
-			if (!parent) root = current.left;
+			if (!parent) root=current.left;
 			else {
-				i = parent.compare(current);
-				if (i > 0) parent.left = current.left;
-				else if (i < 0) parent.right = current.left;
+				i=parent.compare(current);
+				if (i > 0) parent.left=current.left;
+				else if (i < 0) parent.right=current.left;
 			}
 		} else if (!current.right.left){
-			if (!parent) root = current.right;
+			if (!parent) root=current.right;
 			else {
-				i = parent.compare(current);
-				if (i > 0) parent.left = current.right;
-				else if (i < 0) parent.right = current.right;
+				i=parent.compare(current);
+				if (i > 0) parent.left=current.right;
+				else if (i < 0) parent.right=current.right;
 			}
 		} else {
-			var leftmost = current.right.left;
-			var lmParent = current.right;
+			var leftmost=current.right.left;
+			var lmParent=current.right;
 			while (leftmost.left != null){
-				lmParent = leftmost;
-				leftmost = leftmost.left;
+				lmParent=leftmost;
+				leftmost=leftmost.left;
 			}
-			lmParent.left = leftmost.right;
-			leftmost.left = current.left;
-			leftmost.right = current.right;
-			if (!parent) root = leftmost;
+			lmParent.left=leftmost.right;
+			leftmost.left=current.left;
+			leftmost.right=current.right;
+			if (!parent) root=leftmost;
 			else {
-				i = parent.compare(current);
-				if (i > 0) parent.left = leftmost;
-				else if (i < 0) parent.right = leftmost;
+				i=parent.compare(current);
+				if (i > 0) parent.left=leftmost;
+				else if (i < 0) parent.right=leftmost;
 			}
 		}
 	};
-	this.getIterator = function(){
-		var a = new ArrayList();
+	this.getIterator=function(){
+		var a=[];
 		inorderTraversalBuildup(root, a);
-		return a.getIterator();
+		return new dojo.collections.Iterator(a);
 	};
-	this.search = function(data){
+	this.search=function(data){
 		return searchHelper(root, data);
 	};
-	this.toString = function(order, sep){
-		if (!order) var order = dojo.collections.BinaryTree.TraversalMethods.Inorder;
-		if (!sep) var sep = " ";
-		var s = "";
+	this.toString=function(order, sep){
+		if (!order) var order=dojo.collections.BinaryTree.TraversalMethods.Inorder;
+		if (!sep) var sep=" ";
+		var s="";
 		switch (order){
 			case dojo.collections.BinaryTree.TraversalMethods.Preorder:
-				s = preorderTraversal(root, sep);
+				s=preorderTraversal(root, sep);
 				break;
 			case dojo.collections.BinaryTree.TraversalMethods.Inorder:
-				s = inorderTraversal(root, sep);
+				s=inorderTraversal(root, sep);
 				break;
 			case dojo.collections.BinaryTree.TraversalMethods.Postorder:
-				s = postorderTraversal(root, sep);
+				s=postorderTraversal(root, sep);
 				break;
 		};
 		if (s.length == 0) return "";
 		else return s.substring(0, s.length - sep.length);
 	};
 
-	this.count = 0;
-	var root = this.root = null;
+	this.count=0;
+	var root=this.root=null;
 	if (data) {
 		this.add(data);
 	}
 }
-dojo.collections.BinaryTree.TraversalMethods = {
-	Preorder : 0,
-	Inorder : 1,
-	Postorder : 2
+dojo.collections.BinaryTree.TraversalMethods={
+	Preorder : 1,
+	Inorder : 2,
+	Postorder : 3
 };

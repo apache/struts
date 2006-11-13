@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -11,41 +11,77 @@
 dojo.provide("dojo.collections.Queue");
 dojo.require("dojo.collections.Collections");
 
-dojo.collections.Queue = function(arr){
-	var q = [];
-	if (arr) q = q.concat(arr);
-	this.count = q.length;
-	this.clear = function(){
-		q = [];
-		this.count = q.length;
+dojo.collections.Queue=function(/* array? */arr){
+	//	summary
+	//	return an object of type dojo.collections.Queue
+	var q=[];
+	if (arr){
+		q=q.concat(arr);
+	}
+	this.count=q.length;
+	this.clear=function(){
+		//	summary
+		//	clears the internal collection
+		q=[];
+		this.count=q.length;
 	};
-	this.clone = function(){
-		return new dojo.collections.Queue(q);
+	this.clone=function(){
+		//	summary
+		//	creates a new Queue based on this one
+		return new dojo.collections.Queue(q);	//	dojo.collections.Queue
 	};
-	this.contains = function(o){
-		for (var i = 0; i < q.length; i++){
-			if (q[i] == o) return true;
+	this.contains=function(/* object */ o){
+		//	summary
+		//	Check to see if the passed object is an element in this queue
+		for(var i=0; i<q.length; i++){
+			if (q[i]==o){
+				return true;	//	bool
+			}
 		}
-		return false;
+		return false;	//	bool
 	};
-	this.copyTo = function(arr, i){
+	this.copyTo=function(/* array */ arr, /* int */ i){
+		//	summary
+		//	Copy the contents of this queue into the passed array at index i.
 		arr.splice(i,0,q);
 	};
-	this.dequeue = function(){
-		var r = q.shift();
-		this.count = q.length;
-		return r;
+	this.dequeue=function(){
+		//	summary
+		//	shift the first element off the queue and return it
+		var r=q.shift();
+		this.count=q.length;
+		return r;	//	object
 	};
-	this.enqueue = function(o){
-		this.count = q.push(o);
+	this.enqueue=function(/* object */ o){
+		//	summary
+		//	put the passed object at the end of the queue
+		this.count=q.push(o);
 	};
-	this.getIterator = function(){
-		return new dojo.collections.Iterator(q);
+	this.forEach=function(/* function */ fn, /* object? */ scope){
+		//	summary
+		//	functional iterator, following the mozilla spec.
+		var s=scope||dj_global;
+		if(Array.forEach){
+			Array.forEach(q, fn, s);
+		}else{
+			for(var i=0; i<q.length; i++){
+				fn.call(s, q[i], i, q);
+			}
+		}
 	};
-	this.peek = function(){
+	this.getIterator=function(){
+		//	summary
+		//	get an Iterator based on this queue.
+		return new dojo.collections.Iterator(q);	//	dojo.collections.Iterator
+	};
+	this.peek=function(){
+		//	summary
+		//	get the next element in the queue without altering the queue.
 		return q[0];
 	};
-	this.toArray = function(){
+	this.toArray=function(){
+		//	summary
+		//	return an array based on the internal array of the queue.
 		return [].concat(q);
 	};
 };

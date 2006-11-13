@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -62,7 +62,6 @@ function dj_spidermonkey_current_file(depth){
 }
 
 // call this now because later we may not be on the top of the stack
-//dojo.hostenv.getLibraryScriptUri = dj_spidermonkey_current_file;
 if(!dojo.hostenv.library_script_uri_){ 
 	dojo.hostenv.library_script_uri_ = dj_spidermonkey_current_file(0); 
 }

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 2004-2005, The Dojo Foundation
+	Copyright (c) 2004-2006, The Dojo Foundation
 	All Rights Reserved.
 
 	Licensed under the Academic Free License version 2.1 or above OR the
@@ -8,21 +8,33 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
-dojo.provide("dojo.animation");
 dojo.provide("dojo.animation.Animation");
+dojo.require("dojo.animation.AnimationEvent");
 
-dojo.require("dojo.lang");
+dojo.require("dojo.lang.func");
 dojo.require("dojo.math");
 dojo.require("dojo.math.curves");
+
+dojo.deprecated("dojo.animation.Animation is slated for removal in 0.5; use dojo.lfx.* instead.", "0.5");
 
 /*
 Animation package based off of Dan Pupius' work on Animations:
 http://pupius.co.uk/js/Toolkit.Drawing.js
 */
 
-dojo.animation.Animation = function(curve, duration, accel, repeatCount, rate) {
-	// public properties
+dojo.animation.Animation = function(/*dojo.math.curves.* */ curve, /*int*/ duration, /*Decimal?*/ accel, /*int?*/ repeatCount, /*int?*/ rate) {
+	// summary: Animation object iterates a set of numbers over a curve for a given amount of time, calling 'onAnimate' at each step.
+	// curve: Curve to animate over.
+	// duration: Duration of the animation, in milliseconds.
+	// accel: Either an integer or curve representing amount of acceleration. (?)  Default is linear acceleration.
+	// repeatCount: Number of times to repeat the animation.  Default is 0.
+	// rate: Time between animation steps, in milliseconds.  Default is 25.
+	// description: Calls the following events: "onBegin", "onAnimate", "onEnd", "onPlay", "onPause", "onStop"
+	// 				If the animation implements a "handler" function, that will be called before each event is called.
+
 	if(dojo.lang.isArray(curve)) {
+		// curve: Array
+		// id: i
 		curve = new dojo.math.curves.Line(curve[0], curve[1]);
 	}
 	this.curve = curve;
@@ -30,7 +42,11 @@ dojo.animation.Animation = function(curve, duration, accel, repeatCount, rate) {
 	this.repeatCount = repeatCount || 0;
 	this.rate = rate || 25;
 	if(accel) {
+		// accel: Decimal
+		// id: j
 		if(dojo.lang.isFunction(accel.getValue)) {
+			// accel: dojo.math.curves.CatmullRom
+			// id: k
 			this.accel = accel;
 		} else {
 			var i = 0.35*accel+0.5;	// 0.15 <= i <= 0.85
@@ -38,6 +54,7 @@ dojo.animation.Animation = function(curve, duration, accel, repeatCount, rate) {
 		}
 	}
 }
+
 dojo.lang.extend(dojo.animation.Animation, {
 	// public properties
 	curve: null,
@@ -66,7 +83,12 @@ dojo.lang.extend(dojo.animation.Animation, {
 	_startRepeatCount: 0,
 
 	// public methods
-	play: function(gotoStart) {
+	play: function(/*Boolean?*/ gotoStart) {
+		// summary:  Play the animation.
+		// goToStart: If true, will restart the animation from the beginning.  
+		//				Otherwise, starts from current play counter.
+		// description: Sends an "onPlay" event to any observers.
+		//				Also sends an "onBegin" event if starting from the beginning.
 		if( gotoStart ) {
 			clearTimeout(this._timer);
 			this._active = false;
@@ -104,11 +126,13 @@ dojo.lang.extend(dojo.animation.Animation, {
 
 		if(this._animSequence) { this._animSequence._setCurrent(this); }
 
-		//dojo.lang.hitch(this, cycle)();
 		this._cycle();
 	},
 
 	pause: function() {
+		// summary: Temporarily stop the animation, leaving the play counter at the current location.
+		// 			Resume later with sequence.play()
+		// description: Sends an "onPause" AnimationEvent to any observers.
 		clearTimeout(this._timer);
 		if( !this._active ) { return; }
 		this._paused = true;
@@ -119,6 +143,7 @@ dojo.lang.extend(dojo.animation.Animation, {
 	},
 
 	playPause: function() {
+		// summary: Toggle between play and paused states.
 		if( !this._active || this._paused ) {
 			this.play();
 		} else {
@@ -126,7 +151,10 @@ dojo.lang.extend(dojo.animation.Animation, {
 		}
 	},
 
-	gotoPercent: function(pct, andPlay) {
+	gotoPercent: function(/*int*/ pct, /*Boolean*/ andPlay) {
+		// summary: Set the play counter at a certain point in the animation.
+		// pct: Point to set the play counter to, expressed as a percentage (0 to 100).
+		// andPlay: If true, will start the animation at the counter automatically.
 		clearTimeout(this._timer);
 		this._active = true;
 		this._paused = true;
@@ -134,14 +162,17 @@ dojo.lang.extend(dojo.animation.Animation, {
 		if( andPlay ) { this.play(); }
 	},
 
-	stop: function(gotoEnd) {
+	stop: function(/*Boolean?*/ gotoEnd) {
+		// summary: Stop the animation.
+		// gotoEnd: If true, will advance play counter to the end before sending the event.
+		// description: Sends an "onStop" AnimationEvent to any observers.
 		clearTimeout(this._timer);
 		var step = this._percent / 100;
 		if( gotoEnd ) {
 			step = 1;
 		}
 		var e = new dojo.animation.AnimationEvent(this, "stop", this.curve.getValue(step),
-			this._startTime, new Date().valueOf(), this._endTime, this.duration, this._percent, Math.round(fps));
+			this._startTime, new Date().valueOf(), this._endTime, this.duration, this._percent);
 		if(typeof this.handler == "function") { this.handler(e); }
 		if(typeof this.onStop == "function") { this.onStop(e); }
 		this._active = false;
@@ -149,20 +180,23 @@ dojo.lang.extend(dojo.animation.Animation, {
 	},
 
 	status: function() {
+		// summary: Return the status of the animation.
+		// description: Returns one of "playing", "paused" or "stopped".
 		if( this._active ) {
-			return this._paused ? "paused" : "playing";
+			return this._paused ? "paused" : "playing";	/* String */
 		} else {
-			return "stopped";
+			return "stopped";	/* String */
 		}
 	},
 
 	// "private" methods
 	_cycle: function() {
+		// summary: Perform once 'cycle' or step of the animation.
 		clearTimeout(this._timer);
 		if( this._active ) {
 			var curr = new Date().valueOf();
 			var step = (curr - this._startTime) / (this._endTime - this._startTime);
-			fps = 1000 / (curr - this._lastFrame);
+			var fps = 1000 / (curr - this._lastFrame);
 			this._lastFrame = curr;
 
 			if( step >= 1 ) {
@@ -205,156 +239,6 @@ dojo.lang.extend(dojo.animation.Animation, {
 						this._animSequence._playNext();
 					}
 				}
-			}
-		}
-	}
-});
-
-dojo.animation.AnimationEvent = function(anim, type, coords, sTime, cTime, eTime, dur, pct, fps) {
-	this.type = type; // "animate", "begin", "end", "play", "pause", "stop"
-	this.animation = anim;
-
-	this.coords = coords;
-	this.x = coords[0];
-	this.y = coords[1];
-	this.z = coords[2];
-
-	this.startTime = sTime;
-	this.currentTime = cTime;
-	this.endTime = eTime;
-
-	this.duration = dur;
-	this.percent = pct;
-	this.fps = fps;
-};
-dojo.lang.extend(dojo.animation.AnimationEvent, {
-	coordsAsInts: function() {
-		var cints = new Array(this.coords.length);
-		for(var i = 0; i < this.coords.length; i++) {
-			cints[i] = Math.round(this.coords[i]);
-		}
-		return cints;
-	}
-});
-
-dojo.animation.AnimationSequence = function(repeatCount){
-	this._anims = [];
-	this.repeatCount = repeatCount || 0;
-}
-
-dojo.lang.extend(dojo.animation.AnimationSequence, {
-	repeateCount: 0,
-
-	_anims: [],
-	_currAnim: -1,
-
-	onBegin: null,
-	onEnd: null,
-	onNext: null,
-	handler: null,
-
-	add: function() {
-		for(var i = 0; i < arguments.length; i++) {
-			this._anims.push(arguments[i]);
-			arguments[i]._animSequence = this;
-		}
-	},
-
-	remove: function(anim) {
-		for(var i = 0; i < this._anims.length; i++) {
-			if( this._anims[i] == anim ) {
-				this._anims[i]._animSequence = null;
-				this._anims.splice(i, 1);
-				break;
-			}
-		}
-	},
-
-	removeAll: function() {
-		for(var i = 0; i < this._anims.length; i++) {
-			this._anims[i]._animSequence = null;
-		}
-		this._anims = [];
-		this._currAnim = -1;
-	},
-
-	clear: function() {
-		this.removeAll();
-	},
-
-	play: function(gotoStart) {
-		if( this._anims.length == 0 ) { return; }
-		if( gotoStart || !this._anims[this._currAnim] ) {
-			this._currAnim = 0;
-		}
-		if( this._anims[this._currAnim] ) {
-			if( this._currAnim == 0 ) {
-				var e = {type: "begin", animation: this._anims[this._currAnim]};
-				if(typeof this.handler == "function") { this.handler(e); }
-				if(typeof this.onBegin == "function") { this.onBegin(e); }
-			}
-			this._anims[this._currAnim].play(gotoStart);
-		}
-	},
-
-	pause: function() {
-		if( this._anims[this._currAnim] ) {
-			this._anims[this._currAnim].pause();
-		}
-	},
-
-	playPause: function() {
-		if( this._anims.length == 0 ) { return; }
-		if( this._currAnim == -1 ) { this._currAnim = 0; }
-		if( this._anims[this._currAnim] ) {
-			this._anims[this._currAnim].playPause();
-		}
-	},
-
-	stop: function() {
-		if( this._anims[this._currAnim] ) {
-			this._anims[this._currAnim].stop();
-		}
-	},
-
-	status: function() {
-		if( this._anims[this._currAnim] ) {
-			return this._anims[this._currAnim].status();
-		} else {
-			return "stopped";
-		}
-	},
-
-	_setCurrent: function(anim) {
-		for(var i = 0; i < this._anims.length; i++) {
-			if( this._anims[i] == anim ) {
-				this._currAnim = i;
-				break;
-			}
-		}
-	},
-
-	_playNext: function() {
-		if( this._currAnim == -1 || this._anims.length == 0 ) { return; }
-		this._currAnim++;
-		if( this._anims[this._currAnim] ) {
-			var e = {type: "next", animation: this._anims[this._currAnim]};
-			if(typeof this.handler == "function") { this.handler(e); }
-			if(typeof this.onNext == "function") { this.onNext(e); }
-			this._anims[this._currAnim].play(true);
-		} else {
-			var e = {type: "end", animation: this._anims[this._anims.length-1]};
-			if(typeof this.handler == "function") { this.handler(e); }
-			if(typeof this.onEnd == "function") { this.onEnd(e); }
-			if(this.repeatCount > 0) {
-				this._currAnim = 0;
-				this.repeatCount--;
-				this._anims[this._currAnim].play(true);
-			} else if(this.repeatCount == -1) {
-				this._currAnim = 0;
-				this._anims[this._currAnim].play(true);
-			} else {
-				this._currAnim = -1;
 			}
 		}
 	}

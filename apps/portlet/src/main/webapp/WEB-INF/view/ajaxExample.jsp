@@ -4,22 +4,22 @@
 <b>This is a tabbed pane with two panels that fetches data from a remote action via ajax</b>
 
 <s:tabbedPanel id="test2" theme="simple" >
-      <s:panel id="left" tabName="left" theme="ajax" href="/">
+      <s:div id="left" label="left" theme="ajax">
           This is the left pane<br/>
           <s:form >
               <s:textfield name="tt" label="Test Text" />  <br/>
               <s:textfield name="tt2" label="Test Text2" />
           </s:form>
-      </s:panel>
-      <s:panel remote="true" href="/view/ajaxData.action" id="ryh1" theme="ajax" tabName="remote one" />
-      <s:panel id="middle" tabName="middle" theme="ajax" href="/">
+      </s:div>
+      <s:div href="/view/ajaxData.action" id="ryh1" theme="ajax" label="remote one" />
+      <s:div id="middle" label="middle" theme="ajax">
           middle tab<br/>
           <s:form >
               <s:textfield name="tt" label="Test Text44" />  <br/>
               <s:textfield name="tt2" label="Test Text442" />
           </s:form>
-      </s:panel>
-      <s:panel remote="true" href="/view/ajaxData.action"  id="ryh21" theme="ajax" tabName="remote right" />
+      </s:div>
+      <s:div href="/view/ajaxData.action"  id="ryh21" theme="ajax" label="remote right" />
   </s:tabbedPanel>
   
 <p/>
@@ -40,7 +40,7 @@ A DIV that is updated every 2 seconds
             href="/view/ajaxData.action"
             theme="ajax"
             delay="2000"
-            updateFreq="2000"
+            updateInterval="2000"
             errorText="There was an error"
             loadingText="loading...">Initial Content
     </s:div>

@@ -29,6 +29,9 @@ import org.apache.struts2.dispatcher.Dispatcher;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * The TemplateEngineManager will return a template engine for the template
  */
@@ -38,6 +41,8 @@ public class TemplateEngineManager {
     /** The default template extenstion is <code>ftl</code>. */
     public static final String DEFAULT_TEMPLATE_TYPE = "ftl";
 
+    private static final Log LOG = LogFactory.getLog(TemplateEngineManager.class);
+    
     Map templateEngines = new HashMap();
     Container container;
     String defaultTemplateType;
@@ -55,9 +60,15 @@ public class TemplateEngineManager {
     @Inject(StrutsConstants.STRUTS_TEMPLATE_ENGINES)
     public void setTemplateEngines(String engines) {
         if (engines != null) {
+            TemplateEngine eng = null;
             String[] list = engines.split(",");
             for (String name : list) {
-                TemplateEngine eng = container.getInstance(TemplateEngine.class, name);
+                try {
+                    eng = container.getInstance(TemplateEngine.class, name);
+                } catch (Throwable t) {
+                    LOG.info("Unable to load engine ("+name+") due to "+t.getMessage());
+                    continue;
+                }    
                 if (eng != null) {
                     templateEngines.put(name, eng);
                 } else {

@@ -25,12 +25,9 @@ import java.util.Map;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.Dispatcher;
-
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * The TemplateEngineManager will return a template engine for the template
@@ -41,9 +38,8 @@ public class TemplateEngineManager {
     /** The default template extenstion is <code>ftl</code>. */
     public static final String DEFAULT_TEMPLATE_TYPE = "ftl";
 
-    private static final Log LOG = LogFactory.getLog(TemplateEngineManager.class);
     
-    Map templateEngines = new HashMap();
+    Map<String,EngineFactory> templateEngines = new HashMap<String,EngineFactory>();
     Container container;
     String defaultTemplateType;
     
@@ -63,17 +59,7 @@ public class TemplateEngineManager {
             TemplateEngine eng = null;
             String[] list = engines.split(",");
             for (String name : list) {
-                try {
-                    eng = container.getInstance(TemplateEngine.class, name);
-                } catch (Throwable t) {
-                    LOG.info("Unable to load engine ("+name+") due to "+t.getMessage());
-                    continue;
-                }    
-                if (eng != null) {
-                    templateEngines.put(name, eng);
-                } else {
-                    throw new IllegalArgumentException("Invalid template engine name: "+name);
-                }
+                templateEngines.put(name, new LazyEngineFactory(name));
             }
         }
     }
@@ -85,8 +71,12 @@ public class TemplateEngineManager {
      * @param templateExtension  filename extension (eg. .jsp, .ftl, .vm).
      * @param templateEngine     the engine.
      */
-    public void registerTemplateEngine(String templateExtension, TemplateEngine templateEngine) {
-        templateEngines.put(templateExtension, templateEngine);
+    public void registerTemplateEngine(String templateExtension, final TemplateEngine templateEngine) {
+        templateEngines.put(templateExtension, new EngineFactory() {
+            public TemplateEngine create() {
+                return templateEngine;
+            }
+        });
     }
 
     /**
@@ -112,8 +102,29 @@ public class TemplateEngineManager {
                 templateType = type;
             }
         }
-        return (TemplateEngine) templateEngines.get(templateType);
+        return templateEngines.get(templateType).create();
     }
 
+    /** Abstracts loading of the template engine */
+    interface EngineFactory {
+        public TemplateEngine create();
+    }    
 
+    /** 
+     * Allows the template engine to be loaded at request time, so that engines that are missing
+     * dependencies aren't accessed if never used.
+     */
+    class LazyEngineFactory implements EngineFactory {
+        private String name;
+        public LazyEngineFactory(String name) {
+            this.name = name;
+        }    
+        public TemplateEngine create() {
+            TemplateEngine engine = container.getInstance(TemplateEngine.class, name);
+            if (engine == null) {
+                throw new ConfigurationException("Unable to locate template engine: "+name);
+            }
+            return engine;
+        }    
+    }    
 }

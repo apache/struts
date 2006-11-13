@@ -297,6 +297,12 @@ import com.opensymphony.xwork2.util.ValueStack;
  *      <td>500</td>
  *      <td>Tooltip shows up after the specified timeout (miliseconds). A behavior similar to that of OS based tooltips.</td>
  *   </tr>
+ *   <tr>
+ *      <td>key</td>
+ *      <td>simple</td>
+ *      <td>String</td>
+ *      <td>The name of the property this input field represents.  This will auto populate the name, label, and value</td>
+ *   </tr>
  * </table>
  *
  * <!-- END SNIPPET: tooltipattributes -->
@@ -413,6 +419,9 @@ public abstract class UIBean extends Component {
     protected String templateDir;
     protected String theme;
 
+    // shortcut, sets label, name, and value
+    protected String key;
+
     protected String cssClass;
     protected String cssStyle;
     protected String disabled;
@@ -447,7 +456,7 @@ public abstract class UIBean extends Component {
     // javascript tooltip attribute
     protected String tooltip;
     protected String tooltipConfig;
-    
+
     protected String defaultTemplateDir;
     protected String defaultUITheme;
     protected TemplateEngineManager templateEngineManager;
@@ -456,12 +465,12 @@ public abstract class UIBean extends Component {
     public void setDefaultTemplateDir(String dir) {
         this.defaultTemplateDir = dir;
     }
-    
+
     @Inject(StrutsConstants.STRUTS_UI_THEME)
     public void setDefaultUITheme(String theme) {
         this.defaultUITheme = theme;
     }
-    
+
     @Inject
     public void setTemplateEngineManager(TemplateEngineManager mgr) {
         this.templateEngineManager = mgr;
@@ -579,6 +588,21 @@ public abstract class UIBean extends Component {
         addParameter("theme", getTheme());
 
         String name = null;
+
+        if (this.key != null) {
+           if(this.name == null) {
+                this.name = key;
+            }
+
+            if(this.label == null) {
+                this.label = "%{getText('"+key +"')}";
+            }
+
+            if(this.value == null) {
+                this.value = "%{"+key +"}";
+            }
+        }
+
 
         if (this.name != null) {
             name = findString(this.name);
@@ -1107,5 +1131,13 @@ public abstract class UIBean extends Component {
      */
     public void setTooltipConfig(String tooltipConfig) {
         this.tooltipConfig = tooltipConfig;
+    }
+
+    /**
+     * Set the key (name, value, label) for this particular component
+     * @s.tagattribute required="false" type="String" default=""
+     */
+    public void setKey(String key) {
+        this.key = key;
     }
 }

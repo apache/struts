@@ -457,6 +457,15 @@
 
         </attribute>
         <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+        
+        <attribute>
             <name>required</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -725,6 +734,15 @@
 
         </attribute>
         <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
+        <attribute>
             <name>required</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -992,6 +1010,15 @@
             <description><![CDATA[The name to set for element]]></description>
 
         </attribute>
+        <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
         <attribute>
             <name>required</name>
             <required>false</required>
@@ -1386,6 +1413,14 @@
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[The name to set for element]]></description>
+
+        </attribute>
+        <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
 
         </attribute>
         <attribute>
@@ -1784,6 +1819,14 @@
 
         </attribute>
         <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+        <attribute>
             <name>required</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -2139,6 +2182,14 @@
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[The name to set for element]]></description>
+
+        </attribute>
+        <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
 
         </attribute>
         <attribute>
@@ -2572,6 +2623,15 @@
 
         </attribute>
         <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
+        <attribute>
             <name>required</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -2847,6 +2907,15 @@
             <description><![CDATA[The name to set for element]]></description>
 
         </attribute>
+        <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
         <attribute>
             <name>required</name>
             <required>false</required>
@@ -3293,6 +3362,15 @@
 
         </attribute>
         <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
+        <attribute>
             <name>required</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -3596,6 +3674,15 @@
             <description><![CDATA[The name to set for element]]></description>
 
         </attribute>
+        <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
         <attribute>
             <name>required</name>
             <required>false</required>
@@ -3958,6 +4045,15 @@
 
         </attribute>
         <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
+        <attribute>
             <name>required</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -4259,6 +4355,15 @@
             <description><![CDATA[The name to set for element]]></description>
 
         </attribute>
+        <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
         <attribute>
             <name>required</name>
             <required>false</required>
@@ -4661,6 +4766,15 @@
 
         </attribute>
         <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
+        <attribute>
             <name>required</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -4945,6 +5059,15 @@
             <description><![CDATA[The name to set for element]]></description>
 
         </attribute>
+        <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
         <attribute>
             <name>required</name>
             <required>false</required>
@@ -5667,6 +5790,15 @@
 
         </attribute>
         <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
+        <attribute>
             <name>required</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -5966,6 +6098,15 @@
             <description><![CDATA[The name to set for element]]></description>
 
         </attribute>
+        <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
         <attribute>
             <name>required</name>
             <required>false</required>
@@ -6551,6 +6692,15 @@
 
         </attribute>
         <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
+        <attribute>
             <name>required</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -6850,6 +7000,15 @@
             <description><![CDATA[The name to set for element]]></description>
 
         </attribute>
+        <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
         <attribute>
             <name>required</name>
             <required>false</required>
@@ -7178,6 +7337,15 @@
             <description><![CDATA[The name to set for element]]></description>
 
         </attribute>
+        <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
         <attribute>
             <name>required</name>
             <required>false</required>
@@ -7586,6 +7754,15 @@
 
         </attribute>
         <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
+        <attribute>
             <name>required</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -7877,6 +8054,16 @@
             <description><![CDATA[The name to set for element]]></description>
 
         </attribute>
+
+        <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
         <attribute>
             <name>required</name>
             <required>false</required>
@@ -8286,6 +8473,15 @@
 
         </attribute>
         <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
+        <attribute>
             <name>required</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -8595,6 +8791,15 @@
 
         </attribute>
         <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
+        <attribute>
             <name>required</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -8888,6 +9093,15 @@
 
         </attribute>
         <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
+        <attribute>
             <name>required</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -9155,6 +9369,15 @@
             <description><![CDATA[The name to set for element]]></description>
 
         </attribute>
+        <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
         <attribute>
             <name>required</name>
             <required>false</required>
@@ -9616,6 +9839,15 @@
 
         </attribute>
         <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
+        <attribute>
             <name>required</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -9972,6 +10204,15 @@
 
         </attribute>
         <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
+        <attribute>
             <name>required</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -10238,6 +10479,15 @@
             <description><![CDATA[The name to set for element]]></description>
 
         </attribute>
+        <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
         <attribute>
             <name>required</name>
             <required>false</required>
@@ -10507,6 +10757,15 @@
             <description><![CDATA[The name to set for element]]></description>
 
         </attribute>
+        <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
         <attribute>
             <name>required</name>
             <required>false</required>
@@ -10943,6 +11202,16 @@
             <description><![CDATA[The name to set for element]]></description>
 
         </attribute>
+
+        <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
         <attribute>
             <name>required</name>
             <required>false</required>
@@ -11332,6 +11601,16 @@
             <description><![CDATA[The name to set for element]]></description>
 
         </attribute>
+
+        <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
         <attribute>
             <name>required</name>
             <required>false</required>
@@ -11620,6 +11899,16 @@
             <description><![CDATA[The name to set for element]]></description>
 
         </attribute>
+
+        <attribute>
+            <name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The i18n key for the name value]]></description>
+
+        </attribute>
+
         <attribute>
             <name>required</name>
             <required>false</required>

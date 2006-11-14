@@ -88,6 +88,13 @@ public class ClasspathConfigurationProviderTest extends TestCase {
         assertNotNull(acfg);
         assertEquals(3, acfg.getResults().size());
     }
+    
+    public void testActionImplementation() {
+        PackageConfig pkg = config.getPackageConfig("org.apache.struts2.config.cltest");
+        assertEquals("/cltest", pkg.getNamespace());
+        ActionConfig acfg = pkg.getActionConfigs().get("actionImpl");
+        assertNotNull(acfg);
+    }
 
     public void testDynamicResults() {
         PackageConfig pkg = config.getPackageConfig("org.apache.struts2.config.cltest");

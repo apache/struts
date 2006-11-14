@@ -32,8 +32,8 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.Action;
 
+import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
@@ -46,6 +46,7 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ResolverUtil;
 import com.opensymphony.xwork2.util.TextUtils;
+import com.opensymphony.xwork2.util.ResolverUtil.Test;
 
 /**
  * Loads the configuration by scanning the classpath looking for classes that end in
@@ -128,9 +129,15 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
     protected void loadPackages(String[] pkgs) {
 
         ResolverUtil<Class> resolver = new ResolverUtil<Class>();
-        resolver.findImplementations(Action.class,pkgs);
-        // TODO: resolver.findAnnotated( ,pkgs);
-        resolver.findSuffix(ACTION, pkgs);
+        resolver.find(new Test() {
+            // Match Action implementations and classes ending with "Action"
+            public boolean matches(Class type) {
+                // TODO: should also find annotated classes
+                return (Action.class.isAssignableFrom(type) || 
+                        type.getSimpleName().endsWith("Action"));
+            }
+            
+        }, pkgs);
         Set actionClasses = resolver.getClasses();
         for (Object obj : actionClasses) {
            Class cls = (Class) obj;
@@ -183,8 +190,8 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
             }
         }
 
-        boolean trimSuffix = (actionName.lastIndexOf(ACTION) > 0);
-        if (trimSuffix) {
+        // Cut off the Action suffix if found
+        if (actionName.endsWith(ACTION)) {
             actionName = actionName.substring(0, actionName.length() - ACTION.length());
         }
 

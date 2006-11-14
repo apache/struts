@@ -111,7 +111,7 @@ public class FreeMarkerPageFilter extends TemplatePageFilter {
     private static FreemarkerManager freemarkerManager;
     
     @Inject
-    public void setFreemarkerManager(FreemarkerManager mgr) {
+    public static void setFreemarkerManager(FreemarkerManager mgr) {
         freemarkerManager = mgr;
     }
 

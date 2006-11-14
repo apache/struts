@@ -52,7 +52,7 @@ public class VelocityPageFilter extends TemplatePageFilter {
     private static VelocityManager velocityManager;
     
     @Inject
-    public void setVelocityManager(VelocityManager mgr) {
+    public static void setVelocityManager(VelocityManager mgr) {
         velocityManager = mgr;
     }
         

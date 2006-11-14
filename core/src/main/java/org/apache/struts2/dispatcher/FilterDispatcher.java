@@ -56,7 +56,6 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ObjectFactory;
 
 /**
  * Master filter for Struts that handles four distinct
@@ -117,7 +116,6 @@ import com.opensymphony.xwork2.ObjectFactory;
  * To use a custom {@link Dispatcher}, the <code>createDispatcher()</code> method could be overriden by
  * the subclass.
  *
- * @see org.apache.struts2.lifecycle.LifecycleListener
  * @see ActionMapper
  * @see ActionContextCleanUp
  *
@@ -125,26 +123,64 @@ import com.opensymphony.xwork2.ObjectFactory;
  */
 public class FilterDispatcher implements StrutsStatics, Filter {
 
+    /**
+     * Provide a logging instance.
+     */
     private static final Log LOG = LogFactory.getLog(FilterDispatcher.class);
 
+    /**
+     * Store set of path prefixes to use with static resources.
+     */
     private String[] pathPrefixes;
 
+    /**
+     * Provide a formatted date for setting heading information when caching static content.
+     */
     private SimpleDateFormat df = new SimpleDateFormat("E, d MMM yyyy HH:mm:ss");
-    private final Calendar lastModifiedCal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-    private final String lastModified = df.format(lastModifiedCal.getTime());
-    
-    private static boolean serveStatic;
-    private static boolean serveStaticBrowserCache;
-    private static String encoding;
-    private static ActionMapper actionMapper;
-    private FilterConfig filterConfig;
-
-    /** Dispatcher instance to be used by subclass. */
-    protected Dispatcher dispatcher;
-
 
     /**
-     * Initializes the filter
+     * Provide a formatted date for setting heading information when caching static content.
+     */
+    private final Calendar lastModifiedCal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+
+    /**
+     * Provide a formatted date for setting heading information when caching static content.
+     */
+    private final String lastModified = df.format(lastModifiedCal.getTime());
+
+    /**
+     * Store state of StrutsConstants.STRUTS_SERVE_STATIC_CONTENT setting.
+     */
+    private static boolean serveStatic;
+
+    /**
+     * Store state of StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE setting.
+     */
+    private static boolean serveStaticBrowserCache;
+
+    /**
+     * Store state of StrutsConstants.STRUTS_I18N_ENCODING setting.
+     */
+    private static String encoding;
+
+    /**
+     * Provide ActionMapper instance, set by injection.
+     */
+    private static ActionMapper actionMapper;
+
+    /**
+     * Provide FilterConfig instance, set on init.
+     */
+    private FilterConfig filterConfig;
+
+    /**
+     * Expose Dispatcher instance to subclass.
+     */
+    protected Dispatcher dispatcher;
+
+    /**
+     * Initializes the filter by creating a default dispatcher
+     * and setting the default packages for static resources.
      *
      * @param filterConfig The filter configuration
      */
@@ -158,10 +194,10 @@ public class FilterDispatcher implements StrutsStatics, Filter {
         }
         this.pathPrefixes = parse(packages);
     }
-    
 
     /**
-     * Cleans up the dispatcher
+     * Calls dispatcher.cleanup,
+     * which in turn releases local threads and destroys any DispatchListeners.
      *
      * @see javax.servlet.Filter#destroy()
      */
@@ -174,10 +210,11 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     }
     
     /**
-     * Create a {@link Dispatcher}, this serves as a hook for subclass to overried
-     * such that a custom {@link Dispatcher} could be created.
+     * Create a default {@link Dispatcher} that subclasses can override
+     * with a custom Dispatcher, if needed.
      *
-     * @return Dispatcher
+     * @param filterConfig Our FilterConfig
+     * @return Initialized Dispatcher 
      */
     protected Dispatcher createDispatcher(FilterConfig filterConfig) {
         Map<String,String> params = new HashMap<String,String>();
@@ -189,32 +226,49 @@ public class FilterDispatcher implements StrutsStatics, Filter {
         return new Dispatcher(filterConfig.getServletContext(), params);
     }
 
+    /**
+     * Modify state of StrutsConstants.STRUTS_SERVE_STATIC_CONTENT setting.
+     * @param val New setting
+     */
     @Inject(StrutsConstants.STRUTS_SERVE_STATIC_CONTENT)
     public static void setServeStaticContent(String val) {
         serveStatic = "true".equals(val);
     }
     
+    /**
+     * Modify state of StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE setting.
+     * @param val New setting
+     */
     @Inject(StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE)
     public static void setServeStaticBrowserCache(String val) {
         serveStaticBrowserCache = "true".equals(val);
     }
     
+    /**
+     * Modify state of StrutsConstants.STRUTS_I18N_ENCODING setting.
+     * @param val New setting
+     */
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public static void setEncoding(String val) {
         encoding = val;
     }
     
+    /**
+     * Modify ActionMapper instance.
+     * @param mapper New instance
+     */
     @Inject
     public static void setActionMapper(ActionMapper mapper) {
         actionMapper = mapper;
     }
     
     /**
+     * Provide a workaround for some versions of WebLogic.
+     * <p/>
      * Servlet 2.3 specifies that the servlet context can be retrieved from the session. Unfortunately, some versions of
      * WebLogic can only retrieve the servlet context from the filter config. Hence, this method enables subclasses to
      * retrieve the servlet context from other sources.
      *
-     * @param session the HTTP session where, in Servlet 2.3, the servlet context can be retrieved
      * @return the servlet context.
      */
     protected ServletContext getServletContext() {
@@ -222,24 +276,22 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     }
 
     /**
-     * Gets this filter's configuration
+     * Expose the FilterConfig instance.
      *
-     * @return The filter config
+     * @return Our FilterConfit instance
      */
     protected FilterConfig getFilterConfig() {
         return filterConfig;
     }
 
     /**
-     * Helper method that prepare <code>Dispatcher</code>
-     * (by calling <code>Dispatcher.prepare(HttpServletRequest, HttpServletResponse)</code>)
-     * following by wrapping and returning  the wrapping <code>HttpServletRequest</code> [ through
-     * <code>dispatcher.wrapRequest(HttpServletRequest, ServletContext)</code> ]
+     * Wrap and return the given request, if needed, so as to to transparently
+     * handle multipart data as a wrapped class around the given request.
      *
-     * @param request
-     * @param response
-     * @return HttpServletRequest
-     * @throws ServletException
+     * @param request Our ServletRequest object
+     * @param response Our ServerResponse object
+     * @return Wrapped HttpServletRequest object
+     * @throws ServletException on any error
      */
     protected HttpServletRequest prepareDispatcherAndWrapRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 
@@ -273,9 +325,9 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     }
 
     /**
-     * Parses the list of packages
+     * Create a string array from a comma-delimited list of packages.
      *
-     * @param packages A comma-delimited String
+     * @param packages A comma-delimited String listing packages
      * @return A string array of packages
      */
     protected String[] parse(String packages) {
@@ -293,14 +345,17 @@ public class FilterDispatcher implements StrutsStatics, Filter {
             pathPrefixes.add(pathPrefix);
         }
 
-        return (String[]) pathPrefixes.toArray(new String[pathPrefixes.size()]);
+        return pathPrefixes.toArray(new String[pathPrefixes.size()]);
     }
 
 
     /**
+     * Process Action or request for a static resource.
+     *
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
      */
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         ServletContext servletContext = getServletContext();
@@ -308,12 +363,8 @@ public class FilterDispatcher implements StrutsStatics, Filter {
         String timerKey = "FilterDispatcher_doFilter: ";
         try {
             UtilTimerStack.push(timerKey);
-
             request = prepareDispatcherAndWrapRequest(request, response);
-
-
-            ActionMapper mapper = null;
-            ActionMapping mapping = null;
+            ActionMapping mapping;
             try {
                 mapping = actionMapper.getMapping(request, dispatcher.getConfigurationManager());
             } catch (Exception ex) {
@@ -342,7 +393,6 @@ public class FilterDispatcher implements StrutsStatics, Filter {
                 return;
             }
 
-
             try {
                 dispatcher.serviceAction(request, response, servletContext, mapping);
             } finally {
@@ -355,7 +405,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     }
 
     /**
-     * Finds a static resource
+     * Find static resource.
      *
      * @param name The resource name
      * @param response The request
@@ -363,8 +413,8 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      */
     protected void findStaticResource(String name, HttpServletResponse response) throws IOException {
         if (!name.endsWith(".class")) {
-            for (int i = 0; i < pathPrefixes.length; i++) {
-                InputStream is = findInputStream(name, pathPrefixes[i]);
+            for (String pathPrefix : pathPrefixes) {
+                InputStream is = findInputStream(name, pathPrefix);
                 if (is != null) {
                     // set the content-type header
                     String contentType = getContentType(name);
@@ -375,17 +425,16 @@ public class FilterDispatcher implements StrutsStatics, Filter {
                     if (serveStaticBrowserCache) {
                         // set heading information for caching static content
                         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-                        response.setHeader("Date",df.format(cal.getTime())+" GMT");
-                        cal.add(Calendar.DAY_OF_MONTH,1);
-                        response.setHeader("Expires",df.format(cal.getTime())+" GMT");
-                        response.setHeader("Retry-After",df.format(cal.getTime())+" GMT");
-                        response.setHeader("Cache-Control","public");
-                        response.setHeader("Last-Modified",lastModified+" GMT");
-                    }
-                    else {
-                        response.setHeader("Cache-Control","no-cache");
-                        response.setHeader("Pragma","no-cache");
-                        response.setHeader("Expires","-1");
+                        response.setHeader("Date", df.format(cal.getTime()) + " GMT");
+                        cal.add(Calendar.DAY_OF_MONTH, 1);
+                        response.setHeader("Expires", df.format(cal.getTime()) + " GMT");
+                        response.setHeader("Retry-After", df.format(cal.getTime()) + " GMT");
+                        response.setHeader("Cache-Control", "public");
+                        response.setHeader("Last-Modified", lastModified + " GMT");
+                    } else {
+                        response.setHeader("Cache-Control", "no-cache");
+                        response.setHeader("Pragma", "no-cache");
+                        response.setHeader("Expires", "-1");
                     }
 
                     try {
@@ -402,7 +451,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     }
 
     /**
-     * Determines the content type for the resource name
+     * Determine the content type for the resource name.
      *
      * @param name The resource name
      * @return The mime type
@@ -430,7 +479,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     }
 
     /**
-     * Copies the from the input stream to the output stream
+     * Copy bytes from the input stream to the output stream.
      *
      * @param input The input stream
      * @param output The output stream
@@ -445,7 +494,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     }
 
     /**
-     * Looks for a static resource in the classpath
+     * Look for a static resource in the classpath.
      *
      * @param name The resource name
      * @param packagePrefix The package prefix to use to locate the resource

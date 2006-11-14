@@ -350,7 +350,17 @@ public class FilterDispatcher implements StrutsStatics, Filter {
 
 
     /**
-     * Process Action or request for a static resource.
+     * Process an action or handle a request a static resource.
+     * <p/>
+     * The filter tries to match the request to an action mapping.
+     * If mapping is found, the action processes is delegated to the dispatcher's serviceAction method.
+     * If action processing fails, doFilter will try to create an error page via the dispatcher.
+     * <p/>
+     * Otherwise, if the request is for a static resource,
+     * the resource is copied directly to the response, with the appropriate caching headers set.
+     * <p/>
+     * If the request does not match an action mapping, or a static resource page, 
+     * then it passes through.
      *
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
      */
@@ -405,7 +415,8 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     }
 
     /**
-     * Find static resource.
+     * Locate a static resource and copy directly to the response,
+     * setting the appropriate caching headers. 
      *
      * @param name The resource name
      * @param response The request

@@ -26,13 +26,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -53,14 +50,11 @@ import org.apache.struts2.config.ClasspathConfigurationProvider.PageLocator;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
-import org.apache.struts2.impl.StrutsActionProxyFactory;
-import org.apache.struts2.impl.StrutsObjectFactory;
 import org.apache.struts2.util.AttributeMap;
 import org.apache.struts2.util.ClassLoaderUtils;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
@@ -97,35 +91,78 @@ import freemarker.template.Template;
  */
 public class Dispatcher {
 
+    /**
+     * Provide a logging instance.
+     */
     private static final Log LOG = LogFactory.getLog(Dispatcher.class);
 
+    /**
+     * Provide a thread local instance.
+     */
     private static ThreadLocal<Dispatcher> instance = new ThreadLocal<Dispatcher>();
+
+    /**
+     * Store list of DispatcherListeners.
+     */
     private static List<DispatcherListener> dispatcherListeners =
         new ArrayList<DispatcherListener>();
 
+    /**
+     * Store ConfigurationManager instance, set on init.
+     */
     private ConfigurationManager configurationManager;
-    private static boolean portletSupportActive;
-    private static boolean devMode;
-    private static String defaultEncoding;
-    private static String defaultLocale;
-    private static String multipartMaxSize;
-    private static String multipartSaveDir;
-    private static final String DEFAULT_CONFIGURATION_PATHS = "struts-default.xml,struts-plugin.xml,struts.xml"; 
 
-    // used to get WebLogic to play nice
+    /**
+     * Store whether portlet support is active
+     * (set to true by Jsr168Dispatcher).
+     */
+    private static boolean portletSupportActive;
+
+    /**
+     * Store state of  StrutsConstants.STRUTS_DEVMODE setting.
+     */
+    private static boolean devMode;
+
+    /**
+     * Store state of StrutsConstants.STRUTS_I18N_ENCODING setting.
+     */
+    private static String defaultEncoding;
+
+    /**
+     * Store state of StrutsConstants.STRUTS_LOCALE setting.
+     */
+    private static String defaultLocale;
+
+    /**
+     * Store state of StrutsConstants.STRUTS_MULTIPART_SAVEDIR setting.
+     */
+    private static String multipartSaveDir;
+
+    /**
+     * Provide list of default configuration files.
+     */
+    private static final String DEFAULT_CONFIGURATION_PATHS = "struts-default.xml,struts-plugin.xml,struts.xml";
+
+    /**
+     * Store state of STRUTS_DISPATCHER_PARAMETERSWORKAROUND.
+     * <p/>
+     * The workaround is for WebLogic.
+     * We try to autodect WebLogic on Dispatcher init.
+     * The workaround can also be enabled manually.
+     */
     private boolean paramsWorkaroundEnabled = false;
 
     /**
-     * Gets the current instance for this thread
+     * Provide the dispatcher instance for the current thread.
      *
      * @return The dispatcher instance
      */
     public static Dispatcher getInstance() {
-        return (Dispatcher) instance.get();
+        return instance.get();
     }
 
     /**
-     * Sets the dispatcher instance for this thread
+     * Store the dispatcher instance for this thread.
      *
      * @param instance The instance
      */
@@ -134,59 +171,71 @@ public class Dispatcher {
     }
 
     /**
-     * Adds a dispatcher lifecycle listener
+     * Add a dispatcher lifecycle listener.
      *
-     * @param l The listener
+     * @param listener The listener to add
      */
-    public static synchronized void addDispatcherListener(DispatcherListener l) {
-        dispatcherListeners.add(l);
+    public static synchronized void addDispatcherListener(DispatcherListener listener) {
+        dispatcherListeners.add(listener);
     }
 
     /**
-     * Removes a dispatcher lifecycle listener
+     * Remove a specific dispatcher lifecycle listener.
      *
-     * @param l The listener
+     * @param listener The listener
      */
-    public static synchronized void removeDispatcherListener(DispatcherListener l) {
-        dispatcherListeners.remove(l);
+    public static synchronized void removeDispatcherListener(DispatcherListener listener) {
+        dispatcherListeners.remove(listener);
     }
 
     /**
-     * The constructor with its servlet context instance (optional)
+     * Create the Dispatcher instance for a given ServletContext and set of initialization parameters.
      *
-     * @param servletContext The servlet context
+     * @param servletContext Our servlet context
+     * @param initParams The set of initialization parameters
      */
     public Dispatcher(ServletContext servletContext, Map initParams) {
         init(servletContext, initParams);
     }
-    
+
+    /**
+     * Modify state of StrutsConstants.STRUTS_DEVMODE setting.
+     * @param mode New setting
+     */
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     public static void setDevMode(String mode) {
         devMode = "true".equals(mode);
     }
     
+    /**
+     * Modify state of StrutsConstants.STRUTS_LOCALE setting.
+     * @param val New setting
+     */
     @Inject(value=StrutsConstants.STRUTS_LOCALE, required=false)
     public static void setDefaultLocale(String val) {
         defaultLocale = val;
     }
     
+    /**
+     * Modify state of StrutsConstants.STRUTS_I18N_ENCODING setting.
+     * @param val New setting
+     */
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public static void setDefaultEncoding(String val) {
         defaultEncoding = val;
     }
     
-    @Inject(StrutsConstants.STRUTS_MULTIPART_MAXSIZE)
-    public static void setMultipartMaxSize(String val) {
-        multipartMaxSize = val;
-    }
-    
+    /**
+     * Modify state of StrutsConstants.STRUTS_MULTIPART_SAVEDIR setting.
+     * @param val New setting
+     */
     @Inject(StrutsConstants.STRUTS_MULTIPART_SAVEDIR)
     public static void setMultipartSaveDir(String val) {
         multipartSaveDir = val;
     }
 
     /**
-     * Cleans up thread local variables
+     * Release local threads and destroy any DispatchListeners.
      */
     public void cleanup() {
         ObjectFactory objectFactory = ObjectFactory.getObjectFactory();
@@ -213,12 +262,13 @@ public class Dispatcher {
     }
 
     /**
-     * Initializes the instance
+     * Load configurations, including both XML and zero-configuration strategies,
+     * and update optional settings, including whether to reload configurations and resource files. 
      *
-     * @param servletContext The servlet context
+     * @param servletContext Our servlet context
+     * @param initParams The set of initialization parameters
      */
     private void init(final ServletContext servletContext, final Map<String,String> initParams) {
-        
         
         configurationManager = new ConfigurationManager(BeanSelectionProvider.DEFAULT_BEAN_NAME);
         
@@ -228,21 +278,19 @@ public class Dispatcher {
         if (configPaths == null) {
             configPaths = DEFAULT_CONFIGURATION_PATHS;
         }
-        if (configPaths != null) {
-            String[] files = configPaths.split("\\s*[,]\\s*");
-            for (String file : files) {
-                if (file.endsWith(".xml")) {
-                    if ("xwork.xml".equals(file)) {
-                        configurationManager.addConfigurationProvider(new XmlConfigurationProvider(file, false));
-                    } else {
-                        configurationManager.addConfigurationProvider(new StrutsXmlConfigurationProvider(file, false, servletContext));
-                    }
+        String[] files = configPaths.split("\\s*[,]\\s*");
+        for (String file : files) {
+            if (file.endsWith(".xml")) {
+                if ("xwork.xml".equals(file)) {
+                    configurationManager.addConfigurationProvider(new XmlConfigurationProvider(file, false));
                 } else {
-                    throw new IllegalArgumentException("Invalid configuration file name");
+                    configurationManager.addConfigurationProvider(new StrutsXmlConfigurationProvider(file, false, servletContext));
                 }
+            } else {
+                throw new IllegalArgumentException("Invalid configuration file name");
             }
         }
-        
+
         // Load configuration from a scan of the classloader
         String packages = initParams.get("actionPackages");
         if (packages != null) {
@@ -290,20 +338,16 @@ public class Dispatcher {
         // Preload the configuration
         Configuration config = configurationManager.getConfiguration();
         Container container = config.getContainer();
-        
-        
-        boolean reloadi18n = Boolean.valueOf(container.getInstance(String.class, StrutsConstants.STRUTS_I18N_RELOAD)).booleanValue();
+
+        boolean reloadi18n = Boolean.valueOf(container.getInstance(String.class, StrutsConstants.STRUTS_I18N_RELOAD));
         LocalizedTextUtil.setReloadBundles(reloadi18n);
 
         ObjectTypeDeterminer objectTypeDeterminer = container.getInstance(ObjectTypeDeterminer.class);
         ObjectTypeDeterminerFactory.setInstance(objectTypeDeterminer);
 
-//        devMode = "true".equals(container.getInstance(String.class, StrutsConstants.STRUTS_DEVMODE));
-//      Settings.set(StrutsConstants.STRUTS_I18N_RELOAD, "true");
-//      Settings.set(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "true");
-
         //check for configuration reloading
-        FileManager.setReloadingConfigs("true".equals(container.getInstance(String.class, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD)));
+        FileManager.setReloadingConfigs("true".equals(container.getInstance(String.class,
+                StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD)));
 
         String pkg = container.getInstance(String.class, StrutsConstants.STRUTS_CONTINUATIONS_PACKAGE);
         if (pkg != null) {
@@ -316,7 +360,8 @@ public class Dispatcher {
             LOG.info("WebLogic server detected. Enabling Struts parameter access work-around.");
             paramsWorkaroundEnabled = true;
         } else {
-            paramsWorkaroundEnabled = "true".equals(container.getInstance(String.class, StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND));
+            paramsWorkaroundEnabled = "true".equals(container.getInstance(String.class,
+                    StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND));
         } 
 
         synchronized(Dispatcher.class) {
@@ -329,10 +374,13 @@ public class Dispatcher {
     }
 
     /**
-     * Loads the action and executes it. This method first creates the action context from the given
-     * parameters then loads an <tt>ActionProxy</tt> from the given action name and namespace. After that,
-     * the action is executed and output channels throught the response object. Actions not found are
-     * sent back to the user via the {@link Dispatcher#sendError} method, using the 404 return code.
+     * Load Action class for mapping and invoke the appropriate Action method, or go directly to the Result.
+     * <p/>
+     * This method first creates the action context from the given parameters,
+     * and then loads an <tt>ActionProxy</tt> from the given action name and namespace.
+     * After that, the Action method is executed and output channels through the response object.
+     * Actions not found are sent back to the user via the {@link Dispatcher#sendError} method,
+     * using the 404 return code.
      * All other errors are reported by throwing a ServletException.
      *
      * @param request  the HttpServletRequest object
@@ -340,8 +388,11 @@ public class Dispatcher {
      * @param mapping  the action mapping object
      * @throws ServletException when an unknown error occurs (not a 404, but typically something that
      *                          would end up as a 5xx by the servlet container)
+     * @param context Our ServletContext object
      */
-    public void serviceAction(HttpServletRequest request, HttpServletResponse response, ServletContext context, ActionMapping mapping) throws ServletException {
+    public void serviceAction(HttpServletRequest request, HttpServletResponse response, ServletContext context,
+                              ActionMapping mapping) throws ServletException {
+
         Map<String, Object> extraContext = createContextMap(request, response, mapping, context);
 
         // If there was a previous value stack, then create a new copy and pass it in to be used by the new Action
@@ -398,7 +449,7 @@ public class Dispatcher {
     }
 
     /**
-     * Creates a context map containing all the wrapped request objects
+     * Create a context map containing all the wrapped request objects
      *
      * @param request The servlet request
      * @param response The servlet response
@@ -408,6 +459,7 @@ public class Dispatcher {
      */
     public Map<String,Object> createContextMap(HttpServletRequest request, HttpServletResponse response,
             ActionMapping mapping, ServletContext context) {
+
         // request map wrapping the http request objects
         Map requestMap = new RequestMap(request);
 
@@ -435,7 +487,7 @@ public class Dispatcher {
     }
 
     /**
-     * Merges all application and servlet attributes into a single <tt>HashMap</tt> to represent the entire
+     * Merge all application and servlet attributes into a single <tt>HashMap</tt> to represent the entire
      * <tt>Action</tt> context.
      *
      * @param requestMap     a Map of all request attributes.
@@ -459,7 +511,7 @@ public class Dispatcher {
         extraContext.put(ActionContext.SESSION, sessionMap);
         extraContext.put(ActionContext.APPLICATION, applicationMap);
 
-        Locale locale = null;
+        Locale locale;
         if (defaultLocale != null) {
             locale = LocalizedTextUtil.localeFromString(defaultLocale, request.getLocale());
         } else {
@@ -486,39 +538,10 @@ public class Dispatcher {
     }
 
     /**
-     * Returns the maximum upload size allowed for multipart requests (this is configurable).
-     *
-     * @return the maximum upload size allowed for multipart requests
-     */
-    private static int getMaxSize() {
-        Integer maxSize = new Integer(Integer.MAX_VALUE);
-        try {
-            String maxSizeStr = multipartMaxSize;
-
-            if (maxSizeStr != null) {
-                try {
-                    maxSize = new Integer(maxSizeStr);
-                } catch (NumberFormatException e) {
-                    LOG.warn("Unable to format 'struts.multipart.maxSize' property setting. Defaulting to Integer.MAX_VALUE");
-                }
-            } else {
-                LOG.warn("Unable to format 'struts.multipart.maxSize' property setting. Defaulting to Integer.MAX_VALUE");
-            }
-        } catch (IllegalArgumentException e1) {
-            LOG.warn("Unable to format 'struts.multipart.maxSize' property setting. Defaulting to Integer.MAX_VALUE");
-        }
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("maxSize=" + maxSize);
-        }
-
-        return maxSize.intValue();
-    }
-
-    /**
-     * Returns the path to save uploaded files to (this is configurable).
+     * Return the path to save uploaded files to (this is configurable).
      *
      * @return the path to save uploaded files to
+     * @param servletContext Our ServletContext 
      */
     private String getSaveDir(ServletContext servletContext) {
         String saveDir = multipartSaveDir.trim();
@@ -546,7 +569,7 @@ public class Dispatcher {
     }
 
     /**
-     * Prepares a request, including setting the encoding and locale
+     * Prepare a request, including setting the encoding and locale.
      *
      * @param request The request
      * @param response The response
@@ -580,14 +603,18 @@ public class Dispatcher {
     }
 
     /**
-     * Wraps and returns the given response or returns the original response object. This is used to transparently
-     * handle multipart data as a wrapped class around the given request. Override this method to handle multipart
-     * requests in a special way or to handle other types of requests. Note, {@link org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper} is
-     * flexible - you should look to that first before overriding this method to handle multipart data.
+     * Wrap and return the given request or return the original request object.
+     * </p>
+     * This method transparently handles multipart data as a wrapped class around the given request.
+     * Override this method to handle multipart requests in a special way or to handle other types of requests.
+     * Note, {@link org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper} is
+     * flexible - look first to that object before overriding this method to handle multipart data.
      *
      * @param request the HttpServletRequest object.
+     * @param servletContext Our ServletContext object
      * @return a wrapped request or original request.
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper
+     * @throws java.io.IOException on any error.
      */
     public HttpServletRequest wrapRequest(HttpServletRequest request, ServletContext servletContext) throws IOException {
         // don't wrap more than once
@@ -607,12 +634,13 @@ public class Dispatcher {
     }
 
     /**
-     * Sends an HTTP error response code.
+     * Send an HTTP error response code.
      *
      * @param request  the HttpServletRequest object.
      * @param response the HttpServletResponse object.
      * @param code     the HttpServletResponse error code (see {@link javax.servlet.http.HttpServletResponse} for possible error codes).
      * @param e        the Exception that is reported.
+     * @param ctx      the ServletContext object.
      */
     public void sendError(HttpServletRequest request, HttpServletResponse response,
             ServletContext ctx, int code, Exception e) {
@@ -664,7 +692,7 @@ public class Dispatcher {
     }
 
     /**
-     * Returns <tt>true</tt>, if portlet support is active, <tt>false</tt> otherwise.
+     * Return <tt>true</tt>, if portlet support is active, <tt>false</tt> otherwise.
      *
      * @return <tt>true</tt>, if portlet support is active, <tt>false</tt> otherwise.
      */
@@ -673,7 +701,7 @@ public class Dispatcher {
     }
 
     /**
-     * Set the flag that portlet support is active or not.
+     * Modify the portlet support mode.
      * @param portletSupportActive <tt>true</tt> or <tt>false</tt>
      */
     public static void setPortletSupportActive(boolean portletSupportActive) {
@@ -681,7 +709,7 @@ public class Dispatcher {
     }
 
     /**
-     * Resolves pages from the servlet context, failing over to the classpath
+     * Search classpath for a page.
      */
     private final class ServletContextPageLocator implements PageLocator {
         private final ServletContext context;
@@ -707,7 +735,9 @@ public class Dispatcher {
         }
     }
 
-    /** Simple accessor for a static method */
+    /**
+     * Provide an accessor class for static XWork utility.
+     */
     public class Locator {
         public Location getLocation(Object obj) {
             Location loc = LocationUtils.getLocation(obj);
@@ -719,7 +749,7 @@ public class Dispatcher {
     }
 
     /**
-     * Gets the current configuration manager instance
+     * Expose the ConfigurationManager instance.
      *
      * @return The instance
      */
@@ -728,7 +758,7 @@ public class Dispatcher {
     }
 
     /**
-     * Sets the current configuration manager instance
+     * Modify the ConfigurationManager instance
      *
      * @param mgr The configuration manager
      */
@@ -736,6 +766,10 @@ public class Dispatcher {
         this.configurationManager = mgr;
     }
 
+    /**
+     * Expose the dependency injection container.
+     * @return Our dependency injection container
+     */
     public Container getContainer() {
         return getConfigurationManager().getConfiguration().getContainer();
     }

@@ -37,10 +37,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Context;
@@ -55,7 +52,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
     private File baseDir = null;
     private String filename;
     private String reloadKey;
-    private Object servletContext;
+    private ServletContext servletContext;
 
     /**
      * Constructs the configuration provider
@@ -71,6 +68,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
      *
      * @param filename The filename to look for
      * @param errorIfMissing If we should throw an exception if the file can't be found
+     * @param ctx Our ServletContext
      */
     public StrutsXmlConfigurationProvider(String filename, boolean errorIfMissing, ServletContext ctx) {
         super(filename, errorIfMissing);
@@ -116,7 +114,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
      * Look for the configuration file on the classpath and in the file system
      *
      * @param fileName The file name to retrieve
-     * @see com.opensymphony.xwork2.config.providers.XmlConfigurationProvider#getInputStream(java.lang.String)
+     * @see com.opensymphony.xwork2.config.providers.XmlConfigurationProvider#getConfigurationUrls
      */
     @Override
     protected Iterator<URL> getConfigurationUrls(String fileName) throws IOException {
@@ -163,10 +161,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
     @Override
     public boolean needsReload() {
         ActionContext ctx = ActionContext.getContext();
-        if (ctx.get(reloadKey) == null) {
-            return super.needsReload();
-        }
-        return false;
+        return ctx.get(reloadKey) == null && super.needsReload();
 
     }
     

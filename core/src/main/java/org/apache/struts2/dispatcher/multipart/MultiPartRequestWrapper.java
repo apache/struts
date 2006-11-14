@@ -22,13 +22,10 @@ package org.apache.struts2.dispatcher.multipart;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
@@ -36,41 +33,37 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.StrutsRequestWrapper;
-import org.apache.struts2.util.ClassLoaderUtils;
 
 
 /**
- * Parses a multipart request and provides a wrapper around the request. The parsing implementation used
+ * Parse a multipart request and provide a wrapper around the request. The parsing implementation used
  * depends on the <tt>struts.multipart.parser</tt> setting. It should be set to a class which
- * extends {@link org.apache.struts2.dispatcher.multipart.MultiPartRequest}. <p>
+ * extends {@link org.apache.struts2.dispatcher.multipart.MultiPartRequest}. 
  * <p/>
- * Struts ships with three implementations,
- * {@link org.apache.struts2.dispatcher.multipart.PellMultiPartRequest}, and
- * {@link org.apache.struts2.dispatcher.multipart.CosMultiPartRequest} and
- * {@link org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest}. The Jakarta implementation
- * is the default. The <tt>struts.multipart.parser</tt> property should be set to <tt>jakarta</tt> for the
+ * The <tt>struts.multipart.parser</tt> property should be set to <tt>jakarta</tt> for the
  * Jakarta implementation, <tt>pell</tt> for the Pell implementation and <tt>cos</tt> for the Jason Hunter
- * implementation. <p>
+ * implementation.
  * <p/>
  * The files are uploaded when the object is instantiated. If there are any errors they are logged using
  * {@link #addError(String)}. An action handling a multipart form should first check {@link #hasErrors()}
- * before doing any other processing. <p>
+ * before doing any other processing.
+ * <p/>
+ * An alternate implementation, PellMultiPartRequest, is provided as a plugin.
  *
  */
 public class MultiPartRequestWrapper extends StrutsRequestWrapper {
     protected static final Log log = LogFactory.getLog(MultiPartRequestWrapper.class);
 
-    Collection errors;
+    Collection<String> errors;
     MultiPartRequest multi;
 
     /**
-     * Instantiates the appropriate MultiPartRequest parser implementation and processes the data.
+     * Process file downloads and log any errors.
      *
-     * @param request the servlet request object
-     * @param saveDir directory to save the file(s) to
-     * @param maxSize maximum file size allowed
+     * @param request Our HttpServletRequest object
+     * @param saveDir Target directory for any files that we save
+     * @param multiPartRequest Our MultiPartRequest object
      */
     public MultiPartRequestWrapper(MultiPartRequest multiPartRequest, HttpServletRequest request, String saveDir) {
         super(request);
@@ -78,8 +71,8 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
         multi = multiPartRequest;
         try {
             multi.parse(request, saveDir);
-            for (Iterator iter = multi.getErrors().iterator(); iter.hasNext();) {
-                String error = (String) iter.next();
+            for (Object o : multi.getErrors()) {
+                String error = (String) o;
                 addError(error);
             }
         } catch (IOException e) {
@@ -132,6 +125,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
     /**
      * Get a String array of the file names for uploaded files
      *
+     * @param fieldName Field to check for file names.
      * @return a String[] of file names for uploaded files
      */
     public String[] getFileNames(String fieldName) {
@@ -169,7 +163,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
      * @see javax.servlet.http.HttpServletRequest#getParameterMap()
      */
     public Map getParameterMap() {
-        Map map = new HashMap();
+        Map<String, String[]> map = new HashMap<String, String[]>();
         Enumeration enumeration = getParameterNames();
 
         while (enumeration.hasMoreElements()) {
@@ -204,11 +198,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
      * @return <tt>true</tt> if any errors occured when parsing the HTTP multipart request, <tt>false</tt> otherwise.
      */
     public boolean hasErrors() {
-        if ((errors == null) || errors.isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
+        return !((errors == null) || errors.isEmpty());
     }
 
     /**
@@ -216,7 +206,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
      *
      * @return the error Collection.
      */
-    public Collection getErrors() {
+    public Collection<String> getErrors() {
         return errors;
     }
 
@@ -227,7 +217,7 @@ public class MultiPartRequestWrapper extends StrutsRequestWrapper {
      */
     protected void addError(String anErrorMessage) {
         if (errors == null) {
-            errors = new ArrayList();
+            errors = new ArrayList<String>();
         }
 
         errors.add(anErrorMessage);

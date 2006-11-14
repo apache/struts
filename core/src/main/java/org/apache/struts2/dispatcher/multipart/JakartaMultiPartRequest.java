@@ -70,7 +70,6 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
      * Creates a new request wrapper to handle multi-part data using methods adapted from Jason Pell's
      * multipart classes (see class description).
      *
-     * @param maxSize        maximum size post allowed
      * @param saveDir        the directory to save off the file
      * @param servletRequest the request containing the multipart
      * @throws java.io.IOException  is thrown if encoding fails.
@@ -88,8 +87,8 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
             ServletFileUpload upload = new ServletFileUpload(fac);
             List items = upload.parseRequest(createRequestContext(servletRequest));
 
-            for (int i = 0; i < items.size(); i++) {
-                FileItem item = (FileItem) items.get(i);
+            for (Object item1 : items) {
+                FileItem item = (FileItem) item1;
                 if (log.isDebugEnabled()) log.debug("Found item " + item.getFieldName());
                 if (item.isFormField()) {
                     log.debug("Item is a normal form field");

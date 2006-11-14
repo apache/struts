@@ -24,36 +24,38 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.opensymphony.xwork2.config.ConfigurationManager;
 
-
 /**
  * <!-- START SNIPPET: javadoc -->
  *
- * The ActionMapper is responsible for providing a mapping between HTTP requests and action invocation requests and
- * vice-versa. When given an HttpServletRequest, the ActionMapper may return null if no action invocation request maps,
- * or it may return an {@link ActionMapping} that describes an action invocation that Struts should attempt to try. The
- * ActionMapper is not required to guarantee that the {@link ActionMapping} returned be a real action or otherwise
- * ensure a valid request. This means that most ActionMappers do not need to consult the Struts configuration to
- * determine if a request should be mapped.
- *
- * <p/> Just as requests can be mapped from HTTP to an action invocation, the opposite is true as well. However, because
- * HTTP requests (when shown in HTTP responses) must be in String form, a String is returned rather than an actual
- * request object.
+ * Provide a mapping between HTTP requests and action invocation requests and vice-versa.
+ * <p/>
+ * When given an HttpServletRequest, the ActionMapper may return null if no action invocation request matches,
+ * or it may return an {@link ActionMapping} that describes an action invocation for the framework to try.
+ * <p/>
+ * The ActionMapper is not required to guarantee that the {@link ActionMapping} returned be a real action or otherwise
+ * ensure a valid request.
+ * Accordingly, most ActionMappers do not need to consult the Struts configuration
+ * just to determine if a request should be mapped.
+ * <p/>
+ * Just as requests can be mapped from HTTP to an action invocation, the opposite is true as well.
+ * However, because HTTP requests (when shown in HTTP responses) must be in String form,
+ * a String is returned rather than an actual request object.
  *
  * <!-- END SNIPPET: javadoc -->
  */
 public interface ActionMapper {
 
     /**
-     * Gets an action mapping for the current request
+     * Expose the ActionMapping for the current request
      *
      * @param request The servlet request
-     * @param config The current configuration manager
+     * @param configManager The current configuration manager
      * @return The appropriate action mapping
      */
     ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager);
 
     /**
-     * Converts an ActionMapping into a URI string
+     * Convert an ActionMapping into a URI string
      *
      * @param mapping The action mapping
      * @return The URI string that represents this mapping

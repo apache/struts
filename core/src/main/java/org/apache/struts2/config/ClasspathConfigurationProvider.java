@@ -32,6 +32,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.Action;
 
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
@@ -125,7 +126,10 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
      * @param pkgs
      */
     protected void loadPackages(String[] pkgs) {
+
         ResolverUtil<Class> resolver = new ResolverUtil<Class>();
+        resolver.findImplementations(Action.class,pkgs);
+        // TODO: resolver.findAnnotated( ,pkgs);
         resolver.findSuffix(ACTION, pkgs);
         Set actionClasses = resolver.getClasses();
         for (Object obj : actionClasses) {
@@ -179,7 +183,10 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
             }
         }
 
-        actionName = actionName.substring(0, actionName.length() - ACTION.length());
+        boolean trimSuffix = (actionName.lastIndexOf(ACTION) > 0);
+        if (trimSuffix) {
+            actionName = actionName.substring(0, actionName.length() - ACTION.length());
+        }
 
         if (actionName.length() > 1) {
             int lowerPos = actionName.lastIndexOf('/') + 1;

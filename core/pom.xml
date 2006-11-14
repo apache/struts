@@ -152,10 +152,10 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Spring -->
+        <!-- Mocks for unit testing (by Spring) -->
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
+            <artifactId>spring-mock</artifactId>
             <version>1.2.8</version>
             <optional>true</optional>
         </dependency>
@@ -164,30 +164,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>1.2.8</version>
-            <optional>true</optional>
+            <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>1.2.8</version>
-            <optional>true</optional>
-        </dependency>
 
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>1.2.8</version>
-            <optional>true</optional>
-        </dependency>
 
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-mock</artifactId>
-            <version>1.2.8</version>
-            <optional>true</optional>
-        </dependency>
-        
         <!-- Test dependencies -->
         <dependency>
             <groupId>junit</groupId>

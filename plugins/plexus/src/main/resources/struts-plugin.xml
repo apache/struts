@@ -5,7 +5,7 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">
     
 <struts>
-    <bean type="com.opensymphony.xwork.ObjectFactory" name="plexus" class="org.apache.struts2.plexus.PlexusObjectFactory" />
+    <bean type="com.opensymphony.xwork2.ObjectFactory" name="plexus" class="org.apache.struts2.plexus.PlexusObjectFactory" />
     
     <!--  Make the Plexus object factory the automatic default -->
     <constant name="struts.objectFactory" value="plexus" />

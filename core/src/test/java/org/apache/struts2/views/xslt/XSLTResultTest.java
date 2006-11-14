@@ -27,7 +27,6 @@ import javax.xml.transform.TransformerException;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
-import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -120,7 +119,7 @@ public class XSLTResultTest extends StrutsTestCase {
     protected void setUp() throws Exception {
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
-        servletContext = new MockServletContext(new DefaultResourceLoader());
+        servletContext = new MockServletContext();
 
         result = new XSLTResult();
         stack = ValueStackFactory.getFactory().createValueStack();

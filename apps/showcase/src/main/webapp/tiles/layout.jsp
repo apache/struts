@@ -1,35 +1,16 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles" %>
-<html>
-<head>
-    <title>Tiles Showcase</title>
-    <style type="text/css">
-        .header {
-            background-color: #006633;
-            color: white;
-        }
+<%@ taglib prefix="s" uri="/struts-tags" %>
 
-        .body {
-            border: 1px solid black;
-        }
-    </style>
-</head>
+<%-- Show usage; Used in Header --%>
+<tiles:importAttribute name="title" scope="request"/>
+<html>
+    <head><title><tiles:getAsString name="title"/></title></head>
 <body>
-<table>
-    <tr>
-        <td><strong>
-            <tiles:getAsString name="title"/>
-        </strong></td>
-    </tr>
-    <tr>
-        <td>
-            <tiles:attribute name="header"/>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <tiles:attribute name="body"/>
-        </td>
-    </tr>
-</table>
+    <tiles:attribute name="header"/>
+
+    <p id="body">
+        <tiles:attribute name="body"/>
+    </p>
 </body>
 </html>
+

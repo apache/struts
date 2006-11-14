@@ -26,9 +26,10 @@
         <module>pell-multipart</module>
         <module>plexus</module>
         <module>quickstart</module>
-        <module>struts1</module>
         <module>sitegraph</module>
         <module>sitemesh</module>
+        <module>spring</module>
+        <module>struts1</module>
         <module>tiles</module>
     </modules>
     

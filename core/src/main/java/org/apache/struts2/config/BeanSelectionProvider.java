@@ -46,6 +46,86 @@ import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ObjectTypeDeterminer;
 import com.opensymphony.xwork2.util.ObjectTypeDeterminerFactory;
 
+/**
+ * Selects the implementations of key framework extension points, using the loaded
+ * property constants.  The implementations are selected from the container builder
+ * using the name defined in its associated property.  The default implementation name will
+ * always be "struts".
+ *
+ * <p>
+ * The following is a list of the allowed extension points:
+ *
+ * <!-- START SNIPPET: extensionPoints -->
+ * <table border="1">
+ *   <tr>
+ *     <th>Type</th>
+ *     <th>Property</th>
+ *     <th>Scope</th>
+ *     <th>Description</th>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.ObjectFactory</td>
+ *     <td>struts.objectFactory</td>
+ *     <td>singleton</td>
+ *     <td>Creates actions, results, and interceptors</td>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.ActionProxyFactory</td>
+ *     <td>struts.actionProxyFactory</td>
+ *     <td>singleton</td>
+ *     <td>Creates the ActionProxy</td>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.util.ObjectTypeDeterminer</td>
+ *     <td>struts.objectTypeDeterminer</td>
+ *     <td>singleton</td>
+ *     <td>Determines what the key and and element class of a Map or Collection should be</td>
+ *   </tr>
+ *   <tr>
+ *     <td>org.apache.struts2.dispatcher.mapper.ActionMapper</td>
+ *     <td>struts.mapper.class</td>
+ *     <td>singleton</td>
+ *     <td>Determines the ActionMapping from a request and a URI from an ActionMapping</td>
+ *   </tr>
+ *   <tr>
+ *     <td>org.apache.struts2.dispatcher.multipart.MultiPartRequest</td>
+ *     <td>struts.multipart.parser</td>
+ *     <td>per request</td>
+ *     <td>Parses a multipart request (file upload)</td>
+ *   </tr>
+ *   <tr>
+ *     <td>org.apache.struts2.views.freemarker.FreemarkerManager</td>
+ *     <td>struts.freemarker.manager.classname</td>
+ *     <td>singleton</td>
+ *     <td>Loads and processes Freemarker templates</td>
+ *   </tr>
+ *   <tr>
+ *     <td>org.apache.struts2.views.velocity.VelocityManager</td>
+ *     <td>struts.velocity.manager.classname</td>
+ *     <td>singleton</td>
+ *     <td>Loads and processes Velocity templates</td>
+ *   </tr>
+ * </table>
+ *
+ * <!-- END SNIPPET: extensionPoints -->
+ * </p>
+ * <p>
+ * Implementations are selected using the value of its associated property.  That property is
+ * used to determine the implementation by:
+ * </p>
+ * <ol>
+ *   <li>Trying to find an existing bean by that name in the container</li>
+ *   <li>Trying to find a class by that name, then creating a new bean factory for it</li>
+ *   <li>Creating a new delegation bean factory that delegates to the configured ObjectFactory at runtime</li>
+ * </ol>
+ * <p>
+ * Finally, this class overrides certain properties if dev mode is enabled:
+ * </p>
+ * <ul>
+ *   <li><code>struts.i18n.reload = true</code></li>
+ *   <li><code>struts.configuration.xml.reload = true</code></li>
+ * </ul>
+ */
 public class BeanSelectionProvider implements ConfigurationProvider {
     public static final String DEFAULT_BEAN_NAME = "struts";
     private static final Log LOG = LogFactory.getLog(BeanSelectionProvider.class);

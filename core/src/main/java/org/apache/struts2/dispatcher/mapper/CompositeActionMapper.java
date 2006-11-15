@@ -49,10 +49,10 @@ import com.opensymphony.xwork2.util.FileManager;
  * For example, with the following entries in struts.properties
  * <p/>
  * <pre>
- * struts.mapper.class=org.apache.struts2.dispatcher.mapper.CompositeActionMapper
- * struts.mapper.composite.1=org.apache.struts2.dispatcher.mapper.DefaultActionMapper
- * struts.mapper.composite.2=org.apache.struts2.dispatcher.mapper.RestfulActionMapper
- * struts.mapper.composite.3=org.apache.struts2.dispatcher.mapper.Restful2ActionMapper
+ * &lt;bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="struts" 
+ *       class="org.apache.struts2.dispatcher.mapper.CompositeActionMapper" /&gt;
+ * &lt;constant name="struts.mapper.composite" 
+ *       value="org.apache.struts2.dispatcher.mapper.DefaultActionMapper,org.apache.struts2.dispatcher.mapper.RestfulActionMapperorg.apache.struts2.dispatcher.mapper.Restful2ActionMapper" /&gt;
  * </pre>
  * <p/>
  * When {@link CompositeActionMapper#getMapping(HttpServletRequest, ConfigurationManager)} or
@@ -68,6 +68,8 @@ import com.opensymphony.xwork2.util.FileManager;
  *
  * For example with the following in struts-*.xml :-
  * <pre>
+ *    &lt;bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="struts" 
+ *       class="org.apache.struts2.dispatcher.mapper.CompositeActionMapper" /&gt;
  *    &lt;constant name="struts.mapper.composite" 
  *       value="org.apache.struts2.dispatcher.mapper.DefaultActionMapper,foo.bar.MyActionMapper,foo.bar.MyAnotherActionMapper" /&gt;
  * </pre>

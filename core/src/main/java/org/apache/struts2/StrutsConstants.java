@@ -144,4 +144,7 @@ public final class StrutsConstants {
     public static final String STRUTS_TEMPLATE_ENGINES = "struts.templateEngines";
 
     public static final String STRUTS_FREEMARKER_WRAPPER_ALT_MAP = "struts.freemarker.wrapper.altMap";
+
+    /** The name of the xwork converter implementation */
+    public static final String STRUTS_XWORKCONVERTER = "struts.xworkConverter";
 }

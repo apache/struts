@@ -59,17 +59,11 @@
     name CDATA #REQUIRED
 >
 
-<!ELEMENT external-ref (#PCDATA)>
-<!ATTLIST external-ref
-    name NMTOKEN #REQUIRED
-    required (true|false) "true"
->
-
 <!ELEMENT global-results (result+)>
 
 <!ELEMENT global-exception-mappings (exception-mapping+)>
 
-<!ELEMENT action (param|result|interceptor-ref|exception-mapping|external-ref)*>
+<!ELEMENT action (param|result|interceptor-ref|exception-mapping)*>
 <!ATTLIST action
     name CDATA #REQUIRED
     class CDATA #IMPLIED

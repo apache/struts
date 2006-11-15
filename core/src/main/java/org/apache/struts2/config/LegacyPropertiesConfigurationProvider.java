@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -60,7 +61,7 @@ public class LegacyPropertiesConfigurationProvider implements ConfigurationProvi
         return false;
     }
 
-    public void register(ContainerBuilder builder, Properties props)
+    public void register(ContainerBuilder builder, Properties props, List<Class<?>> ignoreFailureStaticInjection)
             throws ConfigurationException {
         
         final Settings settings = Settings.getInstance();

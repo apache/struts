@@ -163,7 +163,7 @@ public class TestConfigurationProvider implements ConfigurationProvider {
         return false;
     }
 
-    public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
+    public void register(ContainerBuilder builder, Properties props, List<Class<?>> ignoreFailureStaticInjection) throws ConfigurationException {
         if (!builder.contains(ObjectFactory.class)) {
             builder.factory(ObjectFactory.class);
         }

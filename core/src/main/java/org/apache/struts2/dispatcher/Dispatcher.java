@@ -329,7 +329,7 @@ public class Dispatcher {
             public void loadPackages() throws ConfigurationException {}
             public boolean needsReload() { return false; }
 
-            public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
+            public void register(ContainerBuilder builder, Properties props, List<Class<?>> ignoreFailureStaticInjection) throws ConfigurationException {
                 props.putAll(initParams);
             }
         });

@@ -20,6 +20,7 @@
  */
 package org.apache.struts2.config;
 
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -148,7 +149,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         return false;
     }
 
-    public void register(ContainerBuilder builder, Properties props) {
+    public void register(ContainerBuilder builder, Properties props, List<Class<?>> ignoreFailureStaticInjection) {
         alias(ObjectFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY, builder, props);
         alias(XWorkConverter.class, StrutsConstants.STRUTS_XWORKCONVERTER, builder, props);
         alias(ActionProxyFactory.class, StrutsConstants.STRUTS_ACTIONPROXYFACTORY, builder, props);

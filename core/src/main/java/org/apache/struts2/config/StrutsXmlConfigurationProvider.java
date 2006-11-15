@@ -88,16 +88,16 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
      * @see com.opensymphony.xwork2.config.providers.XmlConfigurationProvider#register(com.opensymphony.xwork2.inject.ContainerBuilder, java.util.Properties)
      */
     @Override
-    public void register(ContainerBuilder containerBuilder, Properties props) throws ConfigurationException {
+    public void register(ContainerBuilder containerBuilder, Properties props, List<Class<?>> ignoreFailureStaticInjection) throws ConfigurationException {
         if (servletContext != null && !containerBuilder.contains(ServletContext.class)) {
-            containerBuilder.factory(ServletContext.class, new Factory() {
-                public Object create(Context context) throws Exception {
+            containerBuilder.factory(ServletContext.class, new Factory<ServletContext>() {
+                public ServletContext create(Context context) throws Exception {
                     return servletContext;
                 }
                 
             });
         }
-        super.register(containerBuilder, props);
+        super.register(containerBuilder, props, ignoreFailureStaticInjection);
     }
 
     /* (non-Javadoc)

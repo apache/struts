@@ -11,13 +11,13 @@
 <h3>Languages</h3>
 <ul>
     <li>
-        <s:url id="url" action="HelloWorld">
+        <s:url id="url" action="HelloWorld" includeContext="false">
             <s:param name="request_locale">en</s:param>
         </s:url>
         <s:a href="%{url}">English</s:a>
     </li>
     <li>
-        <s:url id="url" action="HelloWorld">
+        <s:url id="url" action="HelloWorld" includeContext="false">
             <s:param name="request_locale">es</s:param>
         </s:url>
         <s:a href="%{url}">Espanol</s:a>

@@ -66,12 +66,10 @@ import com.opensymphony.xwork2.util.FileManager;
  * {@link CompositeActionMapper#getUriFromActionMapping(ActionMapping)} methods.
  * <p/>
  *
- * For example with the following in struts.properties :-
+ * For example with the following in struts-*.xml :-
  * <pre>
- * struts.mapper.class=org.apache.struts2.dispatcher.mapper.CompositeActionMapper
- * struts.mapper.composite.1=org.apache.struts2.dispatcher.mapper.DefaultActionMapper
- * struts.mapper.composite.2=foo.bar.MyActionMapper
- * struts.mapper.composite.3=foo.bar.MyAnotherActionMapper
+ *    &lt;constant name="struts.mapper.composite" 
+ *       value="org.apache.struts2.dispatcher.mapper.DefaultActionMapper,foo.bar.MyActionMapper,foo.bar.MyAnotherActionMapper" /&gt;
  * </pre>
  * <p/>
  * <code>CompositeActionMapper</code> will be configured with 3 ActionMapper, namely

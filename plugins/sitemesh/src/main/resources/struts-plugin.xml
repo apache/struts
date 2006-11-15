@@ -5,6 +5,6 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">
     
 <struts>
-    <bean class="org.apache.struts2.sitemesh.FreeMarkerTemplatePageFilter" static="true" optional="true"/>
-    <bean class="org.apache.struts2.sitemesh.VelocityTemplatePageFilter" static="true" optional="true"/>
+    <bean class="org.apache.struts2.sitemesh.FreeMarkerPageFilter" static="true" optional="true"/>
+    <bean class="org.apache.struts2.sitemesh.VelocityPageFilter" static="true" optional="true"/>
 </struts>

@@ -71,6 +71,22 @@
                     href="http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/?root=Apache-SVN"
                     />
         </menu>
+
+        <menu name="Community">
+            <item
+                    name="Mailing Lists"
+                    href="http://struts.apache.org/mail.html"
+                    />
+            <item
+                    name="Issue Tracker (JIRA)"
+                    href="http://issues.apache.org/struts/"
+                    />
+            <item
+                    name="Wiki Pages"
+                    href="http://cwiki.apache.org/S2WIKI/home.html"
+                    />
+        </menu>
+
         <menu name="Plugin API's">
 
            <item
@@ -127,7 +143,6 @@
                     name="Tiles"
                     href="struts2-plugins/struts2-tiles-plugin/apidocs/index.html"
                     />
-
 
         </menu>
     </body>

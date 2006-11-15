@@ -68,6 +68,8 @@ dojo.widget.defineWidget(
     },
 
     postCreate : function(args, frag) {
+      struts.widget.BindDiv.superclass.postCreate.apply(this);
+
       var self = this;
       var hitchedRefresh = function() {
         dojo.lang.hitch(self, "refresh")();
@@ -79,39 +81,34 @@ dojo.widget.defineWidget(
       if(this.updateInterval > 0) {
         this.timer = new dojo.lang.timing.Timer(this.updateInterval);
         this.timer.onTick = hitchedRefresh;
-
-        //start the timer
-        if(this.autoStart) {
-          //start after delay
-          dojo.lang.setTimeout(this.delay, hitchedStartTimer);
-          if(this.delay === 0) {
-            //load content now
-            this.refresh();
-          }
-        }
       }
-      else {
-        if(this.autoStart) {
-          //start after delay
-          dojo.lang.setTimeout(this.delay, hitchedRefresh);
+
+      var delay = this.delay >= 0 ? this.delay : 0;
+      //start the timer
+      if(this.autoStart) {
+        //start after delay
+        dojo.lang.setTimeout(delay, hitchedStartTimer);
+        if(delay === 0) {
+          //load content now
+          this.refresh();
         }
       }
 
-     //attach listeners
-     if(!dojo.string.isBlank(this.refreshListenTopic)) {
-       this.log("Listening to " + this.refreshListenTopic + " to refresh");
-       dojo.event.topic.subscribe(this.refreshListenTopic, this, "refresh");
-     }
-     if(!dojo.string.isBlank(this.stopTimerListenTopic)) {
-       this.log("Listening to " + this.stopTimerListenTopic + " to stop timer");
-       dojo.event.topic.subscribe(this.stopTimerListenTopic, this, "stopTimer");
-     }
-     if(!dojo.string.isBlank(this.startTimerListenTopic)) {
-       this.log("Listening to " + this.startTimerListenTopic + " to start timer");
-       dojo.event.topic.subscribe(this.startTimerListenTopic, this, "startTimer");
-     }
+      //attach listeners
+      if(!dojo.string.isBlank(this.refreshListenTopic)) {
+        this.log("Listening to " + this.refreshListenTopic + " to refresh");
+        dojo.event.topic.subscribe(this.refreshListenTopic, this, "refresh");
+      }
+      if(!dojo.string.isBlank(this.stopTimerListenTopic)) {
+        this.log("Listening to " + this.stopTimerListenTopic + " to stop timer");
+        dojo.event.topic.subscribe(this.stopTimerListenTopic, this, "stopTimer");
+      }
+      if(!dojo.string.isBlank(this.startTimerListenTopic)) {
+        this.log("Listening to " + this.startTimerListenTopic + " to start timer");
+        dojo.event.topic.subscribe(this.startTimerListenTopic, this, "startTimer");
+      }
 
-     if(!dojo.string.isBlank(this.afterLoading)) {
+      if(!dojo.string.isBlank(this.afterLoading)) {
         dojo.event.connect("after", this, "onDownloadEnd", function(){
           self.log("Executing " + self.afterLoading);
           eval(self.afterLoading);

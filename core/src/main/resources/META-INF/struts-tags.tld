@@ -464,7 +464,7 @@
             <description><![CDATA[The i18n key attribute to be specified in place of the name, value and label attributes]]></description>
 
         </attribute>
-        
+
         <attribute>
             <name>required</name>
             <required>false</required>
@@ -1710,6 +1710,14 @@
 
             <description>
                 <![CDATA[Supply an image src for <i>image</i> type submit button. Will have no effect for types <i>input</i> and <i>button</i>.]]></description>
+
+        </attribute>
+        <attribute>
+            <name>action</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Set action nane to submit to, without .action suffix]]></description>
 
         </attribute>
         <attribute>

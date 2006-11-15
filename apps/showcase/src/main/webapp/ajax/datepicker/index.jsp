@@ -57,5 +57,6 @@ display starts since the range overlaps the end of a month and the beginning of 
 <p>nl-nl locale</p>
 <s:datepicker language="nl-nl" />
 
+<s:include value="../footer.jsp"/>
 </body>
 </html>

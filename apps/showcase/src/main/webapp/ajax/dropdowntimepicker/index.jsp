@@ -46,6 +46,6 @@ Value sent as time since Unix Epoch
 	<s:dropdowndatetimepicker type="time" name="dddp16" saveFormat="posix" value="3:45" language="en-us" />
 <br/>
 
-
+<s:include value="../footer.jsp"/>
 </body>
 </html>

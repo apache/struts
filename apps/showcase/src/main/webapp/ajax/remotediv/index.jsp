@@ -28,7 +28,7 @@
         </li>
 
         <li>
-            <a href="example5.jsp">A simple DIV's that cannot contact the serverm, with fixed error message</a>
+            <a href="example5.jsp">A simple DIV's that cannot contact the server, with fixed error message</a>
         </li>
 
 

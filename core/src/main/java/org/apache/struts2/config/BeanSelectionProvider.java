@@ -186,7 +186,9 @@ public class BeanSelectionProvider implements ConfigurationProvider {
                     if (LOG.isDebugEnabled()) {
                         LOG.info("Choosing bean ("+foundName+") for "+type+" to be loaded from the ObjectFactory");
                     }
-                    builder.factory(type, new ObjectFactoryDelegateFactory(foundName), scope);
+                    if (ObjectFactory.class != type) {
+                        builder.factory(type, new ObjectFactoryDelegateFactory(foundName), scope);
+                    }    
                 }
             }
         } else {

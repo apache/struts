@@ -65,24 +65,12 @@ import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
  *
  * @version $Date$ $Id$
  */
-public class ActionContextCleanUp extends AbstractFilter implements Filter {
+public class ActionContextCleanUp implements Filter {
 
     private static final Log LOG = LogFactory.getLog(ActionContextCleanUp.class);
 
     private static final String COUNTER = "__cleanup_recursion_counter";
 
-    
-    /**
-     * Does nothing in this implementation.
-     * 
-     * @see org.apache.struts2.dispatcher.AbstractFilter#postInit(javax.servlet.FilterConfig)
-     */
-    @Override
-    protected void postInit(FilterConfig filterConfig) throws ServletException {
-        // do nothing
-    }
-    
-    
     /**
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
      */
@@ -91,14 +79,10 @@ public class ActionContextCleanUp extends AbstractFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("doFilter");
-        }
-        
         String timerKey = "ActionContextCleanUp_doFilter: ";
         try {
             UtilTimerStack.push(timerKey);
-            request = prepareDispatcherAndWrapRequest(request, response);
+
             try {
                 Integer count = (Integer)request.getAttribute(COUNTER);
                 if (count == null) {
@@ -148,5 +132,11 @@ public class ActionContextCleanUp extends AbstractFilter implements Filter {
         if (LOG.isDebugEnabled()) {
             LOG.debug("clean up ");
         }
+    }
+
+    public void destroy() {
+    }
+
+    public void init(FilterConfig arg0) throws ServletException {
     }
 }

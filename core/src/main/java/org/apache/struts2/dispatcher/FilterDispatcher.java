@@ -121,7 +121,7 @@ import com.opensymphony.xwork2.ActionContext;
  *
  * @version $Date$ $Id$
  */
-public class FilterDispatcher extends AbstractFilter implements StrutsStatics, Filter {
+public class FilterDispatcher implements StrutsStatics, Filter {
 
     /**
      * Provide a logging instance.
@@ -168,6 +168,15 @@ public class FilterDispatcher extends AbstractFilter implements StrutsStatics, F
      */
     private static ActionMapper actionMapper;
 
+    /**
+     * Provide FilterConfig instance, set on init.
+     */
+    private FilterConfig filterConfig;
+
+    /**
+     * Expose Dispatcher instance to subclass.
+     */
+    protected Dispatcher dispatcher;
 
     /**
      * Initializes the filter by creating a default dispatcher
@@ -175,7 +184,9 @@ public class FilterDispatcher extends AbstractFilter implements StrutsStatics, F
      *
      * @param filterConfig The filter configuration
      */
-    public void postInit(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) throws ServletException {
+        dispatcher = createDispatcher(filterConfig);
+        this.filterConfig = filterConfig;
         String param = filterConfig.getInitParameter("packages");
         String packages = "org.apache.struts2.static template org.apache.struts2.interceptor.debugging";
         if (param != null) {
@@ -184,6 +195,36 @@ public class FilterDispatcher extends AbstractFilter implements StrutsStatics, F
         this.pathPrefixes = parse(packages);
     }
 
+    /**
+     * Calls dispatcher.cleanup,
+     * which in turn releases local threads and destroys any DispatchListeners.
+     *
+     * @see javax.servlet.Filter#destroy()
+     */
+    public void destroy() {
+        if (dispatcher == null) {
+            LOG.warn("something is seriously wrong, Dispatcher is not initialized (null) ");
+        } else {
+            dispatcher.cleanup();
+        }
+    }
+    
+    /**
+     * Create a default {@link Dispatcher} that subclasses can override
+     * with a custom Dispatcher, if needed.
+     *
+     * @param filterConfig Our FilterConfig
+     * @return Initialized Dispatcher 
+     */
+    protected Dispatcher createDispatcher(FilterConfig filterConfig) {
+        Map<String,String> params = new HashMap<String,String>();
+        for (Enumeration e = filterConfig.getInitParameterNames(); e.hasMoreElements(); ) {
+            String name = (String) e.nextElement();
+            String value = filterConfig.getInitParameter(name);
+            params.put(name, value);
+        }
+        return new Dispatcher(filterConfig.getServletContext(), params);
+    }
 
     /**
      * Modify state of StrutsConstants.STRUTS_SERVE_STATIC_CONTENT setting.
@@ -221,6 +262,68 @@ public class FilterDispatcher extends AbstractFilter implements StrutsStatics, F
         actionMapper = mapper;
     }
     
+    /**
+     * Provide a workaround for some versions of WebLogic.
+     * <p/>
+     * Servlet 2.3 specifies that the servlet context can be retrieved from the session. Unfortunately, some versions of
+     * WebLogic can only retrieve the servlet context from the filter config. Hence, this method enables subclasses to
+     * retrieve the servlet context from other sources.
+     *
+     * @return the servlet context.
+     */
+    protected ServletContext getServletContext() {
+        return filterConfig.getServletContext();
+    }
+
+    /**
+     * Expose the FilterConfig instance.
+     *
+     * @return Our FilterConfit instance
+     */
+    protected FilterConfig getFilterConfig() {
+        return filterConfig;
+    }
+
+    /**
+     * Wrap and return the given request, if needed, so as to to transparently
+     * handle multipart data as a wrapped class around the given request.
+     *
+     * @param request Our ServletRequest object
+     * @param response Our ServerResponse object
+     * @return Wrapped HttpServletRequest object
+     * @throws ServletException on any error
+     */
+    protected HttpServletRequest prepareDispatcherAndWrapRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+
+        Dispatcher du = Dispatcher.getInstance();
+
+        // Prepare and wrap the request if the cleanup filter hasn't already, cleanup filter should be
+        // configured first before struts2 dispatcher filter, hence when its cleanup filter's turn,
+        // static instance of Dispatcher should be null.
+        if (du == null) {
+
+            Dispatcher.setInstance(dispatcher);
+
+            // prepare the request no matter what - this ensures that the proper character encoding
+            // is used before invoking the mapper (see WW-9127)
+            dispatcher.prepare(request, response);
+
+            try {
+                // Wrap request first, just in case it is multipart/form-data
+                // parameters might not be accessible through before encoding (ww-1278)
+                request = dispatcher.wrapRequest(request, getServletContext());
+            } catch (IOException e) {
+                String message = "Could not wrap servlet request with MultipartRequestWrapper!";
+                LOG.error(message, e);
+                throw new ServletException(message, e);
+            }
+        }
+        else {
+            dispatcher = du;
+        }
+        return request;
+    }
+
     /**
      * Create a string array from a comma-delimited list of packages.
      *
@@ -266,10 +369,6 @@ public class FilterDispatcher extends AbstractFilter implements StrutsStatics, F
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         ServletContext servletContext = getServletContext();
-        
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("doFilter");
-        }
 
         String timerKey = "FilterDispatcher_doFilter: ";
         try {

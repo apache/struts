@@ -41,20 +41,17 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: javadoc -->
  *
  * <p/> <b>Examples</b>
- *
  * <pre>
  * <!-- START SNIPPET: example -->
  * &lt;s:submit value="%{'Submit'}" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
- *
  * <pre>
  * <!-- START SNIPPET: example2 -->
  * Render an image submit:
  * &lt;s:submit type="image" value="%{'Submit'}" label="Submit the form" src="submit.gif"/&gt;
  * <!-- END SNIPPET: example2 -->
  * </pre>
- *
  * <pre>
  * <!-- START SNIPPET: example3 -->
  * Render an button submit:
@@ -65,24 +62,34 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- START SNIPPET: ajaxJavadoc -->
  * <B>THE FOLLOWING IS ONLY VALID WHEN AJAX IS CONFIGURED</B>
  * <ul>
- *      <li>resultDivId</li>
- *      <li>notifyTopics</li>
- *      <li>onLoadJS</li>
- *      <li>preInvokeJS</li>
+ *      <li>href</li>
+ *      <li>errorText</li>
+ *      <li>afterLoading</li>
+ *      <li>beforeLoading</li>
+ *      <li>executeScripts</li>
+ *      <li>loadingText</li>
+ *      <li>refreshListenTopic</li>
+ *      <li>handler</li>
+ *      <li>formId</li>
+ *      <li>formFilter</li>
+ *      <li>targets</li>
  * </ul>
- * The remote form has three basic modes of use, using the resultDivId,
- * the notifyTopics, or the onLoadJS. You can mix and match any combination of
- * them to get your desired result. All of these examples are contained in the
- * Ajax example webapp. Lets go through some scenarios to see how you might use it:
- * <!-- END SNIPPET: ajaxJavadoc -->
- *
- * <!-- START SNIPPET: ajxExDescription1 -->
- * Show the results in another div. If you want your results to be shown in
- * a div, use the resultDivId where the id is the id of the div you want them
- * shown in. This is an inner HTML approah. Your results get jammed into
- * the div for you. Here is a sample of this approach:
- * <!-- END SNIPPET: ajxExDescription1 -->
- *
+ * 'targets' is a list of element ids whose content will be updated with the
+ * text returned from request.<p/>
+ * 'errorText' is the text that will be displayed when there is an error making the request.<p/>
+ * 'afterLoading' is the name of a function that will be called after the request.<p/>
+ * 'beforeLoading' is the name of a function that will be called before the request.<p/>
+ * 'executeScripts' if set to true will execute javascript sections in the returned text.<p/>
+ * 'loadingText' is the text that will be displayed on the 'targets' elements while making the
+ * request.<p/>
+ * 'handler' is the name of the function that will take care of making the AJAX request. Dojo's widget
+ * and dom node are passed as parameters).<p/>
+ * 'formId' is the id of the html form whose fields will be seralized and passed as parameters
+ * in the request.<p/>
+ * 'formFilter' is the name of a function which will be used to filter the fields that will be
+ * seralized. This function takes as a parameter the element and returns true if the element
+ * should be included.<p/>
+ * 'refreshListenTopic' is the topic that forces an update
  * <pre>
  * <!-- START SNIPPET: ajxExample1 -->
  * Remote form replacing another div:
@@ -101,66 +108,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: ajxExample1 -->
  * </pre>
  *
- *
- * <!-- START SNIPPET: ajxExDescription2 -->
- * Notify other controls(divs) of a change. Using an pub-sub model you can
- * notify others that your control changed and they can take the appropriate action.
- * Most likely they will execute some action to refresh. The notifyTopics does this
- * for you. You can have many topic names in a comma delimited list.
- * eg: notifyTopics="newPerson, dataChanged" .
- * Here is an example of this approach:
- * <!-- END SNIPPET: ajxExDescription2 -->
- *
- * <pre>
- * <!-- START SNIPPET: ajxExample2 -->
- * &lt;s:form id="frm1" action="newPersonWithXMLResult" theme="ajax"  &gt;
- *     &lt;s:textfield label="Name" name="person.name" value="person.name" size="20" required="true" /&gt;
- *     &lt;s:submit id="submitBtn" value="Save" theme="ajax"  cssClass="primary"  notifyTopics="personUpdated, systemWorking" /&gt;
- * &lt;/s:form &gt;
- *
- * &lt;s:div href="/listPeople.action" theme="ajax" errorText="error opps"
- *         loadingText="loading..." id="cart-body" &gt;
- *     &lt;s:action namespace="" name="listPeople" executeResult="true" /&gt;
- * &lt;/s:div&gt;
- * <!-- END SNIPPET: ajxExample2 -->
- * </pre>
- *
- * <!-- START SNIPPET: ajxExDescription3 -->
- * Massage the results with JavaScript. Say that your result returns some h
- * appy XML and you want to parse it and do lots of cool things with it.
- * The way to do this is with a onLoadJS handler. Here you provide the name of
- * a JavaScript function to be called back with the result and the event type.
- * The only key is that you must use the variable names 'data' and 'type' when
- * defining the callback. For example: onLoadJS="myFancyDancyFunction(data, type)".
- * While I talked about XML in this example, your not limited to XML, the data in
- * the callback will be exactly whats returned as your result.
- * Here is an example of this approach:
- * <!-- END SNIPPET: ajxExDescription3 -->
- *
- * <pre>
- * <!-- START SNIPPET: ajxExample3 -->
- * &lt;script language="JavaScript" type="text/javascript"&gt;
- *     function doGreatThings(data, type) {
- *         //Do whatever with your returned fragment...
- *         //Perhapps.... if xml...
- *               var xml = dojo.xml.domUtil.createDocumentFromText(data);
- *               var people = xml.getElementsByTagName("person");
- *               for(var i = 0;i < people.length; i ++){
- *                   var person = people[i];
- *                   var name = person.getAttribute("name")
- *                   var id = person.getAttribute("id")
- *                   alert('Thanks dude. Person: ' + name + ' saved great!!!');
- *               }
- *
- *     }
- * &lt;/script&gt;
- *
- * &lt;s:form id="frm1" action="newPersonWithXMLResult" theme="ajax"  &gt;
- *     &lt;s:textfield label="Name" name="person.name" value="person.name" size="20" required="true" /&gt;
- *     &lt;s:submit id="submitBtn" value="Save" theme="ajax"  cssClass="primary"  onLoadJS="doGreatThings(data, type)" /&gt;
- * &lt;/s:form&gt;
- * <!-- END SNIPPET: ajxExample3 -->
- * </pre>
  *
  * @s.tag name="submit" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.SubmitTag"
  * description="Render a submit button"

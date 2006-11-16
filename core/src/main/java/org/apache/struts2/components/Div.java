@@ -28,24 +28,65 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * <!-- START SNIPPET: javadoc --> The div tag is primarily an AJAX tag, providing a remote call
+ * <!-- START SNIPPET: javadoc -->
+ * The div tag when used on the ajax theme, provides a remote call
  * from the current page to update a section of content without having to refresh the entire page.<p/>
  *
  * It creates a HTML &lt;DIV /&gt; that obtains it's content via a remote XMLHttpRequest call via
  * the dojo framework.<p/>
  *
- * If a "refreshListenTopic" is supplied, it will listen to that topic and refresh it's content when any
- * message is received.<p/> <!-- END SNIPPET: javadoc -->
- *
- * <b>Important:</b> Be sure to setup the page containing this tag to be Configured for AJAX
  * </p>
- *
+ * <!-- START SNIPPET: ajaxJavadoc -->
+ * <B>THE FOLLOWING IS ONLY VALID WHEN AJAX IS CONFIGURED</B>
+ * <ul>
+ *      <li>href</li>
+ *      <li>errorText</li>
+ *      <li>afterLoading</li>
+ *      <li>beforeLoading</li>
+ *      <li>executeScripts</li>
+ *      <li>loadingText</li>
+ *      <li>refreshListenTopic</li>
+ *      <li>handler</li>
+ *      <li>formId</li>
+ *      <li>formFilter</li>
+ *      <li>targets</li>
+ * </ul>
+ * 'targets' is a list of element ids whose content will be updated with the
+ * text returned from request.<p/>
+ * 'errorText' is the text that will be displayed when there is an error making the request.<p/>
+ * 'afterLoading' is the name of a function that will be called after the request.<p/>
+ * 'beforeLoading' is the name of a function that will be called before the request.<p/>
+ * 'executeScripts' if set to true will execute javascript sections in the returned text.<p/>
+ * 'loadingText' is the text that will be displayed on the 'targets' elements while making the
+ * request.<p/>
+ * 'handler' is the name of the function that will take care of making the AJAX request. Dojo's widget
+ * and dom node are passed as parameters).<p/>
+ * 'formId' is the id of the html form whose fields will be seralized and passed as parameters
+ * in the request.<p/>
+ * 'formFilter' is the name of a function which will be used to filter the fields that will be
+ * seralized. This function takes as a parameter the element and returns true if the element
+ * should be included.<p/>
+ * 'updateInterval' sets(in milliseconds) the update interval.
+ * 'autoStart' if set to true(true by default) starts the timer automatically
+ * 'startTimerListenTopic' is the topic used to start the timer
+ * 'stopTimerListenTopic' is the topic used to stop the timer
+ * 'refreshListenTopic' is the topic that forces an update
+ * <!-- END SNIPPET: javadoc -->
  * <p/> <b>Examples</b>
  *
  * <pre>
- *       &lt;!-- START SNIPPET: example --&gt;
- *       &lt;s:div ... /&gt;
- *       &lt;!-- END SNIPPET: example --&gt;
+ *       <!-- START SNIPPET: example -->
+ * &lt;s:div
+ *    id=&quot;once&quot;
+ *    theme=&quot;ajax&quot;
+ *    href=&quot;/AjaxTest.action&quot;
+ *    loadingText=&quot;Loading...&quot;
+ *    refreshListenTopic=&quot;/refresh&quot;
+ *    updateInterval=&quot;3000&quot;
+ *    autoStart=&quot;true&quot;
+ *    formId=&quot;form&quot;
+ *&gt;&lt;/s:div&gt;
+ *       <!-- END SNIPPET: example -->
  * </pre>
  *
  * @s.tag name="div" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.DivTag"

@@ -29,10 +29,39 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- START SNIPPET: javadoc -->
  *
  * A tag that creates a HTML &lt;a href='' /&gt; that when clicked calls a URL remote XMLHttpRequest call via the dojo
- * framework. The 'targets' attribute can hold a comma-delimited list of ids of the elements whose
- * content will be replaced with the response of the request.The result from the URL is executed as JavaScript is executeScripts is set to 'true'. If a
- * 'refreshListenTopic' is supplied, it will listen to that event and update its targets contents.
+ * framework.<p/>
  *
+ * <!-- START SNIPPET: ajaxJavadoc -->
+ * <B>THE FOLLOWING IS ONLY VALID WHEN AJAX IS CONFIGURED</B>
+ * <ul>
+ *      <li>href</li>
+ *      <li>errorText</li>
+ *      <li>afterLoading</li>
+ *      <li>beforeLoading</li>
+ *      <li>executeScripts</li>
+ *      <li>loadingText</li>
+ *      <li>refreshListenTopic</li>
+ *      <li>handler</li>
+ *      <li>formId</li>
+ *      <li>formFilter</li>
+ *      <li>targets</li>
+ * </ul>
+ * 'targets' is a list of element ids whose content will be updated with the
+ * text returned from request.<p/>
+ * 'errorText' is the text that will be displayed when there is an error making the request.<p/>
+ * 'afterLoading' is the name of a function that will be called after the request.<p/>
+ * 'beforeLoading' is the name of a function that will be called before the request.<p/>
+ * 'executeScripts' if set to true will execute javascript sections in the returned text.<p/>
+ * 'loadingText' is the text that will be displayed on the 'targets' elements while making the
+ * request.<p/>
+ * 'handler' is the name of the function that will take care of making the AJAX request. Dojo's widget
+ * and dom node are passed as parameters).<p/>
+ * 'formId' is the id of the html form whose fields will be seralized and passed as parameters
+ * in the request.<p/>
+ * 'formFilter' is the name of a function which will be used to filter the fields that will be
+ * seralized. This function takes as a parameter the element and returns true if the element
+ * should be included.<p/>
+ * 'refreshListenTopic' is the topic that forces an update
  * <!-- END SNIPPET: javadoc -->
  *
  * <p/> <b>Examples</b>
@@ -74,20 +103,21 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <pre>
  * <!-- START SNIPPET: example3 -->
- * &lt;s:a id="test" theme="ajax" href="/simpeResult.action" beforeLoading="confirm(\'You sure\')"&gt;
+ * &lt;s:a id="test" theme="ajax" href="/simpeResult.action" beforeLoading="confirm('Are you sure?')"&gt;
  *  A
  * &lt;/s:a&gt;
  * <!-- END SNIPPET: example3 -->
  * </pre>
+ *
  *
  * @s.tag name="a" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.AnchorTag"
  * description="Render a HTML href element that when clicked calls a URL via remote XMLHttpRequest and updates its targets"
  *
  */
 public class Anchor extends AbstractRemoteCallUIBean {
-    final public static String OPEN_TEMPLATE = "a";
-    final public static String TEMPLATE = "a-close";
-    final public static String COMPONENT_NAME = Anchor.class.getName();
+    public static final String OPEN_TEMPLATE = "a";
+    public static final String TEMPLATE = "a-close";
+    public static final String COMPONENT_NAME = Anchor.class.getName();
 
     protected String targets;
 

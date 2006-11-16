@@ -35,11 +35,12 @@ Use an image as submit
 <label for="textInput">Text to be echoed</label>
 <br/><br/>
 
-<form id="form">
+<s:form id="form" action="AjaxTest">
   <input type=textbox name="data">
-</form>
+  <s:submit type="button" theme="ajax" label="Update Content" targets="t1"  id="ajaxbtn"/>		
+</s:form>
 Use a button as submit (custom text)
-<s:submit type="button" theme="ajax" label="Update Content" targets="t1" href="/AjaxTest.action" formId="form"/>		
+
 		
 <br/><br/>
 	

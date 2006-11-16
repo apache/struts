@@ -26,6 +26,7 @@ dojo.widget.defineWidget(
 
   formId : "",
   formFilter : "",
+  formNode : null,
 
   event : "",
 
@@ -51,6 +52,12 @@ dojo.widget.defineWidget(
     }
     if(!dojo.string.isBlank(this.event)) {
       dojo.event.connect(this.domNode, this.event, this, "reloadContents");
+    }
+    if(dojo.string.isBlank(this.href)) {
+      this.formNode = dojo.string.isBlank(this.formId) ? dojo.dom.getFirstAncestorByTag(this.domNode, "form") : dojo.byId(this.formId);
+      this.href = this.formNode.action;
+    } else {
+      this.formNode = dojo.byId(this.formId);
     }
   },
 
@@ -107,13 +114,12 @@ dojo.widget.defineWidget(
       }
       try {
           var self = this;
-
           this.setContent(this.loadingText);
           dojo.io.bind({
-            url: this.href,
+            url: self.href,
             useCache: false,
             preventCache: true,
-            formNode: dojo.byId(self.formId),
+            formNode: self.formNode,
             formFilter: window[self.formFilter],
             handler: function(type, data, e) {
               dojo.lang.hitch(self, "bindHandler")(type, data, e);

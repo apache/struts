@@ -37,7 +37,6 @@
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
  ${tag.addParameter("ajaxSubmit", "true")}
- onSubmit="return isAjaxFormSubmit(this);"
 >
 <#include "/${parameters.templateDir}/${themeProperties.parent}/control.ftl" />
 <#--

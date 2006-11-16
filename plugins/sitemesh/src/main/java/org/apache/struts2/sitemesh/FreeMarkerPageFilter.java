@@ -110,7 +110,7 @@ public class FreeMarkerPageFilter extends TemplatePageFilter {
     
     private static FreemarkerManager freemarkerManager;
     
-    @Inject
+    @Inject(required=false)
     public static void setFreemarkerManager(FreemarkerManager mgr) {
         freemarkerManager = mgr;
     }
@@ -131,9 +131,12 @@ public class FreeMarkerPageFilter extends TemplatePageFilter {
             throws ServletException, IOException {
 
         String timerKey = "FreemarkerPageFilter_applyDecorator: ";
+        if (freemarkerManager == null) {
+            throw new ServletException("Missing freemarker dependency");
+        }
+        
         try {
             UtilTimerStack.push(timerKey);
-
 
             // get the configuration and template
             Configuration config = freemarkerManager.getConfiguration(servletContext);

@@ -51,7 +51,7 @@ public class VelocityPageFilter extends TemplatePageFilter {
 
     private static VelocityManager velocityManager;
     
-    @Inject
+    @Inject(required=false)
     public static void setVelocityManager(VelocityManager mgr) {
         velocityManager = mgr;
     }
@@ -70,6 +70,11 @@ public class VelocityPageFilter extends TemplatePageFilter {
                                   HttpServletRequest req, HttpServletResponse res,
                                   ServletContext servletContext, ActionContext ctx)
             throws ServletException, IOException {
+        
+        if (velocityManager == null) {
+            throw new ServletException("Missing freemarker dependency");
+        }
+        
         try {
 
             // init (if needed)

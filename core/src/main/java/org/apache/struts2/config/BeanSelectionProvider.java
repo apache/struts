@@ -180,17 +180,23 @@ public class BeanSelectionProvider implements ConfigurationProvider {
                 try {
                     Class cls = ClassLoaderUtil.loadClass(foundName, this.getClass());
                     if (LOG.isDebugEnabled()) {
-                        LOG.info("Choosing bean ("+cls+") for "+type);
+                        LOG.debug("Choosing bean ("+cls+") for "+type);
                     }
                     builder.factory(type, cls, scope);
                 } catch (ClassNotFoundException ex) {
                     // Perhaps a spring bean id, so we'll delegate to the object factory at runtime
                     if (LOG.isDebugEnabled()) {
-                        LOG.info("Choosing bean ("+foundName+") for "+type+" to be loaded from the ObjectFactory");
+                        LOG.debug("Choosing bean ("+foundName+") for "+type+" to be loaded from the ObjectFactory");
                     }
-                    if (ObjectFactory.class != type) {
-                        builder.factory(type, new ObjectFactoryDelegateFactory(foundName), scope);
-                    }    
+                    if (DEFAULT_BEAN_NAME.equals(foundName)) {
+                        // Probably an optional bean, will ignore
+                    } else {
+                        if (ObjectFactory.class != type) {
+                            builder.factory(type, new ObjectFactoryDelegateFactory(foundName, type), scope);
+                        } else {
+                            throw new ConfigurationException("Cannot locate the chosen ObjectFactory implementation: "+foundName);
+                        }
+                    }
                 }
             }
         } else {
@@ -200,13 +206,19 @@ public class BeanSelectionProvider implements ConfigurationProvider {
     
     class ObjectFactoryDelegateFactory implements Factory {
         String name;
-        ObjectFactoryDelegateFactory(String name) {
+        Class type;
+        ObjectFactoryDelegateFactory(String name, Class type) {
             this.name = name;
+            this.type = type;
         }
         
         public Object create(Context context) throws Exception {
             ObjectFactory objFactory = context.getContainer().getInstance(ObjectFactory.class);
-            return objFactory.buildBean(name, null, false);
+            try {
+                return objFactory.buildBean(name, null, false);
+            } catch (ClassNotFoundException ex) {
+                throw new ConfigurationException("Unable to load bean "+type.getName()+" ("+name+")");
+            }
         }
     }
 }

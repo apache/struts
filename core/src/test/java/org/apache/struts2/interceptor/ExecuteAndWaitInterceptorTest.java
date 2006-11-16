@@ -232,7 +232,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
             configuration.addPackageConfig("", wait);
         }
 
-        public void register(ContainerBuilder builder, Properties props, List<Class<?>> ignoreFailureStaticInjection) throws ConfigurationException {
+        public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
             builder.factory(ObjectFactory.class);
             builder.factory(ActionProxyFactory.class, DefaultActionProxyFactory.class);
         }

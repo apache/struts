@@ -25,7 +25,6 @@ import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -374,7 +373,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
         }
     }
 
-    public void register(ContainerBuilder builder, Properties props, List<Class<?>> ignoreFailureStaticInjection) throws ConfigurationException {
+    public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
         // Nothing
     }
 }

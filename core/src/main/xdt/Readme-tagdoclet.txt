@@ -3,7 +3,7 @@ Struts Custom Tagdoclet
 
 The provided xdoclet templates are based on original xdoclet distribution templates for tld generation.
 
-The annotations may be used for classes extending TagSupport or oa.struts2.components.Component. If used in component
+The annotations may be used for classes extending TagSupport or org.apache.struts2.components.Component. If used in component
 classes, you will also need a TagSupport wrapper class to generate valid tld (see @a2:tag#tld-tag-class).
 
 Following a description of the provided tags and their parameters:

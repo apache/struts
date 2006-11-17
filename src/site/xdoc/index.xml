@@ -14,7 +14,7 @@
             <a name="Welcome"/>
 
         <div style="text-align:left">
-        <a href="../WW/home.html"><img src="images/struts2-merger2.png" alt="Struts 2 and WebWork merger" hspace="16" align="left"/></a>
+        <a href="WW/home.html"><img src="images/struts2-merger2.png" alt="Struts 2 and WebWork merger" hspace="16" align="left"/></a>
         
         <p>       
          <strong>Apache Struts 2 is an elegant, extensible framework</strong> for creating enterprise-ready Java web applications. 
@@ -31,7 +31,7 @@
         </p>      
         <p>
          For more about Apache Struts 2, visit
-         <a href="../WW/home.html">
+         <a href="WW/home.html">
             Getting Started.
          </a>
         </p>
@@ -147,7 +147,7 @@
             <subsection>
             <p>
             For more about Apache Struts 2, visit
-            <a href="../WW/home.html">
+            <a href="WW/home.html">
               Getting Started.
             </a>
             </p>

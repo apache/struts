@@ -30,45 +30,31 @@
         
             <item
                     name="Getting Started"
-                    href="../WW/home.html"
+                    href="WW/home.html"
                     />        
             <item
                     name="Tutorials"
-                    href="../WW/tutorials.html"
+                    href="WW/tutorials.html"
                     />        
 
             <item
                     name="FAQs"
-                    href="../WW/faqs.html"
+                    href="WW/faqs.html"
                     />        
 
             <item
                     name="Guides"
-                    href="../WW/guides.html"
+                    href="WW/guides.html"
                     />        
 
             <item
                     name="Release Notes"
-                    href="../WW/release-notes-202.html"
+                    href="cd WW/release-notes-202.html"
                     />        
 
         </menu>
-        <menu name="Reference">
-            <item
-                    name="Struts Core API"
-                    href="struts2-core/apidocs/index.html"
-                    />        
-            <item
-                    name="New API (experimental)"
-                    href="struts2-api/apidocs/index.html"
-                    />        
-            <item
-                    name="Tag Reference"
-                    href="http://struts.apache.org/WW/tag-reference.html"
-                    />        
-        </menu>
 
-        <menu name="Product Support">
+        <menu name="Support">
             <item
                     name="User Mailing List"
                     href="http://struts.apache.org/mail.html"
@@ -80,6 +66,21 @@
             <item
                     name="Wiki Pages"
                     href="http://cwiki.apache.org/S2WIKI/home.html"
+                    />
+        </menu>
+
+        <menu name="Reference">
+            <item
+                    name="Struts Core API"
+                    href="struts2-core/apidocs/index.html"
+                    />
+            <item
+                    name="New API (experimental)"
+                    href="struts2-api/apidocs/index.html"
+                    />
+            <item
+                    name="Tag Reference"
+                    href="http://struts.apache.org/WW/tag-reference.html"
                     />
         </menu>
 

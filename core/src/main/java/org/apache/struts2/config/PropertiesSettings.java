@@ -56,6 +56,7 @@ class PropertiesSettings extends Settings {
         
         if (settingsUrl == null) {
             LOG.debug(name + ".properties missing");
+            settings = new LocatableProperties();
             return;
         }
         

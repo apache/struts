@@ -13,7 +13,7 @@
 <h3><s:text name="mainMenu.heading"/> <s:property
         value="user.fullName"/></h3>
 <ul>
-    <li><a href="<s:url action="Registration!input" />">
+    <li><a href="<s:url action="Registration_input" />">
         <s:text name="mainMenu.registration"/>
     </a>
     </li>

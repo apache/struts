@@ -17,44 +17,44 @@
 <body onLoad="self.focus();document.Registration.username.focus()">
 
 <s:actionerror/>
-<s:form action="Registration!save" validate="false">
+<s:form action="Registration_save" validate="false">
     <s:token />
     <s:hidden name="task"/>
     <s:if test="task == 'Create'">
-        <s:textfield label="%{getText('username')}" name="username"/>
+        <s:textfield key="username"/>
     </s:if>
     <s:else>
-        <s:label label="%{getText('username')}" name="username"/>
+        <s:label key="username"/>
         <s:hidden name="username"/>
     </s:else>
 
-    <s:password label="%{getText('password')}" name="password"/>
+    <s:password key="password"/>
 
-    <s:password label="%{getText('password2')}" name="password2"/>
+    <s:password key="password2"/>
 
-    <s:textfield label="%{getText('fullName')}"
+    <s:textfield key="fullName"
                    name="user.fullName"/>
 
-    <s:textfield label="%{getText('fromAddress')}"
+    <s:textfield key="fromAddress"
                    name="user.fromAddress"/>
 
-    <s:textfield label="%{getText('replyToAddress')}"
+    <s:textfield key="replyToAddress"
                    name="user.replyToAddress"/>
 
     <s:if test="task == 'Create'">
-        <s:submit value="%{getText('button.save')}" action="Registration!save"/>
+        <s:submit key="button.save" action="Registration_save"/>
 
-        <s:reset value="%{getText('button.reset')}"/>
+        <s:reset key="button.reset"/>
 
-        <s:submit action="Welcome" value="%{getText('button.cancel')}"
+        <s:submit action="Welcome" key="button.cancel"
                     onclick="form.onsubmit=null"/>
     </s:if>
     <s:else>
-        <s:submit value="%{getText('button.save')}" action="Registration"/>
+        <s:submit key="button.save" action="Registration"/>
 
-        <s:reset value="%{getText('button.reset')}"/>
+        <s:reset key="button.reset"/>
 
-        <s:submit action="MainMenu" value="%{getText('button.cancel')}"
+        <s:submit action="MainMenu" key="button.cancel"
                     onclick="form.onsubmit=null"/>
     </s:else>
 
@@ -101,11 +101,11 @@
                 </td>
                 <td align="center">
 
-                    <a href="<s:url action="Subscription!delete"><s:param name="host" value="host"/></s:url>">
+                    <a href="<s:url action="Subscription_delete"><s:param name="host" value="host"/></s:url>">
                         <s:text name="registration.deleteSubscription"/>
                     </a>
                     &nbsp;
-                    <a href="<s:url action="Subscription!edit"><s:param name="host" value="host"/></s:url>">
+                    <a href="<s:url action="Subscription_edit"><s:param name="host" value="host"/></s:url>">
                         <s:text name="registration.editSubscription"/>
                     </a>
 
@@ -115,7 +115,7 @@
 
     </table>
 
-    <a href="<s:url action="Subscription!input"/>"><s:text
+    <a href="<s:url action="Subscription_input"/>"><s:text
             name="registration.addSubscription"/></a>
 
 </s:if>

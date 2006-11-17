@@ -20,45 +20,45 @@
 <body onLoad="self.focus();document.Subscription.username.focus()">
 
 <s:actionerror/>
-<s:form action="Subscription!save" validate="true">
+<s:form action="Subscription_save" validate="true">
     <s:token />
     <s:hidden name="task"/>
-    <s:label label="%{getText('username')}" name="user.username"/>
+    <s:label key="username" name="user.username"/>
 
     <s:if test="task == 'Create'">
-        <s:textfield label="%{getText('mailHostname')}" name="host"/>
+        <s:textfield key="mailHostname" name="host"/>
     </s:if>
     <s:else>
-        <s:label label="%{getText('mailHostname')}" name="host"/>
+        <s:label key="mailHostname" name="host"/>
         <s:hidden name="host"/>
     </s:else>
 
     <s:if test="task == 'Delete'">
-        <s:label label="%{getText('mailUsername')}"
+        <s:label key="mailUsername"
                    name="subscription.username"/>
-        <s:label label="%{getText('mailPassword')}"
+        <s:label key="mailPassword"
                    name="subscription.password"/>
-        <s:label label="%{getText('mailServerType')}"
+        <s:label key="mailServerType"
                    name="subscription.type"/>
-        <s:label label="%{getText('autoConnect')}"
+        <s:label key="autoConnect"
                    name="subscription.autoConnect"/>
-        <s:submit value="%{getText('button.confirm')}"/>
+        <s:submit key="button.confirm"/>
     </s:if>
     <s:else>
-        <s:textfield label="%{getText('mailUsername')}"
+        <s:textfield key="mailUsername"
                        name="subscription.username"/>
-        <s:textfield label="%{getText('mailPassword')}"
+        <s:textfield key="mailPassword"
                        name="subscription.password"/>
-        <s:select label="%{getText('mailServerType')}"
+        <s:select key="mailServerType"
                     name="subscription.type" list="types"/>
-        <s:checkbox label="%{getText('autoConnect')}"
+        <s:checkbox key="autoConnect"
                       name="subscription.autoConnect"/>
-        <s:submit value="%{getText('button.save')}"/>
-        <s:reset value="%{getText('button.reset')}"/>
+        <s:submit key="button.save"/>
+        <s:reset key="button.reset"/>
     </s:else>
 
-    <s:submit action="Registration!input"
-                value="%{getText('button.cancel')}"
+    <s:submit action="Registration_input"
+                key="button.cancel"
                 onclick="form.onsubmit=null"/>
 </s:form>
 

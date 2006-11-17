@@ -14,9 +14,9 @@
 <h3><s:text name="index.heading"/></h3>
 
 <ul>
-    <li><a href="<s:url action="Registration!input"/>"><s:text
+    <li><a href="<s:url action="Registration_input"/>"><s:text
             name="index.registration"/></a></li>
-    <li><a href="<s:url action="Login!input"/>"><s:text
+    <li><a href="<s:url action="Login_input"/>"><s:text
             name="index.login"/></a></li>
 </ul>
 

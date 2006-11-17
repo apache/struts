@@ -90,6 +90,9 @@
                     <strong>First-class AJAX support</strong> - The AJAX theme gives interactive 
                     applications a boost. 
                 </li>
+                <li>
+                    <em>Coming in Struts 2.0.2</em> -- <strong>Zero Configuration</strong> - Optionally, replace XML configuration with convention and annotation. 
+                </li>
                 </ul></li>
 
                 <li>
@@ -107,6 +110,9 @@
                 <li>
                     <strong>Easy portlets</strong> - Automatic portlet support allows portal and servlet 
                     deployments with no code changes.
+                </li>
+                <li>
+                    <strong>Integrated profiling</strong> - Peek inside Struts to find the cycles are going!
                 </li>
 
                 </ul></li>
@@ -154,6 +160,30 @@
             </p>
             </subsection>
         </section> 
+        
+        <section name="Platform Requirements">
+        
+        <p>
+        Apache Struts 2 requires:
+        </p>
+        
+        <ul>
+            <li>Servlet API 2.4</li>
+            <li>JSP API 2.0</li>
+            <li>Java 5</li>
+        </ul>
+
+        <p>
+         An alternate set of JARs for Java 4 are also available.
+         See the "J4" distribution. 
+        </p>
+
+        <p>
+         For a full list of requirements, including dependencies used by optional plugins, 
+         see <a href="http://struts.apache.org/2.x/struts2-core/dependencies.html">Project Dependencies</a>
+        </p>
+        
+        </section>
         
         <section name="Licensing of Apache Struts Distributions">
         <p>        

@@ -13,8 +13,8 @@
     <body>
         <links>
             <item name="Apache" href="http://www.apache.org" /> 
-            <item name="Struts 1" href="http://struts.apache.org/1.x" />
             <item name="Struts 2" href="http://struts.apache.org/2.x" />
+            <item name="Struts 1" href="http://struts.apache.org/1.x" />
         </links>
         <menu name="Struts 2">
             <item
@@ -22,7 +22,7 @@
                     href="index.html"
                     />
             <item
-                    name="Download"
+                    name="Releases"
                     href="http://struts.apache.org/downloads.html"/>
         </menu>
 
@@ -66,15 +66,11 @@
                     name="Tag Reference"
                     href="http://struts.apache.org/WW/tag-reference.html"
                     />        
-            <item
-                    name="Source Repository"
-                    href="http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/?root=Apache-SVN"
-                    />
         </menu>
 
-        <menu name="Community">
+        <menu name="Product Support">
             <item
-                    name="Mailing Lists"
+                    name="User Mailing List"
                     href="http://struts.apache.org/mail.html"
                     />
             <item

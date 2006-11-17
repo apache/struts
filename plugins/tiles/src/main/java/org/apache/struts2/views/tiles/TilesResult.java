@@ -20,23 +20,16 @@
  */
 package org.apache.struts2.views.tiles;
 
-import java.util.Locale;
-
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
-import org.apache.tiles.*;
+import org.apache.tiles.TilesContainer;
 import org.apache.tiles.access.TilesAccess;
-import org.apache.tiles.context.BasicTilesContextFactory;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.LocaleProvider;
 
 /**
  * <!-- START SNIPPET: description -->

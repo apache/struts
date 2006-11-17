@@ -19,6 +19,21 @@ lables
 </#list>
 </div><#t/>
 </#if>
+<#if parameters.labelposition?default("") == 'left'>
+<span <#rt/>
+<#if parameters.id?exists>id="wwlbl_${parameters.id}"<#rt/></#if> class="wwlbl">
+<label<#t/>
+<#if parameters.id?exists>
+ for="${parameters.id?html}"<#rt/>
+</#if>
+<#if hasFieldErrors>
+ class="checkboxErrorLabel"<#rt/>
+<#else>
+ class="label"<#rt/>
+</#if>
+>${parameters.label?html}</label><#rt/>
+</span>
+</#if>
 
 <#if parameters.labelposition?default("top") == 'top'>
 <div <#rt/>
@@ -32,12 +47,13 @@ lables
 </#if>
 
 <#include "/${parameters.templateDir}/simple/checkbox.ftl" />
+<#if parameters.labelposition?default("") != 'left'>
 <#if parameters.labelposition?default("top") == 'top'>
 </div> <#rt/>
 <#else>
 </span>  <#rt/>
 </#if>
-<#if parameters.label?exists> 
+<#if parameters.label?exists>
 <#if parameters.labelposition?default("top") == 'top'>
 <div <#rt/>
 <#else>
@@ -54,5 +70,6 @@ lables
  class="checkboxLabel"<#rt/>
 </#if>
 >${parameters.label?html}</label><#rt/>
+</#if>
 </#if>
 <#include "/${parameters.templateDir}/css_xhtml/controlfooter.ftl" /><#nt/>

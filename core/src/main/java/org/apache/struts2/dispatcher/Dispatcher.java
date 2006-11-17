@@ -301,7 +301,6 @@ public class Dispatcher {
                 provider.setPageLocator(new ServletContextPageLocator(servletContext));
                 configurationManager.addConfigurationProvider(provider);
             }
-            configurationManager.addConfigurationProvider(new BeanSelectionProvider());
         }
         
         String configProvs = initParams.get("configProviders");

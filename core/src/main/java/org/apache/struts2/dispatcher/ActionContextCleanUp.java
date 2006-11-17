@@ -93,9 +93,7 @@ public class ActionContextCleanUp implements Filter {
                 }
                 request.setAttribute(COUNTER, count);
 
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("filtering counter="+count);
-                }
+                //LOG.debug("filtering counter="+count);
 
                 chain.doFilter(request, response);
             } finally {
@@ -128,10 +126,6 @@ public class ActionContextCleanUp implements Filter {
         // always dontClean up the thread request, even if an action hasn't been executed
         ActionContext.setContext(null);
         Dispatcher.setInstance(null);
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("clean up ");
-        }
     }
 
     public void destroy() {

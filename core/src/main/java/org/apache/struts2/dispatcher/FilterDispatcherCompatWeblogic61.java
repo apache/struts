@@ -46,9 +46,7 @@ import org.apache.struts2.config.ServletContextSingleton;
  * exception as an error.
  *
  */
-public class FilterDispatcherCompatWeblogic61
-        extends FilterDispatcher
-        implements Filter {
+public class FilterDispatcherCompatWeblogic61 extends FilterDispatcher {
 
     private static Log log =
             LogFactory.getLog(FilterDispatcherCompatWeblogic61.class);

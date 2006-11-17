@@ -46,6 +46,7 @@ import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ObjectTypeDeterminer;
 import com.opensymphony.xwork2.util.ObjectTypeDeterminerFactory;
 import com.opensymphony.xwork2.util.XWorkConverter;
+import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 /**
  * Selects the implementations of key framework extension points, using the loaded
@@ -148,7 +149,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         return false;
     }
 
-    public void register(ContainerBuilder builder, Properties props) {
+    public void register(ContainerBuilder builder, LocatableProperties props) {
         alias(ObjectFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY, builder, props);
         alias(XWorkConverter.class, StrutsConstants.STRUTS_XWORKCONVERTER, builder, props);
         alias(ActionProxyFactory.class, StrutsConstants.STRUTS_ACTIONPROXYFACTORY, builder, props);

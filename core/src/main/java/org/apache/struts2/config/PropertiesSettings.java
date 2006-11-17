@@ -29,13 +29,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsException;
 
+import com.opensymphony.xwork2.util.location.LocatableProperties;
+import com.opensymphony.xwork2.util.location.Location;
+import com.opensymphony.xwork2.util.location.LocationImpl;
+
 
 /**
  * A class to handle settings via a properties file.
  */
 class PropertiesSettings extends Settings {
 
-    Properties settings;
+    LocatableProperties settings;
     static Log LOG = LogFactory.getLog(PropertiesSettings.class);
 
 
@@ -47,14 +51,15 @@ class PropertiesSettings extends Settings {
      * @param name the name of the properties file, excluding the ".properties" extension.
      */
     public PropertiesSettings(String name) {
-        settings = new Properties();
-
+        
         URL settingsUrl = Thread.currentThread().getContextClassLoader().getResource(name + ".properties");
-
+        
         if (settingsUrl == null) {
             LOG.debug(name + ".properties missing");
             return;
         }
+        
+        settings = new LocatableProperties(new LocationImpl(null, settingsUrl.toString()));
 
         // Load settings
         try {
@@ -87,6 +92,23 @@ class PropertiesSettings extends Settings {
         }
 
         return setting;
+    }
+    
+    /**
+     * Gets the location of a property from the properties file.
+     *
+     * @see #getLocation(String)
+     */
+    public Location getLocationImpl(String aName) throws IllegalArgumentException {
+        Location loc = settings.getPropertyLocation(aName);
+
+        if (loc == null) {
+            if (!settings.containsKey(aName)) {
+                throw new IllegalArgumentException("No such setting:" + aName);
+            } 
+        }
+
+        return loc;
     }
 
     /**

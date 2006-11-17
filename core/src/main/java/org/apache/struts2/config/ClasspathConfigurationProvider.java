@@ -44,6 +44,7 @@ import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ResolverUtil;
 import com.opensymphony.xwork2.util.TextUtils;
 import com.opensymphony.xwork2.util.ResolverUtil.Test;
+import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 /**
  * Loads the configuration by scanning the classpath looking for classes that end in
@@ -370,7 +371,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
         }
     }
 
-    public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
+    public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
         // Nothing
     }
 }

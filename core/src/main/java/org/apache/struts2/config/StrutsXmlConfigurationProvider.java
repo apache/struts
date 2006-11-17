@@ -42,6 +42,7 @@ import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Context;
 import com.opensymphony.xwork2.inject.Factory;
+import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 /**
  * Override Xwork class so we can use an arbitrary config file
@@ -88,7 +89,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
      * @see com.opensymphony.xwork2.config.providers.XmlConfigurationProvider#register(com.opensymphony.xwork2.inject.ContainerBuilder, java.util.Properties)
      */
     @Override
-    public void register(ContainerBuilder containerBuilder, Properties props) throws ConfigurationException {
+    public void register(ContainerBuilder containerBuilder, LocatableProperties props) throws ConfigurationException {
         if (servletContext != null && !containerBuilder.contains(ServletContext.class)) {
             containerBuilder.factory(ServletContext.class, new Factory() {
                 public Object create(Context context) throws Exception {

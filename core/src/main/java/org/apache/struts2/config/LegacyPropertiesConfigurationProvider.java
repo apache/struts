@@ -40,6 +40,7 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Context;
 import com.opensymphony.xwork2.inject.Factory;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 public class LegacyPropertiesConfigurationProvider implements ConfigurationProvider {
 
@@ -60,7 +61,7 @@ public class LegacyPropertiesConfigurationProvider implements ConfigurationProvi
         return false;
     }
 
-    public void register(ContainerBuilder builder, Properties props)
+    public void register(ContainerBuilder builder, LocatableProperties props)
             throws ConfigurationException {
         
         final Settings settings = Settings.getInstance();
@@ -69,7 +70,7 @@ public class LegacyPropertiesConfigurationProvider implements ConfigurationProvi
             String name = (String) i.next();
             props.put(name, settings.get(name));
             if (StrutsConstants.STRUTS_DEVMODE.equals(name)) {
-                props.put("devMode", settings.get(name));
+                props.setProperty("devMode", settings.get(name), settings.getLocation(name));
             }
         }
         

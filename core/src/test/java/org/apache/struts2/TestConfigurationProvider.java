@@ -45,6 +45,7 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.interceptor.ParametersInterceptor;
 import com.opensymphony.xwork2.mock.MockResult;
+import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 
 /**
@@ -163,7 +164,7 @@ public class TestConfigurationProvider implements ConfigurationProvider {
         return false;
     }
 
-    public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
+    public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
         if (!builder.contains(ObjectFactory.class)) {
             builder.factory(ObjectFactory.class);
         }

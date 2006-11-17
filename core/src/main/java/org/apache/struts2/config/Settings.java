@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
 
 import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.util.location.Location;
 
 
 /**
@@ -131,12 +132,26 @@ class Settings {
      *
      * @param name the name of the property to get.
      * @return the property as an Object.
-     * @throws IllegalArgumentException if an error occurs retrieveing the property or the property does not exist.
+     * @throws IllegalArgumentException if an error occurs retrieving the property or the property does not exist.
      */
     public static String get(String name) throws IllegalArgumentException {
         String val = getInstance().getImpl(name);
 
         return val;
+    }
+    
+    /**
+     * Returns the location of a a property. This will throw an <tt>IllegalArgumentException</tt> if an error occurs
+     * while retrieveing the property or if the property doesn't exist.
+     *
+     * @param name the name of the property to get.
+     * @return the Location of a property.
+     * @throws IllegalArgumentException if an error occurs retrieving the property or the property does not exist.
+     */
+    public static Location getLocation(String name) throws IllegalArgumentException {
+        Location loc = getInstance().getLocationImpl(name);
+
+        return loc;
     }
 
     /**
@@ -187,6 +202,15 @@ class Settings {
      * @see #get(String)
      */
     public String getImpl(String aName) throws IllegalArgumentException {
+        return null;
+    }
+    
+    /**
+     * Implementation of the {@link #getLocation(String)} method.
+     *
+     * @see #getLocation(String)
+     */
+    public Location getLocationImpl(String aName) throws IllegalArgumentException {
         return null;
     }
 

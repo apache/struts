@@ -77,6 +77,7 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.XWorkContinuationConfig;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
+import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 
 import freemarker.template.Template;
@@ -328,7 +329,7 @@ public class Dispatcher {
             public void loadPackages() throws ConfigurationException {}
             public boolean needsReload() { return false; }
 
-            public void register(ContainerBuilder builder, Properties props) throws ConfigurationException {
+            public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
                 props.putAll(initParams);
             }
         });

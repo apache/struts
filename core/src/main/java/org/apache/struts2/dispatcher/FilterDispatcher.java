@@ -127,6 +127,8 @@ import com.opensymphony.xwork2.ActionContext;
  * <li><b>configProviders</b> - a comma-delimited list of Java classes that implement the 
  * {@link ConfigurationProvider} interface that should be used for building the {@link Configuration}.</li>
  * 
+ * <li><b>*</b> - any other parameters are treated as framework constants.</li>
+ * 
  * </ul>
  *
  * <!-- END SNIPPET: params -->

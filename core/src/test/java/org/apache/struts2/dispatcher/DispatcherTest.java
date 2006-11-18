@@ -30,7 +30,9 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletContext;
 
+import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 /**
@@ -77,5 +79,71 @@ public class DispatcherTest extends StrutsTestCase {
         du.prepare(req, res);
 
         assertEquals("utf-8", req.getCharacterEncoding());
+    }
+    
+    public void testDispatcherListener() throws Exception {
+    	
+    	final DispatcherListenerState state = new DispatcherListenerState();
+    	
+    	Dispatcher.addDispatcherListener(new DispatcherListener() {
+			public void dispatcherDestroyed(Dispatcher du) {
+				state.isDestroyed = true;
+			}
+			public void dispatcherInitialized(Dispatcher du) {
+				state.isInitialized = true;
+			}
+    	});
+    	
+    	
+    	assertFalse(state.isDestroyed);
+    	assertFalse(state.isInitialized);
+    	
+        Dispatcher du = initDispatcher(new HashMap<String, String>() );
+    	
+    	assertTrue(state.isInitialized);
+    	
+    	du.cleanup();
+    	
+    	assertTrue(state.isDestroyed);
+    }
+    
+    
+    public void testConfigurationManager() {
+    	Dispatcher du = null;
+    	final InternalConfigurationManager configurationManager = new InternalConfigurationManager();
+    	try {
+    		du = new Dispatcher(new MockServletContext(), new HashMap<String, String>()) {
+    			{
+    				setConfigurationManager(configurationManager);
+    			}
+    		};
+            Dispatcher.setInstance(du);
+            
+            assertFalse(configurationManager.destroyConfiguration);
+            
+            du.cleanup();
+            
+            assertTrue(configurationManager.destroyConfiguration);
+            
+    	}
+    	finally {
+    		du.setInstance(null);
+    	}
+    }
+    
+    class InternalConfigurationManager extends ConfigurationManager {
+    	public boolean destroyConfiguration = false;
+    	
+    	@Override
+    	public synchronized void destroyConfiguration() {
+    		super.destroyConfiguration();
+    		destroyConfiguration = true;
+    	}
+    }
+    
+    
+    class DispatcherListenerState {
+    	public boolean isInitialized = false;
+    	public boolean isDestroyed = false;
     }
 }

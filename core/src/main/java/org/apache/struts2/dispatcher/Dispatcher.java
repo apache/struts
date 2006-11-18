@@ -239,6 +239,8 @@ public class Dispatcher {
      * Release local threads and destroy any DispatchListeners.
      */
     public void cleanup() {
+    	
+    	// clean up ObjectFactory
         ObjectFactory objectFactory = ObjectFactory.getObjectFactory();
         if (objectFactory == null) {
             LOG.warn("Object Factory is null, something is seriously wrong, no clean up will be performed");
@@ -252,7 +254,11 @@ public class Dispatcher {
                 LOG.error("exception occurred while destroying ObjectFactory ["+objectFactory+"]", e);
             }
         }
+        
+        // clean up Dispatcher itself
         instance.set(null);
+        
+        // clean up DispatcherListeners
         synchronized(Dispatcher.class) {
             if (dispatcherListeners.size() > 0) {
                 for (DispatcherListener l : dispatcherListeners) {
@@ -260,6 +266,10 @@ public class Dispatcher {
                 }
             }
         }
+        
+        // clean up configuration 
+    	configurationManager.destroyConfiguration();
+    	configurationManager = null;
     }
 
     /**

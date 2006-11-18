@@ -112,6 +112,26 @@ import com.opensymphony.xwork2.ActionContext;
  * database access credentials.
  *
  * <p/>
+ * 
+ * <p>
+ * 
+ * This filter supports the following init-params:
+ * <!-- START SNIPPET: params -->
+ *
+ * <ul>
+ *
+ * <li><b>config</b> - a comma-delimited list of XML configuration files to load.</li>
+ *
+ * <li><b>actionPackages</b> - a comma-delimited list of Java packages to scan for Actions.</li>
+ *
+ * <li><b>configProviders</b> - a comma-delimited list of Java classes that implement the 
+ * {@link ConfigurationProvider} interface that should be used for building the {@link Configuration}.</li>
+ * 
+ * </ul>
+ *
+ * <!-- END SNIPPET: params -->
+ * 
+ * </p>
  *
  * To use a custom {@link Dispatcher}, the <code>createDispatcher()</code> method could be overriden by
  * the subclass.

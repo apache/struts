@@ -103,7 +103,7 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         mockActionProxy = mock(ActionProxy.class);
         mockInvocation = mock(ActionInvocation.class);
 
-        mockActionFactory.expects(once()).method("createActionProxy").with(new Constraint[]{isA(Configuration.class), eq(namespace), eq(actionName), isA(Map.class)}).will(returnValue(mockActionProxy.proxy()));
+        mockActionFactory.expects(once()).method("createActionProxy").with(new Constraint[]{eq(namespace), eq(actionName), isA(Map.class)}).will(returnValue(mockActionProxy.proxy()));
         mockActionProxy.stubs().method("getAction").will(returnValue(mockAction.proxy()));
         mockActionProxy.expects(once()).method("execute").will(returnValue(result));
         mockActionProxy.expects(once()).method("getInvocation").will(returnValue(mockInvocation.proxy()));

@@ -41,7 +41,6 @@ import org.apache.struts2.views.jsp.TagUtils;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
@@ -121,7 +120,6 @@ public class ActionComponent extends Component {
     protected HttpServletRequest req;
 
     protected ActionProxyFactory actionProxyFactory;
-    protected Configuration configuration;
     protected ActionProxy proxy;
     protected String name;
     protected String namespace;
@@ -142,18 +140,6 @@ public class ActionComponent extends Component {
     public void setActionProxyFactory(ActionProxyFactory actionProxyFactory) {
         this.actionProxyFactory = actionProxyFactory;
     }
-
-
-
-    /**
-     * @param configuration the configuration to set
-     */
-    @Inject
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
-    }
-
-
 
     public boolean end(Writer writer, String body) {
         boolean end = super.end(writer, "", false);
@@ -259,7 +245,7 @@ public class ActionComponent extends Component {
         // execute at this point, after params have been set
         try {
             
-            proxy = actionProxyFactory.createActionProxy(configuration, namespace, actionName, createExtraContext(), executeResult, true);
+            proxy = actionProxyFactory.createActionProxy(namespace, actionName, createExtraContext(), executeResult, true);
             if (null != methodName) {
                 proxy.setMethod(methodName);
             }

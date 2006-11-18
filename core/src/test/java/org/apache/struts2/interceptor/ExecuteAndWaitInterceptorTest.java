@@ -170,15 +170,11 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
     }
 
     protected ActionProxy buildProxy(String actionName) throws Exception {
-        return container.getInstance(ActionProxyFactory.class).createActionProxy(
-                configurationManager.getConfiguration(), "", actionName, context);
+        return actionProxyFactory.createActionProxy("", actionName, context);
     }
 
     protected void setUp() throws Exception {
-        configurationManager = new ConfigurationManager();
-        configurationManager.addConfigurationProvider(new WaitConfigurationProvider());
-        configurationManager.reload();
-        container = configurationManager.getConfiguration().getContainer();
+        loadConfigurationProviders(new WaitConfigurationProvider());
 
         session = new HashMap();
         params = new HashMap();

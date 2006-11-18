@@ -27,16 +27,14 @@ import java.util.concurrent.Callable;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.DefaultActionProxy;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.Configuration;
 
 public class StrutsActionProxy extends DefaultActionProxy {
 
     private static final long serialVersionUID = -2434901249671934080L;
 
-    public StrutsActionProxy(ObjectFactory objectFactory, Configuration cfg, String namespace, String actionName, Map extraContext,
+    public StrutsActionProxy(String namespace, String actionName, Map extraContext,
                              boolean executeResult, boolean cleanupContext) throws Exception {
-        super(objectFactory, cfg, namespace, actionName, extraContext, executeResult, cleanupContext);
+        super(namespace, actionName, extraContext, executeResult, cleanupContext);
     }
 
     public String execute() throws Exception {

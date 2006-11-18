@@ -107,10 +107,7 @@ public class TokenInterceptorTest extends StrutsTestCase {
     }
 
     protected void setUp() throws Exception {
-        configurationManager = new ConfigurationManager();
-        configurationManager.addConfigurationProvider(new TestConfigurationProvider());
-        configurationManager.reload();
-        container = configurationManager.getConfiguration().getContainer();
+        loadConfigurationProviders(new TestConfigurationProvider());
 
         session = new HashMap();
         params = new HashMap();
@@ -131,8 +128,7 @@ public class TokenInterceptorTest extends StrutsTestCase {
     }
 
     protected ActionProxy buildProxy(String actionName) throws Exception {
-        return container.getInstance(ActionProxyFactory.class).createActionProxy(
-                configurationManager.getConfiguration(), "", actionName, extraContext, true, true);
+        return actionProxyFactory.createActionProxy("", actionName, extraContext, true, true);
     }
 
     protected void tearDown() throws Exception {

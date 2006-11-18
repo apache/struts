@@ -431,7 +431,7 @@ public class Dispatcher {
 
             Configuration config = configurationManager.getConfiguration();
             ActionProxy proxy = config.getContainer().getInstance(ActionProxyFactory.class).createActionProxy(
-                    config, namespace, name, extraContext, true, false);
+                    namespace, name, extraContext, true, false);
             proxy.setMethod(method);
             request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, proxy.getInvocation().getStack());
 

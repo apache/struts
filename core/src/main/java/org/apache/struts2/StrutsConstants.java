@@ -137,7 +137,7 @@ public final class StrutsConstants {
     public static final String STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES = "struts.enable.SlashesInActionNames";
 
     /** Prefix used by {@link CompositeActionMapper} to identify its containing {@link org.apache.struts2.dispatcher.mapper.ActionMapper} class. */
-    public static final String STRUTS_MAPPER_COMPOSITE = "struts.mapper.composite.";
+    public static final String STRUTS_MAPPER_COMPOSITE = "struts.mapper.composite";
 
     public static final String STRUTS_ACTIONPROXYFACTORY = "struts.actionProxyFactory";
 

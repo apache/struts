@@ -19,6 +19,7 @@
    </scm>
 
     <modules>
+        <module>codebehind</module>
         <module>config-browser</module>
         <module>jasperreports</module>
         <module>jfreechart</module>

@@ -187,6 +187,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         
         Dispatcher.setPortletSupportActive(true);
         dispatcherUtils = new Dispatcher(ServletContextHolderListener.getServletContext(), params);
+        dispatcherUtils.init();
         
         // For testability
         if (factory == null) {

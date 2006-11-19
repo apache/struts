@@ -189,14 +189,19 @@ public class Dispatcher {
         dispatcherListeners.remove(listener);
     }
 
+    private ServletContext servletContext;
+    private Map<String, String> initParams;
+    
+    
     /**
      * Create the Dispatcher instance for a given ServletContext and set of initialization parameters.
      *
      * @param servletContext Our servlet context
      * @param initParams The set of initialization parameters
      */
-    public Dispatcher(ServletContext servletContext, Map initParams) {
-        init(servletContext, initParams);
+    public  Dispatcher(ServletContext servletContext, Map<String, String> initParams) {
+        this.servletContext = servletContext;
+        this.initParams = initParams;
     }
 
     /**
@@ -275,15 +280,18 @@ public class Dispatcher {
     /**
      * Load configurations, including both XML and zero-configuration strategies,
      * and update optional settings, including whether to reload configurations and resource files. 
-     *
-     * @param servletContext Our servlet context
-     * @param initParams The set of initialization parameters
      */
-    private void init(final ServletContext servletContext, final Map<String,String> initParams) {
+    public void init() {
         
-        configurationManager = new ConfigurationManager(BeanSelectionProvider.DEFAULT_BEAN_NAME);
+    	if (configurationManager == null) {
+    		configurationManager = new ConfigurationManager(BeanSelectionProvider.DEFAULT_BEAN_NAME);
+    	}
         
+    	// 1] Configuration: legacy properties file (struts.properties)
         configurationManager.addConfigurationProvider(new LegacyPropertiesConfigurationProvider());
+        
+        
+        // 2] Configuration: traditional xml configuration (eg. struts-default.xml, struts-plugin.xml, struts.xml)
         // Load traditional xml configuration
         String configPaths = initParams.get("config");
         if (configPaths == null) {
@@ -302,6 +310,7 @@ public class Dispatcher {
             }
         }
 
+        // 3] Configuration: zero-configuration stuff
         // Load configuration from a scan of the classloader
         String packages = initParams.get("actionPackages");
         if (packages != null) {
@@ -314,6 +323,7 @@ public class Dispatcher {
             }
         }
         
+        // 4] Configuration: custom ConfigurationProviders
         String configProvs = initParams.get("configProviders");
         if (configProvs != null) {
             String[] classes = configProvs.split("\\s*[,]\\s*");
@@ -332,6 +342,7 @@ public class Dispatcher {
             }
         }
         
+        // 5] Configurations: Filter's init-parameters as constants to be injected
         // Load filter init params as constants
         configurationManager.addConfigurationProvider(new ConfigurationProvider() {
             public void destroy() {}
@@ -344,6 +355,8 @@ public class Dispatcher {
             }
         });
         
+        
+        // 6] Configurations: Alias standard Struts2 beans
         configurationManager.addConfigurationProvider(new BeanSelectionProvider());
         // Preload the configuration
         Configuration config = configurationManager.getConfiguration();

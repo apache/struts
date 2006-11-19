@@ -44,6 +44,8 @@ import com.mockobjects.servlet.MockFilterChain;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
 
 /**
  * FilterDispatcher TestCase.
@@ -128,8 +130,15 @@ public class FilterDispatcherTest extends StrutsTestCase {
         final InnerDispatcher _dispatcher = new InnerDispatcher(servletContext);
         Dispatcher.setInstance(null);
 
+        DefaultConfiguration conf = new DefaultConfiguration() {
+        	@Override
+        	public Container getContainer() {
+        		return new ContainerBuilder().create(false);
+        	}
+        };
+       
         ConfigurationManager confManager = new ConfigurationManager();
-        confManager.setConfiguration(new DefaultConfiguration());
+        confManager.setConfiguration(conf);
         _dispatcher.setConfigurationManager(confManager);
 
 
@@ -142,8 +151,8 @@ public class FilterDispatcherTest extends StrutsTestCase {
                 return _dispatcher;
             }
         };
-        filter.init(filterConfig);
         filter.setActionMapper(new InnerActionMapper());
+        filter.init(filterConfig);
         filter.doFilter(req, res, chain);
 
         assertTrue(_dispatcher.wrappedRequest);

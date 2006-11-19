@@ -108,6 +108,7 @@ public abstract class AbstractTagTest extends StrutsTestCase {
 
         mockContainer = new Mock(Container.class);
         Dispatcher du = new Dispatcher(pageContext.getServletContext(), new HashMap());
+        du.init();
         Dispatcher.setInstance(du);
         du.setConfigurationManager(configurationManager);
         session = new SessionMap(request);

@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
 
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.springframework.mock.web.MockFilterConfig;
@@ -124,7 +123,7 @@ public class FilterTest extends TestCase {
                 filterDispatcherCreateDispatcherCount++;
                 return _dispatcher2;
             }
-
+            
             @Override
             public String toString() {
                 return "filterDispatcher";
@@ -132,32 +131,35 @@ public class FilterTest extends TestCase {
         };
     }
 
-
     public void testUsingFilterDispatcherOnly() throws Exception {
         ObjectFactory oldObjecFactory = ObjectFactory.getObjectFactory();
         try {
             ObjectFactory.setObjectFactory(new InnerObjectFactory());
-            filterDispatcher.setActionMapper(new FilterTest.InnerMapper());
 
             assertEquals(cleanUpFilterCreateDispatcherCount, 0);
             assertEquals(filterDispatcherCreateDispatcherCount, 0);
+            assertFalse(_dispatcher1.init);
             assertFalse(_dispatcher1.prepare);
             assertFalse(_dispatcher1.wrapRequest);
             assertFalse(_dispatcher1.service);
+            assertFalse(_dispatcher2.init);
             assertFalse(_dispatcher2.prepare);
             assertFalse(_dispatcher2.wrapRequest);
             assertFalse(_dispatcher2.service);
 
             filterDispatcher.init(filterConfig);
+            FilterDispatcher.setActionMapper(new FilterTest.InnerMapper());
             filterDispatcher.doFilter(request, response, filterChain2);
             filterDispatcher.destroy();
 
             // we are using FilterDispatcher only, so cleanUp filter's Dispatcher should not be created.
             assertEquals(cleanUpFilterCreateDispatcherCount, 0);
             assertEquals(filterDispatcherCreateDispatcherCount, 1);
+            assertFalse(_dispatcher1.init);
             assertFalse(_dispatcher1.prepare);
             assertFalse(_dispatcher1.wrapRequest);
             assertFalse(_dispatcher1.service);
+            assertTrue(_dispatcher2.init);
             assertTrue(_dispatcher2.prepare);
             assertTrue(_dispatcher2.wrapRequest);
             assertTrue(_dispatcher2.service);
@@ -167,6 +169,7 @@ public class FilterTest extends TestCase {
             ObjectFactory.setObjectFactory(oldObjecFactory);
         }
     }
+
 
     public void testUsingFilterDispatcherOnly_Multiple() throws Exception {
         ObjectFactory oldObjecFactory = ObjectFactory.getObjectFactory();
@@ -179,11 +182,14 @@ public class FilterTest extends TestCase {
             assertFalse(_dispatcher1.prepare);
             assertFalse(_dispatcher1.wrapRequest);
             assertFalse(_dispatcher1.service);
+            assertFalse(_dispatcher1.cleanUp);
             assertFalse(_dispatcher2.prepare);
             assertFalse(_dispatcher2.wrapRequest);
             assertFalse(_dispatcher2.service);
+            assertFalse(_dispatcher2.cleanUp);
 
             filterDispatcher.init(filterConfig);
+            FilterDispatcher.setActionMapper(new FilterTest.InnerMapper());
             filterDispatcher.doFilter(request, response, filterChain2);
             filterDispatcher.doFilter(request, response, filterChain2);
             filterDispatcher.destroy();
@@ -194,15 +200,19 @@ public class FilterTest extends TestCase {
             assertFalse(_dispatcher1.prepare);
             assertFalse(_dispatcher1.wrapRequest);
             assertFalse(_dispatcher1.service);
+            assertFalse(_dispatcher1.cleanUp);
             assertTrue(_dispatcher2.prepare);
             assertTrue(_dispatcher2.wrapRequest);
             assertTrue(_dispatcher2.service);
+            assertTrue(_dispatcher2.cleanUp);
             assertTrue(Dispatcher.getInstance() == null);
         }
         finally {
             ObjectFactory.setObjectFactory(oldObjecFactory);
         }
     }
+
+    
 
     /*public void testUsingCleanUpAndFilterDispatcher() throws Exception {
         ObjectFactory oldObjecFactory = ObjectFactory.getObjectFactory();
@@ -281,12 +291,19 @@ public class FilterTest extends TestCase {
 
 
     class InnerDispatcher extends Dispatcher {
+    	public boolean init = false;
         public boolean prepare = false;
         public boolean wrapRequest = false;
         public boolean service = false;
+        public boolean cleanUp = false;
 
         public InnerDispatcher(ServletContext servletContext) {
-            super(servletContext, new HashMap());
+            super(servletContext, new HashMap<String, String>());
+        }
+        
+        @Override
+        public void init() {
+        	init= true;
         }
 
         @Override
@@ -303,6 +320,11 @@ public class FilterTest extends TestCase {
         @Override
         public void serviceAction(HttpServletRequest request, HttpServletResponse response, ServletContext context, ActionMapping mapping) throws ServletException {
             service = true;
+        }
+        
+        @Override
+        public void cleanup() {
+        	cleanUp = true;
         }
     }
 

@@ -80,7 +80,9 @@ public class PortletUrlTagTest extends MockObjectTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        Dispatcher.setInstance(new Dispatcher(null, new HashMap()));
+        Dispatcher du = new Dispatcher(null, new HashMap());
+        du.init();
+        Dispatcher.setInstance(du);
 
         mockPortletApiAvailable();
 

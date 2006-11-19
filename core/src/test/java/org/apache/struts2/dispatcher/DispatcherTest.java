@@ -110,13 +110,13 @@ public class DispatcherTest extends StrutsTestCase {
     
     public void testConfigurationManager() {
     	Dispatcher du = null;
-    	final InternalConfigurationManager configurationManager = new InternalConfigurationManager();
+    	InternalConfigurationManager configurationManager = new InternalConfigurationManager();
     	try {
-    		du = new Dispatcher(new MockServletContext(), new HashMap<String, String>()) {
-    			{
-    				setConfigurationManager(configurationManager);
-    			}
-    		};
+    		du = new Dispatcher(new MockServletContext(), new HashMap<String, String>());
+    		du.setConfigurationManager(configurationManager);
+    		
+    		du.init();
+    		
             Dispatcher.setInstance(du);
             
             assertFalse(configurationManager.destroyConfiguration);

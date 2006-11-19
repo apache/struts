@@ -53,6 +53,7 @@ public abstract class StrutsTestCase extends XWorkTestCase {
             params = new HashMap<String,String>();
         }
         Dispatcher du = new Dispatcher(new MockServletContext(), params);
+        du.init();
         Dispatcher.setInstance(du);
         configurationManager = du.getConfigurationManager();
         configuration = configurationManager.getConfiguration();

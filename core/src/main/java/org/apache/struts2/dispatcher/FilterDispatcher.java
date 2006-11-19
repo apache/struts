@@ -207,8 +207,11 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      * @param filterConfig The filter configuration
      */
     public void init(FilterConfig filterConfig) throws ServletException {
+    	 this.filterConfig = filterConfig;
+    	 
         dispatcher = createDispatcher(filterConfig);
-        this.filterConfig = filterConfig;
+        dispatcher.init();
+       
         String param = filterConfig.getInitParameter("packages");
         String packages = "org.apache.struts2.static template org.apache.struts2.interceptor.debugging";
         if (param != null) {
@@ -388,6 +391,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      */
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
+    	
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         ServletContext servletContext = getServletContext();

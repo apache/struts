@@ -20,7 +20,6 @@
  */
 package org.apache.struts2.showcase.ajax.tree;
 
-import com.opensymphony.xwork2.ActionSupport;
 
 /**
  */

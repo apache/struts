@@ -28,7 +28,6 @@ import org.apache.struts2.views.freemarker.FreemarkerResult;
 
 import com.opensymphony.xwork2.ActionSupport;
 
-@Result(value="listPeople.ftl", type=FreemarkerResult.class)
 public class ListPeopleAction extends ActionSupport {
 
     private static final long serialVersionUID = 3608017189783645371L;

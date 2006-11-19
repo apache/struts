@@ -19,11 +19,11 @@
  * under the License.
  */
 package org.apache.struts2.showcase.fileupload;
-import com.opensymphony.xwork2.ActionSupport;
-
 import java.io.File;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * Showcase action - multiple file upload using List

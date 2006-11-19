@@ -20,10 +20,10 @@
  */
 package org.apache.struts2.showcase.token;
 
+import java.util.Date;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
-
-import java.util.Date;
 
 /**
  * Example to illustrate the <code>token</code> and <code>token-session</code> interceptor.

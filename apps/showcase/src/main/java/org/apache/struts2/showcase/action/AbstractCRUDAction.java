@@ -20,13 +20,14 @@
  */
 package org.apache.struts2.showcase.action;
 
+import java.io.Serializable;
+import java.util.Collection;
+
 import org.apache.log4j.Logger;
-import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.showcase.dao.Dao;
 import org.apache.struts2.showcase.model.IdEntity;
 
-import java.util.Collection;
-import java.io.Serializable;
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * AbstractCRUDAction.

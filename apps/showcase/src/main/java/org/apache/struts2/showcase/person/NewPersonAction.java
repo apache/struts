@@ -30,10 +30,6 @@ import com.opensymphony.xwork2.ActionSupport;
 /**
  */
 @ParentPackage("person")
-@Results({
-    @Result(value="newPerson.ftl", type=FreemarkerResult.class),
-    @Result(name="input", value="newPerson.ftl", type=FreemarkerResult.class)
-})
 public class NewPersonAction extends ActionSupport {
 
     private static final long serialVersionUID = 200410824352645515L;

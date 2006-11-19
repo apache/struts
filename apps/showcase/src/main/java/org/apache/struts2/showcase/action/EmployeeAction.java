@@ -20,7 +20,11 @@
  */
 package org.apache.struts2.showcase.action;
 
-import com.opensymphony.xwork2.Preparable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.apache.struts2.showcase.application.TestDataProvider;
 import org.apache.struts2.showcase.dao.Dao;
@@ -28,10 +32,7 @@ import org.apache.struts2.showcase.dao.EmployeeDao;
 import org.apache.struts2.showcase.model.Employee;
 import org.apache.struts2.showcase.model.Skill;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import com.opensymphony.xwork2.Preparable;
 
 /**
  * JsfEmployeeAction.

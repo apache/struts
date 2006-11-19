@@ -20,7 +20,7 @@
  */
 package org.apache.struts2.showcase.hangman;
 
-import static org.apache.struts2.showcase.hangman.HangmanConstants.*;
+import static org.apache.struts2.showcase.hangman.HangmanConstants.HANGMAN_SESSION_KEY;
 
 import java.util.Map;
 

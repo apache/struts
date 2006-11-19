@@ -20,11 +20,11 @@
  */
 package org.apache.struts2.showcase.sitemesh;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.module.sitemesh.mapper.AbstractDecoratorMapper;
-
-import javax.servlet.http.HttpServletRequest;
 
 public class NoneDecoratorMapper extends AbstractDecoratorMapper {
     public Decorator getDecorator(HttpServletRequest req, Page page) {

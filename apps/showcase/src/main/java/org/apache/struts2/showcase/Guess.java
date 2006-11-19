@@ -20,12 +20,12 @@
  */
 package org.apache.struts2.showcase;
 
-import com.opensymphony.xwork2.ActionSupport;
+import java.util.Random;
+
 import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Preparable;
 import com.uwyn.rife.continuations.ContinuableObject;
-
-import java.util.Random;
 
 // START SNIPPET: example
 public class Guess extends ActionSupport implements Preparable, ContinuableObject {

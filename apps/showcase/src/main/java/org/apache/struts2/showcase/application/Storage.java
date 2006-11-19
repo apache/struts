@@ -20,13 +20,13 @@
  */
 package org.apache.struts2.showcase.application;
 
-import org.apache.struts2.showcase.model.IdEntity;
-import org.apache.struts2.showcase.exception.CreateException;
-import org.apache.struts2.showcase.exception.UpdateException;
-import org.apache.struts2.showcase.exception.StorageException;
-
 import java.io.Serializable;
 import java.util.Collection;
+
+import org.apache.struts2.showcase.exception.CreateException;
+import org.apache.struts2.showcase.exception.StorageException;
+import org.apache.struts2.showcase.exception.UpdateException;
+import org.apache.struts2.showcase.model.IdEntity;
 
 /**
  * Storage. Interface.

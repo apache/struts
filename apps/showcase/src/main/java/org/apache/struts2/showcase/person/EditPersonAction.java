@@ -34,11 +34,7 @@ import com.opensymphony.xwork2.ActionSupport;
  * <code>EditPerson</code>
  *
  */
-@Results({
-    @Result(value="editPeople.jsp"),
-    @Result(name="error",value="editPeople.jsp"),
-    @Result(name="list", value="listPeople.action", type=ServletRedirectResult.class)
-})
+@Result(name="list", value="listPeople.action", type=ServletRedirectResult.class)
 public class EditPersonAction extends ActionSupport {
 
     private static final long serialVersionUID = 7699491775215130850L;

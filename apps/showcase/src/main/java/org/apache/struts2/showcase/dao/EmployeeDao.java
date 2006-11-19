@@ -20,11 +20,11 @@
  */
 package org.apache.struts2.showcase.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.struts2.showcase.model.Employee;
 import org.apache.struts2.showcase.model.Skill;
-
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * EmployeeDao.

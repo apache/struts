@@ -20,17 +20,17 @@
  */
 package org.apache.struts2.showcase.application;
 
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Date;
+
+import org.apache.log4j.Logger;
 import org.apache.struts2.showcase.dao.EmployeeDao;
 import org.apache.struts2.showcase.dao.SkillDao;
 import org.apache.struts2.showcase.exception.StorageException;
 import org.apache.struts2.showcase.model.Employee;
 import org.apache.struts2.showcase.model.Skill;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
-
-import java.io.Serializable;
-import java.util.Date;
-import java.util.Arrays;
 
 /**
  * TestDataProvider.

@@ -20,12 +20,12 @@
  */
 package org.apache.struts2.showcase;
 
-import com.opensymphony.xwork2.ActionSupport;
-
 import java.text.DateFormat;
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
+
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * <code>DateAction</code>

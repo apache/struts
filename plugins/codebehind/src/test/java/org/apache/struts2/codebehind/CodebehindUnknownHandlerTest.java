@@ -33,7 +33,6 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.VoidResult;
 import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 
 public class CodebehindUnknownHandlerTest extends StrutsTestCase {

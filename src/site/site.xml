@@ -30,26 +30,26 @@
         
             <item
                     name="Getting Started"
-                    href="WW/home.html"
+                    href="docs/home.html"
                     />        
             <item
                     name="Tutorials"
-                    href="WW/tutorials.html"
+                    href="docs/tutorials.html"
                     />        
 
             <item
                     name="FAQs"
-                    href="WW/faqs.html"
+                    href="docs/faqs.html"
                     />        
 
             <item
                     name="Guides"
-                    href="WW/guides.html"
+                    href="docs/guides.html"
                     />        
 
             <item
                     name="Release Notes"
-                    href="cd WW/release-notes-202.html"
+                    href="docs/release-notes-202.html"
                     />        
 
         </menu>

@@ -73,7 +73,7 @@ public class StrutsTilesContainerFactory extends TilesContainerFactory {
     }
 
     /**
-     * Wrapper factory, used to wrap the TilesRequestContext with a
+     * Wrapper factory, used to decorate the TilesRequestContext with a
      * FreemarkerResult aware version.
      * 
      */

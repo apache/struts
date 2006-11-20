@@ -21,16 +21,22 @@
  */
 -->
 
- <!DOCTYPE tiles-definitions PUBLIC
-       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
-       "http://struts.apache.org/dtds/tiles-config_2_0.dtd">
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/tiles-config_2_0.dtd">
 
 <tiles-definitions>
 
-  <definition name="showcase.index" template="/tiles/layout.jsp">
-	  <put name="title"  value="Tiles Showcase" />
-	  <put name="header" value="/tiles/header.jsp" />
-	  <put name="body"   value="/tiles/body.jsp" />
-  </definition>
+    <definition name="showcase.index" template="/tiles/layout.jsp">
+        <put name="title" value="Tiles Showcase"/>
+        <put name="header" value="/tiles/header.jsp"/>
+        <put name="body" value="/tiles/body.jsp"/>
+    </definition>
+
+    <definition name="showcase.freemarker" template="/tiles/layout.jsp">
+        <put name="title" value="Tiles/Freemarker Showcase"/>
+        <put name="header" value="/tiles/header.jsp"/>
+        <put name="body" value="/tiles/body.ftl"/>
+    </definition>
 
 </tiles-definitions>

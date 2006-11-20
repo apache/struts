@@ -13,6 +13,10 @@
             <result name="success" type="tiles">showcase.index</result>
         </action>
 
+        <action name="freemarker">
+            <result type="tiles">showcase.freemarker</result>
+        </action>
+
         <action name="sanity">
             <result type="redirect">/tiles/layout.jsp</result>
             <result type="redirect" name="success">/tiles/layout.jsp</result>

@@ -101,6 +101,7 @@ public class FreemarkerResult extends StrutsResultSupport {
     protected Configuration configuration;
     protected ObjectWrapper wrapper;
     protected FreemarkerManager freemarkerManager;
+    private Writer writer;
 
     /*
      * Struts results are constructed for each result execution
@@ -199,10 +200,18 @@ public class FreemarkerResult extends StrutsResultSupport {
         return configuration.getObjectWrapper();
     }
 
+
+    public void setWriter(Writer writer) {
+        this.writer = writer;
+    }
+
     /**
      * The default writer writes directly to the response writer.
      */
     protected Writer getWriter() throws IOException {
+        if(writer != null) {
+            return writer;
+        }
         return ServletActionContext.getResponse().getWriter();
     }
 

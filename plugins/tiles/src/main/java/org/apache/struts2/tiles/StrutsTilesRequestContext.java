@@ -21,16 +21,18 @@
 package org.apache.struts2.tiles;
 
 import com.opensymphony.xwork2.ActionInvocation;
-import freemarker.template.TemplateException;
+import com.opensymphony.xwork2.inject.Container;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
 import org.apache.tiles.context.TilesRequestContext;
 import org.apache.tiles.context.TilesRequestContextWrapper;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -48,6 +50,7 @@ public class StrutsTilesRequestContext extends TilesRequestContextWrapper {
 
     private static final Log LOG =
             LogFactory.getLog(StrutsTilesRequestContext.class);
+
 
     /**
      * The mask used to detect requests which should be intercepted.
@@ -86,8 +89,6 @@ public class StrutsTilesRequestContext extends TilesRequestContextWrapper {
      * be used in order to setup the appropriate model.
      *
      * @throws IOException
-     * @throws ServletException
-     * @throws Exception
      */
     public void include(String include) throws IOException {
         if (include.endsWith(mask)) {
@@ -95,20 +96,29 @@ public class StrutsTilesRequestContext extends TilesRequestContextWrapper {
                 LOG.debug("Intercepting tiles include '" + include + "'. Processing as freemarker result.");
             }
             HttpServletRequest request = (HttpServletRequest) getRequest();
+            HttpServletResponse response = (HttpServletResponse) getResponse();
 
             ActionInvocation invocation =
                     ServletActionContext.getActionContext(request).getActionInvocation();
 
-            FreemarkerResult result = new FreemarkerResult();
-
             try {
+                FreemarkerResult result = new FreemarkerResult();
+                result.setWriter(response.getWriter());
+
+                Container container = Dispatcher.getInstance()
+                        .getConfigurationManager()
+                        .getConfiguration().getContainer();
+
+                container.inject(result);
+
                 result.doExecute(include, invocation);
-            } catch (TemplateException e) {
+            } catch (Exception e) {
                 LOG.error("Error invoking Freemarker template", e);
-                throw new IOException("Error invoking Freemarker template."+ e.getMessage());
+                throw new IOException("Error invoking Freemarker template." + e.getMessage());
             }
         } else {
             super.include(include);
         }
     }
+
 }

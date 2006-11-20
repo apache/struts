@@ -48,8 +48,7 @@ public class FacesResult extends StrutsResultSupport implements Result {
      * config and then renders the result by delegating to the
      * FacesRender.render().
      *
-     * @see org.apache.struts2.dispatcher.StrutsResultSupport#doExecute(java.lang.String,
-     *      com.opensymphony.
+     * @see org.apache.struts2.dispatcher.StrutsResultSupport#doExecute(String, ActionInvocation)
      */
     protected void doExecute(String finalLocation, ActionInvocation invocation)
             throws Exception {

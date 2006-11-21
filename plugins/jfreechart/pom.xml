@@ -88,7 +88,7 @@
         <dependency>
             <groupId>jfree</groupId>
             <artifactId>jcommon</artifactId>
-            <version>[1.0.0,)</version>
+            <version>1.0.2</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -100,7 +100,7 @@
         <dependency>
             <groupId>jfree</groupId>
             <artifactId>jfreechart</artifactId>
-            <version>[1.0.0,)</version>
+            <version>1.0.1</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>

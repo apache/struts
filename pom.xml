@@ -51,9 +51,9 @@
     -->
 
     <scm>
-       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk</connection>
-       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk</developerConnection>
-       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk</url>
+       <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/</connection>
+       <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/</developerConnection>
+       <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/</url>
     </scm>
 
     <issueManagement>
@@ -141,6 +141,7 @@
                 <!-- should have the org.w3c.dom dependency here -->
             </dependencies>
         </profile>
+
     </profiles>
 
 

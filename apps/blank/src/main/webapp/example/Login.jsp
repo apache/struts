@@ -7,8 +7,8 @@
 
 <body>
 <s:form action="Login">
-    <s:textfield label="%{getText('username')}" name="username"/>
-    <s:password label="%{getText('password')}" name="password" />
+    <s:textfield key="username"/>
+    <s:password key="password" />
     <s:submit/>
 </s:form>
 </body>

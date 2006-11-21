@@ -13,22 +13,8 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
-
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
-    <!--
-        This typically isn't required, as the taglib is included in struts-core.jar.
-        If you really need a taglib configuration within web.xml,
-        copy struts2-core/core/src/main/resources/META-INF/struts-tags.tld
-        to the WEB-INF directory as struts-tags.tld.
-     -->
-    <!--taglib>
-        <taglib-uri>/s</taglib-uri>
-        <taglib-location>/WEB-INF/struts-tags.tld</taglib-location>
-    </taglib-->
 </web-app>

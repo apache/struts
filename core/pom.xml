@@ -37,6 +37,32 @@
                     </groups>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.myfaces.tobago</groupId>
+                <artifactId>maven-apt-plugin</artifactId>
+                <configuration>
+                    <A>uri=/struts-tags,tlibVersion=2.2.3,jspVersion=1.2,shortName=s,displayName="Struts Tags",outFile=${basedir}/src/main/resources/META-INF/struts-tags.tld, description="To make it easier to access dynamic data; the Apache Struts framework includes a library of custom tags. The tags interact with the framework's validation and internationalization features; to ensure that input is correct and output is localized. The Struts Tags can be used with JSP FreeMarker or Velocity."
+                    </A>
+                    <resourceTargetPath>target</resourceTargetPath>
+                    <fork>false</fork>
+                    <force>true</force>
+                    <nocompile>true</nocompile>
+                    <showWarnings>true</showWarnings>
+                    <factory>org.apache.struts2.annotations.taglib.apt.TLDAnnotationProcessorFactory</factory>
+                    <target>1.5</target>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                </execution>
+				</executions>
+            </plugin>
         </plugins>
     </build>
     
@@ -324,5 +350,14 @@
             <version>1.2.9</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.sun</groupId>
+            <artifactId>tools</artifactId>
+            <version>1.4.2</version>
+            <scope>system</scope>
+            <systemPath>${java.home}/../lib/tools.jar</systemPath>
+        </dependency>
+
     </dependencies>
 </project>

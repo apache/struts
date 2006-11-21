@@ -26,10 +26,10 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 public @interface StrutsTagAttribute {
-  String name() default "";;
+  String name() default "";
   boolean required();
-  boolean rtexprvalue();
+  boolean rtexprvalue() default true;
   String description();
   String defaultValue() default "";
-  String type() default "";
+  String type() default "String";
 }

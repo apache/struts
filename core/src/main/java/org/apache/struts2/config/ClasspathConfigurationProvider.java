@@ -25,7 +25,6 @@ import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -47,28 +46,94 @@ import com.opensymphony.xwork2.util.ResolverUtil.Test;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 /**
- * Loads the configuration by scanning the classpath looking for classes that end in
- * 'Action'.
+ * ClasspathConfigurationProvider loads the configuration
+ * by scanning the classpath or selected packages for Action classes.
+ * <p>
+ * This provider is only invoked if one or more action packages are passed to the dispatcher,
+ * usually from the web.xml.
+ * Configurations are created for objects that either implement Action or have classnames that end with "Action".
  */
 public class ClasspathConfigurationProvider implements ConfigurationProvider {
 
+    /**
+     * The default page prefix (or "path").
+     * Some applications may place pages under "/WEB-INF" as an extreme security precaution.
+     */
     private static final String DEFAULT_PAGE_PREFIX = "struts.configuration.classpath.defaultPagePrefix";
-    private static final String DEFAULT_PAGE_EXTENSION = "struts.configuration.classpath.defaultPageExtension";
-    private static final String DEFAULT_PARENT_PACKAGE = "struts.configuration.classpath.defaultParentPackage";
-    private static final String ACTION = "Action";
-    private String[] packages;
-    private String defaultParentPackage = "struts-default";
-    private String defaultPageExtension = ".jsp";
+
+    /**
+     * The default page prefix (none).
+     */
     private String defaultPagePrefix = "";
+
+    /**
+     * The default page extension,  to use in place of ".jsp".
+     */
+    private static final String DEFAULT_PAGE_EXTENSION = "struts.configuration.classpath.defaultPageExtension";
+
+    /**
+     * The defacto default page extension, usually associated with JavaServer Pages.
+     */
+    private String defaultPageExtension = ".jsp";
+
+    /**
+     * A setting to indicate a custom default parent package,
+     * to use in place of "struts-default".
+     */
+    private static final String DEFAULT_PARENT_PACKAGE = "struts.configuration.classpath.defaultParentPackage";
+
+    /**
+     * Name of the framework's default configuration package,
+     * that application configuration packages automatically inherit.
+     */
+    private String defaultParentPackage = "struts-default";
+
+    /**
+     * Default suffix that can be used to indicate POJO "Action" classes.
+     */
+    private static final String ACTION = "Action";
+
+    /**
+     * Helper class to scan class path for server pages.
+     */
     private PageLocator pageLocator = new ClasspathPageLocator();
+
+    /**
+     * Flag to indicate the packages have been loaded.
+     *
+     * @see #loadPackages
+     * @see #needsReload
+     */
     private boolean initialized = false;
 
+    /**
+     * The list of packages to scan for Action classes.
+     */
+    private String[] packages;
+
+    /**
+     * The package configurations for scanned Actions.
+     *
+     * @see #loadPackageConfig
+     */
     private Map<String,PackageConfig> loadedPackageConfigs = new HashMap<String,PackageConfig>();
 
+    /**
+     * Logging instance for this class.
+     */
     private static final Log LOG = LogFactory.getLog(ClasspathConfigurationProvider.class);
 
+    /**
+     * The XWork Configuration for this application.
+     *
+     * @see #init
+     */
     private Configuration configuration;
 
+    /**
+     * Create instance utilizing a list of packages to scan for Action classes.
+     * @param pkgs List of pacaktges to scan for Action Classes.
+     */
     public ClasspathConfigurationProvider(String[] pkgs) {
         this.packages = pkgs;
 
@@ -122,7 +187,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
     }
 
     /**
-     * @param pkgs
+     * @param pkgs A set of packages to load
      */
     protected void loadPackages(String[] pkgs) {
 
@@ -136,7 +201,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
             }
             
         }, pkgs);
-        Set actionClasses = resolver.getClasses();
+        Set<? extends Class<? extends Class>> actionClasses = resolver.getClasses();
         for (Object obj : actionClasses) {
            Class cls = (Class) obj;
            if (!Modifier.isAbstract(cls.getModifiers())) {
@@ -149,6 +214,11 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
         }
     }
 
+    /**
+     *
+     * @param cls Action or POJO instance to process
+     * @param pkgs Set of packages to scan for Actions
+     */
     protected void processActionClass(Class cls, String[] pkgs) {
         String name = cls.getName();
         String actionPackage = cls.getPackage().getName();
@@ -188,7 +258,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
             }
         }
 
-        // Cut off the Action suffix if found
+        // Truncate Action suffix if found
         if (actionName.endsWith(ACTION)) {
             actionName = actionName.substring(0, actionName.length() - ACTION.length());
         }
@@ -212,7 +282,8 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
     }
 
     /**
-     * @param actionPackage
+     * @param actionPackage The Java package containing our Action classes
+     * @return
      */
     protected PackageConfig loadPackageConfig(String actionNamespace, String actionPackage, Class actionClass) {
         PackageConfig parent = null;
@@ -306,7 +377,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
         }
 
         protected ResultConfig createResultConfig(Result result) {
-            Class cls = result.type();
+            Class<? extends Object> cls = result.type();
             if (cls == NullResult.class) {
                 cls = null;
             }
@@ -315,9 +386,9 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
 
         public V get(Object key) {
 
-            Object result = super.get(key);
+            V result = super.get(key);
             if (result != null) {
-                return (V) result;
+                return result;
             } else {
 
                 // TODO: This code never is actually used, do to how the runtime configuration
@@ -340,8 +411,8 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
          * @param location
          * @return
          */
-        private ResultConfig createResultConfig(Object key, Class resultClass, String location) {
-            Map configParams = null;
+        private ResultConfig createResultConfig(Object key, Class<? extends Object> resultClass, String location) {
+            Map<? extends Object, ? extends Object> configParams = null;
             if (resultClass == null) {
                 String defaultResultType = pkgConfig.getFullDefaultResultType();
                 ResultTypeConfig resultType = (ResultTypeConfig) pkgConfig.getAllResultTypeConfigs().get(defaultResultType);

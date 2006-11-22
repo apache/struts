@@ -33,61 +33,94 @@ import com.opensymphony.xwork2.util.location.Location;
 
 
 /**
- * Handles all Struts config properties. Implementation of this class is pluggable (the
- * default implementation is {@link DefaultSettings}). This gives developers to ability to customize how
- * Struts properties are set and retrieved. As an example, a developer may wish to check a separate property
- * store before delegating to the Struts one. <p>
- * <p/>
- * Key methods: <ul>
- * <p/>
+ * Settings retrieves and exposes default values used by the framework.
+ * An application can override a factory default and provide its own value for a setting.
+ * <p>
+ * Implementation of the class is pluggable (the default implementation is {@link DefaultSettings}).
+ * Pluggability gives applications to ability to customize how settings are retrieved.
+ * As an example, an application may wish to check some custom property store
+ * before delegating to the usual configuration and property files.
+ * <p>
+ * Key methods:
+ * <ul>
  * <li>{@link #getLocale()}</li>
  * <li>{@link #get(String)}</li>
  * <li>{@link #set(String, String)}</li>
- * <li>{@link #list()}</li></ul>
- * <p/>
- * Key methods for subclassers: <ul>
- * <p/>
+ * <li>{@link #list()}</li>
+ * </ul>
+ * <p>
+ * Key methods for subclasses (plugins):
+ * <ul>
  * <li>{@link #getImpl(String)}</li>
  * <li>{@link #setImpl(String, String)}</li>
  * <li>{@link #listImpl()}</li>
- * <li>{@link #isSetImpl(String)}</li></ul>
+ * <li>{@link #isSetImpl(String)}</li>
+ * </ul>
  */
 class Settings {
 
-    static Settings settingsImpl;
-    static Settings defaultImpl;
-    static Locale locale; // Cached locale
-    private static final Log LOG = LogFactory.getLog(Settings.class);
-
 
     /**
-     * Sets the current settings implementation. Can only be called once.
+     * A pluggable implementation of Settings,
+     * provided through the {@link #setInstance} method.
+     */
+    static Settings settingsImpl;
+
+    /**
+     * An instance of {@link DefaultSettings}
+     * to use when another implementation is not provided (plugged in).
+     */
+    static Settings defaultImpl;
+
+    /**
+     * An instance of the default locale as specified by the <code>struts.locale</code>  setting.
+     *
+     * @see #getLocale
+     */
+    static Locale locale;
+
+    /**
+     * The Logging instance for this class.
+     */
+    private static final Log LOG = LogFactory.getLog(Settings.class);
+
+    /**
+     * Registers a custom Settings implementation (plugin),
+     * and resets the cached locale.
+     * <p>
+     * This method can only be called once.
      *
      * @param config a Settings implementation
      * @throws IllegalStateException if an error occurs when setting the settings implementation.
      */
     public static void setInstance(Settings config) throws IllegalStateException {
         settingsImpl = config;
-        locale = null; // Reset cached locale
+        locale = null;
     }
 
     /**
-     * Gets the current settings implementation.
+     * Provides the Settings object.
+     * <p>
+     * This method will substitute the default instance if another instance is not registered.
      *
-     * @return the current settings implementation.
+     * @return the Settings object.
      */
     public static Settings getInstance() {
         return (settingsImpl == null) ? getDefaultInstance() : settingsImpl;
     }
 
     /**
-     * Returns the Struts locale. Keys off the property <tt>struts.locale</tt> which should be set
-     * as the Java {@link java.util.Locale#toString() toString()} representation of a Locale object (i.e.,
-     * "en", "de_DE", "_GB", "en_US_WIN", "de__POSIX", "fr_MAC", etc). <p>
-     * <p/>
-     * If no locale is specified then the default VM locale is used ({@link java.util.Locale#getDefault()}).
+     * Provides the Struts default locale.
+     * <p>
+     * This method utilizes the <code>struts.locale</code> setting, which should be given
+     * as the Java {@link java.util.Locale#toString() toString()} representation of a Locale object
+     * ("en", "de_DE", "_GB", "en_US_WIN", "de__POSIX", "fr_MAC", and so forth).
+     * <p>
+     * If a <code>struts.locale</code> setting is not registered,
+     * then the default virtual machine locale is substituted and cached.
      *
-     * @return the Struts locale if specified or the VM default locale.
+     * @return the Struts default locale if specified or the VM default locale.
+     * @see java.util.Locale#getDefault()
      */
     public static Locale getLocale() {
         if (locale == null) {
@@ -107,7 +140,7 @@ class Settings {
                 locale = new Locale(lang, country);
             } catch (Throwable t) {
                 // Default
-                LOG.warn("Setting locale to the default locale");
+                LOG.warn("Settings: Could not parse struts.locale setting, substituting default VM locale");
                 locale = Locale.getDefault();
             }
         }
@@ -116,46 +149,50 @@ class Settings {
     }
 
     /**
-     * Determines whether or not a value has been set. Useful for testing for the existance of parameter without
+     * Determines whether or not a setting has a registered value.
+     * <p>
+     * This method is useful for testing for the existance of setting without
      * throwing an IllegalArgumentException.
      *
-     * @param name the name of the property to test.
-     * @return <tt>true</tt> if the property exists and has a value, <tt>false</tt> otherwise.
+     * @param name the name of a setting to test.
+     * @return <code>true</code> if the setting exists and has a value, <code>false</code> otherwise.
      */
     public static boolean isSet(String name) {
         return getInstance().isSetImpl(name);
     }
 
     /**
-     * Returns a property as an Object. This will throw an <tt>IllegalArgumentException</tt> if an error occurs
+     * Provides a setting value as a String.
+     * <p>
+     * The method will throw an <code>IllegalArgumentException</code> if an error occurs
      * while retrieveing the property or if the property doesn't exist.
      *
-     * @param name the name of the property to get.
-     * @return the property as an Object.
+     * @param name the name of the setting to retrieve.
+     * @return the setting value as a String.
      * @throws IllegalArgumentException if an error occurs retrieving the property or the property does not exist.
      */
     public static String get(String name) throws IllegalArgumentException {
-        String val = getInstance().getImpl(name);
-
-        return val;
+        return getInstance().getImpl(name);
     }
-    
+
     /**
-     * Returns the location of a a property. This will throw an <tt>IllegalArgumentException</tt> if an error occurs
-     * while retrieveing the property or if the property doesn't exist.
+     * Provides the Location of a setting.
+     * <p>
+     * The Location is utilized as part of precise error reporting.
+     * <p>
+      * This method will throw an <code>IllegalArgumentException</code> if an error occurs
+     * while retrieving the value or if the setting doesn't exist.
      *
      * @param name the name of the property to get.
      * @return the Location of a property.
      * @throws IllegalArgumentException if an error occurs retrieving the property or the property does not exist.
      */
     public static Location getLocation(String name) throws IllegalArgumentException {
-        Location loc = getInstance().getLocationImpl(name);
-
-        return loc;
+        return getInstance().getLocationImpl(name);
     }
 
     /**
-     * Returns an Iterator of all properties names.
+     * Provides an Iterator of all properties names.
      *
      * @return an Iterator of all properties names.
      */
@@ -164,8 +201,10 @@ class Settings {
     }
 
     /**
-     * Implementation of the {@link #isSet(String)} method.
+     * Implements the {@link #isSet(String)} method.
      *
+     * @param name Identifier for the setting value to change
+     * @return True if the setting exists and has a value, false otherwise.
      * @see #isSet(String)
      */
     public boolean isSetImpl(String name) {
@@ -175,39 +214,51 @@ class Settings {
     }
 
     /**
-     * Sets a property. Throws an exception if an error occurs when setting the property or if the
-     * Settings implementation does not support setting properties.
+     * Registers a value for a setting.
+     * <p>
+     * This method raises an exception if an error occurs when setting the value or if the
+     * settings implementation does not support setting values.
      *
-     * @param name  the name of the property to set.
-     * @param value the property to set.
-     * @throws IllegalArgumentException      if an error occurs when setting the property.
-     * @throws UnsupportedOperationException if the config implementation does not support setting properties.
+     * @param name  the name of the setting.
+     * @param value the value to register for the setting.
+     * @throws IllegalArgumentException      if an error occurs when setting the value.
+     * @throws UnsupportedOperationException if the config implementation does not support setting values.
      */
     public static void set(String name, String value) throws IllegalArgumentException, UnsupportedOperationException {
         getInstance().setImpl(name, value);
     }
 
     /**
-     * Implementation of the {@link #set(String, String)} method.
+     * Implements the {@link #set(String, String)} method.
      *
+     * @param name Identifer for the setting to change.
+     * @param value The new value for the setting.
+     * @throws IllegalArgumentException      if an error occurs when setting the value.
+     * @throws UnsupportedOperationException if the config implementation does not support setting values.
      * @see #set(String, String)
      */
     public void setImpl(String name, String value) throws IllegalArgumentException, UnsupportedOperationException {
-        throw new UnsupportedOperationException("This settings does not support updating a setting");
+        throw new UnsupportedOperationException("Settings: This implementation does not support setting a value.");
     }
 
     /**
-     * Implementation of the {@link #get(String)} method.
+     * Implements the {@link #get(String)} method.
      *
+     * @param aName The name of the setting value to retreive
+     * @return The setting value as a String
+     * @throws IllegalArgumentException if an error occurs when retrieving the value
      * @see #get(String)
      */
     public String getImpl(String aName) throws IllegalArgumentException {
         return null;
     }
-    
+
     /**
-     * Implementation of the {@link #getLocation(String)} method.
+     * Implements the {@link #getLocation(String)} method.
      *
+     * @return The location  of the setting
+     * @param aName Name of the setting to locate
+     * @throws IllegalArgumentException if an error occurs when retrieving the value
      * @see #getLocation(String)
      */
     public Location getLocationImpl(String aName) throws IllegalArgumentException {
@@ -215,14 +266,23 @@ class Settings {
     }
 
     /**
-     * Implementation of the {@link #list()} method.
+     * Implements the {@link #list()} method.
      *
      * @see #list()
+     * @return A list of the settings as an iterator
      */
     public Iterator listImpl() {
-        throw new UnsupportedOperationException("This settings does not support listing the settings");
+        throw new UnsupportedOperationException("Settings: This implementation does not support listing the registered settings");
     }
 
+    /**
+     * Creates a default Settings object.
+     * <p>
+     * A default implementation may be specified by the <code>struts.configuration</code> setting;
+     * otherwise, this method instantiates {@link DefaultSettings} as the default implementation.
+     *
+     * @return A default Settings object.
+     */
     private static Settings getDefaultInstance() {
         if (defaultImpl == null) {
             // Create bootstrap implementation
@@ -237,7 +297,7 @@ class Settings {
                         // singleton instances shouldn't be built accessing request or session-specific context data
                         defaultImpl = (Settings) ObjectFactory.getObjectFactory().buildBean(Thread.currentThread().getContextClassLoader().loadClass(className), null);
                     } catch (Exception e) {
-                        LOG.error("Could not instantiate settings", e);
+                        LOG.error("Settings: Could not instantiate the struts.configuration object, substituting the default implementation.", e);
                     }
                 }
             } catch (IllegalArgumentException ex) {
@@ -248,6 +308,9 @@ class Settings {
         return defaultImpl;
     }
 
+    /**
+     * Resets the default and any plugin Setting instance to null.
+     */
     public static void reset() {
         defaultImpl = null;
         settingsImpl = null;

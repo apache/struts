@@ -26,89 +26,72 @@ import java.util.Set;
 
 
 /**
- * A Settings implementation which stores an internal list of settings objects. Each time
- * a config method is called (get, set, list, etc..) this class will go through the list of settingss
- * and call the method until successful.
+ * DelegatingSettings stores an internal list of {@link Settings} objects
+ * to update settings or retrieve settings values.
+ * <p>
+ * Each time a Settings method is called (get, set, list, and so forth),
+ * this class goes through the list of Settings objects
+ * and calls that method for each delegate,
+ * withholding any exception until all delegates have been called.
  *
  */
 class DelegatingSettings extends Settings {
 
-    Settings[] configList;
-
+    /**
+     * The Settings objects.
+     */
+    Settings[] delegates;
 
     /**
-     * Creates a new DelegatingSettings object given a list of {@link Settings} implementations.
+     * Creates a new DelegatingSettings object utilizing the list of {@link Settings} objects.
      *
-     * @param aConfigList a list of Settings implementations.
+     * @param delegates The Settings objects to use as delegates
      */
-    public DelegatingSettings(Settings[] aConfigList) {
-        configList = aConfigList;
+    public DelegatingSettings(Settings[] delegates) {
+        this.delegates = delegates;
     }
 
-
-    /**
-     * Sets the given property - calls setImpl(String, Object) method on config objects in the config
-     * list until successful.
-     *
-     * @see #set(String, String)
-     */
+    // See superclass for Javadoc
     public void setImpl(String name, String value) throws IllegalArgumentException, UnsupportedOperationException {
-        // Determine which config to use by using get
-        // Delegate to the other settingss
         IllegalArgumentException e = null;
 
-        for (int i = 0; i < configList.length; i++) {
+        for (Settings delegate : delegates) {
             try {
-                configList[i].getImpl(name);
-
-                // Found it, now try setting
-                configList[i].setImpl(name, value);
-
-                // Worked, now return
-                return;
+                delegate.getImpl(name); // Throws exception if not found
+                delegate.setImpl(name, value); // Found it
+                return; // Done
             } catch (IllegalArgumentException ex) {
                 e = ex;
 
-                // Try next config
+                // Try next delegate
             }
         }
 
         throw e;
     }
 
-    /**
-     * Gets the specified property - calls getImpl(String) method on config objects in config list
-     * until successful.
-     *
-     * @see #get(String)
-     */
+    // See superclass for Javadoc
     public String getImpl(String name) throws IllegalArgumentException {
-        // Delegate to the other settings
+
         IllegalArgumentException e = null;
 
-        for (int i = 0; i < configList.length; i++) {
+        for (Settings delegate : delegates) {
             try {
-                return configList[i].getImpl(name);
+                return delegate.getImpl(name);  // Throws exception if not found
             } catch (IllegalArgumentException ex) {
                 e = ex;
 
-                // Try next config
+                // Try next delegate
             }
         }
 
         throw e;
     }
 
-    /**
-     * Determines if a paramter has been set - calls the isSetImpl(String) method on each config object
-     * in config list. Returns <tt>true</tt> when one of the config implementations returns true. Returns
-     * <tt>false</tt> otherwise.
-     *
-     * @see #isSet(String)
-     */
+    // See superclass for Javadoc
     public boolean isSetImpl(String aName) {
-        for (int i = 0; i < configList.length; i++) {
-            if (configList[i].isSetImpl(aName)) {
+        for (Settings delegate : delegates) {
+            if (delegate.isSetImpl(aName)) {
                 return true;
             }
         }
@@ -116,21 +99,16 @@ class DelegatingSettings extends Settings {
         return false;
     }
 
-    /**
-     * Returns a list of all property names - returns a list of all property names in all config
-     * objects in config list.
-     *
-     * @see #list()
-     */
+    // See superclass for Javadoc
     public Iterator listImpl() {
         boolean workedAtAll = false;
 
         Set<Object> settingList = new HashSet<Object>();
         UnsupportedOperationException e = null;
 
-        for (int i = 0; i < configList.length; i++) {
+        for (Settings delegate : delegates) {
             try {
-                Iterator list = configList[i].listImpl();
+                Iterator list = delegate.listImpl();
 
                 while (list.hasNext()) {
                     settingList.add(list.next());
@@ -140,7 +118,7 @@ class DelegatingSettings extends Settings {
             } catch (UnsupportedOperationException ex) {
                 e = ex;
 
-                // Try next config
+                // Try next delegate
             }
         }
 

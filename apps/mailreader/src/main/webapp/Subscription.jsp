@@ -42,7 +42,7 @@
                    name="subscription.type"/>
         <s:label key="autoConnect"
                    name="subscription.autoConnect"/>
-        <s:submit value="%{getText('button.confirm')}"/>
+        <s:submit key="button.confirm"/>
     </s:if>
     <s:else>
         <s:textfield key="mailUsername"
@@ -53,12 +53,12 @@
                     name="subscription.type" list="types"/>
         <s:checkbox key="autoConnect"
                       name="subscription.autoConnect"/>
-        <s:submit value="%{getText('button.save')}"/>
-        <s:reset value="%{getText('button.reset')}"/>
+        <s:submit key="button.save"/>
+        <s:reset key="button.reset"/>
     </s:else>
 
     <s:submit action="Registration_input"
-                value="%{getText('button.cancel')}"
+                key="button.cancel"
                 onclick="form.onsubmit=null"/>
 </s:form>
 

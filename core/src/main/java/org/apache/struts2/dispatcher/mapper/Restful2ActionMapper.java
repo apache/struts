@@ -44,8 +44,8 @@ import org.apache.commons.logging.LogFactory;
  *      are specified using PARAM_NAME/PARAM_VALUE syntax.
  * </ul>
  * <p>
- * These two improvements allow a GET request for 'category/action/movie/Swingers' to
- * be mapped to the action name 'movie' with an id of 'Swingers' with an extra parameter
+ * These two improvements allow a GET request for 'category/action/movie/Thrillers' to
+ * be mapped to the action name 'movie' with an id of 'Thrillers' with an extra parameter
  * named 'category' with a value of 'action'.  A single action mapping can then handle
  * all CRUD operations using wildcards, e.g.
  * </p>
@@ -60,12 +60,12 @@ import org.apache.commons.logging.LogFactory;
  * </p>
  * <ul>
  *  <li><code>GET:    /movie               => method="index"</code></li>
- *  <li><code>GET:    /movie/Swingers      => method="view", id="Swingers"</code></li>
- *  <li><code>GET:    /movie/Swingers!edit => method="edit", id="Swingers"</code></li>
+ *  <li><code>GET:    /movie/Thrillers      => method="view", id="Thrillers"</code></li>
+ *  <li><code>GET:    /movie/Thrillers!edit => method="edit", id="Thrillers"</code></li>
  *  <li><code>GET:    /movie/new           => method="editNew"</code></li>
- *  <li><code>POST:   /movie/Swingers      => method="update"</code></li>
+ *  <li><code>POST:   /movie/Thrillers      => method="update"</code></li>
  *  <li><code>PUT:    /movie/              => method="create"</code></li>
- *  <li><code>DELETE: /movie/Swingers      => method="remove"</code></li>
+ *  <li><code>DELETE: /movie/Thrillers      => method="remove"</code></li>
  * </ul>
  * <p>
  * To simulate the HTTP methods PUT and DELETE, since they aren't supported by HTML,

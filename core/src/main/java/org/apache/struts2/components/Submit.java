@@ -137,9 +137,14 @@ public class Submit extends FormButton implements RemoteUICallBean{
     }
 
     public void evaluateParams() {
-        if (value == null) {
+        if ((key == null) && (value == null)) {
             value = "Submit";
         }
+
+        if (((key != null)) && (value == null)) {
+            this.value = "%{getText('"+key +"')}";
+        }
+
         super.evaluateParams();
     }
 

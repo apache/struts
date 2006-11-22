@@ -42,19 +42,19 @@
                    name="user.replyToAddress"/>
 
     <s:if test="task == 'Create'">
-        <s:submit value="%{getText('button.save')}" action="Registration_save"/>
+        <s:submit key="button.save" action="Registration_save"/>
 
-        <s:reset value="%{getText('button.reset')}"/>
+        <s:reset key="button.reset"/>
 
-        <s:submit action="Welcome" value="%{getText('button.cancel')}"
+        <s:submit action="Welcome" key="button.cancel"
                     onclick="form.onsubmit=null"/>
     </s:if>
     <s:else>
-        <s:submit value="%{getText('button.save')}" action="Registration"/>
+        <s:submit key="button.save" action="Registration"/>
 
-        <s:reset value="%{getText('button.reset')}"/>
+        <s:reset key="button.reset"/>
 
-        <s:submit action="MainMenu" value="%{getText('button.cancel')}"
+        <s:submit action="MainMenu" key="button.cancel"
                     onclick="form.onsubmit=null"/>
     </s:else>
 

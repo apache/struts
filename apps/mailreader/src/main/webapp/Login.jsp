@@ -17,11 +17,11 @@
 
     <s:password key="password" showPassword="true"/>
 
-    <s:submit value="%{getText('button.save')}"/>
+    <s:submit key="button.save"/>
 
-    <s:reset value="%{getText('button.reset')}"/>
+    <s:reset key="button.reset"/>
 
-    <s:submit action="Login_cancel" value="%{getText('button.cancel')}"
+    <s:submit action="Login_cancel" key="button.cancel"
                 onclick="form.onsubmit=null"/>
 </s:form>
 

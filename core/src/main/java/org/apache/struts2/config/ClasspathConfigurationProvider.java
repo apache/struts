@@ -132,6 +132,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
 
     /**
      * Create instance utilizing a list of packages to scan for Action classes.
+     *
      * @param pkgs List of pacaktges to scan for Action Classes.
      */
     public ClasspathConfigurationProvider(String[] pkgs) {
@@ -151,10 +152,16 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
 
     }
 
+    /**
+     * PageLocator defines a locate method that can be used to discover server pages.
+     */
     public static interface PageLocator {
         public URL locate(String path);
     }
 
+    /**
+     * ClasspathPathLocator searches the classpath for server pages.
+     */
     public static class ClasspathPageLocator implements PageLocator {
         public URL locate(String path) {
             return ClassLoaderUtil.getResource(path, getClass());
@@ -162,32 +169,49 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
     }
 
     /**
-     * @param defaultParentPackage the defaultParentPackage to set
+     * Register a default parent package for the actions.
+     *
+     * @param defaultParentPackage the new defaultParentPackage
      */
     public void setDefaultParentPackage(String defaultParentPackage) {
         this.defaultParentPackage = defaultParentPackage;
     }
 
     /**
-     * @param defaultPageExtension the defaultPageExtension to set
+     * Register a default page extension to use when locating pages.
+     *
+     * @param defaultPageExtension the new defaultPageExtension
      */
     public void setDefaultPageExtension(String defaultPageExtension) {
         this.defaultPageExtension = defaultPageExtension;
     }
 
     /**
+     * Reigster a default page prefix to use when locating pages.
+     *
      * @param defaultPagePrefix the defaultPagePrefix to set
      */
     public void setDefaultPagePrefix(String defaultPagePrefix) {
         this.defaultPagePrefix = defaultPagePrefix;
     }
 
+    /**
+     * Register a PageLocation to use to scan for server pages.
+     * 
+     * @param locator
+     */
     public void setPageLocator(PageLocator locator) {
         this.pageLocator = locator;
     }
 
     /**
-     * @param pkgs A set of packages to load
+     * Scan a list of packages for Action classes.
+     *
+     * This method loads classes that implement the Action interface
+     * or have a class name that ends with the letters "Action".
+     *
+     * @param pkgs A list of packages to load
+     * @see #processActionClass
      */
     protected void loadPackages(String[] pkgs) {
 
@@ -201,6 +225,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
             }
             
         }, pkgs);
+
         Set<? extends Class<? extends Class>> actionClasses = resolver.getClasses();
         for (Object obj : actionClasses) {
            Class cls = (Class) obj;
@@ -215,9 +240,14 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
     }
 
     /**
+     * Create a default action mapping for a class instance.
+     *
+     * The namespace annotation is honored, if found, otherwise
+     * the Java package is converted into the namespace
+     * by changing the dots (".") to slashes ("/").
      *
      * @param cls Action or POJO instance to process
-     * @param pkgs Set of packages to scan for Actions
+     * @param pkgs List of packages that were scanned for Actions
      */
     protected void processActionClass(Class cls, String[] pkgs) {
         String name = cls.getName();
@@ -227,7 +257,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
         for (String pkg : pkgs) {
             if (name.startsWith(pkg)) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Processing class "+name);
+                    LOG.debug("ClasspathConfigurationProvider: Processing class "+name);
                 }
                 name = name.substring(pkg.length() + 1);
 
@@ -249,7 +279,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
             String parent = ((ParentPackage)annotation).value();
             PackageConfig parentPkg = configuration.getPackageConfig(parent);
             if (parentPkg == null) {
-                throw new ConfigurationException("Unable to locate parent package "+parent, annotation);
+                throw new ConfigurationException("ClasspathConfigurationProvider: Unable to locate parent package "+parent, annotation);
             }
             pkgConfig.addParent(parentPkg);
 
@@ -263,6 +293,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
             actionName = actionName.substring(0, actionName.length() - ACTION.length());
         }
 
+        // Force initial letter of action to lowercase
         if (actionName.length() > 1) {
             int lowerPos = actionName.lastIndexOf('/') + 1;
             StringBuilder sb = new StringBuilder();
@@ -282,8 +313,15 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
     }
 
     /**
+     * Finds or creates the package configuration for an Action class.
+     *
+     * The namespace annotation is honored, if found,
+     * and the namespace is checked for a parent configuration.
+     * 
+     * @param actionNamespace The configuration namespace
      * @param actionPackage The Java package containing our Action classes
-     * @return
+     * @param actionClass The Action class instance
+     * @return PackageConfig object for the Action class
      */
     protected PackageConfig loadPackageConfig(String actionNamespace, String actionPackage, Class actionClass) {
         PackageConfig parent = null;
@@ -307,7 +345,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
             }
 
             if (parent == null) {
-                throw new ConfigurationException("Unable to locate default parent package: " +
+                throw new ConfigurationException("ClasspathConfigurationProvider: Unable to locate default parent package: " +
                         defaultParentPackage);
             }
             pkgConfig.addParent(parent);
@@ -319,27 +357,45 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
         return pkgConfig;
     }
 
+    /**
+     * Default destructor. Override to provide behavior.
+     */
     public void destroy() {
 
     }
-    
+
+    /**
+     * Register this application's configuration.
+     *
+     * @param config The configuration for this application.
+     */
     public void init(Configuration config) {
         this.configuration = config;
     }
 
+    /**
+     * Clears and loads the list of packages registered at construction.
+     *
+     * @throws ConfigurationException
+     */
     public void loadPackages() throws ConfigurationException {
         loadedPackageConfigs.clear();
         loadPackages(packages);
         initialized = true;
     }
 
+    /**
+     * Indicates whether the packages have been initialized.
+     *
+     * @return True if the packages have been initialized
+     */
     public boolean needsReload() {
         return !initialized;
     }
 
     /**
-     * Creates result configs from result annotations, and if a result isn't found,
-     * creates them on the fly.
+     * Creates ResultConfig objects from result annotations,
+     * and if a result isn't found, creates it on the fly.
      */
     class ResultMap<K,V> extends HashMap<K,V> {
         private Class actionClass;
@@ -376,6 +432,12 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
 
         }
 
+        /**
+         * Extracts result name and value and calls {@link #createResultConfig}.
+         *
+         * @param result Result annotation reference representing result type to create
+         * @return New or cached ResultConfig object for result
+         */
         protected ResultConfig createResultConfig(Result result) {
             Class<? extends Object> cls = result.type();
             if (cls == NullResult.class) {
@@ -384,6 +446,12 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
             return createResultConfig(result.name(), cls, result.value());
         }
 
+        /**
+         * Retrieve ResultConfig from cache.
+         *
+         * @param key Name of ResultConfig
+         * @return ResultConfig correspnding to key
+         */
         public V get(Object key) {
 
             V result = super.get(key);
@@ -391,8 +459,8 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
                 return result;
             } else {
 
-                // TODO: This code never is actually used, do to how the runtime configuration
-                // is created.
+                //  This code should never actually be called,
+                // due to how the runtime configuration is created.
                 String actionPath = pkgConfig.getNamespace() + "/" + actionName;
 
                 String fileName = actionPath + "-" + key + defaultPageExtension;
@@ -406,22 +474,26 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
         }
 
         /**
-         * @param key
-         * @param resultClass
-         * @param location
-         * @return
+         * Creates a default ResultConfig,
+         * using either the resultClass or the default ResultType for configuration package
+         * associated this ResultMap class.
+         *
+         * @param key The result type name
+         * @param resultClass The class for the result type
+         * @param location Path to the resource represented by this type
+         * @return A ResultConfig for key mapped to location 
          */
         private ResultConfig createResultConfig(Object key, Class<? extends Object> resultClass, String location) {
             Map<? extends Object, ? extends Object> configParams = null;
             if (resultClass == null) {
                 String defaultResultType = pkgConfig.getFullDefaultResultType();
-                ResultTypeConfig resultType = (ResultTypeConfig) pkgConfig.getAllResultTypeConfigs().get(defaultResultType);
+                ResultTypeConfig resultType = pkgConfig.getAllResultTypeConfigs().get(defaultResultType);
                 configParams = resultType.getParams();
                 String className = resultType.getClazz();
                 try {
                     resultClass = ClassLoaderUtil.loadClass(className, getClass());
                 } catch (ClassNotFoundException ex) {
-                    throw new ConfigurationException("Unable to locate result class "+className, actionClass);
+                    throw new ConfigurationException("ClasspathConfigurationProvider: Unable to locate result class "+className, actionClass);
                 }
             }
 
@@ -442,7 +514,8 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
         }
     }
 
+    // See superclass for Javadoc
     public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
-        // Nothing
+        // Override to provide functionality
     }
 }

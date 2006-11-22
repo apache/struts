@@ -32,117 +32,111 @@ import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 
 /**
- * Default implementation of Settings - creates and delegates to other settingss by using an internal
- * {@link DelegatingSettings}.
+ * DefaultSettings implements optional methods of Settings.
+ * <p>
+ * This class creates and delegates to other settings by using an internal
+ * {@link DelegatingSettings} object.
  */
 public class DefaultSettings extends Settings {
 
+    /**
+     * The logging instance for this class.
+     */
     protected Log log = LogFactory.getLog(this.getClass());
-    Settings config;
-
 
     /**
-     * Creates a new DefaultSettings object by loading all property files
-     * and creating an internal {@link DelegatingSettings} object. All calls to get and set
-     * in this class will call that settings object.
+     * The Settings object that handles API calls.
+     */
+    Settings delegate;
+
+    /**
+     * Constructs an instance by loading the standard property files, 
+     * any custom property files (<code>struts.custom.properties</code>), 
+     * and any custom message resources ().
+     * <p>
+     * Since this constructor  combines Settings from multiple resources,
+     * it utilizes a {@link DelegatingSettings} instance,
+     * and all API calls are handled by that instance.
      */
     public DefaultSettings() {
-        // Create default implementations
-        // Use default properties and struts.properties
+
         ArrayList<Settings> list = new ArrayList<Settings>();
 
+        // stuts.properties, default.properties
         try {
             list.add(new PropertiesSettings("struts"));
         } catch (Exception e) {
-            log.warn("Could not find or error in struts.properties", e);
+            log.warn("DefaultSettings: Could not find or error in struts.properties", e);
         }
 
         try {
             list.add(new PropertiesSettings("org/apache/struts2/default"));
         } catch (Exception e) {
-            log.error("Could not find org/apache/struts2/default.properties", e);
+            log.error("DefaultSettings: Could not find or error in org/apache/struts2/default.properties", e);
         }
 
-        Settings[] configList = new Settings[list.size()];
-        config = new DelegatingSettings((Settings[]) list.toArray(configList));
+        Settings[] settings = new Settings[list.size()];
+        delegate = new DelegatingSettings(list.toArray(settings));
 
-        // Add list of additional properties settingss
+        // struts.custom.properties
         try {
-            StringTokenizer configFiles = new StringTokenizer((String) config.getImpl(StrutsConstants.STRUTS_CUSTOM_PROPERTIES), ",");
+            StringTokenizer customProperties = new StringTokenizer(delegate.getImpl(StrutsConstants.STRUTS_CUSTOM_PROPERTIES), ",");
 
-            while (configFiles.hasMoreTokens()) {
-                String name = configFiles.nextToken();
+            while (customProperties.hasMoreTokens()) {
+                String name = customProperties.nextToken();
 
                 try {
                     list.add(new PropertiesSettings(name));
                 } catch (Exception e) {
-                    log.error("Could not find " + name + ".properties. Skipping");
+                    log.error("DefaultSettings: Could not find " + name + ".properties. Skipping.");
                 }
             }
 
-            configList = new Settings[list.size()];
-            config = new DelegatingSettings((Settings[]) list.toArray(configList));
+            settings = new Settings[list.size()];
+            delegate = new DelegatingSettings(list.toArray(settings));
         } catch (IllegalArgumentException e) {
-            // thrown when Settings is unable to find a certain property
-            // eg. struts.custom.properties in default.properties which is commented
-            // out
+            // Assume it's OK, since IllegalArgumentException is thrown  
+            // when Settings is unable to find a certain setting,
+            // like the struts.custom.properties, which is commented out
         }
 
-        // Add additional list of i18n global resource bundles
+        // struts.custom.i18n.resources
         try {
 
             LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
-            StringTokenizer bundleFiles = new StringTokenizer((String) config.getImpl(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES), ", ");
+            StringTokenizer customBundles = new StringTokenizer(delegate.getImpl(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES), ", ");
 
-            while (bundleFiles.hasMoreTokens()) {
-                String name = bundleFiles.nextToken();
+            while (customBundles.hasMoreTokens()) {
+                String name = customBundles.nextToken();
                 try {
-                    log.info("Loading global messages from " + name);
+                    log.info("DefaultSettings: Loading global messages from " + name);
                     LocalizedTextUtil.addDefaultResourceBundle(name);
                 } catch (Exception e) {
-                    log.error("Could not find " + name + ".properties. Skipping");
+                    log.error("DefaultSettings: Could not find " + name + ".properties. Skipping");
                 }
             }
         } catch (IllegalArgumentException e) {
-            // struts.custom.i18n.resources wasn't provided
+            // Assume it's OK, since many applications do not provide custom resource bundles. 
         }
     }
 
-
-    /**
-     * Sets the given property - delegates to the internal config implementation.
-     *
-     * @see #set(String, String)
-     */
-    public void setImpl(String aName, String aValue) throws IllegalArgumentException, UnsupportedOperationException {
-        config.setImpl(aName, aValue);
+    // See superclass for Javadoc
+    public void setImpl(String name, String value) throws IllegalArgumentException, UnsupportedOperationException {
+        delegate.setImpl(name, value);
     }
 
-    /**
-     * Gets the specified property - delegates to the internal config implementation.
-     *
-     * @see #get(String)
-     */
+    // See superclass for Javadoc
     public String getImpl(String aName) throws IllegalArgumentException {
-        // Delegate
-        return config.getImpl(aName);
+        return delegate.getImpl(aName);
     }
 
-    /**
-     * Determines whether or not a value has been set - delegates to the internal config implementation.
-     *
-     * @see #isSet(String)
-     */
+    // See superclass for Javadoc
     public boolean isSetImpl(String aName) {
-        return config.isSetImpl(aName);
+        return delegate.isSetImpl(aName);
     }
 
-    /**
-     * Returns a list of all property names - delegates to the internal config implementation.
-     *
-     * @see #list()
-     */
+    // See superclass for Javadoc
     public Iterator listImpl() {
-        return config.listImpl();
+        return delegate.listImpl();
     }
 }

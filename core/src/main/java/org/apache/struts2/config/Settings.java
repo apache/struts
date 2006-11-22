@@ -244,24 +244,24 @@ class Settings {
     /**
      * Implements the {@link #get(String)} method.
      *
-     * @param aName The name of the setting value to retreive
+     * @param name The name of the setting value to retreive
      * @return The setting value as a String
      * @throws IllegalArgumentException if an error occurs when retrieving the value
      * @see #get(String)
      */
-    public String getImpl(String aName) throws IllegalArgumentException {
+    public String getImpl(String name) throws IllegalArgumentException {
         return null;
     }
 
     /**
      * Implements the {@link #getLocation(String)} method.
      *
+     * @param name Name of the setting to locate
      * @return The location  of the setting
-     * @param aName Name of the setting to locate
      * @throws IllegalArgumentException if an error occurs when retrieving the value
      * @see #getLocation(String)
      */
-    public Location getLocationImpl(String aName) throws IllegalArgumentException {
+    public Location getLocationImpl(String name) throws IllegalArgumentException {
         return null;
     }
 

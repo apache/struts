@@ -89,6 +89,19 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
     private String defaultParentPackage = "struts-default";
 
     /**
+     * The default page prefix (or "path").
+     * Some applications may place pages under "/WEB-INF" as an extreme security precaution.
+     */
+    private static final String FORCE_LOWER_CASE = "struts.configuration.classpath.forceLowerCase";
+
+    /**
+     * Whether to use a lowercase letter as the initial letter of an action.
+     * If false, actions will retain the initial uppercase letter from the Action class.
+     * (<code>view.action</code> (true) versus <code>View.action</code> (false)).
+     */
+    private boolean forceLowerCase = true;
+
+    /**
      * Default suffix that can be used to indicate POJO "Action" classes.
      */
     private static final String ACTION = "Action";
@@ -150,6 +163,9 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
             defaultPagePrefix = Settings.get(DEFAULT_PAGE_PREFIX);
         }
 
+        if (Settings.isSet(FORCE_LOWER_CASE)) {
+            forceLowerCase = Settings.get(FORCE_LOWER_CASE).equalsIgnoreCase("true");
+        }
     }
 
     /**
@@ -293,8 +309,8 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
             actionName = actionName.substring(0, actionName.length() - ACTION.length());
         }
 
-        // Force initial letter of action to lowercase
-        if (actionName.length() > 1) {
+        // Force initial letter of action to lowercase, if desired
+        if ((forceLowerCase) && (actionName.length() > 1)) {
             int lowerPos = actionName.lastIndexOf('/') + 1;
             StringBuilder sb = new StringBuilder();
             sb.append(actionName.substring(0, lowerPos));

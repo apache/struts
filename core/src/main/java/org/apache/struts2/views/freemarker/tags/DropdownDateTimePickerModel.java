@@ -1,5 +1,5 @@
 /*
- * $Id: DatePickerModel.java 451544 2006-09-30 05:38:02Z mrdon $
+ * $Id$
  *
  * Copyright 2006 The Apache Software Foundation.
  *

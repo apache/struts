@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java 240373 2005-08-27 01:58:39Z jmitchell $
+ * $Id$
  *
  * Copyright 2000-2004 The Apache Software Foundation.
  *

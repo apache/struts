@@ -47,6 +47,7 @@ import org.apache.struts2.views.velocity.components.ActionDirective;
 import org.apache.struts2.views.velocity.components.ActionErrorDirective;
 import org.apache.struts2.views.velocity.components.ActionMessageDirective;
 import org.apache.struts2.views.velocity.components.AnchorDirective;
+import org.apache.struts2.views.velocity.components.AutocompleterDirective;
 import org.apache.struts2.views.velocity.components.BeanDirective;
 import org.apache.struts2.views.velocity.components.CheckBoxDirective;
 import org.apache.struts2.views.velocity.components.CheckBoxListDirective;
@@ -571,6 +572,7 @@ public class VelocityManager {
         addDirective(sb, DatePickerDirective.class);
         addDirective(sb, DropdownDateTimePickerDirective.class);
         addDirective(sb, DivDirective.class);
+        addDirective(sb, AutocompleterDirective.class);
         addDirective(sb, DoubleSelectDirective.class);
         addDirective(sb, FileDirective.class);
         addDirective(sb, FormDirective.class);

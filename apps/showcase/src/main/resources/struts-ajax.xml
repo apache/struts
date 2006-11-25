@@ -28,6 +28,10 @@
             <result>/ajax/testjs.jsp</result>
         </action>
 
+        <action name="JSONList">
+            <result>/ajax/JSONList.js</result>
+        </action>
+
         <action name="tree">
             <result>/ajax/tree/tree.jsp</result>
         </action>

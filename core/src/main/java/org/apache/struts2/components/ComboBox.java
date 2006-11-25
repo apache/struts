@@ -110,9 +110,7 @@ public class ComboBox extends TextField {
     public void evaluateExtraParams() {
         super.evaluateExtraParams();
 
-        Object value = findValue(list, "list",
-                "You must specify a collection/array/map/enumeration/iterator. " +
-                "Example: people or people.{name}");
+        Object value = findListValue();
 
         if (headerKey != null) {
             addParameter("headerKey", findString(headerKey));
@@ -124,44 +122,49 @@ public class ComboBox extends TextField {
             addParameter("emptyOption", findValue(emptyOption, Boolean.class));
         }
 
-        if (value instanceof Collection) {
-            Collection tmp = (Collection) value;
-            addParameter("list", tmp);
-            if (listKey != null) {
-                addParameter("listKey", listKey);
-            }
-            if (listValue != null) {
-                addParameter("listValue", listValue);
-            }
-        }
-        else if (value instanceof Map) {
-            Map tmp = (Map) value;
-            addParameter("list", MakeIterator.convert(tmp));
-            addParameter("listKey", "key");
-            addParameter("listValue", "value");
-        }
-        else if (value.getClass().isArray()) {
-            Iterator i = MakeIterator.convert(value);
-            addParameter("list", i);
-            if (listKey != null) {
-                addParameter("listKey", listKey);
-            }
-            if (listValue != null) {
-                addParameter("listValue", listValue);
-            }
-        }
-        else {
-            Iterator i = MakeIterator.convert(value);
-            addParameter("list", i);
-            if (listKey != null) {
-                addParameter("listKey", listKey);
-            }
-            if (listValue != null) {
-                addParameter("listValue", listValue);
+        if (value != null) {
+            if (value instanceof Collection) {
+                Collection tmp = (Collection) value;
+                addParameter("list", tmp);
+                if (listKey != null) {
+                    addParameter("listKey", listKey);
+                }
+                if (listValue != null) {
+                    addParameter("listValue", listValue);
+                }
+            } else if (value instanceof Map) {
+                Map tmp = (Map) value;
+                addParameter("list", MakeIterator.convert(tmp));
+                addParameter("listKey", "key");
+                addParameter("listValue", "value");
+            } else if (value.getClass().isArray()) {
+                Iterator i = MakeIterator.convert(value);
+                addParameter("list", i);
+                if (listKey != null) {
+                    addParameter("listKey", listKey);
+                }
+                if (listValue != null) {
+                    addParameter("listValue", listValue);
+                }
+            } else {
+                Iterator i = MakeIterator.convert(value);
+                addParameter("list", i);
+                if (listKey != null) {
+                    addParameter("listKey", listKey);
+                }
+                if (listValue != null) {
+                    addParameter("listValue", listValue);
+                }
             }
         }
     }
 
+    protected Object findListValue() {
+        return findValue(list, "list",
+                "You must specify a collection/array/map/enumeration/iterator. " +
+                "Example: people or people.{name}");
+    }
+    
     /**
      * Iteratable source to populate from. If this is missing, the select widget is simply not displayed.
      * @s.tagattribute required="true"

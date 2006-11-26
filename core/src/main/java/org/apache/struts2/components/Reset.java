@@ -41,14 +41,14 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;s:reset value="%{'Reset'}" /&gt;
+ * &lt;s:reset value="Reset" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
  * <pre>
  * <!-- START SNIPPET: example2 -->
  * Render an button reset:
- * &lt;s:reset type="button" value="%{'Reset'}" label="Reset the form"/&gt;
+ * &lt;s:reset type="button" key="reset"/&gt;
  * <!-- END SNIPPET: example2 -->
  * </pre>
  *

@@ -590,19 +590,16 @@ public abstract class UIBean extends Component {
         String name = null;
 
         if (this.key != null) {
+
            if(this.name == null) {
                 this.name = key;
             }
 
             if(this.label == null) {
-                this.label = "%{getText('"+key +"')}";
+                this.label = "%{getText('"+ key +"')}";
             }
 
-            if(this.value == null) {
-                this.value = "%{"+key +"}";
-            }
         }
-
 
         if (this.name != null) {
             name = findString(this.name);

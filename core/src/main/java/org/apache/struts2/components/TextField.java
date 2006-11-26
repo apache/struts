@@ -33,15 +33,20 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <p/> <b>Examples</b>
  * <p/>
  * <!-- START SNIPPET: exdescription -->
- * In this example, a text control is rendered. The label is retrieved from a ResourceBundle by calling
- * ActionSupport's getText() method.<p/>
+ * In this example, a text control for the "user" property is rendered. The label is also retrieved from a ResourceBundle via the key attribute.
  * <!-- END SNIPPET: exdescription -->
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;s:textfield label="%{text('user_name')}" name="user" /&gt;
+ * &lt;s:textfield key="user" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
+ * <pre>
+ * <!-- START SNIPPET: example2 -->
+ * &lt;s:textfield name="user" label="User Name" /&gt;
+ * <!-- END SNIPPET: example -->
+ * </pre>
+
  * @s.tag name="textfield" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TextFieldTag"
  * description="Render an HTML input field of type text"
  */

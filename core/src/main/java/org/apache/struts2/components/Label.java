@@ -34,13 +34,18 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <p/> <b>Examples</b>
  * <p/>
  * <!-- START SNIPPET: exdescription -->
- * In this example, a label is rendered. The label is retrieved from a ResourceBundle by calling ActionSupport's
- * getText() method giving you an output of 'User Name:tm_jee'. Assuming that i18n message user_name corresponds
- * to 'User Name' and the action's getUserName() method returns 'tm_jee'<p/>
+ * In this example, a label is rendered. The label is retrieved from a ResourceBundle via the key attribute
+ * giving you an output of 'User Name: Ford.Prefect'. Assuming that i18n message userName corresponds
+ * to 'User Name' and the action's getUserName() method returns 'Ford.Prefect'<p/>
  * <!-- END SNIPPET: exdescription -->
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;s:label label="%{text('user_name')}" name="userName" /&gt;
+ * &lt;s:label key="userName" /&gt;
+ * <!-- END SNIPPET: example -->
+ * </pre>
+ * <pre>
+ * <!-- START SNIPPET: example2 -->
+ * &lt;s:label name="userName" label="User Name" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *

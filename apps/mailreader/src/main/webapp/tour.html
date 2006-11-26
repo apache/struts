@@ -450,7 +450,7 @@ public class Welcome extends MailreaderSupport {
 <pre><code> &lt;global-results>
   &lt;result name=<strong>"error"</strong>><strong>/pages/Error.jsp</strong>&lt;/result>
   &lt;result name="invalid.token">/pages/Error.jsp&lt;/result>
-  &lt;result name="login" type="redirect-action">Login!input&lt;/result>
+  &lt;result name="login" type="redirect-action">Login_input&lt;/result>
 &lt;/global-results></code></pre>
 <hr/>
 
@@ -572,9 +572,9 @@ public class Welcome extends MailreaderSupport {
       &lt;h3>&lt;s:text name="index.heading"/>&lt;/h3>
 
       &lt;ul>
-        &lt;li>&lt;a href="&lt;s:url action="Registration!input"/>">&lt;s:text
+        &lt;li>&lt;a href="&lt;s:url action="Registration_input"/>">&lt;s:text
           name="index.registration"/>&lt;/a>&lt;/li>
-        &lt;li>&lt;a href="&lt;s:url action="Login!input"/>">&lt;s:text
+        &lt;li>&lt;a href="&lt;s:url action="Login_input"/>">&lt;s:text
           name="index.login"/>&lt;/a>&lt;/li>
       &lt;/ul>
 
@@ -729,12 +729,12 @@ public class Welcome extends MailreaderSupport {
   &lt;body onLoad="self.focus();document.Login.username.focus()">
     <strong>&lt;s:actionerror/></strong>
     <strong>&lt;s:form action="Login" validate="true"></strong>
-      <strong>&lt;s:textfield label="%{getText('username')}" name="username"/></strong>
-      <strong>&lt;s:password label="%{getText('password')}" name="password"/></strong>
-      <strong>&lt;s:submit value="%{getText('button.save')}"/></strong>
-      <strong>&lt;s:reset value="%{getText('button.reset')}"/></strong>
-      &lt;s:submit <strong>action="Login!cancel" onclick="form.onsubmit=null"</strong>
-        value="%{getText('button.cancel')}"/>
+      <strong>&lt;s:textfield key="username"/></strong>
+      <strong>&lt;s:password key="password"/></strong>
+      <strong>&lt;s:submit key="button.save"/></strong>
+      <strong>&lt;s:reset key="button.reset"/></strong>
+      &lt;s:submit <strong>action="Login_cancel" onclick="form.onsubmit=null"</strong>
+        key="button.cancel"/>
     &lt;/s:form>
     &lt;jsp:include page="Footer.jsp"/>
   &lt;/body>
@@ -793,7 +793,7 @@ public class Welcome extends MailreaderSupport {
 </p>
 
 <pre><code>
-    &lt;s:<strong>textfield</strong> label="%{getText('username')}" name="username"/>
+    &lt;s:<strong>textfield</strong> key="username"/>
 </code></pre>
 
 <p>
@@ -875,13 +875,13 @@ public class Welcome extends MailreaderSupport {
     The second submit button is more interesting.
 </p>
 
-<pre><code>  &lt;s:submit <strong>action="Login!cancel" onclick="form.onsubmit=null"</strong>
-    value="%{getText('button.cancel')}"/>
+<pre><code>  &lt;s:submit <strong>action="Login_cancel" onclick="form.onsubmit=null"</strong>
+    key="button.cancel"/>
 </code></pre>
 
 <p>
     Here we are creating the Cancel button for the form.
-    The button's attribute <em>action="Login<strong>!</strong>cancel"</em>
+    The button's attribute <em>action="Login<strong>_</strong>cancel"</em>
     tells the framework to submit to the Login's "cancel" method
     instead of the usual "execute" method.
     The <em>onclick="form.onsubmit=null"</em> script defeats client-side validation.
@@ -1262,7 +1262,7 @@ public void <strong>setSession(Map value)</strong> {
 
 <hr/>
 <h5>mailreader-support.xml Login</h5>
-<pre><code>&lt;action name="<strong>Login!*</strong>" method="{1}" class="mailreader2.Login">
+<pre><code>&lt;action name="<strong>Login_*</strong>" method="{1}" class="mailreader2.Login">
   &lt;result name="<strong>input</strong>">/pages/Login.jsp&lt;/result>
   &lt;result name="<strong>cancel</strong>" type="redirect-action">Welcome&lt;/result>
   &lt;result type="redirect-action">MainMenu&lt;/result>
@@ -1276,13 +1276,13 @@ public void <strong>setSession(Map value)</strong> {
 
 <p>
     You might notice that the name of the Login action element is not "Login"
-    but "Login<strong>!*</strong>".
+    but "Login<strong>_*</strong>".
     The asterisk is a special "wildcard" notation that tells the framework to match any series
     of character at this point.
     In the method attribute,
     the "{1}" notation indicates that framework should substitute whatever characters match
     the asterisk at runtime.
-    When we cite actions like "Login!cancel" or "Login!input",
+    When we cite actions like "Login_cancel" or "Login_input",
     the framework matches "cancel" or "input" with the wildcard and fills in the blanks.
 </p>
 
@@ -1571,7 +1571,7 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
   &lt;h3>&lt;s:text name="mainMenu.heading"/> <strong>&lt;s:property
     value="user.fullName"/></strong>&lt;/h3>
   &lt;ul>
-    &lt;li>&lt;a href="&lt;s:url <strong>action="Registration!input"</strong> />">
+    &lt;li>&lt;a href="&lt;s:url <strong>action="Registration_input"</strong> />">
         &lt;s:text name="mainMenu.registration"/>
       &lt;/a>
     &lt;/li>
@@ -1718,10 +1718,10 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
      &lt;s:property value="<strong>autoConnect</strong>"/>
   &lt;/td>
   &lt;td align="center">
-    &lt;a href="&lt;s:url action="<strong>Subscription!delete</strong>">&lt;s:param name="<strong>host</strong>" value="host"/>&lt;/s:url>">
+    &lt;a href="&lt;s:url action="<strong>Subscription_delete</strong>">&lt;s:param name="<strong>host</strong>" value="host"/>&lt;/s:url>">
       &lt;s:text name="registration.deleteSubscription"/>
     &lt;/a>&nbsp;
-    &lt;a href="&lt;s:url action="<strong>Subscription!edit</strong>">&lt;s:param name="<strong>host</strong>" value="host"/>&lt;/s:url>">
+    &lt;a href="&lt;s:url action="<strong>Subscription_edit</strong>">&lt;s:param name="<strong>host</strong>" value="host"/>&lt;/s:url>">
       &lt;s:text name="registration.editSubscription"/>
      &lt;/a>
    &lt;/td>
@@ -1773,11 +1773,11 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
                     false
                 </td>
                 <td align="center">
-                    <a href="/struts2-mailreader/Subscription!delete.do?host=mail.hotmail.com">
+                    <a href="/struts2-mailreader/Subscription_delete.do?host=mail.hotmail.com">
                         Delete
                     </a>
                     &nbsp;
-                    <a href="/struts2-mailreader/Subscription!edit.do?host=mail.hotmail.com">
+                    <a href="/struts2-mailreader/Subscription_edit.do?host=mail.hotmail.com">
                         Edit
                     </a>
                 </td>
@@ -1796,17 +1796,17 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
                     false
                 </td>
                 <td align="center">
-                    <a href="/struts2-mailreader/Subscription!delete.do?host=mail.yahoo.com">
+                    <a href="/struts2-mailreader/Subscription_delete.do?host=mail.yahoo.com">
                         Delete
                     </a>
                     &nbsp;
-                    <a href="/struts2-mailreader/Subscription!edit.do?host=mail.yahoo.com">
+                    <a href="/struts2-mailreader/Subscription_edit.do?host=mail.yahoo.com">
                         Edit
                     </a>
                 </td>
             </tr>
     </table>
-    <a href="/struts2-mailreader/Subscription!input.do">Add</a>
+    <a href="/struts2-mailreader/Subscription_input.do">Add</a>
 
 <hr />
 
@@ -1928,7 +1928,7 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
 </p>
 
 <pre><code>
-  &lt;s:url action="Subscription!edit">&lt;s:param name="<strong>host" value="host</strong>"/>&lt;/s:url>">
+  &lt;s:url action="Subscription_edit">&lt;s:param name="<strong>host" value="host</strong>"/>&lt;/s:url>">
 </code></pre>
 
 <p>
@@ -1936,7 +1936,7 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
 </p>
 
 <pre><code>
-  &lt;a href="/struts2-mailreader/Subscription!edit.do?<strong>host=mail.yahoo.com</strong>">Edit&lt;/a>
+  &lt;a href="/struts2-mailreader/Subscription_edit.do?<strong>host=mail.yahoo.com</strong>">Edit&lt;/a>
 </code></pre>
 
 <!--
@@ -1967,16 +1967,16 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
 
 <hr />
 <h5>mailreader-support.xml Subscription element</h5>
-<pre><code>&lt;action name="Subscription!*" method="{1}" class="mailreader2.Subscription">
+<pre><code>&lt;action name="Subscription_*" method="{1}" class="mailreader2.Subscription">
   &lt;result name="input">/pages/Subscription.jsp&lt;/result>
-  &lt;result type="redirect-action">Registration!input&lt;/result>
+  &lt;result type="redirect-action">Registration_input&lt;/result>
 &lt;/action></code></pre>
 <hr />
 
 <p>
     The Edit link specified the Subscription action,
-    but also includes the qualifier <strong>!edit</strong>.
-    The wildcard notation tells the framework to use any characters given after "Subscription!"
+    but also includes the qualifier <strong>_edit</strong>.
+    The wildcard notation tells the framework to use any characters given after "Subscription_"
     as the name of a method to invoke on the Action class,
     instead of the default execute method.
     The "alternate" execute methods are called <strong>alias</strong> methods.
@@ -2107,45 +2107,37 @@ public Subscription findSubscription(String host) {
   &lt;body onLoad="self.focus();document.Subscription.username.focus()">
 
     &lt;s:actionerror/>
-    &lt;s:form <strong>action="Subscription!save"</strong> validate="true">
+    &lt;s:form <strong>action="Subscription_save"</strong> validate="true">
       <strong>&lt;s:token /></strong>
       <strong>&lt;s:hidden name="task"/></strong>
-      <strong>&lt;s:label label="%{getText('username')}" name="user.username"/></strong>
+      <strong>&lt;s:label key="username" name="user.username"/></strong>
 
       &lt;s:if test="task == 'Create'">
-        &lt;s:textfield label="%{getText('mailHostname')}" name="host"/>
+        &lt;s:textfield key="mailHostname" name="host"/>
       &lt;/s:if>
       &lt;s:else>
-        &lt;s:label label="%{getText('mailHostname')}" name="host"/>
+        &lt;s:label key="mailHostname" name="host"/>
         &lt;s:hidden name="host"/>
       &lt;/s:else>
 
       &lt;s:if test="task == 'Delete'">
-        &lt;s:label label="%{getText('mailUsername')}"
-                   name="subscription.username"/>
-        &lt;s:label label="%{getText('mailPassword')}"
-                   name="subscription.password"/>
-        &lt;s:label label="%{getText('mailServerType')}"
-                   name="subscription.type"/>
-        &lt;s:label label="%{getText('autoConnect')}"
-                   name="subscription.autoConnect"/>
-        &lt;s:submit value="%{getText('button.confirm')}"/>
+        &lt;s:label key="subscription.username"/>
+        &lt;s:label key="subscription.password"/>
+        &lt;s:label key="subscription.type"/>
+        &lt;s:label key="subscription.autoConnect"/>
+        &lt;s:submit key="button.confirm"/>
       &lt;/s:if>
       &lt;s:else>
-        &lt;s:textfield label="%{getText('mailUsername')}"
-                       name="subscription.username"/>
-        &lt;s:textfield label="%{getText('mailPassword')}"
-                       name="subscription.password"/>
-        <strong>&lt;s:select label="%{getText('mailServerType')}"
-                    name="subscription.type" list="types"/></strong>
-        <strong>&lt;s:checkbox label="%{getText('autoConnect')}"
-                      name="subscription.autoConnect"/></strong>
-        &lt;s:submit value="%{getText('button.save')}"/>
-        &lt;s:reset value="%{getText('button.reset')}"/>
+        &lt;s:textfield key="subscription.username"/>
+        &lt;s:textfield key="subscription.password"/>
+        <strong>&lt;s:select key="subscription.type" list="types"/></strong>
+        <strong>&lt;s:checkbox key="subscription.autoConnect"/></strong>
+        &lt;s:submit key="button.save"/>
+        &lt;s:reset key="button.reset"/>
       &lt;/s:else>
 
-      &lt;s:submit action="Registration!input"
-                value="%{getText('button.cancel')}"
+      &lt;s:submit action="Registration_input"
+                key="button.cancel"
                 onclick="form.onsubmit=null"/>
   &lt;/s:form>
 
@@ -2169,7 +2161,7 @@ public Subscription findSubscription(String host) {
 <p>
     The <strong>hidden</strong> tag embeds the Task property into the form.
     When the form is submitted,
-    the Subscription!save action will use the Task property to decide
+    the Subscription_save action will use the Task property to decide
     whether to insert or update the form.
 </p>
 
@@ -2192,8 +2184,7 @@ public Subscription findSubscription(String host) {
     but the tag does so without requiring a lot of markup or redtape.
 </p>
 
-<pre><code>&lt;s:select label="%{getText('mailServerType')}"
-  name="subscription.type" <strong>list="types"</strong> />
+<pre><code>&lt;s:select key="subscription.type" <strong>list="types"</strong> />
 </code></pre>
 
 <p>
@@ -2286,13 +2277,13 @@ public Subscription findSubscription(String host) {
 
 <p>
     If we press the SAVE button,
-    the form will be submitted to the Subscription!save action.
+    the form will be submitted to the Subscription_save action.
     Since the save method needs some additional validation,
     we can add a validation file.
 </p>
 
 <hr />
-<h5>Subscription-Subscription!save-validation.xml</h5>
+<h5>Subscription-Subscription_save-validation.xml</h5>
 <pre><code>&lt;!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN"
     "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
 &lt;validators>
@@ -2307,7 +2298,7 @@ public Subscription findSubscription(String host) {
 <p>
     The validators follow the same type of inheritance path as the classes.
     SubscriptionSave extends Subscription,
-    so when Subscription!save is validated,
+    so when Subscription_save is validated,
     the Host property specified by "Subscription-validation.xml" will also be required.
 </p>
 
@@ -2433,14 +2424,14 @@ public Subscription findSubscription(String host) {
 
     &lt;global-results>
         &lt;result name="input">/Subscription.jsp&lt;/result>
-        &lt;result type="redirect-action">Registration!input&lt;/result>
+        &lt;result type="redirect-action">Registration_input&lt;/result>
     &lt;/global-results>
 
-    &lt;action name="Subscription!save" method="save" class="mailreader2.Subscription">
+    &lt;action name="Subscription_save" method="save" class="mailreader2.Subscription">
         &lt;interceptor-ref name="user-submit" />
     &lt;/action>
 
-    &lt;action name="Subscription!*" method="{1}" class="mailreader2.Subscription" />
+    &lt;action name="Subscription_*" method="{1}" class="mailreader2.Subscription" />
 
 &lt;/package>
 
@@ -2474,6 +2465,6 @@ public Subscription findSubscription(String host) {
 <p>
     Enjoy!
 </p>
-
+</blockquote>
 </body>
 </html>

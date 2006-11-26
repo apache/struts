@@ -14,7 +14,7 @@
           type="text/css"/>
 </head>
 
-<body onLoad="self.focus();document.Registration.username.focus()">
+<body onLoad="self.focus();document.Registration_save_username.focus()">
 
 <s:actionerror/>
 <s:form action="Registration_save" validate="false">
@@ -29,31 +29,20 @@
     </s:else>
 
     <s:password key="password"/>
-
     <s:password key="password2"/>
-
-    <s:textfield key="fullName"
-                   name="user.fullName"/>
-
-    <s:textfield key="fromAddress"
-                   name="user.fromAddress"/>
-
-    <s:textfield key="replyToAddress"
-                   name="user.replyToAddress"/>
+    <s:textfield key="user.fullName"/>
+    <s:textfield key="user.fromAddress"/>
+    <s:textfield key="user.replyToAddress"/>
 
     <s:if test="task == 'Create'">
         <s:submit key="button.save" action="Registration_save"/>
-
         <s:reset key="button.reset"/>
-
         <s:submit action="Welcome" key="button.cancel"
                     onclick="form.onsubmit=null"/>
     </s:if>
     <s:else>
         <s:submit key="button.save" action="Registration"/>
-
         <s:reset key="button.reset"/>
-
         <s:submit action="MainMenu" key="button.cancel"
                     onclick="form.onsubmit=null"/>
     </s:else>

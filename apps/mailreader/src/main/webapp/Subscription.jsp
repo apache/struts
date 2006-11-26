@@ -26,33 +26,25 @@
     <s:label key="username" name="user.username"/>
 
     <s:if test="task == 'Create'">
-        <s:textfield key="mailHostname" name="host"/>
+        <s:textfield key="host"/>
     </s:if>
     <s:else>
-        <s:label key="mailHostname" name="host"/>
+        <s:label key="host"/>
         <s:hidden name="host"/>
     </s:else>
 
     <s:if test="task == 'Delete'">
-        <s:label key="mailUsername"
-                   name="subscription.username"/>
-        <s:label key="mailPassword"
-                   name="subscription.password"/>
-        <s:label key="mailServerType"
-                   name="subscription.type"/>
-        <s:label key="autoConnect"
-                   name="subscription.autoConnect"/>
+        <s:label key="subscription.username"/>
+        <s:label key="subscription.password"/>
+        <s:label key="subscription.type"/>
+        <s:label key="subscription.autoConnect"/>
         <s:submit key="button.confirm"/>
     </s:if>
     <s:else>
-        <s:textfield key="mailUsername"
-                       name="subscription.username"/>
-        <s:textfield key="mailPassword"
-                       name="subscription.password"/>
-        <s:select key="mailServerType"
-                    name="subscription.type" list="types"/>
-        <s:checkbox key="autoConnect"
-                      name="subscription.autoConnect"/>
+        <s:textfield key="subscription.username"/>
+        <s:textfield key="subscription.password"/>
+        <s:select key="subscription.type" list="types"/>
+        <s:checkbox key="subscription.autoConnect"/>
         <s:submit key="button.save"/>
         <s:reset key="button.reset"/>
     </s:else>

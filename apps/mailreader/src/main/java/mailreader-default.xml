@@ -33,7 +33,7 @@
         <global-results>
             <result name="error">/pages/Error.jsp</result>
             <result name="invalid.token">/pages/Error.jsp</result>
-            <result name="login" type="redirect-action">Login!input</result>
+            <result name="login" type="redirect-action">Login_input</result>
         </global-results>
 
         <global-exception-mappings>

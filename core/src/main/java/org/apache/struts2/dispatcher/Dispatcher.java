@@ -276,22 +276,11 @@ public class Dispatcher {
     	configurationManager = null;
     }
 
-    /**
-     * Load configurations, including both XML and zero-configuration strategies,
-     * and update optional settings, including whether to reload configurations and resource files. 
-     */
-    public void init() {
-        
-    	if (configurationManager == null) {
-    		configurationManager = new ConfigurationManager(BeanSelectionProvider.DEFAULT_BEAN_NAME);
-    	}
-        
-    	// 1] Configuration: legacy properties file (struts.properties)
+    private void init_LegacyStrutsProperties() {
         configurationManager.addConfigurationProvider(new LegacyPropertiesConfigurationProvider());
-        
-        
-        // 2] Configuration: traditional xml configuration (eg. struts-default.xml, struts-plugin.xml, struts.xml)
-        // Load traditional xml configuration
+    }
+
+    private void init_TraditionalXmlConfigurations() {
         String configPaths = initParams.get("config");
         if (configPaths == null) {
             configPaths = DEFAULT_CONFIGURATION_PATHS;
@@ -308,9 +297,9 @@ public class Dispatcher {
                 throw new IllegalArgumentException("Invalid configuration file name");
             }
         }
+    }
 
-        // 3] Configuration: zero-configuration stuff
-        // Load configuration from a scan of the classloader
+    private void init_ZeroConfiguration() {
         String packages = initParams.get("actionPackages");
         if (packages != null) {
             String[] names = packages.split("\\s*[,]\\s*");
@@ -321,8 +310,9 @@ public class Dispatcher {
                 configurationManager.addConfigurationProvider(provider);
             }
         }
-        
-        // 4] Configuration: custom ConfigurationProviders
+    }
+
+    private void init_CustomConfigurationProviders() {
         String configProvs = initParams.get("configProviders");
         if (configProvs != null) {
             String[] classes = configProvs.split("\\s*[,]\\s*");
@@ -340,9 +330,14 @@ public class Dispatcher {
                 }
             }
         }
-        
-        // 5] Configurations: Filter's init-parameters as constants to be injected
-        // Load filter init params as constants
+    }
+
+    private void init_MethodConfigurationProvider() {
+        // TODO
+        // See https://issues.apache.org/struts/browse/WW-1522
+    }
+
+    private void init_FilterInitParameters() {
         configurationManager.addConfigurationProvider(new ConfigurationProvider() {
             public void destroy() {}
             public void init(Configuration configuration) throws ConfigurationException {}
@@ -353,11 +348,13 @@ public class Dispatcher {
                 props.putAll(initParams);
             }
         });
-        
-        
-        // 6] Configurations: Alias standard Struts2 beans
+    }
+
+    private void init_AliasStandardObjects() {
         configurationManager.addConfigurationProvider(new BeanSelectionProvider());
-        // Preload the configuration
+    }
+
+    private Container init_PreloadConfiguration() {
         Configuration config = configurationManager.getConfiguration();
         Container container = config.getContainer();
 
@@ -367,7 +364,10 @@ public class Dispatcher {
         ObjectTypeDeterminer objectTypeDeterminer = container.getInstance(ObjectTypeDeterminer.class);
         ObjectTypeDeterminerFactory.setInstance(objectTypeDeterminer);
 
-        //check for configuration reloading
+        return container;
+    }
+
+    private void init_CheckConfigurationReloading(Container container) {
         FileManager.setReloadingConfigs("true".equals(container.getInstance(String.class,
                 StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD)));
 
@@ -376,7 +376,10 @@ public class Dispatcher {
             ObjectFactory.setContinuationPackage(pkg);
         }
 
-        // test wether param-access workaround needs to be enabled
+    }
+
+    private void init_CheckWebLogicWorkaround(Container container) {
+        // test whether param-access workaround needs to be enabled
         if (servletContext != null && servletContext.getServerInfo() != null
                 && servletContext.getServerInfo().indexOf("WebLogic") >= 0) {
             LOG.info("WebLogic server detected. Enabling Struts parameter access work-around.");
@@ -384,7 +387,7 @@ public class Dispatcher {
         } else {
             paramsWorkaroundEnabled = "true".equals(container.getInstance(String.class,
                     StrutsConstants.STRUTS_DISPATCHER_PARAMETERSWORKAROUND));
-        } 
+        }
 
         synchronized(Dispatcher.class) {
             if (dispatcherListeners.size() > 0) {
@@ -393,6 +396,31 @@ public class Dispatcher {
                 }
             }
         }
+
+    }
+
+    /**
+     * Load configurations, including both XML and zero-configuration strategies,
+     * and update optional settings, including whether to reload configurations and resource files. 
+     */
+    public void init() {
+        
+    	if (configurationManager == null) {
+    		configurationManager = new ConfigurationManager(BeanSelectionProvider.DEFAULT_BEAN_NAME);
+    	}
+        
+    	init_LegacyStrutsProperties(); // [1]
+        init_TraditionalXmlConfigurations(); // [2]
+        init_ZeroConfiguration(); // [3]
+        init_CustomConfigurationProviders(); // [4]
+        init_MethodConfigurationProvider();
+        init_FilterInitParameters() ; // [5]
+        init_AliasStandardObjects() ; // [6]
+
+        Container container = init_PreloadConfiguration();
+        init_CheckConfigurationReloading(container);
+        init_CheckWebLogicWorkaround(container);
+
     }
 
     /**

@@ -2835,11 +2835,19 @@
 
         </attribute>
         <attribute>
-            <name>listLength</name>
+            <name>dropdownWidth</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
 
-            <description><![CDATA[limits list of visible rows, scroll on rest ]]></description>
+            <description><![CDATA[width in pixels of the dropdown (defaults to combobox width) ]]></description>
+
+        </attribute>
+         <attribute>
+            <name>dropdownHeight</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[height in pixels of the dropdown (defaults to 120) ]]></description>
 
         </attribute>
         <attribute>

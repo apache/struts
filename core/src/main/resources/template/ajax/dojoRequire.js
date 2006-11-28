@@ -8,5 +8,6 @@ dojo.widget.manager.registerWidgetPackage('struts.widget');
 dojo.require("struts.widget.Bind");
 dojo.require("struts.widget.BindDiv");
 dojo.require("struts.widget.BindAnchor");
+dojo.require("struts.widget.ComboBox");
 dojo.require("dojo.widget.Editor");
 dojo.hostenv.writeIncludes(); // not needed, but allows the Venkman debugger to work with the includes

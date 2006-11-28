@@ -37,7 +37,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *   ["Text 1","Value1"],
  *   ["Text 2","Value2"],
  *   ["Text 3","Value3"]
- * ] 
+ * ]
  * </pre>
  * <B>THE FOLLOWING IS ONLY VALID WHEN AJAX IS CONFIGURED</B>
  * <ul>
@@ -56,8 +56,8 @@ public class Autocompleter extends ComboBox {
     private String searchDelay;
     private String disabled;
     private String href;
-    private String listLength;
-
+    private String dropdownWidth;
+    private String dropdownHeight;
 
     public Autocompleter(ValueStack stack, HttpServletRequest request,
             HttpServletResponse response) {
@@ -67,7 +67,7 @@ public class Autocompleter extends ComboBox {
     protected String getDefaultTemplate() {
         return TEMPLATE;
     }
-    
+
     public String getComponentName() {
         return COMPONENT_NAME;
     }
@@ -90,13 +90,14 @@ public class Autocompleter extends ComboBox {
             addParameter("href", UrlHelper.buildUrl(findString(href), request,
                     response, null));
             addParameter("mode", "remote");
-        } 
-        if (listLength != null)
-            addParameter("listLength", findValue(listLength, Integer.class));
-            
+        }
+        if (dropdownHeight != null)
+            addParameter("dropdownHeight", findValue(dropdownHeight, Integer.class));
+        if (dropdownWidth != null)
+            addParameter("dropdownWidth", findValue(dropdownWidth, Integer.class));
     }
 
-    
+
     protected Object findListValue() {
         return (list != null) ? findValue(list, Object.class) : null;
     }
@@ -124,21 +125,13 @@ public class Autocompleter extends ComboBox {
     public void setForceValidOption(String forceValidOption) {
         this.forceValidOption = forceValidOption;
     }
-    
+
     /**
      * The URL to call to obtain the content
      * @s.tagattribute required="false" type="String"
      */
     public void setHref(String href) {
         this.href = href;
-    }
-
-    /**
-     * limits list of visible rows, scroll on rest 
-     * @s.tagattribute required="false" type="Integer" default="8"
-     */
-    public void setListLength(String listLength) {
-        this.listLength = listLength;
     }
 
     /**
@@ -151,10 +144,26 @@ public class Autocompleter extends ComboBox {
 
 
     /**
-     * set how the serach bust be preformed, optionas are: "startstring", "startword" and "substring" 
+     * set how the serach bust be preformed, optionas are: "startstring", "startword" and "substring"
      * @s.tagattribute required="false" default="stringstart" type="String"
      */
     public void setSearchType(String searchType) {
         this.searchType = searchType;
+    }
+
+    /**
+     * set the height of the dropdown in pixels
+     * @s.tagattribute required="false" default="120" type="Integer"
+     */
+    public void setDropdownHeight(String height) {
+        this.dropdownHeight = height;
+    }
+
+    /**
+     * set the width of the drodown, by default the same as the combobox
+     * @s.tagattribute required="false" type="Integer"
+     */
+    public void setDropdownWidth(String width) {
+        this.dropdownWidth = width;
     }
 }

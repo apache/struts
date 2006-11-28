@@ -341,13 +341,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Tiles -->
-        <dependency>
-            <groupId>org.apache.struts.tiles</groupId>
-            <artifactId>tiles-core</artifactId>
-            <version>0.2-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>commons-digester</groupId>
             <artifactId>commons-digester</artifactId>

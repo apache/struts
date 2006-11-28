@@ -1,0 +1,12 @@
+<input
+ dojoType="struts:ComboBox"
+ id="f"
+ dataUrl="a"
+ forceValidOption="false"
+ searchType="b"
+ autoComplete="true"
+ searchDelay="100"
+ dropdownWidth="10"
+ dropdownHeight="10"
+ name="f"
+ value="g">

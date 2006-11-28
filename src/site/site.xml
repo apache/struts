@@ -75,12 +75,16 @@
                     href="struts2-core/apidocs/index.html"
                     />
             <item
-                    name="New API (experimental)"
-                    href="struts2-api/apidocs/index.html"
+                    name="XWork 2 API"
+                    href="xwork-apidocs/index.html"
                     />
             <item
                     name="Tag Reference"
                     href="http://struts.apache.org/WW/tag-reference.html"
+                    />
+            <item
+                    name="New API (experimental)"
+                    href="struts2-api/apidocs/index.html"
                     />
         </menu>
 

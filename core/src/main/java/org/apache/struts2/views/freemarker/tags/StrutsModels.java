@@ -81,6 +81,7 @@ public class StrutsModels {
     protected ElseModel elseModel;
     protected ElseIfModel elseIfModel;
     protected TimePickerModel timePickerModel;
+    protected AutocompleterModel autocompleterModel;
 
 
     public StrutsModels(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
@@ -111,6 +112,14 @@ public class StrutsModels {
         }
 
         return comboBox;
+    }
+
+    public AutocompleterModel getAutocompleterModel() {
+        if (autocompleterModel == null) {
+            autocompleterModel = new AutocompleterModel(stack, req, res);
+        }
+
+        return autocompleterModel;
     }
 
     public ComponentModel getComponent() {

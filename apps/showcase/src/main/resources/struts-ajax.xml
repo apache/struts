@@ -43,17 +43,17 @@
         <action name="toggle" class="org.apache.struts2.showcase.ajax.tree.Toggle">
             <result>/ajax/tree/toggle.jsp</result>
         </action>
-        
+
         <action name="example4">
         	<result type="freemarker">/ajax/tabbedpanel/example4.ftl</result>
         </action>
-        
+
         <action name="example5" class="org.apache.struts2.showcase.ajax.Example5Action">
         	<result name="input">/ajax/tabbedpanel/example5.jsp</result>
         	<result>/ajax/tabbedpanel/example5Ok.jsp</result>
         </action>
     </package>
-    
+
     <package name="ajaxNoDecorate" namespace="/nodecorate" extends="struts-default">
     	<!--  example 4 -->
         <action name="panel1" class="org.apache.struts2.showcase.ajax.Example4ShowPanelAction" method="panel1">
@@ -71,5 +71,8 @@
     	<action name="panel3Submit" class="org.apache.struts2.showcase.ajax.Example4ShowPanelAction" method="panel3">
     		<result type="freemarker">/ajax/tabbedpanel/nodecorate/panel3Submit.ftl</result>
     	</action>
+       <action name="AutocompleterExample" class="org.apache.struts2.showcase.ajax.AutocompleterExampleAction">
+           <result type="freemarker">/ajax/options.ftl</result>
+       </action>
     </package>
 </struts>

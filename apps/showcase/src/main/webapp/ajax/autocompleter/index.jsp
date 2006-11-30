@@ -13,21 +13,21 @@
 
 Using a JSON list returned from an action (href="/JSONList.action"), without autoComplete (autoComplete="false")
 <br/>
-<s:autocompleter theme="ajax" href="/JSONList.action" cssStyle="width: 200px;" autoComplete="false" id="ii"/>
+<s:autocompleter theme="ajax" href="/JSONList.action" cssStyle="width: 200px;" autoComplete="false"/>
 
 <br/>
 <br/>
 
 Using a JSON list returned from an action (href="/JSONList.action"), with autoComplete (autoComplete="true")
 <br/>
-<s:autocompleter theme="ajax" href="/JSONList.action" cssStyle="width: 200px;" autoComplete="true" id="ii"/>
+<s:autocompleter theme="ajax" href="/JSONList.action" cssStyle="width: 200px;" autoComplete="true" />
 
 <br/>
 <br/>
 
 Using a local list (list="{'apple','banana','grape','pear'}")
 <br/>
-<s:autocompleter theme="simple" list="{'apple','banana','grape','pear'}" name="Aa" cssStyle="width: 150px;"/>
+<s:autocompleter theme="simple" list="{'apple','banana','grape','pear'}" scssStyle="width: 150px;"/>
 
 <br/>
 <br/>
@@ -50,6 +50,19 @@ Disabled combobox (disabled="true")
 <br/>
 <s:autocompleter theme="ajax" href="/JSONList.action" cssStyle="width: 200px;" disabled="true"/>
 
+<br/>
+<br/>
+
+
+
+Link two autocompleter elements. When the selected value in 'Autocompleter 1' changes, the available values in 'Autocompleter 2' will change also.
+<br/>
+<form id="selectForm">
+  <p>Autocompleter 1 <s:autocompleter theme="simple" name="select" list="{'fruits','colors'}"  value="colors" onValueChangedPublishTopic="/Refresh" forceValidOption="true"/></p>
+</form>
+Autocompleter 2 <s:autocompleter theme="ajax" href="/nodecorate/AutocompleterExample.action" autoComplete="false" formId="selectForm" refreshListenTopic="/Refresh" forceValidOption="true"/>
+
+<br/>
 <br/>
 
 <s:include value="../footer.jsp"/>

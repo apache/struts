@@ -50,14 +50,20 @@ public class Autocompleter extends ComboBox {
     public static final String TEMPLATE = "autocompleter";
     final private static String COMPONENT_NAME = Autocompleter.class.getName();
 
-    private String forceValidOption;
-    private String searchType;
-    private String autoComplete;
-    private String searchDelay;
-    private String disabled;
-    private String href;
-    private String dropdownWidth;
-    private String dropdownHeight;
+    protected String forceValidOption;
+    protected String searchType;
+    protected String autoComplete;
+    protected String delay;
+    protected String disabled;
+    protected String href;
+    protected String dropdownWidth;
+    protected String dropdownHeight;
+    protected String formId;
+    protected String formFilter;
+    protected String refreshListenTopic;
+    protected String onValueChangedPublishTopic;
+    protected String afterLoading;
+    protected String beforeLoading;
 
     public Autocompleter(ValueStack stack, HttpServletRequest request,
             HttpServletResponse response) {
@@ -82,8 +88,8 @@ public class Autocompleter extends ComboBox {
             addParameter("searchType", findString(searchType));
         if (autoComplete != null)
             addParameter("autoComplete", findValue(autoComplete, Boolean.class));
-        if (searchDelay != null)
-            addParameter("searchDelay", findValue(searchDelay, Integer.class));
+        if (delay != null)
+            addParameter("delay", findValue(delay, Integer.class));
         if (disabled != null)
             addParameter("disabled", findValue(disabled, Boolean.class));
         if (href != null) {
@@ -95,6 +101,18 @@ public class Autocompleter extends ComboBox {
             addParameter("dropdownHeight", findValue(dropdownHeight, Integer.class));
         if (dropdownWidth != null)
             addParameter("dropdownWidth", findValue(dropdownWidth, Integer.class));
+        if (formFilter != null)
+          addParameter("formFilter", findString(formFilter));
+        if (formId != null)
+          addParameter("formId", findString(formId));
+        if (refreshListenTopic != null)
+          addParameter("refreshListenTopic", findString(refreshListenTopic));
+        if (onValueChangedPublishTopic != null)
+          addParameter("onValueChangedPublishTopic", findString(onValueChangedPublishTopic));
+        if (afterLoading != null)
+          addParameter("afterLoading", findString(afterLoading));
+        if (beforeLoading != null)
+          addParameter("beforeLoading", findString(beforeLoading));
     }
 
 
@@ -138,8 +156,8 @@ public class Autocompleter extends ComboBox {
      * set delay before making the search
      * @s.tagattribute required="false" type="Integer" default="100"
      */
-    public void setSearchDelay(String searchDelay) {
-        this.searchDelay = searchDelay;
+    public void setDelay(String searchDelay) {
+        this.delay = searchDelay;
     }
 
 
@@ -165,5 +183,58 @@ public class Autocompleter extends ComboBox {
      */
     public void setDropdownWidth(String width) {
         this.dropdownWidth = width;
+    }
+
+    /**
+     * Function name used to filter the fields of the form.
+     * This function takes as a parameter the element and returns true if the element
+     * must be included.
+     * @s.tagattribute required="false" type="String"
+     */
+    public void setFormFilter(String formFilter) {
+      this.formFilter = formFilter;
+    }
+
+    /**
+     * Form id whose fields will be serialized and passed as parameters
+     *
+     * @s.tagattribute required="false" type="String"
+     */
+    public void setFormId(String formId) {
+      this.formId = formId;
+    }
+
+    /**
+     * Topic that will trigger a re-fetch
+     *
+     * @s.tagattribute required="false" type="String"
+     */
+    public void setRefreshListenTopic(String refreshListenTopic) {
+      this.refreshListenTopic = refreshListenTopic;
+    }
+
+    /**
+     * Topic that will be published when content is fetched.
+     * New Value is passed as parameter.
+     * @s.tagattribute required="false" type="String"
+     */
+    public void setOnValueChangedPublishTopic(String onValueChangedPublishTopic) {
+      this.onValueChangedPublishTopic = onValueChangedPublishTopic;
+    }
+
+    /**
+     * Javascript code name that will be executed after the content has been fetched
+     * @s.tagattribute required="false" type="String"
+     */
+    public void setAfterLoading(String afterLoading) {
+      this.afterLoading = afterLoading;
+    }
+
+    /**
+     * Javascript code that will be executed before the content has been fetched
+     * @s.tagattribute required="false" type="String"
+     */
+    public void setBeforeLoading(String beforeLoading) {
+      this.beforeLoading = beforeLoading;
     }
 }

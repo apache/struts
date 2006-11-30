@@ -34,14 +34,21 @@ import com.opensymphony.xwork2.util.ValueStack;
 public class AutocompleterTag extends ComboBoxTag {
     private static final long serialVersionUID = -1112470447573172581L;
 
-    private String forceValidOption;
-    private String searchType;
-    private String autoComplete;
-    private String searchDelay;
-    private String disabled;
-    private String href;
-    private String dropdownWidth;
-    private String dropdownHeight;
+    protected String forceValidOption;
+    protected String searchType;
+    protected String autoComplete;
+    protected String searchDelay;
+    protected String disabled;
+    protected String href;
+    protected String dropdownWidth;
+    protected String dropdownHeight;
+    protected String formId;
+    protected String formFilter;
+    protected String refreshListenTopic;
+    protected String refreshPublishTopic;
+    protected String onValueChangedPublishTopic;;
+    protected String afterLoading;
+    protected String beforeLoading;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Autocompleter(stack, req, res);
@@ -55,10 +62,16 @@ public class AutocompleterTag extends ComboBoxTag {
         autocompleter.setDisabled(disabled);
         autocompleter.setForceValidOption(forceValidOption);
         autocompleter.setHref(href);
-        autocompleter.setSearchDelay(searchDelay);
+        autocompleter.setDelay(searchDelay);
         autocompleter.setSearchType(searchType);
         autocompleter.setDropdownHeight(dropdownHeight);
         autocompleter.setDropdownWidth(dropdownWidth);
+        autocompleter.setFormFilter(formFilter);
+        autocompleter.setFormId(formId);
+        autocompleter.setRefreshListenTopic(refreshListenTopic);
+        autocompleter.setOnValueChangedPublishTopic(onValueChangedPublishTopic);
+        autocompleter.setBeforeLoading(beforeLoading);
+        autocompleter.setAfterLoading(afterLoading);
     }
 
     public void setAutoComplete(String autoComplete) {
@@ -91,6 +104,34 @@ public class AutocompleterTag extends ComboBoxTag {
 
     public void setDropdownWidth(String width) {
         this.dropdownWidth = width;
+    }
+
+    public void setFormFilter(String formFilter) {
+      this.formFilter = formFilter;
+    }
+
+    public void setFormId(String formId) {
+      this.formId = formId;
+    }
+
+    public void setRefreshListenTopic(String refreshListenTopic) {
+      this.refreshListenTopic = refreshListenTopic;
+    }
+
+    public void setRefreshPublishTopic(String refreshPublishTopic) {
+      this.refreshPublishTopic = refreshPublishTopic;
+    }
+
+    public void setOnValueChangedPublishTopic(String onValueChangedPublishTopic) {
+      this.onValueChangedPublishTopic = onValueChangedPublishTopic;
+    }
+
+    public void setAfterLoading(String afterLoading) {
+      this.afterLoading = afterLoading;
+    }
+
+    public void setBeforeLoading(String beforeLoading) {
+      this.beforeLoading = beforeLoading;
     }
 
 }

@@ -2827,6 +2827,58 @@
 
         </attribute>
         <attribute>
+            <name>beforeLoading</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description>
+                <![CDATA[Javascript code that will be executed before the content has been fetched]]></description>
+
+        </attribute>
+        <attribute>
+            <name>afterLoading</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description>
+                <![CDATA[Javascript code that will be executed after the content has been fetched]]></description>
+
+        </attribute>
+        <attribute>
+            <name>refreshListenTopic</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description>
+                <![CDATA[Topic name to listen to]]></description>
+
+        </attribute>
+        <attribute>
+            <name>onValueChangedPublishTopic</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description>
+                <![CDATA[Topic name that will be triggered when value changes. Take the new value as parameter.]]></description>
+
+        </attribute>
+        <attribute>
+            <name>formId</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Form id whose fields will be serialized and passed as parameters.]]></description>
+
+        </attribute>
+        <attribute>
+            <name>formFilter</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Function name used to filter the fields of the form.]]></description>
+
+        </attribute>
+        <attribute>
             <name>forceValidOption</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -2851,7 +2903,7 @@
 
         </attribute>
         <attribute>
-            <name>searchDelay</name>
+            <name>delay</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
 

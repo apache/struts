@@ -38,14 +38,20 @@
 <#if parameters.maxlength?exists>
  maxlength="${parameters.maxlength?string?html}"<#rt/>
 </#if>
-<#if parameters.nameValue?exists>
- value="<@s.property value="parameters.nameValue"/>"<#rt/>
-</#if>
 <#if parameters.readonly?default(false)>
  readonly="readonly"<#rt/>
 </#if>
 <#if parameters.tabindex?exists>
  tabindex="${parameters.tabindex?html}"<#rt/>
+</#if>
+<#if parameters.onValueChangedPublishTopic?if_exists != "">
+ onValueChangedPublishTopic="${parameters.onValueChangedPublishTopic?html}"<#rt/>
+</#if>
+<#if parameters.beforeLoading?if_exists != "">
+ beforeLoading="${parameters.beforeLoading?html}"<#rt/>
+</#if>
+<#if parameters.afterLoading?if_exists != "">
+ afterLoading="${parameters.afterLoading?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 >
@@ -68,7 +74,7 @@
     	<#assign tmpListValue = stack.findString('top') />
     </#if>
     <option value="${tmpListKey?html}"<#rt/>
-        <#if (parameters.nameValue == tmpListKey)>
+        <#if (parameters.nameValue?exists && parameters.nameValue == tmpListKey)>
  selected="selected"<#rt/>
         </#if>
     ><#t/>

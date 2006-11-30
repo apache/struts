@@ -3,7 +3,7 @@ package org.apache.struts2.views.jsp.ui;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 /**
- * @see Autocompleter
+ * @see org.apache.struts2.components.Autocompleter
  */
 public class AutocompleterTest extends AbstractUITagTest {
 
@@ -22,6 +22,10 @@ public class AutocompleterTest extends AbstractUITagTest {
         tag.setDisabled("c");
         tag.setName("f");
         tag.setValue("g");
+        tag.setBeforeLoading("h");
+        tag.setAfterLoading("i");
+        tag.setRefreshListenTopic("j");
+        tag.setOnValueChangedPublishTopic("k");
         tag.doStartTag();
         tag.doEndTag();
 

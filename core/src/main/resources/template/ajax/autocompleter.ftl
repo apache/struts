@@ -50,6 +50,24 @@
 <#if parameters.tabindex?exists>
  tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
+<#if parameters.formId?if_exists != "">
+ formId="${parameters.formId?html}"<#rt/>
+</#if>
+<#if parameters.formFilter?if_exists != "">
+ formFilter="${parameters.formFilter?html}"<#rt/>
+</#if>
+<#if parameters.refreshListenTopic?if_exists != "">
+ refreshListenTopic="${parameters.refreshListenTopic?html}"<#rt/>
+</#if>
+<#if parameters.onValueChangedPublishTopic?if_exists != "">
+ onValueChangedPublishTopic="${parameters.onValueChangedPublishTopic?html}"<#rt/>
+</#if>
+<#if parameters.beforeLoading?if_exists != "">
+ beforeLoading="${parameters.beforeLoading?html}"<#rt/>
+</#if>
+<#if parameters.afterLoading?if_exists != "">
+ afterLoading="${parameters.afterLoading?html}"<#rt/>
+</#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 >
 

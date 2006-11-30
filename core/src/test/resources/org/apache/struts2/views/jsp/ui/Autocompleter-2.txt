@@ -5,10 +5,9 @@
   forceValidOption="false"
   searchType="b"
   autoComplete="true"
-  searchDelay="100"
   dropdownWidth="10"
   dropdownHeight="10"
-  name="f"value="">
-  <optionvalue="d">d</option>
-  <optionvalue="e">e</option>
+  name="f">
+  <option value="d">d</option>
+  <option value="e">e</option>
 </select>

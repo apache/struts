@@ -27,6 +27,7 @@ import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.ScopesHashModel;
 
 import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * This is an example of a custom FreemarkerManager, mean to be
@@ -50,7 +51,7 @@ public class CustomFreemarkerManager extends FreemarkerManager {
         this.util = util;
     }
 
-    public void populateContext(ScopesHashModel model, OgnlValueStack stack, Object action, HttpServletRequest request, HttpServletResponse response) {
+    protected void populateContext(ScopesHashModel model, ValueStack stack, Object action, HttpServletRequest request, HttpServletResponse response) {
         super.populateContext(model, stack, action, request, response);
         model.put("customFreemarkerManagerUtil", util);
     }

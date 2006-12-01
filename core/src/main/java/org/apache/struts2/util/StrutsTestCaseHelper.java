@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: StrutsTestCase.java 476696 2006-11-19 03:56:18Z tmjee $
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,40 +18,40 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2;
+package org.apache.struts2.util;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.util.StrutsTestCaseHelper;
+import org.springframework.mock.web.MockServletContext;
 
-import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 /**
- * Base test case for JUnit testing Struts.
+ * Generic test setup methods to be used with any unit testing framework. 
  */
-public abstract class StrutsTestCase extends XWorkTestCase {
-
+public class StrutsTestCaseHelper {
+    
     /**
      * Sets up the configuration settings, XWork configuration, and
      * message resources
      */
-    protected void setUp() throws Exception {
-        super.setUp();
-        initDispatcher(null);
+    public static void setUp() throws Exception {
+        LocalizedTextUtil.clearDefaultResourceBundles();
     }
     
-    protected Dispatcher initDispatcher(Map<String,String> params) {
-        Dispatcher du = StrutsTestCaseHelper.initDispatcher(params);
-        configurationManager = du.getConfigurationManager();
-        configuration = configurationManager.getConfiguration();
-        container = configuration.getContainer();
+    public static Dispatcher initDispatcher(Map<String,String> params) {
+        if (params == null) {
+            params = new HashMap<String,String>();
+        }
+        Dispatcher du = new Dispatcher(new MockServletContext(), params);
+        du.init();
+        Dispatcher.setInstance(du);
         return du;
     }
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        StrutsTestCaseHelper.tearDown();
+    public static void tearDown() throws Exception {
+        Dispatcher.setInstance(null);
     }
-
 }

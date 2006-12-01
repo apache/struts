@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: StrutsTestCase.java 476696 2006-11-19 03:56:18Z tmjee $
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,18 +24,18 @@ import java.util.Map;
 
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.util.StrutsTestCaseHelper;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
 
-import com.opensymphony.xwork2.XWorkTestCase;
+import com.opensymphony.xwork2.TestNGXWorkTestCase;
 
 /**
- * Base test case for JUnit testing Struts.
+ * Base test class for TestNG unit tests.  Provides common Struts variables
+ * and performs Struts setup and teardown processes
  */
-public abstract class StrutsTestCase extends XWorkTestCase {
+public class TestNGStrutsTestCase extends TestNGXWorkTestCase {
 
-    /**
-     * Sets up the configuration settings, XWork configuration, and
-     * message resources
-     */
+    @BeforeTest
     protected void setUp() throws Exception {
         super.setUp();
         initDispatcher(null);
@@ -49,9 +49,10 @@ public abstract class StrutsTestCase extends XWorkTestCase {
         return du;
     }
 
+    @AfterTest
     protected void tearDown() throws Exception {
         super.tearDown();
         StrutsTestCaseHelper.tearDown();
     }
-
 }
+

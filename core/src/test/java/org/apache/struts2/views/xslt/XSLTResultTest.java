@@ -23,10 +23,14 @@ package org.apache.struts2.views.xslt;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.URIResolver;
+import javax.xml.transform.stream.StreamSource;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.util.ClassLoaderUtils;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -114,6 +118,27 @@ public class XSLTResultTest extends StrutsTestCase {
         assertTrue(out.indexOf("Hello Santa Claus how are you?") > -1);
         assertTrue(out.indexOf("WebWork in Action by Patrick and Jason") > -1);
         assertTrue(out.indexOf("XWork not in Action by Superman") > -1);
+    }
+    
+    public void testTransform4WithDocumentInclude() throws Exception {
+        result = new XSLTResult(){
+            protected URIResolver getURIResolver() {
+                return new URIResolver() {
+                    public Source resolve(String href, String base) throws TransformerException {
+                        return new StreamSource(ClassLoaderUtils.getResourceAsStream(href, this.getClass()));
+                    }
+                    
+                };
+            }
+            
+        };
+        result.setParse(false);
+        result.setLocation("XSLTResultTest4.xsl");
+        result.execute(mai);
+
+        String out = response.getContentAsString();
+        assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        assertTrue(out.indexOf("<validators>") > -1);
     }
 
     protected void setUp() throws Exception {

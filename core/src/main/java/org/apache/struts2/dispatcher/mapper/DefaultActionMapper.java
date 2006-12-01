@@ -22,9 +22,11 @@ package org.apache.struts2.dispatcher.mapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -285,15 +287,26 @@ public class DefaultActionMapper implements ActionMapper {
     public void handleSpecialParameters(HttpServletRequest request,
             ActionMapping mapping) {
         // handle special parameter prefixes.
+        Set<String> uniqueParameters = new HashSet<String>();
         Map parameterMap = request.getParameterMap();
         for (Iterator iterator = parameterMap.keySet().iterator(); iterator
                 .hasNext();) {
             String key = (String) iterator.next();
-            ParameterAction parameterAction = (ParameterAction) prefixTrie
-                    .get(key);
-            if (parameterAction != null) {
-                parameterAction.execute(key, mapping);
-                break;
+            
+            // Strip off the image button location info, if found
+            if (key.endsWith(".x") || key.endsWith(".y")) {
+                key = key.substring(0, key.length() - 2);
+            }
+            
+            // Ensure a parameter doesn't get processed twice
+            if (!uniqueParameters.contains(key)) {
+                ParameterAction parameterAction = (ParameterAction) prefixTrie
+                        .get(key);
+                if (parameterAction != null) {
+                    parameterAction.execute(key, mapping);
+                    uniqueParameters.add(key);
+                    break;
+                }
             }
         }
     }

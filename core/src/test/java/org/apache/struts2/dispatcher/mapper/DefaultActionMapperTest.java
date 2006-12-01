@@ -239,6 +239,37 @@ public class DefaultActionMapperTest extends StrutsTestCase {
 
         assertEquals(actionMapping.getName(), "myAction");
     }
+    
+    public void testActionPrefix_fromImageButton() throws Exception {
+        Map parameterMap = new HashMap();
+        parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "myAction", "");
+        parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "myAction.x", "");
+        parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "myAction.y", "");
+
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
+        request.setParameterMap(parameterMap);
+        request.setupGetServletPath("/someServletPath.action");
+
+        DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
+        ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
+
+        assertEquals(actionMapping.getName(), "myAction");
+    }
+    
+    public void testActionPrefix_fromIEImageButton() throws Exception {
+        Map parameterMap = new HashMap();
+        parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "myAction.x", "");
+        parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "myAction.y", "");
+
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
+        request.setParameterMap(parameterMap);
+        request.setupGetServletPath("/someServletPath.action");
+
+        DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
+        ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
+
+        assertEquals(actionMapping.getName(), "myAction");
+    }
 
     public void testRedirectPrefix() throws Exception {
         Map parameterMap = new HashMap();

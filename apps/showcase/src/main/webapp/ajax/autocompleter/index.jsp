@@ -27,7 +27,7 @@ Using a JSON list returned from an action (href="/JSONList.action"), with autoCo
 
 Using a local list (list="{'apple','banana','grape','pear'}")
 <br/>
-<s:autocompleter theme="simple" list="{'apple','banana','grape','pear'}" scssStyle="width: 150px;"/>
+<s:autocompleter theme="simple" list="{'apple','banana','grape','pear'}" cssStyle="width: 150px;"/>
 
 <br/>
 <br/>

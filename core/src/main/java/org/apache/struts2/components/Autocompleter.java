@@ -41,7 +41,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </pre>
  * <B>THE FOLLOWING IS ONLY VALID WHEN AJAX IS CONFIGURED</B>
  * <ul>
- *      <li>href</li>
+ *      <li>href - Note: The href attribute value needs to be set as an url tag id.</li>
  * </ul>
  * @s.tag name="autocompleter" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.AutocompleterTag"
  *        description="Renders a combobox with autocomplete and AJAX capabilities"
@@ -93,8 +93,7 @@ public class Autocompleter extends ComboBox {
         if (disabled != null)
             addParameter("disabled", findValue(disabled, Boolean.class));
         if (href != null) {
-            addParameter("href", UrlHelper.buildUrl(findString(href), request,
-                    response, null));
+            addParameter("href", findString(href));
             addParameter("mode", "remote");
         }
         if (dropdownHeight != null)

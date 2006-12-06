@@ -10,7 +10,7 @@ public interface RemoteUICallBean {
     void setRefreshListenTopic(String refreshListenTopic);
 
     /**
-     * The URL to call to obtain the content
+     * The URL to call to obtain the content. Note: If used with ajax context, the value must be set as an url tag value.
      * @s.tagattribute required="false" type="String"
      */
     void setHref(String href);

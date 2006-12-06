@@ -53,6 +53,7 @@ import org.apache.commons.logging.LogFactory;
  * </ul>
  * 'targets' is a list of element ids whose content will be updated with the
  * text returned from request.<p/>
+ * 'href' needs to be set as an url tag reference value.<p/>
  * 'errorText' is the text that will be displayed when there is an error making the request.<p/>
  * 'afterLoading' is the name of a function that will be called after the request.<p/>
  * 'beforeLoading' is the name of a function that will be called before the request.<p/>
@@ -76,10 +77,11 @@ import org.apache.commons.logging.LogFactory;
  *
  * <pre>
  *       <!-- START SNIPPET: example -->
+ * &lt;s:url id="url" action="AjaxTest" />
  * &lt;s:div
  *    id=&quot;once&quot;
  *    theme=&quot;ajax&quot;
- *    href=&quot;/AjaxTest.action&quot;
+ *    href=&quot;%{url}&quot;
  *    loadingText=&quot;Loading...&quot;
  *    refreshListenTopic=&quot;/refresh&quot;
  *    updateInterval=&quot;3000&quot;

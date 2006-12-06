@@ -55,14 +55,14 @@ Disabled combobox (disabled="true")
 <br/>
 
 
-<s:url id="autoex" value="/nodecorate/AutocompleterExample.action"/>
+<s:url id="autoex" action="AutocompleterExample" namespace="/nodecorate"/>
 
 Link two autocompleter elements. When the selected value in 'Autocompleter 1' changes, the available values in 'Autocompleter 2' will change also.
 <br/>
 <form id="selectForm">
   <p>Autocompleter 1 <s:autocompleter theme="simple" name="select" list="{'fruits','colors'}"  value="colors" onValueChangedPublishTopic="/Refresh" forceValidOption="true"/></p>
 </form>
-Autocompleter 2 <s:autocompleter theme="ajax" href="%{autoex}" autoComplete="false" formId="selectForm" refreshListenTopic="/Refresh" forceValidOption="true"/>
+Autocompleter 2 <s:autocompleter theme="ajax" href="%{#autoex}" autoComplete="false" formId="selectForm" refreshListenTopic="/Refresh" forceValidOption="true"/>
 
 <br/>
 <br/>

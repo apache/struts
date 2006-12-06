@@ -25,7 +25,7 @@
     </div>
 
     <div id="local">
-        <img src='<s:url value="/images/logo.png"/>' alt="Struts Logo" width="290" height="80"/>
+        <img src='<s:url value="/images/struts.gif"/>' alt="Struts Logo" width="290" height="80"/>
     </div>
 </body>
 </html>

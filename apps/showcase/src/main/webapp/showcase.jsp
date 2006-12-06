@@ -22,7 +22,6 @@
     <li><a href="<s:url action="index" namespace="/config-browser" includeParams="none" />">Config Browser</a></li>
     <li><a href="<s:url action="guess" namespace="/continuations" />">Continuations</a></li>
     <li><a href="<s:url value="/tags/index.jsp"/>">Tags</a></li>
-    <li><a href="<s:url action="upload" namespace="/fileupload" includeParams="none"/>">File Upload</a></li>
     <li><a href="<s:url value="/empmanager/index.jsp"/>">CRUD</a></li>
     <li><a href="<s:url value="/person/index.jsp"/>">Person Manager</a></li>
     <li><a href="<s:url value="/validation/index.jsp"/>">Validation</a></li>

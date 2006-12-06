@@ -571,4 +571,12 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         }
         return reset;
     }
+
+    public void destroy() {
+        if (dispatcherUtils == null) {
+            LOG.warn("something is seriously wrong, DispatcherUtil is not initialized (null) ");
+        } else {
+            dispatcherUtils.cleanup();
+        }
+    }
 }

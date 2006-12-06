@@ -12,7 +12,7 @@
 		var anchor = dojo.byId("myAnchor");
 		alert(anchor);
 		dojo.event.connect(anchor, "onclick", function(event) {
-			alert('aaa');
+			alert('Custom onclick handler triggered before submitting form... Press OK!');
 		});
 	</script>
 	

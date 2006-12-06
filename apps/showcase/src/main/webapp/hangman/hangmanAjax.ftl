@@ -207,9 +207,10 @@
       <@s.set name="chalkboardImageName" value="%{'Chalkboard_'+#currentCharacter+'.png'}" />
       <@s.url id="chalkboardImageUrl" value="%{'/hangman/images/'+#chalkboardImageName}" />
       <@s.url id="spacerUrl" value="/hangman/images/letter-spacer.png" />
-      
+
+      <@s.url id="blankUrl" value="ajax/blank.action" includeContext="false" />
       <@s.a theme="ajax"
-      		  href="ajax/blank.action"
+      		  href="%{blankUrl}"
       		  id="%{#currentCharacter}" 
       		  notifyTopics="topicGuessMade"
       		  showErrorTransportText="true">

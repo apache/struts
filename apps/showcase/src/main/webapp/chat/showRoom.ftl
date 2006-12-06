@@ -108,7 +108,8 @@
 		</div>
 		<div class="box">
 		<h3>Users Available In Chat</h3>
-		<@s.div id="usersAvailable" href="/chat/ajax/usersAvailable.action"
+        <@s.url id="usersAvailableUrl" action="usersAvailable" namespace="/chat/ajax" />
+        <@s.div id="usersAvailable" href="%{usersAvailableUrl}"
 				  theme="ajax" delay="1" updateFreq="%{@org.apache.struts2.showcase.chat.Constants@UPDATE_FREQ}">
 			Initial Users Available ...
 		</@s.div>
@@ -118,10 +119,10 @@
 		<div class="center">
 		<div class="box">
 		<h3>Messages Posted In Room [${roomName?default('')}]</h3>
-		<@s.url id="url" value="/chat/ajax/messagesAvailableInRoom.action" includeContext="false">
+		<@s.url id="url" value="/chat/ajax/messagesAvailableInRoom.action" includeContext="true">
 			<@s.param name="roomName" value="%{roomName}" />
 		</@s.url>
-		<@s.div id="messagesInRoom" href="%{#url}" includeContext="false"
+		<@s.div id="messagesInRoom" href="%{#url}" includeContext="true"
 				  theme="ajax" delay="1" updateFreq="%{@org.apache.struts2.showcase.chat.Constants@UPDATE_FREQ}" 
 				  listenTopics="topicMessageSend">
 			Initial Messages In Room ...
@@ -143,10 +144,10 @@
 		<div class="right">
 		<div class="box">
 		<h3>Users Available In Room [${roomName?default('')}]</h3>
-		<@s.url id="url" value="/chat/ajax/usersAvailableInRoom.action" includeContext="false">
+		<@s.url id="url" value="/chat/ajax/usersAvailableInRoom.action" includeContext="true">
 			<@s.param name="roomName" value="%{roomName}" />
 		</@s.url>
-		<@s.div id="usersAvailableInRoom" href="%{#url}" includeContext="false"
+		<@s.div id="usersAvailableInRoom" href="%{#url}" includeContext="true"
 				  theme="ajax" delay="1" updateFreq="%{@org.apache.struts2.showcase.chat.Constants@UPDATE_FREQ}">
 			Initial Users Available In Room ...
 		</@s.div>

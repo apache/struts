@@ -118,8 +118,8 @@
             name="thoughts" 
             tooltip="Enter your thoughts here" />
             
-    <s:submit onclick="alert('aaaa');" />
-    <s:reset onclick="alert('bbbb');" />
+    <s:submit onclick="alert('Custom onclick event triggered before submitting form... Press OK to continue!');" />
+    <s:reset onclick="alert('Resetting form now... Press OK to continue!');" />
 </s:form>
     
 </body>

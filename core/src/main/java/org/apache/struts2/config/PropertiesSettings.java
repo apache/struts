@@ -21,6 +21,7 @@
 package org.apache.struts2.config;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Properties;
@@ -63,10 +64,20 @@ class PropertiesSettings extends Settings {
         settings = new LocatableProperties(new LocationImpl(null, settingsUrl.toString()));
 
         // Load settings
+        InputStream in = null;
         try {
-            settings.load(settingsUrl.openStream());
+            in = settingsUrl.openStream();
+            settings.load(in);
         } catch (IOException e) {
             throw new StrutsException("Could not load " + name + ".properties:" + e, e);
+        } finally {
+            if(in != null) {
+                try {
+                    in.close();
+                } catch(IOException io) {
+                    LOG.warn("Unable to close input stream");
+                }
+            }
         }
     }
 

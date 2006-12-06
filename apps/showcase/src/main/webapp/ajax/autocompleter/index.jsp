@@ -11,16 +11,17 @@
 
 <body>
 
+<s:url id="jsonList" value="/JSONList.action" />
 Using a JSON list returned from an action (href="/JSONList.action"), without autoComplete (autoComplete="false")
 <br/>
-<s:autocompleter theme="ajax" href="/JSONList.action" cssStyle="width: 200px;" autoComplete="false"/>
+<s:autocompleter theme="ajax" href="%{jsonList}" cssStyle="width: 200px;" autoComplete="false"/>
 
 <br/>
 <br/>
 
 Using a JSON list returned from an action (href="/JSONList.action"), with autoComplete (autoComplete="true")
 <br/>
-<s:autocompleter theme="ajax" href="/JSONList.action" cssStyle="width: 200px;" autoComplete="true" />
+<s:autocompleter theme="ajax" href="%{jsonList}" cssStyle="width: 200px;" autoComplete="true" />
 
 <br/>
 <br/>
@@ -34,33 +35,34 @@ Using a local list (list="{'apple','banana','grape','pear'}")
 
 Force valid options (forceValidOption="true")
 <br/>
-<s:autocompleter theme="ajax" href="/JSONList.action" cssStyle="width: 200px;" forceValidOption="true"/>
+<s:autocompleter theme="ajax" href="%{jsonList}" cssStyle="width: 200px;" forceValidOption="true"/>
 
 <br/>
 <br/>
 
 Make dropdown's height to 180px  (dropdownHeight="180")
 <br/>
-<s:autocompleter theme="ajax" href="/JSONList.action" cssStyle="width: 200px;" dropdownHeight="180"/>
+<s:autocompleter theme="ajax" href="%{jsonList}" cssStyle="width: 200px;" dropdownHeight="180"/>
 
 <br/>
 <br/>
 
 Disabled combobox (disabled="true")
 <br/>
-<s:autocompleter theme="ajax" href="/JSONList.action" cssStyle="width: 200px;" disabled="true"/>
+<s:autocompleter theme="ajax" href="%{jsonList}" cssStyle="width: 200px;" disabled="true"/>
 
 <br/>
 <br/>
 
 
+<s:url id="autoex" value="/nodecorate/AutocompleterExample.action"/>
 
 Link two autocompleter elements. When the selected value in 'Autocompleter 1' changes, the available values in 'Autocompleter 2' will change also.
 <br/>
 <form id="selectForm">
   <p>Autocompleter 1 <s:autocompleter theme="simple" name="select" list="{'fruits','colors'}"  value="colors" onValueChangedPublishTopic="/Refresh" forceValidOption="true"/></p>
 </form>
-Autocompleter 2 <s:autocompleter theme="ajax" href="/nodecorate/AutocompleterExample.action" autoComplete="false" formId="selectForm" refreshListenTopic="/Refresh" forceValidOption="true"/>
+Autocompleter 2 <s:autocompleter theme="ajax" href="%{autoex}" autoComplete="false" formId="selectForm" refreshListenTopic="/Refresh" forceValidOption="true"/>
 
 <br/>
 <br/>

@@ -22,6 +22,8 @@
     </script>
 </head>
 
+<s:url id="ajaxTest" value="/AjaxTest.action" />
+
 <body>
 
     <table cellpadding="0" cellspacing="10" border="0" width="600">
@@ -36,7 +38,7 @@
                               <s:textfield name="tt2" label="Test Text2" />
                           </s:form>
                       </s:div>
-                      <s:div theme="ajax"  href="/AjaxTest.action" id="ryh1" theme="ajax" label="remote one" />
+                      <s:div theme="ajax"  href="%{ajaxTest}" id="ryh1" label="remote one" />
                       <s:div theme="ajax"  id="middle" label="middle">
                           middle tab<br/>
                           <s:form >
@@ -44,7 +46,7 @@
                               <s:textfield name="tt2" label="Test Text442" />
                           </s:form>
                       </s:div>
-                      <s:div theme="ajax" href="/AjaxTest.action"  id="ryh21" theme="ajax" label="remote right" />
+                      <s:div theme="ajax" href="%{ajaxTest}"  id="ryh21" label="remote right" />
                   </s:tabbedPanel>
                 <!--// END SNIPPET: tabbedpanel-tag-->
              </td>

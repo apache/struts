@@ -26,11 +26,13 @@
 <input type=button value="start timer" onclick="controller.start()">
 <input type=button value="stop timer" onclick="controller.stop()">
 
+<s:url id="ajaxTest" value="/AjaxTest.action" />
+
 <s:div
         id="once"
         theme="ajax"
         cssStyle="border: 1px solid yellow;"
-        href="/AjaxTest.action"
+        href="%{ajaxTest}"
         refreshListenTopic="/refresh"
 		startTimerListenTopic="/startTimer"
 		stopTimerListenTopic="/stopTimer"

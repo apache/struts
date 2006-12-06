@@ -7,9 +7,9 @@
 	<link rel="stylesheet" type="text/css" href="<s:url value="/struts/tabs.css"/>" />
 </head>
 <body>
-	<s:url id="panel1url" action="panel1" namespace="/nodecorate" includeContext="false" />
-	<s:url id="panel2url" action="panel2" namespace="/nodecorate" includeContext="false"/>
-	<s:url id="panel3url" action="panel3" namespace="/nodecorate" includeContext="false"/>
+	<s:url id="panel1url" action="panel1" namespace="/nodecorate" />
+	<s:url id="panel2url" action="panel2" namespace="/nodecorate" />
+	<s:url id="panel3url" action="panel3" namespace="/nodecorate" />
 	<s:tabbedPanel id="tabbedpanel" >
 		<s:div id="panel1" label="Panel1" href="%{#panel1url}" theme="ajax" />
 		<s:div id="panel2" label="Panel2" href="%{#panel2url}" theme="ajax"  />

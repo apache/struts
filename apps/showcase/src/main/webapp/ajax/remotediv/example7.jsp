@@ -9,10 +9,13 @@
 
 <body>
 
+<s:url id="test3" value="/Test3.action" />
+
+
 <s:div
         id="error"
         cssStyle="border: 1px solid yellow;"
-        href="/Test3.action"
+        href="%{test3}"
         theme="ajax"
         delay="1000"
 		executeScripts="true"

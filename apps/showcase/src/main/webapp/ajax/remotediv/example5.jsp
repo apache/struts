@@ -9,6 +9,8 @@
 
 <body>
 
+<s:url id="ajaxNoUrl" value="/AjaxNoUrl.jsp" />
+
 <s:div
         id="error"
         cssStyle="border: 1px solid yellow;"

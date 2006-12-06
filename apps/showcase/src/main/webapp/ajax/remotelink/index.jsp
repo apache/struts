@@ -26,9 +26,12 @@
 
 <br/><br/>
 
+<s:url id="ajaxTest" value="/AjaxTest.action" />
+<s:url id="test3" value="/Test3.action" />
+
 <s:a  id="link1"
         theme="ajax"
-        href="/AjaxTest.action"
+        href="%{ajaxTest}"
 		targets="t1,t2">Update 'Div 1' and 'Div 2'</s:a>
 
 <br/><br/>
@@ -43,7 +46,7 @@
 
 <s:a  id="link3"
         theme="ajax"
-        href="/AjaxTest.action"
+        href="%{ajaxTest}"
 		loadingText="Loading!!!"
 		beforeLoading="before()"
 		afterLoading="after()"
@@ -53,7 +56,7 @@
 
 <s:a  id="link4"
         theme="ajax"
-        href="/Test3.action"
+        href="%{test3}"
 		executeScripts="true"
 		targets="t2">Update 'Div 2' and execute returned javascript </s:a>
 
@@ -61,7 +64,7 @@
 
 <s:a  id="link5"
         theme="ajax"
-        href="/AjaxTest.action"
+        href="%{ajaxTest}"
 		handler="handler"
 		targets="t2">Update 'Div 2' using a custom handler </s:a>
 
@@ -78,7 +81,7 @@
 
 <s:a  id="link6"
         theme="ajax"
-        href="/AjaxTest.action"
+        href="%{ajaxTest}"
 		targets="t2"
 		formId="form"
 		>Update 'Div 2' with the content of the textbox </s:a>

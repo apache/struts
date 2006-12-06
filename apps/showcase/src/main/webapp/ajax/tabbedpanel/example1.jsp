@@ -22,6 +22,8 @@
     </script>
 </head>
 
+<s:url id="ajaxTest" value="/AjaxTest.action" />
+
 <body>
 
     <table cellpadding="0" cellspacing="10" border="0" width="600">
@@ -52,7 +54,7 @@
                             <s:textfield name="tt2" label="Test Text2"/>
                         </s:form>
                     </s:div>
-                    <s:div href="/AjaxTest.action" id="ryh1" theme="ajax"
+                    <s:div href="%{ajaxTest}" id="ryh1" theme="ajax"
                                     label="remote one"></s:div>
                     <s:div id="middle" label="middle" theme="ajax">
                         middle tab<br/>
@@ -61,18 +63,18 @@
                             <s:textfield name="tt2" label="Test Text442"/>
                         </s:form>
                     </s:div>
-                    <s:div  href="/AjaxTest.action" id="ryh21" theme="ajax" label="remote right"/>
+                    <s:div  href="%{ajaxTest}" id="ryh21" theme="ajax" label="remote right"/>
                 </s:tabbedPanel>
             </td>
         </tr>
         <tr>
             <td align="top">
                 <s:tabbedPanel id="testremote">
-                    <s:div  href="/AjaxTest.action" id="r1" theme="ajax" label="remote one" theme="ajax">
+                    <s:div  href="%{ajaxTest}" id="r1" theme="ajax" label="remote one">
                         <s:action name="AjaxTest" executeResult="true" />
                     </s:div>
-                    <s:div  href="/AjaxTest.action" id="r2" theme="ajax" label="remote two" theme="ajax"></s:div>
-                    <s:div  href="/AjaxTest.action" id="r3" theme="ajax" label="remote three" theme="ajax"></s:div>
+                    <s:div  href="%{ajaxTest}" id="r2" theme="ajax" label="remote two"></s:div>
+                    <s:div  href="%{ajaxTest}" id="r3" theme="ajax" label="remote three"></s:div>
                 </s:tabbedPanel>
             </td>
             <td align="top">

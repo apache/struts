@@ -9,10 +9,13 @@
 
 <body>
 
+<s:url id="ajaxTest" value="/AjaxTest.action" />
+
+
 <s:div
         id="twoseconds"
         cssStyle="border: 1px solid yellow;"
-        href="/AjaxTest.action"
+        href="%{ajaxTest}"
         theme="ajax"
         delay="2000"
         updateInterval="%{#parameters.period}"

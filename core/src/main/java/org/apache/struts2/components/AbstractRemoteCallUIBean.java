@@ -20,8 +20,6 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts2.views.util.UrlHelper;
-
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -49,7 +47,7 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
         super.evaluateExtraParams();
 
         if (href != null)
-            addParameter("href", UrlHelper.buildUrl(findString(href), request, response, null));
+            addParameter("href", findString(href));
         if (errorText != null)
             addParameter("errorText", findString(errorText));
         if (loadingText != null)

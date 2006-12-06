@@ -9,12 +9,14 @@
 
 
 <body>
+<s:url id="ajaxTest" value="/AjaxTest.action" />
+
 
 <s:div
         id="once"
         theme="ajax"
         cssStyle="border: 1px solid yellow;"
-        href="/AjaxTest.action"
+        href="%{ajaxTest}"
         updateInterval="2000"
 		>
     Initial Content</s:div>

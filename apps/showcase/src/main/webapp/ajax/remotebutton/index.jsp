@@ -19,17 +19,18 @@
 <body>
 
 <div id="t1">Div 1</div>
+<s:url id="ajaxTest" value="/AjaxTest.action" />
 
 
 <br/><br/>
 
 A submit button 
-<s:submit type="submit" theme="ajax" value="submit" targets="t1" href="/AjaxTest.action"/>
+<s:submit type="submit" theme="ajax" value="submit" targets="t1" href="%{ajaxTest}"/>
 <br/><br/>
 
 Use an image as submit 
 
-<s:submit type="image" theme="ajax" label="Alt Text" targets="t1" src="${pageContext.request.contextPath}/images/struts-power.gif" href="/AjaxTest.action"/>
+<s:submit type="image" theme="ajax" label="Alt Text" targets="t1" src="${pageContext.request.contextPath}/images/struts-power.gif" href="%{ajaxTest}"/>
 <br/><br/>
 
 <label for="textInput">Text to be echoed</label>

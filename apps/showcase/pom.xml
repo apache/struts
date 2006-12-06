@@ -86,14 +86,12 @@
             <groupId>velocity</groupId>
             <artifactId>velocity</artifactId>
             <version>1.4</version>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>velocity-tools</groupId>
             <artifactId>velocity-tools</artifactId>
             <version>1.1</version>
-            <optional>true</optional>
         </dependency>
 
 

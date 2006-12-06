@@ -75,7 +75,7 @@ class PropertiesSettings extends Settings {
                 try {
                     in.close();
                 } catch(IOException io) {
-                    LOG.warn("Unable to close input stream");
+                    LOG.warn("Unable to close input stream", io);
                 }
             }
         }

@@ -77,7 +77,8 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
     public void parse(HttpServletRequest servletRequest, String saveDir)
             throws IOException {
         DiskFileItemFactory fac = new DiskFileItemFactory();
-        fac.setSizeThreshold((int)maxSize);
+        // Make sure that the data is written to file
+        fac.setSizeThreshold(0);
         if (saveDir != null) {
             fac.setRepository(new File(saveDir));
         }
@@ -85,6 +86,7 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
         // Parse the request
         try {
             ServletFileUpload upload = new ServletFileUpload(fac);
+            upload.setSizeMax(maxSize);
             List items = upload.parseRequest(createRequestContext(servletRequest));
 
             for (Object item1 : items) {

@@ -55,7 +55,7 @@ public class CodebehindUnknownHandler implements UnknownHandler {
 
     protected String defaultPackageName = "codebehind-default";
     protected ServletContext servletContext;
-    protected Map<String,ResultTypeConfig> resultsByExtension = new HashMap<String,ResultTypeConfig>();
+    protected Map<String,ResultTypeConfig> resultsByExtension;
     protected String templatePathPrefix = "/";
     protected Configuration configuration;
     protected ObjectFactory objectFactory;
@@ -70,6 +70,13 @@ public class CodebehindUnknownHandler implements UnknownHandler {
     @Inject
     public void setConfiguration(Configuration config) {
         this.configuration = config;
+        resultsByExtension = new LinkedHashMap<String,ResultTypeConfig>();
+        PackageConfig parentPackage = configuration.getPackageConfig(defaultPackageName);
+        Map<String,ResultTypeConfig> results = parentPackage.getAllResultTypeConfigs();
+        
+        resultsByExtension.put("jsp", results.get("dispatcher"));
+        resultsByExtension.put("vm", results.get("velocity"));
+        resultsByExtension.put("ftl", results.get("freemarker"));
     }
     
     @Inject
@@ -82,22 +89,8 @@ public class CodebehindUnknownHandler implements UnknownHandler {
         this.objectFactory = objectFactory;
     }
     
-    protected Map<String,ResultTypeConfig> loadResultTypes(Configuration config) {
-        Map<String,ResultTypeConfig> resultTypes = new LinkedHashMap<String,ResultTypeConfig>();
-        PackageConfig parentPackage = config.getPackageConfig(defaultPackageName);
-        Map<String,ResultTypeConfig> results = parentPackage.getAllResultTypeConfigs();
-        
-        resultTypes.put("jsp", results.get("dispatcher"));
-        resultTypes.put("vm", results.get("velocity"));
-        resultTypes.put("ftl", results.get("freemarker"));
-        return resultTypes;
-    }
-    
     public ActionConfig handleUnknownAction(String namespace, String actionName)
             throws XWorkException {
-        if (resultsByExtension == null) {
-            resultsByExtension = loadResultTypes(configuration);
-        }
         String pathPrefix = determinePath(templatePathPrefix, namespace);
         ActionConfig actionConfig = null;
         for (String ext : resultsByExtension.keySet()) {
@@ -118,9 +111,6 @@ public class CodebehindUnknownHandler implements UnknownHandler {
     }
 
     protected ActionConfig buildActionConfig(String path, String namespace, String actionName, ResultTypeConfig resultTypeConfig) {
-        if (resultsByExtension == null) {
-            resultsByExtension = loadResultTypes(configuration);
-        }
         Map<String,ResultConfig> results = new HashMap<String,ResultConfig>();
         HashMap params = new HashMap();
         if (resultTypeConfig.getParams() != null) {

@@ -42,7 +42,7 @@
         <mapper class="com.opensymphony.module.sitemesh.mapper.FileDecoratorMapper">
         </mapper>
 
-        <mapper class="org.apache.struts2.showcase.sitemesh.NoneDecoratorMapper">
+        <mapper class="org.apache.struts2.sitemesh.NoneDecoratorMapper">
         </mapper>
 
         <mapper class="com.opensymphony.module.sitemesh.mapper.ConfigDecoratorMapper">

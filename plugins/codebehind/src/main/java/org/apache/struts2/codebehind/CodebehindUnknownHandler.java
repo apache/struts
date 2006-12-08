@@ -48,6 +48,9 @@ import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 import com.opensymphony.xwork2.config.providers.InterceptorBuilder;
 import com.opensymphony.xwork2.inject.Inject;
 
+/**
+ * Uses code-behind conventions to solve the two unknown problems.  
+ */
 public class CodebehindUnknownHandler implements UnknownHandler {
 
     protected String defaultPackageName = "codebehind-default";

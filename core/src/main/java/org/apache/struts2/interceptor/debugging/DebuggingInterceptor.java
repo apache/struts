@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
 import org.apache.struts2.StrutsConstants;
 
@@ -105,10 +106,18 @@ public class DebuggingInterceptor implements Interceptor {
     private boolean enableXmlWithConsole = false;
     
     private boolean devMode;
+    private FreemarkerManager freemarkerManager;
+    
+    private boolean consoleEnabled = false;
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String mode) {
         this.devMode = "true".equals(mode);
+    }
+    
+    @Inject
+    public void setFreemarkerManager(FreemarkerManager mgr) {
+        this.freemarkerManager = mgr;
     }
 
     /**
@@ -145,6 +154,7 @@ public class DebuggingInterceptor implements Interceptor {
                             }
                         });
             } else if (CONSOLE_MODE.equals(type)) {
+                consoleEnabled = true;
                 inv.addPreResultListener(
                         new PreResultListener() {
                             public void beforeResult(ActionInvocation inv, String actionResult) {
@@ -160,6 +170,7 @@ public class DebuggingInterceptor implements Interceptor {
                                 ActionContext.getContext().put("debugXML", xml);
 
                                 FreemarkerResult result = new FreemarkerResult();
+                                result.setFreemarkerManager(freemarkerManager);
                                 result.setContentType("text/html");
                                 result.setLocation("/org/apache/struts2/interceptor/debugging/console.ftl");
                                 result.setParse(false);
@@ -175,6 +186,7 @@ public class DebuggingInterceptor implements Interceptor {
                 ValueStack stack = (ValueStack) ctx.getSession().get(SESSION_KEY);
                 String cmd = getParameter(EXPRESSION_PARAM);
 
+                ServletActionContext.getRequest().setAttribute("decorator", "none");
                 HttpServletResponse res = ServletActionContext.getResponse();
                 res.setContentType("text/plain");
 
@@ -193,7 +205,7 @@ public class DebuggingInterceptor implements Interceptor {
             try {
                 return inv.invoke();
             } finally {
-                if (devMode) {
+                if (devMode && consoleEnabled) {
                     final ActionContext ctx = ActionContext.getContext();
                     ctx.getSession().put(SESSION_KEY, ctx.get(ActionContext.VALUE_STACK));
                 }

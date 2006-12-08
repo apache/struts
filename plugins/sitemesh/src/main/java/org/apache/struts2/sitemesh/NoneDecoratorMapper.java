@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: FreeMarkerPageFilter.java 475637 2006-11-16 08:32:03Z mrdon $
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,15 +18,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.showcase.sitemesh;
+package org.apache.struts2.sitemesh;
+
+import com.opensymphony.module.sitemesh.mapper.AbstractDecoratorMapper;
+import com.opensymphony.module.sitemesh.Decorator;
+import com.opensymphony.module.sitemesh.Page;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.opensymphony.module.sitemesh.Decorator;
-import com.opensymphony.module.sitemesh.Page;
-import com.opensymphony.module.sitemesh.mapper.AbstractDecoratorMapper;
-
+/**
+ * Won't decorate the output if it finds a "decorator" flag in the request
+ */
 public class NoneDecoratorMapper extends AbstractDecoratorMapper {
+    
     public Decorator getDecorator(HttpServletRequest req, Page page) {
         if ("none".equals(req.getAttribute("decorator"))) {
             return null;

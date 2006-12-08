@@ -387,6 +387,7 @@ There's quite a few combination being tested. The characters in bold and non-bol
 	Bar
 </@s.else>
 
+<br/>
 <b>27 - Foo - </b>
 <@s.if test="true">
 	Foo
@@ -404,6 +405,7 @@ There's quite a few combination being tested. The characters in bold and non-bol
 	Bar
 </@s.else>
 
+<br/>
 <b>28 - MooFooFoo</b>
 <@s.if test="false">
 	Foo
@@ -421,7 +423,7 @@ There's quite a few combination being tested. The characters in bold and non-bol
 	Bar
 </@s.else>
 
-
+<br/>
 <b>29 - MooMooMoo</b>
 <@s.if test="false">
 	Foo
@@ -439,7 +441,7 @@ There's quite a few combination being tested. The characters in bold and non-bol
 	Bar
 </@s.else>
 
-
+<br/>
 <b>30 - Moo - </b>
 <@s.if test="false">
 	Foo
@@ -457,7 +459,7 @@ There's quite a few combination being tested. The characters in bold and non-bol
 	Bar
 </@s.else>
 
-
+<br/>
 <b>31 - BarFooFoo - </b>
 <@s.if test="false">
 	Foo
@@ -475,6 +477,7 @@ There's quite a few combination being tested. The characters in bold and non-bol
 	</@s.elseif>
 </@s.else>
 
+<br/>
 <b>32 - BarMooMoo - </b>
 <@s.if test="false">
 	Foo
@@ -492,6 +495,7 @@ There's quite a few combination being tested. The characters in bold and non-bol
 	</@s.elseif>
 </@s.else>
 
+<br/>
 <b>33 - Bar - </b>
 <@s.if test="false">
 	Foo

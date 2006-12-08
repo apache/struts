@@ -151,6 +151,19 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;/result&gt;
  * <!-- END SNIPPET: description.example --></pre>
  *
+ * <p>
+ * In the following example the XSLT result would use the action's user property
+ * instead of the action as it's base document and walk through it's properties.
+ * The exposedValue uses an ognl expression to derive it's value.
+ * </p>
+ *
+ * <pre>
+ * &lt;result name="success" type="xslt"&gt;
+ *   &lt;param name="location"&gt;foo.xslt&lt;/param&gt;
+ *   &lt;param name="exposedValue"&gt;user$&lt;/param&gt;
+ * &lt;/result&gt;
+ * </pre>
+ * *
  * <b>This result type takes the following parameters:</b>
  *
  * <!-- START SNIPPET: params -->
@@ -192,17 +205,41 @@ import com.opensymphony.xwork2.util.ValueStack;
 public class XSLTResult implements Result {
 
     private static final long serialVersionUID = 6424691441777176763L;
-    private static final Log log = LogFactory.getLog(XSLTResult.class);
+
+    /** Log instance for this result. */
+    private static final Log LOG = LogFactory.getLog(XSLTResult.class);
+
+    /** 'stylesheetLocation' parameter.  Points to the xsl. */
     public static final String DEFAULT_PARAM = "stylesheetLocation";
 
+    /** Cache of all tempaltes. */
+    private static final Map<String, Templates> templatesCache;
+
+    static {
+        templatesCache = new HashMap<String, Templates>();
+    }
+
+    // Configurable Parameters
+
+    /** Determines whether or not the result should allow caching. */
     protected boolean noCache;
-    private final Map<String, Templates> templatesCache;
+
+    /** Indicates the location of the xsl template. */
     private String stylesheetLocation;
+
+    /** Indicates the property name patterns which should be exposed to the xml. */
+    private String matchingPattern;
+
+    /** Indicates the property name patterns which should be excluded from the xml. */
+    private String exludingPattern;
+
+    /** Indicates the ognl expression respresenting the bean which is to be exposed as xml. */
+    private String exposedValue;
+
     private boolean parse;
     private AdapterFactory adapterFactory;
 
     public XSLTResult() {
-        templatesCache = new HashMap<String, Templates>();
     }
 
     public XSLTResult(String stylesheetLocation) {
@@ -232,6 +269,30 @@ public class XSLTResult implements Result {
         return stylesheetLocation;
     }
 
+    public String getExposedValue() {
+        return exposedValue;
+    }
+
+    public void setExposedValue(String exposedValue) {
+        this.exposedValue = exposedValue;
+    }
+
+    public String getMatchingPattern() {
+        return matchingPattern;
+    }
+
+    public void setMatchingPattern(String matchingPattern) {
+        this.matchingPattern = matchingPattern;
+    }
+
+    public String getExludingPattern() {
+        return exludingPattern;
+    }
+
+    public void setExludingPattern(String exludingPattern) {
+        this.exludingPattern = exludingPattern;
+    }
+
     /**
      * If true, parse the stylesheet location for OGNL expressions.
      *
@@ -249,6 +310,7 @@ public class XSLTResult implements Result {
             ValueStack stack = ActionContext.getContext().getValueStack();
             location = TextParseUtil.translateVariables(location, stack);
         }
+
 
         try {
             HttpServletResponse response = ServletActionContext.getResponse();
@@ -278,23 +340,29 @@ public class XSLTResult implements Result {
 
             response.setContentType(mimeType);
 
-            Source xmlSource = getDOMSourceForStack(invocation.getAction());
+            Object result = invocation.getAction();
+            if (exposedValue != null) {
+                ValueStack stack = invocation.getStack();
+                result = stack.findValue(exposedValue);
+            }
+
+            Source xmlSource = getDOMSourceForStack(result);
 
             // Transform the source XML to System.out.
             PrintWriter out = response.getWriter();
 
-            log.debug("xmlSource = " + xmlSource);
+            LOG.debug("xmlSource = " + xmlSource);
             transformer.transform(xmlSource, new StreamResult(out));
 
             out.close(); // ...and flush...
 
-            if (log.isDebugEnabled()) {
-                log.debug("Time:" + (System.currentTimeMillis() - startTime) + "ms");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Time:" + (System.currentTimeMillis() - startTime) + "ms");
             }
 
             writer.flush();
         } catch (Exception e) {
-            log.error("Unable to render XSLT Template, '" + location + "'", e);
+            LOG.error("Unable to render XSLT Template, '" + location + "'", e);
             throw e;
         }
     }
@@ -337,7 +405,7 @@ public class XSLTResult implements Result {
                     throw new TransformerException("Stylesheet " + path + " not found in resources.");
                 }
 
-                log.debug("Preparing XSLT stylesheet templates: " + path);
+                LOG.debug("Preparing XSLT stylesheet templates: " + path);
 
                 TransformerFactory factory = TransformerFactory.newInstance();
                 templates = factory.newTemplates(new StreamSource(resource.openStream()));
@@ -348,8 +416,8 @@ public class XSLTResult implements Result {
         return templates;
     }
 
-    protected Source getDOMSourceForStack(Object action)
+    protected Source getDOMSourceForStack(Object value)
             throws IllegalAccessException, InstantiationException {
-        return new DOMSource(getAdapterFactory().adaptDocument("result", action) );
+        return new DOMSource(getAdapterFactory().adaptDocument("result", value) );
     }
 }

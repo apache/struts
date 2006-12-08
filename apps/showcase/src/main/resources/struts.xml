@@ -43,6 +43,8 @@
 
     <include file="struts-tiles.xml" />
 
+    <include file="struts-xslt.xml" />
+
     <package name="default" extends="struts-default">
         <interceptors>
             <interceptor-stack name="crudStack">

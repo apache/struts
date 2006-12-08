@@ -390,12 +390,12 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
             Map sessionMap, Map applicationMap, String portletNamespace,
             Integer phase) throws PortletException {
         LOG.debug("serviceAction");
-        Dispatcher.setInstance(dispatcherUtils);
         HashMap extraContext = createContextMap(requestMap, parameterMap,
                 sessionMap, applicationMap, request, response,
                 getPortletConfig(), phase);
         String actionName = mapping.getName();
         String namespace = mapping.getNamespace();
+        Dispatcher.setInstance(dispatcherUtils);
         try {
             LOG.debug("Creating action proxy for name = " + actionName
                     + ", namespace = " + namespace);
@@ -431,6 +431,8 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
             LOG.error("Could not execute action", e);
             throw new PortletException("Error executing action " + actionName,
                     e);
+        } finally {
+            Dispatcher.setInstance(null);
         }
     }
 

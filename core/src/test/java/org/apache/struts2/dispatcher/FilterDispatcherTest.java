@@ -46,6 +46,8 @@ import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.inject.Context;
+import com.opensymphony.xwork2.inject.Factory;
 
 /**
  * FilterDispatcher TestCase.
@@ -83,11 +85,26 @@ public class FilterDispatcherTest extends StrutsTestCase {
 
     public void testObjectFactoryDestroy() throws Exception {
 
-        FilterDispatcher filterDispatcher = new FilterDispatcher();
+        final InnerDestroyableObjectFactory destroyedObjectFactory = new InnerDestroyableObjectFactory();
+        FilterDispatcher filterDispatcher = new FilterDispatcher() {
+            @Override
+            protected Dispatcher createDispatcher(FilterConfig cfg) {
+                return new Dispatcher(cfg.getServletContext(), new HashMap()) {
+                    Container cont = new ContainerBuilder()
+                        .factory(ObjectFactory.class, new Factory() {
+                            public Object create(Context context) throws Exception { return destroyedObjectFactory; }
+                        })
+                        .create(false);
+                    
+                    @Override
+                    public Container getContainer() {
+                        return cont;
+                    }
+                };
+            }
+        };
         filterDispatcher.init(new MockFilterConfig((ServletContext) null));
-        InnerDestroyableObjectFactory destroyedObjectFactory = new InnerDestroyableObjectFactory();
-        ObjectFactory.setObjectFactory(destroyedObjectFactory);
-
+        
         assertFalse(destroyedObjectFactory.destroyed);
         filterDispatcher.destroy();
         assertTrue(destroyedObjectFactory.destroyed);

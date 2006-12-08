@@ -1,4 +1,6 @@
-<script type="text/javascript">
+<tr>
+    <td class="tdLabel"></td>
+    <td><script type="text/javascript">
 	dojo.require("dojo.widget.DatePicker");
 </script>
 <div dojoType="datepicker"
@@ -12,3 +14,5 @@
  weekStartsOn="g"
  staticDisplay="false">
 </div>
+</td>
+</tr>

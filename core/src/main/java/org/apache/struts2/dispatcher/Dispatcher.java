@@ -168,6 +168,17 @@ public class Dispatcher {
      */
     public static void setInstance(Dispatcher instance) {
         Dispatcher.instance.set(instance);
+        
+        if (instance != null) {
+            Container cont = instance.getContainer();
+            if (cont != null) {
+                ObjectFactory.setObjectFactory(cont.getInstance(ObjectFactory.class));
+            } else {
+                LOG.warn("This dispatcher instance doesn't have a container, so the object factory won't be set.");
+            }
+        } else {
+            ObjectFactory.setObjectFactory(null);
+        }
     }
 
     /**
@@ -258,6 +269,7 @@ public class Dispatcher {
                 LOG.error("exception occurred while destroying ObjectFactory ["+objectFactory+"]", e);
             }
         }
+        ObjectFactory.setObjectFactory(null);
         
         // clean up Dispatcher itself
         instance.set(null);
@@ -815,6 +827,16 @@ public class Dispatcher {
      * @return Our dependency injection container
      */
     public Container getContainer() {
-        return getConfigurationManager().getConfiguration().getContainer();
+        ConfigurationManager mgr = getConfigurationManager();
+        if (mgr == null) {
+            throw new IllegalStateException("The configuration manager shouldn't be null");
+        } else {
+            Configuration config = mgr.getConfiguration();
+            if (config == null) {
+                throw new IllegalStateException("Unable to load configuration");
+            } else {
+                return config.getContainer();
+            }
+        }
     }
 }

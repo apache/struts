@@ -228,7 +228,9 @@ public class FileUploadInterceptorTest extends StrutsTestCase {
     }
 
     private MultiPartRequestWrapper createMultipartRequest(HttpServletRequest req, int maxsize) throws IOException {
-       return new MultiPartRequestWrapper(new JakartaMultiPartRequest(), req, tempDir.getAbsolutePath());
+       JakartaMultiPartRequest jak = new JakartaMultiPartRequest();
+       jak.setMaxSize(String.valueOf(maxsize));
+       return new MultiPartRequestWrapper(jak, req, tempDir.getAbsolutePath());
     }
 
     protected void setUp() throws Exception {

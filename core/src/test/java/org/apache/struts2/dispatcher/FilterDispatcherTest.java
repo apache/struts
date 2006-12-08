@@ -100,11 +100,12 @@ public class FilterDispatcherTest extends StrutsTestCase {
         MockHttpServletResponse res = new MockHttpServletResponse();
         MockFilterChain chain = new MockFilterChain();
         final NoOpDispatcher _dispatcher = new NoOpDispatcher(servletContext);
-        Dispatcher.setInstance(_dispatcher);
-
         ConfigurationManager confManager = new ConfigurationManager();
         confManager.setConfiguration(new DefaultConfiguration());
         _dispatcher.setConfigurationManager(confManager);
+        Dispatcher.setInstance(_dispatcher);
+
+        
 
 
         ObjectFactory.setObjectFactory(new InnerObjectFactory());

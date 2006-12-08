@@ -1,3 +1,5 @@
+<tr>
+    <td colspan="2"><div align="right">
 <input
   type="button"
   dojoType="struts:Bind"
@@ -12,3 +14,6 @@
   afterLoading="g"
   handler="h"
   value="i"/>
+  </div>
+  </td>
+  </tr>

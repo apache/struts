@@ -105,8 +105,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 public class VelocityManager {
     private static final Log log = LogFactory.getLog(VelocityManager.class);
-    private static VelocityManager instance;
     public static final String STRUTS = "struts";
+    private ObjectFactory objectFactory;
 
     /**
      * the parent JSP tag
@@ -137,6 +137,11 @@ public class VelocityManager {
     private String customConfigFile;
 
     public VelocityManager() {
+    }
+    
+    @Inject
+    public void setObjectFactory(ObjectFactory fac) {
+        this.objectFactory = fac;
     }
 
     /**
@@ -238,7 +243,7 @@ public class VelocityManager {
         for (int i = 0; i < chainedContextNames.length; i++) {
             String className = chainedContextNames[i];
             try {
-                VelocityContext velocityContext = (VelocityContext) ObjectFactory.getObjectFactory().buildBean(className, null);
+                VelocityContext velocityContext = (VelocityContext) objectFactory.buildBean(className, null);
                 contextList.add(velocityContext);
             } catch (Exception e) {
                 log.warn("Warning.  " + e.getClass().getName() + " caught while attempting to instantiate a chained VelocityContext, " + className + " -- skipping");

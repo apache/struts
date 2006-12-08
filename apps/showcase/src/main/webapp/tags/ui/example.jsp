@@ -13,7 +13,7 @@
 <s:fielderror />
 
 
-<s:form action="exampleSubmit" method="post" enctype="multipart/form-data" tooltipConfig="#{'jsTooltipEnabled':'true'}">
+<s:form action="exampleSubmit" method="post" enctype="multipart/form-data" tooltipConfig="%{'jsTooltipEnabled':'true'}">
     <s:textfield 
             label="Name" 
             name="name"
@@ -35,7 +35,7 @@
             tooltip="Choose Your Favourite Color"
             label="Favorite Color"
             list="{'Red', 'Blue', 'Green'}"
-            name="favoriteColor"
+            name="favouriteColor"
             emptyOption="true"
             headerKey="None"
             headerValue="None"/>

@@ -44,7 +44,7 @@ public class UITagExample extends ActionSupport implements Validateable {
     String name;
     Date birthday;
     String bio;
-    String favoriteColor;
+    String favouriteColor;
     List friends;
     boolean legalAge;
     String state;
@@ -168,12 +168,12 @@ public class UITagExample extends ActionSupport implements Validateable {
         this.bio = bio;
     }
 
-    public String getFavoriteColor() {
-        return favoriteColor;
+    public String getFavouriteColor() {
+        return favouriteColor;
     }
 
-    public void setFavoriteColor(String favoriteColor) {
-        this.favoriteColor = favoriteColor;
+    public void setFavouriteColor(String favoriteColor) {
+        this.favouriteColor = favoriteColor;
     }
 
     public List getFriends() {
@@ -210,6 +210,10 @@ public class UITagExample extends ActionSupport implements Validateable {
 
     public void setPicture(File picture) {
         this.picture = picture;
+    }
+    
+    public File getPicture() {
+        return this.picture;
     }
 
     public void setPictureContentType(String pictureContentType) {

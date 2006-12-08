@@ -169,6 +169,7 @@ public class Dispatcher {
     public static void setInstance(Dispatcher instance) {
         Dispatcher.instance.set(instance);
         
+        // Tie the ObjectFactory threadlocal instance to this Dispatcher instance
         if (instance != null) {
             Container cont = instance.getContainer();
             if (cont != null) {
@@ -251,12 +252,12 @@ public class Dispatcher {
     }
 
     /**
-     * Release local threads and destroy any DispatchListeners.
+     * Releases all instances bound to this dispatcher instance.
      */
     public void cleanup() {
     	
     	// clean up ObjectFactory
-        ObjectFactory objectFactory = ObjectFactory.getObjectFactory();
+        ObjectFactory objectFactory = getContainer().getInstance(ObjectFactory.class);
         if (objectFactory == null) {
             LOG.warn("Object Factory is null, something is seriously wrong, no clean up will be performed");
         }
@@ -269,9 +270,8 @@ public class Dispatcher {
                 LOG.error("exception occurred while destroying ObjectFactory ["+objectFactory+"]", e);
             }
         }
-        ObjectFactory.setObjectFactory(null);
         
-        // clean up Dispatcher itself
+        // clean up Dispatcher itself for this thread
         instance.set(null);
         
         // clean up DispatcherListeners

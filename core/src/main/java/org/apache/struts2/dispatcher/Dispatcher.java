@@ -370,12 +370,6 @@ public class Dispatcher {
     private void init_CheckConfigurationReloading(Container container) {
         FileManager.setReloadingConfigs("true".equals(container.getInstance(String.class,
                 StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD)));
-
-        String pkg = container.getInstance(String.class, StrutsConstants.STRUTS_CONTINUATIONS_PACKAGE);
-        if (pkg != null) {
-            ObjectFactory.setContinuationPackage(pkg);
-        }
-
     }
 
     private void init_CheckWebLogicWorkaround(Container container) {

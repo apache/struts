@@ -68,9 +68,14 @@ public class LegacyPropertiesConfigurationProvider implements ConfigurationProvi
         
         for (Iterator i = settings.list(); i.hasNext(); ) {
             String name = (String) i.next();
-            props.put(name, settings.get(name));
+            props.setProperty(name, settings.get(name), settings.getLocation(name));
+            
+            // Convert struts properties into ones that xwork expects
             if (StrutsConstants.STRUTS_DEVMODE.equals(name)) {
                 props.setProperty("devMode", settings.get(name), settings.getLocation(name));
+            }
+            if (StrutsConstants.STRUTS_CONTINUATIONS_PACKAGE.equals(name)) {
+                props.setProperty("continuations.package", settings.get(name), settings.getLocation(name));
             }
         }
         

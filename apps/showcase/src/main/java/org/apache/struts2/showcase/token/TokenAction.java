@@ -53,7 +53,7 @@ public class TokenAction extends ActionSupport {
         return SUCCESS;
     }
 
-    public String doInput() throws Exception {
+    public String input() throws Exception {
         // prepare input form
         Integer balSource = (Integer) ActionContext.getContext().getSession().get("balanceSource");
         Integer balDest = (Integer) ActionContext.getContext().getSession().get("balanceDestination");

@@ -36,6 +36,7 @@ import com.opensymphony.module.sitemesh.Decorator;
 import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.module.sitemesh.filter.PageFilter;
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionEventListener;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionSupport;
@@ -177,6 +178,9 @@ public abstract class TemplatePageFilter extends PageFilter {
 
         public String invokeActionOnly() throws Exception {
             return null;
+        }
+
+        public void setActionEventListener(ActionEventListener listener) {
         }
     }
 }

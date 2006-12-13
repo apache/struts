@@ -74,9 +74,6 @@ public class LegacyPropertiesConfigurationProvider implements ConfigurationProvi
             if (StrutsConstants.STRUTS_DEVMODE.equals(name)) {
                 props.setProperty("devMode", settings.get(name), settings.getLocation(name));
             }
-            if (StrutsConstants.STRUTS_CONTINUATIONS_PACKAGE.equals(name)) {
-                props.setProperty("continuations.package", settings.get(name), settings.getLocation(name));
-            }
         }
         
         // Set default locale

@@ -73,7 +73,6 @@ import com.opensymphony.xwork2.util.ObjectTypeDeterminer;
 import com.opensymphony.xwork2.util.ObjectTypeDeterminerFactory;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.util.XWorkContinuationConfig;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
@@ -463,17 +462,6 @@ public class Dispatcher {
             String namespace = mapping.getNamespace();
             String name = mapping.getName();
             String method = mapping.getMethod();
-
-            String id = request.getParameter(XWorkContinuationConfig.CONTINUE_PARAM);
-            if (id != null) {
-                // remove the continue key from the params - we don't want to bother setting
-                // on the value stack since we know it won't work. Besides, this breaks devMode!
-                Map params = (Map) extraContext.get(ActionContext.PARAMETERS);
-                params.remove(XWorkContinuationConfig.CONTINUE_PARAM);
-
-                // and now put the key in the context to be picked up later by XWork
-                extraContext.put(XWorkContinuationConfig.CONTINUE_KEY, id);
-            }
 
             Configuration config = configurationManager.getConfiguration();
             ActionProxy proxy = config.getContainer().getInstance(ActionProxyFactory.class).createActionProxy(

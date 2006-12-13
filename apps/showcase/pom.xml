@@ -64,6 +64,12 @@
 
         <dependency>
             <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-continuations-plugin</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
             <artifactId>struts2-codebehind-plugin</artifactId>
             <version>${pom.version}</version>
         </dependency>
@@ -120,11 +126,6 @@
          <artifactId>myfaces-api</artifactId>
          <version>1.1.2</version>
       </dependency>
-      <dependency>
-         <groupId>org.rifers</groupId>
-         <artifactId>rife-continuations</artifactId>
-         <version>0.0.2</version>
-     </dependency>
      <dependency>
          <groupId>commons-fileupload</groupId>
          <artifactId>commons-fileupload</artifactId>

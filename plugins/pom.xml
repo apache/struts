@@ -21,6 +21,7 @@
     <modules>
         <module>codebehind</module>
         <module>config-browser</module>
+        <module>continuations</module>
         <module>jasperreports</module>
         <module>jfreechart</module>
         <module>jsf</module>

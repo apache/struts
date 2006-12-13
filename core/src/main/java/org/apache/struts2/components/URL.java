@@ -42,7 +42,6 @@ import org.apache.struts2.views.util.UrlHelper;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.XWorkContinuationConfig;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -141,7 +140,8 @@ public class URL extends Component {
     protected String portletUrlType;
     protected String anchor;
     protected String urlIncludeParams;
-
+    protected ExtraParameterProvider extraParameterProvider;
+    
     public URL(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack);
         this.req = req;
@@ -151,6 +151,11 @@ public class URL extends Component {
     @Inject(StrutsConstants.STRUTS_URL_INCLUDEPARAMS)
     public void setUrlIncludeParams(String urlIncludeParams) {
         this.urlIncludeParams = urlIncludeParams;
+    }
+    
+    @Inject(required=false)
+    public void setExtraParameterProvider(ExtraParameterProvider provider) {
+        this.extraParameterProvider = provider;
     }
 
     public boolean start(Writer writer) {
@@ -172,14 +177,15 @@ public class URL extends Component {
 
             if (NONE.equalsIgnoreCase(includeParams)) {
                 mergeRequestParameters(value, parameters, Collections.EMPTY_MAP);
-                ActionContext.getContext().put(XWorkContinuationConfig.CONTINUE_KEY, null);
             } else if (ALL.equalsIgnoreCase(includeParams)) {
                 mergeRequestParameters(value, parameters, req.getParameterMap());
 
                 // for ALL also include GET parameters
                 includeGetParameters();
+                includeExtraParameters();
             } else if (GET.equalsIgnoreCase(includeParams) || (includeParams == null && value == null && action == null)) {
                 includeGetParameters();
+                includeExtraParameters();
             } else if (includeParams != null) {
                 LOG.warn("Unknown value for includeParams parameter to URL tag: " + includeParams);
             }
@@ -191,6 +197,11 @@ public class URL extends Component {
         return result;
     }
 
+    private void includeExtraParameters() {
+        if (extraParameterProvider != null) {
+            mergeRequestParameters(value, parameters, extraParameterProvider.getExtraParameters());
+        }
+    }
     private void includeGetParameters() {
         if(!(Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest())) {
             String query = extractQueryString();
@@ -416,5 +427,9 @@ public class URL extends Component {
                 parameters.put(key, entry.getValue());
             }
         }
+    }
+    
+    public static interface ExtraParameterProvider {
+        public Map getExtraParameters();
     }
 }

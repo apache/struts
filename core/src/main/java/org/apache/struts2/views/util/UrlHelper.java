@@ -41,7 +41,6 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.XWorkContinuationConfig;
 
 
 /**
@@ -164,16 +163,6 @@ public class UrlHelper {
             }
 
             link.append(requestURI);
-        }
-
-        // tie in the continuation parameter
-        String continueId = (String) ActionContext.getContext().get(XWorkContinuationConfig.CONTINUE_KEY);
-        if (continueId != null) {
-            if (params == null) {
-                params = Collections.singletonMap(XWorkContinuationConfig.CONTINUE_PARAM, continueId);
-            } else {
-                params.put(XWorkContinuationConfig.CONTINUE_PARAM, continueId);
-            }
         }
 
         //if the action was not explicitly set grab the params from the request

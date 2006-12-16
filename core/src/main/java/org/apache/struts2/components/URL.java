@@ -212,6 +212,9 @@ public class URL extends Component {
     private String extractQueryString() {
         // Parse the query string to make sure that the parameters come from the query, and not some posted data
         String query = req.getQueryString();
+        if (query == null) {
+            query = (String) req.getAttribute("javax.servlet.forward.query_string");
+        }
 
         if (query != null) {
             // Remove possible #foobar suffix

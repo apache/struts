@@ -40,10 +40,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.config.BeanSelectionProvider;
-import org.apache.struts2.config.ClasspathConfigurationProvider;
-import org.apache.struts2.config.LegacyPropertiesConfigurationProvider;
-import org.apache.struts2.config.StrutsXmlConfigurationProvider;
+import org.apache.struts2.config.*;
 import org.apache.struts2.config.ClasspathConfigurationProvider.ClasspathPageLocator;
 import org.apache.struts2.config.ClasspathConfigurationProvider.PageLocator;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -344,8 +341,10 @@ public class Dispatcher {
     }
 
     private void init_MethodConfigurationProvider() {
-        // TODO
         // See https://issues.apache.org/struts/browse/WW-1522
+        MethodConfigurationProvider provider = new MethodConfigurationProvider();
+        provider.init(configurationManager.getConfiguration());
+        provider.loadPackages();        
     }
 
     private void init_FilterInitParameters() {

@@ -21,116 +21,223 @@
 package org.apache.struts2.config;
 
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.springframework.mock.web.MockServletContext;
 
 import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.config.entities.*;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.ActionSupport;
 
 import junit.framework.TestCase;
 
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+
 /**
- * Preliminary test to define parameters of MethodConfigurationProvide. WORK IN PROGESS.
+ * MethodConfigurationProviderTest exercises the MethodConfigurationProvider
+ * to confirm that only the expected methods are generated.
  */
 public class MethodConfigurationProviderTest extends TestCase {
 
+    /**
+     * Object under test.
+     */
     MethodConfigurationProvider provider;
-    Configuration config;
 
+    /**
+     * Set of packages and ActionConfigs to exercise.
+     */
+    Configuration configuration;
+
+    /**
+     * Mock dispatcher.
+     */
+    Dispatcher dispatcher;
+
+    /**
+     * Creates a mock Dispatcher and seeds Configuration.
+     */
     public void setUp() {
 
-        config = new DefaultConfiguration();
+        InternalConfigurationManager configurationManager = new InternalConfigurationManager();
+        dispatcher = new Dispatcher(new MockServletContext(), new HashMap<String, String>());
+        dispatcher.setConfigurationManager(configurationManager);
+        dispatcher.init();
+        Dispatcher.setInstance(dispatcher);
 
+        configuration = new DefaultConfiguration();
+        // empty package for the "default" namespace of empty String
         PackageConfig strutsDefault = new PackageConfig("struts-default");
         strutsDefault.addResultTypeConfig(new ResultTypeConfig("dispatcher", ServletDispatcherResult.class.getName(), "location"));
         strutsDefault.setDefaultResultType("dispatcher");
-        config.addPackageConfig("struts-default", strutsDefault);
+        configuration.addPackageConfig("struts-default", strutsDefault);
 
-        PackageConfig customPackage = new PackageConfig("custom-package");
-        customPackage.setNamespace("/custom");
+        // custom package with various actions
+        PackageConfig customPackage = new PackageConfig("trick-package");
+        customPackage.setNamespace("/trick");
+        // action that specifies ActionSupport (not empty) but with no methods
         ActionConfig action = new ActionConfig(null, ActionSupport.class, null, null, null);
         customPackage.addActionConfig("action",action);
-        config.addPackageConfig("custom-package", customPackage);
+        // action that species a custom Action with a manual method
+        ActionConfig custom = new ActionConfig(null, Custom.class, null, null, null);
+        customPackage.addActionConfig("custom",custom);
+        // action for manual method, with params, to prove it is not overwritten
+        Map params = new HashMap();
+        params.put("name","value");
+        ActionConfig manual = new ActionConfig("manual", Custom.class, params, null, null);
+        customPackage.addActionConfig("custom!manual",manual);
+        configuration.addPackageConfig("trick-package", customPackage);
 
         provider = new MethodConfigurationProvider();
-        provider.init(config);
+        provider.init(configuration);
         provider.loadPackages();
     }
 
+    /**
+     * Provides the "custom-package" configuration.
+     * @return the "custom-package" configuration.
+     */
     private PackageConfig getCustom() {
-        return config.getPackageConfig("custom-package");
+        return configuration.getPackageConfig("trick-package");
     }
 
     /**
      * Confirms baseline setup works as expected.
      */
-    public void off_testSetup() {
-        assertEquals(2, config.getPackageConfigs().size());
-        PackageConfig struts = config.getPackageConfig("struts-default");
+    public void testSetup() {
+        assertEquals(2, configuration.getPackageConfigs().size());
+        PackageConfig struts = configuration.getPackageConfig("struts-default");
         assertNotNull(struts);
+        assertTrue("testSetup: Expected struts-default to be empty!", struts.getActionConfigs().size() == 0);
+
         PackageConfig custom = getCustom();
         assertNotNull(custom);
-        assertEquals(0,struts.getActionConfigs().size());
-        assertTrue("testSetup: Expected ActionConfigs to be added!", 1 <struts.getActionConfigs().size());
+        assertTrue("testSetup: Expected ActionConfigs to be added!", custom.getActionConfigs().size() > 0);
     }
 
     /**
-     * Confirms system detects other non-void, no-argument methods
-     * on the class of default actions, and that it creates an ActionConfig
-     * matching the default action.
+     * Confirms that system detects no-argument methods that return Strings
+     * and generates the appropriate ActionConfigs.
      */
-    public void off_testQualifyingMethods() {
+    public void testQualifyingMethods() {
 
-        PackageConfig custom = getCustom();
+        PackageConfig config = getCustom();
 
-        boolean baseline = custom.getActionConfigs().containsKey("action");
-        assertTrue("The root action is missing!",baseline);
+        boolean action = config.getActionConfigs().containsKey("action");
+        assertTrue("The root action is missing!",action);
 
-        boolean action_execute = custom.getActionConfigs().containsKey("action!execute");
-        assertFalse("The execute method should not have an ActionConfig!",action_execute);
+        boolean custom = config.getActionConfigs().containsKey("custom");
+        assertTrue("The custom action is missing!",custom);
 
-        boolean action_validate = custom.getActionConfigs().containsKey("action!validate");
-        assertTrue("Expected an ActionConfig for the validate method",action_validate);
+        boolean action_input = getCustom().getActionConfigs().containsKey("action!input");
+        assertTrue("The Action.input method should have an action mapping!",action_input);
 
+        boolean custom_input = getCustom().getActionConfigs().containsKey("custom!input");
+        assertTrue("The Custom.input method should have an action mapping!",custom_input);
+
+        boolean custom_auto = getCustom().getActionConfigs().containsKey("custom!auto");
+        assertTrue("The Custom.auto method should have an action mapping!",custom_auto);
+
+        boolean custom_gettysburg = getCustom().getActionConfigs().containsKey("custom!gettysburg");
+        assertTrue("The Custom.gettysburg method should have an action mapping!",custom_gettysburg);
     }
 
     /**
-     * Confirms system excludes methods that are not non-void and no-argument or begin with "get".
+     * Confirms system excludes methods that do not return Strings
+     * and no-argument or begin with "getx" or "isX".
      */
     public void testExcludedMethods() {
 
         PackageConfig custom = getCustom();
 
-        boolean action_getLocale = custom.getActionConfigs().containsKey("action!getLocale");
-        assertFalse("A 'get' method has an ActionConfig!",action_getLocale);
+        boolean action_toString = custom.getActionConfigs().containsKey("action!toString");
+        assertFalse("The toString has an ActionConfig!",action_toString);
 
-        boolean action_pause = custom.getActionConfigs().containsKey("action!pause");
-        assertFalse("A void method with arguments has an ActionConfig!",action_pause);
-                
+        boolean action_execute = custom.getActionConfigs().containsKey("action!execute");
+        assertFalse("The execute has an ActionConfig!",action_execute);
+
+        boolean action_get_method = custom.getActionConfigs().containsKey("action!getLocale");
+        assertFalse("A 'getX' method has an ActionConfig!",action_get_method);
+
+        boolean action_is_method = custom.getActionConfigs().containsKey("custom!isIt");
+        assertFalse("A 'isX' method has an ActionConfig!",action_is_method);
+
+        boolean void_method = custom.getActionConfigs().containsKey("action!validate");
+        assertFalse("A void method has an ActionConfig!",void_method);
+
+        boolean void_with_parameters = custom.getActionConfigs().containsKey("action!addActionMessage");
+        assertFalse("A void method with parameters has an ActionConfig!",void_with_parameters);
+
+        boolean return_method = custom.getActionConfigs().containsKey("action!hasActionErrors");
+        assertFalse("A method with a return type other than String has an ActionConfig!",return_method);
+
+        ActionConfig manual = getCustom().getActionConfigs().get("custom!manual");
+        Object val = manual.getParams().get("name");
+        assertTrue("The custom.Manual method was generated!","value".equals(val.toString()));
     }
 
     /**
-     * Confirms system does not create an ActionConfig for
-     * methods that already have an action.
+     * Custom is a test Action class.
      */
-    public void testCustomMethods() {
+    public class Custom extends ActionSupport {
 
-        ActionConfig action_validate = getCustom().getActionConfigs().get("action!validate");
-        // TODO
+        /**
+         * Tests ordinary methods.
+         * @return SUCCESS
+         */
+        public String custom() {
+            return SUCCESS;
+        }
 
+        /**
+         * Tests JavaBean property.
+         * @return SUCCESS
+         */
+        public boolean isIt() {
+            return true;
+        }
+
+        /**
+         * Tests manual override.
+         * @return SUCCESS
+         */
+        public String manual() {
+            return SUCCESS;
+        }
+
+        /**
+         * Tests dynamic configuration.
+         * @return SUCCESS
+         */
+        public String auto() {
+            return SUCCESS;
+        }
+
+        /**
+         * Tests method that looks like a JavaBean property.
+         * @return SUCCESS
+         */
+        public String gettysburg() {
+            return SUCCESS;
+        }
     }
 
     /**
-     * Confirms system creates an ActionConfig that matches default action.
-      */
-    public void testActionConfig() {
+     * InternalConfigurationManager is a mock ConfigurationManager.
+     */
+    class InternalConfigurationManager extends ConfigurationManager {
+    	public boolean destroyConfiguration = false;
 
-        ActionConfig action_input = getCustom().getActionConfigs().get("action!input");
-        // TODO
-
+    	@Override
+    	public synchronized void destroyConfiguration() {
+    		super.destroyConfiguration();
+    		destroyConfiguration = true;
+    	}
     }
 
 }
+
 

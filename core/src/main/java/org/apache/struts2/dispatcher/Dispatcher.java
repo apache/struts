@@ -164,7 +164,7 @@ public class Dispatcher {
      */
     public static void setInstance(Dispatcher instance) {
         Dispatcher.instance.set(instance);
-        
+
         // Tie the ObjectFactory threadlocal instance to this Dispatcher instance
         if (instance != null) {
             Container cont = instance.getContainer();
@@ -198,8 +198,8 @@ public class Dispatcher {
 
     private ServletContext servletContext;
     private Map<String, String> initParams;
-    
-    
+
+
     /**
      * Create the Dispatcher instance for a given ServletContext and set of initialization parameters.
      *
@@ -219,7 +219,7 @@ public class Dispatcher {
     public static void setDevMode(String mode) {
         devMode = "true".equals(mode);
     }
-    
+
     /**
      * Modify state of StrutsConstants.STRUTS_LOCALE setting.
      * @param val New setting
@@ -228,7 +228,7 @@ public class Dispatcher {
     public static void setDefaultLocale(String val) {
         defaultLocale = val;
     }
-    
+
     /**
      * Modify state of StrutsConstants.STRUTS_I18N_ENCODING setting.
      * @param val New setting
@@ -237,7 +237,7 @@ public class Dispatcher {
     public static void setDefaultEncoding(String val) {
         defaultEncoding = val;
     }
-    
+
     /**
      * Modify state of StrutsConstants.STRUTS_MULTIPART_SAVEDIR setting.
      * @param val New setting
@@ -251,7 +251,7 @@ public class Dispatcher {
      * Releases all instances bound to this dispatcher instance.
      */
     public void cleanup() {
-    	
+
     	// clean up ObjectFactory
         ObjectFactory objectFactory = getContainer().getInstance(ObjectFactory.class);
         if (objectFactory == null) {
@@ -266,10 +266,10 @@ public class Dispatcher {
                 LOG.error("exception occurred while destroying ObjectFactory ["+objectFactory+"]", e);
             }
         }
-        
+
         // clean up Dispatcher itself for this thread
         instance.set(null);
-        
+
         // clean up DispatcherListeners
         synchronized(Dispatcher.class) {
             if (dispatcherListeners.size() > 0) {
@@ -278,8 +278,8 @@ public class Dispatcher {
                 }
             }
         }
-        
-        // clean up configuration 
+
+        // clean up configuration
     	configurationManager.destroyConfiguration();
     	configurationManager = null;
     }
@@ -342,9 +342,35 @@ public class Dispatcher {
 
     private void init_MethodConfigurationProvider() {
         // See https://issues.apache.org/struts/browse/WW-1522
+    /*
+    com.opensymphony.xwork2.inject.DependencyException: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyException: No mapping found for dependency [type=org.apache.struts2.dispatcher.mapper.ActionMapper, name='default'] in public static void org.apache.struts2.dispatcher.FilterDispatcher.setActionMapper(org.apache.struts2.dispatcher.mapper.ActionMapper).
+	at com.opensymphony.xwork2.inject.ContainerImpl.addInjectorsForMembers(ContainerImpl.java:135)
+	at com.opensymphony.xwork2.inject.ContainerImpl.addInjectorsForMethods(ContainerImpl.java:104)
+	at com.opensymphony.xwork2.inject.ContainerImpl.injectStatics(ContainerImpl.java:89)
+	at com.opensymphony.xwork2.inject.ContainerBuilder.create(ContainerBuilder.java:494)
+	at com.opensymphony.xwork2.config.impl.DefaultConfiguration.reload(DefaultConfiguration.java:140)
+	at com.opensymphony.xwork2.config.ConfigurationManager.getConfiguration(ConfigurationManager.java:52)
+	at org.apache.struts2.dispatcher.Dispatcher.init_MethodConfigurationProvider(Dispatcher.java:347)
+	at org.apache.struts2.dispatcher.Dispatcher.init(Dispatcher.java:421)
+	at org.apache.struts2.config.MethodConfigurationProviderTest.setUp(MethodConfigurationProviderTest.java:68)
+	at com.intellij.rt.execution.junit.JUnitStarter.main(JUnitStarter.java:40)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:90)
+Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyException: No mapping found for dependency [type=org.apache.struts2.dispatcher.mapper.ActionMapper, name='default'] in public static void org.apache.struts2.dispatcher.FilterDispatcher.setActionMapper(org.apache.struts2.dispatcher.mapper.ActionMapper).
+	at com.opensymphony.xwork2.inject.ContainerImpl.createParameterInjector(ContainerImpl.java:217)
+	at com.opensymphony.xwork2.inject.ContainerImpl.getParametersInjectors(ContainerImpl.java:207)
+	at com.opensymphony.xwork2.inject.ContainerImpl$MethodInjector.<init>(ContainerImpl.java:260)
+	at com.opensymphony.xwork2.inject.ContainerImpl$3.create(ContainerImpl.java:108)
+	at com.opensymphony.xwork2.inject.ContainerImpl$3.create(ContainerImpl.java:106)
+	at com.opensymphony.xwork2.inject.ContainerImpl.addInjectorsForMembers(ContainerImpl.java:132)
+	... 26 more
+
         MethodConfigurationProvider provider = new MethodConfigurationProvider();
         provider.init(configurationManager.getConfiguration());
-        provider.loadPackages();        
+        provider.loadPackages();
+   */
     }
 
     private void init_FilterInitParameters() {
@@ -405,14 +431,14 @@ public class Dispatcher {
 
     /**
      * Load configurations, including both XML and zero-configuration strategies,
-     * and update optional settings, including whether to reload configurations and resource files. 
+     * and update optional settings, including whether to reload configurations and resource files.
      */
     public void init() {
-        
+
     	if (configurationManager == null) {
     		configurationManager = new ConfigurationManager(BeanSelectionProvider.DEFAULT_BEAN_NAME);
     	}
-        
+
     	init_LegacyStrutsProperties(); // [1]
         init_TraditionalXmlConfigurations(); // [2]
         init_ZeroConfiguration(); // [3]
@@ -584,7 +610,7 @@ public class Dispatcher {
      * Return the path to save uploaded files to (this is configurable).
      *
      * @return the path to save uploaded files to
-     * @param servletContext Our ServletContext 
+     * @param servletContext Our ServletContext
      */
     private String getSaveDir(ServletContext servletContext) {
         String saveDir = multipartSaveDir.trim();
@@ -692,7 +718,7 @@ public class Dispatcher {
 
             try {
                 FreemarkerManager mgr = getContainer().getInstance(FreemarkerManager.class);
-                
+
                 freemarker.template.Configuration config = mgr.getConfiguration(ctx);
                 Template template = config.getTemplate("/org/apache/struts2/dispatcher/error.ftl");
 

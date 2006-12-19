@@ -46,19 +46,24 @@ public class StrutsTilesContainerFactory extends TilesContainerFactory {
                                     BasicTilesContainer container)
             throws TilesException {
 
+        Map<String, String> initParmMap =
+               TilesContainerFactory.getInitParameterMap(context);
+
         TilesContextFactory contextFactory = (TilesContextFactory)
                 TilesContainerFactory.createFactory(
-                        context, TilesContainerFactory.CONTEXT_FACTORY_INIT_PARAM);
+                        initParmMap, TilesContainerFactory.CONTEXT_FACTORY_INIT_PARAM);
 
         contextFactory = new StrutsTilesContextFactory(contextFactory);
 
         DefinitionsFactory defsFactory = (DefinitionsFactory)
                 TilesContainerFactory.createFactory(
-                        context, TilesContainerFactory.DEFINITIONS_FACTORY_INIT_PARAM);
+                         initParmMap,
+                         TilesContainerFactory.DEFINITIONS_FACTORY_INIT_PARAM);
 
         PreparerFactory prepFactory =
                 (PreparerFactory) TilesContainerFactory.createFactory(
-                        context, TilesContainerFactory.PREPARER_FACTORY_INIT_PARAM);
+                        initParmMap,
+                        TilesContainerFactory.PREPARER_FACTORY_INIT_PARAM);
 
         TilesApplicationContext tilesContext =
                 contextFactory.createApplicationContext(context);

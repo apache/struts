@@ -7,32 +7,44 @@
 <body>
 
 <script>
+    function destroyWidgets() {
+      var div = dojo.byId("updateCharacterAvailableDiv");
+      var anchors = div.getElementsByTagName("a");
+      dojo.lang.forEach(anchors, function(anchor){
+      	var widget = dojo.widget.byId(anchor);
+      	widget.destroy();
+      });
+    }
+
 	var _listeners = {
-		   guessMade: function(sourceId) {
-		   		this.guessMadeFunc(sourceId);
-		   		this.updateCharacterAvailable(sourceId);
-		   		this.updateVocab(sourceId);
-		   		this.updateScaffold(sourceId);
-		   		this.updateGuessLeft(sourceId);
-		   }, 
-	       guessMadeFunc: function(sourceId) { 
+		   guessMade: function(sourceId, type) {
+		        if(type == "before") {
+			   		this.guessMadeFunc(sourceId);
+			   		this.updateCharacterAvailable(sourceId);
+			   		this.updateVocab(sourceId);
+			   		this.updateScaffold(sourceId);
+			   		this.updateGuessLeft(sourceId);
+		   		}
+		   },
+	       guessMadeFunc: function(sourceId) {
 	       				var requestAttr = { character: sourceId };
 						dojo.io.bind({
 							url: "<@s.url action="guessCharacter" namespace="/hangman" />",
 							load: function(type, data, event) {
-								
+
 							},
 							mimetype: "text/html",
 							content: requestAttr
-						}); 
+						});
 	       			},
 	       updateCharacterAvailable: function(sourceId) {
 	       				dojo.io.bind({
 	       					url: "<@s.url action="updateCharacterAvailable" namespace="/hangman/ajax" />",
 	       					load: function(type, data, event) {
 	       						var div = dojo.byId("updateCharacterAvailableDiv");
+	       						destroyWidgets();
 	       						div.innerHTML = data;
-	       						
+
 	       						try{
                         			var xmlParser = new dojo.xml.Parse();
                         			var frag  = xmlParser.parseElement(div, null, true);
@@ -50,18 +62,18 @@
 	       					},
 	       					mimetype: "text/html"
 	       				});
-	       			}, 
+	       			},
 	       	updateVocab: function(sourceId) {
 	       			dojo.io.bind({
 	       				url: "<@s.url action="updateVocabCharacters" namespace="/hangman/ajax" />",
 	       				load: function(type, data, event) {
 	       					var div = dojo.byId("updateVocabDiv");
 	       					div.innerHTML = data;
-	       					
+
 	       					try {
 	       						var xmlParser = new dojo.xml.Parse();
 	       						var frag = xmlParser.parseElement(div, null, true);
-	       						
+
 	       						var scripts = div.getElementsByTagName("script");
 	       						for(var i=0; i<scripts.length; i++) {
 	       							eval(scripts[i].innerHTML);
@@ -81,11 +93,11 @@
 	       			load: function(type, data, event) {
 	       				var div = dojo.byId("updateScaffoldDiv");
 	       				div.innerHTML = data;
-	       				
+
 	       				try {
 	       					var xmlParser = new dojo.xml.Parse();
 	       					var frag = xmlParser.parseElement(div, null, true);
-	       					
+
 	       					var scripts = div.getElementsByTagName("script");
 	       					for(var i=0; i<scripts.length; i++) {
 	       							eval(scripts[i].innerHTML);
@@ -98,18 +110,18 @@
 	       			},
 	       			mimetype: "text/html"
 	       		});
-	       	}, 
+	       	},
 	       	updateGuessLeft: function(sourceId) {
 	       		dojo.io.bind({
 	       			url: "<@s.url action="updateGuessLeft" namespace="/hangman/ajax" />",
 	       			load: function(type, data, event) {
 	       				var div = dojo.byId("updateGuessLeftDiv");
 	       				div.innerHTML = data;
-	       				
+
 	       				try {
 	       					var xmlParser = new dojo.xml.Parse();
 	       					var frag = xmlParser.parseElement(div, null, true);
-	       					
+
 	       					var scripts = div.getElementsByTagName("script");
 	       					for(var i=0; i<scripts.length; i++) {
 	       							eval(scripts[i].innerHTML);
@@ -125,20 +137,15 @@
 	       	}
 	    };
 	dojo.event.topic.subscribe("topicGuessMade", _listeners, "guessMade");
-	// dojo.event.topic.subscribe("topicGuessMade", _listeners, "guessMadeFunc"); 
-	// dojo.event.topic.subscribe("topicGuessMade", _listeners, "updateCharacterAvailable");
-	// dojo.event.topic.subscribe("topicGuessMade", _listeners, "updateVocab");
-	// dojo.event.topic.subscribe("topicGuessMade", _listeners, "updateScaffold");
-	// dojo.event.topic.subscribe("topicGuessMade", _listeners, "updateGuessLeft");
 </script>
 
-<table bgcolor="green"> 
-  <tr> 
+<table bgcolor="green">
+  <tr>
     <td>
     <@s.url id="url" value="/hangman/images/hangman.png" />
     <img alt="Hangman" src="<@s.property value="%{#url}" />"
-           width="197" height="50" border="0"/> 
-    </td> 
+           width="197" height="50" border="0"/>
+    </td>
     <td width="70" align="right">
       <#-- Guesses Left -->
       <div id="updateGuessLeftDiv">
@@ -153,8 +160,8 @@
     	<img alt="Guesses Left"
             src="<@s.property value="%{#url}" />" width="164" height="11" border="0"/>
     </td>
-  </tr> 
-  <tr> 
+  </tr>
+  <tr>
   	<td></td>
     <td align="left">
     <#-- Display Scaffold -->
@@ -165,14 +172,14 @@
     </div>
     </td>
     <td></td>
-    </tr> 
+    </tr>
   <tr>
-    <td width="160"> 
+    <td width="160">
       <p align="right">
       	<@s.url id="url" value="/hangman/images/guess.png" />
         <img alt="Current Guess" src="<@s.property value="%{#url}" />"
-           align="MIDDLE" width="127" height="20" border="0"/></p> 
-    </td> 
+           align="MIDDLE" width="127" height="20" border="0"/></p>
+    </td>
     <td>
     <#-- Display Vacab  -->
     <div id="updateVocabDiv">
@@ -189,18 +196,18 @@
     	</#if>
 	</@s.iterator>
 	</div>
-    </td> 
+    </td>
   </tr>
-  <tr> 
-    <td valign="top"> 
+  <tr>
+    <td valign="top">
       <p align="right">
       	<@s.url id="url" value="/hangman/images/choose.png" />
         <img alt="Choose" src="<@s.property value="%{#url}" />"
              height="20" width="151" border="0"/>
-      </p> 
-    </td> 
+      </p>
+    </td>
     <td width="330">
-    
+
     <#-- Show Characters Available -->
     <div id="updateCharacterAvailableDiv">
 	<@s.iterator id="currentCharacter" value="%{hangman.charactersAvailable}" status="stat">
@@ -211,23 +218,24 @@
       <@s.url id="blankUrl" value="ajax/blank.action" includeContext="false" />
       <@s.a theme="ajax"
       		  href="%{blankUrl}"
-      		  id="%{#currentCharacter}" 
+      		  id="%{#currentCharacter}"
       		  notifyTopics="topicGuessMade"
       		  showErrorTransportText="true">
       	<img height="36" alt="" src="<@s.property value="%{#chalkboardImageUrl}" />" width="36" border="0" />
       </@s.a>
 	</@s.iterator>
 	</div>
- 
-   
+
+
    </td>
-  </tr> 
+  </tr>
   <tr>
   	<td>
-  		
+
   	</td>
   </tr>
 </table>
 </body>
 </html>
+
 

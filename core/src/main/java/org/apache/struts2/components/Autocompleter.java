@@ -23,8 +23,6 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts2.views.util.UrlHelper;
-
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -39,10 +37,37 @@ import com.opensymphony.xwork2.util.ValueStack;
  *   ["Text 3","Value3"]
  * ]
  * </pre>
+ * <!-- START SNIPPET: ajaxJavadoc -->
  * <B>THE FOLLOWING IS ONLY VALID WHEN AJAX IS CONFIGURED</B>
  * <ul>
- *      <li>href - Note: The href attribute value needs to be set as an url tag id.</li>
+ *      <li>href</li>
+ *      <li>errorText</li>
+ *      <li>listenTopics</li>
+ *      <li>notifyTopics</li>
+ *      <li>listenTopics</li>
+ *      <li>formId</li>
+ *      <li>formFilter</li>
+ *      <li>indicator</li>
  * </ul>
+ * 'dropdownWidth' width in pixels of the drodpdown, same as autocompleter's width by default<p/>
+ * 'dropdownHeight' height in pixels of the drodown, 120 px by default<p/>
+ * 'forceValidOption' if invalid option is selected, clear autocompleter's text when focus is lost<p/>
+ * 'autoComplete', if true, make suggestions on the textbox<p/>
+ * 'formId' is the id of the html form whose fields will be seralized and passed as parameters
+ * in the request.<p/>
+ * 'formFilter' is the name of a function which will be used to filter the fields that will be
+ * seralized. This function takes as a parameter the element and returns true if the element
+ * should be included.<p/>
+ * 'listenTopics' comma separated list of topics names, that will trigger a request
+ * 'indicator' element to be shown while the request executing
+ * 'showErrorTransportText': whether errors should be displayed (on 'targets')<p/>
+ * 'notifyTopics' comma separated list of topics names, that will be published. Three parameters are passed:<p/>
+ * <ul>
+ *      <li>data: selected value when type='valuechanged'</li>
+ *      <li>type: 'before' before the request is made, 'valuechanged' when selection changes, 'load' when the request succeeds, or 'error' when it fails</li>
+ *      <li>request: request javascript object, when type='load' or type='error'</li>
+ * <ul>
+ *
  * @s.tag name="autocompleter" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.AutocompleterTag"
  *        description="Renders a combobox with autocomplete and AJAX capabilities"
  */
@@ -60,10 +85,9 @@ public class Autocompleter extends ComboBox {
     protected String dropdownHeight;
     protected String formId;
     protected String formFilter;
-    protected String refreshListenTopic;
-    protected String onValueChangedPublishTopic;
-    protected String afterLoading;
-    protected String beforeLoading;
+    protected String listenTopics;
+    protected String notifyTopics;
+    protected String indicator;
 
     public Autocompleter(ValueStack stack, HttpServletRequest request,
             HttpServletResponse response) {
@@ -78,8 +102,9 @@ public class Autocompleter extends ComboBox {
         return COMPONENT_NAME;
     }
 
-    public void evaluateParams() {
-        super.evaluateParams();
+
+    public void evaluateExtraParams() {
+        super.evaluateExtraParams();
 
         if (forceValidOption != null)
             addParameter("forceValidOption", findValue(forceValidOption,
@@ -104,16 +129,18 @@ public class Autocompleter extends ComboBox {
           addParameter("formFilter", findString(formFilter));
         if (formId != null)
           addParameter("formId", findString(formId));
-        if (refreshListenTopic != null)
-          addParameter("refreshListenTopic", findString(refreshListenTopic));
-        if (onValueChangedPublishTopic != null)
-          addParameter("onValueChangedPublishTopic", findString(onValueChangedPublishTopic));
-        if (afterLoading != null)
-          addParameter("afterLoading", findString(afterLoading));
-        if (beforeLoading != null)
-          addParameter("beforeLoading", findString(beforeLoading));
+        if (listenTopics != null)
+          addParameter("listenTopics", findString(listenTopics));
+        if (notifyTopics != null)
+          addParameter("notifyTopics", findString(notifyTopics));
+        if (indicator != null)
+            addParameter("indicator", findString(indicator));
+        //get the key value
+        if(name != null) {
+            String keyNameExpr = "%{" + name + "Key}";
+            addParameter("key", findString(keyNameExpr));
+        }
     }
-
 
     protected Object findListValue() {
         return (list != null) ? findValue(list, Object.class) : null;
@@ -208,8 +235,8 @@ public class Autocompleter extends ComboBox {
      *
      * @s.tagattribute required="false" type="String"
      */
-    public void setRefreshListenTopic(String refreshListenTopic) {
-      this.refreshListenTopic = refreshListenTopic;
+    public void setListenTopics(String listenTopics) {
+      this.listenTopics = listenTopics;
     }
 
     /**
@@ -217,23 +244,15 @@ public class Autocompleter extends ComboBox {
      * New Value is passed as parameter.
      * @s.tagattribute required="false" type="String"
      */
-    public void setOnValueChangedPublishTopic(String onValueChangedPublishTopic) {
-      this.onValueChangedPublishTopic = onValueChangedPublishTopic;
+    public void setNotifyTopics(String onValueChangedPublishTopic) {
+      this.notifyTopics = onValueChangedPublishTopic;
     }
 
     /**
-     * Javascript code name that will be executed after the content has been fetched
+     * Id of element that will be shown while request is made
      * @s.tagattribute required="false" type="String"
      */
-    public void setAfterLoading(String afterLoading) {
-      this.afterLoading = afterLoading;
-    }
-
-    /**
-     * Javascript code that will be executed before the content has been fetched
-     * @s.tagattribute required="false" type="String"
-     */
-    public void setBeforeLoading(String beforeLoading) {
-      this.beforeLoading = beforeLoading;
+    public void setIndicator(String indicator) {
+        this.indicator = indicator;
     }
 }

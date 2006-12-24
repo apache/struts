@@ -17,7 +17,7 @@
         href="%{ajaxTest}"
         theme="ajax"
         delay="1000"
-        updateInterval="5000"
+        updateFreq="5000"
         errorText="There was an error"
         loadingText="reloading">loading now</s:div>
 

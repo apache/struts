@@ -58,14 +58,15 @@ public class DivTest extends AbstractUITagTest {
         tag.setErrorText("c");
         tag.setAutoStart("true");
         tag.setDelay("4000");
-        tag.setUpdateInterval("1000");
-        tag.setRefreshListenTopic("g");
-        tag.setStartTimerListenTopic("h");
-        tag.setStopTimerListenTopic("i");
+        tag.setUpdateFreq("1000");
+        tag.setListenTopics("g");
+        tag.setStartTimerListenTopics("h");
+        tag.setStopTimerListenTopics("i");
         tag.setBeforeLoading("j");
         tag.setAfterLoading("k");
         tag.setRefreshOnShow("true");
         tag.setHandler("l");
+        tag.setIndicator("m");
         tag.doStartTag();
         tag.doEndTag();
 

@@ -20,8 +20,8 @@
 <#if parameters.autoComplete?exists>
  autoComplete="${parameters.autoComplete?string?html}"<#rt/>
 </#if>
-<#if parameters.searchDelay?exists>
- searchDelay="${parameters.searchDelay?c}"<#rt/>
+<#if parameters.delay?exists>
+ searchDelay="${parameters.delay?c}"<#rt/>
 </#if>
 <#if parameters.disabled?exists>
  disabled="${parameters.disabled?string?html}"<#rt/>
@@ -41,8 +41,11 @@
 <#if parameters.maxlength?exists>
  maxlength="${parameters.maxlength?string?html}"<#rt/>
 </#if>
-<#if parameters.nameValue?exists>
- value="<@s.property value="parameters.nameValue"/>"<#rt/>
+<#if parameters.nameValue?if_exists != "">
+ initialValue="${parameters.nameValue}"<#rt/>
+</#if>
+<#if parameters.key?if_exists != "">
+ initialKey="${parameters.key}"<#rt/>
 </#if>
 <#if parameters.readonly?default(false)>
  readonly="readonly"<#rt/>
@@ -56,19 +59,17 @@
 <#if parameters.formFilter?if_exists != "">
  formFilter="${parameters.formFilter?html}"<#rt/>
 </#if>
-<#if parameters.refreshListenTopic?if_exists != "">
- refreshListenTopic="${parameters.refreshListenTopic?html}"<#rt/>
+<#if parameters.listenTopics?if_exists != "">
+ listenTopics="${parameters.listenTopics?html}"<#rt/>
 </#if>
-<#if parameters.onValueChangedPublishTopic?if_exists != "">
- onValueChangedPublishTopic="${parameters.onValueChangedPublishTopic?html}"<#rt/>
+<#if parameters.notifyTopics?if_exists != "">
+ notifyTopics="${parameters.notifyTopics?html}"<#rt/>
 </#if>
-<#if parameters.beforeLoading?if_exists != "">
- beforeLoading="${parameters.beforeLoading?html}"<#rt/>
-</#if>
-<#if parameters.afterLoading?if_exists != "">
- afterLoading="${parameters.afterLoading?html}"<#rt/>
+<#if parameters.indicator?if_exists != "">
+ indicator="${parameters.indicator?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 >
+
 
 

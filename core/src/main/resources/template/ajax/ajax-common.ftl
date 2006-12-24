@@ -37,8 +37,11 @@
   <#if parameters.executeScripts?exists>
     executeScripts="${parameters.executeScripts?string?html}"<#rt/>
   </#if>
-  <#if parameters.refreshListenTopic?if_exists != "">
-    refreshListenTopic="${parameters.refreshListenTopic?html}"<#rt/>
+  <#if parameters.listenTopics?if_exists != "">
+    listenTopics="${parameters.listenTopics?html}"<#rt/>
+  </#if>
+   <#if parameters.notifyTopics?if_exists != "">
+    notifyTopics="${parameters.notifyTopics?html}"<#rt/>
   </#if>
   <#if parameters.beforeLoading?if_exists != "">
     beforeLoading="${parameters.beforeLoading?html}"<#rt/>
@@ -51,4 +54,10 @@
   </#if>
   <#if parameters.handler?if_exists != "">
     handler="${parameters.handler?html}"<#rt/>
+  </#if>
+  <#if parameters.indicator?if_exists != "">
+    indicator="${parameters.indicator?html}"<#rt/>
+  </#if>
+  <#if parameters.showErrorTransportText?exists>
+    showError="${parameters.showErrorTransportText?string?html}"<#rt/>
   </#if>

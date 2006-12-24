@@ -164,7 +164,7 @@ public class ComboBox extends TextField {
                 "You must specify a collection/array/map/enumeration/iterator. " +
                 "Example: people or people.{name}");
     }
-    
+
     /**
      * Iteratable source to populate from. If this is missing, the select widget is simply not displayed.
      * @s.tagattribute required="true"

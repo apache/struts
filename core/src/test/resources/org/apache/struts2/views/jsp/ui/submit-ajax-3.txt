@@ -12,10 +12,13 @@
   href="b"
   loadingText="c"
   errorText="d"
-  refreshListenTopic="e"
+  listenTopics="e"
+  notifyTopics="k"
   beforeLoading="f"
   afterLoading="g"
-  handler="h"/>
+  handler="h"
+  indicator="l"
+  />
   </div>
   </td>
   </tr>

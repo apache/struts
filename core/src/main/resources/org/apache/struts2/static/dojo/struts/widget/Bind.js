@@ -16,9 +16,12 @@ dojo.widget.defineWidget(
   //messages
   loadingText : "Loading...",
   errorText : "",
+  showError : true,
 
   //pub/sub events
-  refreshListenTopic : "",
+  listenTopics : "",
+  notifyTopics : "",
+  notifyTopicsArray : null,
 
   //callbacks
   beforeLoading : "",
@@ -29,21 +32,29 @@ dojo.widget.defineWidget(
   formNode : null,
 
   event : "",
+  indicator : "",
 
-  onDownloadStart : function(event) {
-    if(!dojo.string.isBlank(this.beforeLoading)) {
-      eval(this.beforeLoading);
-    }
-    if(!dojo.string.isBlank(this.loadingText)) {
-      event.text = this.loadingText;
-    }
-  },
+  parseContent : true,
 
   postCreate : function() {
     //attach listeners
-    if(!dojo.string.isBlank(this.refreshListenTopic)) {
-      this.log("Listening to " + this.refreshListenTopic + " to refresh");
-      dojo.event.topic.subscribe(this.refreshListenTopic, this, "reloadContents");
+    if(!dojo.string.isBlank(this.listenTopics)) {
+      this.log("Listening to " + this.listenTopics + " to refresh");
+      var topics = this.listenTopics.split(",");
+      if(topics) {
+        var self = this;
+        if(topics) {
+          if(topics) {
+            dojo.lang.forEach(topics, function(topic){
+              dojo.event.topic.subscribe(topic, self, "reloadContents");
+            });
+          }
+        }
+      }
+    }
+
+    if(!dojo.string.isBlank(this.notifyTopics)) {
+      this.notifyTopicsArray = this.notifyTopics.split(",");
     }
 
     if(!dojo.string.isBlank(this.targets)) {
@@ -62,21 +73,37 @@ dojo.widget.defineWidget(
   },
 
   log : function(text) {
-    dojo.debug("[" + this.widgetId + "] " + text);
+    dojo.debug("[" + (this.widgetId ? this.widgetId : "unknown")  + "] " + text);
   },
 
   setContent : function(text) {
-    dojo.lang.forEach(this.targetsArray, function(target) {
-      dojo.byId(target).innerHTML = text;
-    });
+    if(this.targetsArray) {
+      var self = this;
+	  var xmlParser = new dojo.xml.Parse();
+      dojo.lang.forEach(this.targetsArray, function(target) {
+
+        var node = dojo.byId(target);
+        node.innerHTML = text;
+        if(self.parseContent){
+          var frag  = xmlParser.parseElement(node, null, true);
+          dojo.widget.getParser().createSubComponents(frag, dojo.widget.byId(target));
+		}
+      });
+    }
   },
 
   bindHandler : function(type, data, e) {
+     //hide indicator
+     dojo.html.hide(this.indicator);
+
      //post script
      if(!dojo.string.isBlank(this.afterLoading)) {
-       this.log("Executing " + this.beforeLoading);
+       this.log("Executing " + this.afterLoading);
        eval(this.afterLoading);
      }
+     //publish topics
+     this.notify(data, type, e);
+
      if(type == "load") {
        if(this.executeScripts) {
          //update targets content
@@ -95,9 +122,34 @@ dojo.widget.defineWidget(
          this.setContent(data);
        }
      } else {
-       var message = dojo.string.isBlank(this.errorText) ? e.message : this.errorText;
-       this.setContent(message);
+       if(this.showError) {
+         var message = dojo.string.isBlank(this.errorText) ? e.message : this.errorText;
+         this.setContent(message);
+       }
      }
+  },
+
+  notify : function(data, type, e) {
+    if(this.notifyTopicsArray) {
+      dojo.lang.forEach(this.notifyTopicsArray, function(topic) {
+        try {
+          dojo.event.topic.publish(topic, data, type, null);
+        } catch(e){}
+      });
+    }
+  },
+
+  onDownloadStart : function(event) {
+    if(!dojo.string.isBlank(this.beforeLoading)) {
+      //for backward compatibility
+      var data = null;
+      var type = null;
+
+      eval(this.beforeLoading);
+    }
+    if(!dojo.string.isBlank(this.loadingText)) {
+      event.text = this.loadingText;
+    }
   },
 
   reloadContents : function() {
@@ -110,10 +162,18 @@ dojo.widget.defineWidget(
       //pre script
       if(!dojo.string.isBlank(this.beforeLoading)) {
         this.log("Executing " + this.beforeLoading);
+        //backward compatibility
+        var data = null;
+        var type = null;
+
         eval(this.beforeLoading);
       }
+
+      //show indicator
+      dojo.html.show(this.indicator);
       try {
           var self = this;
+          this.notify(this.widgetId, "before", {});
           this.setContent(this.loadingText);
           dojo.io.bind({
             url: self.href,
@@ -181,5 +241,6 @@ dojo.widget.defineWidget(
     };
   }
 });
+
 
 

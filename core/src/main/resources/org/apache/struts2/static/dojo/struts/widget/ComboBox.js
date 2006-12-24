@@ -19,16 +19,12 @@ struts.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ li
   this._lastSearch = "";
   this._lastSearchResults = null;
 
-  this.beforeLoading = "";
-  this.afterLoading = "";
-
   this.formId = "";
   this.formFilter = "";
 
+  this.cbox = null;
   this.init = function(/*Widget*/ cbox, /*DomNode*/ node){
-    this.beforeLoading = cbox.beforeLoading;
-    this.afterLoading = cbox.afterLoading;
-
+    this.cbox = cbox;
     this.formId = cbox.formId;
     this.formFilter = cbox.formFilter;
 
@@ -55,18 +51,18 @@ struts.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ li
   };
 
   this.getData = function(/*String*/ url){
-    if(!dojo.string.isBlank(this.beforeLoading)) {
-      eval(this.beforeLoading);
-    }
+    //show indicator
+    dojo.html.show(this.cbox.indicator);
 
     dojo.io.bind({
       url: url,
       formNode: dojo.byId(this.formId),
       formFilter: window[this.formFilter],
-      load: dojo.lang.hitch(this, function(type, data, evt){
-        if(!dojo.string.isBlank(this.afterLoading)) {
-          eval(this.afterLoading);
-        }
+      load: dojo.lang.hitch(this, function(type, data, evt) {
+         //show indicator
+         dojo.html.hide(this.cbox.indicator);
+
+        this.cbox.notify.apply(this.cbox, [data, type, evt]);
         if(!dojo.lang.isArray(data)){
           var arrData = [];
           for(var key in data){
@@ -183,16 +179,26 @@ dojo.widget.defineWidget(
   dropdownWidth: 0,
   itemHeight: 0,
 
-  refreshListenTopic : "",
-  onValueChangedPublishTopic : "",
+  listenTopics : "",
+  notifyTopics : "",
+  notifyTopicsArray : null,
 
-  //callbacks
-  beforeLoading : "",
-  afterLoading : "",
+  indicator : "",
 
   formId : "",
   formFilter : "",
   dataProviderClass: "struts.widget.ComboBoxDataProvider",
+
+  loadOnType : false,
+  loadMinimum : 3,
+
+  initialValue : "",
+  initialKey : "",
+
+  visibleDownArrow : true,
+  fadeTime : 100,
+
+  templateCssPath: dojo.uri.dojoUri("struts/ComboBox.css"),
   //from Dojo's  ComboBox
   showResultList: function() {
   // Our dear friend IE doesnt take max-height so we need to calculate that on our own every time
@@ -278,16 +284,68 @@ dojo.widget.defineWidget(
 
   postCreate : function() {
     struts.widget.ComboBox.superclass.postCreate.apply(this);
-
+    var self = this;
     //events
-    if(!dojo.string.isBlank(this.refreshListenTopic)) {
-      var self = this;
-      dojo.event.topic.subscribe(this.refreshListenTopic, function() {
-        self.dataProvider.getData(self.dataUrl);
+    if(!dojo.string.isBlank(this.listenTopics)) {
+      var topics = this.listenTopics.split(",");
+      for(var i = 0; i < topics.length; i++) {
+        dojo.event.topic.subscribe(topics[i], function() {
+          self.notify(this.widgetId, "before", {});
+          self.dataProvider.getData(self.dataUrl);
+        });
+      }
+    }
+
+    if(!dojo.string.isBlank(this.notifyTopics)) {
+      this.notifyTopicsArray = this.notifyTopics.split(",");
+    }
+
+    //better name
+    this.comboBoxSelectionValue.name = this.name + "Key";
+
+    //init values
+    this.comboBoxValue.value = this.initialValue;
+    this.comboBoxSelectionValue.value = this.initialKey;
+    this.textInputNode.value = this.initialValue;
+
+    //hide arrow?
+    if(!this.visibleDownArrow) {
+      dojo.html.hide(this.downArrowNode);
+    }
+  },
+
+  clearValues : function() {
+  	this.comboBoxValue.value = "";
+    this.comboBoxSelectionValue.value = "";
+    this.textInputNode.value = "";
+  },
+
+  onValueChanged : function(data) {
+    this.notify(data, "valuechanged", null);
+  },
+
+  notify : function(data, type, e) {
+    if(this.notifyTopicsArray) {
+      dojo.lang.forEach(this.notifyTopicsArray, function(topic) {
+        try {
+          dojo.event.topic.publish(topic, data, type, null);
+        } catch(e){}
       });
     }
-    if(!dojo.string.isBlank(this.onValueChangedPublishTopic)) {
-      dojo.event.topic.registerPublisher(this.onValueChangedPublishTopic, this, "onValueChanged");
+  },
+
+  startSearchFromInput: function() {
+    var searchStr = this.textInputNode.value;
+    if(this.loadOnType) {
+    	if(searchStr.length >= this.loadMinimum) {
+    	    var nuHref = this.dataUrl + (this.dataUrl.indexOf("?") > -1 ? "&" : "?");
+			nuHref += this.name + '=' + searchStr;
+			this.dataProvider.getData(nuHref);
+			this.startSearch(searchStr);
+    	}
     }
+    else {
+		this.startSearch(searchStr);
+	}
   }
 });

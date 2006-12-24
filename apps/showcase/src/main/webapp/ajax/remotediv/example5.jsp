@@ -20,6 +20,7 @@
         errorText="Could not contact server"
         loadingText="reloading">loading now</s:div>
 
+
 <s:include value="../footer.jsp"/>
 
 </body>

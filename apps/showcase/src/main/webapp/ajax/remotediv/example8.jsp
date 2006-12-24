@@ -15,12 +15,12 @@
 		start : function() {},
 		stop : function() {}
 	};
-	
-	
+
+
 	dojo.event.topic.registerPublisher("/refresh", controller, "refresh");
 	dojo.event.topic.registerPublisher("/startTimer", controller, "start");
 	dojo.event.topic.registerPublisher("/stopTimer", controller, "stop");
-	
+
 </script>
 <form id="form">
 	<label for="textInput">Text to be echoed</label>
@@ -41,10 +41,10 @@
         cssStyle="border: 1px solid yellow;"
         href="%{ajaxTest}"
         loadingText="Loading..."
-		refreshListenTopic="/refresh"
-		startTimerListenTopic="/startTimer"
-		stopTimerListenTopic="/stopTimer"
-		updateInterval="3000"
+		listenTopics="/refresh"
+		startTimerListenTopics="/startTimer"
+		stopTimerListenTopics="/stopTimer"
+		updateFreq="3000"
 		autoStart="true"
 		formId="form"
 		>

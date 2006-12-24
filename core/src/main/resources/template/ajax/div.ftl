@@ -2,17 +2,17 @@
   <#if parameters.delay?exists>
     delay="${parameters.delay?c}"<#rt/>
   </#if>
-  <#if parameters.updateInterval?exists>
-    updateInterval="${parameters.updateInterval?c}"<#rt/>
+  <#if parameters.updateFreq?exists>
+    updateFreq="${parameters.updateFreq?c}"<#rt/>
   </#if>
   <#if parameters.autoStart?exists>
     autoStart="${parameters.autoStart?string?html}"<#rt/>
   </#if>
-  <#if parameters.startTimerListenTopic?if_exists != "">
-    startTimerListenTopic="${parameters.startTimerListenTopic?html}"<#rt/>
+  <#if parameters.startTimerListenTopics?if_exists != "">
+    startTimerListenTopics="${parameters.startTimerListenTopics?html}"<#rt/>
   </#if>
-  <#if parameters.stopTimerListenTopic?if_exists != "">
-    stopTimerListenTopic="${parameters.stopTimerListenTopic?html}"<#rt/>
+  <#if parameters.stopTimerListenTopics?if_exists != "">
+    stopTimerListenTopics="${parameters.stopTimerListenTopics?html}"<#rt/>
   </#if>
   <#include "/${parameters.templateDir}/ajax/ajax-common.ftl" />
   <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />

@@ -23,8 +23,14 @@ import javax.servlet.http.HttpServletResponse;
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
- * AbstractRemoteCallUIBean is superclass for all components dealing with remote calls.
+ * AbstractRemoteCallUIBean is superclass for all components dealing with remote
+ * calls.
+ */
+/**
+ * TODO: Document AbstractRemoteCallUIBean.
  *
+ * @author $Author$
+ * @version $Revision$ $Date$
  */
 public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements RemoteUICallBean {
 
@@ -34,12 +40,16 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
     protected String beforeLoading;
     protected String executeScripts;
     protected String loadingText;
-    protected String refreshListenTopic;
+    protected String listenTopics;
     protected String handler;
     protected String formId;
     protected String formFilter;
+    protected String notifyTopics;
+    protected String showErrorTransportText;
+    protected String indicator;
 
-    public AbstractRemoteCallUIBean(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public AbstractRemoteCallUIBean(ValueStack stack, HttpServletRequest request,
+            HttpServletResponse response) {
         super(stack, request, response);
     }
 
@@ -58,30 +68,42 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
             addParameter("beforeLoading", findString(beforeLoading));
         if (executeScripts != null)
             addParameter("executeScripts", findValue(executeScripts, Boolean.class));
-        if (refreshListenTopic != null)
-            addParameter("refreshListenTopic", findValue(refreshListenTopic, String.class));
+        if (listenTopics != null)
+            addParameter("listenTopics", findValue(listenTopics, String.class));
+        if (notifyTopics != null)
+            addParameter("notifyTopics", findValue(notifyTopics, String.class));
         if (handler != null)
             addParameter("handler", findString(handler));
         if (formId != null)
             addParameter("formId", findString(formId));
         if (formFilter != null)
             addParameter("formFilter", findString(formFilter));
+        if (indicator != null)
+            addParameter("indicator", findString(indicator));
+        if (showErrorTransportText != null)
+            addParameter("showErrorTransportText", findValue(showErrorTransportText, Boolean.class));
+        else
+            addParameter("showErrorTransportText", true);
     }
 
+
     /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setRefreshListenTopic(java.lang.String)
+     * @see org.apache.struts2.components.RemoteUICallBean#setListenTopics(java.lang.String)
      */
-    public void setRefreshListenTopic(String refreshListenTopic) {
-        this.refreshListenTopic = refreshListenTopic;
+    public void setListenTopics(String listenTopics) {
+        this.listenTopics = listenTopics;
     }
 
     /**
-     * The theme to use for the element. <b>This tag will usually use the ajax theme.</b>
+     * The theme to use for the element. <b>This tag will usually use the ajax
+     * theme.</b>
+     *
      * @s.tagattribute required="false" type="String"
      */
     public void setTheme(String theme) {
         super.setTheme(theme);
     }
+
 
     /* (non-Javadoc)
      * @see org.apache.struts2.components.RemoteUICallBean#setHref(java.lang.String)
@@ -90,12 +112,14 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
         this.href = href;
     }
 
+
     /* (non-Javadoc)
      * @see org.apache.struts2.components.RemoteUICallBean#setErrorText(java.lang.String)
      */
     public void setErrorText(String errorText) {
         this.errorText = errorText;
     }
+
 
     /* (non-Javadoc)
      * @see org.apache.struts2.components.RemoteUICallBean#setAfterLoading(java.lang.String)
@@ -104,12 +128,14 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
         this.afterLoading = afterLoading;
     }
 
+
     /* (non-Javadoc)
      * @see org.apache.struts2.components.RemoteUICallBean#setBeforeLoading(java.lang.String)
      */
     public void setBeforeLoading(String beforeLoading) {
         this.beforeLoading = beforeLoading;
     }
+
 
     /* (non-Javadoc)
      * @see org.apache.struts2.components.RemoteUICallBean#setExecuteScripts(java.lang.String)
@@ -125,12 +151,14 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
         this.loadingText = loadingText;
     }
 
+
     /* (non-Javadoc)
      * @see org.apache.struts2.components.RemoteUICallBean#setHandler(java.lang.String)
      */
     public void setHandler(String handler) {
         this.handler = handler;
     }
+
 
     /* (non-Javadoc)
      * @see org.apache.struts2.components.RemoteUICallBean#setFormFilter(java.lang.String)
@@ -145,4 +173,25 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
     public void setFormId(String formId) {
         this.formId = formId;
     }
+
+    /* (non-Javadoc)
+     * @see org.apache.struts2.components.RemoteUICallBean#setNotifyTopics(java.lang.String)
+     */
+    public void setNotifyTopics(String notifyTopics) {
+        this.notifyTopics = notifyTopics;
+    }
+
+
+    /* (non-Javadoc)
+     * @see org.apache.struts2.components.RemoteUICallBean#setShowErrorTransportText(java.lang.String)
+     */
+    public void setShowErrorTransportText(String showError) {
+        this.showErrorTransportText = showError;
+    }
+
+
+    public void setIndicator(String indicator) {
+        this.indicator = indicator;
+    }
+
 }

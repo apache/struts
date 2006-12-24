@@ -15,11 +15,18 @@
 		start : function() {},
 		stop : function() {}
 	};
-	
+
 	dojo.event.topic.registerPublisher("/refresh", controller, "refresh");
 	dojo.event.topic.registerPublisher("/startTimer", controller, "start");
 	dojo.event.topic.registerPublisher("/stopTimer", controller, "stop");
-	
+
+    dojo.event.topic.subscribe("/after", function(data, type, e){
+      alert('inside a topic event. type='+type);
+      //data : text returned
+      //type : "before", "load" or "error"
+      //e    : request object
+    });
+
 </script>
 
 <input type=button value="refresh" onclick="controller.refresh()">
@@ -33,13 +40,13 @@
         theme="ajax"
         cssStyle="border: 1px solid yellow;"
         href="%{ajaxTest}"
-        refreshListenTopic="/refresh"
-		startTimerListenTopic="/startTimer"
-		stopTimerListenTopic="/stopTimer"
-		updateInterval="10000"
+        listenTopics="/refresh"
+		startTimerListenTopics="/startTimer"
+		stopTimerListenTopics="/stopTimer"
+		updateFreq="10000"
 		autoStart="false"
-		beforeLoading="alert('before request')"
 		afterLoading="alert('after request')"
+        notifyTopics="/after"
 		>
     Initial Content</s:div>
 

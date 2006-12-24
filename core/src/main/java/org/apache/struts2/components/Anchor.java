@@ -36,21 +36,25 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <ul>
  *      <li>href</li>
  *      <li>errorText</li>
- *      <li>afterLoading</li>
- *      <li>beforeLoading</li>
+ *      <li>listenTopics</li>
+ *      <li>notifyTopics</li>
  *      <li>executeScripts</li>
  *      <li>loadingText</li>
- *      <li>refreshListenTopic</li>
+ *      <li>listenTopics</li>
  *      <li>handler</li>
  *      <li>formId</li>
  *      <li>formFilter</li>
  *      <li>targets</li>
+ *      <li>showErrorTransportText</li>
+ *      <li>targets</li>
+ *      <li>indicator</li>
  * </ul>
+ * 'resultDivId' Deprecated. Use targets.<p/>
  * 'targets' is a list of element ids whose content will be updated with the
  * text returned from request.<p/>
  * 'errorText' is the text that will be displayed when there is an error making the request.<p/>
- * 'afterLoading' is the name of a function that will be called after the request.<p/>
- * 'beforeLoading' is the name of a function that will be called before the request.<p/>
+ * 'onLoadJS' Deprecated. Use 'notifyTopics'.<p/>
+ * 'preInvokeJS' Deprecated. Use 'notifyTopics'.<p/>
  * 'executeScripts' if set to true will execute javascript sections in the returned text.<p/>
  * 'loadingText' is the text that will be displayed on the 'targets' elements while making the
  * request.<p/>
@@ -61,7 +65,15 @@ import com.opensymphony.xwork2.util.ValueStack;
  * 'formFilter' is the name of a function which will be used to filter the fields that will be
  * seralized. This function takes as a parameter the element and returns true if the element
  * should be included.<p/>
- * 'refreshListenTopic' is the topic that forces an update
+ * 'listenTopics' comma separated list of topics names, that will trigger a request
+ * 'indicator' element to be shown while the request executing
+ * 'showErrorTransportText': whether errors should be displayed (on 'targets')</p>
+ * 'notifyTopics' comma separated list of topics names, that will be published. Three parameters are passed:<p/>
+ * <ul>
+ *      <li>data: html or json object when type='load' or type='error'</li>
+ *      <li>type: 'before' before the request is made, 'load' when the request succeeds, or 'error' when it fails</li>
+ *      <li>request: request javascript object, when type='load' or type='error'</li>
+ * <ul>
  * <!-- END SNIPPET: javadoc -->
  *
  * <p/> <b>Examples</b>

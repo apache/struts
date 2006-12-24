@@ -8,12 +8,17 @@
 </head>
 
 <script type="text/javascript">
-   function before() {alert("before request");}
-   function after() {alert("after request");}
    function handler(widget, node) {
      alert('I will handle this myself!');
 	 dojo.byId(widget.targetsArray[0]).innerHTML = "Done";
    }
+
+   dojo.event.topic.subscribe("/after", function(data, type, e){
+      alert('inside a topic event. type='+type);
+      //data : text returned
+      //type : "before", "load" or "error"
+      //e    : request object
+   });
 </script>
 
 <body>
@@ -29,10 +34,14 @@
 <s:url id="ajaxTest" value="/AjaxTest.action" />
 <s:url id="test3" value="/Test3.action" />
 
-<s:a  id="link1"
+<br/><br/>
+
+<s:a
         theme="ajax"
         href="%{ajaxTest}"
-		targets="t1,t2">Update 'Div 1' and 'Div 2'</s:a>
+        indicator="indicator"
+		targets="t1,t2" notifyTopics="/after" >Update 'Div 1' and 'Div 2', publish topic '/after', use indicator</s:a>
+<img id="indicator" src="${pageContext.request.contextPath}/images/indicator.gif" alt="Loading..." style="display:none"/>
 
 <br/><br/>
 
@@ -41,16 +50,14 @@
         href="/AjaxNoUrl.jsp"
 		errorText="Error Loading"
 		targets="t1">Try to update 'Div 1', use custom error message</s:a>
-		
+
 <br/><br/>
 
 <s:a  id="link3"
         theme="ajax"
         href="%{ajaxTest}"
 		loadingText="Loading!!!"
-		beforeLoading="before()"
-		afterLoading="after()"
-		targets="t1">Update 'Div 1', use custom loading message, execute javascript functions before and after the request is made</s:a>
+		targets="t1">Update 'Div 1', use custom loading message</s:a>
 
 <br/><br/>
 
@@ -86,9 +93,9 @@
 		formId="form"
 		>Update 'Div 2' with the content of the textbox </s:a>
 
-		
+
 <br/><br/>
-	
+
 <s:include value="../footer.jsp"/>
 
 </body>

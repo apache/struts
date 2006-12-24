@@ -37,18 +37,16 @@ public class AutocompleterTag extends ComboBoxTag {
     protected String forceValidOption;
     protected String searchType;
     protected String autoComplete;
-    protected String searchDelay;
+    protected String delay;
     protected String disabled;
     protected String href;
     protected String dropdownWidth;
     protected String dropdownHeight;
     protected String formId;
     protected String formFilter;
-    protected String refreshListenTopic;
-    protected String refreshPublishTopic;
-    protected String onValueChangedPublishTopic;;
-    protected String afterLoading;
-    protected String beforeLoading;
+    protected String listenTopics;
+    protected String notifyTopics;
+    protected String indicator;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Autocompleter(stack, req, res);
@@ -62,16 +60,15 @@ public class AutocompleterTag extends ComboBoxTag {
         autocompleter.setDisabled(disabled);
         autocompleter.setForceValidOption(forceValidOption);
         autocompleter.setHref(href);
-        autocompleter.setDelay(searchDelay);
+        autocompleter.setDelay(delay);
         autocompleter.setSearchType(searchType);
         autocompleter.setDropdownHeight(dropdownHeight);
         autocompleter.setDropdownWidth(dropdownWidth);
         autocompleter.setFormFilter(formFilter);
         autocompleter.setFormId(formId);
-        autocompleter.setRefreshListenTopic(refreshListenTopic);
-        autocompleter.setOnValueChangedPublishTopic(onValueChangedPublishTopic);
-        autocompleter.setBeforeLoading(beforeLoading);
-        autocompleter.setAfterLoading(afterLoading);
+        autocompleter.setListenTopics(listenTopics);
+        autocompleter.setNotifyTopics(notifyTopics);
+        autocompleter.setIndicator(indicator);
     }
 
     public void setAutoComplete(String autoComplete) {
@@ -90,8 +87,8 @@ public class AutocompleterTag extends ComboBoxTag {
         this.href = href;
     }
 
-    public void setSearchDelay(String searchDelay) {
-        this.searchDelay = searchDelay;
+    public void setDelay(String searchDelay) {
+        this.delay = searchDelay;
     }
 
     public void setSearchType(String searchType) {
@@ -114,24 +111,15 @@ public class AutocompleterTag extends ComboBoxTag {
       this.formId = formId;
     }
 
-    public void setRefreshListenTopic(String refreshListenTopic) {
-      this.refreshListenTopic = refreshListenTopic;
+    public void setListenTopics(String listenTopics) {
+      this.listenTopics = listenTopics;
     }
 
-    public void setRefreshPublishTopic(String refreshPublishTopic) {
-      this.refreshPublishTopic = refreshPublishTopic;
+    public void setNotifyTopics(String onValueChangedPublishTopic) {
+      this.notifyTopics = onValueChangedPublishTopic;
     }
 
-    public void setOnValueChangedPublishTopic(String onValueChangedPublishTopic) {
-      this.onValueChangedPublishTopic = onValueChangedPublishTopic;
+    public void setIndicator(String indicator) {
+        this.indicator = indicator;
     }
-
-    public void setAfterLoading(String afterLoading) {
-      this.afterLoading = afterLoading;
-    }
-
-    public void setBeforeLoading(String beforeLoading) {
-      this.beforeLoading = beforeLoading;
-    }
-
 }

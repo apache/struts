@@ -1610,6 +1610,14 @@
 
         </attribute>
         <attribute>
+            <name>indicator</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Id of element that will be show while doing the request]]></description>
+
+        </attribute>
+        <attribute>
             <name>targets</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
@@ -1651,12 +1659,21 @@
 
         </attribute>
         <attribute>
-            <name>refreshListenTopic</name>
+            <name>listenTopics</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
 
             <description>
-                <![CDATA[Topic name to listen to (comma delimited), that will cause the DIV's content to be re-fetched]]></description>
+                <![CDATA[Topic names to listen to (comma delimited)]]></description>
+
+        </attribute>
+        <attribute>
+            <name>notifyTopics</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description>
+                <![CDATA[Topic names to publish (comma delimited)]]></description>
 
         </attribute>
         <attribute>
@@ -1677,21 +1694,39 @@
 
         </attribute>
         <attribute>
-            <name>beforeLoading</name>
+            <name>preInvokeJS</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
 
             <description>
-                <![CDATA[Javascript code that will be executed before the content has been fetched]]></description>
+                <![CDATA[Deprecated. Use "notifyTopics".]]></description>
 
         </attribute>
         <attribute>
-            <name>afterLoading</name>
+            <name>onLoadJS</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
 
             <description>
-                <![CDATA[Javascript code that will be executed after the content has been fetched]]></description>
+                <![CDATA[Deprecated. Use "notifyTopics".]]></description>
+
+        </attribute>
+        <attribute>
+            <name>showErrorTransportText</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description>
+                <![CDATA[Set whether errors will be shown or not]]></description>
+
+        </attribute>
+        <attribute>
+            <name>resultDivId</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description>
+                <![CDATA[Deprecated. Use "targets".]]></description>
 
         </attribute>
         <attribute>
@@ -2406,11 +2441,27 @@
         <description><![CDATA[Render HTML div providing content from remote call via AJAX]]></description>
 
         <attribute>
-            <name>updateInterval</name>
+            <name>indicator</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Id of element that will be show while doing the request]]></description>
+
+        </attribute>
+        <attribute>
+            <name>updateFreq</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
 
             <description><![CDATA[How often to re-fetch the content (in milliseconds)]]></description>
+
+        </attribute>
+        <attribute>
+            <name>refreshOnShow</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Reload content when selected. Only valid inside tabbedPanel.]]></description>
 
         </attribute>
         <attribute>
@@ -2471,30 +2522,48 @@
 
         </attribute>
         <attribute>
-            <name>refreshListenTopic</name>
+            <name>listenTopics</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
 
             <description>
-                <![CDATA[Topic name to listen to (comma delimited), that will cause the DIV's content to be re-fetched]]></description>
+                <![CDATA[Topic names to listen to (comma delimited)]]></description>
 
         </attribute>
         <attribute>
-            <name>startTimerListenTopic</name>
+            <name>notifyTopics</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
 
             <description>
-                <![CDATA[Topic name to listen to (comma delimited), that will cause the auto updater timer to start]]></description>
+                <![CDATA[Topic names to publish (comma delimited)]]></description>
 
         </attribute>
         <attribute>
-            <name>stopTimerListenTopic</name>
+            <name>startTimerListenTopics</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
 
             <description>
-                <![CDATA[Topic name to listen to (comma delimited), that will cause the auto updater timer to stop]]></description>
+                <![CDATA[Topic names to listen to (comma delimited), that will cause the auto updater timer to start]]></description>
+
+        </attribute>
+        <attribute>
+            <name>stopTimerListenTopics</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description>
+                <![CDATA[Topic names to listen to (comma delimited), that will cause the auto updater timer to stop]]></description>
+
+        </attribute>
+        <attribute>
+            <name>showErrorTransportText</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description>
+                <![CDATA[Set whether errors will be shown or not]]></description>
 
         </attribute>
         <attribute>
@@ -2524,21 +2593,12 @@
 
         </attribute>
         <attribute>
-            <name>beforeLoading</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description>
-                <![CDATA[Javascript code that will be executed before the content has been fetched]]></description>
-
-        </attribute>
-        <attribute>
             <name>afterLoading</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
 
             <description>
-                <![CDATA[Javascript code that will be executed after the content has been fetched]]></description>
+                <![CDATA[Deprecated. Use "notifyTopics".]]></description>
 
         </attribute>
         <attribute>
@@ -2818,6 +2878,14 @@
         <body-content>JSP</body-content>
         <description><![CDATA[Render HTML div providing content from remote call via AJAX]]></description>
 
+        <attribute>
+            <name>indicator</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Id of element that will be show while doing the request]]></description>
+
+        </attribute>
 	    <attribute>
             <name>autoComplete</name>
             <required>false</required>
@@ -2827,25 +2895,7 @@
 
         </attribute>
         <attribute>
-            <name>beforeLoading</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description>
-                <![CDATA[Javascript code that will be executed before the content has been fetched]]></description>
-
-        </attribute>
-        <attribute>
-            <name>afterLoading</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description>
-                <![CDATA[Javascript code that will be executed after the content has been fetched]]></description>
-
-        </attribute>
-        <attribute>
-            <name>refreshListenTopic</name>
+            <name>listenTopics</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
 
@@ -2854,7 +2904,7 @@
 
         </attribute>
         <attribute>
-            <name>onValueChangedPublishTopic</name>
+            <name>notifyTopics</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
 
@@ -8004,7 +8054,14 @@
         <description>
             <![CDATA[Render a HTML href element that when clicked calls a URL via remote XMLHttpRequest]]>
         </description>
+        <attribute>
+            <name>indicator</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
 
+            <description><![CDATA[Id of element that will be show while doing the request]]></description>
+
+        </attribute>
         <attribute>
             <name>executeScripts</name>
             <required>false</required>
@@ -8043,16 +8100,34 @@
             <rtexprvalue>true</rtexprvalue>
 
             <description>
-                <![CDATA[The text to display to the user while the new content is being fetched (especially good if the content will take awhile)]]></description>
+                <![CDATA[The text to display to the user while the new content is being fetched.]]></description>
 
         </attribute>
         <attribute>
-            <name>refreshListenTopic</name>
+            <name>listenTopics</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
 
             <description>
-                <![CDATA[Topic name to listen to (comma delimited), that will cause the DIV's content to be re-fetched]]></description>
+                <![CDATA[Topic names to listen to (comma delimited) to trigger an update]]></description>
+
+        </attribute>
+        <attribute>
+            <name>notifyTopics</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description>
+                <![CDATA[Topic names to publish (comma delimited)]]></description>
+
+        </attribute>
+        <attribute>
+            <name>showErrorTransportText</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description>
+                <![CDATA[Set whether errors will be shown or not]]></description>
 
         </attribute>
         <attribute>
@@ -8082,12 +8157,12 @@
 
         </attribute>
         <attribute>
-            <name>beforeLoading</name>
+            <name>preInvokeJS</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
 
             <description>
-                <![CDATA[Javascript code that will be executed before the content has been fetched]]></description>
+                <![CDATA[Deprecated. Use "beforeLoading"]]></description>
 
         </attribute>
         <attribute>

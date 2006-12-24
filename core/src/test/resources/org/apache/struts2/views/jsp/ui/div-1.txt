@@ -1,16 +1,18 @@
 <div
   dojoType="struts:BindDiv"
   delay="4000"
-  updateInterval="1000"
+  updateFreq="1000"
   autoStart="true"
-  startTimerListenTopic="h"
-  stopTimerListenTopic="i"
+  startTimerListenTopics="h"
+  stopTimerListenTopics="i"
   id="mylabel"
   href="a"
   loadingText="b"
   errorText="c"
-  refreshListenTopic="g"
+  listenTopics="g"
   beforeLoading="j"
   afterLoading="k"
-  handler="l">
+  handler="l"
+  indicator="m"
+  showError="true">
 </div>

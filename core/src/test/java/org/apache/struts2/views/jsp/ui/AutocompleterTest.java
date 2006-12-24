@@ -17,15 +17,12 @@ public class AutocompleterTest extends AbstractUITagTest {
         tag.setHref("a");
         tag.setDropdownWidth("10");
         tag.setDropdownHeight("10");
-        tag.setSearchDelay("100");
+        tag.setDelay("100");
         tag.setSearchType("b");
         tag.setDisabled("c");
         tag.setName("f");
         tag.setValue("g");
-        tag.setBeforeLoading("h");
-        tag.setAfterLoading("i");
-        tag.setRefreshListenTopic("j");
-        tag.setOnValueChangedPublishTopic("k");
+        tag.setIndicator("h");
         tag.doStartTag();
         tag.doEndTag();
 
@@ -43,7 +40,7 @@ public class AutocompleterTest extends AbstractUITagTest {
         tag.setHref("a");
         tag.setDropdownWidth("10");
         tag.setDropdownHeight("10");
-        tag.setSearchDelay("100");
+        tag.setDelay("100");
         tag.setSearchType("b");
         tag.setDisabled("c");
         tag.setName("f");

@@ -22,7 +22,8 @@ import org.apache.struts2.components.RemoteUICallBean;
 public abstract class AbstractRemoteCallUITag extends AbstractClosingTag {
 
     protected String href;
-    protected String refreshListenTopic;
+    protected String listenTopics;
+    protected String notifyTopics;
     protected String loadingText;
     protected String errorText;
     protected String beforeLoading;
@@ -31,13 +32,15 @@ public abstract class AbstractRemoteCallUITag extends AbstractClosingTag {
     protected String handler;
     protected String formId;
     protected String formFilter;
+    protected String showErrorTransportText;
+    protected String indicator;
 
     protected void populateParams() {
         super.populateParams();
 
         RemoteUICallBean remote = (RemoteUICallBean) component;
         remote.setHref(href);
-        remote.setRefreshListenTopic(refreshListenTopic);
+        remote.setListenTopics(listenTopics);
         remote.setLoadingText(loadingText);
         remote.setErrorText(errorText);
         remote.setAfterLoading(afterLoading);
@@ -46,6 +49,9 @@ public abstract class AbstractRemoteCallUITag extends AbstractClosingTag {
         remote.setHandler(handler);
         remote.setFormFilter(formFilter);
         remote.setFormId(formId);
+        remote.setNotifyTopics(notifyTopics);
+        remote.setShowErrorTransportText(showErrorTransportText);
+        remote.setIndicator(indicator);
     }
 
     public void setHref(String href) {
@@ -60,8 +66,8 @@ public abstract class AbstractRemoteCallUITag extends AbstractClosingTag {
         this.loadingText = loadingText;
     }
 
-    public void setRefreshListenTopic(String refreshListenTopic) {
-        this.refreshListenTopic = refreshListenTopic;
+    public void setListenTopics(String listenTopics) {
+        this.listenTopics = listenTopics;
     }
 
     public void setAfterLoading(String afterLoading) {
@@ -86,5 +92,20 @@ public abstract class AbstractRemoteCallUITag extends AbstractClosingTag {
 
     public void setFormId(String formId) {
         this.formId = formId;
+    }
+
+    public void setNotifyTopics(String notifyTopics) {
+        this.notifyTopics = notifyTopics;
+    }
+
+    public void setShowErrorTransportText(String showErrorTransportText) {
+        this.showErrorTransportText = showErrorTransportText;
+    }
+
+    /**
+     * @param indicator The indicator to set.
+     */
+    public void setIndicator(String indicator) {
+        this.indicator = indicator;
     }
 }

@@ -32,13 +32,13 @@ public class DivTag extends AbstractRemoteCallUITag {
 
     private static final long serialVersionUID = 5309231035916461758L;
 
-    protected String updateInterval;
+    protected String updateFreq;
     protected String autoStart;
     protected String delay;
-    protected String startTimerListenTopic;
-    protected String stopTimerListenTopic;
+    protected String startTimerListenTopics;
+    protected String stopTimerListenTopics;
     protected String refreshOnShow;
-    
+
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Div(stack, req, res);
     }
@@ -47,11 +47,12 @@ public class DivTag extends AbstractRemoteCallUITag {
         super.populateParams();
 
         Div div = (Div) component;
-        div.setUpdateInterval(updateInterval);
+        div.setUpdateFreq(updateFreq);
         div.setAutoStart(autoStart);
         div.setDelay(delay);
-        div.setStartTimerListenTopic(startTimerListenTopic);
-        div.setStopTimerListenTopic(stopTimerListenTopic);
+        div.setStartTimerListenTopics(startTimerListenTopics);
+        div.setStopTimerListenTopics(stopTimerListenTopics);
+        div.setRefreshOnShow(refreshOnShow);
     }
 
     public void setAutoStart(String autoStart) {
@@ -62,16 +63,16 @@ public class DivTag extends AbstractRemoteCallUITag {
         this.delay = delay;
     }
 
-    public void setUpdateInterval(String updateInterval) {
-        this.updateInterval = updateInterval;
+    public void setUpdateFreq(String updateInterval) {
+        this.updateFreq = updateInterval;
     }
 
-    public void setStartTimerListenTopic(String startTimerListenTopic) {
-        this.startTimerListenTopic = startTimerListenTopic;
+    public void setStartTimerListenTopics(String startTimerListenTopic) {
+        this.startTimerListenTopics = startTimerListenTopic;
     }
 
-    public void setStopTimerListenTopic(String stopTimerListenTopic) {
-        this.stopTimerListenTopic = stopTimerListenTopic;
+    public void setStopTimerListenTopics(String stopTimerListenTopic) {
+        this.stopTimerListenTopics = stopTimerListenTopic;
     }
 
     public void setRefreshOnShow(String refreshOnShow) {

@@ -1,4 +1,4 @@
-<select dojoType="struts:ComboBox" mode="local"<#rt/>
+<select dojoType="struts:ComboBox"<#rt/>
 <#if parameters.id?if_exists != "">
  id="${parameters.id?html}"<#rt/>
 </#if>
@@ -7,6 +7,9 @@
 </#if>
 <#if parameters.cssStyle?if_exists != "">
  style="${parameters.cssStyle?html}"<#rt/>
+</#if>
+<#if parameters.href?if_exists != "">
+ dataUrl="${parameters.href}"<#rt/>
 </#if>
 <#if parameters.forceValidOption?exists>
  forceValidOption="${parameters.forceValidOption?string?html}"<#rt/>
@@ -17,8 +20,8 @@
 <#if parameters.autoComplete?exists>
  autoComplete="${parameters.autoComplete?string?html}"<#rt/>
 </#if>
-<#if parameters.searchDelay?exists>
- searchDelay="${parameters.searchDelay?c}"<#rt/>
+<#if parameters.delay?exists>
+ searchDelay="${parameters.delay?c}"<#rt/>
 </#if>
 <#if parameters.disabled?exists>
  disabled="${parameters.disabled?string?html}"<#rt/>
@@ -38,20 +41,29 @@
 <#if parameters.maxlength?exists>
  maxlength="${parameters.maxlength?string?html}"<#rt/>
 </#if>
+<#if parameters.nameValue?if_exists != "">
+ initialValue="${parameters.nameValue}"<#rt/>
+</#if>
+<#if parameters.key?if_exists != "">
+ initialKey="${parameters.key}"<#rt/>
+</#if>
 <#if parameters.readonly?default(false)>
  readonly="readonly"<#rt/>
 </#if>
 <#if parameters.tabindex?exists>
  tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
-<#if parameters.onValueChangedPublishTopic?if_exists != "">
- onValueChangedPublishTopic="${parameters.onValueChangedPublishTopic?html}"<#rt/>
+<#if parameters.formId?if_exists != "">
+ formId="${parameters.formId?html}"<#rt/>
 </#if>
-<#if parameters.beforeLoading?if_exists != "">
- beforeLoading="${parameters.beforeLoading?html}"<#rt/>
+<#if parameters.formFilter?if_exists != "">
+ formFilter="${parameters.formFilter?html}"<#rt/>
 </#if>
-<#if parameters.afterLoading?if_exists != "">
- afterLoading="${parameters.afterLoading?html}"<#rt/>
+<#if parameters.listenTopics?if_exists != "">
+ listenTopics="${parameters.listenTopics?html}"<#rt/>
+</#if>
+<#if parameters.notifyTopics?if_exists != "">
+ notifyTopics="${parameters.notifyTopics?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 >
@@ -83,4 +95,5 @@
     </@s.iterator>
 </#if>
 </select>
+
 

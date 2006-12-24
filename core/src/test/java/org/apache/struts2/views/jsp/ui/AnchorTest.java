@@ -43,10 +43,12 @@ public class AnchorTest extends AbstractUITagTest {
         tag.setLoadingText("d");
         tag.setAfterLoading("e");
         tag.setBeforeLoading("f");
-        tag.setRefreshListenTopic("g");
+        tag.setListenTopics("g");
         tag.setTargets("h");
         tag.setHandler("i");
-
+        tag.setNotifyTopics("j");
+        tag.setIndicator("k");
+        tag.setShowErrorTransportText("true");
         tag.doStartTag();
         tag.doEndTag();
 

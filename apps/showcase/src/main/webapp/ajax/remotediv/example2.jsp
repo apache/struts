@@ -17,10 +17,11 @@
         theme="ajax"
         cssStyle="border: 1px solid yellow;"
         href="%{ajaxTest}"
-        updateInterval="2000"
+        updateFreq="2000"
+        indicator="indicator"
 		>
     Initial Content</s:div>
-
+<img id="indicator" src="${pageContext.request.contextPath}/images/indicator.gif" alt="Loading..." style="display:none"/>
 <s:include value="../footer.jsp"/>
 
 </body>

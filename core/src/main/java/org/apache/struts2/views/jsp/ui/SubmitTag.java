@@ -40,16 +40,24 @@ public class SubmitTag extends AbstractUITag {
     protected String align;
     protected String type;
     protected String href;
-    protected String refreshListenTopic;
+    protected String listenTopics;
+    protected String notifyTopics;
     protected String loadingText;
     protected String errorText;
-    protected String beforeLoading;
-    protected String afterLoading;
     protected String executeScripts;
     protected String handler;
     protected String formId;
     protected String formFilter;
     protected String src;
+    protected String showErrorTransportText;
+    protected String indicator;
+
+    //these two are called "preInvokeJS" and "onLoadJS" on the tld
+    //Names changed here to keep some consistency
+    protected String beforeLoading;
+    protected String afterLoading;
+
+    //this one is called "resultDivId" on the tld
     protected String targets;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
@@ -65,7 +73,7 @@ public class SubmitTag extends AbstractUITag {
         submit.setAlign(align);
         submit.setType(type);
         submit.setHref(href);
-        submit.setRefreshListenTopic(refreshListenTopic);
+        submit.setListenTopics(listenTopics);
         submit.setLoadingText(loadingText);
         submit.setErrorText(errorText);
         submit.setAfterLoading(afterLoading);
@@ -76,6 +84,9 @@ public class SubmitTag extends AbstractUITag {
         submit.setFormId(formId);
         submit.setSrc(src);
         submit.setTargets(targets);
+        submit.setNotifyTopics(notifyTopics);
+        submit.setShowErrorTransportText(showErrorTransportText);
+        submit.setIndicator(indicator);
     }
 
     public void setAction(String action) {
@@ -110,16 +121,8 @@ public class SubmitTag extends AbstractUITag {
         this.loadingText = loadingText;
     }
 
-    public void setRefreshListenTopic(String refreshListenTopic) {
-        this.refreshListenTopic = refreshListenTopic;
-    }
-
-    public void setAfterLoading(String afterLoading) {
-        this.afterLoading = afterLoading;
-    }
-
-    public void setBeforeLoading(String beforeLoading) {
-        this.beforeLoading = beforeLoading;
+    public void setListenTopics(String listenTopics) {
+        this.listenTopics = listenTopics;
     }
 
     public void setExecuteScripts(String executeScripts) {
@@ -144,5 +147,32 @@ public class SubmitTag extends AbstractUITag {
 
     public void setTargets(String targets) {
         this.targets = targets;
+    }
+
+    @Deprecated
+    public void setResultDivId(String id) {
+        this.targets = id;
+    }
+
+    @Deprecated
+    public void setOnLoadJS(String postJS) {
+        this.afterLoading = postJS;
+    }
+
+    @Deprecated
+    public void setPreInvokeJS(String preJS) {
+        this.beforeLoading = preJS;
+    }
+
+    public void setNotifyTopics(String notifyTopics) {
+        this.notifyTopics = notifyTopics;
+    }
+
+    public void setShowErrorTransportText(String showErrorTransportText) {
+        this.showErrorTransportText = showErrorTransportText;
+    }
+
+    public void setIndicator(String indicator) {
+        this.indicator = indicator;
     }
 }

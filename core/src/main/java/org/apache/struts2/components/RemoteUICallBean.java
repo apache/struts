@@ -3,11 +3,18 @@ package org.apache.struts2.components;
 public interface RemoteUICallBean {
 
     /**
-     * Topic that will trigger a re-fetch
+     * Topic that will trigger the remote call
      *
      * @s.tagattribute required="false" type="String"
      */
-    void setRefreshListenTopic(String refreshListenTopic);
+    void setListenTopics(String topics);
+
+    /**
+     * Topic that will published when the remote call completes
+     *
+     * @s.tagattribute required="false" type="String"
+     */
+    void setNotifyTopics(String topics);
 
     /**
      * The URL to call to obtain the content. Note: If used with ajax context, the value must be set as an url tag value.
@@ -67,7 +74,19 @@ public interface RemoteUICallBean {
      * @s.tagattribute required="false" type="String"
      */
     void setFormId(String formId);
-    
-   
+
+    /**
+     * Set whether errors will be shown or not
+     *
+     * @s.tagattribute required="false" type="Boolean"
+     */
+    void setShowErrorTransportText(String showError);
+
+    /**
+     * Id of element that will be shown while making request
+     *
+     * @s.tagattribute required="false" type="String"
+     */
+    void setIndicator(String indicator);
 
 }

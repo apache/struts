@@ -17,18 +17,27 @@
 	configured, the action errors / messages / field errors will be store and 
 	remains retrieveable even after a redirect.
 	</p>
-	<p/>
-	
-	<s:actionmessage/>
-	<s:actionerror/>
-	<s:fielderror />
 
-	<s:form action="submitApplication" namespace="/validation">
+    <table border="1">
+        <tr><td>ActionMessages: </td><td></td><s:actionmessage/></tr>
+       <tr><td>ActionErrors: </td><td><s:actionerror/></td></tr>
+    </table>
+
+    <p>
+    <s:form action="submitApplication" namespace="/validation">
 		<s:textfield name="name" label="Name" />
 		<s:textfield name="age" label="Age" />
 		<s:submit />
 		<s:submit action="cancelApplication" value="%{'Cancel'}" />
 	</s:form>
+    </p>
+    <p>
+        Try submitting with an invalid age value,
+        and note that the browser location changes,
+        but validation messages are retained.
+        Because of the redirect,
+        the input values are not retained. 
+    </p>
 
 </body>
 </html>

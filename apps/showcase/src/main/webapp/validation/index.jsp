@@ -34,8 +34,8 @@
             <li><s:a href="%{nonFieldValidatorUrl}">Non Field Validator</s:a></li>
             <li><s:a href="%{visitorValidatorUrl}">Visitor Validator</s:a></li>
             <li><s:a href="%{clientSideValidationUrl}">Client side validation using JavaScript</s:a></li>
-            <li><s:a href="%{backToShowcase}">Back To Showcase</s:a>
             <li><s:a href="%{storeMessageAcrossRequestExample}">Store across request using MessageStoreInterceptor (Example)</s:a></li>
+            <li><s:a href="%{backToShowcase}">Back To Showcase</s:a>
         </ul>
     </body>
 </html>

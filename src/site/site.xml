@@ -80,7 +80,7 @@
                     />
             <item
                     name="Tag Reference"
-                    href="http://struts.apache.org/WW/tag-reference.html"
+                    href="docs/tag-reference.html"
                     />
             <item
                     name="New API (experimental)"

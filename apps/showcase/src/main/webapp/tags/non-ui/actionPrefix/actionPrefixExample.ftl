@@ -39,7 +39,10 @@
 			<@s.submit name="redirect-action:redirectActionPrefix" value="%{'redirect-action prefix'}" />
 			
 			<@s.submit value="Normal Submit" />
-		</@s.form>
+
+            <@s.submit name="action:redirectActionPrefixAction" value="%{'redirect-action without prefix'}" />
+
+        </@s.form>
 	</body>
 </html>
 

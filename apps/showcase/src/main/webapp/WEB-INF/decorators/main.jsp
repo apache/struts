@@ -77,10 +77,10 @@
             <div class="wrapper">
                 <h2 class="accessibility">Navigation</h2>
                 <ul class="clearfix">
-                    <li><a href="<s:url value="/showcase.jsp"/>"><strong>Home</strong></a></li>
-                    <li><a href="<s:url action="index" namespace="/config-browser" includeParams="none" />">Config Browser</a></li>
+                    <li><a href="<s:url value="/showcase.jsp"/>">Home</a></li>
                     <li><a href="<s:url value="/ajax/index.jsp"/>">AJAX</a></li>
                     <li><a href="<s:url action="actionChain1!input" namespace="/actionchaining"  includeParams="none" />">Action Chaining</a></li>
+                    <li><a href="<s:url action="index" namespace="/config-browser" includeParams="none" />">Config Browser</a></li>
                     <li><a href="<s:url value="/conversion/index.jsp"/>">Conversion</a></li>
                     <li><a href="<s:url value="/empmanager/index.jsp"/>">CRUD</a></li>
                     <li><a href="<s:url value="/wait/index.jsp"/>">Execute & Wait</a></li>

@@ -13,7 +13,7 @@
 <s:fielderror />
 
 
-<s:form action="exampleSubmit" method="post" enctype="multipart/form-data" tooltipConfig="%{'jsTooltipEnabled':'true'}">
+<s:form action="exampleSubmit" enctype="multipart/form-data" tooltipConfig="%{'jsTooltipEnabled':'true'}">
     <s:textfield 
             label="Name" 
             name="name"

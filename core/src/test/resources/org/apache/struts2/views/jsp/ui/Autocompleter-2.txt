@@ -3,7 +3,7 @@
  id="f"
  dataUrl="a"
  forceValidOption="false"
- searchType="b"
+ searchType="B"
  autoComplete="true"
  searchDelay="100"
  dropdownWidth="10"

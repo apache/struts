@@ -98,7 +98,7 @@ dojo.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ limi
 					var text = opts[x].textContent || opts[x].innerText || opts[x].innerHTML;
 					var keyValArr = [String(text), String(opts[x].value)];
 					data.push(keyValArr);
-					if(opts[x].selected){ 
+					if(opts[x].selected){
 						cbox.setAllValues(keyValArr[0], keyValArr[1]);
 					}
 				}
@@ -110,7 +110,7 @@ dojo.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ limi
 	this.getData = function(/*String*/ url){
 		dojo.io.bind({
 			url: url,
-			load: dojo.lang.hitch(this, function(type, data, evt){ 
+			load: dojo.lang.hitch(this, function(type, data, evt){
 				if(!dojo.lang.isArray(data)){
 					var arrData = [];
 					for(var key in data){
@@ -212,7 +212,7 @@ dojo.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ limi
 		// populate this.data and initialize lookup structures
 		this.data = pdata;
 	};
-	
+
 	if(dataPairs){
 		this.setData(dataPairs);
 	}
@@ -224,11 +224,11 @@ dojo.widget.defineWidget(
 	{
 		// Applies to any renderer
 		isContainer: false,
-	
+
 		forceValidOption: false,
-		searchType: "stringstart",
+		searchType: "STARTSTRING",
 		dataProvider: null,
-	
+
 		startSearch: function(/*String*/ searchString){},
 		selectNextResult: function(){},
 		selectPrevResult: function(){},
@@ -248,11 +248,11 @@ dojo.widget.defineWidget(
 		dataUrl: "",
 		fadeTime: 200,
 		disabled: false,
-		// maxListLength limits list to X visible rows, scroll on rest 
-		maxListLength: 8, 
+		// maxListLength limits list to X visible rows, scroll on rest
+		maxListLength: 8,
 		// mode can also be "remote" for JSON-returning live search or "html" for
 		// dumber live search
-		mode: "local", 
+		mode: "local",
 		selectedResult: null,
 		_highlighted_option: null,
 		_prev_key_backspace: false,
@@ -285,7 +285,7 @@ dojo.widget.defineWidget(
 		getValue: function(){
 			return this.comboBoxValue.value;
 		},
-	
+
 		getState: function(){
 			return {value: this.getValue()};
 		},
@@ -296,15 +296,15 @@ dojo.widget.defineWidget(
 
 		enable:function(){
 			this.disabled=false;
-			this.isEnabled = true; 
+			this.isEnabled = true;
 			this.textInputNode.removeAttribute("disabled");
 		},
- 
+
 		disable: function(){
-			this.disabled = true; 
+			this.disabled = true;
 			this.isEnabled = false;
-			this.textInputNode.setAttribute("disabled",true); 
-		}, 
+			this.textInputNode.setAttribute("disabled",true);
+		},
 
 		getCaretPos: function(/*DomNode*/ element){
 			// khtml 3.5.2 has selection* methods as does webkit nightlies from 2005-06-22
@@ -329,7 +329,7 @@ dojo.widget.defineWidget(
 				} catch (e){
 					return 0; // If focus has shifted, 0 is fine for caret pos.
 				}
-				
+
 			}
 		},
 
@@ -398,7 +398,7 @@ dojo.widget.defineWidget(
 					if(!this.autoComplete && this.popupWidget.isShowingNow && this._highlighted_option){
 						dojo.event.browser.stopEvent(evt);
 						this.selectOption({ 'target': this._highlighted_option, 'noHide': false});
-	
+
 						// put caret last
 						this.setSelectedRange(this.textInputNode, this.textInputNode.value.length, null);
 					}else{
@@ -452,14 +452,14 @@ dojo.widget.defineWidget(
 			if(doSearch){
 				// if we have gotten this far we dont want to keep our highlight
 				this.blurOptionNode();
-	
+
 				// need to wait a tad before start search so that the event bubbles through DOM and we have value visible
 				this.searchTimer = setTimeout(dojo.lang.hitch(this, this.startSearchFromInput), this.searchDelay);
 			}
 		},
 
-		// When inputting characters using an input method, such as Asian  
-		// languages, it will generate this event instead of onKeyDown event 
+		// When inputting characters using an input method, such as Asian
+		// languages, it will generate this event instead of onKeyDown event
 		compositionEnd: function(/*Event*/ evt){
 			evt.key = evt.keyCode;
 			this._handleKeyEvents(evt);
@@ -543,9 +543,9 @@ dojo.widget.defineWidget(
 			// For inlining a table we need browser specific CSS
 			dojo.html.applyBrowserClass(this.domNode);
 
-			var source = this.getFragNodeRef(frag); 
-			if (! this.name && source.name){ this.name = source.name; } 
-			this.comboBoxValue.name = this.name; 
+			var source = this.getFragNodeRef(frag);
+			if (! this.name && source.name){ this.name = source.name; }
+			this.comboBoxValue.name = this.name;
 			this.comboBoxSelectionValue.name = this.name+"_selected";
 
 			/* different nodes get different parts of the style */
@@ -568,7 +568,7 @@ dojo.widget.defineWidget(
 			this.dataProvider = new dpClass();
 			this.dataProvider.init(this, this.getFragNodeRef(frag));
 
-			this.popupWidget = new dojo.widget.createWidget("PopupContainer", 
+			this.popupWidget = new dojo.widget.createWidget("PopupContainer",
 				{toggle: this.dropdownToggle, toggleDuration: this.toggleDuration});
 			dojo.event.connect(this, 'destroy', this.popupWidget, 'destroy');
 			this.optionsListNode = this.popupWidget.domNode;
@@ -577,7 +577,7 @@ dojo.widget.defineWidget(
 			dojo.event.connect(this.optionsListNode, 'onclick', this, 'selectOption');
 			dojo.event.connect(this.optionsListNode, 'onmouseover', this, '_onMouseOver');
 			dojo.event.connect(this.optionsListNode, 'onmouseout', this, '_onMouseOut');
-			
+
 			dojo.event.connect(this.optionsListNode, "onmouseover", this, "itemMouseOver");
 			dojo.event.connect(this.optionsListNode, "onmouseout", this, "itemMouseOut");
 		},
@@ -648,7 +648,7 @@ dojo.widget.defineWidget(
 				this.blurTimer = dojo.lang.setTimeout(this, "checkBlurred", millisec);
 			}
 		},
-	
+
 		// these 2 are needed in IE and Safari as inputTextNode loses focus when scrolling optionslist
 		_onMouseOver: function(/*Event*/ evt){
 			if(!this._mouseover_list){
@@ -726,7 +726,7 @@ dojo.widget.defineWidget(
 
 			if(!dojo.html.isDescendantOf(evt.target, this.optionsListNode)){
 				// handle autocompletion where the the user has hit ENTER or TAB
-	
+
 				// if the input is empty do nothing
 				if(!this.textInputNode.value.length){
 					return;
@@ -739,7 +739,7 @@ dojo.widget.defineWidget(
 				}
 				// otherwise the user has accepted the autocompleted value
 			}else{
-				tgt = evt.target; 
+				tgt = evt.target;
 			}
 
 			while((tgt.nodeType!=1)||(!tgt.getAttribute("resultName"))){
@@ -790,7 +790,7 @@ dojo.widget.defineWidget(
 						height = visibleCount * dojo.html.getMarginBox(childs[0]).height +"px";
 					}
 					width = (dojo.html.getMarginBox(this.domNode).width-2)+"px";
-					
+
 				}
 				this.popupWidget.open(this.domNode, this, this.downArrowNode);
 			}else{
@@ -828,7 +828,7 @@ dojo.widget.defineWidget(
 			dojo.event.connect(this.dataProvider, "provideSearchResults", this, "openResultList");
 			dojo.event.connect(this.textInputNode, "onblur", this, "onBlurInput");
 			dojo.event.connect(this.textInputNode, "onfocus", this, "onFocusInput");
-			if (this.disabled){ 
+			if (this.disabled){
 				this.disable();
 			}
 			var s = dojo.widget.html.stabile.getState(this.widgetId);

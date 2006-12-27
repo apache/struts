@@ -3,11 +3,14 @@
  id="f"
  dataUrl="a"
  forceValidOption="false"
- searchType="b"
+ searchType="B"
  autoComplete="true"
  searchDelay="100"
  dropdownWidth="10"
  dropdownHeight="10"
  name="f"
  initialValue="g"
-indicator="h">
+ indicator="h"
+ loadOnType="true"
+ loadMinimum="3"
+ visibleDownArrow="false">

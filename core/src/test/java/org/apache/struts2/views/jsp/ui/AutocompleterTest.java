@@ -23,6 +23,9 @@ public class AutocompleterTest extends AbstractUITagTest {
         tag.setName("f");
         tag.setValue("g");
         tag.setIndicator("h");
+        tag.setLoadOnTextChange("true");
+        tag.setLoadMinimumCount("3");
+        tag.setShowDownArrow("false");
         tag.doStartTag();
         tag.doEndTag();
 

@@ -15,7 +15,7 @@
  forceValidOption="${parameters.forceValidOption?string?html}"<#rt/>
 </#if>
 <#if parameters.searchType?if_exists != "">
- searchType="${parameters.searchType}"<#rt/>
+ searchType="${parameters.searchType?html}"<#rt/>
 </#if>
 <#if parameters.autoComplete?exists>
  autoComplete="${parameters.autoComplete?string?html}"<#rt/>
@@ -67,6 +67,15 @@
 </#if>
 <#if parameters.indicator?if_exists != "">
  indicator="${parameters.indicator?html}"<#rt/>
+</#if>
+<#if parameters.loadOnTextChange?default(false)>
+ loadOnType="${parameters.loadOnTextChange?string?html}"<#rt/>
+</#if>
+<#if parameters.loadMinimumCount?exists>
+ loadMinimum="${parameters.loadMinimumCount?c}"<#rt/>
+</#if>
+<#if parameters.showDownArrow?exists>
+ visibleDownArrow="${parameters.showDownArrow?string?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 >

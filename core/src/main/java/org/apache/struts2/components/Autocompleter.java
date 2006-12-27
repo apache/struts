@@ -48,6 +48,10 @@ import com.opensymphony.xwork2.util.ValueStack;
  *      <li>formId</li>
  *      <li>formFilter</li>
  *      <li>indicator</li>
+ *      <li>loadOnTextChange</li>
+ *      <li>loadMinimumCount</li>
+ *      <li>showDownArrow</li>
+ *      <li>searchType</li>
  * </ul>
  * 'dropdownWidth' width in pixels of the drodpdown, same as autocompleter's width by default<p/>
  * 'dropdownHeight' height in pixels of the drodown, 120 px by default<p/>
@@ -61,6 +65,10 @@ import com.opensymphony.xwork2.util.ValueStack;
  * 'listenTopics' comma separated list of topics names, that will trigger a request
  * 'indicator' element to be shown while the request executing
  * 'showErrorTransportText': whether errors should be displayed (on 'targets')<p/>
+ * 'loadOnTextChange' options will be reloaded everytime a character is typed on the textbox<p/>
+ * 'loadMinimumCount' minimum number of characters that will force the content to be loaded<p/>
+ * 'showDownError' show or hide the down arrow button
+ * 'searchType' how the search must be performed, options are: "startstring", "startword" and "substring"<p/>
  * 'notifyTopics' comma separated list of topics names, that will be published. Three parameters are passed:<p/>
  * <ul>
  *      <li>data: selected value when type='valuechanged'</li>
@@ -88,6 +96,9 @@ public class Autocompleter extends ComboBox {
     protected String listenTopics;
     protected String notifyTopics;
     protected String indicator;
+    protected String loadOnTextChange;
+    protected String loadMinimumCount;
+    protected String showDownArrow;
 
     public Autocompleter(ValueStack stack, HttpServletRequest request,
             HttpServletResponse response) {
@@ -109,8 +120,11 @@ public class Autocompleter extends ComboBox {
         if (forceValidOption != null)
             addParameter("forceValidOption", findValue(forceValidOption,
                     Boolean.class));
-        if (searchType != null)
-            addParameter("searchType", findString(searchType));
+        if (searchType != null) {
+            String type =  findString(searchType);
+            if(type != null)
+                addParameter("searchType", type.toUpperCase());
+        }
         if (autoComplete != null)
             addParameter("autoComplete", findValue(autoComplete, Boolean.class));
         if (delay != null)
@@ -135,6 +149,14 @@ public class Autocompleter extends ComboBox {
           addParameter("notifyTopics", findString(notifyTopics));
         if (indicator != null)
             addParameter("indicator", findString(indicator));
+        if (loadOnTextChange != null)
+            addParameter("loadOnTextChange", findValue(loadOnTextChange, Boolean.class));
+        if (loadMinimumCount != null)
+            addParameter("loadMinimumCount", findValue(loadMinimumCount, Integer.class));
+        if (showDownArrow != null)
+            addParameter("showDownArrow", findValue(showDownArrow, Boolean.class));
+        else
+            addParameter("showDownArrow", Boolean.TRUE);
         //get the key value
         if(name != null) {
             String keyNameExpr = "%{" + name + "Key}";
@@ -188,7 +210,7 @@ public class Autocompleter extends ComboBox {
 
 
     /**
-     * set how the serach bust be preformed, optionas are: "startstring", "startword" and "substring"
+     * set how the search must be performed, options are: "startstring", "startword" and "substring"
      * @s.tagattribute required="false" default="stringstart" type="String"
      */
     public void setSearchType(String searchType) {
@@ -254,5 +276,29 @@ public class Autocompleter extends ComboBox {
      */
     public void setIndicator(String indicator) {
         this.indicator = indicator;
+    }
+
+    /**
+     * Minimum number of characters that will force the content to be loaded
+     * @s.tagattribute required="false" type="Integer" default="3"
+     */
+    public void setLoadMinimumCount(String loadMinimumCount) {
+        this.loadMinimumCount = loadMinimumCount;
+    }
+
+    /**
+     * Options will be reloaded everytime a character is typed on the textbox.
+     * @s.tagattribute required="false" type="Boolean" default="false"
+     */
+    public void setLoadOnTextChange(String loadOnType) {
+        this.loadOnTextChange = loadOnType;
+    }
+
+    /**
+     * Show or hide the down arrow button
+     * @s.tagattribute required="false" type="Boolean" default="true"
+     */
+    public void setShowDownArrow(String showDownArrow) {
+        this.showDownArrow = showDownArrow;
     }
 }

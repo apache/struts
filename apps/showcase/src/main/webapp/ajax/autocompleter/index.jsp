@@ -11,11 +11,20 @@
 
 <body>
 
+
 <s:url id="jsonList" value="/JSONList.action"/>
 
-Using a JSON list returned from an action (href="/JSONList.action"), without autoComplete (autoComplete="false"), use indicator
+Using a JSON list returned from an action (href="/JSONList.action"), without autoComplete (autoComplete="false"), use indicator, search substring (searchType="substring")
 <br/>
-<s:autocompleter name="state" theme="ajax" indicator="indicator" href="%{jsonList}" cssStyle="width: 200px;" autoComplete="false"/>
+<s:autocompleter name="state" theme="ajax" indicator="indicator1" href="%{jsonList}" cssStyle="width: 200px;" autoComplete="false" searchType="substring"/>
+<img id="indicator1" src="${pageContext.request.contextPath}/images/indicator.gif" alt="Loading..." style="display:none"/>
+
+<br/>
+<br/>
+
+Reload on type (loadOnTextChange="true"), after 3 characters (loadMinimumCout="3", it is "3" by default), without the down arrow button (showDownArrow="false")
+<br/>
+<s:autocompleter theme="ajax" indicator="indicator" href="%{jsonList}" cssStyle="width: 200px;" autoComplete="false" loadOnTextChange="true" loadMinimumCount="3" showDownArrow="false"/>
 <img id="indicator" src="${pageContext.request.contextPath}/images/indicator.gif" alt="Loading..." style="display:none"/>
 
 <br/>
@@ -64,7 +73,7 @@ Link two autocompleter elements. When the selected value in 'Autocompleter 1' ch
 <form id="selectForm">
   <p>Autocompleter 1 <s:autocompleter theme="simple" name="select" list="{'fruits','colors'}"  value="colors" notifyTopics="/Changed" forceValidOption="true" id="sel"/></p>
 </form>
-Autocompleter 2 <s:autocompleter theme="ajax" href="%{#autoex}" autoComplete="false" formId="selectForm" listenTopics="/Changed" notifyTopics="/OpsChanged" forceValidOption="true" id="ops"/>
+Autocompleter 2 <s:autocompleter theme="ajax" href="%{#autoex}" autoComplete="false" formId="selectForm" listenTopics="/Changed" forceValidOption="true" id="ops"/>
 
 <br/>
 <br/>

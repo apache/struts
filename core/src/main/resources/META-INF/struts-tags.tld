@@ -2886,6 +2886,30 @@
             <description><![CDATA[Id of element that will be show while doing the request]]></description>
 
         </attribute>
+        <attribute>
+            <name>loadOnTextChange</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Reload options when text changes on the textbox (false by default)]]></description>
+
+        </attribute>
+        <attribute>
+            <name>loadMinimumCount</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Minimum number of characters that will force the content to be loaded (3 by default)]]></description>
+
+        </attribute>
+        <attribute>
+            <name>showDownArrow</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Show or hide the down arrow button (true by default)]]></description>
+
+        </attribute>
 	    <attribute>
             <name>autoComplete</name>
             <required>false</required>
@@ -2977,7 +3001,15 @@
             <description><![CDATA[The URL to call to obtain the content]]></description>
 
         </attribute>
-       <attribute>
+        <attribute>
+            <name>searchType</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[how the search must be performed, options are: "startstring" (default), "startword" and "substring"]]></description>
+
+        </attribute>
+        <attribute>
             <name>list</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>

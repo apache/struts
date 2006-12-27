@@ -25,7 +25,9 @@ dojo.widget.defineWidget(
 
     //messages
     loadingText : "Loading...",
+    showLoading : true,
     errorText : "",
+    showError : true,
 
     //pub/sub events
     listenTopics : "",
@@ -42,7 +44,6 @@ dojo.widget.defineWidget(
     formFilter : "",
     firstTime : true,
 
-    showError : true,
     indicator: "",
 
 	//make dojo process the content
@@ -56,7 +57,11 @@ dojo.widget.defineWidget(
           return;
         }
       }
-      if(!dojo.string.isBlank(this.loadingText)) {
+      if(!this.showLoading) {
+        event.returnValue = false;
+        return;
+      }
+      if(this.showLoading && !dojo.string.isBlank(this.loadingText)) {
         event.text = this.loadingText;
       }
     },
@@ -85,10 +90,13 @@ dojo.widget.defineWidget(
 
     notify : function(data, type, e) {
       if(this.notifyTopicsArray) {
+        var self = this;
         dojo.lang.forEach(this.notifyTopicsArray, function(topic) {
           try {
-            dojo.event.topic.publish(topic, data, type, null);
-          } catch(e){}
+            dojo.event.topic.publish(topic, data, type, e);
+          } catch(ex) {
+            self.log(ex);
+          }
         });
       }
     },
@@ -129,7 +137,6 @@ dojo.widget.defineWidget(
 
       //start the timer
       if(this.autoStart) {
-        this.log("autostarting");
         //start after delay
         if(this.delay > 0) {
           if(this.updateFreq > 0) {
@@ -185,10 +192,16 @@ dojo.widget.defineWidget(
           return;
         }
       }
+
+      var request = {cancel: false};
+      this.notify(this.widgetId, "before", request);
+      if(request.cancel) {
+        return;
+      }
+
       //show indicator
       dojo.html.show(this.indicator);
 
-      this.notify(this.widgetId, "before", {});
       this._handleDefaults("Loading...", "onDownloadStart");
       var self = this;
       dojo.io.bind({

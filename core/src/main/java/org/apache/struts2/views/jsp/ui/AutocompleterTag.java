@@ -47,6 +47,9 @@ public class AutocompleterTag extends ComboBoxTag {
     protected String listenTopics;
     protected String notifyTopics;
     protected String indicator;
+    protected String loadOnTextChange;
+    protected String loadMinimumCount;
+    protected String showDownArrow;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Autocompleter(stack, req, res);
@@ -69,6 +72,9 @@ public class AutocompleterTag extends ComboBoxTag {
         autocompleter.setListenTopics(listenTopics);
         autocompleter.setNotifyTopics(notifyTopics);
         autocompleter.setIndicator(indicator);
+        autocompleter.setLoadMinimumCount(loadMinimumCount);
+        autocompleter.setLoadOnTextChange(loadOnTextChange);
+        autocompleter.setShowDownArrow(showDownArrow);
     }
 
     public void setAutoComplete(String autoComplete) {
@@ -122,4 +128,21 @@ public class AutocompleterTag extends ComboBoxTag {
     public void setIndicator(String indicator) {
         this.indicator = indicator;
     }
+
+    public void setLoadMinimumCount(String loadMinimumCount) {
+        this.loadMinimumCount = loadMinimumCount;
+    }
+
+    public String getLoadMinimumCount() {
+        return loadMinimumCount;
+    }
+
+    public void setLoadOnTextChange(String loadOnTextChange) {
+        this.loadOnTextChange = loadOnTextChange;
+    }
+
+    public void setShowDownArrow(String showDownArrow) {
+        this.showDownArrow = showDownArrow;
+    }
+
 }

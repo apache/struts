@@ -17,6 +17,7 @@ dojo.widget.defineWidget(
   loadingText : "Loading...",
   errorText : "",
   showError : true,
+  showLoading : true,
 
   //pub/sub events
   listenTopics : "",
@@ -35,14 +36,14 @@ dojo.widget.defineWidget(
   indicator : "",
 
   parseContent : true,
-
   postCreate : function() {
+    var self = this;
+
     //attach listeners
     if(!dojo.string.isBlank(this.listenTopics)) {
       this.log("Listening to " + this.listenTopics + " to refresh");
       var topics = this.listenTopics.split(",");
       if(topics) {
-        var self = this;
         if(topics) {
           if(topics) {
             dojo.lang.forEach(topics, function(topic){
@@ -61,13 +62,27 @@ dojo.widget.defineWidget(
       //split targets
       this.targetsArray = this.targets.split(",");
     }
+
     if(!dojo.string.isBlank(this.event)) {
-      dojo.event.connect(this.domNode, this.event, this, "reloadContents");
+      dojo.event.connect(this.domNode, this.event, function(evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        self.reloadContents();
+      });
     }
-    if(dojo.string.isBlank(this.href)) {
-      this.formNode = dojo.string.isBlank(this.formId) ? dojo.dom.getFirstAncestorByTag(this.domNode, "form") : dojo.byId(this.formId);
-      this.href = this.formNode.action;
+
+    if(dojo.string.isBlank(this.href) && dojo.string.isBlank(this.formId)) {
+      //no href and no formId, we must be inside a form
+      this.formNode = dojo.dom.getFirstAncestorByTag(this.domNode, "form");
     } else {
+      this.formNode = dojo.byId(this.formId);
+    }
+
+    if(this.formNode && dojo.string.isBlank(this.href)) {
+      this.href = this.formNode.action;
+    }
+
+    if(!dojo.string.isBlank(this.formId)) {
       this.formNode = dojo.byId(this.formId);
     }
   },
@@ -81,10 +96,10 @@ dojo.widget.defineWidget(
       var self = this;
 	  var xmlParser = new dojo.xml.Parse();
       dojo.lang.forEach(this.targetsArray, function(target) {
-
         var node = dojo.byId(target);
         node.innerHTML = text;
-        if(self.parseContent){
+
+        if(self.parseContent && text != self.loadingText){
           var frag  = xmlParser.parseElement(node, null, true);
           dojo.widget.getParser().createSubComponents(frag, dojo.widget.byId(target));
 		}
@@ -131,10 +146,13 @@ dojo.widget.defineWidget(
 
   notify : function(data, type, e) {
     if(this.notifyTopicsArray) {
+      var self = this;
       dojo.lang.forEach(this.notifyTopicsArray, function(topic) {
         try {
-          dojo.event.topic.publish(topic, data, type, null);
-        } catch(e){}
+          dojo.event.topic.publish(topic, data, type, e);
+        } catch(ex){
+		  self.log(ex);
+        }
       });
     }
   },
@@ -147,12 +165,13 @@ dojo.widget.defineWidget(
 
       eval(this.beforeLoading);
     }
-    if(!dojo.string.isBlank(this.loadingText)) {
+    if(this.showLoading && !dojo.string.isBlank(this.loadingText)) {
       event.text = this.loadingText;
     }
   },
 
-  reloadContents : function() {
+  reloadContents : function(evt) {
+
     if(!dojo.string.isBlank(this.handler)) {
       //use custom handler
       this.log("Invoking handler: " + this.handler);
@@ -169,14 +188,39 @@ dojo.widget.defineWidget(
         eval(this.beforeLoading);
       }
 
-      //show indicator
-      dojo.html.show(this.indicator);
       try {
           var self = this;
-          this.notify(this.widgetId, "before", {});
-          this.setContent(this.loadingText);
+          var request = {cancel: false};
+          this.notify(this.widgetId, "before", request);
+          if(request.cancel) {
+            this.log("Request canceled");
+            return;
+          }
+
+          //if the href is null, we still call the "beforeLoading"
+          // and publish the notigy topics
+          if(dojo.string.isBlank(this.href)) {
+            return;
+          }
+
+          //if there is a parent form, and it has a "onsubmit"
+          //execute it, validation is usually there
+          if(this.formNode && this.formNode.onsubmit != null) {
+            var makeRequest = this.formNode.onsubmit.call(evt);
+            if(makeRequest != null && !makeRequest) {
+              this.log("Request canceled by 'onsubmit' of the form");
+              return;
+            }
+          }
+
+          //show indicator
+          dojo.html.show(this.indicator);
+		  if(this.showLoading) {
+            this.setContent(this.loadingText);
+          }
+
           dojo.io.bind({
-            url: self.href,
+            url: this.href,
             useCache: false,
             preventCache: true,
             formNode: self.formNode,

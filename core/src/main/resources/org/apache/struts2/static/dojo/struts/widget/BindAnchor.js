@@ -12,9 +12,10 @@ dojo.widget.defineWidget(
   event: "onclick",
 
   postCreate : function() {
-     this.domNode.href = "#";
      struts.widget.BindAnchor.superclass.postCreate.apply(this);
+     this.domNode.href = "#";
   }
 });
+
 
 

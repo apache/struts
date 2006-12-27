@@ -198,6 +198,9 @@ dojo.widget.defineWidget(
   visibleDownArrow : true,
   fadeTime : 100,
 
+  //dojo has "stringstart" which is invalid
+  searchType: "STARTSTRING",
+
   templateCssPath: dojo.uri.dojoUri("struts/ComboBox.css"),
   //from Dojo's  ComboBox
   showResultList: function() {
@@ -258,10 +261,12 @@ dojo.widget.defineWidget(
             var i = text.toLowerCase().indexOf(typedText.toLowerCase());
             if(i >= 0) {
                 var pre = text.substring(0, i);
-                var matched = text.substring(i, typedText.length);
+                var matched = text.substring(i, i + typedText.length);
                 var post = text.substring(i + typedText.length);
 
-                td.appendChild(document.createTextNode(pre));
+                if(!dojo.string.isBlank(pre)) {
+                  td.appendChild(document.createTextNode(pre));
+                }
                 var boldNode = document.createElement("b");
                 td.appendChild(boldNode);
                 boldNode.appendChild(document.createTextNode(matched));
@@ -290,7 +295,12 @@ dojo.widget.defineWidget(
       var topics = this.listenTopics.split(",");
       for(var i = 0; i < topics.length; i++) {
         dojo.event.topic.subscribe(topics[i], function() {
-          self.notify(this.widgetId, "before", {});
+          var request = {cancel: false};
+	      self.notify(this.widgetId, "before", request);
+	      if(request.cancel) {
+	        return;
+	      }
+          self.clearValues();
           self.dataProvider.getData(self.dataUrl);
         });
       }
@@ -312,6 +322,11 @@ dojo.widget.defineWidget(
     if(!this.visibleDownArrow) {
       dojo.html.hide(this.downArrowNode);
     }
+
+    //search type
+    if(!dojo.string.isBlank(this.searchType)) {
+      this.dataProvider.searchType = this.searchType.toUpperCase();
+    }
   },
 
   clearValues : function() {
@@ -328,8 +343,10 @@ dojo.widget.defineWidget(
     if(this.notifyTopicsArray) {
       dojo.lang.forEach(this.notifyTopicsArray, function(topic) {
         try {
-          dojo.event.topic.publish(topic, data, type, null);
-        } catch(e){}
+          dojo.event.topic.publish(topic, data, type, e);
+        } catch(ex) {
+          dojo.debug(ex);
+        }
       });
     }
   },
@@ -339,13 +356,15 @@ dojo.widget.defineWidget(
     if(this.loadOnType) {
     	if(searchStr.length >= this.loadMinimum) {
     	    var nuHref = this.dataUrl + (this.dataUrl.indexOf("?") > -1 ? "&" : "?");
-			nuHref += this.name + '=' + searchStr;
-			this.dataProvider.getData(nuHref);
-			this.startSearch(searchStr);
-    	}
+   		nuHref += this.name + '=' + searchStr;
+   		this.dataProvider.getData(nuHref);
+   		this.startSearch(searchStr);
+    	} else {
+           this.hideResultList();
+        }
     }
     else {
-		this.startSearch(searchStr);
+	  this.startSearch(searchStr);
 	}
   }
 });

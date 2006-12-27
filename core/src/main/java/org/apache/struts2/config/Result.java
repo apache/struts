@@ -33,4 +33,5 @@ public @interface Result {
     String name() default Action.SUCCESS;
     Class type() default NullResult.class;
     String value();
+    String[] params() default {};
 }

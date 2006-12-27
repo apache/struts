@@ -213,7 +213,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
 
     /**
      * Register a PageLocation to use to scan for server pages.
-     * 
+     *
      * @param locator
      */
     public void setPageLocator(PageLocator locator) {
@@ -236,10 +236,10 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
             // Match Action implementations and classes ending with "Action"
             public boolean matches(Class type) {
                 // TODO: should also find annotated classes
-                return (Action.class.isAssignableFrom(type) || 
+                return (Action.class.isAssignableFrom(type) ||
                         type.getSimpleName().endsWith("Action"));
             }
-            
+
         }, pkgs);
 
         Set<? extends Class<? extends Class>> actionClasses = resolver.getClasses();
@@ -333,7 +333,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
      *
      * The namespace annotation is honored, if found,
      * and the namespace is checked for a parent configuration.
-     * 
+     *
      * @param actionNamespace The configuration namespace
      * @param actionPackage The Java package containing our Action classes
      * @param actionClass The Action class instance
@@ -445,7 +445,6 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
 
                 actionClass = actionClass.getSuperclass();
             }
-
         }
 
         /**
@@ -459,7 +458,24 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
             if (cls == NullResult.class) {
                 cls = null;
             }
-            return createResultConfig(result.name(), cls, result.value());
+            return createResultConfig(result.name(), cls, result.value(), createParameterMap(result.params()));
+        }
+
+        protected Map<String, String> createParameterMap(String[] parms) {
+            Map<String, String> map = new HashMap<String, String>();
+            int subtract = parms.length % 2;
+            if(subtract != 0) {
+                LOG.warn("Odd number of result parameters key/values specified.  The final one will be ignored.");
+            }
+            for (int i = 0; i < parms.length - subtract; i++) {
+                String key = parms[i++];
+                String value = parms[i];
+                map.put(key, value);
+                if(LOG.isDebugEnabled()) {
+                    LOG.debug("Adding parmeter["+key+":"+value+"] to result.");
+                }
+            }
+            return map;
         }
 
         /**
@@ -485,7 +501,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
                 }
 
                 String location = defaultPagePrefix + fileName;
-                return (V) createResultConfig(key, null, location);
+                return (V) createResultConfig(key, null, location, null);
             }
         }
 
@@ -497,10 +513,11 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
          * @param key The result type name
          * @param resultClass The class for the result type
          * @param location Path to the resource represented by this type
-         * @return A ResultConfig for key mapped to location 
+         * @return A ResultConfig for key mapped to location
          */
-        private ResultConfig createResultConfig(Object key, Class<? extends Object> resultClass, String location) {
-            Map<? extends Object, ? extends Object> configParams = null;
+        private ResultConfig createResultConfig(Object key, Class<? extends Object> resultClass,
+                                                String location,
+                                                Map<? extends Object,? extends Object > configParams) {
             if (resultClass == null) {
                 String defaultResultType = pkgConfig.getFullDefaultResultType();
                 ResultTypeConfig resultType = pkgConfig.getAllResultTypeConfigs().get(defaultResultType);
@@ -525,6 +542,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
             if (configParams != null) {
                 params.putAll(configParams);
             }
+
             params.put(defaultParam, location);
             return new ResultConfig((String) key, resultClass.getName(), params);
         }

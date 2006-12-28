@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLDecoder;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
@@ -32,7 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.TimeZone;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -51,6 +49,8 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+
+import sun.security.action.GetLongAction;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
@@ -158,17 +158,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     /**
      * Provide a formatted date for setting heading information when caching static content.
      */
-    private SimpleDateFormat df = new SimpleDateFormat("E, d MMM yyyy HH:mm:ss");
-
-    /**
-     * Provide a formatted date for setting heading information when caching static content.
-     */
-    private final Calendar lastModifiedCal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-
-    /**
-     * Provide a formatted date for setting heading information when caching static content.
-     */
-    private final String lastModified = df.format(lastModifiedCal.getTime());
+    private final Calendar lastModifiedCal = Calendar.getInstance();
 
     /**
      * Store state of StrutsConstants.STRUTS_SERVE_STATIC_CONTENT setting.
@@ -420,7 +410,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
 
                 if (serveStatic && resourcePath.startsWith("/struts")) {
                     String name = resourcePath.substring("/struts".length());
-                    findStaticResource(name, response);
+                    findStaticResource(name, request, response);
                 } else {
                     // this is a normal request, let it pass through
                     chain.doFilter(request, response);
@@ -445,29 +435,50 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      * setting the appropriate caching headers. 
      *
      * @param name The resource name
-     * @param response The request
+     * @param request The request
+     * @param response The response
      * @throws IOException If anything goes wrong
      */
-    protected void findStaticResource(String name, HttpServletResponse response) throws IOException {
+    protected void findStaticResource(String name, HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (!name.endsWith(".class")) {
             for (String pathPrefix : pathPrefixes) {
                 InputStream is = findInputStream(name, pathPrefix);
                 if (is != null) {
-                    // set the content-type header
+                    Calendar cal = Calendar.getInstance();
+                    
+                    // check for if-modified-since, prior to any other headers
+                    long ifModifiedSince = 0;
+                    try {
+                    	ifModifiedSince = request.getDateHeader("If-Modified-Since");
+                    } catch (Exception e) {
+                    	LOG.warn("Invalid If-Modified-Since header value: '" + request.getHeader("If-Modified-Since") + "', ignoring");
+                    }
+    				long lastModifiedMillis = lastModifiedCal.getTimeInMillis();
+    				long now = cal.getTimeInMillis();
+                    cal.add(Calendar.DAY_OF_MONTH, 1);
+                    long expires = cal.getTimeInMillis();
+                    
+    				if (ifModifiedSince > 0 && ifModifiedSince <= lastModifiedMillis) {
+    					// not modified, content is not sent - only basic headers and status SC_NOT_MODIFIED
+                        response.setDateHeader("Expires", expires);
+    					response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+    					is.close();
+    					return;
+    				}
+                	
+                	// set the content-type header
                     String contentType = getContentType(name);
                     if (contentType != null) {
                         response.setContentType(contentType);
                     }
 
                     if (serveStaticBrowserCache) {
-                        // set heading information for caching static content
-                        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-                        response.setHeader("Date", df.format(cal.getTime()) + " GMT");
-                        cal.add(Calendar.DAY_OF_MONTH, 1);
-                        response.setHeader("Expires", df.format(cal.getTime()) + " GMT");
-                        response.setHeader("Retry-After", df.format(cal.getTime()) + " GMT");
+                    	// set heading information for caching static content
+                        response.setDateHeader("Date", now);
+                        response.setDateHeader("Expires", expires);
+                        response.setDateHeader("Retry-After", expires);
                         response.setHeader("Cache-Control", "public");
-                        response.setHeader("Last-Modified", lastModified + " GMT");
+                        response.setDateHeader("Last-Modified", lastModifiedMillis);
                     } else {
                         response.setHeader("Cache-Control", "no-cache");
                         response.setHeader("Pragma", "no-cache");

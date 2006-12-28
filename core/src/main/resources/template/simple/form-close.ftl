@@ -6,7 +6,7 @@
   Enable auto-select of optiontransferselect tag's entries upon containing form's 
   submission.
 -->
-dojo.require("dojo.event.connect");
+dojo.require("dojo.event.*");
 <#if (parameters.optiontransferselectIds?if_exists?size > 0)>
 	var containingForm = document.getElementById("${parameters.id}");
 	<#assign selectObjIds = parameters.optiontransferselectIds.keySet() />

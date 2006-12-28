@@ -31,6 +31,9 @@
 <#if parameters.multiple?default(false)>
  multiple="multiple"<#rt/>
 </#if>
+<#if parameters.get("doubleSize")?exists>
+ size="${parameters.get("doubleSize")?html}"<#rt/>
+</#if>
 >
 </select>
 <script type="text/javascript">

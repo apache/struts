@@ -35,6 +35,8 @@ import com.mockobjects.servlet.MockHttpServletResponse;
 public class StrutsMockHttpServletResponse extends MockHttpServletResponse {
     private Locale locale;
     private PrintWriter writer;
+    private int status;
+    private String redirectURL;
 
     public Locale getLocale() {
         return locale;
@@ -44,11 +46,19 @@ public class StrutsMockHttpServletResponse extends MockHttpServletResponse {
         this.locale = locale;
     }
 
+    public String getContentType() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public PrintWriter getWriter() throws IOException {
         if (writer == null)
             return new PrintWriter(new ByteArrayOutputStream());
         else
             return writer;
+    }
+
+    public void setCharacterEncoding(String string) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void setWriter(PrintWriter writer) {
@@ -59,7 +69,30 @@ public class StrutsMockHttpServletResponse extends MockHttpServletResponse {
         return s;
     }
 
+    public String encodeRedirectURL(String s) {
+        return s;
+    }
+
     public String encodeUrl(String s) {
         return s;
+    }
+
+    public void setStatus(int i) {
+        this.status = i;
+        super.setStatus(i);
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+
+    public String getRedirectURL() {
+        return redirectURL;
+    }
+
+    public void sendRedirect(String redirectURL) throws IOException {
+        this.redirectURL = redirectURL;
+        super.sendRedirect(redirectURL);
     }
 }

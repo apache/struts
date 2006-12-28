@@ -25,15 +25,23 @@ import java.util.Map;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.ServletRedirectResult;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
+import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
 
 import com.mockobjects.servlet.MockHttpServletRequest;
+import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.DefaultActionInvocation;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * DefaultActionMapper test case.
@@ -273,19 +281,30 @@ public class DefaultActionMapperTest extends StrutsTestCase {
 
     public void testRedirectPrefix() throws Exception {
         Map parameterMap = new HashMap();
-        parameterMap.put(DefaultActionMapper.REDIRECT_PREFIX + "www.google.com", "");
+        parameterMap.put(DefaultActionMapper.REDIRECT_PREFIX + "http://www.google.com", "");
 
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
         request.setupGetServletPath("/someServletPath.action");
         request.setParameterMap(parameterMap);
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
+        defaultActionMapper.setContainer(container);
         ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
 
         Result result = actionMapping.getResult();
         assertNotNull(result);
         assertTrue(result instanceof ServletRedirectResult);
 
+        Mock invMock = new Mock(ActionInvocation.class);
+        ActionInvocation inv = (ActionInvocation) invMock.proxy();
+        ActionContext ctx = ActionContext.getContext();
+        ctx.put(ServletActionContext.HTTP_REQUEST, request);
+        StrutsMockHttpServletResponse response = new StrutsMockHttpServletResponse();
+        ctx.put(ServletActionContext.HTTP_RESPONSE, response);
+        invMock.expectAndReturn("getInvocationContext", ctx);
+        invMock.expectAndReturn("getStack", ctx.getValueStack());
+        result.execute(inv);
+        assertEquals("http://www.google.com", response.getRedirectURL());
         //TODO: need to test location but there's noaccess to the property/method, unless we use reflection
     }
 

@@ -39,6 +39,7 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.inject.Container;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -177,6 +178,8 @@ public class DefaultActionMapper implements ActionMapper {
     
     List extensions = new ArrayList() {{ add("action");}};
 
+    private Container container;
+
     public DefaultActionMapper() {
         prefixTrie = new PrefixTrie() {
             {
@@ -206,6 +209,7 @@ public class DefaultActionMapper implements ActionMapper {
                 put(REDIRECT_PREFIX, new ParameterAction() {
                     public void execute(String key, ActionMapping mapping) {
                         ServletRedirectResult redirect = new ServletRedirectResult();
+                        container.inject(redirect);
                         redirect.setLocation(key.substring(REDIRECT_PREFIX
                                 .length()));
                         mapping.setResult(redirect);
@@ -217,6 +221,7 @@ public class DefaultActionMapper implements ActionMapper {
                         String location = key.substring(REDIRECT_ACTION_PREFIX
                                 .length());
                         ServletRedirectResult redirect = new ServletRedirectResult();
+                        container.inject(redirect);
                         String extension = getDefaultExtension();
                         if (extension != null) {
                             location += "." + extension;
@@ -237,6 +242,11 @@ public class DefaultActionMapper implements ActionMapper {
     @Inject(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES)
     public void setSlashesInActionNames(String allow) {
         allowSlashesInActionNames = "true".equals(allow);
+    }
+
+    @Inject
+    public void setContainer(Container container) {
+        this.container = container;
     }
 
     /*

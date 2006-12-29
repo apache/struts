@@ -186,12 +186,6 @@
 
         <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-quickstart-plugin</artifactId>
-            <version>${version}</version>
-        </dependency> 
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
             <artifactId>struts2-sitegraph-plugin</artifactId>
             <version>${version}</version>
         </dependency> 

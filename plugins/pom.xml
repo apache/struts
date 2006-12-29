@@ -27,7 +27,6 @@
         <module>jsf</module>
         <module>pell-multipart</module>
         <module>plexus</module>
-        <module>quickstart</module>
         <module>sitegraph</module>
         <module>sitemesh</module>
         <module>spring</module>

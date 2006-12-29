@@ -99,10 +99,6 @@
         <outputDirectory>docs/struts2-plugins/struts2-plexus-plugin</outputDirectory>
       </fileSet>
       <fileSet>
-        <directory>../plugins/quickstart/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-quickstart-plugin</outputDirectory>
-      </fileSet>
-      <fileSet>
         <directory>../plugins/struts1/target/site</directory>
         <outputDirectory>docs/struts2-plugins/struts2-struts1-plugin</outputDirectory>
       </fileSet>

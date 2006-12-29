@@ -121,11 +121,6 @@
                     />
 
            <item
-                    name="QuickStart"
-                    href="struts2-plugins/struts2-quickstart-plugin/apidocs/index.html"
-                    />
-
-           <item
                     name="Sitegraph"
                     href="struts2-plugins/struts2-sitegraph-plugin/apidocs/index.html"
                     />

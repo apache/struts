@@ -18,6 +18,23 @@
        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/plugins/sitegraph/</url>
     </scm>
 
+    <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <configuration>
+              <archive>
+                <manifest>
+                  <mainClass>org.apache.struts2.sitegraph.SiteGraph</mainClass>
+                  <addClasspath>true</addClasspath>
+                </manifest>
+              </archive>
+            </configuration>
+          </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
 
         <dependency>

@@ -317,7 +317,9 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         request.setParameterMap(parameterMap);
 
         DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
+        defaultActionMapper.setContainer(container);
         ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
+        
 
         Result result = actionMapping.getResult();
         assertNotNull(result);

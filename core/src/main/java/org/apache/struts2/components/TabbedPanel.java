@@ -49,7 +49,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *    &lt;s:div id=&quot;three&quot; label=&quot;remote&quot; theme=&quot;ajax&quot; href=&quot;/AjaxTest.action&quot; &gt;
  *        This is the remote tab
  *    &lt;/s:div&gt;
- *&lt;/s:tabbedPanel&gt;
+ * &lt;/s:tabbedPanel&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *

@@ -101,8 +101,16 @@ import com.opensymphony.xwork2.util.ValueStack;
  *      <li>data: html or json object when type='load' or type='error'</li>
  *      <li>type: 'before' before the request is made, 'load' when the request succeeds, or 'error' when it fails</li>
  *      <li>request: request javascript object, when type='load' or type='error'</li>
- * <ul>
-
+ * </ul>
+ * <!-- END SNIPPET: ajaxJavadoc -->
+ *
+ * <!-- START SNIPPET: ajxExDescription1 -->
+ * Show the results in another div. If you want your results to be shown in
+ * a div, use the resultDivId where the id is the id of the div you want them
+ * shown in. This is an inner HTML approah. Your results get jammed into
+ * the div for you. Here is a sample of this approach:
+ * <!-- END SNIPPET: ajxExDescription1 -->
+ * 
  * <pre>
  * <!-- START SNIPPET: ajxExample1 -->
  * Remote form replacing another div:

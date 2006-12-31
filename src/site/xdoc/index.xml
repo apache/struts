@@ -87,8 +87,8 @@
                     add Spring beans!
                 </li>
                 <li>
-                    <strong>First-class AJAX support</strong> - The AJAX theme gives interactive 
-                    applications a boost. 
+                    <strong>First-class AJAX support</strong> - The AJAX theme is backed by the popular Dojo Framework. 
+                    AJAX tags look and feel just like standard Struts tags but provide greater interactivity and flexibility. 
                 </li>
                 <li>
                     <em>Coming in Struts 2.0.2</em> -- <strong>Zero Configuration</strong> - Optionally, replace XML configuration with convention and annotation. 
@@ -98,10 +98,6 @@
                 <li>
                     <em>Deploy!</em> 
                 <ul>
-                <li>
-                    <strong>QuickStart</strong> - Configuration files are reloadable so many changes 
-                    can be made on the fly without restarting a web container. 
-                </li>
                 <li>
                     <strong>Easy plugins</strong> - Framework extensions can be added by dropping in a JAR. 
                     No manual configuration required! Bundled plugins add support for JavaServer Faces, 
@@ -113,6 +109,9 @@
                 </li>
                 <li>
                     <strong>Integrated profiling</strong> - Peek inside Struts to find the cycles are going!
+                </li>
+                <li>
+                    <em>Coming in Struts 2.0.2</em> -- <strong>REST-ful URLs</strong> - Use search-engine friendly URLs, like category/action/movie/Thrillers. 
                 </li>
 
                 </ul></li>
@@ -141,6 +140,9 @@
                 <li>
                     <strong>Integrating Debugging</strong> - Built-in debugging tools supporting profiling, 
                     problem reports, and interactive object model queries.
+                </li>
+                <li>
+                    <em>Coming in Struts 2.0.2</em> -- <strong>Precise Error Reporting</strong> - All configuration elements, including properties that come from Java properties files, include location and line information. 
                 </li>
                 </ul></li></ul>
                 

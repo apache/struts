@@ -49,7 +49,7 @@
 
             <item
                     name="Release Notes"
-                    href="docs/release-notes-202.html"
+                    href="docs/release-notes-203.html"
                     />        
 
         </menu>
@@ -81,6 +81,10 @@
             <item
                     name="Tag Reference"
                     href="docs/tag-reference.html"
+                    />
+            <item
+                    name="Plugin Registry"
+                    href="http://cwiki.apache.org/S2PLUGINS/home.html"
                     />
             <item
                     name="New API (experimental)"

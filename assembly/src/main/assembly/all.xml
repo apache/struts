@@ -67,6 +67,12 @@
         <outputDirectory>docs/struts2-core</outputDirectory>
       </fileSet>
 
+      <!-- Include the Confluence docs in the assembly -->
+      <fileSet>
+        <directory>target/cwiki</directory>
+        <outputDirectory>docs</outputDirectory>
+      </fileSet>
+
       <!-- Plugins -->
       <!-- 
       <fileSet>

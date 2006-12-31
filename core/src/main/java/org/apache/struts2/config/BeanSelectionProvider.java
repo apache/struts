@@ -216,7 +216,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         public Object create(Context context) throws Exception {
             ObjectFactory objFactory = context.getContainer().getInstance(ObjectFactory.class);
             try {
-                return objFactory.buildBean(name, null, false);
+                return objFactory.buildBean(name, null, true);
             } catch (ClassNotFoundException ex) {
                 throw new ConfigurationException("Unable to load bean "+type.getName()+" ("+name+")");
             }

@@ -96,6 +96,10 @@ struts.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ li
       searchStr = searchStr.toLowerCase();
     }
     for(var x=0; x<this.data.length; x++){
+      if(!this.data[x]) {
+        //needed for IE
+        continue;
+      }
       if((!ignoreLimit)&&(ret.length >= this.searchLimit)){
         break;
       }

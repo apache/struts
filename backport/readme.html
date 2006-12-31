@@ -48,6 +48,7 @@ and concurrency utilities
     <li>Enhanced for loop (for-each loop)</li>
     <li>Varargs (variable arguments)</li>
     <li>Covariant return types</li>
+    <li>Formatted output</li>
     <li>Static import</li>
     <li>Concurrency utilities</li>
     <li>Collections framework enhancements</li>
@@ -75,7 +76,7 @@ and concurrency utilities
     </li>
 </ol>
 
-<p>The full command line syntax:<br>
+<p><a name="syntax">The full command line syntax:</a><br>
     <code>java -jar retrotranslator-transformer-<i>n.n.n</i>.jar &lt;options&gt;</code>
     <br>or<br>
     <code>java -cp retrotranslator-transformer-<i>n.n.n</i>.jar net.sf.retrotranslator.transformer.Retrotranslator &lt;options&gt;</code></p>
@@ -117,7 +118,7 @@ and concurrency utilities
         <td>Off</td>
     </tr>
     <tr>
-        <td nowrap><code>-advanced</code></td>
+        <td nowrap><a name="option_advanced"><code>-advanced</code></a></td>
         <td>Allows to override Java 1.4 methods for better Java 5 compatibility.</td>
         <td>Off</td>
     </tr>
@@ -154,6 +155,17 @@ and concurrency utilities
             like the use of <code>java.lang.StringBuilder</code> for string concatenation
             or the implicit <code>valueOf</code> method call for autoboxing.</td>
         <td>Off</td>
+    </tr>
+    <tr>
+        <td nowrap><code>-retainflags</code></td>
+        <td>Asks the translator to keep Java 5 specific access modifiers.</td>
+        <td>Off</td>
+    </tr>
+    <tr>
+        <td nowrap><a name="option_backport"><code>-backport</code></a></td>
+        <td>Informs the translator about <a href="#extension">user-defined</a> backport packages.
+            Package names should be separated by semicolons.</td>
+        <td>-</td>
     </tr>
 </table>
 <p>
@@ -248,6 +260,17 @@ and concurrency utilities
         <td>Off</td>
     </tr>
     <tr>
+        <td><code>retainflags</code></td>
+        <td>Asks the translator to keep Java 5 specific access modifiers.</td>
+        <td>Off</td>
+    </tr>
+    <tr>
+        <td><code>backport</code></td>
+        <td>Informs the translator about <a href="#extension">user-defined</a> backport packages.
+            Package names should be separated by semicolons.</td>
+        <td>-</td>
+    </tr>
+    <tr>
         <td><code>failonwarning</code></td>
         <td>Indicates whether the build will fail when there are verification warnings.</td>
         <td>On</td>
@@ -293,18 +316,22 @@ and concurrency utilities
     <li>
         If you want to run a JAR file with the JIT, execute:<br>
         <code>java -cp retrotranslator-transformer-<i>n.n.n</i>.jar
-            net.sf.retrotranslator.transformer.JITRetrotranslator -jar &lt;jarfile&gt; [&lt;args...&gt;]</code>
+            net.sf.retrotranslator.transformer.JITRetrotranslator &lt;options&gt; -jar &lt;jarfile&gt; [&lt;args...&gt;]</code>
     </li>
     <li>
         When the first option does not work or if you just want to run a class from your classpath, execute:<br>
         <code>java -cp retrotranslator-transformer-<i>n.n.n</i>.jar:&lt;classpath&gt;
-            net.sf.retrotranslator.transformer.JITRetrotranslator &lt;class&gt; [&lt;args...&gt;]</code>
+            net.sf.retrotranslator.transformer.JITRetrotranslator &lt;options&gt; &lt;class&gt; [&lt;args...&gt;]</code>
     </li>
     <li>
-        Alternatively you may simply call <code>JITRetrotranslator.install()</code> from some JVM 1.4 compatible class
+        Alternatively you may simply call <code>JITRetrotranslator.run()</code> from some JVM 1.4 compatible class
         before Java 5 classes are loaded.
     </li>
 </ul>
+<p>
+    JIT Retrotranslator can accept <code>-<a href="#option_advanced">advanced</a></code>
+    and <code>-<a href="#option_backport">backport</a></code> options.
+</p>
 
 <h4><a name="supported">What Java 5 classes and methods are supported?</a></h4>
 <table border="1" cellspacing="0" cellpadding="5">
@@ -313,8 +340,9 @@ and concurrency utilities
     <tr><td><code>java.util.concurrent,<br>java.util.concurrent.atomic,<br>java.util.concurrent.locks</code></td>
         <td>almost all classes</td><td>almost all methods</td>
         <td>
-            <a href="http://dcl.mathcs.emory.edu/util/backport-util-concurrent/index.php"> Backport of JSR 166</a><br>
-            <code>Condition.awaitNanos(long)</code> method is supported but with
+            Supported via the <a href="http://dcl.mathcs.emory.edu/util/backport-util-concurrent/index.php">
+            Backport of JSR 166</a>.<br>
+            The <code>Condition.awaitNanos(long)</code> method is supported with
         <a href="http://dcl.mathcs.emory.edu/util/backport-util-concurrent/doc/api/edu/emory/mathcs/backport/java/util/concurrent/helpers/Utils.html#awaitNanos(edu.emory.mathcs.backport.java.util.concurrent.locks.Condition, long)">
         very little</a> accuracy guarantees.
         </td></tr>
@@ -325,20 +353,25 @@ and concurrency utilities
             <code>new Flushable[...]</code> is replaced with <code>new Object[...]</code>
         </td></tr>
     <tr><td><code>PrintStream</code></td><td>
-        <code>append(CharSequence), append(CharSequence, int, int), append(char)</code>
+        * (11 new methods and constructors)
         </td><td>&nbsp;</td></tr>
     <tr><td><code>PrintWriter</code></td><td>
-        <code>PrintWriter(File), PrintWriter(File, String), PrintWriter(String), PrintWriter(String, String)</code>
-        </td><td>&nbsp;</td></tr>
+        * (11 new methods and constructors)
+        </td><td>
+        The <code>PrintWriter.format</code> and <code>PrintWriter.printf</code> methods always flush the output buffer.
+        </td></tr>
     <tr><td><code>Reader</code></td><td><code>read(CharBuffer)</code></td><td>&nbsp;</td></tr>
     <tr><td><code>Writer</code></td><td>
-        <code>append(CharSequence), append(CharSequence, int, int), append(char)</code>
+        <code>append(CharSequence),<br>
+            append(CharSequence, int, int),<br>
+            append(char)</code>
         </td><td>&nbsp;</td></tr>
     <tr><td rowspan="24"><code>java.lang</code></td><td><code>Appendable</code></td><td>*
     </td><td>
         <code>new Appendable[...]</code> is replaced with <code>new Object[...]</code>
     </td></tr>
-    <tr><td><code>Boolean</code></td><td><code>parseBoolean(String), compareTo(Boolean)</code></td><td>&nbsp;</td></tr>
+    <tr><td><code>Boolean</code></td><td><code>parseBoolean(String),<br>
+        compareTo(Boolean)</code></td><td>&nbsp;</td></tr>
     <tr><td><code>Byte</code></td><td><code>valueOf(byte)</code></td><td>&nbsp;</td></tr>
     <tr><td><code>Character</code></td><td><code>valueOf(char)</code></td><td>&nbsp;</td></tr>
     <tr><td><code>Class</code></td><td>* (21 new methods)</td><td>
@@ -353,38 +386,49 @@ and concurrency utilities
         IllegalArgumentException(Throwable)</code></td><td>&nbsp;</td></tr>
     <tr><td><code>IllegalStateException</code></td><td><code>IllegalStateException(String, Throwable),<br>
         IllegalStateException(Throwable)</code></td><td>&nbsp;</td></tr>
-    <tr><td><code>Integer</code></td><td><code>valueOf(int)</code></td><td>&nbsp;</td></tr>
+    <tr><td><code>Integer</code></td><td><code>valueOf(int), signum(int)</code></td><td>&nbsp;</td></tr>
     <tr><td><code>Iterable</code></td><td>*</td><td>
         <code>new Iterable[...]</code> is replaced with <code>new Object[...]</code>
     </td></tr>
-    <tr><td><code>Long</code></td><td><code>valueOf(long)</code></td><td>&nbsp;</td></tr>
+    <tr><td><code>Long</code></td><td><code>valueOf(long), signum(long)</code></td><td>&nbsp;</td></tr>
     <tr><td><code>Package</code></td><td>* (4 new methods)</td><td>&nbsp;</td></tr>
     <tr><td><code>Readable</code></td><td>*</td><td>
         <code>new Readable[...]</code> is replaced with <code>new Object[...]</code>
     </td></tr>
     <tr><td><code>Short</code></td><td><code>valueOf(short)</code></td><td>&nbsp;</td></tr>
-    <tr><td><code>String</code></td><td><code>contains(CharSequence),<br> contentEquals(CharSequence),<br>
-        replace(CharSequence, CharSequence)</code></td><td>&nbsp;</td></tr>
+    <tr><td><code>String</code></td><td><code>contains(CharSequence),<br>
+        contentEquals(CharSequence),<br>
+        format(Locale, String, Object...),<br>
+        format(String, Object...),<br>
+        replace(CharSequence, CharSequence)
+    </code></td><td>&nbsp;</td></tr>
     <tr><td><code>StringBuffer</code></td><td><code>
-        StringBuffer(CharSequence), append(CharSequence), append(CharSequence, int, int),
-        insert(int, CharSequence), insert(int, CharSequence, int, int)
+        StringBuffer(CharSequence),<br>
+        append(CharSequence),<br>
+        append(CharSequence, int, int),<br>
+        insert(int, CharSequence),<br>
+        insert(int, CharSequence, int, int)
     </code></td><td>&nbsp;</td></tr>
     <tr><td><code>StringBuilder</code></td><td>
         All methods supported in <code>StringBuffer</code>
     </td><td><code>StringBuilder</code> is replaced with <code>StringBuffer</code></td></tr>
     <tr><td><code>SuppressWarnings</code></td><td>*</td><td>&nbsp;</td></tr>
-    <tr><td><code>System</code></td><td><code>nanoTime(), clearProperty(String)</code></td><td>
-        <a href="http://dcl.mathcs.emory.edu/util/backport-util-concurrent/index.php"> Backport of JSR 166</a><br>
-        <code>System.nanoTime()</code> method precision
+    <tr><td><code>System</code></td><td><code>nanoTime(),<br> clearProperty(String)</code></td><td>
+        The <code>System.nanoTime()</code> method is supported via the
+        <a href="http://dcl.mathcs.emory.edu/util/backport-util-concurrent/index.php">Backport of JSR 166</a>
+        and its precision
         <a href="http://dcl.mathcs.emory.edu/util/backport-util-concurrent/doc/api/edu/emory/mathcs/backport/java/util/concurrent/helpers/Utils.html#nanoTime()">
             may vary</a> on different platforms.
     </td></tr>
-    <tr><td><code>Thread</code></td><td><code>getStackTrace(), getId()
-    </code></td><td><code>Thread.getStackTrace()</code> returns non-empty stack trace only for the current thread;<br>
-        <code>Thread.getId()</code> does not reflect the order in which threads are created.</td></tr>
+    <tr><td><code>Thread</code></td><td><code>getStackTrace(),<br> getId()
+    </code></td><td>The <code>Thread.getStackTrace()</code>
+        method returns non-empty stack trace only for the current thread.<br>
+        The <code>Thread.getId()</code> method does not reflect the order in which threads are created.</td></tr>
     <tr><td><code>TypeNotPresentException</code></td><td>*</td><td>&nbsp;</td></tr>
 
-    <tr><td rowspan="12"><code>java.lang.reflect</code></td><td><code>AnnotatedElement</code></td><td>*</td><td>
+    <tr><td rowspan="13"><code>java.lang.reflect</code></td>
+        <td><code>AccessibleObject</code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>AnnotatedElement</code></td><td>*</td><td>
         <code>new AnnotatedElement[...]</code> is replaced with <code>new Object[...]</code>
     </td></tr>
     <tr><td><code>Constructor</code></td><td>* (11 new methods)</td><td>&nbsp;</td></tr>
@@ -404,34 +448,47 @@ and concurrency utilities
     <tr><td><code>WildcardType</code></td><td>*</td><td>&nbsp;</td></tr>
 
     <tr><td ><code>java.math</code></td><td><code>BigDecimal</code></td><td>
-        <code>BigDecimal(int), BigDecimal(long), ZERO, ONE, TEN, divideAndRemainder(BigDecimal),
-            divideToIntegralValue(BigDecimal), pow(int), remainder(BigDecimal), toPlainString(), valueOf(double),
-            valueOf(long)</code></td><td><code>BigDecimal.setScale(int, int)</code> supports negative scales in advanced mode.</td></tr>
-
+        <code>BigDecimal(int),<br> BigDecimal(long),<br> ZERO, ONE, TEN,<br> divideAndRemainder(BigDecimal),<br>
+            divideToIntegralValue(BigDecimal),<br> pow(int),<br> remainder(BigDecimal),<br>
+            toPlainString(),<br> valueOf(double),<br>
+            valueOf(long)</code></td><td>The <code>BigDecimal.setScale(int, int)</code>
+        method supports negative scales in advanced mode.</td></tr>
     <tr><td ><code>java.rmi.server</code></td><td><code>RemoteObjectInvocationHandler</code></td>
         <td>*</td><td>&nbsp;</td></tr>
 
+    <tr><td ><code>java.net</code></td><td><code>URL</code></td>
+        <td><code>toURI()</code></td><td>&nbsp;</td></tr>
+
     <tr><td><code>java.util.nio</code></td><td><code>CharBuffer</code></td><td>
-        <code>append(CharSequence), append(CharSequence, int, int), append(char), read(CharBuffer)</code>
+        <code>append(CharSequence),<br> append(CharSequence, int, int),<br> append(char),<br> read(CharBuffer)</code>
         </td><td>&nbsp;</td></tr>
 
-    <tr><td rowspan="9"><code>java.util</code></td><td><code>AbstractQueue</code></td><td>*</td><td>
-        &nbsp;</td></tr>
+    <tr><td rowspan="10"><code>java.util</code></td><td><code>AbstractQueue</code></td><td>*</td><td>
+        Supported via the <a href="http://dcl.mathcs.emory.edu/util/backport-util-concurrent/index.php">
+        Backport of JSR 166</a>.
+        </td></tr>
     <tr><td><code>Arrays</code></td><td>* (21 new methods)</td><td>&nbsp;</td></tr>
     <tr><td><code>Collections</code></td><td>* (13 new methods)</td><td>
-        <a href="http://dcl.mathcs.emory.edu/util/backport-util-concurrent/index.php"> Backport of JSR 166</a>
+        Supported via the <a href="http://dcl.mathcs.emory.edu/util/backport-util-concurrent/index.php">
+        Backport of JSR 166</a>.
     </td></tr>
     <tr><td><code>EnumMap</code></td><td>*</td><td>&nbsp;</td></tr>
     <tr><td><code>EnumSet</code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>Formatter</code></td><td>*</td><td>&nbsp;</td></tr>
     <tr><td><code>LinkedList</code></td><td>* (5 new methods)</td><td>&nbsp;</td></tr>
-    <tr><td><code>PriorityQueue</code></td><td>*</td><td>&nbsp;</td></tr>
+    <tr><td><code>PriorityQueue</code></td><td>*</td><td>
+        Supported via the <a href="http://dcl.mathcs.emory.edu/util/backport-util-concurrent/index.php">
+        Backport of JSR 166</a>.
+        </td></tr>
     <tr><td><code>Queue</code></td><td>*</td><td>
+        Supported via the <a href="http://dcl.mathcs.emory.edu/util/backport-util-concurrent/index.php">
+        Backport of JSR 166</a>.<br>
         <code>new Queue[...]</code> is replaced with <code>new Object[...]</code>
     </td></tr>
     <tr><td><code>UUID</code></td><td>*</td><td>&nbsp;</td></tr>
 
     <tr><td rowspan="3"><code>java.util.regex</code></td><td><code>Matcher</code></td><td>
-        <code>quoteReplacement(String), toMatchResult()</code></td><td>&nbsp;</td></tr>
+        <code>quoteReplacement(String),<br> toMatchResult()</code></td><td>&nbsp;</td></tr>
     <tr><td><code>MatchResult</code></td><td>*</td><td>
         <code>new MatchResult[...]</code> is replaced with <code>new Object[...]</code>
     </td></tr>
@@ -446,23 +503,33 @@ and concurrency utilities
     For example, all references to
     <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/EnumSet.html"><code>java.util.EnumSet</code></a>
     are replaced with references to
-    <a href="http://cvs.sourceforge.net/viewcvs.py/retrotranslator/Retrotranslator/src/net/sf/retrotranslator/runtime/java/util/EnumSet_.java?view=markup">
+    <a href="http://retrotranslator.cvs.sourceforge.net/retrotranslator/Retrotranslator/src/net/sf/retrotranslator/runtime/java/util/EnumSet_.java?view=markup">
     <code>net.sf.retrotranslator.runtime.java.util.EnumSet<b>_</b></code></a> (trailing underscore) if the latter can be found.
     But if you replace a whole class that exists in J2SE 1.4 you may encounter interoperability issues with other libraries.
     So, for example, support for Java 5 fields, methods, and constructors of
     <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/math/BigDecimal.html"><code>java.math.BigDecimal</code></a> is placed into
 
-    <a href="http://cvs.sourceforge.net/viewcvs.py/retrotranslator/Retrotranslator/src/net/sf/retrotranslator/runtime/java/math/_BigDecimal.java?view=markup">
+    <a href="http://retrotranslator.cvs.sourceforge.net/retrotranslator/Retrotranslator/src/net/sf/retrotranslator/runtime/java/math/_BigDecimal.java?view=markup">
     <code>net.sf.retrotranslator.runtime.java.math.<b>_</b>BigDecimal</code></a> (leading underscore):
 </p>
     <ul>
         <li>For a static field there is a public static field with the same name and type.</li>
         <li>For a static method there is a public static method with the same signature.</li>
         <li>For an instance method there is a public static method with the same signature
-            but with an additional first parameter representing an instance.</li>
+            but with an additional first parameter representing the instance.</li>
         <li>For a constructor there is a public static <code>convertConstructorArguments</code> method that
             accepts constructor's arguments an returns an argument for a Java 1.4 constuctor.</li>
    </ul>
+<p>
+    Another approach for constructor backporting is used by
+    <a href="http://retrotranslator.cvs.sourceforge.net/retrotranslator/Retrotranslator/src/net/sf/retrotranslator/runtime/java/io/_PrintStream.java?view=markup">
+    <code>net.sf.retrotranslator.runtime.java.io.<b>_</b>PrintStream</code></a>. There is a public static
+    <code>createInstanceBuilder</code> method that accepts constructor's arguments an returns an object with public
+    <code>argument1</code>...<code>argumentN</code> methods and optional public void <code>initialize</code> method.
+    All <code>argumentX</code> methods provide arguments for a Java 1.4 constuctor and should not have any parameters.
+    The <code>initialize</code> method has a single parameter for the created instance and may be used for postprocessing.
+
+</p>
 <p>
     However, if the backported methods require access
     to non-public methods or fields of the instance, they cannot be fully handled by Retrotranslator.
@@ -472,6 +539,9 @@ and concurrency utilities
     Also this approach cannot be used to replace instance field references.
 </p>
 <p>
+    You can put your extensions into packages other than <code>net.sf.retrotranslator.runtime</code>.
+    For example, to make Retrotranslator use <code>com.mycompany.internal.java.lang._String</code>
+    just specify <code>-backport com.mycompany.internal</code> at the command line.
     If you have written an extension that does not contain copyrighted code, you may send
     a <a href="http://sourceforge.net/tracker/?group_id=153566&atid=788281">patch</a>
     under the <a href="#license">Retrotranslator license</a>.
@@ -481,14 +551,16 @@ and concurrency utilities
 
 <p>
     Basically, only classes, methods, and fields listed <a href="#supported">above</a> should work, and other features,
-    like formatted input/output, are not supported. Known issues:
+    like formatted input, are not supported. Known issues:
 </p>
 <ul>
     <li>Reflection-based tools may be unable to discover additional classes and methods introduced in Java 5 when running on JRE 1.4.</li>
+    <li>Some applications enable all features only if they detect Java 5, so you may need to override system properties:<br>
+        <code>&nbsp;java -Djava.version=1.5.0 -Djava.specification.version=1.5 -Djava.class.version=49.0 ...</code></li>
     <li>Translated code running on JRE 5.0 may be incompatible with other Java 5 code when Java 5 API is used.</li>
     <li>Reflection on generics and metadata may return incomplete information for dynamically generated classes.</li>
-    <li>Access modifiers and constants inlined by a compiler are ignored during the verification.</li>
-    <li>Upcasting may help to translate invocations of inherited methods introduced in Java 5: <br>
+    <li>Constants inlined by a compiler and access modifiers are ignored during the verification.</li>
+    <li>Inherited methods introduced in Java 5 may not work, however upcasting may help in some cases:<br>
         <code>&nbsp;((Writer) new FileWriter("file.tmp")).append("Hello").close();</code></li>
     <li>Serialized objects produced by translated code may be incompatible with JRE 5.0.</li>
 </ul>

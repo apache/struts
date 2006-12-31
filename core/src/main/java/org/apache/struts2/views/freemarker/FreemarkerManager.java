@@ -23,8 +23,13 @@ package org.apache.struts2.views.freemarker;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletContext;
@@ -36,9 +41,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.JspSupportServlet;
+import org.apache.struts2.views.TagLibrary;
 import org.apache.struts2.views.freemarker.tags.StrutsModels;
 import org.apache.struts2.views.util.ContextUtil;
 
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -117,6 +124,9 @@ public class FreemarkerManager {
     
     private String encoding;
     private boolean altMapWrapper;
+    private Map<String,TagLibrary> tagLibraries;
+    private String tagLibraryPrefixes;
+    private Container container;
     
     
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
@@ -128,6 +138,28 @@ public class FreemarkerManager {
     public void setWrapperAltMap(String val) {
         altMapWrapper = "true".equals(val);
     }
+    
+    @Inject(StrutsConstants.STRUTS_TAG_LIBRARIES)
+    public void setTagLibraryPrefixes(String libnames) {
+        this.tagLibraryPrefixes = libnames;
+    }
+    
+    @Inject
+    public void setContainer(Container container) {
+        this.container = container;
+    }
+    
+    /*
+    @Inject
+    public void setContainer(Container container) {
+        Map<String,TagLibrary> map = new HashMap<String,TagLibrary>();
+        Set<String> prefixes = container.getInstanceNames(TagLibrary.class);
+        for (String prefix : prefixes) {
+            map.put(prefix, container.getInstance(TagLibrary.class, prefix));
+        }
+        this.tagLibraries = Collections.unmodifiableMap(map);
+    }
+    */
 
     public final synchronized freemarker.template.Configuration getConfiguration(ServletContext servletContext) throws TemplateException {
         freemarker.template.Configuration config = (freemarker.template.Configuration) servletContext.getAttribute(CONFIG_SERVLET_CONTEXT_KEY);
@@ -137,6 +169,17 @@ public class FreemarkerManager {
 
             // store this configuration in the servlet context
             servletContext.setAttribute(CONFIG_SERVLET_CONTEXT_KEY, config);
+        }
+        
+        if (tagLibraries == null && tagLibraryPrefixes != null) {
+            Map<String,TagLibrary> map = new HashMap<String,TagLibrary>();
+            List<TagLibrary> list = new ArrayList<TagLibrary>();
+            TagLibrary lib = null;
+            String[] prefixes = tagLibraryPrefixes.split(",");
+            for (String prefix : prefixes) {
+                map.put(prefix, container.getInstance(TagLibrary.class, prefix));
+            }
+            this.tagLibraries = Collections.unmodifiableMap(map);
         }
 
         config.setWhitespaceStripping(true);
@@ -318,7 +361,9 @@ public class FreemarkerManager {
     public SimpleHash buildTemplateModel(ValueStack stack, Object action, ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, ObjectWrapper wrapper) {
         ScopesHashModel model = buildScopesHashModel(servletContext, request, response, wrapper, stack);
         populateContext(model, stack, action, request, response);
-        model.put("s", new StrutsModels(stack, request, response));
+        for (String prefix : tagLibraries.keySet()) {
+            model.put(prefix, tagLibraries.get(prefix).getFreemarkerModels(stack, request, response));
+        }
         return model;
     }
 }

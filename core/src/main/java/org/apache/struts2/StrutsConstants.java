@@ -142,6 +142,8 @@ public final class StrutsConstants {
     public static final String STRUTS_ACTIONPROXYFACTORY = "struts.actionProxyFactory";
 
     public static final String STRUTS_TEMPLATE_ENGINES = "struts.templateEngines";
+    
+    public static final String STRUTS_TAG_LIBRARIES = "struts.tagLibraries";
 
     public static final String STRUTS_FREEMARKER_WRAPPER_ALT_MAP = "struts.freemarker.wrapper.altMap";
 

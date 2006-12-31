@@ -113,6 +113,7 @@ public class Form extends ClosingUIBean {
     
     protected boolean enableDynamicMethodInvocation = true;
     protected Configuration configuration;
+    protected ObjectFactory objectFactory;
 
     public Form(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -138,6 +139,11 @@ public class Form extends ClosingUIBean {
     @Inject
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
+    }
+    
+    @Inject
+    public void setObjectFactory(ObjectFactory objectFactory) {
+        this.objectFactory = objectFactory;
     }
 
 
@@ -267,7 +273,7 @@ public class Form extends ClosingUIBean {
             // this can be used for getting the list of validators
             addParameter("actionName", actionName);
             try {
-                Class clazz = ObjectFactory.getObjectFactory().getClassInstance(actionConfig.getClassName());
+                Class clazz = objectFactory.getClassInstance(actionConfig.getClassName());
                 addParameter("actionClass", clazz);
             } catch (ClassNotFoundException e) {
                 // this is OK, we'll just move on

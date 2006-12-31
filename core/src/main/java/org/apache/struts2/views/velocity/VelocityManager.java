@@ -25,10 +25,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.servlet.ServletContext;
@@ -41,51 +44,9 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.util.VelocityStrutsUtil;
+import org.apache.struts2.views.TagLibrary;
 import org.apache.struts2.views.jsp.ui.OgnlTool;
 import org.apache.struts2.views.util.ContextUtil;
-import org.apache.struts2.views.velocity.components.ActionDirective;
-import org.apache.struts2.views.velocity.components.ActionErrorDirective;
-import org.apache.struts2.views.velocity.components.ActionMessageDirective;
-import org.apache.struts2.views.velocity.components.AnchorDirective;
-import org.apache.struts2.views.velocity.components.AutocompleterDirective;
-import org.apache.struts2.views.velocity.components.BeanDirective;
-import org.apache.struts2.views.velocity.components.CheckBoxDirective;
-import org.apache.struts2.views.velocity.components.CheckBoxListDirective;
-import org.apache.struts2.views.velocity.components.ComboBoxDirective;
-import org.apache.struts2.views.velocity.components.ComponentDirective;
-import org.apache.struts2.views.velocity.components.DateDirective;
-import org.apache.struts2.views.velocity.components.DatePickerDirective;
-import org.apache.struts2.views.velocity.components.DivDirective;
-import org.apache.struts2.views.velocity.components.DoubleSelectDirective;
-import org.apache.struts2.views.velocity.components.DropdownDateTimePickerDirective;
-import org.apache.struts2.views.velocity.components.FieldErrorDirective;
-import org.apache.struts2.views.velocity.components.FileDirective;
-import org.apache.struts2.views.velocity.components.FormDirective;
-import org.apache.struts2.views.velocity.components.HeadDirective;
-import org.apache.struts2.views.velocity.components.HiddenDirective;
-import org.apache.struts2.views.velocity.components.I18nDirective;
-import org.apache.struts2.views.velocity.components.IncludeDirective;
-import org.apache.struts2.views.velocity.components.LabelDirective;
-import org.apache.struts2.views.velocity.components.OptionTransferSelectDirective;
-import org.apache.struts2.views.velocity.components.ParamDirective;
-import org.apache.struts2.views.velocity.components.PasswordDirective;
-import org.apache.struts2.views.velocity.components.PropertyDirective;
-import org.apache.struts2.views.velocity.components.PushDirective;
-import org.apache.struts2.views.velocity.components.RadioDirective;
-import org.apache.struts2.views.velocity.components.ResetDirective;
-import org.apache.struts2.views.velocity.components.SelectDirective;
-import org.apache.struts2.views.velocity.components.SetDirective;
-import org.apache.struts2.views.velocity.components.SubmitDirective;
-import org.apache.struts2.views.velocity.components.TabbedPanelDirective;
-import org.apache.struts2.views.velocity.components.TextAreaDirective;
-import org.apache.struts2.views.velocity.components.TextDirective;
-import org.apache.struts2.views.velocity.components.TextFieldDirective;
-import org.apache.struts2.views.velocity.components.TokenDirective;
-import org.apache.struts2.views.velocity.components.TreeDirective;
-import org.apache.struts2.views.velocity.components.TreeNodeDirective;
-import org.apache.struts2.views.velocity.components.URLDirective;
-import org.apache.struts2.views.velocity.components.UpDownSelectDirective;
-import org.apache.struts2.views.velocity.components.WebTableDirective;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
@@ -95,6 +56,7 @@ import org.apache.velocity.tools.view.context.ChainedContext;
 import org.apache.velocity.tools.view.servlet.ServletToolboxManager;
 
 import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -135,6 +97,12 @@ public class VelocityManager {
     private Properties velocityProperties;
 
     private String customConfigFile;
+    
+    private String tagLibraryPrefixes;
+    
+    private List<TagLibrary> tagLibraries;
+    
+    private Container container;
 
     public VelocityManager() {
     }
@@ -142,6 +110,16 @@ public class VelocityManager {
     @Inject
     public void setObjectFactory(ObjectFactory fac) {
         this.objectFactory = fac;
+    }
+    
+    @Inject(StrutsConstants.STRUTS_TAG_LIBRARIES)
+    public void setTagLibraryPrefixes(String libnames) {
+        this.tagLibraryPrefixes = libnames;
+    }
+    
+    @Inject
+    public void setContainer(Container container) {
+        this.container = container;
     }
 
     /**
@@ -267,6 +245,16 @@ public class VelocityManager {
     public synchronized void init(ServletContext context) {
         if (velocityEngine == null) {
             velocityEngine = newVelocityEngine(context);
+        }
+        if (tagLibraries == null && tagLibraryPrefixes != null) {
+            List<TagLibrary> list = new ArrayList<TagLibrary>();
+            TagLibrary lib = null;
+            String[] prefixes = tagLibraryPrefixes.split(",");
+            for (String prefix : prefixes) {
+                list.add(container.getInstance(TagLibrary.class, prefix));
+            }
+            this.tagLibraries = Collections.unmodifiableList(list);
+            
         }
         this.initToolbox(context);
     }
@@ -566,50 +554,13 @@ public class VelocityManager {
 
         // components
         StringBuffer sb = new StringBuffer();
-
-        addDirective(sb, ActionDirective.class);
-        addDirective(sb, BeanDirective.class);
-        addDirective(sb, CheckBoxDirective.class);
-        addDirective(sb, CheckBoxListDirective.class);
-        addDirective(sb, ComboBoxDirective.class);
-        addDirective(sb, ComponentDirective.class);
-        addDirective(sb, DateDirective.class);
-        addDirective(sb, DatePickerDirective.class);
-        addDirective(sb, DropdownDateTimePickerDirective.class);
-        addDirective(sb, DivDirective.class);
-        addDirective(sb, AutocompleterDirective.class);
-        addDirective(sb, DoubleSelectDirective.class);
-        addDirective(sb, FileDirective.class);
-        addDirective(sb, FormDirective.class);
-        addDirective(sb, HeadDirective.class);
-        addDirective(sb, HiddenDirective.class);
-        addDirective(sb, AnchorDirective.class);
-        addDirective(sb, I18nDirective.class);
-        addDirective(sb, IncludeDirective.class);
-        addDirective(sb, LabelDirective.class);
-        addDirective(sb, ParamDirective.class);
-        addDirective(sb, PasswordDirective.class);
-        addDirective(sb, PushDirective.class);
-        addDirective(sb, PropertyDirective.class);
-        addDirective(sb, RadioDirective.class);
-        addDirective(sb, SelectDirective.class);
-        addDirective(sb, SetDirective.class);
-        addDirective(sb, SubmitDirective.class);
-        addDirective(sb, ResetDirective.class);
-        addDirective(sb, TabbedPanelDirective.class);
-        addDirective(sb, TextAreaDirective.class);
-        addDirective(sb, TextDirective.class);
-        addDirective(sb, TextFieldDirective.class);
-        addDirective(sb, TokenDirective.class);
-        addDirective(sb, TreeDirective.class);
-        addDirective(sb, TreeNodeDirective.class);
-        addDirective(sb, URLDirective.class);
-        addDirective(sb, WebTableDirective.class);
-        addDirective(sb, ActionErrorDirective.class);
-        addDirective(sb, ActionMessageDirective.class);
-        addDirective(sb, FieldErrorDirective.class);
-        addDirective(sb, OptionTransferSelectDirective.class);
-        addDirective(sb, UpDownSelectDirective.class);
+        
+        for (TagLibrary tagLibrary : tagLibraries) {
+            List<Class> directives = tagLibrary.getVelocityDirectiveClasses();
+            for (Class directive : directives) {
+                addDirective(sb, directive);
+            }
+        }
 
         String directives = sb.toString();
 

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.TestAction;
@@ -132,6 +133,7 @@ public class FormTagTest extends AbstractUITagTest {
                         public void setScopeStrategy(Strategy scopeStrategy) {}
                         public <T> T getInstance(Class<T> type, String name) {return null;}
                         public <T> T getInstance(Class<T> type) {return null;}
+                        public Set<String> getInstanceNames(Class<?> type) {return null;}
 
                         public void inject(Object o) {
                             cont.inject(o);
@@ -157,6 +159,9 @@ public class FormTagTest extends AbstractUITagTest {
                                     interceptors.add(interceptorMapping);
 
                                     return interceptors;
+                                }
+                                public String getClassName() {
+                                    return ActionSupport.class.getName();
                                 }
                             };
                             return actionConfig;
@@ -233,6 +238,7 @@ public class FormTagTest extends AbstractUITagTest {
                         public void setScopeStrategy(Strategy scopeStrategy) {}
                         public <T> T getInstance(Class<T> type, String name) {return null;}
                         public <T> T getInstance(Class<T> type) {return null;}
+                        public Set<String> getInstanceNames(Class<?> type) {return null;}
 
                         public void inject(Object o) {
                             cont.inject(o);
@@ -258,6 +264,9 @@ public class FormTagTest extends AbstractUITagTest {
                                     interceptors.add(interceptorMapping);
 
                                     return interceptors;
+                                }
+                                public String getClassName() {
+                                    return ActionSupport.class.getName();
                                 }
                             };
                             return actionConfig;

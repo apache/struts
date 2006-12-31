@@ -20,7 +20,6 @@
  */
 package org.apache.struts2.views.freemarker;
 
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
 

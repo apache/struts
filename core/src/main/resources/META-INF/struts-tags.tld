@@ -11982,15 +11982,6 @@
 
         </attribute>
         <attribute>
-            <name>saveFormat</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-
-            <description><![CDATA[Formatting scheme used when submitting the form element.Possible values are rfc,iso,posix and unix.]]></description>
-
-        </attribute>
-
-        <attribute>
             <name>adjustWeeks</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>

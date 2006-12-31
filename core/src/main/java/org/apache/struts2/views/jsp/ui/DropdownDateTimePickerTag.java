@@ -35,7 +35,6 @@ public class DropdownDateTimePickerTag extends DatePickerTag {
     protected String iconPath;
     protected String formatLength;
     protected String displayFormat;
-    protected String saveFormat;
     protected String toggleType;
     protected String toggleDuration;
     protected String type;
@@ -51,7 +50,6 @@ public class DropdownDateTimePickerTag extends DatePickerTag {
         picker.setIconPath(iconPath);
         picker.setFormatLength(formatLength);
         picker.setDisplayFormat(displayFormat);
-        picker.setSaveFormat(saveFormat);
         picker.setToggleType(toggleType);
         picker.setToggleDuration(toggleDuration);
         picker.setType(type);
@@ -67,10 +65,6 @@ public class DropdownDateTimePickerTag extends DatePickerTag {
 
     public void setIconPath(String iconPath) {
         this.iconPath = iconPath;
-    }
-
-    public void setSaveFormat(String saveFormat) {
-        this.saveFormat = saveFormat;
     }
 
     public void setToggleDuration(String toggleDuration) {

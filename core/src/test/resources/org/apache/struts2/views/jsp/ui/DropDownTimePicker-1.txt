@@ -1,6 +1,3 @@
-<script type="text/javascript">
-	dojo.require("dojo.widget.DropdownTimePicker");
-</script>
 <div dojoType="dropdowntimepicker"
  id="id"
  value="n"

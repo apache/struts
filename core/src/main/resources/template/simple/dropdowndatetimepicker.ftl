@@ -1,10 +1,3 @@
-<script type="text/javascript">
-   <#if parameters.type?if_exists == "date">
-     dojo.require("dojo.widget.DropdownDatePicker");
-   <#else>
-     dojo.require("dojo.widget.DropdownTimePicker");
-  </#if>
-</script>
 <div
    <#if parameters.type?if_exists == "date">
      dojoType="dropdowndatepicker"<#rt/>
@@ -14,14 +7,15 @@
   <#if parameters.id?if_exists != "">
     id="${parameters.id?html}"<#rt/>
   </#if>
-  <#if parameters.value?if_exists != "">
-    value="${parameters.value?html}"<#rt/>
+  <#if parameters.nameValue?if_exists != "">
+    value="${parameters.nameValue?html}"<#rt/>
   </#if>
   <#if parameters.language?if_exists != "">
     lang="${parameters.language?html}"<#rt/>
   </#if>
   <#if parameters.name?if_exists != "">
-    inputName="${parameters.name?html}"<#rt/>
+    name="${parameters.name?html}"<#rt/>
+    inputName="dojo.${parameters.name?html}"<#rt/>
   </#if>
   <#if parameters.displayWeeks?if_exists != "">
     displayWeeks="${parameters.displayWeeks?html}"<#rt/>
@@ -62,14 +56,12 @@
   <#if parameters.displayFormat?if_exists != "">
     displayFormat="${parameters.displayFormat?html}"<#rt/>
   </#if>
-  <#if parameters.saveFormat?if_exists != "">
-    saveFormat="${parameters.saveFormat?html}"<#rt/>
-  </#if>
   <#if parameters.toggleType?if_exists != "">
     containerToggle="${parameters.toggleType?html}"<#rt/>
   </#if>
   <#if parameters.toggleDuration?exists>
     containerToggleDuration="${parameters.toggleDuration?string?html}"<#rt/>
   </#if>
+  saveFormat="rfc"<#rt/>
   <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 ></div>

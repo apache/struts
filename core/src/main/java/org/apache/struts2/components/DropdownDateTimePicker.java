@@ -17,8 +17,15 @@
  */
 package org.apache.struts2.components;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -28,28 +35,33 @@ import com.opensymphony.xwork2.util.ValueStack;
  * Renders picker(datepicker or timepicker) in a dropdown container.
  * </p>
  * <p>
- * It is possible to customize the user-visible formatting
- * with either the formatLength or displayFormat attributes.  The value sent to the server is
- * typically a locale-independent value in a hidden field as defined by the name attribute.
- * RFC3339 representation is used by default, but other options are available with saveFormat
+ * It is possible to customize the user-visible formatting with either the
+ * formatLength or displayFormat attributes. The value sent to the server is
+ * typically a locale-independent value in a hidden field as defined by the name
+ * attribute. RFC3339 representation is used by default, but other options are
+ * available with saveFormat
  * </p>
  *
  * @s.tag name="dropdowndatetimepicker" tld-body-content="JSP"
- *        tld-tag-class="org.apache.struts2.views.jsp.ui.DropdownDateTimePickerTag" description="Render
- *        a dropdown picker(datepicker or timepicker)"
+ *        tld-tag-class="org.apache.struts2.views.jsp.ui.DropdownDateTimePickerTag"
+ *        description="Render a dropdown picker(datepicker or timepicker)"
  */
 public class DropdownDateTimePicker extends DatePicker {
     final public static String TEMPLATE = "dropdowndatetimepicker";
+    final private static SimpleDateFormat RFC3399_FORMAT = new SimpleDateFormat(
+            "yyyy-MM-dd'T'HH:mm:ss");
 
     protected String iconPath;
     protected String formatLength;
     protected String displayFormat;
-    protected String saveFormat;
     protected String toggleType;
     protected String toggleDuration;
     protected String type;
 
-    public DropdownDateTimePicker(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    protected static Log log = LogFactory.getLog(DropdownDateTimePicker.class);
+
+    public DropdownDateTimePicker(ValueStack stack, HttpServletRequest request,
+            HttpServletResponse response) {
         super(stack, request, response);
     }
 
@@ -66,20 +78,65 @@ public class DropdownDateTimePicker extends DatePicker {
             addParameter("formatLength", findString(formatLength));
         if(displayFormat != null)
             addParameter("displayFormat", findString(displayFormat));
-        if(saveFormat != null)
-            addParameter("saveFormat", findString(saveFormat));
         if(toggleType != null)
             addParameter("toggleType", findString(toggleType));
         if(toggleDuration != null)
-            addParameter("toggleDuration", findValue(toggleDuration, Integer.class));
+            addParameter("toggleDuration", findValue(toggleDuration,
+                    Integer.class));
         if(type != null)
             addParameter("type", findString(type));
         else
             addParameter("type", "date");
+
+        // format the value to RFC 3399
+        if(parameters.containsKey("value")) {
+            parameters.put("nameValue", format(parameters.get("value")));
+        } else {
+            if(name != null) {
+                String expr = name;
+                if(altSyntax()) {
+                    expr = "%{" + expr + "}";
+                }
+                addParameter("nameValue", format(findValue(expr)));
+            }
+        }
+
+    }
+
+
+    private String format(Object obj) {
+        if(obj == null)
+            return null;
+
+        if(obj instanceof Date) {
+            return RFC3399_FORMAT.format((Date) obj);
+        } else {
+            // try to parse a date
+            String dateStr = obj.toString();
+            if(dateStr.equalsIgnoreCase("today"))
+                return  RFC3399_FORMAT.format(new Date());
+
+            try {
+                Date date = null;
+                if(this.displayFormat != null) {
+                    SimpleDateFormat format = new SimpleDateFormat(
+                            this.displayFormat);
+                    date = format.parse(dateStr);
+                } else {
+                    // last resource
+                    date = SimpleDateFormat.getInstance().parse(dateStr);
+                }
+                return RFC3399_FORMAT.format(date);
+            } catch (ParseException e) {
+                log.error("Could not parse date", e);
+                return dateStr;
+            }
+        }
     }
 
     /**
-     * A pattern used for the visual display of the formatted date, e.g. dd/MM/yyyy.
+     * A pattern used for the visual display of the formatted date, e.g.
+     * dd/MM/yyyy.
      *
      * @s.tagattribute required="false" type="String"
      */
@@ -88,7 +145,8 @@ public class DropdownDateTimePicker extends DatePicker {
     }
 
     /**
-     * Type of formatting used for visual display, appropriate to locale (choice of long, short, medium or full)
+     * Type of formatting used for visual display, appropriate to locale (choice
+     * of long, short, medium or full)
      *
      * @s.tagattribute required="false" type="String"
      */
@@ -106,15 +164,6 @@ public class DropdownDateTimePicker extends DatePicker {
     }
 
     /**
-     * Formatting scheme used when submitting the form element.
-     * Possible values are rfc,iso,posix and unix
-     * @s.tagattribute required="false" type="String" default="rfc"
-     */
-    public void setSaveFormat(String saveFormat) {
-        this.saveFormat = saveFormat;
-    }
-
-    /**
      * Duration of toggle in seconds
      *
      * @s.tagattribute required="false" type="Integer" default="100"
@@ -124,8 +173,8 @@ public class DropdownDateTimePicker extends DatePicker {
     }
 
     /**
-     * Defines the type of the picker on the dropdown.
-     * Possible values are "date" for a DatePicker, and "time" for a timePicker
+     * Defines the type of the picker on the dropdown. Possible values are
+     * "date" for a DatePicker, and "time" for a timePicker
      *
      * @s.tagattribute required="false" type="String" default="date"
      */
@@ -134,8 +183,8 @@ public class DropdownDateTimePicker extends DatePicker {
     }
 
     /**
-     * Toggle type of the dropdown.
-     * Possible values are plain,wipe,explode,fade
+     * Toggle type of the dropdown. Possible values are plain,wipe,explode,fade
+     *
      * @s.tagattribute required="false" type="String" default="plain"
      */
     public void setToggleType(String toggleType) {

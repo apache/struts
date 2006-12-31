@@ -12,11 +12,11 @@
 
 <body>
 <p>toggleTye="wipe":</p>
-	<input dojoType="dropdowndatepicker" value="2006-10-31" containerToggle="wipe" containerToggleDuration="300">
+	<s:dropdowndatetimepicker value="2006-10-31" toggleType="wipe" toggleDuration="300" name="test"/>
 <p>toggleTye="explode":</p>
-	<input dojoType="dropdowndatepicker" value="2006-07-22" containerToggle="explode" containerToggleDuration="500">
+	<s:dropdowndatetimepicker value="2006-07-22" toggleType="explode" toggleDuration="500"/>
 <p>toggleTye="fade":</p>
-	<input dojoType="dropdowndatepicker" value="2006-06-30" containerToggle="fade" containerToggleDuration="500">
+	<s:dropdowndatetimepicker value="2006-06-30" toggleType="fade" toggleDuration="500"/>
 <p>With value="today"</p>
 	<s:dropdowndatetimepicker  name="dddp1" value="today" />
 <p>US format, empty</p>
@@ -33,13 +33,7 @@
 	<s:dropdowndatetimepicker  name="dddp12" value="2006-06-26" formatLength="long" language="en-us" />
 <p>German format with initial date of 2006-06-26 and long formatting (parse not supported)</p>
 	<s:dropdowndatetimepicker  name="dddp13" value="2006-06-26" formatLength="long" language="de" />
-<p>Value sent as RFC3339</p>
-	<s:dropdowndatetimepicker  name="dddp14" saveFormat="rfc" value="2006-06-26" language="en-us" />
-<p>Custom save format: yyyy!dd!mm</p>
-	<s:dropdowndatetimepicker  name="dddp15" saveFormat="yyyy!dd!MM" value="2006-06-26" language="en-us" />
-<p>Value sent as time since Unix Epoch</p>
-	<s:dropdowndatetimepicker  name="dddp16" saveFormat="posix" value="2006-06-26" language="en-us" />
-
+<br/>
 <s:include value="../footer.jsp"/>
 </body>
 </html>

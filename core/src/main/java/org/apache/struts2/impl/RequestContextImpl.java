@@ -150,7 +150,7 @@ public class RequestContextImpl implements RequestContext {
         return proceed;
     }
 
-    static ThreadLocal<RequestContextImpl[]> threadLocalRequestContext = new ThreadLocal<RequestContextImpl[]>() {
+    static ThreadLocal<Object[]> threadLocalRequestContext = new ThreadLocal<Object[]>() {
         protected RequestContextImpl[] initialValue() {
             return new RequestContextImpl[1];
         }
@@ -162,7 +162,7 @@ public class RequestContextImpl implements RequestContext {
      */
     public static String callInContext(ActionInvocation invocation, Callable<String> callable)
             throws Exception {
-        RequestContextImpl[] reference = threadLocalRequestContext.get();
+        RequestContextImpl[] reference = (RequestContextImpl[])threadLocalRequestContext.get();
 
         if (reference[0] == null) {
             // Initial invocation.
@@ -187,7 +187,7 @@ public class RequestContextImpl implements RequestContext {
     }
 
     public static RequestContextImpl get() {
-        RequestContextImpl requestContext = threadLocalRequestContext.get()[0];
+        RequestContextImpl requestContext = ((RequestContextImpl[])threadLocalRequestContext.get())[0];
 
         if (requestContext == null)
             throw new IllegalStateException("RequestContext has not been created.");

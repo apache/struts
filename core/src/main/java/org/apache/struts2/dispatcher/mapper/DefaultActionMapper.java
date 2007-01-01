@@ -349,7 +349,7 @@ public class DefaultActionMapper implements ActionMapper {
             for (Iterator i = config.getPackageConfigs().values().iterator(); i
                     .hasNext();) {
                 String ns = ((PackageConfig) i.next()).getNamespace();
-                if (ns != null && prefix.startsWith(ns + "/")) {
+                if (ns != null && prefix.startsWith(ns) && (prefix.length() == ns.length() || prefix.charAt(ns.length()) == '/')) {
                     if (ns.length() > namespace.length()) {
                         namespace = ns;
                     }

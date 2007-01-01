@@ -116,7 +116,6 @@
         <profile>
             <id>all</id>
             <modules>
-                <module>all</module>
                 <module>plugins</module>
                 <module>apps</module>
             </modules>

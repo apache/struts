@@ -20,6 +20,8 @@
  */
 package org.apache.struts2.views;
 
+import java.util.HashSet;
+
 import junit.framework.TestCase;
 
 import org.apache.struts2.components.template.FreemarkerTemplateEngine;
@@ -49,9 +51,13 @@ public class TemplateEngineManagerTest extends TestCase {
         mockContainer.matchAndReturn("getInstance", C.args(C.eq(TemplateEngine.class), C.eq("jsp")), new JspTemplateEngine());
         mockContainer.matchAndReturn("getInstance", C.args(C.eq(TemplateEngine.class), C.eq("vm")), new VelocityTemplateEngine());
         mockContainer.matchAndReturn("getInstance", C.args(C.eq(TemplateEngine.class), C.eq("ftl")), new FreemarkerTemplateEngine());
+        mockContainer.matchAndReturn("getInstanceNames", C.args(C.eq(TemplateEngine.class)), new HashSet() {{
+            add("jsp");
+            add("vm");
+            add("ftl");
+        }});
         
         mgr.setContainer((Container)mockContainer.proxy());
-        mgr.setTemplateEngines("jsp,vm,ftl");
         mgr.setDefaultTemplateType("jsp");
     }
     

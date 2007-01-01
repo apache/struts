@@ -125,9 +125,6 @@ public class FreemarkerManager {
     private String encoding;
     private boolean altMapWrapper;
     private Map<String,TagLibrary> tagLibraries;
-    private String tagLibraryPrefixes;
-    private Container container;
-    
     
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public void setEncoding(String encoding) {
@@ -139,17 +136,6 @@ public class FreemarkerManager {
         altMapWrapper = "true".equals(val);
     }
     
-    @Inject(StrutsConstants.STRUTS_TAG_LIBRARIES)
-    public void setTagLibraryPrefixes(String libnames) {
-        this.tagLibraryPrefixes = libnames;
-    }
-    
-    @Inject
-    public void setContainer(Container container) {
-        this.container = container;
-    }
-    
-    /*
     @Inject
     public void setContainer(Container container) {
         Map<String,TagLibrary> map = new HashMap<String,TagLibrary>();
@@ -159,7 +145,6 @@ public class FreemarkerManager {
         }
         this.tagLibraries = Collections.unmodifiableMap(map);
     }
-    */
 
     public final synchronized freemarker.template.Configuration getConfiguration(ServletContext servletContext) throws TemplateException {
         freemarker.template.Configuration config = (freemarker.template.Configuration) servletContext.getAttribute(CONFIG_SERVLET_CONTEXT_KEY);
@@ -171,17 +156,6 @@ public class FreemarkerManager {
             servletContext.setAttribute(CONFIG_SERVLET_CONTEXT_KEY, config);
         }
         
-        if (tagLibraries == null && tagLibraryPrefixes != null) {
-            Map<String,TagLibrary> map = new HashMap<String,TagLibrary>();
-            List<TagLibrary> list = new ArrayList<TagLibrary>();
-            TagLibrary lib = null;
-            String[] prefixes = tagLibraryPrefixes.split(",");
-            for (String prefix : prefixes) {
-                map.put(prefix, container.getInstance(TagLibrary.class, prefix));
-            }
-            this.tagLibraries = Collections.unmodifiableMap(map);
-        }
-
         config.setWhitespaceStripping(true);
 
         return config;

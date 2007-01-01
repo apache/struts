@@ -20,11 +20,11 @@
  */
 package org.apache.struts2.components.template;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.Dispatcher;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
@@ -51,17 +51,13 @@ public class TemplateEngineManager {
     @Inject
     public void setContainer(Container container) {
         this.container = container;
-    }
-    
-    @Inject(StrutsConstants.STRUTS_TEMPLATE_ENGINES)
-    public void setTemplateEngines(String engines) {
-        if (engines != null) {
-            TemplateEngine eng = null;
-            String[] list = engines.split(",");
-            for (String name : list) {
-                templateEngines.put(name, new LazyEngineFactory(name));
-            }
+        Map<String,EngineFactory> map = new HashMap<String,EngineFactory>();
+        Set<String> prefixes = container.getInstanceNames(TemplateEngine.class);
+        for (String prefix : prefixes) {
+            map.put(prefix, new LazyEngineFactory(prefix));
         }
+        this.templateEngines = Collections.unmodifiableMap(map);
+        
     }
     
     /**

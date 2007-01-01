@@ -98,12 +98,8 @@ public class VelocityManager {
 
     private String customConfigFile;
     
-    private String tagLibraryPrefixes;
-    
     private List<TagLibrary> tagLibraries;
     
-    private Container container;
-
     public VelocityManager() {
     }
     
@@ -112,14 +108,14 @@ public class VelocityManager {
         this.objectFactory = fac;
     }
     
-    @Inject(StrutsConstants.STRUTS_TAG_LIBRARIES)
-    public void setTagLibraryPrefixes(String libnames) {
-        this.tagLibraryPrefixes = libnames;
-    }
-    
     @Inject
     public void setContainer(Container container) {
-        this.container = container;
+        List<TagLibrary> list = new ArrayList<TagLibrary>();
+        Set<String> prefixes = container.getInstanceNames(TagLibrary.class);
+        for (String prefix : prefixes) {
+            list.add(container.getInstance(TagLibrary.class, prefix));
+        }
+        this.tagLibraries = Collections.unmodifiableList(list);
     }
 
     /**
@@ -245,16 +241,6 @@ public class VelocityManager {
     public synchronized void init(ServletContext context) {
         if (velocityEngine == null) {
             velocityEngine = newVelocityEngine(context);
-        }
-        if (tagLibraries == null && tagLibraryPrefixes != null) {
-            List<TagLibrary> list = new ArrayList<TagLibrary>();
-            TagLibrary lib = null;
-            String[] prefixes = tagLibraryPrefixes.split(",");
-            for (String prefix : prefixes) {
-                list.add(container.getInstance(TagLibrary.class, prefix));
-            }
-            this.tagLibraries = Collections.unmodifiableList(list);
-            
         }
         this.initToolbox(context);
     }

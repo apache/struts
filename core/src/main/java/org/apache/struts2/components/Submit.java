@@ -181,7 +181,7 @@ public class Submit extends FormButton implements RemoteUICallBean{
         super.evaluateExtraParams();
 
         if (href != null)
-            addParameter("href", UrlHelper.buildUrl(findString(href), request, response, null));
+            addParameter("href", findString(href));
         if (errorText != null)
             addParameter("errorText", findString(errorText));
         if (loadingText != null)

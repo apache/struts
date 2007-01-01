@@ -307,6 +307,14 @@
           <enabled>false</enabled>
         </releases>
       </pluginRepository>
+      <pluginRepository>
+            <id>apache.snapshots</id>
+            <name>Apache Maven Repository (Snapshots and Test Builds)</name>
+            <url>http://people.apache.org/repo/m2-snapshot-repository</url>
+            <releases><enabled>false</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </pluginRepository>
+ 
     </pluginRepositories>
 
 </project>

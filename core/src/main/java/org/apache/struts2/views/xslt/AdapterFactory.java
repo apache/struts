@@ -90,9 +90,6 @@ import org.w3c.dom.Text;
  */
 public class AdapterFactory {
 
-    /**
-     * Map<Class, Class<AdapterNode>>
-     */
     private Map<Class, Class> adapterTypes = new HashMap<Class, Class>();
 
     /**

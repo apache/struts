@@ -20,23 +20,31 @@
 
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.0</version>
-                <configuration>
-                    <sourcepath>src/main/java;../../xwork/src/java</sourcepath>
-                    <groups>
-                        <group>
-                            <title>Struts Packages</title>
-                            <packages>org.apache.struts2*</packages>
-                        </group>
-                        <group>
-                            <title>XWork Packages</title>
-                            <packages>com.opensymphony.xwork2*</packages>
-                        </group>
-                    </groups>
-                </configuration>
+        	<plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.0-alpha-1-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>unpack-xwork</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+		                    <artifactItems>
+		                        <artifactItem>
+		                            <groupId>opensymphony</groupId>
+		                            <artifactId>xwork</artifactId>
+		                            <version>2.0-SNAPSHOT</version>
+		                            <classifier>sources</classifier>
+		                        </artifactItem>
+		                    </artifactItems>
+		                    <outputDirectory>${project.build.directory}/xwork-sources</outputDirectory>
+		                </configuration>
+                    </execution>
+				</executions>
             </plugin>
+            
 <!--
             <plugin>
                 <groupId>org.apache.myfaces.tobago</groupId>
@@ -67,6 +75,36 @@
 -->
         </plugins>
     </build>
+    
+    <reporting>
+        <plugins>
+        	<plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <sourcepath>${basedir}/src/main/java;${basedir}/target/xwork-sources</sourcepath>
+                    <encoding>UTF-8</encoding>
+                    <groups>
+                        <group>
+                            <title>Struts Packages</title>
+                            <packages>org.apache.struts2*</packages>
+                        </group>
+                        <group>
+                            <title>XWork Packages</title>
+                            <packages>com.opensymphony.xwork2*</packages>
+                        </group>
+                    </groups>
+                    <show>private</show>
+                    <links>
+                        <link>http://java.sun.com/j2se/1.5.0/docs/api</link>
+                        <link>http://java.sun.com/javaee/5/docs/api/</link>
+                        <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
+                        <link>http://logging.apache.org/log4j/docs/api/</link>
+                    </links>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
     
     <profiles>
      	<profile>

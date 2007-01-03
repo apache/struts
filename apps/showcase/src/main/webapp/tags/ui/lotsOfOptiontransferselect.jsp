@@ -116,7 +116,13 @@
         value="{'england', 'brazil'}" />    
         
     <br/>
-    
+
+    <s:select label="Favourite Cities"
+        list="availableCities"
+        name="favouriteCities"
+        value="%{defaultFavouriteCities}"
+        multiple="true" size="4"/>
+
     <s:submit value="Submit It" />
     
     <br/>

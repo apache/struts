@@ -23,6 +23,7 @@ package org.apache.struts2.showcase;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -44,6 +45,8 @@ public class LotsOfOptiontransferselectAction extends ActionSupport {
 
     private List _favouriteSportsKeys;
     private List _nonFavouriteSportsKeys;
+
+    private List _favouriteCities;
 
     private List _prioritisedFavouriteCartoonCharacters;
     private List _prioritisedFavouriteCars;
@@ -247,6 +250,29 @@ public class LotsOfOptiontransferselectAction extends ActionSupport {
 
 
 
+    public Map getAvailableCities() {
+        Map map = new LinkedHashMap();
+        map.put("boston", "Boston");
+        map.put("new york", "New York");
+        map.put("london", "London");
+        map.put("rome", "Rome");
+        return map;
+    }
+
+    public List getDefaultFavouriteCities() {
+        List list = new ArrayList();
+        list.add("boston");
+        list.add("rome");
+        return list;
+    }
+
+    public List getFavouriteCities() {
+        return _favouriteCities;
+    }
+
+    public void setFavouriteCities(List favouriteCities) {
+        this._favouriteCities = favouriteCities;
+    }
 
     // actions
 

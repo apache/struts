@@ -68,8 +68,25 @@
           /> 
         
     <br/>   
-    
-    <s:updownselect 
+
+    <s:optiontransferselect
+        tooltip="Pick One at a Time"
+        label="Favourite Sport"
+        leftTitle="Non Favourite Sports"
+        rightTitle="Favourite Sports"
+        name="nonFavouriteSports"
+        list="defaultNonFavoriteSports"
+        doubleName="favouriteSports"
+        doubleList="defaultFavouriteSports"
+        size="1" multiple="false"
+        doubleSize="5" doubleMultiple="true"
+        allowAddAllToLeft="false"
+        allowAddAllToRight="false"
+        allowSelectAll="false"
+          />
+    <br/>
+
+    <s:updownselect
         tooltip="Prioritized Your Favourite Cartoon Characters"
         label="Prioritised Favourite Cartoon Characters"
         list="defaultFavouriteCartoonCharacters" 
@@ -107,3 +124,4 @@
 </s:form>
 
 </body>
+</html>

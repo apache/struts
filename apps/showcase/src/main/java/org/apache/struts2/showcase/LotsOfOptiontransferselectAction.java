@@ -42,6 +42,9 @@ public class LotsOfOptiontransferselectAction extends ActionSupport {
     private List _favouriteCountriesKeys;
     private List _notFavouriteCountriesKeys;
 
+    private List _favouriteSportsKeys;
+    private List _nonFavouriteSportsKeys;
+
     private List _prioritisedFavouriteCartoonCharacters;
     private List _prioritisedFavouriteCars;
     private List _prioritisedFavouriteCountries;
@@ -188,6 +191,37 @@ public class LotsOfOptiontransferselectAction extends ActionSupport {
         _notFavouriteCountriesKeys = notFavouriteCountries;
     }
 
+    // Sports
+    public Map getDefaultNonFavoriteSports() {
+        Map m = new LinkedHashMap();
+        m.put("basketball", "Basketball");
+        m.put("football", "Football");
+        m.put("baseball", "Baseball");
+        return m;
+    }
+
+    public Map getDefaultFavoriteSports() {
+        return new LinkedHashMap();
+    }
+
+    public List getFavouriteSports() {
+        return _favouriteSportsKeys;
+    }
+
+    public void setFavouriteSports(List favouriteSportsKeys) {
+        this._favouriteSportsKeys = favouriteSportsKeys;
+    }
+
+    public List getNonFavouriteSports() {
+        return _nonFavouriteSportsKeys;
+    }
+
+    public void setNonFavouriteSports(List notFavouriteSportsKeys) {
+        this._nonFavouriteSportsKeys = notFavouriteSportsKeys;
+    }
+
+
+    
 
     public List getPrioritisedFavouriteCartoonCharacters() {
         return _prioritisedFavouriteCartoonCharacters;

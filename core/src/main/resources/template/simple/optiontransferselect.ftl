@@ -170,7 +170,7 @@
 <select 
 	name="${parameters.doubleName?default("")?html}"
 	<#if parameters.get("doubleSize")?exists><#t/>
-	size="${parameters.get("size")?html}"		
+	size="${parameters.get("doubleSize")?html}"		
 	</#if><#t/>
 	<#if parameters.doubleDisabled?default(false)><#t/>
 	disabled="disabled"

@@ -53,14 +53,19 @@ import com.opensymphony.xwork2.inject.Inject;
  */
 public class CodebehindUnknownHandler implements UnknownHandler {
 
-    protected String defaultPackageName = "codebehind-default";
+    protected String defaultPackageName;
     protected ServletContext servletContext;
     protected Map<String,ResultTypeConfig> resultsByExtension;
-    protected String templatePathPrefix = "/";
+    protected String templatePathPrefix;
     protected Configuration configuration;
     protected ObjectFactory objectFactory;
     
     protected static final Log LOG = LogFactory.getLog(CodebehindUnknownHandler.class);
+    
+    @Inject("struts.codebehind.pathPrefix")
+    public void setPathPrefix(String prefix) {
+        this.templatePathPrefix=prefix;
+    }
     
     @Inject("struts.codebehind.defaultPackage")
     public void setDefaultPackage(String pkg) {

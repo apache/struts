@@ -1,19 +1,24 @@
-<script type="text/javascript">
-    dojo.require("dojo.widget.DatePicker");
-</script>
-
-<div dojoType="datepicker"
-  <#if parameters.id?if_exists != "">
-    id="${parameters.id?html}"<#rt/>
-  </#if>
-  <#if parameters.value?if_exists != "">
-    value="${parameters.value?html}"<#rt/>
-  </#if>
-  <#if parameters.language?if_exists != "">
-    lang="${parameters.language?html}"<#rt/>
+<input type="hidden"
+  <#if parameters.nameValue?if_exists != "">
+    value="${parameters.nameValue?html}"<#rt/>
   </#if>
   <#if parameters.name?if_exists != "">
     name="${parameters.name?html}"<#rt/>
+    id="struts_${parameters.name?html}"<#rt/>
+  </#if>
+>
+<div dojoType="struts:DatePicker"
+  <#if parameters.id?if_exists != "">
+    id="${parameters.id?html}"<#rt/>
+  </#if>
+  <#if parameters.name?if_exists != "">
+    inputId="struts_${parameters.name?html}"<#rt/>
+  </#if>
+  <#if parameters.nameValue?if_exists != "">
+    value="${parameters.nameValue?html}"<#rt/>
+  </#if>
+  <#if parameters.language?if_exists != "">
+    lang="${parameters.language?html}"<#rt/>
   </#if>
   <#if parameters.displayWeeks?if_exists != "">
     displayWeeks="${parameters.displayWeeks?html}"<#rt/>

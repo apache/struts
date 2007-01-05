@@ -1,13 +1,21 @@
-<script type="text/javascript">
-    dojo.require("dojo.widget.TimePicker");
-</script>
-
-<div dojoType="timepicker"
+<input type="hidden"
+  <#if parameters.nameValue?if_exists != "">
+    value="${parameters.nameValue?html}"<#rt/>
+  </#if>
+  <#if parameters.name?if_exists != "">
+    name="${parameters.name?html}"<#rt/>
+    id="struts_${parameters.name?html}"<#rt/>
+  </#if>
+>
+<div dojoType="struts:TimePicker"
   <#if parameters.id?if_exists != "">
     id="${parameters.id?html}"<#rt/>
   </#if>
-  <#if parameters.value?if_exists != "">
-    storedTime="todayT${parameters.value?html}"<#rt/>
+  <#if parameters.name?if_exists != "">
+    inputId="struts_${parameters.name?html}"<#rt/>
+  </#if>
+  <#if parameters.nameValue?if_exists != "">
+    storedTime="${parameters.nameValue?html}"<#rt/>
   </#if>
   <#if parameters.language?if_exists != "">
     lang="${parameters.language?html}"<#rt/>

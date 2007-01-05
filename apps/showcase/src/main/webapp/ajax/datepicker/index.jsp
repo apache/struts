@@ -12,7 +12,7 @@
 <body>
 
 This should have the month label all on one line (problem in IE) appears fine in FF though.
-<s:paneldatepicker  id="foo" language="en-us" displayWeeks="1" staticDisplay="true"/>
+<s:datepicker  id="foo" language="en-us" displayWeeks="1" staticDisplay="true"/>
 
 <p>A calendar in your locale, or the closest thing to it we currently provide</p>
 <s:datepicker id="test"   cssStyle="border:1px solid red;padding:1px;"/>

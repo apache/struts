@@ -61,20 +61,13 @@ public class CodebehindUnknownHandler implements UnknownHandler {
     protected ObjectFactory objectFactory;
     
     protected static final Log LOG = LogFactory.getLog(CodebehindUnknownHandler.class);
-    
-    @Inject("struts.codebehind.pathPrefix")
-    public void setPathPrefix(String prefix) {
-        this.templatePathPrefix=prefix;
-    }
-    
-    @Inject("struts.codebehind.defaultPackage")
-    public void setDefaultPackage(String pkg) {
-        this.defaultPackageName = pkg;
-    }
-    
+
     @Inject
-    public void setConfiguration(Configuration config) {
-        this.configuration = config;
+    public CodebehindUnknownHandler(@Inject("struts.codebehind.defaultPackage") String defaultPackage, 
+                                    @Inject Configuration configuration) {
+
+        this.configuration = configuration;
+        this.defaultPackageName = defaultPackage;
         resultsByExtension = new LinkedHashMap<String,ResultTypeConfig>();
         PackageConfig parentPackage = configuration.getPackageConfig(defaultPackageName);
         Map<String,ResultTypeConfig> results = parentPackage.getAllResultTypeConfigs();
@@ -82,6 +75,12 @@ public class CodebehindUnknownHandler implements UnknownHandler {
         resultsByExtension.put("jsp", results.get("dispatcher"));
         resultsByExtension.put("vm", results.get("velocity"));
         resultsByExtension.put("ftl", results.get("freemarker"));
+       
+    }                                
+
+    @Inject("struts.codebehind.pathPrefix")
+    public void setPathPrefix(String prefix) {
+        this.templatePathPrefix=prefix;
     }
     
     @Inject

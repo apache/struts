@@ -43,10 +43,8 @@ public class CodebehindUnknownHandlerTest extends StrutsTestCase {
     public void setUp() throws Exception {
         super.setUp();
         mockServletContext = new Mock(ServletContext.class);
-        handler = new CodebehindUnknownHandler();
-        handler.setDefaultPackage("codebehind-default");
+        handler = new CodebehindUnknownHandler("codebehind-default", configuration);
         handler.setPathPrefix("/");
-        handler.setConfiguration(configuration);
         handler.setObjectFactory(container.getInstance(ObjectFactory.class));
         handler.setServletContext((ServletContext)mockServletContext.proxy());
     }

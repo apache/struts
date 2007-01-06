@@ -39,17 +39,24 @@
 </#if>
 <@s.iterator value="parameters.list">
         <#if parameters.listKey?exists>
-            <#assign itemKey = stack.findValue(parameters.listKey)/>
+            <#if stack.findString(parameters.listKey)?exists>
+              <#assign itemKey = stack.findString(parameters.listKey).toString()/>
+            <#else>
+              <#assign itemKey = ''/>
+            </#if>
         <#else>
-            <#assign itemKey = stack.findValue('top')/>
+            <#assign itemKey = stack.findValue('top').toString()/>
         </#if>
-        <#assign itemKeyStr = itemKey.toString() />
         <#if parameters.listValue?exists>
-            <#assign itemValue = stack.findString(parameters.listValue)/>
+            <#if stack.findString(parameters.listValue)?exists>
+              <#assign itemValue = stack.findString(parameters.listValue)/>
+            <#else>
+              <#assign itemValue = ''/>
+            </#if>
         <#else>
             <#assign itemValue = stack.findString('top')/>
         </#if>
-    <option value="${itemKeyStr?html}"<#rt/>
+    <option value="${itemKey?html}"<#rt/>
         <#if tag.contains(parameters.nameValue, itemKey) == true>
  selected="selected"<#rt/>
         </#if>

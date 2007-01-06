@@ -25,6 +25,7 @@ import java.io.Writer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.util.OgnlUtil;
@@ -98,9 +99,15 @@ public class Bean extends Component {
 
     protected Object bean;
     protected String name;
+    protected ObjectFactory objectFactory;
 
     public Bean(ValueStack stack) {
         super(stack);
+    }
+    
+    @Inject
+    public void setObjectFactory(ObjectFactory objectFactory) {
+        this.objectFactory = objectFactory;
     }
 
     public boolean start(Writer writer) {
@@ -110,7 +117,7 @@ public class Bean extends Component {
 
         try {
             String beanName = findString(name, "name", "Bean name is required. Example: com.acme.FooBean");
-            bean = ObjectFactory.getObjectFactory().buildBean(ClassLoaderUtil.loadClass(beanName, getClass()), stack.getContext());
+            bean = objectFactory.buildBean(ClassLoaderUtil.loadClass(beanName, getClass()), stack.getContext());
         } catch (Exception e) {
             log.error("Could not instantiate bean", e);
 

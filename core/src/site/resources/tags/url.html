@@ -28,92 +28,12 @@ Please do not edit it directly.
 				<th align="left" valign="top"><h4>Description</h4></th>
 			</tr>
 				<tr>
-					<td align="left" valign="top">namespace</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">The namespace to use</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">includeContext</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">Boolean</td>
-					<td align="left" valign="top">Whether actual context should be included in url</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">windowState</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">The resulting portlet window state</td>
-				</tr>
-				<tr>
 					<td align="left" valign="top">action</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">he action generate url for, if not using value</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">value</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">The target value to use, if not using action</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">scheme</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Set scheme attribute</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">portletMode</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">The resulting portlet mode</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">id</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">id for referencing element. For UI and form tags it will be used as HTML id attribute</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">portletUrlType</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Specifies if this should be a portlet render or action url</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">encode</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">Boolean</td>
-					<td align="left" valign="top">Whether to encode parameters</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">method</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">The method of action to use</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">anchor</td>
@@ -124,12 +44,92 @@ Please do not edit it directly.
 					<td align="left" valign="top">The anchor for this URL</td>
 				</tr>
 				<tr>
+					<td align="left" valign="top">encode</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">Boolean</td>
+					<td align="left" valign="top">Whether to encode parameters</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">id</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">id for referencing element. For UI and form tags it will be used as HTML id attribute</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">includeContext</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">Boolean</td>
+					<td align="left" valign="top">Whether actual context should be included in url</td>
+				</tr>
+				<tr>
 					<td align="left" valign="top">includeParams</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">get</td>
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">The includeParams attribute may have the value 'none', 'get' or 'all'</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">method</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">The method of action to use</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">namespace</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">The namespace to use</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">portletMode</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">The resulting portlet mode</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">portletUrlType</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Specifies if this should be a portlet render or action url</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">scheme</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Set scheme attribute</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">value</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">The target value to use, if not using action</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">windowState</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">The resulting portlet window state</td>
 				</tr>
 		</table>
 		<!-- END SNIPPET: tagattributes -->

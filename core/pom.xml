@@ -452,7 +452,7 @@
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts-annotations</artifactId>
-            <version>1.0</version>
+            <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 

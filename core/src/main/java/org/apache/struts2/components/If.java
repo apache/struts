@@ -65,7 +65,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * @see ElseIf
  *
  */
-@StrutsTag(name="if", tldTagClass="If tag", description="org.apache.struts2.views.jsp.IfTag")
+@StrutsTag(name="if", tldTagClass="org.apache.struts2.views.jsp.IfTag", description="If tag")
 public class If extends Component {
     public static final String ANSWER = "struts.if.answer";
 

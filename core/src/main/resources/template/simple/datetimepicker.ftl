@@ -1,28 +1,24 @@
 <script type="text/javascript">
     dojo.require("dojo.widget.DatePicker");
 </script>
-
-<input type="hidden"
-  <#if parameters.nameValue?if_exists != "">
-    value="${parameters.nameValue?html}"<#rt/>
+<div
+   <#if parameters.type?if_exists == "date">
+     dojoType="dropdowndatepicker"<#rt/>
+   <#else>
+     dojoType="dropdowntimepicker"<#rt/>
   </#if>
-  <#if parameters.name?if_exists != "">
-    name="${parameters.name?html}"<#rt/>
-    id="struts_${parameters.name?html}"<#rt/>
-  </#if>
- />
-<div dojoType="struts:DatePicker"
   <#if parameters.id?if_exists != "">
     id="${parameters.id?html}"<#rt/>
-  </#if>
-  <#if parameters.name?if_exists != "">
-    inputId="struts_${parameters.name?html}"<#rt/>
   </#if>
   <#if parameters.nameValue?if_exists != "">
     value="${parameters.nameValue?html}"<#rt/>
   </#if>
   <#if parameters.language?if_exists != "">
     lang="${parameters.language?html}"<#rt/>
+  </#if>
+  <#if parameters.name?if_exists != "">
+    name="dojo.${parameters.name?html}"<#rt/>
+    inputName="${parameters.name?html}"<#rt/>
   </#if>
   <#if parameters.displayWeeks?if_exists != "">
     displayWeeks="${parameters.displayWeeks?html}"<#rt/>
@@ -54,5 +50,21 @@
   <#if parameters.cssStyle?if_exists != "">
     style="${parameters.cssStyle?html}"<#rt/>
   </#if>
+  <#if parameters.iconPath?if_exists != "">
+    iconURL="${parameters.iconPath}"<#rt/>
+  </#if>
+  <#if parameters.formatLength?if_exists != "">
+    formatLength="${parameters.formatLength?html}"<#rt/>
+  </#if>
+  <#if parameters.displayFormat?if_exists != "">
+    displayFormat="${parameters.displayFormat?html}"<#rt/>
+  </#if>
+  <#if parameters.toggleType?if_exists != "">
+    containerToggle="${parameters.toggleType?html}"<#rt/>
+  </#if>
+  <#if parameters.toggleDuration?exists>
+    containerToggleDuration="${parameters.toggleDuration?string?html}"<#rt/>
+  </#if>
+  saveFormat="rfc"<#rt/>
   <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 ></div>

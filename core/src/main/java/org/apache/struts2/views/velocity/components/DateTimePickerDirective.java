@@ -21,21 +21,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.components.Component;
-import org.apache.struts2.components.DatePicker;
-import org.apache.struts2.components.DropdownDateTimePicker;
+import org.apache.struts2.components.DateTimePicker;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
- * @see DatePicker
+ * @see DateTimePicker
  */
-public class DropdownDateTimePickerDirective extends TextFieldDirective {
+public class DateTimePickerDirective extends TextFieldDirective {
 
     protected Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
-        return new DropdownDateTimePicker(stack, req, res);
+        return new DateTimePicker(stack, req, res);
     }
 
     public String getBeanName() {
-        return "dropdowndatetimepicker";
+        return "datetimepicker";
     }
 }

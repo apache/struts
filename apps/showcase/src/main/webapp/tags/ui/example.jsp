@@ -19,7 +19,7 @@
             name="name"
             tooltip="Enter your Name here" />
 
-    <s:dropdowndatetimepicker
+    <s:datetimepicker
             tooltip="Select Your Birthday"
             label="Birthday"
             name="birthday" />

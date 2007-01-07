@@ -41,8 +41,7 @@ public class StrutsModels {
     protected ComboBoxModel comboBox;
     protected ComponentModel component;
     protected DateModel date;
-    protected DatePickerModel datepicker;
-    protected DropdownDateTimePickerModel dropdownDateTimePicker;
+    protected DateTimePickerModel dateTimePicker;
     protected DivModel div;
     protected DoubleSelectModel doubleselect;
     protected FileModel file;
@@ -80,7 +79,6 @@ public class StrutsModels {
     protected IfModel ifModel;
     protected ElseModel elseModel;
     protected ElseIfModel elseIfModel;
-    protected TimePickerModel timePickerModel;
     protected AutocompleterModel autocompleterModel;
 
 
@@ -241,20 +239,12 @@ public class StrutsModels {
         return date;
     }
 
-    public DatePickerModel getDatePicker() {
-        if (datepicker == null) {
-            datepicker = new DatePickerModel(stack, req, res);
+    public DateTimePickerModel getDropdownDateTimePicker() {
+        if (dateTimePicker == null) {
+            dateTimePicker = new DateTimePickerModel(stack, req, res);
         }
 
-        return datepicker;
-    }
-
-    public DropdownDateTimePickerModel getDropdownDateTimePicker() {
-        if (dropdownDateTimePicker == null) {
-            dropdownDateTimePicker = new DropdownDateTimePickerModel(stack, req, res);
-        }
-
-        return dropdownDateTimePicker;
+        return dateTimePicker;
     }
 
     public TokenModel getToken() {
@@ -464,12 +454,5 @@ public class StrutsModels {
             elseIfModel = new ElseIfModel(stack, req, res);
         }
         return elseIfModel;
-    }
-
-    public TimePickerModel getTimepicker() {
-        if (timePickerModel == null) {
-            timePickerModel = new TimePickerModel(stack, req, res);
-        }
-        return timePickerModel;
     }
 }

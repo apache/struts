@@ -20,9 +20,15 @@
  */
 package org.apache.struts2.components;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts.annotations.StrutsTag;
 import org.apache.struts.annotations.StrutsTagAttribute;
 
@@ -31,15 +37,15 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  * <!-- START SNIPPET: javadoc -->
  * <p>
- * Renders datepicker element.
+ * Renders a date/time picker in a dropdown container.
  * </p>
  * <p>
- * A stand-alone DatePicker widget that makes it easy to select a date, or increment by week, month,
+ * A stand-alone DateTimePicker widget that makes it easy to select a date/time, or increment by week, month,
  * and/or year.
  * </p>
  * Dates attributes passed in the `RFC 3339` format:
  *
- * Renders datepicker element.</p>
+ * Renders date/time picker element.</p>
  * Format supported by this component are:-
  * <table border="1">
  *   <tr>
@@ -75,6 +81,14 @@ import com.opensymphony.xwork2.util.ValueStack;
  *      <td>Display the last digits of the year</td>
  *   </tr>
  * </table>
+ * 
+ * <p>
+ * It is possible to customize the user-visible formatting with either the
+ * formatLength or displayFormat attributes. The value sent to the server is
+ * typically a locale-independent value in a hidden field as defined by the name
+ * attribute. RFC3339 representation is used by default, but other options are
+ * available with saveFormat
+ * </p>
  *
  * <p/>
  *
@@ -86,9 +100,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- START SNIPPET: expl1 -->
  *
  * Example 1:
- *     &lt;s:datepicker name="order.date" label="Order Date" /&gt;
+ *     &lt;s:datetimepicker name="order.date" label="Order Date" /&gt;
  * Example 2:
- *     &lt;s:datepicker name="delivery.date" label="Delivery Date" format="#yyyy-#MM-#dd"  /&gt;
+ *     &lt;s:datetimepicker name="delivery.date" label="Delivery Date" format="#yyyy-#MM-#dd"  /&gt;
  *
  * <!-- END SNIPPET: expl1 -->
  * </pre>
@@ -103,16 +117,26 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <pre>
  * <!-- START SNIPPET: expl2 -->
  *
- * &lt;s:datepicker name="birthday" label="Birthday" templateCss="...." /&gt;
+ * &lt;s:datetimepicker name="birthday" label="Birthday" templateCss="...." /&gt;
  *
  * <!-- END SNIPPET: expl2 -->
  * </pre>
  *
  */
-@StrutsTag(name="datepicker", tldTagClass="org.apache.struts2.views.jsp.ui.DatePickerTag", description="Render datepicker")
-public class DatePicker extends UIBean {
+@StrutsTag(name="datetimepicker", tldTagClass="org.apache.struts2.views.jsp.ui.DateTimePickerTag", description="Render datetimepicker")
+public class DateTimePicker extends UIBean {
 
-    final public static String TEMPLATE = "datepicker";
+    final public static String TEMPLATE = "datetimepicker";
+    final private static SimpleDateFormat RFC3399_FORMAT = new SimpleDateFormat(
+    "yyyy-MM-dd'T'HH:mm:ss");
+    final protected static Log LOG = LogFactory.getLog(DateTimePicker.class);
+    
+    protected String iconPath;
+    protected String formatLength;
+    protected String displayFormat;
+    protected String toggleType;
+    protected String toggleDuration;
+    protected String type;
 
     protected String displayWeeks;
     protected String adjustWeeks;
@@ -123,7 +147,7 @@ public class DatePicker extends UIBean {
     protected String dayWidth;
     protected String language;
 
-    public DatePicker(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+    public DateTimePicker(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 
@@ -152,6 +176,34 @@ public class DatePicker extends UIBean {
             addParameter("language", findString(language));
         if(value != null)
             addParameter("value", findString(value));
+        if(iconPath != null)
+            addParameter("iconPath", iconPath);
+        if(formatLength != null)
+            addParameter("formatLength", findString(formatLength));
+        if(displayFormat != null)
+            addParameter("displayFormat", findString(displayFormat));
+        if(toggleType != null)
+            addParameter("toggleType", findString(toggleType));
+        if(toggleDuration != null)
+            addParameter("toggleDuration", findValue(toggleDuration,
+                    Integer.class));
+        if(type != null)
+            addParameter("type", findString(type));
+        else
+            addParameter("type", "date");
+
+        // format the value to RFC 3399
+        if(parameters.containsKey("value")) {
+            parameters.put("nameValue", format(parameters.get("value")));
+        } else {
+            if(name != null) {
+                String expr = name;
+                if(altSyntax()) {
+                    expr = "%{" + expr + "}";
+                }
+                addParameter("nameValue", format(findValue(expr)));
+            }
+        }
     }
 
     @StrutsTagAttribute(description="If true, weekly size of calendar changes to acomodate the month if false," +
@@ -193,6 +245,68 @@ public class DatePicker extends UIBean {
     @StrutsTagAttribute(description="Language to display this widget in", defaultValue="brower's specified preferred language")
     public void setLanguage(String language) {
         this.language = language;
+    }
+    
+    @StrutsTagAttribute(description="A pattern used for the visual display of the formatted date, e.g. dd/MM/yyyy")
+    public void setDisplayFormat(String displayFormat) {
+        this.displayFormat = displayFormat;
+    }
+
+    @StrutsTagAttribute(description="Type of formatting used for visual display. Possible values are " +
+                "long, short, medium or full", defaultValue="short")
+    public void setFormatLength(String formatLength) {
+        this.formatLength = formatLength;
+    }
+
+    @StrutsTagAttribute(description=" Path to icon used for the dropdown")
+    public void setIconPath(String iconPath) {
+        this.iconPath = iconPath;
+    }
+
+    @StrutsTagAttribute(description="Duration of toggle in milliseconds", type="Integer", defaultValue="100")
+    public void setToggleDuration(String toggleDuration) {
+        this.toggleDuration = toggleDuration;
+    }
+
+    @StrutsTagAttribute(description="Defines the type of the picker on the dropdown. Possible values are 'date'" +
+                " for a DateTimePicker, and 'time' for a timePicker", defaultValue="date")
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    @StrutsTagAttribute(description="oggle type of the dropdown. Possible values are plain,wipe,explode,fade", defaultValue="plain")
+    public void setToggleType(String toggleType) {
+        this.toggleType = toggleType;
+    }
+    
+    private String format(Object obj) {
+        if(obj == null)
+            return null;
+
+        if(obj instanceof Date) {
+            return RFC3399_FORMAT.format((Date) obj);
+        } else {
+            // try to parse a date
+            String dateStr = obj.toString();
+            if(dateStr.equalsIgnoreCase("today"))
+                return  RFC3399_FORMAT.format(new Date());
+
+            try {
+                Date date = null;
+                if(this.displayFormat != null) {
+                    SimpleDateFormat format = new SimpleDateFormat(
+                            this.displayFormat);
+                    date = format.parse(dateStr);
+                } else {
+                    // last resource
+                    date = SimpleDateFormat.getInstance().parse(dateStr);
+                }
+                return RFC3399_FORMAT.format(date);
+            } catch (ParseException e) {
+                LOG.error("Could not parse date", e);
+                return dateStr;
+            }
+        }
     }
 
 }

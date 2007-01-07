@@ -18,10 +18,9 @@ import org.apache.struts2.views.velocity.components.CheckBoxListDirective;
 import org.apache.struts2.views.velocity.components.ComboBoxDirective;
 import org.apache.struts2.views.velocity.components.ComponentDirective;
 import org.apache.struts2.views.velocity.components.DateDirective;
-import org.apache.struts2.views.velocity.components.DatePickerDirective;
 import org.apache.struts2.views.velocity.components.DivDirective;
 import org.apache.struts2.views.velocity.components.DoubleSelectDirective;
-import org.apache.struts2.views.velocity.components.DropdownDateTimePickerDirective;
+import org.apache.struts2.views.velocity.components.DateTimePickerDirective;
 import org.apache.struts2.views.velocity.components.FieldErrorDirective;
 import org.apache.struts2.views.velocity.components.FileDirective;
 import org.apache.struts2.views.velocity.components.FormDirective;
@@ -73,8 +72,7 @@ public class DefaultTagLibrary implements TagLibrary {
             ComboBoxDirective.class,
             ComponentDirective.class,
             DateDirective.class,
-            DatePickerDirective.class,
-            DropdownDateTimePickerDirective.class,
+            DateTimePickerDirective.class,
             DivDirective.class,
             AutocompleterDirective.class,
             DoubleSelectDirective.class,

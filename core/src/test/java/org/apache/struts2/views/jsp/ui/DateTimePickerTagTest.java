@@ -25,7 +25,7 @@ import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 /**
  */
-public class DatePickerTagTest extends AbstractUITagTest {
+public class DateTimePickerTagTest extends AbstractUITagTest {
 
 
     public void testGenericSimple() throws Exception {
@@ -44,7 +44,7 @@ public class DatePickerTagTest extends AbstractUITagTest {
     }
 
     public void testSimple() throws Exception {
-        DatePickerTag tag = new DatePickerTag();
+        DateTimePickerTag tag = new DateTimePickerTag();
         tag.setPageContext(pageContext);
 
         tag.setId("id");
@@ -62,7 +62,7 @@ public class DatePickerTagTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        verify(DatePickerTagTest.class.getResource("DatePickerTagTest-1.txt"));
+        verify(DateTimePickerTagTest.class.getResource("DateTimePickerTagTest-1.txt"));
     }
 
 }

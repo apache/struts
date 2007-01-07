@@ -24,14 +24,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.components.Component;
-import org.apache.struts2.components.DatePicker;
+import org.apache.struts2.components.DateTimePicker;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
- * @see DatePicker
+ * @see DateTimePicker
  */
-public class DatePickerTag extends AbstractUITag {
+public class DateTimePickerTag extends AbstractUITag {
 
     private static final long serialVersionUID = 4054114507143447232L;
 
@@ -43,23 +43,36 @@ public class DatePickerTag extends AbstractUITag {
     protected String staticDisplay;
     protected String dayWidth;
     protected String language;
+    
+    protected String iconPath;
+    protected String formatLength;
+    protected String displayFormat;
+    protected String toggleType;
+    protected String toggleDuration;
+    protected String type;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
-        return new DatePicker(stack, req, res);
+        return new DateTimePicker(stack, req, res);
     }
 
     protected void populateParams() {
         super.populateParams();
 
-        final DatePicker datePicker = (DatePicker) component;
-        datePicker.setAdjustWeeks(adjustWeeks);
-        datePicker.setDayWidth(dayWidth);
-        datePicker.setDisplayWeeks(displayWeeks);
-        datePicker.setEndDate(endDate);
-        datePicker.setStartDate(startDate);
-        datePicker.setStaticDisplay(staticDisplay);
-        datePicker.setWeekStartsOn(weekStartsOn);
-        datePicker.setLanguage(language);
+        final DateTimePicker dateTimePicker = (DateTimePicker) component;
+        dateTimePicker.setAdjustWeeks(adjustWeeks);
+        dateTimePicker.setDayWidth(dayWidth);
+        dateTimePicker.setDisplayWeeks(displayWeeks);
+        dateTimePicker.setEndDate(endDate);
+        dateTimePicker.setStartDate(startDate);
+        dateTimePicker.setStaticDisplay(staticDisplay);
+        dateTimePicker.setWeekStartsOn(weekStartsOn);
+        dateTimePicker.setLanguage(language);
+        dateTimePicker.setIconPath(iconPath);
+        dateTimePicker.setFormatLength(formatLength);
+        dateTimePicker.setDisplayFormat(displayFormat);
+        dateTimePicker.setToggleType(toggleType);
+        dateTimePicker.setToggleDuration(toggleDuration);
+        dateTimePicker.setType(type);
     }
 
     public void setAdjustWeeks(String adjustWeeks) {
@@ -92,5 +105,29 @@ public class DatePickerTag extends AbstractUITag {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+    
+    public void setDisplayFormat(String displayFormat) {
+        this.displayFormat = displayFormat;
+    }
+
+    public void setFormatLength(String formatLength) {
+        this.formatLength = formatLength;
+    }
+
+    public void setIconPath(String iconPath) {
+        this.iconPath = iconPath;
+    }
+
+    public void setToggleDuration(String toggleDuration) {
+        this.toggleDuration = toggleDuration;
+    }
+
+    public void setToggleType(String toggleType) {
+        this.toggleType = toggleType;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

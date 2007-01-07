@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -159,10 +161,8 @@ public class UpDownSelect extends Select {
     public String getAllowMoveUp() {
         return allowMoveUp;
     }
-    /**
-     * Whether move up button should be displayed
-     * @s.tagattribute required="false" type="Boolean" default="true"
-     */
+
+    @StrutsTagAttribute(description="Whether move up button should be displayed", type="Boolean", defaultValue="true")
     public void setAllowMoveUp(String allowMoveUp) {
         this.allowMoveUp = allowMoveUp;
     }
@@ -172,10 +172,8 @@ public class UpDownSelect extends Select {
     public String getAllowMoveDown() {
         return allowMoveDown;
     }
-    /**
-     * Whether move down button should be displayed
-     * @s.tagattribute required="false" type="Boolean" default="true"
-     */
+
+    @StrutsTagAttribute(description="Whether move down button should be displayed", type="Boolean", defaultValue="true")
     public void setAllowMoveDown(String allowMoveDown) {
         this.allowMoveDown = allowMoveDown;
     }
@@ -185,10 +183,8 @@ public class UpDownSelect extends Select {
     public String getAllowSelectAll() {
         return allowSelectAll;
     }
-    /**
-     * Whether or not select all button should be displayed
-     * @s.tagattribute required="false" type="Boolean" default="true"
-     */
+
+    @StrutsTagAttribute(description="Whether or not select all button should be displayed", type="Boolean", defaultValue="true")
     public void setAllowSelectAll(String allowSelectAll) {
         this.allowSelectAll = allowSelectAll;
     }
@@ -197,10 +193,8 @@ public class UpDownSelect extends Select {
     public String getMoveUpLabel() {
         return moveUpLabel;
     }
-    /**
-     * Text to display on the move up button
-     * @s.tagattribute required="false" type="String" default="^"
-     */
+
+    @StrutsTagAttribute(description="Text to display on the move up button", defaultValue="^")
     public void setMoveUpLabel(String moveUpLabel) {
         this.moveUpLabel = moveUpLabel;
     }
@@ -210,10 +204,8 @@ public class UpDownSelect extends Select {
     public String getMoveDownLabel() {
         return moveDownLabel;
     }
-    /**
-     * Text to display on the move down button
-     * @s.tagattribute required="false" type="String" default="v"
-     */
+
+    @StrutsTagAttribute(description="Text to display on the move down button", defaultValue="v")
     public void setMoveDownLabel(String moveDownLabel) {
         this.moveDownLabel = moveDownLabel;
     }
@@ -223,10 +215,8 @@ public class UpDownSelect extends Select {
     public String getSelectAllLabel() {
         return selectAllLabel;
     }
-    /**
-     * Text to display on the select all button
-     * @s.tagattribute required="false" type="String" default="*"
-     */
+
+    @StrutsTagAttribute(description="Text to display on the select all button", defaultValue="*")
     public void setSelectAllLabel(String selectAllLabel) {
         this.selectAllLabel = selectAllLabel;
     }

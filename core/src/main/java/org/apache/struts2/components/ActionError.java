@@ -23,6 +23,8 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -46,9 +48,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="actionerror" tld-body-content="empty" tld-tag-class="org.apache.struts2.views.jsp.ui.ActionErrorTag"
- * description="Render action errors if they exists"
  */
+@StrutsTag(name="actionerror", tldBodyContent="empty", tldTagClass="org.apache.struts2.views.jsp.ui.ActionErrorTag", description="Render action errors if they exists")
 public class ActionError extends UIBean {
 
     public static final String TEMPLATE = "actionerror";

@@ -30,6 +30,8 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.TextProvider;
@@ -135,10 +137,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <code>Date</code>
  *
- * @s.tag name="date" tld-body-content="empty"
- *         tld-tag-class="org.apache.struts2.views.jsp.DateTag"
- *         description="Render a formatted date."
  */
+@StrutsTag(name="date", tldBodyContent="empty", tldTagClass="org.apache.struts2.views.jsp.DateTag", description="Render a formatted date.")
 public class Date extends Component {
 
     private static final Log LOG = LogFactory.getLog(Date.class);
@@ -336,20 +336,12 @@ public class Date extends Component {
         return super.end(writer, "");
     }
 
-    /**
-     * Date or DateTime format pattern
-     *
-     * @s.tagattribute required="false" rtexprvalue="false"
-     */
+    @StrutsTagAttribute(description="Date or DateTime format pattern", rtexprvalue=false)
     public void setFormat(String format) {
         this.format = format;
     }
 
-    /**
-     * Whether to print out the date nicely
-     *
-     * @s.tagattribute required="false" type="Boolean" default="false"
-     */
+    @StrutsTagAttribute(description="Whether to print out the date nicely", type="Boolean", defaultValue="false")
     public void setNice(boolean nice) {
         this.nice = nice;
     }
@@ -361,11 +353,7 @@ public class Date extends Component {
         return name;
     }
 
-    /**
-     * The date value to format
-     *
-     * @s.tagattribute required="true" type="String"
-     */
+    @StrutsTagAttribute(description="The date value to format", required=true)
     public void setName(String name) {
         this.name = name;
     }

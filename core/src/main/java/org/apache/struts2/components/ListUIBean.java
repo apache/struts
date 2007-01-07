@@ -27,6 +27,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTagAttribute;
 import org.apache.struts2.util.ContainUtil;
 import org.apache.struts2.util.MakeIterator;
 
@@ -128,26 +129,18 @@ public abstract class ListUIBean extends UIBean {
         return null; // don't convert nameValue to anything, we need the raw value
     }
 
-    /**
-     * Iterable source to populate from. If the list is a Map (key, value), the Map key will become the option "value" parameter and the Map value will become the option body.
-     * @s.tagattribute required="true"
-     */
+    @StrutsTagAttribute(description="Iterable source to populate from. If the list is a Map (key, value), the Map key will become the option 'value'" +
+                " parameter and the Map value will become the option body.", required=true)
     public void setList(Object list) {
         this.list = list;
     }
 
-    /**
-     * Property of list objects to get field value from
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description=" Property of list objects to get field value from")
     public void setListKey(String listKey) {
         this.listKey = listKey;
     }
 
-    /**
-     * Property of list objects to get field content from
-     * @s.tagattribute required="false"
-      */
+    @StrutsTagAttribute(description="Property of list objects to get field content from")
     public void setListValue(String listValue) {
         this.listValue = listValue;
     }

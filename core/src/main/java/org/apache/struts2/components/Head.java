@@ -23,6 +23,8 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsConstants;
 
 import com.opensymphony.xwork2.inject.Inject;
@@ -74,9 +76,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example3 -->
  * </pre>
  *
- * @s.tag name="head" tld-body-content="empty" tld-tag-class="org.apache.struts2.views.jsp.ui.HeadTag"
- * description="Render a chunk of HEAD for your HTML file"
  */
+@StrutsTag(name="head", tldBodyContent="empty", tldTagClass="org.apache.struts2.views.jsp.ui.HeadTag",
+    description="Render a chunk of HEAD for your HTML file")
 public class Head extends UIBean {
     public static final String TEMPLATE = "head";
 
@@ -91,7 +93,7 @@ public class Head extends UIBean {
     protected String getDefaultTemplate() {
         return TEMPLATE;
     }
-    
+
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public void setEncoding(String encoding) {
         this.encoding = encoding;
@@ -119,11 +121,9 @@ public class Head extends UIBean {
         return calendarcss;
     }
 
-    /**
-     * The jscalendar css theme to use" default="calendar-blue.css
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The jscalendar css theme to use", defaultValue="calendar-blue.css")
     public void setCalendarcss(String calendarcss) {
+        //TODO remove this one
         this.calendarcss = calendarcss;
     }
 
@@ -131,10 +131,7 @@ public class Head extends UIBean {
         return debug;
     }
 
-    /**
-     * Set to true to enable debugging mode for AJAX themes
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set to true to enable debugging mode for AJAX themes")
     public void setDebug(boolean debug) {
         this.debug = debug;
     }

@@ -23,6 +23,9 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -49,9 +52,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="label" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.LabelTag"
- * description="Render a label that displays read-only information"
  */
+@StrutsTag(name="label", tldTagClass="org.apache.struts2.views.jsp.ui.LabelTag", description="Render a label that displays" +
+                " read-only information")
 public class Label extends UIBean {
     final public static String TEMPLATE = "label";
 
@@ -85,10 +88,7 @@ public class Label extends UIBean {
         }
     }
 
-    /**
-     * HTML for attribute
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description=" HTML for attribute")
     public void setFor(String forAttr) {
         this.forAttr = forAttr;
     }

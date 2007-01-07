@@ -23,6 +23,7 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
 import org.apache.struts2.util.ContainUtil;
 
 import com.opensymphony.xwork2.util.ValueStack;
@@ -108,9 +109,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <!-- END SNIPPET: note -->
  *
- * @s.tag name="component" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.ComponentTag"
- * description="Render a custom ui widget"
  */
+@StrutsTag(name="component", tldTagClass="org.apache.struts2.views.jsp.ui.ComponentTag", description="Render a custom ui widget")
 public class GenericUIBean extends UIBean {
     private final static String TEMPLATE = "empty";
 

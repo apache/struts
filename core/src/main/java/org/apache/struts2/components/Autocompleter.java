@@ -23,6 +23,9 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -76,9 +79,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  *      <li>request: request javascript object, when type='load' or type='error'</li>
  * <ul>
  *
- * @s.tag name="autocompleter" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.AutocompleterTag"
- *        description="Renders a combobox with autocomplete and AJAX capabilities"
  */
+@StrutsTag(name="autocompleter", tldTagClass="org.apache.struts2.views.jsp.ui.AutocompleterTag", description="Renders a combobox with autocomplete and AJAX capabilities")
 public class Autocompleter extends ComboBox {
     public static final String TEMPLATE = "autocompleter";
     final private static String COMPONENT_NAME = Autocompleter.class.getName();
@@ -168,136 +170,83 @@ public class Autocompleter extends ComboBox {
         return (list != null) ? findValue(list, Object.class) : null;
     }
 
-    /**
-     * sets if combobox must perform autocomplete
-     * @s.tagattribute required="false" type="Boolean" default="true"
-     */
+    @StrutsTagAttribute(description="Whether autocompleter should make suggestion on the textbox", type="Boolean", defaultValue="false")
     public void setAutoComplete(String autoComplete) {
         this.autoComplete = autoComplete;
     }
 
-    /**
-     * sets combobox to enabled or disabled
-     * @s.tagattribute required="false" type="Boolean" default="false"
-     */
+    @StrutsTagAttribute(description="Enable or disable autocompleter", type="Boolean", defaultValue="false")
     public void setDisabled(String disabled) {
         this.disabled = disabled;
     }
 
-    /**
-     * sets if user can enter a value that is not in a list
-     * @s.tagattribute required="false" type="Boolean" default="false"
-     */
+    @StrutsTagAttribute(description="Force selection to be one of the options", type="Boolean", defaultValue="false")
     public void setForceValidOption(String forceValidOption) {
         this.forceValidOption = forceValidOption;
     }
 
-    /**
-     * The URL to call to obtain the content
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description="The URL used to load the options")
     public void setHref(String href) {
         this.href = href;
     }
 
-    /**
-     * set delay before making the search
-     * @s.tagattribute required="false" type="Integer" default="100"
-     */
+    @StrutsTagAttribute(description="Delay before making the search", type="Integer", defaultValue="100")
     public void setDelay(String searchDelay) {
         this.delay = searchDelay;
     }
 
-
-    /**
-     * set how the search must be performed, options are: "startstring", "startword" and "substring"
-     * @s.tagattribute required="false" default="stringstart" type="String"
-     */
+    @StrutsTagAttribute(description="how the search must be performed, options are: 'startstring', 'startword' " +
+                "and 'substring'", defaultValue="stringstart")
     public void setSearchType(String searchType) {
         this.searchType = searchType;
     }
 
-    /**
-     * set the height of the dropdown in pixels
-     * @s.tagattribute required="false" default="120" type="Integer"
-     */
+    @StrutsTagAttribute(description="Dropdown's height in pixels", type="Integer", defaultValue="120")
     public void setDropdownHeight(String height) {
         this.dropdownHeight = height;
     }
 
-    /**
-     * set the width of the drodown, by default the same as the combobox
-     * @s.tagattribute required="false" type="Integer"
-     */
+    @StrutsTagAttribute(description="Dropdown's width", type="Integer", defaultValue="same as textbox")
     public void setDropdownWidth(String width) {
         this.dropdownWidth = width;
     }
 
-    /**
-     * Function name used to filter the fields of the form.
-     * This function takes as a parameter the element and returns true if the element
-     * must be included.
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description="Function name used to filter the fields of the form")
     public void setFormFilter(String formFilter) {
       this.formFilter = formFilter;
     }
 
-    /**
-     * Form id whose fields will be serialized and passed as parameters
-     *
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description="Form id whose fields will be serialized and passed as parameters")
     public void setFormId(String formId) {
       this.formId = formId;
     }
 
-    /**
-     * Topic that will trigger a re-fetch
-     *
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description="Topic that will trigger a reload")
     public void setListenTopics(String listenTopics) {
       this.listenTopics = listenTopics;
     }
 
-    /**
-     * Topic that will be published when content is fetched.
-     * New Value is passed as parameter.
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description="Topics that will be published when content is reloaded")
     public void setNotifyTopics(String onValueChangedPublishTopic) {
       this.notifyTopics = onValueChangedPublishTopic;
     }
 
-    /**
-     * Id of element that will be shown while request is made
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description="Id of element that will be shown while request is made")
     public void setIndicator(String indicator) {
         this.indicator = indicator;
     }
 
-    /**
-     * Minimum number of characters that will force the content to be loaded
-     * @s.tagattribute required="false" type="Integer" default="3"
-     */
+    @StrutsTagAttribute(description="Minimum number of characters that will force the content to be loaded", type="Integer", defaultValue="3")
     public void setLoadMinimumCount(String loadMinimumCount) {
         this.loadMinimumCount = loadMinimumCount;
     }
 
-    /**
-     * Options will be reloaded everytime a character is typed on the textbox.
-     * @s.tagattribute required="false" type="Boolean" default="false"
-     */
+    @StrutsTagAttribute(description="Options will be reloaded everytime a character is typed on the textbox", type="Boolean", defaultValue="true")
     public void setLoadOnTextChange(String loadOnType) {
         this.loadOnTextChange = loadOnType;
     }
 
-    /**
-     * Show or hide the down arrow button
-     * @s.tagattribute required="false" type="Boolean" default="true"
-     */
+    @StrutsTagAttribute(description="Show or hide the down arrow button", type="Boolean", defaultValue="true")
     public void setShowDownArrow(String showDownArrow) {
         this.showDownArrow = showDownArrow;
     }

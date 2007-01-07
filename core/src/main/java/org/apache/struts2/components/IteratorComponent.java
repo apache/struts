@@ -23,6 +23,8 @@ package org.apache.struts2.components;
 import java.io.Writer;
 import java.util.Iterator;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.views.jsp.IteratorStatus;
 
@@ -179,9 +181,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example5code -->
  * </pre>
  *
- * @s.tag name="iterator" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.IteratorTag"
- * description="Iterate over a iterable value"
  */
+@StrutsTag(name="iterator", tldTagClass="org.apache.struts2.views.jsp.IteratorTag", description="Iterate over a iterable value")
 public class IteratorComponent extends Component {
     protected Iterator iterator;
     protected IteratorStatus status;
@@ -274,18 +275,13 @@ public class IteratorComponent extends Component {
         }
     }
 
-    /**
-     * if specified, an instanceof IteratorStatus will be pushed into stack upon each iteration
-     * @s.tagattribute required="false" type="Boolean" default="false"
-     */
+    @StrutsTagAttribute(description="If specified, an instanceof IteratorStatus will be pushed into stack upon each iteration",
+        type="Boolean", defaultValue="false")
     public void setStatus(String status) {
         this.statusAttr = status;
     }
 
-    /**
-     * the iteratable source to iterate over, else an the object itself will be put into a newly created List
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="the iteratable source to iterate over, else an the object itself will be put into a newly created List")
     public void setValue(String value) {
         this.value = value;
     }

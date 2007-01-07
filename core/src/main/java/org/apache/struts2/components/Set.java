@@ -22,6 +22,9 @@ package org.apache.struts2.components;
 
 import java.io.Writer;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -71,9 +74,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="set" tld-body-content="empty" tld-tag-class="org.apache.struts2.views.jsp.SetTag"
- * description="Assigns a value to a variable in a specified scope"
  */
+@StrutsTag(name="set", tldBodyContent="empty", tldTagClass="org.apache.struts2.views.jsp.SetTag", description="Assigns a value to a variable in a specified scope")
 public class Set extends Component {
     protected String name;
     protected String scope;
@@ -119,26 +121,18 @@ public class Set extends Component {
         return super.end(writer, body);
     }
 
-    /**
-     * The name of the new variable that is assigned the value of <i>value</i>
-     * @s.tagattribute required="true" type="String"
-     */
+    @StrutsTagAttribute(description=" The name of the new variable that is assigned the value of <i>value</i>", required=true)
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * The scope in which to assign the variable. Can be <b>application</b>, <b>session</b>, <b>request</b>, <b>page</b>, or <b>action</b>.
-     * @s.tagattribute required="false" type="String" default="action"
-     */
+    @StrutsTagAttribute(description="The scope in which to assign the variable. Can be <b>application</b>" +
+                ", <b>session</b>, <b>request</b>, <b>page</b>, or <b>action</b>.", defaultValue="action")
     public void setScope(String scope) {
         this.scope = scope;
     }
 
-    /**
-     * The value that is assigned to the variable named <i>name</i>
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The value that is assigned to the variable named <i>name</i>")
     public void setValue(String value) {
         this.value = value;
     }

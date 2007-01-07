@@ -31,16 +31,15 @@ import javax.swing.table.TableModel;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.components.GenericUIBean;
 import org.apache.struts2.components.table.renderer.CellRenderer;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
-/**
- * @s.tag name="table" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.table.WebTableTag"
- * description="Instantiate a JavaBean and place it in the context."
- */
+@StrutsTag(name="table", tldTagClass="org.apache.struts2.views.jsp.ui.table.WebTableTag", description="Instantiate a JavaBean and place it in the context")
 public class WebTable extends GenericUIBean {
     private static final Log LOG = LogFactory.getLog(WebTable.class);
 
@@ -247,10 +246,7 @@ public class WebTable extends GenericUIBean {
         return new WebTableRowIterator(this);
     }
 
-    /**
-     * Index of column to sort data by
-     * @s.tagattribute required="false" type="Integer"
-     */
+    @StrutsTagAttribute(description="Index of column to sort data by", type="Integer")
     public void setSortColumn(int sortColumn) {
         this.sortColumn = sortColumn;
     }
@@ -267,10 +263,7 @@ public class WebTable extends GenericUIBean {
         return "WEBTABLE_" + modelName + "_SORT_COLUMN";
     }
 
-    /**
-     * Set sort order. Allowed values are NONE, ASC and DESC
-     * @s.tagattribute required="false" type="String" default="NONE"
-     */
+    @StrutsTagAttribute(description="Set sort order. Allowed values are NONE, ASC and DESC", defaultValue="NONE")
     public void setSortOrder(String sortOrder) {
         if (sortOrder.equals(SortableTableModel.NONE)) {
             this.sortOrder = SortableTableModel.NONE;
@@ -295,10 +288,8 @@ public class WebTable extends GenericUIBean {
         return "WEBTABLE_" + modelName + "_SORT_ORDER";
     }
 
-    /**
-     * Whether the table should be sortable. Requires that model implements org.apache.struts2.components.table.SortableTableModel if set to true.
-     * @s.tagattribute required="false" type="Boolean" default="false"
-     */
+    @StrutsTagAttribute(description="Whether the table should be sortable. Requires that model implements " +
+                "org.apache.struts2.components.table.SortableTableModel if set to true.", type="Boolean", defaultValue="false")
     public void setSortable(boolean sortable) {
         sortableAttr = sortable;
 

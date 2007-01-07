@@ -23,6 +23,9 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -99,9 +102,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  *       <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="div" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.DivTag"
- *        description="Render HTML div providing content from remote call via AJAX"
  */
+@StrutsTag(name="div", tldTagClass="org.apache.struts2.views.jsp.ui.DivTag", description="Render HTML div providing content from remote call via AJAX")
 public class Div extends AbstractRemoteCallUIBean {
 
     public static final String TEMPLATE = "div";
@@ -144,57 +146,38 @@ public class Div extends AbstractRemoteCallUIBean {
             addParameter("stopTimerListenTopics", findString(stopTimerListenTopics));
     }
 
-    /**
-     * Start timer automatically
-     *
-     * @s.tagattribute required="false" type="Boolean" default="true"
-     */
+    @StrutsTagAttribute(description="Start timer automatically", type="Boolean", defaultValue="true")
     public void setAutoStart(String autoStart) {
         this.autoStart = autoStart;
     }
 
-    /**
-     * How long to wait before fetching the content (in milliseconds)
-     *
-     * @s.tagattribute required="false" type="Integer" default="0"
-     */
+    @StrutsTagAttribute(description="How long to wait before fetching the content (in milliseconds)",  type="Integer")
     public void setDelay(String delay) {
         this.delay = delay;
     }
 
-    /**
-     * How often to re-fetch the content (in milliseconds)
-     *
-     * @s.tagattribute required="false" type="Integer" default="0"
-     */
+    @StrutsTagAttribute(description="How often to reload the content (in milliseconds)", type="Integer")
     public void setUpdateFreq(String updateInterval) {
         this.updateFreq = updateInterval;
     }
 
-    /**
-     * Topic that will start the timer (for autoupdate)
-     *
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description="Topics that will start the timer (for autoupdate)")
     public void setStartTimerListenTopics(String startTimerListenTopic) {
         this.startTimerListenTopics = startTimerListenTopic;
     }
 
-    /**
-     * Topic that will stop the timer (for autoupdate)
-     *
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description="Topics that will stop the timer (for autoupdate)")
     public void setStopTimerListenTopics(String stopTimerListenTopic) {
         this.stopTimerListenTopics = stopTimerListenTopic;
     }
 
-    /**
-     * Content will be loaded when div becomes visible
-     *
-     * @s.tagattribute required="false" type="String" default="false"
-     */
+    @StrutsTagAttribute(description="Content will be loaded when div becomes visible, used only inside tabbedPanel", type="Boolean", defaultValue="false")
     public void setRefreshOnShow(String refreshOnShow) {
         this.refreshOnShow = refreshOnShow;
+    }
+
+    @StrutsTagAttribute(description="Deprecated. Use 'notifyTopics'. Javascript code execute after reload")
+    public void setAfterLoading(String afterLoading) {
+        this.afterLoading = afterLoading;
     }
 }

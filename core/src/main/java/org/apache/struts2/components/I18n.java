@@ -24,6 +24,8 @@ import java.io.Writer;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsException;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -76,9 +78,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: i18nExample -->
  * </pre>
  *
- * @s.tag name="i18n" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.I18nTag"
- * description="Get a resource bundle and place it on the value stack"
  */
+@StrutsTag(name="i18n", tldTagClass="org.apache.struts2.views.jsp.I18nTag", description="Get a resource bundle" +
+                " and place it on the value stack")
 public class I18n extends Component {
     protected boolean pushed;
     protected String name;
@@ -123,10 +125,7 @@ public class I18n extends Component {
         return super.end(writer, body);
     }
 
-    /**
-     * Name of ressource bundle to use (eg foo/bar/customBundle)
-     * @s.tagattribute required="true" default="String"
-     */
+    @StrutsTagAttribute(description="Name of ressource bundle to use (eg foo/bar/customBundle)", required=true, defaultValue="String")
     public void setName(String name) {
         this.name = name;
     }

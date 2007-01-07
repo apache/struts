@@ -42,6 +42,8 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.util.FastByteArrayOutputStream;
@@ -90,9 +92,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: exampledescription -->
  * </pre>
  *
- * @s.tag name="include" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.IncludeTag"
- * description="Include a servlet's output (result of servlet or a JSP page)"
  */
+@StrutsTag(name="include", tldTagClass="org.apache.struts2.views.jsp.IncludeTag", description="Include a servlet's output " +
+                "(result of servlet or a JSP page)")
 public class Include extends Component {
 
     private static final Log _log = LogFactory.getLog(Include.class);
@@ -110,7 +112,7 @@ public class Include extends Component {
         this.req = req;
         this.res = res;
     }
-    
+
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public static void setDefaultEncoding(String encoding) {
         defaultEncoding = encoding;
@@ -165,10 +167,7 @@ public class Include extends Component {
         return super.end(writer, body);
     }
 
-    /**
-     * The jsp/servlet output to include
-     * @s.tagattribute required="true" type="String"
-     */
+    @StrutsTagAttribute(description="The jsp/servlet output to include", required=true)
     public void setValue(String value) {
         this.value = value;
     }

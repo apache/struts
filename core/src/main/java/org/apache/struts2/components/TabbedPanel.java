@@ -23,6 +23,9 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -53,9 +56,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="tabbedPanel" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TabbedPanelTag"
- * description="Render a tabbedPanel widget."
  */
+@StrutsTag(name="tabbedPanel", tldTagClass="org.apache.struts2.views.jsp.ui.TabbedPanelTag", description="Render a tabbedPanel widget.")
 public class TabbedPanel extends ClosingUIBean {
     public static final String TEMPLATE = "tabbedpanel";
     public static final String TEMPLATE_CLOSE = "tabbedpanel-close";
@@ -101,36 +103,24 @@ public class TabbedPanel extends ClosingUIBean {
         return COMPONENT_NAME;
     }
 
-    /**
-     * The id to assign to the component.
-     * @s.tagattribute required="true" type="String"
-     */
+    @StrutsTagAttribute(description="The id to assign to the component.", required=true)
     public void setId(String id) {
         // This is required to override tld generation attributes to required=true
         super.setId(id);
     }
 
 
-    /**
-     * The id of the tab that will be selected by default
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description=" The id of the tab that will be selected by default")
     public void setSelectedTab(String selectedTab) {
       this.selectedTab = selectedTab;
     }
 
-    /**
-     * Where the close button will be placed, possible values are "tab" and "pane"
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description="Where the close button will be placed, possible values are 'tab' and 'pane'")
     public void setCloseButton(String closeButton) {
         this.closeButton = closeButton;
     }
 
-    /**
-     * If doLayout is false, the tab container's height equals the height of the currently selected tab
-     * @s.tagattribute required="false" default="false" type="Boolean"
-     */
+    @StrutsTagAttribute(description="If doLayout is false, the tab container's height equals the height of the currently selected tab", type="Boolean", defaultValue="false")
     public void setDoLayout(String doLayout) {
         this.doLayout = doLayout;
     }

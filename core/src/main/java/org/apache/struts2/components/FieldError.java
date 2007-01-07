@@ -26,6 +26,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
 import org.apache.struts2.components.Param.UnnamedParametric;
 
 import com.opensymphony.xwork2.util.ValueStack;
@@ -80,9 +81,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: description -->
  * </pre>
  *
- * @s.tag name="fielderror" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.FieldErrorTag"
- * description="Render field error (all or partial depending on param tag nested)if they exists"
  */
+@StrutsTag(name="fielderror", tldTagClass="org.apache.struts2.views.jsp.ui.FieldErrorTag", description="Render field error (all " +
+                "or partial depending on param tag nested)if they exists")
 public class FieldError extends UIBean implements UnnamedParametric {
 
     private List errorFieldNames = new ArrayList();

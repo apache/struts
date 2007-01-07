@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
@@ -877,19 +878,12 @@ public abstract class UIBean extends Component {
         }
     }
 
-
-    /**
-     * The template directory.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The template directory.")
     public void setTemplateDir(String templateDir) {
         this.templateDir = templateDir;
     }
 
-    /**
-     * The theme (other than default) to use for rendering the element
-     * @s.tagattribute required="false"
-      */
+    @StrutsTagAttribute(description="The theme (other than default) to use for rendering the element")
     public void setTheme(String theme) {
         this.theme = theme;
     }
@@ -898,242 +892,152 @@ public abstract class UIBean extends Component {
         return template;
     }
 
-    /**
-     * The template (other than default) to use for rendering the element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The template (other than default) to use for rendering the element")
     public void setTemplate(String template) {
         this.template = template;
     }
 
-    /**
-     * The css class to use for element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The css class to use for element")
     public void setCssClass(String cssClass) {
         this.cssClass = cssClass;
     }
 
-    /**
-     * The css style definitions for element ro use
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The css style definitions for element ro use")
     public void setCssStyle(String cssStyle) {
         this.cssStyle = cssStyle;
     }
 
-    /**
-     * Set the html title attribute on rendered html element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the html title attribute on rendered html element")
     public void setTitle(String title) {
         this.title = title;
     }
 
-    /**
-     * Set the html disabled attribute on rendered html element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the html disabled attribute on rendered html element")
     public void setDisabled(String disabled) {
         this.disabled = disabled;
     }
 
-    /**
-     * Label expression used for rendering a element specific label
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Label expression used for rendering a element specific label")
     public void setLabel(String label) {
         this.label = label;
     }
 
-    /**
-     * define label position of form element (top/left)
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Define label position of form element (top/left)")
     public void setLabelposition(String labelPosition) {
         this.labelPosition = labelPosition;
     }
 
-    /**
-     * define required position of required form element (left|right)
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Define required position of required form element (left|right)")
     public void setRequiredposition(String requiredposition) {
         this.requiredposition = requiredposition;
     }
 
-    /**
-     * The name to set for element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The name to set for element")
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * If set to true, the rendered element will indicate that input is required
-     * @s.tagattribute  required="false" type="Boolean" default="false"
-     */
+    @StrutsTagAttribute(description="If set to true, the rendered element will indicate that input is required", type="Boolean", defaultValue="false")
     public void setRequired(String required) {
         this.required = required;
     }
 
-    /**
-     * Set the html tabindex attribute on rendered html element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the html tabindex attribute on rendered html element")
     public void setTabindex(String tabindex) {
         this.tabindex = tabindex;
     }
 
-    /**
-     * Preset the value of input element.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Preset the value of input element.")
     public void setValue(String value) {
         this.value = value;
     }
 
-    /**
-     * Set the html onclick attribute on rendered html element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the html onclick attribute on rendered html element")
     public void setOnclick(String onclick) {
         this.onclick = onclick;
     }
 
-    /**
-     * Set the html ondblclick attribute on rendered html element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the html ondblclick attribute on rendered html element")
     public void setOndblclick(String ondblclick) {
         this.ondblclick = ondblclick;
     }
 
-    /**
-     * Set the html onmousedown attribute on rendered html element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the html onmousedown attribute on rendered html element")
     public void setOnmousedown(String onmousedown) {
         this.onmousedown = onmousedown;
     }
 
-    /**
-     * Set the html onmouseup attribute on rendered html element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the html onmouseup attribute on rendered html element")
     public void setOnmouseup(String onmouseup) {
         this.onmouseup = onmouseup;
     }
 
-    /**
-     * Set the html onmouseover attribute on rendered html element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the html onmouseover attribute on rendered html element")
     public void setOnmouseover(String onmouseover) {
         this.onmouseover = onmouseover;
     }
 
-    /**
-     * Set the html onmousemove attribute on rendered html element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the html onmousemove attribute on rendered html element")
     public void setOnmousemove(String onmousemove) {
         this.onmousemove = onmousemove;
     }
 
-    /**
-     * Set the html onmouseout attribute on rendered html element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the html onmouseout attribute on rendered html element")
     public void setOnmouseout(String onmouseout) {
         this.onmouseout = onmouseout;
     }
 
-    /**
-     * Set the html onfocus attribute on rendered html element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the html onfocus attribute on rendered html element")
     public void setOnfocus(String onfocus) {
         this.onfocus = onfocus;
     }
 
-    /**
-     * Set the html onblur attribute on rendered html element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description=" Set the html onblur attribute on rendered html element")
     public void setOnblur(String onblur) {
         this.onblur = onblur;
     }
 
-    /**
-     * Set the html onkeypress attribute on rendered html element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the html onkeypress attribute on rendered html element")
     public void setOnkeypress(String onkeypress) {
         this.onkeypress = onkeypress;
     }
 
-    /**
-     * Set the html onkeydown attribute on rendered html element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the html onkeydown attribute on rendered html element")
     public void setOnkeydown(String onkeydown) {
         this.onkeydown = onkeydown;
     }
 
-    /**
-     * Set the html onkeyup attribute on rendered html element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the html onkeyup attribute on rendered html element")
     public void setOnkeyup(String onkeyup) {
         this.onkeyup = onkeyup;
     }
 
-    /**
-     * Set the html onselect attribute on rendered html element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the html onselect attribute on rendered html element")
     public void setOnselect(String onselect) {
         this.onselect = onselect;
     }
 
-    /**
-     * Set the html onchange attribute on rendered html element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the html onchange attribute on rendered html element")
     public void setOnchange(String onchange) {
         this.onchange = onchange;
     }
 
-    /**
-     * Set the html accesskey attribute on rendered html element
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the html accesskey attribute on rendered html element")
     public void setAccesskey(String accesskey) {
         this.accesskey = accesskey;
     }
 
-    /**
-     * Set the tooltip of this particular component
-     * @s.tagattribute required="false" type="String" default=""
-     */
+    @StrutsTagAttribute(description="Set the tooltip of this particular component")
     public void setTooltip(String tooltip) {
         this.tooltip = tooltip;
     }
 
-    /**
-     * Set the tooltip configuration
-     * @s.tagattribute required="false" type="String" default=""
-     */
+    @StrutsTagAttribute(description="Set the tooltip configuration")
     public void setTooltipConfig(String tooltipConfig) {
         this.tooltipConfig = tooltipConfig;
     }
 
-    /**
-     * Set the key (name, value, label) for this particular component
-     * @s.tagattribute required="false" type="String" default=""
-     */
+    @StrutsTagAttribute(description="Set the key (name, value, label) for this particular component")
     public void setKey(String key) {
         this.key = key;
     }

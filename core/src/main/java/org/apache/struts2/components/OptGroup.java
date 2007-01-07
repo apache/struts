@@ -29,6 +29,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -65,9 +67,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="optgroup" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.OptGroupTag"
- * description="Renders a Select Tag's OptGroup Tag"
  */
+@StrutsTag(name="optgroup", tldTagClass="org.apache.struts2.views.jsp.ui.OptGroupTag", description="Renders a Select Tag's OptGroup Tag")
 public class OptGroup extends Component {
 
     public static final String INTERNAL_LIST_UI_BEAN_LIST_PARAMETER_KEY = "optGroupInternalListUiBeanList";
@@ -110,42 +111,27 @@ public class OptGroup extends Component {
         return false;
     }
 
-    /**
-     * Set the label attribute.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the label attribute")
     public void setLabel(String label) {
         internalUiBean.setLabel(label);
     }
 
-    /**
-     * Set the disable attribute.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the disable attribute.")
     public void setDisabled(String disabled) {
         internalUiBean.setDisabled(disabled);
     }
 
-    /**
-     * Set the list attribute.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the list attribute.")
     public void setList(String list) {
         internalUiBean.setList(list);
     }
 
-    /**
-     * Set the listKey attribute.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the listKey attribute.")
     public void setListKey(String listKey) {
         internalUiBean.setListKey(listKey);
     }
 
-    /**
-     * Set the listValue attribute.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the listValue attribute.")
     public void setListValue(String listValue) {
         internalUiBean.setListValue(listValue);
     }

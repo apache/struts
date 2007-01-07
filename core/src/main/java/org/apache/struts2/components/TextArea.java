@@ -23,6 +23,9 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -40,9 +43,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * @see TabbedPanel
  *
- * @s.tag name="textarea" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TextareaTag"
- * description="Render HTML textarea tag."
  */
+@StrutsTag(name="textarea", tldTagClass="org.apache.struts2.views.jsp.ui.TextareaTag", description="Render HTML textarea tag.")
 public class TextArea extends UIBean {
     final public static String TEMPLATE = "textarea";
 
@@ -79,34 +81,22 @@ public class TextArea extends UIBean {
         }
     }
 
-    /**
-     * HTML cols attribute
-     * @s.tagattribute required="false" type="Integer"
-     */
+    @StrutsTagAttribute(description="HTML cols attribute", type="Integer")
     public void setCols(String cols) {
         this.cols = cols;
     }
 
-    /**
-     * Whether the textarea is readonly
-     * @s.tagattribute required="false" type="Boolean" default="false"
-     */
+    @StrutsTagAttribute(description="Whether the textarea is readonly", type="Boolean", defaultValue="false")
     public void setReadonly(String readonly) {
         this.readonly = readonly;
     }
 
-    /**
-     * HTML rows attribute
-     * @s.tagattribute required="false" type="Integer"
-     */
+    @StrutsTagAttribute(description="HTML rows attribute", type="Integer")
     public void setRows(String rows) {
         this.rows = rows;
     }
 
-    /**
-     * HTML wrap attribute
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description="HTML wrap attribute")
     public void setWrap(String wrap) {
         this.wrap = wrap;
     }

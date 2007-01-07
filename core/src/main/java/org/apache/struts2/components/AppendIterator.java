@@ -27,6 +27,8 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 import org.apache.struts2.components.Param.UnnamedParametric;
 import org.apache.struts2.util.AppendIteratorFilter;
 import org.apache.struts2.util.MakeIterator;
@@ -112,9 +114,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * @see org.apache.struts2.util.AppendIteratorFilter
  * @see org.apache.struts2.views.jsp.iterator.AppendIteratorTag
  *
- * @s.tag name="append" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.iterator.AppendIteratorTag"
- * description="Append the values of a list of iterators to one iterator"
  */
+@StrutsTag(name="append", tldTagClass="org.apache.struts2.views.jsp.iterator.AppendIteratorTag", description="Append the values of a list of iterators to one iterator")
 public class AppendIterator extends Component implements UnnamedParametric {
 
     private static final Log _log = LogFactory.getLog(AppendIterator.class);
@@ -161,10 +162,7 @@ public class AppendIterator extends Component implements UnnamedParametric {
         _parameters.add(value);
     }
 
-    /**
-     * the id of which if supplied will have the resultant appended iterator stored under in the stack's context
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The id of which if supplied will have the resultant appended iterator stored under in the stack's context")
     public void setId(String id) {
         super.setId(id);
     }

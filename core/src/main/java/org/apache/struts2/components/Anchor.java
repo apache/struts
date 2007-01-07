@@ -23,6 +23,9 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -121,11 +124,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example3 -->
  * </pre>
  *
- *
- * @s.tag name="a" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.AnchorTag"
- * description="Render a HTML href element that when clicked calls a URL via remote XMLHttpRequest and updates its targets"
- *
  */
+@StrutsTag(name="a", tldTagClass="org.apache.struts2.views.jsp.ui.AnchorTag", description="Render a HTML href element that when clicked can optionally call a URL via remote XMLHttpRequest and updates its targets")
 public class Anchor extends AbstractRemoteCallUIBean {
     public static final String OPEN_TEMPLATE = "a";
     public static final String TEMPLATE = "a-close";
@@ -152,20 +152,19 @@ public class Anchor extends AbstractRemoteCallUIBean {
             addParameter("targets", findString(targets));
     }
 
-    /**
-     * The id to assign the component
-     * @s.tagattribute required="false" type="String"
-     */
-    public void setId(String id) {
-        super.setId(id);
-    }
-
-    /**
-     * Comma delimited list of ids of the elements whose content will be updated
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description="Comma delimited list of ids of the elements whose content will be updated")
     public void setTargets(String targets) {
         this.targets = targets;
     }
 
+    @StrutsTagAttribute(name="onLoadJS", description="Deprecated. Use 'notifyTopics'. Javascript code execute after reload")
+    public void setAfterLoading(String afterLoading) {
+        this.afterLoading = afterLoading;
+    }
+
+
+    @StrutsTagAttribute(name="preInvokeJS", description="Deprecated. Use 'notifyTopics'. Javascript code execute before reload")
+    public void setBeforeLoading(String beforeLoading) {
+        this.beforeLoading = beforeLoading;
+    }
 }

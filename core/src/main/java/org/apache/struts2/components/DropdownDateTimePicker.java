@@ -26,6 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -42,10 +44,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  * available with saveFormat
  * </p>
  *
- * @s.tag name="dropdowndatetimepicker" tld-body-content="JSP"
- *        tld-tag-class="org.apache.struts2.views.jsp.ui.DropdownDateTimePickerTag"
- *        description="Render a dropdown picker(datepicker or timepicker)"
  */
+@StrutsTag(name="dropdowndatetimepicker", tldTagClass="org.apache.struts2.views.jsp.ui.DropdownDateTimePickerTag",
+    description="Renders a dropdown picker(datepicker or timepicker)")
 public class DropdownDateTimePicker extends DatePicker {
     final public static String TEMPLATE = "dropdowndatetimepicker";
     final private static SimpleDateFormat RFC3399_FORMAT = new SimpleDateFormat(
@@ -134,59 +135,34 @@ public class DropdownDateTimePicker extends DatePicker {
         }
     }
 
-    /**
-     * A pattern used for the visual display of the formatted date, e.g.
-     * dd/MM/yyyy.
-     *
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description="A pattern used for the visual display of the formatted date, e.g. dd/MM/yyyy")
     public void setDisplayFormat(String displayFormat) {
         this.displayFormat = displayFormat;
     }
 
-    /**
-     * Type of formatting used for visual display, appropriate to locale (choice
-     * of long, short, medium or full)
-     *
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description="Type of formatting used for visual display. Possible values are " +
+                "long, short, medium or full", defaultValue="short")
     public void setFormatLength(String formatLength) {
         this.formatLength = formatLength;
     }
 
-    /**
-     * Path to icon used for the dropdown
-     *
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description=" Path to icon used for the dropdown")
     public void setIconPath(String iconPath) {
         this.iconPath = iconPath;
     }
 
-    /**
-     * Duration of toggle in seconds
-     *
-     * @s.tagattribute required="false" type="Integer" default="100"
-     */
+    @StrutsTagAttribute(description="Duration of toggle in milliseconds", type="Integer", defaultValue="100")
     public void setToggleDuration(String toggleDuration) {
         this.toggleDuration = toggleDuration;
     }
 
-    /**
-     * Defines the type of the picker on the dropdown. Possible values are
-     * "date" for a DatePicker, and "time" for a timePicker
-     *
-     * @s.tagattribute required="false" type="String" default="date"
-     */
+    @StrutsTagAttribute(description="Defines the type of the picker on the dropdown. Possible values are 'date'" +
+                " for a DatePicker, and 'time' for a timePicker", defaultValue="date")
     public void setType(String type) {
         this.type = type;
     }
 
-    /**
-     * Toggle type of the dropdown. Possible values are plain,wipe,explode,fade
-     *
-     * @s.tagattribute required="false" type="String" default="plain"
-     */
+    @StrutsTagAttribute(description="oggle type of the dropdown. Possible values are plain,wipe,explode,fade", defaultValue="plain")
     public void setToggleType(String toggleType) {
         this.toggleType = toggleType;
     }

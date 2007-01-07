@@ -22,6 +22,8 @@ package org.apache.struts2.components;
 
 import java.io.Writer;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsException;
 
 import com.opensymphony.xwork2.util.ValueStack;
@@ -86,9 +88,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * @see Bean
  * @see Text
  *
- * @s.tag name="param" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ParamTag"
- * description="Parametrize other tags"
  */
+@StrutsTag(name="param", tldTagClass="org.apache.struts2.views.jsp.ParamTag", description="Parametrize other tags")
 public class Param extends Component {
     protected String name;
     protected String value;
@@ -127,18 +128,12 @@ public class Param extends Component {
         return true;
     }
 
-    /**
-     * Name of Parameter to set
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description="Name of Parameter to set")
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * Value expression for Parameter to set
-     * @s.tagattribute required="false" default="The value of evaluating provided name against stack"
-     */
+    @StrutsTagAttribute(description="Value expression for Parameter to set", defaultValue="The value of evaluating provided name against stack")
     public void setValue(String value) {
         this.value = value;
     }

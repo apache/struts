@@ -23,6 +23,8 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -39,9 +41,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="doubleselect" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.DoubleSelectTag"
- * description="Renders two HTML select elements with second one changing displayed values depending on selected entry of first one."
  */
+@StrutsTag(name="doubleselect", tldTagClass="org.apache.struts2.views.jsp.ui.DoubleSelectTag", description="Renders two HTML select elements with second one changing displayed values depending on " +
+                "selected entry of first one.")
 public class DoubleSelect extends DoubleListUIBean {
     final public static String TEMPLATE = "doubleselect";
 

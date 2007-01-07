@@ -20,6 +20,8 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -87,35 +89,18 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
     }
 
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setListenTopics(java.lang.String)
-     */
+    @StrutsTagAttribute(description="Topic that will trigger the remote call")
     public void setListenTopics(String listenTopics) {
         this.listenTopics = listenTopics;
     }
 
-    /**
-     * The theme to use for the element. <b>This tag will usually use the ajax
-     * theme.</b>
-     *
-     * @s.tagattribute required="false" type="String"
-     */
-    public void setTheme(String theme) {
-        super.setTheme(theme);
-    }
-
-
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setHref(java.lang.String)
-     */
+    @StrutsTagAttribute(description="The URL to call to obtain the content. Note: If used with ajax context, the value must be set as an url tag value.")
     public void setHref(String href) {
         this.href = href;
     }
 
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setErrorText(java.lang.String)
-     */
+    @StrutsTagAttribute(description="The text to display to the user if the is an error fetching the content")
     public void setErrorText(String errorText) {
         this.errorText = errorText;
     }
@@ -137,59 +122,45 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
     }
 
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setExecuteScripts(java.lang.String)
-     */
+    @StrutsTagAttribute(description="Javascript code in the fetched content will be executed", type="Boolean", defaultValue="false")
     public void setExecuteScripts(String executeScripts) {
         this.executeScripts = executeScripts;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setLoadingText(java.lang.String)
-     */
+    @StrutsTagAttribute(description="Text to be shown while content is being fetched", defaultValue="Loading...")
     public void setLoadingText(String loadingText) {
         this.loadingText = loadingText;
     }
 
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setHandler(java.lang.String)
-     */
+    @StrutsTagAttribute(description="Javascript function name that will make the request")
     public void setHandler(String handler) {
         this.handler = handler;
     }
 
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setFormFilter(java.lang.String)
-     */
+    @StrutsTagAttribute(description="Function name used to filter the fields of the form.")
     public void setFormFilter(String formFilter) {
         this.formFilter = formFilter;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setFormId(java.lang.String)
-     */
+    @StrutsTagAttribute(description="Form id whose fields will be serialized and passed as parameters")
     public void setFormId(String formId) {
         this.formId = formId;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setNotifyTopics(java.lang.String)
-     */
+    @StrutsTagAttribute(description="Topics that will published when the remote call completes")
     public void setNotifyTopics(String notifyTopics) {
         this.notifyTopics = notifyTopics;
     }
 
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setShowErrorTransportText(java.lang.String)
-     */
+    @StrutsTagAttribute(description="Set whether errors will be shown or not", type="Boolean", defaultValue="true")
     public void setShowErrorTransportText(String showError) {
         this.showErrorTransportText = showError;
     }
 
-
+    @StrutsTagAttribute(description="Id of element that will be shown while making request")
     public void setIndicator(String indicator) {
         this.indicator = indicator;
     }

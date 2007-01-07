@@ -23,6 +23,9 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -73,9 +76,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <!-- END SNIPPET: exnote -->
  *
- * @s.tag name="select" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.SelectTag"
- * description="Render a select element"
  */
+@StrutsTag(name="select", tldTagClass="org.apache.struts2.views.jsp.ui.SelectTag", description="Render a select element")
 public class Select extends ListUIBean {
     final public static String TEMPLATE = "select";
 
@@ -114,42 +116,29 @@ public class Select extends ListUIBean {
         }
     }
 
-    /**
-     * Whether or not to add an empty (--) option after the header option
-     * @s.tagattribute required="false" type="Boolean" default="false"
-     */
+    @StrutsTagAttribute(description="Whether or not to add an empty (--) option after the header option", type="Boolean", defaultValue="false")
     public void setEmptyOption(String emptyOption) {
         this.emptyOption = emptyOption;
     }
 
-    /**
-     * Key for first item in list. Must not be empty! "'-1'" and "''" is correct, "" is bad.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description=" Key for first item in list. Must not be empty! '-1' and '' is correct, '' is bad.")
     public void setHeaderKey(String headerKey) {
         this.headerKey = headerKey;
     }
 
-    /**
-     * Value expression for first item in list
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Value expression for first item in list")
     public void setHeaderValue(String headerValue) {
         this.headerValue = headerValue;
     }
 
-    /**
-     * Creates a multiple select. The tag will pre-select multiple values if the values are passed as an Array (of appropriate types) via the value attribute. Passing a Collection may work too? Haven't tested this.
-     * @s.tagattribute required="false"  type="Boolean" default="false"
-     */
+    @StrutsTagAttribute(description=" Creates a multiple select. The tag will pre-select multiple values" +
+                " if the values are passed as an Array (of appropriate types) via the value attribute. Passing " +
+                "a Collection may work too? Haven't tested this.", type="Boolean", defaultValue="false")
     public void setMultiple(String multiple) {
         this.multiple = multiple;
     }
 
-    /**
-     * Size of the element box (# of elements to show)
-     * @s.tagattribute required="false" type="Integer"
-     */
+    @StrutsTagAttribute(description="Size of the element box (# of elements to show)", type="Integer")
     public void setSize(String size) {
         this.size = size;
     }

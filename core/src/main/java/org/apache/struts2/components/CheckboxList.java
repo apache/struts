@@ -23,6 +23,8 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -40,9 +42,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="checkboxlist" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.CheckboxListTag"
- * description="Render a list of checkboxes"
-  */
+ */
+@StrutsTag(name="checkboxlist", tldTagClass="org.apache.struts2.views.jsp.ui.CheckboxListTag", description="Render a list of checkboxes")
 public class CheckboxList extends ListUIBean {
     final public static String TEMPLATE = "checkboxlist";
 

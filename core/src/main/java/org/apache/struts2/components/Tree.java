@@ -25,6 +25,9 @@ import java.io.Writer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -63,10 +66,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- *
- * @s.tag name="tree" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TreeTag"
- * description="Render a tree widget."
  */
+@StrutsTag(name="tree", tldTagClass="org.apache.struts2.views.jsp.ui.TreeTag", description="Render a tree widget.")
 public class Tree extends ClosingUIBean {
 
     private static final String TEMPLATE = "tree-close";
@@ -222,10 +223,7 @@ public class Tree extends ClosingUIBean {
         return toggle;
     }
 
-    /**
-     * The toggle property (either 'explode' or 'fade'). Default is 'fade'.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The toggle property (either 'explode' or 'fade')", defaultValue="fade")
     public void setToggle(String toggle) {
         this.toggle = toggle;
     }
@@ -234,10 +232,7 @@ public class Tree extends ClosingUIBean {
         return treeSelectedTopic;
     }
 
-    /**
-     * The treeSelectedTopic property.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The treeSelectedTopic property")
     public void setTreeSelectedTopic(String treeSelectedTopic) {
         this.treeSelectedTopic = treeSelectedTopic;
     }
@@ -246,10 +241,7 @@ public class Tree extends ClosingUIBean {
         return treeExpandedTopic;
     }
 
-    /**
-     * The treeExpandedTopic property.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The treeExpandedTopic property.")
     public void setTreeExpandedTopic(String treeExpandedTopic) {
         this.treeExpandedTopic = treeExpandedTopic;
     }
@@ -258,10 +250,7 @@ public class Tree extends ClosingUIBean {
         return treeCollapsedTopic;
     }
 
-    /**
-     * The treeCollapsedTopic property.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The treeCollapsedTopic property.")
     public void setTreeCollapsedTopic(String treeCollapsedTopic) {
         this.treeCollapsedTopic = treeCollapsedTopic;
     }
@@ -270,10 +259,7 @@ public class Tree extends ClosingUIBean {
         return rootNodeAttr;
     }
 
-    /**
-     * The rootNode property.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The rootNode property.")
     public void setRootNode(String rootNode) {
         this.rootNodeAttr = rootNode;
     }
@@ -282,10 +268,7 @@ public class Tree extends ClosingUIBean {
         return childCollectionProperty;
     }
 
-    /**
-     * The childCollectionProperty property.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The childCollectionProperty property.")
     public void setChildCollectionProperty(String childCollectionProperty) {
         this.childCollectionProperty = childCollectionProperty;
     }
@@ -294,10 +277,7 @@ public class Tree extends ClosingUIBean {
         return nodeTitleProperty;
     }
 
-    /**
-     * The nodeTitleProperty property.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The nodeTitleProperty property.")
     public void setNodeTitleProperty(String nodeTitleProperty) {
         this.nodeTitleProperty = nodeTitleProperty;
     }
@@ -306,18 +286,12 @@ public class Tree extends ClosingUIBean {
         return nodeIdProperty;
     }
 
-    /**
-     * The nodeIdProperty property.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The nodeIdProperty property.")
     public void setNodeIdProperty(String nodeIdProperty) {
         this.nodeIdProperty = nodeIdProperty;
     }
 
-    /**
-     * The showRootGrid property (default true).
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The showRootGrid property (default true).")
     public void setShowRootGrid(String showRootGrid) {
         this.showRootGrid = showRootGrid;
     }
@@ -330,10 +304,7 @@ public class Tree extends ClosingUIBean {
         return blankIconSrc;
     }
 
-    /**
-     * Blank icon image source.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Blank icon image source.")
     public void setBlankIconSrc(String blankIconSrc) {
         this.blankIconSrc = blankIconSrc;
     }
@@ -342,10 +313,7 @@ public class Tree extends ClosingUIBean {
         return expandIconSrcMinus;
     }
 
-    /**
-     * Expand icon (-) image source.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Expand icon (-) image source.")
     public void setExpandIconSrcMinus(String expandIconSrcMinus) {
         this.expandIconSrcMinus = expandIconSrcMinus;
     }
@@ -354,10 +322,7 @@ public class Tree extends ClosingUIBean {
         return expandIconSrcPlus;
     }
 
-    /**
-     * Expand Icon (+) image source.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Expand Icon (+) image source.")
     public void setExpandIconSrcPlus(String expandIconSrcPlus) {
         this.expandIconSrcPlus = expandIconSrcPlus;
     }
@@ -366,10 +331,7 @@ public class Tree extends ClosingUIBean {
         return gridIconSrcC;
     }
 
-    /**
-     * Image source for under child item child icons.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Image source for under child item child icons.")
     public void setGridIconSrcC(String gridIconSrcC) {
         this.gridIconSrcC = gridIconSrcC;
     }
@@ -379,10 +341,7 @@ public class Tree extends ClosingUIBean {
     }
 
 
-    /**
-     * Image source for last child grid.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description=" Image source for last child grid.")
     public void setGridIconSrcL(String gridIconSrcL) {
         this.gridIconSrcL = gridIconSrcL;
     }
@@ -391,10 +350,7 @@ public class Tree extends ClosingUIBean {
         return gridIconSrcP;
     }
 
-    /**
-     * Image source for under parent item child icons.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Image source for under parent item child icons.")
     public void setGridIconSrcP(String gridIconSrcP) {
         this.gridIconSrcP = gridIconSrcP;
     }
@@ -403,10 +359,7 @@ public class Tree extends ClosingUIBean {
         return gridIconSrcV;
     }
 
-    /**
-     * Image source for vertical line.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Image source for vertical line.")
     public void setGridIconSrcV(String gridIconSrcV) {
         this.gridIconSrcV = gridIconSrcV;
     }
@@ -415,10 +368,7 @@ public class Tree extends ClosingUIBean {
         return gridIconSrcX;
     }
 
-    /**
-     * Image source for grid for sole root item.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Image source for grid for sole root item.")
     public void setGridIconSrcX(String gridIconSrcX) {
         this.gridIconSrcX = gridIconSrcX;
     }
@@ -427,10 +377,7 @@ public class Tree extends ClosingUIBean {
         return gridIconSrcY;
     }
 
-    /**
-     * Image source for grid for last root item.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Image source for grid for last root item.")
     public void setGridIconSrcY(String gridIconSrcY) {
         this.gridIconSrcY = gridIconSrcY;
     }
@@ -440,10 +387,7 @@ public class Tree extends ClosingUIBean {
     }
 
 
-    /**
-     * Icon height (default 18 pixels).
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Icon height", defaultValue="18px")
     public void setIconHeight(String iconHeight) {
         this.iconHeight = iconHeight;
     }
@@ -452,10 +396,7 @@ public class Tree extends ClosingUIBean {
         return iconWidth;
     }
 
-    /**
-     * Icon width (default 19 pixels).
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Icon width", defaultValue="19px")
     public void setIconWidth(String iconWidth) {
         this.iconWidth = iconWidth;
     }
@@ -466,10 +407,7 @@ public class Tree extends ClosingUIBean {
         return templateCssPath;
     }
 
-    /**
-     * Template css path (default {contextPath}/struts/tree.css.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Template css path", defaultValue="{contextPath}/struts/tree.css.")
     public void setTemplateCssPath(String templateCssPath) {
         this.templateCssPath = templateCssPath;
     }
@@ -478,10 +416,7 @@ public class Tree extends ClosingUIBean {
         return toggleDuration;
     }
 
-    /**
-     * Toggle duration (default 150 ms)
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Toggle duration in milliseconds", defaultValue="150")
     public void setToggleDuration(String toggleDuration) {
         this.toggleDuration = toggleDuration;
     }
@@ -490,10 +425,7 @@ public class Tree extends ClosingUIBean {
         return showGrid;
     }
 
-    /**
-     * Show grid (default true).
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Show grid", type="Boolean", defaultValue="true")
     public void setShowGrid(String showGrid) {
         this.showGrid = showGrid;
     }

@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -44,10 +45,7 @@ public abstract class ClosingUIBean extends UIBean {
 
     public abstract String getDefaultOpenTemplate();
 
-    /**
-     * Set template to use for opening the rendered html.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set template to use for opening the rendered html.")
     public void setOpenTemplate(String openTemplate) {
         this.openTemplate = openTemplate;
     }

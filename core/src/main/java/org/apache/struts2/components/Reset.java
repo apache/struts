@@ -23,6 +23,9 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -52,9 +55,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example2 -->
  * </pre>
  *
- * @s.tag name="reset" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.ResetTag"
- * description="Render a reset button"
  */
+@StrutsTag(name="reset", tldTagClass="org.apache.struts2.views.jsp.ui.ResetTag", description="Render a reset button")
 public class Reset extends FormButton {
     final public static String TEMPLATE = "reset";
 
@@ -94,12 +96,8 @@ public class Reset extends FormButton {
         return false;
     }
 
-    /**
-     * Supply a reset button text apart from reset value. Will have no effect for <i>input</i> type reset, since button
-     * text will always be the value parameter.
-     *
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Supply a reset button text apart from reset value. Will have no effect for " +
+                "<i>input</i> type reset, since button text will always be the value parameter.")
     public void setLabel(String label) {
         super.setLabel(label);
     }

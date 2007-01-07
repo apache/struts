@@ -23,6 +23,9 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -105,9 +108,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: expl2 -->
  * </pre>
  *
- * @s.tag name="datepicker" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.DatePickerTag"
- * description="Render datepicker"
  */
+@StrutsTag(name="datepicker", tldTagClass="org.apache.struts2.views.jsp.ui.DatePickerTag", description="Render datepicker")
 public class DatePicker extends UIBean {
 
     final public static String TEMPLATE = "datepicker";
@@ -152,75 +154,43 @@ public class DatePicker extends UIBean {
             addParameter("value", findString(value));
     }
 
-    /**
-     * If true, weekly size of calendar changes to acomodate the month if false, 42 day format is
-     * used
-     *
-     * @s.tagattribute required="false" type="Boolean" default="false"
-     */
+    @StrutsTagAttribute(description="If true, weekly size of calendar changes to acomodate the month if false," +
+                " 42 day format is used", type="Boolean", defaultValue="false")
     public void setAdjustWeeks(String adjustWeeks) {
         this.adjustWeeks = adjustWeeks;
     }
 
-    /**
-     * How to render the names of the days in the header(narrow, abbr or wide)
-     *
-     * @s.tagattribute required="false" type="String" default="narrow"
-     */
+    @StrutsTagAttribute(description="How to render the names of the days in the header(narrow, abbr or wide)", defaultValue="narrow")
     public void setDayWidth(String dayWidth) {
         this.dayWidth = dayWidth;
     }
 
-    /**
-     * Total weeks to display
-     *
-     * @s.tagattribute required="false" type="Integer" default="6"
-     */
+    @StrutsTagAttribute(description="Total weeks to display", type="Integer", defaultValue="6")
     public void setDisplayWeeks(String displayWeeks) {
         this.displayWeeks = displayWeeks;
     }
 
-    /**
-     * Last available date in the calendar set
-     *
-     * @s.tagattribute required="false" type="Date" default="2941-10-12"
-     */
+    @StrutsTagAttribute(description="Last available date in the calendar set", type="Date", defaultValue="2941-10-12")
     public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
-    /**
-     * First available date in the calendar set
-     *
-     * @s.tagattribute required="false" type="Date" default="1492-10-12"
-     */
+    @StrutsTagAttribute(description="First available date in the calendar set", type="Date", defaultValue="1492-10-12")
     public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    /**
-     * Disable all incremental controls, must pick a date in the current display
-     *
-     * @s.tagattribute required="false" type="Boolean" default="false"
-     */
+    @StrutsTagAttribute(description="Disable all incremental controls, must pick a date in the current display", type="Boolean", defaultValue="false")
     public void setStaticDisplay(String staticDisplay) {
         this.staticDisplay = staticDisplay;
     }
 
-    /**
-     * Adjusts the first day of the week 0==Sunday..6==Saturday
-     *
-     * @s.tagattribute required="false" type="Integer" default="0"
-     */
+    @StrutsTagAttribute(description="Adjusts the first day of the week 0==Sunday..6==Saturday", type="Integer", defaultValue="0")
     public void setWeekStartsOn(String weekStartsOn) {
         this.weekStartsOn = weekStartsOn;
     }
 
-    /**
-     * Language to display this widget in (like en-us).
-     *
-     * @s.tagattribute required="false" type="String" default="brower's specified preferred language"
-     */
+    @StrutsTagAttribute(description="Language to display this widget in", defaultValue="brower's specified preferred language")
     public void setLanguage(String language) {
         this.language = language;
     }

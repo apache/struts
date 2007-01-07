@@ -22,6 +22,9 @@ package org.apache.struts2.components;
 
 import java.io.Writer;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -105,9 +108,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example4description -->
  * </pre>
  *
- * @s.tag name="push" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.PushTag"
- * description="Push value on stack for simplified usage."
  */
+@StrutsTag(name="push", tldTagClass="org.apache.struts2.views.jsp.PushTag", description="Push value on stack for simplified usage.")
 public class Push extends Component {
     protected String value;
     protected boolean pushed;
@@ -141,10 +143,7 @@ public class Push extends Component {
         return super.end(writer, body);
     }
 
-    /**
-     * Value to push on stack
-     * @s.tagattribute required="true"
-     */
+    @StrutsTagAttribute(description="Value to push on stack", required=true)
     public void setValue(String value) {
         this.value = value;
     }

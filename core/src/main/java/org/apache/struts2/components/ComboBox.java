@@ -27,6 +27,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 import org.apache.struts2.util.MakeIterator;
 
 import com.opensymphony.xwork2.util.ValueStack;
@@ -85,9 +87,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="combobox" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.ComboBoxTag"
- * description="Widget that fills a text box from a select"
-  */
+ */
+@StrutsTag(name="combobox", tldTagClass="org.apache.struts2.views.jsp.ui.ComboBoxTag", description="Widget that fills a text box from a select")
 public class ComboBox extends TextField {
     final public static String TEMPLATE = "combobox";
 
@@ -165,50 +166,33 @@ public class ComboBox extends TextField {
                 "Example: people or people.{name}");
     }
 
-    /**
-     * Iteratable source to populate from. If this is missing, the select widget is simply not displayed.
-     * @s.tagattribute required="true"
-      */
+    @StrutsTagAttribute(description="Iteratable source to populate from. " +
+                "If this is missing, the select widget is simply not displayed.", required=true)
     public void setList(String list) {
         this.list = list;
     }
 
-    /**
-     * Decide if an empty option is to be inserted. Default false.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Decide if an empty option is to be inserted. Default false.")
     public void setEmptyOption(String emptyOption) {
         this.emptyOption = emptyOption;
     }
 
-    /**
-     * set the header key for the header option.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the header key for the header option.")
     public void setHeaderKey(String headerKey) {
         this.headerKey = headerKey;
     }
 
-    /**
-     * set the header value for the header option.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the header value for the header option.")
     public void setHeaderValue(String headerValue) {
         this.headerValue = headerValue;
     }
 
-    /**
-     * set the key used to retrive the option key.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the key used to retrive the option key.")
     public void setListKey(String listKey) {
         this.listKey = listKey;
     }
 
-    /**
-     * set the value used to retrive the option value.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set the value used to retrive the option value.")
     public void setListValue(String listValue) {
         this.listValue = listValue;
     }

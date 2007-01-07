@@ -22,6 +22,9 @@ package org.apache.struts2.components;
 
 import java.io.Writer;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -58,8 +61,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="elseif" tld-body-content="JSP" description="Elseif tag"  tld-tag-class="org.apache.struts2.views.jsp.ElseIfTag"
  */
+@StrutsTag(name="elseif", tldTagClass="org.apache.struts2.views.jsp.ElseIfTag", description="Elseif tag")
 public class ElseIf extends Component {
     public ElseIf(ValueStack stack) {
         super(stack);
@@ -97,10 +100,7 @@ public class ElseIf extends Component {
         return super.end(writer, "");
     }
 
-    /**
-     * Expression to determine if body of tag is to be displayed
-     * @s.tagattribute required="true" type="Boolean"
-     */
+    @StrutsTagAttribute(description="Expression to determine if body of tag is to be displayed", type="Boolean", required=true)
     public void setTest(String test) {
         this.test = test;
     }

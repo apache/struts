@@ -23,6 +23,9 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -42,9 +45,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="password" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.PasswordTag"
- * description="Render an HTML input tag of type password"
  */
+@StrutsTag(name="password", tldTagClass="org.apache.struts2.views.jsp.ui.PasswordTag", description="Render an HTML input tag of type password")
 public class Password extends TextField {
     final public static String TEMPLATE = "password";
 
@@ -66,10 +68,7 @@ public class Password extends TextField {
         }
     }
 
-    /**
-     * Whether to show input
-     * @s.tagattribute required="false" type="Boolean" default="false"
-     */
+    @StrutsTagAttribute(description="Whether to show input", type="Boolean", defaultValue="false")
     public void setShowPassword(String showPassword) {
         this.showPassword = showPassword;
     }

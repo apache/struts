@@ -23,6 +23,8 @@ package org.apache.struts2.components;
 import java.io.Writer;
 import java.util.Map;
 
+import org.apache.struts.annotations.StrutsTag;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -54,8 +56,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="else" bodycontent="JSP" description="Else tag"  tld-tag-class="org.apache.struts2.views.jsp.ElseTag"
  */
+@StrutsTag(name="else", tldTagClass="org.apache.struts2.views.jsp.ElseTag", description="Else tag")
 public class Else extends Component {
     public Else(ValueStack stack) {
         super(stack);

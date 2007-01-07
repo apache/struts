@@ -23,6 +23,9 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -47,9 +50,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
 
- * @s.tag name="textfield" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TextFieldTag"
- * description="Render an HTML input field of type text"
  */
+@StrutsTag(name="textfield", tldTagClass="org.apache.struts2.views.jsp.ui.TextFieldTag", description="Render an HTML input field of type text")
 public class TextField extends UIBean {
     /**
      * The name of the default template for the TextFieldTag
@@ -85,34 +87,22 @@ public class TextField extends UIBean {
         }
     }
 
-    /**
-     * HTML maxlength attribute
-     * @s.tagattribute required="false" type="Integer"
-     */
+    @StrutsTagAttribute(description="HTML maxlength attribute", type="Integer")
     public void setMaxlength(String maxlength) {
         this.maxlength = maxlength;
     }
 
-    /**
-     * Deprecated. Use maxlength instead.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Deprecated. Use maxlength instead.", type="Integer")
     public void setMaxLength(String maxlength) {
         this.maxlength = maxlength;
     }
 
-    /**
-     * Whether the input is readonly
-     * @s.tagattribute required="false" type="Boolean" default="false"
-     */
+    @StrutsTagAttribute(description="Whether the input is readonly", type="Boolean", defaultValue="false")
     public void setReadonly(String readonly) {
         this.readonly = readonly;
     }
 
-    /**
-     * HTML size attribute
-     * @s.tagattribute required="false" type="Integer"
-     */
+    @StrutsTagAttribute(description="HTML size attribute",  type="Integer")
     public void setSize(String size) {
         this.size = size;
     }

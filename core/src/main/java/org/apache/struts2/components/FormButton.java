@@ -23,6 +23,8 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -139,38 +141,23 @@ public abstract class FormButton extends UIBean {
      */
     protected abstract boolean supportsImageType();
 
-    /**
-     * Set action attribute.
-     *
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description="Set action attribute.")
     public void setAction(String action) {
         this.action = action;
     }
 
-    /**
-     * Set method attribute.
-     *
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description="Set method attribute.")
     public void setMethod(String method) {
         this.method = method;
     }
 
-    /**
-     * HTML align attribute.
-     *
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description="HTML align attribute.")
     public void setAlign(String align) {
         this.align = align;
     }
 
-    /**
-     * The type of submit to use. Valid values are <i>input</i>, <i>button</i> and <i>image</i>.
-     *
-     * @s.tagattribute required="false" type="String" default="input"
-     */
+    @StrutsTagAttribute(description="The type of submit to use. Valid values are <i>input</i>, " +
+                "<i>button</i> and <i>image</i>.", defaultValue="input")
     public void setType(String type) {
         this.type = type;
     }

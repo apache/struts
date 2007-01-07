@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -42,9 +44,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="file" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.FileTag"
- * description="Render a file input field"
  */
+@StrutsTag(name="file", tldTagClass="org.apache.struts2.views.jsp.ui.FileTag", description="Render a file input field")
 public class File extends UIBean {
     private final static Log log = LogFactory.getLog(File.class);
 
@@ -88,18 +89,12 @@ public class File extends UIBean {
         }
     }
 
-    /**
-     * HTML accept attribute to indicate accepted file mimetypes
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="HTML accept attribute to indicate accepted file mimetypes")
     public void setAccept(String accept) {
         this.accept = accept;
     }
 
-    /**
-     * HTML size attribute
-     * @s.tagattribute required="false" type="Integer"
-     */
+    @StrutsTagAttribute(description="HTML size attribute", required=false, type="Integer")
     public void setSize(String size) {
         this.size = size;
     }

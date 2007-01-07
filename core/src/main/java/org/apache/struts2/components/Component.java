@@ -31,6 +31,7 @@ import java.util.Stack;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -453,10 +454,7 @@ public class Component {
         return id;
     }
 
-    /**
-     * id for referencing element. For UI and form tags it will be used as HTML id attribute
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="id for referencing element. For UI and form tags it will be used as HTML id attribute")
     public void setId(String id) {
         if (id != null) {
             this.id = findString(id);

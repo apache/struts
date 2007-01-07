@@ -25,6 +25,8 @@ import java.io.Writer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.TextUtils;
@@ -83,9 +85,9 @@ import com.opensymphony.xwork2.util.TextUtils;
  * <!-- END SNIPPET: i18nExample -->
  * </pre>
  *
- * @s.tag name="property" tld-body-content="empty" tld-tag-class="org.apache.struts2.views.jsp.PropertyTag"
- * description="Print out expression which evaluates against the stack"
  */
+@StrutsTag(name="property", tldBodyContent="empty", tldTagClass="org.apache.struts2.views.jsp.PropertyTag",
+    description="Print out expression which evaluates against the stack")
 public class Property extends Component {
     private static final Log LOG = LogFactory.getLog(Property.class);
 
@@ -97,26 +99,17 @@ public class Property extends Component {
     private String value;
     private boolean escape = true;
 
-    /**
-     * The default value to be used if <u>value</u> attribute is null
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description="The default value to be used if <u>value</u> attribute is null")
     public void setDefault(String defaultValue) {
         this.defaultValue = defaultValue;
     }
 
-    /**
-     * Whether to escape HTML
-     * @s.tagattribute required="false" type="Boolean" default="true"
-     */
+    @StrutsTagAttribute(description=" Whether to escape HTML", type="Boolean", defaultValue="true")
     public void setEscape(boolean escape) {
         this.escape = escape;
     }
 
-    /**
-     * value to be displayed
-     * @s.tagattribute required="false" type="Object" default="&lt;top of stack&gt;"
-     */
+    @StrutsTagAttribute(description="Value to be displayed", type="Object", defaultValue="&lt;top of stack&gt;")
     public void setValue(String value) {
         this.value = value;
     }

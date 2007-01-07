@@ -23,6 +23,9 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -75,10 +78,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- *
- * @s.tag name="treenode" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TreeNodeTag"
- * description="Render a tree node within a tree widget."
  */
+@StrutsTag(name="treenode", tldTagClass="org.apache.struts2.views.jsp.ui.TreeNodeTag", description="Render a tree node within a tree widget.")
 public class TreeNode extends ClosingUIBean {
     private static final String TEMPLATE = "treenode-close";
     private static final String OPEN_TEMPLATE = "treenode";
@@ -95,10 +96,7 @@ public class TreeNode extends ClosingUIBean {
         return TEMPLATE;
     }
 
-    /**
-     * Label expression used for rendering tree node label.
-     * @s.tagattribute required="true"
-     */
+    @StrutsTagAttribute(description="Label expression used for rendering tree node label.", required=true)
     public void setLabel(String label) {
         super.setLabel(label);
     }

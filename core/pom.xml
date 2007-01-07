@@ -44,12 +44,18 @@
                     </execution>
 				</executions>
             </plugin>
-<!--
             <plugin>
                 <groupId>org.apache.myfaces.tobago</groupId>
                 <artifactId>maven-apt-plugin</artifactId>
                 <configuration>
-                    <A>uri=/struts-tags,tlibVersion=2.2.3,jspVersion=1.2,shortName=s,displayName="Struts Tags",outFile=${basedir}/src/main/resources/META-INF/struts-tags.tld, description="To make it easier to access dynamic data; the Apache Struts framework includes a library of custom tags. The tags interact with the framework's validation and internationalization features; to ensure that input is correct and output is localized. The Struts Tags can be used with JSP FreeMarker or Velocity."
+                    <A>uri=/struts-tags,tlibVersion=2.2.3,jspVersion=1.2,shortName=s,displayName="Struts Tags",
+                    outFile=${basedir}/src/main/resources/META-INF/struts-tags.tld,
+                    description="To make it easier to access dynamic data;
+                    the Apache Struts framework includes a library of custom tags.
+                    The tags interact with the framework's validation and internationalization features;
+                    to ensure that input is correct and output is localized.
+                    The Struts Tags can be used with JSP FreeMarker or Velocity.",
+                    outTemplatesDir=${basedir}/src/site/resources/tags
                     </A>
                     <resourceTargetPath>target</resourceTargetPath>
                     <fork>false</fork>
@@ -71,7 +77,6 @@
                 </execution>
 				</executions>
             </plugin>
--->
         </plugins>
     </build>
     
@@ -221,7 +226,6 @@
                 </plugins>
             </build>
         </profile>
-    
     </profiles>
  
     
@@ -443,6 +447,13 @@
             <artifactId>log4j</artifactId>
             <version>1.2.9</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts-annotations</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>

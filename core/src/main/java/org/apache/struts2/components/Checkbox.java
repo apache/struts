@@ -23,6 +23,9 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -46,9 +49,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="checkbox" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.CheckboxTag"
- * description="Render a checkbox input field"
-  */
+ */
+@StrutsTag(name="checkbox", tldTagClass="org.apache.struts2.views.jsp.ui.CheckboxTag", description="Render a checkbox input field")
 public class Checkbox extends UIBean {
     final public static String TEMPLATE = "checkbox";
 
@@ -74,10 +76,7 @@ public class Checkbox extends UIBean {
         return Boolean.class; // for checkboxes, everything needs to end up as a Boolean
     }
 
-    /**
-     * The actual HTML value attribute of the checkbox.
-     * @s.tagattribute required="false" default="'true'"
-     */
+    @StrutsTagAttribute(description="The actual HTML value attribute of the checkbox.", defaultValue="true")
     public void setFieldValue(String fieldValue) {
         this.fieldValue = fieldValue;
     }

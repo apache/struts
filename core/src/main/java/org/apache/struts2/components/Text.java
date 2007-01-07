@@ -29,6 +29,8 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.util.TextUtils;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -110,9 +112,8 @@ import com.opensymphony.xwork2.TextProvider;
  *
  * @see Param
  *
- * @s.tag name="text" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.TextTag"
- * description="Render a I18n text message."
  */
+@StrutsTag(name="text", tldTagClass="org.apache.struts2.views.jsp.TextTag", description="Render a I18n text message")
 public class Text extends Component implements Param.UnnamedParametric {
     private static final Log LOG = LogFactory.getLog(Text.class);
 
@@ -124,10 +125,7 @@ public class Text extends Component implements Param.UnnamedParametric {
         super(stack);
     }
 
-    /**
-     *  Name of resource property to fetch
-     * @s.tagattribute required="true"
-     */
+    @StrutsTagAttribute(description=" Name of resource property to fetch", required=true)
     public void setName(String name) {
         this.name = name;
     }

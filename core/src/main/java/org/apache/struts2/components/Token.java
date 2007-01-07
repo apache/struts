@@ -25,6 +25,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
 import org.apache.struts2.util.TokenHelper;
 
 import com.opensymphony.xwork2.util.ValueStack;
@@ -49,9 +50,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * @see org.apache.struts2.interceptor.TokenInterceptor
  * @see org.apache.struts2.interceptor.TokenSessionStoreInterceptor
  *
- * @s.tag name="token" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.TokenTag"
- * description="Stop double-submission of forms"
  */
+@StrutsTag(name="token", tldTagClass="org.apache.struts2.views.jsp.ui.TokenTag", description="Stop double-submission of forms")
 public class Token extends UIBean {
 
     public static final String TEMPLATE = "token";

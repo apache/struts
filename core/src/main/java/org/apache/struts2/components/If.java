@@ -22,6 +22,9 @@ package org.apache.struts2.components;
 
 import java.io.Writer;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -61,18 +64,15 @@ import com.opensymphony.xwork2.util.ValueStack;
  * @see Else
  * @see ElseIf
  *
- * @s.tag name="if" tld-body-content="JSP" description="If tag" tld-tag-class="org.apache.struts2.views.jsp.IfTag"
  */
+@StrutsTag(name="if", tldTagClass="If tag", description="org.apache.struts2.views.jsp.IfTag")
 public class If extends Component {
     public static final String ANSWER = "struts.if.answer";
 
     Boolean answer;
     String test;
 
-    /**
-     * Expression to determine if body of tag is to be displayed
-     * @s.tagattribute required="true" type="Boolean"
-     */
+    @StrutsTagAttribute(description="Expression to determine if body of tag is to be displayed", type="Boolean", required=true)
     public void setTest(String test) {
         this.test = test;
     }

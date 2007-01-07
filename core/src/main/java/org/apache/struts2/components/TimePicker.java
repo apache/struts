@@ -23,6 +23,9 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -55,37 +58,25 @@ public class TimePicker extends TextField {
              addParameter("language", findString(language));
          if(value != null)
              addParameter("value", findString(value));
-  	}
+     }
 
-  	protected String getDefaultTemplate() {
-          return TEMPLATE;
-      }
+     protected String getDefaultTemplate() {
+         return TEMPLATE;
+     }
 
-      /**
-      * Set default minutes to current time
-      *
-      * @s.tagattribute required="false" type="Boolean" default="false"
-       */
+     @StrutsTagAttribute(description="Set default minutes to current time", type="Boolean", defaultValue="false")
      public void setUseDefaultMinutes(String useDefaultMinutes) {
          this.useDefaultMinutes = useDefaultMinutes;
-      }
+     }
 
-      /**
-      * Set default time
-      *
-      * @s.tagattribute required="false" type="Boolean" default="true"
-       */
+     @StrutsTagAttribute(description="Set time to current time", type="Boolean", defaultValue="true")
      public void setUseDefaultTime(String useDefaultTime) {
          this.useDefaultTime = useDefaultTime;
-      }
+     }
 
-      /**
-      * Language to display this widget in (like en-us).
-      *
-      * @s.tagattribute required="false" type="String" default="brower's specified preferred language"
-       */
+     @StrutsTagAttribute(description="Language to display this widget in", defaultValue="brower's specified preferred language")
      public void setLanguage(String language) {
          this.language = language;
-      }
+     }
 
 }

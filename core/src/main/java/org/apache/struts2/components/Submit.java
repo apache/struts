@@ -23,6 +23,8 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.util.UrlHelper;
 
 import com.opensymphony.xwork2.util.ValueStack;
@@ -110,7 +112,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * shown in. This is an inner HTML approah. Your results get jammed into
  * the div for you. Here is a sample of this approach:
  * <!-- END SNIPPET: ajxExDescription1 -->
- * 
+ *
  * <pre>
  * <!-- START SNIPPET: ajxExample1 -->
  * Remote form replacing another div:
@@ -129,10 +131,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: ajxExample1 -->
  * </pre>
  *
- *
- * @s.tag name="submit" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.SubmitTag"
- * description="Render a submit button"
  */
+@StrutsTag(name="submit", tldTagClass="org.apache.struts2.views.jsp.ui.SubmitTag", description="Render a submit button")
 public class Submit extends FormButton implements RemoteUICallBean{
     final public static String TEMPLATE = "submit";
 
@@ -219,119 +219,86 @@ public class Submit extends FormButton implements RemoteUICallBean{
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setRefreshListenTopic(java.lang.String)
-     */
+    @StrutsTagAttribute(description="Topic that will trigger the remote call")
     public void setListenTopics(String listenTopics) {
         this.listenTopics = listenTopics;
     }
 
-    /**
-     * The theme to use for the element. <b>This tag will usually use the ajax theme.</b>
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description="The theme to use for the element. <b>This tag will usually use the ajax theme.</b>")
     public void setTheme(String theme) {
         super.setTheme(theme);
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setHref(java.lang.String)
-     */
+    @StrutsTagAttribute(description="The URL to call to obtain the content. Note: If used with ajax context, the value must be set as an url tag value.")
     public void setHref(String href) {
         this.href = href;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setErrorText(java.lang.String)
-     */
+    @StrutsTagAttribute(description="The text to display to the user if the is an error fetching the content")
     public void setErrorText(String errorText) {
         this.errorText = errorText;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setAfterLoading(java.lang.String)
-     */
+    @StrutsTagAttribute(name="onLoadJS", description="Deprecated. Use 'notifyTopics'. Javascript code execute after reload")
     public void setAfterLoading(String afterLoading) {
         this.afterLoading = afterLoading;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setBeforeLoading(java.lang.String)
-     */
+
+    @StrutsTagAttribute(name="preInvokeJS", description="Deprecated. Use 'notifyTopics'. Javascript code execute before reload")
     public void setBeforeLoading(String beforeLoading) {
         this.beforeLoading = beforeLoading;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setExecuteScripts(java.lang.String)
-     */
+    @StrutsTagAttribute(description="Javascript code in the fetched content will be executed", type="Boolean", defaultValue="false")
     public void setExecuteScripts(String executeScripts) {
         this.executeScripts = executeScripts;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setLoadingText(java.lang.String)
-     */
+    @StrutsTagAttribute(description="Text to be shown while content is being fetched", defaultValue="Loading...")
     public void setLoadingText(String loadingText) {
         this.loadingText = loadingText;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setHandler(java.lang.String)
-     */
+    @StrutsTagAttribute(description="Javascript function name that will make the request")
     public void setHandler(String handler) {
         this.handler = handler;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setFormFilter(java.lang.String)
-     */
+    @StrutsTagAttribute(description="Function name used to filter the fields of the form.")
     public void setFormFilter(String formFilter) {
         this.formFilter = formFilter;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setFormId(java.lang.String)
-     */
+    @StrutsTagAttribute(description="Form id whose fields will be serialized and passed as parameters")
     public void setFormId(String formId) {
         this.formId = formId;
     }
 
-    /**
-     * Supply an image src for <i>image</i> type submit button. Will have no effect for types <i>input</i> and <i>button</i>.
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Supply an image src for <i>image</i> type submit button. Will have no effect for types <i>input</i> and <i>button</i>.")
     public void setSrc(String src) {
         this.src = src;
     }
 
-    /**
-     * Comma delimited list of ids of the elements whose content will be updated
-     * @s.tagattribute required="false" type="String"
-     */
+    @StrutsTagAttribute(description="Comma delimited list of ids of the elements whose content will be updated")
     public void setTargets(String targets) {
         this.targets = targets;
     }
 
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setNotifyTopics(java.lang.String)
-     */
+    @StrutsTagAttribute(description="Topics that will published when the remote call completes")
     public void setNotifyTopics(String notifyTopics) {
         this.notifyTopics = notifyTopics;
     }
 
 
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setShowErrorTransportText(java.lang.String)
-     */
+    @StrutsTagAttribute(description="Set whether errors will be shown or not", type="Boolean", defaultValue="true")
     public void setShowErrorTransportText(String showErrorTransportText) {
         this.showErrorTransportText = showErrorTransportText;
     }
 
-    /**
-     * @param indicator The indicator to set.
-     */
+
+    @StrutsTagAttribute(description="Set indicator")
     public void setIndicator(String indicator) {
         this.indicator = indicator;
     }

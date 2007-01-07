@@ -30,6 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
@@ -91,9 +93,8 @@ import com.opensymphony.xwork2.validator.Validator;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="form" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.FormTag"
- * description="Renders an input form"
  */
+@StrutsTag(name="form", tldTagClass="org.apache.struts2.views.jsp.ui.FormTag", description="Renders an input form")
 public class Form extends ClosingUIBean {
     public static final String OPEN_TEMPLATE = "form";
     public static final String TEMPLATE = "form-close";
@@ -110,7 +111,7 @@ public class Form extends ClosingUIBean {
     protected String portletMode;
     protected String windowState;
     protected String acceptcharset;
-    
+
     protected boolean enableDynamicMethodInvocation = true;
     protected Configuration configuration;
     protected ObjectFactory objectFactory;
@@ -130,17 +131,17 @@ public class Form extends ClosingUIBean {
     protected String getDefaultTemplate() {
         return TEMPLATE;
     }
-    
+
     @Inject(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION)
     public void setEnableDynamicMethodInvocation(String enable) {
         enableDynamicMethodInvocation = "true".equals(enable);
     }
-    
+
     @Inject
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
     }
-    
+
     @Inject
     public void setObjectFactory(ObjectFactory objectFactory) {
         this.objectFactory = objectFactory;
@@ -435,93 +436,53 @@ public class Form extends ClosingUIBean {
         return sequence++;
     }
 
-
-    /**
-     * HTML onsubmit attribute
-     *
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="HTML onsubmit attribute")
     public void setOnsubmit(String onsubmit) {
         this.onsubmit = onsubmit;
     }
 
-    /**
-     * Set action nane to submit to, without .action suffix
-     *
-     * @s.tagattribute required="false" default="current action"
-     */
+    @StrutsTagAttribute(description="Set action nane to submit to, without .action suffix", defaultValue="current action")
     public void setAction(String action) {
         this.action = action;
     }
 
-    /**
-     * HTML form target attribute
-     *
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="HTML form target attribute")
     public void setTarget(String target) {
         this.target = target;
     }
 
-    /**
-     * HTML form enctype attribute
-     *
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="HTML form enctype attribute")
     public void setEnctype(String enctype) {
         this.enctype = enctype;
     }
 
-    /**
-     * HTML form method attribute
-     *
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="HTML form method attribute")
     public void setMethod(String method) {
         this.method = method;
     }
 
-    /**
-     * namespace for action to submit to
-     *
-     * @s.tagattribute required="false" default="current namespace"
-     */
+    @StrutsTagAttribute(description="Namespace for action to submit to", defaultValue="current namespace")
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
 
-    /**
-     * Whether client side/remote validation should be performed. Only useful with theme xhtml/ajax
-     *
-     * @s.tagattribute required="false" type="Boolean" default="false"
-     */
+    @StrutsTagAttribute(description="Whether client side/remote validation should be performed. Only" +
+                " useful with theme xhtml/ajax", type="Boolean", defaultValue="false")
     public void setValidate(String validate) {
         this.validate = validate;
     }
 
-    /**
-     * The portlet mode to display after the form submit
-     *
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="he portlet mode to display after the form submit")
     public void setPortletMode(String portletMode) {
         this.portletMode = portletMode;
     }
 
-    /**
-     * The window state to display after the form submit
-     *
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The window state to display after the form submit")
     public void setWindowState(String windowState) {
         this.windowState = windowState;
     }
 
-    /**
-     * The accepted charsets for this form. The values may be comma or blank delimited.
-     *
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The accepted charsets for this form. The values may be comma or blank delimited.")
     public void setAcceptcharset(String acceptcharset) {
         this.acceptcharset = acceptcharset;
     }

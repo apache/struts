@@ -32,6 +32,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.Dispatcher;
@@ -105,9 +107,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * @see Param
  *
- * @s.tag name="url" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.URLTag"
- * description="This tag is used to create a URL"
  */
+@StrutsTag(name="url", tldTagClass="org.apache.struts2.views.jsp.URLTag", description="This tag is used to create a URL")
 public class URL extends Component {
     private static final Log LOG = LogFactory.getLog(URL.class);
 
@@ -141,18 +142,18 @@ public class URL extends Component {
     protected String anchor;
     protected String urlIncludeParams;
     protected ExtraParameterProvider extraParameterProvider;
-    
+
     public URL(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack);
         this.req = req;
         this.res = res;
     }
-    
+
     @Inject(StrutsConstants.STRUTS_URL_INCLUDEPARAMS)
     public void setUrlIncludeParams(String urlIncludeParams) {
         this.urlIncludeParams = urlIncludeParams;
     }
-    
+
     @Inject(required=false)
     public void setExtraParameterProvider(ExtraParameterProvider provider) {
         this.extraParameterProvider = provider;
@@ -278,98 +279,62 @@ public class URL extends Component {
         return super.end(writer, body);
     }
 
-    /**
-     * The includeParams attribute may have the value 'none', 'get' or 'all'.
-     * @s.tagattribute required="false" default="get"
-     */
+    @StrutsTagAttribute(description="The includeParams attribute may have the value 'none', 'get' or 'all'", defaultValue="get")
     public void setIncludeParams(String includeParams) {
         this.includeParams = includeParams;
     }
 
-    /**
-     * Set scheme attribute
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Set scheme attribute")
     public void setScheme(String scheme) {
         this.scheme = scheme;
     }
 
-    /**
-     * The target value to use, if not using action
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The target value to use, if not using action")
     public void setValue(String value) {
         this.value = value;
     }
 
-    /**
-     * The action generate url for, if not using value
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="he action generate url for, if not using value")
     public void setAction(String action) {
         this.action = action;
     }
 
-    /**
-     * The namespace to use
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The namespace to use")
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
 
-    /**
-     * The method of action to use
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The method of action to use")
     public void setMethod(String method) {
         this.method = method;
     }
 
-    /**
-     * whether to encode parameters
-     * @s.tagattribute required="false" type="Boolean" default="true"
-     */
+    @StrutsTagAttribute(description="Whether to encode parameters", type="Boolean", defaultValue="true")
     public void setEncode(boolean encode) {
         this.encode = encode;
     }
 
-    /**
-     * whether actual context should be included in url
-     * @s.tagattribute required="false" type="Boolean" default="true"
-     */
+    @StrutsTagAttribute(description="Whether actual context should be included in url", type="Boolean", defaultValue="true")
     public void setIncludeContext(boolean includeContext) {
         this.includeContext = includeContext;
     }
 
-    /**
-     * The resulting portlet mode
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The resulting portlet mode")
     public void setPortletMode(String portletMode) {
         this.portletMode = portletMode;
     }
 
-    /**
-     * The resulting portlet window state
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The resulting portlet window state")
     public void setWindowState(String windowState) {
         this.windowState = windowState;
     }
 
-    /**
-     * Specifies if this should be a portlet render or action url
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="Specifies if this should be a portlet render or action url")
     public void setPortletUrlType(String portletUrlType) {
         this.portletUrlType = portletUrlType;
     }
 
-    /**
-     * The anchor for this URL
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The anchor for this URL")
     public void setAnchor(String anchor) {
         this.anchor = anchor;
     }
@@ -431,7 +396,7 @@ public class URL extends Component {
             }
         }
     }
-    
+
     public static interface ExtraParameterProvider {
         public Map getExtraParameters();
     }

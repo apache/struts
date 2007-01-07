@@ -24,6 +24,7 @@ import java.io.Writer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
@@ -146,10 +147,8 @@ public class Bean extends Component {
         OgnlUtil.setProperty(key, value, bean, getStack().getContext());
     }
 
-    /**
-     * the class name of the bean to be instantiated (must respect JavaBean specification)
-     * @s.tagattribute required="true" type="String"
-     */
+    @StrutsTagAttribute(description="The class name of the bean to be instantiated (must respect JavaBean specification)",
+                        required=true)
     public void setName(String name) {
         this.name = name;
     }

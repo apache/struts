@@ -32,6 +32,8 @@ import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.Dispatcher;
@@ -110,9 +112,8 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
- * @s.tag name="action" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ActionTag"
- * description="Execute an action from within a view"
  */
+@StrutsTag(name="action", tldTagClass="org.apache.struts2.views.jsp.ActionTag", description="Execute an action from within a view")
 public class ActionComponent extends Component {
     private static final Log LOG = LogFactory.getLog(ActionComponent.class);
 
@@ -132,7 +133,7 @@ public class ActionComponent extends Component {
         this.req = req;
         this.res = res;
     }
-    
+
     /**
      * @param actionProxyFactory the actionProxyFactory to set
      */
@@ -244,7 +245,7 @@ public class ActionComponent extends Component {
         ValueStack stack = getStack();
         // execute at this point, after params have been set
         try {
-            
+
             proxy = actionProxyFactory.createActionProxy(namespace, actionName, createExtraContext(), executeResult, true);
             if (null != methodName) {
                 proxy.setMethod(methodName);
@@ -267,50 +268,27 @@ public class ActionComponent extends Component {
         }
     }
 
-    /**
-     * the id (if speficied) to put the action under stack's context.
-     * @s.tagattribute required="false" type="String"
-     */
-    public void setId(String id) {
-        super.setId(id);
-    }
-
-    /**
-     * name of the action to be executed (without the extension suffix eg. .action)
-     * @s.tagattribute required="true" type="String"
-     */
+    @StrutsTagAttribute(required=true,description="Name of the action to be executed (without the extension suffix eg. .action)")
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * namespace for action to call
-     * @s.tagattribute required="false" type="String" default="namespace from where tag is used"
-     */
+    @StrutsTagAttribute(description="Namespace for action to call", defaultValue="namespace from where tag is used")
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
 
-    /**
-     * whether the result of this action (probably a view) should be executed/rendered
-     * @s.tagattribute required="false" type="Boolean" default="false"
-     */
+    @StrutsTagAttribute(description="Whether the result of this action (probably a view) should be executed/rendered", type="Boolean", defaultValue="false")
     public void setExecuteResult(boolean executeResult) {
         this.executeResult = executeResult;
     }
 
-    /**
-     * whether the request parameters are to be included when the action is invoked
-     * @s.tagattribute required="false" type="Boolean" default="false"
-     */
+    @StrutsTagAttribute(description="Whether the request parameters are to be included when the action is invoked", type="Boolean", defaultValue="false")
     public void setIgnoreContextParams(boolean ignoreContextParams) {
         this.ignoreContextParams = ignoreContextParams;
     }
 
-    /**
-     * whether the writer should be flush upon end of action component tag, default to true.
-     * @s.tagattribute required="false" type="Boolean" default="true"
-     */
+    @StrutsTagAttribute(description="Whether the writer should be flush upon end of action component tag, default to true", type="Boolean", defaultValue="true")
     public void setFlush(boolean flush) {
         this.flush = flush;
     }

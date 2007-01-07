@@ -27,6 +27,8 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 import org.apache.struts2.components.Param.UnnamedParametric;
 import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.util.MergeIteratorFilter;
@@ -125,9 +127,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  * @see org.apache.struts2.util.MergeIteratorFilter
  * @see org.apache.struts2.views.jsp.iterator.MergeIteratorTag
  *
- * @s.tag name="merge" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.iterator.MergeIteratorTag"
- * description="Merge the values of a list of iterators into one iterator"
  */
+@StrutsTag(name="merge", tldTagClass="org.apache.struts2.views.jsp.iterator.MergeIteratorTag", description="Merge the values " +
+                "of a list of iterators into one iterator")
 public class MergeIterator extends Component implements UnnamedParametric {
 
     private static final Log _log = LogFactory.getLog(MergeIterator.class);
@@ -170,10 +172,7 @@ public class MergeIterator extends Component implements UnnamedParametric {
         return super.end(writer, body);
     }
 
-    /**
-     * the id where the resultant merged iterator will be stored in the stack's context
-     * @s.tagattribute required="false"
-     */
+    @StrutsTagAttribute(description="The id where the resultant merged iterator will be stored in the stack's context")
     public void setId(String id) {
         super.setId(id);
     }

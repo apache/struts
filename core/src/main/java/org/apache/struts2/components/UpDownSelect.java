@@ -77,6 +77,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * @s.tag name="updownselect" tld-body-content="JSP" tld-tag-class="org.apache.struts2.views.jsp.ui.UpDownSelectTag"
  * description="Render a up down select element"
  */
+@StrutsTag(name="updownselect", tldTagClass="org.apache.struts2.views.jsp.ui.UpDownSelectTag", 
+        description="Create a Select component with buttons to move the elements in the select component up and down")
 public class UpDownSelect extends Select {
 
     private static final Log _log = LogFactory.getLog(UpDownSelect.class);

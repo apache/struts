@@ -210,20 +210,21 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
                 secondTime = false;
             } else {
                 secondTime = true;
+                context.put(KEY, null);
             }
         }
 
         synchronized (session) {
             BackgroundProcess bp = (BackgroundProcess) session.get(KEY + name);
 
-            if (secondTime && bp == null) {
+            if ((!executeAfterValidationPass || secondTime) && bp == null) {
                 bp = getNewBackgroundProcess(name, actionInvocation, threadPriority);
                 session.put(KEY + name, bp);
                 performInitialDelay(bp); // first time let some time pass before showing wait page
                 secondTime = false;
             }
 
-            if (!secondTime && bp != null && !bp.isDone()) {
+            if ((!executeAfterValidationPass || !secondTime) && bp != null && !bp.isDone()) {
                 actionInvocation.getStack().push(bp.getAction());
                 Map results = proxy.getConfig().getResults();
                 if (!results.containsKey(WAIT)) {
@@ -238,7 +239,7 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
                 }
 
                 return WAIT;
-            } else if (!secondTime && bp != null && bp.isDone()) {
+            } else if ((!executeAfterValidationPass || !secondTime) && bp != null && bp.isDone()) {
                 session.remove(KEY + name);
                 actionInvocation.getStack().push(bp.getAction());
 

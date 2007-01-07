@@ -76,7 +76,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *      <li>data: html or json object when type='load' or type='error'</li>
  *      <li>type: 'before' before the request is made, 'load' when the request succeeds, or 'error' when it fails</li>
  *      <li>request: request javascript object, when type='load' or type='error'</li>
- * <ul>
+ * </ul>
  * <!-- END SNIPPET: javadoc -->
  *
  * <p/> <b>Examples</b>

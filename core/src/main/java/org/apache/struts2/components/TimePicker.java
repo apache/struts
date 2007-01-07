@@ -35,6 +35,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * @version $Date$ $Id$
  */
+@StrutsTag(name="timepicker", tldTagClass="org.apache.struts2.views.jsp.ui.TimePickerTag", description="Render timepicker")
 public class TimePicker extends TextField {
 
   	final public static String TEMPLATE = "timepicker";

@@ -24,6 +24,8 @@ import javax.servlet.jsp.JspException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 import org.apache.struts2.util.IteratorGenerator;
 import org.apache.struts2.util.IteratorGenerator.Converter;
 import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
@@ -121,10 +123,9 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  * <!-- END SNIPPET: example -->
  *
  * @see org.apache.struts2.util.IteratorGenerator
- *
- * @s.tag name="generator" tld-body-content="JSP"
- * description="Generate an iterator for a iterable source."
  */
+@StrutsTag(name="generator", tldTagClass="org.apache.struts2.views.jsp.iterator.IteratorGeneratorTag", 
+        description="Generate an iterator for a iterable source.")
 public class IteratorGeneratorTag extends StrutsBodyTagSupport {
 
     private static final long serialVersionUID = 2968037295463973936L;
@@ -140,10 +141,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
 
     IteratorGenerator iteratorGenerator = null;
 
-    /**
-     * @s.tagattribute required="false" type="Integer"
-     * description="the max number entries to be in the iterator"
-     */
+    @StrutsTagAttribute(type="Integer",description="The max number entries to be in the iterator")
     public void setCount(String count) {
         countAttr = count;
     }
@@ -152,6 +150,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
      * @s.tagattribute required="true" type="String"
      * description="the separator to be used in separating the <i>val</i> into entries of the iterator"
      */
+    @StrutsTagAttribute(required=true, description="The separator to be used in separating the <i>val</i> into entries of the iterator")
     public void setSeparator(String separator) {
         separatorAttr = separator;
     }
@@ -160,14 +159,13 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
      * @s.tagattribute required="true"
      * description="the source to be parsed into an iterator"
      */
+    @StrutsTagAttribute(required=true, description="The source to be parsed into an iterator")
     public void setVal(String val) {
         valueAttr = val;
     }
 
-    /**
-     * @s.tagattribute required="false" type="org.apache.struts2.util.IteratorGenerator.Converter"
-     * description="the converter to convert the String entry parsed from <i>val</i> into an object"
-     */
+    @StrutsTagAttribute(type="org.apache.struts2.util.IteratorGenerator.Converter",
+            description="The converter to convert the String entry parsed from <i>val</i> into an object")
     public void setConverter(String aConverter) {
         converterAttr = aConverter;
     }
@@ -176,6 +174,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
      * @s.tagattribute required="false" type="String"
      * description="the id to store the resultant iterator into page context, if such id is supplied"
      */
+    @StrutsTagAttribute(description="The id to store the resultant iterator into page context, if such id is supplied")
     public void setId(String string) {
         super.setId(string);
     }

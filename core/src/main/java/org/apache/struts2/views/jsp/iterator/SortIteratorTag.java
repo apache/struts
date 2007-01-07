@@ -24,6 +24,8 @@ import java.util.Comparator;
 
 import javax.servlet.jsp.JspException;
 
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 import org.apache.struts2.util.MakeIterator;
 import org.apache.struts2.util.SortIteratorFilter;
 import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
@@ -84,6 +86,8 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  * @s.tag name="sort" tld-body-content="JSP"
  * description="Sort a List using a Comparator both passed in as the tag attribute."
  */
+@StrutsTag(name="sort", tldTagClass="org.apache.struts2.views.jsp.iterator.SortIteratorTag", 
+        description="Sort a List using a Comparator both passed in as the tag attribute.")
 public class SortIteratorTag extends StrutsBodyTagSupport {
 
     private static final long serialVersionUID = -7835719609764092235L;
@@ -93,18 +97,12 @@ public class SortIteratorTag extends StrutsBodyTagSupport {
 
     SortIteratorFilter sortIteratorFilter = null;
 
-    /**
-     * @s.tagattribute required="true" type="java.util.Comparator"
-     * description="The comparator to use"
-     */
+    @StrutsTagAttribute(required=true,type="java.util.Comparator", description="The comparator to use")
     public void setComparator(String comparator) {
         comparatorAttr = comparator;
     }
 
-    /**
-     * @s.tagattribute required="false"
-     * description="The iterable source to sort"
-     */
+    @StrutsTagAttribute(description="The iterable source to sort")
     public void setSource(String source) {
         sourceAttr = source;
     }

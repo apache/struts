@@ -12,6 +12,42 @@
                     to ensure that input is correct and output is localized.
                     The Struts Tags can be used with JSP FreeMarker or Velocity."]]></description>
   <tag>
+    <name>generator</name>
+    <tag-class>org.apache.struts2.views.jsp.iterator.IteratorGeneratorTag</tag-class>
+    <body-content>JSP</body-content>
+    <description><![CDATA[Generate an iterator for a iterable source.]]></description>
+    <attribute>
+      <name>converter</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The converter to convert the String entry parsed from <i>val</i> into an object]]></description>
+    </attribute>
+    <attribute>
+      <name>count</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The max number entries to be in the iterator]]></description>
+    </attribute>
+    <attribute>
+      <name>id</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The id to store the resultant iterator into page context, if such id is supplied]]></description>
+    </attribute>
+    <attribute>
+      <name>separator</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The separator to be used in separating the <i>val</i> into entries of the iterator]]></description>
+    </attribute>
+    <attribute>
+      <name>val</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The source to be parsed into an iterator]]></description>
+    </attribute>
+  </tag>
+  <tag>
     <name>push</name>
     <tag-class>org.apache.struts2.views.jsp.PushTag</tag-class>
     <body-content>JSP</body-content>
@@ -1260,36 +1296,6 @@
     </attribute>
   </tag>
   <tag>
-    <name>property</name>
-    <tag-class>org.apache.struts2.views.jsp.PropertyTag</tag-class>
-    <body-content>empty</body-content>
-    <description><![CDATA[Print out expression which evaluates against the stack]]></description>
-    <attribute>
-      <name>default</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The default value to be used if <u>value</u> attribute is null]]></description>
-    </attribute>
-    <attribute>
-      <name>escape</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[ Whether to escape HTML]]></description>
-    </attribute>
-    <attribute>
-      <name>id</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[id for referencing element. For UI and form tags it will be used as HTML id attribute]]></description>
-    </attribute>
-    <attribute>
-      <name>value</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Value to be displayed]]></description>
-    </attribute>
-  </tag>
-  <tag>
     <name>hidden</name>
     <tag-class>org.apache.struts2.views.jsp.ui.HiddenTag</tag-class>
     <body-content>JSP</body-content>
@@ -1491,258 +1497,6 @@
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description><![CDATA[Preset the value of input element.]]></description>
-    </attribute>
-  </tag>
-  <tag>
-    <name>datepicker</name>
-    <tag-class>org.apache.struts2.views.jsp.ui.DatePickerTag</tag-class>
-    <body-content>JSP</body-content>
-    <description><![CDATA[Render datepicker]]></description>
-    <attribute>
-      <name>accesskey</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>adjustWeeks</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[If true, weekly size of calendar changes to acomodate the month if false, 42 day format is used]]></description>
-    </attribute>
-    <attribute>
-      <name>cssClass</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The css class to use for element]]></description>
-    </attribute>
-    <attribute>
-      <name>cssStyle</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The css style definitions for element ro use]]></description>
-    </attribute>
-    <attribute>
-      <name>dayWidth</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[How to render the names of the days in the header(narrow, abbr or wide)]]></description>
-    </attribute>
-    <attribute>
-      <name>disabled</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html disabled attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>displayWeeks</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Total weeks to display]]></description>
-    </attribute>
-    <attribute>
-      <name>endDate</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Last available date in the calendar set]]></description>
-    </attribute>
-    <attribute>
-      <name>id</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[id for referencing element. For UI and form tags it will be used as HTML id attribute]]></description>
-    </attribute>
-    <attribute>
-      <name>key</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the key (name, value, label) for this particular component]]></description>
-    </attribute>
-    <attribute>
-      <name>label</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Label expression used for rendering a element specific label]]></description>
-    </attribute>
-    <attribute>
-      <name>labelposition</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-    </attribute>
-    <attribute>
-      <name>language</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Language to display this widget in]]></description>
-    </attribute>
-    <attribute>
-      <name>name</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The name to set for element]]></description>
-    </attribute>
-    <attribute>
-      <name>onblur</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[ Set the html onblur attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onchange</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onchange attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onclick</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onclick attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>ondblclick</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html ondblclick attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onfocus</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onfocus attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onkeydown</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onkeydown attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onkeypress</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onkeypress attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onkeyup</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onkeyup attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onmousedown</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onmousedown attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onmousemove</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onmousemove attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onmouseout</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onmouseout attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onmouseover</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onmouseover attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onmouseup</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onmouseup attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onselect</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>required</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
-    </attribute>
-    <attribute>
-      <name>requiredposition</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Define required position of required form element (left|right)]]></description>
-    </attribute>
-    <attribute>
-      <name>startDate</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[First available date in the calendar set]]></description>
-    </attribute>
-    <attribute>
-      <name>staticDisplay</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Disable all incremental controls, must pick a date in the current display]]></description>
-    </attribute>
-    <attribute>
-      <name>tabindex</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html tabindex attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>template</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The template (other than default) to use for rendering the element]]></description>
-    </attribute>
-    <attribute>
-      <name>templateDir</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The template directory.]]></description>
-    </attribute>
-    <attribute>
-      <name>theme</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The theme (other than default) to use for rendering the element]]></description>
-    </attribute>
-    <attribute>
-      <name>title</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html title attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>tooltip</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the tooltip of this particular component]]></description>
-    </attribute>
-    <attribute>
-      <name>tooltipConfig</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the tooltip configuration]]></description>
-    </attribute>
-    <attribute>
-      <name>value</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Preset the value of input element.]]></description>
-    </attribute>
-    <attribute>
-      <name>weekStartsOn</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Adjusts the first day of the week 0==Sunday..6==Saturday]]></description>
     </attribute>
   </tag>
   <tag>
@@ -2097,6 +1851,288 @@
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description><![CDATA[Preset the value of input element.]]></description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>datepicker</name>
+    <tag-class>org.apache.struts2.views.jsp.ui.DatePickerTag</tag-class>
+    <body-content>JSP</body-content>
+    <description><![CDATA[Render datepicker]]></description>
+    <attribute>
+      <name>accesskey</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>adjustWeeks</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[If true, weekly size of calendar changes to acomodate the month if false, 42 day format is used]]></description>
+    </attribute>
+    <attribute>
+      <name>cssClass</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The css class to use for element]]></description>
+    </attribute>
+    <attribute>
+      <name>cssStyle</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The css style definitions for element ro use]]></description>
+    </attribute>
+    <attribute>
+      <name>dayWidth</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[How to render the names of the days in the header(narrow, abbr or wide)]]></description>
+    </attribute>
+    <attribute>
+      <name>disabled</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html disabled attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>displayWeeks</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Total weeks to display]]></description>
+    </attribute>
+    <attribute>
+      <name>endDate</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Last available date in the calendar set]]></description>
+    </attribute>
+    <attribute>
+      <name>id</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[id for referencing element. For UI and form tags it will be used as HTML id attribute]]></description>
+    </attribute>
+    <attribute>
+      <name>key</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the key (name, value, label) for this particular component]]></description>
+    </attribute>
+    <attribute>
+      <name>label</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Label expression used for rendering a element specific label]]></description>
+    </attribute>
+    <attribute>
+      <name>labelposition</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+    </attribute>
+    <attribute>
+      <name>language</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Language to display this widget in]]></description>
+    </attribute>
+    <attribute>
+      <name>name</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The name to set for element]]></description>
+    </attribute>
+    <attribute>
+      <name>onblur</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[ Set the html onblur attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onchange</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onchange attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onclick</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onclick attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>ondblclick</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html ondblclick attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onfocus</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onfocus attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onkeydown</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onkeydown attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onkeypress</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onkeypress attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onkeyup</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onkeyup attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onmousedown</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onmousedown attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onmousemove</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onmousemove attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onmouseout</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onmouseout attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onmouseover</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onmouseover attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onmouseup</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onmouseup attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onselect</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>required</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
+    </attribute>
+    <attribute>
+      <name>requiredposition</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Define required position of required form element (left|right)]]></description>
+    </attribute>
+    <attribute>
+      <name>startDate</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[First available date in the calendar set]]></description>
+    </attribute>
+    <attribute>
+      <name>staticDisplay</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Disable all incremental controls, must pick a date in the current display]]></description>
+    </attribute>
+    <attribute>
+      <name>tabindex</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html tabindex attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>template</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The template (other than default) to use for rendering the element]]></description>
+    </attribute>
+    <attribute>
+      <name>templateDir</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The template directory.]]></description>
+    </attribute>
+    <attribute>
+      <name>theme</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The theme (other than default) to use for rendering the element]]></description>
+    </attribute>
+    <attribute>
+      <name>title</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html title attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>tooltip</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the tooltip of this particular component]]></description>
+    </attribute>
+    <attribute>
+      <name>tooltipConfig</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the tooltip configuration]]></description>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Preset the value of input element.]]></description>
+    </attribute>
+    <attribute>
+      <name>weekStartsOn</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Adjusts the first day of the week 0==Sunday..6==Saturday]]></description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>property</name>
+    <tag-class>org.apache.struts2.views.jsp.PropertyTag</tag-class>
+    <body-content>empty</body-content>
+    <description><![CDATA[Print out expression which evaluates against the stack]]></description>
+    <attribute>
+      <name>default</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The default value to be used if <u>value</u> attribute is null]]></description>
+    </attribute>
+    <attribute>
+      <name>escape</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[ Whether to escape HTML]]></description>
+    </attribute>
+    <attribute>
+      <name>id</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[id for referencing element. For UI and form tags it will be used as HTML id attribute]]></description>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Value to be displayed]]></description>
     </attribute>
   </tag>
   <tag>
@@ -3537,6 +3573,36 @@
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description><![CDATA[The id where the resultant merged iterator will be stored in the stack's context]]></description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>subset</name>
+    <tag-class>org.apache.struts2.views.jsp.iterator.SubsetIteratorTag</tag-class>
+    <body-content>JSP</body-content>
+    <description><![CDATA[Takes an iterator and outputs a subset of it.]]></description>
+    <attribute>
+      <name>count</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Indicate the number of entries to be in the resulting subset iterator]]></description>
+    </attribute>
+    <attribute>
+      <name>decider</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Extension to plug-in a decider to determine if that particular entry is to be included in the resulting subset iterator]]></description>
+    </attribute>
+    <attribute>
+      <name>source</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Indicate the source of which the resulting subset iterator is to be derived base on]]></description>
+    </attribute>
+    <attribute>
+      <name>start</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Indicate the starting index (eg. first entry is 0) of entries in the source to be available as the first entry in the resulting subset iterator]]></description>
     </attribute>
   </tag>
   <tag>
@@ -5118,501 +5184,21 @@
     </attribute>
   </tag>
   <tag>
-    <name>checkbox</name>
-    <tag-class>org.apache.struts2.views.jsp.ui.CheckboxTag</tag-class>
+    <name>sort</name>
+    <tag-class>org.apache.struts2.views.jsp.iterator.SortIteratorTag</tag-class>
     <body-content>JSP</body-content>
-    <description><![CDATA[Render a checkbox input field]]></description>
+    <description><![CDATA[Sort a List using a Comparator both passed in as the tag attribute.]]></description>
     <attribute>
-      <name>accesskey</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>cssClass</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The css class to use for element]]></description>
-    </attribute>
-    <attribute>
-      <name>cssStyle</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The css style definitions for element ro use]]></description>
-    </attribute>
-    <attribute>
-      <name>disabled</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html disabled attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>fieldValue</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The actual HTML value attribute of the checkbox.]]></description>
-    </attribute>
-    <attribute>
-      <name>id</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[id for referencing element. For UI and form tags it will be used as HTML id attribute]]></description>
-    </attribute>
-    <attribute>
-      <name>key</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the key (name, value, label) for this particular component]]></description>
-    </attribute>
-    <attribute>
-      <name>label</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Label expression used for rendering a element specific label]]></description>
-    </attribute>
-    <attribute>
-      <name>labelposition</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-    </attribute>
-    <attribute>
-      <name>name</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The name to set for element]]></description>
-    </attribute>
-    <attribute>
-      <name>onblur</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[ Set the html onblur attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onchange</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onchange attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onclick</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onclick attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>ondblclick</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html ondblclick attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onfocus</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onfocus attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onkeydown</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onkeydown attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onkeypress</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onkeypress attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onkeyup</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onkeyup attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onmousedown</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onmousedown attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onmousemove</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onmousemove attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onmouseout</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onmouseout attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onmouseover</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onmouseover attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onmouseup</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onmouseup attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onselect</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>required</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
-    </attribute>
-    <attribute>
-      <name>requiredposition</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Define required position of required form element (left|right)]]></description>
-    </attribute>
-    <attribute>
-      <name>tabindex</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html tabindex attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>template</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The template (other than default) to use for rendering the element]]></description>
-    </attribute>
-    <attribute>
-      <name>templateDir</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The template directory.]]></description>
-    </attribute>
-    <attribute>
-      <name>theme</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The theme (other than default) to use for rendering the element]]></description>
-    </attribute>
-    <attribute>
-      <name>title</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html title attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>tooltip</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the tooltip of this particular component]]></description>
-    </attribute>
-    <attribute>
-      <name>tooltipConfig</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the tooltip configuration]]></description>
-    </attribute>
-    <attribute>
-      <name>value</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Preset the value of input element.]]></description>
-    </attribute>
-  </tag>
-  <tag>
-    <name>updownselect</name>
-    <tag-class>org.apache.struts2.views.jsp.ui.UpDownSelectTag</tag-class>
-    <body-content>JSP</body-content>
-    <description><![CDATA[Create a Select component with buttons to move the elements in the select component up and down]]></description>
-    <attribute>
-      <name>accesskey</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>allowMoveDown</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Whether move down button should be displayed]]></description>
-    </attribute>
-    <attribute>
-      <name>allowMoveUp</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Whether move up button should be displayed]]></description>
-    </attribute>
-    <attribute>
-      <name>allowSelectAll</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Whether or not select all button should be displayed]]></description>
-    </attribute>
-    <attribute>
-      <name>cssClass</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The css class to use for element]]></description>
-    </attribute>
-    <attribute>
-      <name>cssStyle</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The css style definitions for element ro use]]></description>
-    </attribute>
-    <attribute>
-      <name>disabled</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html disabled attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>emptyOption</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Whether or not to add an empty (--) option after the header option]]></description>
-    </attribute>
-    <attribute>
-      <name>headerKey</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[ Key for first item in list. Must not be empty! '-1' and '' is correct, '' is bad.]]></description>
-    </attribute>
-    <attribute>
-      <name>headerValue</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Value expression for first item in list]]></description>
-    </attribute>
-    <attribute>
-      <name>id</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[id for referencing element. For UI and form tags it will be used as HTML id attribute]]></description>
-    </attribute>
-    <attribute>
-      <name>key</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the key (name, value, label) for this particular component]]></description>
-    </attribute>
-    <attribute>
-      <name>label</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Label expression used for rendering a element specific label]]></description>
-    </attribute>
-    <attribute>
-      <name>labelposition</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Define label position of form element (top/left)]]></description>
-    </attribute>
-    <attribute>
-      <name>list</name>
+      <name>comparator</name>
       <required>true</required>
       <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Iterable source to populate from. If the list is a Map (key, value), the Map key will become the option 'value' parameter and the Map value will become the option body.]]></description>
+      <description><![CDATA[The comparator to use]]></description>
     </attribute>
     <attribute>
-      <name>listKey</name>
+      <name>source</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[ Property of list objects to get field value from]]></description>
-    </attribute>
-    <attribute>
-      <name>listValue</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Property of list objects to get field content from]]></description>
-    </attribute>
-    <attribute>
-      <name>moveDownLabel</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Text to display on the move down button]]></description>
-    </attribute>
-    <attribute>
-      <name>moveUpLabel</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Text to display on the move up button]]></description>
-    </attribute>
-    <attribute>
-      <name>multiple</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[ Creates a multiple select. The tag will pre-select multiple values if the values are passed as an Array (of appropriate types) via the value attribute. Passing a Collection may work too? Haven't tested this.]]></description>
-    </attribute>
-    <attribute>
-      <name>name</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The name to set for element]]></description>
-    </attribute>
-    <attribute>
-      <name>onblur</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[ Set the html onblur attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onchange</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onchange attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onclick</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onclick attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>ondblclick</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html ondblclick attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onfocus</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onfocus attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onkeydown</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onkeydown attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onkeypress</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onkeypress attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onkeyup</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onkeyup attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onmousedown</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onmousedown attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onmousemove</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onmousemove attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onmouseout</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onmouseout attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onmouseover</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onmouseover attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onmouseup</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onmouseup attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>onselect</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>required</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
-    </attribute>
-    <attribute>
-      <name>requiredposition</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Define required position of required form element (left|right)]]></description>
-    </attribute>
-    <attribute>
-      <name>selectAllLabel</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Text to display on the select all button]]></description>
-    </attribute>
-    <attribute>
-      <name>size</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Size of the element box (# of elements to show)]]></description>
-    </attribute>
-    <attribute>
-      <name>tabindex</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html tabindex attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>template</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The template (other than default) to use for rendering the element]]></description>
-    </attribute>
-    <attribute>
-      <name>templateDir</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The template directory.]]></description>
-    </attribute>
-    <attribute>
-      <name>theme</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The theme (other than default) to use for rendering the element]]></description>
-    </attribute>
-    <attribute>
-      <name>title</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the html title attribute on rendered html element]]></description>
-    </attribute>
-    <attribute>
-      <name>tooltip</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the tooltip of this particular component]]></description>
-    </attribute>
-    <attribute>
-      <name>tooltipConfig</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the tooltip configuration]]></description>
-    </attribute>
-    <attribute>
-      <name>value</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Preset the value of input element.]]></description>
+      <description><![CDATA[The iterable source to sort]]></description>
     </attribute>
   </tag>
   <tag>
@@ -5655,6 +5241,216 @@
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description><![CDATA[Set the html disabled attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>id</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[id for referencing element. For UI and form tags it will be used as HTML id attribute]]></description>
+    </attribute>
+    <attribute>
+      <name>key</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the key (name, value, label) for this particular component]]></description>
+    </attribute>
+    <attribute>
+      <name>label</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Label expression used for rendering a element specific label]]></description>
+    </attribute>
+    <attribute>
+      <name>labelposition</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+    </attribute>
+    <attribute>
+      <name>name</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The name to set for element]]></description>
+    </attribute>
+    <attribute>
+      <name>onblur</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[ Set the html onblur attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onchange</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onchange attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onclick</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onclick attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>ondblclick</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html ondblclick attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onfocus</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onfocus attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onkeydown</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onkeydown attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onkeypress</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onkeypress attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onkeyup</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onkeyup attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onmousedown</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onmousedown attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onmousemove</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onmousemove attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onmouseout</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onmouseout attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onmouseover</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onmouseover attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onmouseup</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onmouseup attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onselect</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>required</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
+    </attribute>
+    <attribute>
+      <name>requiredposition</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Define required position of required form element (left|right)]]></description>
+    </attribute>
+    <attribute>
+      <name>tabindex</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html tabindex attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>template</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The template (other than default) to use for rendering the element]]></description>
+    </attribute>
+    <attribute>
+      <name>templateDir</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The template directory.]]></description>
+    </attribute>
+    <attribute>
+      <name>theme</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The theme (other than default) to use for rendering the element]]></description>
+    </attribute>
+    <attribute>
+      <name>title</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html title attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>tooltip</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the tooltip of this particular component]]></description>
+    </attribute>
+    <attribute>
+      <name>tooltipConfig</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the tooltip configuration]]></description>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Preset the value of input element.]]></description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>checkbox</name>
+    <tag-class>org.apache.struts2.views.jsp.ui.CheckboxTag</tag-class>
+    <body-content>JSP</body-content>
+    <description><![CDATA[Render a checkbox input field]]></description>
+    <attribute>
+      <name>accesskey</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>cssClass</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The css class to use for element]]></description>
+    </attribute>
+    <attribute>
+      <name>cssStyle</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The css style definitions for element ro use]]></description>
+    </attribute>
+    <attribute>
+      <name>disabled</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html disabled attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>fieldValue</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The actual HTML value attribute of the checkbox.]]></description>
     </attribute>
     <attribute>
       <name>id</name>
@@ -6081,6 +5877,294 @@
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description><![CDATA[Comma delimited list of ids of the elements whose content will be updated]]></description>
+    </attribute>
+    <attribute>
+      <name>template</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The template (other than default) to use for rendering the element]]></description>
+    </attribute>
+    <attribute>
+      <name>templateDir</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The template directory.]]></description>
+    </attribute>
+    <attribute>
+      <name>theme</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The theme (other than default) to use for rendering the element]]></description>
+    </attribute>
+    <attribute>
+      <name>title</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html title attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>tooltip</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the tooltip of this particular component]]></description>
+    </attribute>
+    <attribute>
+      <name>tooltipConfig</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the tooltip configuration]]></description>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Preset the value of input element.]]></description>
+    </attribute>
+  </tag>
+  <tag>
+    <name>updownselect</name>
+    <tag-class>org.apache.struts2.views.jsp.ui.UpDownSelectTag</tag-class>
+    <body-content>JSP</body-content>
+    <description><![CDATA[Create a Select component with buttons to move the elements in the select component up and down]]></description>
+    <attribute>
+      <name>accesskey</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>allowMoveDown</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Whether move down button should be displayed]]></description>
+    </attribute>
+    <attribute>
+      <name>allowMoveUp</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Whether move up button should be displayed]]></description>
+    </attribute>
+    <attribute>
+      <name>allowSelectAll</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Whether or not select all button should be displayed]]></description>
+    </attribute>
+    <attribute>
+      <name>cssClass</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The css class to use for element]]></description>
+    </attribute>
+    <attribute>
+      <name>cssStyle</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The css style definitions for element ro use]]></description>
+    </attribute>
+    <attribute>
+      <name>disabled</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html disabled attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>emptyOption</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Whether or not to add an empty (--) option after the header option]]></description>
+    </attribute>
+    <attribute>
+      <name>headerKey</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[ Key for first item in list. Must not be empty! '-1' and '' is correct, '' is bad.]]></description>
+    </attribute>
+    <attribute>
+      <name>headerValue</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Value expression for first item in list]]></description>
+    </attribute>
+    <attribute>
+      <name>id</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[id for referencing element. For UI and form tags it will be used as HTML id attribute]]></description>
+    </attribute>
+    <attribute>
+      <name>key</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the key (name, value, label) for this particular component]]></description>
+    </attribute>
+    <attribute>
+      <name>label</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Label expression used for rendering a element specific label]]></description>
+    </attribute>
+    <attribute>
+      <name>labelposition</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Define label position of form element (top/left)]]></description>
+    </attribute>
+    <attribute>
+      <name>list</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Iterable source to populate from. If the list is a Map (key, value), the Map key will become the option 'value' parameter and the Map value will become the option body.]]></description>
+    </attribute>
+    <attribute>
+      <name>listKey</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[ Property of list objects to get field value from]]></description>
+    </attribute>
+    <attribute>
+      <name>listValue</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Property of list objects to get field content from]]></description>
+    </attribute>
+    <attribute>
+      <name>moveDownLabel</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Text to display on the move down button]]></description>
+    </attribute>
+    <attribute>
+      <name>moveUpLabel</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Text to display on the move up button]]></description>
+    </attribute>
+    <attribute>
+      <name>multiple</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[ Creates a multiple select. The tag will pre-select multiple values if the values are passed as an Array (of appropriate types) via the value attribute. Passing a Collection may work too? Haven't tested this.]]></description>
+    </attribute>
+    <attribute>
+      <name>name</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The name to set for element]]></description>
+    </attribute>
+    <attribute>
+      <name>onblur</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[ Set the html onblur attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onchange</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onchange attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onclick</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onclick attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>ondblclick</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html ondblclick attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onfocus</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onfocus attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onkeydown</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onkeydown attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onkeypress</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onkeypress attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onkeyup</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onkeyup attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onmousedown</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onmousedown attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onmousemove</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onmousemove attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onmouseout</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onmouseout attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onmouseover</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onmouseover attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onmouseup</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onmouseup attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>onselect</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
+    </attribute>
+    <attribute>
+      <name>required</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
+    </attribute>
+    <attribute>
+      <name>requiredposition</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Define required position of required form element (left|right)]]></description>
+    </attribute>
+    <attribute>
+      <name>selectAllLabel</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Text to display on the select all button]]></description>
+    </attribute>
+    <attribute>
+      <name>size</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Size of the element box (# of elements to show)]]></description>
+    </attribute>
+    <attribute>
+      <name>tabindex</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set the html tabindex attribute on rendered html element]]></description>
     </attribute>
     <attribute>
       <name>template</name>

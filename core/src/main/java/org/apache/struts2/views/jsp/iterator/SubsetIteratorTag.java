@@ -24,6 +24,8 @@ import javax.servlet.jsp.JspException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts.annotations.StrutsTagAttribute;
 import org.apache.struts2.util.SubsetIteratorFilter;
 import org.apache.struts2.util.SubsetIteratorFilter.Decider;
 import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
@@ -145,6 +147,8 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  * @s.tag name="subset" tld-body-content="JSP"
  * description="Takes an iterator and outputs a subset of it"
  */
+@StrutsTag(name="subset", tldTagClass="org.apache.struts2.views.jsp.iterator.SubsetIteratorTag", 
+        description="Takes an iterator and outputs a subset of it.")
 public class SubsetIteratorTag extends StrutsBodyTagSupport {
 
     private static final long serialVersionUID = -6252696081713080102L;
@@ -159,18 +163,12 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
     SubsetIteratorFilter subsetIteratorFilter = null;
 
 
-    /**
-     * @s.tagattribute required="false" type="Integer"
-     * description="Indicate the number of entries to be in the resulting subset iterator"
-     */
+    @StrutsTagAttribute(type="Integer", description="Indicate the number of entries to be in the resulting subset iterator")
     public void setCount(String count) {
         countAttr = count;
     }
 
-    /**
-     * @s.tagattribute required="false"
-     * description="Indicate the source of which the resulting subset iterator is to be derived base on"
-     */
+    @StrutsTagAttribute(description="Indicate the source of which the resulting subset iterator is to be derived base on")
     public void setSource(String source) {
         sourceAttr = source;
     }
@@ -179,14 +177,14 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
      * @s.tagattribute required="false" type="Integer"
      * description="Indicate the starting index (eg. first entry is 0) of entries in the source to be available as the first entry in the resulting subset iterator"
      */
+    @StrutsTagAttribute(type="Integer", 
+            description="Indicate the starting index (eg. first entry is 0) of entries in the source to be available as the first entry in the resulting subset iterator")
     public void setStart(String start) {
         startAttr = start;
     }
 
-    /**
-     * @s.tagattribute required="false" type="org.apache.struts2.util.SubsetIteratorFilter.Decider"
-     * description="Extension to plug-in a decider to determine if that particular entry is to be included in the resulting subset iterator"
-     */
+    @StrutsTagAttribute(type="org.apache.struts2.util.SubsetIteratorFilter.Decider", 
+            description="Extension to plug-in a decider to determine if that particular entry is to be included in the resulting subset iterator")
     public void setDecider(String decider) {
         deciderAttr = decider;
     }

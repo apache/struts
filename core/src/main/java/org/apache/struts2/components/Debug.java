@@ -31,9 +31,11 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.struts.annotations.StrutsTag;
 import org.apache.struts2.StrutsException;
 
-
+@StrutsTag(name="debug", tldTagClass="org.apache.struts2.views.jsp.ui.DebugTag", 
+        description="Prints debugging information")
 public class Debug extends UIBean {
     public static final String TEMPLATE = "debug";
 

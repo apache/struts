@@ -14,8 +14,8 @@
     lang="${parameters.language?html}"<#rt/>
   </#if>
   <#if parameters.name?if_exists != "">
-    name="${parameters.name?html}"<#rt/>
-    inputName="dojo.${parameters.name?html}"<#rt/>
+    name="dojo.${parameters.name?html}"<#rt/>
+    inputName="${parameters.name?html}"<#rt/>
   </#if>
   <#if parameters.displayWeeks?if_exists != "">
     displayWeeks="${parameters.displayWeeks?html}"<#rt/>

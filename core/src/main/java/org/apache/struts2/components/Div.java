@@ -36,7 +36,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * It creates a HTML &lt;DIV /&gt; that obtains it's content via a remote XMLHttpRequest call via
  * the dojo framework.<p/>
  *
- * </p>
+ * <p>
  * <!-- START SNIPPET: ajaxJavadoc -->
  * <B>THE FOLLOWING IS ONLY VALID WHEN AJAX IS CONFIGURED</B>
  * <ul>
@@ -82,9 +82,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  *      <li>type: 'before' before the request is made, 'load' when the request succeeds, or 'error' when it fails</li>
  *      <li>request: request javascript object, when type='load' or type='error'</li>
  * <ul>
-
+ * </p>
  * <!-- END SNIPPET: javadoc -->
- * <p/> <b>Examples</b>
+ * <p> <b>Examples</b>
  *
  * <pre>
  *       <!-- START SNIPPET: example -->
@@ -101,6 +101,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *&gt;&lt;/s:div&gt;
  *       <!-- END SNIPPET: example -->
  * </pre>
+ * </p>
  *
  */
 @StrutsTag(name="div", tldTagClass="org.apache.struts2.views.jsp.ui.DivTag", description="Render HTML div providing content from remote call via AJAX")

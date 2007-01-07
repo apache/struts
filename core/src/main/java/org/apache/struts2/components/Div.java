@@ -31,12 +31,12 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  * <!-- START SNIPPET: javadoc -->
  * The div tag when used on the ajax theme, provides a remote call
- * from the current page to update a section of content without having to refresh the entire page.<p/>
- *
- * It creates a HTML &lt;DIV /&gt; that obtains it's content via a remote XMLHttpRequest call via
- * the dojo framework.<p/>
- *
+ * from the current page to update a section of content without having to refresh the entire page.
  * <p>
+ * It creates a HTML &lt;DIV /&gt; that obtains it's content via a remote XMLHttpRequest call via
+ * the dojo framework.
+ * </p>
+ * <div>
  * <!-- START SNIPPET: ajaxJavadoc -->
  * <B>THE FOLLOWING IS ONLY VALID WHEN AJAX IS CONFIGURED</B>
  * <ul>
@@ -76,15 +76,14 @@ import com.opensymphony.xwork2.util.ValueStack;
  * 'listenTopics' comma separated list of topics names, that will trigger a request
  * 'indicator' element to be shown while the request executing
  * 'showErrorTransportText': whether errors should be displayed (on 'targets')</p>
- * 'notifyTopics' comma separated list of topics names, that will be published. Three parameters are passed:<p>
+ * 'notifyTopics' comma separated list of topics names, that will be published. Three parameters are passed:
  * <ul>
  *      <li>data: html or json object when type='load' or type='error'</li>
  *      <li>type: 'before' before the request is made, 'load' when the request succeeds, or 'error' when it fails</li>
  *      <li>request: request javascript object, when type='load' or type='error'</li>
  * <ul>
- * </p>
  * <!-- END SNIPPET: javadoc -->
- * <p> <b>Examples</b>
+ * </div><p> <b>Examples</b>
  *
  * <pre>
  *       <!-- START SNIPPET: example -->

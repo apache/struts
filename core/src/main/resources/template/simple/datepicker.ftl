@@ -1,3 +1,7 @@
+<script type="text/javascript">
+    dojo.require("dojo.widget.DatePicker");
+</script>
+
 <input type="hidden"
   <#if parameters.nameValue?if_exists != "">
     value="${parameters.nameValue?html}"<#rt/>
@@ -6,7 +10,7 @@
     name="${parameters.name?html}"<#rt/>
     id="struts_${parameters.name?html}"<#rt/>
   </#if>
->
+ />
 <div dojoType="struts:DatePicker"
   <#if parameters.id?if_exists != "">
     id="${parameters.id?html}"<#rt/>

@@ -3,10 +3,11 @@
     <td><script type="text/javascript">
 	dojo.require("dojo.widget.DatePicker");
 </script>
-<div dojoType="datepicker"
+<input type="hidden" name="h" id="struts_h" />
+<div dojoType="struts:DatePicker"
  id="id"
+ inputId="struts_h"
  lang="i"
- name="h"
  displayWeeks="true"
  adjustWeeks="true"
  startDate="e"

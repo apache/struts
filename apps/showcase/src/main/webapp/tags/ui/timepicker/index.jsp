@@ -2,14 +2,8 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <html>
 <head>
-    <title>Ajax Examples</title>
-
-    <!--// START SNIPPET: common-include-->
-    <jsp:include page="/ajax/commonInclude.jsp"/>
-    <!--// END SNIPPET: common-include-->
-
+    <title>UI Tags Example</title>
 </head>
-
 <body>
 <table>
 <tr><td>

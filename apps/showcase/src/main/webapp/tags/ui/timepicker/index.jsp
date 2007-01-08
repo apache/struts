@@ -3,45 +3,17 @@
 <html>
 <head>
     <title>UI Tags Example</title>
+    <s:head />
 </head>
 <body>
 <table>
-<tr><td>
-<s:datetimepicker type="time" value="10:30" toggleType="wipe" toggleDuration="300"/>
-</td><td>
-toggleType="wipe"
-</td></tr>
-<tr><td>
-<s:datetimepicker type="time" value="13:00" toggleType="explode" toggleDuration="500"/>
-</td><td>
-toggleTye="explode"
-</td></tr>
-<tr><td>
-<s:datetimepicker type="time" value="13:00" toggleType="fade" toggleDuration="500"/>
-</td><td>
-toggleType="fade"
-</td></tr>
-<tr><td>
-<s:datetimepicker type="time" name="dddp1" value="today" />
-</td><td>
-With value="today"
-</td></tr>
-<tr><td>
-<s:datetimepicker  type="time" name="dddp2" language="en-us" />
-</td><td>
-US format, empty
-</td></tr>
-<tr><td>
-<s:datetimepicker type="time" name="dddp7"  language="de" />
-</td><td>
-In German
-</td></tr>
-<tr><td>
-<s:datetimepicker type="time" name="dddp8"  language="nl" />
-</td><td>
-In Dutch
-</td><td>
+<s:datetimepicker label="toggleType='wipe'" type="time" value="10:30" toggleType="wipe" toggleDuration="300"/>
+<s:datetimepicker label="toggleType='explode'" type="time" value="13:00" toggleType="explode" toggleDuration="500"/>
+<s:datetimepicker label="toggleType='fade'" type="time" value="13:00" toggleType="fade" toggleDuration="500"/>
+<s:datetimepicker label="With value='today'" type="time" name="dddp1" value="today" />
+<s:datetimepicker label="US format, empty" type="time" name="dddp2" language="en-us" />
+<s:datetimepicker label="In German" type="time" name="dddp7"  language="de" />
+<s:datetimepicker label="In Dutch" type="time" name="dddp8"  language="nl" />
 </table>
-<s:include value="../footer.jsp"/>
 </body>
 </html>

@@ -2762,7 +2762,7 @@
       <name>doubleListKey</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The key expression to use for second list]]></description>
+      <description><![CDATA[Set the list key of the second attribute]]></description>
     </attribute>
     <attribute>
       <name>doubleListValue</name>
@@ -4958,7 +4958,7 @@
       <name>doubleListKey</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[The key expression to use for second list]]></description>
+      <description><![CDATA[Set the list key of the second attribute]]></description>
     </attribute>
     <attribute>
       <name>doubleListValue</name>

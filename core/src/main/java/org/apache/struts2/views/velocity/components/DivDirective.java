@@ -39,4 +39,8 @@ public class DivDirective extends AbstractDirective {
     protected Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Div(stack, req, res);
     }
+
+    public int getType() {
+        return BLOCK;
+    }
 }

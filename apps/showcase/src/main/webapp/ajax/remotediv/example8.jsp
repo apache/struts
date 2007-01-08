@@ -30,8 +30,8 @@
 <br/><br/>
 
 <input type=button value="refresh" onclick="controller.refresh()">
-<input type=button value="start timer" onclick="controller.start()">
 <input type=button value="stop timer" onclick="controller.stop()">
+<input type=button value="start timer" onclick="controller.start()">
 
 <s:url id="ajaxTest" value="/AjaxTest.action" />
 

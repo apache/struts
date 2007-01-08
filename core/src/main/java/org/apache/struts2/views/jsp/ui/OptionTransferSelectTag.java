@@ -173,6 +173,53 @@ public class OptionTransferSelectTag extends AbstractDoubleListTag {
         this.allowAddToRight = allowAddToRight;
     }
 
+    public String getAllowUpDownOnLeft() {
+        return allowUpDownOnLeft;
+    }
+
+    public void setAllowUpDownOnLeft(String allowUpDownOnLeft) {
+        this.allowUpDownOnLeft = allowUpDownOnLeft;
+    }
+
+    public String getAllowUpDownOnRight() {
+        return allowUpDownOnRight;
+    }
+
+    public void setAllowUpDownOnRight(String allowUpDownOnRight) {
+        this.allowUpDownOnRight = allowUpDownOnRight;
+    }
+
+    public String getLeftUpLabel() {
+        return leftUpLabel;
+    }
+
+    public void setLeftUpLabel(String leftUpLabel) {
+        this.leftUpLabel = leftUpLabel;
+    }
+
+    public String getLeftDownLabel() {
+        return leftDownLabel;
+    }
+
+    public void setLeftDownLabel(String leftDownLabel) {
+        this.leftDownLabel = leftDownLabel;
+    }
+
+    public String getRightUpLabel() {
+        return rightUpLabel;
+    }
+
+    public void setRightUpLabel(String rightUpLabel) {
+        this.rightUpLabel = rightUpLabel;
+    }
+
+    public String getRightDownLabel() {
+        return rightDownLabel;
+    }
+
+    public void setRightDownLabel(String rightDownLabel) {
+        this.rightDownLabel = rightDownLabel;
+    }
 
     public String getLeftTitle() {
         return leftTitle;

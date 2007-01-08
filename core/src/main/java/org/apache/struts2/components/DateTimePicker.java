@@ -297,11 +297,11 @@ public class DateTimePicker extends UIBean {
                     SimpleDateFormat format = new SimpleDateFormat(
                             this.displayFormat);
                     date = format.parse(dateStr);
+                    return RFC3399_FORMAT.format(date);
                 } else {
-                    // last resource
-                    date = SimpleDateFormat.getInstance().parse(dateStr);
+                    // last resource to assume already in correct/default format
+                    return dateStr;
                 }
-                return RFC3399_FORMAT.format(date);
             } catch (ParseException e) {
                 LOG.error("Could not parse date", e);
                 return dateStr;

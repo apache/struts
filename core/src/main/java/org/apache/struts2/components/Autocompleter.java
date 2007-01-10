@@ -250,4 +250,10 @@ public class Autocompleter extends ComboBox {
     public void setShowDownArrow(String showDownArrow) {
         this.showDownArrow = showDownArrow;
     }
+
+    // Override as not required
+    @StrutsTagAttribute(description="Iteratable source to populate from.")
+    public void setList(String list) {
+        super.setList(list);
+    }
 }

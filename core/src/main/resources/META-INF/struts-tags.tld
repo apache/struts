@@ -894,9 +894,9 @@
     </attribute>
     <attribute>
       <name>list</name>
-      <required>true</required>
+      <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Iteratable source to populate from. If this is missing, the select widget is simply not displayed.]]></description>
+      <description><![CDATA[Iteratable source to populate from.]]></description>
     </attribute>
     <attribute>
       <name>listKey</name>

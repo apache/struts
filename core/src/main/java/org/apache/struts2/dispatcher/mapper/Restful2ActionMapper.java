@@ -63,8 +63,8 @@ import org.apache.commons.logging.LogFactory;
  *  <li><code>GET:    /movie/Thrillers      => method="view", id="Thrillers"</code></li>
  *  <li><code>GET:    /movie/Thrillers!edit => method="edit", id="Thrillers"</code></li>
  *  <li><code>GET:    /movie/new           => method="editNew"</code></li>
- *  <li><code>POST:   /movie/Thrillers      => method="update"</code></li>
- *  <li><code>PUT:    /movie/              => method="create"</code></li>
+ *  <li><code>POST:   /movie/Thrillers      => method="create"</code></li>
+ *  <li><code>PUT:    /movie/              => method="update"</code></li>
  *  <li><code>DELETE: /movie/Thrillers      => method="remove"</code></li>
  * </ul>
  * <p>
@@ -108,9 +108,9 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                     // Index e.g. foo/
                     if (isGet(request)) {
                         mapping.setMethod("index");
-
+                        
                     // Creating a new entry on POST e.g. foo/
-                    } else if (isPost(request)) {
+                    } else if (isPut(request)) {
                         mapping.setMethod("create");
                     }
 
@@ -126,7 +126,7 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                         mapping.setMethod("view");
 
                     // Updating an item e.g. foo/1
-                    } else if (isPut(request)) {
+                    } else if (isPost(request)) {
                         mapping.setMethod("update");
 
                     // Removing an item e.g. foo/1
@@ -173,7 +173,6 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                 mapping.setName(actionName.substring(actionSlashPos+1));
             }
         }
-
 
         return mapping;
     }

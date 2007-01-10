@@ -88,12 +88,12 @@ public class Restful2ActionMapperTest extends StrutsTestCase {
         assertEquals("1", mapping.getParams().get("bar"));
     }
 
-    public void testPostCreate() throws Exception {
+    public void testPutCreate() throws Exception {
         req.setupGetRequestURI("/my/namespace/foo/");
         req.setupGetServletPath("/my/namespace/foo/");
         req.setupGetAttribute(null);
         req.addExpectedGetAttributeName("javax.servlet.include.servlet_path");
-        req.setupGetMethod("POST");
+        req.setupGetMethod("PUT");
 
         ActionMapping mapping = mapper.getMapping(req, configManager);
 

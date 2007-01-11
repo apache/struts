@@ -74,6 +74,7 @@ public class StrutsModels {
     protected FieldErrorModel fielderror;
     protected OptionTransferSelectModel optiontransferselect;
     protected TreeModel treeModel;
+    protected TreeNodeModel treenodeModel;
     protected UpDownSelectModel updownselect;
     protected OptGroupModel optGroupModel;
     protected IfModel ifModel;
@@ -419,6 +420,13 @@ public class StrutsModels {
             treeModel = new TreeModel(stack,req, res);
         }
         return treeModel;
+    }
+
+    public TreeNodeModel getTreenode() {
+        if (treenodeModel == null) {
+            treenodeModel = new TreeNodeModel(stack, req, res);
+        }
+        return treenodeModel;
     }
 
     public UpDownSelectModel getUpdownselect() {

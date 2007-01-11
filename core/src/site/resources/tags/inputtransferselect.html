@@ -4,15 +4,15 @@ Please do not edit it directly.
 -->
 <html>
     <head>
-		<title>doubleselect</title>
+		<title>inputtransferselect</title>
 	</head>
 
 	<body>
-		<h1>Tag Name: doubleselect</h1>
+		<h1>Tag Name: inputtransferselect</h1>
 		<h2>Description</h2>
 		<p>
 		<!-- START SNIPPET: tagdescription -->
-		Renders two HTML select elements with second one changing displayed values depending on selected entry of first one.
+		Renders an input form
 		<!-- END SNIPPET: tagdescription -->
 		</p>
 
@@ -34,6 +34,46 @@ Please do not edit it directly.
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">Set the html accesskey attribute on rendered html element</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">addLabel</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">the label used for the add button</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">allowRemoveAll</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Determine whether the remove all button will display</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">allowUpDown</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Determine whether items in the list can be reordered</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">buttonCssClass</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">the css class used for rendering buttons</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">buttonCssStyle</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">the css style used for rendering buttons</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">cssClass</td>
@@ -60,252 +100,12 @@ Please do not edit it directly.
 					<td align="left" valign="top">Set the html disabled attribute on rendered html element</td>
 				</tr>
 				<tr>
-					<td align="left" valign="top">doubleAccesskey</td>
+					<td align="left" valign="top">downLabel</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Set the html accesskey attribute.</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleCssClass</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">The css class for the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleCssStyle</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">The css style for the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleDisabled</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Decides if a disable attribute should be added to the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleEmptyOption</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Decides if the second list will add an empty option</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleHeaderKey</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">The header key for the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleHeaderValue</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">The header value for the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleId</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">The id of the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleList</td>
-					<td align="left" valign="top"><strong>true</strong></td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">The second iterable source to populate from.</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleListKey</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">The key expression to use for second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleListValue</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">The value expression to use for second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleMultiple</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top"> Decides if multiple attribute should be set on the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleName</td>
-					<td align="left" valign="top"><strong>true</strong></td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">The name for complete component</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleOnblur</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Set the onblur attribute of the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleOnchange</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Set the onchange attribute of the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleOnclick</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Set the onclick attribute of the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleOndblclick</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Set the ondbclick attribute of the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleOnfocus</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Set the onfocus attribute of the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleOnkeydown</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Set the onkeydown attribute of the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleOnkeypress</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Set the onkeypress attribute of the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleOnkeyup</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Set the onkeyup attribute of the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleOnmousedown</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Set the onmousedown attribute of the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleOnmousemove</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Set the onmousemove attribute of the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleOnmouseout</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Set the onmouseout attribute of the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleOnmouseover</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Set the onmouseover attribute of the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleOnmouseup</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Set the onmouseup attribute of the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleOnselect</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Set the onselect attribute of the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleSize</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Set the size attribute of the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">doubleValue</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">The value expression for complete component</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">emptyOption</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">Boolean</td>
-					<td align="left" valign="top">Decides of an empty option is to be inserted in the second list</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">formName</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">The form name this component resides in and populates to</td>
+					<td align="left" valign="top">the label used for the down button</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">headerKey</td>
@@ -313,7 +113,7 @@ Please do not edit it directly.
 					<td align="left" valign="top"></td>
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Set the header key of the second list. Must not be empty! '-1' and '' is correct, '' is bad.</td>
+					<td align="left" valign="top">the header key of the select box</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">headerValue</td>
@@ -321,7 +121,7 @@ Please do not edit it directly.
 					<td align="left" valign="top"></td>
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
-					<td align="left" valign="top"> Set the header value of the second list</td>
+					<td align="left" valign="top">the header value of the select box</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">id</td>
@@ -356,6 +156,14 @@ Please do not edit it directly.
 					<td align="left" valign="top">Define label position of form element (top/left)</td>
 				</tr>
 				<tr>
+					<td align="left" valign="top">leftTitle</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">the left hand title</td>
+				</tr>
+				<tr>
 					<td align="left" valign="top">list</td>
 					<td align="left" valign="top"><strong>true</strong></td>
 					<td align="left" valign="top"></td>
@@ -385,7 +193,7 @@ Please do not edit it directly.
 					<td align="left" valign="top"></td>
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Creates a multiple select. The tag will pre-select multiple values if the values are passed as an Array (of appropriate types) via the value attribute.</td>
+					<td align="left" valign="top">Determine whether or not multiple entries are shown</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">name</td>
@@ -508,6 +316,22 @@ Please do not edit it directly.
 					<td align="left" valign="top">Set the html onselect attribute on rendered html element</td>
 				</tr>
 				<tr>
+					<td align="left" valign="top">removeAllLabel</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">the label used for the remove all button</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">removeLabel</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">the label used for the remove button</td>
+				</tr>
+				<tr>
 					<td align="left" valign="top">required</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">false</td>
@@ -524,12 +348,20 @@ Please do not edit it directly.
 					<td align="left" valign="top">Define required position of required form element (left|right)</td>
 				</tr>
 				<tr>
+					<td align="left" valign="top">rightTitle</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">the right hand title</td>
+				</tr>
+				<tr>
 					<td align="left" valign="top">size</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
 					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">Integer</td>
-					<td align="left" valign="top">Size of the element box (# of elements to show)</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">the size of the select box</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">tabindex</td>
@@ -586,6 +418,14 @@ Please do not edit it directly.
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">Set the tooltip configuration</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">upLabel</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">the label used for the up button</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">value</td>

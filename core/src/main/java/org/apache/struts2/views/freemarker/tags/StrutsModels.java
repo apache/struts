@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.components.InputTransferSelect;
 
 /**
  * Provides @s.tag access for various tags.
@@ -81,6 +82,7 @@ public class StrutsModels {
     protected ElseModel elseModel;
     protected ElseIfModel elseIfModel;
     protected AutocompleterModel autocompleterModel;
+    protected InputTransferSelectModel inputtransferselect;
 
 
     public StrutsModels(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
@@ -463,4 +465,13 @@ public class StrutsModels {
         }
         return elseIfModel;
     }
+
+
+    public InputTransferSelectModel getInputtransferselect() {
+        if (inputtransferselect == null) {
+            inputtransferselect = new InputTransferSelectModel(stack, req, res);
+        }
+        return inputtransferselect;
+    }
+
 }

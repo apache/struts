@@ -22,6 +22,22 @@ dojo.require("dojo.event.connect");
 			});
 	</#list>
 </#if>
+<#if (parameters.inputtransferselectIds?if_exists?size > 0)>
+	var containingForm = document.getElementById("${parameters.id}");
+	<#assign selectObjIds = parameters.inputtransferselectIds.keySet() />
+	<#list selectObjIds as selectObjectId>
+		dojo.event.connect(containingForm, "onsubmit",
+			function(evt) {
+				var selectObj = document.getElementById("${selectObjectId}");
+				<#if parameters.inputtransferselectIds.get(selectObjectId)?exists>
+					<#assign selectTagHeaderKey = parameters.inputtransferselectIds.get(selectObjectId)/>
+					selectAllOptionsExceptSome(selectObj, "key", "${selectTagHeaderKey}");
+				<#else>
+					selectAllOptionsExceptSome(selectObj, "key", "");
+				</#if>
+			});
+	</#list>
+</#if>
 <#if (parameters.optiontransferselectDoubleIds?if_exists?size > 0)>
 	var containingForm = document.getElementById("${parameters.id}");
 	<#assign selectDoubleObjIds = parameters.optiontransferselectDoubleIds.keySet() />

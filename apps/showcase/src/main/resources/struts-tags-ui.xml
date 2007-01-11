@@ -22,6 +22,7 @@
         	<result type="velocity">exampleSubmited.vm</result>
         	<result name="input" type="velocity">example.vm</result>
         </action>
+
         <action name="lotsOfOptiontransferselect" class="org.apache.struts2.showcase.LotsOfOptiontransferselectAction" method="input">
         	<result>lotsOfOptiontransferselect.jsp</result>
         </action>
@@ -29,7 +30,15 @@
         	<result name="input">lotsOfOptiontransferselect.jsp</result>
         	<result>lotsOfOptiontransferselectSubmit.jsp</result>
         </action>
-        
+
+         <action name="moreSelects" class="org.apache.struts2.showcase.MoreSelectsAction" method="input">
+        	<result>moreSelects.jsp</result>
+        </action>
+        <action name="moreSelectsSubmit" class="org.apache.struts2.showcase.MoreSelectsAction" method="submit">
+        	<result name="input">moreSelects.jsp</result>
+        	<result>moreSelectsSubmit.jsp</result>
+        </action>
+
         <!--  START SNIPPET: treeExampleDynamicXWorkXml -->
         
         <action name="showDynamicTreeAction" class="org.apache.struts2.showcase.ShowDynamicTreeAction">

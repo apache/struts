@@ -23,6 +23,8 @@ package org.apache.struts2.interceptor;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
+import java.io.Serializable;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
@@ -201,7 +203,7 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
     }
 
 
-    private static final Object NULL = new Object() {
+    private static final Object NULL = new Serializable() {
         public String toString() {
             return "NULL";
         }

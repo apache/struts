@@ -82,6 +82,8 @@ public class StreamResult extends StrutsResultSupport {
 
     protected static final Log log = LogFactory.getLog(StreamResult.class);
 
+    public static final String DEFAULT_PARAM = "inputName";
+
     protected String contentType = "text/plain";
     protected String contentLength;
     protected String contentDisposition = "inline";

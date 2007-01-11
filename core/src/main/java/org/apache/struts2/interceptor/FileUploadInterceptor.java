@@ -248,7 +248,6 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                     File[] files = multiWrapper.getFiles(inputName);
                     if (files != null) {
                         for (int index = 0; index < files.length; index++) {
-                            getTextMessage("struts.messages.current.file", new Object[]{inputName, contentType[index], fileName[index], files[index]}, ActionContext.getContext().getLocale());
 
                             if (acceptFile(files[index], contentType[index], inputName, validation, ac.getLocale())) {
                                 parameters.put(inputName, files);

@@ -41,8 +41,9 @@ public class URLBean {
     String page;
 
 
-    public void setPage(String page) {
+    public URLBean setPage(String page) {
         this.page = page;
+        return this;
     }
 
     public void setRequest(HttpServletRequest request) {

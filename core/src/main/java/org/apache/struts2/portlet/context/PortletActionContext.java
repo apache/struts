@@ -30,6 +30,7 @@ import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.portlet.PortletActionConstants;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -176,12 +177,12 @@ public class PortletActionContext implements PortletActionConstants {
     }
 
     /**
-     * Get the default action name for the current mode.
+     * Get the default action mapping for the current mode.
      *
-     * @return The default action name for the current portlet mode.
+     * @return The default action mapping for the current portlet mode.
      */
-    public static String getDefaultActionForMode() {
-        return (String)getContext().get(DEFAULT_ACTION_FOR_MODE);
+    public static ActionMapping getDefaultActionForMode() {
+        return (ActionMapping)getContext().get(DEFAULT_ACTION_FOR_MODE);
     }
 
     /**

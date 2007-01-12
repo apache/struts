@@ -31,6 +31,7 @@ import javax.portlet.RenderResponse;
 
 import junit.textui.TestRunner;
 
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
@@ -166,8 +167,9 @@ public class PortletActionContextTest extends MockObjectTestCase {
     }
 
     public void testGetDefaultActionForMode() {
-        context.put(PortletActionConstants.DEFAULT_ACTION_FOR_MODE, "testAction");
-        assertEquals("testAction", PortletActionContext.getDefaultActionForMode());
+        ActionMapping mapping = new ActionMapping();
+        context.put(PortletActionConstants.DEFAULT_ACTION_FOR_MODE, mapping);
+        assertEquals(mapping, PortletActionContext.getDefaultActionForMode());
     }
 
     public void tearDown() throws Exception {

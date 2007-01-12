@@ -23,7 +23,7 @@
     <s:textfield label="Employee Id" name="currentEmployee.empId"/>
     <s:textfield label="%{getText('employee.firstName')}" name="currentEmployee.firstName"/>
     <s:textfield label="%{getText('employee.lastName')}" name="currentEmployee.lastName"/>
-    <s:datepicker label="Birthdate" name="currentEmployee.birthDate"/>
+    <s:datetimepicker label="Birthdate" name="currentEmployee.birthDate"/>
     <s:textfield label="Salary" name="currentEmployee.salary"/>
     <s:checkbox fieldValue="true" label="Married" name="currentEmployee.married"/>
     <s:combobox list="availablePositions" label="Position" name="currentEmployee.position"/>

@@ -41,6 +41,12 @@
             Apache Struts Distributions
          </a>
         </p>
+        <p>
+          For more about extensions to Struts 2, visit our 
+         <a href="http://cwiki.apache.org/S2PLUGINS/home.html">
+            Plugin Registry
+         </a>.
+        </p>
         </div>
             
         </section>
@@ -86,13 +92,15 @@
                     <strong>Easy Spring integration</strong> - Struts<sup>2</sup> Actions are Spring-aware. Just 
                     add Spring beans!
                 </li>
+                <!-- Experimental
                 <li>
                     <strong>First-class AJAX support</strong> - The AJAX theme is backed by the popular Dojo Framework. 
                     AJAX tags look and feel just like standard Struts tags but provide greater interactivity and flexibility. 
                 </li>
                 <li>
-                    <em>Coming in Struts 2.0.2</em> -- <strong>Zero Configuration</strong> - Optionally, replace XML configuration with convention and annotation. 
+                    strong>Zero Configuration</strong> - Optionally, replace XML configuration with convention and annotation. 
                 </li>
+                -->
                 </ul></li>
 
                 <li>
@@ -110,10 +118,11 @@
                 <li>
                     <strong>Integrated profiling</strong> - Peek inside Struts to find the cycles are going!
                 </li>
+                <!-- Experimental
                 <li>
-                    <em>Coming in Struts 2.0.2</em> -- <strong>REST-ful URLs</strong> - Use search-engine friendly URLs, like category/action/movie/Thrillers. 
+                    <strong>REST-ful URLs</strong> - Use search-engine friendly URLs, like category/action/movie/Thrillers. 
                 </li>
-
+                -->
                 </ul></li>
                 <li>
                 <em>Maintain!</em> 
@@ -142,7 +151,7 @@
                     problem reports, and interactive object model queries.
                 </li>
                 <li>
-                    <em>Coming in Struts 2.0.2</em> -- <strong>Precise Error Reporting</strong> - All configuration elements, including properties that come from Java properties files, include location and line information. 
+                    <strong>Precise Error Reporting</strong> - All configuration elements, including properties that come from Java properties files, include location and line information. 
                 </li>
                 </ul></li></ul>
                 

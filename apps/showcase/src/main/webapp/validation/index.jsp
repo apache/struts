@@ -26,15 +26,15 @@
         <s:url id="storeMessageAcrossRequestExample" value="/validation/storeErrorsAcrossRequestExample.jsp" />
         
         <ul>
+            <li><s:a href="%{fieldValidatorUrl}">Field Validators</s:a></li>
+            <li><s:a href="%{clientSideValidationUrl}">Field Validators with client-side JavaScript</s:a></li>
+            <li><s:a href="%{nonFieldValidatorUrl}">Non Field Validator</s:a></li>
+            <li><s:a href="%{storeMessageAcrossRequestExample}">Store across request using MessageStoreInterceptor (Example)</s:a></li>
+            <li>(broken) <s:a href="%{quizAjax}">Validation (ajax)</s:a></li>
             <li><s:a href="%{quizBasic}">Validation (basic)</s:a></li>
             <li><s:a href="%{quizClient}">Validation (client)</s:a></li>
             <li><s:a href="%{quizClientCss}">Validation (client using css_xhtml theme)</s:a></li>
-            <li>(broken) <s:a href="%{quizAjax}">Validation (ajax)</s:a></li>
-            <li><s:a href="%{fieldValidatorUrl}">Field Validators</s:a></li>
-            <li><s:a href="%{nonFieldValidatorUrl}">Non Field Validator</s:a></li>
             <li><s:a href="%{visitorValidatorUrl}">Visitor Validator</s:a></li>
-            <li><s:a href="%{clientSideValidationUrl}">Client side validation using JavaScript</s:a></li>
-            <li><s:a href="%{storeMessageAcrossRequestExample}">Store across request using MessageStoreInterceptor (Example)</s:a></li>
             <li><s:a href="%{backToShowcase}">Back To Showcase</s:a>
         </ul>
     </body>

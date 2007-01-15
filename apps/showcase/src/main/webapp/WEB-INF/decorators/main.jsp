@@ -78,6 +78,8 @@
                 <h2 class="accessibility">Navigation</h2>
                 <ul class="clearfix">
         <li><a href="<s:url value="/showcase.jsp"/>">Home</a></li>
+        <li><a href="<s:url value="/ajax/index.jsp"/>">Ajax</a></li>
+        <li><a href="<s:url value="/chat/index.jsp"/>">Ajax Chat</a></li>
         <li><a href="<s:url action="actionChain1!input" namespace="/actionchaining"  includeParams="none" />">Action Chaining</a></li>
         <li><a href="<s:url action="index" namespace="/config-browser" includeParams="none" />">Config Browser</a></li>
         <li><a href="<s:url value="/conversion/index.jsp"/>">Conversion</a></li>

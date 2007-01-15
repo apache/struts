@@ -34,13 +34,13 @@ import com.opensymphony.xwork2.Action;
  */
 public class FileDownloadAction implements Action {
 
-    private String filePath;
-    public void setFilePath(String value) {
-        filePath = value;
+    private String inputPath;
+    public void setInputPath(String value) {
+        inputPath = value;
     }
 
-    public InputStream getImageStream() throws Exception {
-        return ServletActionContext.getServletContext().getResourceAsStream(filePath);
+    public InputStream getInputStream() throws Exception {
+        return ServletActionContext.getServletContext().getResourceAsStream(inputPath);
     }
 
     public String execute() throws Exception {

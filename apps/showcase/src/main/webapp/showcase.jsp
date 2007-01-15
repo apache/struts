@@ -33,6 +33,8 @@
     <%-- THIS LIST IS MAINTAINED IN WEB-INF/decorators/main.jsp TO CREATE THE MENU BAR -- EDIT THERE AND COPY HERE --%>
     <ul>
         <li><a href="<s:url value="/showcase.jsp"/>">Home</a></li>        
+        <li><a href="<s:url value="/ajax/index.jsp" />">Ajax Theme for Struts Tags</a></li>
+        <li><a href="<s:url value="/chat/index.jsp"/>">Ajax Chat</a>
         <li><a href="<s:url action="actionChain1!input" namespace="/actionchaining"  includeParams="none" />">Action Chaining</a></li>
         <li><a href="<s:url action="index" namespace="/config-browser" includeParams="none" />">Config Browser</a></li>
         <li><a href="<s:url value="/conversion/index.jsp"/>">Conversion</a></li>
@@ -56,12 +58,7 @@
         These examples are under development and may not be fully operational.
     </p>
     <ul>
-        <li><a href="<s:url value="/ajax/index.jsp" />">Ajax Theme for Struts Tags</a></li>
-        <li><a href="<s:url value="/chat/index.jsp"/>">Ajax Chat</a>
         <li><a href="<s:url action="guess" namespace="/continuations" />">Continuations</a></li>
-        <li>
-            Filedownload / ZIP file
-        </li>
     </ul>
 
 </p>

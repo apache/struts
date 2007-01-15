@@ -1,7 +1,7 @@
 <#include "/${parameters.templateDir}/${parameters.theme}/controlheader.ftl" />
 
 <textarea<#rt/>
- dojoType="Editor"
+ dojoType="Editor2"
 <#if parameters.editorControls?exists>
  items="${parameters.editorControls?html}"<#rt/>
 <#else>

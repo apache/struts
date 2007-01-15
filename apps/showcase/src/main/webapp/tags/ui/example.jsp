@@ -26,7 +26,7 @@
 
     <s:textarea
             tooltip="Enter your Biography"
-            label="Biograph"
+            label="Biography"
             name="bio"
             cols="20"
             rows="3"/>

@@ -27,15 +27,20 @@ import org.apache.struts2.ServletActionContext;
 import com.opensymphony.xwork2.Action;
 
 /**
- * Action to demonstrate how to use file download.
- * <p/>
- * This action is used to download a jpeg file from the image folder.
+ * Demonstrates file resource download.
+ * Set filePath to the local file resource to download,
+ * relative to the application root ("/images/struts.gif").
  *
  */
 public class FileDownloadAction implements Action {
 
+    private String filePath;
+    public void setFilePath(String value) {
+        filePath = value;
+    }
+
     public InputStream getImageStream() throws Exception {
-        return ServletActionContext.getServletContext().getResourceAsStream("/images/struts.gif");
+        return ServletActionContext.getServletContext().getResourceAsStream(filePath);
     }
 
     public String execute() throws Exception {

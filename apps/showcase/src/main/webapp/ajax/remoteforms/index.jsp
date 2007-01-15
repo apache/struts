@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>Ajax Examples</title>
-    <jsp:include page="/ajax/commonInclude.jsp"/>
+    <s:head theme="ajax"/>
 
     <script language="JavaScript" type="text/javascript">
         function doSomething() {
@@ -59,7 +59,7 @@ Remote form evaluating suplied JS on completion:<br/>
 
     <input type='text' name='data' value='Struts User'>
 
-    <s:submit value="GO4" theme="ajax" afterLoading="alert('form submitted');"/>
+    <s:submit value="GO4" theme="ajax"/>
 
 </s:form>
 
@@ -73,7 +73,7 @@ Remote form replacing the forms content after confirming results:<br/>
 
     <input type='text' name='data' value='Struts User'>
 
-    <s:submit value="GO3" theme="ajax" targets="theForm5" beforeLoading="confirm('sure?');"/>
+    <s:submit value="GO3" theme="ajax" targets="theForm5" />
 
 </s:form>
 
@@ -87,7 +87,7 @@ Remote form replacing the forms content after running a function:<br/>
 
     <input type='text' name='data' value='Struts User'>
 
-    <s:submit value="GO3" theme="ajax" targets="theForm6" beforeLoading="doSomething();"/>
+    <s:submit value="GO3" theme="ajax" targets="theForm6" />
 
 </s:form>
 
@@ -104,8 +104,6 @@ A form with no remote submit (so should not be ajaxified):<br/>
     <s:submit value="Go AWAY" targets="theForm7" />
 
 </s:form>
-
-<s:include value="../footer.jsp"/>
 
 </body>
 </html>

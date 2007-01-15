@@ -13,7 +13,7 @@
 #sform ("action=exampleSubmitVelocity" "method=post" "enctype=multipart/form-data")
     #stextfield ("label=Name" "name=name")
     #sdatetimepicker ("label=Birthday" "name=birthday")
-    #stextarea ("label=Biograph" "name=bio" "cols=20" "rows=3")
+    #stextarea ("label=Biography" "name=bio" "cols=20" "rows=3")
     #sselect ("label=Favourite Color" "list={'Red', 'Blue', 'Green'}" "name=favouriteColor" "emptyOption=true" "headerKey=None" "headerValue=None")
     #sselect ("label=Favourite Language" "list=favouriteLanguages" "name=favouriteLanguage" "listKey=key" "listValue=description" "emptyOption=true" "headerKey=None" "headerValue=None")
     #scheckboxlist ("label=Friends" "list={'Patrick', 'Jason', 'Jay', 'Toby', 'Rene'}" "name=friends")

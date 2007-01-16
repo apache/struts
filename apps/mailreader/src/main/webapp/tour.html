@@ -15,12 +15,12 @@
 
 <p>
     <i>
-        This article is meant to introduce a new user to Apache Struts 2 by 
+        This article is meant to introduce a new user to Apache Struts 2 by
         "walking through" a simple, but functional, application.
-        The article includes code snippets, but for the best result, you might 
-        want to install the MailReader application on your own development 
+        The article includes code snippets, but for the best result, you might
+        want to install the MailReader application on your own development
         workstation and follow along.
-        Of course, the full source code to the MailReader is included in the 
+        Of course, the full source code to the MailReader is included in the
         distribution.
     </i>
 </p>
@@ -28,7 +28,7 @@
 <p>
     <i>
         The tour assumes the reader has a basic understanding of the Java
-        language, JavaBeans, web applications, and JavaServer Pages. For 
+        language, JavaBeans, web applications, and JavaServer Pages. For
         background on these technologies, see the
         <a href="http://struts.apache.org/primer.html">
             Key Technologies Primer</a>.
@@ -215,7 +215,7 @@
 <hr/>
 
 <p>
-    You might note taht the web.xml configuration does not specify which file extension
+    You might note that the web.xml configuration does not specify which file extension
     to use with actions.
     The default extension for Struts 2 is ".action",
     but the extension can be changed in the struts.properties file.
@@ -255,10 +255,10 @@
 <p>
     The actions are listed in one or more XML configuration files,
     the default configuration file being named "struts.xml".
-    When the application loads, the struts.xml, and any other files 
-    it includes, are parsed, and the framework creates a set of 
-    configuration objects. 
-    Among other things, the configuration maps a request for a certain 
+    When the application loads, the struts.xml, and any other files
+    it includes, are parsed, and the framework creates a set of
+    configuration objects.
+    Among other things, the configuration maps a request for a certain
     page to a certain action mapping.
 </p>
 
@@ -301,7 +301,7 @@
 <p>
     When the client requests "Welcome.do", the request is passed to the "struts2"
     FilterDispatcher (that we registered in the web.xml file).
-    The FilterDispatcher retrieves the appropriate action mapping from the 
+    The FilterDispatcher retrieves the appropriate action mapping from the
     configuration.
     If we just wanted to forward to the Welcome page, we could use a simple
     configuration element.
@@ -367,8 +367,8 @@
 <blockquote>
     <p>
         The Struts configuration lets us separate concerns and "say it once".
-        The configuration helps us "normalize" an application, 
-        in much the same way we normalize a database schema. 
+        The configuration helps us "normalize" an application,
+        in much the same way we normalize a database schema.
     </p>
 </blockquote>
 <hr/>
@@ -429,7 +429,7 @@ public class Welcome extends MailreaderSupport {
 <hr/>
 
 <p>
-    Several common result names are predefined, 
+    Several common result names are predefined,
     including ERROR, SUCCESS, LOGIN, NONE, and INPUT,
     so that these tokens can be used consistently across Struts 2 applications.
 </p>
@@ -541,7 +541,7 @@ public class Welcome extends MailreaderSupport {
 <hr/>
 
 <p>
-    If you change a message in the resource, and then rebuild and reload the 
+    If you change a message in the resource, and then rebuild and reload the
     application, the change will appear throughout the application.
     If you provide message resources for additional locales, you can
     localize your application.
@@ -944,12 +944,12 @@ public class Welcome extends MailreaderSupport {
 <hr/>
 
 <p>
-   You may note that the DTD refers to "XWork". 
+   You may note that the DTD refers to "XWork".
    <a href="http://www.opensymphony.com/xwork/">
      Open Symphony XWork
-   </a> is a generic command-pattern framework that can be used outside of a 
-   web environment. In practice, Struts 2 is a web-based extension of the 
-   XWork framework. 
+   </a> is a generic command-pattern framework that can be used outside of a
+   web environment. Essentially, Struts 2 is a web-based extension of the
+   XWork framework.
 </p>
 
 <p>
@@ -959,7 +959,7 @@ public class Welcome extends MailreaderSupport {
     If the username is blank or absent, validation will fail and an error
     message is generated.
     The messages would be based on the "error.username.required" or
-    "error.password.required" message templates, from the resource bundle.
+    "error.password.required" message templates from the resource bundle.
 </p>
 
 <!--
@@ -1014,7 +1014,7 @@ public String <strong>execute()</strong> throws ExpiredPasswordException {
 
 <p>
     Let's look at the relevant properties and methods from MailreaderSupport
-    and another base class, <strong>ActionSupport</strong>, namely 
+    and another base class, <strong>ActionSupport</strong>, namely
     "getUsername", "getPassword", "findUser", "setUser", and "hasErrors".
 </p>
 
@@ -1101,7 +1101,7 @@ public void setPassword(String password) {
     When "findUser" returns,
     the Login Action looks to see if a valid (non-null) User object is returned.
     A valid User is passed to the <strong>User property</strong>.
-    Although it is still a JavaBean property, 
+    Although it is still a JavaBean property,
     the User property is not implemented in quite the same way as Username and Password.
 </p>
 
@@ -1310,7 +1310,7 @@ public void <strong>setSession(Map value)</strong> {
 <p>
     Within the Login action element, the first result element is named "input".
     If validation or authentification fail,
-    the Action class will return "input" and the framework will transfer control to the 
+    the Action class will return "input" and the framework will transfer control to the
     "Login.jsp" page.
 </p>
 
@@ -1473,7 +1473,7 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
 <hr/>
 
 <p>
-    The <strong>user</strong> stacks require that the client be authenticated. 
+    The <strong>user</strong> stacks require that the client be authenticated.
     In other words, that a User object is present in the session.
     The actions using a <strong>guest</strong> stack can be accessed by any client.
     The <strong>-submit</strong> versions of each can be used with actions
@@ -1483,7 +1483,7 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
 <h5>Double Submits</h5>
 
 <p>
-    A common problem with designing web applications is that users are impatient 
+    A common problem with designing web applications is that users are impatient
     and response times can vary.
     Sometimes, people will press a submit button a second time.
     When this happens, the browser submits the request again,
@@ -1518,11 +1518,11 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
 
 <p>
     Because the default interceptor stack will now authenticate the client,
-    we need to specify the standard "defaultStack" for the three 
+    we need to specify the standard "defaultStack" for the three
     "guest actions", Welcome, Login, and Register.
-    Requiring authentification by default is the better practice, since it 
-    means that we won't forget to enable it when creating new actions. 
-    Meanwhile, those pesky users will ensure that we don't forget to disable 
+    Requiring authentification by default is the better practice, since it
+    means that we won't forget to enable it when creating new actions.
+    Meanwhile, those pesky users will ensure that we don't forget to disable
     authentification for "guest" services.
 </p>
 
@@ -1654,7 +1654,7 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
         The "test" tag is a convenient way to express presentation
         logic within your pages.
         Customized pages help to prevent user error,
-        and dynamic customization reduces the number of server pages your 
+        and dynamic customization reduces the number of server pages your
         application needs to maintain, among other benefits.
     </font></p>
 </blockquote>
@@ -1892,7 +1892,7 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
     the value for the field is pushed onto the value stack.
     As a result, if the client enters text into an Integer field,
     the framework can still redisplay whatever was entered.
-    An invalid input value is not stored in the field (even if it could be). 
+    An invalid input value is not stored in the field (even if it could be).
     The invalid input is pushed onto the stack for the scope of the request.
 </p>
 
@@ -2076,7 +2076,7 @@ public Subscription findSubscription(String host) {
 
 <p>
     By keeping routine safety precautions out of the Action class,
-    the all-important Actions becomes smaller and easier to maintain.
+    the all-important Action becomes smaller and easier to maintain.
 </p>
 
 <p>

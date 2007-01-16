@@ -39,7 +39,7 @@
          To download Apache Struts 2, visit
          <a href="http://struts.apache.org/download.cgi#struts201">
             Apache Struts Distributions
-         </a>
+         </a>.
         </p>
         <p>
           For more about extensions to Struts 2, visit our 
@@ -112,13 +112,16 @@
                     JasperReports, JFreeChart, Tiles, and more ...
                 </li>
                 <li>
+                    <strong>Integrated profiling</strong> - Peek inside Struts to find the cycles are going!
+                </li>
+                <li>
+                    <strong>Precise Error Reporting</strong> - All configuration elements, including properties that come from Java properties files, include location and line information. 
+                </li>
+                <!-- Experimental
+                <li>
                     <strong>Easy portlets</strong> - Automatic portlet support allows portal and servlet 
                     deployments with no code changes.
                 </li>
-                <li>
-                    <strong>Integrated profiling</strong> - Peek inside Struts to find the cycles are going!
-                </li>
-                <!-- Experimental
                 <li>
                     <strong>REST-ful URLs</strong> - Use search-engine friendly URLs, like category/action/movie/Thrillers. 
                 </li>
@@ -149,9 +152,6 @@
                 <li>
                     <strong>Integrating Debugging</strong> - Built-in debugging tools supporting profiling, 
                     problem reports, and interactive object model queries.
-                </li>
-                <li>
-                    <strong>Precise Error Reporting</strong> - All configuration elements, including properties that come from Java properties files, include location and line information. 
                 </li>
                 </ul></li></ul>
                 

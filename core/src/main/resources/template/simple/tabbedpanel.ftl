@@ -9,7 +9,7 @@
     style="${parameters.cssStyle?html}"<#rt/>
   </#if>
   <#if parameters.id?if_exists != "">
-    style="${parameters.id?html}"<#rt/>
+    id="${parameters.id?html}"<#rt/>
   </#if>
   <#if parameters.cssClass?if_exists != "">
     class="${parameters.cssClass?html}"<#rt/>

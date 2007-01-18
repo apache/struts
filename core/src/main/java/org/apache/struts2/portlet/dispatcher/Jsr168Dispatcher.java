@@ -37,7 +37,6 @@ import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
@@ -55,16 +54,15 @@ import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.context.ServletContextHolderListener;
 import org.apache.struts2.util.AttributeMap;
 
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.TextUtils;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -211,7 +209,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
                 "defaultPreviewAction");
         parseModeConfig(cfg, new PortletMode("edit_defaults"),
                 "editDefaultsNamespace", "defaultEditDefaultsAction");
-        if (StringUtils.isEmpty(portletNamespace)) {
+        if (!TextUtils.stringSet(portletNamespace)) {
             portletNamespace = "";
         }
         LocalizedTextUtil
@@ -237,20 +235,20 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
             PortletMode portletMode, String nameSpaceParam,
             String defaultActionParam) {
         String namespace = portletConfig.getInitParameter(nameSpaceParam);
-        if (StringUtils.isEmpty(namespace)) {
+        if (!TextUtils.stringSet(namespace)) {
             namespace = "";
         }
         modeMap.put(portletMode, namespace);
         String defaultAction = portletConfig
                 .getInitParameter(defaultActionParam);
-        if (StringUtils.isEmpty(defaultAction)) {
+        if (!TextUtils.stringSet(defaultAction)) {
             defaultAction = DEFAULT_ACTION_NAME;
         }
         StringBuffer fullPath = new StringBuffer();
-        if (StringUtils.isNotEmpty(portletNamespace)) {
+        if (TextUtils.stringSet(portletNamespace)) {
             fullPath.append(portletNamespace + "/");
         }
-        if (StringUtils.isNotEmpty(namespace)) {
+        if (TextUtils.stringSet(namespace)) {
             fullPath.append(namespace + "/");
         }
         fullPath.append(defaultAction);
@@ -404,7 +402,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
             request.setAttribute("struts.valueStack", proxy.getInvocation()
                     .getStack());
             if (PortletActionConstants.RENDER_PHASE.equals(phase)
-                    && StringUtils.isNotEmpty(request
+                    && TextUtils.stringSet(request
                             .getParameter(EVENT_ACTION))) {
 
                 ActionProxy action = (ActionProxy) request.getPortletSession()
@@ -461,7 +459,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
             mapping = (ActionMapping) actionMap.get(request.getPortletMode());
         } else {
             String actionPath = request.getParameter(ACTION_PARAM);
-            if (StringUtils.isEmpty(actionPath)) {
+            if (!TextUtils.stringSet(actionPath)) {
                 mapping = (ActionMapping) actionMap.get(request
                         .getPortletMode());
             } else {

@@ -34,12 +34,12 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.context.PortletActionContext;
+import com.opensymphony.xwork2.util.TextUtils;
 
 /**
  * Helper class for creating Portlet URLs. Portlet URLs are fundamentally different from regular
@@ -84,7 +84,7 @@ public class PortletUrlHelper {
         LOG.debug("Creating url. Action = " + action + ", Namespace = "
                 + namespace + ", Type = " + type);
         namespace = prependNamespace(namespace, portletMode);
-        if(StringUtils.isEmpty(portletMode)) {
+        if (!TextUtils.stringSet(portletMode)) {
             portletMode = PortletActionContext.getRenderRequest().getPortletMode().toString();
         }
         String result = null;
@@ -101,7 +101,7 @@ public class PortletUrlHelper {
                 params.put(key, new String[] { val });
             }
         }
-        if (StringUtils.isNotEmpty(namespace)) {
+        if (TextUtils.stringSet(namespace)) {
             StringBuffer sb = new StringBuffer();
             sb.append(namespace);
             if(!action.startsWith("/") && !namespace.endsWith("/")) {
@@ -140,7 +140,7 @@ public class PortletUrlHelper {
         result = url.toString();
         // TEMP BUG-WORKAROUND FOR DOUBLE ESCAPING OF AMPERSAND
         if(result.indexOf("&amp;") >= 0) {
-            result = StringUtils.replace(result, "&amp;", "&");
+            result = result.replace("&amp;", "&");
         }
         return result;
 
@@ -158,22 +158,22 @@ public class PortletUrlHelper {
     private static String prependNamespace(String namespace, String portletMode) {
         StringBuffer sb = new StringBuffer();
         PortletMode mode = PortletActionContext.getRenderRequest().getPortletMode();
-        if(StringUtils.isNotEmpty(portletMode)) {
+        if(TextUtils.stringSet(portletMode)) {
             mode = new PortletMode(portletMode);
         }
         String portletNamespace = PortletActionContext.getPortletNamespace();
         String modeNamespace = (String)PortletActionContext.getModeNamespaceMap().get(mode);
         LOG.debug("PortletNamespace: " + portletNamespace + ", modeNamespace: " + modeNamespace);
-        if(StringUtils.isNotEmpty(portletNamespace)) {
+        if(TextUtils.stringSet(portletNamespace)) {
             sb.append(portletNamespace);
         }
-        if(StringUtils.isNotEmpty(modeNamespace)) {
+        if(TextUtils.stringSet(modeNamespace)) {
             if(!modeNamespace.startsWith("/")) {
                 sb.append("/");
             }
             sb.append(modeNamespace);
         }
-        if(StringUtils.isNotEmpty(namespace)) {
+        if(TextUtils.stringSet(namespace)) {
             if(!namespace.startsWith("/")) {
                 sb.append("/");
             }
@@ -256,7 +256,7 @@ public class PortletUrlHelper {
     private static WindowState getWindowState(RenderRequest portletReq,
             String windowState) {
         WindowState state = portletReq.getWindowState();
-        if (StringUtils.isNotEmpty(windowState)) {
+        if (TextUtils.stringSet(windowState)) {
             state = portletReq.getWindowState();
             if ("maximized".equalsIgnoreCase(windowState)) {
                 state = WindowState.MAXIMIZED;
@@ -284,7 +284,7 @@ public class PortletUrlHelper {
             String portletMode) {
         PortletMode mode = portletReq.getPortletMode();
 
-        if (StringUtils.isNotEmpty(portletMode)) {
+        if (TextUtils.stringSet(portletMode)) {
             mode = portletReq.getPortletMode();
             if ("edit".equalsIgnoreCase(portletMode)) {
                 mode = PortletMode.EDIT;

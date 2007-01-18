@@ -293,13 +293,6 @@
             <version>1.0.4</version>
         </dependency>
 
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.0</version>
-            <optional>true</optional>
-        </dependency>
-
         <!-- Ajax -->
         <dependency>
             <groupId>uk.ltd.getahead</groupId>

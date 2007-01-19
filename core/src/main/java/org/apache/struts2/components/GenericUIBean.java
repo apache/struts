@@ -23,7 +23,7 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.util.ContainUtil;
 
 import com.opensymphony.xwork2.util.ValueStack;

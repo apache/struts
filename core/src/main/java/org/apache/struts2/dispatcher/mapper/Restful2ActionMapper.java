@@ -93,6 +93,10 @@ public class Restful2ActionMapper extends DefaultActionMapper {
     public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
 
         ActionMapping mapping = super.getMapping(request, configManager);
+        
+        if (mapping == null) {
+            return null;
+        }
 
         String actionName = mapping.getName();
 

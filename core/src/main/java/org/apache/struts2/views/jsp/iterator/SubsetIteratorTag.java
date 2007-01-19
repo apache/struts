@@ -24,8 +24,8 @@ import javax.servlet.jsp.JspException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts.annotations.StrutsTag;
-import org.apache.struts.annotations.StrutsTagAttribute;
+import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.util.SubsetIteratorFilter;
 import org.apache.struts2.util.SubsetIteratorFilter.Decider;
 import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
@@ -147,7 +147,7 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  * @s.tag name="subset" tld-body-content="JSP"
  * description="Takes an iterator and outputs a subset of it"
  */
-@StrutsTag(name="subset", tldTagClass="org.apache.struts2.views.jsp.iterator.SubsetIteratorTag", 
+@StrutsTag(name="subset", tldTagClass="org.apache.struts2.views.jsp.iterator.SubsetIteratorTag",
         description="Takes an iterator and outputs a subset of it.")
 public class SubsetIteratorTag extends StrutsBodyTagSupport {
 

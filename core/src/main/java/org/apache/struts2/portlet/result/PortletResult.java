@@ -34,7 +34,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
@@ -43,6 +42,7 @@ import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.context.PortletActionContext;
 
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.TextUtils;
 
 /**
  * Result type that includes a JSP to render.
@@ -174,7 +174,7 @@ public class PortletResult extends StrutsResultSupport {
         LOG.debug("RenderRequest: " + req);
         LOG.debug("RenderResponse: " + res);
         res.setContentType(contentType);
-        if (StringUtils.isNotEmpty(title)) {
+        if (TextUtils.stringSet(title)) {
             res.setTitle(title);
         }
         LOG.debug("Location: " + finalLocation);

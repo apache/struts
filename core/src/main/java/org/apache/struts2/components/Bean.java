@@ -24,8 +24,8 @@ import java.io.Writer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts.annotations.StrutsTag;
-import org.apache.struts.annotations.StrutsTagAttribute;
+import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
@@ -93,7 +93,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * @see Param
  */
-@StrutsTag(name="bean", tldTagClass="org.apache.struts2.views.jsp.BeanTag", 
+@StrutsTag(name="bean", tldTagClass="org.apache.struts2.views.jsp.BeanTag",
         description="Instantiate a JavaBean and place it in the context")
 public class Bean extends Component {
     protected static Log log = LogFactory.getLog(Bean.class);

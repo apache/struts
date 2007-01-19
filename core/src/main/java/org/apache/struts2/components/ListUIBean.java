@@ -27,7 +27,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.annotations.StrutsTagAttribute;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.util.ContainUtil;
 import org.apache.struts2.util.MakeIterator;
 

@@ -29,11 +29,10 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.annotations.StrutsTag;
-import org.apache.struts.annotations.StrutsTagAttribute;
+import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.util.PortletUrlHelper;

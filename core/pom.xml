@@ -11,7 +11,7 @@
     <artifactId>struts2-core</artifactId>
     <packaging>jar</packaging>
     <name>Struts 2 Core</name>
-    
+
     <scm>
        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/core/</connection>
        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/core/</developerConnection>
@@ -79,7 +79,7 @@
             </plugin>
         </plugins>
     </build>
-    
+
     <reporting>
         <plugins>
         	<plugin>
@@ -109,16 +109,16 @@
             </plugin>
         </plugins>
     </reporting>
-    
+
     <profiles>
      	<profile>
-	    	<!-- 
+	    	<!--
 	    		Run the translator for Java 1.4 compatiblity
-	    		
+
 	    		Sample:
 	    		$ cd struts/struts2/
 	    		$ mvn clean install -Papps,j4 -Djava14.jar=$JAVA_HOME/../Classes/classes.jar
-	    	
+
 	    	 -->
 	      <id>j4</id>
 	      <build>
@@ -173,7 +173,7 @@
 	        </dependency>
 	      </dependencies>
 	    </profile>
-        
+
         <profile>
             <id>alljars</id>
             <build>
@@ -246,8 +246,8 @@
         </profile>
 
     </profiles>
- 
-    
+
+
     <dependencies>
         <dependency>
             <groupId>opensymphony</groupId>
@@ -260,7 +260,7 @@
             <artifactId>struts2-api</artifactId>
             <version>${pom.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>freemarker</groupId>
             <artifactId>freemarker</artifactId>
@@ -286,7 +286,7 @@
             <artifactId>ognl</artifactId>
             <version>2.6.9</version>
         </dependency>
- 
+
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
@@ -411,7 +411,7 @@
                 </exclusion>
             </exclusions>
         </dependency-->
- 
+
         <dependency>
             <groupId>jmock</groupId>
             <artifactId>jmock-cglib</artifactId>

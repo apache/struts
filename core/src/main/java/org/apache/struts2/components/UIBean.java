@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts.annotations.StrutsTagAttribute;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;

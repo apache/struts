@@ -36,15 +36,18 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.ApplicationMap;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.PortletApplicationMap;
@@ -52,6 +55,7 @@ import org.apache.struts2.portlet.PortletRequestMap;
 import org.apache.struts2.portlet.PortletSessionMap;
 import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.context.ServletContextHolderListener;
+import org.apache.struts2.portlet.util.HttpServletRequestMock;
 import org.apache.struts2.util.AttributeMap;
 
 import com.opensymphony.xwork2.util.FileManager;
@@ -168,6 +172,8 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
     private String portletNamespace = null;
 
     private Dispatcher dispatcherUtils;
+    
+    private ActionMapper actionMapper;
 
     /**
      * Initialize the portlet with the init parameters from <tt>portlet.xml</tt>
@@ -220,6 +226,8 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         if ("true".equalsIgnoreCase(container.getInstance(String.class, StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD))) {
             FileManager.setReloadingConfigs(true);
         }
+        
+        actionMapper = container.getInstance(ActionMapper.class);
     }
 
     /**
@@ -401,6 +409,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
                     + ", namespace = " + namespace);
             ActionProxy proxy = factory.createActionProxy(namespace,
                     actionName, extraContext);
+            proxy.setMethod(mapping.getMethod());
             request.setAttribute("struts.valueStack", proxy.getInvocation()
                     .getStack());
             if (PortletActionConstants.RENDER_PHASE.equals(phase)
@@ -455,26 +464,31 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
      * @param request the PortletRequest object.
      * @return the namespace of the action.
      */
-    protected ActionMapping getActionMapping(PortletRequest request) {
-        ActionMapping mapping = new ActionMapping();
+    protected ActionMapping getActionMapping(final PortletRequest request) {
+        ActionMapping mapping = null;
+        String actionPath = null;
         if (resetAction(request)) {
             mapping = (ActionMapping) actionMap.get(request.getPortletMode());
         } else {
-            String actionPath = request.getParameter(ACTION_PARAM);
+            actionPath = request.getParameter(ACTION_PARAM);
             if (!TextUtils.stringSet(actionPath)) {
                 mapping = (ActionMapping) actionMap.get(request
                         .getPortletMode());
             } else {
-                String namespace = "";
-                String action = actionPath;
-                int idx = actionPath.lastIndexOf('/');
-                if (idx >= 0) {
-                    namespace = actionPath.substring(0, idx);
-                    action = actionPath.substring(idx + 1);
-                }
-                mapping.setName(action);
-                mapping.setNamespace(namespace);
+                
+                // Use the usual action mapper, but it is expecting an action extension
+                // on the uri, so we add the default one, which should be ok as the
+                // portlet is a portlet first, a servlet second
+                HttpServletRequestMock httpRequest = new HttpServletRequestMock()
+                    .setServletPath(actionPath + ".action")
+                    .setParameterMap(request.getParameterMap());
+                mapping = actionMapper.getMapping(httpRequest, dispatcherUtils.getConfigurationManager());
             }
+        }
+        
+        if (mapping == null) {
+            throw new StrutsException("Unable to locate action mapping for request, probably due to " +
+                    "an invalid action path: "+actionPath);
         }
         return mapping;
     }

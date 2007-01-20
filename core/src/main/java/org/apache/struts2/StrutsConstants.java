@@ -145,4 +145,6 @@ public final class StrutsConstants {
 
     /** The name of the xwork converter implementation */
     public static final String STRUTS_XWORKCONVERTER = "struts.xworkConverter";
+
+    public static final String STRUTS_ALWAYS_SELECT_FULL_NAMESPACE = "struts.mapper.alwaysSelectFullNamespace";
 }

@@ -173,6 +173,8 @@ public class DefaultActionMapper implements ActionMapper {
     private boolean allowDynamicMethodCalls = true;
 
     private boolean allowSlashesInActionNames = false;
+    
+    private boolean alwaysSelectFullNamespace = false;
 
     private PrefixTrie prefixTrie = null;
     
@@ -243,6 +245,11 @@ public class DefaultActionMapper implements ActionMapper {
     public void setSlashesInActionNames(String allow) {
         allowSlashesInActionNames = "true".equals(allow);
     }
+    
+    @Inject(StrutsConstants.STRUTS_ALWAYS_SELECT_FULL_NAMESPACE)
+    public void setAlwaysSelectFullNamespace(String val) {
+        this.alwaysSelectFullNamespace = "true".equals(val);
+    }
 
     @Inject
     public void setContainer(Container container) {
@@ -264,7 +271,7 @@ public class DefaultActionMapper implements ActionMapper {
             return null;
         }
 
-        parseNameAndNamespace(uri, mapping, configManager.getConfiguration());
+        parseNameAndNamespace(uri, mapping, configManager);
 
         handleSpecialParameters(request, mapping);
 
@@ -330,7 +337,7 @@ public class DefaultActionMapper implements ActionMapper {
      *            The action mapping to populate
      */
     void parseNameAndNamespace(String uri, ActionMapping mapping,
-            Configuration config) {
+            ConfigurationManager configManager) {
         String namespace, name;
         int lastSlash = uri.lastIndexOf("/");
         if (lastSlash == -1) {
@@ -342,7 +349,13 @@ public class DefaultActionMapper implements ActionMapper {
             // namespace anyway if not found in root namespace.
             namespace = "/";
             name = uri.substring(lastSlash + 1);
+        } else if (alwaysSelectFullNamespace) {
+            // Simply select the namespace as everything before the last slash
+            namespace = uri.substring(0, lastSlash);
+            name = uri.substring(lastSlash + 1);
         } else {
+            // Try to find the namespace in those defined, defaulting to ""
+            Configuration config = configManager.getConfiguration();
             String prefix = uri.substring(0, lastSlash);
             namespace = "";
             // Find the longest matching namespace, defaulting to the default

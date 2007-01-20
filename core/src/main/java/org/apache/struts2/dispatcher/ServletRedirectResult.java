@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -123,8 +124,12 @@ public class ServletRedirectResult extends StrutsResultSupport {
 
         if (isPathUrl(finalLocation)) {
             if (!finalLocation.startsWith("/")) {
-                String namespace = actionMapper.getMapping(
-                        request, Dispatcher.getInstance().getConfigurationManager()).getNamespace();
+                ActionMapping mapping = actionMapper.getMapping(
+                        request, Dispatcher.getInstance().getConfigurationManager()); 
+                String namespace = null;
+                if (mapping != null) {
+                    namespace = mapping.getNamespace();
+                }
 
                 if ((namespace != null) && (namespace.length() > 0) && (!"/".equals(namespace))) {
                     finalLocation = namespace + "/" + finalLocation;

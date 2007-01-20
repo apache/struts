@@ -872,9 +872,10 @@ public abstract class UIBean extends Component {
                 addParameter("id", id);
             }
         } else if (form != null) {
-            addParameter("id", form.getParameters().get("id") + "_" + escape(name));
+            addParameter("id", form.getParameters().get("id") + "_" 
+                    + escape(name != null ? findString(name) : null));
         } else {
-            addParameter("id", escape(name));
+            addParameter("id", escape(name != null ? findString(name) : null));
         }
     }
 

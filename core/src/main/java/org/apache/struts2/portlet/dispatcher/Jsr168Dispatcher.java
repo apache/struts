@@ -36,7 +36,6 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -595,4 +594,12 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
             dispatcherUtils.cleanup();
         }
     }
+
+    /**
+     * @param actionMapper the actionMapper to set
+     */
+    public void setActionMapper(ActionMapper actionMapper) {
+        this.actionMapper = actionMapper;
+    }
+    
 }

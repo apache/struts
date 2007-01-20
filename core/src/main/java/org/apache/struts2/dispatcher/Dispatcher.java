@@ -284,6 +284,10 @@ public class Dispatcher {
     	configurationManager = null;
     }
 
+    private void init_DefaultProperties() {
+        configurationManager.addConfigurationProvider(new DefaultPropertiesProvider());
+    }
+    
     private void init_LegacyStrutsProperties() {
         configurationManager.addConfigurationProvider(new LegacyPropertiesConfigurationProvider());
     }
@@ -439,13 +443,14 @@ Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyExcepti
     		configurationManager = new ConfigurationManager(BeanSelectionProvider.DEFAULT_BEAN_NAME);
     	}
 
-    	init_LegacyStrutsProperties(); // [1]
+    	init_DefaultProperties(); // [1]
         init_TraditionalXmlConfigurations(); // [2]
-        init_ZeroConfiguration(); // [3]
-        init_CustomConfigurationProviders(); // [4]
+        init_LegacyStrutsProperties(); // [3]
+        init_ZeroConfiguration(); // [4]
+        init_CustomConfigurationProviders(); // [5]
         init_MethodConfigurationProvider();
-        init_FilterInitParameters() ; // [5]
-        init_AliasStandardObjects() ; // [6]
+        init_FilterInitParameters() ; // [6]
+        init_AliasStandardObjects() ; // [7]
 
         Container container = init_PreloadConfiguration();
         init_CheckConfigurationReloading(container);

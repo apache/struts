@@ -41,6 +41,8 @@ import javax.servlet.ServletContextEvent;
 
 import junit.textui.TestRunner;
 
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.context.ServletContextHolderListener;
 import org.jmock.Mock;
@@ -106,6 +108,7 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         mockActionProxy.stubs().method("getAction").will(returnValue(mockAction.proxy()));
         mockActionProxy.expects(once()).method("execute").will(returnValue(result));
         mockActionProxy.expects(once()).method("getInvocation").will(returnValue(mockInvocation.proxy()));
+        mockActionProxy.expects(once()).method("setMethod");
         mockInvocation.stubs().method("getStack").will(returnValue(stack));
 
     }
@@ -130,6 +133,7 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
 
         Map initParams = new HashMap();
         initParams.put("viewNamespace", "/view");
+        initParams.put(StrutsConstants.STRUTS_ALWAYS_SELECT_FULL_NAMESPACE, "true");
 
         initPortletConfig(initParams, new HashMap());
         initRequest(requestParams, new HashMap(), sessionMap, new HashMap(), PortletMode.VIEW, WindowState.NORMAL, false, null);
@@ -162,6 +166,7 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         requestParams.put(PortletActionConstants.ACTION_PARAM, new String[]{"/view/testAction"});
         requestParams.put(PortletActionConstants.MODE_PARAM, new String[]{mode.toString()});
 
+        initParams.put(StrutsConstants.STRUTS_ALWAYS_SELECT_FULL_NAMESPACE, "true");
         initPortletConfig(initParams, new HashMap());
         initRequest(requestParams, new HashMap(), new HashMap(), new HashMap(), PortletMode.VIEW, WindowState.NORMAL, true, null);
         setupActionFactory("/view", "testAction", "success", ValueStackFactory.getFactory().createValueStack());

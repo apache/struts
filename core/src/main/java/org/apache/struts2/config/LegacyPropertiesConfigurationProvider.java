@@ -66,15 +66,7 @@ public class LegacyPropertiesConfigurationProvider implements ConfigurationProvi
         
         final Settings settings = Settings.getInstance();
         
-        for (Iterator i = settings.list(); i.hasNext(); ) {
-            String name = (String) i.next();
-            props.setProperty(name, settings.get(name), settings.getLocation(name));
-            
-            // Convert struts properties into ones that xwork expects
-            if (StrutsConstants.STRUTS_DEVMODE.equals(name)) {
-                props.setProperty("devMode", settings.get(name), settings.getLocation(name));
-            }
-        }
+        loadSettings(props, settings);
         
         // Set default locale
         final Locale locale = settings.getLocale();
@@ -83,5 +75,17 @@ public class LegacyPropertiesConfigurationProvider implements ConfigurationProvi
                 return locale;
             }
         });
+    }
+
+    /**
+     * @param props
+     * @param settings
+     */
+    protected void loadSettings(LocatableProperties props, final Settings settings) {
+        // We are calling the impl methods to get around the single instance of Settings that is expected
+        for (Iterator i = settings.listImpl(); i.hasNext(); ) {
+            String name = (String) i.next();
+            props.setProperty(name, settings.getImpl(name), settings.getLocationImpl(name));
+        }
     }
 }

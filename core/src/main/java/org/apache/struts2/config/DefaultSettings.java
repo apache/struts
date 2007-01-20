@@ -69,12 +69,6 @@ public class DefaultSettings extends Settings {
             log.warn("DefaultSettings: Could not find or error in struts.properties", e);
         }
 
-        try {
-            list.add(new PropertiesSettings("org/apache/struts2/default"));
-        } catch (Exception e) {
-            log.error("DefaultSettings: Could not find or error in org/apache/struts2/default.properties", e);
-        }
-
         Settings[] settings = new Settings[list.size()];
         delegate = new DelegatingSettings(list.toArray(settings));
 

@@ -246,10 +246,12 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         }
         StringBuffer fullPath = new StringBuffer();
         if (TextUtils.stringSet(portletNamespace)) {
-            fullPath.append(portletNamespace + "/");
+            fullPath.append(portletNamespace);
         }
         if (TextUtils.stringSet(namespace)) {
-            fullPath.append(namespace + "/");
+            fullPath.append(namespace).append("/");
+        } else {
+            fullPath.append("/");
         }
         fullPath.append(defaultAction);
         ActionMapping mapping = new ActionMapping();

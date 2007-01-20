@@ -42,11 +42,19 @@
             <#if (msgs?size > 1)>
             <ol>
                 <#list msgs as msg>
-                    <li>${msg}</li>
+                    <#if (msg?is_method)>
+                        <li>${msg[0]}</li>
+                    <#else>
+                        <li>${msg}</li>
+                    </#if>
                 </#list>
             </ol>
             <#elseif (msgs?size == 1)>
-                ${msgs[0]}
+                <#if (msg?is_method)>
+                    <li>${msgs[0][0]}</li>
+                <#else>
+                    <li>${msgs[0]}</li>
+                </#if>
             </#if>
         </td>
     </tr>

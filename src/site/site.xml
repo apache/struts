@@ -49,7 +49,7 @@
 
             <item
                     name="Release Notes"
-                    href="docs/release-notes-203.html"
+                    href="docs/release-notes-204.html"
                     />        
 
         </menu>
@@ -100,14 +100,14 @@
                     href="struts2-plugins/struts2-jasperreports-plugin/apidocs/index.html"
                     />
 
-            <item
-                    name="JavaServer Faces"
-                    href="struts2-plugins/struts2-jsf-plugin/apidocs/index.html"
-                    />
-
            <item
                     name="JFreeChart"
                     href="struts2-plugins/struts2-jfreechart-plugin/apidocs/index.html"
+                    />
+
+            <item
+                    name="JavaServer Faces"
+                    href="struts2-plugins/struts2-jsf-plugin/apidocs/index.html"
                     />
 
            <item

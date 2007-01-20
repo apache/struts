@@ -19,6 +19,13 @@
     </scm>
 
     <build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.struts</groupId>
+                <artifactId>struts-annotations</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </extension>
+        </extensions>
         <plugins>
         	<plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -459,13 +466,6 @@
             <artifactId>log4j</artifactId>
             <version>1.2.9</version>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts-annotations</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
 
     </dependencies>

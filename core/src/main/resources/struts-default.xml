@@ -84,7 +84,7 @@
             <interceptor name="timer" class="com.opensymphony.xwork2.interceptor.TimerInterceptor"/>
             <interceptor name="token" class="org.apache.struts2.interceptor.TokenInterceptor"/>
             <interceptor name="token-session" class="org.apache.struts2.interceptor.TokenSessionStoreInterceptor"/>
-            <interceptor name="validation" class="com.opensymphony.xwork2.validator.ValidationInterceptor"/>
+            <interceptor name="validation" class="org.apache.struts2.interceptor.validation.AnnotationValidationInterceptor"/>
             <interceptor name="workflow" class="com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor"/>
             <interceptor name="store" class="org.apache.struts2.interceptor.MessageStoreInterceptor" />
             <interceptor name="checkbox" class="org.apache.struts2.interceptor.CheckboxInterceptor" />

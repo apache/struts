@@ -127,6 +127,12 @@
             </modules>
         </profile>
         <profile>
+            <id>struts-annotations</id>
+            <modules>
+                <module>../maven/struts-annotations</module>
+            </modules>
+        </profile>
+        <profile>
             <id>1.4-backport</id>
             <activation>
                 <jdk>1.4</jdk>

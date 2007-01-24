@@ -56,18 +56,6 @@ public class SettingsTest extends StrutsTestCase {
         assertEquals("This is another test message", LocalizedTextUtil.findDefaultText("default.testmessage2", Locale.getDefault()));
     }
 
-    public void testReplaceDefaultMessages() {
-        Locale.setDefault(Locale.US); // force to US locale as we also have _de and _da properties
-
-        LocalizedTextUtil.clearDefaultResourceBundles();
-        LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
-        assertEquals("The form has already been processed or no token was supplied, please try again.", LocalizedTextUtil.findDefaultText("struts.messages.invalid.token", Locale.getDefault()));
-        Settings.reset();
-
-        assertEquals("testmessages,testmessages2", Settings.get(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES));
-        assertEquals("Replaced message for token tag", LocalizedTextUtil.findDefaultText("struts.messages.invalid.token", Locale.getDefault()));
-    }
-
     public void testSetSettings() {
         Settings.setInstance(new TestSettings());
 

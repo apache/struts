@@ -21,6 +21,7 @@
 package org.apache.struts2.config;
 
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,6 +44,7 @@ import com.opensymphony.xwork2.inject.Factory;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ObjectTypeDeterminer;
 import com.opensymphony.xwork2.util.ObjectTypeDeterminerFactory;
 import com.opensymphony.xwork2.util.XWorkConverter;
@@ -166,6 +168,26 @@ public class BeanSelectionProvider implements ConfigurationProvider {
             props.setProperty("devMode", "true");
         } else {
             props.setProperty("devMode", "false");
+        }
+        
+        // TODO: This should be moved to XWork after 2.0.4
+        // struts.custom.i18n.resources
+        try {
+
+            LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
+            StringTokenizer customBundles = new StringTokenizer(props.getProperty(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES), ", ");
+
+            while (customBundles.hasMoreTokens()) {
+                String name = customBundles.nextToken();
+                try {
+                    LOG.info("Loading global messages from " + name);
+                    LocalizedTextUtil.addDefaultResourceBundle(name);
+                } catch (Exception e) {
+                    LOG.error("Could not find messages file " + name + ".properties. Skipping");
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            // Assume it's OK, since many applications do not provide custom resource bundles. 
         }
     }
     

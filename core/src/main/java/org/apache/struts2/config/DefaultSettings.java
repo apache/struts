@@ -94,24 +94,6 @@ public class DefaultSettings extends Settings {
             // like the struts.custom.properties, which is commented out
         }
 
-        // struts.custom.i18n.resources
-        try {
-
-            LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
-            StringTokenizer customBundles = new StringTokenizer(delegate.getImpl(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES), ", ");
-
-            while (customBundles.hasMoreTokens()) {
-                String name = customBundles.nextToken();
-                try {
-                    log.info("DefaultSettings: Loading global messages from " + name);
-                    LocalizedTextUtil.addDefaultResourceBundle(name);
-                } catch (Exception e) {
-                    log.error("DefaultSettings: Could not find " + name + ".properties. Skipping");
-                }
-            }
-        } catch (IllegalArgumentException e) {
-            // Assume it's OK, since many applications do not provide custom resource bundles. 
-        }
     }
 
     // See superclass for Javadoc

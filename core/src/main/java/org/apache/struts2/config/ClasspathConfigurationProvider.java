@@ -39,6 +39,7 @@ import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ResolverUtil;
 import com.opensymphony.xwork2.util.TextUtils;
@@ -150,22 +151,6 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
      */
     public ClasspathConfigurationProvider(String[] pkgs) {
         this.packages = pkgs;
-
-        if (Settings.isSet(DEFAULT_PARENT_PACKAGE)) {
-            defaultParentPackage = Settings.get(DEFAULT_PARENT_PACKAGE);
-        }
-
-        if (Settings.isSet(DEFAULT_PAGE_EXTENSION)) {
-            defaultPageExtension = Settings.get(DEFAULT_PAGE_EXTENSION);
-        }
-
-        if (Settings.isSet(DEFAULT_PAGE_PREFIX)) {
-            defaultPagePrefix = Settings.get(DEFAULT_PAGE_PREFIX);
-        }
-
-        if (Settings.isSet(FORCE_LOWER_CASE)) {
-            forceLowerCase = Settings.get(FORCE_LOWER_CASE).equalsIgnoreCase("true");
-        }
     }
 
     /**
@@ -189,6 +174,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
      *
      * @param defaultParentPackage the new defaultParentPackage
      */
+    @Inject(value=DEFAULT_PARENT_PACKAGE, required=false)
     public void setDefaultParentPackage(String defaultParentPackage) {
         this.defaultParentPackage = defaultParentPackage;
     }
@@ -198,6 +184,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
      *
      * @param defaultPageExtension the new defaultPageExtension
      */
+    @Inject(value=DEFAULT_PAGE_EXTENSION, required=false)
     public void setDefaultPageExtension(String defaultPageExtension) {
         this.defaultPageExtension = defaultPageExtension;
     }
@@ -207,8 +194,20 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
      *
      * @param defaultPagePrefix the defaultPagePrefix to set
      */
+    @Inject(value=DEFAULT_PAGE_PREFIX, required=false)
     public void setDefaultPagePrefix(String defaultPagePrefix) {
         this.defaultPagePrefix = defaultPagePrefix;
+    }
+    
+    /**
+     * Whether to use a lowercase letter as the initial letter of an action.
+     * 
+     * @param force If false, actions will retain the initial uppercase letter from the Action class.
+     * (<code>view.action</code> (true) versus <code>View.action</code> (false)).
+     */
+    @Inject(value=FORCE_LOWER_CASE, required=false)
+    public void setForceLowerCase(String force) {
+        this.forceLowerCase = "true".equals(force);
     }
 
     /**

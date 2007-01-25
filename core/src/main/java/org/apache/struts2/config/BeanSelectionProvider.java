@@ -172,11 +172,13 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         
         // TODO: This should be moved to XWork after 2.0.4
         // struts.custom.i18n.resources
-        try {
 
-            LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
+        LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
+        
+        String bundles = props.getProperty(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES);
+        if (bundles != null && bundles.length() > 0) { 
             StringTokenizer customBundles = new StringTokenizer(props.getProperty(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES), ", ");
-
+            
             while (customBundles.hasMoreTokens()) {
                 String name = customBundles.nextToken();
                 try {
@@ -185,9 +187,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
                 } catch (Exception e) {
                     LOG.error("Could not find messages file " + name + ".properties. Skipping");
                 }
-            }
-        } catch (IllegalArgumentException e) {
-            // Assume it's OK, since many applications do not provide custom resource bundles. 
+            } 
         }
     }
     

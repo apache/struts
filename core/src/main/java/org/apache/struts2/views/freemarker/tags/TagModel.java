@@ -68,7 +68,7 @@ public abstract class TagModel implements TemplateTransformModel {
 
     protected abstract Component getBean();
 
-    private Map convertParams(Map params) {
+    protected Map convertParams(Map params) {
         HashMap map = new HashMap(params.size());
         for (Iterator iterator = params.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
@@ -80,7 +80,7 @@ public abstract class TagModel implements TemplateTransformModel {
         return map;
     }
 
-    private Map getComplexParams(Map params) {
+    protected Map getComplexParams(Map params) {
         HashMap map = new HashMap(params.size());
         for (Iterator iterator = params.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
@@ -102,7 +102,7 @@ public abstract class TagModel implements TemplateTransformModel {
         return map;
     }
 
-    private boolean complexType(Object value) {
+    protected boolean complexType(Object value) {
         return value instanceof freemarker.ext.beans.BeanModel
                 || value instanceof SimpleNumber
                 || value instanceof SimpleSequence;

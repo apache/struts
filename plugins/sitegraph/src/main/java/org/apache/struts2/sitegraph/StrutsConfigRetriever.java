@@ -13,6 +13,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.config.BeanSelectionProvider;
+import org.apache.struts2.config.DefaultPropertiesProvider;
 import org.apache.struts2.config.LegacyPropertiesConfigurationProvider;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.sitegraph.entities.FreeMarkerView;
@@ -54,6 +55,7 @@ public class StrutsConfigRetriever {
         try {
             ConfigurationProvider configProvider = new StrutsXmlConfigurationProvider(configFile.getCanonicalPath(), true, null);
             cm = new ConfigurationManager();
+            cm.addConfigurationProvider(new DefaultPropertiesProvider());
             cm.addConfigurationProvider(new StrutsXmlConfigurationProvider("struts-default.xml", false, null));
             cm.addConfigurationProvider(configProvider);
             cm.addConfigurationProvider(new LegacyPropertiesConfigurationProvider());

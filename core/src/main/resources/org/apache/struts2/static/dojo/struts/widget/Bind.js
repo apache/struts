@@ -44,13 +44,9 @@ dojo.widget.defineWidget(
       this.log("Listening to " + this.listenTopics + " to refresh");
       var topics = this.listenTopics.split(",");
       if(topics) {
-        if(topics) {
-          if(topics) {
-            dojo.lang.forEach(topics, function(topic){
-              dojo.event.topic.subscribe(topic, self, "reloadContents");
-            });
-          }
-        }
+        dojo.lang.forEach(topics, function(topic){
+          dojo.event.topic.subscribe(topic, self, "reloadContents");
+        });
       }
     }
 

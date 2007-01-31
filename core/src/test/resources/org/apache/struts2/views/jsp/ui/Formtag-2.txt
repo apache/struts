@@ -19,7 +19,7 @@
 </form>
 
 
-<script>
+<script type="text/javascript">
 	dojo.require("dojo.event.*");
 	var containingForm = document.getElementById("myAction");
 	dojo.event.connect(containingForm, "onsubmit", 
@@ -29,7 +29,7 @@
 			});
 </script>
 
-<script>
+<script type="text/javascript">
     function validateForm_myAction() {
         form = document.getElementById("myAction");
         clearErrorMessages(form);

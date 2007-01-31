@@ -12,7 +12,7 @@ Only the following validators are supported:
 END SNIPPET: supported-validators
 -->
 <#if ((parameters.validate?default(false) == true) && (parameters.performValidation?default(false) == true))>
-<script>
+<script type="text/javascript">
     function validateForm_${parameters.id}() {
         form = document.getElementById("${parameters.id}");
         clearErrorMessages(form);

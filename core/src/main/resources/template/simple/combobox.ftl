@@ -1,4 +1,4 @@
-<script>
+<script type="text/javascript">
 	function autoPopulate_${parameters.name?html}(targetElement) {
 		<#if parameters.headerKey?exists && parameters.headerValue?exists>
 		if (targetElement.options[targetElement.selectedIndex].value == '${parameters.headerKey?html}') {

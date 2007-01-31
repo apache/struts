@@ -1,7 +1,7 @@
 <tr>
     <td class="tdLabel"><label for="foo" class="label">mylabel:</label></td>
     <td>
-<script>
+<script type="text/javascript">
 	function autoPopulate_foo(targetElement) {
 		targetElement.form.elements['foo'].value=targetElement.options[targetElement.selectedIndex].value;
 	}

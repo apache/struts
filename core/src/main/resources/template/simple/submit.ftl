@@ -17,9 +17,10 @@
 </#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl"/>
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
-><#if parameters.label?exists><@s.property value="parameters.label"/><#rt/></#if></button>
+><#if parameters.body?length gt 0><@s.property value="parameters.body"/><#elseif parameters.label?exists><@s.property value="parameters.label"/><#rt/></#if></button>
 <#else>
 <#if parameters.type?exists && parameters.type=="image">
+<@s.property value="parameters.body"/>
 <input type="image"<#rt/>
 <#if parameters.label?exists>
  alt="${parameters.label?html}"<#rt/>

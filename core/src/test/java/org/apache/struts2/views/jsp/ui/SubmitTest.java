@@ -23,8 +23,12 @@ package org.apache.struts2.views.jsp.ui;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.jsp.tagext.BodyContent;
+
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
+
+import com.mockobjects.servlet.MockBodyContent;
 
 
 /**
@@ -80,6 +84,25 @@ public class SubmitTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("Submit-3.txt"));
+    }
+    
+    public void testButtonSimpleWithBody() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        SubmitTag tag = new SubmitTag();
+        tag.setPageContext(pageContext);
+        tag.setType("button");
+        tag.setName("myname");
+        tag.setValue("%{foo}");
+
+        tag.doStartTag();
+        StrutsBodyContent body = new StrutsBodyContent(null);
+        body.append("foo");
+        tag.setBodyContent(body);
+        tag.doEndTag();
+
+        verify(TextFieldTag.class.getResource("Submit-7.txt"));
     }
 
     public void testButtonWithLabel() throws Exception {

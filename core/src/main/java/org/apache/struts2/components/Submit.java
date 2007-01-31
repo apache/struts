@@ -20,9 +20,13 @@
  */
 package org.apache.struts2.components;
 
+import java.io.Writer;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
@@ -133,6 +137,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 @StrutsTag(name="submit", tldTagClass="org.apache.struts2.views.jsp.ui.SubmitTag", description="Render a submit button")
 public class Submit extends FormButton implements RemoteUICallBean{
+    
+    private static final Log LOG = LogFactory.getLog(Submit.class);
+    
     final public static String TEMPLATE = "submit";
 
     protected String href;
@@ -216,6 +223,25 @@ public class Submit extends FormButton implements RemoteUICallBean{
      */
     protected boolean supportsImageType() {
         return true;
+    }
+    
+    /**
+     * Overrides to be able to render body in a template rather than always before the template
+     */
+    public boolean end(Writer writer, String body) {
+        evaluateParams();
+        try {
+            addParameter("body", body);
+            
+            mergeTemplate(writer, buildTemplateName(template, getDefaultTemplate()));
+        } catch (Exception e) {
+            LOG.error("error when rendering", e);
+        }
+        finally {
+            popComponentStack();
+        }
+
+        return false;
     }
 
     @StrutsTagAttribute(description="Topic that will trigger the remote call")

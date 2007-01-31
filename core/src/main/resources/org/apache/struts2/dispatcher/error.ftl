@@ -50,7 +50,7 @@
                 </#list>
             </ol>
             <#elseif (msgs?size == 1)>
-                <#if (msg?is_method)>
+                <#if (msgs[0]?is_method)>
                     <li>${msgs[0][0]}</li>
                 <#else>
                     <li>${msgs[0]}</li>

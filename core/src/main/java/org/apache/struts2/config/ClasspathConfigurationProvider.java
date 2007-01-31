@@ -289,6 +289,11 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
 
         PackageConfig pkgConfig = loadPackageConfig(actionNamespace, actionPackage, cls);
 
+        // In case the package changed due to namespace annotation processing
+        if (!actionPackage.equals(pkgConfig.getName())) {
+            actionPackage = pkgConfig.getName();
+        }
+
         Annotation annotation = cls.getAnnotation(ParentPackage.class);
         if (annotation != null) {
             String parent = ((ParentPackage)annotation).value();
@@ -323,7 +328,6 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
         actionConfig.setPackageName(actionPackage);
 
         actionConfig.setResults(new ResultMap<String,ResultConfig>(cls, actionName, pkgConfig));
-
         pkgConfig.addActionConfig(actionName, actionConfig);
     }
 
@@ -475,33 +479,6 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
                 }
             }
             return map;
-        }
-
-        /**
-         * Retrieve ResultConfig from cache.
-         *
-         * @param key Name of ResultConfig
-         * @return ResultConfig correspnding to key
-         */
-        public V get(Object key) {
-
-            V result = super.get(key);
-            if (result != null) {
-                return result;
-            } else {
-
-                //  This code should never actually be called,
-                // due to how the runtime configuration is created.
-                String actionPath = pkgConfig.getNamespace() + "/" + actionName;
-
-                String fileName = actionPath + "-" + key + defaultPageExtension;
-                if (pageLocator.locate(defaultPagePrefix + fileName) == null) {
-                    fileName = actionPath + defaultPageExtension;
-                }
-
-                String location = defaultPagePrefix + fileName;
-                return (V) createResultConfig(key, null, location, null);
-            }
         }
 
         /**

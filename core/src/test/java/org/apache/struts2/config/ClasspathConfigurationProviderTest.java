@@ -59,7 +59,8 @@ public class ClasspathConfigurationProviderTest extends TestCase {
         Map configs = pkg.getActionConfigs();
         assertNotNull(configs);
         // assertEquals(1, configs.size());
-        assertNotNull(configs.get("customParentPackage"));
+        ActionConfig actionConfig = (ActionConfig) configs.get("customParentPackage");
+        assertNotNull(actionConfig);
     }
 
     public void testParentPackage() {
@@ -76,9 +77,12 @@ public class ClasspathConfigurationProviderTest extends TestCase {
         Map configs = pkg.getAllActionConfigs();
         // assertEquals(2, configs.size());
         ActionConfig config = (ActionConfig) configs.get("customNamespace");
+        assertEquals(config.getPackageName(), pkg.getName());
+        assertEquals(1, pkg.getParents().size());
         assertNotNull(config);
         assertEquals("/mynamespace", pkg.getNamespace());
-        assertNotNull(configs.get("customParentPackage"));
+        ActionConfig ac = (ActionConfig) configs.get("customParentPackage");
+        assertNotNull(ac);
     }
 
     public void testResultAnnotations() {
@@ -95,14 +99,4 @@ public class ClasspathConfigurationProviderTest extends TestCase {
         ActionConfig acfg = pkg.getActionConfigs().get("actionImpl");
         assertNotNull(acfg);
     }
-
-    public void testDynamicResults() {
-        PackageConfig pkg = config.getPackageConfig("org.apache.struts2.config.cltest");
-        ActionConfig config = pkg.getActionConfigs().get("twoResult");
-        ResultConfig result = config.getResults().get("foobar");
-        assertNotNull(result);
-        assertEquals("/cltest/twoResult.jsp", result.getParams().get("location"));
-        assertEquals(ServletDispatcherResult.class.getName(), result.getClassName());
-    }
-
 }

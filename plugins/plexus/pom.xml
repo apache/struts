@@ -23,7 +23,6 @@
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-container-default</artifactId>
             <version>1.0-alpha-10-SNAPSHOT</version>
-            <optional>true</optional>
         </dependency>
    </dependencies>
 </project>

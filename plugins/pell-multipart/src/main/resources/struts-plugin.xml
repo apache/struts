@@ -5,5 +5,5 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">
     
 <struts>
-    <bean type="org.apache.struts2.dispatcher.MultiPartRequest" name="pell" class="org.apache.struts2.dispatcher.PellMultiPartRequest" />
+    <bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="pell" class="org.apache.struts2.dispatcher.multipart.PellMultiPartRequest" />
 </struts>

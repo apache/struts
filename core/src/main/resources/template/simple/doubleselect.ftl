@@ -38,9 +38,9 @@
 </select>
 <script type="text/javascript">
 <#assign itemCount = startCount/>
-    var ${parameters.name}Group = new Array(${parameters.listSize} + ${startCount});
+    var ${parameters.id}Group = new Array(${parameters.listSize} + ${startCount});
     for (i = 0; i < (${parameters.listSize} + ${startCount}); i++)
-    ${parameters.name}Group[i] = new Array();
+    ${parameters.id}Group[i] = new Array();
 
 <@s.iterator value="parameters.list">
     <#if parameters.listKey?exists>
@@ -66,14 +66,14 @@
         <#else>
             <#assign doubleItemValue = stack.findString('top')/>
         </#if>
-    ${parameters.name}Group[${itemCount}][${doubleItemCount}] = new Option("${doubleItemValue}", "${doubleItemKeyStr}");
+    ${parameters.id}Group[${itemCount}][${doubleItemCount}] = new Option("${doubleItemValue}", "${doubleItemKeyStr}");
 
         <#assign doubleItemCount = doubleItemCount + 1/>
     </@s.iterator>
     <#assign itemCount = itemCount + 1/>
 </@s.iterator>
 
-    var ${parameters.name}Temp = document.${parameters.formName}.${parameters.doubleName};
+    var ${parameters.id}Temp = document.${parameters.formName}.${parameters.doubleName};
 <#assign itemCount = startCount/>
 <#assign redirectTo = 0/>
 <@s.iterator value="parameters.list">
@@ -87,25 +87,25 @@
     </#if>
     <#assign itemCount = itemCount + 1/>
 </@s.iterator>
-    ${parameters.name}Redirect(${redirectTo});
-    function ${parameters.name}Redirect(x) {
+    ${parameters.id}Redirect(${redirectTo});
+    function ${parameters.id}Redirect(x) {
     	var selected = false;
-        for (m = ${parameters.name}Temp.options.length - 1; m >= 0; m--) {
-            ${parameters.name}Temp.options[m] = null;
+        for (m = ${parameters.id}Temp.options.length - 1; m >= 0; m--) {
+            ${parameters.id}Temp.options[m] = null;
         }
 
-        for (i = 0; i < ${parameters.name}Group[x].length; i++) {
-            ${parameters.name}Temp.options[i] = new Option(${parameters.name}Group[x][i].text, ${parameters.name}Group[x][i].value);
+        for (i = 0; i < ${parameters.id}Group[x].length; i++) {
+            ${parameters.id}Temp.options[i] = new Option(${parameters.id}Group[x][i].text, ${parameters.id}Group[x][i].value);
             <#if parameters.doubleNameValue?exists>
-            	if (${parameters.name}Temp.options[i].value == '${parameters.doubleNameValue}') {
-            		${parameters.name}Temp.options[i].selected = true;
+            	if (${parameters.id}Temp.options[i].value == '${parameters.doubleNameValue}') {
+            		${parameters.id}Temp.options[i].selected = true;
             		selected = true;
             	}
             </#if>
         }
 
-        if ((${parameters.name}Temp.options.length > 0) && (! selected)) {
-           	${parameters.name}Temp.options[0].selected = true;
+        if ((${parameters.id}Temp.options.length > 0) && (! selected)) {
+           	${parameters.id}Temp.options[0].selected = true;
         }
     }
 </script>

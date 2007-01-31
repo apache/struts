@@ -60,6 +60,6 @@ public class DoubleSelect extends DoubleListUIBean {
         super.evaluateExtraParams();
 
         // force the onchange parameter
-        addParameter("onchange", getParameters().get("name") + "Redirect(this.options.selectedIndex)");
+        addParameter("onchange", getParameters().get("id") + "Redirect(this.options.selectedIndex)");
     }
 }

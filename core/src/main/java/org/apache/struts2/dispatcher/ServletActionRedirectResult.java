@@ -135,7 +135,6 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
     protected String actionName;
     protected String namespace;
     protected String method;
-    protected ActionMapper actionMapper;
 
     private Map<String, String> requestParameters = new HashMap<String, String>();
 
@@ -158,11 +157,6 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
         this.method = method;
     }
     
-    @Inject
-    public void setActionMapper(ActionMapper mapper) {
-        this.actionMapper = mapper;
-    }
-
     protected List<String> prohibitedResultParam = Arrays.asList(new String[] {
             DEFAULT_PARAM, "namespace", "method", "encode", "parse", "location",
             "prependServletContext" });

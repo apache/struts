@@ -32,6 +32,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -89,6 +91,11 @@ public class OptGroup extends Component {
                 return "empty";
             }
         };
+    }
+    
+    @Inject
+    public void setContainer(Container container) {
+        container.inject(internalUiBean);
     }
 
     public boolean end(Writer writer, String body) {

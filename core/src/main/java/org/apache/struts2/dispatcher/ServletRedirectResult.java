@@ -85,7 +85,7 @@ public class ServletRedirectResult extends StrutsResultSupport {
 
     protected boolean prependServletContext = true;
 
-    private ActionMapper actionMapper;
+    protected ActionMapper actionMapper;
 
     public ServletRedirectResult() {
         super();

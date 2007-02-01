@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java 490514 2006-12-27 15:25:48Z ddewolf $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

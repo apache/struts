@@ -1,5 +1,5 @@
 /*
- * $Id: SettingsTest.java 498215 2007-01-20 23:59:10Z mrdon $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

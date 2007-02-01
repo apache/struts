@@ -1,5 +1,5 @@
 /*
- * $Id: AnnotationValidationInterceptorTest.java 478625 2006-11-23 17:31:52Z wsmoak $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

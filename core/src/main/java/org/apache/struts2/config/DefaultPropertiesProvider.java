@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultActionMapper.java 498085 2007-01-20 08:13:11Z mrdon $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

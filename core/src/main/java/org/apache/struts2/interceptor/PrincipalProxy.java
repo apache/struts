@@ -25,21 +25,10 @@ import java.security.Principal;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Proxy class used together with PrincipalAware interface. It allows to get indirect access to
- * HttpServletRequest Principal related methods.
- *
+ * Proxy interface used together with PrincipalAware interface. It allows to get indirect access to
+ * HttpServletRequest or PortletRequest Principal related methods.
  */
-public class PrincipalProxy {
-    private HttpServletRequest request;
-
-    /**
-     * Constructs a proxy
-     *
-     * @param request The underlying request
-     */
-    public PrincipalProxy(HttpServletRequest request) {
-        this.request = request;
-    }
+public interface PrincipalProxy {
 
     /**
      * True if the user is in the given role
@@ -47,43 +36,35 @@ public class PrincipalProxy {
      * @param role The role
      * @return True if the user is in that role
      */
-    public boolean isUserInRole(String role) {
-        return request.isUserInRole(role);
-    }
+    boolean isUserInRole(String role);
 
     /**
      * Gets the user principal
      *
      * @return The principal
      */
-    public Principal getUserPrincipal() {
-        return request.getUserPrincipal();
-    }
+    Principal getUserPrincipal();
 
     /**
      * Gets the user id
      *
      * @return The user id
      */
-    public String getRemoteUser() {
-        return request.getRemoteUser();
-    }
+    String getRemoteUser();
 
     /**
      * Is the request using https?
      *
      * @return True if using https
      */
-    public boolean isRequestSecure() {
-        return request.isSecure();
-    }
+    boolean isRequestSecure();
 
     /**
-     * Gets the request
+     * Gets the request.
      *
      * @return The request
+     * @deprecated To obtain the HttpServletRequest in your action, use
+     *             {@link org.apache.struts2.servlet.ServletRequestAware}, since this method will be dropped in future.
      */
-    public HttpServletRequest getRequest() {
-        return request;
-    }
+    HttpServletRequest getRequest();
 }

@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-apps</artifactId>
-        <version>2.0.6-SNAPSHOT</version>
+        <version>2.1.0-SNAPSHOT</version>
     </parent>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-showcase</artifactId>
@@ -17,7 +17,7 @@
        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/apps/showcase/</developerConnection>
        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/apps/showcase/</url>
     </scm>
-    
+
 
     <profiles>
         <profile>
@@ -31,7 +31,7 @@
         </profile>
     </profiles>
     <dependencies>
-        
+
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-struts1-plugin</artifactId>
@@ -55,7 +55,7 @@
             <artifactId>struts2-sitemesh-plugin</artifactId>
             <version>${pom.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-tiles-plugin</artifactId>
@@ -79,14 +79,14 @@
             <artifactId>struts2-spring-plugin</artifactId>
             <version>${pom.version}</version>
         </dependency>
- 
+
         <dependency>
            <groupId>javax.servlet</groupId>
            <artifactId>servlet-api</artifactId>
            <version>2.4</version>
            <scope>provided</scope>
         </dependency>
-        
+
         <!-- Velocity -->
         <dependency>
             <groupId>velocity</groupId>
@@ -137,9 +137,9 @@
          <version>1.1.1</version>
      </dependency>
 
- 
+
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>

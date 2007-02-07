@@ -5,7 +5,7 @@
     <parent>
       <groupId>org.apache.struts</groupId>
       <artifactId>struts2-apps</artifactId>
-      <version>2.0.6-SNAPSHOT</version>
+      <version>2.1.0-SNAPSHOT</version>
     </parent>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-mailreader</artifactId>
@@ -19,7 +19,7 @@
     </scm>
 
     <dependencies>
-    
+
         <dependency>
            <groupId>javax.servlet</groupId>
            <artifactId>servlet-api</artifactId>
@@ -38,7 +38,7 @@
         </dependency>
 
     </dependencies>
-    
+
     <build>
         <resources>
             <resource>

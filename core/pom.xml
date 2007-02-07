@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>2.0.6-SNAPSHOT</version>
+        <version>2.1.0-SNAPSHOT</version>
     </parent>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-core</artifactId>
@@ -20,7 +20,7 @@
 
     <build>
         <plugins>
-        	<plugin>
+            <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>2.0-alpha-1-SNAPSHOT</version>
                 <executions>
@@ -31,18 +31,18 @@
                             <goal>unpack</goal>
                         </goals>
                         <configuration>
-		                    <artifactItems>
-		                        <artifactItem>
-		                            <groupId>opensymphony</groupId>
-		                            <artifactId>xwork</artifactId>
-		                            <version>2.0.0</version>
-		                            <classifier>sources</classifier>
-		                        </artifactItem>
-		                    </artifactItems>
-		                    <outputDirectory>${project.build.directory}/xwork-sources</outputDirectory>
-		                </configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>opensymphony</groupId>
+                                    <artifactId>xwork</artifactId>
+                                    <version>2.0.0</version>
+                                    <classifier>sources</classifier>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}/xwork-sources</outputDirectory>
+                        </configuration>
                     </execution>
-				</executions>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.myfaces.tobago</groupId>
@@ -75,14 +75,14 @@
                             <goal>execute</goal>
                         </goals>
                 </execution>
-				</executions>
+                </executions>
             </plugin>
         </plugins>
     </build>
 
     <reporting>
         <plugins>
-        	<plugin>
+            <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
@@ -111,68 +111,68 @@
     </reporting>
 
     <profiles>
-     	<profile>
-	    	<!--
-	    		Run the translator for Java 1.4 compatiblity
+        <profile>
+            <!--
+                Run the translator for Java 1.4 compatiblity
 
-	    		Sample:
-	    		$ cd struts/struts2/
-	    		$ mvn clean install -Papps,j4 -Djava14.jar=$JAVA_HOME/../Classes/classes.jar
+                Sample:
+                $ cd struts/struts2/
+                $ mvn clean install -Papps,j4 -Djava14.jar=$JAVA_HOME/../Classes/classes.jar
 
-	    	 -->
-	      <id>j4</id>
-	      <build>
-	        <plugins>
-	          <plugin>
-	            <groupId>org.codehaus.mojo</groupId>
-	            <artifactId>retrotranslator-maven-plugin</artifactId>
-	            <executions>
-	              <execution>
-	                <id>retrotranslate</id>
-	              </execution>
-	            </executions>
-	          </plugin>
-	          <plugin>
-	            <artifactId>maven-jar-plugin</artifactId>
-	            <executions>
-	              <execution>
-	                <id>create-j4-jar</id>
-	                <goals><goal>jar</goal></goals>
-	                <configuration>
-	                  <classesDirectory>${project.build.directory}/classes-retro</classesDirectory>
-	                  <classifier>j4</classifier>
-	                  <archive>
-	                    <manifestEntries>
-	                      <Extension-Name>${project.artifactId}-j4</Extension-Name>
-	                      <Specification-Vendor>${project.organization.name}</Specification-Vendor>
-	                      <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
-	                      <Implementation-Title>${project.description}</Implementation-Title>
-	                      <Implementation-Version>${project.version}</Implementation-Version>
-	                      <Revision>${scm.revision}</Revision>
-	                    </manifestEntries>
-	                   </archive>
-	                </configuration>
-	              </execution>
-	            </executions>
-	          </plugin>
-	        </plugins>
-	      </build>
-	       <dependencies>
-	        <dependency>
-	          <groupId>sun.jdk</groupId>
-	          <artifactId>rt</artifactId>
-	          <version>1.4.0</version>
-	          <scope>system</scope>
-	          <!-- path to rt.jar (on OSX, it's classes.jar) -->
-	          <systemPath>${java14.jar}</systemPath>
-	        </dependency>
-	        <dependency>
-	          <groupId>net.sf.retrotranslator</groupId>
-	          <artifactId>retrotranslator-runtime</artifactId>
-	          <version>1.0.8</version>
-	        </dependency>
-	      </dependencies>
-	    </profile>
+             -->
+          <id>j4</id>
+          <build>
+            <plugins>
+              <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>retrotranslator-maven-plugin</artifactId>
+                <executions>
+                  <execution>
+                    <id>retrotranslate</id>
+                  </execution>
+                </executions>
+              </plugin>
+              <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                  <execution>
+                    <id>create-j4-jar</id>
+                    <goals><goal>jar</goal></goals>
+                    <configuration>
+                      <classesDirectory>${project.build.directory}/classes-retro</classesDirectory>
+                      <classifier>j4</classifier>
+                      <archive>
+                        <manifestEntries>
+                          <Extension-Name>${project.artifactId}-j4</Extension-Name>
+                          <Specification-Vendor>${project.organization.name}</Specification-Vendor>
+                          <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+                          <Implementation-Title>${project.description}</Implementation-Title>
+                          <Implementation-Version>${project.version}</Implementation-Version>
+                          <Revision>${scm.revision}</Revision>
+                        </manifestEntries>
+                       </archive>
+                    </configuration>
+                  </execution>
+                </executions>
+              </plugin>
+            </plugins>
+          </build>
+           <dependencies>
+            <dependency>
+              <groupId>sun.jdk</groupId>
+              <artifactId>rt</artifactId>
+              <version>1.4.0</version>
+              <scope>system</scope>
+              <!-- path to rt.jar (on OSX, it's classes.jar) -->
+              <systemPath>${java14.jar}</systemPath>
+            </dependency>
+            <dependency>
+              <groupId>net.sf.retrotranslator</groupId>
+              <artifactId>retrotranslator-runtime</artifactId>
+              <version>1.0.8</version>
+            </dependency>
+          </dependencies>
+        </profile>
 
         <profile>
             <id>alljars</id>
@@ -471,6 +471,6 @@
             <optional>true</optional>
         </dependency>
 
-        
+
     </dependencies>
 </project>

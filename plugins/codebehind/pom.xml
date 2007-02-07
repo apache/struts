@@ -5,13 +5,13 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>2.0.6-SNAPSHOT</version>
+        <version>2.1.0-SNAPSHOT</version>
     </parent>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-codebehind-plugin</artifactId>
     <packaging>jar</packaging>
     <name>Struts 2 Codebehind Plugin</name>
-    
+
     <scm>
        <connection>scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/plugins/codebehind/</connection>
        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/plugins/codebehind/</developerConnection>
@@ -57,9 +57,9 @@
             <scope>provided</scope>
         </dependency>
 
- 
 
 
- 
+
+
    </dependencies>
 </project>

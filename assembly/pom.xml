@@ -155,12 +155,13 @@
 
         <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-api</artifactId>
+            <artifactId>struts2-core</artifactId>
             <version>${version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-core</artifactId>
+            <artifactId>struts2-codebehind-plugin</artifactId>
             <version>${version}</version>
         </dependency>
 
@@ -197,6 +198,12 @@
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-plexus-plugin</artifactId>
+            <version>${version}</version>
+        </dependency> 
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-spring-plugin</artifactId>
             <version>${version}</version>
         </dependency> 
 

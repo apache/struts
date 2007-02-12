@@ -32,7 +32,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-parent</artifactId>
-    <version>2.0.5</version>
+    <version>2.0.6-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Struts 2</name>
     <url>http://struts.apache.org/struts2</url>
@@ -78,7 +78,7 @@
     <modules>
         <module>core</module>
         <!--<module>assembly</module>-->
-        <module>api</module>
+        <!-- <module>api</module> -->
     </modules>
 
     <licenses>

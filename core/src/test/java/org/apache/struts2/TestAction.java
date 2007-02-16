@@ -40,6 +40,7 @@ public class TestAction extends ActionSupport {
     private Collection collection2;
     private Map map;
     private String foo;
+
     private String result;
     private User user;
     private String[] array;
@@ -61,7 +62,7 @@ public class TestAction extends ActionSupport {
 
     public void setMap(Map map) {
         this.map = map;
-    }
+    }private Integer fooInt;
 
     public String getFoo() {
         return foo;
@@ -127,6 +128,14 @@ public class TestAction extends ActionSupport {
         this.collection2 = collection;
     }
 
+    public Integer getFooInt() {
+        return fooInt;
+    }
+
+    public void setFooInt(Integer fooInt) {
+        this.fooInt = fooInt;
+    }
+    
     public String execute() throws Exception {
         if (result == null) {
             result = Action.SUCCESS;

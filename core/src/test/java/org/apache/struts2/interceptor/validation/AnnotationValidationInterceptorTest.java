@@ -48,6 +48,7 @@ public class AnnotationValidationInterceptorTest extends StrutsTestCase {
     public void testShouldNotSkip() throws Exception {
         mockActionProxy.expectAndReturn("getMethod", "execute");
         mockActionProxy.expectAndReturn("getActionName", "foo");
+        mockActionProxy.expectAndReturn("getMethod", "execute");
         interceptor.doIntercept((ActionInvocation)mockActionInvocation.proxy());
         mockActionProxy.verify();
     }

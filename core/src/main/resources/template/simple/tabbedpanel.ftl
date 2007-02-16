@@ -26,4 +26,7 @@
   <#if parameters.doLayout?exists>
     doLayout="${parameters.doLayout?string?html}"<#rt/>
   </#if>
+  <#if parameters.templateCssPath?exists>
+	templateCssPath="<@s.url value='${parameters.templateCssPath}' encode="false" includeParams='none'/>"
+  </#if>
 >

@@ -13,4 +13,6 @@
  indicator="h"
  loadOnType="true"
  loadMinimum="3"
- visibleDownArrow="false">
+ visibleDownArrow="false"
+ buttonSrc="i"
+ templateCssPath="j">

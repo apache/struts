@@ -46,6 +46,8 @@ public class AutocompleterTest extends AbstractUITagTest {
         tag.setLoadOnTextChange("true");
         tag.setLoadMinimumCount("3");
         tag.setShowDownArrow("false");
+        tag.setIconPath("i");
+        tag.setTemplateCssPath("j");
         tag.doStartTag();
         tag.doEndTag();
 
@@ -67,6 +69,8 @@ public class AutocompleterTest extends AbstractUITagTest {
         tag.setSearchType("b");
         tag.setDisabled("c");
         tag.setName("f");
+        tag.setIconPath("i");
+        tag.setTemplateCssPath("j");
         tag.doStartTag();
         tag.doEndTag();
 

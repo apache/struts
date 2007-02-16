@@ -178,7 +178,7 @@ public class DateTimePicker extends UIBean {
         if(value != null)
             addParameter("value", findString(value));
         if(iconPath != null)
-            addParameter("iconPath", iconPath);
+            addParameter("iconPath", findString(iconPath));
         if(formatLength != null)
             addParameter("formatLength", findString(formatLength));
         if(displayFormat != null)
@@ -261,7 +261,7 @@ public class DateTimePicker extends UIBean {
         this.formatLength = formatLength;
     }
 
-    @StrutsTagAttribute(description=" Path to icon used for the dropdown")
+    @StrutsTagAttribute(description="Path to icon used for the dropdown")
     public void setIconPath(String iconPath) {
         this.iconPath = iconPath;
     }

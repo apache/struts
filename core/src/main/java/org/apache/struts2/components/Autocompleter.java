@@ -101,7 +101,9 @@ public class Autocompleter extends ComboBox {
     protected String loadOnTextChange;
     protected String loadMinimumCount;
     protected String showDownArrow;
-
+    protected String templateCssPath;
+    protected String iconPath;
+    
     public Autocompleter(ValueStack stack, HttpServletRequest request,
             HttpServletResponse response) {
         super(stack, request, response);
@@ -159,6 +161,10 @@ public class Autocompleter extends ComboBox {
             addParameter("showDownArrow", findValue(showDownArrow, Boolean.class));
         else
             addParameter("showDownArrow", Boolean.TRUE);
+        if(templateCssPath != null)
+            addParameter("templateCssPath", findString(templateCssPath));
+        if(iconPath != null)
+            addParameter("iconPath", findString(iconPath));
         //get the key value
         if(name != null) {
             String keyNameExpr = "%{" + name + "Key}";
@@ -255,5 +261,15 @@ public class Autocompleter extends ComboBox {
     @StrutsTagAttribute(description="Iteratable source to populate from.")
     public void setList(String list) {
         super.setList(list);
+    }
+    
+    @StrutsTagAttribute(description="Template css path")
+    public void setTemplateCssPath(String templateCssPath) {
+        this.templateCssPath = templateCssPath;
+    }
+    
+    @StrutsTagAttribute(description="Path to icon used for the dropdown")
+    public void setIconPath(String iconPath) {
+        this.iconPath = iconPath;
     }
 }

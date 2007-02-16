@@ -14,5 +14,6 @@
   afterLoading="k"
   handler="l"
   indicator="m"
-  showError="true">
+  showError="true"
+  showLoading="true">
 </div>

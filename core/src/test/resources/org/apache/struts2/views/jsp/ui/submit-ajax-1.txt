@@ -16,6 +16,7 @@
   afterLoading="g"
   handler="h"
   indicator="l"
+  showLoading="true"
   />
   </div>
   </td>

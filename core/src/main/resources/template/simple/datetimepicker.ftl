@@ -51,7 +51,7 @@
     style="${parameters.cssStyle?html}"<#rt/>
   </#if>
   <#if parameters.iconPath?if_exists != "">
-    iconURL="${parameters.iconPath}"<#rt/>
+    iconURL="<@s.url value='${parameters.iconPath}' encode="false" includeParams='none'/>"<#rt/>
   </#if>
   <#if parameters.formatLength?if_exists != "">
     formatLength="${parameters.formatLength?html}"<#rt/>
@@ -64,6 +64,9 @@
   </#if>
   <#if parameters.toggleDuration?exists>
     containerToggleDuration="${parameters.toggleDuration?string?html}"<#rt/>
+  </#if>
+  <#if parameters.templateCssPath?exists>
+	templateCssPath="<@s.url value='${parameters.templateCssPath}' encode="false" includeParams='none'/>"
   </#if>
   saveFormat="rfc"<#rt/>
   <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />

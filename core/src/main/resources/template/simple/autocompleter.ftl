@@ -65,6 +65,12 @@
 <#if parameters.notifyTopics?if_exists != "">
  notifyTopics="${parameters.notifyTopics?html}"<#rt/>
 </#if>
+<#if parameters.iconPath?if_exists != "">
+ buttonSrc="<@s.url value='${parameters.iconPath}' encode="false" includeParams='none'/>"<#rt/>
+</#if>
+<#if parameters.templateCssPath?if_exists != "">
+ templateCssPath="<@s.url value='${parameters.templateCssPath}' encode="false" includeParams='none'/>"
+</#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 >
 <#if parameters.list?exists>

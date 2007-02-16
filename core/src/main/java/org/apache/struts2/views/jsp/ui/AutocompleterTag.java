@@ -50,6 +50,8 @@ public class AutocompleterTag extends ComboBoxTag {
     protected String loadOnTextChange;
     protected String loadMinimumCount;
     protected String showDownArrow;
+    protected String templateCssPath;
+    protected String iconPath;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Autocompleter(stack, req, res);
@@ -75,6 +77,8 @@ public class AutocompleterTag extends ComboBoxTag {
         autocompleter.setLoadMinimumCount(loadMinimumCount);
         autocompleter.setLoadOnTextChange(loadOnTextChange);
         autocompleter.setShowDownArrow(showDownArrow);
+        autocompleter.setTemplateCssPath(templateCssPath);
+        autocompleter.setIconPath(iconPath);
     }
 
     public void setAutoComplete(String autoComplete) {
@@ -145,4 +149,11 @@ public class AutocompleterTag extends ComboBoxTag {
         this.showDownArrow = showDownArrow;
     }
 
+    public void setTemplateCssPath(String templateCssPath) {
+        this.templateCssPath = templateCssPath;
+    }
+    
+    public void setIconPath(String iconPath) {
+        this.iconPath = iconPath;
+    }
 }

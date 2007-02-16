@@ -14,6 +14,9 @@
   <#if parameters.stopTimerListenTopics?if_exists != "">
     stopTimerListenTopics="${parameters.stopTimerListenTopics?html}"<#rt/>
   </#if>
+  <#if parameters.refreshOnShow?exists>
+    refreshOnShow="${parameters.refreshOnShow?string?html}"<#rt/>
+  </#if>
   <#include "/${parameters.templateDir}/ajax/ajax-common.ftl" />
   <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 >

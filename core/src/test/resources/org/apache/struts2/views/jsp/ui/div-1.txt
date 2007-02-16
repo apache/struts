@@ -5,6 +5,7 @@
   autoStart="true"
   startTimerListenTopics="h"
   stopTimerListenTopics="i"
+  refreshOnShow="true"
   id="mylabel"
   href="a"
   loadingText="b"

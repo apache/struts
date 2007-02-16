@@ -49,6 +49,7 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
     protected String notifyTopics;
     protected String showErrorTransportText;
     protected String indicator;
+    protected String showLoadingText;
 
     public AbstractRemoteCallUIBean(ValueStack stack, HttpServletRequest request,
             HttpServletResponse response) {
@@ -86,6 +87,8 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
             addParameter("showErrorTransportText", findValue(showErrorTransportText, Boolean.class));
         else
             addParameter("showErrorTransportText", true);
+        if (showLoadingText != null)
+            addParameter("showLoadingText", findString(showLoadingText));
     }
 
 
@@ -165,4 +168,8 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
         this.indicator = indicator;
     }
 
+    @StrutsTagAttribute(description="Show loading text on targets", type="Boolean", defaultValue="true")
+    public void setShowLoadingText(String showLoadingText) {
+        this.showLoadingText = showLoadingText;
+    }
 }

@@ -61,3 +61,6 @@
   <#if parameters.showErrorTransportText?exists>
     showError="${parameters.showErrorTransportText?string?html}"<#rt/>
   </#if>
+  <#if parameters.showLoadingText?exists>
+    showLoading="${parameters.showLoadingText?string?html}"<#rt/>
+  </#if>

@@ -11,5 +11,6 @@
  targets="h"
  handler="i"
  indicator="k"
- showError="true">
+ showError="true"
+ showLoading="true">
 </a>

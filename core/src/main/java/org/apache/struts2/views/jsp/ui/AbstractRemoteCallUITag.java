@@ -34,6 +34,7 @@ public abstract class AbstractRemoteCallUITag extends AbstractClosingTag {
     protected String formFilter;
     protected String showErrorTransportText;
     protected String indicator;
+    protected String showLoadingText;
 
     protected void populateParams() {
         super.populateParams();
@@ -52,6 +53,7 @@ public abstract class AbstractRemoteCallUITag extends AbstractClosingTag {
         remote.setNotifyTopics(notifyTopics);
         remote.setShowErrorTransportText(showErrorTransportText);
         remote.setIndicator(indicator);
+        remote.setShowLoadingText(showLoadingText);
     }
 
     public void setHref(String href) {
@@ -107,5 +109,9 @@ public abstract class AbstractRemoteCallUITag extends AbstractClosingTag {
      */
     public void setIndicator(String indicator) {
         this.indicator = indicator;
+    }
+
+    public void setShowLoadingText(String showLoadingText) {
+        this.showLoadingText = showLoadingText;
     }
 }

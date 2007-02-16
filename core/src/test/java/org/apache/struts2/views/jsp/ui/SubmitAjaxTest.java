@@ -60,10 +60,11 @@ public class SubmitAjaxTest extends AbstractUITagTest {
         tag.setLabel("i");
         tag.setNotifyTopics("k");
         tag.setIndicator("l");
+        tag.setShowLoadingText("true");
         tag.doStartTag();
         tag.doEndTag();
 
-        verify(DivTest.class.getResource("submit-ajax-1.txt"));
+        verify(SubmitAjaxTest.class.getResource("submit-ajax-1.txt"));
     }
 
     public void testButton() throws Exception {
@@ -89,7 +90,7 @@ public class SubmitAjaxTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        verify(DivTest.class.getResource("submit-ajax-2.txt"));
+        verify(SubmitAjaxTest.class.getResource("submit-ajax-2.txt"));
     }
 
     public void testImage() throws Exception {
@@ -116,6 +117,6 @@ public class SubmitAjaxTest extends AbstractUITagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        verify(DivTest.class.getResource("submit-ajax-3.txt"));
+        verify(SubmitAjaxTest.class.getResource("submit-ajax-3.txt"));
     }
 }

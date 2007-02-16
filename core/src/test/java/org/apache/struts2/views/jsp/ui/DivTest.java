@@ -67,6 +67,7 @@ public class DivTest extends AbstractUITagTest {
         tag.setRefreshOnShow("true");
         tag.setHandler("l");
         tag.setIndicator("m");
+        tag.setShowLoadingText("true");
         tag.doStartTag();
         tag.doEndTag();
 

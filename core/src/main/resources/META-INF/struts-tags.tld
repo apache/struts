@@ -7223,6 +7223,12 @@
       <description><![CDATA[The template (other than default) to use for rendering the element]]></description>
     </attribute>
     <attribute>
+      <name>templateCssPath</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Template css path]]></description>
+    </attribute>
+    <attribute>
       <name>templateDir</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>

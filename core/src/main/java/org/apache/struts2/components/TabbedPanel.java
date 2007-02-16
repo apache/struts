@@ -66,6 +66,7 @@ public class TabbedPanel extends ClosingUIBean {
     protected String selectedTab;
     protected String closeButton;
     protected String doLayout ;
+    protected String templateCssPath;
 
     public TabbedPanel(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -89,6 +90,8 @@ public class TabbedPanel extends ClosingUIBean {
             addParameter("labelPosition", null);
             addParameter("labelPosition", labelPosition);
         }
+        if(templateCssPath != null)
+            addParameter("templateCssPath", findString(templateCssPath));
     }
 
     public String getDefaultOpenTemplate() {
@@ -123,5 +126,10 @@ public class TabbedPanel extends ClosingUIBean {
     @StrutsTagAttribute(description="If doLayout is false, the tab container's height equals the height of the currently selected tab", type="Boolean", defaultValue="false")
     public void setDoLayout(String doLayout) {
         this.doLayout = doLayout;
+    }
+
+    @StrutsTagAttribute(description="Template css path")
+    public void setTemplateCssPath(String templateCssPath) {
+        this.templateCssPath = templateCssPath;
     }
 }

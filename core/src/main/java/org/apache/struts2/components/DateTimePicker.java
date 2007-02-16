@@ -127,7 +127,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 public class DateTimePicker extends UIBean {
 
     final public static String TEMPLATE = "datetimepicker";
-    final private static SimpleDateFormat RFC3399_FORMAT = new SimpleDateFormat(
+    final private static SimpleDateFormat RFC3339_FORMAT = new SimpleDateFormat(
     "yyyy-MM-dd'T'HH:mm:ss");
     final protected static Log LOG = LogFactory.getLog(DateTimePicker.class);
     
@@ -146,6 +146,7 @@ public class DateTimePicker extends UIBean {
     protected String staticDisplay;
     protected String dayWidth;
     protected String language;
+    protected String templateCssPath;
 
     public DateTimePicker(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -191,7 +192,9 @@ public class DateTimePicker extends UIBean {
             addParameter("type", findString(type));
         else
             addParameter("type", "date");
-
+        if(templateCssPath != null)
+            addParameter("templateCssPath", findString(templateCssPath));
+        
         // format the value to RFC 3399
         if(parameters.containsKey("value")) {
             parameters.put("nameValue", format(parameters.get("value")));
@@ -279,17 +282,22 @@ public class DateTimePicker extends UIBean {
         this.toggleType = toggleType;
     }
     
+    @StrutsTagAttribute(description="Template css path")
+    public void setTemplateCssPath(String templateCssPath) {
+        this.templateCssPath = templateCssPath;
+    }
+    
     private String format(Object obj) {
         if(obj == null)
             return null;
 
         if(obj instanceof Date) {
-            return RFC3399_FORMAT.format((Date) obj);
+            return RFC3339_FORMAT.format((Date) obj);
         } else {
             // try to parse a date
             String dateStr = obj.toString();
             if(dateStr.equalsIgnoreCase("today"))
-                return  RFC3399_FORMAT.format(new Date());
+                return  RFC3339_FORMAT.format(new Date());
 
             try {
                 Date date = null;
@@ -297,7 +305,7 @@ public class DateTimePicker extends UIBean {
                     SimpleDateFormat format = new SimpleDateFormat(
                             this.displayFormat);
                     date = format.parse(dateStr);
-                    return RFC3399_FORMAT.format(date);
+                    return RFC3339_FORMAT.format(date);
                 } else {
                     // last resource to assume already in correct/default format
                     return dateStr;

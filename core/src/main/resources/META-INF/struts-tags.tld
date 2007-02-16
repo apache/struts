@@ -701,6 +701,12 @@
       <description><![CDATA[Set whether errors will be shown or not]]></description>
     </attribute>
     <attribute>
+      <name>showLoadingText</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Show loading text on targets]]></description>
+    </attribute>
+    <attribute>
       <name>tabindex</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
@@ -2609,6 +2615,12 @@
       <description><![CDATA[Set whether errors will be shown or not]]></description>
     </attribute>
     <attribute>
+      <name>showLoadingText</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Show loading text on targets]]></description>
+    </attribute>
+    <attribute>
       <name>startTimerListenTopics</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
@@ -2762,7 +2774,7 @@
       <name>doubleListKey</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the list key of the second attribute]]></description>
+      <description><![CDATA[The key expression to use for second list]]></description>
     </attribute>
     <attribute>
       <name>doubleListValue</name>
@@ -5270,7 +5282,7 @@
       <name>doubleListKey</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description><![CDATA[Set the list key of the second attribute]]></description>
+      <description><![CDATA[The key expression to use for second list]]></description>
     </attribute>
     <attribute>
       <name>doubleListValue</name>
@@ -6945,6 +6957,12 @@
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description><![CDATA[Set whether errors will be shown or not]]></description>
+    </attribute>
+    <attribute>
+      <name>showLoadingText</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Show loading text on targets]]></description>
     </attribute>
     <attribute>
       <name>src</name>

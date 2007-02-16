@@ -514,7 +514,6 @@ public abstract class DoubleListUIBean extends ListUIBean {
         return doubleList;
     }
 
-    @StrutsTagAttribute(description="Set the list key of the second attribute")
     public String getDoubleListKey() {
         return doubleListKey;
     }

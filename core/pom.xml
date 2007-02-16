@@ -49,7 +49,7 @@
                 <artifactId>maven-apt-plugin</artifactId>
                 <configuration>
                     <A>uri=/struts-tags,tlibVersion=2.2.3,jspVersion=1.2,shortName=s,displayName="Struts Tags",
-                    outFile=${basedir}/src/main/resources/META-INF/struts-tags.tld,
+                    outFile=${basedir}/target/classes/META-INF/struts-tags.tld,
                     description="To make it easier to access dynamic data;
                     the Apache Struts framework includes a library of custom tags.
                     The tags interact with the framework's validation and internationalization features;

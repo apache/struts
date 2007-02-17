@@ -38,6 +38,9 @@
 <#if parameters.get("size")?exists>
  size="${parameters.get("size")?html}"<#rt/>
 </#if>
+<#if parameters.keyName?if_exists != "">
+ keyName="${parameters.keyName?html}"<#rt/>
+</#if>
 <#if parameters.maxlength?exists>
  maxlength="${parameters.maxlength?string?html}"<#rt/>
 </#if>

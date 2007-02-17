@@ -52,7 +52,8 @@ public class AutocompleterTag extends ComboBoxTag {
     protected String showDownArrow;
     protected String templateCssPath;
     protected String iconPath;
-
+    protected String keyName;
+    
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Autocompleter(stack, req, res);
     }
@@ -79,6 +80,7 @@ public class AutocompleterTag extends ComboBoxTag {
         autocompleter.setShowDownArrow(showDownArrow);
         autocompleter.setTemplateCssPath(templateCssPath);
         autocompleter.setIconPath(iconPath);
+        autocompleter.setKeyName(keyName);
     }
 
     public void setAutoComplete(String autoComplete) {
@@ -155,5 +157,9 @@ public class AutocompleterTag extends ComboBoxTag {
     
     public void setIconPath(String iconPath) {
         this.iconPath = iconPath;
+    }
+
+    public void setKeyName(String keyName) {
+        this.keyName = keyName;
     }
 }

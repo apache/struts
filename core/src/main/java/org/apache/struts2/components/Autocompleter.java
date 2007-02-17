@@ -72,6 +72,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  * 'loadMinimumCount' minimum number of characters that will force the content to be loaded<p/>
  * 'showDownError' show or hide the down arrow button
  * 'searchType' how the search must be performed, options are: "startstring", "startword" and "substring"<p/>
+ * 'keyName' name of the field to which the selected key will be assigned<p/>
+ * 'iconPath' path of icon used for the dropdown
+ * 'templateCssPath' path to css file used to customize Dojo's widget
  * 'notifyTopics' comma separated list of topics names, that will be published. Three parameters are passed:<p/>
  * <ul>
  *      <li>data: selected value when type='valuechanged'</li>
@@ -103,6 +106,7 @@ public class Autocompleter extends ComboBox {
     protected String showDownArrow;
     protected String templateCssPath;
     protected String iconPath;
+    protected String keyName;
     
     public Autocompleter(ValueStack stack, HttpServletRequest request,
             HttpServletResponse response) {
@@ -165,11 +169,15 @@ public class Autocompleter extends ComboBox {
             addParameter("templateCssPath", findString(templateCssPath));
         if(iconPath != null)
             addParameter("iconPath", findString(iconPath));
-        //get the key value
-        if(name != null) {
-            String keyNameExpr = "%{" + name + "Key}";
-            addParameter("key", findString(keyNameExpr));
+        if(keyName != null)
+            addParameter("keyName", findString(keyName));
+        else {
+            keyName = name + "Key";
+            addParameter("keyName", findString(keyName));
         }
+        
+        String keyNameExpr = "%{" + keyName + "}";
+        addParameter("key", findString(keyNameExpr));
     }
 
     protected Object findListValue() {
@@ -271,5 +279,10 @@ public class Autocompleter extends ComboBox {
     @StrutsTagAttribute(description="Path to icon used for the dropdown")
     public void setIconPath(String iconPath) {
         this.iconPath = iconPath;
+    }
+    
+    @StrutsTagAttribute(description="Name of the field to which the selected key will be assigned")
+    public void setKeyName(String keyName) {
+       this.keyName = keyName;
     }
 }

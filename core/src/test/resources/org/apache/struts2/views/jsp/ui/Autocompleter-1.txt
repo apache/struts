@@ -9,6 +9,7 @@
  dropdownWidth="10"
  dropdownHeight="10"
  name="f"
+ keyName="i"
  initialValue="g"
  indicator="h"
  loadOnType="true"

@@ -9,6 +9,7 @@
  dropdownWidth="10"
  dropdownHeight="10"
  name="f"
+ keyName="fKey"
  buttonSrc="i"
  templateCssPath="j"
  >

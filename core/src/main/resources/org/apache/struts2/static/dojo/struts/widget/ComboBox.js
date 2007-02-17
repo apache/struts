@@ -205,6 +205,7 @@ dojo.widget.defineWidget(
   //dojo has "stringstart" which is invalid
   searchType: "STARTSTRING",
 
+  keyName: "",
   templateCssPath: dojo.uri.dojoUri("struts/ComboBox.css"),
   //from Dojo's  ComboBox
   showResultList: function() {
@@ -315,7 +316,7 @@ dojo.widget.defineWidget(
     }
 
     //better name
-    this.comboBoxSelectionValue.name = this.name + "Key";
+    this.comboBoxSelectionValue.name = dojo.string.isBlank(this.keyName) ? this.name + "Key" : this.keyName;
 
     //init values
     this.comboBoxValue.value = this.initialValue;

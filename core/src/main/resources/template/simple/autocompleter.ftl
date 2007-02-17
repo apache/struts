@@ -35,6 +35,9 @@
 <#if parameters.name?if_exists != "">
  name="${parameters.name?html}"<#rt/>
 </#if>
+<#if parameters.keyName?if_exists != "">
+ keyName="${parameters.keyName?html}"<#rt/>
+</#if>
 <#if parameters.get("size")?exists>
  size="${parameters.get("size")?html}"<#rt/>
 </#if>

@@ -37,6 +37,7 @@ import net.sf.jasperreports.engine.export.JRCsvExporter;
 import net.sf.jasperreports.engine.export.JRCsvExporterParameter;
 import net.sf.jasperreports.engine.export.JRHtmlExporter;
 import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
+import net.sf.jasperreports.engine.export.JRRtfExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXmlExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
@@ -286,6 +287,9 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
                     } else if (format.equals(FORMAT_XML)) {
                         response.setContentType("text/xml");
                         exporter = new JRXmlExporter();
+                    } else if (format.equals(FORMAT_RTF)) {
+                        response.setContentType("application/rtf");
+                        exporter = new JRRtfExporter();
                     } else {
                         throw new ServletException("Unknown report format: " + format);
                     }

@@ -103,10 +103,12 @@ public class UrlHelper {
             link.append("://");
             link.append(request.getServerName());
 
-            if ((scheme.equals("http") && (httpPort != DEFAULT_HTTP_PORT)) || (scheme.equals("https") && httpsPort != DEFAULT_HTTPS_PORT))
-            {
-                link.append(":");
-                link.append(scheme.equals("http") ? httpPort : httpsPort);
+            if (scheme != null) {
+                if ((scheme.equals("http") && (httpPort != DEFAULT_HTTP_PORT)) || (scheme.equals("https") && httpsPort != DEFAULT_HTTPS_PORT))
+                {
+                    link.append(":");
+                    link.append(scheme.equals("http") ? httpPort : httpsPort);
+                }
             }
         }
         else if (

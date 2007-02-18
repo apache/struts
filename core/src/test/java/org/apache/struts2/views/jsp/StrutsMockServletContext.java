@@ -43,6 +43,7 @@ public class StrutsMockServletContext implements ServletContext {
 
     String realPath;
     String servletInfo;
+    String contextPath;
     Map initParams = new HashMap();
     Map attributes = new HashMap();
     InputStream resourceAsStream;
@@ -157,5 +158,13 @@ public class StrutsMockServletContext implements ServletContext {
 
     public void setServletInfo(String servletInfo) {
         this.servletInfo = servletInfo;
+    }
+    
+    public String getContextPath() {
+        return contextPath;
+    } 
+
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
     }
 }

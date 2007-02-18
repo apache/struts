@@ -515,8 +515,7 @@ Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyExcepti
             LOG.error("Could not find action or result", e);
             sendError(request, response, context, HttpServletResponse.SC_NOT_FOUND, e);
         } catch (Exception e) {
-            LOG.error("Could not execute action", e);
-            sendError(request, response, context, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);
+            throw new ServletException(e);
         } finally {
             UtilTimerStack.pop(timerKey);
         }

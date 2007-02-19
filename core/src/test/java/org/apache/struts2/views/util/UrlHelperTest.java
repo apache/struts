@@ -74,22 +74,6 @@ public class UrlHelperTest extends StrutsTestCase {
         assertEquals(expectedUrl, result);
     }
 
-
-    public void testBuildParametersStringWithUrlHavingSomeExistingParameters() throws Exception {
-        String expectedUrl = "http://localhost:8080/myContext/myPage.jsp?initParam=initValue&amp;param1=value1&amp;param2=value2";
-
-        Map parameters = new LinkedHashMap();
-        parameters.put("param1", "value1");
-        parameters.put("param2", "value2");
-
-        StringBuffer url = new StringBuffer("http://localhost:8080/myContext/myPage.jsp?initParam=initValue");
-
-        UrlHelper.buildParametersString(parameters, url);
-
-        assertEquals(
-           expectedUrl, url.toString());
-    }
-
     public void testForceAddNullSchemeHostAndPort() throws Exception {
         String expectedUrl = "http://localhost/contextPath/path1/path2/myAction.action";
 
@@ -109,7 +93,24 @@ public class UrlHelperTest extends StrutsTestCase {
             null, true, true, true);
         assertEquals(expectedUrl, result);
         mockHttpServletRequest.verify();
+    }        
+
+    public void testBuildParametersStringWithUrlHavingSomeExistingParameters() throws Exception {
+        String expectedUrl = "http://localhost:8080/myContext/myPage.jsp?initParam=initValue&amp;param1=value1&amp;param2=value2";
+
+        Map parameters = new LinkedHashMap();
+        parameters.put("param1", "value1");
+        parameters.put("param2", "value2");
+
+        StringBuffer url = new StringBuffer("http://localhost:8080/myContext/myPage.jsp?initParam=initValue");
+
+        UrlHelper.buildParametersString(parameters, url);
+
+        assertEquals(
+           expectedUrl, url.toString());
     }
+
+
 
     public void testBuildWithRootContext() {
         String expectedUrl = "/MyAction.action";

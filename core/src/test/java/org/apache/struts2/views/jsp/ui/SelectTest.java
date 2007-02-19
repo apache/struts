@@ -379,7 +379,6 @@ public class SelectTest extends AbstractUITagTest {
         verify(SelectTag.class.getResource("Select-6.txt"));
     }
 
-
     public void testSimpleInteger() throws Exception {
         TestAction testAction = (TestAction) action;
 
@@ -466,7 +465,7 @@ public class SelectTest extends AbstractUITagTest {
             return id;
         }
     }
-    
+
     private void prepareTagGeneric(SelectTag tag) {
         TestAction testAction = (TestAction) action;
         ArrayList collection = new ArrayList();

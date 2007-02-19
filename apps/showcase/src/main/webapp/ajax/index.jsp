@@ -15,9 +15,9 @@ Note: The Ajax tags are experimental. These examples have only been tested under
     <li><a href="remotediv">Remote div tag</a></li>
     <li><a href="remotelink">Remote link tag</a></li>
     <li><a href="tabbedpanel">Tabbed panel</a></li>
-    <li><a href="widgets">Widgets </a> (may not work in all browsers!) 
+    <li><a href="widgets">Widgets </a> (may not work in all browsers!)
         see the <a href="http://www.dojotoolkit.org">dojo website</a> for more information</li>
-    <li>(broken) <a href="remoteforms">Remote forms</a></li>
+    <li><a href="remoteforms">Remote forms</a></li>
 </ul>
 </body>
 </html>

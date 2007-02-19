@@ -11,7 +11,7 @@
 		</li>
         <li>
             <@s.url id="url" action="hangmanAjax" namespace="/hangman" />
-            <@s.a href="%{#url}">Hangman (Ajax - Experimental)</@s.a>
+            (broken) <@s.a href="%{#url}">Hangman (Ajax - Experimental)</@s.a>
         </li>
 	</ul>
 </body>

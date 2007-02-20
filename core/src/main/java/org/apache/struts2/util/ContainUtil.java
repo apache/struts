@@ -80,7 +80,7 @@ public class ContainUtil {
                 return true;
             }
         } else if (obj1 instanceof Collection) {
-            if (((Collection) obj1).contains(obj2)) {
+            if (((Collection) obj1).contains(obj2) || ((Collection) obj1).contains(obj2.toString())) {
                 //log.debug("obj1 is a collection and contains obj2");
                 return true;
             }

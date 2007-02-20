@@ -170,6 +170,33 @@ public class SelectTest extends AbstractUITagTest {
         }
     }
 
+    public class LongObject {
+        private Long id;
+        private String value;
+
+
+        public LongObject(Long id, String value) {
+            this.id = id;
+            this.value = value;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
     public void testNullList() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setList2(null);
@@ -237,6 +264,44 @@ public class SelectTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(SelectTag.class.getResource("Select-2.txt"));
+    }
+
+    /**
+     * WW-1747 - should be a valid test case for the described issue
+     * @throws Exception
+     */
+    public void testMultipleWithLists() throws Exception {
+        TestAction testAction = (TestAction) action;
+        Collection collection = new ArrayList(2);
+
+        collection.add(1l);
+        collection.add(3l);
+        testAction.setCollection(collection);
+
+        List selectList = new ArrayList();
+        selectList.add(new LongObject(1l, "foo"));
+        selectList.add(new LongObject(2l, "bar"));
+        selectList.add(new LongObject(3l, "foobar"));
+        testAction.setList2(selectList);
+
+        SelectTag tag = new SelectTag();
+        tag.setPageContext(pageContext);
+        tag.setLabel("mylabel");
+        tag.setName("collection");
+        tag.setList("list2");
+        tag.setListKey("id");
+        tag.setListValue("value");
+        tag.setMultiple("true");
+        tag.setOnmousedown("alert('onmousedown');");
+        tag.setOnmousemove("alert('onmousemove');");
+        tag.setOnmouseout("alert('onmouseout');");
+        tag.setOnmouseover("alert('onmouseover');");
+        tag.setOnmouseup("alert('onmouseup');");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(SelectTag.class.getResource("Select-12.txt"));
     }
 
     public void testSimple() throws Exception {

@@ -57,7 +57,7 @@
             <#assign itemValue = stack.findString('top')/>
         </#if>
     <option value="${itemKey?html}"<#rt/>
-        <#if tag.contains(parameters.nameValue, itemKey) == true || (parameters.nameValue?exists && parameters.nameValue?string == itemKey?string)>
+        <#if tag.contains(parameters.nameValue, itemKey) == true>
  selected="selected"<#rt/>
         </#if>
     >${itemValue?html}</option><#lt/>

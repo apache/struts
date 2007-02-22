@@ -5,7 +5,7 @@
    <#if parameters.type?if_exists == "date">
      dojoType="dropdowndatepicker"<#rt/>
    <#else>
-     dojoType="dropdowntimepicker"<#rt/>
+     dojoType="struts:StrutsTimePicker"<#rt/>
   </#if>
   <#if parameters.id?if_exists != "">
     id="${parameters.id?html}"<#rt/>

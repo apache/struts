@@ -3,6 +3,6 @@ dojo.kwCompoundRequire({
 	         "struts.widget.BindDiv",
 	         "struts.widget.BindAnchor",
 	         "struts.widget.ComboBox",
-            "struts.widget.DatePicker"]
+             "struts.widget.StrutsTimePicker"]
 });
 dojo.provide("struts.widget.*");

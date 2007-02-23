@@ -33,8 +33,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <p>The autocomplete tag is a combobox that can autocomplete text entered on the input box.
  * When used on the "simple" theme, the autocompleter can be used like the ComboBox.
  * When used on the "ajax" theme, the list can be retieved from an action. </p>
- * <!-- END SNIPPET: javadoc -->
- * <!-- START SNIPPET: ajaxJavadoc -->
  * <B>THE FOLLOWING IS ONLY VALID WHEN AJAX IS CONFIGURED</B>
  * <ul>
  *      <li>href</li>
@@ -76,8 +74,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *      <li>type: 'before' before the request is made, 'valuechanged' when selection changes, 'load' when the request succeeds, or 'error' when it fails</li>
  *      <li>request: request javascript object, when type='load' or type='error'</li>
  * <ul>
- *<!-- END SNIPPET: ajaxJavadoc -->
- *
+ *<!-- END SNIPPET: javadoc -->
  *<!-- START SNIPPET: example -->
  *<p>Autocompleter that gets its list from an action:</p>
  *&lt;s:autocompleter name="test"  href="%{jsonList}" autoComplete="false"/&gt;

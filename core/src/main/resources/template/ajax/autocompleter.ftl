@@ -86,6 +86,9 @@
 <#if parameters.templateCssPath?if_exists != "">
  templateCssPath="<@s.url value='${parameters.templateCssPath}' encode="false" includeParams='none'/>"
 </#if>
+<#if parameters.dataFieldName?if_exists != "">
+ dataFieldName="${parameters.dataFieldName?html}"
+</#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 >
 

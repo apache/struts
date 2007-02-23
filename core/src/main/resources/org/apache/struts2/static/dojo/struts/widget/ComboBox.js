@@ -63,12 +63,28 @@ struts.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ li
          dojo.html.hide(this.cbox.indicator);
 
         this.cbox.notify.apply(this.cbox, [data, type, evt]);
-        if(!dojo.lang.isArray(data)){
-          var arrData = [];
-          for(var key in data){
-            arrData.push([data[key], key]);
-          }
-          data = arrData;
+        if(!dojo.lang.isArray(data)) {
+           //if there is a dataFieldName, take it
+           if(!dojo.string.isBlank(this.cbox.dataFieldName) && data[this.cbox.dataFieldName] != null) {
+             arrData = data[this.cbox.dataFieldName];
+           } else {
+             //try to find a match
+             var arrData = null;
+             for(var key in data){
+               //does it start with the field name? take it
+               if(key == this.cbox.name) {
+                 arrData = data[key];
+                 break;
+               }
+               //grab the first array found, we will use it if nothing else
+               //is found
+               if(!arrData && dojo.lang.isArray(data[key])) {
+                 arrData = data = data[key];
+               }
+             }
+           }
+           
+           data = arrData;
         }
         this.setData(data);
       }),
@@ -167,6 +183,13 @@ struts.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ li
   this.setData = function(/*Array*/ pdata){
     // populate this.data and initialize lookup structures
     this.data = pdata;
+    //all ellements must be a key and value pair
+    for(var i = 0; i < this.data.length; i++) {
+      var element = this.data[i];
+      if(!dojo.lang.isArray(element)) {
+        this.data[i] = [element, element];
+      }
+    }
   };
 
   if(dataPairs){
@@ -205,6 +228,7 @@ dojo.widget.defineWidget(
   //dojo has "stringstart" which is invalid
   searchType: "STARTSTRING",
 
+  dataFieldName : ""  ,
   keyName: "",
   templateCssPath: dojo.uri.dojoUri("struts/ComboBox.css"),
   //from Dojo's  ComboBox

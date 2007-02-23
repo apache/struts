@@ -31,15 +31,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  * <p>The autocomplete tag is a combobox that can autocomplete text entered on the input box.
  * When used on the "simple" theme, the autocompleter can be used like the ComboBox.
- * When used on the "ajax" theme, the list can be retieved from an action. This action must
- * return a JSON list in the format:</p>
- * <pre>
- * [
- *   ["Text 1","Value1"],
- *   ["Text 2","Value2"],
- *   ["Text 3","Value3"]
- * ]
- * </pre>
+ * When used on the "ajax" theme, the list can be retieved from an action. </p>
  * <!-- START SNIPPET: ajaxJavadoc -->
  * <B>THE FOLLOWING IS ONLY VALID WHEN AJAX IS CONFIGURED</B>
  * <ul>
@@ -75,6 +67,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * 'keyName' name of the field to which the selected key will be assigned<p/>
  * 'iconPath' path of icon used for the dropdown
  * 'templateCssPath' path to css file used to customize Dojo's widget
+ * 'dataFieldName' name of the field to be used as the list in the returned JSON string<p/>
  * 'notifyTopics' comma separated list of topics names, that will be published. Three parameters are passed:<p/>
  * <ul>
  *      <li>data: selected value when type='valuechanged'</li>
@@ -107,6 +100,7 @@ public class Autocompleter extends ComboBox {
     protected String templateCssPath;
     protected String iconPath;
     protected String keyName;
+    protected String dataFieldName;
     
     public Autocompleter(ValueStack stack, HttpServletRequest request,
             HttpServletResponse response) {
@@ -169,6 +163,8 @@ public class Autocompleter extends ComboBox {
             addParameter("templateCssPath", findString(templateCssPath));
         if(iconPath != null)
             addParameter("iconPath", findString(iconPath));
+        if(dataFieldName != null)
+        addParameter("dataFieldName", findString(dataFieldName));
         if(keyName != null)
             addParameter("keyName", findString(keyName));
         else {
@@ -284,5 +280,10 @@ public class Autocompleter extends ComboBox {
     @StrutsTagAttribute(description="Name of the field to which the selected key will be assigned")
     public void setKeyName(String keyName) {
        this.keyName = keyName;
+    }
+
+    @StrutsTagAttribute(description="Name of the field in the returned JSON object that contains the data array", defaultValue="Value specified in 'name'")
+    public void setDataFieldName(String dataFieldName) {
+        this.dataFieldName = dataFieldName;
     }
 }

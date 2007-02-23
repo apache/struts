@@ -49,6 +49,7 @@ public class AutocompleterTest extends AbstractUITagTest {
         tag.setShowDownArrow("false");
         tag.setIconPath("i");
         tag.setTemplateCssPath("j");
+        tag.setDataFieldName("k");
         tag.doStartTag();
         tag.doEndTag();
 

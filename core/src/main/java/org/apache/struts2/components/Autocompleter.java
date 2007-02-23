@@ -29,9 +29,11 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
+ * <!-- START SNIPPET: javadoc -->
  * <p>The autocomplete tag is a combobox that can autocomplete text entered on the input box.
  * When used on the "simple" theme, the autocompleter can be used like the ComboBox.
  * When used on the "ajax" theme, the list can be retieved from an action. </p>
+ * <!-- END SNIPPET: javadoc -->
  * <!-- START SNIPPET: ajaxJavadoc -->
  * <B>THE FOLLOWING IS ONLY VALID WHEN AJAX IS CONFIGURED</B>
  * <ul>
@@ -62,11 +64,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  * 'showErrorTransportText': whether errors should be displayed (on 'targets')<p/>
  * 'loadOnTextChange' options will be reloaded everytime a character is typed on the textbox<p/>
  * 'loadMinimumCount' minimum number of characters that will force the content to be loaded<p/>
- * 'showDownError' show or hide the down arrow button
+ * 'showDownError' show or hide the down arrow button<p/>
  * 'searchType' how the search must be performed, options are: "startstring", "startword" and "substring"<p/>
  * 'keyName' name of the field to which the selected key will be assigned<p/>
- * 'iconPath' path of icon used for the dropdown
- * 'templateCssPath' path to css file used to customize Dojo's widget
+ * 'iconPath' path of icon used for the dropdown<p/>
+ * 'templateCssPath' path to css file used to customize Dojo's widget<p/>
  * 'dataFieldName' name of the field to be used as the list in the returned JSON string<p/>
  * 'notifyTopics' comma separated list of topics names, that will be published. Three parameters are passed:<p/>
  * <ul>
@@ -74,7 +76,16 @@ import com.opensymphony.xwork2.util.ValueStack;
  *      <li>type: 'before' before the request is made, 'valuechanged' when selection changes, 'load' when the request succeeds, or 'error' when it fails</li>
  *      <li>request: request javascript object, when type='load' or type='error'</li>
  * <ul>
+ *<!-- END SNIPPET: ajaxJavadoc -->
  *
+ *<!-- START SNIPPET: example -->
+ *<p>Autocompleter that gets its list from an action:</p>
+ *&lt;s:autocompleter name="test"  href="%{jsonList}" autoComplete="false"/&gt;
+ *<br/>
+ **<p>Autocompleter that uses a list:</p>
+ *&lt;s:autocompleter name="test"  list="{'apple','banana','grape','pear'}" autoComplete="false"/&gt;
+ *<br/>
+ *<!-- END SNIPPET: example -->
  */
 @StrutsTag(name="autocompleter", tldTagClass="org.apache.struts2.views.jsp.ui.AutocompleterTag", description="Renders a combobox with autocomplete and AJAX capabilities")
 public class Autocompleter extends ComboBox {

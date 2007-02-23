@@ -820,7 +820,7 @@ public class Welcome extends MailreaderSupport {
 </p>
 
 <hr/>
-<pre><code>&lt;#if (actionErrors?exists && actionErrors?size > 0)>
+<pre><code>&lt;#if (actionErrors?exists &amp;&amp; actionErrors?size > 0)>
   &lt;ul>
     &lt;#list actionErrors as error>
       &lt;li>&lt;span class="errorMessage">${error}&lt;/span>&lt;/li>

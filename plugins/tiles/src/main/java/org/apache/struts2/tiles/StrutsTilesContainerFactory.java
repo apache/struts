@@ -98,8 +98,8 @@ public class StrutsTilesContainerFactory extends TilesContainerFactory {
             return factory.createApplicationContext(context);
         }
 
-        public TilesRequestContext createRequestContext(TilesApplicationContext tilesApplicationContext, Object request, Object response) {
-            TilesRequestContext context = factory.createRequestContext(tilesApplicationContext, request, response);
+        public TilesRequestContext createRequestContext(TilesApplicationContext tilesApplicationContext, Object... requestItems) {
+            TilesRequestContext context = factory.createRequestContext(tilesApplicationContext, requestItems);
             return new StrutsTilesRequestContext(context);
         }
 

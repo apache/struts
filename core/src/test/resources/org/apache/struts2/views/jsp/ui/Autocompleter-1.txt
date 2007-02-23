@@ -16,4 +16,5 @@
  loadMinimum="3"
  visibleDownArrow="false"
  buttonSrc="i"
- templateCssPath="j">
+ templateCssPath="j"
+ dataFieldName="k">

@@ -13,7 +13,7 @@
         <section name="About Apache Struts 2">
             <a name="Welcome"/>
 
-        <div style="text-align:left">
+        <div style="text-align:left;min-height:200px">
         <a href="docs/home.html"><img src="images/struts2-merger2.png" alt="Struts 2 and WebWork merger" hspace="16" align="left"/></a>
         
         <p>       
@@ -27,32 +27,39 @@
          After working independently for several years, 
          the WebWork and Struts communities joined forces to create Struts<sup>2</sup>. 
          This new version of Struts is simpler to use and
-         closer to how Struts was always meant to be.
-        </p>      
-        <ul><li>
-         For more about Apache Struts 2, visit
-         <a href="docs/home.html">
-            Getting Started.
-         </a>
-        </li>
-        <li>
-         To download the framework, visit
-         <a href="http://struts.apache.org/download.cgi#struts201">
-            Apache Struts Distributions.
-         </a>
-        </li>
-        <li>
-          For more about extensions, visit our 
-         <a href="http://cwiki.apache.org/S2PLUGINS/home.html">
-            Plugin Registry.
-         </a>
-        </li>
-        <li>
-          For more about migrating, visit our 
-         <a href="http://struts.apache.org/2.x/docs/migration-guide.html">
+         closer to how Struts was always meant to be. For more about migrating, visit our 
+		 <a href="http://struts.apache.org/2.x/docs/migration-guide.html">
             Migration Guide.
          </a>
-        </li>        </ul>
+        </p>      
+        <div>
+			    <br />
+				<a href="http://struts.apache.org/download.cgi#struts205">
+					<div style="background:url(images/download.gif) no-repeat scroll 0%; width:200px; min-height:80px; float:left;position:relative;margin:5px">
+						<span style="bottom:15px;position:absolute;color:white;padding-left:10px">
+							<small>version 2.0.5</small>
+							<br />
+							<span style="font-weight: bold; font-size:140%">Download Now</span>
+						</span>
+					</div>
+				</a>
+				
+				<a href="http://struts.apache.org/2.x/docs/home.html" style="margin:10px">
+					<div style="background:url(images/help.gif) no-repeat scroll 0%; width:200px; min-height:80px; float:left;position:relative;margin:5px">
+						<span style="bottom:15px;position:absolute;color:white;padding-left:10px">
+							<span style="font-weight: bold; font-size:140%">Get Started</span>
+						</span>
+					</div>
+				</a>
+				
+				<a href="http://cwiki.apache.org/S2PLUGINS/home.html" style="margin:10px">
+					<div style="background:url(images/plugins.gif) no-repeat scroll 0%; width:200px; min-height:80px; float:left;position:relative;margin:5px">
+						<span style="bottom:15px;position:absolute;color:white;padding-left:10px">
+							<span style="font-weight: bold; font-size:140%">Plugins Registry</span>
+						</span>
+					</div>
+				</a>
+			</div>	
         </div>
             
         </section>

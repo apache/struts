@@ -21,6 +21,7 @@ struts.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ li
 
   this.formId = "";
   this.formFilter = "";
+  this.firstRequest = true;
 
   this.cbox = null;
   this.init = function(/*Widget*/ cbox, /*DomNode*/ node){
@@ -59,10 +60,14 @@ struts.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ li
       formNode: dojo.byId(this.formId),
       formFilter: window[this.formFilter],
       load: dojo.lang.hitch(this, function(type, data, evt) {
-         //show indicator
-         dojo.html.hide(this.cbox.indicator);
+        //show indicator
+        dojo.html.hide(this.cbox.indicator);
 
-        this.cbox.notify.apply(this.cbox, [data, type, evt]);
+        //if notifyTopics is published on the first request (onload)
+        //the value of listeners will be reset
+        if(!this.firstRequest) {
+          this.cbox.notify.apply(this.cbox, [data, type, evt]);
+        }
         if(!dojo.lang.isArray(data)) {
            //if there is a dataFieldName, take it
            if(!dojo.string.isBlank(this.cbox.dataFieldName) && data[this.cbox.dataFieldName] != null) {
@@ -87,6 +92,7 @@ struts.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ li
            data = arrData;
         }
         this.setData(data);
+        this.firstRequest = false;
       }),
       mimetype: "text/json"
     });

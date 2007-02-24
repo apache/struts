@@ -77,6 +77,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * 'indicator' element to be shown while the request executing<p/>
  * 'showErrorTransportText': whether errors should be displayed (on 'targets')</p>
  * 'showLoadingText' show loading text on targets</p>
+ * 'separateScript' Run scripts in a separate scope, unique for each Div<p/>
  * 'notifyTopics' comma separated list of topics names, that will be published. Three parameters are passed:<p/>
  * <ul>
  *      <li>data: html or json object when type='load' or type='error'</li>
@@ -117,6 +118,7 @@ public class Div extends AbstractRemoteCallUIBean {
     protected String startTimerListenTopics;
     protected String stopTimerListenTopics;
     protected String refreshOnShow;
+    protected String separateScripts;
 
     public Div(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -145,6 +147,8 @@ public class Div extends AbstractRemoteCallUIBean {
             addParameter("startTimerListenTopics", findString(startTimerListenTopics));
         if (stopTimerListenTopics != null)
             addParameter("stopTimerListenTopics", findString(stopTimerListenTopics));
+        if (separateScripts != null)
+            addParameter("separateScripts", findValue(separateScripts, Boolean.class));
     }
 
     @StrutsTagAttribute(description="Start timer automatically", type="Boolean", defaultValue="true")
@@ -180,5 +184,10 @@ public class Div extends AbstractRemoteCallUIBean {
     @StrutsTagAttribute(description="Deprecated. Use 'notifyTopics'. Javascript code execute after reload")
     public void setAfterLoading(String afterLoading) {
         this.afterLoading = afterLoading;
+    }
+
+    @StrutsTagAttribute(description="Run scripts in a separate scope, unique for each Div", defaultValue="true")
+    public void setSeparateScripts(String separateScripts) {
+        this.separateScripts = separateScripts;
     }
 }

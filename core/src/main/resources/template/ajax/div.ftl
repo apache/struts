@@ -17,6 +17,9 @@
   <#if parameters.refreshOnShow?exists>
     refreshOnShow="${parameters.refreshOnShow?string?html}"<#rt/>
   </#if>
+  <#if parameters.separateScripts?exists>
+    scriptSeparation="${parameters.separateScripts?string?html}"<#rt/>
+  </#if>
   <#include "/${parameters.templateDir}/ajax/ajax-common.ftl" />
   <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 >

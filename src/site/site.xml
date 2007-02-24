@@ -78,10 +78,6 @@
                     href="docs/tag-reference.html"
                     />
             <item
-                    name="New API (experimental)"
-                    href="struts2-api/apidocs/index.html"
-                    />
-            <item
                     name="Plugin Registry"
                     href="http://cwiki.apache.org/S2PLUGINS/home.html"
                     />

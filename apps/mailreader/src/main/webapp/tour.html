@@ -837,7 +837,7 @@ public class Welcome extends MailreaderSupport {
 </p>
 
 <hr/>
-<pre><code>&lt;#if (actionErrors?exists && actionErrors?size > 0)>
+<pre><code>&lt;#if (actionErrors?exists &amp;&amp; actionErrors?size > 0)>
   <strong>&lt;table></strong>
     &lt;#list actionErrors as error>
       <strong>&lt;tr>&lt;td></strong>&lt;span class="errorMessage">${error}&lt;/span><strong>&lt;/td>&lt;/tr></strong>
@@ -1064,7 +1064,7 @@ public void setPassword(String password) {
 <pre><code>public User <strong>findUser</strong>(String username, String password)
   throws <strong>ExpiredPasswordException</strong> {
   User user = <strong>getDatabase().findUser(username)</strong>;
-  if ((user != null) && !user.getPassword().equals(password)) {
+  if ((user != null) &amp;&amp; !user.getPassword().equals(password)) {
     user = null;
   }
   if (user == null) {
@@ -1427,7 +1427,7 @@ public class <strong>AuthenticationInterceptor</strong> implements Interceptor {
   public String <strong>intercept</strong>(ActionInvocation actionInvocation) throws Exception {
     Map session = actionInvocation.getInvocationContext().getSession();
     User user = (User) session.get(Constants.USER_KEY);
-    boolean isAuthenticated = (null!=user) && (null!=user.getDatabase());
+    boolean isAuthenticated = (null!=user) &amp;&amp; (null!=user.getDatabase());
     if (<strong>isAuthenticated</strong>) {
       return actionInvocation.invoke();
     }

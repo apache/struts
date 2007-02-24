@@ -38,7 +38,8 @@ public class DivTag extends AbstractRemoteCallUITag {
     protected String startTimerListenTopics;
     protected String stopTimerListenTopics;
     protected String refreshOnShow;
-
+    protected String separateScripts;
+    
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Div(stack, req, res);
     }
@@ -53,6 +54,7 @@ public class DivTag extends AbstractRemoteCallUITag {
         div.setStartTimerListenTopics(startTimerListenTopics);
         div.setStopTimerListenTopics(stopTimerListenTopics);
         div.setRefreshOnShow(refreshOnShow);
+        div.setSeparateScripts(separateScripts);
     }
 
     public void setAutoStart(String autoStart) {
@@ -77,5 +79,9 @@ public class DivTag extends AbstractRemoteCallUITag {
 
     public void setRefreshOnShow(String refreshOnShow) {
         this.refreshOnShow = refreshOnShow;
+    }
+
+    public void setSeparateScripts(String separateScripts) {
+        this.separateScripts = separateScripts;
     }
 }

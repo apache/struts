@@ -6,6 +6,7 @@
   startTimerListenTopics="h"
   stopTimerListenTopics="i"
   refreshOnShow="true"
+  scriptSeparation="false"
   id="mylabel"
   href="a"
   loadingText="b"

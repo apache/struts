@@ -320,20 +320,20 @@ public class FilterDispatcher implements StrutsStatics, Filter {
             // prepare the request no matter what - this ensures that the proper character encoding
             // is used before invoking the mapper (see WW-9127)
             dispatcher.prepare(request, response);
-
-            try {
-                // Wrap request first, just in case it is multipart/form-data
-                // parameters might not be accessible through before encoding (ww-1278)
-                request = dispatcher.wrapRequest(request, getServletContext());
-            } catch (IOException e) {
-                String message = "Could not wrap servlet request with MultipartRequestWrapper!";
-                LOG.error(message, e);
-                throw new ServletException(message, e);
-            }
-        }
-        else {
+        } else {
             dispatcher = du;
         }
+        
+        try {
+            // Wrap request first, just in case it is multipart/form-data
+            // parameters might not be accessible through before encoding (ww-1278)
+            request = dispatcher.wrapRequest(request, getServletContext());
+        } catch (IOException e) {
+            String message = "Could not wrap servlet request with MultipartRequestWrapper!";
+            LOG.error(message, e);
+            throw new ServletException(message, e);
+        }
+
         return request;
     }
 

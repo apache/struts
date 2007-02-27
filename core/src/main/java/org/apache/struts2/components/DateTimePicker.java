@@ -43,51 +43,53 @@ import com.opensymphony.xwork2.util.ValueStack;
  * A stand-alone DateTimePicker widget that makes it easy to select a date/time, or increment by week, month,
  * and/or year.
  * </p>
- * Dates attributes passed in the `RFC 3339` format:
  *
- * Renders date/time picker element.</p>
- * Format supported by this component are:-
+ * <p>
+ * It is possible to customize the user-visible formatting with either the
+ * 'formatLength' (long, short, medium or full) or 'displayFormat' attributes. By defaulty current
+ * locale will be used.</p>
+ * </p>
+ * 
+ * Syntax supported by 'displayFormat' is (http://www.unicode.org/reports/tr35/tr35-4.html#Date_Format_Patterns):-
  * <table border="1">
  *   <tr>
  *      <td>Format</td>
  *      <td>Description</td>
  *   </tr>
  *   <tr>
- *      <td>#dd</td>
- *      <td>Display day in two digits format</td>
+ *      <td>d</td>
+ *      <td>Day of the month</td>
  *   </tr>
  *   <tr>
- *      <td>#d</td>
- *      <td>Try to display day in one digit format, if cannot use 2 digit format</td>
+ *      <td>D</td>
+ *      <td>Day of year</td>
  *   </tr>
  *   <tr>
- *      <td>#MM</td>
- *      <td>Display month in two digits format</td>
+ *      <td>M</td>
+ *      <td>Month - Use one or two for the numerical month, three for the abbreviation, or four for the full name, or 5 for the narrow name.</td>
  *   </tr>
  *   <tr>
- *      <td>#M</td>
- *      <td>Try to display month in one digits format, if cannot use 2 digit format</td>
+ *      <td>h</td>
+ *      <td>Hour [1-12].</td>
  *   </tr>
  *   <tr>
- *      <td>#yyyy</td>
- *      <td>Display year in four digits format</td>
+ *      <td>H</td>
+ *      <td>Hour [0-23].</td>
  *   </tr>
  *   <tr>
- *      <td>#yy</td>
- *      <td>Display the last two digits of the yaer</td>
+ *      <td>m</td>
+ *      <td>Minute. Use one or two for zero padding.</td>
  *   </tr>
  *   <tr>
- *      <td>#y</td>
- *      <td>Display the last digits of the year</td>
+ *      <td>s</td>
+ *      <td>Second. Use one or two for zero padding.</td>
  *   </tr>
  * </table>
  * 
  * <p>
- * It is possible to customize the user-visible formatting with either the
- * formatLength or displayFormat attributes. The value sent to the server is
+ * The value sent to the server is
  * typically a locale-independent value in a hidden field as defined by the name
- * attribute. RFC3339 representation is used by default, but other options are
- * available with saveFormat
+ * attribute. RFC3339 representation is the format used.
  * </p>
  *
  * <p/>
@@ -102,7 +104,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * Example 1:
  *     &lt;s:datetimepicker name="order.date" label="Order Date" /&gt;
  * Example 2:
- *     &lt;s:datetimepicker name="delivery.date" label="Delivery Date" format="#yyyy-#MM-#dd"  /&gt;
+ *     &lt;s:datetimepicker name="delivery.date" label="Delivery Date" format="yyyy-MM-dd"  /&gt;
  *
  * <!-- END SNIPPET: expl1 -->
  * </pre>

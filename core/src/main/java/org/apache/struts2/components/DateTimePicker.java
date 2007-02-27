@@ -43,7 +43,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * A stand-alone DateTimePicker widget that makes it easy to select a date/time, or increment by week, month,
  * and/or year.
  * </p>
- * Dates attributes passed in the `RFC 3339` format:
  *
  * <p>
  * It is possible to customize the user-visible formatting with either the
@@ -51,7 +50,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * locale will be used.</p>
  * </p>
  * 
- * Syntax supported by 'displayFormat' aree (http://www.unicode.org/reports/tr35/tr35-4.html#Date_Format_Patterns):-
+ * Syntax supported by 'displayFormat' is (http://www.unicode.org/reports/tr35/tr35-4.html#Date_Format_Patterns):-
  * <table border="1">
  *   <tr>
  *      <td>Format</td>
@@ -90,8 +89,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <p>
  * The value sent to the server is
  * typically a locale-independent value in a hidden field as defined by the name
- * attribute. RFC3339 representation is used by default, but other options are
- * available with saveFormat
+ * attribute. RFC3339 representation is the format used.
  * </p>
  *
  * <p/>
@@ -106,7 +104,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * Example 1:
  *     &lt;s:datetimepicker name="order.date" label="Order Date" /&gt;
  * Example 2:
- *     &lt;s:datetimepicker name="delivery.date" label="Delivery Date" format="#yyyy-#MM-#dd"  /&gt;
+ *     &lt;s:datetimepicker name="delivery.date" label="Delivery Date" format="yyyy-MM-dd"  /&gt;
  *
  * <!-- END SNIPPET: expl1 -->
  * </pre>

@@ -299,13 +299,13 @@ public class DateTimePicker extends UIBean {
             // try to parse a date
             String dateStr = obj.toString();
             if(dateStr.equalsIgnoreCase("today"))
-                return  RFC3339_FORMAT.format(new Date());
+                return RFC3339_FORMAT.format(new Date());
 
             try {
                 Date date = null;
                 if(this.displayFormat != null) {
                     SimpleDateFormat format = new SimpleDateFormat(
-                            this.displayFormat);
+                            (String) getParameters().get("displayFormat"));
                     date = format.parse(dateStr);
                     return RFC3339_FORMAT.format(date);
                 } else {

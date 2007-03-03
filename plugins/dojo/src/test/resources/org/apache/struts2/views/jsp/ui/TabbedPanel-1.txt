@@ -1,0 +1,12 @@
+<script type="text/javascript">
+  dojo.require("dojo.widget.TabContainer");
+  dojo.require("dojo.widget.LinkPane");
+  dojo.require("dojo.widget.ContentPane");
+</script>
+<div
+    dojoType="TabContainer"
+    selectedTab="a"
+    labelPosition="b"
+    closeButton="c"
+    doLayout="true">
+</div>

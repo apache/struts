@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<project>
+    <parent>
+        <artifactId>struts2-plugins</artifactId>
+        <groupId>org.apache.struts</groupId>
+        <version>2.1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.apache.struts</groupId>
+    <artifactId>struts2-dojo-plugin</artifactId>
+    <name>Struts2 Dojo Plugin</name>
+
+    <scm>
+        <connection>
+            scm:svn:http://svn.apache.org/repos/asf/struts/struts2/trunk/plugins/dojo/
+        </connection>
+        <developerConnection>
+            scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/plugins/dojo/
+        </developerConnection>
+        <url>
+            http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/plugins/dojo/
+        </url>
+    </scm>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.myfaces.tobago</groupId>
+                <artifactId>maven-apt-plugin</artifactId>
+                <configuration>
+                    <A>
+                        uri=/struts-dojo-tags,tlibVersion=2.2.3,jspVersion=1.2,shortName=sx,displayName="Struts
+                        Dojo Tags",
+                        outFile=${basedir}/target/classes/META-INF/struts-dojo-tags.tld,
+                        description="Struts AJAX tags based on Dojo.",
+                        outTemplatesDir=${basedir}/../../core/src/site/resources/tags/ajax
+                    </A>
+                    <resourceTargetPath>target</resourceTargetPath>
+                    <fork>false</fork>
+                    <force>true</force>
+                    <nocompile>true</nocompile>
+                    <showWarnings>true</showWarnings>
+                    <factory>
+                        org.apache.struts.annotations.taglib.apt.TLDAnnotationProcessorFactory
+                    </factory>
+                    <target>1.5</target>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <!-- Core -->
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-core</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <!-- JSP API -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Velocity -->
+        <dependency>
+            <groupId>velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.4</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>compile</scope>
+            <version>3.8.1</version>
+            <!-- has to be compile for StrutsTestCase, which is part of the base package so others can write unit tests -->
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>5.1</version>
+            <optional>true</optional>
+            <classifier>jdk15</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>jmock</groupId>
+            <artifactId>jmock</artifactId>
+            <version>1.0.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>2.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!--dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymockclassextension</artifactId>
+            <version>1.1</version>
+            <scope>test</scope>
+            <exclusions>
+            <exclusion>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            </exclusion>
+            </exclusions>
+            </dependency-->
+
+        <dependency>
+            <groupId>jmock</groupId>
+            <artifactId>jmock-cglib</artifactId>
+            <version>1.0.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>mockobjects</groupId>
+            <artifactId>mockobjects-core</artifactId>
+            <version>0.09</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>mockobjects</groupId>
+            <artifactId>mockobjects-jdk1.3</artifactId>
+            <version>0.09</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>mockobjects</groupId>
+            <artifactId>mockobjects-alt-jdk1.3</artifactId>
+            <version>0.09</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>mockobjects</groupId>
+            <artifactId>mockobjects-alt-jdk1.3-j2ee1.3</artifactId>
+            <version>0.09</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>mockobjects</groupId>
+            <artifactId>mockobjects-jdk1.3-j2ee1.3</artifactId>
+            <version>0.09</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <!-- Mocks for unit testing (by Spring) -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-mock</artifactId>
+            <version>1.2.8</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>1.2.8</version>
+            <scope>test</scope>
+        </dependency>
+        
+         <!-- struts-annotations must be in compile scope for maven-apt-plugin to
+        function correctly. Marking it optional to exclude it from transitive
+        dependency resolution -->
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts-annotations</artifactId>
+            <version>1.0.2-SNAPSHOT</version>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+</project>

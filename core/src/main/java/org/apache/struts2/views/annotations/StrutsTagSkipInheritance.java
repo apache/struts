@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: StrutsTag.java 502294 2007-02-01 17:28:00Z niallp $
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,30 +18,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views.jsp.ui;
 
-import org.apache.struts2.TestAction;
-import org.apache.struts2.views.jsp.AbstractUITagTest;
+package org.apache.struts2.views.annotations;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
+ * Marks a class as the top class in the class hierarchy scanned for tag annotations 
  */
-public class AnchorTest extends AbstractUITagTest {
-
-
-    public void testSimple() throws Exception {
-        TestAction testAction = (TestAction) action;
-        testAction.setFoo("bar");
-
-        AnchorTag tag = new AnchorTag();
-        tag.setPageContext(pageContext);
-
-        tag.setId("mylink");
-        tag.setHref("a");
-        tag.doStartTag();
-        tag.doEndTag();
-
-        verify(AnchorTest.class.getResource("href-1.txt"));
-    }
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface StrutsTagSkipInheritance {
 
 }

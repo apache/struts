@@ -74,10 +74,4 @@ public class HiddenTest extends AbstractUITagTest {
         HiddenTag tag = new HiddenTag();
         verifyGenericProperties(tag, "xhtml", null);
     }
-
-    public void testGenericAjax() throws Exception {
-        HiddenTag tag = new HiddenTag();
-        verifyGenericProperties(tag, "ajax", null);
-    }
-
 }

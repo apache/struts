@@ -1,16 +1,4 @@
 <a
- dojoType="struts:BindAnchor"
  id="mylink"
- href="a"
- loadingText="d"
- errorText="c"
- listenTopics="g"
- notifyTopics="j"
- beforeLoading="f"
- afterLoading="e"
- targets="h"
- handler="i"
- indicator="k"
- showError="true"
- showLoading="true">
+ href="a">
 </a>

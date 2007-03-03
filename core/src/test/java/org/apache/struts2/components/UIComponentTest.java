@@ -22,7 +22,6 @@ package org.apache.struts2.components;
 
 import org.apache.struts2.TestConfigurationProvider;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
-import org.apache.struts2.views.jsp.ui.AbstractRemoteCallUITag;
 import org.apache.struts2.views.jsp.ui.ActionErrorTag;
 import org.apache.struts2.views.jsp.ui.ActionMessageTag;
 import org.apache.struts2.views.jsp.ui.AnchorTag;
@@ -178,7 +177,7 @@ public class UIComponentTest extends AbstractUITagTest {
 
         try {
             t.doStartTag();
-            AbstractRemoteCallUITag tag = new DivTag();
+            DivTag tag = new DivTag();
             tag.setPageContext(pageContext);
             tag.doStartTag();
             assertEquals(tag.getComponent().getComponentStack().peek(), tag.getComponent());

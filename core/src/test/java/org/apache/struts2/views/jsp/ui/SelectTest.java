@@ -406,12 +406,6 @@ public class SelectTest extends AbstractUITagTest {
         verifyGenericProperties(tag, "xhtml", new String[]{"value"});
     }
 
-    public void testGenericAjax() throws Exception {
-        SelectTag tag = new SelectTag();
-        prepareTagGeneric(tag);
-        verifyGenericProperties(tag, "ajax", new String[]{"value"});
-    }
-
     public void testMultipleOn() throws Exception {
         SelectTag tag = new SelectTag();
         tag.setPageContext(pageContext);

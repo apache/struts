@@ -108,10 +108,4 @@ public class LabelTest extends AbstractUITagTest {
         LabelTag tag = new LabelTag();
         verifyGenericProperties(tag, "xhtml", null);
     }
-
-    public void testGenericAjax() throws Exception {
-        LabelTag tag = new LabelTag();
-        verifyGenericProperties(tag, "ajax", null);
-    }
-
 }

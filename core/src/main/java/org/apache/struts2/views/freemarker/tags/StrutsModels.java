@@ -42,7 +42,6 @@ public class StrutsModels {
     protected ComboBoxModel comboBox;
     protected ComponentModel component;
     protected DateModel date;
-    protected DateTimePickerModel dateTimePicker;
     protected DivModel div;
     protected DoubleSelectModel doubleselect;
     protected FileModel file;
@@ -61,7 +60,6 @@ public class StrutsModels {
     protected SetModel set;
     protected SubmitModel submit;
     protected ResetModel reset;
-    protected TabbedPanelModel tabbedPanel;
     protected TextAreaModel textarea;
     protected TextModel text;
     protected TextFieldModel textfield;
@@ -74,14 +72,11 @@ public class StrutsModels {
     protected ActionMessageModel actionmessage;
     protected FieldErrorModel fielderror;
     protected OptionTransferSelectModel optiontransferselect;
-    protected TreeModel treeModel;
-    protected TreeNodeModel treenodeModel;
     protected UpDownSelectModel updownselect;
     protected OptGroupModel optGroupModel;
     protected IfModel ifModel;
     protected ElseModel elseModel;
     protected ElseIfModel elseIfModel;
-    protected AutocompleterModel autocompleterModel;
     protected InputTransferSelectModel inputtransferselect;
 
 
@@ -113,14 +108,6 @@ public class StrutsModels {
         }
 
         return comboBox;
-    }
-
-    public AutocompleterModel getAutocompleterModel() {
-        if (autocompleterModel == null) {
-            autocompleterModel = new AutocompleterModel(stack, req, res);
-        }
-
-        return autocompleterModel;
     }
 
     public ComponentModel getComponent() {
@@ -242,14 +229,6 @@ public class StrutsModels {
         return date;
     }
 
-    public DateTimePickerModel getDateTimePicker() {
-        if (dateTimePicker == null) {
-            dateTimePicker = new DateTimePickerModel(stack, req, res);
-        }
-
-        return dateTimePicker;
-    }
-
     public TokenModel getToken() {
         if (token == null) {
             token = new TokenModel(stack, req, res);
@@ -330,14 +309,6 @@ public class StrutsModels {
         return text;
     }
 
-    public TabbedPanelModel getTabbedPanel() {
-        if (tabbedPanel == null) {
-            tabbedPanel = new TabbedPanelModel(stack, req, res);
-        }
-
-        return tabbedPanel;
-    }
-
     public BeanModel getBean() {
         if (bean == null) {
             bean = new BeanModel(stack, req, res);
@@ -415,20 +386,6 @@ public class StrutsModels {
             optiontransferselect = new OptionTransferSelectModel(stack, req, res);
         }
         return optiontransferselect;
-    }
-
-    public TreeModel getTree() {
-        if (treeModel == null) {
-            treeModel = new TreeModel(stack,req, res);
-        }
-        return treeModel;
-    }
-
-    public TreeNodeModel getTreenode() {
-        if (treenodeModel == null) {
-            treenodeModel = new TreeNodeModel(stack, req, res);
-        }
-        return treenodeModel;
     }
 
     public UpDownSelectModel getUpdownselect() {

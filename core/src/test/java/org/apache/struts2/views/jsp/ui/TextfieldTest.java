@@ -60,11 +60,6 @@ public class TextfieldTest extends AbstractUITagTest {
         verifyGenericProperties(tag, "xhtml", null);
     }
 
-    public void testGenericAjax() throws Exception {
-        TextFieldTag tag = new TextFieldTag();
-        verifyGenericProperties(tag, "ajax", null);
-    }
-
     public void testErrors() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");

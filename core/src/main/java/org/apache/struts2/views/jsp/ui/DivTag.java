@@ -28,60 +28,11 @@ import org.apache.struts2.components.Div;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
-public class DivTag extends AbstractRemoteCallUITag {
+public class DivTag extends AbstractClosingTag {
 
     private static final long serialVersionUID = 5309231035916461758L;
-
-    protected String updateFreq;
-    protected String autoStart;
-    protected String delay;
-    protected String startTimerListenTopics;
-    protected String stopTimerListenTopics;
-    protected String refreshOnShow;
-    protected String separateScripts;
     
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Div(stack, req, res);
-    }
-
-    protected void populateParams() {
-        super.populateParams();
-
-        Div div = (Div) component;
-        div.setUpdateFreq(updateFreq);
-        div.setAutoStart(autoStart);
-        div.setDelay(delay);
-        div.setStartTimerListenTopics(startTimerListenTopics);
-        div.setStopTimerListenTopics(stopTimerListenTopics);
-        div.setRefreshOnShow(refreshOnShow);
-        div.setSeparateScripts(separateScripts);
-    }
-
-    public void setAutoStart(String autoStart) {
-        this.autoStart = autoStart;
-    }
-
-    public void setDelay(String delay) {
-        this.delay = delay;
-    }
-
-    public void setUpdateFreq(String updateInterval) {
-        this.updateFreq = updateInterval;
-    }
-
-    public void setStartTimerListenTopics(String startTimerListenTopic) {
-        this.startTimerListenTopics = startTimerListenTopic;
-    }
-
-    public void setStopTimerListenTopics(String stopTimerListenTopic) {
-        this.stopTimerListenTopics = stopTimerListenTopic;
-    }
-
-    public void setRefreshOnShow(String refreshOnShow) {
-        this.refreshOnShow = refreshOnShow;
-    }
-
-    public void setSeparateScripts(String separateScripts) {
-        this.separateScripts = separateScripts;
     }
 }

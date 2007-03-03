@@ -223,12 +223,6 @@ public class DoubleSelectTest extends AbstractUITagTest {
         verifyGenericProperties(tag, "xhtml", new String[]{"value"});
     }
 
-    public void testGenericAjax() throws Exception {
-        DoubleSelectTag tag = new DoubleSelectTag();
-        prepareTagGeneric(tag);
-        verifyGenericProperties(tag, "ajax", new String[]{"value"});
-    }
-
     private void prepareTagGeneric(DoubleSelectTag tag) {
         TestAction testAction = (TestAction) action;
         Region antwerp = new Region("Antwerp", "AN");

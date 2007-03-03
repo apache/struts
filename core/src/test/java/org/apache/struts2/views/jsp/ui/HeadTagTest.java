@@ -49,29 +49,6 @@ public class HeadTagTest extends AbstractUITagTest {
         verify(HeadTagTest.class.getResource("HeadTagTest-1.txt"));
     }
 
-    public void testHead2() throws Exception {
-        tag.setTheme("ajax");
-        tag.doStartTag();
-        Head component = (Head) tag.getComponent();
-        assertTrue(!component.isDebug());
-        tag.doEndTag();
-
-        verify(HeadTagTest.class.getResource("HeadTagTest-2.txt"));
-        assertTrue("should have debug false", writer.toString().indexOf("isDebug: false") > -1);
-    }
-
-    public void testHead3() throws Exception {
-        tag.setTheme("ajax");
-        tag.setDebug("true");
-        tag.doStartTag();
-        Head component = (Head) tag.getComponent(); // must be done between start and end
-        assertTrue(component.isDebug());
-        tag.doEndTag();
-
-        verify(HeadTagTest.class.getResource("HeadTagTest-3.txt"));
-        assertTrue("should have debug true", writer.toString().indexOf("isDebug: true") > -1);
-    }
-
     public void testHead4() throws Exception {
         tag.setCalendarcss("my-calendar");
         tag.doStartTag();

@@ -50,5 +50,10 @@ public interface RemoteUICallBean {
     void setShowLoadingText(String showLoadingText);
 
     void setIndicator(String indicator);
-
+    
+    void setName(String name);
+    
+    void setCssStyle(String style);
+    
+    void setCssClass(String cssClass);
 }

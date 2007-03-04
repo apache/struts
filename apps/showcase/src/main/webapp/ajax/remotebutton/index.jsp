@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 
 <html>
 <head>
@@ -33,19 +33,19 @@
 
 A submit button, with an indicator
 <img id="indicator" src="${pageContext.request.contextPath}/images/indicator.gif" alt="Loading..." style="display:none"/>
-<s:submit type="submit" theme="ajax" value="submit" targets="t1" href="%{ajaxTest}" align="left" indicator="indicator"/>
+<sx:submit type="submit" value="submit" targets="t1" href="%{ajaxTest}" indicator="indicator"/>
 
 <br/><br/>
 
 A submit button, with "notifyTopics"
-<s:submit type="submit" theme="ajax" value="submit" targets="t1" href="%{ajaxTest}" align="left" notifyTopics="/after"/>
+<sx:submit type="submit" value="submit" targets="t1" href="%{ajaxTest}" notifyTopics="/after"/>
 
 <br/><br/>
 
 Use an image as submit
 
-<s:submit type="image" theme="ajax" label="Alt Text" targets="t1"
-  src="${pageContext.request.contextPath}/images/struts-power.gif" href="%{ajaxTest}" align="left" />
+<sx:submit type="image" label="Alt Text" targets="t1"
+  src="${pageContext.request.contextPath}/images/struts-power.gif" href="%{ajaxTest}" />
 <br/><br/>
 
 <label for="textInput">Text to be echoed</label>
@@ -54,7 +54,7 @@ Use an image as submit
 Use a button as submit (custom text)
 <s:form id="form" action="AjaxTest">
   <input type=textbox name="data">
-  <s:submit type="button" theme="ajax" label="Update Content" targets="t1"  id="ajaxbtn"/>
+  <sx:submit type="button" label="Update Content" targets="t1"  id="ajaxbtn"/>
 </s:form>
 
 <br/><br/>

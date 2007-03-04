@@ -291,6 +291,11 @@ public class DateTimePicker extends UIBean {
         this.templateCssPath = templateCssPath;
     }
     
+    @StrutsTagAttribute(description="Preset the value of input element")
+    public void setValue(String arg0) {
+        super.setValue(arg0);
+    }
+    
     private String format(Object obj) {
         if(obj == null)
             return null;

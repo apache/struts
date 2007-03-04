@@ -65,52 +65,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example3 -->
  * </pre>
  *
- * <!-- START SNIPPET: ajaxJavadoc -->
- * <B>THE FOLLOWING IS ONLY VALID WHEN AJAX IS CONFIGURED</B>
- * <ul>
- *      <li>href</li>
- *      <li>errorText</li>
- *      <li>listenTopics</li>
- *      <li>notifyTopics</li>
- *      <li>executeScripts</li>
- *      <li>loadingText</li>
- *      <li>listenTopics</li>
- *      <li>handler</li>
- *      <li>formId</li>
- *      <li>formFilter</li>
- *      <li>targets</li>
- *      <li>showErrorTransportText</li>
- *      <li>targets</li>
- *      <li>indicator</li>
- * </ul>
- * 'resultDivId' Deprecated. Use targets.</p>
- * 'targets' is a list of element ids whose content will be updated with the
- * text returned from request.<p/>
- * 'errorText' is the text that will be displayed when there is an error making the request.<p/>
- * 'onLoadJS' Deprecated. Use 'notifyTopics'.<p/>
- * 'preInvokeJS' Deprecated. Use 'notifyTopics'.<p/>
- * 'executeScripts' if set to true will execute javascript sections in the returned text.<p/>
- * 'loadingText' is the text that will be displayed on the 'targets' elements while making the
- * request.<p/>
- * 'handler' is the name of the function that will take care of making the AJAX request. Dojo's widget
- * and dom node are passed as parameters).<p/>
- * 'formId' is the id of the html form whose fields will be seralized and passed as parameters
- * in the request.<p/>
- * 'formFilter' is the name of a function which will be used to filter the fields that will be
- * seralized. This function takes as a parameter the element and returns true if the element
- * should be included.<p/>
- * 'listenTopics' comma separated list of topics names, that will trigger a request
- * 'indicator' element to be shown while the request executing
- * 'showErrorTransportText': whether errors should be displayed (on 'targets')</p>
- * 'showLoadingText' show loading text on targets</p>
- * 'notifyTopics' comma separated list of topics names, that will be published. Three parameters are passed:<p/>
- * <ul>
- *      <li>data: html or json object when type='load' or type='error'</li>
- *      <li>type: 'before' before the request is made, 'load' when the request succeeds, or 'error' when it fails</li>
- *      <li>request: request javascript object, when type='load' or type='error'</li>
- * </ul>
- * <!-- END SNIPPET: ajaxJavadoc -->
- *
  * <!-- START SNIPPET: ajxExDescription1 -->
  * Show the results in another div. If you want your results to be shown in
  * a div, use the resultDivId where the id is the id of the div you want them
@@ -315,7 +269,6 @@ public class Submit extends FormButton implements RemoteUICallBean {
         this.targets = targets;
     }
 
-
     @StrutsTagAttribute(description="Topics that will published when the remote call completes")
     public void setNotifyTopics(String notifyTopics) {
         this.notifyTopics = notifyTopics;
@@ -327,7 +280,6 @@ public class Submit extends FormButton implements RemoteUICallBean {
         this.showErrorTransportText = showErrorTransportText;
     }
 
-
     @StrutsTagAttribute(description="Set indicator")
     public void setIndicator(String indicator) {
         this.indicator = indicator;
@@ -336,5 +288,41 @@ public class Submit extends FormButton implements RemoteUICallBean {
     @StrutsTagAttribute(description="Show loading text on targets", type="Boolean", defaultValue="true")
     public void setShowLoadingText(String showLoadingText) {
         this.showLoadingText = showLoadingText;
+    }
+    
+    @StrutsTagAttribute(description="The css class to use for element")
+    public void setCssClass(String cssClass) {
+        super.setCssClass(cssClass);
+    }
+
+    @StrutsTagAttribute(description="The css style to use for element")
+    public void setCssStyle(String cssStyle) {
+        super.setCssStyle(cssStyle);
+    }
+
+    @StrutsTagAttribute(description="The id to use for the element")
+    public void setId(String id) {
+        super.setId(id);
+    }
+
+    @StrutsTagAttribute(description="The name to set for element")
+    public void setName(String name) {
+        super.setName(name);
+    }
+
+    @StrutsTagAttribute(description="The type of submit to use. Valid values are <i>input</i>, " +
+        "<i>button</i> and <i>image</i>.", defaultValue="input")
+    public void setType(String type) {
+        super.setType(type);
+    }
+
+    @StrutsTagAttribute(description="Preset the value of input element.")
+    public void setValue(String value) {
+        super.setValue(value);
+    }
+
+    @StrutsTagAttribute(description="Label expression used for rendering a element specific label")
+    public void setLabel(String label) {
+        super.setLabel(label);
     }
 }

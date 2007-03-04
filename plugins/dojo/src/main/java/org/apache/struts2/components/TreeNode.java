@@ -102,4 +102,24 @@ public class TreeNode extends ClosingUIBean {
     public void setLabel(String label) {
         super.setLabel(label);
     }
+    
+    @StrutsTagAttribute(description="The css class to use for element")
+    public void setCssClass(String cssClass) {
+        super.setCssClass(cssClass);
+    }
+
+    @StrutsTagAttribute(description="The css style to use for element")
+    public void setCssStyle(String cssStyle) {
+        super.setCssStyle(cssStyle);
+    }
+
+    @StrutsTagAttribute(description="The id to use for the element")
+    public void setId(String id) {
+        super.setId(id);
+    }
+
+    @StrutsTagAttribute(description="The name to set for element")
+    public void setName(String name) {
+        super.setName(name);
+    }
 }

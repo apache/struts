@@ -21,6 +21,9 @@
 package org.apache.struts2.views.jsp.ui;
 
 
+import org.apache.struts2.views.jsp.ui.dojo.TreeNodeTag;
+import org.apache.struts2.views.jsp.ui.dojo.TreeTag;
+
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 

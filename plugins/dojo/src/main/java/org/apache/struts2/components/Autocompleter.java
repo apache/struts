@@ -34,50 +34,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <p>The autocomplete tag is a combobox that can autocomplete text entered on the input box.
  * When used on the "simple" theme, the autocompleter can be used like the ComboBox.
  * When used on the "ajax" theme, the list can be retieved from an action. </p>
- * <!-- END SNIPPET: javadoc -->
- * <!-- START SNIPPET: ajaxJavadoc -->
- * <B>THE FOLLOWING IS ONLY VALID WHEN AJAX IS CONFIGURED</B>
- * <ul>
- *      <li>href</li>
- *      <li>errorText</li>
- *      <li>listenTopics</li>
- *      <li>notifyTopics</li>
- *      <li>listenTopics</li>
- *      <li>formId</li>
- *      <li>formFilter</li>
- *      <li>indicator</li>
- *      <li>loadOnTextChange</li>
- *      <li>loadMinimumCount</li>
- *      <li>showDownArrow</li>
- *      <li>searchType</li>
- * </ul>
- * 'dropdownWidth' width in pixels of the drodpdown, same as autocompleter's width by default<p/>
- * 'dropdownHeight' height in pixels of the drodown, 120 px by default<p/>
- * 'forceValidOption' if invalid option is selected, clear autocompleter's text when focus is lost<p/>
- * 'autoComplete', if true, make suggestions on the textbox<p/>
- * 'formId' is the id of the html form whose fields will be seralized and passed as parameters
- * in the request.<p/>
- * 'formFilter' is the name of a function which will be used to filter the fields that will be
- * seralized. This function takes as a parameter the element and returns true if the element
- * should be included.<p/>
- * 'listenTopics' comma separated list of topics names, that will trigger a request
- * 'indicator' element to be shown while the request executing
- * 'showErrorTransportText': whether errors should be displayed (on 'targets')<p/>
- * 'loadOnTextChange' options will be reloaded everytime a character is typed on the textbox<p/>
- * 'loadMinimumCount' minimum number of characters that will force the content to be loaded<p/>
- * 'showDownError' show or hide the down arrow button<p/>
- * 'searchType' how the search must be performed, options are: "startstring", "startword" and "substring"<p/>
- * 'keyName' name of the field to which the selected key will be assigned<p/>
- * 'iconPath' path of icon used for the dropdown<p/>
- * 'templateCssPath' path to css file used to customize Dojo's widget<p/>
- * 'dataFieldName' name of the field to be used as the list in the returned JSON string<p/>
- * 'notifyTopics' comma separated list of topics names, that will be published. Three parameters are passed:<p/>
- * <ul>
- *      <li>data: selected value when type='valuechanged'</li>
- *      <li>type: 'before' before the request is made, 'valuechanged' when selection changes, 'load' when the request succeeds, or 'error' when it fails</li>
- *      <li>request: request javascript object, when type='load' or type='error'</li>
- * <ul>
- *<!-- END SNIPPET: ajaxJavadoc -->
+ *<!-- END SNIPPET: javadoc -->
  *
  *<!-- START SNIPPET: example -->
  *<p>Autocompleter that gets its list from an action:</p>
@@ -298,5 +255,30 @@ public class Autocompleter extends ComboBox {
     @StrutsTagAttribute(description="Name of the field in the returned JSON object that contains the data array", defaultValue="Value specified in 'name'")
     public void setDataFieldName(String dataFieldName) {
         this.dataFieldName = dataFieldName;
+    }
+    
+    @StrutsTagAttribute(description="The css class to use for element")
+    public void setCssClass(String cssClass) {
+        super.setCssClass(cssClass);
+    }
+
+    @StrutsTagAttribute(description="The css style to use for element")
+    public void setCssStyle(String cssStyle) {
+        super.setCssStyle(cssStyle);
+    }
+
+    @StrutsTagAttribute(description="The id to use for the element")
+    public void setId(String id) {
+        super.setId(id);
+    }
+
+    @StrutsTagAttribute(description="The name to set for element")
+    public void setName(String name) {
+        super.setName(name);
+    }
+
+    @StrutsTagAttribute(description="Preset the value of input element")
+    public void setValue(String arg0) {
+        super.setValue(arg0);
     }
 }

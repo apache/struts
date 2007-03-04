@@ -21,6 +21,7 @@
 package org.apache.struts2.views.jsp.ui;
 
 import org.apache.struts2.TestAction;
+import org.apache.struts2.views.jsp.ui.dojo.AnchorTag;
 
 
 /**

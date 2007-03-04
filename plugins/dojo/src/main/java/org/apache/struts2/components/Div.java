@@ -37,54 +37,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * the dojo framework.
  * </p>
  * <div>
- * <!-- START SNIPPET: ajaxJavadoc -->
- * <B>THE FOLLOWING IS ONLY VALID WHEN AJAX IS CONFIGURED</B>
- * <ul>
- *      <li>href</li>
- *      <li>errorText</li>
- *      <li>afterLoading</li>
- *      <li>executeScripts</li>
- *      <li>loadingText</li>
- *      <li>listenTopics</li>
- *      <li>handler</li>
- *      <li>formId</li>
- *      <li>formFilter</li>
- *      <li>targets</li>
- *      <li>notifyTopics</li>
- *      <li>showErrorTransportText</li>
- *      <li>indicator</li>
- * </ul>
- * 'targets' is a list of element ids whose content will be updated with the
- * text returned from request.<p/>
- * 'href' needs to be set as an url tag reference value.<p/>
- * 'errorText' is the text that will be displayed when there is an error making the request.<p/>
- * 'afterLoading' Deprecated. Use 'notifyTopics'.<p/>
- * 'executeScripts' if set to true will execute javascript sections in the returned text.<p/>
- * 'loadingText' is the text that will be displayed on the 'targets' elements while making the
- * request.<p/>
- * 'handler' is the name of the function that will take care of making the AJAX request. Dojo's widget
- * and dom node are passed as parameters).<p/>
- * 'formId' is the id of the html form whose fields will be seralized and passed as parameters
- * in the request.<p/>
- * 'formFilter' is the name of a function which will be used to filter the fields that will be
- * seralized. This function takes as a parameter the element and returns true if the element
- * should be included.<p/>
- * 'updateFreq' sets(in milliseconds) the update interval.<p/>
- * 'autoStart' if set to true(true by default) starts the timer automatically<p/>
- * 'startTimerListenTopics' is a comma-separated list of topics used to start the timer<p/>
- * 'stopTimerListenTopics' is a comma-separated list of topics used to stop the timer<p/>
- * 'listenTopics' comma separated list of topics names, that will trigger a request<p/>
- * 'indicator' element to be shown while the request executing<p/>
- * 'showErrorTransportText': whether errors should be displayed (on 'targets')</p>
- * 'showLoadingText' show loading text on targets</p>
- * 'separateScript' Run scripts in a separate scope, unique for each Div<p/>
- * 'notifyTopics' comma separated list of topics names, that will be published. Three parameters are passed:<p/>
- * <ul>
- *      <li>data: html or json object when type='load' or type='error'</li>
- *      <li>type: 'before' before the request is made, 'load' when the request succeeds, or 'error' when it fails</li>
- *      <li>request: request javascript object, when type='load' or type='error'</li>
- * </ul>
- * <!-- END SNIPPET: javadoc -->
+ * 
  * </div><p> <b>Examples</b>
  *
  * <pre>

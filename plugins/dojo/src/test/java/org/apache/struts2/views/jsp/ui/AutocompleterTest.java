@@ -20,6 +20,8 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
+import org.apache.struts2.views.jsp.ui.dojo.AutocompleterTag;
+
 
 /**
  * @see org.apache.struts2.components.Autocompleter

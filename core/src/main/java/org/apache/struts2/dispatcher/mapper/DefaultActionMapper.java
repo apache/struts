@@ -46,7 +46,7 @@ import com.opensymphony.xwork2.inject.Container;
  *
  * Default action mapper implementation, using the standard *.[ext] (where ext
  * usually "action") pattern. The extension is looked up from the Struts
- * configuration key <b>struts.action.exection</b>.
+ * configuration key <b>struts.action.extension</b>.
  *
  * <p/> To help with dealing with buttons and other related requirements, this
  * mapper (and other {@link ActionMapper}s, we hope) has the ability to name a

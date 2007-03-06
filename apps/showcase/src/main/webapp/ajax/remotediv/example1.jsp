@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 
 <html>
 <head>
@@ -11,12 +12,11 @@
 
 
 <body>
-<s:div
+<sx:div
         id="once"
-        theme="ajax"
         cssStyle="border: 1px solid yellow;"
         href="%{ajaxTest}">
-    Initial Content</s:div>
+    Initial Content</sx:div>
 
 <s:include value="../footer.jsp"/>
 

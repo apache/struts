@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 
 <html>
@@ -12,7 +13,7 @@
    function after() {alert("after request");}
    function handler(widget, node) {
      alert('I will handle this myself!');
-   dojo.byId(widget.targetsArray[0]).innerHTML = "Done";
+     dojo.byId(widget.targetsArray[0]).innerHTML = "Done";
    }
 
     dojo.event.topic.subscribe("/after", function(data, type, e){

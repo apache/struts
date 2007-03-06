@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 
 <html>
 <head>
@@ -36,44 +37,39 @@
 
 <br/><br/>
 
-<s:a
-        theme="ajax"
+<sx:a
         href="%{ajaxTest}"
         indicator="indicator"
-		targets="t1,t2" notifyTopics="/after" >Update 'Div 1' and 'Div 2', publish topic '/after', use indicator</s:a>
+		targets="t1,t2" notifyTopics="/after" >Update 'Div 1' and 'Div 2', publish topic '/after', use indicator</sx:a>
 <img id="indicator" src="${pageContext.request.contextPath}/images/indicator.gif" alt="Loading..." style="display:none"/>
 
 <br/><br/>
 
-<s:a  id="link2"
-        theme="ajax"
+<sx:a  id="link2"
         href="/AjaxNoUrl.jsp"
 		errorText="Error Loading"
-		targets="t1">Try to update 'Div 1', use custom error message</s:a>
+		targets="t1">Try to update 'Div 1', use custom error message</sx:a>
 
 <br/><br/>
 
-<s:a  id="link3"
-        theme="ajax"
+<sx:a  id="link3"
         href="%{ajaxTest}"
 		loadingText="Loading!!!"
-		targets="t1">Update 'Div 1', use custom loading message</s:a>
+		targets="t1">Update 'Div 1', use custom loading message</sx:a>
 
 <br/><br/>
 
-<s:a  id="link4"
-        theme="ajax"
+<sx:a  id="link4"
         href="%{test3}"
 		executeScripts="true"
-		targets="t2">Update 'Div 2' and execute returned javascript </s:a>
+		targets="t2">Update 'Div 2' and execute returned javascript </sx:a>
 
 <br/><br/>
 
-<s:a  id="link5"
-        theme="ajax"
+<sx:a  id="link5"
         href="%{ajaxTest}"
 		handler="handler"
-		targets="t2">Update 'Div 2' using a custom handler </s:a>
+		targets="t2">Update 'Div 2' using a custom handler </sx:a>
 
 
 <br/><br/>
@@ -86,12 +82,11 @@
 
 <br/><br/>
 
-<s:a  id="link6"
-        theme="ajax"
+<sx:a  id="link6"
         href="%{ajaxTest}"
 		targets="t2"
 		formId="form"
-		>Update 'Div 2' with the content of the textbox </s:a>
+		>Update 'Div 2' with the content of the textbox </sx:a>
 
 
 <br/><br/>

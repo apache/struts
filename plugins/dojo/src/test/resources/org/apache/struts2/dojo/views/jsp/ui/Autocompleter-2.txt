@@ -1,7 +1,6 @@
 <select
  dojoType="struts:ComboBox"
  id="f"
- dataUrl="a"
  forceValidOption="false"
  searchType="B"
  autoComplete="true"
@@ -10,6 +9,7 @@
  dropdownHeight="10"
  name="f"
  keyName="fKey"
+ visibleDownArrow="true"
  buttonSrc="i"
  templateCssPath="j"
  >

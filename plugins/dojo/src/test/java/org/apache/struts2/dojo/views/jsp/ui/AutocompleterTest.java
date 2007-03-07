@@ -60,7 +60,6 @@ public class AutocompleterTest extends AbstractUITagTest {
         tag.setDisabled("false");
         tag.setForceValidOption("false");
         tag.setList("{'d','e'}");
-        tag.setHref("a");
         tag.setDropdownWidth("10");
         tag.setDropdownHeight("10");
         tag.setDelay("100");

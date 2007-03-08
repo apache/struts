@@ -1,7 +1,10 @@
-<a
-	<#if parameters.id?if_exists != "">id="${parameters.id?html}"</#if>
-	<#if parameters.href?if_exists != "">href="${parameters.href}"</#if>
-
+<a<#rt/>
+<#if parameters.id?if_exists != "">
+ id="${parameters.id?html}"<#rt/>
+</#if>
+<#if parameters.href?if_exists != "">
+ href="${parameters.href}"<#rt/>
+</#if>
 <#if parameters.tabindex?exists>
  tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>

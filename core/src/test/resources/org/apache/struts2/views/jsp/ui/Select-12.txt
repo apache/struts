@@ -3,6 +3,6 @@
     <td><select name="collection" id="collection" multiple="multiple" onmousedown="alert('onmousedown');" onmouseup="alert('onmouseup');" onmouseover="alert('onmouseover');" onmousemove="alert('onmousemove');" onmouseout="alert('onmouseout');">
     <option value="1" selected="selected">foo</option>
     <option value="2">bar</option>
-    <option value="3" selected="selected">foobar</option>
+    <option value="300000000" selected="selected">foobar</option>
 </select></td>
 </tr>

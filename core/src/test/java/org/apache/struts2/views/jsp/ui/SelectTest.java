@@ -275,13 +275,13 @@ public class SelectTest extends AbstractUITagTest {
         Collection collection = new ArrayList(2);
 
         collection.add(1l);
-        collection.add(3l);
+        collection.add(300000000l);
         testAction.setCollection(collection);
 
         List selectList = new ArrayList();
         selectList.add(new LongObject(1l, "foo"));
         selectList.add(new LongObject(2l, "bar"));
-        selectList.add(new LongObject(3l, "foobar"));
+        selectList.add(new LongObject(300000000l, "foobar"));
         testAction.setList2(selectList);
 
         SelectTag tag = new SelectTag();

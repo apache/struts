@@ -1,4 +1,4 @@
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
 <!--
     function toggleDebug(debugId) {
         var debugDiv = document.getElementById(debugId);

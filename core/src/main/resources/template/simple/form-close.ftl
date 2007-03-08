@@ -86,5 +86,5 @@ dojo.require("dojo.event.*");
 --><#t/>
 <#if (parameters.hasTooltip?default(false))><#t/>
 	<#lt/><!-- javascript that is needed for tooltips -->
-	<#lt/><script language="JavaScript" type="text/javascript">dojo.require("dojo.widget.html.Tooltip");dojo.require("dojo.fx.html");</script>
+	<#lt/><script type="text/javascript">dojo.require("dojo.widget.html.Tooltip");dojo.require("dojo.fx.html");</script>
 </#if><#t/>

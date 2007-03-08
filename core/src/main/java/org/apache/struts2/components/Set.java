@@ -32,7 +32,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <p>The set tag assigns a value to a variable in a specified scope. It is useful when you wish to assign a variable to a
  * complex expression and then simply reference that variable each time rather than the complex expression. This is
  * useful in both cases: when the complex expression takes time (performance improvement) or is hard to read (code
- * readability improvement).</P>
+ * readability improvement).</p>
+ * <p>If the tag is used with body content, the evaluation of the value parameter is omitted. Instead, the String to
+ * which the body eveluates is set as value for the scoped variable.</p>
  *
  * The scopes available are as follows :-
  * <ul>
@@ -75,7 +77,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </pre>
  *
  */
-@StrutsTag(name="set", tldBodyContent="empty", tldTagClass="org.apache.struts2.views.jsp.SetTag", description="Assigns a value to a variable in a specified scope")
+@StrutsTag(name="set", tldBodyContent="JSP", tldTagClass="org.apache.struts2.views.jsp.SetTag", description="Assigns a value to a variable in a specified scope")
 public class Set extends Component {
     protected String name;
     protected String scope;
@@ -88,11 +90,18 @@ public class Set extends Component {
     public boolean end(Writer writer, String body) {
         ValueStack stack = getStack();
 
+        Object o;
         if (value == null) {
-            value = "top";
+        	if (body!=null && !body.equals("")) {
+        		o = body;
+        	} else {
+        		o = findValue("top");
+        	}
+        } else {
+        	o = findValue(value);
         }
 
-        Object o = findValue(value);
+        body="";
 
         String name;
         if (altSyntax()) {

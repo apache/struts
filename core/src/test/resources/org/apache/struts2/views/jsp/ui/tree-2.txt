@@ -1,4 +1,4 @@
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
         <!--
         dojo.require("dojo.lang.*");
         dojo.require("dojo.widget.*");

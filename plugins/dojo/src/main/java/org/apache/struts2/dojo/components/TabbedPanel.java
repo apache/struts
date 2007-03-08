@@ -60,7 +60,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  */
 @StrutsTag(name="tabbedPanel", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.TabbedPanelTag", description="Render a tabbedPanel widget.")
-@StrutsTagSkipInheritance
 public class TabbedPanel extends ClosingUIBean {
     public static final String TEMPLATE = "tabbedpanel";
     public static final String TEMPLATE_CLOSE = "tabbedpanel-close";

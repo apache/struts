@@ -30,7 +30,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * AbstractRemoteCallUIBean is superclass for all components dealing with remote
  * calls.
  */
-@StrutsTagSkipInheritance
 public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements RemoteUICallBean {
 
     protected String href;

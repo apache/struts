@@ -93,7 +93,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  */
 @StrutsTag(name="submit", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.SubmitTag", description="Render a submit button")
-@StrutsTagSkipInheritance
 public class Submit extends FormButton implements RemoteUICallBean {
     
     private static final Log LOG = LogFactory.getLog(Submit.class);

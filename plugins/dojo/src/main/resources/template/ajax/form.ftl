@@ -3,7 +3,7 @@
 <script type="text/javascript" src="${base}/dwr/interface/validator.js"></script>
 <script type="text/javascript" src="${base}/dwr/engine.js"></script>
 <script type="text/javascript" src="${base}/struts/ajax/validation.js"></script>
-<script type="text/javascript" src="${base}/struts/${themeProperties.parent}/validation.js"></script>
+<script type="text/javascript" src="${base}/struts/ajax/validation.js"></script>
 </#if>
 <form<#rt/>
 <#if parameters.namespace?exists>

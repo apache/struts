@@ -82,13 +82,17 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  */
 @StrutsTag(name="treenode", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.TreeNodeTag", description="Render a tree node within a tree widget.")
-@StrutsTagSkipInheritance
 public class TreeNode extends ClosingUIBean {
     private static final String TEMPLATE = "treenode-close";
     private static final String OPEN_TEMPLATE = "treenode";
 
     public TreeNode(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
+    }
+
+    @Override
+    public String getTheme() {
+        return "ajax";
     }
 
     public String getDefaultOpenTemplate() {

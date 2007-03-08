@@ -32,7 +32,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.components.UIBean;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
-import org.apache.struts2.views.annotations.StrutsTagSkipInheritance;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -128,7 +127,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  */
 @StrutsTag(name="datetimepicker", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.DateTimePickerTag", description="Render datetimepicker")
-@StrutsTagSkipInheritance
 public class DateTimePicker extends UIBean {
 
     final public static String TEMPLATE = "datetimepicker";

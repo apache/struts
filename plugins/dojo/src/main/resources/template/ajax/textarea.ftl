@@ -1,5 +1,3 @@
-<#include "/${parameters.templateDir}/${parameters.theme}/controlheader.ftl" />
-
 <textarea<#rt/>
  dojoType="Editor2"
 <#if parameters.editorControls?exists>
@@ -40,6 +38,3 @@
 <@s.property value="parameters.nameValue"/><#t/>
 </#if>
 </textarea>
-
-<#--include "/${parameters.templateDir}/xhtml/controlfooter.ftl" /-->
-<#include "/${parameters.templateDir}/${themeProperties.parent}/controlfooter.ftl" />

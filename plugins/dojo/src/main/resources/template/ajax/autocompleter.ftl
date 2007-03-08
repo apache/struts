@@ -92,6 +92,7 @@
  dataFieldName="${parameters.dataFieldName?html}"
 </#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
+<#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 >
 <#if parameters.list?exists>
 	<#if (parameters.headerKey?exists && parameters.headerValue?exists)>

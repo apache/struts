@@ -1,7 +1,7 @@
 <input
  dojoType="struts:ComboBox"
- id="f"
  dataUrl="a"
+ id="f"
  forceValidOption="false"
  searchType="B"
  autoComplete="true"

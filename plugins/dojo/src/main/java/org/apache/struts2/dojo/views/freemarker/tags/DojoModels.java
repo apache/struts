@@ -14,10 +14,11 @@ public class DojoModels {
     protected TabbedPanelModel tabbedPanel;
     protected TreeModel treeModel;
     protected TreeNodeModel treenodeModel;
-    protected AutocompleterModel autocompleterModel;
+    protected AutocompleterModel autocompleter;
     protected DivModel div;
     protected AnchorModel a;
     protected SubmitModel submit;
+    protected FormModel form;
     
     private ValueStack stack;
     private HttpServletRequest req;
@@ -37,12 +38,20 @@ public class DojoModels {
         return dateTimePicker;
     }
     
-    public AutocompleterModel getAutocompleterModel() {
-        if (autocompleterModel == null) {
-            autocompleterModel = new AutocompleterModel(stack, req, res);
+    public FormModel getForm() {
+        if (form == null) {
+            form = new FormModel(stack, req, res);
         }
 
-        return autocompleterModel;
+        return form;
+    }
+    
+    public AutocompleterModel getAutocompleterModel() {
+        if (autocompleter == null) {
+            autocompleter = new AutocompleterModel(stack, req, res);
+        }
+
+        return autocompleter;
     }
     
     public TabbedPanelModel getTabbedpanelModel() {

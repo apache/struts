@@ -70,7 +70,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  */
 @StrutsTag(name="tree", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.TreeTag", description="Render a tree widget.")
-@StrutsTagSkipInheritance
 public class Tree extends ClosingUIBean {
 
     private static final String TEMPLATE = "tree-close";
@@ -212,6 +211,11 @@ public class Tree extends ClosingUIBean {
         if (templateCssPath != null) {
             addParameter("templateCssPath", findString(templateCssPath));
         }
+    }
+
+    @Override
+    public String getTheme() {
+        return "ajax";
     }
 
     public String getDefaultOpenTemplate() {

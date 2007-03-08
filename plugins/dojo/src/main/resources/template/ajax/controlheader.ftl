@@ -7,5 +7,4 @@
         ${tag.addParameter('onblur', "validate(this);")}
     </#if>
 </#if>
-<#include "/${parameters.templateDir}/${themeProperties.parent}/controlheader.ftl" />
     

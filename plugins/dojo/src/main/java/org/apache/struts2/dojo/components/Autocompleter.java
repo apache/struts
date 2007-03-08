@@ -47,7 +47,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  *<!-- END SNIPPET: example -->
  */
 @StrutsTag(name="autocompleter", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.AutocompleterTag", description="Renders a combobox with autocomplete and AJAX capabilities")
-@StrutsTagSkipInheritance
 public class Autocompleter extends ComboBox {
     public static final String TEMPLATE = "autocompleter";
     final private static String COMPONENT_NAME = Autocompleter.class.getName();

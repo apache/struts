@@ -1,3 +1,4 @@
+<#setting number_format="#">
 <select<#rt/>
  name="${parameters.name?default("")?html}"<#rt/>
 <#if parameters.get("size")?exists>

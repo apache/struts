@@ -31,6 +31,7 @@ import org.apache.struts2.StrutsException;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.TextProviderSupport;
+import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -102,10 +103,10 @@ public class I18n extends Component {
 
             if (bundle != null) {
                 final Locale locale = (Locale) getStack().getContext().get(ActionContext.LOCALE);
-                getStack().push(new TextProviderSupport(bundle, new LocaleProvider() {
-                    public Locale getLocale() {
-                        return locale;
-                    }
+                getStack().push(TextProviderFactory.getInstance(bundle, new LocaleProvider() {
+                     public Locale getLocale() {
+                         return locale;
+                     }
                 }));
                 pushed = true;
             }

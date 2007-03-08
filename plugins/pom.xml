@@ -32,6 +32,7 @@
         <module>spring</module>
         <module>struts1</module>
         <module>tiles</module>
+        <module>dojo</module>
     </modules>
 
     <dependencies>

@@ -10,7 +10,11 @@
     <#else>
         <#assign itemValue = stack.findString('top')/>
     </#if>
-<input type="radio" name="${parameters.name?html}" id="${parameters.id?html}${itemKeyStr?html}"<#rt/>
+<input type="radio"<#rt/>
+<#if parameters.name?exists>
+ name="${parameters.name?html}"<#rt/>
+</#if>
+ id="${parameters.id?html}${itemKeyStr?html}"<#rt/>
 <#if tag.contains(parameters.nameValue, itemKey)>
  checked="checked"<#rt/>
 </#if>

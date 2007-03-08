@@ -52,10 +52,7 @@ import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
 import com.opensymphony.xwork2.util.FileManager;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
@@ -403,6 +400,9 @@ Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyExcepti
 
         ObjectTypeDeterminer objectTypeDeterminer = container.getInstance(ObjectTypeDeterminer.class);
         ObjectTypeDeterminerFactory.setInstance(objectTypeDeterminer);
+
+        TextProvider textProvider = container.getInstance(TextProvider.class);
+        TextProviderFactory.setInstance(textProvider);
 
         return container;
     }

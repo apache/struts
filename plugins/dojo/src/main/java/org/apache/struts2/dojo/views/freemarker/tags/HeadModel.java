@@ -18,26 +18,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views.jsp.ui;
+package org.apache.struts2.dojo.views.freemarker.tags;
 
-import org.apache.struts2.views.jsp.AbstractUITagTest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.components.Component;
+import org.apache.struts2.dojo.components.Head;
+import org.apache.struts2.views.freemarker.tags.TagModel;
+
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
- * Unit test for {@link HeadTag}.
- * <p/>
- * Note: If unit test fails with encoding difference check the src/test/struts.properties
- * and adjust the .txt files accordingly
- *
+ * @see Head
  */
-public class HeadTagTest extends AbstractUITagTest {
+public class HeadModel extends TagModel {
+    public HeadModel(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+        super(stack, req, res);
+    }
 
-    public void testHead1() throws Exception {
-        HeadTag tag = new HeadTag();
-        tag.setPageContext(pageContext);
-        
-        tag.doStartTag();
-        tag.doEndTag();
-
-        verify(HeadTagTest.class.getResource("HeadTagTest-1.txt"));
+    protected Component getBean() {
+        return new Head(stack, req, res);
     }
 }

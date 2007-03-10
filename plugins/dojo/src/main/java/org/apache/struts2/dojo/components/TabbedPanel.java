@@ -43,7 +43,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: exdesc -->
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;s:tabbedPanel id=&quot;test&quot; &gt;
+ * &lt;s:tabbedpanel id=&quot;test&quot; &gt;
  *    &lt;s:div id=&quot;one&quot; label=&quot;one&quot; theme=&quot;ajax&quot; labelposition=&quot;top&quot; &gt;
  *        This is the first pane&lt;br/&gt;
  *        &lt;s:form&gt;
@@ -54,12 +54,12 @@ import com.opensymphony.xwork2.util.ValueStack;
  *    &lt;s:div id=&quot;three&quot; label=&quot;remote&quot; theme=&quot;ajax&quot; href=&quot;/AjaxTest.action&quot; &gt;
  *        This is the remote tab
  *    &lt;/s:div&gt;
- * &lt;/s:tabbedPanel&gt;
+ * &lt;/s:tabbedpanel&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  *
  */
-@StrutsTag(name="tabbedPanel", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.TabbedPanelTag", description="Render a tabbedPanel widget.")
+@StrutsTag(name="tabbedpanel", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.TabbedPanelTag", description="Render a tabbedPanel widget.")
 public class TabbedPanel extends ClosingUIBean {
     public static final String TEMPLATE = "tabbedpanel";
     public static final String TEMPLATE_CLOSE = "tabbedpanel-close";

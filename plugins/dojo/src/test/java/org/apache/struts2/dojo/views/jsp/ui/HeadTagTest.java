@@ -18,9 +18,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.struts2.views.jsp.ui;
+package org.apache.struts2.dojo.views.jsp.ui;
 
-import org.apache.struts2.views.jsp.AbstractUITagTest;
 
 /**
  * Unit test for {@link HeadTag}.

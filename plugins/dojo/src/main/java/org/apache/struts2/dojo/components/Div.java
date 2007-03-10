@@ -129,7 +129,7 @@ public class Div extends AbstractRemoteCallUIBean {
         this.stopTimerListenTopics = stopTimerListenTopic;
     }
 
-    @StrutsTagAttribute(description="Content will be loaded when div becomes visible, used only inside tabbedPanel", type="Boolean", defaultValue="false")
+    @StrutsTagAttribute(description="Content will be loaded when div becomes visible, used only inside the tabbedpanel tag", type="Boolean", defaultValue="false")
     public void setRefreshOnShow(String refreshOnShow) {
         this.refreshOnShow = refreshOnShow;
     }

@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
+import org.apache.struts2.views.annotations.StrutsTagSkipInheritance;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -105,6 +106,12 @@ public class Anchor extends AbstractRemoteCallUIBean {
 
         if(targets != null)
             addParameter("targets", findString(targets));
+    }
+    
+    @Override
+    @StrutsTagSkipInheritance
+    public void setTheme(String theme) {
+        super.setTheme(theme);
     }
 
     @StrutsTagAttribute(description="Comma delimited list of ids of the elements whose content will be updated")

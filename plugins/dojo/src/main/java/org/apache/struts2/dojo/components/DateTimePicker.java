@@ -32,6 +32,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.components.UIBean;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
+import org.apache.struts2.views.annotations.StrutsTagSkipInheritance;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -210,6 +211,12 @@ public class DateTimePicker extends UIBean {
                 addParameter("nameValue", format(findValue(expr)));
             }
         }
+    }
+    
+    @Override
+    @StrutsTagSkipInheritance
+    public void setTheme(String theme) {
+        super.setTheme(theme);
     }
 
     @Override

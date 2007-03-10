@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
 /**
  * Marks a class as the top class in the class hierarchy scanned for tag annotations 
  */
-@Target(ElementType.TYPE)
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface StrutsTagSkipInheritance {
 

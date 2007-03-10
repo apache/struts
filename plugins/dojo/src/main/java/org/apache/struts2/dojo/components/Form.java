@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagSkipInheritance;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -39,6 +40,12 @@ public class Form extends org.apache.struts2.components.Form {
         super(stack, request, response);
     }
 
+    @Override
+    @StrutsTagSkipInheritance
+    public void setTheme(String theme) {
+        super.setTheme(theme);
+    }
+    
     @Override
     public String getTheme() {
         return "ajax";

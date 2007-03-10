@@ -97,6 +97,12 @@ public class TabbedPanel extends ClosingUIBean {
     }
 
     @Override
+    @StrutsTagSkipInheritance
+    public void setTheme(String theme) {
+        super.setTheme(theme);
+    }
+    
+    @Override
     public String getTheme() {
         return "ajax";
     }

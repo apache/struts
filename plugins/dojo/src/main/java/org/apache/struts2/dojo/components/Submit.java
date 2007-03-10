@@ -176,6 +176,12 @@ public class Submit extends FormButton implements RemoteUICallBean {
     }
 
     @Override
+    @StrutsTagSkipInheritance
+    public void setTheme(String theme) {
+        super.setTheme(theme);
+    }
+    
+    @Override
     public String getTheme() {
         return "ajax";
     }
@@ -211,11 +217,6 @@ public class Submit extends FormButton implements RemoteUICallBean {
     @StrutsTagAttribute(description="Topic that will trigger the remote call")
     public void setListenTopics(String listenTopics) {
         this.listenTopics = listenTopics;
-    }
-
-    @StrutsTagAttribute(description="The theme to use for the element. <b>This tag will usually use the ajax theme.</b>")
-    public void setTheme(String theme) {
-        super.setTheme(theme);
     }
 
     @StrutsTagAttribute(description="The URL to call to obtain the content. Note: If used with ajax context, the value must be set as an url tag value.")

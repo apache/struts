@@ -39,7 +39,7 @@
 
         <action name="transfer3" class="org.apache.struts2.showcase.token.TokenAction">
             <interceptor-ref name="defaultStack"/>
-            <interceptor-ref name="token-session"/>
+            <interceptor-ref name="tokenSession"/>
             <result name="invalid.token">doublePost.jsp</result>
             <result name="success" type="redirect">transferDone.jsp</result>
         </action>

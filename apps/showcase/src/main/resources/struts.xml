@@ -61,7 +61,7 @@
             <interceptor-stack name="crudStack">
               <interceptor-ref name="checkbox" />
                 <interceptor-ref name="params" />
-        <interceptor-ref name="static-params" />
+        <interceptor-ref name="staticParams" />
                 <interceptor-ref name="defaultStack" />
             </interceptor-stack>
         </interceptors>

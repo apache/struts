@@ -224,7 +224,7 @@
                 </interceptor-ref>
             </interceptor-stack>
 
-            <!-- Deprecated name forms scheduled for removal in Struts 2.1.0. The camelCase versions are preferred. See ww-1707 --->
+            <!-- Deprecated name forms scheduled for removal in Struts 2.1.0. The camelCase versions are preferred. See ww-1707 -->
             <interceptor name="external-ref" class="com.opensymphony.xwork2.interceptor.ExternalReferencesInterceptor"/>
             <interceptor name="model-driven" class="com.opensymphony.xwork2.interceptor.ModelDrivenInterceptor"/>
             <interceptor name="static-params" class="com.opensymphony.xwork2.interceptor.StaticParametersInterceptor"/>

@@ -4,11 +4,6 @@
 
     <display-name>Struts 2 Mailreader</display-name>
 
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>classpath*:applicationContext*.xml</param-value>
-    </context-param>
-
     <filter>
         <filter-name>Struts2</filter-name>
         <filter-class>
@@ -21,19 +16,13 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <listener>
-        <listener-class>
-            org.springframework.web.context.ContextLoaderListener
-        </listener-class>
-    </listener>
-
     <!-- Application Listener for Mailreader database -->
     <listener>
         <listener-class>
             mailreader2.ApplicationListener
         </listener-class>
     </listener>
-       
+
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>

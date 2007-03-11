@@ -3,40 +3,38 @@
 <!DOCTYPE struts PUBLIC
     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
     "http://struts.apache.org/dtds/struts-2.0.dtd">
-    
+
 <struts>
-	<bean class="com.opensymphony.xwork2.ObjectFactory" name="xwork" />
-	<bean type="com.opensymphony.xwork2.ObjectFactory" name="struts" class="org.apache.struts2.impl.StrutsObjectFactory" />
-	
-	<bean type="com.opensymphony.xwork2.ActionProxyFactory" name="xwork" class="com.opensymphony.xwork2.DefaultActionProxyFactory"/>
-	<bean type="com.opensymphony.xwork2.ActionProxyFactory" name="struts" class="org.apache.struts2.impl.StrutsActionProxyFactory"/>
-	
-	<bean type="com.opensymphony.xwork2.util.ObjectTypeDeterminer" name="tiger" class="com.opensymphony.xwork2.util.GenericsObjectTypeDeterminer"/>
-	<bean type="com.opensymphony.xwork2.util.ObjectTypeDeterminer" name="notiger" class="com.opensymphony.xwork2.util.DefaultObjectTypeDeterminer"/>
-	<bean type="com.opensymphony.xwork2.util.ObjectTypeDeterminer" name="struts" class="com.opensymphony.xwork2.util.DefaultObjectTypeDeterminer"/>
-    
+  <bean class="com.opensymphony.xwork2.ObjectFactory" name="xwork" />
+  <bean type="com.opensymphony.xwork2.ObjectFactory" name="struts" class="org.apache.struts2.impl.StrutsObjectFactory" />
+
+  <bean type="com.opensymphony.xwork2.ActionProxyFactory" name="xwork" class="com.opensymphony.xwork2.DefaultActionProxyFactory"/>
+  <bean type="com.opensymphony.xwork2.ActionProxyFactory" name="struts" class="org.apache.struts2.impl.StrutsActionProxyFactory"/>
+
+  <bean type="com.opensymphony.xwork2.util.ObjectTypeDeterminer" name="tiger" class="com.opensymphony.xwork2.util.GenericsObjectTypeDeterminer"/>
+  <bean type="com.opensymphony.xwork2.util.ObjectTypeDeterminer" name="notiger" class="com.opensymphony.xwork2.util.DefaultObjectTypeDeterminer"/>
+  <bean type="com.opensymphony.xwork2.util.ObjectTypeDeterminer" name="struts" class="com.opensymphony.xwork2.util.DefaultObjectTypeDeterminer"/>
+
     <bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="struts" class="org.apache.struts2.dispatcher.mapper.DefaultActionMapper" />
     <bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="composite" class="org.apache.struts2.dispatcher.mapper.CompositeActionMapper" />
     <bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="restful" class="org.apache.struts2.dispatcher.mapper.RestfulActionMapper" />
     <bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="restful2" class="org.apache.struts2.dispatcher.mapper.Restful2ActionMapper" />
-    
+
     <bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="struts" class="org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest" scope="default" optional="true"/>
     <bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="jakarta" class="org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest" scope="default" optional="true" />
-    
+
     <bean type="org.apache.struts2.views.TagLibrary" name="s" class="org.apache.struts2.views.DefaultTagLibrary" />
-    
+
     <bean class="org.apache.struts2.views.freemarker.FreemarkerManager" name="struts" optional="true"/>
     <bean class="org.apache.struts2.views.velocity.VelocityManager" name="struts" optional="true" />
-    
+
     <bean class="org.apache.struts2.components.template.TemplateEngineManager" />
     <bean type="org.apache.struts2.components.template.TemplateEngine" name="ftl" class="org.apache.struts2.components.template.FreemarkerTemplateEngine" />
     <bean type="org.apache.struts2.components.template.TemplateEngine" name="vm" class="org.apache.struts2.components.template.VelocityTemplateEngine" />
     <bean type="org.apache.struts2.components.template.TemplateEngine" name="jsp" class="org.apache.struts2.components.template.JspTemplateEngine" />
 
-	<bean type="com.opensymphony.xwork2.util.XWorkConverter" name="xwork1" class="com.opensymphony.xwork2.util.XWorkConverter" />    
+  <bean type="com.opensymphony.xwork2.util.XWorkConverter" name="xwork1" class="com.opensymphony.xwork2.util.XWorkConverter" />
     <bean type="com.opensymphony.xwork2.util.XWorkConverter" name="struts" class="com.opensymphony.xwork2.util.AnnotationXWorkConverter" />
-    <bean type="com.opensymphony.xwork2.TextProvider" name="xwork1" class="com.opensymphony.xwork2.TextProviderSupport" />
-    <bean type="com.opensymphony.xwork2.TextProvider" name="struts" class="com.opensymphony.xwork2.TextProviderSupport" />
 
     <!--  Only have static injections -->
     <bean class="com.opensymphony.xwork2.util.OgnlValueStack" static="true" />
@@ -47,7 +45,7 @@
     <bean class="org.apache.struts2.views.util.UrlHelper" static="true" />
     <bean class="com.opensymphony.xwork2.util.XWorkConverter" static="true" />
     <bean class="com.opensymphony.xwork2.ObjectFactory" static="true" />
-	
+
     <package name="struts-default">
         <result-types>
             <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult"/>
@@ -92,7 +90,7 @@
             <interceptor name="checkbox" class="org.apache.struts2.interceptor.CheckboxInterceptor" />
             <interceptor name="profiling" class="org.apache.struts2.interceptor.ProfilingActivationInterceptor" />
             <interceptor name="roles" class="org.apache.struts2.interceptor.RolesInterceptor" />
-            
+
             <!-- Basic stack -->
             <interceptor-stack name="basicStack">
                 <interceptor-ref name="exception"/>
@@ -194,7 +192,7 @@
                 <interceptor-ref name="checkbox"/>
                 <interceptor-ref name="static-params"/>
                 <interceptor-ref name="params">
-                	<param name="excludeParams">dojo\..*</param>
+                  <param name="excludeParams">dojo\..*</param>
                 </interceptor-ref>
                 <interceptor-ref name="conversionError"/>
                 <interceptor-ref name="validation">
@@ -223,9 +221,9 @@
                     <param name="excludeMethods">input,back,cancel</param>
                 </interceptor-ref>
             </interceptor-stack>
-            
+
        </interceptors>
-        
+
         <default-interceptor-ref name="defaultStack"/>
     </package>
 

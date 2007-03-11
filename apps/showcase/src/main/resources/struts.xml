@@ -7,9 +7,22 @@
 <!-- START SNIPPET: xworkSample -->
 <struts>
 
+    <!-- Some or all of these can be flipped to true for debugging -->
+    <constant name="struts.i18n.reload" value="false" />
+    <constant name="struts.devMode" value="false" />
+    <constant name="struts.configuration.xml.reload" value="false" />
+    <constant name="struts.custom.i18n.resources" value="globalMessages" />
+
+    <constant name="struts.codebehind.defaultPackage" value="person" />
+    <constant name="struts.freemarker.manager.classname" value="customFreemarkerManager" />
+    <constant name="struts.serve.static" value="true" />
+    <constant name="struts.serve.static.browserCache" value="false" />
+
     <include file="struts-chat.xml" />
 
     <include file="struts-hangman.xml" />
+
+    <include file="struts-continuations.xml"/>
 
     <include file="struts-tags.xml"/>
 

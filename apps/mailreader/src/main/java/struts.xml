@@ -8,7 +8,6 @@
     <constant name="struts.action.extension" value="do" />
     <constant name="struts.devMode" value="false" />
     <constant name="struts.enable.DynamicMethodInvocation" value="false" />
-    <constant name="struts.objectFactory" value="spring" />
 
     <include file="mailreader-default.xml"/>
 

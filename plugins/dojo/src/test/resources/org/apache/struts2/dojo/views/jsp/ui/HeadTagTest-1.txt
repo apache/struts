@@ -3,7 +3,7 @@
 	djConfig={
 		baseRelativePath: "/struts/dojo",
 		isDebug: false,
-		bindEncoding: "UTF-8",
+		bindEncoding: "ISO-8859-1",
 		debugAtAllCosts: true // not needed, but allows the Venkman debugger to work with the includes
 		};
 </script>

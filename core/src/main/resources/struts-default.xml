@@ -55,12 +55,15 @@
             <result-type name="freemarker" class="org.apache.struts2.views.freemarker.FreemarkerResult"/>
             <result-type name="httpheader" class="org.apache.struts2.dispatcher.HttpHeaderResult"/>
             <result-type name="redirect" class="org.apache.struts2.dispatcher.ServletRedirectResult"/>
-            <result-type name="redirect-action" class="org.apache.struts2.dispatcher.ServletActionRedirectResult"/>
+            <result-type name="redirectAction" class="org.apache.struts2.dispatcher.ServletActionRedirectResult"/>
             <result-type name="stream" class="org.apache.struts2.dispatcher.StreamResult"/>
             <result-type name="velocity" class="org.apache.struts2.dispatcher.VelocityResult"/>
             <result-type name="xslt" class="org.apache.struts2.views.xslt.XSLTResult"/>
-            <result-type name="plaintext" class="org.apache.struts2.dispatcher.PlainTextResult" />
+            <result-type name="plainText" class="org.apache.struts2.dispatcher.PlainTextResult" />
+            <!-- Deprecated name form scheduled for removal in Struts 2.1.0. The camelCase versions are preferred. See ww-1707 -->
+            <result-type name="redirect-action" class="org.apache.struts2.dispatcher.ServletActionRedirectResult"/>
         </result-types>
+
 
         <interceptors>
             <interceptor name="alias" class="com.opensymphony.xwork2.interceptor.AliasInterceptor"/>
@@ -96,7 +99,7 @@
             <!-- Basic stack -->
             <interceptor-stack name="basicStack">
                 <interceptor-ref name="exception"/>
-                <interceptor-ref name="servlet-config"/>
+                <interceptor-ref name="servletConfig"/>
                 <interceptor-ref name="prepare"/>
                 <interceptor-ref name="checkbox"/>
                 <interceptor-ref name="params"/>
@@ -118,7 +121,7 @@
 
             <!-- Sample model-driven stack  -->
             <interceptor-stack name="modelDrivenStack">
-                <interceptor-ref name="model-driven"/>
+                <interceptor-ref name="modelDriven"/>
                 <interceptor-ref name="basicStack"/>
             </interceptor-stack>
 

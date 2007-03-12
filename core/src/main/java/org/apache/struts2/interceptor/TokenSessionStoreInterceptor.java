@@ -23,6 +23,7 @@ package org.apache.struts2.interceptor;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.util.InvocationSessionStore;
@@ -110,6 +111,7 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
         ActionContext ac = invocation.getInvocationContext();
 
         HttpServletRequest request = (HttpServletRequest) ac.get(ServletActionContext.HTTP_REQUEST);
+        HttpServletResponse response = (HttpServletResponse) ac.get(ServletActionContext.HTTP_RESPONSE); 
         String tokenName = TokenHelper.getTokenName();
         String token = TokenHelper.getToken(tokenName);
 
@@ -126,6 +128,9 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
                 Map context = stack.getContext();
                 request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
 
+                ActionContext savedContext = savedInvocation.getInvocationContext();
+                savedContext.getContextMap().put(ServletActionContext.HTTP_REQUEST, request);
+                savedContext.getContextMap().put(ServletActionContext.HTTP_RESPONSE, response);
                 Result result = savedInvocation.getResult();
 
                 if ((result != null) && (savedInvocation.getProxy().getExecuteResult())) {

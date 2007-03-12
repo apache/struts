@@ -45,8 +45,8 @@
     <bean class="org.apache.struts2.dispatcher.FilterDispatcher" static="true" />
     <bean class="org.apache.struts2.views.util.ContextUtil" static="true" />
     <bean class="org.apache.struts2.views.util.UrlHelper" static="true" />
-    <bean class="com.opensymphony.xwork2.util.XWorkConverter" static="true" />
     <bean class="com.opensymphony.xwork2.ObjectFactory" static="true" />
+    <bean class="com.opensymphony.xwork2.util.XWorkConverter" static="true" />
 
     <package name="struts-default">
         <result-types>
@@ -70,6 +70,7 @@
             <interceptor name="autowiring" class="com.opensymphony.xwork2.spring.interceptor.ActionAutowiringInterceptor"/>
             <interceptor name="chain" class="com.opensymphony.xwork2.interceptor.ChainingInterceptor"/>
             <interceptor name="conversionError" class="org.apache.struts2.interceptor.StrutsConversionErrorInterceptor"/>
+            <interceptor name="cookie" class="org.apache.struts2.interceptor.CookieInterceptor"/>
             <interceptor name="createSession" class="org.apache.struts2.interceptor.CreateSessionInterceptor" />
             <interceptor name="debugging" class="org.apache.struts2.interceptor.debugging.DebuggingInterceptor" />
             <interceptor name="externalRef" class="com.opensymphony.xwork2.interceptor.ExternalReferencesInterceptor"/>

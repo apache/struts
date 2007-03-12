@@ -3,7 +3,7 @@
 <!DOCTYPE struts PUBLIC
     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
     "http://struts.apache.org/dtds/struts-2.0.dtd">
-    
+
 <struts>
     <package name="struts1-default" extends="struts-default">
 
@@ -11,19 +11,19 @@
             <interceptor name="actionForm-reset" class="org.apache.struts2.s1.ActionFormResetInterceptor"/>
             <interceptor name="actionForm-validation" class="org.apache.struts2.s1.ActionFormValidationInterceptor"/>
             <interceptor name="actionForm-commonsValidation" class="org.apache.struts2.s1.ActionFormValidationInterceptor">
-            	<param name="pathnames">/org/apache/struts/validator/validator-rules.xml,/WEB-INF/validation.xml</param>
+              <param name="pathnames">/org/apache/struts/validator/validator-rules.xml,/WEB-INF/validation.xml</param>
             </interceptor>
             <interceptor-stack name="struts1Stack">
-	    		<interceptor-ref name="static-params"/>
-	    		<interceptor-ref name="scoped-model-driven"/>
-	    		<interceptor-ref name="model-driven"/>
+          <interceptor-ref name="staticParams"/>
+          <interceptor-ref name="scopedModelDriven"/>
+          <interceptor-ref name="modelDriven"/>
                 <interceptor-ref name="actionForm-reset"/>
                 <interceptor-ref name="basicStack"/>
                 <interceptor-ref name="actionForm-validation"/>
                 <interceptor-ref name="workflow"/>
-	    	</interceptor-stack>
+        </interceptor-stack>
         </interceptors>
-        
+
         <default-interceptor-ref name="struts1Stack"/>
     </package>
 

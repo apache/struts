@@ -38,7 +38,7 @@
 
     <bean type="com.opensymphony.xwork2.TextProvider" name="xwork1" class="com.opensymphony.xwork2.TextProviderSupport" />
     <bean type="com.opensymphony.xwork2.TextProvider" name="struts" class="com.opensymphony.xwork2.TextProviderSupport" />
-    
+
     <!--  Only have static injections -->
     <bean class="com.opensymphony.xwork2.util.OgnlValueStack" static="true" />
     <bean class="org.apache.struts2.dispatcher.Dispatcher" static="true" />
@@ -56,11 +56,11 @@
             <result-type name="freemarker" class="org.apache.struts2.views.freemarker.FreemarkerResult"/>
             <result-type name="httpheader" class="org.apache.struts2.dispatcher.HttpHeaderResult"/>
             <result-type name="redirect" class="org.apache.struts2.dispatcher.ServletRedirectResult"/>
-            <result-type name="redirect-action" class="org.apache.struts2.dispatcher.ServletActionRedirectResult"/>
+            <result-type name="redirectAction" class="org.apache.struts2.dispatcher.ServletActionRedirectResult"/>
             <result-type name="stream" class="org.apache.struts2.dispatcher.StreamResult"/>
             <result-type name="velocity" class="org.apache.struts2.dispatcher.VelocityResult"/>
             <result-type name="xslt" class="org.apache.struts2.views.xslt.XSLTResult"/>
-            <result-type name="plaintext" class="org.apache.struts2.dispatcher.PlainTextResult" />
+            <result-type name="plainText" class="org.apache.struts2.dispatcher.PlainTextResult" />
         </result-types>
 
         <interceptors>

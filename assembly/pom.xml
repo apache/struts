@@ -425,13 +425,6 @@
             <scope>provided</scope>
         </dependency>
 
-      <dependency>
-         <groupId>org.rifers</groupId>
-         <artifactId>rife-continuations</artifactId>
-         <version>0.0.2</version>
-         <scope>provided</scope>
-     </dependency>
-
         <!-- Exclude transitive dependencies -->
         <dependency>
             <groupId>javax.servlet</groupId>

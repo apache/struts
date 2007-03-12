@@ -22,8 +22,6 @@
 
     <include file="struts-hangman.xml" />
 
-    <include file="struts-continuations.xml"/>
-
     <include file="struts-tags.xml"/>
 
     <include file="struts-validation.xml" />

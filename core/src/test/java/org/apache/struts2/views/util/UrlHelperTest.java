@@ -20,6 +20,7 @@
  */
 package org.apache.struts2.views.util;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -28,7 +29,6 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
 
 import com.mockobjects.dynamic.Mock;
@@ -109,8 +109,6 @@ public class UrlHelperTest extends StrutsTestCase {
         assertEquals(
            expectedUrl, url.toString());
     }
-
-
 
     public void testBuildWithRootContext() {
         String expectedUrl = "/MyAction.action";
@@ -320,6 +318,31 @@ public class UrlHelperTest extends StrutsTestCase {
         assertEquals(result.size(), 0);
     }
 
+    public void testParseMultiQuery() throws Exception {
+        Map result = UrlHelper.parseQueryString("param=1&param=1&param=1");
+        
+        assertNotNull(result);
+        assertEquals(result.size(), 1);
+        String values[] = (String[]) result.get("param");
+        Arrays.sort(values);
+        assertEquals(values.length, 3);
+        assertEquals(values[0], "1");
+        assertEquals(values[1], "1");
+        assertEquals(values[2], "1");
+    }
+
+    public void testParseDuplicateQuery() throws Exception {
+        Map result = UrlHelper.parseQueryString("param=1&param=2&param=3");
+        
+        assertNotNull(result);
+        assertEquals(result.size(), 1);
+        String values[] = (String[]) result.get("param");
+        Arrays.sort(values);
+        assertEquals(values.length, 3);
+        assertEquals(values[0], "1");
+        assertEquals(values[1], "2");
+        assertEquals(values[2], "3");
+    }
 
     public void testTranslateAndEncode() throws Exception {
         UrlHelper.setCustomEncoding("UTF-8");

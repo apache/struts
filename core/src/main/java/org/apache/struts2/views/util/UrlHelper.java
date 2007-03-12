@@ -24,9 +24,11 @@ package org.apache.struts2.views.util;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +39,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -61,21 +62,21 @@ public class UrlHelper {
     private static final int DEFAULT_HTTPS_PORT = 443;
 
     private static final String AMP = "&amp;";
-    
+
     private static int httpPort = DEFAULT_HTTP_PORT;
     private static int httpsPort = DEFAULT_HTTPS_PORT;
     private static String customEncoding;
-    
+
     @Inject(StrutsConstants.STRUTS_URL_HTTP_PORT)
     public static void setHttpPort(String val) {
         httpPort = Integer.parseInt(val);
     }
-    
+
     @Inject(StrutsConstants.STRUTS_URL_HTTPS_PORT)
     public static void setHttpsPort(String val) {
         httpsPort = Integer.parseInt(val);
     }
-    
+
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public static void setCustomEncoding(String val) {
         customEncoding = val;
@@ -297,7 +298,26 @@ public class UrlHelper {
                     }
                     if (paramName != null) {
                         String translatedParamValue = translateAndDecode(paramValue);
-                        queryParams.put(paramName, translatedParamValue);
+
+                        if(queryParams.containsKey(paramName)) {
+                            // WW-1619 append new param value to existing value(s)
+                            Object currentParam = queryParams.get(paramName);
+                            if(currentParam instanceof String) {
+                                queryParams.put(paramName, new String[] {
+                                        (String) currentParam, translatedParamValue});
+                            } else {
+                                String currentParamValues[] = (String[]) currentParam;
+                                List paramList = new ArrayList(Arrays
+                                    .asList(currentParamValues));
+                                paramList.add(translatedParamValue);
+                                String newParamValues[] = new String[paramList
+                                    .size()];
+                                queryParams.put(paramName, paramList
+                                    .toArray(newParamValues));
+                            }
+                        } else {
+                            queryParams.put(paramName, translatedParamValue);
+                        }
                     }
                 }
             }

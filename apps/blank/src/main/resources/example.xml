@@ -13,7 +13,7 @@
 
         <action name="Login_*" method="{1}" class="example.Login">
             <result name="input">/example/Login.jsp</result>
-            <result type="redirect-action">Menu</result>
+            <result type="redirectAction">Menu</result>
         </action>
 
         <action name="*" class="example.ExampleSupport">

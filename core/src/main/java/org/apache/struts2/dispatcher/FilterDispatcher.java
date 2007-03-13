@@ -123,7 +123,7 @@ import com.opensymphony.xwork2.ActionContext;
  * <li><b>actionPackages</b> - a comma-delimited list of Java packages to scan for Actions.</li>
  *
  * <li><b>configProviders</b> - a comma-delimited list of Java classes that implement the 
- * {@link ConfigurationProvider} interface that should be used for building the {@link Configuration}.</li>
+ * {@link com.opensymphony.xwork2.config.ConfigurationProvider} interface that should be used for building the {@link com.opensymphony.xwork2.config.Configuration}.</li>
  * 
  * <li><b>*</b> - any other parameters are treated as framework constants.</li>
  * 
@@ -537,6 +537,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
         while (-1 != (n = input.read(buffer))) {
             output.write(buffer, 0, n);
         }
+        output.flush(); // WW-1526
     }
 
     /**

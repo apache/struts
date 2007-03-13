@@ -110,9 +110,9 @@ import com.opensymphony.xwork2.ActionContext;
  * database access credentials.
  *
  * <p/>
- * 
+ *
  * <p>
- * 
+ *
  * This filter supports the following init-params:
  * <!-- START SNIPPET: params -->
  *
@@ -122,15 +122,15 @@ import com.opensymphony.xwork2.ActionContext;
  *
  * <li><b>actionPackages</b> - a comma-delimited list of Java packages to scan for Actions.</li>
  *
- * <li><b>configProviders</b> - a comma-delimited list of Java classes that implement the 
+ * <li><b>configProviders</b> - a comma-delimited list of Java classes that implement the
  * {@link ConfigurationProvider} interface that should be used for building the {@link Configuration}.</li>
- * 
+ *
  * <li><b>*</b> - any other parameters are treated as framework constants.</li>
- * 
+ *
  * </ul>
  *
  * <!-- END SNIPPET: params -->
- * 
+ *
  * </p>
  *
  * To use a custom {@link Dispatcher}, the <code>createDispatcher()</code> method could be overriden by
@@ -195,11 +195,11 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      * @param filterConfig The filter configuration
      */
     public void init(FilterConfig filterConfig) throws ServletException {
-    	 this.filterConfig = filterConfig;
-    	 
+       this.filterConfig = filterConfig;
+
         dispatcher = createDispatcher(filterConfig);
         dispatcher.init();
-       
+
         String param = filterConfig.getInitParameter("packages");
         String packages = "org.apache.struts2.static template org.apache.struts2.interceptor.debugging";
         if (param != null) {
@@ -221,13 +221,13 @@ public class FilterDispatcher implements StrutsStatics, Filter {
             dispatcher.cleanup();
         }
     }
-    
+
     /**
      * Create a default {@link Dispatcher} that subclasses can override
      * with a custom Dispatcher, if needed.
      *
      * @param filterConfig Our FilterConfig
-     * @return Initialized Dispatcher 
+     * @return Initialized Dispatcher
      */
     protected Dispatcher createDispatcher(FilterConfig filterConfig) {
         Map<String,String> params = new HashMap<String,String>();
@@ -247,7 +247,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     public static void setServeStaticContent(String val) {
         serveStatic = "true".equals(val);
     }
-    
+
     /**
      * Modify state of StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE setting.
      * @param val New setting
@@ -256,7 +256,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     public static void setServeStaticBrowserCache(String val) {
         serveStaticBrowserCache = "true".equals(val);
     }
-    
+
     /**
      * Modify state of StrutsConstants.STRUTS_I18N_ENCODING setting.
      * @param val New setting
@@ -265,7 +265,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     public static void setEncoding(String val) {
         encoding = val;
     }
-    
+
     /**
      * Modify ActionMapper instance.
      * @param mapper New instance
@@ -274,7 +274,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     public static void setActionMapper(ActionMapper mapper) {
         actionMapper = mapper;
     }
-    
+
     /**
      * Provide a workaround for some versions of WebLogic.
      * <p/>
@@ -323,7 +323,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
         } else {
             dispatcher = du;
         }
-        
+
         try {
             // Wrap request first, just in case it is multipart/form-data
             // parameters might not be accessible through before encoding (ww-1278)
@@ -372,14 +372,14 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      * Otherwise, if the request is for a static resource,
      * the resource is copied directly to the response, with the appropriate caching headers set.
      * <p/>
-     * If the request does not match an action mapping, or a static resource page, 
+     * If the request does not match an action mapping, or a static resource page,
      * then it passes through.
      *
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
      */
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
-    	
+
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         ServletContext servletContext = getServletContext();
@@ -430,7 +430,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
 
     /**
      * Locate a static resource and copy directly to the response,
-     * setting the appropriate caching headers. 
+     * setting the appropriate caching headers.
      *
      * @param name The resource name
      * @param request The request
@@ -443,35 +443,35 @@ public class FilterDispatcher implements StrutsStatics, Filter {
                 InputStream is = findInputStream(name, pathPrefix);
                 if (is != null) {
                     Calendar cal = Calendar.getInstance();
-                    
+
                     // check for if-modified-since, prior to any other headers
                     long ifModifiedSince = 0;
                     try {
-                    	ifModifiedSince = request.getDateHeader("If-Modified-Since");
+                      ifModifiedSince = request.getDateHeader("If-Modified-Since");
                     } catch (Exception e) {
-                    	LOG.warn("Invalid If-Modified-Since header value: '" + request.getHeader("If-Modified-Since") + "', ignoring");
+                      LOG.warn("Invalid If-Modified-Since header value: '" + request.getHeader("If-Modified-Since") + "', ignoring");
                     }
-    				long lastModifiedMillis = lastModifiedCal.getTimeInMillis();
-    				long now = cal.getTimeInMillis();
+            long lastModifiedMillis = lastModifiedCal.getTimeInMillis();
+            long now = cal.getTimeInMillis();
                     cal.add(Calendar.DAY_OF_MONTH, 1);
                     long expires = cal.getTimeInMillis();
-                    
-    				if (ifModifiedSince > 0 && ifModifiedSince <= lastModifiedMillis) {
-    					// not modified, content is not sent - only basic headers and status SC_NOT_MODIFIED
+
+            if (ifModifiedSince > 0 && ifModifiedSince <= lastModifiedMillis) {
+              // not modified, content is not sent - only basic headers and status SC_NOT_MODIFIED
                         response.setDateHeader("Expires", expires);
-    					response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-    					is.close();
-    					return;
-    				}
-                	
-                	// set the content-type header
+              response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+              is.close();
+              return;
+            }
+
+                  // set the content-type header
                     String contentType = getContentType(name);
                     if (contentType != null) {
                         response.setContentType(contentType);
                     }
 
                     if (serveStaticBrowserCache) {
-                    	// set heading information for caching static content
+                      // set heading information for caching static content
                         response.setDateHeader("Date", now);
                         response.setDateHeader("Expires", expires);
                         response.setDateHeader("Retry-After", expires);
@@ -537,6 +537,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
         while (-1 != (n = input.read(buffer))) {
             output.write(buffer, 0, n);
         }
+        output.flush();
     }
 
     /**

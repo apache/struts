@@ -7,9 +7,6 @@
     <title>Ajax examples - tabbled panel</title>
 
     <jsp:include page="/ajax/commonInclude.jsp"/>
-    <link rel="stylesheet" type="text/css" href="<s:url value="/struts/tabs.css"/>">
-    
-    
 </head>
 
 <body>
@@ -22,7 +19,7 @@
                           I'm the other Tab!!!
                       </sx:div >
                      
-                  </xs:tabbedpanel>
+                  </sx:tabbedpanel>
 				  
 				
 

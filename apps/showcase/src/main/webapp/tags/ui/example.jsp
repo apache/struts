@@ -1,9 +1,11 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
+
 <html>
 <head>
     <title>UI Tags Example</title>
-    <s:head/>
+    <sx:head/>
 </head>
 
 <body>
@@ -19,7 +21,7 @@
             name="name"
             tooltip="Enter your Name here" />
 
-    <s:datetimepicker
+    <sx:datetimepicker
             tooltip="Select Your Birthday"
             label="Birthday"
             name="birthday" />

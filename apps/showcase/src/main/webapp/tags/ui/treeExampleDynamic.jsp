@@ -1,9 +1,10 @@
 <%@taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 
 <html>
 <head>
 <title>Showcase - UI Tag Example - Tree Example (Dynamic)</title>
-<s:head theme="ajax" debug="true" />
+<sx:head/>
 </head>
 <body>
 
@@ -27,14 +28,13 @@
 
 
 <div style="float:left; margin-right: 50px;">
-<s:tree 
-    theme="ajax"
+<sx:tree 
     rootNode="%{treeRootNode}" 
     childCollectionProperty="children" 
     nodeIdProperty="id"
     nodeTitleProperty="name"
     treeSelectedTopic="treeSelected">
-</s:tree> 
+</sx:tree> 
 </div>
 
 <div id="displayId">

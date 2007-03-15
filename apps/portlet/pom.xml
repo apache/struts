@@ -17,7 +17,38 @@
        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/apps/portlet/</developerConnection>
        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/apps/portlet/</url>
     </scm>
-
+	
+	<profiles>
+		<profile>
+			<id>pluto</id>
+			<build>
+				<plugins>
+				  <!-- configure maven-war-plugin to use updated web.xml -->
+			      <plugin>
+			        <artifactId>maven-war-plugin</artifactId>
+			        <configuration>
+			          <webXml>${project.build.directory}/pluto-resources/web.xml</webXml>
+			        </configuration>
+			      </plugin>
+			      <!-- bind 'pluto:assemble' goal to 'process-resources' lifecycle -->
+			      <plugin>
+			        <groupId>org.apache.pluto</groupId>
+			        <artifactId>maven-pluto-plugin</artifactId>
+			        <version>1.1.1</version>
+			        <executions>
+			          <execution>
+			            <phase>generate-resources</phase>
+			            <goals>
+			              <goal>assemble</goal>
+			            </goals>
+			          </execution>
+			        </executions>
+			      </plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	
     <dependencies>
         <dependency>
             <groupId>portlet-api</groupId>

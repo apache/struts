@@ -17,13 +17,13 @@
         </action>
 
         <action name="Logout" class="mailreader2.Logout">
-            <result type="redirect-action">Welcome</result>
+            <result type="redirectAction">Welcome</result>
         </action>
 
         <action name="Login_*"  method="{1}" class="mailreader2.Login">
             <result name="input">/Login.jsp</result>
-            <result name="cancel" type="redirect-action">Welcome</result>
-            <result type="redirect-action">MainMenu</result>
+            <result name="cancel" type="redirectAction">Welcome</result>
+            <result type="redirectAction">MainMenu</result>
             <result name="expired" type="chain">ChangePassword</result>
             <exception-mapping
                     exception="org.apache.struts.apps.mailreader.dao.ExpiredPasswordException"
@@ -33,7 +33,7 @@
 
         <action name="Registration_*" method="{1}" class="mailreader2.Registration">
             <result name="input">/Registration.jsp</result>
-            <result type="redirect-action">MainMenu</result>
+            <result type="redirectAction">MainMenu</result>
             <interceptor-ref name="guest"/>
         </action>
     </package>
@@ -42,7 +42,7 @@
 
         <global-results>
             <result name="input">/Subscription.jsp</result>
-            <result type="redirect-action">Registration_input</result>
+            <result type="redirectAction">Registration_input</result>
         </global-results>
 
         <action name="Subscription_save" method="save" class="mailreader2.Subscription">

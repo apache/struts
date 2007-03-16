@@ -62,6 +62,7 @@
             <result-type name="plainText" class="org.apache.struts2.dispatcher.PlainTextResult" />
             <!-- Deprecated name form scheduled for removal in Struts 2.1.0. The camelCase versions are preferred. See ww-1707 -->
             <result-type name="redirect-action" class="org.apache.struts2.dispatcher.ServletActionRedirectResult"/>
+            <result-type name="plaintext" class="org.apache.struts2.dispatcher.PlainTextResult" />
         </result-types>
 
 

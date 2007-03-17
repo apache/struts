@@ -41,6 +41,7 @@ import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.UnknownHandler;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;

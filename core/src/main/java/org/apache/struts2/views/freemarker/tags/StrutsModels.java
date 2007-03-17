@@ -115,7 +115,7 @@ public class StrutsModels {
         return comboBox;
     }
 
-    public AutocompleterModel getAutocompleterModel() {
+    public AutocompleterModel getAutocompleter() {
         if (autocompleterModel == null) {
             autocompleterModel = new AutocompleterModel(stack, req, res);
         }

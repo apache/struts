@@ -21,11 +21,18 @@
 	dojo.event.topic.registerPublisher("/startTimer", controller, "start");
 	dojo.event.topic.registerPublisher("/stopTimer", controller, "stop");
 
-    dojo.event.topic.subscribe("/after", function(data, type, e){
-      alert('inside a topic event. type='+type);
-      //data : text returned
-      //type : "before", "load" or "error"
+    dojo.event.topic.subscribe("/before", function(data, type, e){
+      alert('inside a topic event. before request');
+      //data : source element id
+      //type : "before" 
       //e    : request object
+    });
+    
+    dojo.event.topic.subscribe("/after", function(data, type, e){
+      alert('inside a topic event. after request');
+      //data : text returned
+      //type : "load" 
+      //e    : undefined
     });
 
 </script>
@@ -37,7 +44,7 @@
 <s:url id="ajaxTest" value="/AjaxTest.action" />
 
 <sx:div
-        id="once"
+        id="div1"
         cssStyle="border: 1px solid yellow;"
         href="%{ajaxTest}"
         listenTopics="/refresh"
@@ -45,8 +52,8 @@
 		stopTimerListenTopics="/stopTimer"
 		updateFreq="10000"
 		autoStart="false"
-		afterLoading="alert('after request')"
-        notifyTopics="/after"
+        beforeNotifyTopics="/before"
+        afterNotifyTopics="/after"
 		>
     Initial Content</sx:div>
 

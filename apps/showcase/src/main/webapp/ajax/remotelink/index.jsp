@@ -14,10 +14,32 @@
 	 dojo.byId(widget.targetsArray[0]).innerHTML = "Done";
    }
 
+   dojo.event.topic.subscribe("/before", function(data, type, e){
+      alert('inside a topic event. before request');
+      //data : source element id
+      //type : "before"
+      //e    : request object
+   });
+   
    dojo.event.topic.subscribe("/after", function(data, type, e){
-      alert('inside a topic event. type='+type);
+      alert('inside a topic event. after request');
       //data : text returned
-      //type : "before", "load" or "error"
+      //type : "load"
+      //e    : undefined
+   });
+   
+   dojo.event.topic.subscribe("/error", function(data, type, e){
+      alert('inside a topic event. on error');
+      //data : error object
+      //type : "error"
+      //e    : undefined
+   });
+   
+   dojo.event.topic.subscribe("/topics", function(data, type, e){
+      alert('inside a topic event. type='+type);
+      debugger;
+      //data : text returned
+      //type : "before", "load", "error"
       //e    : request object
    });
 </script>
@@ -37,10 +59,12 @@
 
 <br/><br/>
 
-<sx:a
+<sx:a   id="link1"
         href="%{ajaxTest}"
         indicator="indicator"
-		targets="t1,t2" notifyTopics="/after" >Update 'Div 1' and 'Div 2', publish topic '/after', use indicator</sx:a>
+		targets="t1,t2" 
+        beforeNotifyTopics="/before"
+        afterNotifyTopics="/after" >Update 'Div 1' and 'Div 2', publish topic '/before' and '/after', use indicator</sx:a>
 <img id="indicator" src="${pageContext.request.contextPath}/images/indicator.gif" alt="Loading..." style="display:none"/>
 
 <br/><br/>
@@ -48,7 +72,8 @@
 <sx:a  id="link2"
         href="/AjaxNoUrl.jsp"
 		errorText="Error Loading"
-		targets="t1">Try to update 'Div 1', use custom error message</sx:a>
+		targets="t1"
+        errorNotifyTopics="/error">Try to update 'Div 1', publish '/error', use custom error message</sx:a>
 
 <br/><br/>
 

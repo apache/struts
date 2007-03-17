@@ -70,6 +70,9 @@ public class CodebehindUnknownHandler implements UnknownHandler {
         this.defaultPackageName = defaultPackage;
         resultsByExtension = new LinkedHashMap<String,ResultTypeConfig>();
         PackageConfig parentPackage = configuration.getPackageConfig(defaultPackageName);
+        if (parentPackage == null) {
+            throw new ConfigurationException("Unknown parent package: "+parentPackage);
+        }    
         Map<String,ResultTypeConfig> results = parentPackage.getAllResultTypeConfigs();
         
         resultsByExtension.put("jsp", results.get("dispatcher"));

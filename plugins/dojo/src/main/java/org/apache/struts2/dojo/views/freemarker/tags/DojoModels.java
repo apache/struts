@@ -46,7 +46,7 @@ public class DojoModels {
         return form;
     }
     
-    public AutocompleterModel getAutocompleterModel() {
+    public AutocompleterModel getAutocompleter() {
         if (autocompleter == null) {
             autocompleter = new AutocompleterModel(stack, req, res);
         }

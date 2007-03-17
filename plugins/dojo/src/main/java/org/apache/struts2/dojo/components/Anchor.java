@@ -118,15 +118,4 @@ public class Anchor extends AbstractRemoteCallUIBean {
     public void setTargets(String targets) {
         this.targets = targets;
     }
-
-    @StrutsTagAttribute(name="onLoadJS", description="Deprecated. Use 'notifyTopics'. Javascript code execute after reload")
-    public void setAfterLoading(String afterLoading) {
-        this.afterLoading = afterLoading;
-    }
-
-
-    @StrutsTagAttribute(name="preInvokeJS", description="Deprecated. Use 'notifyTopics'. Javascript code execute before reload")
-    public void setBeforeLoading(String beforeLoading) {
-        this.beforeLoading = beforeLoading;
-    }
 }

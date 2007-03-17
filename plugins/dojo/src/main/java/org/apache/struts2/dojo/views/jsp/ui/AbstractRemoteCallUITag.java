@@ -27,8 +27,6 @@ public abstract class AbstractRemoteCallUITag extends AbstractClosingTag {
     protected String notifyTopics;
     protected String loadingText;
     protected String errorText;
-    protected String beforeLoading;
-    protected String afterLoading;
     protected String executeScripts;
     protected String handler;
     protected String formId;
@@ -36,6 +34,9 @@ public abstract class AbstractRemoteCallUITag extends AbstractClosingTag {
     protected String showErrorTransportText;
     protected String indicator;
     protected String showLoadingText;
+    protected String beforeNotifyTopics;
+    protected String afterNotifyTopics;
+    protected String errorNotifyTopics;
 
     protected void populateParams() {
         super.populateParams();
@@ -45,8 +46,6 @@ public abstract class AbstractRemoteCallUITag extends AbstractClosingTag {
         remote.setListenTopics(listenTopics);
         remote.setLoadingText(loadingText);
         remote.setErrorText(errorText);
-        remote.setAfterLoading(afterLoading);
-        remote.setBeforeLoading(beforeLoading);
         remote.setExecuteScripts(executeScripts);
         remote.setHandler(handler);
         remote.setFormFilter(formFilter);
@@ -55,6 +54,9 @@ public abstract class AbstractRemoteCallUITag extends AbstractClosingTag {
         remote.setShowErrorTransportText(showErrorTransportText);
         remote.setIndicator(indicator);
         remote.setShowLoadingText(showLoadingText);
+        remote.setAfterNotifyTopics(afterNotifyTopics);
+        remote.setBeforeNotifyTopics(beforeNotifyTopics);
+        remote.setErrorNotifyTopics(errorNotifyTopics);
     }
 
     public void setHref(String href) {
@@ -71,14 +73,6 @@ public abstract class AbstractRemoteCallUITag extends AbstractClosingTag {
 
     public void setListenTopics(String listenTopics) {
         this.listenTopics = listenTopics;
-    }
-
-    public void setAfterLoading(String afterLoading) {
-        this.afterLoading = afterLoading;
-    }
-
-    public void setBeforeLoading(String beforeLoading) {
-        this.beforeLoading = beforeLoading;
     }
 
     public void setExecuteScripts(String executeScripts) {
@@ -105,14 +99,23 @@ public abstract class AbstractRemoteCallUITag extends AbstractClosingTag {
         this.showErrorTransportText = showErrorTransportText;
     }
 
-    /**
-     * @param indicator The indicator to set.
-     */
     public void setIndicator(String indicator) {
         this.indicator = indicator;
     }
 
     public void setShowLoadingText(String showLoadingText) {
         this.showLoadingText = showLoadingText;
+    }
+
+    public void setAfterNotifyTopics(String afterNotifyTopics) {
+        this.afterNotifyTopics = afterNotifyTopics;
+    }
+
+    public void setBeforeNotifyTopics(String beforeNotifyTopics) {
+        this.beforeNotifyTopics = beforeNotifyTopics;
+    }
+
+    public void setErrorNotifyTopics(String errorNotifyTopics) {
+        this.errorNotifyTopics = errorNotifyTopics;
     }
 }

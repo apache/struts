@@ -35,14 +35,15 @@ public class SubmitAjaxTest extends AbstractUITagTest {
         tag.setLoadingText("c");
         tag.setErrorText("d");
         tag.setListenTopics("e");
-        tag.setPreInvokeJS("f");
-        tag.setOnLoadJS("g");
+        tag.setBeforeNotifyTopics("f");
+        tag.setAfterNotifyTopics("g");
         tag.setHandler("h");
         tag.setType("submit");
         tag.setLabel("i");
         tag.setNotifyTopics("k");
         tag.setIndicator("l");
         tag.setShowLoadingText("true");
+        tag.setErrorNotifyTopics("m");
         tag.doStartTag();
         tag.doEndTag();
 
@@ -62,13 +63,14 @@ public class SubmitAjaxTest extends AbstractUITagTest {
         tag.setLoadingText("c");
         tag.setErrorText("d");
         tag.setListenTopics("e");
-        tag.setPreInvokeJS("f");
-        tag.setOnLoadJS("g");
+        tag.setBeforeNotifyTopics("f");
+        tag.setAfterNotifyTopics("g");
         tag.setHandler("h");
         tag.setType("button");
         tag.setLabel("i");
         tag.setNotifyTopics("k");
         tag.setIndicator("l");
+        tag.setErrorNotifyTopics("m");
         tag.doStartTag();
         tag.doEndTag();
 
@@ -88,14 +90,15 @@ public class SubmitAjaxTest extends AbstractUITagTest {
         tag.setLoadingText("c");
         tag.setErrorText("d");
         tag.setListenTopics("e");
-        tag.setPreInvokeJS("f");
-        tag.setOnLoadJS("g");
+        tag.setBeforeNotifyTopics("f");
+        tag.setAfterNotifyTopics("g");
         tag.setHandler("h");
         tag.setType("image");
         tag.setLabel("i");
         tag.setSrc("j");
         tag.setNotifyTopics("k");
         tag.setIndicator("l");
+        tag.setErrorNotifyTopics("m");
         tag.doStartTag();
         tag.doEndTag();
 

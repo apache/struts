@@ -44,13 +44,14 @@ public class DivTest extends AbstractUITagTest {
         tag.setListenTopics("g");
         tag.setStartTimerListenTopics("h");
         tag.setStopTimerListenTopics("i");
-        tag.setBeforeLoading("j");
-        tag.setAfterLoading("k");
+        tag.setBeforeNotifyTopics("j");
+        tag.setAfterNotifyTopics("k");
         tag.setRefreshOnShow("true");
         tag.setHandler("l");
         tag.setIndicator("m");
         tag.setShowLoadingText("true");
         tag.setSeparateScripts("false");
+        tag.setErrorNotifyTopics("n");
         tag.doStartTag();
         tag.doEndTag();
 

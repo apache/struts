@@ -43,11 +43,14 @@
    <#if parameters.notifyTopics?if_exists != "">
     notifyTopics="${parameters.notifyTopics?html}"<#rt/>
   </#if>
-  <#if parameters.beforeLoading?if_exists != "">
-    beforeLoading="${parameters.beforeLoading?html}"<#rt/>
+  <#if parameters.beforeNotifyTopics?if_exists != "">
+    beforeNotifyTopics="${parameters.beforeNotifyTopics?html}"<#rt/>
   </#if>
-  <#if parameters.afterLoading?if_exists != "">
-    afterLoading="${parameters.afterLoading?html}"<#rt/>
+  <#if parameters.afterNotifyTopics?if_exists != "">
+    afterNotifyTopics="${parameters.afterNotifyTopics?html}"<#rt/>
+  </#if>
+  <#if parameters.errorNotifyTopics?if_exists != "">
+    errorNotifyTopics="${parameters.errorNotifyTopics?html}"<#rt/>
   </#if>
   <#if parameters.targets?if_exists != "">
     targets="${parameters.targets?html}"<#rt/>

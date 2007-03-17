@@ -38,8 +38,8 @@ public class AnchorTest extends AbstractUITagTest {
         tag.setHref("a");
         tag.setErrorText("c");
         tag.setLoadingText("d");
-        tag.setAfterLoading("e");
-        tag.setBeforeLoading("f");
+        tag.setBeforeNotifyTopics("e");
+        tag.setAfterNotifyTopics("f");
         tag.setListenTopics("g");
         tag.setTargets("h");
         tag.setHandler("i");
@@ -47,6 +47,7 @@ public class AnchorTest extends AbstractUITagTest {
         tag.setIndicator("k");
         tag.setShowErrorTransportText("true");
         tag.setShowLoadingText("true");
+        tag.setErrorNotifyTopics("l");
         tag.doStartTag();
         tag.doEndTag();
 

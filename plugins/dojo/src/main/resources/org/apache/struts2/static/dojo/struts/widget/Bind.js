@@ -28,11 +28,7 @@ dojo.widget.defineWidget(
   afterNotifyTopics : "",
   afterNotifyTopicsArray : null,
   errorNotifyTopics : "",
-  errorNotifyTopicsArray : "",
-  
-  //callbacks
-  beforeLoading : "",
-  afterLoading : "",
+  errorNotifyTopicsArray : null,
 
   formId : "",
   formFilter : "",
@@ -62,18 +58,18 @@ dojo.widget.defineWidget(
     }
     
     //before topics
-    if(!dojo.string.isBlank(this.beforeNotifyTopcis)) {
-      this.beforeNotifyTopcisArray = this.beforeNotifyTopics.split(",");
+    if(!dojo.string.isBlank(this.beforeNotifyTopics)) {
+      this.beforeNotifyTopicsArray = this.beforeNotifyTopics.split(",");
     }
     
     //after topics
-    if(!dojo.string.isBlank(this.afterNotifyTopcis)) {
-      this.afterNotifyTopcisArray = this.afterNotifyTopics.split(",");
+    if(!dojo.string.isBlank(this.afterNotifyTopics)) {
+      this.afterNotifyTopicsArray = this.afterNotifyTopics.split(",");
     }
     
     //error topics
-    if(!dojo.string.isBlank(this.errorNotifyTopcis)) {
-      this.errorNotifyTopcisArray = this.errorNotifyTopics.split(",");
+    if(!dojo.string.isBlank(this.errorNotifyTopics)) {
+      this.errorNotifyTopicsArray = this.errorNotifyTopics.split(",");
     }
 
     if(!dojo.string.isBlank(this.targets)) {
@@ -129,11 +125,6 @@ dojo.widget.defineWidget(
      //hide indicator
      dojo.html.hide(this.indicator);
 
-     //post script
-     if(!dojo.string.isBlank(this.afterLoading)) {
-       this.log("Executing " + this.afterLoading);
-       eval(this.afterLoading);
-     }
      //publish topics
      this.notify(data, type, e);
 
@@ -189,7 +180,7 @@ dojo.widget.defineWidget(
         break;
     }
     
-    this.notifyTo(topicsArray, data, e);
+    this.notifyTo(topicsArray, data, type, e);
   },
   
   notifyTo : function(topicsArray, data, e) {
@@ -206,36 +197,18 @@ dojo.widget.defineWidget(
   },
 
   onDownloadStart : function(event) {
-    if(!dojo.string.isBlank(this.beforeLoading)) {
-      //for backward compatibility
-      var data = null;
-      var type = null;
-
-      eval(this.beforeLoading);
-    }
     if(this.showLoading && !dojo.string.isBlank(this.loadingText)) {
       event.text = this.loadingText;
     }
   },
 
   reloadContents : function(evt) {
-
     if(!dojo.string.isBlank(this.handler)) {
       //use custom handler
       this.log("Invoking handler: " + this.handler);
       window[this.handler](this, this.domNode);
     }
     else {
-      //pre script
-      if(!dojo.string.isBlank(this.beforeLoading)) {
-        this.log("Executing " + this.beforeLoading);
-        //backward compatibility
-        var data = null;
-        var type = null;
-
-        eval(this.beforeLoading);
-      }
-
       try {
           var self = this;
           var request = {cancel: false};
@@ -245,8 +218,7 @@ dojo.widget.defineWidget(
             return;
           }
 
-          //if the href is null, we still call the "beforeLoading"
-          // and publish the notigy topics
+          //if the href is null, we still publish the notify topics
           if(dojo.string.isBlank(this.href)) {
             return;
           }
@@ -280,8 +252,10 @@ dojo.widget.defineWidget(
          });
       }
       catch(ex) {
-        var message = dojo.string.isBlank(this.errorText) ? ex : this.errorText;
-        this.setContent(message);
+        if(this.showError) {
+          var message = dojo.string.isBlank(this.errorText) ? ex : this.errorText;
+          this.setContent(message);
+        }  
       }
     }
   },

@@ -1,9 +1,3 @@
-<tr>
-    <td colspan="2"><div <#rt/>
-<#if parameters.align?exists>
-    align="${parameters.align?html}"<#t/>
-</#if>
-><#t/>
 <#if parameters.type?exists && parameters.type=="button">
   <input type="button" dojoType="struts:Bind" event="onclick"<#rt/>
   <#include "/${parameters.templateDir}/ajax/ajax-common.ftl"/>
@@ -36,6 +30,3 @@
     <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
   />
 </#if>
-
-</div><#t/>
-<#include "/${parameters.templateDir}/xhtml/controlfooter.ftl" />

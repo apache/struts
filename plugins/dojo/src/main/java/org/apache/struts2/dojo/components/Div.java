@@ -134,11 +134,6 @@ public class Div extends AbstractRemoteCallUIBean {
         this.refreshOnShow = refreshOnShow;
     }
 
-    @StrutsTagAttribute(description="Deprecated. Use 'notifyTopics'. Javascript code execute after reload")
-    public void setAfterLoading(String afterLoading) {
-        this.afterLoading = afterLoading;
-    }
-
     @StrutsTagAttribute(description="Run scripts in a separate scope, unique for each Div", defaultValue="true")
     public void setSeparateScripts(String separateScripts) {
         this.separateScripts = separateScripts;

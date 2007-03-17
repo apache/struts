@@ -53,14 +53,10 @@ public class SubmitTag extends AbstractUITag {
     protected String showErrorTransportText;
     protected String indicator;
     protected String showLoadingText;
-
-    //these two are called "preInvokeJS" and "onLoadJS" on the tld
-    //Names changed here to keep some consistency
-    protected String beforeLoading;
-    protected String afterLoading;
-
-    //this one is called "resultDivId" on the tld
     protected String targets;
+    protected String beforeNotifyTopics;
+    protected String afterNotifyTopics;
+    protected String errorNotifyTopics;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Submit(stack, req, res);
@@ -78,8 +74,6 @@ public class SubmitTag extends AbstractUITag {
         submit.setListenTopics(listenTopics);
         submit.setLoadingText(loadingText);
         submit.setErrorText(errorText);
-        submit.setAfterLoading(afterLoading);
-        submit.setBeforeLoading(beforeLoading);
         submit.setExecuteScripts(executeScripts);
         submit.setHandler(handler);
         submit.setFormFilter(formFilter);
@@ -90,6 +84,9 @@ public class SubmitTag extends AbstractUITag {
         submit.setShowErrorTransportText(showErrorTransportText);
         submit.setIndicator(indicator);
         submit.setShowLoadingText(showLoadingText);
+        submit.setAfterNotifyTopics(afterNotifyTopics);
+        submit.setBeforeNotifyTopics(beforeNotifyTopics);
+        submit.setErrorNotifyTopics(errorNotifyTopics);
     }
 
     public void setAction(String action) {
@@ -152,21 +149,6 @@ public class SubmitTag extends AbstractUITag {
         this.targets = targets;
     }
 
-    @Deprecated
-    public void setResultDivId(String id) {
-        this.targets = id;
-    }
-
-    @Deprecated
-    public void setOnLoadJS(String postJS) {
-        this.afterLoading = postJS;
-    }
-
-    @Deprecated
-    public void setPreInvokeJS(String preJS) {
-        this.beforeLoading = preJS;
-    }
-
     public void setNotifyTopics(String notifyTopics) {
         this.notifyTopics = notifyTopics;
     }
@@ -181,5 +163,17 @@ public class SubmitTag extends AbstractUITag {
 
     public void setShowLoadingText(String showLoadingText) {
         this.showLoadingText = showLoadingText;
+    }
+
+    public void setAfterNotifyTopics(String afterNotifyTopics) {
+        this.afterNotifyTopics = afterNotifyTopics;
+    }
+
+    public void setBeforeNotifyTopics(String beforeNotifyTopics) {
+        this.beforeNotifyTopics = beforeNotifyTopics;
+    }
+
+    public void setErrorNotifyTopics(String errorNotifyTopics) {
+        this.errorNotifyTopics = errorNotifyTopics;
     }
 }

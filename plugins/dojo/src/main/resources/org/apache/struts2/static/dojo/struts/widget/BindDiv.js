@@ -35,6 +35,13 @@ dojo.widget.defineWidget(
     notifyTopicsArray : null,
     stopTimerListenTopics : "",
     startTimerListenTopics : "",
+    beforeNotifyTopics : "",
+    beforeNotifyTopicsArray : null,
+    afterNotifyTopics : "",
+    afterNotifyTopicsArray : null,
+    errorNotifyTopics : "",
+    errorNotifyTopicsArray : null,
+    
 
     //callbacks
     beforeLoading : "",
@@ -50,13 +57,6 @@ dojo.widget.defineWidget(
 	parseContent : true,
 
     onDownloadStart : function(event) {
-      if(!dojo.string.isBlank(this.beforeLoading)) {
-        this.log("Executing " + this.beforeLoading);
-        var result = eval(this.beforeLoading);
-        if(result !== null && !result) {
-          return;
-        }
-      }
       if(!this.showLoading) {
         event.returnValue = false;
         return;
@@ -95,6 +95,35 @@ dojo.widget.defineWidget(
           try {
             dojo.event.topic.publish(topic, data, type, e);
           } catch(ex) {
+            self.log(ex);
+          }
+        });
+      }
+      
+      //before, after and error topics
+      var topicsArray = null;
+      switch(type) {
+        case "before":
+          topicsArray = this.beforeNotifyTopicsArray;
+          break;
+        case "load":
+          topicsArray = this.afterNotifyTopicsArray;
+          break;
+        case "error":
+          topicsArray = this.errorNotifyTopicsArray;
+          break;
+      }
+    
+      this.notifyTo(topicsArray, data, type, e);
+    },
+    
+    notifyTo : function(topicsArray, data, e) {
+      var self = this;
+      if(topicsArray) {
+        dojo.lang.forEach(topicsArray, function(topic) {
+          try {
+            dojo.event.topic.publish(topic, data, e);
+          } catch(ex){
             self.log(ex);
           }
         });
@@ -160,10 +189,6 @@ dojo.widget.defineWidget(
         }
       }
 
-      if(!dojo.string.isBlank(this.notifyTopics)) {
-        this.notifyTopicsArray = this.notifyTopics.split(",");
-      }
-
       if(!dojo.string.isBlank(this.stopTimerListenTopics)) {
         this.log("Listening to " + this.stopTimerListenTopics + " to stop timer");
         var stopTopics = this.stopTimerListenTopics.split(",");
@@ -182,6 +207,26 @@ dojo.widget.defineWidget(
             dojo.event.topic.subscribe(topic, self, "startTimer");
           });
         }
+      }
+     
+      //notify topics
+      if(!dojo.string.isBlank(this.notifyTopics)) {
+        this.notifyTopicsArray = this.notifyTopics.split(",");
+      }
+      
+      //before topics
+      if(!dojo.string.isBlank(this.beforeNotifyTopics)) {
+        this.beforeNotifyTopicsArray = this.beforeNotifyTopics.split(",");
+      }
+      
+      //after topics
+      if(!dojo.string.isBlank(this.afterNotifyTopics)) {
+        this.afterNotifyTopicsArray = this.afterNotifyTopics.split(",");
+      }
+      
+      //error topics
+      if(!dojo.string.isBlank(this.errorNotifyTopics)) {
+        this.errorNotifyTopicsArray = this.errorNotifyTopics.split(",");
       }
     },
 
@@ -215,12 +260,7 @@ dojo.widget.defineWidget(
           //hide indicator
           dojo.html.hide(self.indicator);
 
-          if(!dojo.string.isBlank(self.afterLoading)) {
-            self.log("Executing " + self.afterLoading);
-            eval(self.afterLoading);
-          }
-
-          self.notify(data, type, null);
+          self.notify(data, type, e);
 
           if(type == "load") {
             self.onDownloadEnd.call(self, url, data);

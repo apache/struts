@@ -112,13 +112,10 @@ public class Submit extends FormButton implements RemoteUICallBean {
     protected String showErrorTransportText;
     protected String indicator;
     protected String showLoadingText;
-    //these two are called "preInvokeJS" and "onLoadJS" on the tld
-    //Names changed here to keep some consistency
-    protected String beforeLoading;
-    protected String afterLoading;
-
-    //this one is called "resultDivId" on the tld
     protected String targets;
+    protected String beforeNotifyTopics;
+    protected String afterNotifyTopics;
+    protected String errorNotifyTopics;
 
     public Submit(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -149,10 +146,6 @@ public class Submit extends FormButton implements RemoteUICallBean {
             addParameter("errorText", findString(errorText));
         if (loadingText != null)
             addParameter("loadingText", findString(loadingText));
-        if (afterLoading != null)
-            addParameter("afterLoading", findString(afterLoading));
-        if (beforeLoading != null)
-            addParameter("beforeLoading", findString(beforeLoading));
         if (executeScripts != null)
             addParameter("executeScripts", findValue(executeScripts, Boolean.class));
         if (listenTopics != null)
@@ -173,6 +166,14 @@ public class Submit extends FormButton implements RemoteUICallBean {
             addParameter("targets", findString(targets));
         if (showLoadingText != null)
             addParameter("showLoadingText", findString(showLoadingText));
+        if (showLoadingText != null)
+            addParameter("showLoadingText", findString(showLoadingText));
+        if (beforeNotifyTopics != null)
+            addParameter("beforeNotifyTopics", findString(beforeNotifyTopics));
+        if (afterNotifyTopics != null)
+            addParameter("afterNotifyTopics", findString(afterNotifyTopics));
+        if (errorNotifyTopics != null)
+            addParameter("errorNotifyTopics", findString(errorNotifyTopics));
     }
 
     @Override
@@ -229,17 +230,6 @@ public class Submit extends FormButton implements RemoteUICallBean {
         this.errorText = errorText;
     }
 
-    @StrutsTagAttribute(name="onLoadJS", description="Deprecated. Use 'notifyTopics'. Javascript code execute after reload")
-    public void setAfterLoading(String afterLoading) {
-        this.afterLoading = afterLoading;
-    }
-
-
-    @StrutsTagAttribute(name="preInvokeJS", description="Deprecated. Use 'notifyTopics'. Javascript code execute before reload")
-    public void setBeforeLoading(String beforeLoading) {
-        this.beforeLoading = beforeLoading;
-    }
-
     @StrutsTagAttribute(description="Javascript code in the fetched content will be executed", type="Boolean", defaultValue="false")
     public void setExecuteScripts(String executeScripts) {
         this.executeScripts = executeScripts;
@@ -275,11 +265,10 @@ public class Submit extends FormButton implements RemoteUICallBean {
         this.targets = targets;
     }
 
-    @StrutsTagAttribute(description="Topics that will published when the remote call completes")
+    @StrutsTagAttribute(description="Comma delimmited list of topics that will published before and after the request, and on errors")
     public void setNotifyTopics(String notifyTopics) {
         this.notifyTopics = notifyTopics;
     }
-
 
     @StrutsTagAttribute(description="Set whether errors will be shown or not", type="Boolean", defaultValue="true")
     public void setShowErrorTransportText(String showErrorTransportText) {
@@ -330,5 +319,20 @@ public class Submit extends FormButton implements RemoteUICallBean {
     @StrutsTagAttribute(description="Label expression used for rendering a element specific label")
     public void setLabel(String label) {
         super.setLabel(label);
+    }
+    
+    @StrutsTagAttribute(description="Comma delimmited list of topics that will published after the request(if the request succeeds)")
+    public void setAfterNotifyTopics(String afterNotifyTopics) {
+        this.afterNotifyTopics = afterNotifyTopics;
+    }
+
+    @StrutsTagAttribute(description="Comma delimmited list of topics that will published before the request")
+    public void setBeforeNotifyTopics(String beforeNotifyTopics) {
+        this.beforeNotifyTopics = beforeNotifyTopics;
+    }
+
+    @StrutsTagAttribute(description="Comma delimmited list of topics that will published after the request(if the request fails)")
+    public void setErrorNotifyTopics(String errorNotifyTopics) {
+        this.errorNotifyTopics = errorNotifyTopics;
     }
 }

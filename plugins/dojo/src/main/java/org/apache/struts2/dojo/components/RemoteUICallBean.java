@@ -31,9 +31,11 @@ public interface RemoteUICallBean {
 
     void setErrorText(String errorText);
 
-    void setAfterLoading(String afterLoading);
+    void setAfterNotifyTopics(String afterNotifyTopics);
 
-    void setBeforeLoading(String beforeLoading);
+    void setBeforeNotifyTopics(String beforeNotifyTopics);
+    
+    void setErrorNotifyTopics(String errorNotifyTopics);
 
     void setExecuteScripts(String executeScripts);
 

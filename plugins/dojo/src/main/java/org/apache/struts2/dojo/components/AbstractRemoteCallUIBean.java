@@ -34,8 +34,6 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
 
     protected String href;
     protected String errorText;
-    protected String afterLoading;
-    protected String beforeLoading;
     protected String executeScripts;
     protected String loadingText;
     protected String listenTopics;
@@ -46,7 +44,10 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
     protected String showErrorTransportText;
     protected String indicator;
     protected String showLoadingText;
-
+    protected String beforeNotifyTopics;
+    protected String afterNotifyTopics;
+    protected String errorNotifyTopics;
+    
     public AbstractRemoteCallUIBean(ValueStack stack, HttpServletRequest request,
             HttpServletResponse response) {
         super(stack, request, response);
@@ -61,10 +62,6 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
             addParameter("errorText", findString(errorText));
         if (loadingText != null)
             addParameter("loadingText", findString(loadingText));
-        if (afterLoading != null)
-            addParameter("afterLoading", findString(afterLoading));
-        if (beforeLoading != null)
-            addParameter("beforeLoading", findString(beforeLoading));
         if (executeScripts != null)
             addParameter("executeScripts", findValue(executeScripts, Boolean.class));
         if (listenTopics != null)
@@ -85,6 +82,12 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
             addParameter("showErrorTransportText", true);
         if (showLoadingText != null)
             addParameter("showLoadingText", findString(showLoadingText));
+        if (beforeNotifyTopics != null)
+            addParameter("beforeNotifyTopics", findString(beforeNotifyTopics));
+        if (afterNotifyTopics != null)
+            addParameter("afterNotifyTopics", findString(afterNotifyTopics));
+        if (errorNotifyTopics != null)
+            addParameter("errorNotifyTopics", findString(errorNotifyTopics));
     }
 
     @Override
@@ -114,23 +117,6 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
         this.errorText = errorText;
     }
 
-
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setAfterLoading(java.lang.String)
-     */
-    public void setAfterLoading(String afterLoading) {
-        this.afterLoading = afterLoading;
-    }
-
-
-    /* (non-Javadoc)
-     * @see org.apache.struts2.components.RemoteUICallBean#setBeforeLoading(java.lang.String)
-     */
-    public void setBeforeLoading(String beforeLoading) {
-        this.beforeLoading = beforeLoading;
-    }
-
-
     @StrutsTagAttribute(description="Javascript code in the fetched content will be executed", type="Boolean", defaultValue="false")
     public void setExecuteScripts(String executeScripts) {
         this.executeScripts = executeScripts;
@@ -158,7 +144,7 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
         this.formId = formId;
     }
 
-    @StrutsTagAttribute(description="Topics that will published when the remote call completes")
+    @StrutsTagAttribute(description="Comma delimmited list of topics that will published before and after the request, and on errors")
     public void setNotifyTopics(String notifyTopics) {
         this.notifyTopics = notifyTopics;
     }
@@ -197,5 +183,20 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
     @StrutsTagAttribute(description="The name to set for element")
     public void setName(String name) {
         super.setName(name);
+    }
+
+    @StrutsTagAttribute(description="Comma delimmited list of topics that will published after the request(if the request succeeds)")
+    public void setAfterNotifyTopics(String afterNotifyTopics) {
+        this.afterNotifyTopics = afterNotifyTopics;
+    }
+
+    @StrutsTagAttribute(description="Comma delimmited list of topics that will published before the request")
+    public void setBeforeNotifyTopics(String beforeNotifyTopics) {
+        this.beforeNotifyTopics = beforeNotifyTopics;
+    }
+
+    @StrutsTagAttribute(description="Comma delimmited list of topics that will published after the request(if the request fails)")
+    public void setErrorNotifyTopics(String errorNotifyTopics) {
+        this.errorNotifyTopics = errorNotifyTopics;
     }
 }

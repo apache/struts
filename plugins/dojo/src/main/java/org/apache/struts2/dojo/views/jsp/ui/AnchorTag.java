@@ -52,11 +52,6 @@ public class AnchorTag extends AbstractRemoteCallUITag {
     public void setTargets(String targets) {
         this.targets = targets;
     }
-
-    @Deprecated()
-    public void setPreInvokeJS(String preInvokeJS) {
-        this.beforeLoading = preInvokeJS;
-    }
 }
 
 

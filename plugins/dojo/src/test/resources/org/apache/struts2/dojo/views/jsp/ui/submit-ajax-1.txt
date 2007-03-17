@@ -1,5 +1,3 @@
-<tr>
-    <td colspan="2"><div align="right">
 <input
   type="submit"
   dojoType="struts:Bind"
@@ -12,12 +10,10 @@
   errorText="d"
   listenTopics="e"
   notifyTopics="k"
-  beforeLoading="f"
-  afterLoading="g"
+  beforeNotifyTopics="f"
+  afterNotifyTopics="g"
+  errorNotifyTopics="m"
   handler="h"
   indicator="l"
   showLoading="true"
   />
-  </div>
-  </td>
-  </tr>

@@ -41,6 +41,7 @@ import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.UnknownHandler;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
@@ -70,6 +71,9 @@ public class CodebehindUnknownHandler implements UnknownHandler {
         this.defaultPackageName = defaultPackage;
         resultsByExtension = new LinkedHashMap<String,ResultTypeConfig>();
         PackageConfig parentPackage = configuration.getPackageConfig(defaultPackageName);
+        if (parentPackage == null) {
+            throw new ConfigurationException("Unknown parent package: "+parentPackage);
+        }    
         Map<String,ResultTypeConfig> results = parentPackage.getAllResultTypeConfigs();
         
         resultsByExtension.put("jsp", results.get("dispatcher"));

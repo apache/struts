@@ -1,3 +1,4 @@
+<#include "/${parameters.templateDir}/ajax/controlheader.ftl" />
 <#if parameters.href?exists>
   <input dojoType="struts:ComboBox"<#rt/>
   dataUrl="${parameters.href}"<#rt/>
@@ -122,6 +123,8 @@
     </@s.iterator>
   </select>    
 </#if>
-
+<#if parameters.label?if_exists != "">
+	<#include "/${parameters.templateDir}/xhtml/controlfooter.ftl" />
+</#if>	
 
 

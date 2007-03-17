@@ -1,6 +1,7 @@
 <script type="text/javascript">
     dojo.require("dojo.widget.DatePicker");
-</script>
+</script>	
+<#include "/${parameters.templateDir}/ajax/controlheader.ftl" />
 <div
    <#if parameters.type?if_exists == "date">
      dojoType="dropdowndatepicker"<#rt/>
@@ -71,3 +72,6 @@
   saveFormat="rfc"<#rt/>
   <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 ></div>
+<#if parameters.label?if_exists != "">
+	<#include "/${parameters.templateDir}/xhtml/controlfooter.ftl" />
+</#if>	

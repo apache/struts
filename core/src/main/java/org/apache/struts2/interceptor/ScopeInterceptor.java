@@ -202,25 +202,29 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
         super();
     }
 
+    // Since 2.0.7. Avoid null references on session serialization (WW-1803).
+    private static class NULLClass implements Serializable {
+      public String toString() {
+        return "NULL";
+      }
+      public boolean equals(Object obj) {
+        return obj == null || (obj instanceof NULLClass);
+      }
+    }
 
-    private static final Object NULL = new Serializable() {
-        public String toString() {
-            return "NULL";
-        }
-    };
+    private static final Object NULL = new NULLClass();
 
     private static final Object nullConvert(Object o) {
         if (o == null) {
             return NULL;
         }
 
-        if (o == NULL) {
+        if (o == NULL || NULL.equals(o)) {
             return null;
         }
 
         return o;
     }
-
 
     private static Map locks = new IdentityHashMap();
 

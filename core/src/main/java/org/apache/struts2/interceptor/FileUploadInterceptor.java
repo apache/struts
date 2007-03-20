@@ -125,10 +125,10 @@ import com.opensymphony.xwork2.util.LocalizedTextUtil;
  *
  * And then you need to set encoding <code>multipart/form-data</code> in the form where the user selects the file to upload.
  * <pre>
- *   &lt;s:form action="doUpload" method="post" enctype="multipart/form-data"&gt;
- *       &lt;s:file name="upload" label="File"/&gt;
- *       &lt;s:submit/&gt;
- *   &lt;/s:form&gt;
+ *   &lt;a:form action="doUpload" method="post" enctype="multipart/form-data"&gt;
+ *       &lt;a:file name="upload" label="File"/&gt;
+ *       &lt;a:submit/&gt;
+ *   &lt;/a:form&gt;
  * </pre>
  *
  * And then in your action code you'll have access to the File object if you provide setters according to the

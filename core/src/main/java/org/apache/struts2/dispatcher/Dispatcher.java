@@ -403,7 +403,7 @@ Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyExcepti
 
         TextProvider textProvider = container.getInstance(TextProvider.class);
         TextProviderFactory.setInstance(textProvider);
-
+        
         return container;
     }
 

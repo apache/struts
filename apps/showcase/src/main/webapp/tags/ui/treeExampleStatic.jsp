@@ -1,9 +1,8 @@
 <%@taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 <html>
 <head>
 <title>Showcase - UI Tag Example - Tree Example (Static)</title>
-<sx:head />
+<s:head theme="ajax" debug="true"  />
 </head>
 <body>
 
@@ -26,21 +25,21 @@
 
 
 <div style="float:left; margin-right: 50px;">
-<sx:tree label="parent" id="parentId" templateCssPath="/struts/tree.css" 
+<s:tree label="parent" id="parentId" theme="ajax" templateCssPath="/struts/tree.css" 
 showRootGrid="true" showGrid="true" treeSelectedTopic="treeSelected">
-    <sx:treenode label="child1" id="child1Id">
-        <sx:treenode label="grandchild1" id="grandchild1Id"/>
-        <sx:treenode label="grandchild2" id="grandchild2Id"/>
-        <sx:treenode label="grandchild3" id="grandchild3Id"/>
-    </sx:treenode>
-    <sx:treenode label="child2" id="child2Id"/>
-    <sx:treenode label="child3" id="child3Id"/>
-    <sx:treenode label="child4" id="child4Id"/>
-    <sx:treenode label="child5" id="child5Id">
-        <sx:treenode label="gChild1" id="gChild1Id"/>
-        <sx:treenode label="gChild2" id="gChild2Id"/>
-    </sx:treenode>
-</sx:tree>
+    <s:treenode theme="ajax" label="child1" id="child1Id">
+        <s:treenode theme="ajax" label="grandchild1" id="grandchild1Id"/>
+        <s:treenode theme="ajax" label="grandchild2" id="grandchild2Id"/>
+        <s:treenode theme="ajax" label="grandchild3" id="grandchild3Id"/>
+    </s:treenode>
+    <s:treenode theme="ajax" label="child2" id="child2Id"/>
+    <s:treenode theme="ajax" label="child3" id="child3Id"/>
+    <s:treenode theme="ajax" label="child4" id="child4Id"/>
+    <s:treenode theme="ajax" label="child5" id="child5Id">
+        <s:treenode theme="ajax" label="gChild1" id="gChild1Id"/>
+        <s:treenode theme="ajax" label="gChild2" id="gChild2Id"/>
+    </s:treenode>
+</s:tree>
 </div>
 
 

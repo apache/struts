@@ -264,4 +264,9 @@ public class SubmitTest extends AbstractUITagTest {
         verifyGenericProperties(tag, "xhtml", null);
     }
 
+    public void testGenericAjax() throws Exception {
+        SubmitTag tag = new SubmitTag();
+        verifyGenericProperties(tag, "ajax", null);
+    }
+
 }

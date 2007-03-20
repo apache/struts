@@ -22,7 +22,7 @@
 			<result>/tags/non-ui/actionTag/includedPage3.jsp</result>
 		</action>
 		<action name="lookAtSource">
-			<result type="plainText">/tags/non-ui/actionTag/showActionTagDemo.jsp</result>
+			<result type="plaintext">/tags/non-ui/actionTag/showActionTagDemo.jsp</result>
 		</action>
 	</package>
 	
@@ -104,10 +104,10 @@
 			<result type="freemarker">/tags/non-ui/actionPrefix/redirectActionPrefix.ftl</result>
 		</action>
         <action name="redirectActionPrefixAction">
-            <result type="redirect">redirectActionPrefix</result>
+            <result type="redirect-action">redirectActionPrefix</result>
         </action>
 		<action name="viewSource">
-			<result type="plainText">/tags/non-ui/actionPrefix/actionPrefixExample.ftl</result>
+			<result type="plaintext">/tags/non-ui/actionPrefix/actionPrefixExample.ftl</result>
 		</action>
 	</package>
 	

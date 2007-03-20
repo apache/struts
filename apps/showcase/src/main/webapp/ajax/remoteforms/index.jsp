@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 
 <html>
 <head>
@@ -22,83 +21,89 @@
 Remote form replacing another div:<br/>
 
 <div id='two' style="border: 1px solid yellow;"><b>initial content</b></div>
-<sx:form
+<s:form
         id='theForm2'
         cssStyle="border: 1px solid green;"
         action='AjaxRemoteForm'
-        method='post'>
+        method='post'
+        theme="ajax">
 
     <input type='text' name='data' value='Struts User'>
 
-    <sx:submit value="GO2" theme="ajax" targets="two"/>
+    <s:submit value="GO2" theme="ajax" targets="two"/>
 
-</sx:form>
+</s:form>
 
 
 Remote form replacing the forms content:<br/>
-<sx:form
+<s:form
         id='theForm3'
         cssStyle="border: 1px solid green;"
         action='AjaxRemoteForm'
-        method='post'>
+        method='post'
+        theme="ajax">
 
     <input type='text' name='data' value='Struts User'>
 
-    <sx:submit value="GO3" targets="theForm3"/>
+    <s:submit value="GO3" theme="ajax" targets="theForm3"/>
 
-</sx:form>
+</s:form>
 
 Remote form evaluating suplied JS on completion:<br/>
-<sx:form
+<s:form
         id='theForm4'
         cssStyle="border: 1px solid green;"
         action='AjaxRemoteForm'
-        method='post'>
+        method='post'
+        theme="ajax">
 
     <input type='text' name='data' value='Struts User'>
 
-    <sx:submit value="GO4" />
+    <s:submit value="GO4" theme="ajax"/>
 
-</sx:form>
+</s:form>
 
 Remote form replacing the forms content after confirming results:<br/>
-<sx:form
+<s:form
         id='theForm5'
         cssStyle="border: 1px solid green;"
         action='AjaxRemoteForm'
-        method='post'>
+        method='post'
+        theme="ajax">
 
     <input type='text' name='data' value='Struts User'>
 
-    <sx:submit value="GO3" targets="theForm5" />
+    <s:submit value="GO3" theme="ajax" targets="theForm5" />
 
-</sx:form>
+</s:form>
 
 Remote form replacing the forms content after running a function:<br/>
-<sx:form
+<s:form
         id='theForm6'
         cssStyle="border: 1px solid green;"
         action='AjaxRemoteForm'
-        method='post'>
+        method='post'
+        theme="ajax">
 
     <input type='text' name='data' value='Struts User'>
 
-    <sx:submit value="GO3" targets="theForm6" />
+    <s:submit value="GO3" theme="ajax" targets="theForm6" />
 
-</sx:form>
+</s:form>
 
 A form with no remote submit (so should not be ajaxified):<br/>
-<sx:form
+<s:form
         id='theForm7'
         cssStyle="border: 1px solid green;"
         action='AjaxRemoteForm'
-        method='post'>
+        method='post'
+        theme="ajax">
 
     <input type='text' name='data' value='Struts User'>
 
-    <sx:submit value="Go AWAY" targets="theForm7" />
+    <s:submit value="Go AWAY" targets="theForm7" />
 
-</sx:form>
+</s:form>
 
 </body>
 </html>

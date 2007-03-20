@@ -49,7 +49,7 @@
         
         
         <action name="showComponentTagExampleCode">
-        	<result type="plainText">/tags/ui/componentTagExample.jsp</result>
+        	<result type="plaintext">/tags/ui/componentTagExample.jsp</result>
         </action>
         
 	</package>

@@ -82,4 +82,10 @@ public class TextareaTest extends AbstractUITagTest {
         TextareaTag tag = new TextareaTag();
         verifyGenericProperties(tag, "xhtml", new String[] {"value"});
     }
+
+    public void testGenericAjax() throws Exception {
+        TextareaTag tag = new TextareaTag();
+        verifyGenericProperties(tag, "ajax", new String[] {"value"});
+    }
+
 }

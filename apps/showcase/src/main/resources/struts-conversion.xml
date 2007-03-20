@@ -18,13 +18,13 @@
 			<result name="input">enterPersonInfo.jsp</result>
 		</action>
 		<action name="showPersonJspCode">
-			<result type="plainText">/conversion/enterPersonInfo.jsp</result>
+			<result type="plaintext">/conversion/enterPersonInfo.jsp</result>
 		</action>
 		<action name="showPersonActionJavaCode">
-			<result type="plainText">/conversion/PersonAction.java.txt</result>
+			<result type="plaintext">/conversion/PersonAction.java.txt</result>
 		</action>
 		<action name="showPersonJavaCode">
-			<result type="plainText">/conversion/Person.java.txt</result>
+			<result type="plaintext">/conversion/Person.java.txt</result>
 		</action>
 		
 		
@@ -37,13 +37,13 @@
 			<result name="input">enterAddressInfo.jsp</result>
 		</action>
 		<action name="showAddressJspCode">
-			<result type="plainText">/conversion/enterAddressInfo.jsp</result>
+			<result type="plaintext">/conversion/enterAddressInfo.jsp</result>
 		</action>
 		<action name="showAddressActionJavaCode">
-			<result type="plainText">/conversion/AddressAction.java.txt</result>
+			<result type="plaintext">/conversion/AddressAction.java.txt</result>
 		</action>
 		<action name="showAddressJavaCode">
-			<result type="plainText">/conversion/Address.java.txt</result>
+			<result type="plaintext">/conversion/Address.java.txt</result>
 		</action>
 		
 		
@@ -56,19 +56,19 @@
 			<result name="input">enterOperations.jsp</result>
 		</action>
 		<action name="showEnumJspCode">
-			<result type="plainText">/conversion/enterOperations.jsp</result>
+			<result type="plaintext">/conversion/enterOperations.jsp</result>
 		</action>
 		<action name="showOperationsEnumJavaCode">
-			<result type="plainText">/conversion/OperationsEnum.java.txt</result>
+			<result type="plaintext">/conversion/OperationsEnum.java.txt</result>
 		</action>
 		<action name="showOperationEnumActionJavaCode">
-			<result type="plainText">/conversion/OperationsEnumAction.java.txt</result>
+			<result type="plaintext">/conversion/OperationsEnumAction.java.txt</result>
 		</action>
 		<action name="showEnumTypeConverterJavaCode">
-			<result type="plainText">/conversion/EnumTypeConverter.java.txt</result>
+			<result type="plaintext">/conversion/EnumTypeConverter.java.txt</result>
 		</action>
 		<action name="showOperationsEnumActionConversionProperties">
-			<result type="plainText">/conversion/OperationsEnumActionConversion.txt</result>
+			<result type="plaintext">/conversion/OperationsEnumActionConversion.txt</result>
 		</action>
 		
 	</package>

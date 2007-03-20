@@ -25,32 +25,37 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.components.Anchor;
 import org.apache.struts2.components.Component;
-import org.apache.struts2.components.UIBean;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see Anchor
  */
-public class AnchorTag extends AbstractClosingTag {
+public class AnchorTag extends AbstractRemoteCallUITag {
 
-    private static final long serialVersionUID = -1034616578492431113L;
+	private static final long serialVersionUID = -1034616578492431113L;
 
-    protected String href;
-    
+    protected String targets;
+    protected String preInvokeJS;
+
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Anchor(stack, req, res);
     }
-    
+
     protected void populateParams() {
         super.populateParams();
 
-        Anchor anchor = (Anchor) component;
-        anchor.setHref(href);
+        Anchor link = (Anchor) component;
+        link.setTargets(targets);
     }
-    
-    public void setHref(String href) {
-        this.href = href;
+
+    public void setTargets(String targets) {
+        this.targets = targets;
+    }
+
+    @Deprecated()
+    public void setPreInvokeJS(String preInvokeJS) {
+        this.beforeLoading = preInvokeJS;
     }
 }
 

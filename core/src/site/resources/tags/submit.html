@@ -76,12 +76,68 @@ Please do not edit it directly.
 					<td align="left" valign="top">Set the html disabled attribute on rendered html element</td>
 				</tr>
 				<tr>
+					<td align="left" valign="top">errorText</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">The text to display to the user if the is an error fetching the content</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">executeScripts</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">Boolean</td>
+					<td align="left" valign="top">Javascript code in the fetched content will be executed</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">formFilter</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Function name used to filter the fields of the form.</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">formId</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Form id whose fields will be serialized and passed as parameters</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">handler</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Javascript function name that will make the request</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">href</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">The URL to call to obtain the content. Note: If used with ajax context, the value must be set as an url tag value.</td>
+				</tr>
+				<tr>
 					<td align="left" valign="top">id</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">id for referencing element. For UI and form tags it will be used as HTML id attribute</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">indicator</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Set indicator</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">key</td>
@@ -108,6 +164,22 @@ Please do not edit it directly.
 					<td align="left" valign="top">Define label position of form element (top/left)</td>
 				</tr>
 				<tr>
+					<td align="left" valign="top">listenTopics</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Topic that will trigger the remote call</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">loadingText</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">Loading...</td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Text to be shown while content is being fetched</td>
+				</tr>
+				<tr>
 					<td align="left" valign="top">method</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
@@ -122,6 +194,22 @@ Please do not edit it directly.
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">The name to set for element</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">notifyTopics</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Topics that will published when the remote call completes</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">onLoadJS</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Deprecated. Use 'notifyTopics'. Javascript code execute after reload</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">onblur</td>
@@ -236,6 +324,14 @@ Please do not edit it directly.
 					<td align="left" valign="top">Set the html onselect attribute on rendered html element</td>
 				</tr>
 				<tr>
+					<td align="left" valign="top">preInvokeJS</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Deprecated. Use 'notifyTopics'. Javascript code execute before reload</td>
+				</tr>
+				<tr>
 					<td align="left" valign="top">required</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">false</td>
@@ -252,6 +348,22 @@ Please do not edit it directly.
 					<td align="left" valign="top">Define required position of required form element (left|right)</td>
 				</tr>
 				<tr>
+					<td align="left" valign="top">showErrorTransportText</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">Boolean</td>
+					<td align="left" valign="top">Set whether errors will be shown or not</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">showLoadingText</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">Boolean</td>
+					<td align="left" valign="top">Show loading text on targets</td>
+				</tr>
+				<tr>
 					<td align="left" valign="top">src</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
@@ -266,6 +378,14 @@ Please do not edit it directly.
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">Set the html tabindex attribute on rendered html element</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">targets</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Comma delimited list of ids of the elements whose content will be updated</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">template</td>
@@ -289,7 +409,7 @@ Please do not edit it directly.
 					<td align="left" valign="top"></td>
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">The theme (other than default) to use for rendering the element</td>
+					<td align="left" valign="top">The theme to use for the element. <b>This tag will usually use the ajax theme.</b></td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">title</td>

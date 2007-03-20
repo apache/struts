@@ -53,7 +53,7 @@ END SNIPPET: supported-validators
                     addError(field, error);
                     errors = true;
                 }
-            }
+            } 
             <#elseif validator.validatorType = "regex">
             if (field.value != null && !field.value.match("${validator.expression?js_string}")) {
                 addError(field, error);

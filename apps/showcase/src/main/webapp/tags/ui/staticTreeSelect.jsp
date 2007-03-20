@@ -1,5 +1,4 @@
 <%@taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 
 <%
     request.setAttribute("decorator", "none");

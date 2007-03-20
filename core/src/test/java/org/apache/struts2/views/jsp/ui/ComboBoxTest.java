@@ -46,6 +46,12 @@ public class ComboBoxTest extends AbstractUITagTest {
         verifyGenericProperties(tag, "xhtml", null);
     }
 
+    public void testGenericAjax() throws Exception {
+        ComboBoxTag tag = new ComboBoxTag();
+        prepareTagGeneric(tag);
+        verifyGenericProperties(tag, "ajax", null);
+    }
+
     private void prepareTagGeneric(ComboBoxTag tag) {
         TestAction testAction = (TestAction) action;
         ArrayList collection = new ArrayList();

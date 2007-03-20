@@ -37,7 +37,19 @@ public class AnchorTest extends AbstractUITagTest {
         tag.setPageContext(pageContext);
 
         tag.setId("mylink");
+        tag.setTheme("ajax");
         tag.setHref("a");
+        tag.setErrorText("c");
+        tag.setLoadingText("d");
+        tag.setAfterLoading("e");
+        tag.setBeforeLoading("f");
+        tag.setListenTopics("g");
+        tag.setTargets("h");
+        tag.setHandler("i");
+        tag.setNotifyTopics("j");
+        tag.setIndicator("k");
+        tag.setShowErrorTransportText("true");
+        tag.setShowLoadingText("true");
         tag.doStartTag();
         tag.doEndTag();
 

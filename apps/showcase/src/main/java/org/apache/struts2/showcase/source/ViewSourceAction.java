@@ -90,7 +90,6 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
         return SUCCESS;
     }
 
-
     /**
      * @param className the className to set
      */

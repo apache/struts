@@ -5,7 +5,7 @@
     response.setHeader("Pragma", "no-cache");
     response.setHeader("Cache-Control", "no-cache");
     response.setDateHeader("Expires", 0);
-    
+
     // Calculate the view sources url
     String sourceUrl = request.getContextPath()+"/viewSource.action";
     com.opensymphony.xwork2.ActionInvocation inv = com.opensymphony.xwork2.ActionContext.getContext().getActionInvocation();
@@ -14,9 +14,9 @@
         com.opensymphony.xwork2.util.location.Location loc = inv.getProxy().getConfig().getLocation();
         sourceUrl += "?config="+(loc != null ? loc.getURI()+":"+loc.getLineNumber() : "");
         sourceUrl += "&className="+inv.getProxy().getConfig().getClassName();
-        
+
         if (inv.getResult() != null && inv.getResult() instanceof org.apache.struts2.dispatcher.StrutsResultSupport) {
-	        sourceUrl += "&page="+mapping.getNamespace()+"/"+((org.apache.struts2.dispatcher.StrutsResultSupport)inv.getResult()).getLastFinalLocation();
+          sourceUrl += "&page="+mapping.getNamespace()+"/"+((org.apache.struts2.dispatcher.StrutsResultSupport)inv.getResult()).getLastFinalLocation();
         }
     } else {
         sourceUrl += "?page="+request.getServletPath();
@@ -104,11 +104,11 @@
 
     </div><!-- end content -->
 
-	<div>
-    	<p>
-    		<a href="<%=sourceUrl %>">View Sources</a>
-    	</p>
-	</div>
+  <div>
+      <p>
+        <a href="<%=sourceUrl %>">View Sources</a>
+      </p>
+  </div>
     <div id="footer" class="clearfix">
         <p>Copyright &copy; 2003-<s:property value="#dateAction.now.year + 1900" /> The Apache Software Foundation.</p>
     </div><!-- end footer -->

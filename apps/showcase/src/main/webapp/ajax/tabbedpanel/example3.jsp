@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 
 <html>
 <head>
@@ -31,24 +30,24 @@
         <tr>
             <td align="top">
                 <!--// START SNIPPET: tabbedpanel-tag-->
-                <sx:tabbedpanel id="test2" cssStyle="width: 500px; height: 300px;" doLayout="true">
-                      <sx:div id="left" label="left">
+                <s:tabbedPanel id="test2" theme="simple" cssStyle="width: 500px; height: 300px;" doLayout="true">
+                      <s:div theme="ajax"  id="left" label="left">
                           This is the left pane<br/>
                           <s:form >
                               <s:textfield name="tt" label="Test Text" />  <br/>
                               <s:textfield name="tt2" label="Test Text2" />
                           </s:form>
-                      </sx:div>
-                      <sx:div href="%{ajaxTest}" id="ryh1" label="remote one" />
-                      <sx:div id="middle" label="middle">
+                      </s:div>
+                      <s:div theme="ajax"  href="%{ajaxTest}" id="ryh1" label="remote one" />
+                      <s:div theme="ajax"  id="middle" label="middle">
                           middle tab<br/>
                           <s:form >
                               <s:textfield name="tt" label="Test Text44" />  <br/>
                               <s:textfield name="tt2" label="Test Text442" />
                           </s:form>
-                      </sx:div>
-                      <sx:div href="%{ajaxTest}"  id="ryh21" label="remote right" />
-                  </sx:tabbedpanel>
+                      </s:div>
+                      <s:div theme="ajax" href="%{ajaxTest}"  id="ryh21" label="remote right" />
+                  </s:tabbedPanel>
                 <!--// END SNIPPET: tabbedpanel-tag-->
              </td>
         </tr>

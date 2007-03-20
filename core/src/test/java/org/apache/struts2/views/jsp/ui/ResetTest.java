@@ -126,4 +126,10 @@ public class ResetTest extends AbstractUITagTest {
         ResetTag tag = new ResetTag();
         verifyGenericProperties(tag, "xhtml", null);
     }
+
+    public void testGenericAjax() throws Exception {
+        ResetTag tag = new ResetTag();
+        verifyGenericProperties(tag, "ajax", null);
+    }
+
 }

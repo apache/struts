@@ -35,7 +35,32 @@ public class HeadTag extends AbstractUITag {
 
     private static final long serialVersionUID = 6876765769175246030L;
 
+    private String calendarcss;
+    private String debug;
+
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Head(stack, req, res);
+    }
+
+    protected void populateParams() {
+        super.populateParams();
+        if (calendarcss != null) {
+            ((Head) component).setCalendarcss(calendarcss);
+        }
+        if (debug != null) {
+            ((Head) component).setDebug(Boolean.valueOf(debug).booleanValue());
+        }
+    }
+
+    public String getCalendarcss() {
+        return calendarcss;
+    }
+
+    public void setCalendarcss(String calendarcss) {
+        this.calendarcss = calendarcss;
+    }
+
+    public void setDebug(String debug) {
+        this.debug = debug;
     }
 }

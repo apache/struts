@@ -100,7 +100,7 @@ public class Set extends Component {
         } else {
         	o = findValue(value);
         }
-
+        
         body="";
 
         String name;

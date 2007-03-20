@@ -53,4 +53,10 @@ public class PasswordTest extends AbstractUITagTest {
         PasswordTag tag = new PasswordTag();
         verifyGenericProperties(tag, "xhtml", new String[]{"value"});
     }
+
+    public void testGenericAjax() throws Exception {
+        PasswordTag tag = new PasswordTag();
+        verifyGenericProperties(tag, "ajax", new String[]{"value"});
+    }
+
 }

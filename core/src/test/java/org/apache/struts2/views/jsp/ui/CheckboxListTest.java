@@ -60,6 +60,12 @@ public class CheckboxListTest extends AbstractUITagTest {
         verifyGenericProperties(tag, "xhtml", new String[]{"tabindex","cssClass","cssStyle","id"});
     }
 
+    public void testGenericAjax() throws Exception {
+        CheckboxListTag tag = new CheckboxListTag();
+        prepareTagGeneric(tag);
+        verifyGenericProperties(tag, "ajax", new String[]{"tabindex","cssClass","cssStyle","id"});
+    }
+
     private void prepareTagGeneric(CheckboxListTag tag) {
         TestAction testAction = (TestAction) action;
         Collection collection = new ArrayList(2);

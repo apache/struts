@@ -188,7 +188,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *          <td>html javascript onclick attribute</td>
  *       </tr>
  *       <tr>
- *          <td>ondblclick</td>
+ *          <td>ondbclick</td>
  *          <td>simple</td>
  *          <td>String</td>
  *          <td>html javascript ondbclick attribute</td>
@@ -311,31 +311,31 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <!-- START SNIPPET: tooltipdescription -->
  *
- * Every Form UI component (in xhtml / css_xhtml or any other that extends them) can
- * have tooltips assigned to them. The Form component's tooltip related attribute, once
- * defined, will be applied to all form UI components that are created under it unless
- * explicitly overriden by having the Form UI component itself defined with their own tooltip attribute.
+ * Every Form UI component (in xhtml / css_xhtml or any others that extends of them) could
+ * have tooltip assigned to a them. The Form component's tooltip related attribute once
+ * defined will be applicable to all form UI component that is created under it unless
+ * explicitly overriden by having the Form UI component itself defined that tooltip attribute.
  *
  * <p/>
  *
- * In Example 1, the textfield will inherit the tooltipDelay and tooltipIcon attribte from
- * its containing form. In other words, although it doesn't define a tooltipAboveMousePointer
- * attribute, it will have that attribute inherited from its containing form.
+ * In Example 1, the textfield will inherit the tooltipDelay adn tooltipIcon attribte from
+ * its containing form. In other words, although it doesn't defined a tooltipAboveMousePointer
+ * attribute, it will have that attributes inherited from its containing form.
  *
  * <p/>
  *
  * In Example 2, the the textfield will inherite both the tooltipDelay and
- * tooltipIcon attribute from its containing form, but the tooltipDelay
+ * tooltipIcon attribute from its containing form but tooltipDelay
  * attribute is overriden at the textfield itself. Hence, the textfield actually will
- * have its tooltipIcon defined as /myImages/myIcon.gif, inherited from its containing form, and
- * tooltipDelay defined as 5000.
+ * have tooltipIcon defined as /myImages/myIcon.gif, inherited from its containing form and
+ * tooltipDelay defined as 5000, due to overriden at the textfield itself.
  *
  * <p/>
  *
- * Example 3, 4 and 5 show different ways of setting the tooltipConfig attribute.<br/>
- * <b>Example 3:</b> Set tooltip config through the body of the param tag<br/>
- * <b>Example 4:</b> Set tooltip config through the value attribute of the param tag<br/>
- * <b>Example 5:</b> Set tooltip config through the tooltipConfig attribute of the component tag<br/>
+ * Example 3, 4 and 5 shows different way of setting the tooltipConfig attribute.<br/>
+ * <b>Example 3:</b>Set tooltip config through body of param tag<br/>
+ * <b>Example 4:</b>Set tooltip config through value attribute of param tag<br/>
+ * <b>Example 5:</b>Set tooltip config through tooltipConfig attribute of component tag<br/>
  *
  * <!-- END SNIPPET: tooltipdescription -->
  *
@@ -346,7 +346,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;!-- Example 1: --&gt;
  * &lt;s:form
  *          tooltipConfig="#{'tooltipDelay':'500',
- *                           'tooltipIcon':'/myImages/myIcon.gif'}" .... &gt;
+ *                           'tooltipIcon='/myImages/myIcon.gif'}" .... &gt;
  *   ....
  *     &lt;s:textfield label="Customer Name" tooltip="Enter the customer name" .... /&gt;
  *   ....
@@ -367,7 +367,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;-- Example 3: --&gt;
  * &lt;s:textfield
  *        label="Customer Name"
- *        tooltip="One of our customer Details"&gt;
+ *        tooltip="One of our customer Details'"&gt;
  *        &lt;s:param name="tooltipConfig"&gt;
  *             tooltipDelay = 500 |
  *             tooltipIcon = /myImages/myIcon.gif

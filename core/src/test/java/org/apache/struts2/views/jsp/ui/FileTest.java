@@ -77,4 +77,10 @@ public class FileTest extends AbstractUITagTest {
         FileTag tag = new FileTag();
         verifyGenericProperties(tag, "xhtml", null);
     }
+
+    public void testGenericAjax() throws Exception {
+        FileTag tag = new FileTag();
+        verifyGenericProperties(tag, "ajax", null);
+    }
+
 }

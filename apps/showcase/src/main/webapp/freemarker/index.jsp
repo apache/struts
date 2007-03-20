@@ -11,8 +11,7 @@
         <li>
             <s:url id="url" action="customFreemarkerManagerDemo" namespace="/freemarker" />
             <s:a href="%{#url}">Demo of usage of a Custom Freemarker Manager</s:a>
-        </li>
-        <li>
+            <p/>
             <s:url id="url" action="standardTags" namespace="/freemarker" />
             <s:a href="%{#url}">Demo of Standard Struts Freemarker Tags</s:a>
         </li>

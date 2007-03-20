@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 
 <html>
 <head>
@@ -13,7 +12,7 @@
    function after() {alert("after request");}
    function handler(widget, node) {
      alert('I will handle this myself!');
-     dojo.byId(widget.targetsArray[0]).innerHTML = "Done";
+   dojo.byId(widget.targetsArray[0]).innerHTML = "Done";
    }
 
     dojo.event.topic.subscribe("/after", function(data, type, e){
@@ -34,19 +33,19 @@
 
 A submit button, with an indicator
 <img id="indicator" src="${pageContext.request.contextPath}/images/indicator.gif" alt="Loading..." style="display:none"/>
-<sx:submit type="submit" value="submit" targets="t1" href="%{ajaxTest}" indicator="indicator"/>
+<s:submit type="submit" theme="ajax" value="submit" targets="t1" href="%{ajaxTest}" align="left" indicator="indicator"/>
 
 <br/><br/>
 
 A submit button, with "notifyTopics"
-<sx:submit type="submit" value="submit" targets="t1" href="%{ajaxTest}" notifyTopics="/after"/>
+<s:submit type="submit" theme="ajax" value="submit" targets="t1" href="%{ajaxTest}" align="left" notifyTopics="/after"/>
 
 <br/><br/>
 
 Use an image as submit
 
-<sx:submit type="image" label="Alt Text" targets="t1"
-  src="${pageContext.request.contextPath}/images/struts-power.gif" href="%{ajaxTest}" />
+<s:submit type="image" theme="ajax" label="Alt Text" targets="t1"
+  src="${pageContext.request.contextPath}/images/struts-power.gif" href="%{ajaxTest}" align="left" />
 <br/><br/>
 
 <label for="textInput">Text to be echoed</label>
@@ -55,7 +54,7 @@ Use an image as submit
 Use a button as submit (custom text)
 <s:form id="form" action="AjaxTest">
   <input type=textbox name="data">
-  <sx:submit type="button" label="Update Content" targets="t1"  id="ajaxbtn"/>
+  <s:submit type="button" theme="ajax" label="Update Content" targets="t1"  id="ajaxbtn"/>
 </s:form>
 
 <br/><br/>

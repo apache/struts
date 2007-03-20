@@ -30,6 +30,7 @@ import org.apache.struts2.StrutsException;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.LocaleProvider;
+import com.opensymphony.xwork2.TextProviderSupport;
 import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;

@@ -22,6 +22,8 @@
 
     <include file="struts-hangman.xml" />
 
+    <include file="struts-continuations.xml"/>
+
     <include file="struts-tags.xml"/>
 
     <include file="struts-validation.xml" />
@@ -59,7 +61,7 @@
             <interceptor-stack name="crudStack">
               <interceptor-ref name="checkbox" />
                 <interceptor-ref name="params" />
-        <interceptor-ref name="staticParams" />
+        <interceptor-ref name="static-params" />
                 <interceptor-ref name="defaultStack" />
             </interceptor-stack>
         </interceptors>

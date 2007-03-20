@@ -81,7 +81,7 @@ import com.opensymphony.xwork2.util.location.LocatableProperties;
  *     <td>com.opensymphony.xwork2.util.ObjectTypeDeterminer</td>
  *     <td>struts.objectTypeDeterminer</td>
  *     <td>singleton</td>
- *     <td>Determines what the key and and element class of a Map or Collection should be</td>
+ *     <td>Determines what the key and element class of a Map or Collection should be</td>
  *   </tr>
  *   <tr>
  *     <td>org.apache.struts2.dispatcher.mapper.ActionMapper</td>

@@ -117,11 +117,11 @@ import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
  * &lt;html&gt;
  *   &lt;head&gt;
  *     &lt;title&gt;Please wait&lt;/title&gt;
- *     &lt;meta http-equiv="refresh" content="5;url=&lt;a:url includeParams="all" /&gt;"/&gt;
+ *     &lt;meta http-equiv="refresh" content="5;url=&lt;s:url includeParams="all" /&gt;"/&gt;
  *   &lt;/head&gt;
  *   &lt;body&gt;
  *     Please wait while we process your request.
- *     Click &lt;a href="&lt;a:url includeParams="all" /&gt;">&lt;/a&gt; if this page does not reload automatically.
+ *     Click &lt;a href="&lt;s:url includeParams="all" /&gt;">&lt;/a&gt; if this page does not reload automatically.
  *   &lt;/body&gt;
  * &lt;/html&gt;
  * </pre>

@@ -87,11 +87,11 @@ import com.opensymphony.xwork2.inject.Container;
  *
  * <pre>
  *  &lt;!-- START SNIPPET: method-example --&gt;
- *  &lt;a:form action=&quot;baz&quot;&gt;
- *      &lt;a:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
- *      &lt;a:submit value=&quot;Create person&quot;/&gt;
- *      &lt;a:submit name=&quot;method:anotherMethod&quot; value=&quot;Cancel&quot;/&gt;
- *  &lt;/a:form&gt;
+ *  &lt;s:form action=&quot;baz&quot;&gt;
+ *      &lt;s:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
+ *      &lt;s:submit value=&quot;Create person&quot;/&gt;
+ *      &lt;s:submit name=&quot;method:anotherMethod&quot; value=&quot;Cancel&quot;/&gt;
+ *  &lt;/s:form&gt;
  *  &lt;!-- END SNIPPET: method-example --&gt;
  * </pre>
  *
@@ -108,11 +108,11 @@ import com.opensymphony.xwork2.inject.Container;
  *
  * <pre>
  *  &lt;!-- START SNIPPET: action-example --&gt;
- *  &lt;a:form action=&quot;baz&quot;&gt;
- *      &lt;a:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
- *      &lt;a:submit value=&quot;Create person&quot;/&gt;
- *      &lt;a:submit name=&quot;action:anotherAction&quot; value=&quot;Cancel&quot;/&gt;
- *  &lt;/a:form&gt;
+ *  &lt;s:form action=&quot;baz&quot;&gt;
+ *      &lt;s:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
+ *      &lt;s:submit value=&quot;Create person&quot;/&gt;
+ *      &lt;s:submit name=&quot;action:anotherAction&quot; value=&quot;Cancel&quot;/&gt;
+ *  &lt;/s:form&gt;
  *  &lt;!-- END SNIPPET: action-example --&gt;
  * </pre>
  *
@@ -129,11 +129,11 @@ import com.opensymphony.xwork2.inject.Container;
  *
  * <pre>
  *  &lt;!-- START SNIPPET: redirect-example --&gt;
- *  &lt;a:form action=&quot;baz&quot;&gt;
- *      &lt;a:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
- *      &lt;a:submit value=&quot;Create person&quot;/&gt;
- *      &lt;a:submit name=&quot;redirect:www.google.com&quot; value=&quot;Cancel&quot;/&gt;
- *  &lt;/a:form&gt;
+ *  &lt;s:form action=&quot;baz&quot;&gt;
+ *      &lt;s:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
+ *      &lt;s:submit value=&quot;Create person&quot;/&gt;
+ *      &lt;s:submit name=&quot;redirect:www.google.com&quot; value=&quot;Cancel&quot;/&gt;
+ *  &lt;/s:form&gt;
  *  &lt;!-- END SNIPPET: redirect-example --&gt;
  * </pre>
  *
@@ -151,11 +151,11 @@ import com.opensymphony.xwork2.inject.Container;
  *
  * <pre>
  *  &lt;!-- START SNIPPET: redirect-action-example --&gt;
- *  &lt;a:form action=&quot;baz&quot;&gt;
- *      &lt;a:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
- *      &lt;a:submit value=&quot;Create person&quot;/&gt;
- *      &lt;a:submit name=&quot;redirect-action:dashboard&quot; value=&quot;Cancel&quot;/&gt;
- *  &lt;/a:form&gt;
+ *  &lt;s:form action=&quot;baz&quot;&gt;
+ *      &lt;s:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
+ *      &lt;s:submit value=&quot;Create person&quot;/&gt;
+ *      &lt;s:submit name=&quot;redirect-action:dashboard&quot; value=&quot;Cancel&quot;/&gt;
+ *  &lt;/s:form&gt;
  *  &lt;!-- END SNIPPET: redirect-action-example --&gt;
  * </pre>
  *

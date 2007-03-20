@@ -36,6 +36,22 @@ Please do not edit it directly.
 					<td align="left" valign="top">Set the html accesskey attribute on rendered html element</td>
 				</tr>
 				<tr>
+					<td align="left" valign="top">afterNotifyTopics</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Comma delimmited list of topics that will published after the request(if the request succeeds)</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">beforeNotifyTopics</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Comma delimmited list of topics that will published before the request</td>
+				</tr>
+				<tr>
 					<td align="left" valign="top">cssClass</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
@@ -58,6 +74,14 @@ Please do not edit it directly.
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">Set the html disabled attribute on rendered html element</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">errorNotifyTopics</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Comma delimmited list of topics that will published after the request(if the request fails)</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">errorText</td>
@@ -177,15 +201,7 @@ Please do not edit it directly.
 					<td align="left" valign="top"></td>
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Topics that will published when the remote call completes</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">onLoadJS</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Deprecated. Use 'notifyTopics'. Javascript code execute after reload</td>
+					<td align="left" valign="top">Comma delimmited list of topics that will published before and after the request, and on errors</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">onblur</td>
@@ -306,14 +322,6 @@ Please do not edit it directly.
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">Set template to use for opening the rendered html.</td>
-				</tr>
-				<tr>
-					<td align="left" valign="top">preInvokeJS</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Deprecated. Use 'notifyTopics'. Javascript code execute before reload</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">required</td>

@@ -46,8 +46,10 @@ END SNIPPET: supported-validators
                     while (value.substring(value.length-1, value.length) == ' ')
                         value = value.substring(0, value.length-1);
                 </#if>
-                if((${validator.minLength} > -1 && value.length < ${validator.minLength}) ||
-                        (${validator.maxLength} > -1 && value.length > ${validator.maxLength})) {
+                if(value.length > 0 && (
+                        (${validator.minLength} > -1 && value.length < ${validator.minLength}) ||
+                        (${validator.maxLength} > -1 && value.length > ${validator.maxLength})
+                    )) {
                     addError(field, error);
                     errors = true;
                 }

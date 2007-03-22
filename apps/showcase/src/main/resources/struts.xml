@@ -108,7 +108,7 @@
             <interceptor-ref name="basicStack"/>
         </action>
         <action name="edit-*" class="org.apache.struts2.showcase.action.EmployeeAction">
-      <param name="empId">{1}</param>
+      		<param name="empId">{1}</param>
             <result>/empmanager/editEmployee.jsp</result>
             <interceptor-ref name="crudStack"><param name="validation.excludeMethods">execute</param></interceptor-ref>
         </action>

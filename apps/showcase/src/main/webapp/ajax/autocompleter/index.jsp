@@ -72,7 +72,7 @@ Disabled combobox (disabled="true")
 Link two autocompleter elements. When the selected value in 'Autocompleter 1' changes, the available values in 'Autocompleter 2' will change also.
 <br/>
 <form id="selectForm">
-  <p>Autocompleter 1 <sx:autocompleter  name="select" list="{'fruits','colors'}"  value="colors" notifyTopics="/Changed" forceValidOption="true" id="sel"/></p>
+  <p>Autocompleter 1 <sx:autocompleter  name="select" list="{'fruits','colors'}"  value="colors" valueNotifyTopics="/Changed" forceValidOption="true" id="sel"/></p>
 </form>
 Autocompleter 2 <sx:autocompleter  href="%{#autoex}" autoComplete="false" formId="selectForm" listenTopics="/Changed" forceValidOption="true" id="ops"/>
 

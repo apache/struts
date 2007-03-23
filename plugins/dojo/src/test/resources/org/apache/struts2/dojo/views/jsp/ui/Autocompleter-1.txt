@@ -11,6 +11,7 @@
  name="f"
  keyName="i"
  initialValue="g"
+ valueNotifyTopics="l"
  indicator="h"
  loadOnType="true"
  loadMinimum="3"

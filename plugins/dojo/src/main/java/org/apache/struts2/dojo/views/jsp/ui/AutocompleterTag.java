@@ -55,6 +55,10 @@ public class AutocompleterTag extends ComboBoxTag {
     protected String iconPath;
     protected String keyName;
     protected String dataFieldName;
+    protected String beforeNotifyTopics;
+    protected String afterNotifyTopics;
+    protected String errorNotifyTopics;
+    protected String valueNotifyTopics;
     
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Autocompleter(stack, req, res);
@@ -84,6 +88,10 @@ public class AutocompleterTag extends ComboBoxTag {
         autocompleter.setIconPath(iconPath);
         autocompleter.setKeyName(keyName);
         autocompleter.setDataFieldName(dataFieldName);
+        autocompleter.setAfterNotifyTopics(afterNotifyTopics);
+        autocompleter.setBeforeNotifyTopics(beforeNotifyTopics);
+        autocompleter.setErrorNotifyTopics(errorNotifyTopics);
+        autocompleter.setValueNotifyTopics(valueNotifyTopics);
     }
 
     public void setAutoComplete(String autoComplete) {
@@ -168,5 +176,21 @@ public class AutocompleterTag extends ComboBoxTag {
 
     public void setDataFieldName(String dataFieldName) {
         this.dataFieldName = dataFieldName;
+    }
+    
+    public void setAfterNotifyTopics(String afterNotifyTopics) {
+        this.afterNotifyTopics = afterNotifyTopics;
+    }
+
+    public void setBeforeNotifyTopics(String beforeNotifyTopics) {
+        this.beforeNotifyTopics = beforeNotifyTopics;
+    }
+
+    public void setErrorNotifyTopics(String errorNotifyTopics) {
+        this.errorNotifyTopics = errorNotifyTopics;
+    }
+
+    public void setValueNotifyTopics(String valueNotifyTopics) {
+        this.valueNotifyTopics = valueNotifyTopics;
     }
 }

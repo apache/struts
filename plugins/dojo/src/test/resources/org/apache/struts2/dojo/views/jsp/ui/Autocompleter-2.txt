@@ -9,6 +9,7 @@
  dropdownHeight="10"
  name="f"
  keyName="fKey"
+ valueNotifyTopics="k"
  visibleDownArrow="true"
  buttonSrc="i"
  templateCssPath="j"

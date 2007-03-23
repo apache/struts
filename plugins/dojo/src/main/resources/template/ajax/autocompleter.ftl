@@ -71,6 +71,18 @@
 <#if parameters.notifyTopics?if_exists != "">
  notifyTopics="${parameters.notifyTopics?html}"<#rt/>
 </#if>
+<#if parameters.beforeNotifyTopics?if_exists != "">
+  beforeNotifyTopics="${parameters.beforeNotifyTopics?html}"<#rt/>
+</#if>
+<#if parameters.afterNotifyTopics?if_exists != "">
+  afterNotifyTopics="${parameters.afterNotifyTopics?html}"<#rt/>
+</#if>
+<#if parameters.errorNotifyTopics?if_exists != "">
+  errorNotifyTopics="${parameters.errorNotifyTopics?html}"<#rt/>
+</#if>
+<#if parameters.valueNotifyTopics?if_exists != "">
+  valueNotifyTopics="${parameters.valueNotifyTopics?html}"<#rt/>
+</#if>
 <#if parameters.indicator?if_exists != "">
  indicator="${parameters.indicator?html}"<#rt/>
 </#if>

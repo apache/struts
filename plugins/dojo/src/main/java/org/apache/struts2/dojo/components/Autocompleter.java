@@ -71,6 +71,10 @@ public class Autocompleter extends ComboBox {
     protected String iconPath;
     protected String keyName;
     protected String dataFieldName;
+    protected String beforeNotifyTopics;
+    protected String afterNotifyTopics;
+    protected String errorNotifyTopics;
+    protected String valueNotifyTopics;
     
     public Autocompleter(ValueStack stack, HttpServletRequest request,
             HttpServletResponse response) {
@@ -144,6 +148,15 @@ public class Autocompleter extends ComboBox {
         
         String keyNameExpr = "%{" + keyName + "}";
         addParameter("key", findString(keyNameExpr));
+        
+        if (beforeNotifyTopics != null)
+            addParameter("beforeNotifyTopics", findString(beforeNotifyTopics));
+        if (afterNotifyTopics != null)
+            addParameter("afterNotifyTopics", findString(afterNotifyTopics));
+        if (errorNotifyTopics != null)
+            addParameter("errorNotifyTopics", findString(errorNotifyTopics));
+        if (valueNotifyTopics != null)
+            addParameter("valueNotifyTopics", findString(valueNotifyTopics));
     }
 
     @Override
@@ -291,5 +304,25 @@ public class Autocompleter extends ComboBox {
     @StrutsTagAttribute(description="Preset the value of input element")
     public void setValue(String arg0) {
         super.setValue(arg0);
+    }
+    
+    @StrutsTagAttribute(description="Comma delimmited list of topics that will published after the request(if the request succeeds)")
+    public void setAfterNotifyTopics(String afterNotifyTopics) {
+        this.afterNotifyTopics = afterNotifyTopics;
+    }
+
+    @StrutsTagAttribute(description="Comma delimmited list of topics that will published before the request")
+    public void setBeforeNotifyTopics(String beforeNotifyTopics) {
+        this.beforeNotifyTopics = beforeNotifyTopics;
+    }
+
+    @StrutsTagAttribute(description="Comma delimmited list of topics that will published after the request(if the request fails)")
+    public void setErrorNotifyTopics(String errorNotifyTopics) {
+        this.errorNotifyTopics = errorNotifyTopics;
+    }
+
+    @StrutsTagAttribute(description="Comma delimmited list of topics that will published when a value is selected")
+    public void setValueNotifyTopics(String valueNotifyTopics) {
+        this.valueNotifyTopics = valueNotifyTopics;
     }
 }

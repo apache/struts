@@ -183,12 +183,12 @@ dojo.widget.defineWidget(
     this.notifyTo(topicsArray, data, type, e);
   },
   
-  notifyTo : function(topicsArray, data, e) {
+  notifyTo : function(topicsArray, data, type, e) {
     var self = this;
     if(topicsArray) {
       dojo.lang.forEach(topicsArray, function(topic) {
         try {
-          dojo.event.topic.publish(topic, data, e);
+          dojo.event.topic.publish(topic, data, type, e);
         } catch(ex){
           self.log(ex);
         }

@@ -59,8 +59,9 @@ struts.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ li
       url: url,
       formNode: dojo.byId(this.formId),
       formFilter: window[this.formFilter],
-      load: dojo.lang.hitch(this, function(type, data, evt) {
-        //show indicator
+      handler: dojo.lang.hitch(this, function(type, data, evt) {
+        this.firstRequest = false;
+        //hide indicator
         dojo.html.hide(this.cbox.indicator);
 
         //if notifyTopics is published on the first request (onload)
@@ -92,7 +93,6 @@ struts.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ li
            data = arrData;
         }
         this.setData(data);
-        this.firstRequest = false;
       }),
       mimetype: "text/json"
     });
@@ -215,7 +215,14 @@ dojo.widget.defineWidget(
   listenTopics : "",
   notifyTopics : "",
   notifyTopicsArray : null,
-
+  beforeNotifyTopics : "",
+  beforeNotifyTopicsArray : null,
+  afterNotifyTopics : "",
+  afterNotifyTopicsArray : null,
+  errorNotifyTopics : "",
+  errorNotifyTopicsArray : null,
+  valueNotifyTopics : "",
+  valueNotifyTopicsArray : null,
   indicator : "",
 
   formId : "",
@@ -234,7 +241,7 @@ dojo.widget.defineWidget(
   //dojo has "stringstart" which is invalid
   searchType: "STARTSTRING",
 
-  dataFieldName : ""  ,
+  dataFieldName : "",
   keyName: "",
   templateCssPath: dojo.uri.dojoUri("struts/ComboBox.css"),
   //from Dojo's  ComboBox
@@ -341,8 +348,29 @@ dojo.widget.defineWidget(
       }
     }
 
+    //notify topics
     if(!dojo.string.isBlank(this.notifyTopics)) {
       this.notifyTopicsArray = this.notifyTopics.split(",");
+    }
+    
+    //before topics
+    if(!dojo.string.isBlank(this.beforeNotifyTopics)) {
+      this.beforeNotifyTopicsArray = this.beforeNotifyTopics.split(",");
+    }
+    
+    //after topics
+    if(!dojo.string.isBlank(this.afterNotifyTopics)) {
+      this.afterNotifyTopicsArray = this.afterNotifyTopics.split(",");
+    }
+    
+    //error topics
+    if(!dojo.string.isBlank(this.errorNotifyTopics)) {
+      this.errorNotifyTopicsArray = this.errorNotifyTopics.split(",");
+    }
+    
+    //value topics
+    if(!dojo.string.isBlank(this.valueNotifyTopics)) {
+      this.valueNotifyTopicsArray = this.valueNotifyTopics.split(",");
     }
 
     //better name
@@ -376,11 +404,44 @@ dojo.widget.defineWidget(
 
   notify : function(data, type, e) {
     if(this.notifyTopicsArray) {
+      var self = this;
       dojo.lang.forEach(this.notifyTopicsArray, function(topic) {
         try {
           dojo.event.topic.publish(topic, data, type, e);
         } catch(ex) {
-          dojo.debug(ex);
+          self.log(ex);
+        }
+      });
+    }
+    
+    //before, after and error topics
+    var topicsArray = null;
+    switch(type) {
+      case "before":
+        topicsArray = this.beforeNotifyTopicsArray;
+        break;
+      case "load":
+        topicsArray = this.afterNotifyTopicsArray;
+        break;
+      case "error":
+        topicsArray = this.errorNotifyTopicsArray;
+        break;
+      case "valuechanged":
+        topicsArray = this.valueNotifyTopicsArray;
+        break;
+    }
+  
+    this.notifyTo(topicsArray, data, type, e);
+  },
+  
+  notifyTo : function(topicsArray, data, type, e) {
+    var self = this;
+    if(topicsArray) {
+      dojo.lang.forEach(topicsArray, function(topic) {
+        try {
+          dojo.event.topic.publish(topic, data, type, e);
+        } catch(ex){
+          self.log(ex);
         }
       });
     }

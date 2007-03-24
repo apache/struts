@@ -1,4 +1,4 @@
-
+</table>
 <#if (parameters.customOnsubmitEnabled?default(false))>
 <script type="text/javascript">
 <#-- 
@@ -84,6 +84,4 @@ dojo.require("dojo.event.connect");
 --><#t/>
 	<#lt/><!-- javascript that is needed for tooltips -->
 	<#lt/><script type="text/javascript">dojo.require("dojo.widget.Tooltip");dojo.require("dojo.fx.html");</script>
-
-</table>
 </form>

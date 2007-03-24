@@ -106,7 +106,11 @@
 </#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
->
+<#if parameters.href?exists>
+ />
+<#else>
+ >
+</#if>
 <#if parameters.list?exists>
 	<#if (parameters.headerKey?exists && parameters.headerValue?exists)>
 		<option value="${parameters.headerKey?html}">${parameters.headerValue?html}</option>

@@ -3,6 +3,7 @@
   delay="4000"
   updateFreq="1000"
   autoStart="true"
+  closable="true"
   startTimerListenTopics="h"
   stopTimerListenTopics="i"
   refreshOnShow="true"

@@ -52,6 +52,7 @@ public class DivTest extends AbstractUITagTest {
         tag.setShowLoadingText("true");
         tag.setSeparateScripts("false");
         tag.setErrorNotifyTopics("n");
+        tag.setClosable("true");
         tag.doStartTag();
         tag.doEndTag();
 

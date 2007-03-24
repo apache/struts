@@ -131,7 +131,7 @@ public class TabbedPanel extends ClosingUIBean {
       this.selectedTab = selectedTab;
     }
 
-    @StrutsTagAttribute(description="Where the close button will be placed, possible values are 'tab' and 'pane'")
+    @StrutsTagAttribute(description="Deprecated. Use 'closable' on each div(tab)")
     public void setCloseButton(String closeButton) {
         this.closeButton = closeButton;
     }

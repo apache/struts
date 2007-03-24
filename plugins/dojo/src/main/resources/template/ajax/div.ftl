@@ -8,6 +8,9 @@
   <#if parameters.autoStart?exists>
     autoStart="${parameters.autoStart?string?html}"<#rt/>
   </#if>
+  <#if parameters.closable?exists>
+    closable="${parameters.closable?string?html}"<#rt/>
+  </#if>
   <#if parameters.startTimerListenTopics?if_exists != "">
     startTimerListenTopics="${parameters.startTimerListenTopics?html}"<#rt/>
   </#if>

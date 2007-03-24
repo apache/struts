@@ -72,7 +72,8 @@ public class Div extends AbstractRemoteCallUIBean {
     protected String stopTimerListenTopics;
     protected String refreshOnShow;
     protected String separateScripts;
-
+    protected String closable;
+    
     public Div(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
@@ -102,6 +103,8 @@ public class Div extends AbstractRemoteCallUIBean {
             addParameter("stopTimerListenTopics", findString(stopTimerListenTopics));
         if (separateScripts != null)
             addParameter("separateScripts", findValue(separateScripts, Boolean.class));
+        if (closable != null)
+            addParameter("closable", findValue(closable, Boolean.class));
     }
 
     @StrutsTagAttribute(description="Start timer automatically", type="Boolean", defaultValue="true")
@@ -137,5 +140,10 @@ public class Div extends AbstractRemoteCallUIBean {
     @StrutsTagAttribute(description="Run scripts in a separate scope, unique for each Div", defaultValue="true")
     public void setSeparateScripts(String separateScripts) {
         this.separateScripts = separateScripts;
+    }
+
+    @StrutsTagAttribute(description="Show a close button when the div is inside a 'tabbedpanel'", defaultValue="false")
+    public void setClosable(String closable) {
+        this.closable = closable;
     }
 }

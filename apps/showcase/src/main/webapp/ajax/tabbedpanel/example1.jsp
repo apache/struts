@@ -13,9 +13,9 @@
 
 <body>
 
-    <table cellpadding="0" cellspacing="10" border="0" width="600">
+    <table cellpadding="0" cellspacing="10" border="0" width="900">
         <tr>
-            <td align="top">
+            <td align="top" width="400">
                 <sx:tabbedpanel id="test" >
                     <sx:div id="one" label="one" >
                         This is the first pane<br/>
@@ -66,30 +66,23 @@
             </td>
             <td align="top">
                 <sx:tabbedpanel id="test3" >
-                    <sx:div id="left1" label="out one" >
-                        Outer one<br/>
-                        <sx:tabbedpanel id="test11">
-                            <sx:div id="i11" label="inner 1 one">Inner 1</sx:div>
-                            <sx:div id="112" label="inner 1 two">Inner 2</sx:div>
-                            <sx:div id="i13" label="inner 1 three">Inner 3</sx:div>
-                        </sx:tabbedpanel>
-                    </sx:div>
-                    <sx:div id="middle1" label="out two" >
-                        Outer two<br/>
-                        <sx:tabbedpanel id="test12" >
-                            <sx:div id="i21" label="inner 2 one" >Inner 21</sx:div>
-                            <sx:div id="122" label="inner 2 two" >Inner 22</sx:div>
-                            <sx:div id="i23" label="inner 2 three" >Inner 23</sx:div>
-                        </sx:tabbedpanel>
-                    </sx:div>
-                    <sx:div id="right1" label="out three" >
-                        Outer three<br/>
-                        <sx:tabbedpanel id="test13">
-                            <sx:div id="i31" label="inner 3 one" >Inner 31</sx:div>
-                            <sx:div id="132" label="inner 3 two" >Inner 32</sx:div>
-                            <sx:div id="i33" label="inner 3 three" >Inner 33</sx:div>
-                        </sx:tabbedpanel>
-                    </sx:div>
+                    <sx:tabbedpanel id="test11" label="Container 1">
+                        <sx:div id="i11" label="inner 1 one">Inner 1</sx:div>
+                        <sx:div id="112" label="inner 1 two">Inner 2</sx:div>
+                        <sx:div id="i13" label="inner 1 three">Inner 3</sx:div>
+                    </sx:tabbedpanel>
+                   
+                    <sx:tabbedpanel id="test12" label="Container 2">
+                        <sx:div id="i21" label="inner 2 one" >Inner 21</sx:div>
+                        <sx:div id="122" label="inner 2 two" >Inner 22</sx:div>
+                        <sx:div id="i23" label="inner 2 three" >Inner 23</sx:div>
+                    </sx:tabbedpanel>
+                    
+                    <sx:tabbedpanel id="test13" label="Container 3">
+                        <sx:div id="i31" label="inner 3 one" >Inner 31</sx:div>
+                        <sx:div id="132" label="inner 3 two" >Inner 32</sx:div>
+                        <sx:div id="i33" label="inner 3 three" >Inner 33</sx:div>
+                    </sx:tabbedpanel>
                 </sx:tabbedpanel>
             </td>
         </tr>

@@ -1,9 +1,3 @@
-<script type="text/javascript">
-  dojo.require("dojo.widget.TabContainer");
-  dojo.require("dojo.widget.LinkPane");
-  dojo.require("dojo.widget.ContentPane");
-</script>
-
 <div dojoType="TabContainer"
   <#if parameters.cssStyle?if_exists != "">
     style="${parameters.cssStyle?html}"<#rt/>
@@ -26,7 +20,12 @@
   <#if parameters.doLayout?exists>
     doLayout="${parameters.doLayout?string?html}"<#rt/>
   </#if>
+  <#if parameters.label?if_exists != "">
+    label="${parameters.label?html}"<#rt/>
+  </#if>
   <#if parameters.templateCssPath?exists>
 	templateCssPath="<@s.url value='${parameters.templateCssPath}' encode="false" includeParams='none'/>"
   </#if>
+  <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
+  <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 >

@@ -31,57 +31,54 @@ import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- *
- * A tag that creates a HTML &lt;a href='' /&gt; that when clicked calls a URL remote XMLHttpRequest call via the dojo
- * framework.<p/>
- *<!-- END SNIPPET: javadoc -->
- * <p/> <b>Examples</b>
- *
+ * <p>
+ * A tag that creates an HTML &lt;a/&gt; element, that when clicked makes an asynchronous request(XMLHttpRequest). The url
+ * attribute must be build using the &lt;s:url/&gt; tag. 
+ * </p>
+ * <!-- END SNIPPET: javadoc -->
  * <pre>
- * <!-- START SNIPPET: example1 -->
- * &lt;s:a id="link1" theme="ajax" href="/DoIt.action" errorText="An error ocurred" loadingText="Loading..."&gt;
- *     &lt;img border="none" src="&lt;%=request.getContextPath()%&gt;/images/delete.gif"/&gt;
- *     &lt;s:param name="id" value="1"/&gt;
- * &lt;/s:a&gt;
- * <!-- END SNIPPET: example1 -->
+ * <!-- START SNIPPET: examples -->
+ * <b>Update target content with html returned from an action:</b>
+ * 
+ * &lt;div id="div1"&gt;Div 1&lt;/div&gt;
+ * &lt;s:url id="ajaxTest" value="/AjaxTest.action"/&gt;
+ * 
+ * &lt;sx:a id="link1" href="%{ajaxTest}" target="div1"&gt;
+ *      Update Content
+ * &lt;/sx:a&gt;
+ * 
+ * <b>Submit form(anchor inside the form):</b>
+ * 
+ * &lt;s:form id="form" action="AjaxTest"&gt;
+ *      &lt;input type="textbox" name="data"&gt;
+ *      &lt;sx:a&gt;Submit form&lt;/s:a&gt;           
+ * &lt;/s:form&gt;
+ * 
+ * <b>Submit form(anchor outside the form)</b>
+ * 
+ * &lt;s:form id="form" action="AjaxTest"&gt;
+ *      &lt;input type="textbox" name="data"&gt;   
+ * &lt;/s:form&gt;
+ * 
+ * &lt;sx:a formId="form"&gt;Submit form&lt;/sx:a&gt;
+ * 
+ * <b>Using topics:</b>
+ * <script type="text/javascript">
+ * dojo.event.topic.subscribe("/before", function(data, type, e){
+ *      alert('inside a topic event. before request');
+ *      //data : source element id
+ *      //type : "before"
+ *      //e    : request object
+ *      //set e.cancel = true to cancel request
+ * });
+ * </script>         
+ * 
+ * &lt;sx:a beforeNotifyTopics="/before"&gt;Publish topics&lt;/s:a&gt; 
+ * <!-- END SNIPPET: examples -->
  * </pre>
- *
- * </p>
- *
- * <!-- START SNIPPET: exampledescription1 -->
- *
- * Results in
- *
- * <!-- END SNIPPET: exampledescription1 -->
- *
- * </p>
- *
- * <pre>
- * <!-- START SNIPPET: example2 -->
- * &lt;a dojoType="BindAnchor" executeScripts="true" id="link1" href="/DoIt.action?id=1" errorText="An error ocurred"&gt;&lt;/a&gt;
- * <!-- END SNIPPET: example2 -->
- * </pre>
- *
- * </p>
- *
- * <!-- START SNIPPET: exampledescription2 -->
- *
- * Here is an example that uses the beforeLoading. This example is in altSyntax=true:
- *
- * <!-- END SNIPPET: exampledescription2 -->
- *
- * </p>
- *
- * <pre>
- * <!-- START SNIPPET: example3 -->
- * &lt;s:a id="test" theme="ajax" href="/simpeResult.action" beforeLoading="confirm('Are you sure?')"&gt;
- *  A
- * &lt;/s:a&gt;
- * <!-- END SNIPPET: example3 -->
- * </pre>
- *
  */
-@StrutsTag(name="a", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.AnchorTag", description="Render a HTML href element that when clicked can optionally call a URL via remote XMLHttpRequest and updates its targets")
+@StrutsTag(name="a", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.AnchorTag", description="Renders an HTML anchor element that when clicked calls a URL via remote XMLHttpRequest and updates " +
+                "its targets content")
 public class Anchor extends AbstractRemoteCallUIBean {
     public static final String OPEN_TEMPLATE = "a";
     public static final String TEMPLATE = "a-close";

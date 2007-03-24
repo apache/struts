@@ -1,5 +1,5 @@
 //If we use "TimePicker" for the name, Dojo get's confused and breaks
-//TODO remove this file on nect Dojo release
+//TODO remove this file on next Dojo release
 
 dojo.provide("struts.widget.StrutsTimePicker");
 
@@ -8,7 +8,7 @@ dojo.require("dojo.widget.DropdownTimePicker");
 dojo.widget.defineWidget(
   "struts.widget.StrutsTimePicker",
   dojo.widget.DropdownTimePicker, {
-  widgetType : "TimePicker",
+  widgetType : "StrutsTimePicker",
 
   inputName: "",
   name: "",
@@ -21,6 +21,17 @@ dojo.widget.defineWidget(
     }
 
     this.inputNode.name = this.name;
+    
+    //set cssClass
+    if(this.extraArgs.class) {
+      dojo.html.setClass(this.inputNode, this.extraArgs.class);
+    }  
+    
+    //set cssStyle
+    if(this.extraArgs.style) {
+      dojo.html.setStyleText(this.inputNode, this.extraArgs.style);
+    }  
+    
     this.valueNode.name = this.inputName;
   },
   

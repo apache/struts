@@ -1,10 +1,7 @@
-<script type="text/javascript">
-    dojo.require("dojo.widget.DatePicker");
-</script>	
 <#include "/${parameters.templateDir}/ajax/controlheader.ftl" />
 <div
    <#if parameters.type?if_exists == "date">
-     dojoType="dropdowndatepicker"<#rt/>
+     dojoType="struts:StrutsDatePicker"<#rt/>
    <#else>
      dojoType="struts:StrutsTimePicker"<#rt/>
   </#if>

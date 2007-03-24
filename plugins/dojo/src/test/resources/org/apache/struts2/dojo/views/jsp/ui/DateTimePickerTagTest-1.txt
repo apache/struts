@@ -1,8 +1,4 @@
-<script type="text/javascript">
-    dojo.require("dojo.widget.DatePicker");
-</script>
-
-<div dojoType="dropdowndatepicker" 
+<div dojoType="struts:StrutsDatePicker" 
      id="id"
      lang="i"
      name="dojo.h"

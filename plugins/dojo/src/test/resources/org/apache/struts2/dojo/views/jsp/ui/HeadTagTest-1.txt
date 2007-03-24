@@ -1,14 +1,13 @@
 <script language="JavaScript" type="text/javascript">
 	// Dojo configuration
 	djConfig={
-		baseRelativePath: "/struts/dojo",
-		isDebug: false,
+		isDebug: true,
 		bindEncoding: "ISO-8859-1",
 		debugAtAllCosts: true // not needed, but allows the Venkman debugger to work with the includes
 		};
 </script>
 
-<script language="JavaScript" type="text/javascript" src="/struts/dojo/dojo.js">
+<script language="JavaScript" type="text/javascript" src="/path/dojo.js.uncompressed.js">
 </script>
 
 <script language="JavaScript" type="text/javascript" src="/struts/ajax/dojoRequire.js">

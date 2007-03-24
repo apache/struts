@@ -66,11 +66,14 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 @StrutsTag(name="head", tldBodyContent="empty", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.HeadTag",
     description="Render a chunk of HEAD for your HTML file")
+@StrutsTagSkipInheritance
 public class Head extends org.apache.struts2.components.Head {
     public static final String TEMPLATE = "head";
 
-    private boolean debug;
-
+    private String debug;
+    private String compressed;
+    private String baseRelativePath;
+    
     public Head(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
@@ -81,8 +84,13 @@ public class Head extends org.apache.struts2.components.Head {
 
     public void evaluateParams() {
         super.evaluateParams();
-
-        addParameter("debug", Boolean.valueOf(debug).toString());
+        
+        if(this.debug != null)
+            addParameter("debug", findValue(this.debug, Boolean.class));
+        if(this.compressed != null)
+            addParameter("compressed", findValue(this.compressed, Boolean.class));
+        if(this.baseRelativePath != null)
+            addParameter("baseRelativePath", findString(this.baseRelativePath));
     }
 
     @Override
@@ -97,11 +105,21 @@ public class Head extends org.apache.struts2.components.Head {
     }
     
     public boolean isDebug() {
-        return debug;
+        return debug != null && Boolean.parseBoolean(debug);
     }
 
     @StrutsTagAttribute(description="Set to true to enable Dojo debug messages", defaultValue="false")
-    public void setDebug(boolean debug) {
+    public void setDebug(String debug) {
         this.debug = debug;
+    }
+
+    @StrutsTagAttribute(description="Use compressed version of dojo.js", defaultValue="true")
+    public void setCompressed(String compressed) {
+        this.compressed = compressed;
+    }
+
+    @StrutsTagAttribute(description="Context relative path of Dojo distribution folder", defaultValue="/struts/dojo")
+    public void setBaseRelativePath(String baseRelativePath) {
+        this.baseRelativePath = baseRelativePath;
     }
 }

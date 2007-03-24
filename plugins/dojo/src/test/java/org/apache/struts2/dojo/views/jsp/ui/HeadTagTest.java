@@ -34,6 +34,9 @@ public class HeadTagTest extends AbstractUITagTest {
         HeadTag tag = new HeadTag();
         tag.setPageContext(pageContext);
         
+        tag.setDebug("true");
+        tag.setCompressed("false");
+        tag.setBaseRelativePath("/path");
         tag.doStartTag();
         tag.doEndTag();
 

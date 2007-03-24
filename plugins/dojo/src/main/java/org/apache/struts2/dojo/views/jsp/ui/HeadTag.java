@@ -37,6 +37,8 @@ public class HeadTag extends AbstractUITag {
     private static final long serialVersionUID = 6876765769175246030L;
 
     private String debug;
+    private String compressed;
+    private String baseRelativePath;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Head(stack, req, res);
@@ -44,12 +46,22 @@ public class HeadTag extends AbstractUITag {
 
     protected void populateParams() {
         super.populateParams();
-        if (debug != null) {
-            ((Head) component).setDebug(Boolean.valueOf(debug).booleanValue());
-        }
+        
+        Head head = (Head) component;
+        head.setDebug(debug);
+        head.setCompressed(compressed);
+        head.setBaseRelativePath(baseRelativePath);
     }
 
     public void setDebug(String debug) {
         this.debug = debug;
+    }
+
+    public void setBaseRelativePath(String baseRelativePath) {
+        this.baseRelativePath = baseRelativePath;
+    }
+
+    public void setCompressed(String compressed) {
+        this.compressed = compressed;
     }
 }

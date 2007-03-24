@@ -32,19 +32,56 @@ import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * <p>The autocomplete tag is a combobox that can autocomplete text entered on the input box.
- * When used on the "simple" theme, the autocompleter can be used like the ComboBox.
- * When used on the "ajax" theme, the list can be retieved from an action. </p>
- *<!-- END SNIPPET: javadoc -->
+ * <p>The autocomplete tag is a combobox that can autocomplete text entered on the input box. If an action
+ * is used to populate the autocompleter, the output of the action must be a well formed JSON string. The 
+ * autocompleter expects and array of arrays of length 2, where the first element is the text displayed and
+ * the second is the value.</p>
+ * <!-- END SNIPPET: javadoc -->
+ * <pre>
+ * <!-- START SNIPPET: examples -->
+ * <b>Autocompleter that gets its list from an action:</b>
  *
- *<!-- START SNIPPET: example -->
- *<p>Autocompleter that gets its list from an action:</p>
- *&lt;s:autocompleter name="test"  href="%{jsonList}" autoComplete="false"/&gt;
- *<br/>
- **<p>Autocompleter that uses a list:</p>
- *&lt;s:autocompleter name="test"  list="{'apple','banana','grape','pear'}" autoComplete="false"/&gt;
- *<br/>
- *<!-- END SNIPPET: example -->
+ * &lt;sx:autocompleter name="autocompleter1" href="%{jsonList}"/&gt;
+ *
+ * Which expects a response like:
+ * 
+ * [
+ *      ["Text1", "Value1"],
+ *      ["Text2", "Value2"]
+ * ]
+ * 
+ * Or (note that now the response is a JSON object, instead of an array, and a field inside the object matches the autocompleter's name):
+ * 
+ * {
+ *      autocompleter1:[
+ *           ["Text1", "Value1"],
+ *           ["Text2", "Value2"]
+ *      ]
+ * }
+ * 
+ * The name of the field that contains the data for the autocompleter can be specified using the "dataFieldName" attribute.
+ * 
+ * <b>Autocompleter that uses a list:</b>
+ *
+ * &lt;s:autocompleter name="test"  list="{'apple','banana','grape','pear'}" autoComplete="false"/&gt;
+ * 
+ * <b>Autocompleter that reloads its content everytime the text changes (and the length of the text is greater than 3):</b>
+ * 
+ * &lt;sx:autocompleter name="mvc" href="%{jsonList}" loadOnTextChange="true" loadMinimumCount="3"/&gt;
+ * 
+ * The text entered on the autocompleter is passed as a parameter to the url specified in "href", like (text is "struts"):
+ *  
+ * http://host/example/myaction.do?mvc=struts
+ * 
+ * <b>Linking two autocompleters:</b>
+ * 
+ * &lt;form id="selectForm"&gt;
+ *      &lt;sx:autocompleter  name="select" list="{'fruits','colors'}"  valueNotifyTopics="/changed" /&gt;
+ * &lt;/form&gt;  
+ * &lt;sx:autocompleter  href="%{jsonList}" formId="selectForm" listenTopics="/changed"/&gt;
+ * 
+ * <!-- END SNIPPET: examples -->
+ * <pre>
  */
 @StrutsTag(name="autocompleter", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.AutocompleterTag", description="Renders a combobox with autocomplete and AJAX capabilities")
 public class Autocompleter extends ComboBox {

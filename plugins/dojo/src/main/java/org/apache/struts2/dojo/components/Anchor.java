@@ -51,7 +51,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * 
  * &lt;s:form id="form" action="AjaxTest"&gt;
  *      &lt;input type="textbox" name="data"&gt;
- *      &lt;sx:a&gt;Submit form&lt;/s:a&gt;           
+ *      &lt;sx:a&gt;Submit form&lt;/sx:a&gt;           
  * &lt;/s:form&gt;
  * 
  * <b>Submit form(anchor outside the form)</b>
@@ -73,7 +73,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * });
  * </script>         
  * 
- * &lt;sx:a beforeNotifyTopics="/before"&gt;Publish topics&lt;/s:a&gt; 
+ * &lt;sx:a beforeNotifyTopics="/before"&gt;Publish topics&lt;/sx:a&gt; 
  * <!-- END SNIPPET: examples -->
  * </pre>
  */

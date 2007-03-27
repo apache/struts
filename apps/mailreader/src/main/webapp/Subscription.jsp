@@ -13,7 +13,7 @@
     <s:if test="task=='Delete'">
         <title><s:text name="subscription.title.delete"/></title>
     </s:if>
-    <link href="<s:url value="/css/mailreader.css"/>" rel="stylesheet"
+    <link href="<s:url value="/css/mailreader.css" includeParams="none"/>" rel="stylesheet"
           type="text/css"/>
 </head>
 

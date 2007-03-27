@@ -44,12 +44,11 @@
 
 <hr/>
 
-<p><s:i18n name="alternate">
+<p><s:i18n name="alternate"><a href="http://struts.apache.org/">
     <img src="<s:text name="struts.logo.path"/>"
-         alt="<s:text name="struts.logo.alt"/>"/>
+         alt="<s:text name="struts.logo.alt"/>" border="0px"/>
+</a>
 </s:i18n></p>
-
-<p><a href="<s:url action="Tour" />"><s:text name="index.tour"/></a></p>
 
 </body>
 </html>

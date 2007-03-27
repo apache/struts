@@ -13,7 +13,7 @@
 
     <filter-mapping>
         <filter-name>Struts2</filter-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>*.do</url-pattern>
     </filter-mapping>
 
     <!-- Application Listener for Mailreader database -->

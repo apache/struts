@@ -28,7 +28,7 @@
         <s:hidden name="username"/>
     </s:else>
 
-    <s:password key="password"/>
+    <s:password key="password" showPassword="true"/>
     <s:password key="password2"/>
     <s:textfield key="user.fullName"/>
     <s:textfield key="user.fromAddress"/>

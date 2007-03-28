@@ -3,7 +3,16 @@
     djConfig = {
         isDebug: ${parameters.debug?default(false)?string},
         bindEncoding: "${parameters.encoding}",
-        debugAtAllCosts: true // not needed, but allows the Venkman debugger to work with the includes
+        <#if parameters.locale?if_exists != "">
+          locale: "${parameters.locale}",
+        </#if>
+        <#if parameters.extraLocales?exists>
+          extraLocale: [
+        	<#list parameters.extraLocales as locale>
+        		"${locale}",
+        	</#list>
+          ]
+        </#if>
     };
 </script>
 

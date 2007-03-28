@@ -3,7 +3,12 @@
 	djConfig={
 		isDebug: true,
 		bindEncoding: "ISO-8859-1",
-		debugAtAllCosts: true // not needed, but allows the Venkman debugger to work with the includes
+		locale: "es",
+		extraLocale: [
+			"a",
+			"b",
+			"c",
+		]
 		};
 </script>
 

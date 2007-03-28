@@ -39,7 +39,9 @@ public class HeadTag extends AbstractUITag {
     private String debug;
     private String compressed;
     private String baseRelativePath;
-
+    private String extraLocales;
+    private String locale;
+    
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Head(stack, req, res);
     }
@@ -51,6 +53,8 @@ public class HeadTag extends AbstractUITag {
         head.setDebug(debug);
         head.setCompressed(compressed);
         head.setBaseRelativePath(baseRelativePath);
+        head.setExtraLocales(extraLocales);
+        head.setLocale(locale);
     }
 
     public void setDebug(String debug) {
@@ -63,5 +67,13 @@ public class HeadTag extends AbstractUITag {
 
     public void setCompressed(String compressed) {
         this.compressed = compressed;
+    }
+
+    public void setExtraLocales(String extraLocales) {
+        this.extraLocales = extraLocales;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 }

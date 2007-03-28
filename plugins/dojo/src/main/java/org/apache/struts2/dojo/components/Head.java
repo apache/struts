@@ -73,6 +73,8 @@ public class Head extends org.apache.struts2.components.Head {
     private String debug;
     private String compressed;
     private String baseRelativePath;
+    private String extraLocales;
+    private String locale;
     
     public Head(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -85,12 +87,18 @@ public class Head extends org.apache.struts2.components.Head {
     public void evaluateParams() {
         super.evaluateParams();
         
-        if(this.debug != null)
+        if (this.debug != null)
             addParameter("debug", findValue(this.debug, Boolean.class));
-        if(this.compressed != null)
+        if (this.compressed != null)
             addParameter("compressed", findValue(this.compressed, Boolean.class));
-        if(this.baseRelativePath != null)
+        if (this.baseRelativePath != null)
             addParameter("baseRelativePath", findString(this.baseRelativePath));
+        if (this.extraLocales != null) {
+            String locales = findString(this.extraLocales);
+            addParameter("extraLocales", locales.split(","));
+        }
+        if (this.locale != null)
+            addParameter("locale", findString(this.locale));
     }
 
     @Override
@@ -121,5 +129,15 @@ public class Head extends org.apache.struts2.components.Head {
     @StrutsTagAttribute(description="Context relative path of Dojo distribution folder", defaultValue="/struts/dojo")
     public void setBaseRelativePath(String baseRelativePath) {
         this.baseRelativePath = baseRelativePath;
+    }
+
+    @StrutsTagAttribute(description="Comma separated list of locale names to be loaded by Dojo, locale names must be specified as in RFC3066")
+    public void setExtraLocales(String extraLocales) {
+        this.extraLocales = extraLocales;
+    }
+
+    @StrutsTagAttribute(description="Default locale to be used by Dojo, locale name must be specified as in RFC3066")
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 }

@@ -11,7 +11,7 @@
 	border:1px solid #84a3d1;
 }
 
-.dojoAccordionPane .label :hover {
+.dojoAccordionPane .label:hover {
 	cursor: pointer;
 }
 

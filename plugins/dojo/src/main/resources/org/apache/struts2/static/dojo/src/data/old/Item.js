@@ -13,44 +13,14 @@ dojo.require("dojo.data.old.Observable");
 dojo.require("dojo.data.old.Value");
 dojo.require("dojo.lang.common");
 dojo.require("dojo.lang.assert");
-
-// -------------------------------------------------------------------
-// Constructor
-// -------------------------------------------------------------------
-dojo.data.old.Item = function(/* dojo.data.old.provider.Base */ dataProvider) {
-	/**
-	 * summary:
-	 * An Item has attributes and attribute values, sort of like 
-	 * a record in a database, or a 'struct' in C.  Instances of
-	 * the Item class know how to store and retrieve their
-	 * attribute values.
-	 */
-	dojo.lang.assertType(dataProvider, dojo.data.old.provider.Base, {optional: true});
+dojo.data.old.Item = function (dataProvider) {
+	dojo.lang.assertType(dataProvider, dojo.data.old.provider.Base, {optional:true});
 	dojo.data.old.Observable.call(this);
 	this._dataProvider = dataProvider;
 	this._dictionaryOfAttributeValues = {};
 };
 dojo.inherits(dojo.data.old.Item, dojo.data.old.Observable);
-
-// -------------------------------------------------------------------
-// Public class methods
-// -------------------------------------------------------------------
-dojo.data.old.Item.compare = function(/* dojo.data.old.Item */ itemOne, /* dojo.data.old.Item */ itemTwo) {
-	/**
-	 * summary:
-	 * Given two Items to compare, this method returns 0, 1, or -1.
-	 * This method is designed to be used by sorting routines, like
-	 * the JavaScript built-in Array sort() method.
-	 * 
-	 * Example:
-	 * <pre>
-	 *   var a = dataProvider.newItem("kermit");
-	 *   var b = dataProvider.newItem("elmo");
-	 *   var c = dataProvider.newItem("grover");
-	 *   var array = new Array(a, b, c);
-	 *   array.sort(dojo.data.old.Item.compare);
-	 * </pre>
-	 */
+dojo.data.old.Item.compare = function (itemOne, itemTwo) {
 	dojo.lang.assertType(itemOne, dojo.data.old.Item);
 	if (!dojo.lang.isOfType(itemTwo, dojo.data.old.Item)) {
 		return -1;
@@ -62,7 +32,7 @@ dojo.data.old.Item.compare = function(/* dojo.data.old.Item */ itemOne, /* dojo.
 		var attributeArrayTwo = itemTwo.getAttributes();
 		if (attributeArrayOne.length != attributeArrayTwo.length) {
 			if (attributeArrayOne.length > attributeArrayTwo.length) {
-				return 1; 
+				return 1;
 			} else {
 				return -1;
 			}
@@ -77,7 +47,7 @@ dojo.data.old.Item.compare = function(/* dojo.data.old.Item */ itemOne, /* dojo.
 			}
 			if (arrayOfValuesOne.length != arrayOfValuesTwo.length) {
 				if (arrayOfValuesOne.length > arrayOfValuesTwo.length) {
-					return 1; 
+					return 1;
 				} else {
 					return -1;
 				}
@@ -92,20 +62,13 @@ dojo.data.old.Item.compare = function(/* dojo.data.old.Item */ itemOne, /* dojo.
 		}
 	} else {
 		if (nameOne > nameTwo) {
-			return 1; 
+			return 1;
 		} else {
-			return -1;  // 0, 1, or -1
+			return -1;
 		}
 	}
 };
-
-// -------------------------------------------------------------------
-// Public instance methods
-// -------------------------------------------------------------------
-dojo.data.old.Item.prototype.toString = function() {
-	/**
-	 * Returns a simple string representation of the item.
-	 */
+dojo.data.old.Item.prototype.toString = function () {
 	var arrayOfStrings = [];
 	var attributes = this.getAttributes();
 	for (var i in attributes) {
@@ -115,109 +78,77 @@ dojo.data.old.Item.prototype.toString = function() {
 		if (arrayOfValues.length == 1) {
 			valueString = arrayOfValues[0];
 		} else {
-			valueString = '[';
-			valueString += arrayOfValues.join(', ');
-			valueString += ']';
+			valueString = "[";
+			valueString += arrayOfValues.join(", ");
+			valueString += "]";
 		}
-		arrayOfStrings.push('  ' + attribute + ': ' + valueString);
+		arrayOfStrings.push("  " + attribute + ": " + valueString);
 	}
-	var returnString = '{ ';
-	returnString += arrayOfStrings.join(',\n');
-	returnString += ' }';
-	return returnString; // string
+	var returnString = "{ ";
+	returnString += arrayOfStrings.join(",\n");
+	returnString += " }";
+	return returnString;
 };
-
-dojo.data.old.Item.prototype.compare = function(/* dojo.data.old.Item */ otherItem) {
-	/**
-	 * summary: Compares this Item to another Item, and returns 0, 1, or -1.
-	 */ 
-	return dojo.data.old.Item.compare(this, otherItem); // 0, 1, or -1
+dojo.data.old.Item.prototype.compare = function (otherItem) {
+	return dojo.data.old.Item.compare(this, otherItem);
 };
-
-dojo.data.old.Item.prototype.isEqual = function(/* dojo.data.old.Item */ otherItem) {
-	/**
-	 * summary: Returns true if this Item is equal to the otherItem, or false otherwise.
-	 */
-	return (this.compare(otherItem) == 0); // boolean
+dojo.data.old.Item.prototype.isEqual = function (otherItem) {
+	return (this.compare(otherItem) == 0);
 };
-
-dojo.data.old.Item.prototype.getName = function() {
-	return this.get('name');
+dojo.data.old.Item.prototype.getName = function () {
+	return this.get("name");
 };
-
-dojo.data.old.Item.prototype.get = function(/* string or dojo.data.old.Attribute */ attributeId) {
-	/**
-	 * summary: Returns a single literal value, like "foo" or 33.
-	 */ 
-	// dojo.lang.assertType(attributeId, [String, dojo.data.old.Attribute]);
+dojo.data.old.Item.prototype.get = function (attributeId) {
 	var literalOrValueOrArray = this._dictionaryOfAttributeValues[attributeId];
 	if (dojo.lang.isUndefined(literalOrValueOrArray)) {
-		return null; // null
+		return null;
 	}
 	if (literalOrValueOrArray instanceof dojo.data.old.Value) {
-		return literalOrValueOrArray.getValue(); // literal
+		return literalOrValueOrArray.getValue();
 	}
 	if (dojo.lang.isArray(literalOrValueOrArray)) {
 		var dojoDataValue = literalOrValueOrArray[0];
-		return dojoDataValue.getValue(); // literal
+		return dojoDataValue.getValue();
 	}
-	return literalOrValueOrArray; // literal
+	return literalOrValueOrArray;
 };
-
-dojo.data.old.Item.prototype.getValue = function(/* string or dojo.data.old.Attribute */ attributeId) {
-	/**
-	 * summary: Returns a single instance of dojo.data.old.Value.
-	 */ 
-	// dojo.lang.assertType(attributeId, [String, dojo.data.old.Attribute]);
+dojo.data.old.Item.prototype.getValue = function (attributeId) {
 	var literalOrValueOrArray = this._dictionaryOfAttributeValues[attributeId];
 	if (dojo.lang.isUndefined(literalOrValueOrArray)) {
-		return null; // null
+		return null;
 	}
 	if (literalOrValueOrArray instanceof dojo.data.old.Value) {
-		return literalOrValueOrArray; // dojo.data.old.Value
+		return literalOrValueOrArray;
 	}
 	if (dojo.lang.isArray(literalOrValueOrArray)) {
 		var dojoDataValue = literalOrValueOrArray[0];
-		return dojoDataValue; // dojo.data.old.Value
+		return dojoDataValue;
 	}
 	var literal = literalOrValueOrArray;
 	dojoDataValue = new dojo.data.old.Value(literal);
 	this._dictionaryOfAttributeValues[attributeId] = dojoDataValue;
-	return dojoDataValue; // dojo.data.old.Value
+	return dojoDataValue;
 };
-
-dojo.data.old.Item.prototype.getValues = function(/* string or dojo.data.old.Attribute */ attributeId) {
-	/**
-	 * summary: Returns an array of dojo.data.old.Value objects.
-	 */ 
-	// dojo.lang.assertType(attributeId, [String, dojo.data.old.Attribute]);
+dojo.data.old.Item.prototype.getValues = function (attributeId) {
 	var literalOrValueOrArray = this._dictionaryOfAttributeValues[attributeId];
 	if (dojo.lang.isUndefined(literalOrValueOrArray)) {
-		return null; // null
+		return null;
 	}
 	if (literalOrValueOrArray instanceof dojo.data.old.Value) {
 		var array = [literalOrValueOrArray];
 		this._dictionaryOfAttributeValues[attributeId] = array;
-		return array; // Array
+		return array;
 	}
 	if (dojo.lang.isArray(literalOrValueOrArray)) {
-		return literalOrValueOrArray; // Array
+		return literalOrValueOrArray;
 	}
 	var literal = literalOrValueOrArray;
 	var dojoDataValue = new dojo.data.old.Value(literal);
 	array = [dojoDataValue];
 	this._dictionaryOfAttributeValues[attributeId] = array;
-	return array; // Array
+	return array;
 };
-
-dojo.data.old.Item.prototype.load = function(/* string or dojo.data.old.Attribute */ attributeId, /* anything */ value) {
-	/**
-	 * summary: 
-	 * Used for loading an attribute value into an item when
-	 * the item is first being loaded into memory from some
-	 * data store (such as a file).
-	 */ 
-	// dojo.lang.assertType(attributeId, [String, dojo.data.old.Attribute]);
+dojo.data.old.Item.prototype.load = function (attributeId, value) {
 	this._dataProvider.registerAttribute(attributeId);
 	var literalOrValueOrArray = this._dictionaryOfAttributeValues[attributeId];
 	if (dojo.lang.isUndefined(literalOrValueOrArray)) {
@@ -241,40 +172,19 @@ dojo.data.old.Item.prototype.load = function(/* string or dojo.data.old.Attribut
 	array = [dojoDataValue, value];
 	this._dictionaryOfAttributeValues[attributeId] = array;
 };
-
-dojo.data.old.Item.prototype.set = function(/* string or dojo.data.old.Attribute */ attributeId, /* anything */ value) {
-	/**
-	 * summary: 
-	 * Used for setting an attribute value as a result of a
-	 * user action.
-	 */ 
-	// dojo.lang.assertType(attributeId, [String, dojo.data.old.Attribute]);
+dojo.data.old.Item.prototype.set = function (attributeId, value) {
 	this._dataProvider.registerAttribute(attributeId);
 	this._dictionaryOfAttributeValues[attributeId] = value;
 	this._dataProvider.noteChange(this, attributeId, value);
 };
-
-dojo.data.old.Item.prototype.setValue = function(/* string or dojo.data.old.Attribute */ attributeId, /* dojo.data.old.Value */ value) {
+dojo.data.old.Item.prototype.setValue = function (attributeId, value) {
 	this.set(attributeId, value);
 };
-
-dojo.data.old.Item.prototype.addValue = function(/* string or dojo.data.old.Attribute */ attributeId, /* anything */ value) {
-	/**
-	 * summary: 
-	 * Used for adding an attribute value as a result of a
-	 * user action.
-	 */ 
+dojo.data.old.Item.prototype.addValue = function (attributeId, value) {
 	this.load(attributeId, value);
 	this._dataProvider.noteChange(this, attributeId, value);
 };
-
-dojo.data.old.Item.prototype.setValues = function(/* string or dojo.data.old.Attribute */ attributeId, /* Array */ arrayOfValues) {
-	/**
-	 * summary: 
-	 * Used for setting an array of attribute values as a result of a
-	 * user action.
-	 */
-	// dojo.lang.assertType(attributeId, [String, dojo.data.old.Attribute]);
+dojo.data.old.Item.prototype.setValues = function (attributeId, arrayOfValues) {
 	dojo.lang.assertType(arrayOfValues, Array);
 	this._dataProvider.registerAttribute(attributeId);
 	var finalArray = [];
@@ -288,40 +198,24 @@ dojo.data.old.Item.prototype.setValues = function(/* string or dojo.data.old.Att
 		this._dataProvider.noteChange(this, attributeId, value);
 	}
 };
-
-dojo.data.old.Item.prototype.getAttributes = function() {
-	/**
-	 * summary: 
-	 * Returns an array containing all of the attributes for which
-	 * this item has attribute values.
-	 */ 
+dojo.data.old.Item.prototype.getAttributes = function () {
 	var arrayOfAttributes = [];
 	for (var key in this._dictionaryOfAttributeValues) {
 		arrayOfAttributes.push(this._dataProvider.getAttribute(key));
 	}
-	return arrayOfAttributes; // Array
+	return arrayOfAttributes;
 };
-
-dojo.data.old.Item.prototype.hasAttribute = function(/* string or dojo.data.old.Attribute */ attributeId) {
-	/**
-	 * summary: Returns true if the given attribute of the item has been assigned any value.
-	 */ 
-	// dojo.lang.assertType(attributeId, [String, dojo.data.old.Attribute]);
-	return (attributeId in this._dictionaryOfAttributeValues); // boolean
+dojo.data.old.Item.prototype.hasAttribute = function (attributeId) {
+	return (attributeId in this._dictionaryOfAttributeValues);
 };
-
-dojo.data.old.Item.prototype.hasAttributeValue = function(/* string or dojo.data.old.Attribute */ attributeId, /* anything */ value) {
-	/**
-	 * summary: Returns true if the given attribute of the item has been assigned the given value.
-	 */ 
+dojo.data.old.Item.prototype.hasAttributeValue = function (attributeId, value) {
 	var arrayOfValues = this.getValues(attributeId);
 	for (var i in arrayOfValues) {
 		var candidateValue = arrayOfValues[i];
 		if (candidateValue.isEqual(value)) {
-			return true; // boolean
+			return true;
 		}
 	}
-	return false; // boolean
+	return false;
 };
-
 

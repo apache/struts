@@ -9,7 +9,6 @@
 */
 
 dojo.provide("dojo.widget.DropdownTimePicker");
-
 dojo.require("dojo.widget.*");
 dojo.require("dojo.widget.DropdownContainer");
 dojo.require("dojo.widget.TimePicker");
@@ -18,99 +17,138 @@ dojo.require("dojo.html.*");
 dojo.require("dojo.date.format");
 dojo.require("dojo.date.serialize");
 dojo.require("dojo.i18n.common");
-dojo.requireLocalization("dojo.widget", "DropdownTimePicker");
-
-// summary
-//	input box with a drop-down gui control, for setting the time (hours, minutes, seconds, am/pm) of an event
-dojo.widget.defineWidget(
-	"dojo.widget.DropdownTimePicker",
-	dojo.widget.DropdownContainer,
-	{
-		// URL
-		//	path of icon for button to display time picker widget
-		iconURL: dojo.uri.dojoUri("src/widget/templates/images/timeIcon.gif"),
-		
-		// Number
-		//	z-index of time picker widget
-		zIndex: "10",
-
-		// pattern used in display of formatted time.  Uses locale-specific format by default.  See dojo.date.format.
-		displayFormat: "",
-
-		// String
-		//	Deprecated. format string for how time is displayed in the input box using strftime, see dojo.date.strftime	
-		timeFormat: "",
-
-//FIXME: need saveFormat attribute support
-
-		// type of format appropriate to locale.  see dojo.date.format
-		formatLength: "short",
-
-		// String
-		//	time value in RFC3339 format (http://www.ietf.org/rfc/rfc3339.txt)
-		//	ex: 12:00
-		value: "",
-
-		postMixInProperties: function() {
-			dojo.widget.DropdownTimePicker.superclass.postMixInProperties.apply(this, arguments);
-			var messages = dojo.i18n.getLocalization("dojo.widget", "DropdownTimePicker", this.lang);
-			this.iconAlt = messages.selectTime;
-		},
-
-		fillInTemplate: function(){
-			dojo.widget.DropdownTimePicker.superclass.fillInTemplate.apply(this, arguments);
-
-			var timeProps = { widgetContainerId: this.widgetId, lang: this.lang };
-			this.timePicker = dojo.widget.createWidget("TimePicker", timeProps, this.containerNode, "child");
-			dojo.event.connect(this.timePicker, "onSetTime", this, "onSetTime");
-			dojo.event.connect(this.inputNode,  "onchange",  this, "onInputChange");
-			this.containerNode.style.zIndex = this.zIndex;
-			this.containerNode.explodeClassName = "timeBorder";
-			if(this.value){
-				this.timePicker.selectedTime.anyTime = false;
-				this.timePicker.setDateTime("2005-01-01T" + this.value);
-				this.timePicker.initData();
-				this.timePicker.initUI();
-				this.onSetTime();
+dojo.requireLocalization("dojo.widget", "DropdownTimePicker", null, "ROOT");
+dojo.widget.defineWidget("dojo.widget.DropdownTimePicker", dojo.widget.DropdownContainer, {iconURL:dojo.uri.moduleUri("dojo.widget", "templates/images/timeIcon.gif"), formatLength:"short", displayFormat:"", timeFormat:"", saveFormat:"", value:"", name:"", postMixInProperties:function () {
+	dojo.widget.DropdownTimePicker.superclass.postMixInProperties.apply(this, arguments);
+	var messages = dojo.i18n.getLocalization("dojo.widget", "DropdownTimePicker", this.lang);
+	this.iconAlt = messages.selectTime;
+	if (typeof (this.value) == "string" && this.value.toLowerCase() == "today") {
+		this.value = new Date();
+	}
+	if (this.value && isNaN(this.value)) {
+		var orig = this.value;
+		this.value = dojo.date.fromRfc3339(this.value);
+		if (!this.value) {
+			var d = dojo.date.format(new Date(), {selector:"dateOnly", datePattern:"yyyy-MM-dd"});
+			var c = orig.split(":");
+			for (var i = 0; i < c.length; ++i) {
+				if (c[i].length == 1) {
+					c[i] = "0" + c[i];
+				}
 			}
-		},
-		
-		onSetTime: function(){
-			// summary: callback when user sets the time via the TimePicker widget
-			if(this.timePicker.selectedTime.anyTime){
-				this.inputNode.value = "";
-			}else if(this.timeFormat){
-				dojo.deprecated("dojo.widget.DropdownTimePicker",
-				"Must use displayFormat attribute instead of timeFormat.  See dojo.date.format for specification.", "0.5");
-				this.inputNode.value = dojo.date.strftime(this.timePicker.time, this.timeFormat, this.lang);
-			}else{
-				this.inputNode.value = dojo.date.format(this.timePicker.time,
-					{formatLength:this.formatLength, datePattern:this.displayFormat, selector:'timeOnly', locale:this.lang});
-			}
-
-			this.hideContainer();
-		},
-		
-		onInputChange: function(){
-			// summary: callback when the user has typed in a time value manually
-			this.timePicker.time = "2005-01-01T" + this.inputNode.value; //FIXME: i18n
-			this.timePicker.setDateTime(this.timePicker.time);
-			this.timePicker.initData();
-			this.timePicker.initUI();
-		},
-		
-		enable: function() {
-			// summary: enable this widget to accept user input
-			this.inputNode.disabled = false;
-			this.timePicker.enable();
-			dojo.widget.DropdownTimePicker.superclass.enable.apply(this, arguments);
-		},
-		
-		disable: function() {
-			// summary: lock this widget so that the user can't change the value
-			this.inputNode.disabled = true;
-			this.timePicker.disable();
-			dojo.widget.DropdownTimePicker.superclass.disable.apply(this, arguments);
+			orig = c.join(":");
+			this.value = dojo.date.fromRfc3339(d + "T" + orig);
+			dojo.deprecated("dojo.widget.DropdownTimePicker", "time attributes must be passed in Rfc3339 format", "0.5");
 		}
 	}
-);
+	if (this.value && !isNaN(this.value)) {
+		this.value = new Date(this.value);
+	}
+}, fillInTemplate:function () {
+	dojo.widget.DropdownTimePicker.superclass.fillInTemplate.apply(this, arguments);
+	var value = "";
+	if (this.value instanceof Date) {
+		value = this.value;
+	} else {
+		if (this.value) {
+			var orig = this.value;
+			var d = dojo.date.format(new Date(), {selector:"dateOnly", datePattern:"yyyy-MM-dd"});
+			var c = orig.split(":");
+			for (var i = 0; i < c.length; ++i) {
+				if (c[i].length == 1) {
+					c[i] = "0" + c[i];
+				}
+			}
+			orig = c.join(":");
+			value = dojo.date.fromRfc3339(d + "T" + orig);
+		}
+	}
+	var tpArgs = {widgetContainerId:this.widgetId, lang:this.lang, value:value};
+	this.timePicker = dojo.widget.createWidget("TimePicker", tpArgs, this.containerNode, "child");
+	dojo.event.connect(this.timePicker, "onValueChanged", this, "_updateText");
+	if (this.value) {
+		this._updateText();
+	}
+	this.containerNode.style.zIndex = this.zIndex;
+	this.containerNode.explodeClassName = "timeContainer";
+	this.valueNode.name = this.name;
+}, getValue:function () {
+	return this.valueNode.value;
+}, getTime:function () {
+	return this.timePicker.storedTime;
+}, setValue:function (rfcDate) {
+	this.setTime(rfcDate);
+}, setTime:function (dateObj) {
+	var value = "";
+	if (dateObj instanceof Date) {
+		value = dateObj;
+	} else {
+		if (this.value) {
+			var orig = this.value;
+			var d = dojo.date.format(new Date(), {selector:"dateOnly", datePattern:"yyyy-MM-dd"});
+			var c = orig.split(":");
+			for (var i = 0; i < c.length; ++i) {
+				if (c[i].length == 1) {
+					c[i] = "0" + c[i];
+				}
+			}
+			orig = c.join(":");
+			value = dojo.date.fromRfc3339(d + "T" + orig);
+		}
+	}
+	this.timePicker.setTime(value);
+	this._syncValueNode();
+}, _updateText:function () {
+	if (this.timePicker.selectedTime.anyTime) {
+		this.inputNode.value = "";
+	} else {
+		if (this.timeFormat) {
+			dojo.deprecated("dojo.widget.DropdownTimePicker", "Must use displayFormat attribute instead of timeFormat.  See dojo.date.format for specification.", "0.5");
+			this.inputNode.value = dojo.date.strftime(this.timePicker.time, this.timeFormat, this.lang);
+		} else {
+			this.inputNode.value = dojo.date.format(this.timePicker.time, {formatLength:this.formatLength, timePattern:this.displayFormat, selector:"timeOnly", locale:this.lang});
+		}
+	}
+	this._syncValueNode();
+	this.onValueChanged(this.getTime());
+	this.hideContainer();
+}, onValueChanged:function (dateObj) {
+}, onInputChange:function () {
+	if (this.dateFormat) {
+		dojo.deprecated("dojo.widget.DropdownTimePicker", "Cannot parse user input.  Must use displayFormat attribute instead of dateFormat.  See dojo.date.format for specification.", "0.5");
+	} else {
+		var input = dojo.string.trim(this.inputNode.value);
+		if (input) {
+			var inputTime = dojo.date.parse(input, {formatLength:this.formatLength, timePattern:this.displayFormat, selector:"timeOnly", locale:this.lang});
+			if (inputTime) {
+				this.setTime(inputTime);
+			}
+		} else {
+			this.valueNode.value = input;
+		}
+	}
+	if (input) {
+		this._updateText();
+	}
+}, _syncValueNode:function () {
+	var time = this.timePicker.time;
+	var value;
+	switch (this.saveFormat.toLowerCase()) {
+	  case "rfc":
+	  case "iso":
+	  case "":
+		value = dojo.date.toRfc3339(time, "timeOnly");
+		break;
+	  case "posix":
+	  case "unix":
+		value = Number(time);
+		break;
+	  default:
+		value = dojo.date.format(time, {datePattern:this.saveFormat, selector:"timeOnly", locale:this.lang});
+	}
+	this.valueNode.value = value;
+}, destroy:function (finalize) {
+	this.timePicker.destroy(finalize);
+	dojo.widget.DropdownTimePicker.superclass.destroy.apply(this, arguments);
+}});
+

@@ -5,16 +5,16 @@
 			<td
 				><input
 					dojoAttachPoint='textbox' type='${this.type}'
-					dojoAttachEvent='onblur;onfocus;onkey:_handleKeyEvents;onKeyUp:_onSpinnerKeyUp;onresize:resize'
+					dojoAttachEvent='onblur;onfocus;onkey:_handleKeyEvents;onKeyUp:_onSpinnerKeyUp;onresize:_resize'
 					id='${this.widgetId}' name='${this.name}' size='${this.size}' maxlength='${this.maxlength}'
 					value='${this.value}' class='${this.className}' autocomplete="off"
 			></td>
 			<td
 				><img dojoAttachPoint="upArrowNode"
-					dojoAttachEvent="onDblClick: _upArrowDoubleClicked;  onMouseDown: _upArrowPressed; onMouseUp: _arrowReleased; onMouseMove: _discardEvent;"
+					dojoAttachEvent="onDblClick: _upArrowDoubleClicked;  onMouseDown: _upArrowPressed; onMouseUp: _arrowReleased; onMouseOut: _arrowReleased; onMouseMove: _discardEvent;"
 					src="${this.incrementSrc}" style="width: ${this.buttonSize.width}px; height: ${this.buttonSize.height}px;"
 				><img dojoAttachPoint="downArrowNode"
-					dojoAttachEvent="onDblClick: _downArrowDoubleClicked;  onMouseDown: _downArrowPressed; onMouseUp: _arrowReleased; onMouseMove: _discardEvent;"
+					dojoAttachEvent="onDblClick: _downArrowDoubleClicked;  onMouseDown: _downArrowPressed; onMouseUp: _arrowReleased; onMouseOut: _arrowReleased; onMouseMove: _discardEvent;"
 					src="${this.decrementSrc}" style="width: ${this.buttonSize.width}px; height: ${this.buttonSize.height}px;"
 			></td>
 		</tr>

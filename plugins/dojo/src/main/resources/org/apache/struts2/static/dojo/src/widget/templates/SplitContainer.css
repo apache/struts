@@ -1,6 +1,7 @@
 .dojoSplitContainer{
 	position: relative;
 	overflow: hidden;
+	display: block;
 }
 
 .dojoSplitPane{

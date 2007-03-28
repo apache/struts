@@ -5,7 +5,7 @@
 <html>
 <head>
     <title>UI Tags Example</title>
-    <sx:head />
+    <sx:head extraLocales="en-us,nl-nl,de-de" />
 </head>
 <body>
 <table>
@@ -16,8 +16,8 @@
 <sx:datetimepicker label="US format, empty" name="dddp2" language="en-us" />
 <sx:datetimepicker label="US format with initial date of 2006-06-26" name="dddp3" value="2006-06-26" language="en-us" />
 <sx:datetimepicker label="With initial date of 1969-04-25 and a custom format dd/MM/yyyy" name="dddp5" value="25/04/1969" displayFormat="dd/MM/yyyy" />
-<sx:datetimepicker label="In German" name="dddp7" value="2006-06-28" language="de" />
-<sx:datetimepicker label="In Dutch"  name="dddp8" value="2006-06-28" language="nl" />
+<sx:datetimepicker label="In German" name="dddp7" value="2006-06-28" language="de-de" />
+<sx:datetimepicker label="In Dutch"  name="dddp8" value="2006-06-28" language="nl-nl" />
 <sx:datetimepicker label="US format with initial date of 2006-06-26 and long formatting (parse not supported)" name="dddp12" value="2006-06-26" formatLength="long" language="en-us" />
 <sx:datetimepicker label="German format with initial date of 2006-06-26 and long formatting (parse not supported)" name="dddp13" value="2006-06-26" formatLength="long" language="de" />
 </table>

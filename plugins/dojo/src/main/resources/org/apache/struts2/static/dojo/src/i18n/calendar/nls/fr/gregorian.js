@@ -8,20 +8,4 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
-({
-    'months-format-wide': ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"],
-    'months-format-abbr': ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sep.", "oct.", "nov.", "déc."],
-    'months-standAlone-narrow': ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
-    'days-format-wide': ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"],
-    'days-format-abbr': ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."],
-    'days-standAlone-narrow': ["D", "L", "M", "M", "J", "V", "S"],
-
-	'dateFormat-full': "EEEE d MMMM yyyy",
-	'dateFormat-long': "d MMMM yyyy",
-	'dateFormat-medium': "d MMM yy",
-	'dateFormat-short': "dd/MM/yy",
-
-	'timeFormat-full': "HH' h 'mm z",
-
-	eras: ['av. J.-C.','apr. J.-C.']
-})
+({"field-weekday":"jour de la semaine", "dateFormat-medium":"d MMM yy", "field-second":"seconde", "field-week":"semaine", "pm":"ap. m.", "timeFormat-full":"HH' h 'mm z", "months-standAlone-narrow":["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"], "am":"matin", "days-standAlone-narrow":["D", "L", "M", "M", "J", "V", "S"], "field-year":"ann\xe9e", "eras":["av. J.-C.", "apr. J.-C."], "field-minute":"minute", "field-hour":"heure", "dateFormat-long":"d MMMM yyyy", "field-day":"jour", "field-dayperiod":"p\xe9riode de la journ\xe9e", "field-month":"mois", "dateFormat-short":"dd/MM/yy", "months-format-wide":["janvier", "f\xe9vrier", "mars", "avril", "mai", "juin", "juillet", "ao\xfbt", "septembre", "octobre", "novembre", "d\xe9cembre"], "field-era":"\xe9poque", "months-format-abbr":["janv.", "f\xe9vr.", "mars", "avr.", "mai", "juin", "juil.", "ao\xfbt", "sept.", "oct.", "nov.", "d\xe9c."], "days-format-wide":["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"], "dateFormat-full":"EEEE d MMMM yyyy", "field-zone":"zone", "days-format-abbr":["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."], "timeFormat-medium":"HH:mm:ss", "timeFormat-short":"HH:mm", "timeFormat-long":"HH:mm:ss z"})

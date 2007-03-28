@@ -8,7 +8,4 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
-({
-	displayName: "INR",
-	symbol: function(value){return (value == 1) ? "Re." : "Rs.";}
-})
+({"displayName":"INR"})

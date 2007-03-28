@@ -7,6 +7,7 @@
 	_zoom: 1; /* force IE6 layout mode so top border doesnt disappear */
 	display: block;
 	clear: both;
+	overflow: hidden;
 }
 
 .dojoTabLabels-top {

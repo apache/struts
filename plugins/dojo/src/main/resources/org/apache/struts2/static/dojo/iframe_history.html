@@ -10,14 +10,9 @@
 	var noInit = false;
 	var domain = "";
 	// document.domain = "localhost";
-	function init(){
-		// parse the query string if there is one to try to get args that
-		// we can act on
-		var sparams = document.location.search;
-		if(sparams.length >= 0){
-			if(sparams.charAt(0) == "?"){
-				sparams = sparams.substring(1);
-			}
+	
+	function defineParams(sparams){
+		if(sparams){
 			var ss = (sparams.indexOf("&amp;") >= 0) ? "&amp;" : "&";
 			sparams = sparams.split(ss);
 			for(var x=0; x<sparams.length; x++){
@@ -27,12 +22,46 @@
 				}
 			}
 		}
+	}
+	
+	function init(){
+		// parse the query string if there is one to try to get params that
+		// we can act on. Also allow params to be in a fragment identifier.
+		var query = null;
+		var frag = null;
+		var url = document.location.href;
+		var hashIndex = url.indexOf("#");
+		
+		//Extract fragment identifier
+		if(hashIndex != -1){
+			frag = url.substring(hashIndex + 1, url.length);
+			url = url.substring(0, hashIndex);
+		}
+
+		//Extract querystring
+		var parts = url.split("?");
+		if(parts.length == 2){
+			query = parts[1];
+		}
+
+		defineParams(query);
+		defineParams(frag);
 
 		if(noInit){ return; }
 		if(domain.length > 0){
 			document.domain = domain;
 		}
-		if((window.parent != window)&&(window.parent["dojo"])){
+		var hasParentDojo = false;
+		try{
+			hasParentDojo = window.parent != window && window.parent["dojo"];
+		}catch(e){
+			alert("Initializing iframe_history.html failed. If you are using a cross-domain Dojo build,"
+				+ " please save iframe_history.html to your domain and set djConfig.dojoIframeHistoryUrl"
+				+ " to the path on your domain to iframe_history.html");
+			throw e;
+		}
+
+		if(hasParentDojo){
 			//Set the page title so IE history shows up with a somewhat correct name.
 			document.title = window.parent.document.title;
 			
@@ -42,6 +71,7 @@
 				pdj.undo.browser.iframeLoaded(null, window.location);
 			}
 		}
+
 	}
 	// -->
 	</script>

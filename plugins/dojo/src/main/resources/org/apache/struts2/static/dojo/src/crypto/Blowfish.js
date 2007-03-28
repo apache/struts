@@ -10,567 +10,373 @@
 
 dojo.require("dojo.crypto");
 dojo.provide("dojo.crypto.Blowfish");
-
-/*	Blowfish
- *	Created based on the C# implementation by Marcus Hahn (http://www.hotpixel.net/)
- *	Unsigned math functions derived from Joe Gregorio's SecureSyndication GM script
- *	http://bitworking.org/projects/securesyndication/
- *	(Note that this is *not* an adaption of the above script)
- *
- *	version 1.0 
- *	TRT 
- *	2005-12-08
- */
-dojo.crypto.Blowfish = new function(){
-	//	summary
-	//	Object for doing Blowfish encryption/decryption.
-	var POW2=Math.pow(2,2);
-	var POW3=Math.pow(2,3);
-	var POW4=Math.pow(2,4);
-	var POW8=Math.pow(2,8);
-	var POW16=Math.pow(2,16);
-	var POW24=Math.pow(2,24);
-	var iv=null;	//	CBC mode initialization vector
-	var boxes={
-		p:[
-			0x243f6a88, 0x85a308d3, 0x13198a2e, 0x03707344, 0xa4093822, 0x299f31d0, 0x082efa98, 0xec4e6c89, 
-			0x452821e6, 0x38d01377, 0xbe5466cf, 0x34e90c6c, 0xc0ac29b7, 0xc97c50dd, 0x3f84d5b5, 0xb5470917, 
-			0x9216d5d9, 0x8979fb1b
-		],
-		s0:[
-			0xd1310ba6, 0x98dfb5ac, 0x2ffd72db, 0xd01adfb7, 0xb8e1afed, 0x6a267e96, 0xba7c9045, 0xf12c7f99,
-			0x24a19947, 0xb3916cf7, 0x0801f2e2, 0x858efc16, 0x636920d8, 0x71574e69, 0xa458fea3, 0xf4933d7e,
-			0x0d95748f, 0x728eb658, 0x718bcd58, 0x82154aee, 0x7b54a41d, 0xc25a59b5, 0x9c30d539, 0x2af26013,
-			0xc5d1b023, 0x286085f0, 0xca417918, 0xb8db38ef, 0x8e79dcb0, 0x603a180e, 0x6c9e0e8b, 0xb01e8a3e,
-			0xd71577c1, 0xbd314b27, 0x78af2fda, 0x55605c60, 0xe65525f3, 0xaa55ab94, 0x57489862, 0x63e81440,
-			0x55ca396a, 0x2aab10b6, 0xb4cc5c34, 0x1141e8ce, 0xa15486af, 0x7c72e993, 0xb3ee1411, 0x636fbc2a,
-			0x2ba9c55d, 0x741831f6, 0xce5c3e16, 0x9b87931e, 0xafd6ba33, 0x6c24cf5c, 0x7a325381, 0x28958677,
-			0x3b8f4898, 0x6b4bb9af, 0xc4bfe81b, 0x66282193, 0x61d809cc, 0xfb21a991, 0x487cac60, 0x5dec8032,
-			0xef845d5d, 0xe98575b1, 0xdc262302, 0xeb651b88, 0x23893e81, 0xd396acc5, 0x0f6d6ff3, 0x83f44239,
-			0x2e0b4482, 0xa4842004, 0x69c8f04a, 0x9e1f9b5e, 0x21c66842, 0xf6e96c9a, 0x670c9c61, 0xabd388f0,
-			0x6a51a0d2, 0xd8542f68, 0x960fa728, 0xab5133a3, 0x6eef0b6c, 0x137a3be4, 0xba3bf050, 0x7efb2a98, 
-			0xa1f1651d, 0x39af0176, 0x66ca593e, 0x82430e88, 0x8cee8619, 0x456f9fb4, 0x7d84a5c3, 0x3b8b5ebe, 
-			0xe06f75d8, 0x85c12073, 0x401a449f, 0x56c16aa6, 0x4ed3aa62, 0x363f7706, 0x1bfedf72, 0x429b023d, 
-			0x37d0d724, 0xd00a1248, 0xdb0fead3, 0x49f1c09b, 0x075372c9, 0x80991b7b, 0x25d479d8, 0xf6e8def7,
-			0xe3fe501a, 0xb6794c3b, 0x976ce0bd, 0x04c006ba, 0xc1a94fb6, 0x409f60c4, 0x5e5c9ec2, 0x196a2463,
-			0x68fb6faf, 0x3e6c53b5, 0x1339b2eb, 0x3b52ec6f, 0x6dfc511f, 0x9b30952c, 0xcc814544, 0xaf5ebd09,
-			0xbee3d004, 0xde334afd, 0x660f2807, 0x192e4bb3, 0xc0cba857, 0x45c8740f, 0xd20b5f39, 0xb9d3fbdb, 
-			0x5579c0bd, 0x1a60320a, 0xd6a100c6, 0x402c7279, 0x679f25fe, 0xfb1fa3cc, 0x8ea5e9f8, 0xdb3222f8, 
-			0x3c7516df, 0xfd616b15, 0x2f501ec8, 0xad0552ab, 0x323db5fa, 0xfd238760, 0x53317b48, 0x3e00df82, 
-			0x9e5c57bb, 0xca6f8ca0, 0x1a87562e, 0xdf1769db, 0xd542a8f6, 0x287effc3, 0xac6732c6, 0x8c4f5573, 
-			0x695b27b0, 0xbbca58c8, 0xe1ffa35d, 0xb8f011a0, 0x10fa3d98, 0xfd2183b8, 0x4afcb56c, 0x2dd1d35b,
-			0x9a53e479, 0xb6f84565, 0xd28e49bc, 0x4bfb9790, 0xe1ddf2da, 0xa4cb7e33, 0x62fb1341, 0xcee4c6e8, 
-			0xef20cada, 0x36774c01, 0xd07e9efe, 0x2bf11fb4, 0x95dbda4d, 0xae909198, 0xeaad8e71, 0x6b93d5a0,
-			0xd08ed1d0, 0xafc725e0, 0x8e3c5b2f, 0x8e7594b7, 0x8ff6e2fb, 0xf2122b64, 0x8888b812, 0x900df01c, 
-			0x4fad5ea0, 0x688fc31c, 0xd1cff191, 0xb3a8c1ad, 0x2f2f2218, 0xbe0e1777, 0xea752dfe, 0x8b021fa1,
-			0xe5a0cc0f, 0xb56f74e8, 0x18acf3d6, 0xce89e299, 0xb4a84fe0, 0xfd13e0b7, 0x7cc43b81, 0xd2ada8d9,
-			0x165fa266, 0x80957705, 0x93cc7314, 0x211a1477, 0xe6ad2065, 0x77b5fa86, 0xc75442f5, 0xfb9d35cf,
-			0xebcdaf0c, 0x7b3e89a0, 0xd6411bd3, 0xae1e7e49, 0x00250e2d, 0x2071b35e, 0x226800bb, 0x57b8e0af,
-			0x2464369b, 0xf009b91e, 0x5563911d, 0x59dfa6aa, 0x78c14389, 0xd95a537f, 0x207d5ba2, 0x02e5b9c5,
-			0x83260376, 0x6295cfa9, 0x11c81968, 0x4e734a41, 0xb3472dca, 0x7b14a94a, 0x1b510052, 0x9a532915,
-			0xd60f573f, 0xbc9bc6e4, 0x2b60a476, 0x81e67400, 0x08ba6fb5, 0x571be91f, 0xf296ec6b, 0x2a0dd915,
-			0xb6636521, 0xe7b9f9b6, 0xff34052e, 0xc5855664, 0x53b02d5d, 0xa99f8fa1, 0x08ba4799, 0x6e85076a
-		],
-		s1:[
-			0x4b7a70e9, 0xb5b32944, 0xdb75092e, 0xc4192623, 0xad6ea6b0, 0x49a7df7d, 0x9cee60b8, 0x8fedb266,
-			0xecaa8c71, 0x699a17ff, 0x5664526c, 0xc2b19ee1, 0x193602a5, 0x75094c29, 0xa0591340, 0xe4183a3e,
-			0x3f54989a, 0x5b429d65, 0x6b8fe4d6, 0x99f73fd6, 0xa1d29c07, 0xefe830f5, 0x4d2d38e6, 0xf0255dc1,
-			0x4cdd2086, 0x8470eb26, 0x6382e9c6, 0x021ecc5e, 0x09686b3f, 0x3ebaefc9, 0x3c971814, 0x6b6a70a1,
-			0x687f3584, 0x52a0e286, 0xb79c5305, 0xaa500737, 0x3e07841c, 0x7fdeae5c, 0x8e7d44ec, 0x5716f2b8,
-			0xb03ada37, 0xf0500c0d, 0xf01c1f04, 0x0200b3ff, 0xae0cf51a, 0x3cb574b2, 0x25837a58, 0xdc0921bd,
-			0xd19113f9, 0x7ca92ff6, 0x94324773, 0x22f54701, 0x3ae5e581, 0x37c2dadc, 0xc8b57634, 0x9af3dda7,
-			0xa9446146, 0x0fd0030e, 0xecc8c73e, 0xa4751e41, 0xe238cd99, 0x3bea0e2f, 0x3280bba1, 0x183eb331, 
-			0x4e548b38, 0x4f6db908, 0x6f420d03, 0xf60a04bf, 0x2cb81290, 0x24977c79, 0x5679b072, 0xbcaf89af, 
-			0xde9a771f, 0xd9930810, 0xb38bae12, 0xdccf3f2e, 0x5512721f, 0x2e6b7124, 0x501adde6, 0x9f84cd87,
-			0x7a584718, 0x7408da17, 0xbc9f9abc, 0xe94b7d8c, 0xec7aec3a, 0xdb851dfa, 0x63094366, 0xc464c3d2, 
-			0xef1c1847, 0x3215d908, 0xdd433b37, 0x24c2ba16, 0x12a14d43, 0x2a65c451, 0x50940002, 0x133ae4dd,
-			0x71dff89e, 0x10314e55, 0x81ac77d6, 0x5f11199b, 0x043556f1, 0xd7a3c76b, 0x3c11183b, 0x5924a509, 
-			0xf28fe6ed, 0x97f1fbfa, 0x9ebabf2c, 0x1e153c6e, 0x86e34570, 0xeae96fb1, 0x860e5e0a, 0x5a3e2ab3, 
-			0x771fe71c, 0x4e3d06fa, 0x2965dcb9, 0x99e71d0f, 0x803e89d6, 0x5266c825, 0x2e4cc978, 0x9c10b36a,
-			0xc6150eba, 0x94e2ea78, 0xa5fc3c53, 0x1e0a2df4, 0xf2f74ea7, 0x361d2b3d, 0x1939260f, 0x19c27960, 
-			0x5223a708, 0xf71312b6, 0xebadfe6e, 0xeac31f66, 0xe3bc4595, 0xa67bc883, 0xb17f37d1, 0x018cff28,
-			0xc332ddef, 0xbe6c5aa5, 0x65582185, 0x68ab9802, 0xeecea50f, 0xdb2f953b, 0x2aef7dad, 0x5b6e2f84, 
-			0x1521b628, 0x29076170, 0xecdd4775, 0x619f1510, 0x13cca830, 0xeb61bd96, 0x0334fe1e, 0xaa0363cf,
-			0xb5735c90, 0x4c70a239, 0xd59e9e0b, 0xcbaade14, 0xeecc86bc, 0x60622ca7, 0x9cab5cab, 0xb2f3846e, 
-			0x648b1eaf, 0x19bdf0ca, 0xa02369b9, 0x655abb50, 0x40685a32, 0x3c2ab4b3, 0x319ee9d5, 0xc021b8f7, 
-			0x9b540b19, 0x875fa099, 0x95f7997e, 0x623d7da8, 0xf837889a, 0x97e32d77, 0x11ed935f, 0x16681281, 
-			0x0e358829, 0xc7e61fd6, 0x96dedfa1, 0x7858ba99, 0x57f584a5, 0x1b227263, 0x9b83c3ff, 0x1ac24696,
-			0xcdb30aeb, 0x532e3054, 0x8fd948e4, 0x6dbc3128, 0x58ebf2ef, 0x34c6ffea, 0xfe28ed61, 0xee7c3c73,
-			0x5d4a14d9, 0xe864b7e3, 0x42105d14, 0x203e13e0, 0x45eee2b6, 0xa3aaabea, 0xdb6c4f15, 0xfacb4fd0, 
-			0xc742f442, 0xef6abbb5, 0x654f3b1d, 0x41cd2105, 0xd81e799e, 0x86854dc7, 0xe44b476a, 0x3d816250,
-			0xcf62a1f2, 0x5b8d2646, 0xfc8883a0, 0xc1c7b6a3, 0x7f1524c3, 0x69cb7492, 0x47848a0b, 0x5692b285,
-			0x095bbf00, 0xad19489d, 0x1462b174, 0x23820e00, 0x58428d2a, 0x0c55f5ea, 0x1dadf43e, 0x233f7061,
-			0x3372f092, 0x8d937e41, 0xd65fecf1, 0x6c223bdb, 0x7cde3759, 0xcbee7460, 0x4085f2a7, 0xce77326e,
-			0xa6078084, 0x19f8509e, 0xe8efd855, 0x61d99735, 0xa969a7aa, 0xc50c06c2, 0x5a04abfc, 0x800bcadc,
-			0x9e447a2e, 0xc3453484, 0xfdd56705, 0x0e1e9ec9, 0xdb73dbd3, 0x105588cd, 0x675fda79, 0xe3674340,
-			0xc5c43465, 0x713e38d8, 0x3d28f89e, 0xf16dff20, 0x153e21e7, 0x8fb03d4a, 0xe6e39f2b, 0xdb83adf7
-		],
-		s2:[
-			0xe93d5a68, 0x948140f7, 0xf64c261c, 0x94692934, 0x411520f7, 0x7602d4f7, 0xbcf46b2e, 0xd4a20068,
-			0xd4082471, 0x3320f46a, 0x43b7d4b7, 0x500061af, 0x1e39f62e, 0x97244546, 0x14214f74, 0xbf8b8840,
-			0x4d95fc1d, 0x96b591af, 0x70f4ddd3, 0x66a02f45, 0xbfbc09ec, 0x03bd9785, 0x7fac6dd0, 0x31cb8504,
-			0x96eb27b3, 0x55fd3941, 0xda2547e6, 0xabca0a9a, 0x28507825, 0x530429f4, 0x0a2c86da, 0xe9b66dfb,
-			0x68dc1462, 0xd7486900, 0x680ec0a4, 0x27a18dee, 0x4f3ffea2, 0xe887ad8c, 0xb58ce006, 0x7af4d6b6,
-			0xaace1e7c, 0xd3375fec, 0xce78a399, 0x406b2a42, 0x20fe9e35, 0xd9f385b9, 0xee39d7ab, 0x3b124e8b,
-			0x1dc9faf7, 0x4b6d1856, 0x26a36631, 0xeae397b2, 0x3a6efa74, 0xdd5b4332, 0x6841e7f7, 0xca7820fb,
-			0xfb0af54e, 0xd8feb397, 0x454056ac, 0xba489527, 0x55533a3a, 0x20838d87, 0xfe6ba9b7, 0xd096954b,
-			0x55a867bc, 0xa1159a58, 0xcca92963, 0x99e1db33, 0xa62a4a56, 0x3f3125f9, 0x5ef47e1c, 0x9029317c,
-			0xfdf8e802, 0x04272f70, 0x80bb155c, 0x05282ce3, 0x95c11548, 0xe4c66d22, 0x48c1133f, 0xc70f86dc,
-			0x07f9c9ee, 0x41041f0f, 0x404779a4, 0x5d886e17, 0x325f51eb, 0xd59bc0d1, 0xf2bcc18f, 0x41113564,
-			0x257b7834, 0x602a9c60, 0xdff8e8a3, 0x1f636c1b, 0x0e12b4c2, 0x02e1329e, 0xaf664fd1, 0xcad18115,
-			0x6b2395e0, 0x333e92e1, 0x3b240b62, 0xeebeb922, 0x85b2a20e, 0xe6ba0d99, 0xde720c8c, 0x2da2f728,
-			0xd0127845, 0x95b794fd, 0x647d0862, 0xe7ccf5f0, 0x5449a36f, 0x877d48fa, 0xc39dfd27, 0xf33e8d1e,
-			0x0a476341, 0x992eff74, 0x3a6f6eab, 0xf4f8fd37, 0xa812dc60, 0xa1ebddf8, 0x991be14c, 0xdb6e6b0d,
-			0xc67b5510, 0x6d672c37, 0x2765d43b, 0xdcd0e804, 0xf1290dc7, 0xcc00ffa3, 0xb5390f92, 0x690fed0b,
-			0x667b9ffb, 0xcedb7d9c, 0xa091cf0b, 0xd9155ea3, 0xbb132f88, 0x515bad24, 0x7b9479bf, 0x763bd6eb,
-			0x37392eb3, 0xcc115979, 0x8026e297, 0xf42e312d, 0x6842ada7, 0xc66a2b3b, 0x12754ccc, 0x782ef11c,
-			0x6a124237, 0xb79251e7, 0x06a1bbe6, 0x4bfb6350, 0x1a6b1018, 0x11caedfa, 0x3d25bdd8, 0xe2e1c3c9,
-			0x44421659, 0x0a121386, 0xd90cec6e, 0xd5abea2a, 0x64af674e, 0xda86a85f, 0xbebfe988, 0x64e4c3fe,
-			0x9dbc8057, 0xf0f7c086, 0x60787bf8, 0x6003604d, 0xd1fd8346, 0xf6381fb0, 0x7745ae04, 0xd736fccc, 
-			0x83426b33, 0xf01eab71, 0xb0804187, 0x3c005e5f, 0x77a057be, 0xbde8ae24, 0x55464299, 0xbf582e61,
-			0x4e58f48f, 0xf2ddfda2, 0xf474ef38, 0x8789bdc2, 0x5366f9c3, 0xc8b38e74, 0xb475f255, 0x46fcd9b9,
-			0x7aeb2661, 0x8b1ddf84, 0x846a0e79, 0x915f95e2, 0x466e598e, 0x20b45770, 0x8cd55591, 0xc902de4c, 
-			0xb90bace1, 0xbb8205d0, 0x11a86248, 0x7574a99e, 0xb77f19b6, 0xe0a9dc09, 0x662d09a1, 0xc4324633, 
-			0xe85a1f02, 0x09f0be8c, 0x4a99a025, 0x1d6efe10, 0x1ab93d1d, 0x0ba5a4df, 0xa186f20f, 0x2868f169, 
-			0xdcb7da83, 0x573906fe, 0xa1e2ce9b, 0x4fcd7f52, 0x50115e01, 0xa70683fa, 0xa002b5c4, 0x0de6d027, 
-			0x9af88c27, 0x773f8641, 0xc3604c06, 0x61a806b5, 0xf0177a28, 0xc0f586e0, 0x006058aa, 0x30dc7d62,
-			0x11e69ed7, 0x2338ea63, 0x53c2dd94, 0xc2c21634, 0xbbcbee56, 0x90bcb6de, 0xebfc7da1, 0xce591d76,
-			0x6f05e409, 0x4b7c0188, 0x39720a3d, 0x7c927c24, 0x86e3725f, 0x724d9db9, 0x1ac15bb4, 0xd39eb8fc, 
-			0xed545578, 0x08fca5b5, 0xd83d7cd3, 0x4dad0fc4, 0x1e50ef5e, 0xb161e6f8, 0xa28514d9, 0x6c51133c,
-			0x6fd5c7e7, 0x56e14ec4, 0x362abfce, 0xddc6c837, 0xd79a3234, 0x92638212, 0x670efa8e, 0x406000e0
-		],
-		s3:[
-			0x3a39ce37, 0xd3faf5cf, 0xabc27737, 0x5ac52d1b, 0x5cb0679e, 0x4fa33742, 0xd3822740, 0x99bc9bbe,
-			0xd5118e9d, 0xbf0f7315, 0xd62d1c7e, 0xc700c47b, 0xb78c1b6b, 0x21a19045, 0xb26eb1be, 0x6a366eb4,
-			0x5748ab2f, 0xbc946e79, 0xc6a376d2, 0x6549c2c8, 0x530ff8ee, 0x468dde7d, 0xd5730a1d, 0x4cd04dc6, 
-			0x2939bbdb, 0xa9ba4650, 0xac9526e8, 0xbe5ee304, 0xa1fad5f0, 0x6a2d519a, 0x63ef8ce2, 0x9a86ee22,
-			0xc089c2b8, 0x43242ef6, 0xa51e03aa, 0x9cf2d0a4, 0x83c061ba, 0x9be96a4d, 0x8fe51550, 0xba645bd6, 
-			0x2826a2f9, 0xa73a3ae1, 0x4ba99586, 0xef5562e9, 0xc72fefd3, 0xf752f7da, 0x3f046f69, 0x77fa0a59, 
-			0x80e4a915, 0x87b08601, 0x9b09e6ad, 0x3b3ee593, 0xe990fd5a, 0x9e34d797, 0x2cf0b7d9, 0x022b8b51,
-			0x96d5ac3a, 0x017da67d, 0xd1cf3ed6, 0x7c7d2d28, 0x1f9f25cf, 0xadf2b89b, 0x5ad6b472, 0x5a88f54c, 
-			0xe029ac71, 0xe019a5e6, 0x47b0acfd, 0xed93fa9b, 0xe8d3c48d, 0x283b57cc, 0xf8d56629, 0x79132e28, 
-			0x785f0191, 0xed756055, 0xf7960e44, 0xe3d35e8c, 0x15056dd4, 0x88f46dba, 0x03a16125, 0x0564f0bd, 
-			0xc3eb9e15, 0x3c9057a2, 0x97271aec, 0xa93a072a, 0x1b3f6d9b, 0x1e6321f5, 0xf59c66fb, 0x26dcf319,
-			0x7533d928, 0xb155fdf5, 0x03563482, 0x8aba3cbb, 0x28517711, 0xc20ad9f8, 0xabcc5167, 0xccad925f, 
-			0x4de81751, 0x3830dc8e, 0x379d5862, 0x9320f991, 0xea7a90c2, 0xfb3e7bce, 0x5121ce64, 0x774fbe32, 
-			0xa8b6e37e, 0xc3293d46, 0x48de5369, 0x6413e680, 0xa2ae0810, 0xdd6db224, 0x69852dfd, 0x09072166, 
-			0xb39a460a, 0x6445c0dd, 0x586cdecf, 0x1c20c8ae, 0x5bbef7dd, 0x1b588d40, 0xccd2017f, 0x6bb4e3bb,
-			0xdda26a7e, 0x3a59ff45, 0x3e350a44, 0xbcb4cdd5, 0x72eacea8, 0xfa6484bb, 0x8d6612ae, 0xbf3c6f47,
-			0xd29be463, 0x542f5d9e, 0xaec2771b, 0xf64e6370, 0x740e0d8d, 0xe75b1357, 0xf8721671, 0xaf537d5d, 
-			0x4040cb08, 0x4eb4e2cc, 0x34d2466a, 0x0115af84, 0xe1b00428, 0x95983a1d, 0x06b89fb4, 0xce6ea048,
-			0x6f3f3b82, 0x3520ab82, 0x011a1d4b, 0x277227f8, 0x611560b1, 0xe7933fdc, 0xbb3a792b, 0x344525bd, 
-			0xa08839e1, 0x51ce794b, 0x2f32c9b7, 0xa01fbac9, 0xe01cc87e, 0xbcc7d1f6, 0xcf0111c3, 0xa1e8aac7, 
-			0x1a908749, 0xd44fbd9a, 0xd0dadecb, 0xd50ada38, 0x0339c32a, 0xc6913667, 0x8df9317c, 0xe0b12b4f, 
-			0xf79e59b7, 0x43f5bb3a, 0xf2d519ff, 0x27d9459c, 0xbf97222c, 0x15e6fc2a, 0x0f91fc71, 0x9b941525, 
-			0xfae59361, 0xceb69ceb, 0xc2a86459, 0x12baa8d1, 0xb6c1075e, 0xe3056a0c, 0x10d25065, 0xcb03a442,
-			0xe0ec6e0e, 0x1698db3b, 0x4c98a0be, 0x3278e964, 0x9f1f9532, 0xe0d392df, 0xd3a0342b, 0x8971f21e, 
-			0x1b0a7441, 0x4ba3348c, 0xc5be7120, 0xc37632d8, 0xdf359f8d, 0x9b992f2e, 0xe60b6f47, 0x0fe3f11d,
-			0xe54cda54, 0x1edad891, 0xce6279cf, 0xcd3e7e6f, 0x1618b166, 0xfd2c1d05, 0x848fd2c5, 0xf6fb2299, 
-			0xf523f357, 0xa6327623, 0x93a83531, 0x56cccd02, 0xacf08162, 0x5a75ebb5, 0x6e163697, 0x88d273cc, 
-			0xde966292, 0x81b949d0, 0x4c50901b, 0x71c65614, 0xe6c6c7bd, 0x327a140a, 0x45e1d006, 0xc3f27b9a, 
-			0xc9aa53fd, 0x62a80f00, 0xbb25bfe2, 0x35bdd2f6, 0x71126905, 0xb2040222, 0xb6cbcf7c, 0xcd769c2b, 
-			0x53113ec0, 0x1640e3d3, 0x38abbd60, 0x2547adf0, 0xba38209c, 0xf746ce76, 0x77afa1c5, 0x20756060,
-			0x85cbfe4e, 0x8ae88dd8, 0x7aaaf9b0, 0x4cf9aa7e, 0x1948c25c, 0x02fb8a8c, 0x01c36ae4, 0xd6ebe1f9,
-			0x90d4f869, 0xa65cdea0, 0x3f09252d, 0xc208e69f, 0xb74e6132, 0xce77e25b, 0x578fdfe3, 0x3ac372e6
-		]
-	}
-////////////////////////////////////////////////////////////////////////////
-	function add(x,y){
-		var sum=(x+y)&0xffffffff;
-		if (sum<0){
-			sum=-sum;
-			return (0x10000*((sum>>16)^0xffff))+(((sum&0xffff)^0xffff)+1);
+dojo.crypto.Blowfish = new function () {
+	var POW2 = Math.pow(2, 2);
+	var POW3 = Math.pow(2, 3);
+	var POW4 = Math.pow(2, 4);
+	var POW8 = Math.pow(2, 8);
+	var POW16 = Math.pow(2, 16);
+	var POW24 = Math.pow(2, 24);
+	var iv = null;
+	var boxes = {p:[608135816, 2242054355, 320440878, 57701188, 2752067618, 698298832, 137296536, 3964562569, 1160258022, 953160567, 3193202383, 887688300, 3232508343, 3380367581, 1065670069, 3041331479, 2450970073, 2306472731], s0:[3509652390, 2564797868, 805139163, 3491422135, 3101798381, 1780907670, 3128725573, 4046225305, 614570311, 3012652279, 134345442, 2240740374, 1667834072, 1901547113, 2757295779, 4103290238, 227898511, 1921955416, 1904987480, 2182433518, 2069144605, 3260701109, 2620446009, 720527379, 3318853667, 677414384, 3393288472, 3101374703, 2390351024, 1614419982, 1822297739, 2954791486, 3608508353, 3174124327, 2024746970, 1432378464, 3864339955, 2857741204, 1464375394, 1676153920, 1439316330, 715854006, 3033291828, 289532110, 2706671279, 2087905683, 3018724369, 1668267050, 732546397, 1947742710, 3462151702, 2609353502, 2950085171, 1814351708, 2050118529, 680887927, 999245976, 1800124847, 3300911131, 1713906067, 1641548236, 4213287313, 1216130144, 1575780402, 4018429277, 3917837745, 3693486850, 3949271944, 596196993, 3549867205, 258830323, 2213823033, 772490370, 2760122372, 1774776394, 2652871518, 566650946, 4142492826, 1728879713, 2882767088, 1783734482, 3629395816, 2517608232, 2874225571, 1861159788, 326777828, 3124490320, 2130389656, 2716951837, 967770486, 1724537150, 2185432712, 2364442137, 1164943284, 2105845187, 998989502, 3765401048, 2244026483, 1075463327, 1455516326, 1322494562, 910128902, 469688178, 1117454909, 936433444, 3490320968, 3675253459, 1240580251, 122909385, 2157517691, 634681816, 4142456567, 3825094682, 3061402683, 2540495037, 79693498, 3249098678, 1084186820, 1583128258, 426386531, 1761308591, 1047286709, 322548459, 995290223, 1845252383, 2603652396, 3431023940, 2942221577, 3202600964, 3727903485, 1712269319, 422464435, 3234572375, 1170764815, 3523960633, 3117677531, 1434042557, 442511882, 3600875718, 1076654713, 1738483198, 4213154764, 2393238008, 3677496056, 1014306527, 4251020053, 793779912, 2902807211, 842905082, 4246964064, 1395751752, 1040244610, 2656851899, 3396308128, 445077038, 3742853595, 3577915638, 679411651, 2892444358, 2354009459, 1767581616, 3150600392, 3791627101, 3102740896, 284835224, 4246832056, 1258075500, 768725851, 2589189241, 3069724005, 3532540348, 1274779536, 3789419226, 2764799539, 1660621633, 3471099624, 4011903706, 913787905, 3497959166, 737222580, 2514213453, 2928710040, 3937242737, 1804850592, 3499020752, 2949064160, 2386320175, 2390070455, 2415321851, 4061277028, 2290661394, 2416832540, 1336762016, 1754252060, 3520065937, 3014181293, 791618072, 3188594551, 3933548030, 2332172193, 3852520463, 3043980520, 413987798, 3465142937, 3030929376, 4245938359, 2093235073, 3534596313, 375366246, 2157278981, 2479649556, 555357303, 3870105701, 2008414854, 3344188149, 4221384143, 3956125452, 2067696032, 3594591187, 2921233993, 2428461, 544322398, 577241275, 1471733935, 610547355, 4027169054, 1432588573, 1507829418, 2025931657, 3646575487, 545086370, 48609733, 2200306550, 1653985193, 298326376, 1316178497, 3007786442, 2064951626, 458293330, 2589141269, 3591329599, 3164325604, 727753846, 2179363840, 146436021, 1461446943, 4069977195, 705550613, 3059967265, 3887724982, 4281599278, 3313849956, 1404054877, 2845806497, 146425753, 1854211946], s1:[1266315497, 3048417604, 3681880366, 3289982499, 2909710000, 1235738493, 2632868024, 2414719590, 3970600049, 1771706367, 1449415276, 3266420449, 422970021, 1963543593, 2690192192, 3826793022, 1062508698, 1531092325, 1804592342, 2583117782, 2714934279, 4024971509, 1294809318, 4028980673, 1289560198, 2221992742, 1669523910, 35572830, 157838143, 1052438473, 1016535060, 1802137761, 1753167236, 1386275462, 3080475397, 2857371447, 1040679964, 2145300060, 2390574316, 1461121720, 2956646967, 4031777805, 4028374788, 33600511, 2920084762, 1018524850, 629373528, 3691585981, 3515945977, 2091462646, 2486323059, 586499841, 988145025, 935516892, 3367335476, 2599673255, 2839830854, 265290510, 3972581182, 2759138881, 3795373465, 1005194799, 847297441, 406762289, 1314163512, 1332590856, 1866599683, 4127851711, 750260880, 613907577, 1450815602, 3165620655, 3734664991, 3650291728, 3012275730, 3704569646, 1427272223, 778793252, 1343938022, 2676280711, 2052605720, 1946737175, 3164576444, 3914038668, 3967478842, 3682934266, 1661551462, 3294938066, 4011595847, 840292616, 3712170807, 616741398, 312560963, 711312465, 1351876610, 322626781, 1910503582, 271666773, 2175563734, 1594956187, 70604529, 3617834859, 1007753275, 1495573769, 4069517037, 2549218298, 2663038764, 504708206, 2263041392, 3941167025, 2249088522, 1514023603, 1998579484, 1312622330, 694541497, 2582060303, 2151582166, 1382467621, 776784248, 2618340202, 3323268794, 2497899128, 2784771155, 503983604, 4076293799, 907881277, 423175695, 432175456, 1378068232, 4145222326, 3954048622, 3938656102, 3820766613, 2793130115, 2977904593, 26017576, 3274890735, 3194772133, 1700274565, 1756076034, 4006520079, 3677328699, 720338349, 1533947780, 354530856, 688349552, 3973924725, 1637815568, 332179504, 3949051286, 53804574, 2852348879, 3044236432, 1282449977, 3583942155, 3416972820, 4006381244, 1617046695, 2628476075, 3002303598, 1686838959, 431878346, 2686675385, 1700445008, 1080580658, 1009431731, 832498133, 3223435511, 2605976345, 2271191193, 2516031870, 1648197032, 4164389018, 2548247927, 300782431, 375919233, 238389289, 3353747414, 2531188641, 2019080857, 1475708069, 455242339, 2609103871, 448939670, 3451063019, 1395535956, 2413381860, 1841049896, 1491858159, 885456874, 4264095073, 4001119347, 1565136089, 3898914787, 1108368660, 540939232, 1173283510, 2745871338, 3681308437, 4207628240, 3343053890, 4016749493, 1699691293, 1103962373, 3625875870, 2256883143, 3830138730, 1031889488, 3479347698, 1535977030, 4236805024, 3251091107, 2132092099, 1774941330, 1199868427, 1452454533, 157007616, 2904115357, 342012276, 595725824, 1480756522, 206960106, 497939518, 591360097, 863170706, 2375253569, 3596610801, 1814182875, 2094937945, 3421402208, 1082520231, 3463918190, 2785509508, 435703966, 3908032597, 1641649973, 2842273706, 3305899714, 1510255612, 2148256476, 2655287854, 3276092548, 4258621189, 236887753, 3681803219, 274041037, 1734335097, 3815195456, 3317970021, 1899903192, 1026095262, 4050517792, 356393447, 2410691914, 3873677099, 3682840055], s2:[3913112168, 2491498743, 4132185628, 2489919796, 1091903735, 1979897079, 3170134830, 3567386728, 3557303409, 857797738, 1136121015, 1342202287, 507115054, 2535736646, 337727348, 3213592640, 1301675037, 2528481711, 1895095763, 1721773893, 3216771564, 62756741, 2142006736, 835421444, 2531993523, 1442658625, 3659876326, 2882144922, 676362277, 1392781812, 170690266, 3921047035, 1759253602, 3611846912, 1745797284, 664899054, 1329594018, 3901205900, 3045908486, 2062866102, 2865634940, 3543621612, 3464012697, 1080764994, 553557557, 3656615353, 3996768171, 991055499, 499776247, 1265440854, 648242737, 3940784050, 980351604, 3713745714, 1749149687, 3396870395, 4211799374, 3640570775, 1161844396, 3125318951, 1431517754, 545492359, 4268468663, 3499529547, 1437099964, 2702547544, 3433638243, 2581715763, 2787789398, 1060185593, 1593081372, 2418618748, 4260947970, 69676912, 2159744348, 86519011, 2512459080, 3838209314, 1220612927, 3339683548, 133810670, 1090789135, 1078426020, 1569222167, 845107691, 3583754449, 4072456591, 1091646820, 628848692, 1613405280, 3757631651, 526609435, 236106946, 48312990, 2942717905, 3402727701, 1797494240, 859738849, 992217954, 4005476642, 2243076622, 3870952857, 3732016268, 765654824, 3490871365, 2511836413, 1685915746, 3888969200, 1414112111, 2273134842, 3281911079, 4080962846, 172450625, 2569994100, 980381355, 4109958455, 2819808352, 2716589560, 2568741196, 3681446669, 3329971472, 1835478071, 660984891, 3704678404, 4045999559, 3422617507, 3040415634, 1762651403, 1719377915, 3470491036, 2693910283, 3642056355, 3138596744, 1364962596, 2073328063, 1983633131, 926494387, 3423689081, 2150032023, 4096667949, 1749200295, 3328846651, 309677260, 2016342300, 1779581495, 3079819751, 111262694, 1274766160, 443224088, 298511866, 1025883608, 3806446537, 1145181785, 168956806, 3641502830, 3584813610, 1689216846, 3666258015, 3200248200, 1692713982, 2646376535, 4042768518, 1618508792, 1610833997, 3523052358, 4130873264, 2001055236, 3610705100, 2202168115, 4028541809, 2961195399, 1006657119, 2006996926, 3186142756, 1430667929, 3210227297, 1314452623, 4074634658, 4101304120, 2273951170, 1399257539, 3367210612, 3027628629, 1190975929, 2062231137, 2333990788, 2221543033, 2438960610, 1181637006, 548689776, 2362791313, 3372408396, 3104550113, 3145860560, 296247880, 1970579870, 3078560182, 3769228297, 1714227617, 3291629107, 3898220290, 166772364, 1251581989, 493813264, 448347421, 195405023, 2709975567, 677966185, 3703036547, 1463355134, 2715995803, 1338867538, 1343315457, 2802222074, 2684532164, 233230375, 2599980071, 2000651841, 3277868038, 1638401717, 4028070440, 3237316320, 6314154, 819756386, 300326615, 590932579, 1405279636, 3267499572, 3150704214, 2428286686, 3959192993, 3461946742, 1862657033, 1266418056, 963775037, 2089974820, 2263052895, 1917689273, 448879540, 3550394620, 3981727096, 150775221, 3627908307, 1303187396, 508620638, 2975983352, 2726630617, 1817252668, 1876281319, 1457606340, 908771278, 3720792119, 3617206836, 2455994898, 1729034894, 1080033504], s3:[976866871, 3556439503, 2881648439, 1522871579, 1555064734, 1336096578, 3548522304, 2579274686, 3574697629, 3205460757, 3593280638, 3338716283, 3079412587, 564236357, 2993598910, 1781952180, 1464380207, 3163844217, 3332601554, 1699332808, 1393555694, 1183702653, 3581086237, 1288719814, 691649499, 2847557200, 2895455976, 3193889540, 2717570544, 1781354906, 1676643554, 2592534050, 3230253752, 1126444790, 2770207658, 2633158820, 2210423226, 2615765581, 2414155088, 3127139286, 673620729, 2805611233, 1269405062, 4015350505, 3341807571, 4149409754, 1057255273, 2012875353, 2162469141, 2276492801, 2601117357, 993977747, 3918593370, 2654263191, 753973209, 36408145, 2530585658, 25011837, 3520020182, 2088578344, 530523599, 2918365339, 1524020338, 1518925132, 3760827505, 3759777254, 1202760957, 3985898139, 3906192525, 674977740, 4174734889, 2031300136, 2019492241, 3983892565, 4153806404, 3822280332, 352677332, 2297720250, 60907813, 90501309, 3286998549, 1016092578, 2535922412, 2839152426, 457141659, 509813237, 4120667899, 652014361, 1966332200, 2975202805, 55981186, 2327461051, 676427537, 3255491064, 2882294119, 3433927263, 1307055953, 942726286, 933058658, 2468411793, 3933900994, 4215176142, 1361170020, 2001714738, 2830558078, 3274259782, 1222529897, 1679025792, 2729314320, 3714953764, 1770335741, 151462246, 3013232138, 1682292957, 1483529935, 471910574, 1539241949, 458788160, 3436315007, 1807016891, 3718408830, 978976581, 1043663428, 3165965781, 1927990952, 4200891579, 2372276910, 3208408903, 3533431907, 1412390302, 2931980059, 4132332400, 1947078029, 3881505623, 4168226417, 2941484381, 1077988104, 1320477388, 886195818, 18198404, 3786409000, 2509781533, 112762804, 3463356488, 1866414978, 891333506, 18488651, 661792760, 1628790961, 3885187036, 3141171499, 876946877, 2693282273, 1372485963, 791857591, 2686433993, 3759982718, 3167212022, 3472953795, 2716379847, 445679433, 3561995674, 3504004811, 3574258232, 54117162, 3331405415, 2381918588, 3769707343, 4154350007, 1140177722, 4074052095, 668550556, 3214352940, 367459370, 261225585, 2610173221, 4209349473, 3468074219, 3265815641, 314222801, 3066103646, 3808782860, 282218597, 3406013506, 3773591054, 379116347, 1285071038, 846784868, 2669647154, 3771962079, 3550491691, 2305946142, 453669953, 1268987020, 3317592352, 3279303384, 3744833421, 2610507566, 3859509063, 266596637, 3847019092, 517658769, 3462560207, 3443424879, 370717030, 4247526661, 2224018117, 4143653529, 4112773975, 2788324899, 2477274417, 1456262402, 2901442914, 1517677493, 1846949527, 2295493580, 3734397586, 2176403920, 1280348187, 1908823572, 3871786941, 846861322, 1172426758, 3287448474, 3383383037, 1655181056, 3139813346, 901632758, 1897031941, 2986607138, 3066810236, 3447102507, 1393639104, 373351379, 950779232, 625454576, 3124240540, 4148612726, 2007998917, 544563296, 2244738638, 2330496472, 2058025392, 1291430526, 424198748, 50039436, 29584100, 3605783033, 2429876329, 2791104160, 1057563949, 3255363231, 3075367218, 3463963227, 1469046755, 985887462]};
+	function add(x, y) {
+		var sum = (x + y) & 4294967295;
+		if (sum < 0) {
+			sum = -sum;
+			return (65536 * ((sum >> 16) ^ 65535)) + (((sum & 65535) ^ 65535) + 1);
 		}
 		return sum;
 	}
-	function split(x){
-		var r=x&0xffffffff;
-		if(r<0) {
-			r=-r;
-			return [((r&0xffff)^0xffff)+1,(r>>16)^0xffff];
+	function split(x) {
+		var r = x & 4294967295;
+		if (r < 0) {
+			r = -r;
+			return [((r & 65535) ^ 65535) + 1, (r >> 16) ^ 65535];
 		}
-		return [r&0xffff,(r>>16)];
+		return [r & 65535, (r >> 16)];
 	}
-	function xor(x,y){
-		var xs=split(x);
-		var ys=split(y);
-		return (0x10000*(xs[1]^ys[1]))+(xs[0]^ys[0]);
+	function xor(x, y) {
+		var xs = split(x);
+		var ys = split(y);
+		return (65536 * (xs[1] ^ ys[1])) + (xs[0] ^ ys[0]);
 	}
-	function $(v, box){
-		var d=v&0xff; v>>=8;
-		var c=v&0xff; v>>=8;
-		var b=v&0xff; v>>=8;
-		var a=v&0xff;
-		var r=add(box.s0[a],box.s1[b]);
-		r=xor(r,box.s2[c]);
-		return add(r,box.s3[d]);
+	function $(v, box) {
+		var d = v & 255;
+		v >>= 8;
+		var c = v & 255;
+		v >>= 8;
+		var b = v & 255;
+		v >>= 8;
+		var a = v & 255;
+		var r = add(box.s0[a], box.s1[b]);
+		r = xor(r, box.s2[c]);
+		return add(r, box.s3[d]);
 	}
-////////////////////////////////////////////////////////////////////////////
-	function eb(o, box){
-		var l=o.left;
-		var r=o.right;
-		l=xor(l,box.p[0]);
-		r=xor(r,xor($(l,box),box.p[1]));
-		l=xor(l,xor($(r,box),box.p[2]));
-		r=xor(r,xor($(l,box),box.p[3]));
-		l=xor(l,xor($(r,box),box.p[4]));
-		r=xor(r,xor($(l,box),box.p[5]));
-		l=xor(l,xor($(r,box),box.p[6]));
-		r=xor(r,xor($(l,box),box.p[7]));
-		l=xor(l,xor($(r,box),box.p[8]));
-		r=xor(r,xor($(l,box),box.p[9]));
-		l=xor(l,xor($(r,box),box.p[10]));
-		r=xor(r,xor($(l,box),box.p[11]));
-		l=xor(l,xor($(r,box),box.p[12]));
-		r=xor(r,xor($(l,box),box.p[13]));
-		l=xor(l,xor($(r,box),box.p[14]));
-		r=xor(r,xor($(l,box),box.p[15]));
-		l=xor(l,xor($(r,box),box.p[16]));
-		o.right=l;
-		o.left=xor(r,box.p[17]);
+	function eb(o, box) {
+		var l = o.left;
+		var r = o.right;
+		l = xor(l, box.p[0]);
+		r = xor(r, xor($(l, box), box.p[1]));
+		l = xor(l, xor($(r, box), box.p[2]));
+		r = xor(r, xor($(l, box), box.p[3]));
+		l = xor(l, xor($(r, box), box.p[4]));
+		r = xor(r, xor($(l, box), box.p[5]));
+		l = xor(l, xor($(r, box), box.p[6]));
+		r = xor(r, xor($(l, box), box.p[7]));
+		l = xor(l, xor($(r, box), box.p[8]));
+		r = xor(r, xor($(l, box), box.p[9]));
+		l = xor(l, xor($(r, box), box.p[10]));
+		r = xor(r, xor($(l, box), box.p[11]));
+		l = xor(l, xor($(r, box), box.p[12]));
+		r = xor(r, xor($(l, box), box.p[13]));
+		l = xor(l, xor($(r, box), box.p[14]));
+		r = xor(r, xor($(l, box), box.p[15]));
+		l = xor(l, xor($(r, box), box.p[16]));
+		o.right = l;
+		o.left = xor(r, box.p[17]);
 	}
-
-	function db(o, box){
-		var l=o.left;
-		var r=o.right;
-		l=xor(l,box.p[17]);
-		r=xor(r,xor($(l,box),box.p[16]));
-		l=xor(l,xor($(r,box),box.p[15]));
-		r=xor(r,xor($(l,box),box.p[14]));
-		l=xor(l,xor($(r,box),box.p[13]));
-		r=xor(r,xor($(l,box),box.p[12]));
-		l=xor(l,xor($(r,box),box.p[11]));
-		r=xor(r,xor($(l,box),box.p[10]));
-		l=xor(l,xor($(r,box),box.p[9]));
-		r=xor(r,xor($(l,box),box.p[8]));
-		l=xor(l,xor($(r,box),box.p[7]));
-		r=xor(r,xor($(l,box),box.p[6]));
-		l=xor(l,xor($(r,box),box.p[5]));
-		r=xor(r,xor($(l,box),box.p[4]));
-		l=xor(l,xor($(r,box),box.p[3]));
-		r=xor(r,xor($(l,box),box.p[2]));
-		l=xor(l,xor($(r,box),box.p[1]));
-		o.right=l;
-		o.left=xor(r,box.p[0]);
+	function db(o, box) {
+		var l = o.left;
+		var r = o.right;
+		l = xor(l, box.p[17]);
+		r = xor(r, xor($(l, box), box.p[16]));
+		l = xor(l, xor($(r, box), box.p[15]));
+		r = xor(r, xor($(l, box), box.p[14]));
+		l = xor(l, xor($(r, box), box.p[13]));
+		r = xor(r, xor($(l, box), box.p[12]));
+		l = xor(l, xor($(r, box), box.p[11]));
+		r = xor(r, xor($(l, box), box.p[10]));
+		l = xor(l, xor($(r, box), box.p[9]));
+		r = xor(r, xor($(l, box), box.p[8]));
+		l = xor(l, xor($(r, box), box.p[7]));
+		r = xor(r, xor($(l, box), box.p[6]));
+		l = xor(l, xor($(r, box), box.p[5]));
+		r = xor(r, xor($(l, box), box.p[4]));
+		l = xor(l, xor($(r, box), box.p[3]));
+		r = xor(r, xor($(l, box), box.p[2]));
+		l = xor(l, xor($(r, box), box.p[1]));
+		o.right = l;
+		o.left = xor(r, box.p[0]);
 	}
-
-	//	Note that we aren't caching contexts here; it might take a little longer
-	//	but we should be more secure this way.
-	function init(key){
-		var k=key;
-		if (typeof(k)=="string"){
-			var a=[];
-			for(var i=0; i<k.length; i++) 
-				a.push(k.charCodeAt(i)&0xff);
-			k=a;
+	function init(key) {
+		var k = key;
+		if (typeof (k) == "string") {
+			var a = [];
+			for (var i = 0; i < k.length; i++) {
+				a.push(k.charCodeAt(i) & 255);
+			}
+			k = a;
 		}
-		//	init the boxes
-		var box = { p:[], s0:[], s1:[], s2:[], s3:[] };
-		for(var i=0; i<boxes.p.length; i++) box.p.push(boxes.p[i]);
-		for(var i=0; i<boxes.s0.length; i++) box.s0.push(boxes.s0[i]);
-		for(var i=0; i<boxes.s1.length; i++) box.s1.push(boxes.s1[i]);
-		for(var i=0; i<boxes.s2.length; i++) box.s2.push(boxes.s2[i]);
-		for(var i=0; i<boxes.s3.length; i++) box.s3.push(boxes.s3[i]);
-
-		//	init p with the key
-		var pos=0;
-		var data=0;
-		for(var i=0; i < box.p.length; i++){
-			for (var j=0; j<4; j++){
-				data = (data*POW8) | k[pos];
-				if(++pos==k.length) pos=0;
+		var box = {p:[], s0:[], s1:[], s2:[], s3:[]};
+		for (var i = 0; i < boxes.p.length; i++) {
+			box.p.push(boxes.p[i]);
+		}
+		for (var i = 0; i < boxes.s0.length; i++) {
+			box.s0.push(boxes.s0[i]);
+		}
+		for (var i = 0; i < boxes.s1.length; i++) {
+			box.s1.push(boxes.s1[i]);
+		}
+		for (var i = 0; i < boxes.s2.length; i++) {
+			box.s2.push(boxes.s2[i]);
+		}
+		for (var i = 0; i < boxes.s3.length; i++) {
+			box.s3.push(boxes.s3[i]);
+		}
+		var pos = 0;
+		var data = 0;
+		for (var i = 0; i < box.p.length; i++) {
+			for (var j = 0; j < 4; j++) {
+				data = (data * POW8) | k[pos];
+				if (++pos == k.length) {
+					pos = 0;
+				}
 			}
 			box.p[i] = xor(box.p[i], data);
 		}
-
-		//	encrypt p and the s boxes
-		var res={ left:0, right:0 };
-		for(var i=0; i<box.p.length;){
+		var res = {left:0, right:0};
+		for (var i = 0; i < box.p.length; ) {
 			eb(res, box);
-			box.p[i++]=res.left;
-			box.p[i++]=res.right;
+			box.p[i++] = res.left;
+			box.p[i++] = res.right;
 		}
-		for (var i=0; i<4; i++){
-			for(var j=0; j<box["s"+i].length;){
+		for (var i = 0; i < 4; i++) {
+			for (var j = 0; j < box["s" + i].length; ) {
 				eb(res, box);
-				box["s"+i][j++]=res.left;
-				box["s"+i][j++]=res.right;
+				box["s" + i][j++] = res.left;
+				box["s" + i][j++] = res.right;
 			}
 		}
 		return box;
 	}
-
-////////////////////////////////////////////////////////////////////////////
-//	CONVERSION FUNCTIONS
-////////////////////////////////////////////////////////////////////////////
-	//	these operate on byte arrays, NOT word arrays.
-	function toBase64(ba){ 
-		var p="=";
-		var tab="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-		var s=[];
-		var l=ba.length;
-		var rm=l%3;
-		var x=l-rm;
-		for (var i=0; i<x;){
-			var t=ba[i++]<<16|ba[i++]<<8|ba[i++];
-			s.push(tab.charAt((t>>>18)&0x3f)); 
-			s.push(tab.charAt((t>>>12)&0x3f));
-			s.push(tab.charAt((t>>>6)&0x3f));
-			s.push(tab.charAt(t&0x3f));
+	function toBase64(ba) {
+		var p = "=";
+		var tab = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+		var s = [];
+		var l = ba.length;
+		var rm = l % 3;
+		var x = l - rm;
+		for (var i = 0; i < x; ) {
+			var t = ba[i++] << 16 | ba[i++] << 8 | ba[i++];
+			s.push(tab.charAt((t >>> 18) & 63));
+			s.push(tab.charAt((t >>> 12) & 63));
+			s.push(tab.charAt((t >>> 6) & 63));
+			s.push(tab.charAt(t & 63));
 		}
-		//	deal with trailers, based on patch from Peter Wood.
-		switch(rm){
-			case 2:{
-				var t=ba[i++]<<16|ba[i++]<<8;
-				s.push(tab.charAt((t>>>18)&0x3f));
-				s.push(tab.charAt((t>>>12)&0x3f));
-				s.push(tab.charAt((t>>>6)&0x3f));
-				s.push(p);
-				break;
-			}
-			case 1:{
-				var t=ba[i++]<<16;
-				s.push(tab.charAt((t>>>18)&0x3f));
-				s.push(tab.charAt((t>>>12)&0x3f));
-				s.push(p);
-				s.push(p);
-				break;
-			}
+		switch (rm) {
+		  case 2:
+			var t = ba[i++] << 16 | ba[i++] << 8;
+			s.push(tab.charAt((t >>> 18) & 63));
+			s.push(tab.charAt((t >>> 12) & 63));
+			s.push(tab.charAt((t >>> 6) & 63));
+			s.push(p);
+			break;
+		  case 1:
+			var t = ba[i++] << 16;
+			s.push(tab.charAt((t >>> 18) & 63));
+			s.push(tab.charAt((t >>> 12) & 63));
+			s.push(p);
+			s.push(p);
+			break;
 		}
 		return s.join("");
 	}
-	function fromBase64(str){
-		var s=str.split("");
-		var p="=";
-		var tab="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-		var out=[];
-		var l=s.length;
-		while(s[--l]==p){ }
-		for (var i=0; i<l;){
-			var t=tab.indexOf(s[i++])<<18|tab.indexOf(s[i++])<<12|tab.indexOf(s[i++])<<6|tab.indexOf(s[i++]);
-			out.push((t>>>16)&0xff);
-			out.push((t>>>8)&0xff);
-			out.push(t&0xff);
+	function fromBase64(str) {
+		var s = str.split("");
+		var p = "=";
+		var tab = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+		var out = [];
+		var l = s.length;
+		while (s[--l] == p) {
+		}
+		for (var i = 0; i < l; ) {
+			var t = tab.indexOf(s[i++]) << 18 | tab.indexOf(s[i++]) << 12 | tab.indexOf(s[i++]) << 6 | tab.indexOf(s[i++]);
+			out.push((t >>> 16) & 255);
+			out.push((t >>> 8) & 255);
+			out.push(t & 255);
 		}
 		return out;
 	}
-////////////////////////////////////////////////////////////////////////////
-//	PUBLIC FUNCTIONS
-//	0.2: Only supporting ECB mode for now.
-////////////////////////////////////////////////////////////////////////////
-	this.getIV=function(/* dojo.crypto.outputTypes? */ outputType){
-		//	summary
-		//	returns the initialization vector in the output format specified by outputType
-		var out=outputType||dojo.crypto.outputTypes.Base64;
-		switch(out){
-			case dojo.crypto.outputTypes.Hex:{
-				var s=[];
-				for(var i=0; i<iv.length; i++)
-					s.push((iv[i]).toString(16));
-				return s.join("");		//	string
+	this.getIV = function (outputType) {
+		var out = outputType || dojo.crypto.outputTypes.Base64;
+		switch (out) {
+		  case dojo.crypto.outputTypes.Hex:
+			var s = [];
+			for (var i = 0; i < iv.length; i++) {
+				s.push((iv[i]).toString(16));
 			}
-			case dojo.crypto.outputTypes.String:{
-				return iv.join("");		//	string
-			}
-			case dojo.crypto.outputTypes.Raw:{
-				return iv;				//	array
-			}
-			default:{
-				return toBase64(iv); 	//	 string
-			}
+			return s.join("");
+		  case dojo.crypto.outputTypes.String:
+			return iv.join("");
+		  case dojo.crypto.outputTypes.Raw:
+			return iv;
+		  default:
+			return toBase64(iv);
 		}
 	};
-	this.setIV=function(/* string */data, /* dojo.crypto.outputTypes? */inputType){
-		//	summary
-		//	sets the initialization vector to data (as interpreted as inputType)
-		var ip=inputType||dojo.crypto.outputTypes.Base64;
-		var ba=null;
-		switch(ip){
-			case dojo.crypto.outputTypes.String:{
-				ba=[];
-				for (var i=0; i<data.length; i++){
-					ba.push(data.charCodeAt(i));
-				}
-				break;
+	this.setIV = function (data, inputType) {
+		var ip = inputType || dojo.crypto.outputTypes.Base64;
+		var ba = null;
+		switch (ip) {
+		  case dojo.crypto.outputTypes.String:
+			ba = [];
+			for (var i = 0; i < data.length; i++) {
+				ba.push(data.charCodeAt(i));
 			}
-			case dojo.crypto.outputTypes.Hex:{
-				ba=[];
-				var i=0;
-				while (i+1<data.length){
-					ba.push(parseInt(data.substr(i,2),16));
-					i+=2;
-				}
-				break;
+			break;
+		  case dojo.crypto.outputTypes.Hex:
+			ba = [];
+			var i = 0;
+			while (i + 1 < data.length) {
+				ba.push(parseInt(data.substr(i, 2), 16));
+				i += 2;
 			}
-			case dojo.crypto.outputTypes.Raw:{
-				ba=data;
-				break;
-			}
-			default:{
-				ba=fromBase64(data);
-				break;
-			}
+			break;
+		  case dojo.crypto.outputTypes.Raw:
+			ba = data;
+			break;
+		  default:
+			ba = fromBase64(data);
+			break;
 		}
-		//	make it a pair of words now
-		iv={};
-		iv.left=ba[0]*POW24|ba[1]*POW16|ba[2]*POW8|ba[3];
-		iv.right=ba[4]*POW24|ba[5]*POW16|ba[6]*POW8|ba[7];
-	}
-	this.encrypt = function(/* string */plaintext, /* string */key, /* object? */ao){
-		//	summary
-		//	encrypts plaintext using key; allows user to specify output type and cipher mode via keyword object "ao"
-		var out=dojo.crypto.outputTypes.Base64;
-		var mode=dojo.crypto.cipherModes.EBC;
-		if (ao){
-			if (ao.outputType) out=ao.outputType;
-			if (ao.cipherMode) mode=ao.cipherMode;
-		}
-
-		var bx = init(key);
-		var padding = 8-(plaintext.length&7);
-		for (var i=0; i<padding; i++) plaintext+=String.fromCharCode(padding);
-		var cipher=[];
-		var count=plaintext.length >> 3;
-		var pos=0;
-		var o={};
-		var isCBC=(mode==dojo.crypto.cipherModes.CBC);
-		var vector={left:iv.left||null, right:iv.right||null};
-		for(var i=0; i<count; i++){
-			o.left=plaintext.charCodeAt(pos)*POW24
-				|plaintext.charCodeAt(pos+1)*POW16
-				|plaintext.charCodeAt(pos+2)*POW8
-				|plaintext.charCodeAt(pos+3);
-			o.right=plaintext.charCodeAt(pos+4)*POW24
-				|plaintext.charCodeAt(pos+5)*POW16
-				|plaintext.charCodeAt(pos+6)*POW8
-				|plaintext.charCodeAt(pos+7);
-
-			if(isCBC){
-				o.left=xor(o.left, vector.left);
-				o.right=xor(o.right, vector.right);
-			}
-
-			eb(o, bx);	//	encrypt the block
-
-			if(isCBC){
-				vector.left=o.left;
-				vector.right=o.right;dojo.crypto.outputTypes.Hex
-			}
-
-			cipher.push((o.left>>24)&0xff); 
-			cipher.push((o.left>>16)&0xff); 
-			cipher.push((o.left>>8)&0xff);
-			cipher.push(o.left&0xff);
-			cipher.push((o.right>>24)&0xff); 
-			cipher.push((o.right>>16)&0xff); 
-			cipher.push((o.right>>8)&0xff);
-			cipher.push(o.right&0xff);
-			pos+=8;
-		}
-		switch(out){
-			case dojo.crypto.outputTypes.Hex:{
-				var s=[];
-				for(var i=0; i<cipher.length; i++)
-					s.push((cipher[i]).toString(16));
-				return s.join("");	//	string
-			}
-			case dojo.crypto.outputTypes.String:{
-				return cipher.join("");	//	string
-			}
-			case dojo.crypto.outputTypes.Raw:{
-				return cipher;	//	array
-			}
-			default:{
-				return toBase64(cipher);	//	string
-			}
-		}
+		iv = {};
+		iv.left = ba[0] * POW24 | ba[1] * POW16 | ba[2] * POW8 | ba[3];
+		iv.right = ba[4] * POW24 | ba[5] * POW16 | ba[6] * POW8 | ba[7];
 	};
-
-	this.decrypt = function(/* string */ciphertext, /* string */key, /* object? */ao){
-		//	summary
-		//	decrypts ciphertext using key; allows specification of how ciphertext is encoded via ao.
-		var ip=dojo.crypto.outputTypes.Base64;
-		var mode=dojo.crypto.cipherModes.EBC;
-		if (ao){
-			if (ao.outputType) ip=ao.outputType;
-			if (ao.cipherMode) mode=ao.cipherMode;
+	this.encrypt = function (plaintext, key, ao) {
+		var out = dojo.crypto.outputTypes.Base64;
+		var mode = dojo.crypto.cipherModes.EBC;
+		if (ao) {
+			if (ao.outputType) {
+				out = ao.outputType;
+			}
+			if (ao.cipherMode) {
+				mode = ao.cipherMode;
+			}
 		}
 		var bx = init(key);
-		var pt=[];
-	
-		var c=null;
-		switch(ip){
-			case dojo.crypto.outputTypes.Hex:{
-				c=[];
-				var i=0;
-				while (i+1<ciphertext.length){
-					c.push(parseInt(ciphertext.substr(i,2),16));
-					i+=2;
-				}
-				break;
-			}
-			case dojo.crypto.outputTypes.String:{
-				c=[];
-				for (var i=0; i<ciphertext.length; i++){
-					c.push(ciphertext.charCodeAt(i));
-				}
-				break;
-			}
-			case dojo.crypto.outputTypes.Raw:{
-				c=ciphertext;	//	should be a byte array
-				break;
-			}
-			default:{
-				c=fromBase64(ciphertext);
-				break;
-			}
+		var padding = 8 - (plaintext.length & 7);
+		for (var i = 0; i < padding; i++) {
+			plaintext += String.fromCharCode(padding);
 		}
-
-		var count=c.length >> 3;
-		var pos=0;
-		var o={};
-		var isCBC=(mode==dojo.crypto.cipherModes.CBC);
-		var vector={left:iv.left||null, right:iv.right||null};
-		for(var i=0; i<count; i++){
-			o.left=c[pos]*POW24|c[pos+1]*POW16|c[pos+2]*POW8|c[pos+3];
-			o.right=c[pos+4]*POW24|c[pos+5]*POW16|c[pos+6]*POW8|c[pos+7];
-
-			if(isCBC){
-				var left=o.left;
-				var right=o.right;
+		var cipher = [];
+		var count = plaintext.length >> 3;
+		var pos = 0;
+		var o = {};
+		var isCBC = (mode == dojo.crypto.cipherModes.CBC);
+		var vector = {left:iv.left || null, right:iv.right || null};
+		for (var i = 0; i < count; i++) {
+			o.left = plaintext.charCodeAt(pos) * POW24 | plaintext.charCodeAt(pos + 1) * POW16 | plaintext.charCodeAt(pos + 2) * POW8 | plaintext.charCodeAt(pos + 3);
+			o.right = plaintext.charCodeAt(pos + 4) * POW24 | plaintext.charCodeAt(pos + 5) * POW16 | plaintext.charCodeAt(pos + 6) * POW8 | plaintext.charCodeAt(pos + 7);
+			if (isCBC) {
+				o.left = xor(o.left, vector.left);
+				o.right = xor(o.right, vector.right);
 			}
-
-			db(o, bx);	//	decrypt the block
-
-			if(isCBC){
-				o.left=xor(o.left, vector.left);
-				o.right=xor(o.right, vector.right);
-				vector.left=left;
-				vector.right=right;
+			eb(o, bx);
+			if (isCBC) {
+				vector.left = o.left;
+				vector.right = o.right;
+				dojo.crypto.outputTypes.Hex;
 			}
-
-			pt.push((o.left>>24)&0xff);
-			pt.push((o.left>>16)&0xff);
-			pt.push((o.left>>8)&0xff);
-			pt.push(o.left&0xff);
-			pt.push((o.right>>24)&0xff);
-			pt.push((o.right>>16)&0xff);
-			pt.push((o.right>>8)&0xff);
-			pt.push(o.right&0xff);
-			pos+=8;
+			cipher.push((o.left >> 24) & 255);
+			cipher.push((o.left >> 16) & 255);
+			cipher.push((o.left >> 8) & 255);
+			cipher.push(o.left & 255);
+			cipher.push((o.right >> 24) & 255);
+			cipher.push((o.right >> 16) & 255);
+			cipher.push((o.right >> 8) & 255);
+			cipher.push(o.right & 255);
+			pos += 8;
 		}
-
-		//	check for padding, and remove.
-		if(pt[pt.length-1]==pt[pt.length-2]||pt[pt.length-1]==0x01){
-			var n=pt[pt.length-1];
-			pt.splice(pt.length-n, n);
+		switch (out) {
+		  case dojo.crypto.outputTypes.Hex:
+			var s = [];
+			for (var i = 0; i < cipher.length; i++) {
+				s.push((cipher[i]).toString(16));
+			}
+			return s.join("");
+		  case dojo.crypto.outputTypes.String:
+			return cipher.join("");
+		  case dojo.crypto.outputTypes.Raw:
+			return cipher;
+		  default:
+			return toBase64(cipher);
 		}
-
-		//	convert to string
-		for(var i=0; i<pt.length; i++)
-			pt[i]=String.fromCharCode(pt[i]);
-		return pt.join("");		//	string
 	};
-
+	this.decrypt = function (ciphertext, key, ao) {
+		var ip = dojo.crypto.outputTypes.Base64;
+		var mode = dojo.crypto.cipherModes.EBC;
+		if (ao) {
+			if (ao.outputType) {
+				ip = ao.outputType;
+			}
+			if (ao.cipherMode) {
+				mode = ao.cipherMode;
+			}
+		}
+		var bx = init(key);
+		var pt = [];
+		var c = null;
+		switch (ip) {
+		  case dojo.crypto.outputTypes.Hex:
+			c = [];
+			var i = 0;
+			while (i + 1 < ciphertext.length) {
+				c.push(parseInt(ciphertext.substr(i, 2), 16));
+				i += 2;
+			}
+			break;
+		  case dojo.crypto.outputTypes.String:
+			c = [];
+			for (var i = 0; i < ciphertext.length; i++) {
+				c.push(ciphertext.charCodeAt(i));
+			}
+			break;
+		  case dojo.crypto.outputTypes.Raw:
+			c = ciphertext;
+			break;
+		  default:
+			c = fromBase64(ciphertext);
+			break;
+		}
+		var count = c.length >> 3;
+		var pos = 0;
+		var o = {};
+		var isCBC = (mode == dojo.crypto.cipherModes.CBC);
+		var vector = {left:iv.left || null, right:iv.right || null};
+		for (var i = 0; i < count; i++) {
+			o.left = c[pos] * POW24 | c[pos + 1] * POW16 | c[pos + 2] * POW8 | c[pos + 3];
+			o.right = c[pos + 4] * POW24 | c[pos + 5] * POW16 | c[pos + 6] * POW8 | c[pos + 7];
+			if (isCBC) {
+				var left = o.left;
+				var right = o.right;
+			}
+			db(o, bx);
+			if (isCBC) {
+				o.left = xor(o.left, vector.left);
+				o.right = xor(o.right, vector.right);
+				vector.left = left;
+				vector.right = right;
+			}
+			pt.push((o.left >> 24) & 255);
+			pt.push((o.left >> 16) & 255);
+			pt.push((o.left >> 8) & 255);
+			pt.push(o.left & 255);
+			pt.push((o.right >> 24) & 255);
+			pt.push((o.right >> 16) & 255);
+			pt.push((o.right >> 8) & 255);
+			pt.push(o.right & 255);
+			pos += 8;
+		}
+		if (pt[pt.length - 1] == pt[pt.length - 2] || pt[pt.length - 1] == 1) {
+			var n = pt[pt.length - 1];
+			pt.splice(pt.length - n, n);
+		}
+		for (var i = 0; i < pt.length; i++) {
+			pt[i] = String.fromCharCode(pt[i]);
+		}
+		return pt.join("");
+	};
 	this.setIV("0000000000000000", dojo.crypto.outputTypes.Hex);
 }();
+

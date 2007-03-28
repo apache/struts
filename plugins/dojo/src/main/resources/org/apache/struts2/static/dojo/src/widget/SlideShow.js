@@ -9,133 +9,67 @@
 */
 
 dojo.provide("dojo.widget.SlideShow");
-
 dojo.require("dojo.event.*");
 dojo.require("dojo.widget.*");
 dojo.require("dojo.lfx.*");
 dojo.require("dojo.html.display");
-
-dojo.widget.defineWidget(
-	"dojo.widget.SlideShow",
-	dojo.widget.HtmlWidget,
-	{
-		templatePath: dojo.uri.dojoUri("src/widget/templates/SlideShow.html"),
-		templateCssPath: dojo.uri.dojoUri("src/widget/templates/SlideShow.css"),
-
-		// useful properties
-		imgUrls: [],		// the images we'll go through
-		imgUrlBase: "",
-		urlsIdx: 0,		// where in the images we are
-		delay: 4000, 		// give it 4 seconds
-		transitionInterval: 2000, // 2 seconds
-		imgWidth: 800,	// img width
-		imgHeight: 600,	// img height
-		background: "img2", // what's in the bg
-		foreground: "img1", // what's in the fg
-		stopped: false,	// should I stay or should I go?
-		fadeAnim: null, // references our animation
-
-		// our DOM nodes:
-		imagesContainer: null,
-		startStopButton: null,
-		controlsContainer: null,
-		img1: null,
-		img2: null,
-		preventCache: false,
-
-		fillInTemplate: function(){
-			// safari will cache the images and not fire an image onload event if
-			// there are only two images in the slideshow
-			if(dojo.render.html.safari && this.imgUrls.length == 2) {
-				this.preventCache = true;
-			}
-			dojo.html.setOpacity(this.img1, 0.9999);
-			dojo.html.setOpacity(this.img2, 0.9999);
-			with(this.imagesContainer.style){
-				width = this.imgWidth+"px";
-				height = this.imgHeight+"px";
-			}
-			with(this.img1.style){
-				width = this.imgWidth+"px";
-				height = this.imgHeight+"px";
-			}
-			with(this.img2.style){
-				width = this.imgWidth+"px";
-				height = this.imgHeight+"px";
-			}
-			if(this.imgUrls.length>1){
-				this.img2.src = this.imgUrlBase+this.imgUrls[this.urlsIdx++] + this.getUrlSuffix();
-				this.endTransition();
-			}else{
-				this.img1.src = this.imgUrlBase+this.imgUrls[this.urlsIdx++] + this.getUrlSuffix();
-			}
-		},
-
-		getUrlSuffix: function() {
-			if(this.preventCache) {
-				return "?ts=" + (new Date()).getTime();
-			} else {
-				return "";
-			}
-		},
-		
-		togglePaused: function(){
-			dojo.debug("pause");
-			if(this.stopped){
-				this.stopped = false;
-				this.backgroundImageLoaded();
-				this.startStopButton.value= "pause";
-			}else{
-				this.stopped = true;
-				this.startStopButton.value= "play";
-			}
-		},
-
-		backgroundImageLoaded: function(){
-			// start fading out the foreground image
-			if(this.stopped){ return; }
-
-			// actually start the fadeOut effect
-			// NOTE: if we wanted to use other transition types, we'd set them up
-			// 		 here as well
-			if(this.fadeAnim) {
-				this.fadeAnim.stop();
-			}
-			this.fadeAnim = dojo.lfx.fadeOut(this[this.foreground], 
-				this.transitionInterval, null);
-			dojo.event.connect(this.fadeAnim,"onEnd",this,"endTransition");
-			this.fadeAnim.play();
-		},
-
-		endTransition: function(){
-			// move the foreground image to the background 
-			with(this[this.background].style){ zIndex = parseInt(zIndex)+1; }
-			with(this[this.foreground].style){ zIndex = parseInt(zIndex)-1; }
-
-			// fg/bg book-keeping
-			var tmp = this.foreground;
-			this.foreground = this.background;
-			this.background = tmp;
-			// keep on truckin
-			this.loadNextImage();
-		},
-
-		loadNextImage: function(){
-			// load a new image in that container, and make sure it informs
-			// us when it finishes loading
-			dojo.event.kwConnect({
-				srcObj: this[this.background],
-				srcFunc: "onload",
-				adviceObj: this,
-				adviceFunc: "backgroundImageLoaded",
-				once: true, // make sure we only ever hear about it once
-				delay: this.delay
-			});
-			dojo.html.setOpacity(this[this.background], 1.0);
-			this[this.background].src = this.imgUrlBase+this.imgUrls[this.urlsIdx++];
-			if(this.urlsIdx>(this.imgUrls.length-1)){
-				this.urlsIdx = 0;
-			}
-		}
+dojo.widget.defineWidget("dojo.widget.SlideShow", dojo.widget.HtmlWidget, {templateString:"<div style=\"position: relative; padding: 3px;\">\n\t\t<div>\n\t\t\t<input type=\"button\" value=\"pause\" \n\t\t\t\tdojoAttachPoint=\"startStopButton\"\n\t\t\t\tdojoAttachEvent=\"onClick: togglePaused;\">\n\t\t</div>\n\t\t<div style=\"position: relative; width: ${this.width}; height: ${this.height};\"\n\t\t\tdojoAttachPoint=\"imagesContainer\"\n\t\t\tdojoAttachEvent=\"onClick: togglePaused;\">\n\t\t\t<img dojoAttachPoint=\"img1\" class=\"slideShowImg\" \n\t\t\t\tstyle=\"z-index: 1; width: ${this.width}; height: ${this.height};\"  />\n\t\t\t<img dojoAttachPoint=\"img2\" class=\"slideShowImg\" \n\t\t\t\tstyle=\"z-index: 0; width: ${this.width}; height: ${this.height};\" />\n\t\t</div>\t\n</div>\n", templateCssString:".slideShowImg {\n\tposition: absolute;\n\tleft: 0px;\n\ttop: 0px; \n\tborder: 2px solid #4d4d4d;\n\tpadding: 0px;\n\tmargin: 0px;\n}\n\n", templateCssPath:dojo.uri.moduleUri("dojo.widget", "templates/SlideShow.css"), imgUrls:[], imgUrlBase:"", delay:4000, transitionInterval:2000, imgWidth:800, imgHeight:600, preventCache:false, stopped:false, _urlsIdx:0, _background:"img2", _foreground:"img1", fadeAnim:null, startStopButton:null, img1:null, img2:null, postMixInProperties:function () {
+	this.width = this.imgWidth + "px";
+	this.height = this.imgHeight + "px";
+}, fillInTemplate:function () {
+	if (dojo.render.html.safari && this.imgUrls.length == 2) {
+		this.preventCache = true;
 	}
-);
+	dojo.html.setOpacity(this.img1, 0.9999);
+	dojo.html.setOpacity(this.img2, 0.9999);
+	if (this.imgUrls.length > 1) {
+		this.img2.src = this.imgUrlBase + this.imgUrls[this._urlsIdx++] + this._getUrlSuffix();
+		this._endTransition();
+	} else {
+		this.img1.src = this.imgUrlBase + this.imgUrls[this._urlsIdx++] + this._getUrlSuffix();
+	}
+}, _getUrlSuffix:function () {
+	if (this.preventCache) {
+		return "?ts=" + (new Date()).getTime();
+	} else {
+		return "";
+	}
+}, togglePaused:function () {
+	if (this.stopped) {
+		this.stopped = false;
+		this._backgroundImageLoaded();
+		this.startStopButton.value = "pause";
+	} else {
+		this.stopped = true;
+		this.startStopButton.value = "play";
+	}
+}, _backgroundImageLoaded:function () {
+	if (this.stopped) {
+		return;
+	}
+	if (this.fadeAnim) {
+		this.fadeAnim.stop();
+	}
+	this.fadeAnim = dojo.lfx.fadeOut(this[this._foreground], this.transitionInterval, null);
+	dojo.event.connect(this.fadeAnim, "onEnd", this, "_endTransition");
+	this.fadeAnim.play();
+}, _endTransition:function () {
+	with (this[this._background].style) {
+		zIndex = parseInt(zIndex) + 1;
+	}
+	with (this[this._foreground].style) {
+		zIndex = parseInt(zIndex) - 1;
+	}
+	var tmp = this._foreground;
+	this._foreground = this._background;
+	this._background = tmp;
+	this._loadNextImage();
+}, _loadNextImage:function () {
+	dojo.event.kwConnect({srcObj:this[this._background], srcFunc:"onload", adviceObj:this, adviceFunc:"_backgroundImageLoaded", once:true, delay:this.delay});
+	dojo.html.setOpacity(this[this._background], 1);
+	this[this._background].src = this.imgUrlBase + this.imgUrls[this._urlsIdx++];
+	if (this._urlsIdx > (this.imgUrls.length - 1)) {
+		this._urlsIdx = 0;
+	}
+}});
+

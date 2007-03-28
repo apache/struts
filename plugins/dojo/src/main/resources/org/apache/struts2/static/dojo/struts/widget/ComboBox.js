@@ -3,53 +3,20 @@ dojo.provide("struts.widget.ComboBox");
 dojo.require("dojo.html.*");
 dojo.require("dojo.widget.ComboBox");
 
-struts.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ limit, /*Number*/ timeout){
-  // NOTE: this data provider is designed as a naive reference
-  // implementation, and as such it is written more for readability than
-  // speed. A deployable data provider would implement lookups, search
-  // caching (and invalidation), and a significantly less naive data
-  // structure for storage of items.
-
+struts.widget.ComboBoxDataProvider = function(combobox, node){
   this.data = [];
-  this.searchTimeout = timeout || 500;
-  this.searchLimit = limit || 30;
+  this.searchLimit = 30;
   this.searchType = "STARTSTRING"; // may also be "STARTWORD" or "SUBSTRING"
   this.caseSensitive = false;
   // for caching optimizations
   this._lastSearch = "";
   this._lastSearchResults = null;
 
-  this.formId = "";
-  this.formFilter = "";
   this.firstRequest = true;
 
-  this.cbox = null;
-  this.init = function(/*Widget*/ cbox, /*DomNode*/ node){
-    this.cbox = cbox;
-    this.formId = cbox.formId;
-    this.formFilter = cbox.formFilter;
-
-    if(!dojo.string.isBlank(cbox.dataUrl)){
-      this.getData(cbox.dataUrl);
-    }else{
-      // check to see if we can populate the list from <option> elements
-      if((node)&&(node.nodeName.toLowerCase() == "select")){
-        // NOTE: we're not handling <optgroup> here yet
-        var opts = node.getElementsByTagName("option");
-        var ol = opts.length;
-        var data = [];
-        for(var x=0; x<ol; x++){
-          var text = opts[x].textContent || opts[x].innerText || opts[x].innerHTML;
-          var keyValArr = [String(text), String(opts[x].value)];
-          data.push(keyValArr);
-          if(opts[x].selected){
-            cbox.setAllValues(keyValArr[0], keyValArr[1]);
-          }
-        }
-        this.setData(data);
-      }
-    }
-  };
+  this.cbox = combobox;
+  this.formId = this.cbox.formId;
+  this.formFilter = this.cbox.formFilter;
 
   this.getData = function(/*String*/ url){
     //show indicator
@@ -97,20 +64,20 @@ struts.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ li
       mimetype: "text/json"
     });
   };
-
-  this.startSearch = function(/*String*/ searchStr, /*String*/ type, /*Boolean*/ ignoreLimit){
+  
+  this.startSearch = function (searchStr, callback) {
     // FIXME: need to add timeout handling here!!
-    this._preformSearch(searchStr, type, ignoreLimit);
+    this._preformSearch(searchStr, callback);
   };
 
-  this._preformSearch = function(/*String*/ searchStr, /*String*/ type, /*Boolean*/ ignoreLimit){
+  this._preformSearch = function(/*String*/ searchStr, callback){
     //
     //  NOTE: this search is LINEAR, which means that it exhibits perhaps
     //  the worst possible speed characteristics of any search type. It's
     //  written this way to outline the responsibilities and interfaces for
     //  a search.
     //
-    var st = type||this.searchType;
+    var st = this.searchType;
     // FIXME: this is just an example search, which means that we implement
     // only a linear search without any of the attendant (useful!) optimizations
     var ret = [];
@@ -122,8 +89,8 @@ struts.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ li
         //needed for IE
         continue;
       }
-      if((!ignoreLimit)&&(ret.length >= this.searchLimit)){
-        break;
+      if((this.searchLimit > 0) && (ret.length >= this.searchLimit)) {
+			break;
       }
       // FIXME: we should avoid copies if possible!
       var dataLabel = new String((!this.caseSensitive) ? this.data[x][0].toLowerCase() : this.data[x][0]);
@@ -175,10 +142,7 @@ struts.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ li
         }
       }
     }
-    this.provideSearchResults(ret);
-  };
-
-  this.provideSearchResults = function(/*Array*/ resultsDataPairs){
+    callback(ret);
   };
 
   this.addData = function(/*Array*/ pairs){
@@ -198,8 +162,26 @@ struts.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ li
     }
   };
 
-  if(dataPairs){
-    this.setData(dataPairs);
+
+  if(!dojo.string.isBlank(this.cbox.dataUrl)){
+    this.getData(this.cbox.dataUrl);
+  } else {
+    // check to see if we can populate the list from <option> elements
+    if((node)&&(node.nodeName.toLowerCase() == "select")){
+      // NOTE: we're not handling <optgroup> here yet
+      var opts = node.getElementsByTagName("option");
+      var ol = opts.length;
+      var data = [];
+      for(var x=0; x<ol; x++){
+        var text = opts[x].textContent || opts[x].innerText || opts[x].innerHTML;
+        var keyValArr = [String(text), String(opts[x].value)];
+        data.push(keyValArr);
+        if(opts[x].selected){
+          this.cbox.setAllValues(keyValArr[0], keyValArr[1]);
+        }
+      }
+      this.setData(data);
+    }
   }
 };
 
@@ -266,31 +248,31 @@ dojo.widget.defineWidget(
 
       this.popupWidget.open(this.domNode, this, this.downArrowNode);
     } else {
-        this.hideResultList();
+        this._hideResultList();
     }
   },
 
-  openResultList: function(/*Array*/ results){
-    if (!this.isEnabled){
-        return;
-    }
-    this.clearResultList();
+  _openResultList: function(/*Array*/ results){
+    if (this.disabled) {
+		return;
+	}
+    this._clearResultList();
     if(!results.length){
-        this.hideResultList();
+        this._hideResultList();
     }
 
     if( (this.autoComplete)&&
         (results.length)&&
         (!this._prev_key_backspace)&&
         (this.textInputNode.value.length > 0)){
-        var cpos = this.getCaretPos(this.textInputNode);
+        var cpos = this._getCaretPos(this.textInputNode);
         // only try to extend if we added the last character at the end of the input
         if((cpos+1) > this.textInputNode.value.length){
             // only add to input node as we would overwrite Capitalisation of chars
             this.textInputNode.value += results[0][0].substr(cpos);
             // build a new range that has the distance from the earlier
             // caret position to the end of the first string selected
-            this.setSelectedRange(this.textInputNode, cpos, this.textInputNode.value.length);
+            this._setSelectedRange(this.textInputNode, cpos, this.textInputNode.value.length);
         }
     }
     var typedText = this.textInputNode.value;
@@ -446,6 +428,10 @@ dojo.widget.defineWidget(
       });
     }
   },
+  
+  log : function(text) {
+    dojo.debug("[" + (this.widgetId ? this.widgetId : "unknown")  + "] " + text);
+  },
 
   startSearchFromInput: function() {
     var searchStr = this.textInputNode.value;
@@ -456,7 +442,7 @@ dojo.widget.defineWidget(
    		this.dataProvider.getData(nuHref);
    		this.startSearch(searchStr);
     	} else {
-           this.hideResultList();
+           this._hideResultList();
         }
     }
     else {

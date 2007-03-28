@@ -8,8 +8,6 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
-dojo.kwCompoundRequire({
-	common: [["dojo.logging.Logger", false, false]],
-	rhino: ["dojo.logging.RhinoLogger"]
-});
+dojo.kwCompoundRequire({common:[["dojo.logging.Logger", false, false]], rhino:["dojo.logging.RhinoLogger"]});
 dojo.provide("dojo.logging.*");
+

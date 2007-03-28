@@ -11,21 +11,9 @@
 dojo.provide("dojo.data.old.Observable");
 dojo.require("dojo.lang.common");
 dojo.require("dojo.lang.assert");
-
-// -------------------------------------------------------------------
-// Constructor
-// -------------------------------------------------------------------
-dojo.data.old.Observable = function() {
+dojo.data.old.Observable = function () {
 };
-
-// -------------------------------------------------------------------
-// Public instance methods
-// -------------------------------------------------------------------
-dojo.data.old.Observable.prototype.addObserver = function(/* object */ observer) {
-	/**
-	 * summary: Registers an object as an observer of this item,
-	 * so that the object will be notified when the item changes.
-	 */ 
+dojo.data.old.Observable.prototype.addObserver = function (observer) {
 	dojo.lang.assertType(observer, Object);
 	dojo.lang.assertType(observer.observedObjectHasChanged, Function);
 	if (!this._arrayOfObservers) {
@@ -35,12 +23,7 @@ dojo.data.old.Observable.prototype.addObserver = function(/* object */ observer)
 		this._arrayOfObservers.push(observer);
 	}
 };
-
-dojo.data.old.Observable.prototype.removeObserver = function(/* object */ observer) {
-	/**
-	 * summary: Removes the observer registration for a previously
-	 * registered object.
-	 */ 
+dojo.data.old.Observable.prototype.removeObserver = function (observer) {
 	if (!this._arrayOfObservers) {
 		return;
 	}
@@ -49,11 +32,7 @@ dojo.data.old.Observable.prototype.removeObserver = function(/* object */ observ
 		this._arrayOfObservers.splice(index, 1);
 	}
 };
-
-dojo.data.old.Observable.prototype.getObservers = function() {
-	/**
-	 * summary: Returns an array with all the observers of this item.
-	 */ 
-	return this._arrayOfObservers; // Array or undefined
+dojo.data.old.Observable.prototype.getObservers = function () {
+	return this._arrayOfObservers;
 };
 

@@ -8,7 +8,4 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
-({
-	displayName: "GBP",
-	symbol: "\u00A3"
-})
+({"displayName":"GBP", "symbol":"\xa3"})

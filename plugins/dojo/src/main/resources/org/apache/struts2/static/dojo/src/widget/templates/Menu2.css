@@ -88,17 +88,12 @@
 }
 
 .dojoMenuBar2 {
-	/*position: relative;*/
 	background:#85aeec url(images/soriaBarBg.gif) repeat-x top left;
-	border-bottom:1px solid #6b9fec;
-	
-}
-
-.dojoMenuBar2Client {
+	/*border-bottom:1px solid #6b9fec;*/
 	padding: 1px;
 }
 
-.dojoMenuBarItem2 {
+.dojoMenuBar2 .dojoMenuItem2 {
 	white-space: nowrap;
 	font: menu;
 	margin: 0;
@@ -106,20 +101,16 @@
 	vertical-align: middle;
 	z-index: 1;
 	padding: 3px 8px;
-}
-
-.dojoMenuBarItem2 span {
-	margin: 0;
-	position: relative;
-	z-index: 2;
+	display: inline;/* needed in khtml to display correctly */
+	display: -moz-inline-box;/* needed in firefox */
 	cursor:pointer;
 	cursor:hand;
 }
 
-.dojoMenuBarItem2Hover {
+.dojoMenuBar2 .dojoMenuItem2Hover {
 	background-color:#d2e4fd;
 }
 
-.dojoMenuBarItem2Disabled span {
+.dojoMenuBar2 .dojoMenuItem2Disabled span {
 	color: #4f6582;
 }

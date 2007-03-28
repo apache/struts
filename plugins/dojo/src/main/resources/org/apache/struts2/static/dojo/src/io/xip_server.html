@@ -42,16 +42,11 @@
 	- data: The URL-encoded data for the request. For a GET request, this would
 	        be the querystring parameters. For a POST request, it wll be the
 	        body data.
+	        
+	See xip_client.html for more info on the xip fragment identifier protocol.	
 	-->
 	<script type="text/javascript">
 	// <!--
-	/*
-	See xip_client.html for more info on the xip fragment identifier protocol.
-	
-	This page uses Dojo to do the actual XMLHttpRequest (XHR) to the server, but you could
-	replace the Dojo references with your own XHR code if you like. But keep the other xip
-	code to communicate back to the xip client frame.
-	*/
 	djConfig = {
 		parseWidgets: false,
 		baseScriptUri: "./"
@@ -59,6 +54,8 @@
 	// -->
 	</script>
 	<script type="text/javascript">
+	// <!--
+		//Core XHR handling taken from Dojo IO code.
 		dojo = {};
 		dojo.hostenv = {};
 		// These are in order of decreasing likelihood; this will change in time.
@@ -104,25 +101,17 @@
 			}
 		}
 
-	//Choosing 1024 as an arbitrary limit for the URL sizes.
-	//Anecdotal info seems to indicate this is safe to use in all
-	//modern browsers.
-	xipUrlLimit = 1024;
+	//MSIE has the lowest limit for URLs with fragment identifiers,
+	//at around 4K. Choosing a slightly smaller number for good measure.
+	xipUrlLimit = 4000;
 	xipIdCounter = 1;
 
 	function xipServerInit(){
+		xipStateId = "";
 		xipCurrentHash = "";
 		xipRequestMessage = "";
 		xipResponseParts = [];
 		xipPartIndex = 0;
-	}
-
-	function xipServerLoaded(){
-		xipServerInit();
-		xipClientUrl = decodeURIComponent(window.location.hash.substring(1, window.location.hash.length));
-		
-		setInterval(pollHash, 10);
-		setClientUrl("loaded");
 	}
 
 	function pollHash(){
@@ -143,44 +132,48 @@
 		}
 	}
 
-	function messageReceived(urlEncodedMessage){
-		//Split off xip header.
-		var parts = urlEncodedMessage.split(":");
-		var command = parts[1];
-		urlEncodedMessage = parts[2] || "";
+	function messageReceived(encodedData){
+		var msg = unpackMessage(encodedData);
 		
-		switch(command){
+		switch(msg.command){
 			case "ok":
 				sendResponsePart();
 				break;
 			case "start":
 				xipRequestMessage = "";
-				xipRequestMessage += urlEncodedMessage;
+				xipRequestMessage += msg.message;
 				setClientUrl("ok");
 				break;
 			case "part":
-				xipRequestMessage += urlEncodedMessage;			
+				xipRequestMessage += msg.message;			
 				setClientUrl("ok");
 				break;
 			case "end":
 				setClientUrl("ok");
-				xipRequestMessage += urlEncodedMessage;
+				xipRequestMessage += msg.message;
 				sendXhr();
 				break;
 		}
 	}
 
-	function sendResponse(urlEncodedData){
+	function sendResponse(encodedData){
 		//Break the message into parts, if necessary.
 		xipResponseParts = [];
-		var resData = urlEncodedData;
+		var resData = encodedData;
 		var urlLength = xipClientUrl.length;
 		var partLength = xipUrlLimit - urlLength;
 		var resIndex = 0;
 
 		while((resData.length - resIndex) + urlLength > xipUrlLimit){
-			xipResponseParts.push(resData.substring(resIndex, resIndex + partLength));
-			resIndex += partLength;
+			var part = resData.substring(resIndex, resIndex + partLength);
+			//Safari will do some extra hex escaping unless we keep the original hex
+			//escaping complete.
+			var percentIndex = part.lastIndexOf("%");
+			if(percentIndex == part.length - 1 || percentIndex == part.length - 2){
+				part = part.substring(0, percentIndex);
+			}
+			xipResponseParts.push(part);
+			resIndex += part.length;
 		}
 		xipResponseParts.push(resData.substring(resIndex, resData.length));
 		
@@ -209,17 +202,21 @@
 	}
 
 	function setClientUrl(cmd, message){
-		var clientUrl = xipClientUrl + "#" + (xipIdCounter++) + ":" + cmd;
-		if(message){
-			clientUrl += ":" + message;
-		}
-
+		var clientUrl = makeClientUrl(cmd, message);
 		//Safari won't let us replace across domains.
 		if(navigator.userAgent.indexOf("Safari") == -1){
 			parent.location.replace(clientUrl);
 		}else{
 			parent.location = clientUrl;
 		}
+	}
+
+	function makeClientUrl(cmd, message){
+		var clientUrl = xipClientUrl + "#" + (xipIdCounter++) + ":" + cmd;
+		if(message){
+			clientUrl += ":" + message;
+		}
+		return clientUrl
 	}
 
 	function xhrDone(xhr){
@@ -324,7 +321,50 @@
 		}
 	}
 
-	window.onload = xipServerLoaded;
+	function unpackMessage(encodedMessage){
+		var parts = encodedMessage.split(":");
+		var command = parts[1];
+		encodedMessage = parts[2] || "";
+
+		var config = null;
+		if(command == "init"){
+			var configParts = encodedMessage.split("&");
+			config = {};
+			for(var i = 0; i < configParts.length; i++){
+				var nameValue = configParts[i].split("=");
+				config[decodeURIComponent(nameValue[0])] = decodeURIComponent(nameValue[1]);
+			}
+		}
+		return {command: command, message: encodedMessage, config: config};
+	}
+
+	function onServerLoad(){
+		xipServerInit();
+
+		//Decode the init params
+		var config = unpackMessage(window.location.href.split("#")[1]).config;
+
+		xipStateId = config.id;
+		xipClientUrl = config.client;
+		xipUseFrameRecursion = config["fr"];
+
+		setInterval(pollHash, 10);
+		
+		if(xipUseFrameRecursion == "true"){
+			var serverUrl = window.location.href.split("#")[0];
+			document.getElementById("iframeHolder").innerHTML = '<iframe src="'
+				+ makeClientUrl("init", 'id=' + xipStateId + '&server=' + encodeURIComponent(serverUrl)
+				+ '&fr=endpoint') + '" name="' + xipStateId + '_clientEndPoint"></iframe>';
+		}else{
+			setClientUrl("loaded");
+		}
+	}
+
+	if(typeof(window.addEventListener) == "undefined"){
+		window.attachEvent("onload", onServerLoad);
+	}else{
+		window.addEventListener('load', onServerLoad, false);
+	}
 	// -->
 	</script>
 </head>
@@ -333,5 +373,6 @@
 
 	<p>This file is used for Dojo's XMLHttpRequest Iframe Proxy. This is the the file
 	that should go on the server that will actually be doing the XHR request.</p>
+	<div id="iframeHolder"></div>
 </body>
 </html>

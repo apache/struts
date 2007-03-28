@@ -10,144 +10,140 @@
 
 dojo.provide("dojo.collections.Graph");
 dojo.require("dojo.collections.Collections");
-
 dojo.experimental("dojo.collections.Graph");
-
-dojo.collections.Graph=function(nodes){
+dojo.collections.Graph = function (nodes) {
 	function node(key, data, neighbors) {
-		this.key=key;
-		this.data=data;
-		this.neighbors=neighbors||new adjacencyList();
-		this.addDirected=function(){
-			if (arguments[0].constructor==edgeToNeighbor){
+		this.key = key;
+		this.data = data;
+		this.neighbors = neighbors || new adjacencyList();
+		this.addDirected = function () {
+			if (arguments[0].constructor == edgeToNeighbor) {
 				this.neighbors.add(arguments[0]);
-			}else{
-				var n=arguments[0];
-				var cost=arguments[1]||0;
+			} else {
+				var n = arguments[0];
+				var cost = arguments[1] || 0;
 				this.neighbors.add(new edgeToNeighbor(n, cost));
 			}
-		}
+		};
 	}
-	function nodeList(){
-		var d=new dojo.collections.Dictionary();
-		function nodelistiterator(){
-			var o=[] ;	//	Create an indexing array
-			var e=d.getIterator();
-			while(e.get()){
-				o[o.length]=e.element;
+	function nodeList() {
+		var d = new dojo.collections.Dictionary();
+		function nodelistiterator() {
+			var o = [];
+			var e = d.getIterator();
+			while (e.get()) {
+				o[o.length] = e.element;
 			}
-
-			var position=0;
-			this.element=o[position]||null;
-			this.atEnd=function(){
-				return (position>=o.length);
-			}
-			this.get=function(){
-				if(this.atEnd()){
-					return null;		//	object
-				}
-				this.element=o[position++];
-				return this.element;	//	object
+			var position = 0;
+			this.element = o[position] || null;
+			this.atEnd = function () {
+				return (position >= o.length);
 			};
-			this.map=function(/* function */fn, /* object? */scope){
-				var s=scope||dj_global;
-				if(Array.map){
-					return Array.map(o,fn,s);	//	array
-				}else{
-					var arr=[];
-					for(var i=0; i<o.length; i++){
-						arr.push(fn.call(s,o[i]));
+			this.get = function () {
+				if (this.atEnd()) {
+					return null;
+				}
+				this.element = o[position++];
+				return this.element;
+			};
+			this.map = function (fn, scope) {
+				var s = scope || dj_global;
+				if (Array.map) {
+					return Array.map(o, fn, s);
+				} else {
+					var arr = [];
+					for (var i = 0; i < o.length; i++) {
+						arr.push(fn.call(s, o[i]));
 					}
-					return arr;		//	array
+					return arr;
 				}
 			};
-			this.reset=function(){
-				position=0;
-				this.element=o[position];
+			this.reset = function () {
+				position = 0;
+				this.element = o[position];
 			};
 		}
-		
-		this.add=function(node){
+		this.add = function (node) {
 			d.add(node.key, node);
 		};
-		this.clear=function(){
+		this.clear = function () {
 			d.clear();
 		};
-		this.containsKey=function(key){
+		this.containsKey = function (key) {
 			return d.containsKey(key);
 		};
-		this.getIterator=function(){
+		this.getIterator = function () {
 			return new nodelistiterator(this);
 		};
-		this.item=function(key){
+		this.item = function (key) {
 			return d.item(key);
 		};
-		this.remove=function(node){
+		this.remove = function (node) {
 			d.remove(node.key);
 		};
 	}
-	function edgeToNeighbor(node, cost){
-		this.neighbor=node;
-		this.cost=cost;
+	function edgeToNeighbor(node, cost) {
+		this.neighbor = node;
+		this.cost = cost;
 	}
-	function adjacencyList(){
-		var d=[];
-		this.add=function(o){
+	function adjacencyList() {
+		var d = [];
+		this.add = function (o) {
 			d.push(o);
 		};
-		this.item=function(i){
+		this.item = function (i) {
 			return d[i];
 		};
-		this.getIterator=function(){
+		this.getIterator = function () {
 			return new dojo.collections.Iterator([].concat(d));
 		};
 	}
-
-	this.nodes=nodes||new nodeList();
-	this.count=this.nodes.count;
-	this.clear=function(){
+	this.nodes = nodes || new nodeList();
+	this.count = this.nodes.count;
+	this.clear = function () {
 		this.nodes.clear();
-		this.count=0;
+		this.count = 0;
 	};
-	this.addNode=function(){
-		var n=arguments[0];
-		if(arguments.length > 1){
-			n=new node(arguments[0],arguments[1]);
+	this.addNode = function () {
+		var n = arguments[0];
+		if (arguments.length > 1) {
+			n = new node(arguments[0], arguments[1]);
 		}
-		if(!this.nodes.containsKey(n.key)){
+		if (!this.nodes.containsKey(n.key)) {
 			this.nodes.add(n);
 			this.count++;
 		}
 	};
-	this.addDirectedEdge=function(uKey, vKey, cost){
-		var uNode,vNode;
-		if(uKey.constructor!= node){
-			uNode=this.nodes.item(uKey);
-			vNode=this.nodes.item(vKey);
-		}else{
-			uNode=uKey;
-			vNode=vKey;
-		}
-		var c=cost||0;
-		uNode.addDirected(vNode,c);
-	};
-	this.addUndirectedEdge=function(uKey, vKey, cost){
+	this.addDirectedEdge = function (uKey, vKey, cost) {
 		var uNode, vNode;
-		if(uKey.constructor!=node){
-			uNode=this.nodes.item(uKey);
-			vNode=this.nodes.item(vKey);
-		}else{
-			uNode=uKey;
-			vNode=vKey;
+		if (uKey.constructor != node) {
+			uNode = this.nodes.item(uKey);
+			vNode = this.nodes.item(vKey);
+		} else {
+			uNode = uKey;
+			vNode = vKey;
 		}
-		var c=cost||0;
-		uNode.addDirected(vNode,c);
-		vNode.addDirected(uNode,c);
+		var c = cost || 0;
+		uNode.addDirected(vNode, c);
 	};
-	this.contains=function(n){
+	this.addUndirectedEdge = function (uKey, vKey, cost) {
+		var uNode, vNode;
+		if (uKey.constructor != node) {
+			uNode = this.nodes.item(uKey);
+			vNode = this.nodes.item(vKey);
+		} else {
+			uNode = uKey;
+			vNode = vKey;
+		}
+		var c = cost || 0;
+		uNode.addDirected(vNode, c);
+		vNode.addDirected(uNode, c);
+	};
+	this.contains = function (n) {
 		return this.nodes.containsKey(n.key);
 	};
-	this.containsKey=function(k){
+	this.containsKey = function (k) {
 		return this.nodes.containsKey(k);
 	};
-}
+};
+

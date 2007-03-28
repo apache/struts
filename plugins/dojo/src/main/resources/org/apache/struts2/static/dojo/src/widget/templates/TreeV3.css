@@ -1,4 +1,3 @@
- 
 /* indent for all tree children excepts root */
 .TreeNode {
     background-image : url('../templates/images/TreeV3/i.gif');
@@ -16,10 +15,6 @@
     background-image: url('../templates/images/TreeV3/i_half.gif');
     background-repeat : no-repeat;
 }
- 
-
-
- 
  
 .TreeExpandOpen .TreeExpand {
     background-image: url('../templates/images/TreeV3/expand_minus.gif');
@@ -49,7 +44,6 @@ so I have to remove TreeExpand and process this one specifically
     background-repeat : no-repeat;
     background-image: url('../templates/images/TreeV3/expand_loading.gif');
 }
-
  
 .TreeContent {
     min-height: 18px;
@@ -71,13 +65,11 @@ so I have to remove TreeExpand and process this one specifically
     background-repeat : no-repeat;
 }
  
- 
 /* same style as IE selection */
-.TreeNodeEmphased {
+.TreeNodeEmphasized {
     background-color: Highlight;
     color: HighlightText;
 }
- 
  
 .TreeContent .RichTextEditable, .TreeContent .RichTextEditable iframe {
       background-color: #ffc;
@@ -88,4 +80,3 @@ so I have to remove TreeExpand and process this one specifically
 .TreeLabelFocused {
       outline: 1px invert dotted;
 }
-

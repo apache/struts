@@ -8,10 +8,6 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
-dojo.kwCompoundRequire({
-	common: ["dojo.io.common"],
-	rhino: ["dojo.io.RhinoIO"],
-	browser: ["dojo.io.BrowserIO", "dojo.io.cookie"],
-	dashboard: ["dojo.io.BrowserIO", "dojo.io.cookie"]
-});
+dojo.kwCompoundRequire({common:["dojo.io.common"], rhino:["dojo.io.RhinoIO"], browser:["dojo.io.BrowserIO", "dojo.io.cookie"], dashboard:["dojo.io.BrowserIO", "dojo.io.cookie"]});
 dojo.provide("dojo.io.*");
+

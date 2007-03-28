@@ -23,8 +23,8 @@ dojo.widget.defineWidget(
     this.inputNode.name = this.name;
     
     //set cssClass
-    if(this.extraArgs.class) {
-      dojo.html.setClass(this.inputNode, this.extraArgs.class);
+    if(this.extraArgs["class"]) {
+      dojo.html.setClass(this.inputNode, this.extraArgs["class"]);
     }  
     
     //set cssStyle

@@ -86,9 +86,6 @@
 		//
 		// WEB SEARCH
 		//
-
-		// NOTE: contextual search and term extraction are not stubbed out
-		// becaues I'm not sure if we can POST via script src inclusion method
 		{
 			// http://developer.yahoo.com/search/web/V1/webSearch.html 
 			"name":"webSearch",
@@ -122,6 +119,35 @@
 			"parameters":[
 				{ "name":"query", "type":"STRING" },
 				{ "name":"results", "type":"INTEGER" } // 1-50, defaults to 10
+			]
+		},
+		{
+			// http://developer.yahoo.com/search/content/V1/termExtraction.html
+			"name":"termExtraction",
+			"serviceURL": "http://search.yahooapis.com/ContentAnalysisService/V1/termExtraction",
+			"parameters":[
+				{ "name":"query", "type":"STRING" },
+				{ "name":"context", "type":"STRING" },
+				{ "name":"results", "type":"INTEGER" } // 1-50, defaults to 10
+			]
+		},
+		{
+			// http://developer.yahoo.com/search/web/V1/contextSearch.html
+			"name":"contextSearch",
+			"serviceURL": "http://search.yahooapis.com/WebSearchService/V1/contextSearch",
+			"parameters":[
+				{ "name":"query", "type":"STRING" },
+				{ "name":"context", "type":"STRING" },
+				{ "name":"type", "type":"STRING" }, // defaults to "all"
+				{ "name":"results", "type":"INTEGER" }, // defaults to 10
+				{ "name":"start", "type":"INTEGER" }, // defaults to 1
+				{ "name":"format", "type":"STRING" }, // defaults to "any", can be "html", "msword", "pdf", "ppt", "rst", "txt", or "xls"
+				{ "name":"adult_ok", "type":"INTEGER" }, // defaults to null
+				{ "name":"similar_ok", "type":"INTEGER" }, // defaults to null
+				{ "name":"language", "type":"STRING" }, // defaults to null
+				{ "name":"country", "type":"STRING" }, // defaults to null
+				{ "name":"site", "type":"STRING" }, // defaults to null
+				{ "name":"license", "type":"STRING" } // defaults to "any", could be "cc_any", "cc_commercial", "cc_modifiable"
 			]
 		},
 		//

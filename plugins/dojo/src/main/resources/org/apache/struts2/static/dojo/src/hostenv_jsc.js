@@ -74,3 +74,5 @@ dojo.hostenv.println = function(s){
 dojo.hostenv.getLibraryScriptUri = function(){
 	return System.Environment.GetCommandLineArgs()[0];
 }
+
+dojo.requireIf((djConfig["isDebug"] || djConfig["debugAtAllCosts"]), "dojo.debug");

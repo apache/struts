@@ -9,95 +9,58 @@
 */
 
 dojo.provide("dojo.widget.ResizeHandle");
-
 dojo.require("dojo.widget.*");
 dojo.require("dojo.html.layout");
 dojo.require("dojo.event.*");
-
-dojo.widget.defineWidget(
-	"dojo.widget.ResizeHandle",
-	dojo.widget.HtmlWidget,
-{
-	isSizing: false,
-	startPoint: null,
-	startSize: null,
-	minSize: null,
-
-	targetElmId: '',
-
-	templateCssPath: dojo.uri.dojoUri("src/widget/templates/ResizeHandle.css"),
-	templateString: '<div class="dojoHtmlResizeHandle"><div></div></div>',
-
-	postCreate: function(){
-		dojo.event.connect(this.domNode, "onmousedown", this, "beginSizing");
-	},
-
-	beginSizing: function(e){
-		if (this.isSizing){ return false; }
-
-		// get the target dom node to adjust.  targetElmId can refer to either a widget or a simple node
-		this.targetWidget = dojo.widget.byId(this.targetElmId);
-		this.targetDomNode = this.targetWidget ? this.targetWidget.domNode : dojo.byId(this.targetElmId);
-		if (!this.targetDomNode){ return; }
-
-		this.isSizing = true;
-		this.startPoint  = {'x':e.clientX, 'y':e.clientY};
-		var mb = dojo.html.getMarginBox(this.targetDomNode);
-		this.startSize  = {'w':mb.width, 'h':mb.height};
-
-		dojo.event.kwConnect({
-			srcObj: dojo.body(), 
-			srcFunc: "onmousemove",
-			targetObj: this,
-			targetFunc: "changeSizing",
-			rate: 25
-		});
-		dojo.event.connect(dojo.body(), "onmouseup", this, "endSizing");
-
-		e.preventDefault();
-	},
-
-	changeSizing: function(e){
-		// On IE, if you move the mouse above/to the left of the object being resized,
-		// sometimes clientX/Y aren't set, apparently.  Just ignore the event.
-		try{
-			if(!e.clientX  || !e.clientY){ return; }
-		}catch(e){
-			// sometimes you get an exception accessing above fields...
+dojo.widget.defineWidget("dojo.widget.ResizeHandle", dojo.widget.HtmlWidget, {targetElmId:"", templateCssString:".dojoHtmlResizeHandle {\n\tfloat: right;\n\tposition: absolute;\n\tright: 2px;\n\tbottom: 2px;\n\twidth: 13px;\n\theight: 13px;\n\tz-index: 20;\n\tcursor: nw-resize;\n\tbackground-image: url(grabCorner.gif);\n\tline-height: 0px;\n}\n", templateCssPath:dojo.uri.moduleUri("dojo.widget", "templates/ResizeHandle.css"), templateString:"<div class=\"dojoHtmlResizeHandle\"><div></div></div>", postCreate:function () {
+	dojo.event.connect(this.domNode, "onmousedown", this, "_beginSizing");
+}, _beginSizing:function (e) {
+	if (this._isSizing) {
+		return false;
+	}
+	this.targetWidget = dojo.widget.byId(this.targetElmId);
+	this.targetDomNode = this.targetWidget ? this.targetWidget.domNode : dojo.byId(this.targetElmId);
+	if (!this.targetDomNode) {
+		return;
+	}
+	this._isSizing = true;
+	this.startPoint = {"x":e.clientX, "y":e.clientY};
+	var mb = dojo.html.getMarginBox(this.targetDomNode);
+	this.startSize = {"w":mb.width, "h":mb.height};
+	dojo.event.kwConnect({srcObj:dojo.body(), srcFunc:"onmousemove", targetObj:this, targetFunc:"_changeSizing", rate:25});
+	dojo.event.connect(dojo.body(), "onmouseup", this, "_endSizing");
+	e.preventDefault();
+}, _changeSizing:function (e) {
+	try {
+		if (!e.clientX || !e.clientY) {
 			return;
 		}
-		var dx = this.startPoint.x - e.clientX;
-		var dy = this.startPoint.y - e.clientY;
-		
-		var newW = this.startSize.w - dx;
-		var newH = this.startSize.h - dy;
-
-		// minimum size check
-		if (this.minSize) {
-			var mb = dojo.html.getMarginBox(this.targetDomNode);
-			if (newW < this.minSize.w) {
-				newW = mb.width;
-			}
-			if (newH < this.minSize.h) {
-				newH = mb.height;
-			}
-		}
-		
-		if(this.targetWidget){
-			this.targetWidget.resizeTo(newW, newH);
-		}else{
-			dojo.html.setMarginBox(this.targetDomNode, { width: newW, height: newH});
-		}
-		
-		e.preventDefault();
-	},
-
-	endSizing: function(e){
-		dojo.event.disconnect(dojo.body(), "onmousemove", this, "changeSizing");
-		dojo.event.disconnect(dojo.body(), "onmouseup", this, "endSizing");
-
-		this.isSizing = false;
 	}
+	catch (e) {
+		return;
+	}
+	var dx = this.startPoint.x - e.clientX;
+	var dy = this.startPoint.y - e.clientY;
+	var newW = this.startSize.w - dx;
+	var newH = this.startSize.h - dy;
+	if (this.minSize) {
+		var mb = dojo.html.getMarginBox(this.targetDomNode);
+		if (newW < this.minSize.w) {
+			newW = mb.width;
+		}
+		if (newH < this.minSize.h) {
+			newH = mb.height;
+		}
+	}
+	if (this.targetWidget) {
+		this.targetWidget.resizeTo(newW, newH);
+	} else {
+		dojo.html.setMarginBox(this.targetDomNode, {width:newW, height:newH});
+	}
+	e.preventDefault();
+}, _endSizing:function (e) {
+	dojo.event.disconnect(dojo.body(), "onmousemove", this, "_changeSizing");
+	dojo.event.disconnect(dojo.body(), "onmouseup", this, "_endSizing");
+	this._isSizing = false;
+}});
 
-
-});

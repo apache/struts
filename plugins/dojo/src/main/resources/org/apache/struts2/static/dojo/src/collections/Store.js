@@ -10,270 +10,282 @@
 
 dojo.provide("dojo.collections.Store");
 dojo.require("dojo.lang.common");
-
-/*	Store
- *	Designed to be a simple store of data with access methods...
- *	specifically to be mixed into other objects (such as widgets).
- */
-dojo.collections.Store = function(/* array? */jsonArray){
-	//	summary
-	//	Data Store with accessor methods.
+dojo.collections.Store = function (jsonArray) {
 	var data = [];
+	var items = {};
 	this.keyField = "Id";
-
-	this.get = function(){
-		//	summary
-		//	Get the internal data array, should not be used.
-		return data;	//	array
+	this.get = function () {
+		return data;
 	};
-	this.getByKey = function(/* string */key){
-		//	summary
-		//	Find the internal data object by key.
-		for(var i=0; i<data.length; i++){
-			if(data[i].key==key){
-				return data[i];	// object
+	this.getByKey = function (key) {
+		return items[key];
+	};
+	this.getByIndex = function (idx) {
+		return data[idx];
+	};
+	this.getIndexOf = function (key) {
+		for (var i = 0; i < data.length; i++) {
+			if (data[i].key == key) {
+				return i;
 			}
 		}
-		return null;	// null
+		return -1;
 	};
-	this.getByIndex = function(/*number*/idx){ 
-		//	summary
-		//	Get the internal data object by index.
-		return data[idx]; 	// object
-	};
-	
-	this.getData = function(){
-		//	summary
-		//	Get an array of source objects.
+	this.getData = function () {
 		var arr = [];
-		for(var i=0; i<data.length; i++){
+		for (var i = 0; i < data.length; i++) {
 			arr.push(data[i].src);
 		}
-		return arr;	//	array
+		return arr;
 	};
-	this.getDataByKey = function(/*string*/key){
-		//	summary
-		//	Get the source object by key.
-		for(var i=0; i<data.length; i++){
-			if(data[i].key==key){
-				return data[i].src; //	object
+	this.getDataByKey = function (key) {
+		if (items[key] != null) {
+			return items[key].src;
+		}
+		return null;
+	};
+	this.getIndexOfData = function (obj) {
+		for (var i = 0; i < data.length; i++) {
+			if (data[i].src == obj) {
+				return i;
 			}
 		}
-		return null;	//	null
+		return -1;
 	};
-	this.getDataByIndex = function(/*number*/idx){ 
-		//	summary
-		//	Get the source object at index idx.
-		return data[idx].src; 	//	object
+	this.getDataByIndex = function (idx) {
+		if (data[idx]) {
+			return data[idx].src;
+		}
+		return null;
 	};
-
-	this.update = function(/* Object */obj, /* string */fieldPath, /* Object */val){
-		var parts=fieldPath.split("."), i=0, o=obj, field;
-		if(parts.length>1) {
+	this.update = function (obj, fieldPath, val, bDontFire) {
+		var parts = fieldPath.split("."), i = 0, o = obj, field;
+		if (parts.length > 1) {
 			field = parts.pop();
-			do{ 
-				if(parts[i].indexOf("()")>-1){
-					var temp=parts[i++].split("()")[0];
-					if(!o[temp]){
+			do {
+				if (parts[i].indexOf("()") > -1) {
+					var temp = parts[i++].split("()")[0];
+					if (!o[temp]) {
 						dojo.raise("dojo.collections.Store.getField(obj, '" + field + "'): '" + temp + "' is not a property of the passed object.");
 					} else {
-						//	this *will* throw an error if the method in question can't be invoked without arguments.
 						o = o[temp]();
 					}
 				} else {
 					o = o[parts[i++]];
 				}
-			} while (i<parts.length && o != null);
+			} while (i < parts.length && o != null);
 		} else {
 			field = parts[0];
 		}
-
 		obj[field] = val;
-		this.onUpdateField(obj, fieldPath, val);
+		if (!bDontFire) {
+			this.onUpdateField(obj, fieldPath, val);
+		}
 	};
-
-	this.forEach = function(/* function */fn){
-		//	summary
-		//	Functional iteration directly on the internal data array.
-		if(Array.forEach){
+	this.forEach = function (fn) {
+		if (Array.forEach) {
 			Array.forEach(data, fn, this);
-		}else{
-			for(var i=0; i<data.length; i++){
+		} else {
+			for (var i = 0; i < data.length; i++) {
 				fn.call(this, data[i]);
 			}
 		}
 	};
-	this.forEachData = function(/* function */fn){
-		//	summary
-		//	Functional iteration on source objects in internal data array.
-		if(Array.forEach){
+	this.forEachData = function (fn) {
+		if (Array.forEach) {
 			Array.forEach(this.getData(), fn, this);
-		}else{
-			var a=this.getData();
-			for(var i=0; i<a.length; i++){
+		} else {
+			var a = this.getData();
+			for (var i = 0; i < a.length; i++) {
 				fn.call(this, a[i]);
 			}
 		}
 	};
-
-	this.setData = function(/*array*/arr){
-		//	summary
-		//	Set up the internal data.
-		data = []; 	//	don't fire onClearData
-		for(var i=0; i<arr.length; i++){
-			data.push({ 
-				key:arr[i][this.keyField], 
-				src:arr[i]
-			});
-		}
-		this.onSetData();
-	};
-	
-	this.clearData = function(){
-		//	summary
-		//	Clears the internal data array.
+	this.setData = function (arr, bDontFire) {
 		data = [];
-		this.onClearData();
+		for (var i = 0; i < arr.length; i++) {
+			var o = {key:arr[i][this.keyField], src:arr[i]};
+			data.push(o);
+			items[o.key] = o;
+		}
+		if (!bDontFire) {
+			this.onSetData();
+		}
 	};
-
-	this.addData = function(/*obj*/obj,/*string?*/key){ 
-		//	summary
-		//	Add an object with optional key to the internal data array.
+	this.clearData = function (bDontFire) {
+		data = [];
+		items = {};
+		if (!bDontFire) {
+			this.onClearData();
+		}
+	};
+	this.addData = function (obj, key, bDontFire) {
 		var k = key || obj[this.keyField];
-		if(this.getByKey(k)){
-			var o = this.getByKey(k);
+		if (items[k] != null) {
+			var o = items[k];
 			o.src = obj;
 		} else {
-			var o={ key:k, src:obj };
+			var o = {key:k, src:obj};
 			data.push(o);
+			items[o.key] = o;
 		}
-		this.onAddData(o);
+		if (!bDontFire) {
+			this.onAddData(o);
+		}
 	};
-	this.addDataRange = function(/*array*/arr){
-		//	summary
-		//	Add a range of objects to the internal data array.
-		var objects=[];
-		for(var i=0; i<arr.length; i++){
+	this.addDataRange = function (arr, bDontFire) {
+		var objects = [];
+		for (var i = 0; i < arr.length; i++) {
 			var k = arr[i][this.keyField];
-			if(this.getByKey(k)){
-				var o = this.getByKey(k);
-				o.src = obj;
+			if (items[k] != null) {
+				var o = items[k];
+				o.src = arr[i];
 			} else {
-				var o = { key:k, src:arr[i] };
+				var o = {key:k, src:arr[i]};
 				data.push(o);
+				items[k] = o;
 			}
 			objects.push(o);
 		}
-		this.onAddDataRange(objects);
+		if (!bDontFire) {
+			this.onAddDataRange(objects);
+		}
 	};
-	
-	this.removeData = function(/*obj*/obj){
-		//	summary
-		//	remove the passed object from the internal data array.
-		var idx=-1;
-		var o=null;
-		for(var i=0; i<data.length; i++){
-			if(data[i].src==obj){
-				idx=i;
-				o=data[i];
+	this.addDataByIndex = function (obj, idx, key, bDontFire) {
+		var k = key || obj[this.keyField];
+		if (items[k] != null) {
+			var i = this.getIndexOf(k);
+			var o = data.splice(i, 1);
+			o.src = obj;
+		} else {
+			var o = {key:k, src:obj};
+			items[k] = o;
+		}
+		data.splice(idx, 0, o);
+		if (!bDontFire) {
+			this.onAddData(o);
+		}
+	};
+	this.addDataRangeByIndex = function (arr, idx, bDontFire) {
+		var objects = [];
+		for (var i = 0; i < arr.length; i++) {
+			var k = arr[i][this.keyField];
+			if (items[k] != null) {
+				var j = this.getIndexOf(k);
+				var o = data.splice(j, 1);
+				o.src = arr[i];
+			} else {
+				var o = {key:k, src:arr[i]};
+				items[k] = o;
+			}
+			objects.push(o);
+		}
+		data.splice(idx, 0, objects);
+		if (!bDontFire) {
+			this.onAddDataRange(objects);
+		}
+	};
+	this.removeData = function (obj, bDontFire) {
+		var idx = -1;
+		var o = null;
+		for (var i = 0; i < data.length; i++) {
+			if (data[i].src == obj) {
+				idx = i;
+				o = data[i];
 				break;
 			}
 		}
-		this.onRemoveData(o);
-		if(idx>-1){
-			data.splice(idx,1);
+		if (!bDontFire) {
+			this.onRemoveData(o);
+		}
+		if (idx > -1) {
+			data.splice(idx, 1);
+			delete items[o.key];
 		}
 	};
-	this.removeDataByKey = function(/*string*/key){
-		//	summary
-		//	remove the object at key from the internal data array.
-		this.removeData(this.getDataByKey(key));
+	this.removeDataRange = function (idx, range, bDontFire) {
+		var ret = data.splice(idx, range);
+		for (var i = 0; i < ret.length; i++) {
+			delete items[ret[i].key];
+		}
+		if (!bDontFire) {
+			this.onRemoveDataRange(ret);
+		}
+		return ret;
 	};
-	this.removeDataByIndex = function(/*number*/idx){
-		//	summary
-		//	remove the object at idx from the internal data array.
-		this.removeData(this.getDataByIndex(idx));
+	this.removeDataByKey = function (key, bDontFire) {
+		this.removeData(this.getDataByKey(key), bDontFire);
 	};
-
-	if(jsonArray && jsonArray.length && jsonArray[0]){
-		this.setData(jsonArray);
+	this.removeDataByIndex = function (idx, bDontFire) {
+		this.removeData(this.getDataByIndex(idx), bDontFire);
+	};
+	if (jsonArray && jsonArray.length && jsonArray[0]) {
+		this.setData(jsonArray, true);
 	}
 };
-
-dojo.extend(dojo.collections.Store, {
-	getField:function(/*object*/obj, /*string*/field){
-		//	helper to get the nested value if needed.
-		var parts=field.split("."), i=0, o=obj;
-		do{ 
-			if(parts[i].indexOf("()")>-1){
-				var temp=parts[i++].split("()")[0];
-				if(!o[temp]){
-					dojo.raise("dojo.collections.Store.getField(obj, '" + field + "'): '" + temp + "' is not a property of the passed object.");
-				} else {
-					//	this *will* throw an error if the method in question can't be invoked without arguments.
-					o = o[temp]();
-				}
+dojo.extend(dojo.collections.Store, {getField:function (obj, field) {
+	var parts = field.split("."), i = 0, o = obj;
+	do {
+		if (parts[i].indexOf("()") > -1) {
+			var temp = parts[i++].split("()")[0];
+			if (!o[temp]) {
+				dojo.raise("dojo.collections.Store.getField(obj, '" + field + "'): '" + temp + "' is not a property of the passed object.");
 			} else {
-				o = o[parts[i++]];
+				o = o[temp]();
 			}
-		} while (i<parts.length && o != null);
-		
-		if(i < parts.length){
-			dojo.raise("dojo.collections.Store.getField(obj, '" + field + "'): '" + field + "' is not a property of the passed object.");
+		} else {
+			o = o[parts[i++]];
 		}
-		return o; // object
-	},
-	getFromHtml:function(/* array */meta, /* HTMLTableBody */body, /* function? */fnMod){
-		//	summary
-		//	Parse HTML data into native JSON structure for the store.
-		var rows = body.rows;
-
-		//	create a data constructor.
-		var ctor=function(row){
-			var obj = {};
-			for(var i=0; i<meta.length; i++){
-				var o = obj;
-				var data = row.cells[i].innerHTML;
-				var p = meta[i].getField();
-				if(p.indexOf(".") > -1){
-					p = p.split(".");
-					while(p.length>1){
-						var pr = p.shift();
-						o[pr] = {};
-						o = o[pr];
-					}
-					p = p[0];
+	} while (i < parts.length && o != null);
+	if (i < parts.length) {
+		dojo.raise("dojo.collections.Store.getField(obj, '" + field + "'): '" + field + "' is not a property of the passed object.");
+	}
+	return o;
+}, getFromHtml:function (meta, body, fnMod) {
+	var rows = body.rows;
+	var ctor = function (row) {
+		var obj = {};
+		for (var i = 0; i < meta.length; i++) {
+			var o = obj;
+			var data = row.cells[i].innerHTML;
+			var p = meta[i].getField();
+			if (p.indexOf(".") > -1) {
+				p = p.split(".");
+				while (p.length > 1) {
+					var pr = p.shift();
+					o[pr] = {};
+					o = o[pr];
 				}
-
-				var type = meta[i].getType();
-				if(type == String){
-					o[p] = data;
+				p = p[0];
+			}
+			var type = meta[i].getType();
+			if (type == String) {
+				o[p] = data;
+			} else {
+				if (data) {
+					o[p] = new type(data);
 				} else {
-					if(data){
-						o[p] = new type(data);
-					} else {
-						o[p] = new type();
-					}
+					o[p] = new type();
 				}
 			}
-			return obj;
-		};
-
-		//	we have initialization data, let's parse it.
-		var arr=[];
-		for(var i=0; i<rows.length; i++){
-			var o = ctor(rows[i]);
-			if(fnMod){
-				fnMod(o, rows[i]);	//	apply any modifiers.
-			}
-			arr.push(o);
 		}
-		return arr;	//	array
-	},
-	onSetData:function(){ },
-	onClearData:function(){ },
-	onAddData:function(obj){ },
-	onAddDataRange:function(arr){ },
-	onRemoveData:function(obj){ },
-	onUpdateField:function(obj, field, val){ }
-});
+		return obj;
+	};
+	var arr = [];
+	for (var i = 0; i < rows.length; i++) {
+		var o = ctor(rows[i]);
+		if (fnMod) {
+			fnMod(o, rows[i]);
+		}
+		arr.push(o);
+	}
+	return arr;
+}, onSetData:function () {
+}, onClearData:function () {
+}, onAddData:function (obj) {
+}, onAddDataRange:function (arr) {
+}, onRemoveData:function (obj) {
+}, onRemoveDataRange:function (arr) {
+}, onUpdateField:function (obj, field, val) {
+}});
+

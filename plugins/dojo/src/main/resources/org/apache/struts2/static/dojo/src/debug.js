@@ -8,29 +8,26 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
-dojo.debug = function(/*...*/){
-	// summary:
-	//		Produce a line of debug output. Does nothing unless
-	//		djConfig.isDebug is true. Accepts any nubmer of args, joined with
-	//		'' to produce a single line of debugging output.  Caller should not
-	//		supply a trailing "\n".
-	if (!djConfig.isDebug) { return; }
+dojo.provide("dojo.debug");
+dojo.debug = function () {
+	if (!djConfig.isDebug) {
+		return;
+	}
 	var args = arguments;
-	if(dj_undef("println", dojo.hostenv)){
+	if (dj_undef("println", dojo.hostenv)) {
 		dojo.raise("dojo.debug not available (yet?)");
 	}
 	var isJUM = dj_global["jum"] && !dj_global["jum"].isBrowser;
-	var s = [(isJUM ? "": "DEBUG: ")];
-	for(var i=0;i<args.length;++i){
-		if(!false && args[i] && args[i] instanceof Error){
-			var msg = "[" + args[i].name + ": " + dojo.errorToString(args[i]) +
-				(args[i].fileName ? ", file: " + args[i].fileName : "") +
-				(args[i].lineNumber ? ", line: " + args[i].lineNumber : "") + "]";
+	var s = [(isJUM ? "" : "DEBUG: ")];
+	for (var i = 0; i < args.length; ++i) {
+		if (!false && args[i] && args[i] instanceof Error) {
+			var msg = "[" + args[i].name + ": " + dojo.errorToString(args[i]) + (args[i].fileName ? ", file: " + args[i].fileName : "") + (args[i].lineNumber ? ", line: " + args[i].lineNumber : "") + "]";
 		} else {
 			try {
 				var msg = String(args[i]);
-			} catch(e) {
-				if(dojo.render.html.ie) {
+			}
+			catch (e) {
+				if (dojo.render.html.ie) {
 					var msg = "[ActiveXObject]";
 				} else {
 					var msg = "[unknown]";
@@ -39,53 +36,48 @@ dojo.debug = function(/*...*/){
 		}
 		s.push(msg);
 	}
-	
 	dojo.hostenv.println(s.join(" "));
-}
-
-/**
- * this is really hacky for now - just 
- * display the properties of the object
-**/
-
-dojo.debugShallow = function(/*Object*/obj){
-	// summary:
-	//		outputs a "name: value" style listing of all enumerable properties
-	//		in obj. Does nothing if djConfig.isDebug == false.
-	// obj: the object to be enumerated
-	if (!djConfig.isDebug) { return; }
-	dojo.debug('------------------------------------------------------------');
-	dojo.debug('Object: '+obj);
+};
+dojo.debugShallow = function (obj) {
+	if (!djConfig.isDebug) {
+		return;
+	}
+	dojo.debug("------------------------------------------------------------");
+	dojo.debug("Object: " + obj);
 	var props = [];
-	for(var prop in obj){
+	for (var prop in obj) {
 		try {
-			props.push(prop + ': ' + obj[prop]);
-		} catch(E) {
-			props.push(prop + ': ERROR - ' + E.message);
+			props.push(prop + ": " + obj[prop]);
+		}
+		catch (E) {
+			props.push(prop + ": ERROR - " + E.message);
 		}
 	}
 	props.sort();
-	for(var i = 0; i < props.length; i++) {
+	for (var i = 0; i < props.length; i++) {
 		dojo.debug(props[i]);
 	}
-	dojo.debug('------------------------------------------------------------');
-}
-
-dojo.debugDeep = function(/*Object*/obj){
-	// summary:
-	//		provides an "object explorer" view of the passed obj in a popup
-	//		window.
-	// obj: the object to be examined
-	if (!djConfig.isDebug) { return; }
-	if (!dojo.uri || !dojo.uri.dojoUri){ return dojo.debug("You'll need to load dojo.uri.* for deep debugging - sorry!"); }
-	if (!window.open){ return dojo.debug('Deep debugging is only supported in host environments with window.open'); }
+	dojo.debug("------------------------------------------------------------");
+};
+dojo.debugDeep = function (obj) {
+	if (!djConfig.isDebug) {
+		return;
+	}
+	if (!dojo.uri || !dojo.uri.dojoUri) {
+		return dojo.debug("You'll need to load dojo.uri.* for deep debugging - sorry!");
+	}
+	if (!window.open) {
+		return dojo.debug("Deep debugging is only supported in host environments with window.open");
+	}
 	var idx = dojo.debugDeep.debugVars.length;
 	dojo.debugDeep.debugVars.push(obj);
-	// dojo.undo.browser back and forward breaks relpaths
-	var url = new dojo.uri.Uri(location, dojo.uri.dojoUri("src/debug/deep.html?var="+idx)).toString();
-	var win = window.open(url, '_blank', 'width=600, height=400, resizable=yes, scrollbars=yes, status=yes');
-	try{
+	var url = (djConfig["dojoDebugDeepHtmlUrl"] || new dojo.uri.Uri(location, dojo.uri.moduleUri("dojo.debug", "deep.html")).toString()) + "?var=" + idx;
+	var win = window.open(url, "_blank", "width=600, height=400, resizable=yes, scrollbars=yes, status=yes");
+	try {
 		win.debugVar = obj;
-	}catch(e){}
-}
+	}
+	catch (e) {
+	}
+};
 dojo.debugDeep.debugVars = [];
+

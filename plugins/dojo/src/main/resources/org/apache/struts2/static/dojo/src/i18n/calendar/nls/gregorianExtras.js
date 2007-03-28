@@ -8,7 +8,4 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
-// Dojo-specific extensions to the CLDR
-({
-	'dateFormat-yearOnly': "yyyy"
-})
+({"dateFormat-yearOnly":"yyyy"})

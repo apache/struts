@@ -8,7 +8,4 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
-({
-	displayName: "ITL",
-	symbol: "\u20A4"
-})
+({"displayName":"ITL", "symbol":"\u20a4"})

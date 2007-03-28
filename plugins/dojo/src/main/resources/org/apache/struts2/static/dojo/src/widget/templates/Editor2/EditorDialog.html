@@ -1,4 +1,6 @@
-<div id="${this.widgetId}" dojoAttachEvent="onMouseDown" class="dojoFloatingPane">
+<div id="${this.widgetId}" class="dojoFloatingPane">
+	<span dojoattachpoint="tabStartOuter" dojoonfocus="trapTabs" dojoonblur="clearTrap"	tabindex="0"></span>
+	<span dojoattachpoint="tabStart" dojoonfocus="trapTabs" dojoonblur="clearTrap" tabindex="0"></span>
 	<div dojoAttachPoint="titleBar" class="dojoFloatingPaneTitleBar"  style="display:none">
 	  	<img dojoAttachPoint="titleBarIcon"  class="dojoFloatingPaneTitleBarIcon">
 		<div dojoAttachPoint="closeAction" dojoAttachEvent="onClick:hide"
@@ -13,6 +15,7 @@
 	</div>
 
 	<div id="${this.widgetId}_container" dojoAttachPoint="containerNode" class="dojoFloatingPaneClient"></div>
-
+	<span dojoattachpoint="tabEnd" dojoonfocus="trapTabs" dojoonblur="clearTrap" tabindex="0"></span>
+	<span dojoattachpoint="tabEndOuter" dojoonfocus="trapTabs" dojoonblur="clearTrap" tabindex="0"></span>
 	<div dojoAttachPoint="resizeBar" class="dojoFloatingPaneResizebar" style="display:none"></div>
 </div>

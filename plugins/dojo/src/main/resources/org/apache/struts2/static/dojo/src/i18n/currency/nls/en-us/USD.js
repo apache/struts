@@ -8,6 +8,4 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
-({
-	symbol: "$"
-})
+({"symbol":"$", "displayName":"US Dollar"})

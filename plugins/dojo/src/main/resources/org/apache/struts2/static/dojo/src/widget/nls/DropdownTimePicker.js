@@ -8,6 +8,4 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
-({
-		selectTime: "Select time"
-})
+({"selectTime":"Select time"})

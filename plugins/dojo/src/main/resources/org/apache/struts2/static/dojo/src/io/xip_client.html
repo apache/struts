@@ -13,13 +13,15 @@
 	This might be reworked later if performance indicates a need for it.
 	
 	xip fragment identifier/hash values have the form:
-	#id:cmd:realUrlEncodedMessage
+	#id:cmd:realEncodedMessage
 
 	id: some ID that should be unique among messages. No inherent meaning,
 	        just something to make sure the hash value is unique so the message
 	        receiver knows a new message is available.
 	        
 	cmd: command to the receiver. Valid values are:
+	         - init: message used to init the frame. Sent as the first URL when loading
+	                 the page. Contains some config parameters.
 	         - loaded: the remote frame is loaded. Only sent from server to client.
 	         - ok: the message that this page sent was received OK. The next message may
 	               now be sent.
@@ -31,17 +33,17 @@
 	                If the message is small enough that it doesn't need to be segmented, then
 	                just one hash value message can be sent with "end" as the command.
 	
-	To reassemble a segmented message, the realUrlEncodedMessage parts just have to be concatenated
+	To reassemble a segmented message, the realEncodedMessage parts just have to be concatenated
 	together.
 	*/
 
-	//Choosing 1024 as an arbitrary limit for the URL sizes.
-	//Anecdotal info seems to indicate this is safe to use in all
-	//modern browsers.
-	xipUrlLimit = 1024;
+	//MSIE has the lowest limit for URLs with fragment identifiers,
+	//at around 4K. Choosing a slightly smaller number for good measure.
+	xipUrlLimit = 4000;
 	xipIdCounter = 1;
 
 	function xipInit(){
+		xipStateId = "";
 		xipIsSending = false;
 		xipServerUrl = null;
 		xipStateId = null;
@@ -51,42 +53,42 @@
 		xipRequestParts = [];
 		xipPartIndex = 0;
 		xipServerWindow = null;
+		xipUseFrameRecursion = false;
 	}
 	xipInit();
 	
-	function send(stateId, ifpServerUrl, urlEncodedData){
-		if(!xipIsSending){
-			xipIsSending = true;
+	function send(encodedData){
+		if(xipUseFrameRecursion == "true"){
+			var clientEndPoint = window.open(xipStateId + "_clientEndPoint");
+			clientEndPoint.send(encodedData);
+		}else{
+			if(!xipIsSending){
+				xipIsSending = true;
+	
+				xipRequestData = encodedData || "";
 
-			xipStateId = stateId;
-			xipRequestData = urlEncodedData || "";
-
-			//Modify the server URL if it is a local path and 
-			//This is done for local/same domain testing.
-			xipServerUrl = ifpServerUrl;
-			if(ifpServerUrl.indexOf("..") == 0){
-				var parts = ifpServerUrl.split("/");
-				xipServerUrl = parts[parts.length - 1];
+				//Get a handle to the server iframe.
+				xipServerWindow = frames[xipStateId + "_frame"];
+				if (!xipServerWindow){
+					xipServerWindow = document.getElementById(xipStateId + "_frame").contentWindow;
+				}
+	
+				sendRequestStart();
 			}
-
-			//Fix server URL to tell it about this page's URL. So that it can call us
-			//back correctly. Use the fragment identifier to allow for caching of the server
-			//page, and hey, we're using the fragment identifier for everything else.
-			ifpServerUrl += "#" + encodeURIComponent(window.location);	
-
-			//Start counter to inspect hash value.
-			setInterval(pollHash, 10);
-
-			//Loader server iframe, then wait for the server page to call us back.
-			xipServerWindow = frames["xipServerFrame"];
-			if (!xipServerWindow){
-				xipServerWindow = document.getElementById("xipServerFrame").contentWindow;
-			}
-
-			xipServerWindow.location.replace(ifpServerUrl);
 		}
 	}
 
+	//Modify the server URL if it is a local path and 
+	//This is done for local/same domain testing.
+	function fixServerUrl(ifpServerUrl){
+		if(ifpServerUrl.indexOf("..") == 0){
+			var parts = ifpServerUrl.split("/");
+			ifpServerUrl = parts[parts.length - 1];
+		}
+		return ifpServerUrl;
+	}
+	
+	
 	function pollHash(){
 		//Can't use location.hash because at least Firefox does a decodeURIComponent on it.
 		var urlParts = window.location.href.split("#");
@@ -105,32 +107,29 @@
 		}
 	}
 
-	function messageReceived(urlEncodedMessage){
-		//Split off xip header.
-		var parts = urlEncodedMessage.split(":");
-		var command = parts[1];
-		urlEncodedMessage = parts[2] || "";
-		
-		switch(command){
+	function messageReceived(encodedData){
+		var msg = unpackMessage(encodedData);
+
+		switch(msg.command){
 			case "loaded":
-				sendRequestStart();
+				xipMasterFrame.dojo.io.XhrIframeProxy.clientFrameLoaded(xipStateId);
 				break;
 			case "ok":
 				sendRequestPart();
 				break;
 			case "start":
 				xipResponseMessage = "";
-				xipResponseMessage += urlEncodedMessage;
+				xipResponseMessage += msg.message;
 				setServerUrl("ok");
 				break;
 			case "part":
-				xipResponseMessage += urlEncodedMessage;			
+				xipResponseMessage += msg.message;			
 				setServerUrl("ok");
 				break;
 			case "end":
 				setServerUrl("ok");
-				xipResponseMessage += urlEncodedMessage;
-				parent.dojo.io.XhrIframeProxy.receive(xipStateId, xipResponseMessage);
+				xipResponseMessage += msg.message;
+				xipMasterFrame.dojo.io.XhrIframeProxy.receive(xipStateId, xipResponseMessage);
 				break;
 		}
 	}
@@ -144,8 +143,15 @@
 		var reqIndex = 0;
 
 		while((reqData.length - reqIndex) + urlLength > xipUrlLimit){
-			xipRequestParts.push(reqData.substring(reqIndex, reqIndex + partLength));
-			reqIndex += partLength;
+			var part = reqData.substring(reqIndex, reqIndex + partLength);
+			//Safari will do some extra hex escaping unless we keep the original hex
+			//escaping complete.
+			var percentIndex = part.lastIndexOf("%");
+			if(percentIndex == part.length - 1 || percentIndex == part.length - 2){
+				part = part.substring(0, percentIndex);
+			}
+			xipRequestParts.push(part);
+			reqIndex += part.length;
 		}
 		xipRequestParts.push(reqData.substring(reqIndex, reqData.length));
 		
@@ -173,10 +179,7 @@
 	}
 	
 	function setServerUrl(cmd, message){
-		var serverUrl = xipServerUrl + "#" + (xipIdCounter++) + ":" + cmd;
-		if(message){
-			serverUrl += ":" + message;
-		}
+		var serverUrl = makeServerUrl(cmd, message);
 
 		//Safari won't let us replace across domains.
 		if(navigator.userAgent.indexOf("Safari") == -1){
@@ -184,8 +187,66 @@
 		}else{
 			xipServerWindow.location = serverUrl;
 		}
-
 	}
+	
+	function makeServerUrl(cmd, message){
+		var serverUrl = xipServerUrl + "#" + (xipIdCounter++) + ":" + cmd;
+		if(message){
+			serverUrl += ":" + message;
+		}
+		return serverUrl;
+	}
+
+	function unpackMessage(encodedMessage){
+		var parts = encodedMessage.split(":");
+		var command = parts[1];
+		encodedMessage = parts[2] || "";
+
+		var config = null;
+		if(command == "init"){
+			var configParts = encodedMessage.split("&");
+			config = {};
+			for(var i = 0; i < configParts.length; i++){
+				var nameValue = configParts[i].split("=");
+				config[decodeURIComponent(nameValue[0])] = decodeURIComponent(nameValue[1]);
+			}
+		}
+		return {command: command, message: encodedMessage, config: config};
+	}
+
+	function onClientLoad(){
+		//Decode the init params
+		var config = unpackMessage(window.location.href.split("#")[1]).config;
+
+		xipStateId = config.id;
+
+		//Remove the query param for the IE7 recursive case.
+		xipServerUrl = fixServerUrl(config.server).replace(/(\?|\&)dojo\.fr\=1/, "");
+		xipUseFrameRecursion = config["fr"];
+		
+		if(xipUseFrameRecursion == "endpoint"){
+			xipMasterFrame = parent.parent;
+		}else{
+			xipMasterFrame = parent;
+		}
+		
+		//Start counter to inspect hash value.
+		setInterval(pollHash, 10);
+
+		var clientUrl = window.location.href.split("#")[0];
+		document.getElementById("iframeHolder").innerHTML = '<iframe src="'
+			+ makeServerUrl("init", 'id=' + xipStateId + '&client=' + encodeURIComponent(clientUrl)
+			+ '&fr=' + xipUseFrameRecursion) + '" id="' + xipStateId + '_frame"></iframe>';
+			
+		
+	}
+
+	if(typeof(window.addEventListener) == "undefined"){
+		window.attachEvent("onload", onClientLoad);
+	}else{
+		window.addEventListener('load', onClientLoad, false);
+	}
+	
 	// -->
 	</script>
 </head>
@@ -195,6 +256,6 @@
 	<p>This file is used for Dojo's XMLHttpRequest Iframe Proxy. This is the "client" file used
 	internally by dojo.io.XhrIframeProxy.</p>
 	
-	<iframe id="xipServerFrame"></iframe>
+	<span id="iframeHolder"></span>
 </body>
 </html>

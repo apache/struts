@@ -1,7 +1,7 @@
 dojo.provide("struts.widget.StrutsDatePicker");
 
 dojo.require("dojo.widget.DropdownDatePicker");
-
+dojo.requireLocalization("dojo.widget", "StrutsDatePicker");
 dojo.widget.defineWidget(
   "struts.widget.StrutsDatePicker",
   dojo.widget.DropdownDatePicker, {
@@ -11,8 +11,8 @@ dojo.widget.defineWidget(
     struts.widget.StrutsDatePicker.superclass.postCreate.apply(this, arguments);
     
     //set cssClass
-    if(this.extraArgs.class) {
-      dojo.html.setClass(this.inputNode, this.extraArgs.class);
+    if(this.extraArgs["class"]) {
+      dojo.html.setClass(this.inputNode, this.extraArgs["class"]);
     }  
     
     //set cssStyle

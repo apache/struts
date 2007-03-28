@@ -5,7 +5,7 @@
 <html>
 <head>
     <title>UI Tags Example</title>
-    <sx:head />
+    <sx:head extraLocales="en-us,nl-nl,de-de"/>
 </head>
 <body>
 <table>

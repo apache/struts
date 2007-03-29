@@ -401,9 +401,6 @@ Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyExcepti
         ObjectTypeDeterminer objectTypeDeterminer = container.getInstance(ObjectTypeDeterminer.class);
         ObjectTypeDeterminerFactory.setInstance(objectTypeDeterminer);
 
-        TextProvider textProvider = container.getInstance(TextProvider.class);
-        TextProviderFactory.setInstance(textProvider);
-        
         return container;
     }
 

@@ -27,6 +27,7 @@ import java.util.ResourceBundle;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.dispatcher.Dispatcher;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.LocaleProvider;
@@ -102,7 +103,9 @@ public class I18n extends Component {
 
             if (bundle != null) {
                 final Locale locale = (Locale) getStack().getContext().get(ActionContext.LOCALE);
-                getStack().push(TextProviderFactory.getInstance(bundle, new LocaleProvider() {
+                TextProviderFactory tpf = new TextProviderFactory();
+                Dispatcher.getInstance().getContainer().inject(tpf);
+                getStack().push(tpf.createInstance(bundle, new LocaleProvider() {
                      public Locale getLocale() {
                          return locale;
                      }

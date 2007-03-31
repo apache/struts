@@ -75,6 +75,7 @@ public class Head extends org.apache.struts2.components.Head {
     private String baseRelativePath;
     private String extraLocales;
     private String locale;
+    private String cache;
     
     public Head(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -99,6 +100,8 @@ public class Head extends org.apache.struts2.components.Head {
         }
         if (this.locale != null)
             addParameter("locale", findString(this.locale));
+        if (this.cache != null)
+            addParameter("cache", findValue(this.cache, Boolean.class));
     }
 
     @Override
@@ -116,12 +119,12 @@ public class Head extends org.apache.struts2.components.Head {
         return debug != null && Boolean.parseBoolean(debug);
     }
 
-    @StrutsTagAttribute(description="Set to true to enable Dojo debug messages", defaultValue="false")
+    @StrutsTagAttribute(description="Enable Dojo debug messages", defaultValue="false", type="Boolean")
     public void setDebug(String debug) {
         this.debug = debug;
     }
 
-    @StrutsTagAttribute(description="Use compressed version of dojo.js", defaultValue="true")
+    @StrutsTagAttribute(description="Use compressed version of dojo.js", defaultValue="true", type="Boolean")
     public void setCompressed(String compressed) {
         this.compressed = compressed;
     }
@@ -139,5 +142,11 @@ public class Head extends org.apache.struts2.components.Head {
     @StrutsTagAttribute(description="Default locale to be used by Dojo, locale name must be specified as in RFC3066")
     public void setLocale(String locale) {
         this.locale = locale;
+    }
+
+    @StrutsTagAttribute(description="Use Struts Dojo profile, which contains all Struts widgets in one file, making it possible to be chached by " +
+                "the browser", defaultValue="true", type="Boolean")
+    public void setCache(String cache) {
+        this.cache = cache;
     }
 }

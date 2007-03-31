@@ -1,10 +1,10 @@
 <script language="JavaScript" type="text/javascript">
 	// Dojo configuration
 	djConfig={
-		isDebug: true,
+		isDebug: false,
 		bindEncoding: "ISO-8859-1",
-		baseRelativePath: "/path",
-		baseScriptUri: "/path",
+		baseRelativePath: "/struts/dojo/",
+		baseScriptUri: "/struts/dojo/",
 		locale: "es",
 		extraLocale: [
 			"a",
@@ -14,7 +14,7 @@
 		};
 </script>
 
-<script language="JavaScript" type="text/javascript" src="/path/struts_dojo.js.uncompressed.js">
+<script language="JavaScript" type="text/javascript" src="/struts/dojo/dojo.js">
 </script>
 
 <script language="JavaScript" type="text/javascript" src="/struts/ajax/dojoRequire.js">

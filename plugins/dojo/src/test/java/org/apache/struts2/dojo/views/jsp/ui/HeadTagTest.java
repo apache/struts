@@ -39,9 +39,25 @@ public class HeadTagTest extends AbstractUITagTest {
         tag.setExtraLocales("a,b,c");
         tag.setBaseRelativePath("/path");
         tag.setLocale("es");
+        tag.setCache("true");
         tag.doStartTag();
         tag.doEndTag();
 
         verify(HeadTagTest.class.getResource("HeadTagTest-1.txt"));
+    }
+    
+    public void testHead2() throws Exception {
+        HeadTag tag = new HeadTag();
+        tag.setPageContext(pageContext);
+        
+        tag.setDebug("false");
+        tag.setCompressed("true");
+        tag.setExtraLocales("a,b,c");
+        tag.setLocale("es");
+        tag.setCache("false");
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(HeadTagTest.class.getResource("HeadTagTest-2.txt"));
     }
 }

@@ -114,7 +114,7 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                         mapping.setMethod("index");
                         
                     // Creating a new entry on POST e.g. foo/
-                    } else if (isPut(request)) {
+                    } else if (isPost(request)) {
                         mapping.setMethod("create");
                     }
 
@@ -130,7 +130,7 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                         mapping.setMethod("view");
 
                     // Updating an item e.g. foo/1
-                    } else if (isPost(request)) {
+                    } else if (isPut(request)) {
                         mapping.setMethod("update");
 
                     // Removing an item e.g. foo/1

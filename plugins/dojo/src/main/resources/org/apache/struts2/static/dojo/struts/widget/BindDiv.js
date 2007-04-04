@@ -284,11 +284,128 @@ dojo.widget.defineWidget(
       }
     },
 
+    //from Dojo's ContentPane
+    //TODO: remove when fixed on Dojo
     startTimer : function() {
       if(this.timer && !this.timer.isRunning) {
         this.log("starting timer with update interval " + this.updateFreq);
         this.timer.start();
       }
+    },
+    
+    splitAndFixPaths:function (s, url) {
+      var titles = [], scripts = [], tmp = [];
+      var match = [], requires = [], attr = [], styles = [];
+      var str = "", path = "", fix = "", tagFix = "", tag = "", origPath = "";
+      if (!url) {
+        url = "./";
+      }
+      if (s) {
+        var regex = /<title[^>]*>([\s\S]*?)<\/title>/i;
+        while (match = regex.exec(s)) {
+          titles.push(match[1]);
+          s = s.substring(0, match.index) + s.substr(match.index + match[0].length);
+        }
+        if (this.adjustPaths) {
+          var regexFindTag = /<[a-z][a-z0-9]*[^>]*\s(?:(?:src|href|style)=[^>])+[^>]*>/i;
+          var regexFindAttr = /\s(src|href|style)=(['"]?)([\w()\[\]\/.,\\'"-:;#=&?\s@!]+?)\2/i;
+          var regexProtocols = /^(?:[#]|(?:(?:https?|ftps?|file|javascript|mailto|news):))/;
+          while (tag = regexFindTag.exec(s)) {
+            str += s.substring(0, tag.index);
+            s = s.substring((tag.index + tag[0].length), s.length);
+            tag = tag[0];
+            tagFix = "";
+            while (attr = regexFindAttr.exec(tag)) {
+              path = "";
+              origPath = attr[3];
+              switch (attr[1].toLowerCase()) {
+                case "src":
+                case "href":
+                if (regexProtocols.exec(origPath)) {
+                  path = origPath;
+                } else {
+                  path = (new dojo.uri.Uri(url, origPath).toString());
+                }
+                break;
+                case "style":
+                path = dojo.html.fixPathsInCssText(origPath, url);
+                break;
+                default:
+                path = origPath;
+              }
+              fix = " " + attr[1] + "=" + attr[2] + path + attr[2];
+              tagFix += tag.substring(0, attr.index) + fix;
+              tag = tag.substring((attr.index + attr[0].length), tag.length);
+            }
+            str += tagFix + tag;
+          }
+          s = str + s;
+        }
+        regex = /(?:<(style)[^>]*>([\s\S]*?)<\/style>|<link ([^>]*rel=['"]?stylesheet['"]?[^>]*)>)/i;
+        while (match = regex.exec(s)) {
+          if (match[1] && match[1].toLowerCase() == "style") {
+            styles.push(dojo.html.fixPathsInCssText(match[2], url));
+          } else {
+            if (attr = match[3].match(/href=(['"]?)([^'">]*)\1/i)) {
+              styles.push({path:attr[2]});
+            }
+          }
+          s = s.substring(0, match.index) + s.substr(match.index + match[0].length);
+        }
+        var regex = /<script([^>]*)>([\s\S]*?)<\/script>/i;
+        var regexSrc = /src=(['"]?)([^"']*)\1/i;
+        var regexDojoJs = /.*(\bdojo\b\.js(?:\.uncompressed\.js)?)$/;
+        var regexInvalid = /(?:var )?\bdjConfig\b(?:[\s]*=[\s]*\{[^}]+\}|\.[\w]*[\s]*=[\s]*[^;\n]*)?;?|dojo\.hostenv\.writeIncludes\(\s*\);?/g;
+        var regexRequires = /dojo\.(?:(?:require(?:After)?(?:If)?)|(?:widget\.(?:manager\.)?registerWidgetPackage)|(?:(?:hostenv\.)?setModulePrefix|registerModulePath)|defineNamespace)\((['"]).*?\1\)\s*;?/;
+        while (match = regex.exec(s)) {
+          if (this.executeScripts && match[1]) {
+            if (attr = regexSrc.exec(match[1])) {
+              if (regexDojoJs.exec(attr[2])) {
+                dojo.debug("Security note! inhibit:" + attr[2] + " from  being loaded again.");
+              } else {
+                scripts.push({path:attr[2]});
+              }
+            }
+          }
+          if (match[2]) {
+            var sc = match[2].replace(regexInvalid, "");
+            if (!sc) {
+              continue;
+            }
+            while (tmp = regexRequires.exec(sc)) {
+              requires.push(tmp[0]);
+              sc = sc.substring(0, tmp.index) + sc.substr(tmp.index + tmp[0].length);
+            }
+            if (this.executeScripts) {
+              scripts.push(sc);
+            }
+          }
+          s = s.substr(0, match.index) + s.substr(match.index + match[0].length);
+        }
+        if (this.extractContent) {
+          match = s.match(/<body[^>]*>\s*([\s\S]+)\s*<\/body>/im);
+          if (match) {
+            s = match[1];
+          }
+        }
+        if (this.executeScripts && this.scriptSeparation) {
+          var regex = /(<[a-zA-Z][a-zA-Z0-9]*\s[^>]*?\S=)((['"])[^>]*scriptScope[^>]*>)/;
+          var regexAttr = /([\s'";:\(])scriptScope(.*)/;
+          str = "";
+          while (tag = regex.exec(s)) {
+            tmp = ((tag[3] == "'") ? "\"" : "'");
+            fix = "";
+            str += s.substring(0, tag.index) + tag[1];
+            while (attr = regexAttr.exec(tag[2])) {
+              tag[2] = tag[2].substring(0, attr.index) + attr[1] + "dojo.widget.byId(" + tmp + this.widgetId + tmp + ").scriptScope" + attr[2];
+            }
+            str += tag[2];
+            s = s.substr(tag.index + tag[0].length);
+          }
+          s = str + s;
+        }
+      }
+      return {"xml":s, "styles":styles, "titles":titles, "requires":requires, "scripts":scripts, "url":url};
     }
   }
 );

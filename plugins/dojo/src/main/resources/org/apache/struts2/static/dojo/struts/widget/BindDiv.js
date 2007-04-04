@@ -284,8 +284,6 @@ dojo.widget.defineWidget(
       }
     },
 
-    //from Dojo's ContentPane
-    //TODO: remove when fixed on Dojo
     startTimer : function() {
       if(this.timer && !this.timer.isRunning) {
         this.log("starting timer with update interval " + this.updateFreq);
@@ -293,6 +291,8 @@ dojo.widget.defineWidget(
       }
     },
     
+    //from Dojo's ContentPane
+    //TODO: remove when fixed on Dojo
     splitAndFixPaths:function (s, url) {
       var titles = [], scripts = [], tmp = [];
       var match = [], requires = [], attr = [], styles = [];

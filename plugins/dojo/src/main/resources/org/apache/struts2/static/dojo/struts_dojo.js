@@ -13829,7 +13829,7 @@ this.isRunning=false;
 dj_global.clearInterval(this.timer);
 }});
 dojo.provide("struts.widget.BindDiv");
-dojo.widget.defineWidget("struts.widget.BindDiv",dojo.widget.ContentPane,{widgetType:"BindDiv",href:"",extractContent:false,parseContent:false,cacheContent:false,refreshOnShow:false,executeScripts:false,updateFreq:0,delay:0,autoStart:true,timer:null,loadingText:"Loading...",showLoading:true,errorText:"",showError:true,listenTopics:"",notifyTopics:"",notifyTopicsArray:null,stopTimerListenTopics:"",startTimerListenTopics:"",beforeNotifyTopics:"",beforeNotifyTopicsArray:null,afterNotifyTopics:"",afterNotifyTopicsArray:null,errorNotifyTopics:"",errorNotifyTopicsArray:null,beforeLoading:"",afterLoading:"",formId:"",formFilter:"",firstTime:true,indicator:"",parseContent:true,onDownloadStart:function(_ba1){
+dojo.widget.defineWidget("struts.widget.BindDiv",dojo.widget.ContentPane,{widgetType:"BindDiv",href:"",extractContent:false,parseContent:false,cacheContent:false,refreshOnShow:false,executeScripts:false,preload:true,updateFreq:0,delay:0,autoStart:true,timer:null,loadingText:"Loading...",showLoading:true,errorText:"",showError:true,listenTopics:"",notifyTopics:"",notifyTopicsArray:null,stopTimerListenTopics:"",startTimerListenTopics:"",beforeNotifyTopics:"",beforeNotifyTopicsArray:null,afterNotifyTopics:"",afterNotifyTopicsArray:null,errorNotifyTopics:"",errorNotifyTopicsArray:null,beforeLoading:"",afterLoading:"",formId:"",formFilter:"",indicator:"",parseContent:true,onDownloadStart:function(_ba1){
 if(!this.showLoading){
 _ba1.returnValue=false;
 return;
@@ -13889,7 +13889,9 @@ self.log(ex);
 });
 }
 },postCreate:function(args,frag){
-struts.widget.BindDiv.superclass.postCreate.apply(this);
+if(this.handler!==""){
+this.setHandler(this.handler);
+}
 var self=this;
 var _bb5=function(){
 dojo.lang.hitch(self,"refresh")();
@@ -13960,13 +13962,10 @@ this.afterNotifyTopicsArray=this.afterNotifyTopics.split(",");
 if(!dojo.string.isBlank(this.errorNotifyTopics)){
 this.errorNotifyTopicsArray=this.errorNotifyTopics.split(",");
 }
+if(this.isShowing()&&this.preload&&this.updateFreq<=0&&this.delay<=0){
+this.loadContents();
+}
 },_downloadExternalContent:function(url,_bbe){
-if(this.firstTime){
-this.firstTime=false;
-if(this.delay>0){
-return;
-}
-}
 var _bbf={cancel:false};
 this.notify(this.widgetId,"before",_bbf);
 if(_bbf.cancel){

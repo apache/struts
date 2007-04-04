@@ -23,6 +23,9 @@
   <#if parameters.separateScripts?exists>
     scriptSeparation="${parameters.separateScripts?string?html}"<#rt/>
   </#if>
+  <#if parameters.preload?exists>
+    preload="${parameters.preload?string?html}"<#rt/>
+  </#if>
   <#include "/${parameters.templateDir}/ajax/ajax-common.ftl" />
   <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
   <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />

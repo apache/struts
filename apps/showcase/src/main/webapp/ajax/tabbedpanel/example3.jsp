@@ -39,7 +39,7 @@
                               <s:textfield name="tt2" label="Test Text2" />
                           </s:form>
                       </sx:div>
-                      <sx:div href="%{ajaxTest}" id="ryh1" label="remote one" />
+                      <sx:div href="%{ajaxTest}" id="ryh1" label="remote one" preload="false"/>
                       <sx:div id="middle" label="middle">
                           middle tab<br/>
                           <s:form >
@@ -47,7 +47,7 @@
                               <s:textfield name="tt2" label="Test Text442" />
                           </s:form>
                       </sx:div>
-                      <sx:div href="%{ajaxTest}"  id="ryh21" label="remote right" />
+                      <sx:div href="%{ajaxTest}"  id="ryh21" label="remote right" preload="false"/>
                   </sx:tabbedpanel>
                 <!--// END SNIPPET: tabbedpanel-tag-->
              </td>

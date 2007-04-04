@@ -22436,7 +22436,8 @@ dojo.widget.defineWidget(
     cacheContent : false,
     refreshOnShow : false,
     executeScripts : false,
-
+    preload : true,
+    
     //update times
     updateFreq : 0,
     delay : 0,
@@ -22469,7 +22470,6 @@ dojo.widget.defineWidget(
 
     formId : "",
     formFilter : "",
-    firstTime : true,
 
     indicator: "",
 
@@ -22551,7 +22551,9 @@ dojo.widget.defineWidget(
     },
 
     postCreate : function(args, frag) {
-      struts.widget.BindDiv.superclass.postCreate.apply(this);
+      if (this.handler !== "") {
+          this.setHandler(this.handler);
+      }
 
       var self = this;
       var hitchedRefresh = function() {
@@ -22648,16 +22650,14 @@ dojo.widget.defineWidget(
       if(!dojo.string.isBlank(this.errorNotifyTopics)) {
         this.errorNotifyTopicsArray = this.errorNotifyTopics.split(",");
       }
+      
+      if(this.isShowing() && this.preload && this.updateFreq <= 0 && this.delay <= 0) {
+        this.loadContents();
+      }
     },
 
     _downloadExternalContent: function(url, useCache) {
-      if(this.firstTime) {
-        this.firstTime = false;
-        if(this.delay > 0) {
-          return;
-        }
-      }
-
+      
       var request = {cancel: false};
       this.notify(this.widgetId, "before", request);
       if(request.cancel) {

@@ -73,6 +73,7 @@ public class Div extends AbstractRemoteCallUIBean {
     protected String refreshOnShow;
     protected String separateScripts;
     protected String closable;
+    protected String preload;
     
     public Div(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -105,6 +106,8 @@ public class Div extends AbstractRemoteCallUIBean {
             addParameter("separateScripts", findValue(separateScripts, Boolean.class));
         if (closable != null)
             addParameter("closable", findValue(closable, Boolean.class));
+        if (preload != null)
+            addParameter("preload", findValue(preload, Boolean.class));
     }
 
     @StrutsTagAttribute(description="Start timer automatically", type="Boolean", defaultValue="true")
@@ -145,5 +148,10 @@ public class Div extends AbstractRemoteCallUIBean {
     @StrutsTagAttribute(description="Show a close button when the div is inside a 'tabbedpanel'", defaultValue="false")
     public void setClosable(String closable) {
         this.closable = closable;
+    }
+
+    @StrutsTagAttribute(description="Load content when page is loaded", type="Boolean", defaultValue="true")
+    public void setPreload(String preload) {
+        this.preload = preload;
     }
 }

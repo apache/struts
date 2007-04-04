@@ -40,6 +40,7 @@ public class DivTag extends AbstractRemoteCallUITag {
     protected String refreshOnShow;
     protected String separateScripts;
     protected String closable;
+    protected String preload;
     
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Div(stack, req, res);
@@ -57,6 +58,7 @@ public class DivTag extends AbstractRemoteCallUITag {
         div.setRefreshOnShow(refreshOnShow);
         div.setSeparateScripts(separateScripts);
         div.setClosable(closable);
+        div.setPreload(preload);
     }
 
     public void setAutoStart(String autoStart) {
@@ -89,5 +91,9 @@ public class DivTag extends AbstractRemoteCallUITag {
 
     public void setClosable(String closable) {
         this.closable = closable;
+    }
+    
+    public void setPreload(String preload) {
+        this.preload = preload;
     }
 }

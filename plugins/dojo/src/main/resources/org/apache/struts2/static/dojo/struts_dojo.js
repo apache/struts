@@ -13904,23 +13904,14 @@ this.timer=new dojo.lang.timing.Timer(this.updateFreq);
 this.timer.onTick=_bb5;
 if(this.autoStart){
 if(this.delay>0){
-dojo.lang.setTimeout(this.delay,_bb6);
+dojo.lang.setTimeout(_bb6,this.delay);
 }else{
 this.startTimer();
 }
 }
 }else{
 if(this.delay>0){
-dojo.lang.setTimeout(this.delay,_bb5);
-}
-}
-if(this.autoStart){
-if(this.delay>0){
-if(this.updateFreq>0){
-dojo.lang.setTimeout(this.delay,_bb6);
-}else{
-dojo.lang.setTimeout(this.delay,_bb5);
-}
+dojo.lang.setTimeout(_bb5,this.delay);
 }
 }
 if(!dojo.string.isBlank(this.listenTopics)){
@@ -13963,7 +13954,7 @@ if(!dojo.string.isBlank(this.errorNotifyTopics)){
 this.errorNotifyTopicsArray=this.errorNotifyTopics.split(",");
 }
 if(this.isShowing()&&this.preload&&this.updateFreq<=0&&this.delay<=0){
-this.loadContents();
+this.refresh();
 }
 },_downloadExternalContent:function(url,_bbe){
 var _bbf={cancel:false};

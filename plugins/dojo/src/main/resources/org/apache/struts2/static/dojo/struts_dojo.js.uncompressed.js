@@ -22564,15 +22564,15 @@ dojo.widget.defineWidget(
       };
 
       if(this.updateFreq > 0) {
+        //there is a timer
         this.timer = new dojo.lang.timing.Timer(this.updateFreq);
         this.timer.onTick = hitchedRefresh;
 
-        //start the timer
         if(this.autoStart) {
-          //start after delay
+          //start the timer
           if(this.delay > 0) {
             //start time after delay
-            dojo.lang.setTimeout(this.delay, hitchedStartTimer);
+            dojo.lang.setTimeout(hitchedStartTimer, this.delay);
           } else {
             //start timer now
             this.startTimer();
@@ -22582,21 +22582,7 @@ dojo.widget.defineWidget(
         //no timer
         if(this.delay > 0) {
           //load after delay
-          dojo.lang.setTimeout(this.delay, hitchedRefresh);
-        }
-      }
-
-      //start the timer
-      if(this.autoStart) {
-        //start after delay
-        if(this.delay > 0) {
-          if(this.updateFreq > 0) {
-            //start time after delay
-          	dojo.lang.setTimeout(this.delay, hitchedStartTimer);
-          } else {
-            //load after delay
-            dojo.lang.setTimeout(this.delay, hitchedRefresh);
-          }
+          dojo.lang.setTimeout(hitchedRefresh, this.delay);
         }
       }
 
@@ -22652,7 +22638,7 @@ dojo.widget.defineWidget(
       }
       
       if(this.isShowing() && this.preload && this.updateFreq <= 0 && this.delay <= 0) {
-        this.loadContents();
+        this.refresh();
       }
     },
 
@@ -22704,8 +22690,6 @@ dojo.widget.defineWidget(
       }
     },
 
-    //from Dojo's ContentPane
-    //TODO: remove when fixed on Dojo
     startTimer : function() {
       if(this.timer && !this.timer.isRunning) {
         this.log("starting timer with update interval " + this.updateFreq);
@@ -22713,6 +22697,8 @@ dojo.widget.defineWidget(
       }
     },
     
+    //from Dojo's ContentPane
+    //TODO: remove when fixed on Dojo
     splitAndFixPaths:function (s, url) {
       var titles = [], scripts = [], tmp = [];
       var match = [], requires = [], attr = [], styles = [];

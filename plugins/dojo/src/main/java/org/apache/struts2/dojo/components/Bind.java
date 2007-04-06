@@ -1,0 +1,213 @@
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.struts2.dojo.components;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
+import org.apache.struts2.views.annotations.StrutsTagSkipInheritance;
+
+import com.opensymphony.xwork2.util.ValueStack;
+
+/**
+ * <!-- START SNIPPET: javadoc -->
+ * <p>
+ * This tag will generated event listeners for multiple events on multiple sources,
+ * making an asynchronous request to the specified href, and updating multiple targets.
+ * </p>
+ * <!-- END SNIPPET: javadoc -->
+ * <p>Examples</p>
+ * <!-- START SNIPPET: example1 -->
+ * <pre>
+ * &lt;img id="indicator" src="${pageContext.request.contextPath}/images/indicator.gif" alt="Loading..." style="display:none"/&gt;
+ * &lt;sx:bind id="ex1" href="%{#ajaxTest}" sources="button" targets="div1" events="onclick" indicator="indicator" /&gt;
+ * &lt;s:submit theme="simple" type="submit" value="submit" id="button"/&gt;
+ * </pre>
+ * <!-- END SNIPPET: example1 -->
+ * <!-- START SNIPPET: example2 -->
+ * <pre>
+ * &lt;sx:bind id="ex3" href="%{#ajaxTest}" sources="chk1" targets="div1" events="onchange" formId="form1" /&gt;
+ * &lt;form id="form1"&gt;
+ *     &lt;s:checkbox name="data" label="Hit me" id="chk1"/&gt;
+ * &lt;/form>
+ * </pre>
+ * <!-- START SNIPPET: example2 -->
+ */
+@StrutsTag(name="bind", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.BindTag", description="Attach event listeners to elements to make AJAX calls")
+@StrutsTagSkipInheritance
+public class Bind extends AbstractRemoteCallUIBean {
+    public static final String TEMPLATE = "bind-close";
+    public static final String OPEN_TEMPLATE = "bind";
+
+    protected String targets;
+    protected String sources;
+    protected String events;
+
+    public Bind(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+        super(stack, request, response);
+    }
+
+    public String getDefaultOpenTemplate() {
+        return OPEN_TEMPLATE;
+    }
+
+    protected String getDefaultTemplate() {
+        return TEMPLATE;
+    }
+
+    public void evaluateExtraParams() {
+        super.evaluateExtraParams();
+
+        if(targets != null)
+            addParameter("targets", findString(targets));
+        if(sources != null)
+            addParameter("sources", findString(sources));
+        if(events != null)
+            addParameter("events", findString(events));
+    }
+    
+    @StrutsTagAttribute(description="Comma delimited list of event names to attach to", required=true)
+    public void setEvents(String events) {
+        this.events = events;
+    }
+
+    @StrutsTagAttribute(description="Comma delimited list of ids of the elements to attach to", required=true)
+    public void setSources(String sources) {
+        this.sources = sources;
+    }
+
+    @StrutsTagAttribute(description="Comma delimited list of ids of the elements whose content will be updated")
+    public void setTargets(String targets) {
+        this.targets = targets;
+    }
+    
+    @Override
+    @StrutsTagSkipInheritance
+    public void setTheme(String theme) {
+        super.setTheme(theme);
+    }
+    
+    @Override
+    public String getTheme() {
+        return "ajax";
+    }
+
+    @StrutsTagAttribute(description="Topic that will trigger the remote call")
+    public void setListenTopics(String listenTopics) {
+        this.listenTopics = listenTopics;
+    }
+
+    @StrutsTagAttribute(description="The URL to call to obtain the content. Note: If used with ajax context, the value must be set as an url tag value.")
+    public void setHref(String href) {
+        this.href = href;
+    }
+
+
+    @StrutsTagAttribute(description="The text to display to the user if the is an error fetching the content")
+    public void setErrorText(String errorText) {
+        this.errorText = errorText;
+    }
+
+    @StrutsTagAttribute(description="Javascript code in the fetched content will be executed", type="Boolean", defaultValue="false")
+    public void setExecuteScripts(String executeScripts) {
+        this.executeScripts = executeScripts;
+    }
+
+    @StrutsTagAttribute(description="Text to be shown while content is being fetched", defaultValue="Loading...")
+    public void setLoadingText(String loadingText) {
+        this.loadingText = loadingText;
+    }
+
+
+    @StrutsTagAttribute(description="Javascript function name that will make the request")
+    public void setHandler(String handler) {
+        this.handler = handler;
+    }
+
+
+    @StrutsTagAttribute(description="Function name used to filter the fields of the form.")
+    public void setFormFilter(String formFilter) {
+        this.formFilter = formFilter;
+    }
+
+    @StrutsTagAttribute(description="Form id whose fields will be serialized and passed as parameters")
+    public void setFormId(String formId) {
+        this.formId = formId;
+    }
+
+    @StrutsTagAttribute(description="Comma delimmited list of topics that will published before and after the request, and on errors")
+    public void setNotifyTopics(String notifyTopics) {
+        this.notifyTopics = notifyTopics;
+    }
+
+
+    @StrutsTagAttribute(description="Set whether errors will be shown or not", type="Boolean", defaultValue="true")
+    public void setShowErrorTransportText(String showError) {
+        this.showErrorTransportText = showError;
+    }
+
+    @StrutsTagAttribute(description="Id of element that will be shown while making request")
+    public void setIndicator(String indicator) {
+        this.indicator = indicator;
+    }
+
+    @StrutsTagAttribute(description="Show loading text on targets", type="Boolean", defaultValue="true")
+    public void setShowLoadingText(String showLoadingText) {
+        this.showLoadingText = showLoadingText;
+    }
+
+    @StrutsTagSkipInheritance
+    public void setCssClass(String cssClass) {
+        super.setCssClass(cssClass);
+    }
+
+    @StrutsTagSkipInheritance
+    public void setCssStyle(String cssStyle) {
+        super.setCssStyle(cssStyle);
+    }
+
+    @StrutsTagSkipInheritance
+    public void setName(String name) {
+        super.setName(name);
+    }
+
+    @StrutsTagAttribute(description="Comma delimmited list of topics that will published after the request(if the request succeeds)")
+    public void setAfterNotifyTopics(String afterNotifyTopics) {
+        this.afterNotifyTopics = afterNotifyTopics;
+    }
+
+    @StrutsTagAttribute(description="Comma delimmited list of topics that will published before the request")
+    public void setBeforeNotifyTopics(String beforeNotifyTopics) {
+        this.beforeNotifyTopics = beforeNotifyTopics;
+    }
+
+    @StrutsTagAttribute(description="Comma delimmited list of topics that will published after the request(if the request fails)")
+    public void setErrorNotifyTopics(String errorNotifyTopics) {
+        this.errorNotifyTopics = errorNotifyTopics;
+    }
+    
+    @StrutsTagAttribute(description="The id to use for the element")
+    public void setId(String id) {
+        super.setId(id);
+    }
+}

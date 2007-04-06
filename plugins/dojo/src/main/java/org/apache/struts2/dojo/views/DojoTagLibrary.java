@@ -6,13 +6,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts2.components.Head;
 import org.apache.struts2.dojo.views.freemarker.tags.DojoModels;
 import org.apache.struts2.dojo.views.velocity.components.AnchorDirective;
 import org.apache.struts2.dojo.views.velocity.components.AutocompleterDirective;
+import org.apache.struts2.dojo.views.velocity.components.BindDirective;
 import org.apache.struts2.dojo.views.velocity.components.DateTimePickerDirective;
 import org.apache.struts2.dojo.views.velocity.components.DivDirective;
 import org.apache.struts2.dojo.views.velocity.components.FormDirective;
+import org.apache.struts2.dojo.views.velocity.components.HeadDirective;
 import org.apache.struts2.dojo.views.velocity.components.SubmitDirective;
 import org.apache.struts2.dojo.views.velocity.components.TabbedPanelDirective;
 import org.apache.struts2.dojo.views.velocity.components.TreeDirective;
@@ -40,7 +41,8 @@ public class DojoTagLibrary implements TagLibrary {
             TreeDirective.class,
             TreeNodeDirective.class,
             FormDirective.class,
-            Head.class
+            HeadDirective.class,
+            BindDirective.class
         };
         return Arrays.asList(directives);
     }

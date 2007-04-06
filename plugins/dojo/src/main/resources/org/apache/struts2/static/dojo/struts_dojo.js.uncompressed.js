@@ -22086,7 +22086,7 @@ dojo.widget.defineWidget(
   formFilter : "",
   formNode : null,
 
-  event : "",
+  events : "",
   indicator : "",
 
   parseContent : true,
@@ -22129,13 +22129,19 @@ dojo.widget.defineWidget(
       this.targetsArray = this.targets.split(",");
     }
 
-    if(!dojo.string.isBlank(this.event)) {
-      dojo.event.connect(this.domNode, this.event, function(evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-        self.reloadContents();
-      });
+    if(!dojo.string.isBlank(this.events)) {
+      var eventsArray = this.events.split(",");
+      if(eventsArray && this.domNode) {
+        dojo.lang.forEach(eventsArray, function(event){
+           dojo.event.connect(self.domNode, event, function(evt) {
+             evt.preventDefault();
+             evt.stopPropagation();
+             self.reloadContents();
+           });
+        });
+      }
     }
+
 
     if(dojo.string.isBlank(this.href) && dojo.string.isBlank(this.formId)) {
       //no href and no formId, we must be inside a form
@@ -22163,12 +22169,16 @@ dojo.widget.defineWidget(
 	  var xmlParser = new dojo.xml.Parse();
       dojo.lang.forEach(this.targetsArray, function(target) {
         var node = dojo.byId(target);
-        node.innerHTML = text;
-
-        if(self.parseContent && text != self.loadingText){
-          var frag  = xmlParser.parseElement(node, null, true);
-          dojo.widget.getParser().createSubComponents(frag, dojo.widget.byId(target));
-		}
+        if(node) {
+          node.innerHTML = text;
+  
+          if(self.parseContent && text != self.loadingText){
+            var frag  = xmlParser.parseElement(node, null, true);
+            dojo.widget.getParser().createSubComponents(frag, dojo.widget.byId(target));
+          }
+        } else {
+          self.log("Unable to find target: " + node);
+        }
       });
     }
   },
@@ -22239,11 +22249,11 @@ dojo.widget.defineWidget(
     var self = this;
     if(topicsArray) {
       dojo.lang.forEach(topicsArray, function(topic) {
-        try {
-          dojo.event.topic.publish(topic, data, type, e);
-        } catch(ex){
-          self.log(ex);
-        }
+      try {
+        dojo.event.topic.publish(topic, data, type, e);
+      } catch(ex){
+        self.log(ex);
+      }
       });
     }
   },
@@ -22827,7 +22837,7 @@ dojo.widget.defineWidget(
   struts.widget.Bind, {
   widgetType : "BindAnchor",
 
-  event: "onclick",
+  events: "onclick",
 
   postCreate : function() {
      struts.widget.BindAnchor.superclass.postCreate.apply(this);
@@ -27632,7 +27642,6 @@ dojo.widget.defineWidget(
 dojo.provide("struts.widget.StrutsDatePicker");
 
 
-
 dojo.widget.defineWidget(
   "struts.widget.StrutsDatePicker",
   dojo.widget.DropdownDatePicker, {
@@ -27653,13 +27662,53 @@ dojo.widget.defineWidget(
   },
 });
 
+dojo.provide("struts.widget.BindEvent");
+
+
+
+dojo.widget.defineWidget(
+  "struts.widget.BindEvent",
+  struts.widget.Bind, {
+  widgetType : "BindEvent",
+
+  sources: "",
+
+  postCreate : function() {
+    struts.widget.BindEvent.superclass.postCreate.apply(this);
+    var self = this;
+
+    if(!dojo.string.isBlank(this.events) && !dojo.string.isBlank(this.sources)) {
+      var eventsArray = this.events.split(",");
+      var sourcesArray = this.sources.split(",");
+
+      if(eventsArray && this.domNode) {
+        //events
+        dojo.lang.forEach(eventsArray, function(event) {
+          //sources
+          dojo.lang.forEach(sourcesArray, function(source) {
+            var sourceObject = dojo.byId(source);
+            if(sourceObject) {
+              dojo.event.connect(sourceObject, event, function(evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                self.reloadContents();
+              });
+            }
+          });
+        });
+      }
+    }
+  }
+});
+
 dojo.kwCompoundRequire({
 	common: ["struts.widget.Bind",
 	         "struts.widget.BindDiv",
 	         "struts.widget.BindAnchor",
 	         "struts.widget.ComboBox",
              "struts.widget.StrutsTimePicker",
-             "struts.widget.StrutsDatePicker"]
+             "struts.widget.StrutsDatePicker",
+             "struts.widget.BindEvent"]
 });
 dojo.provide("struts.widget.*");
 

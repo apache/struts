@@ -1,5 +1,5 @@
 <#if parameters.type?exists && parameters.type=="button">
-  <input type="button" dojoType="struts:Bind" event="onclick"<#rt/>
+  <input type="button" dojoType="struts:Bind" events="onclick"<#rt/>
   <#include "/${parameters.templateDir}/ajax/ajax-common.ftl"/>
   <#include "/${parameters.templateDir}/simple/scripting-events.ftl"/>
   <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
@@ -9,7 +9,7 @@
  />
 <#else>
   <#if parameters.type?exists && parameters.type=="image">
-    <input type="image" dojoType="struts:Bind" event="onclick"<#rt/>
+    <input type="image" dojoType="struts:Bind" events="onclick"<#rt/>
     <#if parameters.label?if_exists != "">
      alt="${parameters.label?html}"<#rt/>
     </#if>
@@ -17,7 +17,7 @@
      src="${parameters.src?html}"<#rt/>
     </#if>
   <#else>
-    <input type="submit" dojoType="struts:Bind" event="onclick"<#rt/>
+    <input type="submit" dojoType="struts:Bind" events="onclick"<#rt/>
   </#if>
     <#if parameters.nameValue?if_exists != "">
      value="${parameters.nameValue?html}"<#rt/>

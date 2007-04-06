@@ -1,0 +1,17 @@
+<script language="JavaScript" type="text/javascript">
+	dojo.addOnLoad(function() { 
+		dojo.widget.createWidget("struts:BindEvent", {
+			"sources":"n",
+			"events":"o",
+			"id":"a",
+			"href":"b",
+			"loadingText":"c",
+			"errorText":"d",
+			"listenTopics":"e", 
+			"notifyTopics":"k",
+			"indicator":"l",
+			"showError":"true",
+			"handler":"h"
+		});
+	});
+</script>

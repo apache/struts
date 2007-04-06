@@ -1,7 +1,7 @@
 <input
   type="submit"
   dojoType="struts:Bind"
-  event="onclick"
+  events="onclick"
   value="Submit"
   id="a"
   label="i"

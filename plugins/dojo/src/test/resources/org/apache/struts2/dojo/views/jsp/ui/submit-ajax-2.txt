@@ -1,7 +1,7 @@
 <input
   type="button"
   dojoType="struts:Bind"
-  event="onclick"
+  events="onclick"
   id="a"
   label="i"
   href="b"

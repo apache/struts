@@ -1,6 +1,6 @@
 dojo.provide("struts.widget.BindDiv");
 
-dojo.require("dojo.io");
+dojo.require("dojo.io.*");
 dojo.require("dojo.widget.ContentPane");
 dojo.require("dojo.lang.timing.Timer");
 

@@ -1,7 +1,7 @@
 <input
   type="image"
   dojoType="struts:Bind"
-  event="onclick"
+  events="onclick"
   alt="i"
   src="j"
   value="Submit"

@@ -19,6 +19,7 @@ public class DojoModels {
     protected AnchorModel a;
     protected SubmitModel submit;
     protected FormModel form;
+    protected BindModel bind;
     
     private ValueStack stack;
     private HttpServletRequest req;
@@ -28,6 +29,14 @@ public class DojoModels {
         this.stack = stack;
         this.req = req;
         this.res = res;
+    }
+    
+    public BindModel getBind() {
+        if (bind == null) {
+            bind = new BindModel(stack, req, res);
+        }
+
+        return bind;
     }
     
     public DateTimePickerModel getDatetimepicker() {

@@ -1,7 +1,6 @@
 dojo.provide("struts.widget.StrutsDatePicker");
 
 dojo.require("dojo.widget.DropdownDatePicker");
-dojo.requireLocalization("dojo.widget", "StrutsDatePicker");
 dojo.widget.defineWidget(
   "struts.widget.StrutsDatePicker",
   dojo.widget.DropdownDatePicker, {

@@ -33,6 +33,8 @@ import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.OgnlUtil;
+import com.opensymphony.xwork2.util.XWorkConverter;
+import com.opensymphony.xwork2.util.ObjectTypeDeterminerFactory;
 
 
 /**
@@ -54,8 +56,8 @@ public class HttpHeaderResultTest extends StrutsTestCase {
 
         Map values = new HashMap();
         values.put("bar", "abc");
-        ActionContext.getContext().getValueStack().push(values);
 
+        ActionContext.getContext().getValueStack().push(values);
         OgnlUtil.setProperties(params, result);
 
         responseMock.expect("addHeader", C.args(C.eq("foo"), C.eq("${bar}")));
@@ -72,8 +74,8 @@ public class HttpHeaderResultTest extends StrutsTestCase {
 
         Map values = new HashMap();
         values.put("bar", "abc");
-        ActionContext.getContext().getValueStack().push(values);
 
+        ActionContext.getContext().getValueStack().push(values);
         OgnlUtil.setProperties(params, result);
 
         responseMock.expect("addHeader", C.args(C.eq("foo"), C.eq("abc")));
@@ -96,11 +98,14 @@ public class HttpHeaderResultTest extends StrutsTestCase {
         response = (HttpServletResponse) responseMock.proxy();
         invocation = (ActionInvocation) new Mock(ActionInvocation.class).proxy();
         ServletActionContext.setResponse(response);
+
+        XWorkConverter.getInstance().setObjectTypeDeterminer(ObjectTypeDeterminerFactory.getInstance());
     }
 
     protected void tearDown() throws Exception {
         super.tearDown();
         ServletActionContext.setResponse(null);
         ActionContext.setContext(null);
+        XWorkConverter.resetInstance();
     }
 }

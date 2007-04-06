@@ -89,8 +89,8 @@ public class Restful2ActionMapperTest extends StrutsTestCase {
     }
 
     public void testPutCreate() throws Exception {
-        req.setupGetRequestURI("/my/namespace/foo/");
-        req.setupGetServletPath("/my/namespace/foo/");
+        req.setupGetRequestURI("/my/namespace/bar/1/foo/");
+        req.setupGetServletPath("/my/namespace/bar/1/foo/");
         req.setupGetAttribute(null);
         req.addExpectedGetAttributeName("javax.servlet.include.servlet_path");
         req.setupGetMethod("PUT");
@@ -99,6 +99,8 @@ public class Restful2ActionMapperTest extends StrutsTestCase {
 
         assertEquals("/my/namespace", mapping.getNamespace());
         assertEquals("foo/", mapping.getName());
-        assertEquals("create", mapping.getMethod());
+        assertEquals("update", mapping.getMethod());
+        assertEquals(1, mapping.getParams().size());
+        assertEquals("1", mapping.getParams().get("bar"));
     }
 }

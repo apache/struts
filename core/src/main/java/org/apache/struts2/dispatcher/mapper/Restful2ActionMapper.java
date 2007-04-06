@@ -64,7 +64,7 @@ import org.apache.commons.logging.LogFactory;
  *  <li><code>GET:    /movie/Thrillers!edit => method="edit", id="Thrillers"</code></li>
  *  <li><code>GET:    /movie/new           => method="editNew"</code></li>
  *  <li><code>POST:   /movie/Thrillers      => method="create"</code></li>
- *  <li><code>PUT:    /movie/              => method="update"</code></li>
+ *  <li><code>PUT:    /movie/Thrillers      => method="update", id="Thrillers""</code></li>
  *  <li><code>DELETE: /movie/Thrillers      => method="remove"</code></li>
  * </ul>
  * <p>
@@ -116,6 +116,10 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                     // Creating a new entry on POST e.g. foo/
                     } else if (isPost(request)) {
                         mapping.setMethod("create");
+                        
+                    // Updating an item e.g. foo/1    
+                    }  else if (isPut(request)) {
+                        mapping.setMethod("update");
                     }
 
                 } else if (lastSlashPos > -1) {
@@ -128,10 +132,6 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                     // Viewing an item e.g. foo/1
                     } else if (isGet(request)) {
                         mapping.setMethod("view");
-
-                    // Updating an item e.g. foo/1
-                    } else if (isPut(request)) {
-                        mapping.setMethod("update");
 
                     // Removing an item e.g. foo/1
                     } else if (isDelete(request)) {

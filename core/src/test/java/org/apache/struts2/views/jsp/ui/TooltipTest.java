@@ -67,6 +67,38 @@ public class TooltipTest extends AbstractUITagTest {
 
         verify(TooltipTest.class.getResource("tooltip-1.txt"));
     }
+    
+    public void testWithoutFormOverridingNew() throws Exception {
+
+        // we test it on textfield component, but since the tooltip are common to
+        // all components, it will be the same for other components as well.
+        FormTag formTag = new FormTag();
+        formTag.setPageContext(pageContext);
+        formTag.setId("myFormId");
+        formTag.setAction("testAction");
+        formTag.setName("myForm");
+
+
+        TextFieldTag tag = new TextFieldTag();
+        tag.setPageContext(pageContext);
+        tag.setLabel("MyLabel");
+        tag.setId("myId");
+
+
+        //same parameters as the OGNL map configuration, output must be the same
+        tag.setTooltip("myTooltip");
+        tag.setTooltipIconPath("/struts/tooltip/myTooltip.gif");
+        tag.setTooltipDelay("500");
+        tag.setJavascriptTooltip("true");
+       
+
+        formTag.doStartTag();
+        tag.doStartTag();
+        tag.doEndTag();
+        formTag.doEndTag();
+
+        verify(TooltipTest.class.getResource("tooltip-1.txt"));
+    }
 
     public void testWithFormOverriding() throws Exception {
 
@@ -83,6 +115,36 @@ public class TooltipTest extends AbstractUITagTest {
                 "'jsTooltipEnabled':'true' "+
                 "}"
         );
+
+
+        TextFieldTag tag = new TextFieldTag();
+        tag.setPageContext(pageContext);
+        tag.setLabel("MyLabel");
+        tag.setId("myId");
+
+        tag.setTooltip("myTooltip");
+
+        formTag.doStartTag();
+        tag.doStartTag();
+        tag.doEndTag();
+        formTag.doEndTag();
+
+        verify(TooltipTest.class.getResource("tooltip-2.txt"));
+    }
+    
+    public void testWithFormOverridingNew() throws Exception {
+
+        FormTag formTag = new FormTag();
+        formTag.setPageContext(pageContext);
+        formTag.setName("myForm");
+        formTag.setId("myFormId");
+        formTag.setAction("testAction");
+
+        // same parameters as the OGNL map configuration, output must be the same
+        formTag.setTooltip("myTooltip");
+        formTag.setTooltipIconPath("/struts/tooltip/myTooltip.gif");
+        formTag.setTooltipDelay("500");
+        formTag.setJavascriptTooltip("true");
 
 
         TextFieldTag tag = new TextFieldTag();
@@ -138,6 +200,40 @@ public class TooltipTest extends AbstractUITagTest {
         verify(TooltipTest.class.getResource("tooltip-3.txt"));
     }
 
+    public void testWithPartialFormOverridingNew() throws Exception {
+
+        FormTag formTag = new FormTag();
+        formTag.setName("myForm");
+        formTag.setPageContext(pageContext);
+        formTag.setId("myFormId");
+        formTag.setAction("testAction");
+
+        // same parameters as the OGNL map configuration, output must be the same
+        formTag.setTooltip("myTooltip");
+        formTag.setTooltipIconPath("/struts/tooltip/myTooltip.gif");
+        formTag.setTooltipDelay("500");
+        formTag.setJavascriptTooltip("true");
+
+
+        TextFieldTag tag = new TextFieldTag();
+        tag.setPageContext(pageContext);
+        tag.setLabel("MyLabel");
+        tag.setId("myId");
+
+
+        //same parameters as the OGNL map configuration, output must be the same
+        tag.setTooltip("myTooltip");
+        tag.setTooltipIconPath("/struts/tooltip/myTooltip2.gif");
+        tag.setTooltipDelay("5000");
+        tag.setJavascriptTooltip("true");
+
+        formTag.doStartTag();
+        tag.doStartTag();
+        tag.doEndTag();
+        formTag.doEndTag();
+
+        verify(TooltipTest.class.getResource("tooltip-3.txt"));
+    }
 
     public void testUsingParamValueToSetConfigurations() throws Exception {
         FormTag formTag = new FormTag();

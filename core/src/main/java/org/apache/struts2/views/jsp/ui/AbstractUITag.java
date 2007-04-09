@@ -64,7 +64,10 @@ public abstract class AbstractUITag extends ComponentTagSupport {
     // tooltip attributes
     protected String tooltip;
     protected String tooltipConfig;
-
+    protected String javascriptTooltip;
+    protected String tooltipDelay;
+    protected String tooltipCssClass;
+    protected String tooltipIconPath;
 
     protected void populateParams() {
         super.populateParams();
@@ -101,6 +104,10 @@ public abstract class AbstractUITag extends ComponentTagSupport {
         uiBean.setOnchange(onchange);
         uiBean.setTooltip(tooltip);
         uiBean.setTooltipConfig(tooltipConfig);
+        uiBean.setJavascriptTooltip(javascriptTooltip);
+        uiBean.setTooltipCssClass(tooltipCssClass);
+        uiBean.setTooltipDelay(tooltipDelay);
+        uiBean.setTooltipIconPath(tooltipIconPath);
         uiBean.setAccesskey(accesskey);
         uiBean.setKey(key);
     }
@@ -231,5 +238,21 @@ public abstract class AbstractUITag extends ComponentTagSupport {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public void setJavascriptTooltip(String javascriptTooltip) {
+        this.javascriptTooltip = javascriptTooltip;
+    }
+
+    public void setTooltipCssClass(String tooltipCssClass) {
+        this.tooltipCssClass = tooltipCssClass;
+    }
+
+    public void setTooltipDelay(String tooltipDelay) {
+        this.tooltipDelay = tooltipDelay;
+    }
+
+    public void setTooltipIconPath(String tooltipIconPath) {
+        this.tooltipIconPath = tooltipIconPath;
     }    
 }

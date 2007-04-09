@@ -457,6 +457,10 @@ public abstract class UIBean extends Component {
     // javascript tooltip attribute
     protected String tooltip;
     protected String tooltipConfig;
+    protected String javascriptTooltip;
+    protected String tooltipDelay;
+    protected String tooltipCssClass;
+    protected String tooltipIconPath;
 
     protected String defaultTemplateDir;
     protected String defaultUITheme;
@@ -776,6 +780,38 @@ public abstract class UIBean extends Component {
             else {
                 LOG.warn("No ancestor Form found, javascript based tooltip will not work, however standard HTML tooltip using alt and title attribute will still work ");
             }
+            
+            //TODO: this is to keep backward compatibility, remove once when tooltipConfig is dropped
+            String  jsTooltipEnabled = (String) getParameters().get("jsTooltipEnabled");
+            if (jsTooltipEnabled != null)
+                this.javascriptTooltip = jsTooltipEnabled;
+            
+            //TODO: this is to keep backward compatibility, remove once when tooltipConfig is dropped
+            String tooltipIcon = (String) getParameters().get("tooltipIcon");
+            if (tooltipIcon != null) 
+                this.addParameter("tooltipIconPath", tooltipIcon);
+            if (this.tooltipIconPath != null)
+                this.addParameter("tooltipIconPath", findString(this.tooltipIconPath));
+            
+            //TODO: this is to keep backward compatibility, remove once when tooltipConfig is dropped
+            String tooltipDelayParam = (String) getParameters().get("tooltipDelay");
+            if (tooltipDelayParam != null) 
+                this.addParameter("tooltipDelay", tooltipDelayParam);
+            if (this.tooltipDelay != null)
+                this.addParameter("tooltipDelay", findString(this.tooltipDelay));
+            
+            if (this.javascriptTooltip != null) {
+                Boolean jsTooltips = (Boolean) findValue(this.javascriptTooltip, Boolean.class);
+                //TODO use a Boolean model when tooltipConfig is dropped
+                this.addParameter("jsTooltipEnabled", jsTooltips.toString());
+                
+                if (form != null)
+                    form.addParameter("hasTooltip", jsTooltips);
+                if (this.tooltipCssClass != null)
+                    this.addParameter("tooltipCssClass", findString(this.tooltipCssClass));
+            }
+            
+
         }
         evaluateExtraParams();
 
@@ -847,6 +883,12 @@ public abstract class UIBean extends Component {
                 }
             }
         }
+        if (component.javascriptTooltip != null)
+            tooltipConfig.put("jsTooltipEnabled", component.javascriptTooltip);
+        if (component.tooltipIconPath != null)
+            tooltipConfig.put("tooltipIcon", component.tooltipIconPath);
+        if (component.tooltipDelay != null)
+            tooltipConfig.put("tooltipDelay", component.tooltipDelay);
         return tooltipConfig;
     }
 
@@ -1033,7 +1075,7 @@ public abstract class UIBean extends Component {
         this.tooltip = tooltip;
     }
 
-    @StrutsTagAttribute(description="Set the tooltip configuration")
+    @StrutsTagAttribute(description="Deprecated. Use individual tooltip configuration attributes instead.")
     public void setTooltipConfig(String tooltipConfig) {
         this.tooltipConfig = tooltipConfig;
     }
@@ -1041,5 +1083,26 @@ public abstract class UIBean extends Component {
     @StrutsTagAttribute(description="Set the key (name, value, label) for this particular component")
     public void setKey(String key) {
         this.key = key;
+    }
+
+    @StrutsTagAttribute(description="Use JavaScript to generate tooltips", type="Boolean", defaultValue="false")
+    public void setJavascriptTooltip(String javascriptTooltip) {
+        this.javascriptTooltip = javascriptTooltip;
+    }
+
+    @StrutsTagAttribute(description="CSS class applied to JavaScrip tooltips", defaultValue="StrutsTTClassic")
+    public void setTooltipCssClass(String tooltipCssClass) {
+        this.tooltipCssClass = tooltipCssClass;
+    }
+
+    @StrutsTagAttribute(description="Delay in milliseconds, before showing JavaScript tooltips ",
+        defaultValue="Classic")
+    public void setTooltipDelay(String tooltipDelay) {
+        this.tooltipDelay = tooltipDelay;
+    }
+
+    @StrutsTagAttribute(description="Icon path used for image that will have the tooltip")
+    public void setTooltipIconPath(String tooltipIconPath) {
+        this.tooltipIconPath = tooltipIconPath;
     }
 }

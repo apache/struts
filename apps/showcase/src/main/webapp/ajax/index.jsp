@@ -10,6 +10,7 @@ Note: The Ajax tags are experimental. These examples have only been tested under
 </p>
 
 <ul>
+    <li><a href="bind">Bind tag</a></li>
     <li><a href="autocompleter">Autocompleter combobox tag</a></li>
     <li><a href="remotebutton">Remote button tag</a></li>
     <li><a href="remotediv">Remote div tag</a></li>

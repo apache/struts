@@ -36,33 +36,44 @@ import com.opensymphony.xwork2.util.ValueStack;
  * attribute must be build using the &lt;s:url/&gt; tag. 
  * </p>
  * <!-- END SNIPPET: javadoc -->
- * <pre>
- * <!-- START SNIPPET: examples -->
- * <b>Update target content with html returned from an action:</b>
+ * <p>Examples</p>
  * 
+ * <p>Update target content with html returned from an action:</p>
+ * <!-- START SNIPPET: example1 -->
+ * <pre>
  * &lt;div id="div1"&gt;Div 1&lt;/div&gt;
  * &lt;s:url id="ajaxTest" value="/AjaxTest.action"/&gt;
  * 
  * &lt;sx:a id="link1" href="%{ajaxTest}" target="div1"&gt;
  *      Update Content
  * &lt;/sx:a&gt;
+ * </pre>
+ * <!-- END SNIPPET: example1 -->
  * 
- * <b>Submit form(anchor inside the form):</b>
- * 
+ * <p>Submit form(anchor inside the form):</p>
+ * <!-- START SNIPPET: example2 -->
+ * <pre>
  * &lt;s:form id="form" action="AjaxTest"&gt;
  *      &lt;input type="textbox" name="data"&gt;
  *      &lt;sx:a&gt;Submit form&lt;/sx:a&gt;           
  * &lt;/s:form&gt;
+ * </pre>
+ * <!-- END SNIPPET: example2 -->
  * 
- * <b>Submit form(anchor outside the form)</b>
- * 
+ * <p>Submit form(anchor outside the form)</p>
+ * <!-- START SNIPPET: example3 -->
+ * <pre>
  * &lt;s:form id="form" action="AjaxTest"&gt;
  *      &lt;input type="textbox" name="data"&gt;   
  * &lt;/s:form&gt;
  * 
  * &lt;sx:a formId="form"&gt;Submit form&lt;/sx:a&gt;
+ * </pre>
+ * <!-- END SNIPPET: example3 -->
  * 
- * <b>Using topics:</b>
+ * <p>Using topics:</p>
+ * <!-- START SNIPPET: example4 -->
+ * <pre>
  * <script type="text/javascript">
  * dojo.event.topic.subscribe("/before", function(data, type, e){
  *      alert('inside a topic event. before request');
@@ -73,8 +84,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  * });
  * </script>         
  * 
- * &lt;sx:a beforeNotifyTopics="/before"&gt;Publish topics&lt;/sx:a&gt; 
- * <!-- END SNIPPET: examples -->
+ * &lt;sx:a beforeNotifyTopics="/before"&gt;Publish topics&lt;/sx:a&gt;
+ * </pre> 
+ * <!-- END SNIPPET: example4 -->
  * </pre>
  */
 @StrutsTag(name="a", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.AnchorTag", description="Renders an HTML anchor element that when clicked calls a URL via remote XMLHttpRequest and updates " +

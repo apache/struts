@@ -64,7 +64,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
     private Map session;
     private ExecuteAndWaitInterceptor waitInterceptor;
 
-    public void _testOneWait() throws Exception {
+    public void testOneWait() throws Exception {
         waitInterceptor.setDelay(0);
         waitInterceptor.setDelaySleepInterval(0);
 
@@ -79,7 +79,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
         assertEquals("success", result2);
     }
 
-    public void _testTwoWait() throws Exception {
+    public void testTwoWait() throws Exception {
         waitInterceptor.setDelay(0);
         waitInterceptor.setDelaySleepInterval(0);
 
@@ -100,7 +100,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
         assertEquals("success", result3);
     }
 
-    public void _testOneWaitWithDelay() throws Exception {
+    public void testOneWaitWithDelay() throws Exception {
         waitInterceptor.setDelay(200);
         waitInterceptor.setDelaySleepInterval(100);
 
@@ -118,7 +118,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
         assertEquals("success", result2);
     }
 
-    public void _testTwoWaitWithDelay() throws Exception {
+    public void testTwoWaitWithDelay() throws Exception {
         waitInterceptor.setDelay(100);
         waitInterceptor.setDelaySleepInterval(100);
 
@@ -154,7 +154,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
         String result = proxy.execute();
         long diff = System.currentTimeMillis() - before;
         assertEquals("success", result);
-        assertTrue("Job done already after 500 so there should not be such long delay", diff <= 750);
+        assertTrue("Job done already after 500 so there should not be such long delay", diff <= 1000);
     }
 
     public void testWaitDelayAndJobAlreadyDone2() throws Exception {
@@ -166,7 +166,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
         String result = proxy.execute();
         long diff = System.currentTimeMillis() - before;
         assertEquals("success", result);
-        assertTrue("Job done already after 500 so there should not be such long delay", diff <= 750);
+        assertTrue("Job done already after 500 so there should not be such long delay", diff <= 1000);
     }
 
     protected ActionProxy buildProxy(String actionName) throws Exception {

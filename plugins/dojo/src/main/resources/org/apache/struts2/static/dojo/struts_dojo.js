@@ -15058,19 +15058,19 @@ self.log(ex);
 }
 },log:function(text){
 dojo.debug("["+(this.widgetId?this.widgetId:"unknown")+"] "+text);
-},startSearchFromInput:function(){
+},_startSearchFromInput:function(){
 var _c8d=this.textInputNode.value;
 if(this.loadOnType){
 if(_c8d.length>=this.loadMinimum){
 var _c8e=this.dataUrl+(this.dataUrl.indexOf("?")>-1?"&":"?");
 _c8e+=this.name+"="+_c8d;
 this.dataProvider.getData(_c8e);
-this.startSearch(_c8d);
+this._startSearch(_c8d);
 }else{
 this._hideResultList();
 }
 }else{
-this.startSearch(_c8d);
+this._startSearch(_c8d);
 }
 }});
 dojo.provide("dojo.widget.DropdownContainer");

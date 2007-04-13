@@ -38,8 +38,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: javadoc -->
  * <p>Examples</p>
  * 
- * <p>Update target content with html returned from an action:</p>
  * <!-- START SNIPPET: example1 -->
+ * <p>Update target content with html returned from an action:</p>
  * <pre>
  * &lt;div id="div1"&gt;Div 1&lt;/div&gt;
  * &lt;s:url id="ajaxTest" value="/AjaxTest.action"/&gt;
@@ -50,8 +50,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </pre>
  * <!-- END SNIPPET: example1 -->
  * 
- * <p>Submit form(anchor inside the form):</p>
  * <!-- START SNIPPET: example2 -->
+ * <p>Submit form(anchor inside the form):</p>
  * <pre>
  * &lt;s:form id="form" action="AjaxTest"&gt;
  *      &lt;input type="textbox" name="data"&gt;
@@ -60,8 +60,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </pre>
  * <!-- END SNIPPET: example2 -->
  * 
- * <p>Submit form(anchor outside the form)</p>
  * <!-- START SNIPPET: example3 -->
+ * <p>Submit form(anchor outside the form)</p>
  * <pre>
  * &lt;s:form id="form" action="AjaxTest"&gt;
  *      &lt;input type="textbox" name="data"&gt;   
@@ -71,8 +71,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </pre>
  * <!-- END SNIPPET: example3 -->
  * 
- * <p>Using topics:</p>
  * <!-- START SNIPPET: example4 -->
+ * <p>Using topics:</p>
  * <pre>
  * <script type="text/javascript">
  * dojo.event.topic.subscribe("/before", function(data, type, e){
@@ -87,7 +87,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;sx:a beforeNotifyTopics="/before"&gt;Publish topics&lt;/sx:a&gt;
  * </pre> 
  * <!-- END SNIPPET: example4 -->
- * </pre>
  */
 @StrutsTag(name="a", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.AnchorTag", description="Renders an HTML anchor element that when clicked calls a URL via remote XMLHttpRequest and updates " +
                 "its targets content")

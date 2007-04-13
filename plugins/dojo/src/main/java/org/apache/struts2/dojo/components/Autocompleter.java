@@ -33,55 +33,90 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  * <!-- START SNIPPET: javadoc -->
  * <p>The autocomplete tag is a combobox that can autocomplete text entered on the input box. If an action
- * is used to populate the autocompleter, the output of the action must be a well formed JSON string. The 
- * autocompleter expects and array of arrays of length 2, where the first element is the text displayed and
- * the second is the value.</p>
- * <!-- END SNIPPET: javadoc -->
+ * is used to populate the autocompleter, the output of the action must be a well formed JSON string. </p>
+ * <p>The autocompleter follows this rule to find its datasource:<p>
+ * <p>1. If the response is an array, assume that it contains 2-dimension array elements, like:
  * <pre>
- * <!-- START SNIPPET: examples -->
- * <b>Autocompleter that gets its list from an action:</b>
- *
- * &lt;sx:autocompleter name="autocompleter1" href="%{jsonList}"/&gt;
- *
- * Which expects a response like:
- * 
  * [
  *      ["Text1", "Value1"],
  *      ["Text2", "Value2"]
  * ]
+ * </pre>
+ * <p>2. If a value is specified in the "dataFieldName" attribute, and the response has a field with that
+ * name, assume that's the datasource, which can be an array of 2-dimension array elements, or a map, 
+ * like (assuming dataFieldName="states"):</p>
+ * <pre>
+ * {
+ *      "states" : [
+ *           ["Alabama","AL"],
+ *           ["Alaska","AK"]
+ *      ]
+ * }     
  * 
- * Or (note that now the response is a JSON object, instead of an array, and a field inside the object matches the autocompleter's name):
+ * or
  * 
  * {
- *      autocompleter1:[
- *           ["Text1", "Value1"],
- *           ["Text2", "Value2"]
+ *      "states" : {
+ *            "Alabama" : "AL",
+ *            "Alaska"  : "AK"
+ *      }
+ * }
+ * </pre>
+ * <p>4. If there is a field that starts with the value specified on the "name" attribute, assume 
+ * that's the datasource, like (assuming name="state"):</p>
+ * <pre>
+ * {
+ *      "states" : [
+ *           ["Alabama","AL"],
+ *           ["Alaska","AK"]
  *      ]
  * }
+ * </pre>
+ * <p>5. Use first array that is found, like:<p>
+ * <pre>
+ * {
+ *      "anything" : [
+ *            ["Text1", "Value1"],
+ *            ["Text2", "Value2"]
+ *     ]       
+ * }
+ * </pre>
+ * <!-- END SNIPPET: javadoc -->
+ * <p>Examples</p>
+ * <!-- START SNIPPET: example1 -->
+ * <p>Autocompleter that gets its list from an action:</p>
+ * <pre>
+ * &lt;sx:autocompleter name="autocompleter1" href="%{jsonList}"/&gt;
+ * </pre>
+ * <!-- END SNIPPET: example1 -->
  * 
- * The name of the field that contains the data for the autocompleter can be specified using the "dataFieldName" attribute.
- * 
- * <b>Autocompleter that uses a list:</b>
- *
+ * <!-- START SNIPPET: example2 -->
+ * <p>Autocompleter that uses a list:</p>
+ * <pre>
  * &lt;s:autocompleter name="test"  list="{'apple','banana','grape','pear'}" autoComplete="false"/&gt;
+ * </pre>
+ * <!-- END SNIPPET: example2 -->
  * 
- * <b>Autocompleter that reloads its content everytime the text changes (and the length of the text is greater than 3):</b>
- * 
+ * <!-- START SNIPPET: example3 -->
+ * <p>Autocompleter that reloads its content everytime the text changes (and the length of the text is greater than 3):</p>
+ * <pre>
  * &lt;sx:autocompleter name="mvc" href="%{jsonList}" loadOnTextChange="true" loadMinimumCount="3"/&gt;
  * 
  * The text entered on the autocompleter is passed as a parameter to the url specified in "href", like (text is "struts"):
  *  
  * http://host/example/myaction.do?mvc=struts
+ * </pre>
+ * <!-- END SNIPPET: example3 -->
  * 
- * <b>Linking two autocompleters:</b>
- * 
+ * <!-- START SNIPPET: example4 -->
+ * <p>Linking two autocompleters:</p>
+ * <pre>
  * &lt;form id="selectForm"&gt;
  *      &lt;sx:autocompleter  name="select" list="{'fruits','colors'}"  valueNotifyTopics="/changed" /&gt;
  * &lt;/form&gt;  
  * &lt;sx:autocompleter  href="%{jsonList}" formId="selectForm" listenTopics="/changed"/&gt;
- * 
- * <!-- END SNIPPET: examples -->
- * <pre>
+ * </pre>
+ * <!-- END SNIPPET: example4 -->
  */
 @StrutsTag(name="autocompleter", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.AutocompleterTag", description="Renders a combobox with autocomplete and AJAX capabilities")
 public class Autocompleter extends ComboBox {

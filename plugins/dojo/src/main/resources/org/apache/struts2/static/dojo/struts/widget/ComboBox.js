@@ -443,20 +443,20 @@ dojo.widget.defineWidget(
     dojo.debug("[" + (this.widgetId ? this.widgetId : "unknown")  + "] " + text);
   },
 
-  startSearchFromInput: function() {
+  _startSearchFromInput: function() {
     var searchStr = this.textInputNode.value;
     if(this.loadOnType) {
-    	if(searchStr.length >= this.loadMinimum) {
-    	    var nuHref = this.dataUrl + (this.dataUrl.indexOf("?") > -1 ? "&" : "?");
-   		nuHref += this.name + '=' + searchStr;
-   		this.dataProvider.getData(nuHref);
-   		this.startSearch(searchStr);
-    	} else {
-           this._hideResultList();
-        }
+      if(searchStr.length >= this.loadMinimum) {
+          var nuHref = this.dataUrl + (this.dataUrl.indexOf("?") > -1 ? "&" : "?");
+      nuHref += this.name + '=' + searchStr;
+      this.dataProvider.getData(nuHref);
+      this._startSearch(searchStr);
+      } else {
+        this._hideResultList();
+      }
     }
     else {
-	  this.startSearch(searchStr);
+	  this._startSearch(searchStr);
 	}
   }
 });

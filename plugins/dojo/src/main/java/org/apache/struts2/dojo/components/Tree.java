@@ -37,9 +37,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * Renders a tree widget with AJAX support.<p/>
  *
- * The id attribute is normally specified, such that it could be looked up using
- * javascript if necessary. The id attribute is required, if the "treeSelectedTopic"
- * is going to be used.<p/>
+ * The "id "attribute is normally specified, such that it could be looked up using
+ * javascript if necessary. The "id" attribute is required if the "treeSelectedTopic"
+ * attribute is going to be used.<p/>
  *
  * <!-- END SNIPPET: javadoc -->
  *

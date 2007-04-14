@@ -10,25 +10,24 @@
 
 <!-- START SNIPPET: treeExampleDynamicJsp -->
 
-<script>
-    function treeNodeSelected(nodeId) {
+<script language="JavaScript" type="text/javascript">
+    dojo.event.topic.subscribe("treeSelected", function treeNodeSelected(node) {
         dojo.io.bind({
-            url: "<s:url value='/tags/ui/ajax/dynamicTreeSelectAction.action' />?nodeId="+nodeId,
+            url: "<s:url value='/tags/ui/ajax/dynamicTreeSelectAction.action'/>?nodeId="+node.node.widgetId,
             load: function(type, data, evt) {
-                var displayDiv = dojo.byId("displayId");
-                displayDiv.innerHTML = data;
+                var divDisplay = dojo.byId("displayId");
+                divDisplay.innerHTML=data;
             },
             mimeType: "text/html"
         });
-    };
-
-    dojo.event.topic.subscribe("treeSelected", this, "treeNodeSelected");
+    });
 </script>
 
 
 
 <div style="float:left; margin-right: 50px;">
 <sx:tree 
+    id="tree"
     rootNode="%{treeRootNode}" 
     childCollectionProperty="children" 
     nodeIdProperty="id"

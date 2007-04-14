@@ -9,19 +9,17 @@
 
 <!-- START SNIPPET: treeExampleStaticJsp -->
 
-<script>
-    function treeNodeSelected(nodeId) {
+<script language="JavaScript" type="text/javascript">
+    dojo.event.topic.subscribe("treeSelected", function treeNodeSelected(node) {
         dojo.io.bind({
-            url: "<s:url value='/tags/ui/ajax/staticTreeSelectAction.action'/>?nodeId="+nodeId,
+            url: "<s:url value='/tags/ui/ajax/staticTreeSelectAction.action'/>?nodeId="+node.node.title,
             load: function(type, data, evt) {
                 var divDisplay = dojo.byId("displayIt");
                 divDisplay.innerHTML=data;
             },
             mimeType: "text/html"
         });
-    };
-
-    dojo.event.topic.subscribe("treeSelected", this, "treeNodeSelected");
+    });
 </script>
 
 

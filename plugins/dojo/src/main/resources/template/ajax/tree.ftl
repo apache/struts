@@ -6,6 +6,10 @@
         // dojo.hostenv.writeIncludes();
         -->
  </script>
+ <#if parameters.treeSelectedTopic?exists>
+ <dojo:TreeSelector widgetId="treeSelector_${parameters.id?default("")}" eventNames="select:${parameters.treeSelectedTopic?html}">
+ </dojo:TreeSelector> 
+ </#if>
 <div dojoType="Tree"   
 	<#if parameters.blankIconSrc?exists>
 	gridIconSrcT="<@s.url value='${parameters.blankIconSrc}' encode="false" includeParams='none'/>"
@@ -59,7 +63,7 @@
     id="${parameters.id?html}"
     </#if>
     <#if parameters.treeSelectedTopic?exists>
-    publishSelectionTopic="${parameters.treeSelectedTopic?html}"
+    selector="treeSelector_${parameters.id?default("")}"
     </#if>
     <#if parameters.treeExpandedTopic?exists>
     publishExpandedTopic="${parameters.treeExpandedTopic?html}"

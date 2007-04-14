@@ -6,9 +6,20 @@
         // dojo.hostenv.writeIncludes();
         -->
  </script>
- <#if parameters.treeSelectedTopic?exists>
- <dojo:TreeSelector widgetId="treeSelector_${parameters.id?default("")}" eventNames="select:${parameters.treeSelectedTopic?html}">
- </dojo:TreeSelector> 
+ <#if parameters.treeSelectedTopic?exists || parameters.treeExpandedTopic?exists
+      || parameters.treeCollapsedTopic?exists>
+  <#assign eventNames = "" >
+  <#if parameters.treeSelectedTopic?exists>
+  	<#assign eventNames = "select:" + parameters.treeSelectedTopic?html + ";">
+  </#if>      
+  <#if parameters.treeExpandedTopic?exists>
+  	<#assign eventNames = eventNames + "expand:" + parameters.treeExpandedTopic?html + ";">
+  </#if> 
+  <#if parameters.treeCollapsedTopic?exists>
+  	<#assign eventNames = eventNames + "collapse:" + parameters.treeCollapsedTopic?html>
+  </#if> 
+ <struts:StrutsTreeSelector widgetId="treeSelector_${parameters.id?default("")}" eventNames="${eventNames}">
+ </struts:StrutsTreeSelector> 
  </#if>
 <div dojoType="Tree"   
 	<#if parameters.blankIconSrc?exists>
@@ -64,9 +75,6 @@
     </#if>
     <#if parameters.treeSelectedTopic?exists>
     selector="treeSelector_${parameters.id?default("")}"
-    </#if>
-    <#if parameters.treeExpandedTopic?exists>
-    publishExpandedTopic="${parameters.treeExpandedTopic?html}"
     </#if>
     <#if parameters.treeCollapsedTopic?exists>
     publishCollapsedTopic="${parameters.treeCollapsedTopic?html}"

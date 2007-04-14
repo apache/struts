@@ -5,6 +5,7 @@ dojo.kwCompoundRequire({
 	         "struts.widget.ComboBox",
              "struts.widget.StrutsTimePicker",
              "struts.widget.StrutsDatePicker",
-             "struts.widget.BindEvent"]
+             "struts.widget.BindEvent",
+             "struts.widget.StrutsTreeSelector"]
 });
 dojo.provide("struts.widget.*");

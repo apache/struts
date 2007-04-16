@@ -52,6 +52,14 @@ Please do not edit it directly.
 					<td align="left" valign="top">The childCollectionProperty property.</td>
 				</tr>
 				<tr>
+					<td align="left" valign="top">collapsedNotifyTopics</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Comma separated lis of topics to be published when a node is collapsed. An object with a 'node' property will be passed as parameter to the topics.</td>
+				</tr>
+				<tr>
 					<td align="left" valign="top">cssClass</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
@@ -90,6 +98,14 @@ Please do not edit it directly.
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">Expand Icon (+) image source.</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">expandedNotifyTopics</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Comma separated lis of topics to be published when a node is expanded. An object with a 'node' property will be passed as parameter to the topics.</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">gridIconSrcC</td>
@@ -356,6 +372,14 @@ Please do not edit it directly.
 					<td align="left" valign="top">The rootNode property.</td>
 				</tr>
 				<tr>
+					<td align="left" valign="top">selectedNotifyTopics</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Comma separated lis of topics to be published when a node is selected. An object with a 'node' property will be passed as parameter to the topics.</td>
+				</tr>
+				<tr>
 					<td align="left" valign="top">showGrid</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">true</td>
@@ -444,20 +468,28 @@ Please do not edit it directly.
 					<td align="left" valign="top">Set the tooltip configuration</td>
 				</tr>
 				<tr>
-					<td align="left" valign="top">treeCollapsedTopic</td>
+					<td align="left" valign="top">tooltipIconPath</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">The treeCollapsedTopic property.</td>
+					<td align="left" valign="top">Icon path used for image that will have the tooltip</td>
 				</tr>
 				<tr>
-					<td align="left" valign="top">treeExpandedTopic</td>
+					<td align="left" valign="top">treeCollapsedTopics</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">The treeExpandedTopic property.</td>
+					<td align="left" valign="top">Deprecated. Use 'collapsedNotifyTopics' instead.</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">treeExpandedTopics</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Deprecated. Use 'expandedNotifyTopics' instead.</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">treeSelectedTopic</td>
@@ -465,7 +497,7 @@ Please do not edit it directly.
 					<td align="left" valign="top"></td>
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">The treeSelectedTopic property</td>
+					<td align="left" valign="top">Deprecated. Use 'selectedNotifyTopics' instead.</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">value</td>

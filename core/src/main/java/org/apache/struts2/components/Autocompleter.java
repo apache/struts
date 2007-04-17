@@ -109,7 +109,7 @@ public class Autocompleter extends ComboBox {
     protected String iconPath;
     protected String keyName;
     protected String dataFieldName;
-    protected String searchLimit;
+    protected String resultsLimit;
     
     public Autocompleter(ValueStack stack, HttpServletRequest request,
             HttpServletResponse response) {
@@ -183,8 +183,8 @@ public class Autocompleter extends ComboBox {
         
         String keyNameExpr = "%{" + keyName + "}";
         addParameter("key", findString(keyNameExpr));
-        if(searchLimit != null)
-            addParameter("searchLimit", findString(searchLimit));
+        if(resultsLimit != null)
+            addParameter("searchLimit", findString(resultsLimit));
     }
 
     protected Object findListValue() {
@@ -299,7 +299,7 @@ public class Autocompleter extends ComboBox {
     }
 
     @StrutsTagAttribute(description="Limit how many results are shown as autocompletion options", defaultValue="30")
-    public void setSearchLimit(String searchLimit) {
-        this.searchLimit = searchLimit;
+    public void setResultsLimit(String resultsLimit) {
+        this.resultsLimit = resultsLimit;
     }
 }

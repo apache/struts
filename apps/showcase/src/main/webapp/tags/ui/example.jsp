@@ -15,11 +15,11 @@
 <s:fielderror />
 
 
-<s:form action="exampleSubmit" enctype="multipart/form-data" tooltipConfig="%{'jsTooltipEnabled':'true'}">
+<s:form action="exampleSubmit" enctype="multipart/form-data" javascriptTooltip="true">
     <s:textfield 
             label="Name" 
             name="name"
-            tooltip="Enter your Name here" />
+            tooltip="Enter your Name here"/>
 
     <sx:datetimepicker
             tooltip="Select Your Birthday"

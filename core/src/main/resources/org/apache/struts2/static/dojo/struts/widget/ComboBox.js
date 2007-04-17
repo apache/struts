@@ -28,7 +28,8 @@ struts.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ li
     this.cbox = cbox;
     this.formId = cbox.formId;
     this.formFilter = cbox.formFilter;
-
+    this.searchLimit = cbox.searchLimit;
+    
     if(!dojo.string.isBlank(cbox.dataUrl)){
       this.getData(cbox.dataUrl);
     }else{
@@ -237,6 +238,8 @@ dojo.widget.defineWidget(
   dataFieldName : ""  ,
   keyName: "",
   templateCssPath: dojo.uri.dojoUri("struts/ComboBox.css"),
+  
+  searchLimit : 30,
   //from Dojo's  ComboBox
   showResultList: function() {
   // Our dear friend IE doesnt take max-height so we need to calculate that on our own every time

@@ -74,6 +74,9 @@
 <#if parameters.templateCssPath?if_exists != "">
  templateCssPath="<@s.url value='${parameters.templateCssPath}' encode="false" includeParams='none'/>"
 </#if>
+<#if parameters.searchLimit?if_exists != "">
+ searchLimit="${parameters.searchLimit?html}"
+</#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 >
 <#if parameters.list?exists>

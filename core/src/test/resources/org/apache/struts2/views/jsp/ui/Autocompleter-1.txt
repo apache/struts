@@ -17,4 +17,5 @@
  visibleDownArrow="false"
  buttonSrc="i"
  templateCssPath="j"
- dataFieldName="k">
+ dataFieldName="k"
+ searchLimit="1">

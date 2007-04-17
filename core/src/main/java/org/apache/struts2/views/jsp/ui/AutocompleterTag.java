@@ -54,6 +54,7 @@ public class AutocompleterTag extends ComboBoxTag {
     protected String iconPath;
     protected String keyName;
     protected String dataFieldName;
+    protected String searchLimit;
     
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Autocompleter(stack, req, res);
@@ -83,6 +84,7 @@ public class AutocompleterTag extends ComboBoxTag {
         autocompleter.setIconPath(iconPath);
         autocompleter.setKeyName(keyName);
         autocompleter.setDataFieldName(dataFieldName);
+        autocompleter.setSearchLimit(searchLimit);
     }
 
     public void setAutoComplete(String autoComplete) {
@@ -167,5 +169,9 @@ public class AutocompleterTag extends ComboBoxTag {
 
     public void setDataFieldName(String dataFieldName) {
         this.dataFieldName = dataFieldName;
+    }
+
+    public void setSearchLimit(String searchLimit) {
+        this.searchLimit = searchLimit;
     }
 }

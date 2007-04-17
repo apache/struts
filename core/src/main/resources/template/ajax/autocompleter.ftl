@@ -89,6 +89,9 @@
 <#if parameters.dataFieldName?if_exists != "">
  dataFieldName="${parameters.dataFieldName?html}"
 </#if>
+<#if parameters.searchLimit?if_exists != "">
+ searchLimit="${parameters.searchLimit?html}"
+</#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 >
 

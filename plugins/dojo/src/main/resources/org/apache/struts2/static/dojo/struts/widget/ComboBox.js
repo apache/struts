@@ -5,7 +5,7 @@ dojo.require("dojo.widget.ComboBox");
 
 struts.widget.ComboBoxDataProvider = function(combobox, node){
   this.data = [];
-  this.searchLimit = 30;
+  this.searchLimit = combobox.searchLimit;
   this.searchType = "STARTSTRING"; // may also be "STARTWORD" or "SUBSTRING"
   this.caseSensitive = false;
   // for caching optimizations
@@ -236,6 +236,10 @@ dojo.widget.defineWidget(
   dataFieldName : "",
   keyName: "",
   templateCssPath: dojo.uri.dojoUri("struts/ComboBox.css"),
+  
+  //how many results are shown
+  searchLimit : 30,
+  
   //from Dojo's  ComboBox
   showResultList: function() {
   // Our dear friend IE doesnt take max-height so we need to calculate that on our own every time

@@ -48,6 +48,7 @@ public class AutocompleterTest extends AbstractUITagTest {
         tag.setTemplateCssPath("j");
         tag.setDataFieldName("k");
         tag.setValueNotifyTopics("l");
+        tag.setResultsLimit("2");
         tag.doStartTag();
         tag.doEndTag();
 
@@ -70,6 +71,7 @@ public class AutocompleterTest extends AbstractUITagTest {
         tag.setIconPath("i");
         tag.setTemplateCssPath("j");
         tag.setValueNotifyTopics("k");
+        tag.setResultsLimit("2");
         tag.doStartTag();
         tag.doEndTag();
 

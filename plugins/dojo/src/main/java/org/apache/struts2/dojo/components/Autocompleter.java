@@ -147,6 +147,7 @@ public class Autocompleter extends ComboBox {
     protected String afterNotifyTopics;
     protected String errorNotifyTopics;
     protected String valueNotifyTopics;
+    protected String resultsLimit;
     
     public Autocompleter(ValueStack stack, HttpServletRequest request,
             HttpServletResponse response) {
@@ -205,13 +206,13 @@ public class Autocompleter extends ComboBox {
             addParameter("showDownArrow", findValue(showDownArrow, Boolean.class));
         else
             addParameter("showDownArrow", Boolean.TRUE);
-        if(templateCssPath != null)
+        if (templateCssPath != null)
             addParameter("templateCssPath", findString(templateCssPath));
-        if(iconPath != null)
+        if (iconPath != null)
             addParameter("iconPath", findString(iconPath));
-        if(dataFieldName != null)
-        addParameter("dataFieldName", findString(dataFieldName));
-        if(keyName != null)
+        if (dataFieldName != null)
+            addParameter("dataFieldName", findString(dataFieldName));
+        if (keyName != null)
             addParameter("keyName", findString(keyName));
         else {
             keyName = name + "Key";
@@ -229,6 +230,8 @@ public class Autocompleter extends ComboBox {
             addParameter("errorNotifyTopics", findString(errorNotifyTopics));
         if (valueNotifyTopics != null)
             addParameter("valueNotifyTopics", findString(valueNotifyTopics));
+        if (resultsLimit != null)
+            addParameter("searchLimit", findString(resultsLimit));
     }
 
     @Override
@@ -396,5 +399,10 @@ public class Autocompleter extends ComboBox {
     @StrutsTagAttribute(description="Comma delimmited list of topics that will published when a value is selected")
     public void setValueNotifyTopics(String valueNotifyTopics) {
         this.valueNotifyTopics = valueNotifyTopics;
+    }
+    
+    @StrutsTagAttribute(description="Limit how many results are shown as autocompletion options", defaultValue="30")
+    public void setResultsLimit(String resultsLimit) {
+        this.resultsLimit = resultsLimit;
     }
 }

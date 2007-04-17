@@ -13,6 +13,7 @@
  visibleDownArrow="true"
  buttonSrc="i"
  templateCssPath="j"
+ searchLimit="2"
  >
  	<option value="d">d</option>
  	<option value="e">e</option>

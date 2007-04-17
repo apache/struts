@@ -59,6 +59,7 @@ public class AutocompleterTag extends ComboBoxTag {
     protected String afterNotifyTopics;
     protected String errorNotifyTopics;
     protected String valueNotifyTopics;
+    protected String resultsLimit;
     
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Autocompleter(stack, req, res);
@@ -92,6 +93,7 @@ public class AutocompleterTag extends ComboBoxTag {
         autocompleter.setBeforeNotifyTopics(beforeNotifyTopics);
         autocompleter.setErrorNotifyTopics(errorNotifyTopics);
         autocompleter.setValueNotifyTopics(valueNotifyTopics);
+        autocompleter.setResultsLimit(resultsLimit);
     }
 
     public void setAutoComplete(String autoComplete) {
@@ -192,5 +194,9 @@ public class AutocompleterTag extends ComboBoxTag {
 
     public void setValueNotifyTopics(String valueNotifyTopics) {
         this.valueNotifyTopics = valueNotifyTopics;
+    }
+
+    public void setResultsLimit(String resultsLimit) {
+        this.resultsLimit = resultsLimit;
     }
 }

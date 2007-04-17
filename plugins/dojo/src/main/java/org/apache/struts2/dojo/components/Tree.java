@@ -77,9 +77,9 @@ public class Tree extends ClosingUIBean {
     private static final String OPEN_TEMPLATE = "tree";
 
     private String toggle = "fade";
-    private String treeSelectedTopic;
-    private String treeExpandedTopic;
-    private String treeCollapsedTopic;
+    private String selectedNotifyTopics;
+    private String expandedNotifyTopics;
+    private String collapsedNotifyTopics;
     protected String rootNodeAttr;
     protected String childCollectionProperty;
     protected String nodeTitleProperty;
@@ -127,16 +127,16 @@ public class Tree extends ClosingUIBean {
             addParameter("toggle", findString(toggle));
         }
 
-        if (treeSelectedTopic != null) {
-            addParameter("treeSelectedTopic", findString(treeSelectedTopic));
+        if (selectedNotifyTopics != null) {
+            addParameter("selectedNotifyTopics", findString(selectedNotifyTopics));
         }
 
-        if (treeExpandedTopic != null) {
-            addParameter("treeExpandedTopic", findString(treeExpandedTopic));
+        if (expandedNotifyTopics != null) {
+            addParameter("expandedNotifyTopics", findString(expandedNotifyTopics));
         }
 
-        if (treeCollapsedTopic != null) {
-            addParameter("treeCollapsedTopic", findString(treeCollapsedTopic));
+        if (collapsedNotifyTopics != null) {
+            addParameter("collapsedNotifyTopics", findString(collapsedNotifyTopics));
         }
 
         if (rootNodeAttr != null) {
@@ -242,31 +242,19 @@ public class Tree extends ClosingUIBean {
         this.toggle = toggle;
     }
 
-    public String getTreeSelectedTopic() {
-        return treeSelectedTopic;
+    @StrutsTagAttribute(description="Deprecated. Use 'selectedNotifyTopics' instead.")
+    public void setTreeSelectedTopic(String selectedNotifyTopic) {
+        this.selectedNotifyTopics = selectedNotifyTopic;
     }
 
-    @StrutsTagAttribute(description="The treeSelectedTopic property")
-    public void setTreeSelectedTopic(String treeSelectedTopic) {
-        this.treeSelectedTopic = treeSelectedTopic;
+    @StrutsTagAttribute(description="Deprecated. Use 'expandedNotifyTopics' instead.")
+    public void setTreeExpandedTopics(String expandedNotifyTopic) {
+        this.expandedNotifyTopics = expandedNotifyTopic;
     }
 
-    public String getTreeExpandedTopic() {
-        return treeExpandedTopic;
-    }
-
-    @StrutsTagAttribute(description="The treeExpandedTopic property.")
-    public void setTreeExpandedTopic(String treeExpandedTopic) {
-        this.treeExpandedTopic = treeExpandedTopic;
-    }
-
-    public String getTreeCollapsedTopic() {
-        return treeCollapsedTopic;
-    }
-
-    @StrutsTagAttribute(description="The treeCollapsedTopic property.")
-    public void setTreeCollapsedTopic(String treeCollapsedTopic) {
-        this.treeCollapsedTopic = treeCollapsedTopic;
+    @StrutsTagAttribute(description="Deprecated. Use 'collapsedNotifyTopics' instead.")
+    public void setTreeCollapsedTopics(String collapsedNotifyTopic) {
+        this.collapsedNotifyTopics = collapsedNotifyTopic;
     }
 
     public String getRootNode() {
@@ -462,6 +450,24 @@ public class Tree extends ClosingUIBean {
     @StrutsTagAttribute(description="The name to set for element")
     public void setName(String name) {
         super.setName(name);
+    }
+
+    @StrutsTagAttribute(description="Comma separated lis of topics to be published when a node" +
+                " is collapsed. An object with a 'node' property will be passed as parameter to the topics.")
+    public void setCollapsedNotifyTopics(String collapsedNotifyTopics) {
+        this.collapsedNotifyTopics = collapsedNotifyTopics;
+    }
+
+    @StrutsTagAttribute(description="Comma separated lis of topics to be published when a node" +
+                " is expanded. An object with a 'node' property will be passed as parameter to the topics.")
+    public void setExpandedNotifyTopics(String expandedNotifyTopics) {
+        this.expandedNotifyTopics= expandedNotifyTopics;
+    }
+
+    @StrutsTagAttribute(description="Comma separated lis of topics to be published when a node" +
+                " is selected. An object with a 'node' property will be passed as parameter to the topics.")
+    public void setSelectedNotifyTopics(String selectedNotifyTopics) {
+        this.selectedNotifyTopics = selectedNotifyTopics;
     }
 }
 

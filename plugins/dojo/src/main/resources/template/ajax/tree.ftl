@@ -6,19 +6,19 @@
         // dojo.hostenv.writeIncludes();
         -->
  </script>
- <#if parameters.treeSelectedTopic?exists || parameters.treeExpandedTopic?exists
-      || parameters.treeCollapsedTopic?exists>
-  <#assign eventNames = "" >
-  <#if parameters.treeSelectedTopic?exists>
-  	<#assign eventNames = "select:" + parameters.treeSelectedTopic?html + ";">
-  </#if>      
-  <#if parameters.treeExpandedTopic?exists>
-  	<#assign eventNames = eventNames + "expand:" + parameters.treeExpandedTopic?html + ";">
+ <#if parameters.selectedNotifyTopics?exists || parameters.expandedNotifyTopics?exists
+      || parameters.collapsedNotifyTopics?exists>  
+ <struts:StrutsTreeSelector widgetId="treeSelector_${parameters.id?default("")}"
+  <#if parameters.selectedNotifyTopics?exists>
+  	selectedNotifyTopics="${parameters.selectedNotifyTopics?html}"
   </#if> 
-  <#if parameters.treeCollapsedTopic?exists>
-  	<#assign eventNames = eventNames + "collapse:" + parameters.treeCollapsedTopic?html>
+  <#if parameters.expandedNotifyTopics?exists>
+  	expandedNotifyTopics="${parameters.expandedNotifyTopics?html}"
   </#if> 
- <struts:StrutsTreeSelector widgetId="treeSelector_${parameters.id?default("")}" eventNames="${eventNames}">
+  <#if parameters.collapsedNotifyTopics?exists>
+  	collapsedNotifyTopics="${parameters.collapsedNotifyTopics?html}"
+  </#if> 
+  >
  </struts:StrutsTreeSelector> 
  </#if>
 <div dojoType="Tree"   
@@ -73,7 +73,8 @@
     <#if parameters.id?exists>
     id="${parameters.id?html}"
     </#if>
-    <#if parameters.treeSelectedTopic?exists>
+    <#if parameters.selectedNotifyTopics?exists || parameters.expandedNotifyTopics?exists
+      || parameters.collapsedNotifyTopics?exists> 
     selector="treeSelector_${parameters.id?default("")}"
     </#if>
     <#if parameters.treeCollapsedTopic?exists>

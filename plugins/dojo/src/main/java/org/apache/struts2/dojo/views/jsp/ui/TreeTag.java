@@ -37,9 +37,9 @@ public class TreeTag extends AbstractClosingTag {
     private static final long serialVersionUID = 2735218501058548013L;
 
     private String toggle;
-    private String treeSelectedTopic;
-    private String treeExpandedTopic;
-    private String treeCollapsedTopic;
+    private String selectedNotifyTopics;
+    private String expandedNotifyTopics;
+    private String collapsedNotifyTopics;
     private String rootNode;
     private String childCollectionProperty;
     private String nodeTitleProperty;
@@ -80,12 +80,12 @@ public class TreeTag extends AbstractClosingTag {
             tree.setRootNode(rootNode);
         if (toggle != null)
             tree.setToggle(toggle);
-        if (treeCollapsedTopic != null)
-            tree.setTreeCollapsedTopic(treeCollapsedTopic);
-        if (treeExpandedTopic != null)
-            tree.setTreeExpandedTopic(treeExpandedTopic);
-        if (treeSelectedTopic != null)
-            tree.setTreeSelectedTopic(treeSelectedTopic);
+        if (selectedNotifyTopics != null)
+            tree.setSelectedNotifyTopics(selectedNotifyTopics);
+        if (expandedNotifyTopics != null)
+            tree.setExpandedNotifyTopics(expandedNotifyTopics);
+        if (collapsedNotifyTopics != null)
+            tree.setCollapsedNotifyTopics(collapsedNotifyTopics);
         if (showRootGrid != null)
             tree.setShowRootGrid(showRootGrid);
 
@@ -127,28 +127,19 @@ public class TreeTag extends AbstractClosingTag {
         this.toggle = toggle;
     }
 
-    public String getTreeSelectedTopic() {
-        return treeSelectedTopic;
-    }
-
+    @Deprecated
     public void setTreeSelectedTopic(String treeSelectedTopic) {
-        this.treeSelectedTopic = treeSelectedTopic;
+        this.selectedNotifyTopics = treeSelectedTopic;
     }
 
-    public String getTreeExpandedTopic() {
-        return treeExpandedTopic;
-    }
-
+    @Deprecated
     public void setTreeExpandedTopic(String treeExpandedTopic) {
-        this.treeExpandedTopic = treeExpandedTopic;
+        this.expandedNotifyTopics = treeExpandedTopic;
     }
 
-    public String getTreeCollapsedTopic() {
-        return treeCollapsedTopic;
-    }
-
+    @Deprecated
     public void setTreeCollapsedTopic(String treeCollapsedTopic) {
-        this.treeCollapsedTopic = treeCollapsedTopic;
+        this.collapsedNotifyTopics = treeCollapsedTopic;
     }
 
     public String getRootNode() {
@@ -301,6 +292,18 @@ public class TreeTag extends AbstractClosingTag {
 
     public void setShowGrid(String showGrid) {
         this.showGrid = showGrid;
+    }
+
+    public void setCollapsedNotifyTopics(String collapsedNotifyTopics) {
+        this.collapsedNotifyTopics = collapsedNotifyTopics;
+    }
+
+    public void setExpandedNotifyTopics(String expandedNotifyTopics) {
+        this.expandedNotifyTopics = expandedNotifyTopics;
+    }
+
+    public void setSelectedNotifyTopics(String selectedNotifyTopics) {
+        this.selectedNotifyTopics = selectedNotifyTopics;
     }
 }
 

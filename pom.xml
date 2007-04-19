@@ -222,10 +222,6 @@
                                 <name>xwork</name>
                                 <sources>file://$xwork$/src/java</sources>
                             </library>
-                            <library>
-                                <name>xwork-tiger</name>
-                                <sources>file://$xwork$/tiger/src/java</sources>
-                            </library>
                         </libraries>
                         -->
                     </configuration>

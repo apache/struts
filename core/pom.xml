@@ -35,7 +35,7 @@
                                 <artifactItem>
                                     <groupId>opensymphony</groupId>
                                     <artifactId>xwork</artifactId>
-                                    <version>2.0.2-SNAPSHOT</version>
+                                    <version>2.0.2</version>
                                     <classifier>sources</classifier>
                                 </artifactItem>
                             </artifactItems>
@@ -252,7 +252,7 @@
         <dependency>
             <groupId>opensymphony</groupId>
             <artifactId>xwork</artifactId>
-            <version>2.0.2-SNAPSHOT</version>
+            <version>2.0.2</version>
         </dependency>
 
         <dependency>

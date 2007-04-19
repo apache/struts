@@ -379,7 +379,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      */
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
-    	
+
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         ServletContext servletContext = getServletContext();
@@ -394,7 +394,6 @@ public class FilterDispatcher implements StrutsStatics, Filter {
             } catch (Exception ex) {
                 LOG.error("error getting ActionMapping", ex);
                 dispatcher.sendError(request, response, servletContext, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
-                ActionContextCleanUp.cleanUp(req);
                 return;
             }
 
@@ -417,14 +416,14 @@ public class FilterDispatcher implements StrutsStatics, Filter {
                 return;
             }
 
+            dispatcher.serviceAction(request, response, servletContext, mapping);
+
+        } finally {
             try {
-                dispatcher.serviceAction(request, response, servletContext, mapping);
-            } finally {
                 ActionContextCleanUp.cleanUp(req);
+            } finally {
+                UtilTimerStack.pop(timerKey);
             }
-        }
-        finally {
-            UtilTimerStack.pop(timerKey);
         }
     }
 

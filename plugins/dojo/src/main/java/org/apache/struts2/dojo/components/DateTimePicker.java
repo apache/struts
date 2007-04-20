@@ -21,7 +21,6 @@
 package org.apache.struts2.dojo.components;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -92,13 +91,23 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </table>
  * 
  * <p>
- * The value sent to the server is
- * typically a locale-independent value in a hidden field as defined by the name
- * attribute. RFC3339 representation is the format used.
+ * The value sent to the server is a locale-independent value, in a hidden field as defined 
+ * by the name attribute. The value will be formatted conforming to RFC3 339 
+ * (yyyy-MM-dd'T'HH:mm:ss)
  * </p>
- *
- * <p/>
- *
+ * <p>
+ * The following formats(in order) will be used to parse the values of the attributes 'value', 
+ * 'startDate' and 'endDate':
+ * </p>
+ * <ul>
+ *   <li>RFC 3339
+ *   <li>SimpleDateFormat.getTimeInstance(DateFormat.SHORT
+ *   <li>SimpleDateFormat.getDateInstance(DateFormat.SHORT
+ *   <li>SimpleDateFormat.getDateInstance(DateFormat.MEDIUM
+ *   <li>SimpleDateFormat.getDateInstance(DateFormat.FULL
+ *   <li>SimpleDateFormat.getDateInstance(DateFormat.LONG
+ *   <li>'displayFormat' attribute value
+ * </ul>
  * <!-- END SNIPPET: javadoc -->
  *
  * <b>Examples</b>
@@ -109,25 +118,12 @@ import com.opensymphony.xwork2.util.ValueStack;
  * Example 1:
  *     &lt;s:datetimepicker name="order.date" label="Order Date" /&gt;
  * Example 2:
- *     &lt;s:datetimepicker name="delivery.date" label="Delivery Date" format="yyyy-MM-dd"  /&gt;
- *
+ *     &lt;s:datetimepicker name="delivery.date" label="Delivery Date" displayFormat="yyyy-MM-dd"  /&gt;
+ * Example 3:    
+ *      &lt;s:datetimepicker name="delivery.date" label="Delivery Date" value="%{date}"  /&gt;
  * <!-- END SNIPPET: expl1 -->
  * </pre>
  * <p/>
- *
- * <!-- START SNIPPET: expldesc2 -->
- *
- * The css could be changed by using the following :-
- *
- * <!-- END SNIPPET: expldesc2 -->
- *
- * <pre>
- * <!-- START SNIPPET: expl2 -->
- *
- * &lt;s:datetimepicker name="birthday" label="Birthday" templateCss="...." /&gt;
- *
- * <!-- END SNIPPET: expl2 -->
- * </pre>
  *
  */
 @StrutsTag(name="datetimepicker", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.DateTimePickerTag", description="Render datetimepicker")
@@ -172,9 +168,9 @@ public class DateTimePicker extends UIBean {
         if(adjustWeeks != null)
             addParameter("adjustWeeks", findValue(adjustWeeks, Boolean.class));
         if(startDate != null)
-            addParameter("startDate", findString(startDate));
+            addParameter("startDate", format(findString(startDate)));
         if(endDate != null)
-            addParameter("endDate", findString(endDate));
+            addParameter("endDate", format(findString(endDate)));
         if(weekStartsOn != null)
             addParameter("weekStartsOn", findString(weekStartsOn));
         if(staticDisplay != null)
@@ -334,17 +330,17 @@ public class DateTimePicker extends UIBean {
             Date date = null;
             //formats used to parse the date
             List<DateFormat> formats = new ArrayList<DateFormat>();
-            if (this.displayFormat != null) {
-                SimpleDateFormat displayFormat = new SimpleDateFormat(
-                        (String) getParameters().get("displayFormat"));
-                formats.add(displayFormat);
-            }
             formats.add(RFC3339_FORMAT);
             formats.add(SimpleDateFormat.getTimeInstance(DateFormat.SHORT));
             formats.add(SimpleDateFormat.getDateInstance(DateFormat.SHORT));
             formats.add(SimpleDateFormat.getDateInstance(DateFormat.MEDIUM));
             formats.add(SimpleDateFormat.getDateInstance(DateFormat.FULL));
             formats.add(SimpleDateFormat.getDateInstance(DateFormat.LONG));
+            if (this.displayFormat != null) {
+                SimpleDateFormat displayFormat = new SimpleDateFormat(
+                        (String) getParameters().get("displayFormat"));
+                formats.add(displayFormat);
+            }
             
             for (DateFormat format : formats) {
                 try {

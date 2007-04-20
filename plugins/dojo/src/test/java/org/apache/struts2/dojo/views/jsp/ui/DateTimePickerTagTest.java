@@ -39,6 +39,8 @@ public class DateTimePickerTagTest extends AbstractUITagTest {
         tag.setName("h");
         tag.setLanguage("i");
         tag.setTemplateCssPath("j");
+        tag.setValueNotifyTopics("k");
+        tag.setValue("l");
         tag.doStartTag();
         tag.doEndTag();
 

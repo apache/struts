@@ -20,9 +20,12 @@
  */
 package org.apache.struts2.dojo.components;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -151,6 +154,7 @@ public class DateTimePicker extends UIBean {
     protected String dayWidth;
     protected String language;
     protected String templateCssPath;
+    protected String valueNotifyTopics;
 
     public DateTimePicker(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -198,6 +202,8 @@ public class DateTimePicker extends UIBean {
             addParameter("type", "date");
         if(templateCssPath != null)
             addParameter("templateCssPath", findString(templateCssPath));
+        if(valueNotifyTopics != null)
+            addParameter("valueNotifyTopics", findString(valueNotifyTopics));
         
         // format the value to RFC 3399
         if(parameters.containsKey("value")) {
@@ -307,6 +313,11 @@ public class DateTimePicker extends UIBean {
         super.setValue(arg0);
     }
     
+    @StrutsTagAttribute(description="Comma delimmited list of topics that will published when a value is selected")
+    public void setValueNotifyTopics(String valueNotifyTopics) {
+        this.valueNotifyTopics = valueNotifyTopics;
+    }
+    
     private String format(Object obj) {
         if(obj == null)
             return null;
@@ -319,21 +330,36 @@ public class DateTimePicker extends UIBean {
             if(dateStr.equalsIgnoreCase("today"))
                 return RFC3339_FORMAT.format(new Date());
 
-            try {
-                Date date = null;
-                if(this.displayFormat != null) {
-                    SimpleDateFormat format = new SimpleDateFormat(
-                            (String) getParameters().get("displayFormat"));
-                    date = format.parse(dateStr);
-                    return RFC3339_FORMAT.format(date);
-                } else {
-                    // last resource to assume already in correct/default format
-                    return dateStr;
-                }
-            } catch (ParseException e) {
-                LOG.error("Could not parse date", e);
-                return dateStr;
+            
+            Date date = null;
+            //formats used to parse the date
+            List<DateFormat> formats = new ArrayList<DateFormat>();
+            if (this.displayFormat != null) {
+                SimpleDateFormat displayFormat = new SimpleDateFormat(
+                        (String) getParameters().get("displayFormat"));
+                formats.add(displayFormat);
             }
+            formats.add(RFC3339_FORMAT);
+            formats.add(SimpleDateFormat.getTimeInstance(DateFormat.SHORT));
+            formats.add(SimpleDateFormat.getDateInstance(DateFormat.SHORT));
+            formats.add(SimpleDateFormat.getDateInstance(DateFormat.MEDIUM));
+            formats.add(SimpleDateFormat.getDateInstance(DateFormat.FULL));
+            formats.add(SimpleDateFormat.getDateInstance(DateFormat.LONG));
+            
+            for (DateFormat format : formats) {
+                try {
+                    date = format.parse(dateStr);
+                    if (date != null)
+                        return RFC3339_FORMAT.format(date);
+                } catch (Exception e) {
+                    //keep going
+                }
+            }
+            
+           // last resource, assume already in correct/default format
+           if (LOG.isDebugEnabled())
+               LOG.debug("Unable to parse date " + dateStr);
+           return dateStr;
         }
     }
 

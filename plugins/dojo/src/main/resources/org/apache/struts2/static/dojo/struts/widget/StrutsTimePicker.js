@@ -13,13 +13,12 @@ dojo.widget.defineWidget(
   inputName: "",
   name: "",
   
+  valueNotifyTopics : "",
+  valueNotifyTopicsArray : null,
+  
   postCreate: function() {
     struts.widget.StrutsTimePicker.superclass.postCreate.apply(this, arguments);
   
-    if(this.value.toLowerCase() == "today") {
-      this.value = dojo.date.toRfc3339(new Date());
-    }
-
     this.inputNode.name = this.name;
     
     //set cssClass
@@ -33,14 +32,46 @@ dojo.widget.defineWidget(
     }  
     
     this.valueNode.name = this.inputName;
+    
+    //value topics
+    if(!dojo.string.isBlank(this.valueNotifyTopics)) {
+      this.valueNotifyTopicsArray = this.valueNotifyTopics.split(",");
+    }
   },
   
-  onSetTime: function() {
-    struts.widget.StrutsTimePicker.superclass.onSetTime.apply(this, arguments);
-    if(this.timePicker.selectedTime.anyTime){
-      this.valueNode.value = "";
-    } else {
-      this.valueNode.value = dojo.date.toRfc3339(this.timePicker.time);
+  _syncValueNode:function () {
+    var time = this.timePicker.time;
+    var value;
+    switch (this.saveFormat.toLowerCase()) {
+      case "rfc":
+      case "iso":
+      case "":
+      //originally, Dojo only saves the time part
+      value = dojo.date.toRfc3339(time);
+      break;
+      case "posix":
+      case "unix":
+      value = Number(time);
+      break;
+      default:
+      value = dojo.date.format(time, {datePattern:this.saveFormat, selector:"timeOnly", locale:this.lang});
+    }
+    this.valueNode.value = value;
+  },
+  
+  _updateText : function() {
+    struts.widget.StrutsTimePicker.superclass._updateText.apply(this, arguments);
+    if(this.valueNotifyTopicsArray != null) {
+      for(var i = 0; i < this.valueNotifyTopicsArray.length; i++) {
+        var topic = this.valueNotifyTopicsArray[i];
+        if(!dojo.string.isBlank(topic)) {
+          try {
+            dojo.event.topic.publish(topic, this.inputNode.value);
+          } catch(ex) {
+            dojo.debug(ex);
+          }
+        }
+      }
     }
   }
 });

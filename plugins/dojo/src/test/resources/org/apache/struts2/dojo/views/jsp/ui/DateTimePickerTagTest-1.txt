@@ -1,5 +1,6 @@
 <div dojoType="struts:StrutsDatePicker" 
      id="id"
+     value="l"
      lang="i"
      name="dojo.h"
      inputName="h"
@@ -10,6 +11,7 @@
      weekStartsOn="g"
      staticDisplay="false"
      templateCssPath="j"
+     valueNotifyTopics="k"
      saveFormat="rfc">
 </div>
 

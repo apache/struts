@@ -63,8 +63,11 @@
   <#if parameters.toggleDuration?exists>
     containerToggleDuration="${parameters.toggleDuration?string?html}"<#rt/>
   </#if>
-  <#if parameters.templateCssPath?exists>
+  <#if parameters.templateCssPath?if_exists != "">
 	templateCssPath="<@s.url value='${parameters.templateCssPath}' encode="false" includeParams='none'/>"
+  </#if>
+  <#if parameters.valueNotifyTopics?if_exists != "">
+	valueNotifyTopics="${parameters.valueNotifyTopics?html}"<#rt/>
   </#if>
   saveFormat="rfc"<#rt/>
   <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />

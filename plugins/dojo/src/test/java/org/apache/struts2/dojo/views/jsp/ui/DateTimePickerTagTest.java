@@ -131,7 +131,7 @@ public class DateTimePickerTagTest extends AbstractUITagTest {
         boolean compareDate, boolean compareTime) throws Exception {
         tag.doStartTag();
         DateTimePicker picker = (DateTimePicker) tag.getComponent();
-        picker.end(pageContext.getOut(), null);
+        picker.evaluateParams();
 
         String dateStr = (String) tag.getComponent().getParameters()
             .get(property);

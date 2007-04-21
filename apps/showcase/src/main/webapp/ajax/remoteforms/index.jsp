@@ -8,20 +8,21 @@
     <s:head theme="ajax"/>
 
     <script language="JavaScript" type="text/javascript">
-        function doSomething() {
-            alert('you can manipulate the form before it gets submitted');
-            return true;
-        }
+        dojo.event.topic.subscribe("/beforeSubmit", function(data, type, e) {
+            alert('you can manipulate the form before it gets submitted. To cancel the submit event set e.cancel=true');
+            e.cancel = true;
+        });
     </script>
 
 </head>
 
 <body>
 
-
-Remote form replacing another div:<br/>
-
 <div id='two' style="border: 1px solid yellow;"><b>initial content</b></div>
+
+
+<br /><br />
+Remote form replacing another div:<br/>
 <sx:form
         id='theForm2'
         cssStyle="border: 1px solid green;"
@@ -30,11 +31,11 @@ Remote form replacing another div:<br/>
 
     <input type='text' name='data' value='Struts User'>
 
-    <sx:submit value="GO2" theme="ajax" targets="two"/>
+    <sx:submit value="GO2" targets="two"/>
 
 </sx:form>
 
-
+<br /><br />
 Remote form replacing the forms content:<br/>
 <sx:form
         id='theForm3'
@@ -48,20 +49,22 @@ Remote form replacing the forms content:<br/>
 
 </sx:form>
 
+<br /><br />
 Remote form evaluating suplied JS on completion:<br/>
 <sx:form
         id='theForm4'
         cssStyle="border: 1px solid green;"
-        action='AjaxRemoteForm'
+        action='Test3'
         method='post'>
 
     <input type='text' name='data' value='Struts User'>
 
-    <sx:submit value="GO4" />
+    <sx:submit value="GO4" executeScripts="true"/>
 
 </sx:form>
 
-Remote form replacing the forms content after confirming results:<br/>
+<br /><br />
+Remote form whose submit is cancelled:<br/>
 <sx:form
         id='theForm5'
         cssStyle="border: 1px solid green;"
@@ -70,25 +73,13 @@ Remote form replacing the forms content after confirming results:<br/>
 
     <input type='text' name='data' value='Struts User'>
 
-    <sx:submit value="GO3" targets="theForm5" />
+    <sx:submit value="GO5" targets="theForm5" beforeNotifyTopics="/beforeSubmit"/>
 
 </sx:form>
 
-Remote form replacing the forms content after running a function:<br/>
-<sx:form
-        id='theForm6'
-        cssStyle="border: 1px solid green;"
-        action='AjaxRemoteForm'
-        method='post'>
-
-    <input type='text' name='data' value='Struts User'>
-
-    <sx:submit value="GO3" targets="theForm6" />
-
-</sx:form>
-
+<br /><br />
 A form with no remote submit (so should not be ajaxified):<br/>
-<sx:form
+<s:form
         id='theForm7'
         cssStyle="border: 1px solid green;"
         action='AjaxRemoteForm'
@@ -96,9 +87,9 @@ A form with no remote submit (so should not be ajaxified):<br/>
 
     <input type='text' name='data' value='Struts User'>
 
-    <sx:submit value="Go AWAY" targets="theForm7" />
+    <s:submit value="Go AWAY"  />
 
-</sx:form>
+</s:form>
 
 </body>
 </html>

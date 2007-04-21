@@ -29,6 +29,10 @@
 <div id="t1">Div 1</div>
 <s:url id="ajaxTest" value="/AjaxTest.action" />
 
+<br/><br/>
+
+A submit button, that highlights (blue color) its targets
+<sx:submit type="submit" value="submit" targets="t1" href="%{ajaxTest}" highlightColor="blue"/>
 
 <br/><br/>
 

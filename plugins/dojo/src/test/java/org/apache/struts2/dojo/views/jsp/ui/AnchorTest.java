@@ -48,6 +48,8 @@ public class AnchorTest extends AbstractUITagTest {
         tag.setShowErrorTransportText("true");
         tag.setShowLoadingText("true");
         tag.setErrorNotifyTopics("l");
+        tag.setHighlightColor("m");
+        tag.setHighlightDuration("n");
         tag.doStartTag();
         tag.doEndTag();
 

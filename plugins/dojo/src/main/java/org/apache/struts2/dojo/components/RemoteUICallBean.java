@@ -58,4 +58,8 @@ public interface RemoteUICallBean {
     void setCssStyle(String style);
     
     void setCssClass(String cssClass);
+    
+    void setHighlightColor(String color);
+    
+    void setHighlightDuration(String color);
 }

@@ -116,6 +116,8 @@ public class Submit extends FormButton implements RemoteUICallBean {
     protected String beforeNotifyTopics;
     protected String afterNotifyTopics;
     protected String errorNotifyTopics;
+    protected String highlightColor;
+    protected String highlightDuration;
 
     public Submit(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -174,6 +176,10 @@ public class Submit extends FormButton implements RemoteUICallBean {
             addParameter("afterNotifyTopics", findString(afterNotifyTopics));
         if (errorNotifyTopics != null)
             addParameter("errorNotifyTopics", findString(errorNotifyTopics));
+        if (highlightColor != null)
+            addParameter("highlightColor", findString(highlightColor));
+        if (highlightDuration != null)
+            addParameter("highlightDuration", findString(highlightDuration));
     }
 
     @Override
@@ -334,5 +340,17 @@ public class Submit extends FormButton implements RemoteUICallBean {
     @StrutsTagAttribute(description="Comma delimmited list of topics that will published after the request(if the request fails)")
     public void setErrorNotifyTopics(String errorNotifyTopics) {
         this.errorNotifyTopics = errorNotifyTopics;
+    }
+    
+    @StrutsTagAttribute(description = "Color used to perform a highlight effect on the elements specified in the 'targets' attribute", 
+        defaultValue = "none")
+    public void setHighlightColor(String highlightColor) {
+        this.highlightColor = highlightColor;
+    }
+
+    @StrutsTagAttribute(description = "Duration of highlight effect in milliseconds. Only valid if 'highlightColor' attribute is set", 
+        defaultValue = "1000")
+    public void setHighlightDuration(String highlightDuration) {
+        this.highlightDuration = highlightDuration;
     }
 }

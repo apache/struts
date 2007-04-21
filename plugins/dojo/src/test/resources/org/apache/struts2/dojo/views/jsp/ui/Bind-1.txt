@@ -12,6 +12,8 @@
 			"indicator":"l",
 			"showError":"true",
 			"handler":"h"
+			"highlightColor":"p"
+			"highlightDuration":"q"
 		});
 	});
 </script>

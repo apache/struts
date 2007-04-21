@@ -46,6 +46,7 @@
 		stopTimerListenTopics="/stopTimer"
 		updateFreq="3000"
 		autoStart="true"
+        highlightColor="red"
 		formId="form"
 		>
     Initial Content</sx:div>

@@ -67,3 +67,9 @@
   <#if parameters.showLoadingText?exists>
     showLoading="${parameters.showLoadingText?string?html}"<#rt/>
   </#if>
+  <#if parameters.highlightColor?if_exists != "">
+    highlightColor="${parameters.highlightColor?html}"<#rt/>
+  </#if>
+  <#if parameters.highlightDuration?if_exists != "">
+    highlightDuration="${parameters.highlightDuration?html}"<#rt/>
+  </#if>

@@ -154,4 +154,10 @@ public class Div extends AbstractRemoteCallUIBean {
     public void setPreload(String preload) {
         this.preload = preload;
     }
+    
+    @StrutsTagAttribute(description = "Color used to perform a highlight effect on this element", 
+        defaultValue = "none")
+    public void setHighlightColor(String highlightColor) {
+        this.highlightColor = highlightColor;
+    }
 }

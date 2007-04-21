@@ -44,6 +44,8 @@ public class SubmitAjaxTest extends AbstractUITagTest {
         tag.setIndicator("l");
         tag.setShowLoadingText("true");
         tag.setErrorNotifyTopics("m");
+        tag.setHighlightColor("n");
+        tag.setHighlightDuration("o");
         tag.doStartTag();
         tag.doEndTag();
 

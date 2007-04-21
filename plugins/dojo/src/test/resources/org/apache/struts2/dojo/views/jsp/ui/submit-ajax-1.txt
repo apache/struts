@@ -16,4 +16,6 @@
   handler="h"
   indicator="l"
   showLoading="true"
+  highlightColor="n"
+  highlightDuration="o"
   />

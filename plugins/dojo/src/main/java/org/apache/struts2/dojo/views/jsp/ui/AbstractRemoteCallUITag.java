@@ -37,7 +37,9 @@ public abstract class AbstractRemoteCallUITag extends AbstractClosingTag {
     protected String beforeNotifyTopics;
     protected String afterNotifyTopics;
     protected String errorNotifyTopics;
-
+    protected String highlightColor;
+    protected String highlightDuration;
+    
     protected void populateParams() {
         super.populateParams();
 
@@ -57,6 +59,8 @@ public abstract class AbstractRemoteCallUITag extends AbstractClosingTag {
         remote.setAfterNotifyTopics(afterNotifyTopics);
         remote.setBeforeNotifyTopics(beforeNotifyTopics);
         remote.setErrorNotifyTopics(errorNotifyTopics);
+        remote.setHighlightColor(highlightColor);
+        remote.setHighlightDuration(highlightDuration);
     }
 
     public void setHref(String href) {
@@ -117,5 +121,13 @@ public abstract class AbstractRemoteCallUITag extends AbstractClosingTag {
 
     public void setErrorNotifyTopics(String errorNotifyTopics) {
         this.errorNotifyTopics = errorNotifyTopics;
+    }
+
+    public void setHighlightColor(String highlightColor) {
+        this.highlightColor = highlightColor;
+    }
+
+    public void setHighlightDuration(String highlightDuration) {
+        this.highlightDuration = highlightDuration;
     }
 }

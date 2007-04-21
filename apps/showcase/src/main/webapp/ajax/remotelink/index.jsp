@@ -57,10 +57,16 @@
 <s:url id="ajaxTest" value="/AjaxTest.action" />
 <s:url id="test3" value="/Test3.action" />
 
+<sx:a  id="link0"
+        href="%{#ajaxTest}"
+        targets="t1"
+        highlightColor="red"
+        highlightDuration="2000">Update 'Div 1' and use red highligh to notify user of changed content</sx:a>
+
 <br/><br/>
 
 <sx:a   id="link1"
-        href="%{ajaxTest}"
+        href="%{#ajaxTest}"
         indicator="indicator"
 		targets="t1,t2" 
         beforeNotifyTopics="/before"
@@ -78,21 +84,21 @@
 <br/><br/>
 
 <sx:a  id="link3"
-        href="%{ajaxTest}"
+        href="%{#ajaxTest}"
 		loadingText="Loading!!!"
 		targets="t1">Update 'Div 1', use custom loading message</sx:a>
 
 <br/><br/>
 
 <sx:a  id="link4"
-        href="%{test3}"
+        href="%{#test3}"
 		executeScripts="true"
 		targets="t2">Update 'Div 2' and execute returned javascript </sx:a>
 
 <br/><br/>
 
 <sx:a  id="link5"
-        href="%{ajaxTest}"
+        href="%{#ajaxTest}"
 		handler="handler"
 		targets="t2">Update 'Div 2' using a custom handler </sx:a>
 
@@ -108,7 +114,7 @@
 <br/><br/>
 
 <sx:a  id="link6"
-        href="%{ajaxTest}"
+        href="%{#ajaxTest}"
 		targets="t2"
 		formId="form"
 		>Update 'Div 2' with the content of the textbox </sx:a>

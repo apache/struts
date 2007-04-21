@@ -56,6 +56,9 @@ dojo.widget.defineWidget(
 	//make dojo process the content
 	parseContent : true,
 
+    highlightColor : "",
+    highlightDuration : 2000,
+    
     onDownloadStart : function(event) {
       if(!this.showLoading) {
         event.returnValue = false;
@@ -64,6 +67,13 @@ dojo.widget.defineWidget(
       if(this.showLoading && !dojo.string.isBlank(this.loadingText)) {
         event.text = this.loadingText;
       }
+    },
+    
+    highlight : function() {
+      if(!dojo.string.isBlank(this.highlightColor)) {
+        var effect = dojo.lfx.html.highlight([this.domNode], this.highlightColor, this.highlightDuration);
+        effect.play();    
+      }        
     },
 
     onDownloadError : function(event) {
@@ -250,6 +260,7 @@ dojo.widget.defineWidget(
 
           if(type == "load") {
             self.onDownloadEnd.call(self, url, data);
+            self.highlight();
           } else {
             // works best when from a live server instead of from file system
             self._handleDefaults.call(self, "Error loading '" + url + "' (" + e.status + " "+  e.statusText + ")", "onDownloadError");

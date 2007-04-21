@@ -19,5 +19,7 @@
   handler="l"
   indicator="m"
   showError="true"
-  showLoading="true">
+  showLoading="true"
+  highlightColor="o"
+  highlightDuration="p">
 </div>

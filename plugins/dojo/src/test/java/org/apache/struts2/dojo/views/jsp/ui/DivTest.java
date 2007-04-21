@@ -53,6 +53,8 @@ public class DivTest extends AbstractUITagTest {
         tag.setSeparateScripts("false");
         tag.setErrorNotifyTopics("n");
         tag.setClosable("true");
+        tag.setHighlightColor("o");
+        tag.setHighlightDuration("p");
         tag.doStartTag();
         tag.doEndTag();
 

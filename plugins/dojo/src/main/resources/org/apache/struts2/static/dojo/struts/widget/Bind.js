@@ -1,6 +1,7 @@
 dojo.provide("struts.widget.Bind");
 
 dojo.require("dojo.widget.HtmlWidget");
+dojo.require("dojo.lfx.html");
 dojo.require("dojo.io.*");
 
 dojo.widget.defineWidget(
@@ -38,6 +39,10 @@ dojo.widget.defineWidget(
   indicator : "",
 
   parseContent : true,
+  
+  highlightColor : "",
+  highlightDuration : 2000,
+
   postCreate : function() {
     var self = this;
 
@@ -90,7 +95,6 @@ dojo.widget.defineWidget(
       }
     }
 
-
     if(dojo.string.isBlank(this.href) && dojo.string.isBlank(this.formId)) {
       //no href and no formId, we must be inside a form
       this.formNode = dojo.dom.getFirstAncestorByTag(this.domNode, "form");
@@ -107,6 +111,21 @@ dojo.widget.defineWidget(
     }
   },
 
+  highlight : function() {
+    if(!dojo.string.isBlank(this.highlightColor)) {
+      var nodes = [];
+      //add nodes to array
+      dojo.lang.forEach(this.targetsArray, function(target) {
+        var node = dojo.byId(target);
+        if(node) {
+          nodes.push(node);
+        }
+      });
+      var effect = dojo.lfx.html.highlight(nodes, this.highlightColor, this.highlightDuration);
+      effect.play();    
+    }
+  },
+  
   log : function(text) {
     dojo.debug("[" + (this.widgetId ? this.widgetId : "unknown")  + "] " + text);
   },
@@ -155,6 +174,7 @@ dojo.widget.defineWidget(
        else {
          this.setContent(data);
        }
+       this.highlight();
      } else {
        if(this.showError) {
          var message = dojo.string.isBlank(this.errorText) ? e.message : this.errorText;

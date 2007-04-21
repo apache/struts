@@ -13,5 +13,7 @@
  handler="i"
  indicator="k"
  showError="true"
- showLoading="true">
+ showLoading="true"
+ highlightColor="m"
+ highlightDuration="n">
 </a>

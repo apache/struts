@@ -22055,6 +22055,7 @@ dojo.provide("struts.widget.Bind");
 
 
 
+
 dojo.widget.defineWidget(
   "struts.widget.Bind",
   dojo.widget.HtmlWidget, {
@@ -22090,6 +22091,10 @@ dojo.widget.defineWidget(
   indicator : "",
 
   parseContent : true,
+  
+  highlightColor : "",
+  highlightDuration : 2000,
+
   postCreate : function() {
     var self = this;
 
@@ -22142,7 +22147,6 @@ dojo.widget.defineWidget(
       }
     }
 
-
     if(dojo.string.isBlank(this.href) && dojo.string.isBlank(this.formId)) {
       //no href and no formId, we must be inside a form
       this.formNode = dojo.dom.getFirstAncestorByTag(this.domNode, "form");
@@ -22159,6 +22163,21 @@ dojo.widget.defineWidget(
     }
   },
 
+  highlight : function() {
+    if(!dojo.string.isBlank(this.highlightColor)) {
+      var nodes = [];
+      //add nodes to array
+      dojo.lang.forEach(this.targetsArray, function(target) {
+        var node = dojo.byId(target);
+        if(node) {
+          nodes.push(node);
+        }
+      });
+      var effect = dojo.lfx.html.highlight(nodes, this.highlightColor, this.highlightDuration);
+      effect.play();    
+    }
+  },
+  
   log : function(text) {
     dojo.debug("[" + (this.widgetId ? this.widgetId : "unknown")  + "] " + text);
   },
@@ -22207,6 +22226,7 @@ dojo.widget.defineWidget(
        else {
          this.setContent(data);
        }
+       this.highlight();
      } else {
        if(this.showError) {
          var message = dojo.string.isBlank(this.errorText) ? e.message : this.errorText;
@@ -22486,6 +22506,9 @@ dojo.widget.defineWidget(
 	//make dojo process the content
 	parseContent : true,
 
+    highlightColor : "",
+    highlightDuration : 2000,
+    
     onDownloadStart : function(event) {
       if(!this.showLoading) {
         event.returnValue = false;
@@ -22494,6 +22517,13 @@ dojo.widget.defineWidget(
       if(this.showLoading && !dojo.string.isBlank(this.loadingText)) {
         event.text = this.loadingText;
       }
+    },
+    
+    highlight : function() {
+      if(!dojo.string.isBlank(this.highlightColor)) {
+        var effect = dojo.lfx.html.highlight([this.domNode], this.highlightColor, this.highlightDuration);
+        effect.play();    
+      }        
     },
 
     onDownloadError : function(event) {
@@ -22680,6 +22710,7 @@ dojo.widget.defineWidget(
 
           if(type == "load") {
             self.onDownloadEnd.call(self, url, data);
+            self.highlight();
           } else {
             // works best when from a live server instead of from file system
             self._handleDefaults.call(self, "Error loading '" + url + "' (" + e.status + " "+  e.statusText + ")", "onDownloadError");
@@ -23999,7 +24030,7 @@ dojo.provide("struts.widget.ComboBox");
 
 struts.widget.ComboBoxDataProvider = function(combobox, node){
   this.data = [];
-  this.searchLimit = 30;
+  this.searchLimit = combobox.searchLimit;
   this.searchType = "STARTSTRING"; // may also be "STARTWORD" or "SUBSTRING"
   this.caseSensitive = false;
   // for caching optimizations
@@ -24230,6 +24261,10 @@ dojo.widget.defineWidget(
   dataFieldName : "",
   keyName: "",
   templateCssPath: dojo.uri.dojoUri("struts/ComboBox.css"),
+  
+  //how many results are shown
+  searchLimit : 30,
+  
   //from Dojo's  ComboBox
   showResultList: function() {
   // Our dear friend IE doesnt take max-height so we need to calculate that on our own every time

@@ -33,8 +33,8 @@
 </p>
 <br/><br/>
 <p>
-    2. Attach to "onmouseover", and "onclick" event on Area below and update content of Div1.
-    <sx:bind id="ex2" href="%{#ajaxTest}" sources="div2" targets="div1" events="onmouseover,onclick" />
+    2. Attach to "onmouseover", and "onclick" event on Area below and update content of Div1, highlight targets with green color
+    <sx:bind id="ex2" href="%{#ajaxTest}" sources="div2" targets="div1" events="onmouseover,onclick" highlightColor="green"/>
     <div id="div2" style="width: 300px; height: 50px; border: 1px solid black">
         Mouse Over or Click Here!
     </div>

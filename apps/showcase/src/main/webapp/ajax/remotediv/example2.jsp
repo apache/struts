@@ -16,7 +16,7 @@
 <sx:div
         id="once"
         cssStyle="border: 1px solid yellow;"
-        href="%{ajaxTest}"
+        href="%{#ajaxTest}"
         updateFreq="2000"
         indicator="indicator"
 		>

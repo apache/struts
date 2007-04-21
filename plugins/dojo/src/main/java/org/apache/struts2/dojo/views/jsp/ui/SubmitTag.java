@@ -57,6 +57,8 @@ public class SubmitTag extends AbstractUITag {
     protected String beforeNotifyTopics;
     protected String afterNotifyTopics;
     protected String errorNotifyTopics;
+    protected String highlightColor;
+    protected String highlightDuration;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Submit(stack, req, res);
@@ -87,6 +89,8 @@ public class SubmitTag extends AbstractUITag {
         submit.setAfterNotifyTopics(afterNotifyTopics);
         submit.setBeforeNotifyTopics(beforeNotifyTopics);
         submit.setErrorNotifyTopics(errorNotifyTopics);
+        submit.setHighlightColor(highlightColor);
+        submit.setHighlightDuration(highlightDuration);
     }
 
     public void setAction(String action) {
@@ -175,5 +179,13 @@ public class SubmitTag extends AbstractUITag {
 
     public void setErrorNotifyTopics(String errorNotifyTopics) {
         this.errorNotifyTopics = errorNotifyTopics;
+    }
+
+    public void setHighlightColor(String highlightColor) {
+        this.highlightColor = highlightColor;
+    }
+
+    public void setHighlightDuration(String highlightDuration) {
+        this.highlightDuration = highlightDuration;
     }
 }

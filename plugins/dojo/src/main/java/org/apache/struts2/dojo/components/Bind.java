@@ -160,7 +160,6 @@ public class Bind extends AbstractRemoteCallUIBean {
         this.notifyTopics = notifyTopics;
     }
 
-
     @StrutsTagAttribute(description="Set whether errors will be shown or not", type="Boolean", defaultValue="true")
     public void setShowErrorTransportText(String showError) {
         this.showErrorTransportText = showError;
@@ -209,5 +208,17 @@ public class Bind extends AbstractRemoteCallUIBean {
     @StrutsTagAttribute(description="The id to use for the element")
     public void setId(String id) {
         super.setId(id);
+    }
+    
+    @StrutsTagAttribute(description = "Color used to perform a highlight effect on the elements specified in the 'targets' attribute", 
+        defaultValue = "none")
+    public void setHighlightColor(String highlightColor) {
+        this.highlightColor = highlightColor;
+    }
+
+    @StrutsTagAttribute(description = "Duration of highlight effect in milliseconds. Only valid if 'highlightColor' attribute is set", 
+        defaultValue = "2000", type="Integer")
+    public void setHighlightDuration(String highlightDuration) {
+        this.highlightDuration = highlightDuration;
     }
 }

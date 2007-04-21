@@ -42,6 +42,12 @@
 			<#if parameters.handler?if_exists != "">
 			    "handler": "${parameters.handler?html}"
 		    </#if>
+		    <#if parameters.highlightColor?if_exists != "">
+			    "highlightColor" : "${parameters.highlightColor?html}"<#rt/>
+			</#if>
+			<#if parameters.highlightDuration?if_exists != "">
+			    "highlightDuration" : "${parameters.highlightDuration?html}"<#rt/>
+			</#if>
 		});
 	});
 </script>

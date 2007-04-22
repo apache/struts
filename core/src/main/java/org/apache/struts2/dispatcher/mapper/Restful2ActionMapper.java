@@ -58,14 +58,14 @@ import org.apache.commons.logging.LogFactory;
  * <p>
  * The following URL's will invoke its methods:
  * </p>
- * <ul>
- *  <li><code>GET:    /movie               => method="index"</code></li>
+ * <ul> 
+ *  <li><code>GET:    /movie                => method="index"</code></li>
  *  <li><code>GET:    /movie/Thrillers      => method="view", id="Thrillers"</code></li>
  *  <li><code>GET:    /movie/Thrillers!edit => method="edit", id="Thrillers"</code></li>
- *  <li><code>GET:    /movie/new           => method="editNew"</code></li>
- *  <li><code>POST:   /movie/Thrillers      => method="create"</code></li>
- *  <li><code>PUT:    /movie/              => method="update"</code></li>
- *  <li><code>DELETE: /movie/Thrillers      => method="remove"</code></li>
+ *  <li><code>GET:    /movie/new            => method="editNew"</code></li>
+ *  <li><code>POST:   /movie/               => method="create"</code></li>
+ *  <li><code>PUT:    /movie/Thrillers      => method="update", id="Thrillers"</code></li>
+ *  <li><code>DELETE: /movie/Thrillers      => method="remove", id="Thrillers"</code></li>
  * </ul>
  * <p>
  * To simulate the HTTP methods PUT and DELETE, since they aren't supported by HTML,
@@ -83,7 +83,7 @@ import org.apache.commons.logging.LogFactory;
 public class Restful2ActionMapper extends DefaultActionMapper {
 
     protected static final Log LOG = LogFactory.getLog(Restful2ActionMapper.class);
-    private static final String HTTP_METHOD_PARAM = "__http_method";
+    public static final String HTTP_METHOD_PARAM = "__http_method";
 
     /*
     * (non-Javadoc)
@@ -114,7 +114,7 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                         mapping.setMethod("index");
                         
                     // Creating a new entry on POST e.g. foo/
-                    } else if (isPut(request)) {
+                    } else if (isPost(request)) {
                         mapping.setMethod("create");
                     }
 
@@ -129,13 +129,13 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                     } else if (isGet(request)) {
                         mapping.setMethod("view");
 
-                    // Updating an item e.g. foo/1
-                    } else if (isPost(request)) {
-                        mapping.setMethod("update");
-
                     // Removing an item e.g. foo/1
                     } else if (isDelete(request)) {
                         mapping.setMethod("remove");
+                    
+                    // Updating an item e.g. foo/1    
+                    }  else if (isPut(request)) {
+                        mapping.setMethod("update");
                     }
                 }
             }

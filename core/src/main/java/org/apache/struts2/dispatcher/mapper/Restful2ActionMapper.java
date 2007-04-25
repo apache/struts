@@ -59,7 +59,7 @@ import org.apache.commons.logging.LogFactory;
  * The following URL's will invoke its methods:
  * </p>
  * <ul> 
- *  <li><code>GET:    /movie                => method="index"</code></li>
+ *  <li><code>GET:    /movie/               => method="index"</code></li>
  *  <li><code>GET:    /movie/Thrillers      => method="view", id="Thrillers"</code></li>
  *  <li><code>GET:    /movie/Thrillers!edit => method="edit", id="Thrillers"</code></li>
  *  <li><code>GET:    /movie/new            => method="editNew"</code></li>

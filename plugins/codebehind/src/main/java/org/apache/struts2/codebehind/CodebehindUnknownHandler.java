@@ -210,4 +210,11 @@ public class CodebehindUnknownHandler implements UnknownHandler {
         return prefix + ns;
     }
 
+    /**
+     * Not used
+     */
+	public Object handleUnknownActionMethod(Object action, String methodName) throws NoSuchMethodException {
+		throw new NoSuchMethodException();
+	}
+
 }

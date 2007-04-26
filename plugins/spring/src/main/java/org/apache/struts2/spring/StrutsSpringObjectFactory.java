@@ -43,22 +43,15 @@ import com.opensymphony.xwork2.spring.SpringObjectFactory;
  */
 public class StrutsSpringObjectFactory extends SpringObjectFactory {
     private static final Log log = LogFactory.getLog(StrutsSpringObjectFactory.class);
-    
-    private String autoWire;
-    private boolean useClassCache = true;
-    
-    @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE,required=false)
-    public void setAutoWire(String val) {
-        autoWire = val;
-    }
-    
-    @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE,required=false)
-    public void setUseClassCache(String val) {
-        useClassCache = "true".equals(val);
-    }
-    
+
     @Inject
-    public void setServletContext(ServletContext servletContext) {
+    public StrutsSpringObjectFactory(
+            @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE,required=false) String autoWire,
+            @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE,required=false) String useClassCacheStr,
+            @Inject ServletContext servletContext) {
+          
+        super();
+        boolean useClassCache = "true".equals(useClassCacheStr);
         log.info("Initializing Struts-Spring integration...");
 
         ApplicationContext appContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);

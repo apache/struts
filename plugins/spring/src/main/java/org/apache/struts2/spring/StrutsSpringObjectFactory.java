@@ -49,7 +49,8 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
             @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE,required=false) String autoWire,
             @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE,required=false) String useClassCacheStr,
             @Inject ServletContext servletContext) {
-            
+          
+        super();
         boolean useClassCache = "true".equals(useClassCacheStr);
         log.info("Initializing Struts-Spring integration...");
 

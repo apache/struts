@@ -1,4 +1,8 @@
 function clearErrorMessages(form) {
+    clearErrorMessagesXHTML(form);
+}
+
+function clearErrorMessagesXHTML(form) {
 
     var table = form.childNodes[1];
     if( typeof table == "undefined" ) {
@@ -28,6 +32,10 @@ function clearErrorMessages(form) {
 }
 
 function clearErrorLabels(form) {
+    clearErrorLabelsXHTML(form);
+}
+
+function clearErrorLabelsXHTML(form) {
     // set all labels back to the normal class
     var elements = form.elements;
     for (var i = 0; i < elements.length; i++) {
@@ -45,6 +53,10 @@ function clearErrorLabels(form) {
 }
 
 function addError(e, errorText) {
+    addErrorXHTML(e, errorText);
+}
+
+function addErrorXHTML(e, errorText) {
     try {
         // clear out any rows with an "errorFor" of e.id
         var row = e.parentNode.parentNode;

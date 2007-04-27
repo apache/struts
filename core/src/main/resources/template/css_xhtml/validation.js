@@ -1,4 +1,8 @@
 function clearErrorMessages(form) {
+    clearErrorMessagesCSS(form);
+}
+
+function clearErrorMessagesCSS(form) {
 	// clear out any rows with an "errorFor" attribute
 	var divs = form.getElementsByTagName("div");
     var paragraphsToDelete = new Array();
@@ -19,6 +23,10 @@ function clearErrorMessages(form) {
 }
 
 function clearErrorLabels(form) {
+    clearErrorLabelsCSS(form);
+}
+
+function clearErrorLabelsCSS(form) {
     // set all labels back to the normal class
     var labels = form.getElementsByTagName("label");
     for (var i = 0; i < labels.length; i++) {
@@ -34,6 +42,10 @@ function clearErrorLabels(form) {
 }
 
 function addError(e, errorText) {
+    addErrorCSS(e, errorText);
+}
+
+function addErrorCSS(e, errorText) {
     try {
         var ctrlDiv = e.parentNode; // wwctrl_ div or span
         var enclosingDiv = ctrlDiv.parentNode; // wwgrp_ div

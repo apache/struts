@@ -20,9 +20,6 @@
 <script language="JavaScript" type="text/javascript" src="/struts/ajax/dojoRequire.js">
 </script>
 
-<script language="JavaScript" type="text/javascript" src="/struts/CommonFunctions.js">
-</script>
-
 <link rel="stylesheet" href="/struts/xhtml/styles.css" type="text/css"/>
 
 <script language="JavaScript" src="/struts/utils.js" type="text/javascript">

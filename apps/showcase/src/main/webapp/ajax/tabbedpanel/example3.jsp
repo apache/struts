@@ -7,20 +7,6 @@
     <title>Ajax examples - tabbled panel</title>
 
     <jsp:include page="/ajax/commonInclude.jsp"/>
-    <link rel="stylesheet" type="text/css" href="<s:url value="/struts/tabs.css"/>">
-    <link rel="stylesheet" type="text/css" href="<s:url value="/struts/niftycorners/niftyCorners.css"/>">
-    <link rel="stylesheet" type="text/css" href="<s:url value="/struts/niftycorners/niftyPrint.css"/>" media="print">
-    <script type="text/javascript" src="<s:url value="/struts/niftycorners/nifty.js"/>"></script>
-    <script type="text/javascript">
-        dojo.event.connect(window, "onload", function() {
-            if (!NiftyCheck())
-                return;
-            Rounded("li.tab_selected", "top", "white", "transparent", "border #ffffffS");
-            Rounded("li.tab_unselected", "top", "white", "transparent", "border #ffffffS");
-            //                Rounded("div#tab_header_main li","top","white","transparent","border #ffffffS");
-            // "white" needs to be replaced with the background color
-        });
-    </script>
 </head>
 
 <s:url id="ajaxTest" value="/AjaxTest.action" />

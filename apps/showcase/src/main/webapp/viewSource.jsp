@@ -1,28 +1,15 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 <html>
 <head>
     <title>View Sources</title>
 
     <jsp:include page="/ajax/commonInclude.jsp"/>
-    <link rel="stylesheet" type="text/css" href="<s:url value="/struts/tabs.css"/>">
-    <link rel="stylesheet" type="text/css" href="<s:url value="/struts/niftycorners/niftyCorners.css"/>">
-    <link rel="stylesheet" type="text/css" href="<s:url value="/struts/niftycorners/niftyPrint.css"/>" media="print">
-    <script type="text/javascript" src="<s:url value="/struts/niftycorners/nifty.js"/>"></script>
-    <script type="text/javascript">
-        window.onload = function() {
-            if (!NiftyCheck())
-                return;
-            Rounded("li.tab_selected", "top", "white", "transparent", "border #ffffffS");
-            Rounded("li.tab_unselected", "top", "white", "transparent", "border #ffffffS");
-            //                Rounded("div#tab_header_main li","top","white","transparent","border #ffffffS");
-            // "white" needs to be replaced with the background color
-        }
-    </script>
 </head>
 <body>
 <h1>View Sources</h1>
 
-<s:tabbedPanel id="test" theme="ajax">
+<sx:tabbedpanel id="test">
 	<s:div id="one" label="Page" theme="ajax">
         <h3>${empty page ? "Unknown page" : page}</h3>
 <pre>
@@ -47,7 +34,7 @@ ${row.count}: <s:property/></s:iterator>
 </pre>
     </s:div>
     
-</s:tabbedPanel>
+</sx:tabbedpanel>
 
 </body>
 </html>

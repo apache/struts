@@ -10,14 +10,14 @@ Note: The Ajax tags are experimental. These examples have only been tested under
 </p>
 
 <ul>
-    <li><a href="bind">Bind tag</a></li>
-    <li><a href="autocompleter">Autocompleter combobox tag</a></li>
-    <li><a href="remotebutton">Remote button tag</a></li>
-    <li><a href="remotediv">Remote div tag</a></li>
-    <li><a href="remotelink">Remote link tag</a></li>
-    <li><a href="tabbedpanel">Tabbed panel</a></li>
-    <li><a href="remoteforms">Remote forms</a></li>
-    <li><a href="widgets">Widgets </a> (may not work in all browsers!) 
+    <li><a href="bind/index.jsp">Bind tag</a></li>
+    <li><a href="autocompleter/index.jsp">Autocompleter combobox tag</a></li>
+    <li><a href="remotebutton/index.jsp">Remote button tag</a></li>
+    <li><a href="remotediv/index.jsp">Remote div tag</a></li>
+    <li><a href="remotelink/index.jsp">Remote link tag</a></li>
+    <li><a href="tabbedpanel/index.jsp">Tabbed panel</a></li>
+    <li><a href="remoteforms/index.jsp">Remote forms</a></li>
+    <li><a href="widgets/index.jsp">Widgets </a> (may not work in all browsers!) 
         see the <a href="http://www.dojotoolkit.org">dojo website</a> for more information</li>
 </ul>
 </body>

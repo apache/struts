@@ -30,23 +30,6 @@
 <head>
     <title><decorator:title default="Struts Showcase"/></title>
     <link href="<s:url value='/styles/main.css' encode='false' includeParams='none'/>" rel="stylesheet" type="text/css" media="all"/>
-    <link href="<s:url value='/struts/niftycorners/niftyCorners.css' encode='false' includeParams='none'/>" rel="stylesheet" type="text/css"/>
-    <link href="<s:url value='/struts/niftycorners/niftyPrint.css' encode='false' includeParams='none'/>" rel="stylesheet" type="text/css" media="print"/>
-
-    <script language="JavaScript" type="text/javascript" src="<s:url value='/struts/niftycorners/nifty.js' encode='false' includeParams='none'/>"></script>
-
-    <script language="JavaScript" type="text/javascript">
-
-        window.onload=function(){
-            if(!NiftyCheck())
-                return;
-            Rounded("blockquote","tr bl","#ECF1F9","#CDFFAA","smooth border #88D84F");
-            Rounded("div#outer-header", "all", "white", "#818EBD", "smooth border #434F7C");
-            Rounded("div#footer", "all", "white", "#818EBD", "smooth border #434F7C");
-        }
-
-    </script>
-
     <decorator:head/>
 </head>
 

@@ -13599,7 +13599,7 @@ self.addKeyHandler(item[1]?item[1]:item[0].charAt(0),item[2]==undefined?self.KEY
 });
 }});
 dojo.provide("struts.widget.Bind");
-dojo.widget.defineWidget("struts.widget.Bind",dojo.widget.HtmlWidget,{widgetType:"Bind",executeScripts:false,targets:"",targetsArray:null,href:"",handler:"",loadingText:"Loading...",errorText:"",showError:true,showLoading:true,listenTopics:"",notifyTopics:"",notifyTopicsArray:null,beforeNotifyTopics:"",beforeNotifyTopicsArray:null,afterNotifyTopics:"",afterNotifyTopicsArray:null,errorNotifyTopics:"",errorNotifyTopicsArray:null,formId:"",formFilter:"",formNode:null,events:"",indicator:"",parseContent:true,highlightColor:"",highlightDuration:2000,validate:false,ajaxAfterValidation:false,postCreate:function(){
+dojo.widget.defineWidget("struts.widget.Bind",dojo.widget.HtmlWidget,{widgetType:"Bind",executeScripts:false,targets:"",targetsArray:null,href:"",handler:"",loadingText:"Loading...",errorText:"",showError:true,showLoading:false,listenTopics:"",notifyTopics:"",notifyTopicsArray:null,beforeNotifyTopics:"",beforeNotifyTopicsArray:null,afterNotifyTopics:"",afterNotifyTopicsArray:null,errorNotifyTopics:"",errorNotifyTopicsArray:null,formId:"",formFilter:"",formNode:null,events:"",indicator:"",parseContent:true,highlightColor:"",highlightDuration:2000,validate:false,ajaxAfterValidation:false,postCreate:function(){
 var self=this;
 if(!dojo.string.isBlank(this.listenTopics)){
 this.log("Listening to "+this.listenTopics+" to refresh");
@@ -13868,7 +13868,7 @@ this.isRunning=false;
 dj_global.clearInterval(this.timer);
 }});
 dojo.provide("struts.widget.BindDiv");
-dojo.widget.defineWidget("struts.widget.BindDiv",dojo.widget.ContentPane,{widgetType:"BindDiv",href:"",extractContent:false,parseContent:false,cacheContent:false,refreshOnShow:false,executeScripts:false,preload:true,updateFreq:0,delay:0,autoStart:true,timer:null,loadingText:"Loading...",showLoading:true,errorText:"",showError:true,listenTopics:"",notifyTopics:"",notifyTopicsArray:null,stopTimerListenTopics:"",startTimerListenTopics:"",beforeNotifyTopics:"",beforeNotifyTopicsArray:null,afterNotifyTopics:"",afterNotifyTopicsArray:null,errorNotifyTopics:"",errorNotifyTopicsArray:null,beforeLoading:"",afterLoading:"",formId:"",formFilter:"",indicator:"",parseContent:true,highlightColor:"",highlightDuration:2000,onDownloadStart:function(_ba9){
+dojo.widget.defineWidget("struts.widget.BindDiv",dojo.widget.ContentPane,{widgetType:"BindDiv",href:"",extractContent:false,parseContent:false,cacheContent:false,refreshOnShow:false,executeScripts:false,preload:true,updateFreq:0,delay:0,autoStart:true,timer:null,loadingText:"Loading...",showLoading:false,errorText:"",showError:true,listenTopics:"",notifyTopics:"",notifyTopicsArray:null,stopTimerListenTopics:"",startTimerListenTopics:"",beforeNotifyTopics:"",beforeNotifyTopicsArray:null,afterNotifyTopics:"",afterNotifyTopicsArray:null,errorNotifyTopics:"",errorNotifyTopicsArray:null,beforeLoading:"",afterLoading:"",formId:"",formFilter:"",indicator:"",parseContent:true,highlightColor:"",highlightDuration:2000,onDownloadStart:function(_ba9){
 if(!this.showLoading){
 _ba9.returnValue=false;
 return;

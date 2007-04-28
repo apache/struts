@@ -172,7 +172,7 @@ public class Bind extends AbstractValidateBean {
         this.indicator = indicator;
     }
 
-    @StrutsTagAttribute(description="Show loading text on targets", type="Boolean", defaultValue="true")
+    @StrutsTagAttribute(description="Show loading text on targets", type="Boolean", defaultValue="false")
     public void setShowLoadingText(String showLoadingText) {
         this.showLoadingText = showLoadingText;
     }

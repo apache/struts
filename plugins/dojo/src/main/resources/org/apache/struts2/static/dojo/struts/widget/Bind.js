@@ -18,7 +18,7 @@ dojo.widget.defineWidget(
   loadingText : "Loading...",
   errorText : "",
   showError : true,
-  showLoading : true,
+  showLoading : false,
 
   //pub/sub events
   listenTopics : "",

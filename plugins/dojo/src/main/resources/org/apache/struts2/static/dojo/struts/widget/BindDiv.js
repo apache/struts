@@ -26,7 +26,7 @@ dojo.widget.defineWidget(
 
     //messages
     loadingText : "Loading...",
-    showLoading : true,
+    showLoading : false,
     errorText : "",
     showError : true,
 

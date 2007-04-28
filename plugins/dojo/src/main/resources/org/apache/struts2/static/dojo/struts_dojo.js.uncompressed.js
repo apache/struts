@@ -22070,7 +22070,7 @@ dojo.widget.defineWidget(
   loadingText : "Loading...",
   errorText : "",
   showError : true,
-  showLoading : true,
+  showLoading : false,
 
   //pub/sub events
   listenTopics : "",
@@ -22504,7 +22504,7 @@ dojo.widget.defineWidget(
 
     //messages
     loadingText : "Loading...",
-    showLoading : true,
+    showLoading : false,
     errorText : "",
     showError : true,
 

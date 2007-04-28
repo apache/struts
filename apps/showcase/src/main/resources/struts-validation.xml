@@ -20,6 +20,7 @@
         </action>
 
         <action name="quizAjax" class="org.apache.struts2.showcase.validation.QuizAction">
+            <interceptor-ref name="jsonValidationWorkflowStack"/>
             <result name="input">quiz-ajax.jsp</result>
             <result>quiz-success.jsp</result>
         </action>

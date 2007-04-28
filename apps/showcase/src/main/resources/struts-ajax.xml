@@ -74,5 +74,9 @@
        <action name="AutocompleterExample" class="org.apache.struts2.showcase.ajax.AutocompleterExampleAction">
            <result type="freemarker">/ajax/options.ftl</result>
        </action>
+       <action name="quizAjax" class="org.apache.struts2.showcase.validation.QuizAction">
+            <interceptor-ref name="jsonValidationWorkflowStack"/>
+            <result>/validation/quiz-success.jsp</result>
+       </action>
     </package>
 </struts>

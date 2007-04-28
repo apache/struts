@@ -7,8 +7,8 @@
           baseRelativePath: "<@s.url value='${parameters.baseRelativePath}' includeParams='none' encode='false' />",
           baseScriptUri: "<@s.url value='${parameters.baseRelativePath}' includeParams='none' encode='false' />",
         <#else>
-          baseRelativePath: "<@s.url value='/struts/dojo/' includeParams='none' encode='false' />",
-          baseScriptUri: "<@s.url value='/struts/dojo/' includeParams='none' encode='false' />",
+          baseRelativePath: "${base}/struts/dojo/",
+          baseScriptUri: "${base}/struts/dojo/",
         </#if>  
         <#if parameters.locale?if_exists != "">
           locale: "${parameters.locale}",
@@ -40,10 +40,14 @@
         src="<@s.url value='${parameters.baseRelativePath}/${profile}${dojoFile}' includeParams='none' encode='false'  />"></script>
 <#else>
   <script language="JavaScript" type="text/javascript"
-        src="<@s.url value='/struts/dojo/${profile}${dojoFile}' includeParams='none' encode='false'  />"></script>
+        src="${base}/struts/dojo/${profile}${dojoFile}"></script>
 </#if>  
 
 <script language="JavaScript" type="text/javascript"
-        src="<@s.url value='/struts/ajax/dojoRequire.js' includeParams='none' encode='false'  />"></script>
+        src="${base}/struts/ajax/dojoRequire.js"></script>
 <script language="JavaScript" type="text/javascript"
-        src="<@s.url value='/struts/CommonFunctions.js' includeParams='none' encode='false'/>"></script>
+        src="${base}/struts/CommonFunctions.js"></script>
+<link rel="stylesheet" href="${base}/struts/xhtml/styles.css" type="text/css"/>
+<script language="JavaScript" src="${base}/struts/utils.js" type="text/javascript"></script>
+<script language="JavaScript" src="${base}/struts/xhtml/validation.js" type="text/javascript"></script>
+<script language="JavaScript" src="${base}/struts/css_xhtml/validation.js" type="text/javascript"></script>

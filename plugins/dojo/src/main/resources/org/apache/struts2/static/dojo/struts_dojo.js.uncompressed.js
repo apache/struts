@@ -22094,7 +22094,10 @@ dojo.widget.defineWidget(
   
   highlightColor : "",
   highlightDuration : 2000,
-
+  
+  validate : false,
+  ajaxAfterValidation : false,
+  
   postCreate : function() {
     var self = this;
 
@@ -22201,38 +22204,57 @@ dojo.widget.defineWidget(
       });
     }
   },
-
+  
   bindHandler : function(type, data, e) {
-     //hide indicator
-     dojo.html.hide(this.indicator);
-
-     //publish topics
-     this.notify(data, type, e);
-
-     if(type == "load") {
-       if(this.executeScripts) {
-         //update targets content
-         var parsed = this.parse(data);
-         //eval scripts
-         if(parsed.scripts && parsed.scripts.length > 0) {
-           var scripts = "";
-           for(var i = 0; i < parsed.scripts.length; i++){
-             scripts += parsed.scripts[i];
-           }
-           (new Function('_container_', scripts+'; return this;'))(this);
-         }
-         this.setContent(parsed.text);
-       }
-       else {
-         this.setContent(data);
-       }
-       this.highlight();
-     } else {
-       if(this.showError) {
-         var message = dojo.string.isBlank(this.errorText) ? e.message : this.errorText;
-         this.setContent(message);
-       }
-     }
+    //hide indicator
+    dojo.html.hide(this.indicator);
+    
+    //publish topics
+    this.notify(data, type, e);
+    
+    if(type == "load") {
+      if(this.validate) {
+        StrutsUtils.clearValidationErrors(this.formNode);
+        //validation is active for this action
+        var errors = StrutsUtils.getValidationErrors(data);
+        if(errors && errors.fieldErrors) {
+          //validation failed
+          StrutsUtils.showValidationErrors(this.formNode, errors);
+          return;
+        } else {
+          //validation passed
+          if(!this.ajaxAfterValidation && this.formNode) {
+            //regular submit
+            this.formNode.submit();
+            return;
+          }
+        }
+      } 
+      
+      // no validation or validation passed
+      if(this.executeScripts) {
+        //update targets content
+        var parsed = this.parse(data);
+        //eval scripts
+        if(parsed.scripts && parsed.scripts.length > 0) {
+          var scripts = "";
+          for(var i = 0; i < parsed.scripts.length; i++){
+            scripts += parsed.scripts[i];
+          }
+          (new Function('_container_', scripts+'; return this;'))(this);
+        }
+        this.setContent(parsed.text);
+      }
+      else {
+        this.setContent(data);
+      }
+      this.highlight();
+    } else {
+      if(this.showError) {
+        var message = dojo.string.isBlank(this.errorText) ? e.message : this.errorText;
+        this.setContent(message);
+      }
+    }
   },
 
   notify : function(data, type, e) {
@@ -22306,8 +22328,9 @@ dojo.widget.defineWidget(
           }
 
           //if there is a parent form, and it has a "onsubmit"
-          //execute it, validation is usually there
-          if(this.formNode && this.formNode.onsubmit != null) {
+          //execute it, validation is usually there, except is validation == true
+          //on which case it is ajax validation, instead of client side
+          if(!this.validate && this.formNode && this.formNode.onsubmit != null) {
             var makeRequest = this.formNode.onsubmit.call(evt);
             if(makeRequest != null && !makeRequest) {
               this.log("Request canceled by 'onsubmit' of the form");
@@ -22320,9 +22343,14 @@ dojo.widget.defineWidget(
 		  if(this.showLoading) {
             this.setContent(this.loadingText);
           }
+          
+          var tmpHref = this.href;
+          if(!this.ajaxAfterValidation) {
+            tmpHref = tmpHref + (tmpHref.indexOf("?") > -1 ? "&" : "?") + "validateOnly=true";
+          }  
 
           dojo.io.bind({
-            url: this.href,
+            url: tmpHref,
             useCache: false,
             preventCache: true,
             formNode: self.formNode,

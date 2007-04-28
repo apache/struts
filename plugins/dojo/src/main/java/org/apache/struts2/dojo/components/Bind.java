@@ -55,7 +55,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 @StrutsTag(name="bind", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.BindTag", description="Attach event listeners to elements to make AJAX calls")
 @StrutsTagSkipInheritance
-public class Bind extends AbstractRemoteCallUIBean {
+public class Bind extends AbstractValidateBean {
     public static final String TEMPLATE = "bind-close";
     public static final String OPEN_TEMPLATE = "bind";
 
@@ -78,11 +78,11 @@ public class Bind extends AbstractRemoteCallUIBean {
     public void evaluateExtraParams() {
         super.evaluateExtraParams();
 
-        if(targets != null)
+        if (targets != null)
             addParameter("targets", findString(targets));
-        if(sources != null)
+        if (sources != null)
             addParameter("sources", findString(sources));
-        if(events != null)
+        if (events != null)
             addParameter("events", findString(events));
     }
     
@@ -112,6 +112,8 @@ public class Bind extends AbstractRemoteCallUIBean {
         return "ajax";
     }
 
+    //these attributes are overwritten here just for the TLD generation
+    
     @StrutsTagAttribute(description="Topic that will trigger the remote call")
     public void setListenTopics(String listenTopics) {
         this.listenTopics = listenTopics;
@@ -220,5 +222,17 @@ public class Bind extends AbstractRemoteCallUIBean {
         defaultValue = "2000", type="Integer")
     public void setHighlightDuration(String highlightDuration) {
         this.highlightDuration = highlightDuration;
+    }
+    
+    @StrutsTagAttribute(description = "Perform Ajax calidation. 'ajaxValidation' interceptor must be applied to action", type="Boolean", 
+        defaultValue = "false")
+    public void setValidate(String validate) {
+        this.validate = validate;
+    }
+    
+    @StrutsTagAttribute(description = "Make an asynchronous request if validation succeeds. Only valid is 'validate' is 'true'", type="Boolean", 
+        defaultValue = "false")
+    public void setAjaxAfterValidation(String ajaxAfterValidation) {
+        this.ajaxAfterValidation = ajaxAfterValidation;
     }
 }

@@ -17,10 +17,10 @@
  */
 package org.apache.struts2.dojo.views.jsp.ui;
 
-import org.apache.struts2.dojo.components.RemoteUICallBean;
+import org.apache.struts2.dojo.components.RemoteBean;
 import org.apache.struts2.views.jsp.ui.AbstractClosingTag;
 
-public abstract class AbstractRemoteCallUITag extends AbstractClosingTag {
+public abstract class AbstractRemoteTag extends AbstractClosingTag {
 
     protected String href;
     protected String listenTopics;
@@ -43,7 +43,7 @@ public abstract class AbstractRemoteCallUITag extends AbstractClosingTag {
     protected void populateParams() {
         super.populateParams();
 
-        RemoteUICallBean remote = (RemoteUICallBean) component;
+        RemoteBean remote = (RemoteBean) component;
         remote.setHref(href);
         remote.setListenTopics(listenTopics);
         remote.setLoadingText(loadingText);

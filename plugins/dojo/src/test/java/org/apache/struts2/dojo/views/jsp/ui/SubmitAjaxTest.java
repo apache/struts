@@ -46,6 +46,8 @@ public class SubmitAjaxTest extends AbstractUITagTest {
         tag.setErrorNotifyTopics("m");
         tag.setHighlightColor("n");
         tag.setHighlightDuration("o");
+        tag.setValidate("true");
+        tag.setAjaxAfterValidation("true");
         tag.doStartTag();
         tag.doEndTag();
 
@@ -73,6 +75,7 @@ public class SubmitAjaxTest extends AbstractUITagTest {
         tag.setNotifyTopics("k");
         tag.setIndicator("l");
         tag.setErrorNotifyTopics("m");
+        tag.setValidate("true");
         tag.doStartTag();
         tag.doEndTag();
 
@@ -101,6 +104,7 @@ public class SubmitAjaxTest extends AbstractUITagTest {
         tag.setNotifyTopics("k");
         tag.setIndicator("l");
         tag.setErrorNotifyTopics("m");
+        tag.setValidate("true");
         tag.doStartTag();
         tag.doEndTag();
 

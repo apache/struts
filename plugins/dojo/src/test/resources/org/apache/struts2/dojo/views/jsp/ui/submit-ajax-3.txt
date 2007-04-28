@@ -5,6 +5,8 @@
   alt="i"
   src="j"
   value="Submit"
+  validate="true"
+  ajaxAfterValidation="false"
   id="a"
   label="i"
   href="b"

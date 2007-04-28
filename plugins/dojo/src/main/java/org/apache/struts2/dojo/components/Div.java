@@ -59,7 +59,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  */
 @StrutsTag(name="div", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.DivTag", description="Render HTML div providing content from remote call via AJAX")
-public class Div extends AbstractRemoteCallUIBean {
+public class Div extends AbstractRemoteBean {
 
     public static final String TEMPLATE = "div";
     public static final String TEMPLATE_CLOSE = "div-close";

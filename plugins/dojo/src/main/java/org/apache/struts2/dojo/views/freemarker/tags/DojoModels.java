@@ -18,7 +18,6 @@ public class DojoModels {
     protected DivModel div;
     protected AnchorModel a;
     protected SubmitModel submit;
-    protected FormModel form;
     protected BindModel bind;
     
     private ValueStack stack;
@@ -47,14 +46,6 @@ public class DojoModels {
         return dateTimePicker;
     }
     
-    public FormModel getForm() {
-        if (form == null) {
-            form = new FormModel(stack, req, res);
-        }
-
-        return form;
-    }
-    
     public AutocompleterModel getAutocompleter() {
         if (autocompleter == null) {
             autocompleter = new AutocompleterModel(stack, req, res);
@@ -63,7 +54,7 @@ public class DojoModels {
         return autocompleter;
     }
     
-    public TabbedPanelModel getTabbedpanelModel() {
+    public TabbedPanelModel getTabbedpanel() {
         if (tabbedPanel == null) {
             tabbedPanel = new TabbedPanelModel(stack, req, res);
         }

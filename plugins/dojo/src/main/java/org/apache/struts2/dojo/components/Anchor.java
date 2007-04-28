@@ -23,6 +23,7 @@ package org.apache.struts2.dojo.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts2.components.Form;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.annotations.StrutsTagSkipInheritance;
@@ -90,7 +91,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 @StrutsTag(name="a", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.AnchorTag", description="Renders an HTML anchor element that when clicked calls a URL via remote XMLHttpRequest and updates " +
                 "its targets content")
-public class Anchor extends AbstractRemoteCallUIBean {
+public class Anchor extends AbstractValidateBean {
     public static final String OPEN_TEMPLATE = "a";
     public static final String TEMPLATE = "a-close";
     public static final String COMPONENT_NAME = Anchor.class.getName();
@@ -112,7 +113,7 @@ public class Anchor extends AbstractRemoteCallUIBean {
     public void evaluateExtraParams() {
         super.evaluateExtraParams();
 
-        if(targets != null)
+        if (targets != null)
             addParameter("targets", findString(targets));
     }
     

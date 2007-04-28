@@ -1,5 +1,7 @@
 <a
  dojoType="struts:BindAnchor"
+ validate="true"
+ ajaxAfterValidation="true"
  id="mylink"
  href="a"
  loadingText="d"

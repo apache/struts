@@ -30,7 +30,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * AbstractRemoteCallUIBean is superclass for all components dealing with remote
  * calls.
  */
-public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements RemoteUICallBean {
+public abstract class AbstractRemoteBean extends ClosingUIBean implements RemoteBean {
 
     protected String href;
     protected String errorText;
@@ -50,7 +50,7 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
     protected String highlightColor;
     protected String highlightDuration;
     
-    public AbstractRemoteCallUIBean(ValueStack stack, HttpServletRequest request,
+    public AbstractRemoteBean(ValueStack stack, HttpServletRequest request,
             HttpServletResponse response) {
         super(stack, request, response);
     }

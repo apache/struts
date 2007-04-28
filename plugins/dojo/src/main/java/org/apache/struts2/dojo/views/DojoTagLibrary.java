@@ -12,7 +12,6 @@ import org.apache.struts2.dojo.views.velocity.components.AutocompleterDirective;
 import org.apache.struts2.dojo.views.velocity.components.BindDirective;
 import org.apache.struts2.dojo.views.velocity.components.DateTimePickerDirective;
 import org.apache.struts2.dojo.views.velocity.components.DivDirective;
-import org.apache.struts2.dojo.views.velocity.components.FormDirective;
 import org.apache.struts2.dojo.views.velocity.components.HeadDirective;
 import org.apache.struts2.dojo.views.velocity.components.SubmitDirective;
 import org.apache.struts2.dojo.views.velocity.components.TabbedPanelDirective;
@@ -40,7 +39,6 @@ public class DojoTagLibrary implements TagLibrary {
             TabbedPanelDirective.class,
             TreeDirective.class,
             TreeNodeDirective.class,
-            FormDirective.class,
             HeadDirective.class,
             BindDirective.class
         };

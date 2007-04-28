@@ -28,11 +28,11 @@ import org.apache.struts2.dojo.components.Bind;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
-public class BindTag extends AbstractRemoteCallUITag {
+public class BindTag extends AbstractValidateTag {
     protected String targets;
     protected String sources;
     protected String events;
-
+    
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Bind(stack, req, res);
     }

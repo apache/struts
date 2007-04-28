@@ -21,7 +21,7 @@
 package org.apache.struts2.dojo.components;
 
 
-public interface RemoteUICallBean {
+public interface RemoteBean {
 
     void setListenTopics(String topics);
 

@@ -28,7 +28,7 @@ import org.apache.struts2.dojo.components.Div;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
-public class DivTag extends AbstractRemoteCallUITag {
+public class DivTag extends AbstractRemoteTag {
 
     private static final long serialVersionUID = 5309231035916461758L;
 

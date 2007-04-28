@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.components.Form;
 import org.apache.struts2.components.FormButton;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
@@ -93,7 +94,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  */
 @StrutsTag(name="submit", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.SubmitTag", description="Render a submit button")
-public class Submit extends FormButton implements RemoteUICallBean {
+public class Submit extends FormButton implements RemoteBean {
     
     private static final Log LOG = LogFactory.getLog(Submit.class);
     
@@ -118,7 +119,9 @@ public class Submit extends FormButton implements RemoteUICallBean {
     protected String errorNotifyTopics;
     protected String highlightColor;
     protected String highlightDuration;
-
+    protected String validate;
+    protected String ajaxAfterValidation;
+    
     public Submit(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
@@ -180,6 +183,19 @@ public class Submit extends FormButton implements RemoteUICallBean {
             addParameter("highlightColor", findString(highlightColor));
         if (highlightDuration != null)
             addParameter("highlightDuration", findString(highlightDuration));
+        
+        Boolean validateValue = false;
+        if (validate != null) {
+            validateValue = (Boolean) findValue(validate, Boolean.class);
+            addParameter("validate", validateValue);
+        } 
+        
+        Form form = (Form) findAncestor(Form.class);
+        if (form != null) 
+            addParameter("parentTheme", form.getTheme());
+        
+        if (ajaxAfterValidation != null)
+            addParameter("ajaxAfterValidation", findValue(ajaxAfterValidation, Boolean.class));
     }
 
     @Override
@@ -352,5 +368,17 @@ public class Submit extends FormButton implements RemoteUICallBean {
         defaultValue = "1000")
     public void setHighlightDuration(String highlightDuration) {
         this.highlightDuration = highlightDuration;
+    }
+
+    @StrutsTagAttribute(description = "Perform Ajax calidation. 'ajaxValidation' interceptor must be applied to action", type="Boolean", 
+        defaultValue = "false")
+    public void setValidate(String validate) {
+        this.validate = validate;
+    }
+
+    @StrutsTagAttribute(description = "Make an asynchronous request if validation succeeds. Only valid is 'validate' is 'true'", type="Boolean", 
+        defaultValue = "false")
+    public void setAjaxAfterValidation(String ajaxAfterValidation) {
+        this.ajaxAfterValidation = ajaxAfterValidation;
     }
 }

@@ -26,6 +26,7 @@ public class BindTest extends AbstractUITagTest {
         tag.setEvents("o");
         tag.setHighlightColor("p");
         tag.setHighlightDuration("q");
+        tag.setValidate("true");
         tag.doStartTag();
         tag.doEndTag();
 

@@ -80,11 +80,13 @@ public class JSONValidationInterceptor extends AnnotationValidationInterceptor {
                     response.setStatus(validationFailedStatus);
                 response.getWriter().print(buildResponse(validationAware));
                 return Action.NONE;
-            }
+            } 
         }
 
         String validateOnly = request.getParameter("validateOnly");
         if (validateOnly != null && "true".equals(validateOnly)) {
+            //there were no errors
+            response.getWriter().print("/* {} */");
             return Action.NONE;
         } else {
             return invocation.invoke();

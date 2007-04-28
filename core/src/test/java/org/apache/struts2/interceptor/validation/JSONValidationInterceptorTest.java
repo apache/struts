@@ -104,7 +104,7 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
         String json = stringWriter.toString();
 
         String normalizedActual = TestUtils.normalize(json, true);
-        assertEquals("", normalizedActual);
+        assertEquals("/*{}*/", normalizedActual);
         assertFalse(invocation.isExecuted());
     }
 

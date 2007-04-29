@@ -53,17 +53,25 @@ struts.widget.ComboBoxDataProvider = function(combobox, node){
              }
            } else {
              //try to find a match
+             var tmpArrData = [];
              for(var key in data){
                //does it start with the field name? take it
                if(dojo.string.startsWith(key, this.cbox.name)) {
                  arrData = data[key];
                  break;
+               } else {
+                 //if nathing else is found, we will use values in this 
+                 //object as the data
+                 tmpArrData.push([data[key], key]);
                }
                //grab the first array found, we will use it if nothing else
                //is found
-               if(!arrData && dojo.lang.isArray(data[key])) {
+               if(!arrData && dojo.lang.isArray(data[key]) && !dojo.lang.isString(data[key])) {
                  arrData = data[key];
                }
+             }
+             if(!arrData) {
+               arrData = tmpArrData;
              }
            }
            

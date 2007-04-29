@@ -69,24 +69,42 @@ struts.widget.ComboBoxDataProvider = function(/*Array*/ dataPairs, /*Number*/ li
         if(!this.firstRequest) {
           this.cbox.notify.apply(this.cbox, [data, type, evt]);
         }
+        var arrData = null;
+        var dataByName = data[this.cbox.dataFieldName];
         if(!dojo.lang.isArray(data)) {
            //if there is a dataFieldName, take it
-           if(!dojo.string.isBlank(this.cbox.dataFieldName) && data[this.cbox.dataFieldName] != null) {
-             arrData = data[this.cbox.dataFieldName];
+           if(dataByName) {
+             if(dojo.lang.isArray(dataByName)) {
+                //ok, it is an array
+                arrData = dataByName;
+             } else if(dojo.lang.isObject(dataByName)) {
+                //it is an object, treat it like a map
+                arrData = [];
+                for(var key in dataByName){
+                    arrData.push([dataByName[key], key]);
+                }
+             }
            } else {
              //try to find a match
-             var arrData = null;
+             var tmpArrData = [];
              for(var key in data){
                //does it start with the field name? take it
-               if(key == this.cbox.name) {
+               if(dojo.string.startsWith(key, this.cbox.name)) {
                  arrData = data[key];
                  break;
+               } else {
+                 //if nathing else is found, we will use values in this 
+                 //object as the data
+                 tmpArrData.push([data[key], key]);
                }
                //grab the first array found, we will use it if nothing else
                //is found
-               if(!arrData && dojo.lang.isArray(data[key])) {
-                 arrData = data = data[key];
+               if(!arrData && dojo.lang.isArray(data[key]) && !dojo.lang.isString(data[key])) {
+                 arrData = data[key];
                }
+             }
+             if(!arrData) {
+               arrData = tmpArrData;
              }
            }
            

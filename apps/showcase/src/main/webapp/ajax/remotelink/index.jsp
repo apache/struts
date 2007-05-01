@@ -14,30 +14,28 @@
 	 dojo.byId(widget.targetsArray[0]).innerHTML = "Done";
    }
 
-   dojo.event.topic.subscribe("/before", function(data, type, e){
+   dojo.event.topic.subscribe("/before", function(event, widget){
       alert('inside a topic event. before request');
-      //data : source element id
-      //type : "before"
-      //e    : request object
+      //event: set event.cancel = true, to cancel request
+      //widget: widget that published the topic
    });
    
-   dojo.event.topic.subscribe("/after", function(data, type, e){
+   dojo.event.topic.subscribe("/after", function(data, request, widget){
       alert('inside a topic event. after request');
-      //data : text returned
-      //type : "load"
-      //e    : undefined
+      //data : text returned from request
+      //request: XMLHttpRequest object
+      //widget: widget that published the topic
    });
    
-   dojo.event.topic.subscribe("/error", function(data, type, e){
+   dojo.event.topic.subscribe("/error", function(error, request, widget){
       alert('inside a topic event. on error');
-      //data : error object
-      //type : "error"
-      //e    : undefined
+      //error : error object (error.message has the error message)
+      //request: XMLHttpRequest object
+      //widget: widget that published the topic
    });
    
    dojo.event.topic.subscribe("/topics", function(data, type, e){
       alert('inside a topic event. type='+type);
-      debugger;
       //data : text returned
       //type : "before", "load", "error"
       //e    : request object

@@ -52,6 +52,57 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;/form>
  * </pre>
  * <!-- START SNIPPET: example2 -->
+ * 
+ * <!-- START SNIPPET: example4 -->
+ * <p>Using beforeNotifyTopics:</p>
+ * <pre>
+ * &lt;script type="text/javascript"&gt;
+ * dojo.event.topic.subscribe("/before", function(event, widget){
+ *     alert('inside a topic event. before request');
+ *     //event: set event.cancel = true, to cancel request
+ *     //widget: widget that published the topic
+ * });
+ * &lt;/script&gt;         
+ * 
+ * &lt;input type="button" id="button"&gt; 
+ * &lt;sx:bind id="ex1" href="%{#ajaxTest}" beforeNotifyTopics="/before" sources="button" events="onclick"/&gt; 
+ * </pre> 
+ * <!-- END SNIPPET: example4 -->
+ * 
+ * <!-- START SNIPPET: example5 -->
+ * <p>Using afterNotifyTopics and highlight:</p>
+ * <pre>
+ * &lt;script type="text/javascript"&gt;
+ * dojo.event.topic.subscribe("/after", function(data, request, widget){
+ *     alert('inside a topic event. after request');
+ *     //data : text returned from request(the html)
+ *     //request: XMLHttpRequest object
+ *     //widget: widget that published the topic
+ * });
+ * &lt;/script&gt;        
+ * 
+ * &lt;input type="button" id="button"&gt;
+ * &lt;sx:bind id="ex1" href="%{#ajaxTest}" highlightColor="red" afterNotifyTopics="/after" sources="button" events="onclick"/&gt;
+ * </pre> 
+ * <!-- END SNIPPET: example5 -->
+ * 
+ * <!-- START SNIPPET: example6 -->
+ * <p>Using errorNotifyTopics and insicator:</p>
+ * <pre>
+ * &lt;script type="text/javascript"&gt;
+ * dojo.event.topic.subscribe("/error", function(error, request, widget){
+ *     alert('inside a topic event. on error');
+ *     //error : error object (error.message has the error message)
+ *     //request: XMLHttpRequest object
+ *     //widget: widget that published the topic
+ * });
+ * &lt;/script&gt;         
+ * 
+ * &lt;input type="button" id="button"&gt;
+ * &lt;img id="ind1" src="${pageContext.request.contextPath}/images/indicator.gif" style="display:none"/&gt;
+ * &lt;sx:bind href="%{#ajaxTest}" indicator="ind1" errorNotifyTopics="/error" sources="button" events="onclick"/&gt;
+ * </pre> 
+ * <!-- END SNIPPET: example6 -->
  */
 @StrutsTag(name="bind", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.BindTag", description="Attach event listeners to elements to make AJAX calls")
 @StrutsTagSkipInheritance

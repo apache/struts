@@ -73,21 +73,52 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example3 -->
  * 
  * <!-- START SNIPPET: example4 -->
- * <p>Using topics:</p>
+ * <p>Using beforeNotifyTopics:</p>
  * <pre>
- * <script type="text/javascript">
- * dojo.event.topic.subscribe("/before", function(data, type, e){
- *      alert('inside a topic event. before request');
- *      //data : source element id
- *      //type : "before"
- *      //e    : request object
- *      //set e.cancel = true to cancel request
+ * &lt;script type="text/javascript"&gt;
+ * dojo.event.topic.subscribe("/before", function(event, widget){
+ *     alert('inside a topic event. before request');
+ *     //event: set event.cancel = true, to cancel request
+ *     //widget: widget that published the topic
  * });
- * </script>         
+ * &lt;/script&gt;         
  * 
  * &lt;sx:a beforeNotifyTopics="/before"&gt;Publish topics&lt;/sx:a&gt;
  * </pre> 
  * <!-- END SNIPPET: example4 -->
+ * 
+ * <!-- START SNIPPET: example5 -->
+ * <p>Using afterNotifyTopics and highlight:</p>
+ * <pre>
+ * &lt;script type="text/javascript"&gt;
+ * dojo.event.topic.subscribe("/after", function(data, request, widget){
+ *     alert('inside a topic event. after request');
+ *     //data : text returned from request(the html)
+ *     //request: XMLHttpRequest object
+ *     //widget: widget that published the topic
+ * });
+ * &lt;/script&gt;        
+ * 
+ * &lt;sx:a afterNotifyTopics="/after" highlightColor="red" href="%{#ajaxTest}"&gt;Publish topics&lt;/sx:a&gt;
+ * </pre> 
+ * <!-- END SNIPPET: example5 -->
+ * 
+ * <!-- START SNIPPET: example6 -->
+ * <p>Using errorNotifyTopics and indicator:</p>
+ * <pre>
+ * &lt;script type="text/javascript"&gt;
+ * dojo.event.topic.subscribe("/error", function(error, request, widget){
+ *     alert('inside a topic event. on error');
+ *     //error : error object (error.message has the error message)
+ *     //request: XMLHttpRequest object
+ *     //widget: widget that published the topic
+ * });
+ * &lt;/script&gt;         
+ * 
+ * &lt;img id="ind1" src="${pageContext.request.contextPath}/images/indicator.gif" style="display:none"/&gt;
+ * &lt;sx:a errorNotifyTopics="/error" indicator="ind1" href="%{#ajaxTest}"&gt;Publish topics&lt;/sx:a&gt;
+ * </pre> 
+ * <!-- END SNIPPET: example6 -->
  */
 @StrutsTag(name="a", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.AnchorTag", description="Renders an HTML anchor element that when clicked calls a URL via remote XMLHttpRequest and updates " +
                 "its targets content")

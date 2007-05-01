@@ -103,7 +103,7 @@ dojo.widget.defineWidget(
         var self = this;
         dojo.lang.forEach(this.notifyTopicsArray, function(topic) {
           try {
-            dojo.event.topic.publish(topic, data, type, e);
+            dojo.event.topic.publish(topic, data, type, e, self);
           } catch(ex) {
             self.log(ex);
           }
@@ -114,28 +114,30 @@ dojo.widget.defineWidget(
       var topicsArray = null;
       switch(type) {
         case "before":
-          topicsArray = this.beforeNotifyTopicsArray;
+          this.notifyTo(this.beforeNotifyTopicsArray, null, e);
           break;
         case "load":
-          topicsArray = this.afterNotifyTopicsArray;
+          this.notifyTo(this.afterNotifyTopicsArray, data, e);
           break;
         case "error":
-          topicsArray = this.errorNotifyTopicsArray;
+          this.notifyTo(this.errorNotifyTopicsArray, data, e);
           break;
       }
-    
-      this.notifyTo(topicsArray, data, type, e);
     },
     
-    notifyTo : function(topicsArray, data, type, e) {
+    notifyTo : function(topicsArray, data, e) {
       var self = this;
       if(topicsArray) {
         dojo.lang.forEach(topicsArray, function(topic) {
-          try {
-            dojo.event.topic.publish(topic, data, type, e);
-          } catch(ex){
-            self.log(ex);
+        try {
+          if(data) {
+            dojo.event.topic.publish(topic, data, e, self);
+          } else {
+            dojo.event.topic.publish(topic, e, self);
           }
+        } catch(ex){
+          self.log(ex);
+        }
         });
       }
     },

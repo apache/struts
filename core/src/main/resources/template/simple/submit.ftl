@@ -9,6 +9,9 @@
 <#if parameters.nameValue?exists>
  value="<@s.property value="parameters.nameValue"/>"<#rt/>
 </#if>
+<#if parameters.disabled?default(false)>
+ disabled="disabled"<#rt/>
+</#if>
 <#if parameters.cssClass?exists>
  class="${parameters.cssClass?html}"<#rt/>
 </#if>
@@ -39,6 +42,9 @@
 </#if>
 <#if parameters.nameValue?exists>
  value="<@s.property value="parameters.nameValue"/>"<#rt/>
+</#if>
+<#if parameters.disabled?default(false)>
+ disabled="disabled"<#rt/>
 </#if>
 <#if parameters.cssClass?exists>
  class="${parameters.cssClass?html}"<#rt/>

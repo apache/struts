@@ -20,15 +20,11 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.jsp.tagext.BodyContent;
-
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 
-import com.mockobjects.servlet.MockBodyContent;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -63,6 +59,7 @@ public class SubmitTest extends AbstractUITagTest {
         tag.setAlign("left");
         tag.setName("myname");
         tag.setValue("%{foo}");
+        tag.setDisabled("true");
 
         tag.doStartTag();
         tag.doEndTag();
@@ -79,13 +76,14 @@ public class SubmitTest extends AbstractUITagTest {
         tag.setType("button");
         tag.setName("myname");
         tag.setValue("%{foo}");
+        tag.setDisabled("true");
 
         tag.doStartTag();
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("Submit-3.txt"));
     }
-    
+
     public void testButtonSimpleWithBody() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");
@@ -132,6 +130,7 @@ public class SubmitTest extends AbstractUITagTest {
         tag.setType("image");
         tag.setName("myname");
         tag.setValue("%{foo}");
+        tag.setDisabled("true");
 
         tag.doStartTag();
         tag.doEndTag();

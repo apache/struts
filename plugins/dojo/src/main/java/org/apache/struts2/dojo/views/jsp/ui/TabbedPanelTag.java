@@ -40,7 +40,9 @@ public class TabbedPanelTag extends AbstractClosingTag {
     private String closeButton;
     private String doLayout;
     private String templateCssPath;
-
+    private String beforeSelectTabNotifyTopics;
+    private String afterSelectTabNotifyTopics;
+    
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new TabbedPanel(stack, req, res);
     }
@@ -53,6 +55,8 @@ public class TabbedPanelTag extends AbstractClosingTag {
         tabbedPanel.setDoLayout(doLayout);
         tabbedPanel.setLabelposition(labelPosition);
         tabbedPanel.setTemplateCssPath(templateCssPath);
+        tabbedPanel.setBeforeSelectTabNotifyTopics(beforeSelectTabNotifyTopics);
+        tabbedPanel.setAfterSelectTabNotifyTopics(afterSelectTabNotifyTopics);
     }
 
     public void setSelectedTab(String selectedTab) {
@@ -69,5 +73,13 @@ public class TabbedPanelTag extends AbstractClosingTag {
 
     public void setTemplateCssPath(String templateCssPath) {
         this.templateCssPath = templateCssPath;
+    }
+
+    public void setBeforeSelectTabNotifyTopics(String beforeSelectTabNotifyTopics) {
+        this.beforeSelectTabNotifyTopics = beforeSelectTabNotifyTopics;
+    }
+
+    public void setAfterSelectTabNotifyTopics(String afterSelectTabNotifyTopics) {
+        this.afterSelectTabNotifyTopics = afterSelectTabNotifyTopics;
     }
 }

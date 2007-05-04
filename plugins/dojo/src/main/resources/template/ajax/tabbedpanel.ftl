@@ -1,4 +1,4 @@
-<div dojoType="TabContainer"
+<div dojoType="struts:StrutsTabContainer"
   <#if parameters.cssStyle?if_exists != "">
     style="${parameters.cssStyle?html}"<#rt/>
   </#if>
@@ -25,6 +25,12 @@
   </#if>
   <#if parameters.templateCssPath?exists>
 	templateCssPath="<@s.url value='${parameters.templateCssPath}' encode="false" includeParams='none'/>"
+  </#if>
+  <#if parameters.beforeSelectTabNotifyTopics?if_exists != "">
+    beforeSelectTabNotifyTopics="${parameters.beforeSelectTabNotifyTopics?html}"<#rt/>
+  </#if>
+  <#if parameters.afterSelectTabNotifyTopics?if_exists != "">
+    afterSelectTabNotifyTopics="${parameters.afterSelectTabNotifyTopics?html}"<#rt/>
   </#if>
   <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
   <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />

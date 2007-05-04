@@ -41,23 +41,43 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- START SNIPPET: exdesc -->
  * The following is an example of a tabbedpanel and panel tag utilizing local and remote content.<p/>
  * <!-- END SNIPPET: exdesc -->
- * <pre>
+ * 
  * <!-- START SNIPPET: example -->
- * &lt;s:tabbedpanel id=&quot;test&quot; &gt;
- *    &lt;s:div id=&quot;one&quot; label=&quot;one&quot; theme=&quot;ajax&quot; labelposition=&quot;top&quot; &gt;
+ * <pre>
+ * &lt;s:tabbedpanel id="test" &gt;
+ *    &lt;s:div id="one" label="one" theme="ajax" labelposition="top" &gt;
  *        This is the first pane&lt;br/&gt;
  *        &lt;s:form&gt;
- *            &lt;s:textfield name=&quot;tt&quot; label=&quot;Test Text&quot;/&gt;  &lt;br/&gt;
- *            &lt;s:textfield name=&quot;tt2&quot; label=&quot;Test Text2&quot;/&gt;
+ *            &lt;s:textfield name="tt" label="Test Text"/&gt;  &lt;br/&gt;
+ *            &lt;s:textfield name="tt2" label="Test Text2"/&gt;
  *        &lt;/s:form&gt;
  *    &lt;/s:div&gt;
- *    &lt;s:div id=&quot;three&quot; label=&quot;remote&quot; theme=&quot;ajax&quot; href=&quot;/AjaxTest.action&quot; &gt;
+ *    &lt;s:div id="three" label="remote" theme="ajax" href="/AjaxTest.action" &gt;
  *        This is the remote tab
  *    &lt;/s:div&gt;
  * &lt;/s:tabbedpanel&gt;
- * <!-- END SNIPPET: example -->
  * </pre>
- *
+ * <!-- END SNIPPET: example -->
+ * 
+ * <!-- START SNIPPET: example2 -->
+ * <p>Use notify topics to prevent a tab from being selected</p>
+ * <pre>
+ * &lt;script type="text/javascript"&gt;
+ * dojo.event.topic.subscribe("/beforeSelect", function(tab, cancel){
+ *     cancel.cancel = true;
+ * });
+ * &lt;/script&gt;
+ * 
+ * &lt;s:tabbedpanel id="test" beforeSelectTabNotifyTopics="/beforeSelect"&gt;
+ *    &lt;s:div id="three" label="remote" theme="ajax" href="/AjaxTest.action" &gt;
+ *        One Tab
+ *    &lt;/s:div&gt;
+ *    &lt;s:div id="three" label="remote" theme="ajax" href="/AjaxTest.action" &gt;
+ *        Another tab
+ *    &lt;/s:div&gt;
+ * &lt;/s:tabbedpanel&gt;
+ * </pre>
+ * <!-- END SNIPPET: example2 -->
  */
 @StrutsTag(name="tabbedpanel", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.TabbedPanelTag", description="Render a tabbedPanel widget.")
 public class TabbedPanel extends ClosingUIBean {
@@ -69,7 +89,9 @@ public class TabbedPanel extends ClosingUIBean {
     protected String closeButton;
     protected String doLayout ;
     protected String templateCssPath;
-
+    protected String beforeSelectTabNotifyTopics;
+    protected String afterSelectTabNotifyTopics;
+    
     public TabbedPanel(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
@@ -78,12 +100,12 @@ public class TabbedPanel extends ClosingUIBean {
     protected void evaluateExtraParams() {
         super.evaluateExtraParams();
 
-        if(selectedTab != null)
+        if (selectedTab != null)
             addParameter("selectedTab", findString(selectedTab));
-        if(closeButton != null)
+        if (closeButton != null)
             addParameter("closeButton", findString(closeButton));
         addParameter("doLayout", doLayout != null ? findValue(doLayout, Boolean.class) : Boolean.FALSE);
-        if(labelPosition != null) {
+        if (labelPosition != null) {
             //dojo has some weird name for label positions
             if(labelPosition.equalsIgnoreCase("left"))
                labelPosition = "left-h";
@@ -92,8 +114,13 @@ public class TabbedPanel extends ClosingUIBean {
             addParameter("labelPosition", null);
             addParameter("labelPosition", labelPosition);
         }
-        if(templateCssPath != null)
+        if (templateCssPath != null)
             addParameter("templateCssPath", findString(templateCssPath));
+        if (beforeSelectTabNotifyTopics!= null)
+            addParameter("beforeSelectTabNotifyTopics", findString(beforeSelectTabNotifyTopics));
+        if (afterSelectTabNotifyTopics!= null)
+            addParameter("afterSelectTabNotifyTopics", findString(afterSelectTabNotifyTopics));
+        
     }
 
     @Override
@@ -144,5 +171,19 @@ public class TabbedPanel extends ClosingUIBean {
     @StrutsTagAttribute(description="Template css path")
     public void setTemplateCssPath(String templateCssPath) {
         this.templateCssPath = templateCssPath;
+    }
+
+
+    @StrutsTagAttribute(description="Comma separated list of topics to be published when a tab is clicked on (before it is selected)" +
+    		"The tab widget will be passed as the first argument to the topic. The event can be cancelled setting to 'true' the 'cancel' property " +
+    		"of the second parameter passed to the topics.")
+    public void setBeforeSelectTabNotifyTopics(String selectedTabNotifyTopics) {
+        this.beforeSelectTabNotifyTopics = selectedTabNotifyTopics;
+    }
+
+    @StrutsTagAttribute(description="Comma separated list of topics to be published when a tab is clicked on (after it is selected)." +
+        "The tab widget will be passed as the first argument to the topic.")
+    public void setAfterSelectTabNotifyTopics(String afterSelectTabNotifyTopics) {
+        this.afterSelectTabNotifyTopics = afterSelectTabNotifyTopics;
     }
 }

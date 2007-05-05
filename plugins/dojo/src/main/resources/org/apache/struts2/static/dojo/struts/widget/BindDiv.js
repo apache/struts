@@ -59,6 +59,9 @@ dojo.widget.defineWidget(
     highlightColor : "",
     highlightDuration : 2000,
     
+    //only used when inside a tabbedpanel
+    disabled : false,
+    
     onDownloadStart : function(event) {
       if(!this.showLoading) {
         event.returnValue = false;

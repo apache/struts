@@ -63,7 +63,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <p>Use notify topics to prevent a tab from being selected</p>
  * <pre>
  * &lt;script type="text/javascript"&gt;
- * dojo.event.topic.subscribe("/beforeSelect", function(tab, cancel){
+ * dojo.event.topic.subscribe("/beforeSelect", function(tabContainer, tab, cancel){
  *     cancel.cancel = true;
  * });
  * &lt;/script&gt;
@@ -91,6 +91,7 @@ public class TabbedPanel extends ClosingUIBean {
     protected String templateCssPath;
     protected String beforeSelectTabNotifyTopics;
     protected String afterSelectTabNotifyTopics;
+    protected String disabledTabCssClass; 
     
     public TabbedPanel(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -120,6 +121,8 @@ public class TabbedPanel extends ClosingUIBean {
             addParameter("beforeSelectTabNotifyTopics", findString(beforeSelectTabNotifyTopics));
         if (afterSelectTabNotifyTopics!= null)
             addParameter("afterSelectTabNotifyTopics", findString(afterSelectTabNotifyTopics));
+        if (disabledTabCssClass!= null)
+            addParameter("disabledTabCssClass", findString(disabledTabCssClass));
         
     }
 
@@ -175,15 +178,21 @@ public class TabbedPanel extends ClosingUIBean {
 
 
     @StrutsTagAttribute(description="Comma separated list of topics to be published when a tab is clicked on (before it is selected)" +
-    		"The tab widget will be passed as the first argument to the topic. The event can be cancelled setting to 'true' the 'cancel' property " +
-    		"of the second parameter passed to the topics.")
+    		"The tab container widget will be passed as the first argument to the topic. The second parameter is the tab widget." +
+    		"The event can be cancelled setting to 'true' the 'cancel' property " +
+    		"of the third parameter passed to the topics.")
     public void setBeforeSelectTabNotifyTopics(String selectedTabNotifyTopics) {
         this.beforeSelectTabNotifyTopics = selectedTabNotifyTopics;
     }
 
     @StrutsTagAttribute(description="Comma separated list of topics to be published when a tab is clicked on (after it is selected)." +
-        "The tab widget will be passed as the first argument to the topic.")
+        "The tab container widget will be passed as the first argument to the topic. The second parameter is the tab widget.")
     public void setAfterSelectTabNotifyTopics(String afterSelectTabNotifyTopics) {
         this.afterSelectTabNotifyTopics = afterSelectTabNotifyTopics;
+    }
+
+    @StrutsTagAttribute(description="Css class to be applied to the tab button of disabled tabs", defaultValue="strutsDisabledTab")
+    public void setDisabledTabCssClass(String disabledTabCssClass) {
+        this.disabledTabCssClass = disabledTabCssClass;
     }
 }

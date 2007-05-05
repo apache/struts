@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="${base}/struts/TabbedPanel.css" type="text/css"/>
 <div dojoType="struts:StrutsTabContainer"
   <#if parameters.cssStyle?if_exists != "">
     style="${parameters.cssStyle?html}"<#rt/>
@@ -31,6 +32,9 @@
   </#if>
   <#if parameters.afterSelectTabNotifyTopics?if_exists != "">
     afterSelectTabNotifyTopics="${parameters.afterSelectTabNotifyTopics?html}"<#rt/>
+  </#if>
+  <#if parameters.disabledTabCssClass?if_exists != "">
+    disabledTabCssClass="${parameters.disabledTabCssClass?html}"<#rt/>
   </#if>
   <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
   <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />

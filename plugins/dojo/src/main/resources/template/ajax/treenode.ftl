@@ -1,4 +1,4 @@
-<div dojoType="TreeNode" 
+<div dojoType="struts:StrutsTreeNode" 
 	<#if parameters.childIconSrc?exists>
 	childIconSrc="<@s.url value='${parameters.childIconSrc}' includeParams='none' encode='false' />"
 	</#if>

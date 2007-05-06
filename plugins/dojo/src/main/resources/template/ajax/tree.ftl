@@ -21,7 +21,13 @@
   >
  </struts:StrutsTreeSelector> 
  </#if>
-<div dojoType="Tree"   
+<div dojoType="struts:StrutsTree"   
+    <#if parameters.href?if_exists != "">
+    href="${parameters.href}"
+    </#if>
+    <#if parameters.errorNotifyTopics?if_exists != "">
+    errorNotifyTopics="${parameters.errorNotifyTopics?html}"<#rt/>
+    </#if>
 	<#if parameters.blankIconSrc?exists>
 	gridIconSrcT="<@s.url value='${parameters.blankIconSrc}' encode="false" includeParams='none'/>"
 	</#if>
@@ -77,15 +83,12 @@
       || parameters.collapsedNotifyTopics?exists> 
     selector="treeSelector_${parameters.id?default("")}"
     </#if>
-    <#if parameters.treeCollapsedTopic?exists>
-    publishCollapsedTopic="${parameters.treeCollapsedTopic?html}"
-    </#if>
     <#if parameters.toggle?exists>
     toggle="${parameters.toggle?html}"
     </#if>
     >
     <#if parameters.label?exists>
-    <div dojoType="TreeNode" title="${parameters.label?html}"
+    <div dojoType="struts:StrutsTreeNode" title="${parameters.label?html}"
     <#if parameters.nodeIdProperty?exists>
     id="${stack.findValue(parameters.nodeIdProperty)}"
     <#else>

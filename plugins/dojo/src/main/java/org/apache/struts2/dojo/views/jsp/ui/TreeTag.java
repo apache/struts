@@ -36,32 +36,33 @@ public class TreeTag extends AbstractClosingTag {
 
     private static final long serialVersionUID = 2735218501058548013L;
 
-    private String toggle;
-    private String selectedNotifyTopics;
-    private String expandedNotifyTopics;
-    private String collapsedNotifyTopics;
-    private String rootNode;
-    private String childCollectionProperty;
-    private String nodeTitleProperty;
-    private String nodeIdProperty;
-    private String showRootGrid;
+    protected String toggle;
+    protected String selectedNotifyTopics;
+    protected String expandedNotifyTopics;
+    protected String collapsedNotifyTopics;
+    protected String rootNode;
+    protected String childCollectionProperty;
+    protected String nodeTitleProperty;
+    protected String nodeIdProperty;
+    protected String showRootGrid;
 
-    private String showGrid;
-    private String blankIconSrc;
-    private String gridIconSrcL;
-    private String gridIconSrcV;
-    private String gridIconSrcP;
-    private String gridIconSrcC;
-    private String gridIconSrcX;
-    private String gridIconSrcY;
-    private String expandIconSrcPlus;
-    private String expandIconSrcMinus;
-    private String iconWidth;
-    private String iconHeight;
-    private String toggleDuration;
-    private String templateCssPath;
-
-
+    protected String showGrid;
+    protected String blankIconSrc;
+    protected String gridIconSrcL;
+    protected String gridIconSrcV;
+    protected String gridIconSrcP;
+    protected String gridIconSrcC;
+    protected String gridIconSrcX;
+    protected String gridIconSrcY;
+    protected String expandIconSrcPlus;
+    protected String expandIconSrcMinus;
+    protected String iconWidth;
+    protected String iconHeight;
+    protected String toggleDuration;
+    protected String templateCssPath;
+    protected String href;
+    protected String errorNotifyTopics;
+    
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Tree(stack,req,res);
     }
@@ -70,53 +71,32 @@ public class TreeTag extends AbstractClosingTag {
         super.populateParams();
 
         Tree tree = (Tree) component;
-        if (childCollectionProperty != null)
-            tree.setChildCollectionProperty(childCollectionProperty);
-        if (nodeIdProperty != null)
-            tree.setNodeIdProperty(nodeIdProperty);
-        if (nodeTitleProperty != null)
-            tree.setNodeTitleProperty(nodeTitleProperty);
-        if (rootNode != null)
-            tree.setRootNode(rootNode);
-        if (toggle != null)
-            tree.setToggle(toggle);
-        if (selectedNotifyTopics != null)
-            tree.setSelectedNotifyTopics(selectedNotifyTopics);
-        if (expandedNotifyTopics != null)
-            tree.setExpandedNotifyTopics(expandedNotifyTopics);
-        if (collapsedNotifyTopics != null)
-            tree.setCollapsedNotifyTopics(collapsedNotifyTopics);
-        if (showRootGrid != null)
-            tree.setShowRootGrid(showRootGrid);
+        tree.setChildCollectionProperty(childCollectionProperty);
+        tree.setNodeIdProperty(nodeIdProperty);
+        tree.setNodeTitleProperty(nodeTitleProperty);
+        tree.setRootNode(rootNode);
+        tree.setToggle(toggle);
+        tree.setSelectedNotifyTopics(selectedNotifyTopics);
+        tree.setExpandedNotifyTopics(expandedNotifyTopics);
+        tree.setCollapsedNotifyTopics(collapsedNotifyTopics);
+        tree.setShowRootGrid(showRootGrid);
 
-        if (showGrid != null)
-            tree.setShowGrid(showGrid);
-        if (blankIconSrc != null)
-            tree.setBlankIconSrc(blankIconSrc);
-        if (gridIconSrcL != null)
-            tree.setGridIconSrcL(gridIconSrcC);
-        if (gridIconSrcV != null)
-            tree.setGridIconSrcV(gridIconSrcV);
-        if (gridIconSrcP != null)
-            tree.setGridIconSrcP(gridIconSrcP);
-        if (gridIconSrcC != null)
-            tree.setGridIconSrcC(gridIconSrcC);
-        if (gridIconSrcX != null)
-            tree.setGridIconSrcX(gridIconSrcX);
-        if (gridIconSrcY != null)
-            tree.setGridIconSrcY(gridIconSrcY);
-        if (expandIconSrcPlus != null)
-            tree.setExpandIconSrcPlus(expandIconSrcPlus);
-        if (expandIconSrcMinus != null)
-            tree.setExpandIconSrcMinus(expandIconSrcMinus);
-        if (iconWidth != null)
-            tree.setIconWidth(iconWidth);
-        if (iconHeight != null)
-            tree.setIconHeight(iconHeight);
-        if (toggleDuration != null)
-            tree.setToggleDuration(toggleDuration);
-        if (templateCssPath != null)
-            tree.setTemplateCssPath(templateCssPath);
+        tree.setShowGrid(showGrid);
+        tree.setBlankIconSrc(blankIconSrc);
+        tree.setGridIconSrcL(gridIconSrcC);
+        tree.setGridIconSrcV(gridIconSrcV);
+        tree.setGridIconSrcP(gridIconSrcP);
+        tree.setGridIconSrcC(gridIconSrcC);
+        tree.setGridIconSrcX(gridIconSrcX);
+        tree.setGridIconSrcY(gridIconSrcY);
+        tree.setExpandIconSrcPlus(expandIconSrcPlus);
+        tree.setExpandIconSrcMinus(expandIconSrcMinus);
+        tree.setIconWidth(iconWidth);
+        tree.setIconHeight(iconHeight);
+        tree.setToggleDuration(toggleDuration);
+        tree.setTemplateCssPath(templateCssPath);
+        tree.setHref(href);
+        tree.setErrorNotifyTopics(errorNotifyTopics);
     }
 
     public String getToggle() {
@@ -304,6 +284,14 @@ public class TreeTag extends AbstractClosingTag {
 
     public void setSelectedNotifyTopics(String selectedNotifyTopics) {
         this.selectedNotifyTopics = selectedNotifyTopics;
+    }
+
+    public void setHref(String href) {
+        this.href = href;
+    }
+
+    public void setErrorNotifyTopics(String errorNotifyTopics) {
+        this.errorNotifyTopics = errorNotifyTopics;
     }
 }
 

@@ -6,36 +6,36 @@
         // dojo.hostenv.writeIncludes();
         -->
  </script>
-<div dojoType="Tree"   
+<div dojoType="struts:StrutsTree"   
 		templateCssPath="/struts/tree.css"
 	showGrid="false"
 	showRootGrid="false"
     id="rootId"
     toggle="fade"
     >
-    <div dojoType="TreeNode" title="Root" id="rootId_root"
+    <div dojoType="struts:StrutsTreeNode" title="Root" id="rootId_root"
     >
-<div dojoType="TreeNode" 
+<div dojoType="struts:StrutsTreeNode" 
 	    id="child1"
     title="Child 1">
 </div>
-<div dojoType="TreeNode" 
+<div dojoType="struts:StrutsTreeNode" 
 	    id="child2"
     title="Child 2">
-<div dojoType="TreeNode" 
+<div dojoType="struts:StrutsTreeNode" 
 	    id="gChild1"
     title="Grand Child 1">
 </div>
-<div dojoType="TreeNode" 
+<div dojoType="struts:StrutsTreeNode" 
 	    id="gChild2"
     title="Grand Child 2">
 </div>
-<div dojoType="TreeNode" 
+<div dojoType="struts:StrutsTreeNode" 
 	    id="gChild3"
     title="Grand Child 3">
 </div>
 </div>
-<div dojoType="TreeNode" 
+<div dojoType="struts:StrutsTreeNode" 
 	    id="child3"
     title="Child 4">
 </div>

@@ -6,58 +6,58 @@
         // dojo.hostenv.writeIncludes();
         -->
  </script>
-<div dojoType="Tree"   
+<div dojoType="struts:StrutsTree"   
 	    id="myTree"
     toggle="fade"
     >
     
-<div dojoType="TreeNode" title="Root" id="1">
+<div dojoType="struts:StrutsTreeNode" title="Root" id="1">
     
-<div dojoType="TreeNode" title="Java" id="2">
+<div dojoType="struts:StrutsTreeNode" title="Java" id="2">
     
-<div dojoType="TreeNode" title="Web Frameworks" id="3">
+<div dojoType="struts:StrutsTreeNode" title="Web Frameworks" id="3">
     
-<div dojoType="TreeNode" title="Struts" id="4">
+<div dojoType="struts:StrutsTreeNode" title="Struts" id="4">
 </div>
     
-<div dojoType="TreeNode" title="Stripes" id="7">
+<div dojoType="struts:StrutsTreeNode" title="Stripes" id="7">
 </div>
     
-<div dojoType="TreeNode" title="Rife" id="8">
-</div>
-</div>
-    
-<div dojoType="TreeNode" title="Persistence" id="9">
-    
-<div dojoType="TreeNode" title="iBatis" id="10">
-</div>
-    
-<div dojoType="TreeNode" title="Hibernate" id="11">
-</div>
-    
-<div dojoType="TreeNode" title="JDO" id="12">
-</div>
-    
-<div dojoType="TreeNode" title="JDBC" id="13">
-</div>
+<div dojoType="struts:StrutsTreeNode" title="Rife" id="8">
 </div>
 </div>
     
-<div dojoType="TreeNode" title="JavaScript" id="14">
+<div dojoType="struts:StrutsTreeNode" title="Persistence" id="9">
     
-<div dojoType="TreeNode" title="Dojo" id="15">
+<div dojoType="struts:StrutsTreeNode" title="iBatis" id="10">
 </div>
     
-<div dojoType="TreeNode" title="Prototype" id="16">
+<div dojoType="struts:StrutsTreeNode" title="Hibernate" id="11">
 </div>
     
-<div dojoType="TreeNode" title="Scriptaculous" id="17">
+<div dojoType="struts:StrutsTreeNode" title="JDO" id="12">
 </div>
     
-<div dojoType="TreeNode" title="OpenRico" id="18">
+<div dojoType="struts:StrutsTreeNode" title="JDBC" id="13">
+</div>
+</div>
 </div>
     
-<div dojoType="TreeNode" title="DWR" id="19">
+<div dojoType="struts:StrutsTreeNode" title="JavaScript" id="14">
+    
+<div dojoType="struts:StrutsTreeNode" title="Dojo" id="15">
+</div>
+    
+<div dojoType="struts:StrutsTreeNode" title="Prototype" id="16">
+</div>
+    
+<div dojoType="struts:StrutsTreeNode" title="Scriptaculous" id="17">
+</div>
+    
+<div dojoType="struts:StrutsTreeNode" title="OpenRico" id="18">
+</div>
+    
+<div dojoType="struts:StrutsTreeNode" title="DWR" id="19">
 </div>
 </div>
 </div>

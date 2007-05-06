@@ -1,4 +1,4 @@
-<div dojoType="TreeNode" title="${stack.findValue(parameters.nodeTitleProperty)}" id="${stack.findValue(parameters.nodeIdProperty)}">
+<div dojoType="struts:StrutsTreeNode" title="${stack.findValue(parameters.nodeTitleProperty)}" id="${stack.findValue(parameters.nodeIdProperty)}">
 <#list stack.findValue(parameters.childCollectionProperty.toString()) as child>
     ${stack.push(child)}
     <#include "/${parameters.templateDir}/ajax/treenode-include.ftl" />

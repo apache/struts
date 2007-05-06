@@ -37,18 +37,15 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * Renders a tree widget with AJAX support.<p/>
  *
- * The "id "attribute is normally specified, such that it could be looked up using
- * javascript if necessary. The "id" attribute is required if the "treeSelectedTopic"
- * attribute is going to be used.<p/>
+ * The "id "attribute is normally specified(recommended), such that it could be looked up using
+ * javascript if necessary. The "id" attribute is required if the "selectedNotifyTopic" or the 
+ * "href" attributes are going to be used.<p/>
  *
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/> <b>Examples</b>
- *
+ * <!-- START SNIPPET: example1 -->
  * <pre>
- * <!-- START SNIPPET: example -->
- *
- * &lt-- statically --&gt;
+ * <p>Tree loaded statically</p>
  * &lt;s:tree id="..." label="..."&gt;
  *    &lt;s:treenode id="..." label="..." /&gt;
  *    &lt;s:treenode id="..." label="..."&gt;
@@ -57,18 +54,62 @@ import com.opensymphony.xwork2.util.ValueStack;
  *    &;lt;/s:treenode&gt;
  *    &lt;s:treenode id="..." label="..." /&gt;
  * &lt;/s:tree&gt;
- *
- * &lt;-- dynamically --&gt;
+ * </pre>
+ * <!-- END SNIPPET: example1 -->
+ * 
+ * <!-- END SNIPPET: example2 -->
+ * <p>Tree loaded dynamically</p>
+ * <pre>
  * &lt;s:tree
  *          id="..."
  *          rootNode="..."
  *          nodeIdProperty="..."
  *          nodeTitleProperty="..."
  *          childCollectionProperty="..." /&gt;
- *
- * <!-- END SNIPPET: example -->
  * </pre>
- *
+ * <!-- END SNIPPET: example2 -->
+ * 
+ * <!-- END SNIPPET: example3 -->
+ * <p>Tree loaded dynamically using AJAX</p>
+ * <pre>
+ * &lt;s:url id="nodesUrl" namespace="/nodecorate" action="getNodes" /&gt;
+ * &lt;div style="float:left; margin-right: 50px;"&gt;
+ *     &lt;sx:tree id="tree" href="%{#nodesUrl}" /&gt;
+ * &lt;/div&gt;
+ * </pre>
+ * 
+ * <p>On this example the url specified on the "href" attibute will be called to load
+ * the elements on the root. The response is expected to be a JSON array of objects like:
+ * </p>
+ * <pre>
+ * [
+ *      {
+ *           label: "Node 1",
+ *           hasChildren: false,
+ *           id: "Node1"
+ *      },
+ *      {
+ *           label: "Node 2",
+ *           hasChildren: true,
+ *           id: "Node2"
+ *      },
+ * ]
+ * </pre>
+ * 
+ * <p>"label" is the text that will be displayed for the node. "hasChildren" marks the node has
+ * having children or not (if true, a plus icon will be assigned to the node so it can be
+ * expanded). The "id" attribute will be used to load the children of the node, when the node
+ * is expanded. When a node is expanded a request will be made to the url in the "href" attribute
+ * and the node's "id" will be passed in the parameter "nodeId".</p>
+ * 
+ * <p>The children collection for a node will be loaded only once, to reload the children of a 
+ * node, use the "reload()" function of the treenode widget. To reload the children nodes of "Node1"
+ * from the example above use the following javascript:
+ * 
+ * <pre>
+ * dojo.widget.byId("Node1").reload();
+ * </pre> 
+ * <!-- END SNIPPET: example3 -->
  */
 @StrutsTag(name="tree", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.TreeTag", description="Render a tree widget.")
 public class Tree extends ClosingUIBean {
@@ -76,31 +117,33 @@ public class Tree extends ClosingUIBean {
     private static final String TEMPLATE = "tree-close";
     private static final String OPEN_TEMPLATE = "tree";
 
-    private String toggle = "fade";
-    private String selectedNotifyTopics;
-    private String expandedNotifyTopics;
-    private String collapsedNotifyTopics;
+    protected String toggle;
+    protected String selectedNotifyTopics;
+    protected String expandedNotifyTopics;
+    protected String collapsedNotifyTopics;
     protected String rootNodeAttr;
     protected String childCollectionProperty;
     protected String nodeTitleProperty;
     protected String nodeIdProperty;
-    private String showRootGrid;
+    protected String showRootGrid;
 
-    private String showGrid;
-    private String blankIconSrc;
-    private String gridIconSrcL;
-    private String gridIconSrcV;
-    private String gridIconSrcP;
-    private String gridIconSrcC;
-    private String gridIconSrcX;
-    private String gridIconSrcY;
-    private String expandIconSrcPlus;
-    private String expandIconSrcMinus;
-    private String iconWidth;
-    private String iconHeight;
-    private String toggleDuration;
-    private String templateCssPath;
-
+    protected String showGrid;
+    protected String blankIconSrc;
+    protected String gridIconSrcL;
+    protected String gridIconSrcV;
+    protected String gridIconSrcP;
+    protected String gridIconSrcC;
+    protected String gridIconSrcX;
+    protected String gridIconSrcY;
+    protected String expandIconSrcPlus;
+    protected String expandIconSrcMinus;
+    protected String iconWidth;
+    protected String iconHeight;
+    protected String toggleDuration;
+    protected String templateCssPath;
+    protected String href;
+    protected String errorNotifyTopics;
+    
     public Tree(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
@@ -108,12 +151,12 @@ public class Tree extends ClosingUIBean {
     public boolean start(Writer writer) {
         boolean result = super.start(writer);
 
-        if (this.label == null) {
+        if (this.label == null && (href == null)) {
             if ((rootNodeAttr == null)
                     || (childCollectionProperty == null)
                     || (nodeTitleProperty == null)
                     || (nodeIdProperty == null)) {
-                fieldError("label","The TreeTag requires either a value for 'label' or ALL of 'rootNode', " +
+                fieldError("label","The TreeTag requires either a value for 'label' or 'href' or ALL of 'rootNode', " +
                         "'childCollectionProperty', 'nodeTitleProperty', and 'nodeIdProperty'", null);
             }
         }
@@ -125,6 +168,8 @@ public class Tree extends ClosingUIBean {
 
         if (toggle != null) {
             addParameter("toggle", findString(toggle));
+        } else {
+            addParameter("toggle", "fade");
         }
 
         if (selectedNotifyTopics != null) {
@@ -212,6 +257,11 @@ public class Tree extends ClosingUIBean {
         if (templateCssPath != null) {
             addParameter("templateCssPath", findString(templateCssPath));
         }
+        if (href != null) 
+            addParameter("href", findString(href));
+        if (errorNotifyTopics != null)
+            addParameter("errorNotifyTopics", findString(errorNotifyTopics));
+       
     }
 
     @Override
@@ -468,6 +518,18 @@ public class Tree extends ClosingUIBean {
                 " is selected. An object with a 'node' property will be passed as parameter to the topics.")
     public void setSelectedNotifyTopics(String selectedNotifyTopics) {
         this.selectedNotifyTopics = selectedNotifyTopics;
+    }
+
+    @StrutsTagAttribute(description="Url used to load the list of children nodes for an specific node, whose id will be " +
+    		"passed as a parameter named 'nodeId' (empty for root)")
+    public void setHref(String href) {
+        this.href = href;
+    }
+    
+    @StrutsTagAttribute(description="Comma delimmited list of topics that will published after the request(if the request fails)." +
+    		"Only valid if 'href' is set")
+    public void setErrorNotifyTopics(String errorNotifyTopics) {
+        this.errorNotifyTopics = errorNotifyTopics;
     }
 }
 

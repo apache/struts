@@ -7,6 +7,8 @@ dojo.kwCompoundRequire({
              "struts.widget.StrutsDatePicker",
              "struts.widget.BindEvent",
              "struts.widget.StrutsTreeSelector",
-             "struts.widget.StrutsTabContainer"]
+             "struts.widget.StrutsTabContainer",
+             "struts.widget.StrutsTreeNode",
+             "struts.widget.StrutsTree"]
 });
 dojo.provide("struts.widget.*");

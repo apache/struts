@@ -28831,6 +28831,2089 @@ dojo.widget.defineWidget(
   }
 });
 
+dojo.provide("dojo.widget.TreeNode");
+
+
+
+
+
+dojo.widget.defineWidget("dojo.widget.TreeNode", dojo.widget.HtmlWidget, function() {
+	this.actionsDisabled = [];
+},
+{
+	widgetType: "TreeNode",
+
+	loadStates: {
+		UNCHECKED: "UNCHECKED",
+    	LOADING: "LOADING",
+    	LOADED: "LOADED"
+	},
+
+
+	actions: {
+		MOVE: "MOVE",
+    	REMOVE: "REMOVE",
+    	EDIT: "EDIT",
+    	ADDCHILD: "ADDCHILD"
+	},
+
+	isContainer: true,
+
+	lockLevel: 0, // lock ++ unlock --, so nested locking works fine
+
+
+	templateString: ('<div class="dojoTreeNode"> '
+		+ '<span treeNode="${this.widgetId}" class="dojoTreeNodeLabel" dojoAttachPoint="labelNode"> '
+		+ '		<span dojoAttachPoint="titleNode" dojoAttachEvent="onClick: onTitleClick" class="dojoTreeNodeLabelTitle">${this.title}</span> '
+		+ '</span> '
+		+ '<span class="dojoTreeNodeAfterLabel" dojoAttachPoint="afterLabelNode">${this.afterLabel}</span> '
+		+ '<div dojoAttachPoint="containerNode" style="display:none"></div> '
+		+ '</div>').replace(/(>|<)\s+/g, '$1'), // strip whitespaces between nodes
+
+
+	childIconSrc: "",
+	childIconFolderSrc: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/closed.gif"), // for under root parent item child icon,
+	childIconDocumentSrc: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/document.gif"), // for under root parent item child icon,
+
+	childIcon: null,
+	isTreeNode: true,
+
+	objectId: "", // the widget represents an object
+
+	afterLabel: "",
+	afterLabelNode: null, // node to the left of labelNode
+
+	// an icon left from childIcon: imgs[-2].
+	// if +/- for folders, blank for leaves
+	expandIcon: null,
+
+	title: "",
+	object: "", // node may have object attached, settable from HTML
+	isFolder: false,
+
+	labelNode: null, // the item label
+	titleNode: null, // the item title
+	imgs: null, // an array of icons imgs
+
+	expandLevel: "", // expand to level
+
+	tree: null,
+
+	depth: 0,
+
+	isExpanded: false,
+
+	state: null,  // after creation will change to loadStates: "loaded/loading/unchecked"
+	domNodeInitialized: false,  // domnode is initialized with icons etc
+
+
+	isFirstChild: function() {
+		return this.getParentIndex() == 0 ? true: false;
+	},
+
+	isLastChild: function() {
+		return this.getParentIndex() == this.parent.children.length-1 ? true : false;
+	},
+
+	lock: function(){ return this.tree.lock.apply(this, arguments) },
+	unlock: function(){ return this.tree.unlock.apply(this, arguments) },
+	isLocked: function(){ return this.tree.isLocked.apply(this, arguments) },
+	cleanLock: function(){ return this.tree.cleanLock.apply(this, arguments) },
+
+	actionIsDisabled: function(action) {
+		var _this = this;
+
+		var disabled = false;
+
+		if (this.tree.strictFolders && action == this.actions.ADDCHILD && !this.isFolder) {
+			disabled = true;
+		}
+
+		if (dojo.lang.inArray(_this.actionsDisabled, action)) {
+			disabled = true;
+		}
+
+		if (this.isLocked()) {
+			disabled = true;
+		}
+
+		return disabled;
+	},
+
+	getInfo: function() {
+		// No title here (title may be widget)
+		var info = {
+			widgetId: this.widgetId,
+			objectId: this.objectId,
+			index: this.getParentIndex(),
+			isFolder: this.isFolder
+		}
+
+		return info;
+	},
+
+	initialize: function(args, frag){
+
+		//dojo.debug(this.title)
+
+		this.state = this.loadStates.UNCHECKED;
+
+		for(var i=0; i<this.actionsDisabled.length; i++) {
+			this.actionsDisabled[i] = this.actionsDisabled[i].toUpperCase();
+		}
+
+		this.expandLevel = parseInt(this.expandLevel);
+
+	},
+
+
+	/**
+	 * Change visible node depth by appending/prepending with blankImgs
+	 * @param depthDiff Integer positive => move right, negative => move left
+	*/
+	adjustDepth: function(depthDiff) {
+
+		for(var i=0; i<this.children.length; i++) {
+			this.children[i].adjustDepth(depthDiff);
+		}
+
+		this.depth += depthDiff;
+
+		if (depthDiff>0) {
+			for(var i=0; i<depthDiff; i++) {
+				var img = this.tree.makeBlankImg();
+				this.imgs.unshift(img);
+				//dojo.debugShallow(this.domNode);
+				dojo.html.insertBefore(this.imgs[0], this.domNode.firstChild);
+
+			}
+		}
+		if (depthDiff<0) {
+			for(var i=0; i<-depthDiff;i++) {
+				this.imgs.shift();
+				dojo.html.removeNode(this.domNode.firstChild);
+			}
+		}
+
+	},
+
+
+	markLoading: function() {
+		this._markLoadingSavedIcon = this.expandIcon.src;
+		this.expandIcon.src = this.tree.expandIconSrcLoading;
+	},
+
+	// if icon is "Loading" then
+	unMarkLoading: function() {
+		if (!this._markLoadingSavedIcon) return;
+
+		var im = new Image();
+		im.src = this.tree.expandIconSrcLoading;
+
+		//dojo.debug("Unmark "+this.expandIcon.src+" : "+im.src);
+		if (this.expandIcon.src == im.src) {
+			this.expandIcon.src = this._markLoadingSavedIcon;
+		}
+		this._markLoadingSavedIcon = null;
+	},
+
+
+	setFolder: function() {
+		dojo.event.connect(this.expandIcon, 'onclick', this, 'onTreeClick');
+		this.expandIcon.src = this.isExpanded ? this.tree.expandIconSrcMinus : this.tree.expandIconSrcPlus;
+		this.isFolder = true;
+	},
+
+
+	createDOMNode: function(tree, depth){
+
+		this.tree = tree;
+		this.depth = depth;
+
+
+		//
+		// add the tree icons
+		//
+
+		this.imgs = [];
+
+		for(var i=0; i<this.depth+1; i++){
+
+			var img = this.tree.makeBlankImg();
+
+			this.domNode.insertBefore(img, this.labelNode);
+
+			this.imgs.push(img);
+		}
+
+
+		this.expandIcon = this.imgs[this.imgs.length-1];
+
+
+		this.childIcon = this.tree.makeBlankImg();
+
+		// add to images before the title
+		this.imgs.push(this.childIcon);
+
+		dojo.html.insertBefore(this.childIcon, this.titleNode);
+
+		// node with children(from source html) becomes folder on build stage.
+		if (this.children.length || this.isFolder) {
+			this.setFolder();
+		}
+		else {
+			// leaves are always loaded
+			//dojo.debug("Set "+this+" state to loaded");
+			this.state = this.loadStates.LOADED;
+		}
+
+		dojo.event.connect(this.childIcon, 'onclick', this, 'onIconClick');
+
+
+		//
+		// create the child rows
+		//
+
+
+		for(var i=0; i<this.children.length; i++){
+			this.children[i].parent = this;
+
+			var node = this.children[i].createDOMNode(this.tree, this.depth+1);
+
+			this.containerNode.appendChild(node);
+		}
+
+
+		if (this.children.length) {
+			this.state = this.loadStates.LOADED;
+		}
+
+		this.updateIcons();
+
+		this.domNodeInitialized = true;
+
+		dojo.event.topic.publish(this.tree.eventNames.createDOMNode, { source: this } );
+
+		return this.domNode;
+	},
+
+	onTreeClick: function(e){
+		dojo.event.topic.publish(this.tree.eventNames.treeClick, { source: this, event: e });
+	},
+
+	onIconClick: function(e){
+		dojo.event.topic.publish(this.tree.eventNames.iconClick, { source: this, event: e });
+	},
+
+	onTitleClick: function(e){
+		dojo.event.topic.publish(this.tree.eventNames.titleClick, { source: this, event: e });
+	},
+
+	markSelected: function() {
+		dojo.html.addClass(this.titleNode, 'dojoTreeNodeLabelSelected');
+	},
+
+
+	unMarkSelected: function() {
+		//dojo.debug('unmark')
+		dojo.html.removeClass(this.titleNode, 'dojoTreeNodeLabelSelected');
+	},
+
+	updateExpandIcon: function() {
+		if (this.isFolder){
+			this.expandIcon.src = this.isExpanded ? this.tree.expandIconSrcMinus : this.tree.expandIconSrcPlus;
+		} else {
+			this.expandIcon.src = this.tree.blankIconSrc;
+		}
+	},
+
+	/* set the grid under the expand icon */
+	updateExpandGrid: function() {
+
+		if (this.tree.showGrid){
+			if (this.depth){
+				this.setGridImage(-2, this.isLastChild() ? this.tree.gridIconSrcL : this.tree.gridIconSrcT);
+			}else{
+				if (this.isFirstChild()){
+					this.setGridImage(-2, this.isLastChild() ? this.tree.gridIconSrcX : this.tree.gridIconSrcY);
+				}else{
+					this.setGridImage(-2, this.isLastChild() ? this.tree.gridIconSrcL : this.tree.gridIconSrcT);
+				}
+			}
+		}else{
+			this.setGridImage(-2, this.tree.blankIconSrc);
+		}
+
+	},
+
+	/* set the grid under the child icon */
+	updateChildGrid: function() {
+
+		if ((this.depth || this.tree.showRootGrid) && this.tree.showGrid){
+			this.setGridImage(-1, (this.children.length && this.isExpanded) ? this.tree.gridIconSrcP : this.tree.gridIconSrcC);
+		}else{
+			if (this.tree.showGrid && !this.tree.showRootGrid){
+				this.setGridImage(-1, (this.children.length && this.isExpanded) ? this.tree.gridIconSrcZ : this.tree.blankIconSrc);
+			}else{
+				this.setGridImage(-1, this.tree.blankIconSrc);
+			}
+		}
+
+
+	},
+
+	updateParentGrid: function() {
+		var parent = this.parent;
+
+		//dojo.debug("updateParentGrid "+this);
+
+		for(var i=0; i<this.depth; i++){
+
+			//dojo.debug("Parent "+parent);
+
+			var idx = this.imgs.length-(3+i);
+			var img = (this.tree.showGrid && !parent.isLastChild()) ? this.tree.gridIconSrcV : this.tree.blankIconSrc;
+
+			//dojo.debug("Image "+img+" for "+idx);
+
+			this.setGridImage(idx, img);
+
+			parent = parent.parent;
+		}
+	},
+
+	updateExpandGridColumn: function() {
+		if (!this.tree.showGrid) return;
+
+		var _this = this;
+
+		var icon = this.isLastChild() ? this.tree.blankIconSrc : this.tree.gridIconSrcV;
+
+		dojo.lang.forEach(_this.getDescendants(),
+			function(node) { node.setGridImage(_this.depth, icon); }
+		);
+
+		this.updateExpandGrid();
+	},
+
+	updateIcons: function(){
+
+
+		//dojo.profile.start("updateIcons")
+
+		//dojo.debug("Update icons for "+this)
+		//dojo.debug(this.isFolder)
+
+		this.imgs[0].style.display = this.tree.showRootGrid ? 'inline' : 'none';
+
+
+		//
+		// set the expand icon
+		//
+
+
+		//
+		// set the child icon
+		//
+		this.buildChildIcon();
+
+		this.updateExpandGrid();
+		this.updateChildGrid();
+		this.updateParentGrid();
+
+
+
+		dojo.profile.stop("updateIcons")
+
+	},
+
+	buildChildIcon: function() {
+		// IE (others?) tries to download whatever is on src attribute so setting "url()" like before isnt a good idea
+		// Only results in a 404
+		if(this.childIconSrc){
+			this.childIcon.src = this.childIconSrc;
+		}
+		this.childIcon.style.display = this.childIconSrc ? 'inline' : 'none';
+	},
+
+	setGridImage: function(idx, src){
+
+		if (idx < 0){
+			idx = this.imgs.length + idx;
+		}
+
+		//if (idx >= this.imgs.length-2) return;
+		this.imgs[idx].style.backgroundImage = 'url(' + src + ')';
+	},
+
+
+	updateIconTree: function(){
+		this.tree.updateIconTree.call(this);
+	},
+
+
+
+
+	expand: function(){
+		if (this.isExpanded) return;
+
+		if (this.children.length) {
+			this.showChildren();
+		}
+
+		this.isExpanded = true;
+
+		this.updateExpandIcon();
+
+		dojo.event.topic.publish(this.tree.eventNames.expand, {source: this} );
+	},
+
+	collapse: function(){
+		if (!this.isExpanded) return;
+
+		this.hideChildren();
+		this.isExpanded = false;
+
+		this.updateExpandIcon();
+
+		dojo.event.topic.publish(this.tree.eventNames.collapse, {source: this} );
+	},
+
+	hideChildren: function(){
+		this.tree.toggleObj.hide(
+			this.containerNode, this.toggleDuration, this.explodeSrc, dojo.lang.hitch(this, "onHide")
+		);
+
+		/* if dnd is in action, recalculate changed coordinates */
+		if(dojo.exists(dojo, 'dnd.dragManager.dragObjects') && dojo.dnd.dragManager.dragObjects.length) {
+			dojo.dnd.dragManager.cacheTargetLocations();
+		}
+	},
+
+	showChildren: function(){
+		this.tree.toggleObj.show(
+			this.containerNode, this.toggleDuration, this.explodeSrc, dojo.lang.hitch(this, "onShow")
+		);
+
+		/* if dnd is in action, recalculate changed coordinates */
+		if(dojo.exists(dojo, 'dnd.dragManager.dragObjects') && dojo.dnd.dragManager.dragObjects.length) {
+			dojo.dnd.dragManager.cacheTargetLocations();
+		}
+	},
+
+	addChild: function(){
+		return this.tree.addChild.apply(this, arguments);
+	},
+
+	doAddChild: function(){
+		return this.tree.doAddChild.apply(this, arguments);
+	},
+
+
+
+	/* Edit current node : change properties and update contents */
+	edit: function(props) {
+		dojo.lang.mixin(this, props);
+		if (props.title) {
+			this.titleNode.innerHTML = this.title;
+		}
+
+		if (props.afterLabel) {
+			this.afterLabelNode.innerHTML = this.afterLabel;
+		}
+
+		if (props.childIconSrc) {
+			this.buildChildIcon();
+		}
+
+
+	},
+
+
+	removeNode: function(){ return this.tree.removeNode.apply(this, arguments) },
+	doRemoveNode: function(){ return this.tree.doRemoveNode.apply(this, arguments) },
+
+
+	toString: function() {
+		return "["+this.widgetType+" Tree:"+this.tree+" ID:"+this.widgetId+" Title:"+this.title+"]";
+
+	}
+
+});
+
+
+
+
+
+dojo.provide("struts.widget.StrutsTreeNode");
+
+
+
+dojo.widget.defineWidget(
+  "struts.widget.StrutsTreeNode",
+  dojo.widget.TreeNode, {
+  widgetType : "StrutsTreeNode",
+  
+  loaded : false,
+  
+  expand : function() {
+    if(!this.loaded) {
+      this.reload();
+    }  
+    struts.widget.StrutsTreeNode.superclass.expand.apply(this);
+  },
+  
+  removeChildren : function() {
+    var self = this;
+    var childrenCopy = dojo.lang.toArray(this.children);
+    dojo.lang.forEach(childrenCopy, function(node) {
+      self.removeNode(node);
+    });
+  },
+  
+  reload : function() {
+    var href = this.tree.href;
+    this.loaded = true;
+    
+    if(!dojo.string.isBlank(href)) {
+      //clear children list
+      this.removeChildren();
+      //pass widgetId as parameter
+      var tmpHref = href + (href.indexOf("?") > -1 ? "&" : "?") + "nodeId=" + this.widgetId;
+
+      var self = this;
+      this.markLoading();
+                
+      dojo.io.bind({
+        url: tmpHref,
+        useCache: false,
+        preventCache: true,
+        handler: function(type, data, e) {
+          if(type == 'load') {
+            //data should be an array
+            if(data) {
+              dojo.lang.forEach(data, function(descr) {
+                //create node for eachd descriptor
+                var newNode = dojo.widget.createWidget("struts:StrutsTreeNode",{
+                  title   : descr.label,
+                  isFolder: descr.hasChildren,
+                  widgetId: descr.id   
+                });
+                self.addChild(newNode);
+              }); 
+            }
+          }
+          
+          self.unMarkLoading();    
+        },
+        mimetype: "text/json"
+      });
+    }
+  }
+});
+
+dojo.provide("dojo.json");
+
+
+
+
+dojo.json = {
+	// jsonRegistry: AdapterRegistry a registry of type-based serializers
+	jsonRegistry: new dojo.AdapterRegistry(),
+
+	register: function(	/*String*/		name, 
+						/*function*/	check, 
+						/*function*/	wrap, 
+						/*optional, boolean*/ override){
+		// summary:
+		//		Register a JSON serialization function. JSON serialization
+		//		functions should take one argument and return an object
+		//		suitable for JSON serialization:
+		//			- string
+		//			- number
+		//			- boolean
+		//			- undefined
+		//			- object
+		//				- null
+		//				- Array-like (length property that is a number)
+		//				- Objects with a "json" method will have this method called
+		//				- Any other object will be used as {key:value, ...} pairs
+		//			
+		//		If override is given, it is used as the highest priority JSON
+		//		serialization, otherwise it will be used as the lowest.
+		// name:
+		//		a descriptive type for this serializer
+		// check:
+		//		a unary function that will be passed an object to determine
+		//		whether or not wrap will be used to serialize the object
+		// wrap:
+		//		the serialization function
+		// override:
+		//		optional, determines if the this serialization function will be
+		//		given priority in the test order
+
+		dojo.json.jsonRegistry.register(name, check, wrap, override);
+	},
+
+	evalJson: function(/*String*/ json){
+		// summary:
+		// 		evaluates the passed string-form of a JSON object
+		// json: 
+		//		a string literal of a JSON item, for instance:
+		//			'{ "foo": [ "bar", 1, { "baz": "thud" } ] }'
+		// return:
+		//		the result of the evaluation
+
+		// FIXME: should this accept mozilla's optional second arg?
+		try {
+			return eval("(" + json + ")");
+		}catch(e){
+			dojo.debug(e);
+			return json;
+		}
+	},
+
+	serialize: function(/*Object*/ o){
+		// summary:
+		//		Create a JSON serialization of an object, note that this
+		//		doesn't check for infinite recursion, so don't do that!
+		// o:
+		//		an object to be serialized. Objects may define their own
+		//		serialization via a special "__json__" or "json" function
+		//		property. If a specialized serializer has been defined, it will
+		//		be used as a fallback.
+		// return:
+		//		a String representing the serialized version of the passed
+		//		object
+
+		var objtype = typeof(o);
+		if(objtype == "undefined"){
+			return "undefined";
+		}else if((objtype == "number")||(objtype == "boolean")){
+			return o + "";
+		}else if(o === null){
+			return "null";
+		}
+		if (objtype == "string") { return dojo.string.escapeString(o); }
+		// recurse
+		var me = arguments.callee;
+		// short-circuit for objects that support "json" serialization
+		// if they return "self" then just pass-through...
+		var newObj;
+		if(typeof(o.__json__) == "function"){
+			newObj = o.__json__();
+			if(o !== newObj){
+				return me(newObj);
+			}
+		}
+		if(typeof(o.json) == "function"){
+			newObj = o.json();
+			if (o !== newObj) {
+				return me(newObj);
+			}
+		}
+		// array
+		if(objtype != "function" && typeof(o.length) == "number"){
+			var res = [];
+			for(var i = 0; i < o.length; i++){
+				var val = me(o[i]);
+				if(typeof(val) != "string"){
+					val = "undefined";
+				}
+				res.push(val);
+			}
+			return "[" + res.join(",") + "]";
+		}
+		// look in the registry
+		try {
+			window.o = o;
+			newObj = dojo.json.jsonRegistry.match(o);
+			return me(newObj);
+		}catch(e){
+			// dojo.debug(e);
+		}
+		// it's a function with no adapter, bad
+		if(objtype == "function"){
+			return null;
+		}
+		// generic object code path
+		res = [];
+		for (var k in o){
+			var useKey;
+			if (typeof(k) == "number"){
+				useKey = '"' + k + '"';
+			}else if (typeof(k) == "string"){
+				useKey = dojo.string.escapeString(k);
+			}else{
+				// skip non-string or number keys
+				continue;
+			}
+			val = me(o[k]);
+			if(typeof(val) != "string"){
+				// skip non-serializable values
+				continue;
+			}
+			res.push(useKey + ":" + val);
+		}
+		return "{" + res.join(",") + "}";
+	}
+};
+
+/**
+ * TreeDrag* specialized on managing subtree drags
+ * It selects nodes and visualises what's going on,
+ * but delegates real actions upon tree to the controller
+ *
+ * This code is considered a part of controller
+*/
+
+dojo.provide("dojo.dnd.TreeDragAndDrop");
+
+
+
+
+
+
+
+dojo.dnd.TreeDragSource = function(node, syncController, type, treeNode){
+	this.controller = syncController;
+	this.treeNode = treeNode;
+
+	dojo.dnd.HtmlDragSource.call(this, node, type);
+}
+
+dojo.inherits(dojo.dnd.TreeDragSource, dojo.dnd.HtmlDragSource);
+
+dojo.lang.extend(dojo.dnd.TreeDragSource, {
+	onDragStart: function(){
+		/* extend adds functions to prototype */
+		var dragObject = dojo.dnd.HtmlDragSource.prototype.onDragStart.call(this);
+		//dojo.debugShallow(dragObject)
+
+		dragObject.treeNode = this.treeNode;
+
+		dragObject.onDragStart = dojo.lang.hitch(dragObject, function(e) {
+
+			/* save selection */
+			this.savedSelectedNode = this.treeNode.tree.selector.selectedNode;
+			if (this.savedSelectedNode) {
+				this.savedSelectedNode.unMarkSelected();
+			}
+
+			var result = dojo.dnd.HtmlDragObject.prototype.onDragStart.apply(this, arguments);
+
+
+			/* remove background grid from cloned object */
+			var cloneGrid = this.dragClone.getElementsByTagName('img');
+			for(var i=0; i<cloneGrid.length; i++) {
+				cloneGrid.item(i).style.backgroundImage='url()';
+			}
+
+			return result;
+
+
+		});
+
+		dragObject.onDragEnd = function(e) {
+
+			/* restore selection */
+			if (this.savedSelectedNode) {
+				this.savedSelectedNode.markSelected();
+			}
+			//dojo.debug(e.dragStatus);
+
+			return dojo.dnd.HtmlDragObject.prototype.onDragEnd.apply(this, arguments);
+		}
+		//dojo.debug(dragObject.domNode.outerHTML)
+
+
+		return dragObject;
+	},
+
+	onDragEnd: function(e){
+
+
+		 var res = dojo.dnd.HtmlDragSource.prototype.onDragEnd.call(this, e);
+
+
+		 return res;
+	}
+});
+
+// .......................................
+
+dojo.dnd.TreeDropTarget = function(domNode, controller, type, treeNode){
+
+	this.treeNode = treeNode;
+	this.controller = controller; // I will sync-ly process drops
+	
+	dojo.dnd.HtmlDropTarget.apply(this, [domNode, type]);
+}
+
+dojo.inherits(dojo.dnd.TreeDropTarget, dojo.dnd.HtmlDropTarget);
+
+dojo.lang.extend(dojo.dnd.TreeDropTarget, {
+
+	autoExpandDelay: 1500,
+	autoExpandTimer: null,
+
+
+	position: null,
+
+	indicatorStyle: "2px black solid",
+
+	showIndicator: function(position) {
+
+		// do not change style too often, cause of blinking possible
+		if (this.position == position) {
+			return;
+		}
+
+		//dojo.debug(position)
+
+		this.hideIndicator();
+
+		this.position = position;
+
+		if (position == "before") {
+			this.treeNode.labelNode.style.borderTop = this.indicatorStyle;
+		} else if (position == "after") {
+			this.treeNode.labelNode.style.borderBottom = this.indicatorStyle;
+		} else if (position == "onto") {
+			this.treeNode.markSelected();
+		}
+
+
+	},
+
+	hideIndicator: function() {
+		this.treeNode.labelNode.style.borderBottom="";
+		this.treeNode.labelNode.style.borderTop="";
+		this.treeNode.unMarkSelected();
+		this.position = null;
+	},
+
+
+
+	// is the target possibly ok ?
+	// This function is run on dragOver, but drop possibility is also determined by position over node
+	// that's why acceptsWithPosition is called
+	// doesnt take index into account ( can change while moving mouse w/o changing target )
+
+
+	/**
+	 * Coarse (tree-level) access check.
+	 * We can't determine real accepts status w/o position
+	*/
+	onDragOver: function(e){
+//dojo.debug("onDragOver for "+e);
+
+
+		var accepts = dojo.dnd.HtmlDropTarget.prototype.onDragOver.apply(this, arguments);
+
+		//dojo.debug("TreeDropTarget.onDragOver accepts:"+accepts)
+
+		if (accepts && this.treeNode.isFolder && !this.treeNode.isExpanded) {
+			this.setAutoExpandTimer();
+		}
+
+		return accepts;
+	},
+
+	/* Parent.onDragOver calls this function to get accepts status */
+	accepts: function(dragObjects) {
+
+		var accepts = dojo.dnd.HtmlDropTarget.prototype.accepts.apply(this, arguments);
+
+		if (!accepts) return false;
+
+		var sourceTreeNode = dragObjects[0].treeNode;
+
+		if (dojo.lang.isUndefined(sourceTreeNode) || !sourceTreeNode || !sourceTreeNode.isTreeNode) {
+			dojo.raise("Source is not TreeNode or not found");
+		}
+
+		if (sourceTreeNode === this.treeNode) return false;
+
+		return true;
+	},
+
+
+
+	setAutoExpandTimer: function() {
+		// set up autoexpand timer
+		var _this = this;
+
+		var autoExpand = function () {
+			if (dojo.dnd.dragManager.currentDropTarget === _this) {
+				_this.controller.expand(_this.treeNode);
+			}
+		}
+
+		this.autoExpandTimer = dojo.lang.setTimeout(autoExpand, _this.autoExpandDelay);
+	},
+
+
+	getDNDMode: function() {
+		return this.treeNode.tree.DNDMode;
+	},
+		
+
+	getAcceptPosition: function(e, sourceTreeNode) {
+
+		var DNDMode = this.getDNDMode();
+
+		if (DNDMode & dojo.widget.Tree.prototype.DNDModes.ONTO &&
+			// check if ONTO is allowed localy
+			!(
+			  !this.treeNode.actionIsDisabled(dojo.widget.TreeNode.prototype.actions.ADDCHILD) // check dynamically cause may change w/o regeneration of dropTarget
+			  && sourceTreeNode.parent !== this.treeNode
+			  && this.controller.canMove(sourceTreeNode, this.treeNode)
+			 )
+		) {
+			// disable ONTO if can't move
+			DNDMode &= ~dojo.widget.Tree.prototype.DNDModes.ONTO;
+		}
+
+
+		var position = this.getPosition(e, DNDMode);
+
+		//dojo.debug(DNDMode & +" : "+position);
+
+
+		// if onto is here => it was allowed before, no accept check is needed
+		if (position=="onto" ||
+			(!this.isAdjacentNode(sourceTreeNode, position)
+			 && this.controller.canMove(sourceTreeNode, this.treeNode.parent)
+			)
+		) {
+			return position;
+		} else {
+			return false;
+		}
+
+	},
+
+	onDragOut: function(e) {
+		this.clearAutoExpandTimer();
+
+		this.hideIndicator();
+	},
+
+
+	clearAutoExpandTimer: function() {
+		if (this.autoExpandTimer) {
+			clearTimeout(this.autoExpandTimer);
+			this.autoExpandTimer = null;
+		}
+	},
+
+
+
+	onDragMove: function(e, dragObjects){
+
+		var sourceTreeNode = dragObjects[0].treeNode;
+
+		var position = this.getAcceptPosition(e, sourceTreeNode);
+
+		if (position) {
+			this.showIndicator(position);
+		}
+
+	},
+
+	isAdjacentNode: function(sourceNode, position) {
+
+		if (sourceNode === this.treeNode) return true;
+		if (sourceNode.getNextSibling() === this.treeNode && position=="before") return true;
+		if (sourceNode.getPreviousSibling() === this.treeNode && position=="after") return true;
+
+		return false;
+	},
+
+
+	/* get DNDMode and see which position e fits */
+	getPosition: function(e, DNDMode) {
+		var node = dojo.byId(this.treeNode.labelNode);
+		var mousey = e.pageY || e.clientY + dojo.body().scrollTop;
+		var nodey = dojo.html.getAbsolutePosition(node).y;
+		var height = dojo.html.getBorderBox(node).height;
+
+		var relY = mousey - nodey;
+		var p = relY / height;
+
+		var position = ""; // "" <=> forbidden
+		if (DNDMode & dojo.widget.Tree.prototype.DNDModes.ONTO
+		  && DNDMode & dojo.widget.Tree.prototype.DNDModes.BETWEEN) {
+			if (p<=0.3) {
+				position = "before";
+			} else if (p<=0.7) {
+				position = "onto";
+			} else {
+				position = "after";
+			}
+		} else if (DNDMode & dojo.widget.Tree.prototype.DNDModes.BETWEEN) {
+			if (p<=0.5) {
+				position = "before";
+			} else {
+				position = "after";
+			}
+		}
+		else if (DNDMode & dojo.widget.Tree.prototype.DNDModes.ONTO) {
+			position = "onto";
+		}
+
+
+		return position;
+	},
+
+
+
+	getTargetParentIndex: function(sourceTreeNode, position) {
+
+		var index = position == "before" ? this.treeNode.getParentIndex() : this.treeNode.getParentIndex()+1;
+		if (this.treeNode.parent === sourceTreeNode.parent
+		  && this.treeNode.getParentIndex() > sourceTreeNode.getParentIndex()) {
+		  	index--;  // dragging a node is different for simple move bacause of before-after issues
+		}
+
+		return index;
+	},
+
+
+	onDrop: function(e){
+		// onDragOut will clean position
+
+
+		var position = this.position;
+
+//dojo.debug(position);
+
+		this.onDragOut(e);
+
+		var sourceTreeNode = e.dragObject.treeNode;
+
+		if (!dojo.lang.isObject(sourceTreeNode)) {
+			dojo.raise("TreeNode not found in dragObject")
+		}
+
+		if (position == "onto") {
+			return this.controller.move(sourceTreeNode, this.treeNode, 0);
+		} else {
+			var index = this.getTargetParentIndex(sourceTreeNode, position);
+			return this.controller.move(sourceTreeNode, this.treeNode.parent, index);
+		}
+
+		//dojo.debug('drop2');
+
+
+
+	}
+
+
+});
+
+
+
+dojo.dnd.TreeDNDController = function(treeController) {
+
+	// I use this controller to perform actions
+	this.treeController = treeController;
+
+	this.dragSources = {};
+
+	this.dropTargets = {};
+
+}
+
+dojo.lang.extend(dojo.dnd.TreeDNDController, {
+
+
+	listenTree: function(tree) {
+		//dojo.debug("Listen tree "+tree);
+		dojo.event.topic.subscribe(tree.eventNames.createDOMNode, this, "onCreateDOMNode");
+		dojo.event.topic.subscribe(tree.eventNames.moveFrom, this, "onMoveFrom");
+		dojo.event.topic.subscribe(tree.eventNames.moveTo, this, "onMoveTo");
+		dojo.event.topic.subscribe(tree.eventNames.addChild, this, "onAddChild");
+		dojo.event.topic.subscribe(tree.eventNames.removeNode, this, "onRemoveNode");
+		dojo.event.topic.subscribe(tree.eventNames.treeDestroy, this, "onTreeDestroy");
+	},
+
+
+	unlistenTree: function(tree) {
+		//dojo.debug("Listen tree "+tree);
+		dojo.event.topic.unsubscribe(tree.eventNames.createDOMNode, this, "onCreateDOMNode");
+		dojo.event.topic.unsubscribe(tree.eventNames.moveFrom, this, "onMoveFrom");
+		dojo.event.topic.unsubscribe(tree.eventNames.moveTo, this, "onMoveTo");
+		dojo.event.topic.unsubscribe(tree.eventNames.addChild, this, "onAddChild");
+		dojo.event.topic.unsubscribe(tree.eventNames.removeNode, this, "onRemoveNode");
+		dojo.event.topic.unsubscribe(tree.eventNames.treeDestroy, this, "onTreeDestroy");
+	},
+
+	onTreeDestroy: function(message) {
+		this.unlistenTree(message.source);
+		// I'm not widget so don't use destroy() call and dieWithTree
+	},
+
+	onCreateDOMNode: function(message) {
+		this.registerDNDNode(message.source);
+	},
+
+	onAddChild: function(message) {
+		this.registerDNDNode(message.child);
+	},
+
+	onMoveFrom: function(message) {
+		var _this = this;
+		dojo.lang.forEach(
+			message.child.getDescendants(),
+			function(node) { _this.unregisterDNDNode(node); }
+		);
+	},
+
+	onMoveTo: function(message) {
+		var _this = this;
+		dojo.lang.forEach(
+			message.child.getDescendants(),
+			function(node) { _this.registerDNDNode(node); }
+		);
+	},
+
+	/**
+	 * Controller(node model) creates DNDNodes because it passes itself to node for synchroneous drops processing
+	 * I can't process DnD with events cause an event can't return result success/false
+	*/
+	registerDNDNode: function(node) {
+		if (!node.tree.DNDMode) return;
+
+//dojo.debug("registerDNDNode "+node);
+
+		/* I drag label, not domNode, because large domNodes are very slow to copy and large to drag */
+
+		var source = null;
+		var target = null;
+
+		if (!node.actionIsDisabled(node.actions.MOVE)) {
+			//dojo.debug("reg source")
+			var source = new dojo.dnd.TreeDragSource(node.labelNode, this, node.tree.widgetId, node);
+			this.dragSources[node.widgetId] = source;
+		}
+
+		var target = new dojo.dnd.TreeDropTarget(node.labelNode, this.treeController, node.tree.DNDAcceptTypes, node);
+
+		this.dropTargets[node.widgetId] = target;
+
+	},
+
+
+	unregisterDNDNode: function(node) {
+
+		if (this.dragSources[node.widgetId]) {
+			dojo.dnd.dragManager.unregisterDragSource(this.dragSources[node.widgetId]);
+			delete this.dragSources[node.widgetId];
+		}
+
+		if (this.dropTargets[node.widgetId]) {
+			dojo.dnd.dragManager.unregisterDropTarget(this.dropTargets[node.widgetId]);
+			delete this.dropTargets[node.widgetId];
+		}
+	}
+
+
+
+
+
+});
+
+
+dojo.provide("dojo.widget.TreeBasicController");
+
+
+
+
+
+
+dojo.widget.defineWidget("dojo.widget.TreeBasicController", dojo.widget.HtmlWidget, {
+	widgetType: "TreeBasicController",
+
+	DNDController: "",
+
+	dieWithTree: false,
+
+	initialize: function(args, frag){
+
+		/* no DND by default for compatibility */
+		if (this.DNDController == "create") {
+			
+			this.DNDController = new dojo.dnd.TreeDNDController(this);
+		}
+
+
+
+	},
+
+
+	/**
+	 * Binds controller to all tree events
+	*/
+	listenTree: function(tree) {
+		//dojo.debug("Event "+tree.eventNames.treeClick);
+		dojo.event.topic.subscribe(tree.eventNames.createDOMNode, this, "onCreateDOMNode");
+		dojo.event.topic.subscribe(tree.eventNames.treeClick, this, "onTreeClick");
+		dojo.event.topic.subscribe(tree.eventNames.treeCreate, this, "onTreeCreate");
+		dojo.event.topic.subscribe(tree.eventNames.treeDestroy, this, "onTreeDestroy");
+
+		if (this.DNDController) {
+			this.DNDController.listenTree(tree);
+		}
+	},
+
+	unlistenTree: function(tree) {
+		dojo.event.topic.unsubscribe(tree.eventNames.createDOMNode, this, "onCreateDOMNode");
+		dojo.event.topic.unsubscribe(tree.eventNames.treeClick, this, "onTreeClick");
+		dojo.event.topic.unsubscribe(tree.eventNames.treeCreate, this, "onTreeCreate");
+		dojo.event.topic.unsubscribe(tree.eventNames.treeDestroy, this, "onTreeDestroy");
+	},
+
+	onTreeDestroy: function(message) {
+		var tree = message.source;
+
+		this.unlistenTree(tree);
+
+		if (this.dieWithTree) {
+			//alert("Killing myself "+this.widgetId);
+			this.destroy();
+			//dojo.debug("done");
+		}
+	},
+
+	onCreateDOMNode: function(message) {
+
+		var node = message.source;
+
+
+		if (node.expandLevel > 0) {
+			this.expandToLevel(node, node.expandLevel);
+		}
+	},
+
+	// perform actions-initializers for tree
+	onTreeCreate: function(message) {
+		var tree = message.source;
+		var _this = this;
+		if (tree.expandLevel) {
+			dojo.lang.forEach(tree.children,
+				function(child) {
+					_this.expandToLevel(child, tree.expandLevel-1)
+				}
+			);
+		}
+	},
+
+	expandToLevel: function(node, level) {
+		if (level == 0) return;
+
+		var children = node.children;
+		var _this = this;
+
+		var handler = function(node, expandLevel) {
+			this.node = node;
+			this.expandLevel = expandLevel;
+			// recursively expand opened node
+			this.process = function() {
+				//dojo.debug("Process "+node+" level "+level);
+				for(var i=0; i<this.node.children.length; i++) {
+					var child = node.children[i];
+
+					_this.expandToLevel(child, this.expandLevel);
+				}
+			};
+		}
+
+		var h = new handler(node, level-1);
+
+
+		this.expand(node, false, h, h.process);
+
+	},
+
+
+
+
+	onTreeClick: function(message){
+		var node = message.source;
+
+		if(node.isLocked()) {
+			return false;
+		}
+
+		if (node.isExpanded){
+			this.collapse(node);
+		} else {
+			this.expand(node);
+		}
+	},
+
+	expand: function(node, sync, callObj, callFunc) {
+		node.expand();
+		if (callFunc) callFunc.apply(callObj, [node]);
+	},
+
+	collapse: function(node) {
+
+		node.collapse();
+	},
+
+// =============================== move ============================
+
+	/**
+	 * Checks whether it is ok to change parent of child to newParent
+	 * May incur type checks etc
+	 *
+	 * It should check only hierarchical possibility w/o index, etc
+	 * because in onDragOver event for Between DND mode we can't calculate index at once on onDragOVer.
+	 * index changes as client moves mouse up-down over the node
+	 */
+	canMove: function(child, newParent){
+
+		if (child.actionIsDisabled(child.actions.MOVE)) {
+			return false;
+		}
+
+		// if we move under same parent then no matter if ADDCHILD disabled for him
+		// but if we move to NEW parent then check if action is disabled for him
+		// also covers case for newParent being a non-folder in strict mode etc
+		if (child.parent !== newParent && newParent.actionIsDisabled(newParent.actions.ADDCHILD)) {
+			return false;
+		}
+
+		// Can't move parent under child. check whether new parent is child of "child".
+		var node = newParent;
+		while(node.isTreeNode) {
+			//dojo.debugShallow(node.title)
+			if (node === child) {
+				// parent of newParent is child
+				return false;
+			}
+			node = node.parent;
+		}
+
+		return true;
+	},
+
+
+	move: function(child, newParent, index) {
+
+		/* move sourceTreeNode to new parent */
+		if (!this.canMove(child, newParent)) {
+			return false;
+		}
+
+		var result = this.doMove(child, newParent, index);
+
+		if (!result) return result;
+
+		if (newParent.isTreeNode) {
+			this.expand(newParent);
+		}
+
+		return result;
+	},
+
+	doMove: function(child, newParent, index) {
+		child.tree.move(child, newParent, index);
+
+		return true;
+	},
+
+// =============================== removeNode ============================
+
+
+	canRemoveNode: function(child) {
+		if (child.actionIsDisabled(child.actions.REMOVE)) {
+			return false;
+		}
+
+		return true;
+	},
+
+
+	removeNode: function(node, callObj, callFunc) {
+		if (!this.canRemoveNode(node)) {
+			return false;
+		}
+
+		return this.doRemoveNode(node, callObj, callFunc);
+	},
+
+
+	doRemoveNode: function(node, callObj, callFunc) {
+		node.tree.removeNode(node);
+
+		if (callFunc) {
+			callFunc.apply(dojo.lang.isUndefined(callObj) ? this : callObj, [node]);
+		}
+	},
+
+
+	// -----------------------------------------------------------------------------
+	//                             Create node stuff
+	// -----------------------------------------------------------------------------
+
+
+	canCreateChild: function(parent, index, data) {
+		if (parent.actionIsDisabled(parent.actions.ADDCHILD)) return false;
+
+		return true;
+	},
+
+
+	/* send data to server and add child from server */
+	/* data may contain an almost ready child, or anything else, suggested to server */
+	/*in RPC controllers server responds with child data to be inserted */
+	createChild: function(parent, index, data, callObj, callFunc) {
+		if (!this.canCreateChild(parent, index, data)) {
+			return false;
+		}
+
+		return this.doCreateChild.apply(this, arguments);
+	},
+
+	doCreateChild: function(parent, index, data, callObj, callFunc) {
+
+		var widgetType = data.widgetType ? data.widgetType : "TreeNode";
+
+		var newChild = dojo.widget.createWidget(widgetType, data);
+
+		parent.addChild(newChild, index);
+
+		this.expand(parent);
+
+		if (callFunc) {
+			callFunc.apply(callObj, [newChild]);
+		}
+
+		return newChild;
+	}
+
+
+
+});
+
+/**
+ * Tree model does all the drawing, visual node management etc.
+ * Throws events about clicks on it, so someone may catch them and process
+ * Tree knows nothing about DnD stuff, covered in TreeDragAndDrop and (if enabled) attached by controller
+*/
+
+/**
+ * TODO: use domNode.cloneNode instead of createElement for grid
+ * Should be faster (lyxsus)
+ */
+dojo.provide("dojo.widget.Tree");
+
+
+
+
+
+
+
+
+
+
+dojo.widget.defineWidget("dojo.widget.Tree", dojo.widget.HtmlWidget, function() {
+	this.eventNames = {};
+
+	this.tree = this;
+	this.DNDAcceptTypes = [];
+	this.actionsDisabled = [];
+
+},
+{
+	widgetType: "Tree",
+
+	eventNamesDefault: {
+		// new child does not get domNode filled in (only template draft)
+		// until addChild->createDOMNode is called(program way) OR createDOMNode (html-way)
+		// hook events to operate on new DOMNode, create dropTargets etc
+		createDOMNode: "createDOMNode",
+		// tree created.. Perform tree-wide actions if needed
+		treeCreate: "treeCreate",
+		treeDestroy: "treeDestroy",
+		// expand icon clicked
+		treeClick: "treeClick",
+		// node icon clicked
+		iconClick: "iconClick",
+		// node title clicked
+		titleClick: "titleClick",
+
+		moveFrom: "moveFrom",
+		moveTo: "moveTo",
+		addChild: "addChild",
+		removeNode: "removeNode",
+		expand: "expand",
+		collapse: "collapse"
+	},
+
+	isContainer: true,
+
+	DNDMode: "off",
+
+	lockLevel: 0, // lock ++ unlock --, so nested locking works fine
+
+	strictFolders: true,
+
+	DNDModes: {
+		BETWEEN: 1,
+		ONTO: 2
+	},
+
+	DNDAcceptTypes: "",
+
+	templateCssPath: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/Tree.css"),
+
+	templateString: '<div class="dojoTree"></div>',
+
+	isExpanded: true, // consider this "root node" to be always expanded
+
+	isTree: true,
+
+	objectId: "",
+
+	// autoCreate if not "off"
+	// used to get the autocreated controller ONLY.
+	// generally, tree DOES NOT KNOW about its CONTROLLER, it just doesn't care
+	// controller gets messages via dojo.event
+	controller: "",
+
+	// autoCreate if not "off"
+	// used to get the autocreated selector ONLY.
+	// generally, tree DOES NOT KNOW its SELECTOR
+	// binding is made with dojo.event
+	selector: "",
+
+	// used ONLY at initialization time
+	menu: "", // autobind menu if menu's widgetId is set here
+
+	expandLevel: "", // expand to level automatically
+
+	//
+	// these icons control the grid and expando buttons for the whole tree
+	//
+
+	blankIconSrc: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_blank.gif"),
+
+	gridIconSrcT: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_grid_t.gif"), // for non-last child grid
+	gridIconSrcL: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_grid_l.gif"), // for last child grid
+	gridIconSrcV: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_grid_v.gif"), // vertical line
+	gridIconSrcP: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_grid_p.gif"), // for under parent item child icons
+	gridIconSrcC: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_grid_c.gif"), // for under child item child icons
+	gridIconSrcX: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_grid_x.gif"), // grid for sole root item
+	gridIconSrcY: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_grid_y.gif"), // grid for last rrot item
+	gridIconSrcZ: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_grid_z.gif"), // for under root parent item child icon
+
+	expandIconSrcPlus: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_expand_plus.gif"),
+	expandIconSrcMinus: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_expand_minus.gif"),
+	expandIconSrcLoading: dojo.uri.moduleUri("dojo.widget", "templates/images/Tree/treenode_loading.gif"),
+
+
+	iconWidth: 18,
+	iconHeight: 18,
+
+
+	//
+	// tree options
+	//
+
+	showGrid: true,
+	showRootGrid: true,
+
+	actionIsDisabled: function(action) {
+		var _this = this;
+		return dojo.lang.inArray(_this.actionsDisabled, action)
+	},
+
+
+	actions: {
+    	ADDCHILD: "ADDCHILD"
+	},
+
+
+	getInfo: function() {
+		var info = {
+			widgetId: this.widgetId,
+			objectId: this.objectId
+		}
+
+		return info;
+	},
+
+	initializeController: function() {
+		if (this.controller != "off") {
+			if (this.controller) {
+				this.controller = dojo.widget.byId(this.controller);
+			}
+			else {
+				// create default controller here
+				
+				this.controller = dojo.widget.createWidget("TreeBasicController",
+					{ DNDController: (this.DNDMode ? "create" : ""), dieWithTree: true }
+				 );
+
+			}
+			this.controller.listenTree(this); // controller listens to my events
+
+		} else {
+			this.controller = null;
+		}
+	},
+
+	initializeSelector: function() {
+
+		if (this.selector != "off") {
+			if (this.selector) {
+				this.selector = dojo.widget.byId(this.selector);
+			}
+			else {
+				// create default controller here
+				
+				this.selector = dojo.widget.createWidget("TreeSelector", {dieWithTree: true});
+			}
+
+			this.selector.listenTree(this);
+
+		} else {
+			this.selector = null;
+		}
+	},
+
+	initialize: function(args, frag){
+
+		var _this = this;
+
+		for(name in this.eventNamesDefault) {
+			if (dojo.lang.isUndefined(this.eventNames[name])) {
+				this.eventNames[name] = this.widgetId+"/"+this.eventNamesDefault[name];
+			}
+		}
+
+		for(var i=0; i<this.actionsDisabled.length; i++) {
+			this.actionsDisabled[i] = this.actionsDisabled[i].toUpperCase();
+		}
+
+		if (this.DNDMode == "off") {
+			this.DNDMode = 0;
+		} else if (this.DNDMode == "between") {
+			this.DNDMode = this.DNDModes.ONTO | this.DNDModes.BETWEEN;
+		} else if (this.DNDMode == "onto") {
+			this.DNDMode = this.DNDModes.ONTO;
+		}
+
+		this.expandLevel = parseInt(this.expandLevel);
+
+		this.initializeSelector();
+		this.initializeController();
+
+		if (this.menu) {
+			this.menu = dojo.widget.byId(this.menu);
+			this.menu.listenTree(this);
+		}
+
+
+		this.containerNode = this.domNode;
+
+	},
+
+
+	postCreate: function() {
+		this.createDOMNode();
+	},
+
+
+	createDOMNode: function() {
+
+		dojo.html.disableSelection(this.domNode);
+
+		for(var i=0; i<this.children.length; i++){
+			this.children[i].parent = this; // root nodes have tree as parent
+
+			var node = this.children[i].createDOMNode(this, 0);
+
+
+			this.domNode.appendChild(node);
+		}
+
+
+		if (!this.showRootGrid){
+			for(var i=0; i<this.children.length; i++){
+				this.children[i].expand();
+			}
+		}
+
+		dojo.event.topic.publish(this.eventNames.treeCreate, { source: this } );
+
+	},
+
+
+	destroy: function() {
+		dojo.event.topic.publish(this.tree.eventNames.treeDestroy, { source: this } );
+
+		return dojo.widget.HtmlWidget.prototype.destroy.apply(this, arguments);
+	},
+
+
+	addChild: function(child, index) {
+
+//		dojo.debug("doAddChild "+index+" called for "+child);
+
+		var message = {
+			child: child,
+			index: index,
+			parent: this,
+			// remember if dom was already initialized
+			// initialized => no createDOMNode => no createDOMNode event
+			domNodeInitialized: child.domNodeInitialized
+		}
+
+		this.doAddChild.apply(this, arguments);
+
+		dojo.event.topic.publish(this.tree.eventNames.addChild, message);
+	},
+
+
+	// not called for initial tree building. See createDOMNode instead.
+	// builds child html node if needed
+	// index is "last node" by default
+	/**
+	 * FIXME: Is it possible that removeNode from the tree will cause leaks cause of attached events ?
+	 * if yes, then only attach events in addChild and detach in remove.. Seems all ok yet.
+	*/
+	doAddChild: function(child, index){
+
+		if (dojo.lang.isUndefined(index)) {
+			index = this.children.length;
+		}
+
+		if (!child.isTreeNode){
+			dojo.raise("You can only add TreeNode widgets to a "+this.widgetType+" widget!");
+			return;
+		}
+
+		// usually it is impossible to change "isFolder" state, but if anyone wants to add a child to leaf,
+		// it is possible program-way.
+		if (this.isTreeNode){
+			if (!this.isFolder) { // just became a folder.
+				//dojo.debug("becoming folder "+this);
+				this.setFolder();
+			}
+		}
+
+		// adjust tree
+		var _this = this;
+		dojo.lang.forEach(child.getDescendants(), function(elem) { elem.tree = _this.tree; });
+
+		// fix parent
+		child.parent = this;
+
+
+		// no dynamic loading for those who become parents
+		if (this.isTreeNode) {
+			this.state = this.loadStates.LOADED;
+		}
+
+		// add new child into DOM after it was added into children
+		if (index < this.children.length) { // children[] already has child
+			//dojo.debug("Inserting before "+this.children[index].title);
+			dojo.html.insertBefore(child.domNode, this.children[index].domNode);
+		} else {
+			this.containerNode.appendChild(child.domNode);
+			if (this.isExpanded && this.isTreeNode) {
+				/* When I add children to hidden containerNode => show container w/ them */
+				this.showChildren();
+			}
+		}
+
+
+		this.children.splice(index, 0, child);
+
+		//dojo.debugShallow(this.children);
+
+
+		// if node exists - adjust its depth, otherwise build it
+		if (child.domNodeInitialized) {
+			var d = this.isTreeNode ? this.depth : -1;
+			child.adjustDepth( d - child.depth + 1 );
+
+
+			// update icons to link generated dom with Tree => updateParentGrid
+			// if I moved child from LastNode inside the tree => need to link it up'n'down =>
+			// updateExpandGridColumn
+			// if I change depth => need to update all grid..
+			child.updateIconTree();
+		} else {
+			//dojo.debug("Create domnode ");
+			child.depth = this.isTreeNode ? this.depth+1 : 0;
+			child.createDOMNode(child.tree, child.depth);
+		}
+
+
+
+		// Use-case:
+		// When previous sibling was created => it was last, no children after it
+		// so it did not create link down => let's add it for all descendants
+		// Use-case:
+		// a child was moved down under the last node so last node should be updated
+		var prevSibling = child.getPreviousSibling();
+		if (child.isLastChild() && prevSibling) {
+			prevSibling.updateExpandGridColumn();
+		}
+
+
+		//dojo.debug("Added child "+child);
+
+
+
+	},
+
+
+
+
+	makeBlankImg: function() {
+		var img = document.createElement('img');
+
+		img.style.width = this.iconWidth + 'px';
+		img.style.height = this.iconHeight + 'px';
+		img.src = this.blankIconSrc;
+		img.style.verticalAlign = 'middle';
+
+		return img;
+	},
+
+
+	updateIconTree: function(){
+
+		//dojo.debug("Update icons for "+this)
+		if (!this.isTree) {
+			this.updateIcons();
+		}
+
+		for(var i=0; i<this.children.length; i++){
+			this.children[i].updateIconTree();
+		}
+
+	},
+
+	toString: function() {
+		return "["+this.widgetType+" ID:"+this.widgetId+"]"
+	},
+
+
+
+
+	/**
+	 * Move child to newParent as last child
+	 * redraw tree and update icons.
+	 *
+	 * Called by target, saves source in event.
+	 * events are published for BOTH trees AFTER update.
+	*/
+	move: function(child, newParent, index) {
+
+		//dojo.debug(child+" "+newParent+" at "+index);
+
+		var oldParent = child.parent;
+		var oldTree = child.tree;
+
+		this.doMove.apply(this, arguments);
+
+		var newParent = child.parent;
+		var newTree = child.tree;
+
+		var message = {
+				oldParent: oldParent, oldTree: oldTree,
+				newParent: newParent, newTree: newTree,
+				child: child
+		};
+
+		/* publish events here about structural changes for both source and target trees */
+		dojo.event.topic.publish(oldTree.eventNames.moveFrom, message);
+		dojo.event.topic.publish(newTree.eventNames.moveTo, message);
+
+	},
+
+
+	/* do actual parent change here. Write remove child first */
+	doMove: function(child, newParent, index) {
+		//var parent = child.parent;
+		child.parent.doRemoveNode(child);
+
+		newParent.doAddChild(child, index);
+	},
+
+
+
+// ================================ removeNode ===================================
+
+	removeNode: function(child) {
+		if (!child.parent) return;
+
+		var oldTree = child.tree;
+		var oldParent = child.parent;
+
+		var removedChild = this.doRemoveNode.apply(this, arguments);
+
+
+		dojo.event.topic.publish(this.tree.eventNames.removeNode,
+			{ child: removedChild, tree: oldTree, parent: oldParent }
+		);
+
+		return removedChild;
+	},
+
+
+	doRemoveNode: function(child) {
+		if (!child.parent) return;
+
+		var parent = child.parent;
+
+		var children = parent.children;
+
+
+		var index = child.getParentIndex();
+		if (index < 0) {
+			dojo.raise("Couldn't find node "+child+" for removal");
+		}
+
+
+		children.splice(index,1);
+		dojo.html.removeNode(child.domNode);
+
+		if (parent.children.length == 0 && !parent.isTree) {
+			parent.containerNode.style.display = "none";
+		}
+
+		// if WAS last node (children.length decreased already) and has prevSibling
+		if (index == children.length && index>0) {
+			children[index-1].updateExpandGridColumn();
+		}
+		// if it WAS first node in WHOLE TREE -
+		// update link up of its former lower neighbour(if exists still)
+		if (parent instanceof dojo.widget.Tree && index == 0 && children.length>0) {
+			children[0].updateExpandGrid();
+		}
+
+		//parent.updateIconTree();
+
+
+		child.parent = child.tree = null;
+
+		return child;
+	},
+
+	markLoading: function() {
+		// no way to mark tree loading
+	},
+
+	unMarkLoading: function() {
+		// no way to show that tree finished loading
+	},
+
+
+	lock: function() {
+		!this.lockLevel && this.markLoading();
+		this.lockLevel++;
+	},
+	unlock: function() {
+		if (!this.lockLevel) {
+			dojo.raise("unlock: not locked");
+		}
+		this.lockLevel--;
+		!this.lockLevel && this.unMarkLoading();
+	},
+
+	isLocked: function() {
+		var node = this;
+		while (true) {
+			if (node.lockLevel) {
+				return true;
+			}
+			if (node instanceof dojo.widget.Tree) {
+				break;
+			}
+			node = node.parent;
+		}
+
+		return false;
+	},
+
+	flushLock: function() {
+		this.lockLevel = 0;
+		this.unMarkLoading();
+	}
+});
+
+
+
+dojo.provide("struts.widget.StrutsTree");
+
+
+
+dojo.widget.defineWidget(
+  "struts.widget.StrutsTree",
+  dojo.widget.Tree, {
+  widgetType : "StrutsTree",
+
+  href : "",
+  errorNotifyTopics : "",
+  errorNotifyTopicsArray : null,
+  
+  postCreate : function() {
+     struts.widget.StrutsTree.superclass.postCreate.apply(this);
+     
+     //error topics
+     if(!dojo.string.isBlank(this.errorNotifyTopics)) {
+       this.errorNotifyTopicsArray = this.errorNotifyTopics.split(",");
+     }
+     
+     var self = this;
+     if(!dojo.string.isBlank(this.href)) {
+       dojo.io.bind({
+        url: this.href,
+        useCache: false,
+        preventCache: true,
+        handler: function(type, data, e) {
+          if(type == 'load') {
+            //data should be an array
+            if(data) {
+              dojo.lang.forEach(data, function(descr) {
+                //create node for eachd descriptor
+                var newNode = dojo.widget.createWidget("struts:StrutsTreeNode",{
+                  title   : descr.label,
+                  isFolder: descr.hasChildren,
+                  widgetId: descr.id   
+                });
+                self.addChild(newNode);
+              }); 
+            }
+          } else {
+            //publish error topics
+            if(self.errorNotifyTopicsArray) {
+              dojo.lang.forEach(self.errorNotifyTopicsArray, function(topic) {
+                try {
+                  dojo.event.topic.publish(topic, data, e, self);
+                } catch(ex){
+                  dojo.debug(ex);
+                }
+              });
+            }
+          }
+        },
+        mimetype: "text/json"
+      });
+     }   
+  }
+});
+
 dojo.kwCompoundRequire({
 	common: ["struts.widget.Bind",
 	         "struts.widget.BindDiv",
@@ -28840,7 +30923,9 @@ dojo.kwCompoundRequire({
              "struts.widget.StrutsDatePicker",
              "struts.widget.BindEvent",
              "struts.widget.StrutsTreeSelector",
-             "struts.widget.StrutsTabContainer"]
+             "struts.widget.StrutsTabContainer",
+             "struts.widget.StrutsTreeNode",
+             "struts.widget.StrutsTree"]
 });
 dojo.provide("struts.widget.*");
 

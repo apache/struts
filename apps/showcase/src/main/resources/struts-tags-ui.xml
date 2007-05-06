@@ -47,6 +47,9 @@
         
         <!--  END SNIPPET: treeExampleDynamicXWorkXml -->
         
+        <action name="showDynamicAjaxTreeAction">
+            <result>/tags/ui/treeExampleAjaxDynamic.jsp</result>
+        </action>
         
         <action name="showComponentTagExampleCode">
         	<result type="plainText">/tags/ui/componentTagExample.jsp</result>

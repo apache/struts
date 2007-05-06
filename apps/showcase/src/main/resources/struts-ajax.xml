@@ -78,5 +78,8 @@
             <interceptor-ref name="jsonValidationWorkflowStack"/>
             <result>/validation/quiz-success.jsp</result>
        </action>
+       <action name="getNodes" class="org.apache.struts2.showcase.ShowAjaxDynamicTreeAction">
+            <result type="freemarker">/tags/ui/treeExampleAjaxDynamic.ftl</result>
+        </action>
     </package>
 </struts>

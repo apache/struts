@@ -14,6 +14,7 @@
         <li><s:url id="url" namespace="/tags/ui" action="moreSelects" method="input" /><s:a href="%{url}">More Select Box UI Examples</s:a></li>
         <li><s:url id="url" namespace="/tags/ui" value="treeExampleStatic.jsp" /><s:a href="%{url}">Tree Example (static)</s:a>
         <li><s:url id="url" namespace="/tags/ui" action="showDynamicTreeAction"/><s:a href="%{url}">Tree Example (dynamic)</s:a>
+        <li><s:url id="url" namespace="/tags/ui" action="showDynamicAjaxTreeAction"/><s:a href="%{url}">Tree Example (dynamic ajax loading)</s:a>
         <li><s:url id="url" value="componentTagExample.jsp"/><s:a href="%{#url}">Component Tag Example</s:a>
         <li><a href="datepicker">DateTime picker tag - Pick a date</a></li>
         <li><a href="timepicker">DateTime picker tag - Pick a time</a></li>

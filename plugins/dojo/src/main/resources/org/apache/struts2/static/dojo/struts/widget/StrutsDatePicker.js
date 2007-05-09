@@ -28,6 +28,27 @@ dojo.widget.defineWidget(
     }
   },
   
+  _syncValueNode:function () {
+    var date = this.datePicker.value;
+    var value = "";
+    switch (this.saveFormat.toLowerCase()) {
+      case "rfc":
+      case "iso":
+      case "":
+        value = dojo.date.toRfc3339(date);
+        break;
+      case "posix":
+      case "unix":
+        value = Number(date);
+        break;
+      default:
+        if (date) {
+            value = dojo.date.format(date, {datePattern:this.saveFormat, selector:"dateOnly", locale:this.lang});
+        }
+    }
+    this.valueNode.value = value;
+  },
+  
   _updateText : function() {
     struts.widget.StrutsDatePicker.superclass._updateText.apply(this, arguments);
     if(this.valueNotifyTopicsArray != null) {

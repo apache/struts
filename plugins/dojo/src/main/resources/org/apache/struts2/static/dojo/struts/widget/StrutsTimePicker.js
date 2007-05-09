@@ -19,8 +19,6 @@ dojo.widget.defineWidget(
   postCreate: function() {
     struts.widget.StrutsTimePicker.superclass.postCreate.apply(this, arguments);
   
-    this.inputNode.name = this.name;
-    
     //set cssClass
     if(this.extraArgs["class"]) {
       dojo.html.setClass(this.inputNode, this.extraArgs["class"]);
@@ -30,8 +28,6 @@ dojo.widget.defineWidget(
     if(this.extraArgs.style) {
       dojo.html.setStyleText(this.inputNode, this.extraArgs.style);
     }  
-    
-    this.valueNode.name = this.inputName;
     
     //value topics
     if(!dojo.string.isBlank(this.valueNotifyTopics)) {

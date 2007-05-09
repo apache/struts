@@ -26980,8 +26980,6 @@ dojo.widget.defineWidget(
   postCreate: function() {
     struts.widget.StrutsTimePicker.superclass.postCreate.apply(this, arguments);
   
-    this.inputNode.name = this.name;
-    
     //set cssClass
     if(this.extraArgs["class"]) {
       dojo.html.setClass(this.inputNode, this.extraArgs["class"]);
@@ -26991,8 +26989,6 @@ dojo.widget.defineWidget(
     if(this.extraArgs.style) {
       dojo.html.setStyleText(this.inputNode, this.extraArgs.style);
     }  
-    
-    this.valueNode.name = this.inputName;
     
     //value topics
     if(!dojo.string.isBlank(this.valueNotifyTopics)) {
@@ -27786,6 +27782,27 @@ dojo.widget.defineWidget(
     if(!dojo.string.isBlank(this.valueNotifyTopics)) {
       this.valueNotifyTopicsArray = this.valueNotifyTopics.split(",");
     }
+  },
+  
+  _syncValueNode:function () {
+    var date = this.datePicker.value;
+    var value = "";
+    switch (this.saveFormat.toLowerCase()) {
+      case "rfc":
+      case "iso":
+      case "":
+        value = dojo.date.toRfc3339(date);
+        break;
+      case "posix":
+      case "unix":
+        value = Number(date);
+        break;
+      default:
+        if (date) {
+            value = dojo.date.format(date, {datePattern:this.saveFormat, selector:"dateOnly", locale:this.lang});
+        }
+    }
+    this.valueNode.value = value;
   },
   
   _updateText : function() {

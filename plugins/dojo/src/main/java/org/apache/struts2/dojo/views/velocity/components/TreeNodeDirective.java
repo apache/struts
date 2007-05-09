@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.components.Component;
 import org.apache.struts2.dojo.components.TreeNode;
-import org.apache.struts2.views.velocity.components.AbstractDirective;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -33,13 +32,17 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <code>TreeNodeDirective</code>
  * @see TreeNode
  */
-public class TreeNodeDirective  extends AbstractDirective {
+public class TreeNodeDirective  extends DojoAbstractDirective {
     public String getBeanName() {
         return "treenode";
     }
 
     protected Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new TreeNode(stack, req, res);
+    }
+    
+    public int getType() {
+        return BLOCK;
     }
 }
 

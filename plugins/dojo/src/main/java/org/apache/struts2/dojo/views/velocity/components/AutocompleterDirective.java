@@ -25,14 +25,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.components.Component;
 import org.apache.struts2.dojo.components.Autocompleter;
-import org.apache.struts2.views.velocity.components.AbstractDirective;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see Autocompleter
  */
-public class AutocompleterDirective extends AbstractDirective {
+public class AutocompleterDirective extends DojoAbstractDirective {
 
     protected Component getBean(ValueStack stack, HttpServletRequest req,
             HttpServletResponse res) {

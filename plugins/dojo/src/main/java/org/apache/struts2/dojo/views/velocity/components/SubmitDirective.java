@@ -25,14 +25,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.Submit;
-import org.apache.struts2.views.velocity.components.AbstractDirective;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see Submit
  */
-public class SubmitDirective extends AbstractDirective {
+public class SubmitDirective extends DojoAbstractDirective {
     public String getBeanName() {
         return "submit";
     }

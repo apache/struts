@@ -101,11 +101,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </p>
  * <ul>
  *   <li>RFC 3339
- *   <li>SimpleDateFormat.getTimeInstance(DateFormat.SHORT
- *   <li>SimpleDateFormat.getDateInstance(DateFormat.SHORT
- *   <li>SimpleDateFormat.getDateInstance(DateFormat.MEDIUM
- *   <li>SimpleDateFormat.getDateInstance(DateFormat.FULL
- *   <li>SimpleDateFormat.getDateInstance(DateFormat.LONG
+ *   <li>SimpleDateFormat.getTimeInstance(DateFormat.SHORT)
+ *   <li>SimpleDateFormat.getDateInstance(DateFormat.SHORT)
+ *   <li>SimpleDateFormat.getDateInstance(DateFormat.MEDIUM)
+ *   <li>SimpleDateFormat.getDateInstance(DateFormat.FULL)
+ *   <li>SimpleDateFormat.getDateInstance(DateFormat.LONG)
  *   <li>'displayFormat' attribute value
  * </ul>
  * <!-- END SNIPPET: javadoc -->

@@ -1,5 +1,5 @@
 /*
- * $Id: DivDirective.java 494148 2007-01-08 18:41:13Z mrdon $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,27 +20,14 @@
  */
 package org.apache.struts2.dojo.views.velocity.components;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.components.Component;
-import org.apache.struts2.dojo.components.Div;
-
-import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.views.velocity.components.AbstractDirective;
 
 /**
- * @see Div
+ * Overwrite name prefix 
+ *
  */
-public class DivDirective extends DojoAbstractDirective {
-    public String getBeanName() {
-        return "div";
-    }
-
-    protected Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
-        return new Div(stack, req, res);
-    }
-
-    public int getType() {
-        return BLOCK;
+public abstract class DojoAbstractDirective extends AbstractDirective {
+    public String getName() {
+        return "sx" + getBeanName();
     }
 }

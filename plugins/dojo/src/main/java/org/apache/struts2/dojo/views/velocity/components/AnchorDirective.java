@@ -25,14 +25,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.components.Anchor;
 import org.apache.struts2.components.Component;
-import org.apache.struts2.views.velocity.components.AbstractDirective;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see Anchor
  */
-public class AnchorDirective extends AbstractDirective {
+public class AnchorDirective extends DojoAbstractDirective {
     public String getBeanName() {
         return "a";
     }

@@ -22,14 +22,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.components.Component;
 import org.apache.struts2.dojo.components.DateTimePicker;
-import org.apache.struts2.views.velocity.components.TextFieldDirective;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see DateTimePicker
  */
-public class DateTimePickerDirective extends TextFieldDirective {
+public class DateTimePickerDirective extends DojoAbstractDirective {
 
     protected Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new DateTimePicker(stack, req, res);

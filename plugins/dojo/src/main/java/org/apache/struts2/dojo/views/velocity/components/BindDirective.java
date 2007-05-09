@@ -25,14 +25,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.components.Component;
 import org.apache.struts2.dojo.components.Bind;
-import org.apache.struts2.views.velocity.components.AbstractDirective;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see Bind
  */
-public class BindDirective extends AbstractDirective {
+public class BindDirective extends DojoAbstractDirective {
     public String getBeanName() {
         return "bind";
     }

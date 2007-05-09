@@ -25,19 +25,22 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.components.Component;
 import org.apache.struts2.dojo.components.TabbedPanel;
-import org.apache.struts2.views.velocity.components.AbstractDirective;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * @see TabbedPanel
  */
-public class TabbedPanelDirective extends AbstractDirective {
+public class TabbedPanelDirective extends DojoAbstractDirective {
     public String getBeanName() {
         return "tabbedpanel";
     }
 
     protected Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new TabbedPanel(stack, req, res);
+    }
+    
+    public int getType() {
+        return BLOCK;
     }
 }

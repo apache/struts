@@ -8,6 +8,12 @@
 <table>
 	#slabel ("label=Name" "name=name")
 	#slabel ("label=Birthday" "name=birthday")
+	<tr>
+        <td><label class="label">Wake up time:</label></td>
+        <td>
+           #sdate ("name=wakeup" "format=hh:mm aa")
+        </td>
+    </tr>
 	#slabel ("label=Biography" "name=bio")
 	#slabel ("label=Favourite Color" "name=favouriteColor")
 	#slabel ("label=Friends" "name=friends")

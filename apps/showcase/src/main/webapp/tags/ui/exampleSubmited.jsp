@@ -10,6 +10,12 @@
 <table>
     <s:label label="Name" name="name" /> 
     <s:label label="Birthday" name="birthday" />
+    <tr>
+        <td><label class="label">Wake up time:</label></td>
+        <td>
+           <s:date name="wakeup" format="hh:mm aa" />
+        </td>
+    </tr>
     <s:label label="Biography" name="bio" /> 
     <s:label label="Favourite Color" name="favouriteColor" /> 
     <s:label label="Friends" name="friends" /> 

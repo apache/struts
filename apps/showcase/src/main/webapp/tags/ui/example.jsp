@@ -25,7 +25,13 @@
             tooltip="Select Your Birthday"
             label="Birthday"
             name="birthday" />
-
+            
+    <sx:datetimepicker
+            tooltip="Enter the time you wake up"
+            label="Wake up time"
+            name="wakeup" 
+            type="time"/>
+            
     <s:textarea
             tooltip="Enter your Biography"
             label="Biography"

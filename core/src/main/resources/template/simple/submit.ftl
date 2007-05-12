@@ -18,6 +18,9 @@
 <#if parameters.cssStyle?exists>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
+<#if parameters.tabindex?exists>
+ tabindex="${parameters.tabindex?html}"<#rt/>
+</#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl"/>
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 ><#if parameters.body?length gt 0><@s.property value="parameters.body"/><#elseif parameters.label?exists><@s.property value="parameters.label"/><#rt/></#if></button>
@@ -54,6 +57,9 @@
 </#if>
 <#if parameters.title?exists>
  title="${parameters.title?html}"<#rt/>
+</#if>
+<#if parameters.tabindex?exists>
+ tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />

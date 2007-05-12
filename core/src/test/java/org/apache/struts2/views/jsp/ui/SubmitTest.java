@@ -60,7 +60,8 @@ public class SubmitTest extends AbstractUITagTest {
         tag.setName("myname");
         tag.setValue("%{foo}");
         tag.setDisabled("true");
-
+        tag.setTabindex("1");
+        
         tag.doStartTag();
         tag.doEndTag();
 
@@ -77,7 +78,8 @@ public class SubmitTest extends AbstractUITagTest {
         tag.setName("myname");
         tag.setValue("%{foo}");
         tag.setDisabled("true");
-
+        tag.setTabindex("1");
+        
         tag.doStartTag();
         tag.doEndTag();
 

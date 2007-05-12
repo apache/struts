@@ -36,7 +36,6 @@ public class SubmitTag extends AbstractUITag {
 
     private static final long serialVersionUID = 2179281109958301343L;
 
-    protected String action;
     protected String method;
     protected String align;
     protected String type;
@@ -70,7 +69,6 @@ public class SubmitTag extends AbstractUITag {
         super.populateParams();
 
         Submit submit = ((Submit) component);
-        submit.setAction(action);
         submit.setMethod(method);
         submit.setAlign(align);
         submit.setType(type);
@@ -95,10 +93,6 @@ public class SubmitTag extends AbstractUITag {
         submit.setHighlightDuration(highlightDuration);
         submit.setValidate(validate);
         submit.setAjaxAfterValidation(ajaxAfterValidation);
-    }
-
-    public void setAction(String action) {
-        this.action = action;
     }
 
     public void setMethod(String method) {

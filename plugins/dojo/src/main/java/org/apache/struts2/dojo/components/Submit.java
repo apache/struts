@@ -29,6 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.components.Form;
 import org.apache.struts2.components.FormButton;
+import org.apache.struts2.interceptor.validation.SkipValidation;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.annotations.StrutsTagSkipInheritance;
@@ -380,5 +381,10 @@ public class Submit extends FormButton implements RemoteBean {
         defaultValue = "false")
     public void setAjaxAfterValidation(String ajaxAfterValidation) {
         this.ajaxAfterValidation = ajaxAfterValidation;
+    }
+
+    @StrutsTagSkipInheritance
+    public void setAction(String action) {
+        super.setAction(action);
     }
 }

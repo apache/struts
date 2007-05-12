@@ -6,6 +6,7 @@
   validate="true"
   ajaxAfterValidation="true"
   id="a"
+  tabindex="1"
   label="i"
   href="b"
   loadingText="c"

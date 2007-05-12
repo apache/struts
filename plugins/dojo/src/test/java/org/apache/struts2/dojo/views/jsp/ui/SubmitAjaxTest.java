@@ -48,6 +48,7 @@ public class SubmitAjaxTest extends AbstractUITagTest {
         tag.setHighlightDuration("o");
         tag.setValidate("true");
         tag.setAjaxAfterValidation("true");
+        tag.setTabindex("1");
         tag.doStartTag();
         tag.doEndTag();
 
@@ -76,6 +77,7 @@ public class SubmitAjaxTest extends AbstractUITagTest {
         tag.setIndicator("l");
         tag.setErrorNotifyTopics("m");
         tag.setValidate("true");
+        tag.setTabindex("1");
         tag.doStartTag();
         tag.doEndTag();
 

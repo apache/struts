@@ -3,6 +3,7 @@
   dojoType="struts:Bind"
   events="onclick"
   id="a"
+  tabindex="1"
   label="i"
   href="b"
   loadingText="c"

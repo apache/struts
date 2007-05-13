@@ -30,17 +30,61 @@ import org.apache.struts2.views.annotations.StrutsTagSkipInheritance;
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
+ * <!-- START SNIPPET: notice -->
+ * The "head" tag renders required javascript code to confogure Dojo and is required to use
+ * any of the tags included in the Dojo plugin.</p>
+ * <!-- END SNIPPET: notice -->
+ * 
  * <!-- START SNIPPET: javadoc -->
+ * <p></p>
+ * 
+ * <p>To debug javascript errors set the "debug" attribute to true, which will display Dojo 
+ * (and Struts) warning and error messages at the bottom of the page. Core Dojo files are by default
+ * compressed, to improve loading time, which makes them very hard to read. To debug Dojo and Struts
+ * widgets, set the "compressed" attribute to true. Make sure to turn this option off before
+ * moving your project into production, as uncompressed files will take longer to download.
+ * </p>
+ * <p>For troubleshooting javascript problems the following configuration is recommended:</p>
+ * <pre>
+ *   &lt;s:head debug="true" cache="false" compressed="false" /&gt;
+ * </pre>
  *
- * Renders parts of the HEAD section for an HTML file. This is useful as some themes require certain CSS and JavaScript
- * includes.<p/>
- *
- * If, for example, your page has ajax components integrated, without having the default theme set to ajax, you might
- * want to use the head tag with <b>theme="ajax"</b> so that the typical ajax header setup will be included in the
- * page.<p/>
- *
- * If you use the ajax theme you can turn a debug flag on by setting the debug parameter to <tt>true</tt>.
- *
+ * <p>Dojo files are loaded as required by the Dojo loading mechanism. The problem with this
+ * approach is that the files are not cached by the browser, so reloading a page or navigating
+ * to a different page that uses the same widgets will cause the files to be reloaded. To solve 
+ * this problem a custom Dojo profile is distributed with the Dojo plugin. This profile contains
+ * the files required by the tags in the Dojo plugin, all in one file (524Kb), which is cached 
+ * by the browser. This file will take longer to load by the browser but it will be downloaded 
+ * only once. By default the "cache" attribute is set to false.</p>
+ * 
+ * <p>Some tags like the "datetimepicker" can use different locales, to use a locale
+ * that is different from the request locale, it must be specified on the "extraLocales" 
+ * attribute. This attribute can contain a comma separated list of locale names. From
+ * Dojo's documentation:</p>
+ * 
+ * <p>
+ * The locale is a short string, defined by the host environment, which conforms to RFC 3066 
+ * (http://www.ietf.org/rfc/rfc3066.txt) used in the HTML specification. 
+ * It consists of short identifiers, typically two characters 
+ * long which are case-insensitive. Note that Dojo uses dash separators, not underscores like 
+ * Java (e.g. "en-us", not "en_US"). Typically country codes are used in the optional second 
+ * identifier, and additional variants may be specified. For example, Japanese is "ja"; 
+ * Japanese in Japan is "ja-jp". Notice that the lower case is intentional -- while Dojo 
+ * will often convert all locales to lowercase to normalize them, it is the lowercase that 
+ * must be used when defining your resources.
+ * </p>
+ * 
+ * <p>The "locale" attribute configures Dojo's locale:</p>
+ * 
+ * "The locale Dojo uses on a page may be overridden by setting djConfig.locale. This may be 
+ * done to accomodate applications with a known user profile or server pages which do manual
+ * assembly and assume a certain locale. You may also set djConfig.extraLocale to load 
+ * localizations in addition to your own, in case you want to specify a particular 
+ * translation or have multiple languages appear on your page."</p>
+ * 
+ * <p>Dojo 0.4.2 is distributed with the Dojo plugin, to use a different Dojo version, the 
+ * "baseRelativePath" attribute can be set to the URL of the Dojo root folder on your application.
+ * </p>
  * <!-- END SNIPPET: javadoc -->
  *
  * <p/> <b>Examples</b>
@@ -49,7 +93,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- START SNIPPET: example1 -->
  * &lt;head&gt;
  *   &lt;title&gt;My page&lt;/title&gt;
- *   &lt;s:head/&gt;
+ *   &lt;sx:head/&gt;
  * &lt;/head&gt;
  * <!-- END SNIPPET: example1 -->
  * </pre>
@@ -58,7 +102,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- START SNIPPET: example3 -->
  * &lt;head&gt;
  *   &lt;title&gt;My page&lt;/title&gt;
- *   &lt;s:head debug="true"/&gt;
+ *   &lt;sx:head debug="true" extraLocales="en-us,nl-nl,de-de"/&gt;
  * &lt;/head&gt;
  * <!-- END SNIPPET: example3 -->
  * </pre>

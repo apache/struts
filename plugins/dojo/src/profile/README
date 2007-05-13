@@ -1,0 +1,19 @@
+To build the Struts Dojo profile:
+
+1. Checkout Dojo from svn (${dojo} refers to root dir)
+
+2. Copy struts.profile.js tp ${dojo}/buildscripts/profiles
+
+3. Copy /plugins/dojo/src/main/resources/org/apache/struts2/static/dojo/struts/ComboBox.css to
+   ${dojo}/struts (Dojo build system doesn't resolve the relative paths that well in 0.4.2)
+   
+4. In ${dojo}/buildscripts/build.xml comment the call to the target "-preload-resources" in the "compress"
+   target. The problem with this is that the locales fail to load on our profile. This has got to be
+   a dojo bug, as the locales loading should be handled by the generated javascript files. (the default dojo
+   profile doesn't include the locales)
+  
+5. Inside ${dojo}/buildscripts run:
+   $ ant -Dversion=0.4.2 -Dprofile=struts clean release intern-strings
+   $ cp ../release/dojo/dojo.js ${struts}/plugins/dojo/src/main/resources/org/apache/struts2/static/dojo/struts_dojo.js
+   $ cp ../release/dojo/dojo.js.uncompressed.js  ${struts}/plugins/dojo/src/main/resources/org/apache/struts2/static/dojo/struts_dojo.js.uncompressed.js
+    

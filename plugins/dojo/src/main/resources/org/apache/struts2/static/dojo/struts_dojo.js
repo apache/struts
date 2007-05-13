@@ -13788,8 +13788,8 @@ if(this.showLoading){
 this.setContent(this.loadingText);
 }
 var _b9b=this.href;
-if(!this.ajaxAfterValidation){
-_b9b=_b9b+(_b9b.indexOf("?")>-1?"&":"?")+"validateOnly=true";
+if(!this.ajaxAfterValidation&&this.validate){
+_b9b=_b9b+(_b9b.indexOf("?")>-1?"&":"?")+"struts.validateOnly=true";
 }
 dojo.io.bind({url:_b9b,useCache:false,preventCache:true,formNode:self.formNode,formFilter:window[self.formFilter],handler:function(type,data,e){
 dojo.lang.hitch(self,"bindHandler")(type,data,e);
@@ -15649,8 +15649,6 @@ var RTL={ar:true,fa:true,he:true,ur:true,yi:true};
 return !RTL[lang];
 };
 dojo.provide("dojo.date.format");
-dojo.requireLocalization("dojo.i18n.calendar","gregorian");
-dojo.requireLocalization("dojo.i18n.calendar","gregorianExtras");
 (function(){
 dojo.date.format=function(_d23,_d24){
 if(typeof _d24=="string"){
@@ -16342,8 +16340,6 @@ _da2.push(0);
 return new Date(_da2[0],(parseInt(_da2[1],10)-1),_da2[2],_da2[3],_da2[4],_da2[5]);
 };
 dojo.provide("dojo.widget.TimePicker");
-dojo.requireLocalization("dojo.i18n.calendar","gregorian");
-dojo.requireLocalization("dojo.widget","TimePicker");
 dojo.widget.defineWidget("dojo.widget.TimePicker",dojo.widget.HtmlWidget,function(){
 this.time="";
 this.useDefaultTime=false;
@@ -16600,7 +16596,6 @@ return hour;
 };
 };
 dojo.provide("dojo.widget.DropdownTimePicker");
-dojo.requireLocalization("dojo.widget","DropdownTimePicker");
 dojo.widget.defineWidget("dojo.widget.DropdownTimePicker",dojo.widget.DropdownContainer,{iconURL:dojo.uri.moduleUri("dojo.widget","templates/images/timeIcon.gif"),formatLength:"short",displayFormat:"",timeFormat:"",saveFormat:"",value:"",name:"",postMixInProperties:function(){
 dojo.widget.DropdownTimePicker.superclass.postMixInProperties.apply(this,arguments);
 var _dd9=dojo.i18n.getLocalization("dojo.widget","DropdownTimePicker",this.lang);
@@ -17108,7 +17103,6 @@ dojo.widget.DatePicker.superclass.destroy.apply(this,arguments);
 dojo.html.destroyNode(this.weekTemplate);
 }});
 dojo.provide("dojo.widget.DropdownDatePicker");
-dojo.requireLocalization("dojo.widget","DropdownDatePicker");
 dojo.widget.defineWidget("dojo.widget.DropdownDatePicker",dojo.widget.DropdownContainer,{iconURL:dojo.uri.moduleUri("dojo.widget","templates/images/dateIcon.gif"),formatLength:"short",displayFormat:"",saveFormat:"",value:"",name:"",displayWeeks:6,adjustWeeks:false,startDate:"1492-10-12",endDate:"2941-10-12",weekStartsOn:"",staticDisplay:false,postMixInProperties:function(_e3e,frag){
 dojo.widget.DropdownDatePicker.superclass.postMixInProperties.apply(this,arguments);
 var _e40=dojo.i18n.getLocalization("dojo.widget","DropdownDatePicker",this.lang);

@@ -295,8 +295,8 @@ dojo.widget.defineWidget(
           }
           
           var tmpHref = this.href;
-          if(!this.ajaxAfterValidation) {
-            tmpHref = tmpHref + (tmpHref.indexOf("?") > -1 ? "&" : "?") + "validateOnly=true";
+          if(!this.ajaxAfterValidation && this.validate) {
+            tmpHref = tmpHref + (tmpHref.indexOf("?") > -1 ? "&" : "?") + "struts.validateOnly=true";
           }  
 
           dojo.io.bind({

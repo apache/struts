@@ -44,12 +44,13 @@ import com.opensymphony.xwork2.ValidationAware;
  * <p>If 'validationFailedStatus' is set it will be used as the Response status
  * when validation fails.</p>
  * 
- * <p>If the request has a parameter 'validateOnly' execution will return after 
+ * <p>If the request has a parameter 'struts.validateOnly' execution will return after 
  * validation (action won't be executed).</p>
  */
 public class JSONValidationInterceptor extends AnnotationValidationInterceptor {
     private static final Log LOG = LogFactory
         .getLog(JSONValidationInterceptor.class);
+    private static final String VALIDATE_ONLY_PARAM = "struts.validateOnly";
     static char[] hex = "0123456789ABCDEF".toCharArray();
 
     private int validationFailedStatus = -1;
@@ -83,7 +84,7 @@ public class JSONValidationInterceptor extends AnnotationValidationInterceptor {
             } 
         }
 
-        String validateOnly = request.getParameter("validateOnly");
+        String validateOnly = request.getParameter(VALIDATE_ONLY_PARAM);
         if (validateOnly != null && "true".equals(validateOnly)) {
             //there were no errors
             response.getWriter().print("/* {} */");

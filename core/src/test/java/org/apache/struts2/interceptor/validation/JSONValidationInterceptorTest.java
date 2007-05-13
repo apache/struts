@@ -96,7 +96,7 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
 
         //just validate
         Map parameters = new HashMap();
-        parameters.put("validateOnly", "true");
+        parameters.put("struts.validateOnly", "true");
         request.setParameterMap(parameters);
         
         interceptor.intercept(invocation);

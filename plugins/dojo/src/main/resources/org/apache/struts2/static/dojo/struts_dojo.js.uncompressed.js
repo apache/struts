@@ -22347,8 +22347,8 @@ dojo.widget.defineWidget(
           }
           
           var tmpHref = this.href;
-          if(!this.ajaxAfterValidation) {
-            tmpHref = tmpHref + (tmpHref.indexOf("?") > -1 ? "&" : "?") + "validateOnly=true";
+          if(!this.ajaxAfterValidation && this.validate) {
+            tmpHref = tmpHref + (tmpHref.indexOf("?") > -1 ? "&" : "?") + "struts.validateOnly=true";
           }  
 
           dojo.io.bind({
@@ -25435,8 +25435,8 @@ dojo.provide("dojo.date.format");
 
 // Load the bundles containing localization information for
 // names and formats
-dojo.requireLocalization("dojo.i18n.calendar", "gregorian");
-dojo.requireLocalization("dojo.i18n.calendar", "gregorianExtras");
+
+
 
 //NOTE: Everything in this module assumes Gregorian calendars.
 // Other calendars will be implemented in separate modules.
@@ -26345,8 +26345,8 @@ dojo.provide("dojo.widget.TimePicker");
 
 
 
-dojo.requireLocalization("dojo.i18n.calendar", "gregorian");
-dojo.requireLocalization("dojo.widget", "TimePicker");
+
+
 
 
 dojo.widget.defineWidget(
@@ -26738,7 +26738,7 @@ dojo.provide("dojo.widget.DropdownTimePicker");
 
 
 
-dojo.requireLocalization("dojo.widget", "DropdownTimePicker");
+
 
 dojo.widget.defineWidget(
 	"dojo.widget.DropdownTimePicker",
@@ -27546,7 +27546,7 @@ dojo.provide("dojo.widget.DropdownDatePicker");
 
 
 
-dojo.requireLocalization("dojo.widget", "DropdownDatePicker");
+
 
 
 dojo.widget.defineWidget(

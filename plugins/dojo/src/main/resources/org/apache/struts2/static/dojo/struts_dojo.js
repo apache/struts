@@ -14954,7 +14954,7 @@ this.setData(data);
 }
 }
 };
-dojo.widget.defineWidget("struts.widget.ComboBox",dojo.widget.ComboBox,{widgetType:"ComboBox",dropdownHeight:120,dropdownWidth:0,itemHeight:0,listenTopics:"",notifyTopics:"",notifyTopicsArray:null,beforeNotifyTopics:"",beforeNotifyTopicsArray:null,afterNotifyTopics:"",afterNotifyTopicsArray:null,errorNotifyTopics:"",errorNotifyTopicsArray:null,valueNotifyTopics:"",valueNotifyTopicsArray:null,indicator:"",formId:"",formFilter:"",dataProviderClass:"struts.widget.ComboBoxDataProvider",loadOnType:false,loadMinimum:3,initialValue:"",initialKey:"",visibleDownArrow:true,fadeTime:100,searchType:"STARTSTRING",dataFieldName:"",keyName:"",templateCssPath:dojo.uri.dojoUri("struts/ComboBox.css"),searchLimit:30,showResultList:function(){
+dojo.widget.defineWidget("struts.widget.ComboBox",dojo.widget.ComboBox,{widgetType:"ComboBox",dropdownHeight:120,dropdownWidth:0,itemHeight:0,listenTopics:"",notifyTopics:"",notifyTopicsArray:null,beforeNotifyTopics:"",beforeNotifyTopicsArray:null,afterNotifyTopics:"",afterNotifyTopicsArray:null,errorNotifyTopics:"",errorNotifyTopicsArray:null,valueNotifyTopics:"",valueNotifyTopicsArray:null,indicator:"",formId:"",formFilter:"",dataProviderClass:"struts.widget.ComboBoxDataProvider",loadOnType:false,loadMinimum:3,initialValue:"",initialKey:"",visibleDownArrow:true,fadeTime:100,searchType:"STARTSTRING",dataFieldName:"",keyName:"",templateCssString:null,templateCssPath:dojo.uri.dojoUri("struts/ComboBox.css"),searchLimit:30,showResultList:function(){
 var _c73=this.optionsListNode.childNodes;
 if(_c73.length){
 this.optionsListNode.style.width=this.dropdownWidth===0?(dojo.html.getMarginBox(this.domNode).width-2)+"px":this.dropdownWidth+"px";

@@ -24303,6 +24303,8 @@ dojo.widget.defineWidget(
 
   dataFieldName : "",
   keyName: "",
+  //embedded the style in the template string in 0.4.2 release, not good
+  templateCssString: null,
   templateCssPath: dojo.uri.dojoUri("struts/ComboBox.css"),
   
   //how many results are shown

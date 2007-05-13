@@ -16,7 +16,7 @@
      dojo.byId(widget.targetsArray[0]).innerHTML = "Done";
    }
 
-    dojo.event.topic.subscribe("/after", function(data, type, e){
+    dojo.event.topic.subscribe("/alltopics", function(data, type, e){
       alert('inside a topic event. type='+type);
       //data : text returned
       //type : "before", "load" or "error"
@@ -43,7 +43,7 @@ A submit button, with an indicator
 <br/><br/>
 
 A submit button, with "notifyTopics"
-<sx:submit type="submit" value="submit" targets="t1" href="%{ajaxTest}" notifyTopics="/after"/>
+<sx:submit type="submit" value="submit" targets="t1" href="%{ajaxTest}" notifyTopics="/alltopics"/>
 
 <br/><br/>
 

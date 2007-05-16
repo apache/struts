@@ -23,6 +23,7 @@ package org.apache.struts2.dojo.components;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -73,6 +74,10 @@ import com.opensymphony.xwork2.util.ValueStack;
  *      <td>Month - Use one or two for the numerical month, three for the abbreviation, or four for the full name, or 5 for the narrow name.</td>
  *   </tr>
  *   <tr>
+ *      <td>y</td>
+ *      <td>Year</td>
+ *   </tr>
+ *   <tr>
  *      <td>h</td>
  *      <td>Hour [1-12].</td>
  *   </tr>
@@ -100,13 +105,13 @@ import com.opensymphony.xwork2.util.ValueStack;
  * 'startDate' and 'endDate':
  * </p>
  * <ul>
- *   <li>RFC 3339
+ *   <li>SimpleDateFormat built using RFC 3339 (yyyy-MM-dd'T'HH:mm:ss)
  *   <li>SimpleDateFormat.getTimeInstance(DateFormat.SHORT)
  *   <li>SimpleDateFormat.getDateInstance(DateFormat.SHORT)
  *   <li>SimpleDateFormat.getDateInstance(DateFormat.MEDIUM)
  *   <li>SimpleDateFormat.getDateInstance(DateFormat.FULL)
  *   <li>SimpleDateFormat.getDateInstance(DateFormat.LONG)
- *   <li>'displayFormat' attribute value
+ *   <li>SimpleDateFormat built using the value of the 'displayFormat' attribute(if any)
  * </ul>
  * <!-- END SNIPPET: javadoc -->
  *
@@ -119,8 +124,10 @@ import com.opensymphony.xwork2.util.ValueStack;
  *     &lt;s:datetimepicker name="order.date" label="Order Date" /&gt;
  * Example 2:
  *     &lt;s:datetimepicker name="delivery.date" label="Delivery Date" displayFormat="yyyy-MM-dd"  /&gt;
- * Example 3:    
+ * Example 3:   
  *      &lt;s:datetimepicker name="delivery.date" label="Delivery Date" value="%{date}"  /&gt;
+ *  Example 3:    
+ *      &lt;s:datetimepicker name="delivery.date" label="Delivery Date" value="%{'2007-01-01'}"  /&gt;     
  * <!-- END SNIPPET: expl1 -->
  * </pre>
  * <p/>
@@ -163,14 +170,16 @@ public class DateTimePicker extends UIBean {
     public void evaluateParams() {
         super.evaluateParams();
 
+        if(displayFormat != null)
+            addParameter("displayFormat", findString(displayFormat));
         if(displayWeeks != null)
             addParameter("displayWeeks", findString(displayWeeks));
         if(adjustWeeks != null)
             addParameter("adjustWeeks", findValue(adjustWeeks, Boolean.class));
         if(startDate != null)
-            addParameter("startDate", format(findString(startDate)));
+            addParameter("startDate", format(findValue(startDate)));
         if(endDate != null)
-            addParameter("endDate", format(findString(endDate)));
+            addParameter("endDate", format(findValue(endDate)));
         if(weekStartsOn != null)
             addParameter("weekStartsOn", findString(weekStartsOn));
         if(staticDisplay != null)
@@ -179,14 +188,13 @@ public class DateTimePicker extends UIBean {
             addParameter("dayWidth", findValue(dayWidth, Integer.class));
         if(language != null)
             addParameter("language", findString(language));
-        if(value != null)
-            addParameter("value", findString(value));
+        if(value != null) 
+            addParameter("value", format(findValue(value)));
+   
         if(iconPath != null)
             addParameter("iconPath", findString(iconPath));
         if(formatLength != null)
             addParameter("formatLength", findString(formatLength));
-        if(displayFormat != null)
-            addParameter("displayFormat", findString(displayFormat));
         if(toggleType != null)
             addParameter("toggleType", findString(toggleType));
         if(toggleDuration != null)
@@ -203,14 +211,10 @@ public class DateTimePicker extends UIBean {
         
         // format the value to RFC 3399
         if(parameters.containsKey("value")) {
-            parameters.put("nameValue", format(parameters.get("value")));
+            parameters.put("nameValue", parameters.get("value"));
         } else {
             if(name != null) {
-                String expr = name;
-                if(altSyntax()) {
-                    expr = "%{" + expr + "}";
-                }
-                addParameter("nameValue", format(findValue(expr)));
+                addParameter("nameValue", format(findValue(name)));
             }
         }
     }
@@ -320,7 +324,10 @@ public class DateTimePicker extends UIBean {
 
         if(obj instanceof Date) {
             return RFC3339_FORMAT.format((Date) obj);
-        } else {
+        } else if(obj instanceof Calendar) {
+            return RFC3339_FORMAT.format(((Calendar) obj).getTime());
+        }
+        else {
             // try to parse a date
             String dateStr = obj.toString();
             if(dateStr.equalsIgnoreCase("today"))
@@ -337,9 +344,14 @@ public class DateTimePicker extends UIBean {
             formats.add(SimpleDateFormat.getDateInstance(DateFormat.FULL));
             formats.add(SimpleDateFormat.getDateInstance(DateFormat.LONG));
             if (this.displayFormat != null) {
-                SimpleDateFormat displayFormat = new SimpleDateFormat(
+                try {
+                    SimpleDateFormat displayFormat = new SimpleDateFormat(
                         (String) getParameters().get("displayFormat"));
-                formats.add(displayFormat);
+                    formats.add(displayFormat);
+                } catch (Exception e) {
+                    // don't use it then (this attribute is used by Dojo, not java code)
+                    LOG.error(e);
+                }
             }
             
             for (DateFormat format : formats) {

@@ -25,9 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import javax.servlet.jsp.JspException;
-
-import org.apache.struts2.dojo.TestAction;
 import org.apache.struts2.dojo.components.DateTimePicker;
 
 /**
@@ -45,15 +42,15 @@ public class DateTimePickerTagTest extends AbstractUITagTest {
         tag.setAdjustWeeks("true");
         tag.setDayWidth("b");
         tag.setDisplayWeeks("true");
-        tag.setEndDate("01-01-2008");
-        tag.setStartDate("01-01-2007");
+        tag.setEndDate("%{'2008-01-01'}");
+        tag.setStartDate("%{'2008-02-02'}");
         tag.setStaticDisplay("false");
         tag.setWeekStartsOn("g");
         tag.setName("h");
         tag.setLanguage("i");
         tag.setTemplateCssPath("j");
         tag.setValueNotifyTopics("k");
-        tag.setValue("l");
+        tag.setValue("%{'2008-03-03'}");
         tag.doStartTag();
         tag.doEndTag();
 
@@ -95,34 +92,54 @@ public class DateTimePickerTagTest extends AbstractUITagTest {
 
     }
 
-    private void assertDateProperty(String property, DateTimePickerTag tag, Date date) throws Exception {
-        DateFormat shortTimeFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
-        DateFormat shortFormat = DateFormat.getDateInstance(DateFormat.SHORT);
-        DateFormat mediumFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-        DateFormat longFormat = DateFormat.getDateInstance(DateFormat.LONG);
-        DateFormat fullFormat = DateFormat.getDateInstance(DateFormat.FULL);
+    private void assertDateProperty(String property, DateTimePickerTag tag, final Date date) throws Exception {
+        final DateFormat shortTimeFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+        final DateFormat shortFormat = DateFormat.getDateInstance(DateFormat.SHORT);
+        final DateFormat mediumFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        final DateFormat longFormat = DateFormat.getDateInstance(DateFormat.LONG);
+        final DateFormat fullFormat = DateFormat.getDateInstance(DateFormat.FULL);
+        //try a Date value
+        stack.set("date", date);
+        assertDateValue(property, tag, date, true, false);
+        
+        //try a Calendar value
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        stack.set("date", calendar);
+        assertDateValue(property, tag, date, true, false);
+        
+        //try an object whose to string returns a parseable date
+        stack.set("date", new Object() {
 
-        // try short format on 'value'
+            @Override
+            public String toString() {
+                return fullFormat.format(date);
+            }
+            
+        });
+        assertDateValue(property, tag, date, true, false);
+        
+        // try short format 
         stack.set("date", shortFormat.format(date));
         assertDateValue(property, tag, date, true, false);
 
-        //try medium format on 'value'
+        //try medium format 
         stack.set("date", mediumFormat.format(date));
         assertDateValue(property, tag, date, true, false);
 
-        //try long format on 'value'
+        //try long format 
         stack.set("date", longFormat.format(date));
         assertDateValue(property, tag, date, true, false);
 
-        //try long format on 'value'
+        //try full format 
         stack.set("date", fullFormat.format(date));
         assertDateValue(property, tag, date, true, false);
 
-        //try RFC 3339 format on 'value'
+        //try RFC 3339 format 
         stack.set("date", RFC3339_FORMAT.format(date));
         assertDateValue(property, tag, date, true, false);
         
-        //try short time format on 'value'
+        //try short time format 
         stack.set("date", shortTimeFormat.format(date));
         assertDateValue(property, tag, date, false, true);
     }

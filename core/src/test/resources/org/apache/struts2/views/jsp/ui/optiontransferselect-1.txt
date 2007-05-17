@@ -34,6 +34,8 @@
 		size="20"		
 		multiple="multiple"
 		id="doubleId"
+		class="c2"
+		style="s2"
 	>
     	<option value="Double Header Key">Double Header Value</option>
     	<option value=""></option>

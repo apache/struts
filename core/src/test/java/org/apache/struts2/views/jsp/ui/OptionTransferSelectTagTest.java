@@ -60,6 +60,8 @@ public class OptionTransferSelectTagTest extends AbstractUITagTest {
         tag.setDoubleSize("20");
         tag.setMultiple("true");
         tag.setDoubleEmptyOption("true");
+        tag.setDoubleCssClass("c2");
+        tag.setDoubleCssStyle("s2");
 
         tag.setAllowAddAllToLeft("true");
         tag.setAllowAddAllToRight("true");

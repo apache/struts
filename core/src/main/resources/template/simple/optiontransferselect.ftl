@@ -184,11 +184,11 @@
 	<#if parameters.doubleId?exists><#t/>
 	id="${parameters.doubleId?html}"
 	</#if><#t/>
-	<#if parameters.doubleCssClass?exists><#t/>
-	class="${parameters.doubleCssClass?html}"
+	<#if parameters.doubleCss?exists><#t/>
+	class="${parameters.doubleCss?html}"
 	</#if><#t/>
-	<#if parameters.doubleCssStyle?exists><#t/>
-	style="${parameters.doubleCssStyle?html}"
+	<#if parameters.doubleStyle?exists><#t/>
+	style="${parameters.doubleStyle?html}"
 	</#if><#t/>
     <#if parameters.doubleOnclick?exists><#t/>
     onclick="${parameters.doubleOnclick?html}"

@@ -19,11 +19,11 @@
 <#if parameters.doubleId?exists>
  id="${parameters.doubleId?html}"<#rt/>
 </#if>
-<#if parameters.cssClass?exists>
- class="${parameters.cssClass?html}"<#rt/>
+<#if parameters.doubleCss?exists>
+ class="${parameters.doubleCss?html}"<#rt/>
 </#if>
-<#if parameters.cssStyle?exists>
- style="${parameters.cssStyle?html}"<#rt/>
+<#if parameters.doubleStyle?exists>
+ style="${parameters.doubleStyle?html}"<#rt/>
 </#if>
 <#if parameters.title?exists>
  title="${parameters.title?html}"<#rt/>

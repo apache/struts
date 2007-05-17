@@ -72,6 +72,7 @@ public class ComboBoxTest extends AbstractUITagTest {
         tag.setPageContext(pageContext);
         tag.setLabel("mylabel");
         tag.setName("foo");
+        tag.setId("cb");
         tag.setList("collection");
 
         tag.doStartTag();

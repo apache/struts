@@ -1,5 +1,5 @@
 <script type="text/javascript">
-	function autoPopulate_${parameters.name?html}(targetElement) {
+	function autoPopulate_${parameters.id?html}(targetElement) {
 		<#if parameters.headerKey?exists && parameters.headerValue?exists>
 		if (targetElement.options[targetElement.selectedIndex].value == '${parameters.headerKey?html}') {
 			return;
@@ -16,7 +16,7 @@
 <#include "/${parameters.templateDir}/simple/text.ftl" />
 <br/>
 <#if parameters.list?exists>
-<select onChange="autoPopulate_${parameters.name?html}(this);"<#rt/>
+<select onChange="autoPopulate_${parameters.id?html}(this);"<#rt/>
     <#if parameters.disabled?default(false)>
  disabled="disabled"<#rt/>
     </#if>

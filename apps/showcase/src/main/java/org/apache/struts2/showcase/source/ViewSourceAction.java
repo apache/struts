@@ -30,7 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.util.ServletContextAware;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -81,7 +83,9 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
             classLines = read(in, -1);
         }
 
-        if (config != null && config.trim().length() > 0) {
+        String rootPath = ServletActionContext.getServletContext().getRealPath("/");
+                
+        if (config != null && config.trim().length() > 0 && (rootPath == null || config.startsWith(rootPath))) {
             int pos = config.lastIndexOf(':');
             configLine = Integer.parseInt(config.substring(pos+1));
             config = config.substring(0, pos).replace("//", "/");

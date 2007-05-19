@@ -29,6 +29,7 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsException;
+import org.apache.struts2.util.ClassLoaderUtils;
 
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.location.Location;
@@ -53,7 +54,7 @@ class PropertiesSettings extends Settings {
      */
     public PropertiesSettings(String name) {
         
-        URL settingsUrl = Thread.currentThread().getContextClassLoader().getResource(name + ".properties");
+        URL settingsUrl = ClassLoaderUtils.getResource(name + ".properties", getClass());
         
         if (settingsUrl == null) {
             LOG.debug(name + ".properties missing");

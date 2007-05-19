@@ -31,7 +31,7 @@
 
         <#assign renderRow=false>
         <#list stackObject.value.keySet() as propertyName>
-            <#if renderRow==true><tr><#else> <#assign renderRow=false> </#if>
+            <#if renderRow==true></tr><tr><#else> <#assign renderRow=false> </#if>
             <td bgcolor="<#if (index % 2) == 0>#BBBBBB<#else>#CCCCCC</#if>">${propertyName}</td>
             <td bgcolor="<#if (index % 2) == 0>#BBBBBB<#else>#CCCCCC</#if>"><#if stackObject.value.get(propertyName)?exists>${stackObject.value.get(propertyName).toString()}<#else>null</#if></td>
     </tr>

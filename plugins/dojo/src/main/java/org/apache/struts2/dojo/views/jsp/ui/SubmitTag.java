@@ -60,6 +60,7 @@ public class SubmitTag extends AbstractUITag {
     protected String highlightDuration;
     protected String validate;
     protected String ajaxAfterValidation;
+    protected String separateScripts;
     
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Submit(stack, req, res);
@@ -93,6 +94,7 @@ public class SubmitTag extends AbstractUITag {
         submit.setHighlightDuration(highlightDuration);
         submit.setValidate(validate);
         submit.setAjaxAfterValidation(ajaxAfterValidation);
+        submit.setSeparateScripts(separateScripts);
     }
 
     public void setMethod(String method) {
@@ -193,5 +195,9 @@ public class SubmitTag extends AbstractUITag {
 
     public void setAjaxAfterValidation(String ajaxAfterValidation) {
         this.ajaxAfterValidation = ajaxAfterValidation;
+    }
+
+    public void setSeparateScripts(String separateScripts) {
+        this.separateScripts = separateScripts;
     }
 }

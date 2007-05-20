@@ -294,7 +294,7 @@ dojo.widget.defineWidget(
     },
     
     //from Dojo's ContentPane
-    //TODO: remove when fixed on Dojo
+    //TODO: remove when fixed on Dojo (WW-1869)
     splitAndFixPaths:function (s, url) {
       var titles = [], scripts = [], tmp = [];
       var match = [], requires = [], attr = [], styles = [];

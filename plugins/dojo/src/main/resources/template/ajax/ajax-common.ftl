@@ -73,3 +73,6 @@
   <#if parameters.highlightDuration?if_exists != "">
     highlightDuration="${parameters.highlightDuration?html}"<#rt/>
   </#if>
+  <#if parameters.separateScripts?exists>
+    scriptSeparation="${parameters.separateScripts?string?html}"<#rt/>
+  </#if>

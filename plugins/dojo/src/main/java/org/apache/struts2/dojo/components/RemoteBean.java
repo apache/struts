@@ -62,4 +62,6 @@ public interface RemoteBean {
     void setHighlightColor(String color);
     
     void setHighlightDuration(String color);
+    
+    void setSeparateScripts(String separateScripts);
 }

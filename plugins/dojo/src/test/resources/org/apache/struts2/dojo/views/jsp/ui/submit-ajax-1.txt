@@ -21,4 +21,5 @@
   showLoading="true"
   highlightColor="n"
   highlightDuration="o"
+  scriptSeparation="true"
   />

@@ -49,6 +49,7 @@ public abstract class AbstractRemoteBean extends ClosingUIBean implements Remote
     protected String errorNotifyTopics;
     protected String highlightColor;
     protected String highlightDuration;
+    protected String separateScripts;
     
     public AbstractRemoteBean(ValueStack stack, HttpServletRequest request,
             HttpServletResponse response) {
@@ -94,6 +95,8 @@ public abstract class AbstractRemoteBean extends ClosingUIBean implements Remote
             addParameter("highlightColor", findString(highlightColor));
         if (highlightDuration != null)
             addParameter("highlightDuration", findString(highlightDuration));
+        if (separateScripts != null)
+            addParameter("separateScripts", findValue(separateScripts, Boolean.class));
     }
 
     @Override
@@ -216,5 +219,10 @@ public abstract class AbstractRemoteBean extends ClosingUIBean implements Remote
         defaultValue = "2000", type="Integer")
     public void setHighlightDuration(String highlightDuration) {
         this.highlightDuration = highlightDuration;
+    }
+    
+    @StrutsTagAttribute(description="Run scripts in a separate scope, unique for each tag", defaultValue="true")
+    public void setSeparateScripts(String separateScripts) {
+        this.separateScripts = separateScripts;
     }
 }

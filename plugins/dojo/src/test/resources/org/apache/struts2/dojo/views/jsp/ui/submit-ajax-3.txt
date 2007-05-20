@@ -19,4 +19,5 @@
   errorNotifyTopics="m"
   handler="h"
   indicator="l"
+  scriptSeparation="true"
   />

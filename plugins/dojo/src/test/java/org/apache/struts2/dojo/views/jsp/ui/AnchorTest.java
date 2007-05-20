@@ -52,6 +52,7 @@ public class AnchorTest extends AbstractUITagTest {
         tag.setHighlightDuration("n");
         tag.setValidate("true");
         tag.setAjaxAfterValidation("true");
+        tag.setSeparateScripts("true");
         tag.doStartTag();
         tag.doEndTag();
 

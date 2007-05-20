@@ -122,6 +122,7 @@ public class Submit extends FormButton implements RemoteBean {
     protected String highlightDuration;
     protected String validate;
     protected String ajaxAfterValidation;
+    protected String separateScripts;
     
     public Submit(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -184,6 +185,8 @@ public class Submit extends FormButton implements RemoteBean {
             addParameter("highlightColor", findString(highlightColor));
         if (highlightDuration != null)
             addParameter("highlightDuration", findString(highlightDuration));
+        if (separateScripts != null)
+            addParameter("separateScripts", findValue(separateScripts, Boolean.class));
         
         Boolean validateValue = false;
         if (validate != null) {
@@ -386,5 +389,10 @@ public class Submit extends FormButton implements RemoteBean {
     @StrutsTagSkipInheritance
     public void setAction(String action) {
         super.setAction(action);
+    }
+    
+    @StrutsTagAttribute(description="Run scripts in a separate scope, unique for each tag", defaultValue="true")
+    public void setSeparateScripts(String separateScripts) {
+        this.separateScripts = separateScripts;
     }
 }

@@ -7,7 +7,6 @@
   startTimerListenTopics="h"
   stopTimerListenTopics="i"
   refreshOnShow="true"
-  scriptSeparation="false"
   id="mylabel"
   href="a"
   loadingText="b"
@@ -21,5 +20,6 @@
   showError="true"
   showLoading="true"
   highlightColor="o"
-  highlightDuration="p">
+  highlightDuration="p"
+  scriptSeparation="false">
 </div>

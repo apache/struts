@@ -17,5 +17,6 @@
  showError="true"
  showLoading="true"
  highlightColor="m"
- highlightDuration="n">
+ highlightDuration="n"
+ scriptSeparation="true">
 </a>

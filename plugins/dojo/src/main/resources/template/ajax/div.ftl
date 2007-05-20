@@ -20,9 +20,6 @@
   <#if parameters.refreshOnShow?exists>
     refreshOnShow="${parameters.refreshOnShow?string?html}"<#rt/>
   </#if>
-  <#if parameters.separateScripts?exists>
-    scriptSeparation="${parameters.separateScripts?string?html}"<#rt/>
-  </#if>
   <#if parameters.preload?exists>
     preload="${parameters.preload?string?html}"<#rt/>
   </#if>

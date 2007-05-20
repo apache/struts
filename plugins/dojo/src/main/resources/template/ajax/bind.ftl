@@ -70,6 +70,9 @@
 			<#else>
 			    "ajaxAfterValidation": false,    
 			</#if>
+			<#if parameters.separateScripts?exists>
+                "scriptSeparation": ${parameters.separateScripts?string?html},<#rt/>
+            </#if>
 		});
 	});
 </script>

@@ -22061,6 +22061,7 @@ dojo.widget.defineWidget(
   dojo.widget.HtmlWidget, {
   widgetType : "Bind",
   executeScripts : false,
+  scriptSeparation : false,
   targets : "",
   targetsArray : null,
   href : "",
@@ -22098,6 +22099,13 @@ dojo.widget.defineWidget(
   validate : false,
   ajaxAfterValidation : false,
   
+  //used for scripts downloading & caching
+  cacheContent : true,
+  //run script on its own scope
+  scriptSeparation : true,
+  //scope for the cript separation
+  scriptScope : null,
+   
   postCreate : function() {
     var self = this;
 
@@ -22235,14 +22243,7 @@ dojo.widget.defineWidget(
       if(this.executeScripts) {
         //update targets content
         var parsed = this.parse(data);
-        //eval scripts
-        if(parsed.scripts && parsed.scripts.length > 0) {
-          var scripts = "";
-          for(var i = 0; i < parsed.scripts.length; i++){
-            scripts += parsed.scripts[i];
-          }
-          (new Function('_container_', scripts+'; return this;'))(this);
-        }
+        this._executeScripts(parsed.scripts);
         this.setContent(parsed.text);
       }
       else {
@@ -22417,7 +22418,65 @@ dojo.widget.defineWidget(
       text: s,
       scripts: scripts
     };
-  }
+  }, 
+  
+  //from Dojo content pane
+  _executeScripts : function (scripts) {
+    var self = this;
+    var tmp = "", code = "";
+    for (var i = 0; i < scripts.length; i++) {
+        if (scripts[i].path) {
+            dojo.io.bind(this._cacheSetting({"url":scripts[i].path, "load":function (type, scriptStr) {
+                dojo.lang.hitch(self, tmp = ";" + scriptStr);
+            }, "error":function (type, error) {
+                error.text = type + " downloading remote script";
+                self._handleDefaults.call(self, error, "onExecError", "debug");
+            }, "mimetype":"text/plain", "sync":true}, this.cacheContent));
+            code += tmp;
+        } else {
+            code += scripts[i];
+        }
+    }
+    try {
+        if (this.scriptSeparation) {
+            delete this.scriptScope;
+            this.scriptScope = new (new Function("_container_", code + "; return this;"))(self);
+        } else {
+            var djg = dojo.global();
+            if (djg.execScript) {
+                djg.execScript(code);
+            } else {
+                var djd = dojo.doc();
+                var sc = djd.createElement("script");
+                sc.appendChild(djd.createTextNode(code));
+                (this.containerNode || this.domNode).appendChild(sc);
+            }
+        }
+    }
+    catch (e) {
+        e.text = "Error running scripts from content:\n" + e.description;
+        this.log(e);
+    }
+ },
+ 
+ _cacheSetting : function (bindObj, useCache) {
+    for (var x in this.bindArgs) {
+        if (dojo.lang.isUndefined(bindObj[x])) {
+            bindObj[x] = this.bindArgs[x];
+        }
+    }
+    if (dojo.lang.isUndefined(bindObj.useCache)) {
+        bindObj.useCache = useCache;
+    }
+    if (dojo.lang.isUndefined(bindObj.preventCache)) {
+        bindObj.preventCache = !useCache;
+    }
+    if (dojo.lang.isUndefined(bindObj.mimetype)) {
+        bindObj.mimetype = "text/html";
+    }
+    return bindObj;
+ }
+ 
 });
 
 
@@ -22774,7 +22833,7 @@ dojo.widget.defineWidget(
     },
     
     //from Dojo's ContentPane
-    //TODO: remove when fixed on Dojo
+    //TODO: remove when fixed on Dojo (WW-1869)
     splitAndFixPaths:function (s, url) {
       var titles = [], scripts = [], tmp = [];
       var match = [], requires = [], attr = [], styles = [];

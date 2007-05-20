@@ -14,8 +14,9 @@
 <#assign trash=stack.push(optGroupBean) />
 	<#assign tmpKey=stack.findValue(optGroupInternalListUiBean.parameters.listKey) />
 	<#assign tmpValue=stack.findValue(optGroupInternalListUiBean.parameters.listValue) />
-	<option value="${tmpKey}"
-	<#if tag.contains(parameters.nameValue, tmpKey) == true>
+	<#assign tmpKeyStr = tmpKey.toString() />
+	<option value="${tmpKeyStr}"
+	<#if tag.contains(parameters.nameValue, tmpKeyStr) == true>
 	selected="selected"
 	</#if>
 	>${tmpValue}

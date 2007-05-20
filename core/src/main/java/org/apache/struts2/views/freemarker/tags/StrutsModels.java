@@ -102,7 +102,7 @@ public class StrutsModels {
         return checkbox;
     }
 
-    public ComboBoxModel getComboBox() {
+    public ComboBoxModel getCombobox() {
         if (comboBox == null) {
             comboBox = new ComboBoxModel(stack, req, res);
         }

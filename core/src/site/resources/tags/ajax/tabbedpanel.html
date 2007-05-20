@@ -36,6 +36,22 @@ Please do not edit it directly.
 					<td align="left" valign="top">Set the html accesskey attribute on rendered html element</td>
 				</tr>
 				<tr>
+					<td align="left" valign="top">afterSelectTabNotifyTopics</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Comma separated list of topics to be published when a tab is clicked on (after it is selected).The tab container widget will be passed as the first argument to the topic. The second parameter is the tab widget.</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">beforeSelectTabNotifyTopics</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top"></td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Comma separated list of topics to be published when a tab is clicked on (before it is selected)The tab container widget will be passed as the first argument to the topic. The second parameter is the tab widget.The event can be cancelled setting to 'true' the 'cancel' property of the third parameter passed to the topics.</td>
+				</tr>
+				<tr>
 					<td align="left" valign="top">closeButton</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
@@ -66,6 +82,14 @@ Please do not edit it directly.
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">Set the html disabled attribute on rendered html element</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">disabledTabCssClass</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">strutsDisabledTab</td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">String</td>
+					<td align="left" valign="top">Css class to be applied to the tab button of disabled tabs</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">doLayout</td>

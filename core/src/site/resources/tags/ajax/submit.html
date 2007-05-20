@@ -36,20 +36,20 @@ Please do not edit it directly.
 					<td align="left" valign="top">Set the html accesskey attribute on rendered html element</td>
 				</tr>
 				<tr>
-					<td align="left" valign="top">action</td>
-					<td align="left" valign="top">false</td>
-					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Set action attribute.</td>
-				</tr>
-				<tr>
 					<td align="left" valign="top">afterNotifyTopics</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">Comma delimmited list of topics that will published after the request(if the request succeeds)</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">ajaxAfterValidation</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">Boolean</td>
+					<td align="left" valign="top">Make an asynchronous request if validation succeeds. Only valid is 'validate' is 'true'</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">align</td>
@@ -390,7 +390,7 @@ Please do not edit it directly.
 				<tr>
 					<td align="left" valign="top">showLoadingText</td>
 					<td align="left" valign="top">false</td>
-					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">Boolean</td>
 					<td align="left" valign="top">Show loading text on targets</td>
@@ -490,6 +490,14 @@ Please do not edit it directly.
 					<td align="left" valign="top">true</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">The type of submit to use. Valid values are <i>input</i>, <i>button</i> and <i>image</i>.</td>
+				</tr>
+				<tr>
+					<td align="left" valign="top">validate</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">false</td>
+					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">Boolean</td>
+					<td align="left" valign="top">Perform Ajax calidation. 'ajaxValidation' interceptor must be applied to action</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">value</td>

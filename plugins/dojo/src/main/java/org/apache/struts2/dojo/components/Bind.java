@@ -286,4 +286,9 @@ public class Bind extends AbstractValidateBean {
     public void setAjaxAfterValidation(String ajaxAfterValidation) {
         this.ajaxAfterValidation = ajaxAfterValidation;
     }
+    
+    @StrutsTagAttribute(description="Run scripts in a separate scope, unique for each tag", defaultValue="true")
+    public void setSeparateScripts(String separateScripts) {
+        this.separateScripts = separateScripts;
+    }
 }

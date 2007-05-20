@@ -512,6 +512,22 @@ public class SelectTest extends AbstractUITagTest {
 
         verify(SelectTag.class.getResource("Select-11.txt"));
     }
+    
+    public void testEnumList() throws Exception {
+
+        SelectTag tag = new SelectTag();
+        tag.setPageContext(pageContext);
+        tag.setLabel("mylabel");
+        tag.setName("status");
+        tag.setList("statusList");
+        tag.setListKey("name");
+        tag.setListValue("displayName");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(SelectTag.class.getResource("Select-13.txt"));
+    }
 
     public class IdName {
         private String name;

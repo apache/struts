@@ -84,6 +84,7 @@
 <sx:a  id="link3"
         href="%{#ajaxTest}"
 		loadingText="Loading!!!"
+        showLoadingText="true"
 		targets="t1">Update 'Div 1', use custom loading message</sx:a>
 
 <br/><br/>

@@ -25,6 +25,7 @@ import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -274,9 +275,14 @@ public class Date extends Component {
         String msg = null;
         ValueStack stack = getStack();
         java.util.Date date = null;
-        // find the name on the valueStack, and cast it to a date
+        // find the name on the valueStack
         try {
-            date = (java.util.Date) findValue(name);
+            //suport Calendar also
+            Object dateObject = findValue(name);
+            if (dateObject instanceof java.util.Date)
+                date = (java.util.Date) dateObject;
+            else if(dateObject instanceof Calendar)
+                date = ((Calendar) dateObject).getTime();
         } catch (Exception e) {
             LOG.error("Could not convert object with key '" + name
                     + "' to a java.util.Date instance");

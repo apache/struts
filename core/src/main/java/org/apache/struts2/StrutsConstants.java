@@ -151,4 +151,7 @@ public final class StrutsConstants {
     /** XWork default text provider */
     public static final String STRUTS_XWORKTEXTPROVIDER = "struts.xworkTextProvider";
 
+    /** The name of the parameter to create when mapping an id (used by some action mappers) */
+	public static final String STRUTS_ID_PARAMETER_NAME = "struts.mapper.idParameterName";
+
 }

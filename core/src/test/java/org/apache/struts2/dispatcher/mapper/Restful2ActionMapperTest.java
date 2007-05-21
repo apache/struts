@@ -106,7 +106,6 @@ public class Restful2ActionMapperTest extends StrutsTestCase {
  
     public void testPutUpdate() throws Exception {
 
-        mapper.setSlashesInActionNames("true");
         req.setupGetRequestURI("/my/namespace/bar/1/foo/2");
         req.setupGetServletPath("/my/namespace/bar/1/foo/2");
         req.setupGetAttribute(null);
@@ -121,10 +120,29 @@ public class Restful2ActionMapperTest extends StrutsTestCase {
         assertEquals(1, mapping.getParams().size());
         assertEquals("1", mapping.getParams().get("bar"));
     }
+    
+    public void testPutUpdateWithIdParam() throws Exception {
+
+        mapper.setIdParameterName("id");
+        req.setupGetRequestURI("/my/namespace/bar/1/foo/2");
+        req.setupGetServletPath("/my/namespace/bar/1/foo/2");
+        req.setupGetAttribute(null);
+        req.addExpectedGetAttributeName("javax.servlet.include.servlet_path");
+        req.setupGetMethod("PUT");
+
+        ActionMapping mapping = mapper.getMapping(req, configManager);
+
+        assertEquals("/my/namespace", mapping.getNamespace());
+        assertEquals("foo", mapping.getName());
+        assertEquals("update", mapping.getMethod());
+        assertEquals(2, mapping.getParams().size());
+        assertEquals("1", mapping.getParams().get("bar"));
+        assertEquals("2", mapping.getParams().get("id"));
+        
+    }
 
     public void testPutUpdateWithFakePut() throws Exception {
 
-        mapper.setSlashesInActionNames("true");
         req.setupGetRequestURI("/my/namespace/bar/1/foo/2");
         req.setupGetServletPath("/my/namespace/bar/1/foo/2");
         req.setupAddParameter(Restful2ActionMapper.HTTP_METHOD_PARAM, "put");
@@ -144,7 +162,6 @@ public class Restful2ActionMapperTest extends StrutsTestCase {
 
     public void testDeleteRemove() throws Exception {
 
-        mapper.setSlashesInActionNames("true");
         req.setupGetRequestURI("/my/namespace/bar/1/foo/2");
         req.setupGetServletPath("/my/namespace/bar/1/foo/2");
         req.setupGetAttribute(null);
@@ -162,7 +179,6 @@ public class Restful2ActionMapperTest extends StrutsTestCase {
 
     public void testDeleteRemoveWithFakeDelete() throws Exception {
 
-        mapper.setSlashesInActionNames("true");
         req.setupGetRequestURI("/my/namespace/bar/1/foo/2");
         req.setupGetServletPath("/my/namespace/bar/1/foo/2");
         req.setupAddParameter(Restful2ActionMapper.HTTP_METHOD_PARAM, "DELETE");

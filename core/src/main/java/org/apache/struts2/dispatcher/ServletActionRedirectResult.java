@@ -95,7 +95,7 @@ import com.opensymphony.xwork2.inject.Inject;
  *     &lt;-- Redirect to an action in the same namespace --&gt;
  *     &lt;action name="dashboard" class="..."&gt;
  *         &lt;result&gt;dashboard.jsp&lt;/result&gt;
- *         &lt;result name="error" type="redirect-action&gt;error&lt;/result&gt;
+ *         &lt;result name="error" type="redirect-action"&gt;error&lt;/result&gt;
  *     &lt;/action&gt;
  *
  *     &lt;action name="error" class="..."&gt;

@@ -58,6 +58,15 @@ import org.apache.struts2.StrutsConstants;
  *   &lt;/action&gt;
  * </pre>
  * <p>
+ *   This mapper supports the following parameters:
+ * </p>
+ * <ul>
+ *   <li><code>struts.mapper.idParameterName</code> - If set, this value will be the name
+ *       of the parameter under which the id is stored.  The id will then be removed
+ *       from the action name.  This allows restful actions to not require wildcards.
+ *   </li>
+ * </ul>
+ * <p>
  * The following URL's will invoke its methods:
  * </p>
  * <ul>

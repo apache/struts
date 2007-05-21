@@ -21,6 +21,7 @@
 package org.apache.struts2.dispatcher.mapper;
 
 import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.inject.Inject;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -29,6 +30,7 @@ import java.net.URLDecoder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.StrutsConstants;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -84,6 +86,12 @@ public class Restful2ActionMapper extends DefaultActionMapper {
 
     protected static final Log LOG = LogFactory.getLog(Restful2ActionMapper.class);
     public static final String HTTP_METHOD_PARAM = "__http_method";
+    private String idParameterName = null;
+    
+    public Restful2ActionMapper() {
+    	setSlashesInActionNames("true");
+    }
+    
 
     /*
     * (non-Javadoc)
@@ -92,6 +100,9 @@ public class Restful2ActionMapper extends DefaultActionMapper {
     */
     public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
 
+    	if (!isSlashesInActionNames()) {
+    		throw new IllegalStateException("This action mapper requires the setting 'slashesInActionNames' to be set to 'true'");
+    	}
         ActionMapping mapping = super.getMapping(request, configManager);
         
         if (mapping == null) {
@@ -137,6 +148,17 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                     }  else if (isPut(request)) {
                         mapping.setMethod("update");
                     }
+                    
+                    if (idParameterName != null) {
+                    	if (mapping.getParams() == null) {
+                            mapping.setParams(new HashMap());
+                        }
+                    	mapping.getParams().put(idParameterName, id);
+                    }
+                }
+                
+                if (idParameterName != null && lastSlashPos > -1) {
+                	actionName = actionName.substring(0, lastSlashPos);
                 }
             }
 
@@ -204,5 +226,16 @@ public class Restful2ActionMapper extends DefaultActionMapper {
             return isPost(request) && "delete".equalsIgnoreCase(request.getParameter(HTTP_METHOD_PARAM));
         }
     }
+
+	public String getIdParameterName() {
+		return idParameterName;
+	}
+
+	@Inject(StrutsConstants.STRUTS_ID_PARAMETER_NAME)
+	public void setIdParameterName(String idParameterName) {
+		this.idParameterName = idParameterName;
+	}
+    
+    
 
 }

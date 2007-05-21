@@ -485,11 +485,17 @@ public class DefaultActionMapper implements ActionMapper {
 
         return uri.toString();
     }
+    
 
-    /**
+	public boolean isSlashesInActionNames() {
+		return allowSlashesInActionNames;
+	}
+	
+	/**
      * Defines a parameter action prefix
      */
     interface ParameterAction {
         void execute(String key, ActionMapping mapping);
     }
+
 }

@@ -202,17 +202,19 @@ public class CookieInterceptor extends AbstractInterceptor {
         Map cookiesMap = new LinkedHashMap();
 
         Cookie cookies[] = request.getCookies();
-        for (int a=0; a< cookies.length; a++) {
-            String name = cookies[a].getName();
-            String value = cookies[a].getValue();
+        if (cookies != null) {
+            for (int a=0; a< cookies.length; a++) {
+                String name = cookies[a].getName();
+                String value = cookies[a].getValue();
 
-            if (cookiesNameSet.contains("*")) {
-                if (LOG.isDebugEnabled())
-                    LOG.debug("contains cookie name [*] in configured cookies name set, cookie with name ["+name+"] with value ["+value+"] will be injected");
-                populateCookieValueIntoStack(name, value, cookiesMap, stack);
-            }
-            else if (cookiesNameSet.contains(cookies[a].getName())) {
-                populateCookieValueIntoStack(name, value, cookiesMap, stack);
+                if (cookiesNameSet.contains("*")) {
+                    if (LOG.isDebugEnabled())
+                        LOG.debug("contains cookie name [*] in configured cookies name set, cookie with name ["+name+"] with value ["+value+"] will be injected");
+                    populateCookieValueIntoStack(name, value, cookiesMap, stack);
+                }
+                else if (cookiesNameSet.contains(cookies[a].getName())) {
+                    populateCookieValueIntoStack(name, value, cookiesMap, stack);
+                }
             }
         }
 

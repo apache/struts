@@ -15,7 +15,7 @@
  name="${parameters.name?html}"<#rt/>
 </#if>
  id="${parameters.id?html}${itemKeyStr?html}"<#rt/>
-<#if tag.contains(parameters.nameValue, itemKey)>
+<#if tag.contains(parameters.nameValue, itemKeyStr)>
  checked="checked"<#rt/>
 </#if>
 <#if itemKey?exists>

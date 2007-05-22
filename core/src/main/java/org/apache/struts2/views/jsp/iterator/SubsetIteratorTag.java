@@ -194,7 +194,7 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
 
         // source
         Object source = null;
-        if (sourceAttr == null && sourceAttr.length() <= 0) {
+        if (sourceAttr == null || sourceAttr.length() == 0) {
             source = findValue("top");
         } else {
             source = findValue(sourceAttr);

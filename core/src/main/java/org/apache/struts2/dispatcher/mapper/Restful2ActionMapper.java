@@ -240,7 +240,7 @@ public class Restful2ActionMapper extends DefaultActionMapper {
 		return idParameterName;
 	}
 
-	@Inject(StrutsConstants.STRUTS_ID_PARAMETER_NAME)
+	@Inject(required=false,value=StrutsConstants.STRUTS_ID_PARAMETER_NAME)
 	public void setIdParameterName(String idParameterName) {
 		this.idParameterName = idParameterName;
 	}

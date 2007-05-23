@@ -29,52 +29,36 @@ import org.apache.tiles.factory.TilesContainerFactory;
 import org.apache.tiles.impl.BasicTilesContainer;
 import org.apache.tiles.preparer.PreparerFactory;
 
-import javax.servlet.jsp.PageContext;
 import java.util.Map;
 
 
 public class StrutsTilesContainerFactory extends TilesContainerFactory {
 
-    /**
-     * Initialize the container in a struts specific manner.
-     * 
-     * @param context
-     * @param container
-     * @throws TilesException
-     */
-    public void initializeContainer(Object context,
-                                    BasicTilesContainer container)
-            throws TilesException {
 
-        Map<String, String> initParmMap =
-               TilesContainerFactory.getInitParameterMap(context);
-
-        TilesContextFactory contextFactory = (TilesContextFactory)
-                TilesContainerFactory.createFactory(
-                        initParmMap, TilesContainerFactory.CONTEXT_FACTORY_INIT_PARAM);
+    @Override
+    protected void storeContainerDependencies(Object context, Map<String, String> initParameters, Map<String, String> configuration, BasicTilesContainer container) throws TilesException {
+        TilesContextFactory contextFactory =
+            (TilesContextFactory) createFactory(configuration,
+                CONTEXT_FACTORY_INIT_PARAM);
 
         contextFactory = new StrutsTilesContextFactory(contextFactory);
 
-        DefinitionsFactory defsFactory = (DefinitionsFactory)
-                TilesContainerFactory.createFactory(
-                         initParmMap,
-                         TilesContainerFactory.DEFINITIONS_FACTORY_INIT_PARAM);
+        DefinitionsFactory defsFactory =
+            (DefinitionsFactory) createFactory(configuration,
+                DEFINITIONS_FACTORY_INIT_PARAM);
 
         PreparerFactory prepFactory =
-                (PreparerFactory) TilesContainerFactory.createFactory(
-                        initParmMap,
-                        TilesContainerFactory.PREPARER_FACTORY_INIT_PARAM);
+            (PreparerFactory) createFactory(configuration,
+                PREPARER_FACTORY_INIT_PARAM);
 
+        contextFactory.init(configuration);
         TilesApplicationContext tilesContext =
-                contextFactory.createApplicationContext(context);
+            contextFactory.createApplicationContext(context);
 
         container.setDefinitionsFactory(defsFactory);
         container.setContextFactory(contextFactory);
         container.setPreparerFactory(prepFactory);
         container.setApplicationContext(tilesContext);
-
-        container.init(getInitParameterMap(context));
-
     }
 
     /**
@@ -98,13 +82,10 @@ public class StrutsTilesContainerFactory extends TilesContainerFactory {
             return factory.createApplicationContext(context);
         }
 
-        public TilesRequestContext createRequestContext(TilesApplicationContext tilesApplicationContext, PageContext pageContext) {
-            TilesRequestContext context = factory.createRequestContext(tilesApplicationContext, pageContext);
-            return new StrutsTilesRequestContext(context);
-        }
-
-        public TilesRequestContext createRequestContext(TilesApplicationContext tilesApplicationContext, Object request, Object response) {
-            TilesRequestContext context = factory.createRequestContext(tilesApplicationContext, request, response);
+        public TilesRequestContext createRequestContext(
+                TilesApplicationContext tilesApplicationContext,
+                Object... requestItems) {
+            TilesRequestContext context = factory.createRequestContext(tilesApplicationContext, requestItems);
             return new StrutsTilesRequestContext(context);
         }
     }

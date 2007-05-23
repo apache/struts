@@ -5,11 +5,6 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
     <display-name>Struts Showcase Application</display-name>
-
-    <context-param>
-        <param-name>org.apache.tiles.CONTAINER_FACTORY</param-name>
-        <param-value>org.apache.struts2.tiles.StrutsTilesContainerFactory</param-value>
-    </context-param>
 	
     <filter>
         <filter-name>struts-cleanup</filter-name>
@@ -57,7 +52,7 @@
 
     <listener>
         <listener-class>
-            org.apache.tiles.listener.TilesListener
+            org.apache.struts2.tiles.StrutsTilesListener
         </listener-class>
     </listener>
     

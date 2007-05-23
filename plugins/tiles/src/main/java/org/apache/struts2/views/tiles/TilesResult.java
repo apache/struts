@@ -101,6 +101,6 @@ public class TilesResult extends ServletDispatcherResult {
         HttpServletRequest request = ServletActionContext.getRequest();
         HttpServletResponse response = ServletActionContext.getResponse();
 
-        container.render(request, response, location);
+        container.render(location, request, response);
     }
 }

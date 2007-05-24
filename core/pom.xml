@@ -115,9 +115,10 @@
             <!--
                 Run the translator for Java 1.4 compatiblity
 
-                Sample:
+                Samples:
                 $ cd struts/struts2/
                 $ mvn clean install -Papps,j4 -Djava14.jar=$JAVA_HOME/../Classes/classes.jar
+                $ mvn clean install -Papps,j4 -Djava14.jar="$JAVA_HOME/jre/lib/rt.jar"                
 
              -->
           <id>j4</id>

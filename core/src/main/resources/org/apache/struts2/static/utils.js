@@ -43,19 +43,18 @@ StrutsUtils.showValidationErrors = function(form, errors) {
   }
 };
 
-
 StrutsUtils.firstElement  = function(parentNode, tagName) {
   var node = parentNode.firstChild;
   while(node && node.nodeType != 1){
     node = node.nextSibling;
   }
   if(tagName && node && node.tagName && node.tagName.toLowerCase() != tagName.toLowerCase()) {
-    node = dojo.dom.nextElement(node, tagName);
+    node = StrutsUtils.nextElement(node, tagName);
   }
   return node;  
 };
 
-StrutsUtils.nextElement = function(node, tagName){
+StrutsUtils.nextElement = function(node, tagName) {
   if(!node) { return null; }
   do {
     node = node.nextSibling;
@@ -63,6 +62,19 @@ StrutsUtils.nextElement = function(node, tagName){
 
   if(node && tagName && tagName.toLowerCase() != node.tagName.toLowerCase()) {
     return StrutsUtils.nextElement(node, tagName);
+  }
+  return node;  
+}
+
+StrutsUtils.previousElement = function(node, tagName) {
+  if(!node) { return null; }
+  if(tagName) { tagName = tagName.toLowerCase(); }
+  do {
+    node = node.previousSibling;
+  } while(node && node.nodeType != 1);
+  
+  if(node && tagName && tagName.toLowerCase() != node.tagName.toLowerCase()) {
+    return StrutsUtils.previousElement(node, tagName);
   }
   return node;  
 }

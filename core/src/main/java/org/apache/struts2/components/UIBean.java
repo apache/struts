@@ -310,6 +310,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  *
  * <!-- START SNIPPET: tooltipdescription -->
+ * <b>tooltipConfig is deprecated, use individual tooltip configuration attributes instead </>
  *
  * Every Form UI component (in xhtml / css_xhtml or any other that extends them) can
  * have tooltips assigned to them. The Form component's tooltip related attribute, once
@@ -318,24 +319,24 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <p/>
  *
- * In Example 1, the textfield will inherit the tooltipDelay and tooltipIcon attribte from
- * its containing form. In other words, although it doesn't define a tooltipAboveMousePointer
+ * In Example 1, the textfield will inherit the tooltipDelay and tooltipIconPath attribte from
+ * its containing form. In other words, although it doesn't define a tooltipIconPath
  * attribute, it will have that attribute inherited from its containing form.
  *
  * <p/>
  *
- * In Example 2, the the textfield will inherite both the tooltipDelay and
- * tooltipIcon attribute from its containing form, but the tooltipDelay
+ * In Example 2, the  textfield will inherite both the tooltipDelay and
+ * tooltipIconPath attribute from its containing form, but the tooltipDelay
  * attribute is overriden at the textfield itself. Hence, the textfield actually will
  * have its tooltipIcon defined as /myImages/myIcon.gif, inherited from its containing form, and
  * tooltipDelay defined as 5000.
  *
  * <p/>
  *
- * Example 3, 4 and 5 show different ways of setting the tooltipConfig attribute.<br/>
+ * Example 3, 4 and 5 show different ways of setting the tooltip configuration attribute.<br/>
  * <b>Example 3:</b> Set tooltip config through the body of the param tag<br/>
  * <b>Example 4:</b> Set tooltip config through the value attribute of the param tag<br/>
- * <b>Example 5:</b> Set tooltip config through the tooltipConfig attribute of the component tag<br/>
+ * <b>Example 5:</b> Set tooltip config through the tooltip attributes of the component tag<br/>
  *
  * <!-- END SNIPPET: tooltipdescription -->
  *
@@ -345,8 +346,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * &lt;!-- Example 1: --&gt;
  * &lt;s:form
- *          tooltipConfig="#{'tooltipDelay':'500',
- *                           'tooltipIcon':'/myImages/myIcon.gif'}" .... &gt;
+ *          tooltipDelay="500"
+ *          tooltipIconPath="/myImages/myIcon.gif" .... &gt;
  *   ....
  *     &lt;s:textfield label="Customer Name" tooltip="Enter the customer name" .... /&gt;
  *   ....
@@ -354,12 +355,12 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * &lt;!-- Example 2: --&gt;
  * &lt;s:form
- *         tooltipConfig="#{'tooltipDelay':'500',
- *                          'tooltipIcon':'/myImages/myIcon.gif'}" ... &gt;
+ *          tooltipDelay="500"
+ *          tooltipIconPath="/myImages/myIcon.gif" .... &gt;
  *   ....
  *     &lt;s:textfield label="Address"
  *          tooltip="Enter your address"
- *          tooltipConfig="#{'tooltipDelay':'5000'}" /&gt;
+ *          tooltipDelay="5000" /&gt;
  *   ....
  * &lt;/s:form&gt;
  *
@@ -368,9 +369,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;s:textfield
  *        label="Customer Name"
  *        tooltip="One of our customer Details"&gt;
- *        &lt;s:param name="tooltipConfig"&gt;
- *             tooltipDelay = 500 |
- *             tooltipIcon = /myImages/myIcon.gif
+ *        &lt;s:param name="tooltipDelay"&gt;
+ *             500
+ *        &lt;/s:param&gt;
+ *        &lt;s:param name="tooltipIconPath"&gt;
+ *             /myImages/myIcon.gif
  *        &lt;/s:param&gt;
  * &lt;/s:textfield&gt;
  *
@@ -380,9 +383,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  *          label="Customer Address"
  *          tooltip="Enter The Customer Address" &gt;
  *          &lt;s:param
- *              name="tooltipConfig"
- *              value="#{'tooltipDelay':'500',
- *                       'tooltipIcon':'/myImages/myIcon.gif'}" /&gt;
+ *              name="tooltipDelay"
+ *              value="500" /&gt;
  * &lt;/s:textfield&gt;
  *
  *
@@ -390,8 +392,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;s:textfield
  *          label="Customer Telephone Number"
  *          tooltip="Enter customer Telephone Number"
- *          tooltipConfig="#{'tooltipDelay':'500',
- *                           'tooltipIcon':'/myImages/myIcon.gif'}" /&gt;
+ *          tooltipDelay="500"
+ *          tooltipIconPath="/myImages/myIcon.gif" /&gt;
  *
  * <!-- END SNIPPET: tooltipexample -->
  * </pre>

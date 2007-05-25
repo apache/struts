@@ -102,7 +102,7 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
         control.replay();
         result.setActionMapper(container.getInstance(ActionMapper.class));
         result.execute(mockInvocation);
-        assertEquals("/myNamespace/myAction.action?param2=value+2&param1=value+1&param3=value+3", res.getRedirectedUrl());
+        assertEquals("/myNamespace/myAction.action?param1=value+1&param2=value+2&param3=value+3", res.getRedirectedUrl());
 
         control.verify();
     }
@@ -156,7 +156,7 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
         control.replay();
         result.setActionMapper(container.getInstance(ActionMapper.class));
         result.execute(mockInvocation);
-        assertEquals("/myNamespace/myAction.action?param2=value+2&param1=value+1&param3=value+3", res.getRedirectedUrl());
+        assertEquals("/myNamespace/myAction.action?param1=value+1&param2=value+2&param3=value+3", res.getRedirectedUrl());
 
         control.verify();
     }

@@ -23,6 +23,7 @@ package org.apache.struts2.dispatcher;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -136,7 +137,7 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
     protected String namespace;
     protected String method;
 
-    private Map<String, String> requestParameters = new HashMap<String, String>();
+    private Map<String, String> requestParameters = new LinkedHashMap<String, String>();
 
     public ServletActionRedirectResult() {
         super();

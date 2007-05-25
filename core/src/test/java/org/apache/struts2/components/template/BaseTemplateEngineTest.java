@@ -34,7 +34,7 @@ public class BaseTemplateEngineTest extends TestCase {
 public void testGetThemePropsThroughFileSystem() throws Exception {
 
         URL dummyResourceUrl = getClass().getResource("dummy.properties");
-        File dummyResourceFile = new File(dummyResourceUrl.getFile());
+        File dummyResourceFile = new File(dummyResourceUrl.getFile().replaceAll("%20", " "));
         String themePropertiesDir = dummyResourceFile.getParent();
 
         System.out.println("dummy resource url="+dummyResourceUrl);

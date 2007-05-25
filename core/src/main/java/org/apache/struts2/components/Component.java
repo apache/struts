@@ -23,8 +23,8 @@ package org.apache.struts2.components;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Stack;
 
@@ -65,7 +65,7 @@ public class Component {
      */
     public Component(ValueStack stack) {
         this.stack = stack;
-        this.parameters = new HashMap();
+        this.parameters = new LinkedHashMap();
         getComponentStack().push(this);
     }
 

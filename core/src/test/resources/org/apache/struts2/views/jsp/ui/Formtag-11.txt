@@ -1,5 +1,5 @@
 <script type="text/javascript" src="/struts/xhtml/validation.js"></script>
-<form namespace="" id="myAction" name="myForm" onsubmit="submitMe(); return validateForm_myAction();" action="/myAction.action" method="POST" enctype="myEncType" title="mytitle" accept-charset="UTF-8">
+<form namespace="" id="myAction" name="myForm" onsubmit="submitMe(); return validateForm_myAction();" action="/myAction.action" method="post" enctype="myEncType" title="mytitle" accept-charset="UTF-8">
 <table class="wwFormTable"> <tr>
     <td class="tdLabel"></td>
     <td>	<script type="text/javascript" src="/struts/optiontransferselect.js"></script>

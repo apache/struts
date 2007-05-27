@@ -31,12 +31,12 @@
                                                                 <td align="bottom">
 
                                                                     #if(($webTable.sortColumn == $curColumn.offset) && ($webTable.sortOrder == 'ASC'))
-                                                                        <img src="#tag( URL "value='/images/sorted_asc.gif'")" border="0" align="bottom"/>                                                                    #else
+                                                                        <img src="#tag( URL "value='/images/sorted_asc.gif'")" border="0" align="bottom" />                                                                    #else
                                                                         <a href="#bodytag( URL )
                                                                                     #param( $webTable.sortColumnLinkName $curColumn.offset)
                                                                                     #param( $webTable.sortOrderLinkName 'ASC')
                                                                                  #end">
-                                                                       <img src="#tag( URL "value='/images/unsorted_asc.gif'")" border="0" align="bottom"/></a>
+                                                                       <img src="#tag( URL "value='/images/unsorted_asc.gif'")" border="0" align="bottom" /></a>
                                                                     #end
                                                                 </td>
 												            </tr>
@@ -44,12 +44,12 @@
 
                                                                 <td align="top">
                                                                     #if(($webTable.sortColumn == $curColumn.offset) && ($webTable.sortOrder == 'DESC'))
-                                                                        <img src="#tag( URL "value='/images/sorted_desc.gif'")" border="0" align="top"/>
+                                                                        <img src="#tag( URL "value='/images/sorted_desc.gif'")" border="0" align="top" />
                                                                     #else
                                                                         <a href="#bodytag( URL )
                                                                                     #param( $webTable.sortColumnLinkName $curColumn.offset)
                                                                                     #param( $webTable.sortOrderLinkName 'DESC')
-                                                                                  #end"><img src="#tag( URL "value='/images/unsorted_desc.gif'")" border="0" align="top"/></a>
+                                                                                  #end"><img src="#tag( URL "value='/images/unsorted_desc.gif'")" border="0" align="top" /></a>
                                                                     #end
                                                                 </td>
                                                             </tr>

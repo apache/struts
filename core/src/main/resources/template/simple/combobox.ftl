@@ -14,7 +14,7 @@
 	}
 </script>
 <#include "/${parameters.templateDir}/simple/text.ftl" />
-<br/>
+<br />
 <#if parameters.list?exists>
 <select onChange="autoPopulate_${parameters.id?html}(this);"<#rt/>
     <#if parameters.disabled?default(false)>

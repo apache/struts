@@ -11,7 +11,7 @@
 #if ($parameters.cssClass)         class="$!struts.htmlEncode($parameters.cssClass)"       #end
 #if ($parameters.cssStyle)         style="$!struts.htmlEncode($parameters.cssStyle)"       #end
 #parse("/$parameters.templateDir/simple/scripting-events.vm")
-/><br/>
+/><br />
 
 #if ($parameters.list)
 <select onChange="this.form.elements['$!struts.htmlEncode($parameters.name)'].value=this.options[this.selectedIndex].value"

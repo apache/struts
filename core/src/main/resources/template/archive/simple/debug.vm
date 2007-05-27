@@ -13,14 +13,14 @@
     }
 -->
 </script>
-<p/>
+<p />
 
 #set ($id = $parameters.id)
 #if ($id) #else #set ($id = 'debug') #end
 <a href="#" onclick="toggleDebug('$id');return false;">[Debug]</a>
 <div style="display:none" id="$id">
 <h2>Struts ValueStack Debug</h2>
-<p/>
+<p />
 
 #set($contextMap = $stack.context)
 
@@ -60,6 +60,6 @@
     #set ($index = $index + 1)
     #end
 </table>
-<p/>
+<p />
 
 </div>

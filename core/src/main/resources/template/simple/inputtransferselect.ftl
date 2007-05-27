@@ -6,7 +6,7 @@
 <tr>
 <td>
 <#if parameters.leftTitle?exists><#t/>
-	<label for="leftTitle">${parameters.leftTitle}</label><br/>
+	<label for="leftTitle">${parameters.leftTitle}</label><br />
 </#if><#t/>
 
 
@@ -48,7 +48,7 @@
 		<#if parameters.buttonCssStyle?exists>
 		 style="${parameters.buttonCssStyle?html}"
 		</#if><#t/>
-		 value="${addLabel}" onclick="addOption(document.getElementById('${parameters.id?html}_input'), document.getElementById('${parameters.id?html}'))" /><br/><br/>
+		 value="${addLabel}" onclick="addOption(document.getElementById('${parameters.id?html}_input'), document.getElementById('${parameters.id?html}'))" /><br /><br />
 	<#t/>
 	<#assign removeLabel=parameters.removeLabel?default("<-")?html /><#t/>
 	<input type="button"
@@ -58,7 +58,7 @@
 		<#if parameters.buttonCssStyle?exists>
 		 style="${parameters.buttonCssStyle?html}"
 		</#if><#t/>
-		 value="${removeLabel}" onclick="removeOptions(document.getElementById('${parameters.id?html}'))" /><br/><br/>
+		 value="${removeLabel}" onclick="removeOptions(document.getElementById('${parameters.id?html}'))" /><br /><br />
 	<#t/>
 	<#assign removeAllLabel=parameters.removeAllLabel?default("<<--")?html /><#t/>
 	<input type="button"
@@ -68,11 +68,11 @@
 		<#if parameters.buttonCssStyle?exists>
 		 style="${parameters.buttonCssStyle?html}"
 		</#if><#t/>
-		 value="${removeAllLabel}" onclick="removeAllOptions(document.getElementById('${parameters.id?html}'))" /><br/><br/>
+		 value="${removeAllLabel}" onclick="removeAllOptions(document.getElementById('${parameters.id?html}'))" /><br /><br />
 </td>
 <td>
 <#if parameters.rightTitle?exists><#t/>
-	<label for="rightTitle">${parameters.rightTitle}</label><br/>
+	<label for="rightTitle">${parameters.rightTitle}</label><br />
 </#if><#t/>
 <#include "/${parameters.templateDir}/simple/select.ftl" />
 <#if parameters.allowUpDown?default(true)>

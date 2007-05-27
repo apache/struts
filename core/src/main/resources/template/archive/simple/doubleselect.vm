@@ -7,7 +7,7 @@
     #set ( $startCount = $startCount + 1)
 #end
 
-<br/>
+<br />
 <select name="$!struts.htmlEncode($parameters.doubleName)"
     #if ($parameters.disabled)         disabled="disabled"                                         #end
     #if ($parameters.doubleTabindex)   tabindex="$!struts.htmlEncode($parameters.doubleTabindex)" #end

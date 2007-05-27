@@ -13,12 +13,12 @@
     }
 -->
 </script>
-<p/>
+<p />
 
 <a href="#" onclick="toggleDebug('<#if parameters.id?if_exists != "">${parameters.id?html}<#else>debug</#if>');return false;">[Debug]</a>
 <div style="display:none" id="<#if parameters.id?if_exists != "">${parameters.id?html}<#else>debug</#if>">
 <h2>Struts ValueStack Debug</h2>
-<p/>
+<p />
 
 <h3>Value Stack Contents</h3>
 <table border="0" cellpadding="2" cellspacing="0" width="400" bgcolor="#DDDDDD">
@@ -39,7 +39,7 @@
         </#list>
     </#list>
 </table>
-<p/>
+<p />
 
 <h3>Stack Context</h3>
 <i>These items are available using the #key notation</i>

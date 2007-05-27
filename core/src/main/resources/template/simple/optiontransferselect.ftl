@@ -6,7 +6,7 @@
 <tr>
 <td>
 <#if parameters.leftTitle?exists><#t/>
-	<label for="leftTitle">${parameters.leftTitle}</label><br/>
+	<label for="leftTitle">${parameters.leftTitle}</label><br />
 </#if><#t/>
 <#include "/${parameters.templateDir}/simple/select.ftl" /> 
 <#if parameters.allowUpDownOnLeft?default(true)>
@@ -44,7 +44,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${addToLeftLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.doubleId?html}'), document.getElementById('${parameters.id?html}'), false, '${parameters.doubleHeaderKey}', '')" /><br/><br/>
+			 value="${addToLeftLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.doubleId?html}'), document.getElementById('${parameters.id?html}'), false, '${parameters.doubleHeaderKey}', '')" /><br /><br />
 		<#else><#t/>
 			<input type="button" 
 			<#if parameters.buttonCssClass?exists><#t/>
@@ -53,7 +53,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${addToLeftLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.doubleId?html}'), document.getElementById('${parameters.id?html}'), false, '')" /><br/><br/>
+			 value="${addToLeftLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.doubleId?html}'), document.getElementById('${parameters.id?html}'), false, '')" /><br /><br />
 		</#if><#t/>
 	</#if><#t/>
 	<#if parameters.allowAddToRight?default(true)><#t/>
@@ -66,7 +66,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${addToRightLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.id?html}'), document.getElementById('${parameters.doubleId?html}'), false, '${parameters.headerKey}', '')" /><br/><br/>
+			 value="${addToRightLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.id?html}'), document.getElementById('${parameters.doubleId?html}'), false, '${parameters.headerKey}', '')" /><br /><br />
 		<#else><#t/>
 			<input type="button"
 			<#if parameters.buttonCssClass?exists><#t/>
@@ -75,7 +75,7 @@
 			<#if parameters.buttonCssStyle?exists>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${addToRightLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.id?html}'), document.getElementById('${parameters.doubleId?html}'), false, '')" /><br/><br/>
+			 value="${addToRightLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.id?html}'), document.getElementById('${parameters.doubleId?html}'), false, '')" /><br /><br />
 		</#if><#t/>
 	</#if><#t/>
 	<#if parameters.allowAddAllToLeft?default(true)><#t/>
@@ -88,7 +88,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle}"
 			</#if><#t/>
-			 value="${addAllToLeftLabel}" onclick="moveAllOptions(document.getElementById('${parameters.doubleId?html}'), document.getElementById('${parameters.id?html}'), false, '${parameters.doubleHeaderKey}', '')" /><br/><br/>
+			 value="${addAllToLeftLabel}" onclick="moveAllOptions(document.getElementById('${parameters.doubleId?html}'), document.getElementById('${parameters.id?html}'), false, '${parameters.doubleHeaderKey}', '')" /><br /><br />
 		<#else><#t/>
 			<input type="button" 
 			<#if parameters.buttonCssClass?exists><#t/>
@@ -97,7 +97,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${addAllToLeftLabel}" onclick="moveAllOptions(document.getElementById('${parameters.doubleId?html}'), document.getElementById('${parameters.id?html}'), false, '')" /><br/><br/>
+			 value="${addAllToLeftLabel}" onclick="moveAllOptions(document.getElementById('${parameters.doubleId?html}'), document.getElementById('${parameters.id?html}'), false, '')" /><br /><br />
 		</#if><#t/>
 	</#if><#t/>
 	<#if parameters.allowAddAllToRight?default(true)><#t/>
@@ -110,7 +110,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${addAllToRightLabel}" onclick="moveAllOptions(document.getElementById('${parameters.id?html}'), document.getElementById('${parameters.doubleId?html}'), false, '${parameters.headerKey}', '')" /><br/><br/>	
+			 value="${addAllToRightLabel}" onclick="moveAllOptions(document.getElementById('${parameters.id?html}'), document.getElementById('${parameters.doubleId?html}'), false, '${parameters.headerKey}', '')" /><br /><br />	
 		<#else><#t/>
 			<input type="button" 
 			<#if parameters.buttonCssClass?exists><#t/>
@@ -119,7 +119,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${addAllToRightLabel}" onclick="moveAllOptions(document.getElementById('${parameters.id?html}'), document.getElementById('${parameters.doubleId?html}'), false, '')" /><br/><br/>	
+			 value="${addAllToRightLabel}" onclick="moveAllOptions(document.getElementById('${parameters.id?html}'), document.getElementById('${parameters.doubleId?html}'), false, '')" /><br /><br />	
 		</#if><#t/>
 	</#if><#t/>
 	<#if parameters.allowSelectAll?default(true)><#t/>
@@ -132,7 +132,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${selectAllLabel}" onclick="selectAllOptionsExceptSome(document.getElementById('${parameters.id?html}'), 'key', '${parameters.headerKey}');selectAllOptionsExceptSome(document.getElementById('${parameters.doubleId?html}'), 'key', '${parameters.doubleHeaderKey}');" /><br/><br/>
+			 value="${selectAllLabel}" onclick="selectAllOptionsExceptSome(document.getElementById('${parameters.id?html}'), 'key', '${parameters.headerKey}');selectAllOptionsExceptSome(document.getElementById('${parameters.doubleId?html}'), 'key', '${parameters.doubleHeaderKey}');" /><br /><br />
 		<#elseif parameters.headerKey?exists><#t/>
 			<input type="button" 
 			<#if parameters.buttonCssClass?exists><#t/>
@@ -141,7 +141,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${selectAllLabel}" onclick="selectAllOptionsExceptSome(document.getElementById('${parameters.id?html}'), 'key', '${parameters.headerKey}');selectAllOptions(document.getElementById('${parameters.doubleId?html}'));" /><br/><br/>
+			 value="${selectAllLabel}" onclick="selectAllOptionsExceptSome(document.getElementById('${parameters.id?html}'), 'key', '${parameters.headerKey}');selectAllOptions(document.getElementById('${parameters.doubleId?html}'));" /><br /><br />
 		<#elseif parameters.doubleHeaderKey?exists><#t/>
 			<input type="button" 
 			<#if parameters.buttonCssClass?exists><#t/>
@@ -150,7 +150,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${selectAllLabel}" onclick="selectAllOptions(document.getElementById('${parameters.id?html}'));selectAllOptionsExceptSome(document.getElementById('${parameters.doubleId?html}'), 'key', '${parameters.doubleHeaderKey}');" /><br/><br/>
+			 value="${selectAllLabel}" onclick="selectAllOptions(document.getElementById('${parameters.id?html}'));selectAllOptionsExceptSome(document.getElementById('${parameters.doubleId?html}'), 'key', '${parameters.doubleHeaderKey}');" /><br /><br />
 		<#else><#t/>
 			<input type="button" 
 			<#if parameters.buttonCssClass?exists><#t/>
@@ -159,13 +159,13 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${selectAllLabel}" onclick="selectAllOptions(document.getElementById('${parameters.id?html}'));selectAllOptions(document.getElementById('${parameters.doubleId?html}'));" /><br/><br/>
+			 value="${selectAllLabel}" onclick="selectAllOptions(document.getElementById('${parameters.id?html}'));selectAllOptions(document.getElementById('${parameters.doubleId?html}'));" /><br /><br />
 		</#if><#t/>
 	</#if><#t/>
 </td>
 <td>
 <#if parameters.rightTitle?exists><#t/>
-	<label for="rightTitle">${parameters.rightTitle}</label><br/>
+	<label for="rightTitle">${parameters.rightTitle}</label><br />
 </#if><#t/>
 <select 
 	name="${parameters.doubleName?default("")?html}"

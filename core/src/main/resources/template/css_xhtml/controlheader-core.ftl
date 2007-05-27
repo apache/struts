@@ -43,7 +43,7 @@
 <#include "/${parameters.templateDir}/xhtml/tooltip.ftl" />
 	</label><#t/>
 <#if parameters.labelposition?default("top") == 'top'>
-</div> <br/><#rt/>
+</div> <br /><#rt/>
 <#else>
 </span> <#rt/>
 </#if>

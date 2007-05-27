@@ -7,7 +7,7 @@
     <#assign startCount = startCount + 1/>
 </#if>
 
-<br/>
+<br />
 <select<#rt/>
  name="${parameters.doubleName?default("")?html}"<#rt/>
 <#if parameters.disabled?default(false)>

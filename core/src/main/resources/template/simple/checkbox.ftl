@@ -26,4 +26,4 @@
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 />
-<input type="hidden" name="__checkbox_${parameters.name?html}" value="${parameters.fieldValue?html}"/>
+<input type="hidden" name="__checkbox_${parameters.name?html}" value="${parameters.fieldValue?html}" />

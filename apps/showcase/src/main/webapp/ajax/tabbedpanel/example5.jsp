@@ -12,10 +12,10 @@
 <body>
 
 				<sx:tabbedpanel id="test2" cssStyle="width: 500px; height: 300px;" doLayout="true" labelposition="bottom">
-                      <sx:div id="left" label="test1" theme="ajax" closable="true">
+                      <sx:div id="left" label="test1" closable="true">
                           I'm a Tab!!!
                       </sx:div >
-                      <sx:div  id="middle" label="test2"  theme="ajax" closable="true">
+                      <sx:div  id="middle" label="test2"  closable="true">
                           I'm the other Tab!!!
                       </sx:div >
                      

@@ -137,12 +137,12 @@ public class Bind extends AbstractValidateBean {
             addParameter("events", findString(events));
     }
     
-    @StrutsTagAttribute(description="Comma delimited list of event names to attach to", required=true)
+    @StrutsTagAttribute(description="Comma delimited list of event names to attach to")
     public void setEvents(String events) {
         this.events = events;
     }
 
-    @StrutsTagAttribute(description="Comma delimited list of ids of the elements to attach to", required=true)
+    @StrutsTagAttribute(description="Comma delimited list of ids of the elements to attach to")
     public void setSources(String sources) {
         this.sources = sources;
     }

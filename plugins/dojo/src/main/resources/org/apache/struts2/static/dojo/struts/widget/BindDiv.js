@@ -133,7 +133,7 @@ dojo.widget.defineWidget(
       if(topicsArray) {
         dojo.lang.forEach(topicsArray, function(topic) {
         try {
-          if(data) {
+          if(data != null) {
             dojo.event.topic.publish(topic, data, e, self);
           } else {
             dojo.event.topic.publish(topic, e, self);

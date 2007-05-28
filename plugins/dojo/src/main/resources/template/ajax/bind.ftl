@@ -1,8 +1,12 @@
 <script language="JavaScript" type="text/javascript">
 	dojo.addOnLoad(function() {
 		dojo.widget.createWidget("struts:BindEvent", {
-			"sources": "${parameters.sources?html}",<#rt/>
-			"events": "${parameters.events?html}",<#rt/>
+		    <#if parameters.sources?if_exists != "">
+                "sources": "${parameters.sources?html}",<#rt/>
+            </#if>
+            <#if parameters.events?if_exists != "">
+                "events": "${parameters.events?html}",<#rt/>
+            </#if>
 			<#if parameters.id?if_exists != "">
 			  	"id": "${parameters.id?html}",<#rt/>
 		    </#if>

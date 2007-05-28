@@ -5,7 +5,7 @@
 <html>
 <head>
     <title>Ajax Examples</title>
-    <s:head theme="ajax"/>
+    <sx:head />
 
     <script language="JavaScript" type="text/javascript">
         dojo.event.topic.subscribe("/beforeSubmit", function(event, widget) {

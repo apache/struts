@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>Showcase - Hangman</title>
-	<@s.head theme="ajax" debug="false" />
+	<@sx.head />
 </head>
 <body>
 
@@ -17,14 +17,13 @@
     }
 
 	var _listeners = {
-		   guessMade: function(sourceId, type) {
-		        if(type == "before") {
-			   		this.guessMadeFunc(sourceId);
-			   		this.updateCharacterAvailable(sourceId);
-			   		this.updateVocab(sourceId);
-			   		this.updateScaffold(sourceId);
-			   		this.updateGuessLeft(sourceId);
-		   		}
+		   guessMade: function(request, widget) {
+		        var sourceId = widget.widgetId;
+           		this.guessMadeFunc(sourceId);
+           		this.updateCharacterAvailable(sourceId);
+           		this.updateVocab(sourceId);
+           		this.updateScaffold(sourceId);
+           		this.updateGuessLeft(sourceId);
 		   },
 	       guessMadeFunc: function(sourceId) {
 	       				var requestAttr = { character: sourceId };
@@ -216,13 +215,11 @@
       <@s.url id="spacerUrl" value="/hangman/images/letter-spacer.png" />
 
       <@s.url id="blankUrl" value="ajax/blank.action" includeContext="false" />
-      <@s.a theme="ajax"
-      		  href="%{blankUrl}"
-      		  id="%{#currentCharacter}"
-      		  notifyTopics="topicGuessMade"
+      <@sx.a  id="%{#currentCharacter}"
+      		  beforeNotifyTopics="topicGuessMade"
       		  showErrorTransportText="true">
       	<img height="36" alt="" src="<@s.property value="%{#chalkboardImageUrl}" />" width="36" border="0" />
-      </@s.a>
+      </@sx.a>
 	</@s.iterator>
 	</div>
 

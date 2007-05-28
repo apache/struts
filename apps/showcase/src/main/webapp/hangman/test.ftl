@@ -1,7 +1,7 @@
 
 <html>
 <head>
-  <@s.head theme="ajax" debug="true" />
+  <@sx.head />
 </head>
 <body>
 	

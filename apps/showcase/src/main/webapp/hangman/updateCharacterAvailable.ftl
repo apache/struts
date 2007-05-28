@@ -22,13 +22,11 @@
       <@s.url id="spacerUrl" value="/hangman/images/letter-spacer.png" />
       <@s.url id="blankUrl" value="ajax/blank.action" includeContext="false" />
       
-      <@s.a theme="ajax"
-      		  id="%{#currentCharacter}" 
-      		  href="%{blankUrl}"
-      		  notifyTopics="topicGuessMade"
+      <@sx.a  id="%{#currentCharacter}" 
+      		  afterNotifyTopics="topicGuessMade"
       		  showErrorTransportText="true">
       	<img height="36" alt="" src="<@s.property value="%{#chalkboardImageUrl}" />" width="36" border="0" />
-      </@s.a>
+      </@sx.a>
       
       <#--
       <a href="#" id="<@s.property value="%{#currentCharacter}"/>" >

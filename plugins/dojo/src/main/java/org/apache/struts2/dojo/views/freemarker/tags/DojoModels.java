@@ -19,6 +19,7 @@ public class DojoModels {
     protected AnchorModel a;
     protected SubmitModel submit;
     protected BindModel bind;
+    protected HeadModel head;
     
     private ValueStack stack;
     private HttpServletRequest req;
@@ -36,6 +37,14 @@ public class DojoModels {
         }
 
         return bind;
+    }
+    
+    public HeadModel getHead() {
+        if (head == null) {
+            head = new HeadModel(stack, req, res);
+        }
+
+        return head;
     }
     
     public DateTimePickerModel getDatetimepicker() {

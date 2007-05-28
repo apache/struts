@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>Showcase - Chat - Login</title>
-		<@s.head theme="ajax" />
+		<@s.head />
 	</head>
 	<body>
 	<@s.actionerror />

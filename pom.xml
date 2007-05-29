@@ -333,8 +333,23 @@
             <id>apache.snapshots</id>
             <name>Apache Maven Repository (Snapshots and Test Builds)</name>
             <url>http://people.apache.org/repo/m2-snapshot-repository</url>
-            <releases><enabled>false</enabled></releases>
-            <snapshots><enabled>true</enabled></snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>opensymphony-maven2</id>
+            <name>opensymphony-maven2</name>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <url>http://maven2.opensymphony.com</url>
         </repository>
         <repository>
             <id>opensymphony</id>
@@ -350,16 +365,16 @@
             </releases>
             <url>http://maven.opensymphony.com</url>
         </repository>
-          <repository>
+        <repository>
             <id>Maven Snapshots</id>
             <url>http://snapshots.maven.codehaus.org/maven2/</url>
             <snapshots>
-              <enabled>true</enabled>
+                <enabled>true</enabled>
             </snapshots>
             <releases>
-              <enabled>false</enabled>
+                <enabled>false</enabled>
             </releases>
-          </repository>
+        </repository>
     </repositories>
     <pluginRepositories>
       <pluginRepository>

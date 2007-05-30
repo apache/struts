@@ -31,7 +31,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: notice -->
- * The "head" tag renders required javascript code to confogure Dojo and is required to use
+ * The "head" tag renders required JavaScript code to configure Dojo and is required in order to use
  * any of the tags included in the Dojo plugin.</p>
  * <!-- END SNIPPET: notice -->
  * 

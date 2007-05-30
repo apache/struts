@@ -29,7 +29,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.components.Form;
 import org.apache.struts2.components.FormButton;
-import org.apache.struts2.interceptor.validation.SkipValidation;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.annotations.StrutsTagSkipInheritance;
@@ -38,7 +37,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * Render a submit button. The submit tag is used together with the form tag to provide asynchronous form submissions.
+ * Renders a submit button that can submit a form asynchronously.
  * The submit can have three different types of rendering:
  * <ul>
  * <li>input: renders as html &lt;input type="submit"...&gt;</li>
@@ -49,50 +48,103 @@ import com.opensymphony.xwork2.util.ValueStack;
  * text shown on the button face, but has issues with Microsoft Internet Explorer at least up to 6.0
  * <!-- END SNIPPET: javadoc -->
  *
- * <p/> <b>Examples</b>
+ * <p>Examples</p>
  * <pre>
- * <!-- START SNIPPET: example -->
- * &lt;s:submit value="%{'Submit'}" /&gt;
- * <!-- END SNIPPET: example -->
+ * <!-- START SNIPPET: example1 -->
+ * &lt;sx:submit value="%{'Submit'}" /&gt;
+ * <!-- END SNIPPET: example1 -->
  * </pre>
  * <pre>
  * <!-- START SNIPPET: example2 -->
  * Render an image submit:
- * &lt;s:submit type="image" value="%{'Submit'}" label="Submit the form" src="submit.gif"/&gt;
+ * &lt;sx:submit type="image" value="%{'Submit'}" label="Submit the form" src="submit.gif"/&gt;
  * <!-- END SNIPPET: example2 -->
  * </pre>
  * <pre>
  * <!-- START SNIPPET: example3 -->
  * Render an button submit:
- * &lt;s:submit type="button" value="%{'Submit'}" label="Submit the form"/&gt;
+ * &lt;sx:submit type="button" value="%{'Submit'}" label="Submit the form"/&gt;
  * <!-- END SNIPPET: example3 -->
  * </pre>
  *
- * <!-- START SNIPPET: ajxExDescription1 -->
- * Show the results in another div. If you want your results to be shown in
- * a div, use the resultDivId where the id is the id of the div you want them
- * shown in. This is an inner HTML approah. Your results get jammed into
- * the div for you. Here is a sample of this approach:
- * <!-- END SNIPPET: ajxExDescription1 -->
- *
+ * <!-- START SNIPPET: example4 -->
+ * <p>Update target content with html returned from an action:</p>
  * <pre>
- * <!-- START SNIPPET: ajxExample1 -->
- * Remote form replacing another div:
- * &lt;div id='two' style="border: 1px solid yellow;"&gt;Initial content&lt;/div&gt;
- * &lt;s:form
- *       id='theForm2'
- *       cssStyle="border: 1px solid green;"
- *       action='/AjaxRemoteForm.action'
- *       method='post'
- *       theme="ajax"&gt;
- *
- *   &lt;input type='text' name='data' value='Struts User' /&gt;
- *   &lt;s:submit value="GO2" theme="ajax" resultDivId="two" /&gt;
- *
- * &lt;/s:form &gt;
- * <!-- END SNIPPET: ajxExample1 -->
+ * &lt;div id="div1"&gt;Div 1&lt;/div&gt;
+ * &lt;s:url id="ajaxTest" value="/AjaxTest.action"/&gt;
+ * 
+ * &lt;sx:submit id="link1" href="%{ajaxTest}" target="div1" /&gt;
  * </pre>
- *
+ * <!-- END SNIPPET: example4 -->
+ * 
+ * <!-- START SNIPPET: example5 -->
+ * <p>Submit form(inside the form):</p>
+ * <pre>
+ * &lt;s:form id="form" action="AjaxTest"&gt;
+ *      &lt;input type="textbox" name="data"&gt;
+ *      &lt;sx:submit /&gt;          
+ * &lt;/s:form&gt;
+ * </pre>
+ * <!-- END SNIPPET: example5 -->
+ * 
+ * <!-- START SNIPPET: example6 -->
+ * <p>Submit form(outside the form)</p>
+ * <pre>
+ * &lt;s:form id="form" action="AjaxTest"&gt;
+ *      &lt;input type="textbox" name="data"&gt;   
+ * &lt;/s:form&gt;
+ * 
+ * &lt;sx:submit formId="form" /&gt;
+ * </pre>
+ * <!-- END SNIPPET: example6 -->
+ * 
+ * <!-- START SNIPPET: example7 -->
+ * <p>Using beforeNotifyTopics:</p>
+ * <pre>
+ * &lt;script type="text/javascript"&gt;
+ * dojo.event.topic.subscribe("/before", function(event, widget){
+ *     alert('inside a topic event. before request');
+ *     //event: set event.cancel = true, to cancel request
+ *     //widget: widget that published the topic
+ * });
+ * &lt;/script&gt;         
+ * 
+ * &lt;sx:submit beforeNotifyTopics="/before" /&gt;
+ * </pre> 
+ * <!-- END SNIPPET: example7 -->
+ * 
+ * <!-- START SNIPPET: example8 -->
+ * <p>Using afterNotifyTopics and highlight target:</p>
+ * <pre>
+ * &lt;script type="text/javascript"&gt;
+ * dojo.event.topic.subscribe("/after", function(data, request, widget){
+ *     alert('inside a topic event. after request');
+ *     //data : text returned from request(the html)
+ *     //request: XMLHttpRequest object
+ *     //widget: widget that published the topic
+ * });
+ * &lt;/script&gt;        
+ * 
+ * &lt;sx:submit afterNotifyTopics="/after" highlightColor="red" href="%{#ajaxTest}" /&gt;
+ * </pre> 
+ * <!-- END SNIPPET: example5 -->
+ * 
+ * <!-- START SNIPPET: example6 -->
+ * <p>Using errorNotifyTopics and indicator:</p>
+ * <pre>
+ * &lt;script type="text/javascript"&gt;
+ * dojo.event.topic.subscribe("/error", function(error, request, widget){
+ *     alert('inside a topic event. on error');
+ *     //error : error object (error.message has the error message)
+ *     //request: XMLHttpRequest object
+ *     //widget: widget that published the topic
+ * });
+ * &lt;/script&gt;         
+ * 
+ * &lt;img id="ind1" src="${pageContext.request.contextPath}/images/indicator.gif" style="display:none"/&gt;
+ * &lt;sx:submit errorNotifyTopics="/error" indicator="ind1" href="%{#ajaxTest}" /&gt;
+ * </pre> 
+ * <!-- END SNIPPET: example6 -->
  */
 @StrutsTag(name="submit", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.SubmitTag", description="Render a submit button")
 public class Submit extends FormButton implements RemoteBean {

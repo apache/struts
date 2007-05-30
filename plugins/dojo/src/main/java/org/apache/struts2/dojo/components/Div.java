@@ -30,33 +30,61 @@ import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
- * The div tag when used on the ajax theme, provides a remote call
- * from the current page to update a section of content without having to refresh the entire page.
  * <p>
- * It creates a HTML &lt;DIV /&gt; that obtains it's content via a remote XMLHttpRequest call via
- * the dojo framework.
+ * This tag generates an HTMl div that loads its content using an XMLHttpRequest call via
+ * the dojo framework. When the "updateFreq" is set the timer will start automatically and 
+ * reload the div content with the value of "updateFreq" as the refresh period. Topics can 
+ * be used to stop(stopTimerListenTopics) and start(startTimerListenTopics) this timer.  
  * </p>
- * <div>
+ * <p>
+ * When used inside a "tabbedpanel" tag, each div becomes a tab. Some attributes are specific
+ * to this use case, like:
+ * <ul>
+ *   <li>refreshOnShow: div content is realoded when tab is selected</li>
+ *   <li>closable: Tab will have close button</li>
+ *   <li>preload: load div content after page is loaded</li>
+ * </ul>
+ * </p>
+ * <!-- END SNIPPET: javadoc -->
  * 
- * </div><p> <b>Examples</b>
- *
+ * <p>Examples</p>
+ * <!-- START SNIPPET: example1 -->
+ * <p>Simple div that loads its content once:</p>
  * <pre>
- *       <!-- START SNIPPET: example -->
- * &lt;s:url id="url" action="AjaxTest" />
- * &lt;s:div
- *    id=&quot;once&quot;
- *    theme=&quot;ajax&quot;
- *    href=&quot;%{url}&quot;
- *    loadingText=&quot;Loading...&quot;
- *    listenTopics=&quot;/refresh&quot;
- *    updateFreq=&quot;3000&quot;
- *    autoStart=&quot;true&quot;
- *    formId=&quot;form&quot;
- *&gt;&lt;/s:div&gt;
- *       <!-- END SNIPPET: example -->
+ * &lt;sx:div href="%{#url}"&gt;Initial Content&lt;/sx:div&gt;
  * </pre>
- * </p>
- *
+ * <!-- END SNIPPET: example1 -->
+ * 
+ * <!-- START SNIPPET: example1 -->
+ * <p>div that reloads its content every 2 seconds, and shows an indicator while reloading:</p>
+ * <pre>
+ * &lt;img id="indicator" src="${pageContext.request.contextPath}/images/indicator.gif" style="display:none"/&gt;
+ * &lt;sx:div href="%{#url}" updateFreq="2000" indicator="indicator"&gt;
+ *   Initial Content
+ * &lt;/sx:div&gt;
+ * </pre>
+ * <!-- END SNIPPET: example1 -->
+ * 
+ * <!-- START SNIPPET: example1 -->
+ * <p>div that uses topics to control the timer, highlights its content in red after reload, and submits
+ * a form:</p>
+ * <pre>
+ * &lt;form id="form"&gt;
+ *   &lt;label for="textInput"&gt;Text to be submited when div reloads&lt;/label&gt;
+ *   &lt;input type=textbox id="textInput" name="data"&gt;
+ * &lt;/form&gt;
+ * &lt;sx:div 
+ *      href="%{#url}" 
+ *      updateFreq="3000"
+ *      listenTopics="/refresh"
+ *      startTimerListenTopics="/startTimer"
+ *      stopTimerListenTopics="/stopTimer"
+ *      highlightColor="red"
+ *      formId="form"&gt;
+ *  Initial Content
+ * &lt;/sx:div&gt;
+ * </pre>
+ * <!-- END SNIPPET: example1 -->
  */
 @StrutsTag(name="div", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.DivTag", description="Render HTML div providing content from remote call via AJAX")
 public class Div extends AbstractRemoteBean {
@@ -71,7 +99,6 @@ public class Div extends AbstractRemoteBean {
     protected String startTimerListenTopics;
     protected String stopTimerListenTopics;
     protected String refreshOnShow;
-    protected String separateScripts;
     protected String closable;
     protected String preload;
     
@@ -138,11 +165,6 @@ public class Div extends AbstractRemoteBean {
     @StrutsTagAttribute(description="Content will be loaded when div becomes visible, used only inside the tabbedpanel tag", type="Boolean", defaultValue="false")
     public void setRefreshOnShow(String refreshOnShow) {
         this.refreshOnShow = refreshOnShow;
-    }
-
-    @StrutsTagAttribute(description="Run scripts in a separate scope, unique for each Div", defaultValue="true")
-    public void setSeparateScripts(String separateScripts) {
-        this.separateScripts = separateScripts;
     }
 
     @StrutsTagAttribute(description="Show a close button when the div is inside a 'tabbedpanel'", defaultValue="false")

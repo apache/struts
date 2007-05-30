@@ -31,10 +31,10 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  * <!-- START SNIPPET: javadoc -->
  * <p>
- * This tag generates an HTMl div that loads its content using an XMLHttpRequest call via
- * the dojo framework. When the "updateFreq" is set the timer will start automatically and 
- * reload the div content with the value of "updateFreq" as the refresh period. Topics can 
- * be used to stop(stopTimerListenTopics) and start(startTimerListenTopics) this timer.  
+ * This tag generates an HTML div that loads its content using an XMLHttpRequest call, via
+ * the dojo framework. When the "updateFreq" is set the built in timer will start automatically and 
+ * reload the div content with the value of "updateFreq" as the refresh period(in milliseconds).
+ * Topics can be used to stop(stopTimerListenTopics) and start(startTimerListenTopics) this timer.  
  * </p>
  * <p>
  * When used inside a "tabbedpanel" tag, each div becomes a tab. Some attributes are specific

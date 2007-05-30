@@ -118,20 +118,48 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <b>Examples</b>
  *
  * <pre>
- * <!-- START SNIPPET: expl1 -->
+ * <!-- START SNIPPET: example1 -->
  *
  * Example 1:
- *     &lt;s:datetimepicker name="order.date" label="Order Date" /&gt;
+ *     &lt;sx:datetimepicker name="order.date" label="Order Date" /&gt;
  * Example 2:
- *     &lt;s:datetimepicker name="delivery.date" label="Delivery Date" displayFormat="yyyy-MM-dd"  /&gt;
+ *     &lt;sx:datetimepicker name="delivery.date" label="Delivery Date" displayFormat="yyyy-MM-dd"  /&gt;
  * Example 3:   
- *      &lt;s:datetimepicker name="delivery.date" label="Delivery Date" value="%{date}"  /&gt;
+ *      &lt;sx:datetimepicker name="delivery.date" label="Delivery Date" value="%{date}"  /&gt;
  *  Example 3:    
- *      &lt;s:datetimepicker name="delivery.date" label="Delivery Date" value="%{'2007-01-01'}"  /&gt;     
- * <!-- END SNIPPET: expl1 -->
+ *      &lt;sx:datetimepicker name="delivery.date" label="Delivery Date" value="%{'2007-01-01'}"  /&gt;     
+ * <!-- END SNIPPET: example1 -->
  * </pre>
- * <p/>
- *
+ * 
+ * <!-- START SNIPPET: example2 -->
+ * <p>Getting and getting the datetimepicker value, from JavaScript</p>
+ * <pre>
+ * &lt;sx:datetimepicker id="picker" label="Order Date" /&gt;
+ * &lt;script type="text/javascript"&gt;
+ *   function setValue() {
+ *      var picker = dojo.widget.byId("picker");
+ *      
+ *      //string value
+ *      picker.setValue('2007-01-01');
+ *      
+ *      //Date value
+ *      picker.setValue(new Date());
+ *   }
+ *   
+ *   function showValue() {
+ *      var picker = dojo.widget.byId("picker");
+ *      
+ *      //string value
+ *      var stringValue = picker.getValue();
+ *      alert(stringValue);
+ *      
+ *      //date value
+ *      var dateValue = picker.getDate();
+ *      alert(dateValue);
+ *   }
+ * &lt;/script&gt;
+ * </pre>
+ * <!-- END SNIPPET: example2 -->
  */
 @StrutsTag(name="datetimepicker", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.DateTimePickerTag", description="Render datetimepicker")
 public class DateTimePicker extends UIBean {

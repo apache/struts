@@ -36,15 +36,28 @@ import com.opensymphony.xwork2.util.ValueStack;
  * making an asynchronous request to the specified href, and updating multiple targets.
  * </p>
  * <!-- END SNIPPET: javadoc -->
+ * 
  * <p>Examples</p>
+ * 
+ * <!-- START SNIPPET: example0 -->
+ * <p>Without attaching to an event, listening to a topic (used to make an Ajax call)</p>
+ * <pre>
+ * &lt;sx:bind href="%{#ajaxTest}" listenTopics="/makecall"/&gt;
+ * &lt;s:submit onclick="dojo.event.topic.publish('/makecall')"/&gt;
+ * </pre>
+ * <!-- END SNIPPET: example0 -->
+ * 
  * <!-- START SNIPPET: example1 -->
+ * <p>Attached to event 'onclick' on submit button</p>
  * <pre>
  * &lt;img id="indicator" src="${pageContext.request.contextPath}/images/indicator.gif" alt="Loading..." style="display:none"/&gt;
  * &lt;sx:bind id="ex1" href="%{#ajaxTest}" sources="button" targets="div1" events="onclick" indicator="indicator" /&gt;
  * &lt;s:submit theme="simple" type="submit" value="submit" id="button"/&gt;
  * </pre>
  * <!-- END SNIPPET: example1 -->
+ * 
  * <!-- START SNIPPET: example2 -->
+ * <p>Submit form</p>
  * <pre>
  * &lt;sx:bind id="ex3" href="%{#ajaxTest}" sources="chk1" targets="div1" events="onchange" formId="form1" /&gt;
  * &lt;form id="form1"&gt;

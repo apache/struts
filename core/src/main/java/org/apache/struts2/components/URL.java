@@ -98,7 +98,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * &lt;-- Example 3--&gt;
  * &lt;s:url includeParams="get"  &gt;
- *     &lt:param name="id" value="%{'22'}" /&gt;
+ *     &lt;s:param name="id" value="%{'22'}" /&gt;
  * &lt;/s:url&gt;
  *
  * <!-- END SNIPPET: example -->

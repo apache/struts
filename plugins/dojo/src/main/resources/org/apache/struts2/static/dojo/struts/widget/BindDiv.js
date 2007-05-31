@@ -62,6 +62,8 @@ dojo.widget.defineWidget(
     //only used when inside a tabbedpanel
     disabled : false,
     
+    transport : "",
+    
     onDownloadStart : function(event) {
       if(!this.showLoading) {
         event.returnValue = false;
@@ -257,6 +259,7 @@ dojo.widget.defineWidget(
         mimetype: "text/html",
         formNode: dojo.byId(self.formId),
         formFilter: window[self.formFilter],
+        transport: self.transport,
         handler: function(type, data, e) {
           //hide indicator
           dojo.html.hide(self.indicator);

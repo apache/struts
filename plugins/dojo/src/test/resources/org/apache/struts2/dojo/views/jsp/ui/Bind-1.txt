@@ -21,6 +21,7 @@
 			"validate": true,
 			"ajaxAfterValidation":false,
 			"scriptSeparation": true,
+			"transport": "q"
 		});
 	});
 </script>

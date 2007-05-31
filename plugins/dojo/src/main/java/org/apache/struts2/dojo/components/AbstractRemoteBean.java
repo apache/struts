@@ -50,6 +50,7 @@ public abstract class AbstractRemoteBean extends ClosingUIBean implements Remote
     protected String highlightColor;
     protected String highlightDuration;
     protected String separateScripts;
+    protected String transport;
     
     public AbstractRemoteBean(ValueStack stack, HttpServletRequest request,
             HttpServletResponse response) {
@@ -97,6 +98,8 @@ public abstract class AbstractRemoteBean extends ClosingUIBean implements Remote
             addParameter("highlightDuration", findString(highlightDuration));
         if (separateScripts != null)
             addParameter("separateScripts", findValue(separateScripts, Boolean.class));
+        if (transport != null)
+            addParameter("transport", findString(transport));
     }
 
     @Override
@@ -224,5 +227,10 @@ public abstract class AbstractRemoteBean extends ClosingUIBean implements Remote
     @StrutsTagAttribute(description="Run scripts in a separate scope, unique for each tag", defaultValue="true")
     public void setSeparateScripts(String separateScripts) {
         this.separateScripts = separateScripts;
+    }
+
+    @StrutsTagAttribute(description="Transport used by Dojo to make the request", defaultValue="XMLHTTPTransport")
+    public void setTransport(String transport) {
+        this.transport = transport;
     }
 }

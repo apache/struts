@@ -64,4 +64,6 @@ public interface RemoteBean {
     void setHighlightDuration(String color);
     
     void setSeparateScripts(String separateScripts);
+    
+    void setTransport(String transport);
 }

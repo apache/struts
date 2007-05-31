@@ -28,6 +28,7 @@ public class BindTest extends AbstractUITagTest {
         tag.setHighlightDuration("q");
         tag.setValidate("true");
         tag.setSeparateScripts("true");
+        tag.setTransport("q");
         tag.doStartTag();
         tag.doEndTag();
 

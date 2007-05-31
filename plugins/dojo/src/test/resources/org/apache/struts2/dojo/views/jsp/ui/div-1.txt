@@ -21,5 +21,6 @@
   showLoading="true"
   highlightColor="o"
   highlightDuration="p"
-  scriptSeparation="false">
+  scriptSeparation="false"
+  transport="q">
 </div>

@@ -53,6 +53,7 @@ dojo.widget.defineWidget(
   scriptSeparation : true,
   //scope for the cript separation
   scriptScope : null,
+  transport : "",
    
   postCreate : function() {
     var self = this;
@@ -306,6 +307,7 @@ dojo.widget.defineWidget(
             preventCache: true,
             formNode: self.formNode,
             formFilter: window[self.formFilter],
+            transport: self.transport,
             handler: function(type, data, e) {
               dojo.lang.hitch(self, "bindHandler")(type, data, e);
             },

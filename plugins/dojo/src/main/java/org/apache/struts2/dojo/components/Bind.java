@@ -32,7 +32,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  * <!-- START SNIPPET: javadoc -->
  * <p>
- * This tag will generated event listeners for multiple events on multiple sources,
+ * This tag will generate event listeners for multiple events on multiple sources,
  * making an asynchronous request to the specified href, and updating multiple targets.
  * </p>
  * <!-- END SNIPPET: javadoc -->
@@ -303,5 +303,10 @@ public class Bind extends AbstractValidateBean {
     @StrutsTagAttribute(description="Run scripts in a separate scope, unique for each tag", defaultValue="true")
     public void setSeparateScripts(String separateScripts) {
         this.separateScripts = separateScripts;
+    }
+    
+    @StrutsTagAttribute(description="Transport used by Dojo to make the request", defaultValue="XMLHTTPTransport")
+    public void setTransport(String transport) {
+        this.transport = transport;
     }
 }

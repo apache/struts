@@ -53,6 +53,7 @@ public class AnchorTest extends AbstractUITagTest {
         tag.setValidate("true");
         tag.setAjaxAfterValidation("true");
         tag.setSeparateScripts("true");
+        tag.setTransport("o");
         tag.doStartTag();
         tag.doEndTag();
 

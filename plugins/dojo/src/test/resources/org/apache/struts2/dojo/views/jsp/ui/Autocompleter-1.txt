@@ -19,4 +19,6 @@
  buttonSrc="i"
  templateCssPath="j"
  dataFieldName="k"
- searchLimit="2"/>
+ searchLimit="2"
+ transport="m"
+/>

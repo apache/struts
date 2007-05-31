@@ -18,5 +18,6 @@
  showLoading="true"
  highlightColor="m"
  highlightDuration="n"
- scriptSeparation="true">
+ scriptSeparation="true"
+ transport="o">
 </a>

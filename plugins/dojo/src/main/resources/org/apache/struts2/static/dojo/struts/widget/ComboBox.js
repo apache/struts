@@ -17,7 +17,8 @@ struts.widget.ComboBoxDataProvider = function(combobox, node){
   this.cbox = combobox;
   this.formId = this.cbox.formId;
   this.formFilter = this.cbox.formFilter;
-
+  this.transport = this.cbox.transport;
+  
   this.getData = function(/*String*/ url){
     //show indicator
     dojo.html.show(this.cbox.indicator);
@@ -26,6 +27,7 @@ struts.widget.ComboBoxDataProvider = function(combobox, node){
       url: url,
       formNode: dojo.byId(this.formId),
       formFilter: window[this.formFilter],
+      transport: this.transport,
       handler: dojo.lang.hitch(this, function(type, data, evt) {
         //hide indicator
         dojo.html.hide(this.cbox.indicator);
@@ -249,6 +251,8 @@ dojo.widget.defineWidget(
   
   //how many results are shown
   searchLimit : 30,
+  
+  transport : "",
   
   //from Dojo's  ComboBox
   showResultList: function() {

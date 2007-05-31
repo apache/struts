@@ -175,6 +175,7 @@ public class Submit extends FormButton implements RemoteBean {
     protected String validate;
     protected String ajaxAfterValidation;
     protected String separateScripts;
+    protected String transport;
     
     public Submit(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -239,6 +240,8 @@ public class Submit extends FormButton implements RemoteBean {
             addParameter("highlightDuration", findString(highlightDuration));
         if (separateScripts != null)
             addParameter("separateScripts", findValue(separateScripts, Boolean.class));
+        if (transport != null)
+            addParameter("transport", findString(transport));
         
         Boolean validateValue = false;
         if (validate != null) {
@@ -432,7 +435,7 @@ public class Submit extends FormButton implements RemoteBean {
         this.validate = validate;
     }
 
-    @StrutsTagAttribute(description = "Make an asynchronous request if validation succeeds. Only valid is 'validate' is 'true'", type="Boolean", 
+    @StrutsTagAttribute(description = "Make an asynchronous request if validation succeeds. Only valid if 'validate' is 'true'", type="Boolean", 
         defaultValue = "false")
     public void setAjaxAfterValidation(String ajaxAfterValidation) {
         this.ajaxAfterValidation = ajaxAfterValidation;
@@ -446,5 +449,10 @@ public class Submit extends FormButton implements RemoteBean {
     @StrutsTagAttribute(description="Run scripts in a separate scope, unique for each tag", defaultValue="true")
     public void setSeparateScripts(String separateScripts) {
         this.separateScripts = separateScripts;
+    }
+    
+    @StrutsTagAttribute(description="Transport used by Dojo to make the request", defaultValue="XMLHTTPTransport")
+    public void setTransport(String transport) {
+        this.transport = transport;
     }
 }

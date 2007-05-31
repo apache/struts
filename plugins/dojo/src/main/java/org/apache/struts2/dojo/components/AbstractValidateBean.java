@@ -55,7 +55,7 @@ public abstract class AbstractValidateBean extends AbstractRemoteBean {
         this.validate = validate;
     }
     
-    @StrutsTagAttribute(description = "Make an asynchronous request if validation succeeds. Only valid is 'validate' is 'true'", type="Boolean", 
+    @StrutsTagAttribute(description = "Make an asynchronous request if validation succeeds. Only valid if 'validate' is 'true'", type="Boolean", 
         defaultValue = "false")
     public void setAjaxAfterValidation(String ajaxAfterValidation) {
         this.ajaxAfterValidation = ajaxAfterValidation;

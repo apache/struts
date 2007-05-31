@@ -148,6 +148,7 @@ public class Autocompleter extends ComboBox {
     protected String errorNotifyTopics;
     protected String valueNotifyTopics;
     protected String resultsLimit;
+    protected String transport;
     
     public Autocompleter(ValueStack stack, HttpServletRequest request,
             HttpServletResponse response) {
@@ -218,6 +219,8 @@ public class Autocompleter extends ComboBox {
             keyName = name + "Key";
             addParameter("keyName", findString(keyName));
         }
+        if (transport != null)
+            addParameter("transport", findString(transport));
         
         String keyNameExpr = "%{" + keyName + "}";
         addParameter("key", findString(keyNameExpr));
@@ -401,8 +404,13 @@ public class Autocompleter extends ComboBox {
         this.valueNotifyTopics = valueNotifyTopics;
     }
     
-    @StrutsTagAttribute(description="Limit how many results are shown as autocompletion options", defaultValue="30")
+    @StrutsTagAttribute(description="Limit how many results are shown as autocompletion options, set to -1 for unlimited results", defaultValue="30")
     public void setResultsLimit(String resultsLimit) {
         this.resultsLimit = resultsLimit;
+    }
+    
+    @StrutsTagAttribute(description="Transport used by Dojo to make the request", defaultValue="XMLHTTPTransport")
+    public void setTransport(String transport) {
+        this.transport = transport;
     }
 }

@@ -77,6 +77,9 @@
 			<#if parameters.separateScripts?exists>
                 "scriptSeparation": ${parameters.separateScripts?string?html},<#rt/>
             </#if>
+            <#if parameters.transport?if_exists != "">
+                "transport": "${parameters.transport?html}"<#rt/>
+            </#if>
 		});
 	});
 </script>

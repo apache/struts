@@ -40,6 +40,7 @@ public abstract class AbstractRemoteTag extends AbstractClosingTag {
     protected String highlightColor;
     protected String highlightDuration;
     protected String separateScripts;
+    protected String transport;
     
     protected void populateParams() {
         super.populateParams();
@@ -63,6 +64,7 @@ public abstract class AbstractRemoteTag extends AbstractClosingTag {
         remote.setHighlightColor(highlightColor);
         remote.setHighlightDuration(highlightDuration);
         remote.setSeparateScripts(separateScripts);
+        remote.setTransport(transport);
     }
 
     public void setHref(String href) {
@@ -135,5 +137,9 @@ public abstract class AbstractRemoteTag extends AbstractClosingTag {
 
     public void setSeparateScripts(String separateScripts) {
         this.separateScripts = separateScripts;
+    }
+
+    public void setTransport(String transport) {
+        this.transport = transport;
     }
 }

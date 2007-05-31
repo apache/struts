@@ -46,19 +46,6 @@ import com.opensymphony.xwork2.inject.Inject;
  * standard redirect result.
  *
  * <p/>
- * @TODO - the below sentence is confusing and seems to be contradictory -- FIX ME
- * To pass parameters, use the &lt;param&gt; ... &lt;/param&gt; tag. The following parameters will not be
- * passed because they are part of the config param for this particular result.
- *
- * <ul>
- *  <li>actionName</li>
- *  <li>namespace</li>
- *  <li>method</li>
- *  <li>encode</li>
- *  <li>parse</li>
- *  <li>location</li>
- *  <li>prependServletContext</li>
- * </ul>
  *
  * See examples below for an example of how request parameters could be passed in.
  *

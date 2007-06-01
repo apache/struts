@@ -117,6 +117,40 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;sx:autocompleter  href="%{jsonList}" formId="selectForm" listenTopics="/changed"/&gt;
  * </pre>
  * <!-- END SNIPPET: example4 -->
+ * 
+ * <!-- START SNIPPET: example5 -->
+ * <p>Set/Get selected values using JavaScript</p>
+ * <pre>
+ * &lt;sx:autocompleter  href="%{jsonList}" id="auto"/&gt;
+ * &lt;script type="text/javascript"&gt;
+ *   function getValues() {
+ *      var autoCompleter = dojo.widget.byId("auto");
+ *      
+ *      //key (in the states example above, "AL")
+ *      var key = autoCompleter.getSelectedKey();
+ *      alert(key);
+ *      
+ *      //value (in the states example above, "Alabama")
+ *      var value = autoCompleter.getSelectedValue();
+ *      alert(value);
+ *      
+ *      //text currently on the textbox (anything the user typed)
+ *      var text = autoCompleter.getText();
+ *      alert(text);
+ *   }
+ * 
+ *   function setValues() {
+ *      var autoCompleter = dojo.widget.byId("auto");
+ *      
+ *      //key (key will be set to "AL" and value to "Alabama")
+ *      autoCompleter.setSelectedKey("AL");
+ *      
+ *      //value (key will be set to "AL" and value to "Alabama")
+ *      autoCompleter.setSelectedValue("Alabama");
+ *   }
+ * &lt;/script&gt;
+ * </pre>
+ * <!-- START SNIPPET: example5 -->
  */
 @StrutsTag(name="autocompleter", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.AutocompleterTag", description="Renders a combobox with autocomplete and AJAX capabilities")
 public class Autocompleter extends ComboBox {

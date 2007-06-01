@@ -476,5 +476,39 @@ dojo.widget.defineWidget(
     else {
 	  this._startSearch(searchStr);
 	}
+  },
+  
+  setSelectedKey : function(key) {
+    var data = this.dataProvider.data;
+    for(element in data) {
+       var obj = data[element];
+       if(obj[1].toString() == key) {
+         this.setValue(obj[0].toString());
+         this.comboBoxSelectionValue.value = obj[1].toString();
+       }
+    }
+  },
+  
+  getSelectedKey : function() {
+    return this.comboBoxSelectionValue.value;
+  },
+  
+  setSelectedValue : function(text) {
+    var data = this.dataProvider.data;
+    for(element in data) {
+       var obj = data[element];
+       if(obj[0].toString() == text) {
+         this.setValue(obj[0].toString());
+         this.comboBoxSelectionValue.value = obj[1].toString();
+       }
+    }
+  },
+  
+  getSelectedValue : function() {
+    return this.comboBoxValue.value;
+  },
+  
+  getText : function() {
+    return this.textInputNode.value();
   }
 });

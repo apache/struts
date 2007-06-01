@@ -22105,6 +22105,7 @@ dojo.widget.defineWidget(
   scriptSeparation : true,
   //scope for the cript separation
   scriptScope : null,
+  transport : "",
    
   postCreate : function() {
     var self = this;
@@ -22291,7 +22292,7 @@ dojo.widget.defineWidget(
     if(topicsArray) {
       dojo.lang.forEach(topicsArray, function(topic) {
       try {
-        if(data) {
+        if(data != null) {
           dojo.event.topic.publish(topic, data, e, self);
         } else {
           dojo.event.topic.publish(topic, e, self);
@@ -22358,6 +22359,7 @@ dojo.widget.defineWidget(
             preventCache: true,
             formNode: self.formNode,
             formFilter: window[self.formFilter],
+            transport: self.transport,
             handler: function(type, data, e) {
               dojo.lang.hitch(self, "bindHandler")(type, data, e);
             },
@@ -22601,6 +22603,8 @@ dojo.widget.defineWidget(
     //only used when inside a tabbedpanel
     disabled : false,
     
+    transport : "",
+    
     onDownloadStart : function(event) {
       if(!this.showLoading) {
         event.returnValue = false;
@@ -22672,7 +22676,7 @@ dojo.widget.defineWidget(
       if(topicsArray) {
         dojo.lang.forEach(topicsArray, function(topic) {
         try {
-          if(data) {
+          if(data != null) {
             dojo.event.topic.publish(topic, data, e, self);
           } else {
             dojo.event.topic.publish(topic, e, self);
@@ -22796,6 +22800,7 @@ dojo.widget.defineWidget(
         mimetype: "text/html",
         formNode: dojo.byId(self.formId),
         formFilter: window[self.formFilter],
+        transport: self.transport,
         handler: function(type, data, e) {
           //hide indicator
           dojo.html.hide(self.indicator);
@@ -24136,7 +24141,8 @@ struts.widget.ComboBoxDataProvider = function(combobox, node){
   this.cbox = combobox;
   this.formId = this.cbox.formId;
   this.formFilter = this.cbox.formFilter;
-
+  this.transport = this.cbox.transport;
+  
   this.getData = function(/*String*/ url){
     //show indicator
     dojo.html.show(this.cbox.indicator);
@@ -24145,6 +24151,7 @@ struts.widget.ComboBoxDataProvider = function(combobox, node){
       url: url,
       formNode: dojo.byId(this.formId),
       formFilter: window[this.formFilter],
+      transport: this.transport,
       handler: dojo.lang.hitch(this, function(type, data, evt) {
         //hide indicator
         dojo.html.hide(this.cbox.indicator);
@@ -24369,6 +24376,8 @@ dojo.widget.defineWidget(
   //how many results are shown
   searchLimit : 30,
   
+  transport : "",
+  
   //from Dojo's  ComboBox
   showResultList: function() {
   // Our dear friend IE doesnt take max-height so we need to calculate that on our own every time
@@ -24591,6 +24600,40 @@ dojo.widget.defineWidget(
     else {
 	  this._startSearch(searchStr);
 	}
+  },
+  
+  setSelectedKey : function(key) {
+    var data = this.dataProvider.data;
+    for(element in data) {
+       var obj = data[element];
+       if(obj[1].toString() == key) {
+         this.setValue(obj[0].toString());
+         this.comboBoxSelectionValue.value = obj[1].toString();
+       }
+    }
+  },
+  
+  getSelectedKey : function() {
+    return this.comboBoxSelectionValue.value;
+  },
+  
+  setSelectedValue : function(text) {
+    var data = this.dataProvider.data;
+    for(element in data) {
+       var obj = data[element];
+       if(obj[0].toString() == text) {
+         this.setValue(obj[0].toString());
+         this.comboBoxSelectionValue.value = obj[1].toString();
+       }
+    }
+  },
+  
+  getSelectedValue : function() {
+    return this.comboBoxValue.value;
+  },
+  
+  getText : function() {
+    return this.textInputNode.value();
   }
 });
 

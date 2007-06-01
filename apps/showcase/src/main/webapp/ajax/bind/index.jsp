@@ -9,12 +9,18 @@
 </head>
 
 <script type="text/javascript">
-    dojo.event.topic.subscribe("/before", function(data, type, e){
-      alert("Before request");
-    });
-    dojo.event.topic.subscribe("/after", function(data, type, e){
-      alert("After request");
-    });
+   dojo.event.topic.subscribe("/before", function(event, widget){
+      alert('inside a topic event. before request');
+      //event: set event.cancel = true, to cancel request
+      //widget: widget that published the topic
+   });
+   
+   dojo.event.topic.subscribe("/after", function(data, request, widget){
+      alert('inside a topic event. after request');
+      //data : text returned from request
+      //request: XMLHttpRequest object
+      //widget: widget that published the topic
+   });
 </script>
 
 <body>

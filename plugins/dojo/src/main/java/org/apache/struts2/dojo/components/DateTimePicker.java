@@ -126,8 +126,10 @@ import com.opensymphony.xwork2.util.ValueStack;
  *     &lt;sx:datetimepicker name="delivery.date" label="Delivery Date" displayFormat="yyyy-MM-dd"  /&gt;
  * Example 3:   
  *      &lt;sx:datetimepicker name="delivery.date" label="Delivery Date" value="%{date}"  /&gt;
- *  Example 3:    
- *      &lt;sx:datetimepicker name="delivery.date" label="Delivery Date" value="%{'2007-01-01'}"  /&gt;     
+ * Example 4:    
+ *      &lt;sx:datetimepicker name="delivery.date" label="Delivery Date" value="%{'2007-01-01'}"  /&gt;
+ * Example 5:           
+ *      &lt;sx:datetimepicker name="order.date" label="Order Date" value="%{'today'}"/&gt;
  * <!-- END SNIPPET: example1 -->
  * </pre>
  * 

@@ -56,7 +56,7 @@ dojo.widget.defineWidget(
         var topic = this.valueNotifyTopicsArray[i];
         if(!dojo.string.isBlank(topic)) {
           try {
-            dojo.event.topic.publish(topic, this.inputNode.value);
+            dojo.event.topic.publish(topic, this.inputNode.value, this.getValue(), this);
           } catch(ex) {
             dojo.debug(ex);
           }

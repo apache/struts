@@ -16836,7 +16836,7 @@ for(var i=0;i<this.valueNotifyTopicsArray.length;i++){
 var _e07=this.valueNotifyTopicsArray[i];
 if(!dojo.string.isBlank(_e07)){
 try{
-dojo.event.topic.publish(_e07,this.inputNode.value);
+dojo.event.topic.publish(_e07,this.inputNode.value,this.getValue(),this);
 }
 catch(ex){
 dojo.debug(ex);
@@ -17298,7 +17298,7 @@ for(var i=0;i<this.valueNotifyTopicsArray.length;i++){
 var _e63=this.valueNotifyTopicsArray[i];
 if(!dojo.string.isBlank(_e63)){
 try{
-dojo.event.topic.publish(_e63,this.inputNode.value);
+dojo.event.topic.publish(_e63,this.inputNode.value,this.getValue(),this);
 }
 catch(ex){
 dojo.debug(ex);

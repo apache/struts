@@ -162,6 +162,22 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;/script&gt;
  * </pre>
  * <!-- END SNIPPET: example2 -->
+ * 
+ * <!-- START SNIPPET: example3 -->
+ * <p>Publish topic when value changes</p>
+ * <pre>
+ * &lt;sx:datetimepicker id="picker" label="Order Date" valueNotifyTopics="/value"/&gt;
+ * 
+ * &lt;script type="text/javascript"&gt;
+ * dojo.event.topic.subscribe("/value", function(textEntered, date, widget){
+ *     alert('value changed');
+ *     //textEntered: String enetered in the textbox
+ *     //date: JavaScript Date object with the value selected
+ *     //widet: widget that published the topic 
+ * });
+ * &lt;/script&gt;  
+ * </pre>
+ * <!-- END SNIPPET: example3 -->
  */
 @StrutsTag(name="datetimepicker", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.DateTimePickerTag", description="Render datetimepicker")
 public class DateTimePicker extends UIBean {

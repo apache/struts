@@ -19,7 +19,8 @@
         delay="1000"
         updateFreq="5000"
         errorText="There was an error"
-        loadingText="reloading">loading now</sx:div>
+        loadingText="reloading"
+        showLoadingText="true">loading now</sx:div>
 
 <s:include value="../footer.jsp"/>
 

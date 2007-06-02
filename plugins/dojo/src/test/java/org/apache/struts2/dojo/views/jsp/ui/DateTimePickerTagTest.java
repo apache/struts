@@ -58,6 +58,14 @@ public class DateTimePickerTagTest extends AbstractUITagTest {
             .getResource("DateTimePickerTagTest-1.txt"));
     }
 
+    public void testTodayValue() throws Exception {
+        DateTimePickerTag tag = new DateTimePickerTag();
+        tag.setPageContext(pageContext);
+        
+        tag.setValue("%{'today'}");
+        assertDateValue("nameValue", tag, new Date(), true, false);
+    }
+    
     public void testDateParsing() throws Exception {
         DateTimePickerTag tag = new DateTimePickerTag();
         tag.setPageContext(pageContext);

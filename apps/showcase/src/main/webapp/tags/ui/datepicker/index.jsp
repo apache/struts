@@ -12,7 +12,7 @@
 <sx:datetimepicker label="toggleType='wipe'" value="%{'2006-10-31'}" toggleType="wipe" toggleDuration="300" name="test"/>
 <sx:datetimepicker label="toggleType='explode'" value="%{'2006-07-22'}" toggleType="explode" toggleDuration="500"/>
 <sx:datetimepicker label="toggleType='fade'" value="%{'2006-06-30'}" toggleType="fade" toggleDuration="500"/>
-<sx:datetimepicker label="With value='today'"  name="dddp1" value="today" />
+<sx:datetimepicker label="With value='today'"  name="dddp1" value="%{'today'}" />
 <sx:datetimepicker label="US format, empty" name="dddp2" language="en-us" />
 <sx:datetimepicker label="US format with initial date of 2006-06-26" name="dddp3" value="%{'2006-06-26'}" language="en-us" />
 <sx:datetimepicker label="With initial date of 1969-04-25 and a custom format dd/MM/yyyy" name="dddp5" value="%{'25/04/1969'}" displayFormat="dd/MM/yyyy" />

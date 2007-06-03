@@ -494,13 +494,17 @@ dojo.widget.defineWidget(
   },
   
   setSelectedValue : function(text) {
-    var data = this.dataProvider.data;
-    for(element in data) {
-       var obj = data[element];
-       if(obj[0].toString() == text) {
-         this.setValue(obj[0].toString());
-         this.comboBoxSelectionValue.value = obj[1].toString();
-       }
+    if(this.dataProvider) {
+      var data = this.dataProvider.data;
+      for(element in data) {
+         var obj = data[element];
+         if(obj[0].toString() == text) {
+           this.setValue(obj[0].toString());
+           this.comboBoxSelectionValue.value = obj[1].toString();
+         }
+      }
+    } else {
+      this.comboBoxSelectionValue.value = text;
     }
   },
   

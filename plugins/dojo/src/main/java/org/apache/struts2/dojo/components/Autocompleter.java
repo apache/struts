@@ -42,12 +42,19 @@ import com.opensymphony.xwork2.util.ValueStack;
  *      ["Text2", "Value2"]
  * ]
  * </pre>
- * <p>2. If a value is specified in the "dataFieldName" attribute, and the response has a field with that
- * name, assume that's the datasource, which can be an array of 2-dimension array elements, or a map, 
- * like (assuming dataFieldName="states"):</p>
+ * <p>2. If the response is a map, use it (recommended as it is the easiest one to generate):
  * <pre>
  * {
- *      "states" : [
+ *      "Alabama" : "AL",
+ *      "Alaska"  : "AL"
+ * }
+ * </pre>
+ * <p>3. If a value is specified in the "dataFieldName" attribute, and the response has a field with that
+ * name, assume that's the datasource, which can be an array of 2-dimension array elements, or a map, 
+ * like (assuming dataFieldName="state"):</p>
+ * <pre>
+ * {
+ *      "state" : [
  *           ["Alabama","AL"],
  *           ["Alaska","AK"]
  *      ]
@@ -56,7 +63,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * or
  * 
  * {
- *      "states" : {
+ *      "state" : {
  *            "Alabama" : "AL",
  *            "Alaska"  : "AK"
  *      }

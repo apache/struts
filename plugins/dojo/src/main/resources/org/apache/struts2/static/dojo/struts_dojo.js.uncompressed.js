@@ -22242,10 +22242,14 @@ dojo.widget.defineWidget(
       
       // no validation or validation passed
       if(this.executeScripts) {
-        //update targets content
+        //parse text to extract content and javascript
         var parsed = this.parse(data);
-        this._executeScripts(parsed.scripts);
+         
+        //update targets content
         this.setContent(parsed.text);
+        
+        //execute scripts
+        this._executeScripts(parsed.scripts);
       }
       else {
         this.setContent(data);
@@ -24618,13 +24622,17 @@ dojo.widget.defineWidget(
   },
   
   setSelectedValue : function(text) {
-    var data = this.dataProvider.data;
-    for(element in data) {
-       var obj = data[element];
-       if(obj[0].toString() == text) {
-         this.setValue(obj[0].toString());
-         this.comboBoxSelectionValue.value = obj[1].toString();
-       }
+    if(this.dataProvider) {
+      var data = this.dataProvider.data;
+      for(element in data) {
+         var obj = data[element];
+         if(obj[0].toString() == text) {
+           this.setValue(obj[0].toString());
+           this.comboBoxSelectionValue.value = obj[1].toString();
+         }
+      }
+    } else {
+      this.comboBoxSelectionValue.value = text;
     }
   },
   
@@ -28902,7 +28910,7 @@ dojo.widget.defineWidget(
         var self = this;
         dojo.lang.forEach(this.beforeSelectTabNotifyTopicsArray, function(topic) {
           try {
-            dojo.event.topic.publish(topic, self, tab, cancel);
+            dojo.event.topic.publish(topic, cancel, tab, self);
           } catch(ex){
             dojo.debug(ex);
           }
@@ -28916,7 +28924,7 @@ dojo.widget.defineWidget(
           var self = this;
           dojo.lang.forEach(this.afterSelectTabNotifyTopicsArray, function(topic) {
             try {
-              dojo.event.topic.publish(topic, self, tab, cancel);
+              dojo.event.topic.publish(topic, tab, self);
             } catch(ex){
               dojo.debug(ex);
             }

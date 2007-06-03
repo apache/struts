@@ -13698,8 +13698,8 @@ return;
 }
 if(this.executeScripts){
 var _b87=this.parse(data);
-this._executeScripts(_b87.scripts);
 this.setContent(_b87.text);
+this._executeScripts(_b87.scripts);
 }else{
 this.setContent(data);
 }
@@ -15179,6 +15179,7 @@ this.comboBoxSelectionValue.value=obj[1].toString();
 },getSelectedKey:function(){
 return this.comboBoxSelectionValue.value;
 },setSelectedValue:function(text){
+if(this.dataProvider){
 var data=this.dataProvider.data;
 for(element in data){
 var obj=data[element];
@@ -15186,6 +15187,9 @@ if(obj[0].toString()==text){
 this.setValue(obj[0].toString());
 this.comboBoxSelectionValue.value=obj[1].toString();
 }
+}
+}else{
+this.comboBoxSelectionValue.value=text;
 }
 },getSelectedValue:function(){
 return this.comboBoxValue.value;
@@ -17753,7 +17757,7 @@ if(this.beforeSelectTabNotifyTopicsArray){
 var self=this;
 dojo.lang.forEach(this.beforeSelectTabNotifyTopicsArray,function(_ebb){
 try{
-dojo.event.topic.publish(_ebb,self,tab,_eb9);
+dojo.event.topic.publish(_ebb,_eb9,tab,self);
 }
 catch(ex){
 dojo.debug(ex);
@@ -17766,7 +17770,7 @@ if(this.afterSelectTabNotifyTopicsArray){
 var self=this;
 dojo.lang.forEach(this.afterSelectTabNotifyTopicsArray,function(_ebc){
 try{
-dojo.event.topic.publish(_ebc,self,tab,_eb9);
+dojo.event.topic.publish(_ebc,tab,self);
 }
 catch(ex){
 dojo.debug(ex);

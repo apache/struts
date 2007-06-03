@@ -190,10 +190,14 @@ dojo.widget.defineWidget(
       
       // no validation or validation passed
       if(this.executeScripts) {
-        //update targets content
+        //parse text to extract content and javascript
         var parsed = this.parse(data);
-        this._executeScripts(parsed.scripts);
+         
+        //update targets content
         this.setContent(parsed.text);
+        
+        //execute scripts
+        this._executeScripts(parsed.scripts);
       }
       else {
         this.setContent(data);

@@ -63,8 +63,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <p>Use notify topics to prevent a tab from being selected</p>
  * <pre>
  * &lt;script type="text/javascript"&gt;
- * dojo.event.topic.subscribe("/beforeSelect", function(tabContainer, tab, cancel){
- *     cancel.cancel = true;
+ * dojo.event.topic.subscribe("/beforeSelect", function(event, tab, tabContainer){
+ *     event.cancel = true;
  * });
  * &lt;/script&gt;
  * 

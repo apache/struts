@@ -45,7 +45,7 @@ dojo.widget.defineWidget(
         var self = this;
         dojo.lang.forEach(this.beforeSelectTabNotifyTopicsArray, function(topic) {
           try {
-            dojo.event.topic.publish(topic, self, tab, cancel);
+            dojo.event.topic.publish(topic, cancel, tab, self);
           } catch(ex){
             dojo.debug(ex);
           }
@@ -59,7 +59,7 @@ dojo.widget.defineWidget(
           var self = this;
           dojo.lang.forEach(this.afterSelectTabNotifyTopicsArray, function(topic) {
             try {
-              dojo.event.topic.publish(topic, self, tab, cancel);
+              dojo.event.topic.publish(topic, tab, self);
             } catch(ex){
               dojo.debug(ex);
             }

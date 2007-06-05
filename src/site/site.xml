@@ -83,7 +83,7 @@
                     />
         </menu>
 
-        <menu name="Plugin API's">
+        <menu name="Plugin APIs">
 
            <item
                     name="Config Browser"

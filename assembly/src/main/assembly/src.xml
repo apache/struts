@@ -60,14 +60,14 @@
           <include>src/</include>
         </includes>
       </fileSet>
-        <fileSet>
+        <!--fileSet>
           <directory>../api</directory>
           <outputDirectory>src/api</outputDirectory>
           <includes>
             <include>pom.xml</include>
             <include>src/</include>
           </includes>
-        </fileSet>
+        </fileSet-->
       <fileSet>
         <directory>../apps</directory>
         <outputDirectory>src/apps</outputDirectory>

@@ -38,18 +38,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <p>1. If the response is an array, assume that it contains 2-dimension array elements, like:
  * <pre>
  * [
- *      ["Text1", "Value1"],
- *      ["Text2", "Value2"]
+ *      ["Alabama", "AL"],
+ *      ["Alaska", "AK"]
  * ]
  * </pre>
- * <p>2. If the response is a map, use it (recommended as it is the easiest one to generate):
- * <pre>
- * {
- *      "Alabama" : "AL",
- *      "Alaska"  : "AL"
- * }
- * </pre>
- * <p>3. If a value is specified in the "dataFieldName" attribute, and the response has a field with that
+ * <p>2. If a value is specified in the "dataFieldName" attribute, and the response has a field with that
  * name, assume that's the datasource, which can be an array of 2-dimension array elements, or a map, 
  * like (assuming dataFieldName="state"):</p>
  * <pre>
@@ -65,11 +58,12 @@ import com.opensymphony.xwork2.util.ValueStack;
  * {
  *      "state" : {
  *            "Alabama" : "AL",
- *            "Alaska"  : "AK"
+ *            "Alaska" : "AK"
  *      }
  * }
  * </pre>
- * <p>4. If there is a field that starts with the value specified on the "name" attribute, assume 
+ * </pre>
+ * <p>3. If there is a field that starts with the value specified on the "name" attribute, assume 
  * that's the datasource, like (assuming name="state"):</p>
  * <pre>
  * {
@@ -79,13 +73,19 @@ import com.opensymphony.xwork2.util.ValueStack;
  *      ]
  * }
  * </pre>
- * <p>5. Use first array that is found, like:<p>
+ * <p>4. Use first array that is found, like:<p>
  * <pre>
  * {
  *      "anything" : [
- *            ["Text1", "Value1"],
- *            ["Text2", "Value2"]
+ *            ["Alabama", "AL"],
+ *            ["Alaska", "AK"]
  *     ]       
+ * }
+ * <p>5. If the response is a map, use it (recommended as it is the easiest one to generate):
+ * <pre>
+ * {
+ *      "Alabama" : "AL",
+ *      "Alaska" : "AK"
  * }
  * </pre>
  * <!-- END SNIPPET: javadoc -->
@@ -153,11 +153,73 @@ import com.opensymphony.xwork2.util.ValueStack;
  *      autoCompleter.setSelectedKey("AL");
  *      
  *      //value (key will be set to "AL" and value to "Alabama")
- *      autoCompleter.setSelectedValue("Alabama");
+ *      autoCompleter.setAllValues("AL", "Alabama");
  *   }
  * &lt;/script&gt;
  * </pre>
  * <!-- START SNIPPET: example5 -->
+ * 
+ * <!-- START SNIPPET: example6 -->
+ * <p>Using beforeNotifyTopics:</p>
+ * <pre>
+ * &lt;script type="text/javascript"&gt;
+ * dojo.event.topic.subscribe("/before", function(event, widget){
+ *     alert('inside a topic event. before request');
+ *     //event: set event.cancel = true, to cancel request
+ *     //widget: widget that published the topic
+ * });
+ * &lt;/script&gt;         
+ * 
+ * &lt;sx:autocompleter beforeNotifyTopics="/before" href="%{#ajaxTest} /&gt;
+ * </pre> 
+ * <!-- END SNIPPET: example6 -->
+ * 
+ * <!-- START SNIPPET: example7 -->
+ * <p>Using afterNotifyTopics:</p>
+ * <pre>
+ * &lt;script type="text/javascript"&gt;
+ * dojo.event.topic.subscribe("/after", function(data, request, widget){
+ *     alert('inside a topic event. after request');
+ *     //data : JavaScript object from parsing response
+ *     //request: XMLHttpRequest object
+ *     //widget: widget that published the topic
+ * });
+ * &lt;/script&gt;        
+ * 
+ * &lt;sx:autocompleter afterNotifyTopics="/after" href="%{#ajaxTest}" /&gt;
+ * </pre> 
+ * <!-- END SNIPPET: example7 -->
+ * 
+ * <!-- START SNIPPET: example8-->
+ * <p>Using errorNotifyTopics:</p>
+ * <pre>
+ * &lt;script type="text/javascript"&gt;
+ * dojo.event.topic.subscribe("/error", function(error, request, widget){
+ *     alert('inside a topic event. on error');
+ *     //error : error object (error.message has the error message)
+ *     //request: XMLHttpRequest object
+ *     //widget: widget that published the topic
+ * });
+ * &lt;/script&gt;
+ * 
+ * &lt;sx:autocompleter errorNotifyTopics="/error" href="%{#ajaxTest}" /&gt;
+ * </pre>
+ * <!-- END SNIPPET: example8 -->
+ * 
+ * <!-- START SNIPPET: example9 -->
+ * <p>Using valueNotifyTopics and indicator:</p>
+ * <pre>
+ * &lt;script type="text/javascript"&gt;
+ * dojo.event.topic.subscribe("/value", function(value, key, text, widget){
+ *     alert('inside a topic event. after value changed');
+ *     //value : selected value (like "Florida" in example above)
+ *     //key: selected key (like "FL" in example above)
+ *     //text: text typed into textbox
+ *     //widget: widget that published the topic
+ * });
+ * &lt;/script&gt;   
+ * <pre>
+ * <!-- END SNIPPET: example9 -->
  */
 @StrutsTag(name="autocompleter", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.AutocompleterTag", description="Renders a combobox with autocomplete and AJAX capabilities")
 public class Autocompleter extends ComboBox {

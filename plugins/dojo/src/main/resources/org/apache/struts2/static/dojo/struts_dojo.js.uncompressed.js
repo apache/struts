@@ -24162,12 +24162,13 @@ struts.widget.ComboBoxDataProvider = function(combobox, node){
 
         //if notifyTopics is published on the first request (onload)
         //the value of listeners will be reset
-        if(!this.firstRequest) {
-          this.firstRequest = false;
+        if(!this.firstRequest || type == "error") {
           this.cbox.notify.apply(this.cbox, [data, type, evt]);
         }
+        
+        this.firstRequest = false;
         var arrData = null;
-        var dataByName = data[this.cbox.dataFieldName];
+        var dataByName = data[dojo.string.isBlank(this.cbox.dataFieldName) ? this.cbox.name : this.cbox.dataFieldName];
         if(!dojo.lang.isArray(data)) {
            //if there is a dataFieldName, take it
            if(dataByName) {
@@ -24178,7 +24179,7 @@ struts.widget.ComboBoxDataProvider = function(combobox, node){
                 //it is an object, treat it like a map
                 arrData = [];
                 for(var key in dataByName){
-                    arrData.push([dataByName[key], key]);
+                    arrData.push([key, dataByName[key]]);
                 }
              }
            } else {
@@ -24192,7 +24193,7 @@ struts.widget.ComboBoxDataProvider = function(combobox, node){
                } else {
                  //if nathing else is found, we will use values in this 
                  //object as the data
-                 tmpArrData.push([data[key], key]);
+                 tmpArrData.push([key, data[key]]);
                }
                //grab the first array found, we will use it if nothing else
                //is found
@@ -24541,12 +24542,13 @@ dojo.widget.defineWidget(
   },
 
   notify : function(data, type, e) {
+    var self = this;
+    //general topics
     if(this.notifyTopicsArray) {
-      var self = this;
       dojo.lang.forEach(this.notifyTopicsArray, function(topic) {
         try {
-          dojo.event.topic.publish(topic, data, type, e);
-        } catch(ex) {
+          dojo.event.topic.publish(topic, data, type, e, self);
+        } catch(ex){
           self.log(ex);
         }
       });
@@ -24556,28 +24558,26 @@ dojo.widget.defineWidget(
     var topicsArray = null;
     switch(type) {
       case "before":
-        topicsArray = this.beforeNotifyTopicsArray;
+        this.notifyTo(this.beforeNotifyTopicsArray, [e, this]);
         break;
       case "load":
-        topicsArray = this.afterNotifyTopicsArray;
+        this.notifyTo(this.afterNotifyTopicsArray, [data, e, this]);
         break;
       case "error":
-        topicsArray = this.errorNotifyTopicsArray;
+        this.notifyTo(this.errorNotifyTopicsArray, [data, e, this]);
         break;
-      case "valuechanged":
-        topicsArray = this.valueNotifyTopicsArray;
-        break;
+       case "valuechanged":
+        this.notifyTo(this.valueNotifyTopicsArray, [this.getSelectedValue(), this.getSelectedKey(), this.getText(), this]);
+        break;  
     }
-  
-    this.notifyTo(topicsArray, data, type, e);
   },
   
-  notifyTo : function(topicsArray, data, type, e) {
+  notifyTo : function(topicsArray, params) {
     var self = this;
     if(topicsArray) {
       dojo.lang.forEach(topicsArray, function(topic) {
         try {
-          dojo.event.topic.publish(topic, data, type, e);
+          dojo.event.topic.publishApply(topic, params);
         } catch(ex){
           self.log(ex);
         }
@@ -24620,28 +24620,13 @@ dojo.widget.defineWidget(
   getSelectedKey : function() {
     return this.comboBoxSelectionValue.value;
   },
-  
-  setSelectedValue : function(text) {
-    if(this.dataProvider) {
-      var data = this.dataProvider.data;
-      for(element in data) {
-         var obj = data[element];
-         if(obj[0].toString() == text) {
-           this.setValue(obj[0].toString());
-           this.comboBoxSelectionValue.value = obj[1].toString();
-         }
-      }
-    } else {
-      this.comboBoxSelectionValue.value = text;
-    }
-  },
-  
+ 
   getSelectedValue : function() {
     return this.comboBoxValue.value;
   },
   
   getText : function() {
-    return this.textInputNode.value();
+    return this.textInputNode.value;
   }
 });
 

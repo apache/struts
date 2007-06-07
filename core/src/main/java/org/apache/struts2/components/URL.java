@@ -50,7 +50,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <p>This tag is used to create a URL.</p>
  *
  * <p>You can use the "param" tag inside the body to provide
- * additional request parameters.</p>
+ * additional request parameters. If the value of a param is an Array or 
+ * an Iterable all the values will be added to the URL.</p>
  *
  * <b>NOTE:</b>
  * <p>When includeParams is 'all' or 'get', the parameter defined in param tag will take

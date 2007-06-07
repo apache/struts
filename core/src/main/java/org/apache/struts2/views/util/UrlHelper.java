@@ -199,41 +199,53 @@ public class UrlHelper {
             // Set params
             Iterator iter = params.entrySet().iterator();
 
-            String[] valueHolder = new String[1];
 
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
                 String name = (String) entry.getKey();
                 Object value = entry.getValue();
 
-                String[] values;
 
-                if (value instanceof String[]) {
-                    values = (String[]) value;
+                if (value instanceof Iterable) {
+                    for (Iterator iterator = ((Iterable) value).iterator(); iterator
+                        .hasNext();) {
+                        Object paramValue = iterator.next();
+                        link.append(buildParameterSubstring(name, paramValue
+                            .toString()));
+
+                        if (iterator.hasNext())
+                            link.append(paramSeparator);
+                    }
+                } else if (value instanceof Object[]) {
+                    Object[] array = (Object[]) value;
+                    for (int i = 0; i < array.length; i++) {
+                        Object paramValue = array[i];
+                        link.append(buildParameterSubstring(name, paramValue
+                            .toString()));
+
+                        if (i < array.length - 1)
+                            link.append(paramSeparator);
+                    }
                 } else {
-                    valueHolder[0] = value.toString();
-                    values = valueHolder;
+                    link.append(buildParameterSubstring(name, value.toString()));
                 }
-
-                for (int i = 0; i < values.length; i++) {
-                    if (values[i] != null) {
-                        link.append(name);
-                        link.append('=');
-                        link.append(translateAndEncode(values[i]));
-                    }
-
-                    if (i < (values.length - 1)) {
-                        link.append(paramSeparator);
-                    }
-                }
-
-                if (iter.hasNext()) {
+                
+                if (iter.hasNext())
                     link.append(paramSeparator);
-                }
             }
         }
     }
 
+    
+    private static String buildParameterSubstring(String name, String value) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(name);
+        builder.append('=');
+        builder.append(translateAndEncode(value));
+        
+        return builder.toString();
+    }
+    
     /**
      * Translates any script expressions using {@link com.opensymphony.xwork2.util.TextParseUtil#translateVariables} and
      * encodes the URL using {@link java.net.URLEncoder#encode} with the encoding specified in the configuration.

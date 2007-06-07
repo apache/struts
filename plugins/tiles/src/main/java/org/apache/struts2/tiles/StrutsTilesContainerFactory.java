@@ -74,7 +74,7 @@ public class StrutsTilesContainerFactory extends TilesContainerFactory {
             this.factory = factory;
         }
 
-        public void init(Map map) {
+        public void init(Map<String, String> map) {
             factory.init(map);
         }
 

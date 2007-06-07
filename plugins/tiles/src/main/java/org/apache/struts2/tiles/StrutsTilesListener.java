@@ -20,10 +20,10 @@
  */
 package org.apache.struts2.tiles;
 
-import org.apache.tiles.listener.TilesListener;
 import org.apache.tiles.TilesContainer;
 import org.apache.tiles.TilesException;
 import org.apache.tiles.factory.TilesContainerFactory;
+import org.apache.tiles.web.startup.TilesListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

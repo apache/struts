@@ -184,7 +184,7 @@ struts.widget.ComboBoxDataProvider = function(combobox, node){
   };
 
 
-  if(!dojo.string.isBlank(this.cbox.dataUrl)){
+  if(!dojo.string.isBlank(this.cbox.dataUrl) && this.cbox.preload){
     this.getData(this.cbox.dataUrl);
   } else {
     // check to see if we can populate the list from <option> elements
@@ -254,6 +254,9 @@ dojo.widget.defineWidget(
   searchLimit : 30,
   
   transport : "",
+  
+  //load options when page loads
+  preload : true,
   
   //from Dojo's  ComboBox
   showResultList: function() {

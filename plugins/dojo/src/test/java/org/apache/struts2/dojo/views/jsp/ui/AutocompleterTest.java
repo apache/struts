@@ -50,6 +50,7 @@ public class AutocompleterTest extends AbstractUITagTest {
         tag.setValueNotifyTopics("l");
         tag.setResultsLimit("2");
         tag.setTransport("m");
+        tag.setPreload("true");
         tag.doStartTag();
         tag.doEndTag();
 

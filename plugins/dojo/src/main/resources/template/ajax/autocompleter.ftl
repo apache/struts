@@ -110,6 +110,9 @@
 <#if parameters.transport?if_exists != "">
   transport="${parameters.transport?html}"<#rt/>
 </#if>
+<#if parameters.preload?exists>
+  preload="${parameters.preload?string?html}"<#rt/>
+</#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 <#if parameters.href?exists>

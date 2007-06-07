@@ -21,4 +21,5 @@
  dataFieldName="k"
  searchLimit="2"
  transport="m"
+ preload="true"
 />

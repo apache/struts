@@ -78,6 +78,7 @@
         <li><a href="<s:url value="/tiles/index.action" />">Tiles</a></li>
         <li><a href="<s:url value="/token/index.jsp"/>">Token</a></li>
         <li><a href="<s:url value="/validation/index.jsp"/>">Validation</a></li>
+        <li><a href="<s:url value="/interactive/index.jsp"/>">Interactive Demo</a></li>
         <li class="last"><a href="<s:url value="/help.jsp"/>">Help</a></li>
                 </ul>
             </div>

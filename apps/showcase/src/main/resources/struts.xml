@@ -9,7 +9,7 @@
 
     <!-- Some or all of these can be flipped to true for debugging -->
     <constant name="struts.i18n.reload" value="false" />
-    <constant name="struts.devMode" value="false" />
+    <constant name="struts.devMode" value="true" />
     <constant name="struts.configuration.xml.reload" value="false" />
     <constant name="struts.custom.i18n.resources" value="globalMessages" />
 
@@ -19,6 +19,8 @@
     <constant name="struts.serve.static.browserCache" value="false" />
 
     <include file="struts-chat.xml" />
+    
+    <include file="struts-interactive.xml" />
 
     <include file="struts-hangman.xml" />
 

@@ -64,7 +64,7 @@ Remote form evaluating suplied JS on completion:<br/>
 </s:form>
 
 <br /><br />
-Remote form whose submit is cancelled:<br/>
+Submit outside form:<br/>
 <s:form
         id='theForm5'
         cssStyle="border: 1px solid green;"
@@ -72,15 +72,39 @@ Remote form whose submit is cancelled:<br/>
         method='post'>
 
     <input type='text' name='data' value='Struts User'>
+</s:form>
+<sx:submit value="GO5" formId="theForm5" targets="two"/>
 
-    <sx:submit value="GO5" targets="theForm5" beforeNotifyTopics="/beforeSubmit"/>
+<br /><br />
+<s:url id="remoteUrl" namespace="/remoteforms" action="AjaxRemoteForm"/>
+Submit outside form, href in submit tag:<br/>
+<s:form
+        id='theForm6'
+        cssStyle="border: 1px solid green;"
+        method='post'>
+
+    <input type='text' name='data' value='Struts User'>
+</s:form>
+<sx:submit value="GO6" formId="theForm6" targets="two" href="%{#remoteUrl}"/>
+
+<br /><br />
+Remote form whose submit is cancelled:<br/>
+<s:form
+        id='theForm7'
+        cssStyle="border: 1px solid green;"
+        action='AjaxRemoteForm'
+        method='post'>
+
+    <input type='text' name='data' value='Struts User'>
+
+    <sx:submit value="GO7" targets="theForm7" beforeNotifyTopics="/beforeSubmit"/>
 
 </s:form>
 
 <br /><br />
 A form with no remote submit (so should not be ajaxified):<br/>
 <s:form
-        id='theForm7'
+        id='theForm8'
         cssStyle="border: 1px solid green;"
         action='AjaxRemoteForm'
         method='post'>

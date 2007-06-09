@@ -107,8 +107,8 @@ dojo.widget.defineWidget(
       }
     }
 
-    if(dojo.string.isBlank(this.href) && dojo.string.isBlank(this.formId)) {
-      //no href and no formId, we must be inside a form
+    if(dojo.string.isBlank(this.formId)) {
+      //no formId, see if we are inside a form
       this.formNode = dojo.dom.getFirstAncestorByTag(this.domNode, "form");
     } else {
       this.formNode = dojo.byId(this.formId);
@@ -116,10 +116,6 @@ dojo.widget.defineWidget(
 
     if(this.formNode && dojo.string.isBlank(this.href)) {
       this.href = this.formNode.action;
-    }
-
-    if(!dojo.string.isBlank(this.formId)) {
-      this.formNode = dojo.byId(this.formId);
     }
   },
 

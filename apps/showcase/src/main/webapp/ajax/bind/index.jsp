@@ -47,15 +47,7 @@
 </p>
 <br/><br/>
 <p>
-    3. Attach to "onchange", event on Checkbox below and update content of Div1 submitting a form.
-    <sx:bind id="ex3" href="%{#ajaxTest}" sources="chk1" targets="div1" events="onchange" formId="form1" />
-    <form id="form1">
-        <s:checkbox name="data" label="Hit me" id="chk1"/>
-    </form>
-</p>
-<br/><br/>
-<p>
-    4. Attach to "onkeydown" event on Textbox below update content of Div1. Publish topics.
+    3. Attach to "onkeydown" event on Textbox below update content of Div1. Publish topics.
     <sx:bind id="ex4" href="%{#ajaxTest}" sources="txt1" targets="div1" events="onkeydown" beforeNotifyTopics="/before" afterNotifyTopics="/after" />
     <br/>
     <s:textfield id="txt1"/>

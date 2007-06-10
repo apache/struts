@@ -29,9 +29,10 @@
               if (the_shell_command) {
                   commands_history[commands_history.length] = the_shell_command;
                   history_pointer = commands_history.length;
-                  var the_url = (url ? url : window.opener.location.pathname) + '?debug=command&expression='+escape(the_shell_command);
+                  var the_url = url ? url : window.opener.location.pathname;
                   dojo.io.bind({
                         url: the_url,
+                        formNode: dojo.byId("wc-form"),
                         load: function(type, data, evt){ printResult(data); },
                         mimetype: "text/plain"
                     });

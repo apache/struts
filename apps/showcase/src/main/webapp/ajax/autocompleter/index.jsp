@@ -12,7 +12,6 @@
 
 <script type="text/javascript">
    dojo.event.topic.subscribe("/before", function(event, widget){
-    debugger;
       alert('inside a topic event. before request');
       //event: set event.cancel = true, to cancel request
       //widget: widget that published the topic
@@ -121,7 +120,7 @@ Link two autocompleter elements. When the selected value in 'Autocompleter 1' ch
     Autocompleter 1 
     <sx:autocompleter  
         name="select" 
-        list="%{'fruits','colors'}" 
+        list="{'fruits','colors'}" 
         value="colors"
         valueNotifyTopics="/Changed"
         forceValidOption="true"/>

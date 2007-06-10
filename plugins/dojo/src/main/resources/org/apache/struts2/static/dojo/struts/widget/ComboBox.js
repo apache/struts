@@ -106,7 +106,7 @@ struts.widget.ComboBoxDataProvider = function(combobox, node){
       searchStr = searchStr.toLowerCase();
     }
     for(var x=0; x<this.data.length; x++){
-      if(!this.data[x]) {
+      if(!this.data[x] || !this.data[x][0]) {
         //needed for IE
         continue;
       }

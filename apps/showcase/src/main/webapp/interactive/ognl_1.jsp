@@ -5,7 +5,7 @@
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 %>
 <p>
-    <b>Accessing nested properites</b>
+    <b>Accessing nested properties</b>
 </p>
 <p>
     To access nested properties, use the dot "." operator to concatenate the property names. The action

@@ -12,7 +12,7 @@
     The <i>property</i> tag is used to print to the page, the result of an OGNL expression. The expression
     is specified in the <i>value</i> attribute.
 </p>
-<p>To print the value of the expression <i>name</i> to the page type
+<p>To print the value of the expression <i>name</i> to the page type:
 <p>
     <i id="example">
         &lt;s:property value=&quot;name&quot; /&gt;

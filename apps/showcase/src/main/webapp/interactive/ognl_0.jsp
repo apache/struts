@@ -5,7 +5,7 @@
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 %>
 <p>
-    <b>Accessing properites</b>
+    <b>Accessing properties</b>
 </p>
 <p>
     The framework uses a standard naming context to evaluate OGNL expressions. 
@@ -17,7 +17,8 @@
     In this example (and in your JSP pages) the last action executed will be on the top of the stack. 
 </p>
 <p>    
-    <a href="#" onclick="selectClassSrcTab()">This action</a> is available on the third tab above. To access the <i>name</i> field enter:
+    <a href="#" onclick="selectClassSrcTab()">This action</a> is available on the third tab above. 
+    To access the <i>name</i> field type:
 </p>
 <p>
     <i id="example">

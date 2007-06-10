@@ -21,6 +21,7 @@
 package org.apache.struts2.showcase.action;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,12 @@ import java.util.Map;
 import com.opensymphony.xwork2.ActionSupport;
 
 public class ExampleAction extends ActionSupport {
-
+    public static final String CONSTANT = "Struts Rocks!";
+        
+    public static Date getCurrentDate() {
+        return new Date();
+    }
+    
     public String getName() {
         return "John Galt";
     }

@@ -19,7 +19,7 @@
         var runningOgnl = true;
         var ognlBase = "${ognlBase}";
         var jspBase = "${jspBase}";
-        var ognlCount = 5;
+        var ognlCount = 7;
         var jspCount = 1;
         
         dojo.addOnLoad(function() {

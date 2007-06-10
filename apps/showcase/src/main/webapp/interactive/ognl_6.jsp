@@ -5,22 +5,15 @@
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 %>
 <p>
-    <b>Accessing properties on the stack</b>
+    <b>Calling methods</b>
 </p>
 <p>
-   Object that are not on the top of the Value Stack are accessed using the "#name" notation. 
-   Some objects are always pushed into the stack by Struts, like:
+  OGNL follows Java's syntax to execute a method.
 </p>
-<ul>
-    <li>#application</li>
-    <li>#session</li>
-    <li>#request</li>
-    <li>#parameters</li>
-</ul>
-<p>To see the value of the first parameter type:</p>
+<p>To execute the <i>getTitle()</i> method on the <i>book</i> object type:</p>
 <p>
     <i id="example">
-        #parameters['debug'][0]
+        book.getTitle() 
     </i>
 </p>
 <p>

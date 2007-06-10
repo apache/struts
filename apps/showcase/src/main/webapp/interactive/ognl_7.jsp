@@ -5,22 +5,15 @@
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 %>
 <p>
-    <b>Accessing properties on the stack</b>
+    <b>Expressions</b>
 </p>
 <p>
-   Object that are not on the top of the Value Stack are accessed using the "#name" notation. 
-   Some objects are always pushed into the stack by Struts, like:
+  OGNL supports expressions using primitive values.
 </p>
-<ul>
-    <li>#application</li>
-    <li>#session</li>
-    <li>#request</li>
-    <li>#parameters</li>
-</ul>
-<p>To see the value of the first parameter type:</p>
+<p>Example 1:</p>
 <p>
     <i id="example">
-        #parameters['debug'][0]
+        (6 - 2)/2 
     </i>
 </p>
 <p>

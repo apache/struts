@@ -412,5 +412,4 @@ dojo.widget.defineWidget(
       }
       return {"xml":s, "styles":styles, "titles":titles, "requires":requires, "scripts":scripts, "url":url};
     }
-  }
-);
+});

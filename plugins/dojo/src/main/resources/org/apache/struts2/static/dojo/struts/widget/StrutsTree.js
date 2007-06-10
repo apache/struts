@@ -53,7 +53,7 @@ dojo.widget.defineWidget(
           }
         },
         mimetype: "text/json"
-      });
+       });
      }   
   }
 });

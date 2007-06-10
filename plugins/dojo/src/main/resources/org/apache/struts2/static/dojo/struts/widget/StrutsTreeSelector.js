@@ -94,6 +94,5 @@ dojo.widget.defineWidget(
   collapse: function(message) {
     var node = message.source;
     this.publishTopics(this.collapsedNotifyTopicsArray, {node: node});
-  },
-  
+  }
 });

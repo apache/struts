@@ -2,21 +2,21 @@
     // Dojo configuration
     djConfig = {
         isDebug: ${parameters.debug?default(false)?string},
-        bindEncoding: "${parameters.encoding}",
+        bindEncoding: "${parameters.encoding}"
         <#if parameters.baseRelativePath?if_exists != "">
-          baseRelativePath: "<@s.url value='${parameters.baseRelativePath}' includeParams='none' encode='false' />",
-          baseScriptUri: "<@s.url value='${parameters.baseRelativePath}' includeParams='none' encode='false' />",
+          ,baseRelativePath: "<@s.url value='${parameters.baseRelativePath}' includeParams='none' encode='false' />"
+          ,baseScriptUri: "<@s.url value='${parameters.baseRelativePath}' includeParams='none' encode='false' />"
         <#else>
-          baseRelativePath: "${base}/struts/dojo/",
-          baseScriptUri: "${base}/struts/dojo/",
+          ,baseRelativePath: "${base}/struts/dojo/"
+          ,baseScriptUri: "${base}/struts/dojo/"
         </#if>  
         <#if parameters.locale?if_exists != "">
-          locale: "${parameters.locale}",
+          ,locale: "${parameters.locale}"
         </#if>
         <#if parameters.extraLocales?exists>
-          extraLocale: [
+          ,extraLocale: [
         	<#list parameters.extraLocales as locale>
-        		"${locale}",
+        		"${locale}"<#if locale_has_next>,</#if>
         	</#list>
           ]
         </#if>

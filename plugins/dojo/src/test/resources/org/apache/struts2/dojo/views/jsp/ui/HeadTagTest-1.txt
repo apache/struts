@@ -9,7 +9,7 @@
 		extraLocale: [
 			"a",
 			"b",
-			"c",
+			"c"
 		]
 		};
 </script>

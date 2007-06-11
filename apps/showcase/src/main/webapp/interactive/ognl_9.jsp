@@ -14,4 +14,5 @@
 <p>
     To learn more see the <a href="#" onclick="window.open('http://www.ognl.org/2.6.9/Documentation/html/LanguageGuide/index.html')">[OGNL Documentation]</a>
 </p>
+You can keep playing with the OGNL console or 
 <a href="#" onclick="startJSP()">Start JSP Interactive Demo</a>

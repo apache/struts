@@ -19,7 +19,7 @@
         var ognlBase = "${ognlBase}";
         var jspBase = "${jspBase}";
         var ognlCount = 10;
-        var jspCount = 3;
+        var jspCount = 5;
         
         dojo.addOnLoad(function() {
             var classSrc = dojo.byId("classSrc");
@@ -33,6 +33,7 @@
         });
         
         function startOgnl() {
+            selectOGNLTab();
             index = -1;
             runningOgnl = true;
             change(1);
@@ -71,6 +72,10 @@
         
         function selectJSPTab() {
             dojo.widget.byId("mainTabContainer").selectTab("jspTab");
+        }
+        
+        function selectOGNLTab() {
+            dojo.widget.byId("mainTabContainer").selectTab("ognlTab");
         }
        
         function change(delta) {
@@ -170,6 +175,10 @@
         pre {
             font-family:Verdana,Geneva,Arial,Helvetica,sans-serif;
             font-style: italic;
+        }
+        span.kw {
+            color: rgb(127, 0, 85);
+            font-weight: bold;;
         }
     </style>
 </head>

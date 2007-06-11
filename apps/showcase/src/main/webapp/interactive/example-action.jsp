@@ -5,41 +5,41 @@
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 %>
 <pre style="font-style: normal;">
-package org.apache.struts2.showcase.action;
+<span class="kw">package</span> org.apache.struts2.showcase.action;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+<span class="kw">import</span> java.util.Arrays;
+<span class="kw">import</span> java.util.Date;
+<span class="kw">import</span> java.util.HashMap;
+<span class="kw">import</span> java.util.List;
+<span class="kw">import</span> java.util.Map;
 
-import com.opensymphony.xwork2.ActionSupport;
+<span class="kw">import</span> com.opensymphony.xwork2.ActionSupport;
 
-public class ExampleAction extends ActionSupport {
-    public static final String CONSTANT = "Struts Rocks!";
+<span class="kw">public class</span> ExampleAction <span class="kw">extends</span> ActionSupport {
+    <span class="kw">public static final</span> String CONSTANT = "Struts Rocks!";
         
-    public static Date getCurrentDate() {
+    <span class="kw">public static</span> Date getCurrentDate() {
         return new Date();
     }
     
-    public String getName() {
+    <span class="kw">public</span> String getName() {
         return "John Galt";
     }
 
-    public String[] getBands() {
+    <span class="kw">public</span> String[] getBands() {
         return new String[] { "Pink Floyd", "Metallica", "Guns & Roses" };
     }
 
-    public List&lt;String> getMovies() {
+    <span class="kw">public</span> List&lt;String&gt; getMovies() {
         return Arrays.asList("Lord of the Rings", "Matrix");
     }
 
-    public Book getBook() {
-        return new Book("Iliad", "Homer");
+    <span class="kw">public</span> Book getBook() {
+        <span class="kw">return</span> new Book("Iliad", "Homer");
     }
 
-    public Map&lt;String, Book> getBooks() {
-        Map&lt;String, Book> books = new HashMap&lt;String, Book&gt;();
+    <span class="kw">public</span> Map&lt;String, Book&gt; getBooks() {
+        Map&lt;String, Book&gt; books = new HashMap&lt;String, Book&gt;();
         books.put("Iliad", new Book("Iliad", "Homer"));
         books.put("The Republic", new Book("The Replublic", "Plato"));
         books.put("Thus Spake Zarathustra", new Book("Thus Spake Zarathustra",
@@ -48,28 +48,28 @@ public class ExampleAction extends ActionSupport {
     }
 }
 
-class Book {
-    private String title;
-    private String author;
+<span class="kw">class</span> Book {
+    <span class="kw">private</span> String title;
+    <span class="kw">private</span> String author;
 
-    public Book(String title, String author) {
+    <span class="kw">public</span> Book(String title, String author) {
         this.title = title;
         this.author = author;
     }
 
-    public String getTitle() {
-        return title;
+    <span class="kw">public</span> String getTitle() {
+        <span class="kw">return</span> title;
     }
 
-    public void setTitle(String title) {
+    <span class="kw">public void</span> setTitle(String title) {
         this.title = title;
     }
 
-    public String getAuthor() {
+    <span class="kw">public</span> String getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    <span class="kw">public void</span> setAuthor(String author) {
         this.author = author;
     }
 }

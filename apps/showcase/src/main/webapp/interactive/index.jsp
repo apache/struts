@@ -13,13 +13,12 @@
     
     <script src="${struts}/webconsole.js"></script>
     <sx:head/>
-    
     <script>
         var index = -1;
         var runningOgnl = true;
         var ognlBase = "${ognlBase}";
         var jspBase = "${jspBase}";
-        var ognlCount = 7;
+        var ognlCount = 10;
         var jspCount = 1;
         
         dojo.addOnLoad(function() {
@@ -177,13 +176,14 @@
     <sx:tabbedpanel id="mainTabContainer" cssClass="tabContainer">
         <sx:div label="OGNL Console" id="ognlTab">
             <div id="shell" class="shell">
-               <form onsubmit="return false">
+               <form onsubmit="return false" id="wc-form">
                     <div class="wc-results" id="wc-result">
                          Welcome to the OGNL console!
                          <br />
                          :-&gt;
                     </div>
-                    OGNL Expression <input onkeyup="keyEvent(event, '${jspEval}')" class="wc-command" id="wc-command" type="text" />
+                    <input type="hidden" name="debug" value="command" />
+                    OGNL Expression <input name="expression" onkeyup="keyEvent(event, '${jspEval}')" class="wc-command" id="wc-command" type="text" />
                 </form>
             </div>
         </sx:div>
@@ -197,7 +197,6 @@
                                 value="Eval JSP Fragment" 
                                 href="%{#jspEval}" 
                                 targets="jspResult" 
-                                highlightColor="#818EBD"
                                 listenTopics="/evalJSP"/>
                        </form>
                     </td>

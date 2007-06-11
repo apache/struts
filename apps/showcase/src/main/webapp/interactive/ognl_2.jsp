@@ -20,7 +20,7 @@
     </i>
 </p>
 <p>
-    on the OGNL console and it enter. <a href="#" onclick="execOgnl('example0')">Do it for me</a>
+    on the OGNL console and hit enter. <a href="#" onclick="execOgnl('example0')">Do it for me</a>
 </p>
 <p>
     <b>Accessing properties inside Lists</b>
@@ -36,4 +36,8 @@
 </p>
 <p>
     on the OGNL console and hit enter.  <a href="#" onclick="execOgnl('example1')">Do it for me</a>
+</p>
+<br/>
+<p>
+    <a href="#" onclick="window.open('http://www.ognl.org/2.6.9/Documentation/html/LanguageGuide/indexing.html#N10184')">[More details]</a>
 </p>

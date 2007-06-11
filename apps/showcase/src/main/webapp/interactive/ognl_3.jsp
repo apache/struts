@@ -48,3 +48,7 @@
 <p>
     on the OGNL console and hit enter. <a href="#" onclick="execOgnl('example2')">Do it for me</a>
 </p>
+<br/>
+<p>
+    <a href="#" onclick="window.open('http://www.ognl.org/2.6.9/Documentation/html/LanguageGuide/indexing.html#N10184')">[More details]</a>
+</p>

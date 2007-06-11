@@ -19,7 +19,7 @@
     </i>
 </p>
 <p>
-    on the OGNL console and it enter.  <a href="#" onclick="execOgnl('example0')">Do it for me</a>
+    on the OGNL console and hit enter.  <a href="#" onclick="execOgnl('example0')">Do it for me</a>
 </p>
 <p>To execute the static method <i>getCurrentDate</i> in the ExampleAction type:</p>
 <p>
@@ -28,5 +28,10 @@
     </i>
 </p>
 <p>
-    on the OGNL console and it enter.  <a href="#" onclick="execOgnl('example1')">Do it for me</a>
+    on the OGNL console and hit enter.  <a href="#" onclick="execOgnl('example1')">Do it for me</a>
+</p>
+<br/>
+<p>
+    <a href="#" onclick="window.open('http://www.ognl.org/2.6.9/Documentation/html/LanguageGuide/staticFields.html')">[More details on static fields]</a>
+    <a href="#" onclick="window.open('http://www.ognl.org/2.6.9/Documentation/html/LanguageGuide/staticMethods.html')">[More details on static methods]</a>
 </p>

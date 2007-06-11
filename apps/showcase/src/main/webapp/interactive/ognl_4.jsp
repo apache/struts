@@ -24,5 +24,9 @@
     </i>
 </p>
 <p>
-    on the OGNL console and it enter.  <a href="#" onclick="execOgnl()">Do it for me</a>
+    on the OGNL console and hit enter.  <a href="#" onclick="execOgnl()">Do it for me</a>
+</p>
+<br/>
+<p>
+    <a href="#" onclick="window.open('http://struts.apache.org/2.x/docs/ognl.html')">[More details]</a>
 </p>

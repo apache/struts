@@ -10,12 +10,34 @@
 <p>
   OGNL supports expressions using primitive values.
 </p>
-<p>Example 1:</p>
+<p>Arithmetic:</p>
 <p>
-    <i id="example">
-        (6 - 2)/2 
+    <i id="example0">
+        (6 - 2)/2
     </i>
 </p>
 <p>
-    on the OGNL console and it enter.  <a href="#" onclick="execOgnl()">Do it for me</a>
+    on the OGNL console and hit enter.  <a href="#" onclick="execOgnl('example0')">Do it for me</a>
+</p>
+<p>Logical:</p>
+<p>
+    <i id="example1">
+        (true || false) and true
+    </i>
+</p>
+<p>
+    on the OGNL console and hit enter.  <a href="#" onclick="execOgnl('example1')">Do it for me</a>
+</p>
+<p>Equality:</p>
+<p>
+    <i id="example2">
+        'a' == 'a'
+    </i>
+</p>
+<p>
+    on the OGNL console and hit enter.  <a href="#" onclick="execOgnl('example2')">Do it for me</a>
+</p>
+<p>
+    OGNL supports many more operators and expressions, see <a href="#" onclick="window.open('http://www.ognl.org/2.6.9/Documentation/html/LanguageGuide/apa.html#operators')">[Operators Reference]</a>
+    for more details.
 </p>

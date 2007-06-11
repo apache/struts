@@ -19,7 +19,20 @@
     </i>
 </p>
 <p>
-    on the JSP console and hit enter. <a href="#" onclick="evalJSP('example0')">Do it for me</a>
+    on the JSP console and hit enter. <a href="#" onclick="execJSP('example0')">Do it for me</a>
+</p>
+<p>
+    As you saw in the OGNL demo, to print a property of an object that is not on top of the stack,
+    use the <i>#object.property</i> notation.
+</p>
+<p>To print the value for the key "struts.view_uri" in <i>request</i> to the page type:
+<p>
+    <i id="example1">
+        &lt;s:property value=&quot;#request['struts.view_uri']&quot; /&gt;
+    </i>
+</p>
+<p>
+    on the JSP console and hit enter. <a href="#" onclick="execJSP('example1')">Do it for me</a>
 </p>
 <p>
     <b>Print property value, using the <i>$</i> operator</b>
@@ -27,10 +40,13 @@
 <p>Use the <i>${name}</i> notation to print values from the Value Stack to the page.
 <p>To print the value of the expression <i>name</i> to the page type:
 <p>
-    <i id="example1">
+    <i id="example2">
         &#36;{name}
     </i>
 </p>
 <p>
-    on the JSP console and hit enter. <a href="#" onclick="evalJSP('example1')">Do it for me</a>
+    on the JSP console and hit enter. <a href="#" onclick="execJSP('example2')">Do it for me</a>
+</p>
+<p>
+    <a href="#" onclick="window.open('http://struts.apache.org/2.x/docs/property.html')">[More details]</a>
 </p>

@@ -4,10 +4,11 @@
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 %>
-<pre>
+<pre style="font-style: normal;">
 package org.apache.struts2.showcase.action;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,28 +16,34 @@ import java.util.Map;
 import com.opensymphony.xwork2.ActionSupport;
 
 public class ExampleAction extends ActionSupport {
-
+    public static final String CONSTANT = "Struts Rocks!";
+        
+    public static Date getCurrentDate() {
+        return new Date();
+    }
+    
     public String getName() {
-        return &quot;John Galt&quot;;
+        return "John Galt";
     }
 
     public String[] getBands() {
-        return new String[] { &quot;Pink Floyd&quot;, &quot;Metallica&quot;, &quot;Guns & Roses&quot; };
+        return new String[] { "Pink Floyd", "Metallica", "Guns & Roses" };
     }
-    
+
+    public List&lt;String> getMovies() {
+        return Arrays.asList("Lord of the Rings", "Matrix");
+    }
+
     public Book getBook() {
-        return new Book(&quot;Iliad&quot;, &quot;Homer&quot;);
+        return new Book("Iliad", "Homer");
     }
 
-    public List&lt;String&gt; getMovies() {
-        return Arrays.asList(&quot;Lord of the Rings&quot;, &quot;Matrix&quot;);
-    }
-
-    public Map&lt;String, Book&gt; getBooks() {
-        Map&lt;String, Book&gt; books = new HashMap&lt;String, Book&gt;();
-        books.put(&quot;Iliad&quot;, new Book(&quot;Iliad&quot;, &quot;Homer&quot;));
-        books.put(&quot;The Republic&quot;, new Book(&quot;The Replublic&quot;, &quot;Plato&quot;));
-        books.put(&quot;Thus Spake Zarathustra&quot;, new Book(&quot;Thus Spake Zarathustra&quot;, &quot;Friedrich Nietzsche&quot;));
+    public Map&lt;String, Book> getBooks() {
+        Map&lt;String, Book> books = new HashMap&lt;String, Book&gt;();
+        books.put("Iliad", new Book("Iliad", "Homer"));
+        books.put("The Republic", new Book("The Replublic", "Plato"));
+        books.put("Thus Spake Zarathustra", new Book("Thus Spake Zarathustra",
+            "Friedrich Nietzsche"));
         return books;
     }
 }

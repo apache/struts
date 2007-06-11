@@ -17,7 +17,7 @@
     </i>
 </p>
 <p>
-   If the value that you want to use in one of these string literal attributes, is stored on the Value Stack,
+   If the value that you want to use in one of these string literal attributes is stored on the Value Stack,
    then the <i>%{#name}</i> syntax (alternative syntax) needs to be used. Assuming there is a value
    with the name "url" stored on the stack:
 </p>
@@ -56,4 +56,7 @@
         <br />
         &lt;s:property value=&quot;%{#movie}&quot; /&gt;
     </i>
+</p>
+<p>
+    <a href="#" onclick="window.open('http://struts.apache.org/2.x/docs/tag-syntax.html')">[More details]</a>
 </p>

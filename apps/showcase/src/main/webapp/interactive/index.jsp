@@ -19,7 +19,7 @@
         var ognlBase = "${ognlBase}";
         var jspBase = "${jspBase}";
         var ognlCount = 10;
-        var jspCount = 1;
+        var jspCount = 3;
         
         dojo.addOnLoad(function() {
             var classSrc = dojo.byId("classSrc");
@@ -54,7 +54,7 @@
             keyEvent({keyCode : 13}, '${jspEval}');
         }
         
-        function evalJSP(id) {
+        function execJSP(id) {
             var exp = dojo.string.trim(dojo.byId(id ? id : "example").innerHTML);
             dojo.byId("jsp").value = unscape(exp);
             
@@ -129,12 +129,12 @@
         .jsp {
             border-style: solid;
             width: 100%;
-            height: 300px;
+            height: 200px;
         }
         .jspResult {
             border-style: none;
             width: 100%;
-            height: 300px;
+            height: 200px;
             padding: 5px;
         }
         .jspResultHeader {
@@ -166,6 +166,10 @@
         }
         .guide {
             padding: 5px;
+        }
+        pre {
+            font-family:Verdana,Geneva,Arial,Helvetica,sans-serif;
+            font-style: italic;
         }
     </style>
 </head>

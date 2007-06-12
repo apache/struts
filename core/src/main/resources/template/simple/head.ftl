@@ -1,0 +1,1 @@
+<script language="JavaScript" src="${base}/struts/utils.js" type="text/javascript"></script>

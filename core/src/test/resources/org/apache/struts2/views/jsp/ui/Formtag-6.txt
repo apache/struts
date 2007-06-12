@@ -19,11 +19,10 @@
 
 
 <script type="text/javascript">
-	dojo.require("dojo.event.*");
 	var containingForm = document.getElementById("myAction");
-	dojo.event.connect(containingForm, "onsubmit", 
+	StrutsUtils.addEventListener(containingForm, "submit", 
 			function(evt) {
 				var updownselectObj = document.getElementById("myAction_myUpDownSelectTag");
 				selectAllOptionsExceptSome(updownselectObj, "key", "");
-			});
+			}, true);
 </script>

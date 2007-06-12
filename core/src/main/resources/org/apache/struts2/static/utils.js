@@ -64,7 +64,7 @@ StrutsUtils.nextElement = function(node, tagName) {
     return StrutsUtils.nextElement(node, tagName);
   }
   return node;  
-}
+};
 
 StrutsUtils.previousElement = function(node, tagName) {
   if(!node) { return null; }
@@ -77,4 +77,24 @@ StrutsUtils.previousElement = function(node, tagName) {
     return StrutsUtils.previousElement(node, tagName);
   }
   return node;  
-}
+};
+
+StrutsUtils.addOnLoad = function(func) {
+  var oldonload = window.onload;
+  if (typeof window.onload != 'function') {
+    window.onload = func;
+  } else {
+    window.onload = function() {
+      oldonload();
+      func();
+    }
+  }
+};
+
+StrutsUtils.addEventListener = function(element, name, observer, capture) {
+  if (element.addEventListener) {
+    element.addEventListener(name, observer, false);
+  } else if (element.attachEvent) {
+    element.attachEvent('on' + name, observer);
+  }
+};

@@ -6,12 +6,11 @@
   Enable auto-select of optiontransferselect tag's entries upon containing form's 
   submission.
 -->
-dojo.require("dojo.event.*");
 <#if (parameters.optiontransferselectIds?if_exists?size > 0)>
 	var containingForm = document.getElementById("${parameters.id}");
 	<#assign selectObjIds = parameters.optiontransferselectIds.keySet() />
 	<#list selectObjIds as selectObjectId>
-		dojo.event.connect(containingForm, "onsubmit", 
+		StrutsUtils.addEventListener(containingForm, "submit", 
 			function(evt) {
 				var selectObj = document.getElementById("${selectObjectId}");
 				<#if parameters.optiontransferselectIds.get(selectObjectId)?exists>
@@ -20,14 +19,14 @@ dojo.require("dojo.event.*");
 				<#else>
 					selectAllOptionsExceptSome(selectObj, "key", "");
 				</#if>
-			});
+			}, true);
 	</#list>
 </#if>
 <#if (parameters.inputtransferselectIds?if_exists?size > 0)>
 	var containingForm = document.getElementById("${parameters.id}");
 	<#assign selectObjIds = parameters.inputtransferselectIds.keySet() />
 	<#list selectObjIds as selectObjectId>
-		dojo.event.connect(containingForm, "onsubmit",
+		StrutsUtils.addEventListener(containingForm, "submit",
 			function(evt) {
 				var selectObj = document.getElementById("${selectObjectId}");
 				<#if parameters.inputtransferselectIds.get(selectObjectId)?exists>
@@ -36,14 +35,14 @@ dojo.require("dojo.event.*");
 				<#else>
 					selectAllOptionsExceptSome(selectObj, "key", "");
 				</#if>
-			});
+			}, true);
 	</#list>
 </#if>
 <#if (parameters.optiontransferselectDoubleIds?if_exists?size > 0)>
 	var containingForm = document.getElementById("${parameters.id}");
 	<#assign selectDoubleObjIds = parameters.optiontransferselectDoubleIds.keySet() />
 	<#list selectDoubleObjIds as selectObjId>
-		dojo.event.connect(containingForm, "onsubmit", 
+		StrutsUtils.addEventListener(containingForm, "submit", 
 			function(evt) {
 				var selectObj = document.getElementById("${selectObjId}");
 				<#if parameters.optiontransferselectDoubleIds.get(selectObjId)?exists>
@@ -52,7 +51,7 @@ dojo.require("dojo.event.*");
 				<#else>
 					selectAllOptionsExceptSome(selectObj, "key", "");
 				</#if>
-			});
+			}, true);
 	</#list>
 </#if>
 
@@ -65,7 +64,7 @@ dojo.require("dojo.event.*");
 	var containingForm = document.getElementById("${parameters.id}");
 	<#assign tmpIds = parameters.updownselectIds.keySet() />
 	<#list tmpIds as tmpId>
-		dojo.event.connect(containingForm, "onsubmit", 
+		StrutsUtils.addEventListener(containingForm, "submit", 
 			function(evt) {
 				var updownselectObj = document.getElementById("${tmpId}");
 				<#if parameters.updownselectIds.get(tmpId)?exists>
@@ -74,7 +73,7 @@ dojo.require("dojo.event.*");
 				<#else>
 					selectAllOptionsExceptSome(updownselectObj, "key", "");
 				</#if>
-			});
+			}, true);
 	</#list>
 </#if>
 </script>

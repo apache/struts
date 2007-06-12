@@ -56,7 +56,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <ul>
  *
- * <li>name* (String): The name of the new variable that is assigned the value of <i>value</i></li>
+ * <li>id (String): The name of the new variable that is assigned the value of <i>value</i></li>
  *
  * <li>value (Object): The value that is assigned to the variable named <i>name</i></li>
  *
@@ -71,7 +71,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;s:set name="personName" value="person.name"/&gt;
+ * &lt;s:set id="personName" value="person.name"/&gt;
  * Hello, &lt;s:property value="#personName"/&gt;. How are you?
  * <!-- END SNIPPET: example -->
  * </pre>
@@ -103,36 +103,26 @@ public class Set extends Component {
 
         body="";
 
-        String name;
-        if (altSyntax()) {
-            name = findString(this.name, "name", "Name is required");
-        } else {
-            name = this.name;
-
-            if (this.name == null) {
-                throw fieldError("name", "Name is required", null);
-            }
-        }
-
+        //no need to throw an error, the id is required on the TLD
         if ("application".equalsIgnoreCase(scope)) {
-            stack.setValue("#application['" + name + "']", o);
+            stack.setValue("#application['" + id + "']", o);
         } else if ("session".equalsIgnoreCase(scope)) {
-            stack.setValue("#session['" + name + "']", o);
+            stack.setValue("#session['" + id + "']", o);
         } else if ("request".equalsIgnoreCase(scope)) {
-            stack.setValue("#request['" + name + "']", o);
+            stack.setValue("#request['" + id + "']", o);
         } else if ("page".equalsIgnoreCase(scope)) {
-            stack.setValue("#attr['" + name + "']", o, false);
+            stack.setValue("#attr['" + id + "']", o, false);
         } else {
-            stack.getContext().put(name, o);
-            stack.setValue("#attr['" + name + "']", o, false);
+            stack.getContext().put(id, o);
+            stack.setValue("#attr['" + id + "']", o, false);
         }
 
         return super.end(writer, body);
     }
 
-    @StrutsTagAttribute(description=" The name of the new variable that is assigned the value of <i>value</i>", required=true)
+    @StrutsTagAttribute(description="Deprecated. Use 'id' instead")
     public void setName(String name) {
-        this.name = name;
+        super.setId(name);
     }
 
     @StrutsTagAttribute(description="The scope in which to assign the variable. Can be <b>application</b>" +
@@ -144,5 +134,10 @@ public class Set extends Component {
     @StrutsTagAttribute(description="The value that is assigned to the variable named <i>name</i>")
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @StrutsTagAttribute(description="The name of the new variable that is assigned the value of <i>value</i>", required=true)
+    public void setId(String id) {
+        super.setId(id);
     }
 }

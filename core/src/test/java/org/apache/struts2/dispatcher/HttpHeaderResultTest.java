@@ -81,10 +81,38 @@ public class HttpHeaderResultTest extends StrutsTestCase {
         result.execute(invocation);
         responseMock.verify();
     }
+    
+    public void testErrorMessageIsParsedAndSet() throws Exception {
+        ActionContext.getContext().getValueStack().set("errMsg", "abc");
+        result.setError(404);
+        result.setErrorMessage("${errMsg}");
+        
+        responseMock.expect("sendError", C.args(C.eq(404), C.eq("abc")));
+        result.execute(invocation);
+        responseMock.verify();
+    }
+    
+    public void testErrorMessageIsNotParsedAndSet() throws Exception {
+        ActionContext.getContext().getValueStack().set("errMsg", "abc");
+        result.setError(404);
+        result.setParse(false);
+        result.setErrorMessage("${errMsg}");
+        
+        responseMock.expect("sendError", C.args(C.eq(404), C.eq("${errMsg}")));
+        result.execute(invocation);
+        responseMock.verify();
+    }
 
     public void testStatusIsSet() throws Exception {
         responseMock.expect("setStatus", C.eq(123));
         result.setStatus(123);
+        result.execute(invocation);
+        responseMock.verify();
+    }
+    
+    public void testErrorIsSet() throws Exception {
+        responseMock.expect("sendError", C.eq(404));
+        result.setError(404);
         result.execute(invocation);
         responseMock.verify();
     }

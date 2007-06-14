@@ -40,30 +40,9 @@ public class SetTagTest extends AbstractUITagTest {
 
         assertEquals("chewie", servletContext.getAttribute("foo"));
     }
-    
-    public void testApplicationScopeUseId() throws JspException {
-        tag.setId("foo");
-        tag.setValue("name");
-        tag.setScope("application");
-        tag.doStartTag();
-        tag.doEndTag();
-
-        assertEquals("chewie", servletContext.getAttribute("foo"));
-    }
-
 
     public void testPageScope() throws JspException {
         tag.setName("foo");
-        tag.setValue("name");
-        tag.setScope("page");
-        tag.doStartTag();
-        tag.doEndTag();
-
-        assertEquals("chewie", pageContext.getAttribute("foo"));
-    }
-    
-    public void testPageScopeUseId() throws JspException {
-        tag.setId("foo");
         tag.setValue("name");
         tag.setScope("page");
         tag.doStartTag();
@@ -80,28 +59,9 @@ public class SetTagTest extends AbstractUITagTest {
         tag.doEndTag();
         assertEquals("chewie", request.getAttribute("foo"));
     }
-    
-    public void testRequestScopeUseId() throws JspException {
-        tag.setId("foo");
-        tag.setValue("name");
-        tag.setScope("request");
-        tag.doStartTag();
-        tag.doEndTag();
-        assertEquals("chewie", request.getAttribute("foo"));
-    }
 
     public void testSessionScope() throws JspException {
         tag.setName("foo");
-        tag.setValue("name");
-        tag.setScope("session");
-        tag.doStartTag();
-        tag.doEndTag();
-
-        assertEquals("chewie", session.get("foo"));
-    }
-    
-    public void testSessionScopeUseId() throws JspException {
-        tag.setId("foo");
         tag.setValue("name");
         tag.setScope("session");
         tag.doStartTag();
@@ -117,24 +77,9 @@ public class SetTagTest extends AbstractUITagTest {
         tag.doEndTag();
         assertEquals("chewie", context.get("foo"));
     }
-    
-    public void testStrutsScopeUseId() throws JspException {
-        tag.setId("foo");
-        tag.setValue("name");
-        tag.doStartTag();
-        tag.doEndTag();
-        assertEquals("chewie", context.get("foo"));
-    }
 
     public void testStrutsScope2() throws JspException {
         tag.setName("chewie");
-        tag.doStartTag();
-        tag.doEndTag();
-        assertEquals(chewie, context.get("chewie"));
-    }
-    
-    public void testStrutsScope2UseId() throws JspException {
-        tag.setId("chewie");
         tag.doStartTag();
         tag.doEndTag();
         assertEquals(chewie, context.get("chewie"));

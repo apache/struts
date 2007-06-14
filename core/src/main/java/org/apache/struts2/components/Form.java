@@ -110,7 +110,8 @@ public class Form extends ClosingUIBean {
     protected String portletMode;
     protected String windowState;
     protected String acceptcharset;
-
+    protected String focusElement;
+    
     protected boolean enableDynamicMethodInvocation = true;
     protected Configuration configuration;
     protected ObjectFactory objectFactory;
@@ -200,6 +201,10 @@ public class Form extends ClosingUIBean {
         if (!parameters.containsKey("tagNames")) {
             // we have this if check so we don't do this twice (on open and close of the template)
             addParameter("tagNames", new ArrayList());
+        }
+        
+        if (focusElement != null) {
+            addParameter("focusElement", findString(focusElement));
         }
     }
 
@@ -484,5 +489,10 @@ public class Form extends ClosingUIBean {
     @StrutsTagAttribute(description="The accepted charsets for this form. The values may be comma or blank delimited.")
     public void setAcceptcharset(String acceptcharset) {
         this.acceptcharset = acceptcharset;
+    }
+
+    @StrutsTagAttribute(description="Id of element that will receive the focus when page loads.")
+    public void setFocusElement(String focusElement) {
+        this.focusElement = focusElement;
     }
 }

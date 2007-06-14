@@ -48,7 +48,8 @@ public class FormTag extends AbstractClosingTag {
     protected String portletMode;
     protected String windowState;
     protected String acceptcharset;
-
+    protected String focusElement;
+    
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Form(stack, req, res);
     }
@@ -66,6 +67,7 @@ public class FormTag extends AbstractClosingTag {
         form.setPortletMode(portletMode);
         form.setWindowState(windowState);
         form.setAcceptcharset(acceptcharset);
+        form.setFocusElement(focusElement);
     }
 
 
@@ -107,5 +109,9 @@ public class FormTag extends AbstractClosingTag {
 
     public void setAcceptcharset(String acceptcharset) {
         this.acceptcharset = acceptcharset;
+    }
+
+    public void setFocusElement(String focusElement) {
+        this.focusElement = focusElement;
     }
 }

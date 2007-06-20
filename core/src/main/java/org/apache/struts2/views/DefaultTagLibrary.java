@@ -63,7 +63,6 @@ import org.apache.struts2.views.velocity.components.TextFieldDirective;
 import org.apache.struts2.views.velocity.components.TokenDirective;
 import org.apache.struts2.views.velocity.components.URLDirective;
 import org.apache.struts2.views.velocity.components.UpDownSelectDirective;
-import org.apache.struts2.views.velocity.components.WebTableDirective;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -111,7 +110,6 @@ public class DefaultTagLibrary implements TagLibrary {
             TextFieldDirective.class,
             TokenDirective.class,
             URLDirective.class,
-            WebTableDirective.class,
             ActionErrorDirective.class,
             ActionMessageDirective.class,
             FieldErrorDirective.class,

@@ -65,7 +65,6 @@ public class StrutsModels {
     protected TextFieldModel textfield;
     protected TokenModel token;
     protected URLModel url;
-    protected WebTableModel table;
     protected PropertyModel property;
     protected IteratorModel iterator;
     protected ActionErrorModel actionerror;
@@ -235,14 +234,6 @@ public class StrutsModels {
         }
 
         return token;
-    }
-
-    public WebTableModel getTable() {
-        if (table == null) {
-            table = new WebTableModel(stack, req, res);
-        }
-
-        return table;
     }
 
     public URLModel getUrl() {

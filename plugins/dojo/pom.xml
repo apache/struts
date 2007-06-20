@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-dojo-plugin</artifactId>
-    <name>Struts2 Dojo Plugin</name>
+    <name>Struts 2 Dojo Plugin</name>
 
     <scm>
         <connection>

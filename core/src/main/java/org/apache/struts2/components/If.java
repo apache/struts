@@ -24,6 +24,7 @@ import java.io.Writer;
 
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
+import org.apache.struts2.views.annotations.StrutsTagSkipInheritance;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -94,5 +95,10 @@ public class If extends Component {
     public boolean end(Writer writer, String body) {
         stack.getContext().put(ANSWER, answer);
         return super.end(writer, body);
+    }
+
+    @StrutsTagSkipInheritance
+    public void setId(String id) {
+        super.setId(id);
     }
 }

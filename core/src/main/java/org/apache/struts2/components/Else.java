@@ -24,6 +24,7 @@ import java.io.Writer;
 import java.util.Map;
 
 import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagSkipInheritance;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -70,5 +71,10 @@ public class Else extends Component {
         context.remove(If.ANSWER);
 
         return !((ifResult == null) || (ifResult.booleanValue()));
+    }
+    
+    @StrutsTagSkipInheritance
+    public void setId(String id) {
+        super.setId(id);
     }
 }

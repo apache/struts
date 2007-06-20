@@ -44,6 +44,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
+import org.apache.struts2.views.annotations.StrutsTagSkipInheritance;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.util.FastByteArrayOutputStream;
@@ -170,6 +171,11 @@ public class Include extends Component {
     @StrutsTagAttribute(description="The jsp/servlet output to include", required=true)
     public void setValue(String value) {
         this.value = value;
+    }
+    
+    @StrutsTagSkipInheritance
+    public void setId(String id) {
+        super.setId(id);
     }
 
     public static String getContextRelativePath(ServletRequest request, String relativePath) {

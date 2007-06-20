@@ -26,6 +26,7 @@ import java.util.ResourceBundle;
 
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
+import org.apache.struts2.views.annotations.StrutsTagSkipInheritance;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.Dispatcher;
 
@@ -131,5 +132,10 @@ public class I18n extends Component {
     @StrutsTagAttribute(description="Name of ressource bundle to use (eg foo/bar/customBundle)", required=true, defaultValue="String")
     public void setName(String name) {
         this.name = name;
+    }
+    
+    @StrutsTagSkipInheritance
+    public void setId(String id) {
+        super.setId(id);
     }
 }

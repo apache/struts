@@ -6,9 +6,6 @@
 	</#if>
 </#if>
 <form<#rt/>
-<#if parameters.namespace?exists && parameters.validate?exists>
- namespace="${parameters.namespace?html}"<#rt/>
-</#if>
 <#if parameters.id?exists>
  id="${parameters.id?html}"<#rt/>
 </#if>

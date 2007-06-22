@@ -22356,6 +22356,15 @@ dojo.widget.defineWidget(
           if(!this.ajaxAfterValidation && this.validate) {
             tmpHref = tmpHref + (tmpHref.indexOf("?") > -1 ? "&" : "?") + "struts.validateOnly=true";
           }  
+          
+          if(dojo.dom.isTag(this.domNode, "INPUT", "input") 
+             && this.events == "onclick" 
+             && this.domNode.type == "submit"
+             && !dojo.string.isBlank(this.domNode.name)
+             && !dojo.string.isBlank(this.domNode.value)) {
+             var enc = /utf/i.test("") ? encodeURIComponent : dojo.string.encodeAscii
+             tmpHref = tmpHref + (tmpHref.indexOf("?") > -1 ? "&" : "?") + enc(this.domNode.name) + "=" + enc(this.domNode.value);
+          }
 
           dojo.io.bind({
             url: tmpHref,

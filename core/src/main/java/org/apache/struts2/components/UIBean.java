@@ -430,6 +430,7 @@ public abstract class UIBean extends Component {
     protected String disabled;
     protected String label;
     protected String labelPosition;
+    protected String labelSeparator;
     protected String requiredposition;
     protected String name;
     protected String required;
@@ -615,6 +616,10 @@ public abstract class UIBean extends Component {
 
         if (label != null) {
             addParameter("label", findString(label));
+        }
+        
+        if (labelSeparator != null) {
+            addParameter("labelseparator", findString(labelSeparator));
         }
 
         if (labelPosition != null) {
@@ -965,6 +970,11 @@ public abstract class UIBean extends Component {
     @StrutsTagAttribute(description="Label expression used for rendering a element specific label")
     public void setLabel(String label) {
         this.label = label;
+    }
+    
+    @StrutsTagAttribute(description="String that will be appended to the labe", defaultValue=":")
+    public void setLabelSeparator(String labelseparator) {
+        this.labelSeparator = labelseparator;
     }
 
     @StrutsTagAttribute(description="Define label position of form element (top/left)")

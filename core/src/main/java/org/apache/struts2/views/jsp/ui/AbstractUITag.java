@@ -34,6 +34,7 @@ public abstract class AbstractUITag extends ComponentTagSupport {
     protected String title;
     protected String disabled;
     protected String label;
+    protected String labelSeparator;
     protected String labelPosition;
     protected String requiredposition;
     protected String name;
@@ -79,6 +80,7 @@ public abstract class AbstractUITag extends ComponentTagSupport {
         uiBean.setTitle(title);
         uiBean.setDisabled(disabled);
         uiBean.setLabel(label);
+        uiBean.setLabelSeparator(labelSeparator);
         uiBean.setLabelposition(labelPosition);
         uiBean.setRequiredposition(requiredposition);
         uiBean.setName(name);
@@ -254,5 +256,9 @@ public abstract class AbstractUITag extends ComponentTagSupport {
 
     public void setTooltipIconPath(String tooltipIconPath) {
         this.tooltipIconPath = tooltipIconPath;
+    }
+
+    public void setLabelSeparator(String labelSeparator) {
+        this.labelSeparator = labelSeparator;
     }    
 }

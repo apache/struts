@@ -335,8 +335,10 @@ public class FreemarkerManager {
     public SimpleHash buildTemplateModel(ValueStack stack, Object action, ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, ObjectWrapper wrapper) {
         ScopesHashModel model = buildScopesHashModel(servletContext, request, response, wrapper, stack);
         populateContext(model, stack, action, request, response);
-        for (String prefix : tagLibraries.keySet()) {
-            model.put(prefix, tagLibraries.get(prefix).getFreemarkerModels(stack, request, response));
+        if (tagLibraries != null) {
+            for (String prefix : tagLibraries.keySet()) {
+                model.put(prefix, tagLibraries.get(prefix).getFreemarkerModels(stack, request, response));
+            }
         }
         return model;
     }

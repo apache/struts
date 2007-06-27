@@ -1,5 +1,5 @@
 <#if !stack.findValue("#inputtransferselect_js_included")?exists><#t/>
-	<script language="javascript" src="<@s.url value="/struts/inputtransferselect.js" encode='false' includeParams='none'/>"></script>
+	<script type="text/javascript" src="<@s.url value="/struts/inputtransferselect.js" encode='false' includeParams='none'/>"></script>
 	<#assign temporaryVariable = stack.setValue("#inputtransferselect_js_included", "true") /><#t/>
 </#if><#t/>
 <table border="0">

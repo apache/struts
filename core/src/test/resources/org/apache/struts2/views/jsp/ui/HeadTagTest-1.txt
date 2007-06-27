@@ -1,2 +1,2 @@
 <link rel="stylesheet" href="/struts/xhtml/styles.css" type="text/css"/>
-<script language="JavaScript" src="/struts/utils.js" type="text/javascript"></script>
+<script src="/struts/utils.js" type="text/javascript"></script>

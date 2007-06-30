@@ -163,6 +163,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         if ("true".equalsIgnoreCase(props.getProperty(StrutsConstants.STRUTS_DEVMODE))) {
             props.setProperty(StrutsConstants.STRUTS_I18N_RELOAD, "true");
             props.setProperty(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "true");
+            props.setProperty(StrutsConstants.STRUTS_FREEMARKER_CACHE_TEMPLATES, "false");
             // Convert struts properties into ones that xwork expects
             props.setProperty("devMode", "true");
         } else {

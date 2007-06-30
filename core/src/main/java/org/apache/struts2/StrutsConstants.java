@@ -75,6 +75,9 @@ public final class StrutsConstants {
 
     /** The org.apache.struts2.views.freemarker.FreemarkerManager implementation class */
     public static final String STRUTS_FREEMARKER_MANAGER_CLASSNAME = "struts.freemarker.manager.classname";
+    
+    /** Cache Freemarker templates */
+    public static final String STRUTS_FREEMARKER_CACHE_TEMPLATES = "struts.freemarker.templatesCache";
 
     /** org.apache.struts2.views.velocity.VelocityManager implementation class */
     public static final String STRUTS_VELOCITY_MANAGER_CLASSNAME = "struts.velocity.manager.classname";

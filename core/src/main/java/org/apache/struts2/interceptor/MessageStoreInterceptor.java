@@ -36,9 +36,9 @@ import com.opensymphony.xwork2.interceptor.Interceptor;
 /**
  * <!-- START SNIPPET: description -->
  *
- * An interceptor to store {@link ValidationAware} action's messages / errors and field errors into
- * Http Session, such that it will be retrieveable at a later stage. This allows the action's message /
- * errors and field errors to be available longer that just the particular http request.
+ * An interceptor to store a {@link ValidationAware} action's messages / errors and field errors into
+ * HTTP Session, such that it will be retrieveable at a later stage. This allows the action's message /
+ * errors and field errors to be available longer that just the particular HTTP request.
  *
  * <p/>
  *
@@ -61,7 +61,7 @@ import com.opensymphony.xwork2.interceptor.Interceptor;
  * <pre>
  *   &lt;action name="submitApplication" ...&gt;
  *      &lt;interceptor-ref name="store"&gt;
- *         &lt;param name="operationMode"&gtl;STORE&lt;/param&gt;
+ *         &lt;param name="operationMode"&gt;STORE&lt;/param&gt;
  *      &lt;/interceptor-ref&gt;
  *      &lt;interceptor-ref name="defaultStack" /&gt;
  *      ....
@@ -128,8 +128,8 @@ import com.opensymphony.xwork2.interceptor.Interceptor;
  * <!-- START SNIPPET: exampleDescription -->
  *
  * With the example above, 'submitApplication.action' will have the action messages / errors / field errors stored
- * in the Http Session. Later when needed, (in this case, when 'applicationFailed.action' is fired, it
- * will get the action messages / errors / field errors stored in the Http Session and put them back into
+ * in the HTTP Session. Later when needed, (in this case, when 'applicationFailed.action' is fired, it
+ * will get the action messages / errors / field errors stored in the HTTP Session and put them back into
  * the action.
  *
  * <!-- END SNIPPET: exampleDescription -->

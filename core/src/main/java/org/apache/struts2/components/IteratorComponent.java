@@ -248,7 +248,7 @@ public class IteratorComponent extends Component {
 
             String id = getId();
 
-            if ((id != null) && (currentValue != null)) {
+            if (id != null) {
                 //pageContext.setAttribute(id, currentValue);
                 //pageContext.setAttribute(id, currentValue, PageContext.REQUEST_SCOPE);
                 stack.getContext().put(id, currentValue);

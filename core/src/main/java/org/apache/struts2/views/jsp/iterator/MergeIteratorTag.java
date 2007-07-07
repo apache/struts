@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.MergeIterator;
-import org.apache.struts2.views.jsp.ComponentTagSupport;
+import org.apache.struts2.views.jsp.ContextBeanTag;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -37,7 +37,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * @see MergeIterator
  * @see org.apache.struts2.util.MergeIteratorFilter
  */
-public class MergeIteratorTag extends ComponentTagSupport {
+public class MergeIteratorTag extends ContextBeanTag {
 
     private static final long serialVersionUID = 4999729472466011218L;
 

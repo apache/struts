@@ -31,7 +31,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  * @see ActionComponent
  */
-public class ActionTag extends ComponentTagSupport {
+public class ActionTag extends ContextBeanTag {
 
     private static final long serialVersionUID = -5384167073331678855L;
 

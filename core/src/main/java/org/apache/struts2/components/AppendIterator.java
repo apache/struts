@@ -116,7 +116,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  */
 @StrutsTag(name="append", tldTagClass="org.apache.struts2.views.jsp.iterator.AppendIteratorTag", description="Append the values of a list of iterators to one iterator")
-public class AppendIterator extends Component implements UnnamedParametric {
+public class AppendIterator extends ContextBean implements UnnamedParametric {
 
     private static final Log _log = LogFactory.getLog(AppendIterator.class);
 
@@ -148,9 +148,7 @@ public class AppendIterator extends Component implements UnnamedParametric {
 
         appendIteratorFilter.execute();
 
-        if (getId() != null && getId().length() > 0) {
-            getStack().getContext().put(getId(), appendIteratorFilter);
-        }
+        putInContext(appendIteratorFilter);
 
         appendIteratorFilter = null;
 
@@ -162,9 +160,9 @@ public class AppendIterator extends Component implements UnnamedParametric {
         _parameters.add(value);
     }
 
-    @StrutsTagAttribute(description="The id of which if supplied will have the resultant appended iterator stored under in the stack's context")
-    public void setId(String id) {
-        super.setId(id);
+    @StrutsTagAttribute(description="The name of which if supplied will have the resultant appended iterator stored under in the stack's context")
+    public void setVar(String var) {
+        super.setVar(var);
     }
 }
 

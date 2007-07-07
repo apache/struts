@@ -140,7 +140,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  */
 @StrutsTag(name="date", tldBodyContent="empty", tldTagClass="org.apache.struts2.views.jsp.DateTag", description="Render a formatted date.")
-public class Date extends Component {
+public class Date extends ContextBean {
 
     private static final Log LOG = LogFactory.getLog(Date.class);
     /**
@@ -328,10 +328,10 @@ public class Date extends Component {
                 }
                 if (msg != null) {
                     try {
-                        if (getId() == null) {
+                        if (getVar() == null) {
                             writer.write(msg);
                         } else {
-                            stack.getContext().put(getId(), msg);
+                            putInContext(msg);
                         }
                     } catch (IOException e) {
                         LOG.error("Could not write out Date tag", e);

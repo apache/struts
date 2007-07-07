@@ -183,7 +183,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  */
 @StrutsTag(name="iterator", tldTagClass="org.apache.struts2.views.jsp.IteratorTag", description="Iterate over a iterable value")
-public class IteratorComponent extends Component {
+public class IteratorComponent extends ContextBean {
     protected Iterator iterator;
     protected IteratorStatus status;
     protected Object oldStatus;
@@ -214,12 +214,12 @@ public class IteratorComponent extends Component {
             Object currentValue = iterator.next();
             stack.push(currentValue);
 
-            String id = getId();
+            String var = getVar();
 
-            if ((id != null) && (currentValue != null)) {
+            if ((var != null) && (currentValue != null)) {
                 //pageContext.setAttribute(id, currentValue);
                 //pageContext.setAttribute(id, currentValue, PageContext.REQUEST_SCOPE);
-                stack.getContext().put(id, currentValue);
+                putInContext(currentValue);
             }
 
             // Status object
@@ -246,13 +246,7 @@ public class IteratorComponent extends Component {
             Object currentValue = iterator.next();
             stack.push(currentValue);
 
-            String id = getId();
-
-            if (id != null) {
-                //pageContext.setAttribute(id, currentValue);
-                //pageContext.setAttribute(id, currentValue, PageContext.REQUEST_SCOPE);
-                stack.getContext().put(id, currentValue);
-            }
+            putInContext(currentValue);
 
             // Update status
             if (status != null) {

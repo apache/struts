@@ -143,9 +143,4 @@ public class OptGroup extends Component {
     public void setListValue(String listValue) {
         internalUiBean.setListValue(listValue);
     }
-    
-    @StrutsTagSkipInheritance
-    public void setId(String id) {
-        super.setId(id);
-    }
 }

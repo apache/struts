@@ -109,7 +109,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  */
 @StrutsTag(name="url", tldTagClass="org.apache.struts2.views.jsp.URLTag", description="This tag is used to create a URL")
-public class URL extends Component {
+public class URL extends ContextBean {
     private static final Log LOG = LogFactory.getLog(URL.class);
 
     /**
@@ -262,13 +262,13 @@ public class URL extends Component {
             result += '#' + anchor;
         }
 
-        String id = getId();
+        String var = getVar();
 
-        if (id != null) {
-            getStack().getContext().put(id, result);
+        if (var != null) {
+            putInContext(result);
 
             // add to the request and page scopes as well
-            req.setAttribute(id, result);
+            req.setAttribute(var, result);
         } else {
             try {
                 writer.write(result);

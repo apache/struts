@@ -139,12 +139,6 @@ public class Param extends Component {
         this.value = value;
     }
     
-    @StrutsTagSkipInheritance
-    public void setId(String id) {
-        super.setId(id);
-    }
-
-
     /**
      * Tags can implement this to support nested param tags without the <tt>name</tt> attribute.
      * <p/>

@@ -156,9 +156,4 @@ public class Property extends Component {
             return value;
         }
     }
-
-    @StrutsTagSkipInheritance
-    public void setId(String id) {
-        super.setId(id);
-    }
 }

@@ -95,7 +95,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 @StrutsTag(name="bean", tldTagClass="org.apache.struts2.views.jsp.BeanTag",
         description="Instantiate a JavaBean and place it in the context")
-public class Bean extends Component {
+public class Bean extends ContextBean {
     protected static Log log = LogFactory.getLog(Bean.class);
 
     protected Object bean;
@@ -129,9 +129,7 @@ public class Bean extends Component {
         stack.push(bean);
 
         // store for reference later
-        if (getId() != null) {
-            getStack().getContext().put(getId(), bean);
-        }
+        putInContext(bean);
 
         return result;
     }

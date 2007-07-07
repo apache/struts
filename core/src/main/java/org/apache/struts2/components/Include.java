@@ -172,11 +172,6 @@ public class Include extends Component {
     public void setValue(String value) {
         this.value = value;
     }
-    
-    @StrutsTagSkipInheritance
-    public void setId(String id) {
-        super.setId(id);
-    }
 
     public static String getContextRelativePath(ServletRequest request, String relativePath) {
         String returnValue;

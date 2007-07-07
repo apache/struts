@@ -114,7 +114,7 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
  *
  */
 @StrutsTag(name="action", tldTagClass="org.apache.struts2.views.jsp.ActionTag", description="Execute an action from within a view")
-public class ActionComponent extends Component {
+public class ActionComponent extends ContextBean {
     private static final Log LOG = LogFactory.getLog(ActionComponent.class);
 
     protected HttpServletResponse res;
@@ -154,8 +154,8 @@ public class ActionComponent extends Component {
             }
             executeAction();
 
-            if ((getId() != null) && (proxy != null)) {
-                getStack().setValue("#attr['" + getId() + "']",
+            if ((getVar() != null) && (proxy != null)) {
+                getStack().setValue("#attr['" + getVar() + "']",
                         proxy.getAction());
             }
         } finally {
@@ -262,9 +262,8 @@ public class ActionComponent extends Component {
             req.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
         }
 
-        if ((getId() != null) && (proxy != null)) {
-            final Map context = stack.getContext();
-            context.put(getId(), proxy.getAction());
+        if ((getVar() != null) && (proxy != null)) {
+            putInContext(proxy.getAction());
         }
     }
 

@@ -425,6 +425,7 @@ public abstract class UIBean extends Component {
     // shortcut, sets label, name, and value
     protected String key;
 
+    protected String id;
     protected String cssClass;
     protected String cssStyle;
     protected String disabled;
@@ -925,6 +926,21 @@ public abstract class UIBean extends Component {
                     + escape(name != null ? findString(name) : null));
         } else {
             addParameter("id", escape(name != null ? findString(name) : null));
+        }
+    }
+    
+    /**
+     * Get's the id for referencing element.
+     * @return the id for referencing element.
+     */
+    public String getId() {
+        return id;
+    }
+
+    @StrutsTagAttribute(description="HTML id attribute")
+    public void setId(String id) {
+        if (id != null) {
+            this.id = findString(id);
         }
     }
 

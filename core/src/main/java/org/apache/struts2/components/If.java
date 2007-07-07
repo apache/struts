@@ -96,9 +96,4 @@ public class If extends Component {
         stack.getContext().put(ANSWER, answer);
         return super.end(writer, body);
     }
-
-    @StrutsTagSkipInheritance
-    public void setId(String id) {
-        super.setId(id);
-    }
 }

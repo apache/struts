@@ -55,7 +55,6 @@ public class Component {
 
     protected ValueStack stack;
     protected Map parameters;
-    protected String id;
     protected ActionMapper actionMapper;
 
     /**
@@ -225,7 +224,7 @@ public class Component {
      * @return  the constructed <code>StrutsException</code>.
      */
     protected StrutsException fieldError(String field, String errorMsg, Exception e) {
-        String msg = "tag '" + getComponentName() + "', field '" + field + ( id != null ?"', id '" + id:"") +
+        String msg = "tag '" + getComponentName() + "', field '" + field +
                 ( parameters != null && parameters.containsKey("name")?"', name '" + parameters.get("name"):"") +
                 "': " + errorMsg;
         throw new StrutsException(msg, e);
@@ -440,21 +439,6 @@ public class Component {
             } else {
                 params.put(key, value);
             }
-        }
-    }
-
-    /**
-     * Get's the id for referencing element.
-     * @return the id for referencing element.
-     */
-    public String getId() {
-        return id;
-    }
-
-    @StrutsTagAttribute(description="id for referencing element. For UI and form tags it will be used as HTML id attribute")
-    public void setId(String id) {
-        if (id != null) {
-            this.id = findString(id);
         }
     }
 

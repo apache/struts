@@ -31,7 +31,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  * @see Date
  */
-public class DateTag extends ComponentTagSupport {
+public class DateTag extends ContextBeanTag {
 
     private static final long serialVersionUID = -6216963123295613440L;
 

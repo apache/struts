@@ -32,7 +32,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  * @see Text
  */
-public class TextTag extends ComponentTagSupport {
+public class TextTag extends ContextBeanTag {
 
     private static final long serialVersionUID = -3075088084198264581L;
 

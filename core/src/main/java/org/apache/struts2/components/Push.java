@@ -149,8 +149,4 @@ public class Push extends Component {
         this.value = value;
     }
     
-    @StrutsTagSkipInheritance
-    public void setId(String id) {
-        super.setId(id);
-    }
 }

@@ -105,9 +105,4 @@ public class ElseIf extends Component {
     public void setTest(String test) {
         this.test = test;
     }
-    
-    @StrutsTagSkipInheritance
-    public void setId(String id) {
-        super.setId(id);
-    }
 }

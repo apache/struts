@@ -133,9 +133,4 @@ public class I18n extends Component {
     public void setName(String name) {
         this.name = name;
     }
-    
-    @StrutsTagSkipInheritance
-    public void setId(String id) {
-        super.setId(id);
-    }
 }

@@ -72,9 +72,4 @@ public class Else extends Component {
 
         return !((ifResult == null) || (ifResult.booleanValue()));
     }
-    
-    @StrutsTagSkipInheritance
-    public void setId(String id) {
-        super.setId(id);
-    }
 }

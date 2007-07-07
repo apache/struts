@@ -78,8 +78,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  */
 @StrutsTag(name="set", tldBodyContent="JSP", tldTagClass="org.apache.struts2.views.jsp.SetTag", description="Assigns a value to a variable in a specified scope")
-public class Set extends Component {
-    protected String name;
+public class Set extends ContextBean {
     protected String scope;
     protected String value;
 
@@ -92,47 +91,41 @@ public class Set extends Component {
 
         Object o;
         if (value == null) {
-        	if (body!=null && !body.equals("")) {
-        		o = body;
-        	} else {
-        		o = findValue("top");
-        	}
+            if (body != null && !body.equals("")) {
+                o = body;
+            } else {
+                o = findValue("top");
+            }
         } else {
-        	o = findValue(value);
+            o = findValue(value);
         }
 
         body="";
-
-        String name;
-        if (altSyntax()) {
-            name = findString(this.name, "name", "Name is required");
-        } else {
-            name = this.name;
-
-            if (this.name == null) {
-                throw fieldError("name", "Name is required", null);
-            }
-        }
-
+        
         if ("application".equalsIgnoreCase(scope)) {
-            stack.setValue("#application['" + name + "']", o);
+            stack.setValue("#application['" + getVar() + "']", o);
         } else if ("session".equalsIgnoreCase(scope)) {
-            stack.setValue("#session['" + name + "']", o);
+            stack.setValue("#session['" + getVar() + "']", o);
         } else if ("request".equalsIgnoreCase(scope)) {
-            stack.setValue("#request['" + name + "']", o);
+            stack.setValue("#request['" + getVar() + "']", o);
         } else if ("page".equalsIgnoreCase(scope)) {
-            stack.setValue("#attr['" + name + "']", o, false);
+            stack.setValue("#attr['" + getVar() + "']", o, false);
         } else {
-            stack.getContext().put(name, o);
-            stack.setValue("#attr['" + name + "']", o, false);
+            stack.getContext().put(getVar(), o);
+            stack.setValue("#attr['" + getVar() + "']", o, false);
         }
 
         return super.end(writer, body);
     }
 
-    @StrutsTagAttribute(description=" The name of the new variable that is assigned the value of <i>value</i>", required=true)
+    @StrutsTagAttribute(description="Name used to reference the value pushed into the Value Stack", required=true)
+    public void setVar(String var) {
+       super.setVar(var);
+    }
+    
+    @StrutsTagAttribute(description="Deprecated. Use 'var' instead", required=true)
     public void setName(String name) {
-        this.name = name;
+        setVar(name);
     }
 
     @StrutsTagAttribute(description="The scope in which to assign the variable. Can be <b>application</b>" +

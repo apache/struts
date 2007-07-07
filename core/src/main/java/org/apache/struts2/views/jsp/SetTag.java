@@ -32,11 +32,10 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  * @see Set
  */
-public class SetTag extends ComponentTagSupport {
+public class SetTag extends ContextBeanTag {
 
     private static final long serialVersionUID = -5074213926790716974L;
 
-    protected String name;
     protected String scope;
     protected String value;
 
@@ -48,13 +47,12 @@ public class SetTag extends ComponentTagSupport {
         super.populateParams();
 
         Set set = (Set) component;
-        set.setName(name);
         set.setScope(scope);
         set.setValue(value);
     }
 
     public void setName(String name) {
-        this.name = name;
+       setVar(name);
     }
 
     public void setScope(String scope) {

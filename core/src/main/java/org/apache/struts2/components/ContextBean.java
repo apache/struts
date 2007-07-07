@@ -27,7 +27,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  * Base class for control and data tags
  */
-public class ContextBean extends Component {
+public abstract class ContextBean extends Component {
     protected String var;
     
     public ContextBean(ValueStack stack) {

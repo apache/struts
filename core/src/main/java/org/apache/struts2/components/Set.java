@@ -118,7 +118,10 @@ public class Set extends ContextBean {
         return super.end(writer, body);
     }
 
-    @StrutsTagAttribute(description="Name used to reference the value pushed into the Value Stack", required=true)
+    /* 
+     * TODO: set required=true when 'id' is dropped after 2.1
+     */
+    @StrutsTagAttribute(description="Name used to reference the value pushed into the Value Stack", required=false)
     public void setVar(String var) {
        super.setVar(var);
     }

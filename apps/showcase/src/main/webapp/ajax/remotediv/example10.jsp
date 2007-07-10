@@ -15,7 +15,7 @@
    }
 </script>
 
-<s:url id="ajaxTest" value="/AjaxTest.action" />
+<s:url var="ajaxTest" value="/AjaxTest.action" />
 
 <body>
 <sx:div

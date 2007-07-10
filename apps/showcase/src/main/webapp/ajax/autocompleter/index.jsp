@@ -45,7 +45,7 @@
 <body>
 
 
-<s:url id="jsonList" value="/JSONList.action"/>
+<s:url var="jsonList" value="/JSONList.action"/>
 
 Using a JSON list returned from an action (href="/JSONList.action"), without autoComplete (autoComplete="false"), use indicator, search substring (searchType="substring")
 <br/>
@@ -111,7 +111,7 @@ Disabled combobox (disabled="true")
 <br/>
 
 
-<s:url id="autoex" action="AutocompleterExample" namespace="/nodecorate"/>
+<s:url var="autoex" action="AutocompleterExample" namespace="/nodecorate"/>
 
 Link two autocompleter elements. When the selected value in 'Autocompleter 1' changes, the available values in 'Autocompleter 2' will change also.
 <br/>

@@ -14,10 +14,10 @@
     which can be used to manipulate the object which will be converted to xml.
 
     <ul>
-        <li><s:url id="url" namespace="/xslt" action="jvmInfo"/><s:a href="%{url}">Render the exposed portion of the action as html</s:a></li>
-        <li><s:url id="url" namespace="/xslt" action="jvmInfoRaw"/><s:a href="%{url}">Render the exposed portion of the action as xml</s:a></li>
-        <li><s:url id="url" namespace="/xslt" action="jvmInfoAll"/><s:a href="%{url}">Render the action as xml</s:a></li>
-        <li><s:url id="url" namespace="/xslt" action="classpath"/><s:a href="%{url}">Render an ognl property</s:a></li>
+        <li><s:url var="url" namespace="/xslt" action="jvmInfo"/><s:a href="%{url}">Render the exposed portion of the action as html</s:a></li>
+        <li><s:url var="url" namespace="/xslt" action="jvmInfoRaw"/><s:a href="%{url}">Render the exposed portion of the action as xml</s:a></li>
+        <li><s:url var="url" namespace="/xslt" action="jvmInfoAll"/><s:a href="%{url}">Render the action as xml</s:a></li>
+        <li><s:url var="url" namespace="/xslt" action="classpath"/><s:a href="%{url}">Render an ognl property</s:a></li>
     </ul>
 </p>
 

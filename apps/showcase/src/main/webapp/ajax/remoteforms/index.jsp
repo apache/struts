@@ -76,7 +76,7 @@ Submit outside form:<br/>
 <sx:submit value="GO5" formId="theForm5" targets="two"/>
 
 <br /><br />
-<s:url id="remoteUrl" namespace="/remoteforms" action="AjaxRemoteForm"/>
+<s:url var="remoteUrl" namespace="/remoteforms" action="AjaxRemoteForm"/>
 Submit outside form, href in submit tag:<br/>
 <s:form
         id='theForm6'

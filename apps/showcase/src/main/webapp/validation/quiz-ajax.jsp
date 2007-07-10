@@ -9,7 +9,7 @@
     <sx:head cache="true" compressed="false"/>
 </head>
 
-<s:url id="url" namespace="/validation" action="quizAjax"/>
+<s:url var="url" namespace="/validation" action="quizAjax"/>
 
 <body>
 

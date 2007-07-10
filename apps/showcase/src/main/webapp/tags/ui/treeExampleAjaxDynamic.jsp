@@ -9,7 +9,7 @@
 <body>
 
 
-<s:url id="nodesUrl" namespace="/nodecorate" action="getNodes" />
+<s:url var="nodesUrl" namespace="/nodecorate" action="getNodes" />
 <div style="float:left; margin-right: 50px;">
     <sx:tree id="tree" href="%{#nodesUrl}" />
 </div>

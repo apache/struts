@@ -41,7 +41,7 @@
 <input type=button value="start timer" onclick="controller.start()">
 <input type=button value="stop timer" onclick="controller.stop()">
 
-<s:url id="ajaxTest" value="/AjaxTest.action" />
+<s:url var="ajaxTest" value="/AjaxTest.action" />
 
 <sx:div
         id="div1"

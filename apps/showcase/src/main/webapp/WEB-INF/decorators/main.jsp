@@ -41,7 +41,7 @@
         <div id="header" class="clearfix">
             <div id="branding">
                 <h1 class="title">Struts Showcase</h1>
-                <s:action id="dateAction" name="date" namespace="/" executeResult="true" />
+                <s:action var="dateAction" name="date" namespace="/" executeResult="true" />
             </div><!-- end branding -->
 
             <div id="search">

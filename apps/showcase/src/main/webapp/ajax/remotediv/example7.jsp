@@ -10,7 +10,7 @@
 
 <body>
 
-<s:url id="test3" value="/Test3.action" />
+<s:url var="test3" value="/Test3.action" />
 
 
 <sx:div

@@ -52,8 +52,8 @@
 
 <br/><br/>
 
-<s:url id="ajaxTest" value="/AjaxTest.action" />
-<s:url id="test3" value="/Test3.action" />
+<s:url var="ajaxTest" value="/AjaxTest.action" />
+<s:url var="test3" value="/Test3.action" />
 
 <sx:a  id="link0"
         href="%{#ajaxTest}"

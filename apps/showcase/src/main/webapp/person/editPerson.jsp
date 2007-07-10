@@ -14,7 +14,7 @@
             <th>First Name</th>
             <th>Last Name</th>
         </tr>
-        <s:iterator id="p" value="persons">
+        <s:iterator var="p" value="persons">
             <tr>
                 <td>
                     <s:property value="%{id}" />

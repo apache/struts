@@ -14,7 +14,7 @@
 	<s:fielderror />
 
 	<h1>Application Canceled</h1>	
-	<s:url id="url" value="/validation/storeErrorsAcrossRequestExample.jsp" />
+	<s:url var="url" value="/validation/storeErrorsAcrossRequestExample.jsp" />
 	<s:a href="%{#url}">Try Again</s:a>
 </body>
 </html>

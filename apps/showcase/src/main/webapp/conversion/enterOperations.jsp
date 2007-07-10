@@ -9,11 +9,11 @@
 </head>
 <body>
 
-See the jsp code <s:url id="url" action="showEnumJspCode" namespace="/conversion" /><s:a href="%{#url}">here.</s:a><br/>
-See the code for OperationsEnum.java <s:url id="url" action="showOperationsEnumJavaCode" namespace="/conversion" /><s:a href="%{#url}">here.</s:a><br/>
-See the code for OperationsEnumAction.java <s:url id="url" action="showOperationEnumActionJavaCode" namespace="/conversion" /><s:a href="%{#url}">here.</s:a><br/>
-See the code for EnumTypeConverter.java  <s:url id="url" action="showEnumTypeConverterJavaCode" namespace="/conversion" /><s:a href="%{#url}">here.</s:a><br/>
-See the properties for OperationsEnumAction-conversion.properties <s:url id="url" action="showOperationsEnumActionConversionProperties" namespace="/conversion" /><s:a href="%{#url}">here.</s:a>
+See the jsp code <s:url var="url" action="showEnumJspCode" namespace="/conversion" /><s:a href="%{#url}">here.</s:a><br/>
+See the code for OperationsEnum.java <s:url var="url" action="showOperationsEnumJavaCode" namespace="/conversion" /><s:a href="%{#url}">here.</s:a><br/>
+See the code for OperationsEnumAction.java <s:url var="url" action="showOperationEnumActionJavaCode" namespace="/conversion" /><s:a href="%{#url}">here.</s:a><br/>
+See the code for EnumTypeConverter.java  <s:url var="url" action="showEnumTypeConverterJavaCode" namespace="/conversion" /><s:a href="%{#url}">here.</s:a><br/>
+See the properties for OperationsEnumAction-conversion.properties <s:url var="url" action="showOperationsEnumActionConversionProperties" namespace="/conversion" /><s:a href="%{#url}">here.</s:a>
 <br/>
 <br/>
 

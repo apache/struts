@@ -27,7 +27,7 @@
 <body>
 
 <div id="t1">Div 1</div>
-<s:url id="ajaxTest" value="/AjaxTest.action" />
+<s:url var="ajaxTest" value="/AjaxTest.action" />
 
 <br/><br/>
 

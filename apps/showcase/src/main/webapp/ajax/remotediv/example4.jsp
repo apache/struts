@@ -10,7 +10,7 @@
 
 <body>
 
-<s:url id="ajaxTest" value="/AjaxTest.action" />
+<s:url var="ajaxTest" value="/AjaxTest.action" />
 
 <sx:div
         id="fiveseconds"

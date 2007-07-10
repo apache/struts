@@ -14,8 +14,8 @@ each doing what they do best.
 
 <p>
     <ul>
-        <li><s:url id="url" namespace="/jsf/employee" action="list"/><s:a href="%{url}">List available Employees</s:a></li>
-        <li><s:url id="url" namespace="/jsf/employee" action="edit"/><s:a href="%{url}">Create/Edit Employee</s:a></li>
+        <li><s:url var="url" namespace="/jsf/employee" action="list"/><s:a href="%{url}">List available Employees</s:a></li>
+        <li><s:url var="url" namespace="/jsf/employee" action="edit"/><s:a href="%{url}">Create/Edit Employee</s:a></li>
     </ul>
 </p>
 

@@ -5,11 +5,11 @@
 <html>
 <head>
     <title>OGNL and tags demo</title>
-    <s:url id="struts" value="/struts" includeParams="none"/>
-    <s:url id="jspEval" action="jspEval" namespace="/nodecorate" includeParams="none"/>
-    <s:url id="viewClass" value="/interactive/example-action.jsp" includeParams="none"/>
-    <s:url id="ognlBase" value="/interactive/ognl_" includeParams="none"/>
-    <s:url id="jspBase" value="/interactive/jsp_" includeParams="none"/>
+    <s:url var="struts" value="/struts" includeParams="none"/>
+    <s:url var="jspEval" action="jspEval" namespace="/nodecorate" includeParams="none"/>
+    <s:url var="viewClass" value="/interactive/example-action.jsp" includeParams="none"/>
+    <s:url var="ognlBase" value="/interactive/ognl_" includeParams="none"/>
+    <s:url var="jspBase" value="/interactive/jsp_" includeParams="none"/>
     
     <script src="${struts}/webconsole.js"></script>
     <sx:head/>

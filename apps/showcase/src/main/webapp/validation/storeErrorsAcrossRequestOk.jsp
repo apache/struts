@@ -15,7 +15,7 @@
 
 	<h2>Ok !</h2>
 	
-	<s:url id="url" value="/validation/storeErrorsAcrossRequestExample.jsp" />
+	<s:url var="url" value="/validation/storeErrorsAcrossRequestExample.jsp" />
 	<s:a href="%{#id}">Try Again</s:a>
 
 </body>

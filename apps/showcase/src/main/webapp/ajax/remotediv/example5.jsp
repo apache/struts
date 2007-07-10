@@ -10,7 +10,7 @@
 
 <body>
 
-<s:url id="ajaxNoUrl" value="/AjaxNoUrl.jsp" />
+<s:url var="ajaxNoUrl" value="/AjaxNoUrl.jsp" />
 
 <sx:div
         id="error"

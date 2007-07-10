@@ -10,7 +10,7 @@ This example tries to demonstrates the usage of &lt;s:component ... &gt; tag.
 <p/>
 
 To have a look at the source of this jsp page click 
-<s:url id="url" action="showComponentTagExampleCode" namespace="/tags/ui"/>
+<s:url var="url" action="showComponentTagExampleCode" namespace="/tags/ui"/>
 <s:a href="%{#url}">here</s:a>
 <p/>
     

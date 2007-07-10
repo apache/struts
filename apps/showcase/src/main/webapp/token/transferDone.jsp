@@ -19,7 +19,7 @@
     web page result from the first post. 
 
     <p/>
-    Click here to <s:url id="back" value="/token"/><s:a href="%{back}">return</s:a>.
+    Click here to <s:url var="back" value="/token"/><s:a href="%{back}">return</s:a>.
 
 </body>
 </html>

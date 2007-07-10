@@ -7,7 +7,7 @@
 
     <b>We have processed your request.</b>
     <p/>
-    Click here to <s:url id="back" value="/wait"/><s:a href="%{back}">return</s:a>.
+    Click here to <s:url var="back" value="/wait"/><s:a href="%{back}">return</s:a>.
 
 </body>
 </html>

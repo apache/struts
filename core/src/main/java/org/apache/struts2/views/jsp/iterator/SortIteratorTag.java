@@ -37,8 +37,8 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  * <b>NOTE: JSP-TAG</b>
  *
  * <p>A Tag that sorts a List using a Comparator both passed in as the tag attribute.
- * If 'id' attribute is specified, the sorted list will be placed into the PageContext
- * attribute using the key specified by 'id'. The sorted list will ALWAYS be
+ * If 'var' attribute is specified, the sorted list will be placed into the PageContext
+ * attribute using the key specified by 'var'. The sorted list will ALWAYS be
  * pushed into the stack and poped at the end of this tag.</p>
  *
  * <!-- END SNIPPET: javadoc -->
@@ -94,6 +94,7 @@ public class SortIteratorTag extends StrutsBodyTagSupport {
 
     String comparatorAttr;
     String sourceAttr;
+    String var;
 
     SortIteratorFilter sortIteratorFilter = null;
 
@@ -105,6 +106,16 @@ public class SortIteratorTag extends StrutsBodyTagSupport {
     @StrutsTagAttribute(description="The iterable source to sort")
     public void setSource(String source) {
         sourceAttr = source;
+    }
+    
+    @StrutsTagAttribute(description="Deprecated. Use 'var' instead")
+    public void setId(String string) {
+        setVar(string);
+    }
+    
+    @StrutsTagAttribute(description="The name to store the resultant iterator into page context, if such name is supplied")
+    public void setVar(String var) {
+        this.var = var;
     }
 
     public int doStartTag() throws JspException {
@@ -134,8 +145,8 @@ public class SortIteratorTag extends StrutsBodyTagSupport {
 
         // push sorted iterator into stack, so nexted tag have access to it
         getStack().push(sortIteratorFilter);
-        if (getId() != null && getId().length() > 0) {
-            pageContext.setAttribute(getId(), sortIteratorFilter);
+        if (var != null && var.length() > 0) {
+            pageContext.setAttribute(var, sortIteratorFilter);
         }
 
         return EVAL_BODY_INCLUDE;

@@ -46,7 +46,7 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  *      <li>source* (Object) - Indicate the source of which the resulting subset iterator is to be derived base on</li>
  *      <li>start (Object) - Indicate the starting index (eg. first entry is 0) of entries in the source to be available as the first entry in the resulting subset iterator</li>
  *      <li>decider (Object) - Extension to plug-in a decider to determine if that particular entry is to be included in the resulting subset iterator</li>
- *      <li>id (String) - Indicate the pageContext attribute id to store the resultant subset iterator in</li>
+ *      <li>var (String) - Indicate the pageContext attribute name to store the resultant subset iterator in</li>
  * </ul>
  * <!-- END SNIPPET: params -->
  *
@@ -121,8 +121,8 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  *
  * <pre>
  * <!-- START SNIPPET: example4 -->
- * &lt;!--  D: List with id --&gt;
- *      &lt;s:subset id="mySubset" source="myList" count="13" start="3" /&gt;
+ * &lt;!--  D: List with var --&gt;
+ *      &lt;s:subset var="mySubset" source="myList" count="13" start="3" /&gt;
  *      &lt;%
  *          Iterator i = (Iterator) pageContext.getAttribute("mySubset");
  *          while(i.hasNext()) {
@@ -159,7 +159,7 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
     String sourceAttr;
     String startAttr;
     String deciderAttr;
-
+    String var;
     SubsetIteratorFilter subsetIteratorFilter = null;
 
 
@@ -189,6 +189,15 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
         deciderAttr = decider;
     }
 
+    @StrutsTagAttribute(description="Deprecated. Use 'var' instead")
+    public void setId(String string) {
+        setVar(string);
+    }
+    
+    @StrutsTagAttribute(description="The name to store the resultant iterator into page context, if such name is supplied")
+    public void setVar(String var) {
+        this.var = var;
+    }
 
     public int doStartTag() throws JspException {
 
@@ -271,8 +280,8 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
         subsetIteratorFilter.execute();
 
         getStack().push(subsetIteratorFilter);
-        if (getId() != null) {
-            pageContext.setAttribute(getId(), subsetIteratorFilter);
+        if (var != null && var.length() > 0) {
+            pageContext.setAttribute(var, subsetIteratorFilter);
         }
 
         return EVAL_BODY_INCLUDE;

@@ -46,7 +46,7 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  *      <li>val* (Object) - the source to be parsed into an iterator </li>
  *      <li>count (Object) - the max number (Integer, Float, Double, Long, String) entries to be in the iterator</li>
  *      <li>separator (String) - the separator to be used in separating the <i>val</i> into entries of the iterator</li>
- *      <li>id (String) - the id to store the resultant iterator into page context, if such id is supplied</li>
+ *      <li>var (String) - the name to store the resultant iterator into page context, if such name is supplied</li>
  *      <li>converter (Object) - the converter (must extends off IteratorGenerator.Converter interface) to convert the String entry parsed from <i>val</i> into an object</li>
  * </ul>
  * <!-- END SNIPPET: params -->
@@ -78,8 +78,8 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  *
  * Example Three:
  * <pre>
- * Generate an iterator with id attribute
- * &lt;s:generator val="%{'aaa,bbb,ccc,ddd,eee'}" count="4" separator="," id="myAtt" /&gt;
+ * Generate an iterator with var attribute
+ * &lt;s:generator val="%{'aaa,bbb,ccc,ddd,eee'}" count="4" separator="," var="myAtt" /&gt;
  * &lt;%
  *  Iterator i = (Iterator) pageContext.getAttribute("myAtt");
  *  while(i.hasNext()) {
@@ -89,7 +89,7 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  * %&gt;
  * </pre>
  * This generates an iterator and put it in the PageContext under the key as specified
- * by the id attribute.
+ * by the var attribute.
  *
  *
  * Example Four:
@@ -138,7 +138,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
     String separatorAttr;
     String valueAttr;
     String converterAttr;
-
+    String var;
     IteratorGenerator iteratorGenerator = null;
 
     @StrutsTagAttribute(type="Integer",description="The max number entries to be in the iterator")
@@ -170,13 +170,14 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
         converterAttr = aConverter;
     }
 
-    /**
-     * @s.tagattribute required="false" type="String"
-     * description="the id to store the resultant iterator into page context, if such id is supplied"
-     */
-    @StrutsTagAttribute(description="The id to store the resultant iterator into page context, if such id is supplied")
+    @StrutsTagAttribute(description="Deprecated. Use 'var' instead")
     public void setId(String string) {
-        super.setId(string);
+        setVar(string);
+    }
+    
+    @StrutsTagAttribute(description="The name to store the resultant iterator into page context, if such name is supplied")
+    public void setVar(String var) {
+        this.var = var;
     }
 
     public int doStartTag() throws JspException {
@@ -236,10 +237,10 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
 
         // push resulting iterator into stack
         getStack().push(iteratorGenerator);
-        if (getId() != null && getId().length() > 0) {
+        if (var != null && var.length() > 0) {
             // if an id is specified, we have the resulting iterator set into
             // the pageContext attribute as well
-            pageContext.setAttribute(getId(), iteratorGenerator);
+            pageContext.setAttribute(var, iteratorGenerator);
         }
 
         return EVAL_BODY_INCLUDE;

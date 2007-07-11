@@ -55,7 +55,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- START SNIPPET: example -->
  * JSP:
  * &lt;-- Example One --&gt;
- * &lt;s:bean name="struts.util.Counter" id="year"&gt;
+ * &lt;s:bean name="struts.util.Counter" var="year"&gt;
  *   &lt;s:param name="first" value="text('firstBirthYear')"/&gt;
  *   &lt;s:param name="last" value="2000"/&gt;
  *

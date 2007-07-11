@@ -100,7 +100,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: code -->
  *
  * <!-- START SNIPPET: example -->
- * &lt;s:append id="myAppendIterator"&gt;
+ * &lt;s:append var="myAppendIterator"&gt;
  *      &lt;s:param value="%{myList1}" /&gt;
  *      &lt;s:param value="%{myList2}" /&gt;
  *      &lt;s:param value="%{myList3}" /&gt;

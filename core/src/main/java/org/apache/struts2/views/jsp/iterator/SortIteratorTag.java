@@ -68,7 +68,7 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
  * &lt;/s:sort&gt;
  *
  * USAGE 2:
- * &lt;s:sort id="mySortedList" comparator="myComparator" source="myList" /&gt;
+ * &lt;s:sort var="mySortedList" comparator="myComparator" source="myList" /&gt;
  *
  * &lt;%
  *    Iterator sortedIterator = (Iterator) pageContext.getAttribute("mySortedList");

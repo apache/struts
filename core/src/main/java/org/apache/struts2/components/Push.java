@@ -58,7 +58,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <pre>
  * <!-- START SNIPPET: example2 -->
  *  &lt;s:push value="myObject"&gt;                              ----- (1)
- *       &lt;s:bean name="jp.SomeBean" id="myBean"/&gt;        ----- (2)
+ *       &lt;s:bean name="jp.SomeBean" var="myBean"/&gt;        ----- (2)
  *          &lt;s:param name="myParam" value="top"/&gt;        ----- (3)
  *       &lt;/s:bean&gt;
  *   &lt;/s:push&gt;
@@ -76,7 +76,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <pre>
  * <!-- START SNIPPET: example3 -->
  * &lt;s:push value="myObject"&gt;                                       ---(A)
- *    &lt;s:bean name="jp.SomeBean" id="myBean"/&gt;                   ---(B)
+ *    &lt;s:bean name="jp.SomeBean" var="myBean"/&gt;                   ---(B)
  *       &lt;s:param name="myParam" value="top.mySomeOtherValue"/&gt;  ---(C)
  *    &lt;/s:bean&gt;
  * &lt;/s:push&gt;
@@ -94,7 +94,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <pre>
  * <!-- START SNIPPET: example4 -->
  * &lt;s:push value="myObject"&gt;                                 ---- (i)
- *    &lt;s:bean name="jp.SomeBean" id="myBean"/&gt;             ---- (ii)
+ *    &lt;s:bean name="jp.SomeBean" var="myBean"/&gt;             ---- (ii)
  *       &lt;s:param name="myParam" value="[1].top"/&gt;         -----(iii)
  *    &lt;/s:bean&gt;
  * &lt;/s:push&gt;

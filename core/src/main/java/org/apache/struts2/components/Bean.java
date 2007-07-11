@@ -38,7 +38,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <p>Instantiates a class that conforms to the JavaBeans specification. This tag has a body which can contain
  * a number of {@link Param} elements to set any mutator methods on that class.</p>
  * <p/>
- * <p>If the id attribute is set on the BeanTag, it will place the instantiated bean into the
+ * <p>If the var attribute is set on the BeanTag, it will place the instantiated bean into the
  * stack's Context.</p>
  * <p/>
  * <!-- END SNIPPET: javadoc -->
@@ -46,7 +46,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <!-- START SNIPPET: params -->
  * <ul>
- *      <li>id - the stack's context id (if supplied) that the created bean will be store under</li>
+ *      <li>var - the stack's context name (if supplied) that the created bean will be store under</li>
  *      <li>name* - the class name of the bean to be instantiated (must respect JavaBean specification)</li>
  * </ul>
  * <!-- END SNIPPET: params -->
@@ -57,13 +57,13 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <pre>
  * <!-- START SNIPPET: examples -->
  * &lt;-- in freemarker form --&gt;
- * [@s.bean name="org.apache.struts2.example.counter.SimpleCounter" id="counter"]
+ * [@s.bean name="org.apache.struts2.example.counter.SimpleCounter" var="counter"]
  *   [s:param name="foo" value="BAR"/]
  *   The value of foo is : [s:property value="foo"/], when inside the bean tag.<br />
  * [/s:bean]
  *
  * &lt;-- in jsp form --&gt;
- * &lt;s:bean name="org.apache.struts2.example.counter.SimpleCounter" id="counter"&gt;
+ * &lt;s:bean name="org.apache.struts2.example.counter.SimpleCounter" var="counter"&gt;
  *   &lt;s:param name="foo" value="BAR" /&gt;
  *   The value of foot is : &lt;s:property value="foo"/&gt;, when inside the bean tag &lt;br /&gt;
  * &lt;/s:bean&gt;

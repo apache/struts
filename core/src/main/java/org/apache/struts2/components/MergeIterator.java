@@ -110,7 +110,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: javacode -->
  *
  * <!-- START SNIPPET: example -->
- * &lt;s:merge id="myMergedIterator1"&gt;
+ * &lt;s:merge var="myMergedIterator1"&gt;
  *      &lt;s:param value="%{myList1}" /&gt;
  *      &lt;s:param value="%{myList2}" /&gt;
  *      &lt;s:param value="%{myList3}" /&gt;

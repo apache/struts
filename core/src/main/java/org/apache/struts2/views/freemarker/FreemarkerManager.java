@@ -124,6 +124,7 @@ public class FreemarkerManager {
     
     private String encoding;
     private boolean altMapWrapper;
+    private boolean cacheBeanWrapper;
     private Map<String,TagLibrary> tagLibraries;
     
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
@@ -134,6 +135,11 @@ public class FreemarkerManager {
     @Inject(StrutsConstants.STRUTS_FREEMARKER_WRAPPER_ALT_MAP)
     public void setWrapperAltMap(String val) {
         altMapWrapper = "true".equals(val);
+    }
+    
+    @Inject(StrutsConstants.STRUTS_FREEMARKER_BEANWRAPPER_CACHE)
+    public void setCacheBeanWrapper(String val) {
+        cacheBeanWrapper = "true".equals(val);
     }
     
     @Inject
@@ -236,7 +242,9 @@ public class FreemarkerManager {
     }
 
     protected BeansWrapper getObjectWrapper() {
-        return new StrutsBeanWrapper(altMapWrapper);
+        StrutsBeanWrapper wrapper = new StrutsBeanWrapper(altMapWrapper);
+        wrapper.setUseCache(cacheBeanWrapper);
+        return wrapper;
     }
 
     /**

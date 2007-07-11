@@ -77,7 +77,7 @@ public final class StrutsConstants {
     public static final String STRUTS_FREEMARKER_MANAGER_CLASSNAME = "struts.freemarker.manager.classname";
     
     /** Cache Freemarker templates */
-    public static final String STRUTS_FREEMARKER_CACHE_TEMPLATES = "struts.freemarker.templatesCache";
+    public static final String STRUTS_FREEMARKER_TEMPLATES_CACHE = "struts.freemarker.templatesCache";
     
     /** Cache model instances at BeanWrapper level */
     public static final String STRUTS_FREEMARKER_BEANWRAPPER_CACHE = "struts.freemarker.beanwrapperCache";

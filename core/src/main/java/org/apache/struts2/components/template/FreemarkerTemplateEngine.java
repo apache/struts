@@ -212,7 +212,7 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
      * @param caching true if the template engine should cache freemarker template
      * internally
      */
-    @Inject(StrutsConstants.STRUTS_FREEMARKER_CACHE_TEMPLATES)
+    @Inject(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE)
     public void setCacheTemplates(String cacheTemplates) {
         freemarkerCaching = "true".equals(cacheTemplates);
     }

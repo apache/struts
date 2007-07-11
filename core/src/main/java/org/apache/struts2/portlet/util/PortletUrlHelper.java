@@ -22,8 +22,8 @@ package org.apache.struts2.portlet.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -230,7 +230,7 @@ public class PortletUrlHelper {
     public static Map ensureParamsAreStringArrays(Map params) {
         Map result = null;
         if (params != null) {
-            result = new HashMap(params.size());
+            result = new LinkedHashMap(params.size());
             Iterator it = params.keySet().iterator();
             while (it.hasNext()) {
                 Object key = it.next();

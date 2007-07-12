@@ -49,7 +49,7 @@
     <bean class="org.apache.struts2.views.util.ContextUtil" static="true" />
     <bean class="org.apache.struts2.views.util.UrlHelper" static="true" />
 
-    <package name="struts-default">
+    <package name="struts-default" abstract="true">
         <result-types>
             <result-type name="chain" class="com.opensymphony.xwork2.ActionChainResult"/>
             <result-type name="dispatcher" class="org.apache.struts2.dispatcher.ServletDispatcherResult" default="true"/>

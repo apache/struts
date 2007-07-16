@@ -235,6 +235,17 @@ public class DefaultActionMapper implements ActionMapper {
             }
         };
     }
+
+    /**
+     * Adds a parameter action.  Should only be called during initialization
+     *
+     * @param prefix The string prefix to trigger the action
+     * @param parameterAction The parameter action to execute
+     * @since 2.1.0
+    */
+    protected void addParameterAction(String prefix, ParameterAction parameterAction) {
+        prefixTrie.put(prefix, parameterAction);
+    }
     
     @Inject(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION)
     public void setAllowDynamicMethodCalls(String allow) {
@@ -491,11 +502,4 @@ public class DefaultActionMapper implements ActionMapper {
 		return allowSlashesInActionNames;
 	}
 	
-	/**
-     * Defines a parameter action prefix
-     */
-    interface ParameterAction {
-        void execute(String key, ActionMapping mapping);
-    }
-
 }

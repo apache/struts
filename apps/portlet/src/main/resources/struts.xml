@@ -69,8 +69,7 @@
 			<interceptor-ref name="defaultStack" />
 		</action>
 
-		<action name="springExample"
-			class="org.apache.struts2.portlet.example.spring.SpringAction">
+		<action name="springExample" class="springAction">
 			<result name="success">
 				/WEB-INF/view/springExample.jsp
 			</result>

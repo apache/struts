@@ -143,28 +143,28 @@ public class FreemarkerResult extends StrutsResultSupport {
     }
 
     /**
-     * Execute this result, using the specified template location.
+     * Execute this result, using the specified template locationArg.
      * <p/>
-     * The template location has already been interoplated for any variable substitutions
+     * The template locationArg has already been interoplated for any variable substitutions
      * <p/>
      * this method obtains the freemarker configuration and the object wrapper from the provided hooks.
      * It them implements the template processing workflow by calling the hooks for
      * preTemplateProcess and postTemplateProcess
      */
-    public void doExecute(String location, ActionInvocation invocation) throws IOException, TemplateException {
-        this.location = location;
+    public void doExecute(String locationArg, ActionInvocation invocation) throws IOException, TemplateException {
+        this.location = locationArg;
         this.invocation = invocation;
         this.configuration = getConfiguration();
         this.wrapper = getObjectWrapper();
 
-        if (!location.startsWith("/")) {
+        if (!locationArg.startsWith("/")) {
             ActionContext ctx = invocation.getInvocationContext();
             HttpServletRequest req = (HttpServletRequest) ctx.get(ServletActionContext.HTTP_REQUEST);
             String base = ResourceUtil.getResourceBase(req);
-            location = base + "/" + location;
+            locationArg = base + "/" + locationArg;
         }
 
-        Template template = configuration.getTemplate(location, deduceLocale());
+        Template template = configuration.getTemplate(locationArg, deduceLocale());
         TemplateModel model = createModel();
 
         // Give subclasses a chance to hook into preprocessing

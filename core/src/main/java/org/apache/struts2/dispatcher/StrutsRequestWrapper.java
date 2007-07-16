@@ -63,24 +63,26 @@ public class StrutsRequestWrapper extends HttpServletRequestWrapper {
         ActionContext ctx = ActionContext.getContext();
         Object attribute = super.getAttribute(s);
 
-        boolean alreadyIn = false;
-        Boolean b = (Boolean) ctx.get("__requestWrapper.getAttribute");
-        if (b != null) {
-            alreadyIn = b.booleanValue();
-        }
+        if (attribute == null) {
+            boolean alreadyIn = false;
+            Boolean b = (Boolean) ctx.get("__requestWrapper.getAttribute");
+            if (b != null) {
+                alreadyIn = b.booleanValue();
+            }
 
-        // note: we don't let # come through or else a request for
-        // #attr.foo or #request.foo could cause an endless loop
-        if (!alreadyIn && attribute == null && s.indexOf("#") == -1) {
-            try {
-                // If not found, then try the ValueStack
-                ctx.put("__requestWrapper.getAttribute", Boolean.TRUE);
-                ValueStack stack = ctx.getValueStack();
-                if (stack != null) {
-                    attribute = stack.findValue(s);
+            // note: we don't let # come through or else a request for
+            // #attr.foo or #request.foo could cause an endless loop
+            if (!alreadyIn && s.indexOf("#") == -1) {
+                try {
+                    // If not found, then try the ValueStack
+                    ctx.put("__requestWrapper.getAttribute", Boolean.TRUE);
+                    ValueStack stack = ctx.getValueStack();
+                    if (stack != null) {
+                        attribute = stack.findValue(s);
+                    }
+                } finally {
+                    ctx.put("__requestWrapper.getAttribute", Boolean.FALSE);
                 }
-            } finally {
-                ctx.put("__requestWrapper.getAttribute", Boolean.FALSE);
             }
         }
         return attribute;

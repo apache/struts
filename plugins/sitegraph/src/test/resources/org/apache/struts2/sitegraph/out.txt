@@ -28,5 +28,6 @@ digraph mygraph {
     tutorial_sitegraph_guess_success_jsp -> tutorial_sitegraph_guess [label="href\n(!default)"];
     hello -> hello_jsp [label="success",color="darkseagreen2"];
     hello -> tutorial_test [label="redirect: tutorial"];
+    hello -> tutorial_test [label="redirect: tutorial2"];
     tutorial_test -> tutorial_sitegraph_guess_input_ftl [label="input",color="darkseagreen2"];
 }

@@ -7,10 +7,7 @@
         <action name="hello" class="com.opensymphony.xwork2.ActionSupport">
             <result name="success">hello.jsp</result>
             <result name="tutorial" type="redirect">/tutorial/test.action</result>
-            <result name="tutorial2" type="redirectAction">
-                <param name="actionName">test</param>
-                <param name="namespace">/tutorial</param>
-            </result>
+            <result name="tutorial2" type="redirectAction">/tutorial/test.action</result>
         </action>
     </package>
 

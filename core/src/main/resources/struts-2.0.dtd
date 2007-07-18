@@ -39,7 +39,7 @@
     class CDATA #REQUIRED
 >
 
-<!ELEMENT interceptor-stack (interceptor-ref+)>
+<!ELEMENT interceptor-stack (interceptor-ref*)>
 <!ATTLIST interceptor-stack
     name CDATA #REQUIRED
 >

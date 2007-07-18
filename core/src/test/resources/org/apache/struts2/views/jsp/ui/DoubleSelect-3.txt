@@ -6,7 +6,7 @@
     <option value="FR">France</option>
 </select>
 <br/>
-<select name="region">
+<select name="region" id="region">
 </select>
 <script type="text/javascript">
     var foo_barGroup = new Array(2 + 0);

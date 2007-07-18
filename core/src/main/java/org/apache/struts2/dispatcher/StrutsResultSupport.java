@@ -117,7 +117,7 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
     }
 
     public StrutsResultSupport(String location) {
-        this(location, false, false);
+        this(location, true, false);
     }
 
     public StrutsResultSupport(String location, boolean parse, boolean encode) {

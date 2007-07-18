@@ -73,7 +73,7 @@
     <#assign itemCount = itemCount + 1/>
 </@s.iterator>
 
-    var ${parameters.id}Temp = document.${parameters.formName}.${parameters.doubleName};
+    var ${parameters.id}Temp = document.${parameters.formName}.${parameters.doubleId};
 <#assign itemCount = startCount/>
 <#assign redirectTo = 0/>
 <@s.iterator value="parameters.list">

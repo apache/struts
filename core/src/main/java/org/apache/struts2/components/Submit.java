@@ -48,19 +48,19 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <p/> <b>Examples</b>
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;s:submit value="%{'Submit'}" /&gt;
+ * &lt;s:submit value="%{'Submit the form'}" /&gt;
  * <!-- END SNIPPET: example -->
  * </pre>
  * <pre>
  * <!-- START SNIPPET: example2 -->
  * Render an image submit:
- * &lt;s:submit type="image" value="%{'Submit'}" label="Submit the form" src="submit.gif"/&gt;
+ * &lt;s:submit type="image" value="%{'Submit the form'}" src="submit.gif"/&gt;
  * <!-- END SNIPPET: example2 -->
  * </pre>
  * <pre>
  * <!-- START SNIPPET: example3 -->
  * Render an button submit:
- * &lt;s:submit type="button" value="%{'Submit'}" label="Submit the form"/&gt;
+ * &lt;s:submit type="button" value="%{'Submit the form'}"/&gt;
  * <!-- END SNIPPET: example3 -->
  * </pre>
  *

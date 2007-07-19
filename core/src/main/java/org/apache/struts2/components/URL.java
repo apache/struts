@@ -250,7 +250,7 @@ public class URL extends ContextBean {
         this.value = value;
     }
 
-    @StrutsTagAttribute(description="he action generate url for, if not using value")
+    @StrutsTagAttribute(description="The action to generate the URL for, if not using value")
     public void setAction(String action) {
         this.action = action;
     }
@@ -270,7 +270,7 @@ public class URL extends ContextBean {
         this.encode = encode;
     }
 
-    @StrutsTagAttribute(description="Whether actual context should be included in url", type="Boolean", defaultValue="true")
+    @StrutsTagAttribute(description="Whether actual context should be included in URL", type="Boolean", defaultValue="true")
     public void setIncludeContext(boolean includeContext) {
         this.includeContext = includeContext;
     }
@@ -285,7 +285,7 @@ public class URL extends ContextBean {
         this.windowState = windowState;
     }
 
-    @StrutsTagAttribute(description="Specifies if this should be a portlet render or action url")
+    @StrutsTagAttribute(description="Specifies if this should be a portlet render or action URL")
     public void setPortletUrlType(String portletUrlType) {
         this.portletUrlType = portletUrlType;
     }

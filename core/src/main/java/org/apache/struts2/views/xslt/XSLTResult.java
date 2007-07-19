@@ -100,7 +100,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;/result&gt;</pre>
  *
  * <p>
- * Without it there would be an endless x/y/x/y/x/y/... elements.
+ * Without it there would be endless x/y/x/y/x/y/... elements.
  * </p>
  *
  * <p>
@@ -231,7 +231,7 @@ public class XSLTResult implements Result {
     private String matchingPattern;
 
     /** Indicates the property name patterns which should be excluded from the xml. */
-    private String exludingPattern;
+    private String excludingPattern;
 
     /** Indicates the ognl expression respresenting the bean which is to be exposed as xml. */
     private String exposedValue;
@@ -285,12 +285,12 @@ public class XSLTResult implements Result {
         this.matchingPattern = matchingPattern;
     }
 
-    public String getExludingPattern() {
-        return exludingPattern;
+    public String getExcludingPattern() {
+        return excludingPattern;
     }
 
-    public void setExludingPattern(String exludingPattern) {
-        this.exludingPattern = exludingPattern;
+    public void setExcludingPattern(String excludingPattern) {
+        this.excludingPattern = excludingPattern;
     }
 
     /**

@@ -47,16 +47,16 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <p>This tag is used to create a URL.</p>
  *
- * <p>You can use the "param" tag inside the body to provide
+ * <p>You can use the &lt;param&gt; tag inside the body to provide
  * additional request parameters. If the value of a param is an Array or 
  * an Iterable all the values will be added to the URL.</p>
  *
  * <b>NOTE:</b>
- * <p>When includeParams is 'all' or 'get', the parameter defined in param tag will take
+ * <p>When includeParams is 'all' or 'get', the parameter defined in &lt;param&gt; tag will take
  * precedence and will not be overriden if they exists in the parameter submitted. For
  * example, in Example 3 below, if there is a id parameter in the url where the page this
- * tag is included like http://<host>:<port>/<context>/editUser.action?id=3333&name=John
- * the generated url will be http://<host>:<port>/context>/editUser.action?id=22&name=John
+ * tag is included like http://&lt;host&gt;:&lt;port&gt;/&lt;context&gt;/editUser.action?id=3333&name=John
+ * the generated url will be http://&lt;host&gt;:&lt;port&gt;/&lt;context&gt;/editUser.action?id=22&name=John
  * cause the parameter defined in the param tag will take precedence.</p>
  *
  * <!-- END SNIPPET: javadoc -->

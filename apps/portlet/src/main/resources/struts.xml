@@ -129,7 +129,7 @@
 		<action name="processFormExampleEdit"
 			class="org.apache.struts2.portlet.example.FormExample">
 			<result name="input">
-				/WEB-INF/edtt/formExampleInput.jsp
+				/WEB-INF/edit/formExampleInput.jsp
 			</result>
 			<result name="success">
 				/edit/processFormExampleForward.action?firstName=${firstName}&amp;lastName=${lastName}

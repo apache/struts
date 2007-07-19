@@ -133,12 +133,16 @@ public class ServletConfigInterceptorTest extends StrutsTestCase {
     }
 
     public void testPrincipalAware() throws Exception {
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        req.setUserPrincipal(null);
+        req.setRemoteUser("Santa");
         MockControl control = MockControl.createControl(PrincipalAware.class);
         control.setDefaultMatcher(MockControl.ALWAYS_MATCHER); // less strick match is needed for this unit test to be conducted using mocks
         PrincipalAware mock = (PrincipalAware) control.getMock();
 
         MockActionInvocation mai = createActionInvocation(mock);
-
+        mai.getInvocationContext().put(StrutsStatics.HTTP_REQUEST, req);
+        
         MockServletContext ctx = new MockServletContext();
         mai.getInvocationContext().put(StrutsStatics.SERVLET_CONTEXT, ctx);
 

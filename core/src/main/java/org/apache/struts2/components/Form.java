@@ -34,8 +34,8 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.portlet.context.PortletActionContext;
-import org.apache.struts2.portlet.util.PortletUrlHelper;
+//import org.apache.struts2.portlet.context.PortletActionContext;
+//import org.apache.struts2.portlet.util.PortletUrlHelper;
 import org.apache.struts2.views.util.UrlHelper;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -115,6 +115,7 @@ public class Form extends ClosingUIBean {
     protected boolean enableDynamicMethodInvocation = true;
     protected Configuration configuration;
     protected ObjectFactory objectFactory;
+    protected UrlRenderer urlRenderer;
 
     public Form(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -145,6 +146,11 @@ public class Form extends ClosingUIBean {
     @Inject
     public void setObjectFactory(ObjectFactory objectFactory) {
         this.objectFactory = objectFactory;
+    }
+    
+    @Inject
+    public void setUrlRenderer(UrlRenderer urlRenderer) {
+    	this.urlRenderer = urlRenderer;
     }
 
 
@@ -227,13 +233,7 @@ public class Form extends ClosingUIBean {
         if (id != null) {
             addParameter("id", escape(id));
         }
-        if (Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
-            evaluateExtraParamsPortletRequest(namespace, action);
-        } else {
-            String namespace = determineNamespace(this.namespace, getStack(),
-                    request);
-            evaluateExtraParamsServletRequest(action, namespace, isAjax);
-        }
+        urlRenderer.renderFormUrl(this);
     }
 
     /**
@@ -241,96 +241,9 @@ public class Form extends ClosingUIBean {
      * @param namespace
      * @param action
      */
-    private void evaluateExtraParamsServletRequest(String action, String namespace, boolean isAjax) {
-        if (action == null) {
-            // no action supplied? ok, then default to the current request (action or general URL)
-            ActionInvocation ai = (ActionInvocation) getStack().getContext().get(ActionContext.ACTION_INVOCATION);
-            if (ai != null) {
-                action = ai.getProxy().getActionName();
-                namespace = ai.getProxy().getNamespace();
-            } else {
-                // hmm, ok, we need to just assume the current URL cut down
-                String uri = request.getRequestURI();
-                action = uri.substring(uri.lastIndexOf('/'));
-            }
-        }
 
-        String actionMethod = "";
-        // FIXME: our implementation is flawed - the only concept of ! should be in DefaultActionMapper
-        // handle "name!method" convention.
-        if (enableDynamicMethodInvocation) {
-            if (action.indexOf("!") != -1) {
-                int endIdx = action.lastIndexOf("!");
-                actionMethod = action.substring(endIdx + 1, action.length());
-                action = action.substring(0, endIdx);
-            }
-        }
 
-        final ActionConfig actionConfig = configuration.getRuntimeConfiguration().getActionConfig(namespace, action);
-        String actionName = action;
-        if (actionConfig != null) {
-
-            ActionMapping mapping = new ActionMapping(action, namespace, actionMethod, parameters);
-            String result = UrlHelper.buildUrl(actionMapper.getUriFromActionMapping(mapping), request, response, null);
-            addParameter("action", result);
-
-            // let's try to get the actual action class and name
-            // this can be used for getting the list of validators
-            addParameter("actionName", actionName);
-            try {
-                Class clazz = objectFactory.getClassInstance(actionConfig.getClassName());
-                addParameter("actionClass", clazz);
-            } catch (ClassNotFoundException e) {
-                // this is OK, we'll just move on
-            }
-
-            addParameter("namespace", namespace);
-
-            // if the name isn't specified, use the action name
-            if (name == null) {
-                addParameter("name", action);
-            }
-
-            // if the id isn't specified, use the action name
-            if (id == null) {
-                addParameter("id", action);
-            }
-        } else if (action != null) {
-            // Since we can't find an action alias in the configuration, we just assume
-            // the action attribute supplied is the path to be used as the uri this
-            // form is submitting to.
-
-            String result = UrlHelper.buildUrl(action, request, response, null);
-            addParameter("action", result);
-
-            // namespace: cut out anything between the start and the last /
-            int slash = result.lastIndexOf('/');
-            if (slash != -1) {
-                addParameter("namespace", result.substring(0, slash));
-            } else {
-                addParameter("namespace", "");
-            }
-
-            // name/id: cut out anything between / and . should be the id and name
-            if (id == null) {
-                slash = result.lastIndexOf('/');
-                int dot = result.indexOf('.', slash);
-                if (dot != -1) {
-                    id = result.substring(slash + 1, dot);
-                } else {
-                    id = result.substring(slash + 1);
-                }
-                addParameter("id", escape(id));
-            }
-        }
-
-        // WW-1284
-        // evaluate if client-side js is to be enabled. (if validation interceptor
-        // does allow validation eg. method is not filtered out)
-        evaluateClientSideJsEnablement(actionName, namespace, actionMethod);
-    }
-
-    private void evaluateClientSideJsEnablement(String actionName, String namespace, String actionMethod) {
+    protected void evaluateClientSideJsEnablement(String actionName, String namespace, String actionMethod) {
 
         // Only evaluate if Client-Side js is to be enable when validate=true
         Boolean validate = (Boolean) getParameters().get("validate");
@@ -359,53 +272,6 @@ public class Form extends ClosingUIBean {
                 }
             }
         }
-    }
-
-    /**
-     * Constructs the action url adapted to a portal environment.
-     *
-     * @param action The action to create the URL for.
-     */
-    private void evaluateExtraParamsPortletRequest(String namespace, String action) {
-
-        if (this.action != null) {
-            // if it isn't specified, we'll make somethig up
-            action = findString(this.action);
-        }
-
-        String type = "action";
-        if (TextUtils.stringSet(method)) {
-            if ("GET".equalsIgnoreCase(method.trim())) {
-                type = "render";
-            }
-        }
-        if (action != null) {
-            String result = PortletUrlHelper.buildUrl(action, namespace,
-                    getParameters(), type, portletMode, windowState);
-            addParameter("action", result);
-
-            // namespace: cut out anything between the start and the last /
-            int slash = result.lastIndexOf('/');
-            if (slash != -1) {
-                addParameter("namespace", result.substring(0, slash));
-            } else {
-                addParameter("namespace", "");
-            }
-
-            // name/id: cut out anything between / and . should be the id and
-            // name
-            if (id == null) {
-                slash = action.lastIndexOf('/');
-                int dot = action.indexOf('.', slash);
-                if (dot != -1) {
-                    id = action.substring(slash + 1, dot);
-                } else {
-                    id = action.substring(slash + 1);
-                }
-                addParameter("id", escape(id));
-            }
-        }
-
     }
 
     public List getValidators(String name) {

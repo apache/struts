@@ -32,6 +32,7 @@
         <module>struts1</module>
         <module>tiles</module>
         <module>dojo</module>
+	  <module>portlet</module>
     </modules>
 
     <dependencies>

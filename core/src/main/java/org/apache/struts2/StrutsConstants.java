@@ -55,6 +55,8 @@ public final class StrutsConstants {
     /** The default includeParams method to generate Struts URLs */
     public static final String STRUTS_URL_INCLUDEPARAMS = "struts.url.includeParams";
 
+	public static final String STRUTS_URL_RENDERER = "struts.urlRenderer";
+
     /** The com.opensymphony.xwork2.ObjectFactory implementation class */
     public static final String STRUTS_OBJECTFACTORY = "struts.objectFactory";
 

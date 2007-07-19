@@ -37,8 +37,6 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.portlet.context.PortletActionContext;
-import org.apache.struts2.portlet.util.PortletUrlHelper;
 import org.apache.struts2.views.util.UrlHelper;
 
 import com.opensymphony.xwork2.inject.Inject;
@@ -125,8 +123,8 @@ public class URL extends ContextBean {
     public static final String GET = "get";
     public static final String ALL = "all";
 
-    private HttpServletRequest req;
-    private HttpServletResponse res;
+    protected HttpServletRequest req;
+    protected HttpServletResponse res;
 
     protected String includeParams;
     protected String scheme;
@@ -142,6 +140,7 @@ public class URL extends ContextBean {
     protected String anchor;
     protected String urlIncludeParams;
     protected ExtraParameterProvider extraParameterProvider;
+	protected UrlRenderer urlRenderer;
 
     public URL(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack);
@@ -153,6 +152,11 @@ public class URL extends ContextBean {
     public void setUrlIncludeParams(String urlIncludeParams) {
         this.urlIncludeParams = urlIncludeParams;
     }
+    
+    @Inject
+	public void setUrlRenderer(UrlRenderer urlRenderer) {
+		this.urlRenderer = urlRenderer;
+	}
 
     @Inject(required=false)
     public void setExtraParameterProvider(ExtraParameterProvider provider) {
@@ -204,10 +208,8 @@ public class URL extends ContextBean {
         }
     }
     private void includeGetParameters() {
-        if(!(Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest())) {
-            String query = extractQueryString();
-            mergeRequestParameters(value, parameters, UrlHelper.parseQueryString(query));
-        }
+    	String query = extractQueryString();
+    	mergeRequestParameters(value, parameters, UrlHelper.parseQueryString(query));
     }
 
     private String extractQueryString() {
@@ -229,53 +231,7 @@ public class URL extends ContextBean {
     }
 
     public boolean end(Writer writer, String body) {
-        String scheme = req.getScheme();
-
-        if (this.scheme != null) {
-            scheme = this.scheme;
-        }
-
-        String result;
-        if (value == null && action != null) {
-            if(Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
-                result = PortletUrlHelper.buildUrl(action, namespace, parameters, portletUrlType, portletMode, windowState);
-            }
-            else {
-                result = determineActionURL(action, namespace, method, req, res, parameters, scheme, includeContext, encode);
-            }
-        } else {
-            if(Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
-                result = PortletUrlHelper.buildResourceUrl(value, parameters);
-            }
-            else {
-                String _value = value;
-
-                // We don't include the request parameters cause they would have been
-                // prioritised before this [in start(Writer) method]
-                if (_value != null && _value.indexOf("?") > 0) {
-                    _value = _value.substring(0, _value.indexOf("?"));
-                }
-                result = UrlHelper.buildUrl(_value, req, res, parameters, scheme, includeContext, encode);
-            }
-        }
-        if ( anchor != null && anchor.length() > 0 ) {
-            result += '#' + anchor;
-        }
-
-        String var = getVar();
-
-        if (var != null) {
-            putInContext(result);
-
-            // add to the request and page scopes as well
-            req.setAttribute(var, result);
-        } else {
-            try {
-                writer.write(result);
-            } catch (IOException e) {
-                throw new StrutsException("IOError: " + e.getMessage(), e);
-            }
-        }
+    	urlRenderer.renderUrl(writer, this);
         return super.end(writer, body);
     }
 

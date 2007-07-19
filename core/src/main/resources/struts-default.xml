@@ -39,6 +39,8 @@
     <bean type="com.opensymphony.xwork2.TextProvider" name="xwork1" class="com.opensymphony.xwork2.TextProviderSupport" />
     <bean type="com.opensymphony.xwork2.TextProvider" name="struts" class="com.opensymphony.xwork2.TextProviderSupport" />
 
+	<bean type="org.apache.struts2.components.UrlRenderer" name="struts" class="org.apache.struts2.components.ServletUrlRenderer"/>
+	
     <!--  Only have static injections -->
     <bean class="com.opensymphony.xwork2.ObjectFactory" static="true" />
     <bean class="com.opensymphony.xwork2.util.XWorkConverter" static="true" />

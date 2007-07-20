@@ -10,6 +10,9 @@
         <li>
             <a href="freemarker.action">View FreeMarker Example</a>
         </li>
+        <li>
+            <a href="freemarkerLayout.action">View Example with a FreeMarker Layout</a>
+        </li>
     </ul>
 
 </div>

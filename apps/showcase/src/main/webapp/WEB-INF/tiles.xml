@@ -39,4 +39,10 @@
         <put-attribute name="body" value="/tiles/body.ftl"/>
     </definition>
 
+    <definition name="showcase.freemarkerLayout" template="/tiles/layout.ftl">
+        <put-attribute name="title" value="Tiles/Freemarker Showcase"/>
+        <put-attribute name="header" value="/tiles/header.jsp"/>
+        <put-attribute name="body" value="/tiles/body.ftl"/>
+    </definition>
+
 </tiles-definitions>

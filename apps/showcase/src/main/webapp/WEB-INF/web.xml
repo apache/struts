@@ -80,6 +80,12 @@
 	    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
     	<load-on-startup>1</load-on-startup>
   	</servlet>
+  		<servlet>
+    	<servlet-name>JspSupportServlet</servlet-name>
+    	<servlet-class>org.apache.struts2.views.JspSupportServlet</servlet-class>
+    	<load-on-startup>1</load-on-startup>
+  	</servlet>
+
 
   	<!-- JavaServer Faces Servlet Mapping, not called directly -->
     	<servlet-mapping>

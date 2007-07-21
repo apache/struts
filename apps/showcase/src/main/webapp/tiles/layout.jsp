@@ -11,5 +11,7 @@
     <p id="body">
         <tiles:insertAttribute name="body"/>
     </p>
+
+	<p>Notice that this is a layout made in JSP</p>
 </body>
 </html>

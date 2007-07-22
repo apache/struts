@@ -11,21 +11,13 @@
 <#include "/${parameters.templateDir}/simple/select.ftl" /> 
 <#if parameters.allowUpDownOnLeft?default(true)>
 <input type="button" 
-<#if parameters.headerKey?exists>
-	onclick="moveOptionDown(document.getElementById('${parameters.id}'), 'key', '${parameters.headerKey}');"
-<#else>
-	onclick="moveOptionDown(document.getElementById('${parameters.id}'), 'key', '');"
-</#if>
+	onclick="moveOptionDown(document.getElementById('${parameters.id}'), 'key', <#if parameters.headerKey?exists>'${parameters.headerKey}'<#else>''</#if>);<#if parameters.upDownOnLeftOnclick?has_content>${parameters.upDownOnLeftOnclick};</#if>"
 <#if parameters.leftDownLabel?exists>
 	value="${parameters.leftDownLabel?html}"
 </#if>
 />
 <input type="button"
-<#if parameters.headerKey?exists>
-	onclick="moveOptionUp(document.getElementById('${parameters.id}'), 'key', '${parameters.headerKey}');"
-<#else>
-	onclick="moveOptionUp(document.getElementById('${parameters.id}'), 'key', '');"
-</#if>	
+	onclick="moveOptionUp(document.getElementById('${parameters.id}'), 'key', <#if parameters.headerKey?exists>'${parameters.headerKey}'<#else>''</#if>);<#if parameters.upDownOnLeftOnclick?has_content>${parameters.upDownOnLeftOnclick};</#if>"
 <#if parameters.leftUpLabel?exists>
 	value="${parameters.leftUpLabel?html}"
 </#if>
@@ -44,7 +36,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${addToLeftLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.doubleId?html}'), document.getElementById('${parameters.id?html}'), false, '${parameters.doubleHeaderKey}', '')" /><br /><br />
+			 value="${addToLeftLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.doubleId?html}'), document.getElementById('${parameters.id?html}'), false, '${parameters.doubleHeaderKey}', '');<#if parameters.addToLeftOnclick?has_content>${parameters.addToLeftOnclick};</#if>" /><br /><br />
 		<#else><#t/>
 			<input type="button" 
 			<#if parameters.buttonCssClass?exists><#t/>
@@ -53,7 +45,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${addToLeftLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.doubleId?html}'), document.getElementById('${parameters.id?html}'), false, '')" /><br /><br />
+			 value="${addToLeftLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.doubleId?html}'), document.getElementById('${parameters.id?html}'), false, '');<#if parameters.addToLeftOnclick?has_content>${parameters.addToLeftOnclick};</#if>" /><br /><br />
 		</#if><#t/>
 	</#if><#t/>
 	<#if parameters.allowAddToRight?default(true)><#t/>
@@ -66,7 +58,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${addToRightLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.id?html}'), document.getElementById('${parameters.doubleId?html}'), false, '${parameters.headerKey}', '')" /><br /><br />
+			 value="${addToRightLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.id?html}'), document.getElementById('${parameters.doubleId?html}'), false, '${parameters.headerKey}', '');<#if parameters.addToRightOnclick?has_content>${parameters.addToRightOnclick};</#if>" /><br /><br />
 		<#else><#t/>
 			<input type="button"
 			<#if parameters.buttonCssClass?exists><#t/>
@@ -75,7 +67,7 @@
 			<#if parameters.buttonCssStyle?exists>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${addToRightLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.id?html}'), document.getElementById('${parameters.doubleId?html}'), false, '')" /><br /><br />
+			 value="${addToRightLabel}" onclick="moveSelectedOptions(document.getElementById('${parameters.id?html}'), document.getElementById('${parameters.doubleId?html}'), false, '');<#if parameters.addToRightOnclick?has_content>${parameters.addToRightOnclick};</#if>" /><br /><br />
 		</#if><#t/>
 	</#if><#t/>
 	<#if parameters.allowAddAllToLeft?default(true)><#t/>
@@ -88,7 +80,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle}"
 			</#if><#t/>
-			 value="${addAllToLeftLabel}" onclick="moveAllOptions(document.getElementById('${parameters.doubleId?html}'), document.getElementById('${parameters.id?html}'), false, '${parameters.doubleHeaderKey}', '')" /><br /><br />
+			 value="${addAllToLeftLabel}" onclick="moveAllOptions(document.getElementById('${parameters.doubleId?html}'), document.getElementById('${parameters.id?html}'), false, '${parameters.doubleHeaderKey}', '');<#if parameters.addAllToLeftOnclick?has_content>${parameters.addAllToLeftOnclick};</#if>" /><br /><br />
 		<#else><#t/>
 			<input type="button" 
 			<#if parameters.buttonCssClass?exists><#t/>
@@ -97,7 +89,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${addAllToLeftLabel}" onclick="moveAllOptions(document.getElementById('${parameters.doubleId?html}'), document.getElementById('${parameters.id?html}'), false, '')" /><br /><br />
+			 value="${addAllToLeftLabel}" onclick="moveAllOptions(document.getElementById('${parameters.doubleId?html}'), document.getElementById('${parameters.id?html}'), false, '');<#if parameters.addAllToLeftOnclick?has_content>${parameters.addAllToLeftOnclick};</#if>" /><br /><br />
 		</#if><#t/>
 	</#if><#t/>
 	<#if parameters.allowAddAllToRight?default(true)><#t/>
@@ -110,7 +102,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${addAllToRightLabel}" onclick="moveAllOptions(document.getElementById('${parameters.id?html}'), document.getElementById('${parameters.doubleId?html}'), false, '${parameters.headerKey}', '')" /><br /><br />	
+			 value="${addAllToRightLabel}" onclick="moveAllOptions(document.getElementById('${parameters.id?html}'), document.getElementById('${parameters.doubleId?html}'), false, '${parameters.headerKey}', '');<#if parameters.addAllToRightOnclick?has_content>${parameters.addAllToRightOnclick};</#if>" /><br /><br />	
 		<#else><#t/>
 			<input type="button" 
 			<#if parameters.buttonCssClass?exists><#t/>
@@ -119,7 +111,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${addAllToRightLabel}" onclick="moveAllOptions(document.getElementById('${parameters.id?html}'), document.getElementById('${parameters.doubleId?html}'), false, '')" /><br /><br />	
+			 value="${addAllToRightLabel}" onclick="moveAllOptions(document.getElementById('${parameters.id?html}'), document.getElementById('${parameters.doubleId?html}'), false, '');<#if parameters.addAllToRightOnclick?has_content>${parameters.addAllToRightOnclick};</#if>" /><br /><br />	
 		</#if><#t/>
 	</#if><#t/>
 	<#if parameters.allowSelectAll?default(true)><#t/>
@@ -132,7 +124,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${selectAllLabel}" onclick="selectAllOptionsExceptSome(document.getElementById('${parameters.id?html}'), 'key', '${parameters.headerKey}');selectAllOptionsExceptSome(document.getElementById('${parameters.doubleId?html}'), 'key', '${parameters.doubleHeaderKey}');" /><br /><br />
+			 value="${selectAllLabel}" onclick="selectAllOptionsExceptSome(document.getElementById('${parameters.id?html}'), 'key', '${parameters.headerKey}');selectAllOptionsExceptSome(document.getElementById('${parameters.doubleId?html}'), 'key', '${parameters.doubleHeaderKey}');<#if parameters.selectAllOnclick?has_content>${parameters.selectAllOnclick};</#if>" /><br /><br />
 		<#elseif parameters.headerKey?exists><#t/>
 			<input type="button" 
 			<#if parameters.buttonCssClass?exists><#t/>
@@ -141,7 +133,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${selectAllLabel}" onclick="selectAllOptionsExceptSome(document.getElementById('${parameters.id?html}'), 'key', '${parameters.headerKey}');selectAllOptions(document.getElementById('${parameters.doubleId?html}'));" /><br /><br />
+			 value="${selectAllLabel}" onclick="selectAllOptionsExceptSome(document.getElementById('${parameters.id?html}'), 'key', '${parameters.headerKey}');selectAllOptions(document.getElementById('${parameters.doubleId?html}'));<#if parameters.selectAllOnclick?has_content>${parameters.selectAllOnclick};</#if>" /><br /><br />
 		<#elseif parameters.doubleHeaderKey?exists><#t/>
 			<input type="button" 
 			<#if parameters.buttonCssClass?exists><#t/>
@@ -150,7 +142,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${selectAllLabel}" onclick="selectAllOptions(document.getElementById('${parameters.id?html}'));selectAllOptionsExceptSome(document.getElementById('${parameters.doubleId?html}'), 'key', '${parameters.doubleHeaderKey}');" /><br /><br />
+			 value="${selectAllLabel}" onclick="selectAllOptions(document.getElementById('${parameters.id?html}'));selectAllOptionsExceptSome(document.getElementById('${parameters.doubleId?html}'), 'key', '${parameters.doubleHeaderKey}');<#if parameters.selectAllOnclick?has_content>${parameters.selectAllOnclick};</#if>" /><br /><br />
 		<#else><#t/>
 			<input type="button" 
 			<#if parameters.buttonCssClass?exists><#t/>
@@ -159,7 +151,7 @@
 			<#if parameters.buttonCssStyle?exists><#t/>
 			 style="${parameters.buttonCssStyle?html}"
 			</#if><#t/>
-			 value="${selectAllLabel}" onclick="selectAllOptions(document.getElementById('${parameters.id?html}'));selectAllOptions(document.getElementById('${parameters.doubleId?html}'));" /><br /><br />
+			 value="${selectAllLabel}" onclick="selectAllOptions(document.getElementById('${parameters.id?html}'));selectAllOptions(document.getElementById('${parameters.doubleId?html}'));<#if parameters.selectAllOnclick?has_content>${parameters.selectAllOnclick};</#if>" /><br /><br />
 		</#if><#t/>
 	</#if><#t/>
 </td>
@@ -260,21 +252,13 @@
 </select>
 <#if parameters.allowUpDownOnRight?default(true)>
 <input type="button" 
-<#if parameters.doubleHeaderKey?exists>
-	onclick="moveOptionDown(document.getElementById('${parameters.doubleId}'), 'key', '${parameters.doubleHeaderKey}');"
-<#else>
-	onclick="moveOptionDown(document.getElementById('${parameters.doubleId}'), 'key', '');"
-</#if>
+	onclick="moveOptionDown(document.getElementById('${parameters.doubleId}'), 'key', <#if parameters.doubleHeaderKey?exists>'${parameters.doubleHeaderKey}'<#else>''</#if>);<#if parameters.upDownOnRightOnclick?has_content>${parameters.upDownOnRightOnclick};</#if>"
 <#if parameters.rightDownLabel?exists>
 	value="${parameters.rightDownLabel?html}"
 </#if>
 />
 <input type="button" 
-<#if parameters.doubleHeaderKey?exists>
-	onclick="moveOptionUp(document.getElementById('${parameters.doubleId}'), 'key', '${parameters.doubleHeaderKey}');"
-<#else>
-	onclick="moveOptionUp(document.getElementById('${parameters.doubleId}'), 'key', '');"
-</#if>
+	onclick="moveOptionUp(document.getElementById('${parameters.doubleId}'), 'key', <#if parameters.doubleHeaderKey?exists>'${parameters.doubleHeaderKey}'<#else>''</#if>);<#if parameters.upDownOnRightOnclick?has_content>${parameters.upDownOnRightOnclick};</#if>"
 <#if parameters.rightUpLabel?exists>
 	value="${parameters.rightUpLabel?html}"
 </#if>

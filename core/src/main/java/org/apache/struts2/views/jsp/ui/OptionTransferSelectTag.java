@@ -59,6 +59,13 @@ public class OptionTransferSelectTag extends AbstractDoubleListTag {
     protected String rightUpLabel;
     protected String rightDownLabel;
 
+    protected String addToLeftOnclick;
+    protected String addToRightOnclick;
+    protected String addAllToLeftOnclick;
+    protected String addAllToRightOnclick;
+    protected String selectAllOnclick;
+    protected String upDownOnLeftOnclick;
+    protected String upDownOnRightOnclick;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new OptionTransferSelect(stack, req, res);
@@ -91,6 +98,14 @@ public class OptionTransferSelectTag extends AbstractDoubleListTag {
 
         optionTransferSelect.setLeftTitle(leftTitle);
         optionTransferSelect.setRightTitle(rightTitle);
+
+        optionTransferSelect.setAddToLeftOnclick(addToLeftOnclick);
+        optionTransferSelect.setAddToRightOnclick(addToRightOnclick);
+        optionTransferSelect.setAddAllToLeftOnclick(addAllToLeftOnclick);
+        optionTransferSelect.setAddAllToRightOnclick(addAllToRightOnclick);
+        optionTransferSelect.setSelectAllOnclick(selectAllOnclick);
+        optionTransferSelect.setUpDownOnLeftOnclick(upDownOnLeftOnclick);
+        optionTransferSelect.setUpDownOnRightOnclick(upDownOnRightOnclick);
     }
 
 
@@ -271,5 +286,61 @@ public class OptionTransferSelectTag extends AbstractDoubleListTag {
 
     public String getButtonCssStyle() {
         return this.buttonCssStyle;
+    }
+
+    public String getAddAllToLeftOnclick() {
+        return this.addAllToLeftOnclick;
+    }
+
+    public void setAddAllToLeftOnclick(String addAllToLeftOnclick) {
+        this.addAllToLeftOnclick = addAllToLeftOnclick;
+    }
+
+    public String getAddAllToRightOnclick() {
+        return this.addAllToRightOnclick;
+    }
+
+    public void setAddAllToRightOnclick(String addAllToRightOnclick) {
+        this.addAllToRightOnclick = addAllToRightOnclick;
+    }
+
+    public String getAddToLeftOnclick() {
+        return this.addToLeftOnclick;
+    }
+
+    public void setAddToLeftOnclick(String addToLeftOnclick) {
+        this.addToLeftOnclick = addToLeftOnclick;
+    }
+
+    public String getAddToRightOnclick() {
+        return this.addToRightOnclick;
+    }
+
+    public void setAddToRightOnclick(String addToRightOnclick) {
+        this.addToRightOnclick = addToRightOnclick;
+    }
+
+    public String getUpDownOnLeftOnclick() {
+        return this.upDownOnLeftOnclick;
+    }
+
+    public void setUpDownOnLeftOnclick(String upDownOnLeftOnclick) {
+        this.upDownOnLeftOnclick = upDownOnLeftOnclick;
+    }
+
+    public String getUpDownOnRightOnclick() {
+        return this.upDownOnRightOnclick;
+    }
+
+    public void setUpDownOnRightOnclick(String upDownOnRightOnclick) {
+        this.upDownOnRightOnclick = upDownOnRightOnclick;
+    }
+
+    public void setSelectAllOnclick(String selectAllOnclick) {
+        this.selectAllOnclick = selectAllOnclick;
+    }
+
+    public String getSelectAllOnclick() {
+        return this.selectAllOnclick;
     }
 }

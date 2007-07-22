@@ -516,6 +516,9 @@ public class OptionTransferSelectTagTest extends AbstractUITagTest {
         tag.setDoubleHeaderKey("Double Header Key");
         tag.setDoubleHeaderValue("Double Header Value");
 
+        tag.setAddToLeftOnclick("alert('Moving Left')");
+        tag.setAddToRightOnclick("alert('Moving Right')");
+
         tag.doStartTag();
         tag.doEndTag();
 

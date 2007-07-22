@@ -18,13 +18,13 @@
 </td>
 <td valign="middle" align="center">
 	<input type="button" class="buttonCssClass" style="buttonCssStyle"
-			value="Left" onclick="moveSelectedOptions(document.getElementById('doubleId'), document.getElementById('id'), false, 'Double Header Key', '')" /><br/><br/>
+			value="Left" onclick="moveSelectedOptions(document.getElementById('doubleId'), document.getElementById('id'), false, 'Double Header Key', '');" /><br/><br/>
 	<input type="button" class="buttonCssClass" style="buttonCssStyle"
-			value="Right" onclick="moveSelectedOptions(document.getElementById('id'), document.getElementById('doubleId'), false, 'Header Key', '')" /><br/><br/>
+			value="Right" onclick="moveSelectedOptions(document.getElementById('id'), document.getElementById('doubleId'), false, 'Header Key', '');" /><br/><br/>
 	<input type="button" class="buttonCssClass" style="buttonCssStyle"
-			value="All Left" onclick="moveAllOptions(document.getElementById('doubleId'), document.getElementById('id'), false, 'Double Header Key', '')" /><br/><br/>
+			value="All Left" onclick="moveAllOptions(document.getElementById('doubleId'), document.getElementById('id'), false, 'Double Header Key', '');" /><br/><br/>
 	<input type="button" class="buttonCssClass" style="buttonCssStyle"
-			value="All Right" onclick="moveAllOptions(document.getElementById('id'), document.getElementById('doubleId'), false, 'Header Key', '')" /><br/><br/>	
+			value="All Right" onclick="moveAllOptions(document.getElementById('id'), document.getElementById('doubleId'), false, 'Header Key', '');" /><br/><br/>	
 	<input type="button" class="buttonCssClass" style="buttonCssStyle"
 			value="Select All" onclick="selectAllOptionsExceptSome(document.getElementById('id'), 'key', 'Header Key');selectAllOptionsExceptSome(document.getElementById('doubleId'), 'key', 'Double Header Key');" /><br/><br/>
 </td>

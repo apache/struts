@@ -123,6 +123,14 @@ public class OptionTransferSelect extends DoubleListUIBean {
     protected String rightUpLabel;
     protected String rightDownLabel;
 
+    protected String addToLeftOnclick;
+    protected String addToRightOnclick;
+    protected String addAllToLeftOnclick;
+    protected String addAllToRightOnclick;
+    protected String selectAllOnclick;
+    protected String upDownOnLeftOnclick;
+    protected String upDownOnRightOnclick;
+
 
     public OptionTransferSelect(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -251,6 +259,34 @@ public class OptionTransferSelect extends DoubleListUIBean {
         addParameter("rightDownLabel",
                 rightDownLabel != null ? findValue(rightDownLabel, String.class) : "v");
 
+
+        // selectAllOnclick
+        addParameter("selectAllOnclick",
+                selectAllOnclick != null ? findValue(selectAllOnclick, String.class) : "");
+
+        // addToLeftOnclick
+        addParameter("addToLeftOnclick",
+                addToLeftOnclick != null ? findValue(addToLeftOnclick, String.class) : "");
+
+        // addToRightOnclick
+        addParameter("addToRightOnclick",
+                addToRightOnclick != null ? findValue(addToRightOnclick, String.class) : "");
+
+        // addAllToLeftOnclick
+        addParameter("addAllToLeftOnclick",
+                addAllToLeftOnclick != null ? findValue(addAllToLeftOnclick, String.class) : "");
+
+        // addAllToRightOnclick
+        addParameter("addAllToRightOnclick",
+                addAllToRightOnclick != null ? findValue(addAllToRightOnclick, String.class) : "");
+
+        // upDownOnLeftOnclick
+        addParameter("upDownOnLeftOnclick",
+                upDownOnLeftOnclick != null ? findValue(upDownOnLeftOnclick, String.class) : "");
+
+        // upDownOnRightOnclick
+        addParameter("upDownOnRightOnclick",
+                upDownOnRightOnclick != null ? findValue(upDownOnRightOnclick, String.class) : "");
 
 
         // inform the form component our select tag infos, so they know how to select
@@ -476,5 +512,66 @@ public class OptionTransferSelect extends DoubleListUIBean {
         return rightDownLabel;
     }
 
+    public String getAddAllToLeftOnclick() {
+        return addAllToLeftOnclick;
+    }
 
+    @StrutsTagAttribute(description="Javascript to run after Add All To Left button pressed")
+    public void setAddAllToLeftOnclick(String addAllToLeftOnclick) {
+        this.addAllToLeftOnclick = addAllToLeftOnclick;
+    }
+
+    public String getAddAllToRightOnclick() {
+        return addAllToRightOnclick;
+    }
+
+    @StrutsTagAttribute(description="Javascript to run after Add All To Right button pressed")
+    public void setAddAllToRightOnclick(String addAllToRightOnclick) {
+        this.addAllToRightOnclick = addAllToRightOnclick;
+    }
+
+    public String getAddToLeftOnclick() {
+        return addToLeftOnclick;
+    }
+
+    @StrutsTagAttribute(description="Javascript to run after Add To Left button pressed")
+    public void setAddToLeftOnclick(String addToLeftOnclick) {
+        this.addToLeftOnclick = addToLeftOnclick;
+    }
+
+    public String getAddToRightOnclick() {
+        return addToRightOnclick;
+    }
+
+    @StrutsTagAttribute(description="Javascript to run after Add To Right button pressed")
+    public void setAddToRightOnclick(String addToRightOnclick) {
+        this.addToRightOnclick = addToRightOnclick;
+    }
+
+    @StrutsTagAttribute(description="Javascript to run after up / down on the left side buttons pressed")
+    public void setUpDownOnLeftOnclick(String upDownOnLeftOnclick) {
+        this.upDownOnLeftOnclick = upDownOnLeftOnclick;
+    }
+
+    public String getUpDownOnLeftOnclick() {
+        return this.upDownOnLeftOnclick;
+    }
+
+    @StrutsTagAttribute(description="Javascript to run after up / down on the right side buttons pressed")
+    public void setUpDownOnRightOnclick(String upDownOnRightOnclick) {
+        this.upDownOnRightOnclick = upDownOnRightOnclick;
+    }
+
+    public String getUpDownOnRightOnclick() {
+        return this.upDownOnRightOnclick;
+    }
+
+    @StrutsTagAttribute(description="Javascript to run after Select All button pressed")
+    public void setSelectAllOnclick(String selectAllOnclick) {
+        this.selectAllOnclick = selectAllOnclick;
+    }
+
+    public String getSelectAllOnclick() {
+        return this.selectAllOnclick;
+    }
 }

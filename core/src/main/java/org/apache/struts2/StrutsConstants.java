@@ -55,8 +55,6 @@ public final class StrutsConstants {
     /** The default includeParams method to generate Struts URLs */
     public static final String STRUTS_URL_INCLUDEPARAMS = "struts.url.includeParams";
 
-	public static final String STRUTS_URL_RENDERER = "struts.urlRenderer";
-
     /** The com.opensymphony.xwork2.ObjectFactory implementation class */
     public static final String STRUTS_OBJECTFACTORY = "struts.objectFactory";
 
@@ -77,12 +75,6 @@ public final class StrutsConstants {
 
     /** The org.apache.struts2.views.freemarker.FreemarkerManager implementation class */
     public static final String STRUTS_FREEMARKER_MANAGER_CLASSNAME = "struts.freemarker.manager.classname";
-    
-    /** Cache Freemarker templates */
-    public static final String STRUTS_FREEMARKER_TEMPLATES_CACHE = "struts.freemarker.templatesCache";
-    
-    /** Cache model instances at BeanWrapper level */
-    public static final String STRUTS_FREEMARKER_BEANWRAPPER_CACHE = "struts.freemarker.beanwrapperCache";
 
     /** org.apache.struts2.views.velocity.VelocityManager implementation class */
     public static final String STRUTS_VELOCITY_MANAGER_CLASSNAME = "struts.velocity.manager.classname";

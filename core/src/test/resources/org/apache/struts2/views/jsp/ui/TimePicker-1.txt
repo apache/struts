@@ -1,0 +1,12 @@
+<script type="text/javascript">
+	dojo.require("dojo.widget.TimePicker");
+</script>
+<div
+  dojoType="timepicker"
+  id="id"
+  storedTime="todayTc"
+  lang="b"
+  name="a"
+  useDefaultMinutes="true"
+  useDefaultTime="false">
+</div>

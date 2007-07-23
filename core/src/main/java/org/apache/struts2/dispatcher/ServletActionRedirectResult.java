@@ -45,6 +45,8 @@ import com.opensymphony.xwork2.inject.Inject;
  * It is strongly recommended that if you are redirecting to another action, you use this result rather than the
  * standard redirect result.
  *
+ * <p/>
+ *
  * See examples below for an example of how request parameters could be passed in.
  *
  * <!-- END SNIPPET: description -->
@@ -81,7 +83,7 @@ import com.opensymphony.xwork2.inject.Inject;
  *     &lt;-- Redirect to an action in the same namespace --&gt;
  *     &lt;action name="dashboard" class="..."&gt;
  *         &lt;result&gt;dashboard.jsp&lt;/result&gt;
- *         &lt;result name="error" type="redirect-action"&gt;error&lt;/result&gt;
+ *         &lt;result name="error" type="redirect-action&gt;error&lt;/result&gt;
  *     &lt;/action&gt;
  *
  *     &lt;action name="error" class="..."&gt;

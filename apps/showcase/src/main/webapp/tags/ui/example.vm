@@ -2,7 +2,6 @@
 <head>
     <title>UI Tags Example</title>
     #shead()
-    #sxhead()
 </head>
 
 <body>
@@ -13,8 +12,7 @@
 
 #sform ("action=exampleSubmitVelocity" "method=post" "enctype=multipart/form-data")
     #stextfield ("label=Name" "name=name")
-    #sxdatetimepicker ("label=Birthday" "name=birthday")
-    #sxdatetimepicker ("label=Wake up time" "name=wakeup" "type=time")
+    #sdatetimepicker ("label=Birthday" "name=birthday")
     #stextarea ("label=Biography" "name=bio" "cols=20" "rows=3")
     #sselect ("label=Favourite Color" "list={'Red', 'Blue', 'Green'}" "name=favouriteColor" "emptyOption=true" "headerKey=None" "headerValue=None")
     #sselect ("label=Favourite Language" "list=favouriteLanguages" "name=favouriteLanguage" "listKey=key" "listValue=description" "emptyOption=true" "headerKey=None" "headerValue=None")

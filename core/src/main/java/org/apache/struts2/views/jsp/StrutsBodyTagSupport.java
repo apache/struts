@@ -39,6 +39,11 @@ public class StrutsBodyTagSupport extends BodyTagSupport {
 
     private static final long serialVersionUID = -1201668454354226175L;
 
+    @StrutsTagAttribute(required=false,description="The id of the tag element")
+    public void setId(String string) {
+        super.setId(string);
+    }
+
     protected boolean altSyntax() {
         return ContextUtil.isUseAltSyntax(getStack().getContext());
     }

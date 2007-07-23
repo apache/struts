@@ -184,11 +184,6 @@ public class DebuggingInterceptor implements Interceptor {
                         });
             } else if (COMMAND_MODE.equals(type)) {
                 ValueStack stack = (ValueStack) ctx.getSession().get(SESSION_KEY);
-                if (stack == null) {
-                    //allows it to be embedded on another page
-                    stack = (ValueStack) ctx.get(ActionContext.VALUE_STACK);
-                    ctx.getSession().put(SESSION_KEY, stack);
-                }
                 String cmd = getParameter(EXPRESSION_PARAM);
 
                 ServletActionContext.getRequest().setAttribute("decorator", "none");

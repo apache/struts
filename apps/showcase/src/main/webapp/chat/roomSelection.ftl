@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<title>Showcase - Chat - Room Selection</title>
-		<@sx.head />
+		<@s.head theme="ajax" />
 		<style type="text/css">
 			div.box {
 				border: 1px solid darkblue;
@@ -128,11 +128,11 @@
 		<div class="box">
 		<h3>Users Available In Chat</h3>
         <@s.url id="usersAvailableUrl" action="usersAvailable" namespace="/chat/ajax" />
-        <@sx.div id="usersAvailable" updateFreq="%{@org.apache.struts2.showcase.chat.Constants@UPDATE_FREQ}"
-		         href="%{usersAvailableUrl}"
-		         class="box">
+        <@s.div id="usersAvailable" delay="1" updateFreq="%{@org.apache.struts2.showcase.chat.Constants@UPDATE_FREQ}"
+		          theme="ajax" href="%{usersAvailableUrl}"
+		          class="box">
 				Initial Loading Users ...
-		</@sx.div>
+		</@s.div>
 		</div>
 		</div>
 		
@@ -141,20 +141,20 @@
 		<div class="box">
 		<h3>Rooms Available In Chat</h3>
         <@s.url id="roomsAvailableUrl" action="roomsAvailable" namespace="/chat/ajax" />
-        <@sx.div id="roomsAvailable" listenTopics="topicRoomCreated"
-				  updateFreq="%{@org.apache.struts2.showcase.chat.Constants@UPDATE_FREQ}"
-				  href="%{roomsAvailableUrl}" >
+        <@s.div id="roomsAvailable" listenTopics="topicRoomCreated"
+				  delay="1" updateFreq="%{@org.apache.struts2.showcase.chat.Constants@UPDATE_FREQ}"
+				  theme="ajax" href="%{roomsAvailableUrl}" >
 			     Initial Loading Rooms ...
-		</@sx.div>
+		</@s.div>
 		</div>
 		
 		<div id="createRoom" class="box">
 		<h3>Create Room In Chat</h3>
 			<div id="createRoomResult"></div>
-			<@s.form id="createRoomId" action="createRoom" namespace="/chat/ajax" method="POST">
+			<@s.form id="createRoomId" action="createRoom" namespace="/chat/ajax" method="POST" theme="ajax">
 				<@s.textfield label="Room Name" required="true" name="name" />
 				<@s.textarea theme="xhtml" label="Room Description" required="true" name="Description" />
-				<@sx.submit value="%{'Create Room'}" targets="createRoomResult" afterNotifyTopics="topicRoomCreated" align="left" />
+				<@s.submit value="%{'Create Room'}" resultDivId="createRoomResult" notifyTopics="topicRoomCreated" theme="ajax" align="left" />
 			</@s.form>
 		</div>
 		</div>

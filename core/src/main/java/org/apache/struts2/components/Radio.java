@@ -43,7 +43,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: exdescription -->
  * <pre>
  * <!-- START SNIPPET: example -->
- * &lt;s:action name="GenderMap" var="genders"/&gt;
+ * &lt;s:action name="GenderMap" id="genders"/&gt;
  * &lt;s:radio label="Gender" name="male" list="#genders.genders"/&gt;
  * <!-- END SNIPPET: example -->
  * </pre>

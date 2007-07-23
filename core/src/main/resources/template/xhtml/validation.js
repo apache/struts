@@ -1,8 +1,4 @@
 function clearErrorMessages(form) {
-    clearErrorMessagesXHTML(form);
-}
-
-function clearErrorMessagesXHTML(form) {
 
     var table = form.childNodes[1];
     if( typeof table == "undefined" ) {
@@ -32,37 +28,23 @@ function clearErrorMessagesXHTML(form) {
 }
 
 function clearErrorLabels(form) {
-    clearErrorLabelsXHTML(form);
-}
-
-function clearErrorLabelsXHTML(form) {
     // set all labels back to the normal class
     var elements = form.elements;
     for (var i = 0; i < elements.length; i++) {
         var e = elements[i];
-        //parent could be a row, or a cell
-        var parent = e.parentNode.parentNode;
-         //if labelposition is 'top' the label is on the row above
-        if(parent.cells) {
-          var labelRow = parent.cells.length > 1 ? parent : StrutsUtils.previousElement(parent, "tr");
-          var cells = labelRow.cells;
-          if (cells && cells.length >= 1) {
-              var label = cells[0].getElementsByTagName("label")[0];
-              if (label) {
-                  label.setAttribute("class", "label");
-                  label.setAttribute("className", "label"); //ie hack cause ie does not support setAttribute
-              }
-          }
+        var cells = e.parentNode.parentNode.cells;
+        if (cells && cells.length >= 2) {
+            var label = cells[0].getElementsByTagName("label")[0];
+            if (label) {
+                label.setAttribute("class", "label");
+                label.setAttribute("className", "label"); //ie hack cause ie does not support setAttribute
+            }
         }
     }
 
 }
 
 function addError(e, errorText) {
-    addErrorXHTML(e, errorText);
-}
-
-function addErrorXHTML(e, errorText) {
     try {
         // clear out any rows with an "errorFor" of e.id
         var row = e.parentNode.parentNode;
@@ -82,10 +64,8 @@ function addErrorXHTML(e, errorText) {
         tr.setAttribute("errorFor", e.id);;
         table.insertBefore(tr, row);
 
-        // update the label too
-        //if labelposition is 'top' the label is on the row above
-        var labelRow = row.cells.length > 1 ? row : StrutsUtils.previousElement(tr, "tr");
-        var label = labelRow.cells[0].getElementsByTagName("label")[0];
+        // updat the label too
+        var label = row.cells[0].getElementsByTagName("label")[0];
         label.setAttribute("class", "errorLabel");
         label.setAttribute("className", "errorLabel"); //ie hack cause ie does not support setAttribute
     } catch (e) {

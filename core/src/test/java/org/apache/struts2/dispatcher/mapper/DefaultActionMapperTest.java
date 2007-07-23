@@ -302,7 +302,7 @@ public class DefaultActionMapperTest extends StrutsTestCase {
 
         assertEquals(actionMapping.getName(), "myAction");
     }
-
+    
     public void testActionPrefix_fromImageButton() throws Exception {
         Map parameterMap = new HashMap();
         parameterMap.put(DefaultActionMapper.ACTION_PREFIX + "myAction", "");
@@ -381,25 +381,6 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         assertTrue(result instanceof ServletRedirectResult);
 
         // TODO: need to test location but there's noaccess to the property/method, unless we use reflection
-    }
-
-    public void testCustomActionPrefix() throws Exception {
-        Map parameterMap = new HashMap();
-        parameterMap.put("foo:myAction", "");
-
-        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
-        request.setParameterMap(parameterMap);
-        request.setupGetServletPath("/someServletPath.action");
-
-        DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
-        defaultActionMapper.addParameterAction("foo", new ParameterAction() {
-            public void execute(String key, ActionMapping mapping) {
-                mapping.setName("myAction");
-            }
-        });
-        ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
-
-        assertEquals(actionMapping.getName(), "myAction");
     }
 
     public void testDropExtension() throws Exception {

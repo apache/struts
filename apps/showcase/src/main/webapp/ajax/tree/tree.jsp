@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Tree</title>
-    <sx:head />
+    <s:head theme="ajax"/>
 </head>
 
 <body>

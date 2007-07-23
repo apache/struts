@@ -34,7 +34,6 @@ public abstract class AbstractUITag extends ComponentTagSupport {
     protected String title;
     protected String disabled;
     protected String label;
-    protected String labelSeparator;
     protected String labelPosition;
     protected String requiredposition;
     protected String name;
@@ -59,17 +58,13 @@ public abstract class AbstractUITag extends ComponentTagSupport {
     protected String onselect;
     protected String onchange;
     protected String accesskey;
-    protected String id;
-    
+
     protected String key;
 
     // tooltip attributes
     protected String tooltip;
     protected String tooltipConfig;
-    protected String javascriptTooltip;
-    protected String tooltipDelay;
-    protected String tooltipCssClass;
-    protected String tooltipIconPath;
+
 
     protected void populateParams() {
         super.populateParams();
@@ -81,7 +76,6 @@ public abstract class AbstractUITag extends ComponentTagSupport {
         uiBean.setTitle(title);
         uiBean.setDisabled(disabled);
         uiBean.setLabel(label);
-        uiBean.setLabelSeparator(labelSeparator);
         uiBean.setLabelposition(labelPosition);
         uiBean.setRequiredposition(requiredposition);
         uiBean.setName(name);
@@ -107,19 +101,10 @@ public abstract class AbstractUITag extends ComponentTagSupport {
         uiBean.setOnchange(onchange);
         uiBean.setTooltip(tooltip);
         uiBean.setTooltipConfig(tooltipConfig);
-        uiBean.setJavascriptTooltip(javascriptTooltip);
-        uiBean.setTooltipCssClass(tooltipCssClass);
-        uiBean.setTooltipDelay(tooltipDelay);
-        uiBean.setTooltipIconPath(tooltipIconPath);
         uiBean.setAccesskey(accesskey);
         uiBean.setKey(key);
-        uiBean.setId(id);
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-    
     public void setCssClass(String cssClass) {
         this.cssClass = cssClass;
     }
@@ -246,25 +231,5 @@ public abstract class AbstractUITag extends ComponentTagSupport {
 
     public void setKey(String key) {
         this.key = key;
-    }
-
-    public void setJavascriptTooltip(String javascriptTooltip) {
-        this.javascriptTooltip = javascriptTooltip;
-    }
-
-    public void setTooltipCssClass(String tooltipCssClass) {
-        this.tooltipCssClass = tooltipCssClass;
-    }
-
-    public void setTooltipDelay(String tooltipDelay) {
-        this.tooltipDelay = tooltipDelay;
-    }
-
-    public void setTooltipIconPath(String tooltipIconPath) {
-        this.tooltipIconPath = tooltipIconPath;
-    }
-
-    public void setLabelSeparator(String labelSeparator) {
-        this.labelSeparator = labelSeparator;
     }    
 }

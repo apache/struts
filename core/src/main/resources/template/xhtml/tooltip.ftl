@@ -1,19 +1,24 @@
 <#if parameters.tooltip?exists><#t/>
-      <img 
-      <#if parameters.tooltipIconPath?exists><#t/>
-      	src='<@s.url value="${parameters.tooltipIconPath}" includeParams="none" encode="false" />'
+	  <#assign tooltipHashCode=parameters.tooltip.hashCode() />
+      <img id="_tt${tooltipHashCode?string('#')}"
+      <#if parameters.tooltipIcon?exists><#t/>
+      	src='<@s.url value="${parameters.tooltipIcon}" includeParams="none" encode="false" />'
       <#else><#t/>
-      	src='<@s.url value="/struts/tooltip.gif" includeParams="none" encode="false" />'
+      	src='<@s.url value="/struts/dojo/struts/tooltip.gif" includeParams="none" encode="false" />'
       </#if><#t/>
-      alt="${parameters.tooltip?html}" 
+      	alt="${parameters.tooltip?html}" 
+      	title="${parameters.tooltip?html}" />
       <#if parameters.jsTooltipEnabled?default('false') == 'true'>
-          onmouseover="domTT_activate(this, event, 'content', '${parameters.tooltip}'<#t/> 
-          <#if parameters.tooltipDelay?exists><#t/>
-          	<#t/>,'delay', '${parameters.tooltipDelay}'<#t/>
+      <span dojoType="tooltip" connectId="_tt${tooltipHashCode?string('#')}"
+          <#if parameters.tooltipToggle?exists><#t/>
+        	<#t/>toggle="${parameters.tooltipToggle}"<#t/>
           </#if><#t/>
-          <#t/>,'styleClass', '${parameters.tooltipCssClass?default("StrutsTTClassic")}'<#t/>
-          <#t/>)" />
-      <#else>
-      	title="${parameters.tooltip?html}"/>
+          <#if parameters.tooltipToggleDuration?exists><#t/>
+        	<#t/>toggleDuration="${parameters.tooltipToggleDuration}"<#t/>
+          </#if><#t/>
+          <#if parameters.tooltipDelay?exists><#t/>
+          	<#t/>delay="${parameters.tooltipDelay}"<#t/>
+          </#if><#t/>
+          caption="${parameters.tooltip}"></span>
      </#if>
 </#if><#t/>

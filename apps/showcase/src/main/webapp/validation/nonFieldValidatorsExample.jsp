@@ -11,7 +11,7 @@
 <html>
     <head>
         <title>Showcase - Validation - Non Field Validator Example</title>
-        <s:url var="siteCss" value="/validation/validationExamplesStyles.css" includeContext="true" />
+        <s:url id="siteCss" value="/validation/validationExamplesStyles.css" includeContext="true" />
         <s:head />
         <!-- link rel="stylesheet" type="text/css" href='<s:property value="%{siteCss}" />'-->
     </head>

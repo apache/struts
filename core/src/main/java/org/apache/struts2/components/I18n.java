@@ -20,21 +20,19 @@
  */
 package org.apache.struts2.components;
 
-import java.io.Writer;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
-import org.apache.struts2.views.annotations.StrutsTag;
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
-import org.apache.struts2.views.annotations.StrutsTagSkipInheritance;
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.dispatcher.Dispatcher;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
+
+import java.io.Writer;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * <!-- START SNIPPET: javadoc -->

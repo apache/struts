@@ -32,7 +32,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  * @see URL
  */
-public class URLTag extends ContextBeanTag {
+public class URLTag extends ComponentTagSupport {
 
     private static final long serialVersionUID = 1722460444125206226L;
 

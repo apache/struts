@@ -43,7 +43,6 @@ public class UITagExample extends ActionSupport implements Validateable {
 
     String name;
     Date birthday;
-    Date wakeup;
     String bio;
     String favouriteColor;
     List friends;
@@ -242,13 +241,7 @@ public class UITagExample extends ActionSupport implements Validateable {
         return this.thoughts;
     }
 
-    public Date getWakeup() {
-        return wakeup;
-    }
 
-    public void setWakeup(Date wakeup) {
-        this.wakeup = wakeup;
-    }
 
     public String doSubmit() {
         return SUCCESS;

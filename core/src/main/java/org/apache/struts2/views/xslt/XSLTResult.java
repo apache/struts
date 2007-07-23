@@ -55,31 +55,31 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  * <!-- START SNIPPET: description -->
  *
- * XSLTResult uses XSLT to transform an action object to XML. The recent version
- * has been specifically modified to deal with Xalan flaws. When using Xalan you
- * may notice that even though you have a very minimal stylesheet like this one
+ * XSLTResult uses XSLT to transform action object to XML. Recent version has
+ * been specifically modified to deal with Xalan flaws. When using Xalan you may
+ * notice that even though you have very minimal stylesheet like this one
  * <pre>
  * &lt;xsl:template match="/result"&gt;
- *   &lt;result/&gt;
+ *   &lt;result /&gt;
  * &lt;/xsl:template&gt;</pre>
  *
  * <p>
- * Xalan would still iterate through every property of your action and all
- * its descendants.
+ * then Xalan would still iterate through every property of your action and it's
+ * all descendants.
  * </p>
  *
  * <p>
- * If you had double-linked objects, Xalan would work forever analysing an
+ * If you had double-linked objects then Xalan would work forever analysing
  * infinite object tree. Even if your stylesheet was not constructed to process
- * them all. It's because the current Xalan eagerly and extensively converts
- * everything to its internal DTM model before further processing.
+ * them all. It's becouse current Xalan eagerly and extensively converts
+ * everything to it's internal DTM model before further processing.
  * </p>
  *
  * <p>
- * That's why there's a loop eliminator added that works by indexing every
+ * Thet's why there's a loop eliminator added that works by indexing every
  * object-property combination during processing. If it notices that some
- * object's property was already walked through, it doesn't go any deeper.
- * Say you have two objects, x and y, with the following properties set
+ * object's property were already walked through, it doesn't get any deeper.
+ * Say, you have two objects x and y with the following properties set
  * (pseudocode):
  * </p>
  * <pre>
@@ -89,7 +89,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * action.x=x;</pre>
  *
  * <p>
- * Due to that modification, the resulting XML document based on x would be:
+ * Due to that modification the resulting XML document based on x would be:
  * </p>
  *
  * <pre>
@@ -105,7 +105,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <p>
  * The XSLTResult code tries also to deal with the fact that DTM model is built
- * in a manner that children are processed before siblings. The result is that if
+ * in a manner that childs are processed before siblings. The result is that if
  * there is object x that is both set in action's x property, and very deeply
  * under action's a property then it would only appear under a, not under x.
  * That's not what we expect, and that's why XSLTResult allows objects to repeat
@@ -114,8 +114,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <p>
  * Sometimes the object mesh is still very dense and you may notice that even
- * though you have a relatively simple stylesheet, execution takes a tremendous
- * amount of time. To help you to deal with that obstacle of Xalan, you may
+ * though you have relatively simple stylesheet execution takes a tremendous
+ * amount of time. To help you to deal with that obstacle of Xalan you may
  * attach regexp filters to elements paths (xpath).
  * </p>
  *
@@ -129,7 +129,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *   &lt;body&gt;
  *   Hello &lt;xsl:value-of select="username"/&gt; how are you?
  *   &lt;/body&gt;
- *   &lt;/html&gt;
+ *   &lt;html&gt;
  * &lt;xsl:template/&gt;
  * </pre>
  *

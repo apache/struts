@@ -9,7 +9,7 @@
 
     <!-- Some or all of these can be flipped to true for debugging -->
     <constant name="struts.i18n.reload" value="false" />
-    <constant name="struts.devMode" value="true" />
+    <constant name="struts.devMode" value="false" />
     <constant name="struts.configuration.xml.reload" value="false" />
     <constant name="struts.custom.i18n.resources" value="globalMessages" />
 
@@ -19,10 +19,10 @@
     <constant name="struts.serve.static.browserCache" value="false" />
 
     <include file="struts-chat.xml" />
-    
-    <include file="struts-interactive.xml" />
 
     <include file="struts-hangman.xml" />
+
+    <include file="struts-continuations.xml"/>
 
     <include file="struts-tags.xml"/>
 
@@ -61,7 +61,7 @@
             <interceptor-stack name="crudStack">
               <interceptor-ref name="checkbox" />
                 <interceptor-ref name="params" />
-        <interceptor-ref name="staticParams" />
+        <interceptor-ref name="static-params" />
                 <interceptor-ref name="defaultStack" />
             </interceptor-stack>
         </interceptors>
@@ -110,7 +110,7 @@
             <interceptor-ref name="basicStack"/>
         </action>
         <action name="edit-*" class="org.apache.struts2.showcase.action.EmployeeAction">
-      		<param name="empId">{1}</param>
+      <param name="empId">{1}</param>
             <result>/empmanager/editEmployee.jsp</result>
             <interceptor-ref name="crudStack"><param name="validation.excludeMethods">execute</param></interceptor-ref>
         </action>

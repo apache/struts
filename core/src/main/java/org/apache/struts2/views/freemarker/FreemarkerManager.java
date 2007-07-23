@@ -124,7 +124,6 @@ public class FreemarkerManager {
     
     private String encoding;
     private boolean altMapWrapper;
-    private boolean cacheBeanWrapper;
     private Map<String,TagLibrary> tagLibraries;
     
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
@@ -135,11 +134,6 @@ public class FreemarkerManager {
     @Inject(StrutsConstants.STRUTS_FREEMARKER_WRAPPER_ALT_MAP)
     public void setWrapperAltMap(String val) {
         altMapWrapper = "true".equals(val);
-    }
-    
-    @Inject(StrutsConstants.STRUTS_FREEMARKER_BEANWRAPPER_CACHE)
-    public void setCacheBeanWrapper(String val) {
-        cacheBeanWrapper = "true".equals(val);
     }
     
     @Inject
@@ -242,9 +236,7 @@ public class FreemarkerManager {
     }
 
     protected BeansWrapper getObjectWrapper() {
-        StrutsBeanWrapper wrapper = new StrutsBeanWrapper(altMapWrapper);
-        wrapper.setUseCache(cacheBeanWrapper);
-        return wrapper;
+        return new StrutsBeanWrapper(altMapWrapper);
     }
 
     /**
@@ -343,10 +335,8 @@ public class FreemarkerManager {
     public SimpleHash buildTemplateModel(ValueStack stack, Object action, ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, ObjectWrapper wrapper) {
         ScopesHashModel model = buildScopesHashModel(servletContext, request, response, wrapper, stack);
         populateContext(model, stack, action, request, response);
-        if (tagLibraries != null) {
-            for (String prefix : tagLibraries.keySet()) {
-                model.put(prefix, tagLibraries.get(prefix).getFreemarkerModels(stack, request, response));
-            }
+        for (String prefix : tagLibraries.keySet()) {
+            model.put(prefix, tagLibraries.get(prefix).getFreemarkerModels(stack, request, response));
         }
         return model;
     }

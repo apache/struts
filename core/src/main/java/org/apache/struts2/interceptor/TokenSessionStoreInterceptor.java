@@ -111,7 +111,7 @@ public class TokenSessionStoreInterceptor extends TokenInterceptor {
         ActionContext ac = invocation.getInvocationContext();
 
         HttpServletRequest request = (HttpServletRequest) ac.get(ServletActionContext.HTTP_REQUEST);
-        HttpServletResponse response = (HttpServletResponse) ac.get(ServletActionContext.HTTP_RESPONSE);
+        HttpServletResponse response = (HttpServletResponse) ac.get(ServletActionContext.HTTP_RESPONSE); 
         String tokenName = TokenHelper.getTokenName();
         String token = TokenHelper.getToken(tokenName);
 

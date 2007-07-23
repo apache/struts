@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.components.AppendIterator;
 import org.apache.struts2.components.Component;
-import org.apache.struts2.views.jsp.ContextBeanTag;
+import org.apache.struts2.views.jsp.ComponentTagSupport;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -36,7 +36,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * @see AppendIterator
  */
-public class AppendIteratorTag extends ContextBeanTag {
+public class AppendIteratorTag extends ComponentTagSupport {
 
     private static final long serialVersionUID = -6017337859763283691L;
 

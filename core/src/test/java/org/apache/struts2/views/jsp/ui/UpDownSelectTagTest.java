@@ -230,6 +230,12 @@ public class UpDownSelectTagTest extends AbstractUITagTest {
         verifyGenericProperties(tag, "xhtml", new String[]{"value"});
     }
 
+    public void testGenericAjax() throws Exception {
+        UpDownSelectTag tag = new UpDownSelectTag();
+        prepareTagGeneric(tag);
+        verifyGenericProperties(tag, "ajax", new String[]{"value"});
+    }
+
     private void prepareTagGeneric(UpDownSelectTag tag) {
         tag.setList("myMap");
     }

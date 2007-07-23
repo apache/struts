@@ -41,7 +41,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *   <li>application - the value will be set in application scope according to servlet spec. using the name as its key</li>
  *   <li>session - the value will be set in session scope according to servlet spec. using the name as key </li>
  *   <li>request - the value will be set in request scope according to servlet spec. using the name as key </li>
- *   <li>page - the value will be set in page scope according to servlet sepc. using the name as key</li>
+ *   <li>page - the value will be set in request scope according to servlet sepc. using the name as key</li>
  *   <li>action - the value will be set in the request scope and Struts' action context using the name as key</li>
  * </ul>
  *
@@ -78,7 +78,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  */
 @StrutsTag(name="set", tldBodyContent="JSP", tldTagClass="org.apache.struts2.views.jsp.SetTag", description="Assigns a value to a variable in a specified scope")
-public class Set extends ContextBean {
+public class Set extends Component {
+    protected String name;
     protected String scope;
     protected String value;
 
@@ -91,44 +92,47 @@ public class Set extends ContextBean {
 
         Object o;
         if (value == null) {
-            if (body != null && !body.equals("")) {
-                o = body;
-            } else {
-                o = findValue("top");
-            }
+        	if (body!=null && !body.equals("")) {
+        		o = body;
+        	} else {
+        		o = findValue("top");
+        	}
         } else {
-            o = findValue(value);
+        	o = findValue(value);
+        }
+        
+        body="";
+
+        String name;
+        if (altSyntax()) {
+            name = findString(this.name, "name", "Name is required");
+        } else {
+            name = this.name;
+
+            if (this.name == null) {
+                throw fieldError("name", "Name is required", null);
+            }
         }
 
-        body="";
-        
         if ("application".equalsIgnoreCase(scope)) {
-            stack.setValue("#application['" + getVar() + "']", o);
+            stack.setValue("#application['" + name + "']", o);
         } else if ("session".equalsIgnoreCase(scope)) {
-            stack.setValue("#session['" + getVar() + "']", o);
+            stack.setValue("#session['" + name + "']", o);
         } else if ("request".equalsIgnoreCase(scope)) {
-            stack.setValue("#request['" + getVar() + "']", o);
+            stack.setValue("#request['" + name + "']", o);
         } else if ("page".equalsIgnoreCase(scope)) {
-            stack.setValue("#attr['" + getVar() + "']", o, false);
+            stack.setValue("#attr['" + name + "']", o, false);
         } else {
-            stack.getContext().put(getVar(), o);
-            stack.setValue("#attr['" + getVar() + "']", o, false);
+            stack.getContext().put(name, o);
+            stack.setValue("#attr['" + name + "']", o, false);
         }
 
         return super.end(writer, body);
     }
 
-    /* 
-     * TODO: set required=true when 'id' is dropped after 2.1
-     */
-    @StrutsTagAttribute(description="Name used to reference the value pushed into the Value Stack")
-    public void setVar(String var) {
-       super.setVar(var);
-    }
-    
-    @StrutsTagAttribute(description="Deprecated. Use 'var' instead")
+    @StrutsTagAttribute(description=" The name of the new variable that is assigned the value of <i>value</i>", required=true)
     public void setName(String name) {
-        setVar(name);
+        this.name = name;
     }
 
     @StrutsTagAttribute(description="The scope in which to assign the variable. Can be <b>application</b>" +

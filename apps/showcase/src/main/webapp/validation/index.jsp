@@ -13,18 +13,18 @@
     </head>
     <body>
         <h1>Validation Examples</h1>
-        
-        <s:url var="quizBasic" namespace="/validation" action="quizBasic" method="input"/>
-        <s:url var="quizClient" namespace="/validation" action="quizClient" method="input"/>
-        <s:url var="quizClientCss" namespace="/validation" action="quizClientCss" method="input"/>
-        <s:url var="quizAjax" namespace="/validation" action="quizAjax" method="input"/>
-        <s:url var="fieldValidatorUrl" action="showFieldValidatorsExamples" namespace="/validation" />
-        <s:url var="nonFieldValidatorUrl" action="showNonFieldValidatorsExamples" namespace="/validation" />
-        <s:url var="visitorValidatorUrl" action="showVisitorValidatorsExamples" namespace="/validation" />
-        <s:url var="clientSideValidationUrl" action="clientSideValidationExample" namespace="/validation" />
-        <s:url var="backToShowcase" action="showcase" namespace="/" />
-        <s:url var="storeMessageAcrossRequestExample" value="/validation/storeErrorsAcrossRequestExample.jsp" />
-        
+
+        <s:url id="quizBasic" namespace="/validation" action="quizBasic" method="input"/>
+        <s:url id="quizClient" namespace="/validation" action="quizClient" method="input"/>
+        <s:url id="quizClientCss" namespace="/validation" action="quizClientCss" method="input"/>
+        <s:url id="quizAjax" namespace="/validation" action="quizAjax" method="input"/>
+        <s:url id="fieldValidatorUrl" action="showFieldValidatorsExamples" namespace="/validation" />
+        <s:url id="nonFieldValidatorUrl" action="showNonFieldValidatorsExamples" namespace="/validation" />
+        <s:url id="visitorValidatorUrl" action="showVisitorValidatorsExamples" namespace="/validation" />
+        <s:url id="clientSideValidationUrl" action="clientSideValidationExample" namespace="/validation" />
+        <s:url id="backToShowcase" action="showcase" namespace="/" />
+        <s:url id="storeMessageAcrossRequestExample" value="/validation/storeErrorsAcrossRequestExample.jsp" />
+
         <ul>
             <li><s:a href="%{fieldValidatorUrl}">Field Validators</s:a></li>
             <li><s:a href="%{clientSideValidationUrl}">Field Validators with client-side JavaScript</s:a></li>

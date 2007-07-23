@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 
 <html>
 <head>
@@ -10,17 +9,18 @@
 
 
 <body>
-<s:url var="ajaxTest" value="/AjaxTest.action" />
+<s:url id="ajaxTest" value="/AjaxTest.action" />
 
 
-<sx:div
+<s:div
         id="once"
+        theme="ajax"
         cssStyle="border: 1px solid yellow;"
-        href="%{#ajaxTest}"
+        href="%{ajaxTest}"
         updateFreq="2000"
         indicator="indicator"
 		>
-    Initial Content</sx:div>
+    Initial Content</s:div>
 <img id="indicator" src="${pageContext.request.contextPath}/images/indicator.gif" alt="Loading..." style="display:none"/>
 <s:include value="../footer.jsp"/>
 

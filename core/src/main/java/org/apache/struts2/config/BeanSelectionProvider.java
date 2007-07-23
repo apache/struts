@@ -26,7 +26,6 @@ import java.util.StringTokenizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.components.UrlRenderer;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
@@ -82,7 +81,7 @@ import com.opensymphony.xwork2.util.location.LocatableProperties;
  *     <td>com.opensymphony.xwork2.util.ObjectTypeDeterminer</td>
  *     <td>struts.objectTypeDeterminer</td>
  *     <td>singleton</td>
- *     <td>Determines what the key and element class of a Map or Collection should be</td>
+ *     <td>Determines what the key and and element class of a Map or Collection should be</td>
  *   </tr>
  *   <tr>
  *     <td>org.apache.struts2.dispatcher.mapper.ActionMapper</td>
@@ -160,12 +159,10 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         alias(MultiPartRequest.class, StrutsConstants.STRUTS_MULTIPART_PARSER, builder, props, Scope.DEFAULT);
         alias(FreemarkerManager.class, StrutsConstants.STRUTS_FREEMARKER_MANAGER_CLASSNAME, builder, props);
         alias(VelocityManager.class, StrutsConstants.STRUTS_VELOCITY_MANAGER_CLASSNAME, builder, props);
-        alias(UrlRenderer.class, StrutsConstants.STRUTS_URL_RENDERER, builder, props);
         
         if ("true".equalsIgnoreCase(props.getProperty(StrutsConstants.STRUTS_DEVMODE))) {
             props.setProperty(StrutsConstants.STRUTS_I18N_RELOAD, "true");
             props.setProperty(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "true");
-            props.setProperty(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE, "false");
             // Convert struts properties into ones that xwork expects
             props.setProperty("devMode", "true");
         } else {

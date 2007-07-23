@@ -69,7 +69,7 @@ import org.apache.struts2.StrutsConstants;
  * <p>
  * The following URL's will invoke its methods:
  * </p>
- * <ul> 
+ * <ul>
  *  <li><code>GET:    /movie/               => method="index"</code></li>
  *  <li><code>GET:    /movie/Thrillers      => method="view", id="Thrillers"</code></li>
  *  <li><code>GET:    /movie/Thrillers!edit => method="edit", id="Thrillers"</code></li>

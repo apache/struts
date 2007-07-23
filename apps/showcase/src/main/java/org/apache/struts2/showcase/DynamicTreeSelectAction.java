@@ -47,7 +47,7 @@ public class DynamicTreeSelectAction extends ActionSupport {
 
 
     public String getNodeName() {
-        return currentCategory != null ? currentCategory.getName() : "Node not found";
+        return currentCategory.getName();
     }
 }
 

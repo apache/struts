@@ -44,7 +44,7 @@ ${parameters.label?html}<#t/>
 <#if parameters.required?default(false) && parameters.requiredposition?default("right") == 'right'>
  <span class="required">*</span><#t/>
 </#if>
-${parameters.labelseparator!":"?html}<#t/>
+:<#t/>
 <#include "/${parameters.templateDir}/xhtml/tooltip.ftl" /> 
 </label><#t/>
 </#if>

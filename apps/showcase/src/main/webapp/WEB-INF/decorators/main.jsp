@@ -5,7 +5,7 @@
     response.setHeader("Pragma", "no-cache");
     response.setHeader("Cache-Control", "no-cache");
     response.setDateHeader("Expires", 0);
-    
+
     // Calculate the view sources url
     String sourceUrl = request.getContextPath()+"/viewSource.action";
     com.opensymphony.xwork2.ActionInvocation inv = com.opensymphony.xwork2.ActionContext.getContext().getActionInvocation();
@@ -14,9 +14,9 @@
         com.opensymphony.xwork2.util.location.Location loc = inv.getProxy().getConfig().getLocation();
         sourceUrl += "?config="+(loc != null ? loc.getURI()+":"+loc.getLineNumber() : "");
         sourceUrl += "&className="+inv.getProxy().getConfig().getClassName();
-        
+
         if (inv.getResult() != null && inv.getResult() instanceof org.apache.struts2.dispatcher.StrutsResultSupport) {
-	        sourceUrl += "&page="+mapping.getNamespace()+"/"+((org.apache.struts2.dispatcher.StrutsResultSupport)inv.getResult()).getLastFinalLocation();
+          sourceUrl += "&page="+mapping.getNamespace()+"/"+((org.apache.struts2.dispatcher.StrutsResultSupport)inv.getResult()).getLastFinalLocation();
         }
     } else {
         sourceUrl += "?page="+request.getServletPath();
@@ -30,6 +30,23 @@
 <head>
     <title><decorator:title default="Struts Showcase"/></title>
     <link href="<s:url value='/styles/main.css' encode='false' includeParams='none'/>" rel="stylesheet" type="text/css" media="all"/>
+    <link href="<s:url value='/struts/niftycorners/niftyCorners.css' encode='false' includeParams='none'/>" rel="stylesheet" type="text/css"/>
+    <link href="<s:url value='/struts/niftycorners/niftyPrint.css' encode='false' includeParams='none'/>" rel="stylesheet" type="text/css" media="print"/>
+
+    <script language="JavaScript" type="text/javascript" src="<s:url value='/struts/niftycorners/nifty.js' encode='false' includeParams='none'/>"></script>
+
+    <script language="JavaScript" type="text/javascript">
+
+        window.onload=function(){
+            if(!NiftyCheck())
+                return;
+            Rounded("blockquote","tr bl","#ECF1F9","#CDFFAA","smooth border #88D84F");
+            Rounded("div#outer-header", "all", "white", "#818EBD", "smooth border #434F7C");
+            Rounded("div#footer", "all", "white", "#818EBD", "smooth border #434F7C");
+        }
+
+    </script>
+
     <decorator:head/>
 </head>
 
@@ -41,7 +58,7 @@
         <div id="header" class="clearfix">
             <div id="branding">
                 <h1 class="title">Struts Showcase</h1>
-                <s:action var="dateAction" name="date" namespace="/" executeResult="true" />
+                <s:action id="dateAction" name="date" namespace="/" executeResult="true" />
             </div><!-- end branding -->
 
             <div id="search">
@@ -78,7 +95,6 @@
         <li><a href="<s:url value="/tiles/index.action" />">Tiles</a></li>
         <li><a href="<s:url value="/token/index.jsp"/>">Token</a></li>
         <li><a href="<s:url value="/validation/index.jsp"/>">Validation</a></li>
-        <li><a href="<s:url value="/interactive/index.jsp"/>">Interactive Demo</a></li>
         <li class="last"><a href="<s:url value="/help.jsp"/>">Help</a></li>
                 </ul>
             </div>
@@ -88,11 +104,11 @@
 
     </div><!-- end content -->
 
-	<div>
-    	<p>
-    		<a href="<%=sourceUrl %>">View Sources</a>
-    	</p>
-	</div>
+  <div>
+      <p>
+        <a href="<%=sourceUrl %>">View Sources</a>
+      </p>
+  </div>
     <div id="footer" class="clearfix">
         <p>Copyright &copy; 2003-<s:property value="#dateAction.now.year + 1900" /> The Apache Software Foundation.</p>
     </div><!-- end footer -->

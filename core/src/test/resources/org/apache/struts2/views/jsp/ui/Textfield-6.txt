@@ -1,4 +1,0 @@
-<tr>
-    <td class="tdLabel"><label for="foo" class="label">mylabel:</label></td>
-    <td><input type="text" name="foo" size="10" value="%{1+1}" id="foo"/></td>
-</tr>

@@ -60,6 +60,11 @@ public class TextfieldTest extends AbstractUITagTest {
         verifyGenericProperties(tag, "xhtml", null);
     }
 
+    public void testGenericAjax() throws Exception {
+        TextFieldTag tag = new TextFieldTag();
+        verifyGenericProperties(tag, "ajax", null);
+    }
+
     public void testErrors() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");
@@ -95,25 +100,6 @@ public class TextfieldTest extends AbstractUITagTest {
 
         verify(TextFieldTag.class.getResource("Textfield-3.txt"));
     }
-    
-    public void testLabelSeparatorJsp() throws Exception {
-        TestAction testAction = (TestAction) action;
-        testAction.setFoo("bar");
-
-        TextFieldTag tag = new TextFieldTag();
-        tag.setPageContext(pageContext);
-        tag.setName("myname");
-        tag.setValue("%{foo}");
-        tag.setSize("10");
-        tag.setOnblur("blahescape('somevalue');");
-        tag.setLabelSeparator("??");
-        tag.setLabel("label");
-
-        tag.doStartTag();
-        tag.doEndTag();
-
-        verify(TextFieldTag.class.getResource("Textfield-4.txt"));
-    }
 
     public void testNoLabelFtl() throws Exception {
         TestAction testAction = (TestAction) action;
@@ -147,38 +133,5 @@ public class TextfieldTest extends AbstractUITagTest {
         tag.doEndTag();
 
         verify(TextFieldTag.class.getResource("Textfield-1.txt"));
-    }
-    
-    public void testSimple_recursionTest() throws Exception {
-        TestAction testAction = (TestAction) action;
-        testAction.setFoo("%{1+1}");
-
-        TextFieldTag tag = new TextFieldTag();
-        tag.setPageContext(pageContext);
-        tag.setLabel("mylabel");
-        tag.setName("myname");
-        tag.setValue("%{foo}");
-        tag.setSize("10");
-
-        tag.doStartTag();
-        tag.doEndTag();
-
-        verify(TextFieldTag.class.getResource("Textfield-5.txt"));
-    }
-    
-    public void testSimple_recursionTestNoValue() throws Exception {
-        TestAction testAction = (TestAction) action;
-        testAction.setFoo("%{1+1}");
-
-        TextFieldTag tag = new TextFieldTag();
-        tag.setPageContext(pageContext);
-        tag.setLabel("mylabel");
-        tag.setName("foo");
-        tag.setSize("10");
-
-        tag.doStartTag();
-        tag.doEndTag();
-
-        verify(TextFieldTag.class.getResource("Textfield-6.txt"));
     }
 }

@@ -8,14 +8,13 @@
 </head>
 <body>
 <div id="shell" >
-   <form onsubmit="return false" id="wc-form">
+   <form onsubmit="return false">
         <div class="wc-results" id="wc-result">
              Welcome to the OGNL console!
              <br />
              :-&gt;
         </div>
-        <input type="hidden" name="debug" value="command" />
-        <input name="expression" onkeyup="keyEvent(event)" class="wc-command" id="wc-command" type="text" />
+        <input onkeyup="keyEvent(event)" class="wc-command" id="wc-command" type="text" />
     </form>
 </div>
 </body>

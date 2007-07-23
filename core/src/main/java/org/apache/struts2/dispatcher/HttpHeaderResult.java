@@ -39,7 +39,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- START SNIPPET: description -->
  *
  * A custom Result type for setting HTTP headers and status by optionally evaluating against the ValueStack.
- * This result can also be used to send and error to the client.
  *
  * <!-- END SNIPPET: description -->
  * <p/>
@@ -54,10 +53,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <li><b>parse</b> - true by default. If set to false, the headers param will not be parsed for Ognl expressions.</li>
  *
  * <li><b>headers</b> - header values.</li>
- * 
- * <li><b>error</b> - the http servlet response error code that should be set on a response.</li>
  *
- * <li><b>errorMessage</b> - error message to be set on response if 'error' is set.</li>
  * </ul>
  *
  * <!-- END SNIPPET: params -->
@@ -69,11 +65,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  *   &lt;param name="status"&gt;204&lt;/param&gt;
  *   &lt;param name="headers.a"&gt;a custom header value&lt;/param&gt;
  *   &lt;param name="headers.b"&gt;another custom header value&lt;/param&gt;
- * &lt;/result&gt;
- * 
- * &lt;result name="proxyRequired" type="httpheader"&gt;
- *   &lt;param name="error"&gt;305&lt;/param&gt;
- *   &lt;param name="errorMessage"&gt;this action must be accessed through a prozy&lt;/param&gt;
  * &lt;/result&gt;
  * <!-- END SNIPPET: example --></pre>
  *
@@ -89,9 +80,7 @@ public class HttpHeaderResult implements Result {
     private boolean parse = true;
     private Map<String,String> headers;
     private int status = -1;
-    private int error = -1;
-    private String errorMessage;
-    
+
     public HttpHeaderResult() {
         super();
         headers = new HashMap<String,String>();
@@ -103,26 +92,6 @@ public class HttpHeaderResult implements Result {
         this.parse = false;
     }
 
-
-    /**
-     * Sets the http servlet error code that should be set on the reponse
-     * 
-     * @param error the Http error code
-     * @see javax.servlet.http.HttpServletResponse#sendError(int)
-     */
-    public void setError(int error) {
-        this.error = error;
-    }
-    
-    /**
-     * Sets the error message that should be set on the reponse
-     * 
-     * @param errorMessage error message send to the client
-     * @see javax.servlet.http.HttpServletResponse#sendError(int, String)
-     */
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
 
     /**
      * Returns a Map of all HTTP headers.
@@ -171,20 +140,14 @@ public class HttpHeaderResult implements Result {
      */
     public void execute(ActionInvocation invocation) throws Exception {
         HttpServletResponse response = ServletActionContext.getResponse();
-        ValueStack stack = ActionContext.getContext().getValueStack();
-        
+
         if (status != -1) {
             response.setStatus(status);
-        } else if (error != -1) {
-            if (errorMessage != null) {
-                String finalMessage = parse ? TextParseUtil.translateVariables(
-                    errorMessage, stack) : errorMessage;
-                response.sendError(error, finalMessage);
-            } else
-                response.sendError(error);
         }
 
         if (headers != null) {
+            ValueStack stack = ActionContext.getContext().getValueStack();
+
             for (Iterator iterator = headers.entrySet().iterator();
                  iterator.hasNext();) {
                 Map.Entry entry = (Map.Entry) iterator.next();

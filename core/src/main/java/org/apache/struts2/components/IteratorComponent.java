@@ -81,7 +81,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <pre>
  * <!-- START SNIPPET: example2code -->
  *
- * &lt;s:bean name="org.apache.struts2.example.IteratorExample" var="it"&gt;
+ * &lt;s:bean name="org.apache.struts2.example.IteratorExample" id="it"&gt;
  *   &lt;s:param name="day" value="'foo'"/&gt;
  *   &lt;s:param name="day" value="'bar'"/&gt;
  * &lt;/s:bean&gt;
@@ -145,12 +145,12 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <pre>
  * <!-- START SNIPPET: example4code -->
  *
- *      &lt;s:action name="entries" var="entries"/&gt;
+ *      &lt;s:action name="entries" id="entries"/&gt;
  *      &lt;s:iterator value="#entries.entries" &gt;
  *          &lt;s:property value="name" /&gt;
  *          &lt;s:property /&gt;
  *          &lt;s:push value="..."&gt;
- *              &lt;s:action name="edit" var="edit" &gt;
+ *              &lt;s:action name="edit" id="edit" &gt;
  *                  &lt;s:param name="entry" value="[0]" /&gt;
  *              &lt;/s:action&gt;
  *          &lt;/push&gt;
@@ -183,7 +183,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  */
 @StrutsTag(name="iterator", tldTagClass="org.apache.struts2.views.jsp.IteratorTag", description="Iterate over a iterable value")
-public class IteratorComponent extends ContextBean {
+public class IteratorComponent extends Component {
     protected Iterator iterator;
     protected IteratorStatus status;
     protected Object oldStatus;
@@ -214,12 +214,12 @@ public class IteratorComponent extends ContextBean {
             Object currentValue = iterator.next();
             stack.push(currentValue);
 
-            String var = getVar();
+            String id = getId();
 
-            if ((var != null) && (currentValue != null)) {
+            if ((id != null) && (currentValue != null)) {
                 //pageContext.setAttribute(id, currentValue);
                 //pageContext.setAttribute(id, currentValue, PageContext.REQUEST_SCOPE);
-                putInContext(currentValue);
+                stack.getContext().put(id, currentValue);
             }
 
             // Status object
@@ -246,7 +246,13 @@ public class IteratorComponent extends ContextBean {
             Object currentValue = iterator.next();
             stack.push(currentValue);
 
-            putInContext(currentValue);
+            String id = getId();
+
+            if ((id != null) && (currentValue != null)) {
+                //pageContext.setAttribute(id, currentValue);
+                //pageContext.setAttribute(id, currentValue, PageContext.REQUEST_SCOPE);
+                stack.getContext().put(id, currentValue);
+            }
 
             // Update status
             if (status != null) {

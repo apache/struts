@@ -1,22 +1,20 @@
 <form id="myFormId" name="myForm" onsubmit="return true;" action="/testAction.action" method="post">
- <tableclass="wwFormTable">
-		<tr>
-			<td class="tdLabel">
-				<labelfor="myId"class="label">
-					MyLabel:<img 
-								src='/struts/tooltip/myTooltip2.gif'
-								alt="myTooltip"
-								onmouseover="domTT_activate(this,event,'content','myTooltip','delay','5000','styleClass','StrutsTTClassic')"/>
-				</label>
-			</td>
-			<td>
-				<input type="text" name="" id="myId"/>
-			</td>
-		</tr>
-	</table>
+ <table class="wwFormTable"> 
+<tr>
+    <td class="tdLabel"><label for="myId" class="label">MyLabel:
+	  <img id="_tt1507188919"
+      	src='/struts/tooltip/myTooltip2.gif'
+      	alt="myTooltip" 
+      	title="myTooltip" />
+
+      <span dojoType="tooltip" connectId="_tt1507188919" delay="5000"
+          caption="myTooltip"></span>
+	  </label></td>
+    <td><input type="text" name="" id="myId"/></td>
+</tr>
+</table>
 </form>
 
-<!--javascript that is needed for tooltips-->
-<script type="text/javascript" src='/struts/domTT.js'></script>
-<link rel="stylesheet" type="text/css" href="/struts/domTT.css"/>
+<!-- javascript that is needed for tooltips -->
+<script type="text/javascript">dojo.require("dojo.widget.Tooltip");dojo.require("dojo.fx.html");</script>
 

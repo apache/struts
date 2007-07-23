@@ -67,7 +67,6 @@ public class OptionTransferSelectTag extends AbstractDoubleListTag {
     protected String upDownOnLeftOnclick;
     protected String upDownOnRightOnclick;
 
-
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new OptionTransferSelect(stack, req, res);
     }
@@ -290,7 +289,7 @@ public class OptionTransferSelectTag extends AbstractDoubleListTag {
     }
 
     public String getAddAllToLeftOnclick() {
-        return addAllToLeftOnclick;
+        return this.addAllToLeftOnclick;
     }
 
     public void setAddAllToLeftOnclick(String addAllToLeftOnclick) {
@@ -298,7 +297,7 @@ public class OptionTransferSelectTag extends AbstractDoubleListTag {
     }
 
     public String getAddAllToRightOnclick() {
-        return addAllToRightOnclick;
+        return this.addAllToRightOnclick;
     }
 
     public void setAddAllToRightOnclick(String addAllToRightOnclick) {
@@ -306,7 +305,7 @@ public class OptionTransferSelectTag extends AbstractDoubleListTag {
     }
 
     public String getAddToLeftOnclick() {
-        return addToLeftOnclick;
+        return this.addToLeftOnclick;
     }
 
     public void setAddToLeftOnclick(String addToLeftOnclick) {
@@ -314,7 +313,7 @@ public class OptionTransferSelectTag extends AbstractDoubleListTag {
     }
 
     public String getAddToRightOnclick() {
-        return addToRightOnclick;
+        return this.addToRightOnclick;
     }
 
     public void setAddToRightOnclick(String addToRightOnclick) {
@@ -322,7 +321,7 @@ public class OptionTransferSelectTag extends AbstractDoubleListTag {
     }
 
     public String getUpDownOnLeftOnclick() {
-        return upDownOnLeftOnclick;
+        return this.upDownOnLeftOnclick;
     }
 
     public void setUpDownOnLeftOnclick(String upDownOnLeftOnclick) {
@@ -330,7 +329,7 @@ public class OptionTransferSelectTag extends AbstractDoubleListTag {
     }
 
     public String getUpDownOnRightOnclick() {
-        return upDownOnRightOnclick;
+        return this.upDownOnRightOnclick;
     }
 
     public void setUpDownOnRightOnclick(String upDownOnRightOnclick) {

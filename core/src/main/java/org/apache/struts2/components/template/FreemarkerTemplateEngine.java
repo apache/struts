@@ -22,8 +22,6 @@ package org.apache.struts2.components.template;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -35,13 +33,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.ValueStack;
 
 import freemarker.template.Configuration;
@@ -53,10 +50,6 @@ import freemarker.template.SimpleHash;
 public class FreemarkerTemplateEngine extends BaseTemplateEngine {
     static Class bodyContent = null;
     private FreemarkerManager freemarkerManager;
-
-    private HashMap<String, freemarker.template.Template> templates = new HashMap<String, freemarker.template.Template>();
-    private HashSet<String> missingTemplates = new HashSet<String>();
-    private boolean freemarkerCaching = false;
 
     static {
         try {
@@ -78,7 +71,7 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
     }
     
     public void renderTemplate(TemplateRenderingContext templateContext) throws Exception {
-    	// get the various items required from the stack
+        // get the various items required from the stack
         ValueStack stack = templateContext.getStack();
         Map context = stack.getContext();
         ServletContext servletContext = (ServletContext) context.get(ServletActionContext.SERVLET_CONTEXT);
@@ -98,32 +91,13 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
         for (Iterator iterator = templates.iterator(); iterator.hasNext();) {
             Template t = (Template) iterator.next();
             templateName = getFinalTemplateName(t);
-            if (freemarkerCaching) {
-                if (!isTemplateMissing(templateName)) {
-                    try {
-                        template = findInCache(templateName);  // look in cache first
-                        if (template == null) {
-                            // try to load, and if it works, stop at the first one
-                            template = config.getTemplate(templateName);
-                            addToCache(templateName, template);
-                        }
-                        break;
-                    } catch (IOException e) {
-                        addToMissingTemplateCache(templateName);
-                        if (exception == null) {
-                            exception = e;
-                        }
-                    }
-                }
-            } else {
-                try {
-                    // try to load, and if it works, stop at the first one
-                    template = config.getTemplate(templateName);
-                    break;
-                } catch (IOException e) {
-                    if (exception == null) {
-                        exception = e;
-                    }
+            try {
+                // try to load, and if it works, stop at the first one
+                template = config.getTemplate(templateName);
+                break;
+            } catch (IOException e) {
+                if (exception == null) {
+                    exception = e;
                 }
             }
         }
@@ -179,41 +153,5 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
 
     protected String getSuffix() {
         return "ftl";
-    }
-
-    protected void addToMissingTemplateCache(String templateName) {
-        synchronized(missingTemplates) {
-            missingTemplates.add(templateName);
-        }
-    }
-    
-    protected boolean isTemplateMissing(String templateName) {
-        synchronized(missingTemplates) {
-            return missingTemplates.contains(templateName);
-        }
-    }
-
-    protected void addToCache(String templateName,
-        freemarker.template.Template template) {
-        synchronized(templates) {
-            templates.put(templateName, template);
-        }
-    }
-    
-    protected freemarker.template.Template findInCache(String templateName) {
-        synchronized(templates) {
-            return (freemarker.template.Template) templates.get(templateName);
-        }
-    }
-    
-    /**
-     * Enables or disables Struts caching of Freemarker templates. By default disabled.
-     * Set struts.freemarker.templatesCache=true to enable cache
-     * @param caching true if the template engine should cache freemarker template
-     * internally
-     */
-    @Inject(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE)
-    public void setCacheTemplates(String cacheTemplates) {
-        freemarkerCaching = "true".equals(cacheTemplates);
     }
 }

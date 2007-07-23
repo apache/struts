@@ -46,7 +46,7 @@ import com.opensymphony.xwork2.inject.Container;
  *
  * Default action mapper implementation, using the standard *.[ext] (where ext
  * usually "action") pattern. The extension is looked up from the Struts
- * configuration key <b>struts.action.extension</b>.
+ * configuration key <b>struts.action.exection</b>.
  *
  * <p/> To help with dealing with buttons and other related requirements, this
  * mapper (and other {@link ActionMapper}s, we hope) has the ability to name a
@@ -87,11 +87,11 @@ import com.opensymphony.xwork2.inject.Container;
  *
  * <pre>
  *  &lt;!-- START SNIPPET: method-example --&gt;
- *  &lt;s:form action=&quot;baz&quot;&gt;
- *      &lt;s:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
- *      &lt;s:submit value=&quot;Create person&quot;/&gt;
- *      &lt;s:submit name=&quot;method:anotherMethod&quot; value=&quot;Cancel&quot;/&gt;
- *  &lt;/s:form&gt;
+ *  &lt;a:form action=&quot;baz&quot;&gt;
+ *      &lt;a:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
+ *      &lt;a:submit value=&quot;Create person&quot;/&gt;
+ *      &lt;a:submit name=&quot;method:anotherMethod&quot; value=&quot;Cancel&quot;/&gt;
+ *  &lt;/a:form&gt;
  *  &lt;!-- END SNIPPET: method-example --&gt;
  * </pre>
  *
@@ -108,11 +108,11 @@ import com.opensymphony.xwork2.inject.Container;
  *
  * <pre>
  *  &lt;!-- START SNIPPET: action-example --&gt;
- *  &lt;s:form action=&quot;baz&quot;&gt;
- *      &lt;s:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
- *      &lt;s:submit value=&quot;Create person&quot;/&gt;
- *      &lt;s:submit name=&quot;action:anotherAction&quot; value=&quot;Cancel&quot;/&gt;
- *  &lt;/s:form&gt;
+ *  &lt;a:form action=&quot;baz&quot;&gt;
+ *      &lt;a:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
+ *      &lt;a:submit value=&quot;Create person&quot;/&gt;
+ *      &lt;a:submit name=&quot;action:anotherAction&quot; value=&quot;Cancel&quot;/&gt;
+ *  &lt;/a:form&gt;
  *  &lt;!-- END SNIPPET: action-example --&gt;
  * </pre>
  *
@@ -129,11 +129,11 @@ import com.opensymphony.xwork2.inject.Container;
  *
  * <pre>
  *  &lt;!-- START SNIPPET: redirect-example --&gt;
- *  &lt;s:form action=&quot;baz&quot;&gt;
- *      &lt;s:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
- *      &lt;s:submit value=&quot;Create person&quot;/&gt;
- *      &lt;s:submit name=&quot;redirect:www.google.com&quot; value=&quot;Cancel&quot;/&gt;
- *  &lt;/s:form&gt;
+ *  &lt;a:form action=&quot;baz&quot;&gt;
+ *      &lt;a:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
+ *      &lt;a:submit value=&quot;Create person&quot;/&gt;
+ *      &lt;a:submit name=&quot;redirect:www.google.com&quot; value=&quot;Cancel&quot;/&gt;
+ *  &lt;/a:form&gt;
  *  &lt;!-- END SNIPPET: redirect-example --&gt;
  * </pre>
  *
@@ -151,11 +151,11 @@ import com.opensymphony.xwork2.inject.Container;
  *
  * <pre>
  *  &lt;!-- START SNIPPET: redirect-action-example --&gt;
- *  &lt;s:form action=&quot;baz&quot;&gt;
- *      &lt;s:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
- *      &lt;s:submit value=&quot;Create person&quot;/&gt;
- *      &lt;s:submit name=&quot;redirect-action:dashboard&quot; value=&quot;Cancel&quot;/&gt;
- *  &lt;/s:form&gt;
+ *  &lt;a:form action=&quot;baz&quot;&gt;
+ *      &lt;a:textfield label=&quot;Enter your name&quot; name=&quot;person.name&quot;/&gt;
+ *      &lt;a:submit value=&quot;Create person&quot;/&gt;
+ *      &lt;a:submit name=&quot;redirect-action:dashboard&quot; value=&quot;Cancel&quot;/&gt;
+ *  &lt;/a:form&gt;
  *  &lt;!-- END SNIPPET: redirect-action-example --&gt;
  * </pre>
  *
@@ -234,17 +234,6 @@ public class DefaultActionMapper implements ActionMapper {
                 });
             }
         };
-    }
-
-    /**
-     * Adds a parameter action.  Should only be called during initialization
-     *
-     * @param prefix The string prefix to trigger the action
-     * @param parameterAction The parameter action to execute
-     * @since 2.1.0
-    */
-    protected void addParameterAction(String prefix, ParameterAction parameterAction) {
-        prefixTrie.put(prefix, parameterAction);
     }
     
     @Inject(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION)
@@ -502,4 +491,11 @@ public class DefaultActionMapper implements ActionMapper {
 		return allowSlashesInActionNames;
 	}
 	
+	/**
+     * Defines a parameter action prefix
+     */
+    interface ParameterAction {
+        void execute(String key, ActionMapping mapping);
+    }
+
 }

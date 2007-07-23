@@ -8,7 +8,7 @@
 </s:if>
 <s:else>
     <s:set name="submitType" value="'create'"/>
-    <s:text var="title" name="item.create"><s:param><s:text name="skill"/></s:param></s:text>
+    <s:text id="title" name="item.create"><s:param><s:text name="skill"/></s:param></s:text>
 </s:else>
 <html>
 <head><title><s:property value="#title"/></title></head>

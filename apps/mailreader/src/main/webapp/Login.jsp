@@ -17,7 +17,7 @@
 
     <s:password key="password" showPassword="true"/>
 
-    <s:submit key="button.logon"/>
+    <s:submit key="button.save"/>
 
     <s:reset key="button.reset"/>
 

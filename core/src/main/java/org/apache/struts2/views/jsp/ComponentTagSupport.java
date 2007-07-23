@@ -26,8 +26,10 @@ import javax.servlet.jsp.JspException;
 
 import org.apache.struts2.components.Component;
 import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
 
 import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -59,6 +61,7 @@ public abstract class ComponentTagSupport extends StrutsBodyTagSupport {
     }
 
     protected void populateParams() {
+        component.setId(id);
     }
 
     public Component getComponent() {

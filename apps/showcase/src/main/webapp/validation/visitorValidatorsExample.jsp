@@ -10,7 +10,7 @@
 
 <html>
 <head><title>Showcase - Validation - VisitorValidatorsExample </title>
-        <s:url var="siteCss" value="/validation/validationExamplesStyles.css" includeContext="true" />
+        <s:url id="siteCss" value="/validation/validationExamplesStyles.css" includeContext="true" />
         <s:head />
         <!-- link rel="stylesheet" type="text/css" href='<s:property value="%{siteCss}" />' -->
 </head>

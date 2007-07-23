@@ -30,13 +30,18 @@ public class DivTest extends AbstractUITagTest {
 
 
     public void testGenericSimple() throws Exception {
-        DivTag tag = new DivTag();
+        AbstractRemoteCallUITag tag = new DivTag();
         verifyGenericProperties(tag, "simple", new String[]{"value","tabindex","disabled"});
     }
 
     public void testGenericXhtml() throws Exception {
-        DivTag tag = new DivTag();
+        AbstractRemoteCallUITag tag = new DivTag();
         verifyGenericProperties(tag, "xhtml", new String[]{"value","tabindex","disabled"});
+    }
+
+    public void testGenericAjax() throws Exception {
+        AbstractRemoteCallUITag tag = new DivTag();
+        verifyGenericProperties(tag, "ajax", new String[]{"value","tabindex","disabled"});
     }
 
     public void testSimple() throws Exception {
@@ -45,7 +50,25 @@ public class DivTest extends AbstractUITagTest {
 
         DivTag tag = new DivTag();
         tag.setPageContext(pageContext);
+
         tag.setId("mylabel");
+        tag.setTheme("ajax");
+        tag.setHref("a");
+        tag.setLoadingText("b");
+        tag.setErrorText("c");
+        tag.setAutoStart("true");
+        tag.setDelay("4000");
+        tag.setUpdateFreq("1000");
+        tag.setListenTopics("g");
+        tag.setStartTimerListenTopics("h");
+        tag.setStopTimerListenTopics("i");
+        tag.setBeforeLoading("j");
+        tag.setAfterLoading("k");
+        tag.setRefreshOnShow("true");
+        tag.setHandler("l");
+        tag.setIndicator("m");
+        tag.setShowLoadingText("true");
+        tag.setSeparateScripts("false");
         tag.doStartTag();
         tag.doEndTag();
 

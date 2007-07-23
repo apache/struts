@@ -1,5 +1,4 @@
 <%@taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 
 <%
     request.setAttribute("decorator", "none");
@@ -8,4 +7,22 @@
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 %>
 
-${parameters.nodeId[0]}
+
+<%--
+<script>
+    var widget = dojo.widget.byId("parentId");
+    alert(widget.selectedNode);
+    if (widget.selectedNode != null) {
+        var inputElement = dojo.byId('sId');
+        inputElement.value='true';
+        alert(inputElement+'\t'+inputElement.value);
+    }
+    else {
+        var inputElement = dojo.byId('sId');
+        inputElement.value='false';
+        alert(inputElement+'\t'+inputElement.value);
+    }
+</script>
+--%>
+
+<%=request.getParameter("nodeId") %>

@@ -14,9 +14,9 @@ An example populating a Set of object (Address.java) into Struts' action (Addres
 
 <p/>
 
-See the jsp code <s:url var="url" action="showAddressJspCode" namespace="/conversion" /><s:a href="%{#url}">here.</s:a><br/>
-See the code for PersonAction.java <s:url var="url" action="showAddressActionJavaCode" namespace="/conversion" /><s:a href="%{#url}">here.</s:a><br/>
-See the code for Person.java <s:url var="url" action="showAddressJavaCode" namespace="/conversion" /><s:a href="%{#url}">here.</s:a><br/>
+See the jsp code <s:url id="url" action="showAddressJspCode" namespace="/conversion" /><s:a href="%{#url}">here.</s:a><br/>
+See the code for PersonAction.java <s:url id="url" action="showAddressActionJavaCode" namespace="/conversion" /><s:a href="%{#url}">here.</s:a><br/>
+See the code for Person.java <s:url id="url" action="showAddressJavaCode" namespace="/conversion" /><s:a href="%{#url}">here.</s:a><br/>
 
 <p/>
 

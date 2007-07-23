@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+    
+<struts>
+    <package name="struts-portlet-default" extends="struts-default">
+
+	   <result-types>
+			<result-type name="dispatcher" class="org.apache.struts2.portlet.result.PortletResult" default="true"/>
+			<result-type name="freemarker" class="org.apache.struts2.views.freemarker.PortletFreemarkerResult"/>
+			<result-type name="velocity" class="org.apache.struts2.portlet.result.PortletVelocityResult"/>
+	   </result-types>
+       
+       <interceptors>
+        <interceptor name="portlet-preferences" class="org.apache.struts2.portlet.interceptor.PortletPreferencesInterceptor"/>
+        <interceptor-stack name="portletDefaultStack">
+            <interceptor-ref name="defaultStack"/>
+            <interceptor-ref name="portlet-preferences" />
+        </interceptor-stack>
+        
+       </interceptors>
+       
+       <default-interceptor-ref name="portletDefaultStack"/>
+       
+	   <action name="renderDirect" class="org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction">
+	   		<result name="success">${location}</result>
+	   </action>
+	   <action name="freemarkerDirect" class="org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction">
+	   		<result type="freemarker" name="success">${location}</result>
+	   </action>
+	   <action name="velocityDirect" class="org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction">
+	   		<result type="velocity" name="success">${location}</result>
+	   </action>
+	</package>
+</struts>

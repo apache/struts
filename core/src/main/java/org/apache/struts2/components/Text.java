@@ -114,7 +114,7 @@ import com.opensymphony.xwork2.TextProvider;
  *
  */
 @StrutsTag(name="text", tldTagClass="org.apache.struts2.views.jsp.TextTag", description="Render a I18n text message")
-public class Text extends ContextBean implements Param.UnnamedParametric {
+public class Text extends Component implements Param.UnnamedParametric {
     private static final Log LOG = LogFactory.getLog(Text.class);
 
     protected List values = Collections.EMPTY_LIST;
@@ -163,10 +163,10 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
 
         if (msg != null) {
             try {
-                if (getVar() == null) {
+                if (getId() == null) {
                     writer.write(msg);
                 } else {
-                    putInContext(msg);
+                    stack.getContext().put(getId(), msg);
                 }
             } catch (IOException e) {
                 LOG.error("Could not write out Text tag", e);

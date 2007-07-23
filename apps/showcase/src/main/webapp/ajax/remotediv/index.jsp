@@ -37,7 +37,7 @@
         </li>
 
         <li>
-            <a href="example8.jsp">A div that will listen to events to refresh and start/stop autoupdate, and gets highlighted in red (when it loads)</a>
+            <a href="example8.jsp">A div that will listen to events to refresh and start/stop autoupdate</a>
         </li>
 
 		<li>

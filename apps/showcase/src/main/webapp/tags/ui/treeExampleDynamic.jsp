@@ -1,39 +1,40 @@
 <%@taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 
 <html>
 <head>
 <title>Showcase - UI Tag Example - Tree Example (Dynamic)</title>
-<sx:head/>
+<s:head theme="ajax" debug="true" />
 </head>
 <body>
 
 <!-- START SNIPPET: treeExampleDynamicJsp -->
 
-<script language="JavaScript" type="text/javascript">
-    dojo.event.topic.subscribe("treeSelected", function treeNodeSelected(node) {
+<script>
+    function treeNodeSelected(nodeId) {
         dojo.io.bind({
-            url: "<s:url value='/tags/ui/ajax/dynamicTreeSelectAction.action'/>&nodeId="+node.node.widgetId,
+            url: "<s:url value='/tags/ui/ajax/dynamicTreeSelectAction.action' />?nodeId="+nodeId,
             load: function(type, data, evt) {
-                var divDisplay = dojo.byId("displayId");
-                divDisplay.innerHTML=data;
+                var displayDiv = dojo.byId("displayId");
+                displayDiv.innerHTML = data;
             },
             mimeType: "text/html"
         });
-    });
+    };
+
+    dojo.event.topic.subscribe("treeSelected", this, "treeNodeSelected");
 </script>
 
 
 
 <div style="float:left; margin-right: 50px;">
-<sx:tree 
-    id="tree"
+<s:tree 
+    theme="ajax"
     rootNode="%{treeRootNode}" 
     childCollectionProperty="children" 
     nodeIdProperty="id"
     nodeTitleProperty="name"
     treeSelectedTopic="treeSelected">
-</sx:tree> 
+</s:tree> 
 </div>
 
 <div id="displayId">

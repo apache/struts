@@ -1,11 +1,9 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
-
 <html>
 <head>
     <title>UI Tags Example</title>
-    <sx:head/>
+    <s:head/>
 </head>
 
 <body>
@@ -15,23 +13,17 @@
 <s:fielderror />
 
 
-<s:form action="exampleSubmit" enctype="multipart/form-data" javascriptTooltip="true">
+<s:form action="exampleSubmit" enctype="multipart/form-data" tooltipConfig="%{'jsTooltipEnabled':'true'}">
     <s:textfield 
             label="Name" 
             name="name"
-            tooltip="Enter your Name here"/>
+            tooltip="Enter your Name here" />
 
-    <sx:datetimepicker
+    <s:datetimepicker
             tooltip="Select Your Birthday"
             label="Birthday"
             name="birthday" />
-            
-    <sx:datetimepicker
-            tooltip="Enter the time you wake up"
-            label="Wake up time"
-            name="wakeup" 
-            type="time"/>
-            
+
     <s:textarea
             tooltip="Enter your Biography"
             label="Biography"

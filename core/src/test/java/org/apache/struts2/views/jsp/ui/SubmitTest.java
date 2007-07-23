@@ -85,7 +85,7 @@ public class SubmitTest extends AbstractUITagTest {
 
         verify(TextFieldTag.class.getResource("Submit-3.txt"));
     }
-
+    
     public void testButtonSimpleWithBody() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");
@@ -263,6 +263,11 @@ public class SubmitTest extends AbstractUITagTest {
     public void testGenericXhtml() throws Exception {
         SubmitTag tag = new SubmitTag();
         verifyGenericProperties(tag, "xhtml", null);
+    }
+
+    public void testGenericAjax() throws Exception {
+        SubmitTag tag = new SubmitTag();
+        verifyGenericProperties(tag, "ajax", null);
     }
 
 }

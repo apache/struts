@@ -20,7 +20,6 @@
  */
 package org.apache.struts2.views.freemarker;
 
-import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Locale;
@@ -43,7 +42,6 @@ import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
@@ -80,10 +78,6 @@ import freemarker.template.TemplateModelException;
  * not be parsed for Ognl expressions.</li>
  *
  * <li><b>contentType</b> - defaults to "text/html" unless specified.</li>
- * 
- * <li><b>writeIfCompleted</b> - false by default, write to stream only if there isn't any error 
- * processing the template. Setting template_exception_handler=rethrow in freemarker.properties
- * will have the same effect.</li>
  *
  * </ul>
  *
@@ -108,7 +102,7 @@ public class FreemarkerResult extends StrutsResultSupport {
     protected ObjectWrapper wrapper;
     protected FreemarkerManager freemarkerManager;
     private Writer writer;
-    private boolean writeIfCompleted = false;
+
     /*
      * Struts results are constructed for each result execution
      *
@@ -143,48 +137,35 @@ public class FreemarkerResult extends StrutsResultSupport {
     }
 
     /**
-     * Execute this result, using the specified template locationArg.
+     * Execute this result, using the specified template location.
      * <p/>
-     * The template locationArg has already been interoplated for any variable substitutions
+     * The template location has already been interoplated for any variable substitutions
      * <p/>
      * this method obtains the freemarker configuration and the object wrapper from the provided hooks.
      * It them implements the template processing workflow by calling the hooks for
      * preTemplateProcess and postTemplateProcess
      */
-    public void doExecute(String locationArg, ActionInvocation invocation) throws IOException, TemplateException {
-        this.location = locationArg;
+    public void doExecute(String location, ActionInvocation invocation) throws IOException, TemplateException {
+        this.location = location;
         this.invocation = invocation;
         this.configuration = getConfiguration();
         this.wrapper = getObjectWrapper();
 
-        if (!locationArg.startsWith("/")) {
+        if (!location.startsWith("/")) {
             ActionContext ctx = invocation.getInvocationContext();
             HttpServletRequest req = (HttpServletRequest) ctx.get(ServletActionContext.HTTP_REQUEST);
             String base = ResourceUtil.getResourceBase(req);
-            locationArg = base + "/" + locationArg;
+            location = base + "/" + location;
         }
 
-        Template template = configuration.getTemplate(locationArg, deduceLocale());
+        Template template = configuration.getTemplate(location, deduceLocale());
         TemplateModel model = createModel();
 
         // Give subclasses a chance to hook into preprocessing
         if (preTemplateProcess(template, model)) {
             try {
                 // Process the template
-                Writer writer = getWriter();
-                if (isWriteIfCompleted() || configuration.getTemplateExceptionHandler() == TemplateExceptionHandler.RETHROW_HANDLER) {
-                    CharArrayWriter charArrayWriter = new CharArrayWriter();
-                    try {
-                        template.process(model, charArrayWriter);
-                        charArrayWriter.flush();
-                        charArrayWriter.writeTo(writer);
-                    } finally {
-                        if (charArrayWriter != null)
-                            charArrayWriter.close();
-                    }
-                } else {
-                    template.process(model, writer);
-                }
+                template.process(model, getWriter());
             } finally {
                 // Give subclasses a chance to hook into postprocessing
                 postTemplateProcess(template, model);
@@ -314,19 +295,5 @@ public class FreemarkerResult extends StrutsResultSupport {
         }
 
         return true;
-    }
-
-    /**
-     * @return true write to the stream only when template processing completed successfully (false by default)
-     */
-    public boolean isWriteIfCompleted() {
-        return writeIfCompleted;
-    }
-
-    /**
-     * Writes to the stream only when template processing completed successfully
-     */
-    public void setWriteIfCompleted(boolean writeIfCompleted) {
-        this.writeIfCompleted = writeIfCompleted;
     }
 }

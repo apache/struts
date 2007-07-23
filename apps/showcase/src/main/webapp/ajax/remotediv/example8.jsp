@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 
 <html>
 <head>
@@ -34,10 +33,11 @@
 <input type=button value="stop timer" onclick="controller.stop()">
 <input type=button value="start timer" onclick="controller.start()">
 
-<s:url var="ajaxTest" value="/AjaxTest.action" />
+<s:url id="ajaxTest" value="/AjaxTest.action" />
 
-<sx:div
+<s:div
         id="once"
+        theme="ajax"
         cssStyle="border: 1px solid yellow;"
         href="%{ajaxTest}"
         loadingText="Loading..."
@@ -46,10 +46,9 @@
 		stopTimerListenTopics="/stopTimer"
 		updateFreq="3000"
 		autoStart="true"
-        highlightColor="red"
 		formId="form"
 		>
-    Initial Content</sx:div>
+    Initial Content</s:div>
 
 <s:include value="../footer.jsp"/>
 

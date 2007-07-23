@@ -406,6 +406,12 @@ public class SelectTest extends AbstractUITagTest {
         verifyGenericProperties(tag, "xhtml", new String[]{"value"});
     }
 
+    public void testGenericAjax() throws Exception {
+        SelectTag tag = new SelectTag();
+        prepareTagGeneric(tag);
+        verifyGenericProperties(tag, "ajax", new String[]{"value"});
+    }
+
     public void testMultipleOn() throws Exception {
         SelectTag tag = new SelectTag();
         tag.setPageContext(pageContext);
@@ -437,7 +443,6 @@ public class SelectTest extends AbstractUITagTest {
 
         verify(SelectTag.class.getResource("Select-6.txt"));
     }
-
 
     public void testSimpleInteger() throws Exception {
         TestAction testAction = (TestAction) action;
@@ -541,7 +546,7 @@ public class SelectTest extends AbstractUITagTest {
             return id;
         }
     }
-    
+
     private void prepareTagGeneric(SelectTag tag) {
         TestAction testAction = (TestAction) action;
         ArrayList collection = new ArrayList();

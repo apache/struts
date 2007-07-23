@@ -33,6 +33,8 @@ import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.OgnlUtil;
+import com.opensymphony.xwork2.util.XWorkConverter;
+import com.opensymphony.xwork2.util.ObjectTypeDeterminerFactory;
 
 
 /**
@@ -54,8 +56,8 @@ public class HttpHeaderResultTest extends StrutsTestCase {
 
         Map values = new HashMap();
         values.put("bar", "abc");
-        ActionContext.getContext().getValueStack().push(values);
 
+        ActionContext.getContext().getValueStack().push(values);
         OgnlUtil.setProperties(params, result);
 
         responseMock.expect("addHeader", C.args(C.eq("foo"), C.eq("${bar}")));
@@ -72,8 +74,8 @@ public class HttpHeaderResultTest extends StrutsTestCase {
 
         Map values = new HashMap();
         values.put("bar", "abc");
-        ActionContext.getContext().getValueStack().push(values);
 
+        ActionContext.getContext().getValueStack().push(values);
         OgnlUtil.setProperties(params, result);
 
         responseMock.expect("addHeader", C.args(C.eq("foo"), C.eq("abc")));
@@ -81,38 +83,10 @@ public class HttpHeaderResultTest extends StrutsTestCase {
         result.execute(invocation);
         responseMock.verify();
     }
-    
-    public void testErrorMessageIsParsedAndSet() throws Exception {
-        ActionContext.getContext().getValueStack().set("errMsg", "abc");
-        result.setError(404);
-        result.setErrorMessage("${errMsg}");
-        
-        responseMock.expect("sendError", C.args(C.eq(404), C.eq("abc")));
-        result.execute(invocation);
-        responseMock.verify();
-    }
-    
-    public void testErrorMessageIsNotParsedAndSet() throws Exception {
-        ActionContext.getContext().getValueStack().set("errMsg", "abc");
-        result.setError(404);
-        result.setParse(false);
-        result.setErrorMessage("${errMsg}");
-        
-        responseMock.expect("sendError", C.args(C.eq(404), C.eq("${errMsg}")));
-        result.execute(invocation);
-        responseMock.verify();
-    }
 
     public void testStatusIsSet() throws Exception {
         responseMock.expect("setStatus", C.eq(123));
         result.setStatus(123);
-        result.execute(invocation);
-        responseMock.verify();
-    }
-    
-    public void testErrorIsSet() throws Exception {
-        responseMock.expect("sendError", C.eq(404));
-        result.setError(404);
         result.execute(invocation);
         responseMock.verify();
     }
@@ -124,11 +98,14 @@ public class HttpHeaderResultTest extends StrutsTestCase {
         response = (HttpServletResponse) responseMock.proxy();
         invocation = (ActionInvocation) new Mock(ActionInvocation.class).proxy();
         ServletActionContext.setResponse(response);
+
+        XWorkConverter.getInstance().setObjectTypeDeterminer(ObjectTypeDeterminerFactory.getInstance());
     }
 
     protected void tearDown() throws Exception {
         super.tearDown();
         ServletActionContext.setResponse(null);
         ActionContext.setContext(null);
+        XWorkConverter.resetInstance();
     }
 }

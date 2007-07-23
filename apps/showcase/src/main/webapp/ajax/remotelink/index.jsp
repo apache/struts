@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 
 <html>
 <head>
@@ -14,30 +13,10 @@
 	 dojo.byId(widget.targetsArray[0]).innerHTML = "Done";
    }
 
-   dojo.event.topic.subscribe("/before", function(event, widget){
-      alert('inside a topic event. before request');
-      //event: set event.cancel = true, to cancel request
-      //widget: widget that published the topic
-   });
-   
-   dojo.event.topic.subscribe("/after", function(data, request, widget){
-      alert('inside a topic event. after request');
-      //data : text returned from request
-      //request: XMLHttpRequest object
-      //widget: widget that published the topic
-   });
-   
-   dojo.event.topic.subscribe("/error", function(error, request, widget){
-      alert('inside a topic event. on error');
-      //error : error object (error.message has the error message)
-      //request: XMLHttpRequest object
-      //widget: widget that published the topic
-   });
-   
-   dojo.event.topic.subscribe("/topics", function(data, type, e){
+   dojo.event.topic.subscribe("/after", function(data, type, e){
       alert('inside a topic event. type='+type);
       //data : text returned
-      //type : "before", "load", "error"
+      //type : "before", "load" or "error"
       //e    : request object
    });
 </script>
@@ -52,54 +31,49 @@
 
 <br/><br/>
 
-<s:url var="ajaxTest" value="/AjaxTest.action" />
-<s:url var="test3" value="/Test3.action" />
-
-<sx:a  id="link0"
-        href="%{#ajaxTest}"
-        targets="t1"
-        highlightColor="red"
-        highlightDuration="2000">Update 'Div 1' and use red highligh to notify user of changed content</sx:a>
+<s:url id="ajaxTest" value="/AjaxTest.action" />
+<s:url id="test3" value="/Test3.action" />
 
 <br/><br/>
 
-<sx:a   id="link1"
-        href="%{#ajaxTest}"
+<s:a
+        theme="ajax"
+        href="%{ajaxTest}"
         indicator="indicator"
-		targets="t1,t2" 
-        beforeNotifyTopics="/before"
-        afterNotifyTopics="/after" >Update 'Div 1' and 'Div 2', publish topic '/before' and '/after', use indicator</sx:a>
+		targets="t1,t2" notifyTopics="/after" >Update 'Div 1' and 'Div 2', publish topic '/after', use indicator</s:a>
 <img id="indicator" src="${pageContext.request.contextPath}/images/indicator.gif" alt="Loading..." style="display:none"/>
 
 <br/><br/>
 
-<sx:a  id="link2"
+<s:a  id="link2"
+        theme="ajax"
         href="/AjaxNoUrl.jsp"
 		errorText="Error Loading"
-		targets="t1"
-        errorNotifyTopics="/error">Try to update 'Div 1', publish '/error', use custom error message</sx:a>
+		targets="t1">Try to update 'Div 1', use custom error message</s:a>
 
 <br/><br/>
 
-<sx:a  id="link3"
-        href="%{#ajaxTest}"
+<s:a  id="link3"
+        theme="ajax"
+        href="%{ajaxTest}"
 		loadingText="Loading!!!"
-        showLoadingText="true"
-		targets="t1">Update 'Div 1', use custom loading message</sx:a>
+		targets="t1">Update 'Div 1', use custom loading message</s:a>
 
 <br/><br/>
 
-<sx:a  id="link4"
-        href="%{#test3}"
+<s:a  id="link4"
+        theme="ajax"
+        href="%{test3}"
 		executeScripts="true"
-		targets="t2">Update 'Div 2' and execute returned javascript </sx:a>
+		targets="t2">Update 'Div 2' and execute returned javascript </s:a>
 
 <br/><br/>
 
-<sx:a  id="link5"
-        href="%{#ajaxTest}"
+<s:a  id="link5"
+        theme="ajax"
+        href="%{ajaxTest}"
 		handler="handler"
-		targets="t2">Update 'Div 2' using a custom handler </sx:a>
+		targets="t2">Update 'Div 2' using a custom handler </s:a>
 
 
 <br/><br/>
@@ -112,11 +86,12 @@
 
 <br/><br/>
 
-<sx:a  id="link6"
-        href="%{#ajaxTest}"
+<s:a  id="link6"
+        theme="ajax"
+        href="%{ajaxTest}"
 		targets="t2"
 		formId="form"
-		>Update 'Div 2' with the content of the textbox </sx:a>
+		>Update 'Div 2' with the content of the textbox </s:a>
 
 
 <br/><br/>

@@ -4,7 +4,7 @@
 <s:iterator value="category.children">
     <li>
         <s:if test="children.size() > 0">
-            <sx:a href="toggle.action?catId=%{id}">+</sx:a>
+            <s:a theme="ajax" href="toggle.action?catId=%{id}">+</s:a>
         </s:if>
         <s:property value="name"/>
     </li>
@@ -15,7 +15,8 @@
         <s:set name="display" value="''"/>
     </s:else>                                                                                     ›
 
-    <sx:div id="children_%{id}"
+    <s:div theme="ajax"
+            id="children_%{id}"
             cssStyle="display: %{display}"
             href="getCategory.action?catId=%{id}"
             refreshListenTopic="children_%{id}"/>

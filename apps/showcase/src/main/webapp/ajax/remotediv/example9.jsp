@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<%@ taglib prefix="sx" uri="/struts-dojo-tags" %>
 
 <html>
 <head>
@@ -21,18 +20,11 @@
 	dojo.event.topic.registerPublisher("/startTimer", controller, "start");
 	dojo.event.topic.registerPublisher("/stopTimer", controller, "stop");
 
-    dojo.event.topic.subscribe("/before", function(data, type, e){
-      alert('inside a topic event. before request');
-      //data : source element id
-      //type : "before" 
-      //e    : request object
-    });
-    
     dojo.event.topic.subscribe("/after", function(data, type, e){
-      alert('inside a topic event. after request');
+      alert('inside a topic event. type='+type);
       //data : text returned
-      //type : "load" 
-      //e    : undefined
+      //type : "before", "load" or "error"
+      //e    : request object
     });
 
 </script>
@@ -41,10 +33,11 @@
 <input type=button value="start timer" onclick="controller.start()">
 <input type=button value="stop timer" onclick="controller.stop()">
 
-<s:url var="ajaxTest" value="/AjaxTest.action" />
+<s:url id="ajaxTest" value="/AjaxTest.action" />
 
-<sx:div
-        id="div1"
+<s:div
+        id="once"
+        theme="ajax"
         cssStyle="border: 1px solid yellow;"
         href="%{ajaxTest}"
         listenTopics="/refresh"
@@ -52,10 +45,10 @@
 		stopTimerListenTopics="/stopTimer"
 		updateFreq="10000"
 		autoStart="false"
-        beforeNotifyTopics="/before"
-        afterNotifyTopics="/after"
+		afterLoading="alert('after request')"
+        notifyTopics="/after"
 		>
-    Initial Content</sx:div>
+    Initial Content</s:div>
 
 <s:include value="../footer.jsp"/>
 

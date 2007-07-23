@@ -6,7 +6,7 @@
 </head>
 
 <body>
-<s:action var="myDate" name="date" namespace="/" executeResult="false" />
+<s:action id="myDate" name="date" namespace="/" executeResult="false" />
 
 <table>
     <tr>

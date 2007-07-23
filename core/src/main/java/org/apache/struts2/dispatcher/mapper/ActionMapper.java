@@ -27,7 +27,7 @@ import com.opensymphony.xwork2.config.ConfigurationManager;
 /**
  * <!-- START SNIPPET: javadoc -->
  *
- * The ActionMapper interface provides a mapping between HTTP requests and action invocation requests and vice-versa.
+ * Provide a mapping between HTTP requests and action invocation requests and vice-versa.
  * <p/>
  * When given an HttpServletRequest, the ActionMapper may return null if no action invocation request matches,
  * or it may return an {@link ActionMapping} that describes an action invocation for the framework to try.

@@ -110,7 +110,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: javacode -->
  *
  * <!-- START SNIPPET: example -->
- * &lt;s:merge var="myMergedIterator1"&gt;
+ * &lt;s:merge id="myMergedIterator1"&gt;
  *      &lt;s:param value="%{myList1}" /&gt;
  *      &lt;s:param value="%{myList2}" /&gt;
  *      &lt;s:param value="%{myList3}" /&gt;
@@ -130,7 +130,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 @StrutsTag(name="merge", tldTagClass="org.apache.struts2.views.jsp.iterator.MergeIteratorTag", description="Merge the values " +
                 "of a list of iterators into one iterator")
-public class MergeIterator extends ContextBean implements UnnamedParametric {
+public class MergeIterator extends Component implements UnnamedParametric {
 
     private static final Log _log = LogFactory.getLog(MergeIterator.class);
 
@@ -163,16 +163,18 @@ public class MergeIterator extends ContextBean implements UnnamedParametric {
         mergeIteratorFilter.execute();
 
         // if id exists, we put it in the stack's context
-        putInContext(mergeIteratorFilter);
+        if (getId() != null && getId().length() > 0) {
+            getStack().getContext().put(getId(), mergeIteratorFilter);
+        }
 
         mergeIteratorFilter = null;
 
         return super.end(writer, body);
     }
 
-    @StrutsTagAttribute(description="The name where the resultant merged iterator will be stored in the stack's context")
-    public void setVar(String var) {
-        super.setVar(var);
+    @StrutsTagAttribute(description="The id where the resultant merged iterator will be stored in the stack's context")
+    public void setId(String id) {
+        super.setId(id);
     }
 
     // == UnnamedParametric interface implementation ---------------------

@@ -193,7 +193,7 @@ public abstract class DoubleListUIBean extends ListUIBean {
         } else if (form != null) {
             addParameter("doubleId", form.getParameters().get("id") + "_" +escape(this.doubleName));
         } else {
-            addParameter("doubleId", escape(doubleName != null ? findString(doubleName) : null));
+            addParameter("doubleId", escape(doubleName !=null ? findString(doubleName) : null));
         }
 
         if (doubleOnclick != null) {

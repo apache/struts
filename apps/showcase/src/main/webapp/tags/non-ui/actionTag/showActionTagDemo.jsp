@@ -35,7 +35,7 @@
 </div>
 
 
-<s:url var="url" action="lookAtSource" namespace="/tags/non-ui/actionTag" />
+<s:url id="url" action="lookAtSource" namespace="/tags/non-ui/actionTag" />
 <s:a href="%{#url}">Source</s:a>
 
 </body>

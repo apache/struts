@@ -1,6 +1,0 @@
-<tr>
-    <td class="tdLabel">
-        <label for="myname" class="label">label??</label>
-    </td>
-    <td><input type="text" name="myname" size="10" value="bar" id="myname" onblur="blahescape('somevalue');"/></td>
-</tr>

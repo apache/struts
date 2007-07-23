@@ -111,6 +111,12 @@ public class RadioTest extends AbstractUITagTest {
         verifyGenericProperties(tag, "xhtml", new String[]{"id","value"});
     }
 
+    public void testGenericAjax() throws Exception {
+        RadioTag tag = new RadioTag();
+        prepareTagGeneric(tag);
+        verifyGenericProperties(tag, "ajax", new String[]{"id","value"});
+    }
+
     private void prepareTagGeneric(RadioTag tag) {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");

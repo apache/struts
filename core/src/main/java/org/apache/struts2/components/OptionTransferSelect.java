@@ -289,7 +289,6 @@ public class OptionTransferSelect extends DoubleListUIBean {
                 upDownOnRightOnclick != null ? findValue(upDownOnRightOnclick, String.class) : "");
 
 
-
         // inform the form component our select tag infos, so they know how to select
         // its elements upon onsubmit
         Form formAncestor = (Form) findAncestor(Form.class);
@@ -575,5 +574,4 @@ public class OptionTransferSelect extends DoubleListUIBean {
     public String getSelectAllOnclick() {
         return this.selectAllOnclick;
     }
-
 }

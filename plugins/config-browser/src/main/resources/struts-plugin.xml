@@ -19,7 +19,7 @@
         </global-results>
 
         <action name="index">
-            <result type="redirectAction">actionNames</result>
+            <result type="redirect-action">actionNames</result>
         </action>
 
         <action name="actionNames" class="org.apache.struts2.config_browser.ActionNamesAction">

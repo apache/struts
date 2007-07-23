@@ -21,7 +21,7 @@
       document.getElementById('wc-command').value = '';
   }
 
-  function keyEvent(event, url)
+  function keyEvent(event)
   {
       switch(event.keyCode){
           case 13:
@@ -29,10 +29,9 @@
               if (the_shell_command) {
                   commands_history[commands_history.length] = the_shell_command;
                   history_pointer = commands_history.length;
-                  var the_url = url ? url : window.opener.location.pathname;
+                  var the_url = window.opener.location.pathname + '?debug=command&expression='+escape(the_shell_command);
                   dojo.io.bind({
                         url: the_url,
-                        formNode: dojo.byId("wc-form"),
                         load: function(type, data, evt){ printResult(data); },
                         mimetype: "text/plain"
                     });

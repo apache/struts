@@ -188,7 +188,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *          <td>html javascript onclick attribute</td>
  *       </tr>
  *       <tr>
- *          <td>ondblclick</td>
+ *          <td>ondbclick</td>
  *          <td>simple</td>
  *          <td>String</td>
  *          <td>html javascript ondbclick attribute</td>
@@ -310,33 +310,32 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  *
  * <!-- START SNIPPET: tooltipdescription -->
- * <b>tooltipConfig is deprecated, use individual tooltip configuration attributes instead </>
  *
- * Every Form UI component (in xhtml / css_xhtml or any other that extends them) can
- * have tooltips assigned to them. The Form component's tooltip related attribute, once
- * defined, will be applied to all form UI components that are created under it unless
- * explicitly overriden by having the Form UI component itself defined with their own tooltip attribute.
- *
- * <p/>
- *
- * In Example 1, the textfield will inherit the tooltipDelay and tooltipIconPath attribte from
- * its containing form. In other words, although it doesn't define a tooltipIconPath
- * attribute, it will have that attribute inherited from its containing form.
+ * Every Form UI component (in xhtml / css_xhtml or any others that extends of them) could
+ * have tooltip assigned to a them. The Form component's tooltip related attribute once
+ * defined will be applicable to all form UI component that is created under it unless
+ * explicitly overriden by having the Form UI component itself defined that tooltip attribute.
  *
  * <p/>
  *
- * In Example 2, the  textfield will inherite both the tooltipDelay and
- * tooltipIconPath attribute from its containing form, but the tooltipDelay
+ * In Example 1, the textfield will inherit the tooltipDelay adn tooltipIcon attribte from
+ * its containing form. In other words, although it doesn't defined a tooltipAboveMousePointer
+ * attribute, it will have that attributes inherited from its containing form.
+ *
+ * <p/>
+ *
+ * In Example 2, the the textfield will inherite both the tooltipDelay and
+ * tooltipIcon attribute from its containing form but tooltipDelay
  * attribute is overriden at the textfield itself. Hence, the textfield actually will
- * have its tooltipIcon defined as /myImages/myIcon.gif, inherited from its containing form, and
- * tooltipDelay defined as 5000.
+ * have tooltipIcon defined as /myImages/myIcon.gif, inherited from its containing form and
+ * tooltipDelay defined as 5000, due to overriden at the textfield itself.
  *
  * <p/>
  *
- * Example 3, 4 and 5 show different ways of setting the tooltip configuration attribute.<br/>
- * <b>Example 3:</b> Set tooltip config through the body of the param tag<br/>
- * <b>Example 4:</b> Set tooltip config through the value attribute of the param tag<br/>
- * <b>Example 5:</b> Set tooltip config through the tooltip attributes of the component tag<br/>
+ * Example 3, 4 and 5 shows different way of setting the tooltipConfig attribute.<br/>
+ * <b>Example 3:</b>Set tooltip config through body of param tag<br/>
+ * <b>Example 4:</b>Set tooltip config through value attribute of param tag<br/>
+ * <b>Example 5:</b>Set tooltip config through tooltipConfig attribute of component tag<br/>
  *
  * <!-- END SNIPPET: tooltipdescription -->
  *
@@ -346,8 +345,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * &lt;!-- Example 1: --&gt;
  * &lt;s:form
- *          tooltipDelay="500"
- *          tooltipIconPath="/myImages/myIcon.gif" .... &gt;
+ *          tooltipConfig="#{'tooltipDelay':'500',
+ *                           'tooltipIcon='/myImages/myIcon.gif'}" .... &gt;
  *   ....
  *     &lt;s:textfield label="Customer Name" tooltip="Enter the customer name" .... /&gt;
  *   ....
@@ -355,12 +354,12 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * &lt;!-- Example 2: --&gt;
  * &lt;s:form
- *          tooltipDelay="500"
- *          tooltipIconPath="/myImages/myIcon.gif" .... &gt;
+ *         tooltipConfig="#{'tooltipDelay':'500',
+ *                          'tooltipIcon':'/myImages/myIcon.gif'}" ... &gt;
  *   ....
  *     &lt;s:textfield label="Address"
  *          tooltip="Enter your address"
- *          tooltipDelay="5000" /&gt;
+ *          tooltipConfig="#{'tooltipDelay':'5000'}" /&gt;
  *   ....
  * &lt;/s:form&gt;
  *
@@ -368,12 +367,10 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;-- Example 3: --&gt;
  * &lt;s:textfield
  *        label="Customer Name"
- *        tooltip="One of our customer Details"&gt;
- *        &lt;s:param name="tooltipDelay"&gt;
- *             500
- *        &lt;/s:param&gt;
- *        &lt;s:param name="tooltipIconPath"&gt;
- *             /myImages/myIcon.gif
+ *        tooltip="One of our customer Details'"&gt;
+ *        &lt;s:param name="tooltipConfig"&gt;
+ *             tooltipDelay = 500 |
+ *             tooltipIcon = /myImages/myIcon.gif
  *        &lt;/s:param&gt;
  * &lt;/s:textfield&gt;
  *
@@ -383,8 +380,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  *          label="Customer Address"
  *          tooltip="Enter The Customer Address" &gt;
  *          &lt;s:param
- *              name="tooltipDelay"
- *              value="500" /&gt;
+ *              name="tooltipConfig"
+ *              value="#{'tooltipDelay':'500',
+ *                       'tooltipIcon':'/myImages/myIcon.gif'}" /&gt;
  * &lt;/s:textfield&gt;
  *
  *
@@ -392,8 +390,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;s:textfield
  *          label="Customer Telephone Number"
  *          tooltip="Enter customer Telephone Number"
- *          tooltipDelay="500"
- *          tooltipIconPath="/myImages/myIcon.gif" /&gt;
+ *          tooltipConfig="#{'tooltipDelay':'500',
+ *                           'tooltipIcon':'/myImages/myIcon.gif'}" /&gt;
  *
  * <!-- END SNIPPET: tooltipexample -->
  * </pre>
@@ -425,13 +423,11 @@ public abstract class UIBean extends Component {
     // shortcut, sets label, name, and value
     protected String key;
 
-    protected String id;
     protected String cssClass;
     protected String cssStyle;
     protected String disabled;
     protected String label;
     protected String labelPosition;
-    protected String labelSeparator;
     protected String requiredposition;
     protected String name;
     protected String required;
@@ -461,10 +457,6 @@ public abstract class UIBean extends Component {
     // javascript tooltip attribute
     protected String tooltip;
     protected String tooltipConfig;
-    protected String javascriptTooltip;
-    protected String tooltipDelay;
-    protected String tooltipCssClass;
-    protected String tooltipIconPath;
 
     protected String defaultTemplateDir;
     protected String defaultUITheme;
@@ -617,10 +609,6 @@ public abstract class UIBean extends Component {
 
         if (label != null) {
             addParameter("label", findString(label));
-        }
-        
-        if (labelSeparator != null) {
-            addParameter("labelseparator", findString(labelSeparator));
         }
 
         if (labelPosition != null) {
@@ -788,38 +776,6 @@ public abstract class UIBean extends Component {
             else {
                 LOG.warn("No ancestor Form found, javascript based tooltip will not work, however standard HTML tooltip using alt and title attribute will still work ");
             }
-            
-            //TODO: this is to keep backward compatibility, remove once when tooltipConfig is dropped
-            String  jsTooltipEnabled = (String) getParameters().get("jsTooltipEnabled");
-            if (jsTooltipEnabled != null)
-                this.javascriptTooltip = jsTooltipEnabled;
-            
-            //TODO: this is to keep backward compatibility, remove once when tooltipConfig is dropped
-            String tooltipIcon = (String) getParameters().get("tooltipIcon");
-            if (tooltipIcon != null) 
-                this.addParameter("tooltipIconPath", tooltipIcon);
-            if (this.tooltipIconPath != null)
-                this.addParameter("tooltipIconPath", findString(this.tooltipIconPath));
-            
-            //TODO: this is to keep backward compatibility, remove once when tooltipConfig is dropped
-            String tooltipDelayParam = (String) getParameters().get("tooltipDelay");
-            if (tooltipDelayParam != null) 
-                this.addParameter("tooltipDelay", tooltipDelayParam);
-            if (this.tooltipDelay != null)
-                this.addParameter("tooltipDelay", findString(this.tooltipDelay));
-            
-            if (this.javascriptTooltip != null) {
-                Boolean jsTooltips = (Boolean) findValue(this.javascriptTooltip, Boolean.class);
-                //TODO use a Boolean model when tooltipConfig is dropped
-                this.addParameter("jsTooltipEnabled", jsTooltips.toString());
-                
-                if (form != null)
-                    form.addParameter("hasTooltip", jsTooltips);
-                if (this.tooltipCssClass != null)
-                    this.addParameter("tooltipCssClass", findString(this.tooltipCssClass));
-            }
-            
-
         }
         evaluateExtraParams();
 
@@ -891,12 +847,6 @@ public abstract class UIBean extends Component {
                 }
             }
         }
-        if (component.javascriptTooltip != null)
-            tooltipConfig.put("jsTooltipEnabled", component.javascriptTooltip);
-        if (component.tooltipIconPath != null)
-            tooltipConfig.put("tooltipIcon", component.tooltipIconPath);
-        if (component.tooltipDelay != null)
-            tooltipConfig.put("tooltipDelay", component.tooltipDelay);
         return tooltipConfig;
     }
 
@@ -926,21 +876,6 @@ public abstract class UIBean extends Component {
                     + escape(name != null ? findString(name) : null));
         } else {
             addParameter("id", escape(name != null ? findString(name) : null));
-        }
-    }
-    
-    /**
-     * Get's the id for referencing element.
-     * @return the id for referencing element.
-     */
-    public String getId() {
-        return id;
-    }
-
-    @StrutsTagAttribute(description="HTML id attribute")
-    public void setId(String id) {
-        if (id != null) {
-            this.id = findString(id);
         }
     }
 
@@ -986,11 +921,6 @@ public abstract class UIBean extends Component {
     @StrutsTagAttribute(description="Label expression used for rendering a element specific label")
     public void setLabel(String label) {
         this.label = label;
-    }
-    
-    @StrutsTagAttribute(description="String that will be appended to the labe", defaultValue=":")
-    public void setLabelSeparator(String labelseparator) {
-        this.labelSeparator = labelseparator;
     }
 
     @StrutsTagAttribute(description="Define label position of form element (top/left)")
@@ -1103,7 +1033,7 @@ public abstract class UIBean extends Component {
         this.tooltip = tooltip;
     }
 
-    @StrutsTagAttribute(description="Deprecated. Use individual tooltip configuration attributes instead.")
+    @StrutsTagAttribute(description="Set the tooltip configuration")
     public void setTooltipConfig(String tooltipConfig) {
         this.tooltipConfig = tooltipConfig;
     }
@@ -1111,26 +1041,5 @@ public abstract class UIBean extends Component {
     @StrutsTagAttribute(description="Set the key (name, value, label) for this particular component")
     public void setKey(String key) {
         this.key = key;
-    }
-
-    @StrutsTagAttribute(description="Use JavaScript to generate tooltips", type="Boolean", defaultValue="false")
-    public void setJavascriptTooltip(String javascriptTooltip) {
-        this.javascriptTooltip = javascriptTooltip;
-    }
-
-    @StrutsTagAttribute(description="CSS class applied to JavaScrip tooltips", defaultValue="StrutsTTClassic")
-    public void setTooltipCssClass(String tooltipCssClass) {
-        this.tooltipCssClass = tooltipCssClass;
-    }
-
-    @StrutsTagAttribute(description="Delay in milliseconds, before showing JavaScript tooltips ",
-        defaultValue="Classic")
-    public void setTooltipDelay(String tooltipDelay) {
-        this.tooltipDelay = tooltipDelay;
-    }
-
-    @StrutsTagAttribute(description="Icon path used for image that will have the tooltip")
-    public void setTooltipIconPath(String tooltipIconPath) {
-        this.tooltipIconPath = tooltipIconPath;
     }
 }

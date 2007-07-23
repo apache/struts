@@ -61,23 +61,13 @@ public class FormTagTest extends AbstractUITagTest {
         tag.setEnctype("myEncType");
         tag.setTitle("mytitle");
         tag.setOnsubmit("submitMe()");
+
         tag.doStartTag();
         tag.doEndTag();
 
         verify(FormTag.class.getResource("Formtag-9.txt"));
     }
 
-    public void testFormWithFocusElement() throws Exception {
-        FormTag tag = new FormTag();
-        tag.setTheme("xhtml");
-        tag.setPageContext(pageContext);
-        tag.setAction("testAction");
-        tag.setFocusElement("felement");
-        tag.doStartTag();
-        tag.doEndTag();
-
-        verify(FormTag.class.getResource("Formtag-12.txt"));
-    }
 
     public void testFormWithActionAttributeContainingBothActionAndMethodAndNamespace() throws Exception {
         FormTag tag = new FormTag();

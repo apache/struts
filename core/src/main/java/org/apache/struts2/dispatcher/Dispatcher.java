@@ -622,7 +622,6 @@ Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyExcepti
 
             if (tempdir != null) {
                 saveDir = tempdir.toString();
-                setMultipartSaveDir(saveDir);
             }
         } else {
             File multipartSaveDir = new File(saveDir);

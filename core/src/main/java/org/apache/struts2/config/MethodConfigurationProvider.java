@@ -49,7 +49,7 @@ import java.lang.reflect.Method;
  * }
  * </code>
  * <p/>
- * If the action URL is "foo!bar", then the "foo" action is invoked,
+ * If the action URL is "foo!bar", the the "foo" action is invoked,
  * calling "bar" instead of "execute".
  * <p/>
  * Instead of scanning each request at runtime, the provider creates action mappings

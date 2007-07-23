@@ -25,7 +25,6 @@ import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -140,7 +139,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  */
 @StrutsTag(name="date", tldBodyContent="empty", tldTagClass="org.apache.struts2.views.jsp.DateTag", description="Render a formatted date.")
-public class Date extends ContextBean {
+public class Date extends Component {
 
     private static final Log LOG = LogFactory.getLog(Date.class);
     /**
@@ -275,14 +274,9 @@ public class Date extends ContextBean {
         String msg = null;
         ValueStack stack = getStack();
         java.util.Date date = null;
-        // find the name on the valueStack
+        // find the name on the valueStack, and cast it to a date
         try {
-            //suport Calendar also
-            Object dateObject = findValue(name);
-            if (dateObject instanceof java.util.Date)
-                date = (java.util.Date) dateObject;
-            else if(dateObject instanceof Calendar)
-                date = ((Calendar) dateObject).getTime();
+            date = (java.util.Date) findValue(name);
         } catch (Exception e) {
             LOG.error("Could not convert object with key '" + name
                     + "' to a java.util.Date instance");
@@ -328,10 +322,10 @@ public class Date extends ContextBean {
                 }
                 if (msg != null) {
                     try {
-                        if (getVar() == null) {
+                        if (getId() == null) {
                             writer.write(msg);
                         } else {
-                            putInContext(msg);
+                            stack.getContext().put(getId(), msg);
                         }
                     } catch (IOException e) {
                         LOG.error("Could not write out Date tag", e);

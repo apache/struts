@@ -37,6 +37,8 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.portlet.context.PortletActionContext;
+import org.apache.struts2.portlet.util.PortletUrlHelper;
 import org.apache.struts2.views.util.UrlHelper;
 
 import com.opensymphony.xwork2.inject.Inject;
@@ -47,16 +49,15 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <p>This tag is used to create a URL.</p>
  *
- * <p>You can use the &lt;param&gt; tag inside the body to provide
- * additional request parameters. If the value of a param is an Array or 
- * an Iterable all the values will be added to the URL.</p>
+ * <p>You can use the "param" tag inside the body to provide
+ * additional request parameters.</p>
  *
  * <b>NOTE:</b>
- * <p>When includeParams is 'all' or 'get', the parameter defined in &lt;param&gt; tag will take
+ * <p>When includeParams is 'all' or 'get', the parameter defined in param tag will take
  * precedence and will not be overriden if they exists in the parameter submitted. For
  * example, in Example 3 below, if there is a id parameter in the url where the page this
- * tag is included like http://&lt;host&gt;:&lt;port&gt;/&lt;context&gt;/editUser.action?id=3333&name=John
- * the generated url will be http://&lt;host&gt;:&lt;port&gt;/&lt;context&gt;/editUser.action?id=22&name=John
+ * tag is included like http://<host>:<port>/<context>/editUser.action?id=3333&name=John
+ * the generated url will be http://<host>:<port>/context>/editUser.action?id=22&name=John
  * cause the parameter defined in the param tag will take precedence.</p>
  *
  * <!-- END SNIPPET: javadoc -->
@@ -107,7 +108,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  */
 @StrutsTag(name="url", tldTagClass="org.apache.struts2.views.jsp.URLTag", description="This tag is used to create a URL")
-public class URL extends ContextBean {
+public class URL extends Component {
     private static final Log LOG = LogFactory.getLog(URL.class);
 
     /**
@@ -123,8 +124,8 @@ public class URL extends ContextBean {
     public static final String GET = "get";
     public static final String ALL = "all";
 
-    protected HttpServletRequest req;
-    protected HttpServletResponse res;
+    private HttpServletRequest req;
+    private HttpServletResponse res;
 
     protected String includeParams;
     protected String scheme;
@@ -140,7 +141,6 @@ public class URL extends ContextBean {
     protected String anchor;
     protected String urlIncludeParams;
     protected ExtraParameterProvider extraParameterProvider;
-	protected UrlRenderer urlRenderer;
 
     public URL(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         super(stack);
@@ -152,11 +152,6 @@ public class URL extends ContextBean {
     public void setUrlIncludeParams(String urlIncludeParams) {
         this.urlIncludeParams = urlIncludeParams;
     }
-    
-    @Inject
-	public void setUrlRenderer(UrlRenderer urlRenderer) {
-		this.urlRenderer = urlRenderer;
-	}
 
     @Inject(required=false)
     public void setExtraParameterProvider(ExtraParameterProvider provider) {
@@ -208,8 +203,10 @@ public class URL extends ContextBean {
         }
     }
     private void includeGetParameters() {
-    	String query = extractQueryString();
-    	mergeRequestParameters(value, parameters, UrlHelper.parseQueryString(query));
+        if(!(Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest())) {
+            String query = extractQueryString();
+            mergeRequestParameters(value, parameters, UrlHelper.parseQueryString(query));
+        }
     }
 
     private String extractQueryString() {
@@ -231,7 +228,53 @@ public class URL extends ContextBean {
     }
 
     public boolean end(Writer writer, String body) {
-    	urlRenderer.renderUrl(writer, this);
+        String scheme = req.getScheme();
+
+        if (this.scheme != null) {
+            scheme = this.scheme;
+        }
+
+        String result;
+        if (value == null && action != null) {
+            if(Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
+                result = PortletUrlHelper.buildUrl(action, namespace, parameters, portletUrlType, portletMode, windowState);
+            }
+            else {
+                result = determineActionURL(action, namespace, method, req, res, parameters, scheme, includeContext, encode);
+            }
+        } else {
+            if(Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
+                result = PortletUrlHelper.buildResourceUrl(value, parameters);
+            }
+            else {
+                String _value = value;
+
+                // We don't include the request parameters cause they would have been
+                // prioritised before this [in start(Writer) method]
+                if (_value != null && _value.indexOf("?") > 0) {
+                    _value = _value.substring(0, _value.indexOf("?"));
+                }
+                result = UrlHelper.buildUrl(_value, req, res, parameters, scheme, includeContext, encode);
+            }
+        }
+        if ( anchor != null && anchor.length() > 0 ) {
+            result += '#' + anchor;
+        }
+
+        String id = getId();
+
+        if (id != null) {
+            getStack().getContext().put(id, result);
+
+            // add to the request and page scopes as well
+            req.setAttribute(id, result);
+        } else {
+            try {
+                writer.write(result);
+            } catch (IOException e) {
+                throw new StrutsException("IOError: " + e.getMessage(), e);
+            }
+        }
         return super.end(writer, body);
     }
 

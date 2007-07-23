@@ -25,9 +25,12 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.portlet.PortletRequest;
 
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.servlet.interceptor.ServletPrincipalProxy;
+import org.apache.struts2.portlet.PortletActionConstants;
+import org.apache.struts2.portlet.interceptor.PortletPrincipalProxy;
 import org.apache.struts2.util.ServletContextAware;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -151,7 +154,11 @@ public class ServletConfigInterceptor extends AbstractInterceptor implements Str
 
         if (action instanceof PrincipalAware) {
             HttpServletRequest request = (HttpServletRequest) context.get(HTTP_REQUEST);
-            if(request != null) {
+            Object portletRequest = context.get(PortletActionConstants.REQUEST);
+            if (portletRequest != null) {
+                // We are in portlet environment, so principal information resides in PortletRequest
+                ((PrincipalAware) action).setPrincipalProxy(new PortletPrincipalProxy((PortletRequest) portletRequest));
+            } else {
                 // We are in servtlet environment, so principal information resides in HttpServletRequest
                 ((PrincipalAware) action).setPrincipalProxy(new ServletPrincipalProxy(request));
             }

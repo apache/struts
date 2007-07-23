@@ -31,6 +31,7 @@ import org.apache.struts2.views.velocity.components.ActionDirective;
 import org.apache.struts2.views.velocity.components.ActionErrorDirective;
 import org.apache.struts2.views.velocity.components.ActionMessageDirective;
 import org.apache.struts2.views.velocity.components.AnchorDirective;
+import org.apache.struts2.views.velocity.components.AutocompleterDirective;
 import org.apache.struts2.views.velocity.components.BeanDirective;
 import org.apache.struts2.views.velocity.components.CheckBoxDirective;
 import org.apache.struts2.views.velocity.components.CheckBoxListDirective;
@@ -39,6 +40,7 @@ import org.apache.struts2.views.velocity.components.ComponentDirective;
 import org.apache.struts2.views.velocity.components.DateDirective;
 import org.apache.struts2.views.velocity.components.DivDirective;
 import org.apache.struts2.views.velocity.components.DoubleSelectDirective;
+import org.apache.struts2.views.velocity.components.DateTimePickerDirective;
 import org.apache.struts2.views.velocity.components.FieldErrorDirective;
 import org.apache.struts2.views.velocity.components.FileDirective;
 import org.apache.struts2.views.velocity.components.FormDirective;
@@ -57,12 +59,16 @@ import org.apache.struts2.views.velocity.components.ResetDirective;
 import org.apache.struts2.views.velocity.components.SelectDirective;
 import org.apache.struts2.views.velocity.components.SetDirective;
 import org.apache.struts2.views.velocity.components.SubmitDirective;
+import org.apache.struts2.views.velocity.components.TabbedPanelDirective;
 import org.apache.struts2.views.velocity.components.TextAreaDirective;
 import org.apache.struts2.views.velocity.components.TextDirective;
 import org.apache.struts2.views.velocity.components.TextFieldDirective;
 import org.apache.struts2.views.velocity.components.TokenDirective;
+import org.apache.struts2.views.velocity.components.TreeDirective;
+import org.apache.struts2.views.velocity.components.TreeNodeDirective;
 import org.apache.struts2.views.velocity.components.URLDirective;
 import org.apache.struts2.views.velocity.components.UpDownSelectDirective;
+import org.apache.struts2.views.velocity.components.WebTableDirective;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -86,7 +92,9 @@ public class DefaultTagLibrary implements TagLibrary {
             ComboBoxDirective.class,
             ComponentDirective.class,
             DateDirective.class,
+            DateTimePickerDirective.class,
             DivDirective.class,
+            AutocompleterDirective.class,
             DoubleSelectDirective.class,
             FileDirective.class,
             FormDirective.class,
@@ -105,11 +113,15 @@ public class DefaultTagLibrary implements TagLibrary {
             SetDirective.class,
             SubmitDirective.class,
             ResetDirective.class,
+            TabbedPanelDirective.class,
             TextAreaDirective.class,
             TextDirective.class,
             TextFieldDirective.class,
             TokenDirective.class,
+            TreeDirective.class,
+            TreeNodeDirective.class,
             URLDirective.class,
+            WebTableDirective.class,
             ActionErrorDirective.class,
             ActionMessageDirective.class,
             FieldErrorDirective.class,

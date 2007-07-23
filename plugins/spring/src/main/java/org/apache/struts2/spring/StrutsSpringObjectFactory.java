@@ -57,7 +57,7 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
         ApplicationContext appContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
         if (appContext == null) {
             // uh oh! looks like the lifecycle listener wasn't installed. Let's inform the user
-            String message = "********** FATAL ERROR STARTING UP SPRING-STRUTS INTEGRATION **********\n" +
+            String message = "********** FATAL ERROR STARTING UP STRUTS-SPRING INTEGRATION **********\n" +
                     "Looks like the Spring listener was not configured for your web app! \n" +
                     "Nothing will work until WebApplicationContextUtils returns a valid ApplicationContext.\n" +
                     "You might need to add the following to web.xml: \n" +

@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-parent</artifactId>
-        <version>2.0.9-SNAPSHOT</version>
+        <version>2.0.9</version>
     </parent>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-core</artifactId>
@@ -118,7 +118,7 @@
                 Samples:
                 $ cd struts/struts2/
                 $ mvn clean install -Papps,j4 -Djava14.jar=$JAVA_HOME/../Classes/classes.jar
-                $ mvn clean install -Papps,j4 -Djava14.jar="$JAVA_HOME/jre/lib/rt.jar"                
+                $ mvn clean install -Papps,j4 -Djava14.jar="$JAVA_HOME/jre/lib/rt.jar"
 
              -->
           <id>j4</id>

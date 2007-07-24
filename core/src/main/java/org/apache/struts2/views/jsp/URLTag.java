@@ -44,6 +44,7 @@ public class URLTag extends ComponentTagSupport {
     protected String method;
     protected String encode;
     protected String includeContext;
+    protected String escapeAmp;
     protected String portletMode;
     protected String windowState;
     protected String portletUrlType;
@@ -74,6 +75,9 @@ public class URLTag extends ComponentTagSupport {
         if (includeContext != null) {
             url.setIncludeContext(Boolean.valueOf(includeContext).booleanValue());
         }
+        if (escapeAmp != null) {
+            url.setEscapeAmp(Boolean.valueOf(escapeAmp).booleanValue());
+        }
     }
 
     public void setEncode(String encode) {
@@ -82,6 +86,10 @@ public class URLTag extends ComponentTagSupport {
 
     public void setIncludeContext(String includeContext) {
         this.includeContext = includeContext;
+    }
+
+    public void setEscapeAmp(String escapeAmp) {
+        this.escapeAmp = escapeAmp;
     }
 
     public void setIncludeParams(String name) {

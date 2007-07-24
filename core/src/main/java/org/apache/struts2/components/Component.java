@@ -333,16 +333,19 @@ public class Component {
      * @param scheme      http or https
      * @param includeContext  should the context path be included or not
      * @param encodeResult    should the url be encoded
+     * @param forceAddSchemeHostAndPort    should the scheme host and port be forced
+     * @param escapeAmp    should ampersand (&) be escaped to &amp;
      * @return the action url.
      */
     protected String determineActionURL(String action, String namespace, String method,
                                         HttpServletRequest req, HttpServletResponse res, Map parameters, String scheme,
-                                        boolean includeContext, boolean encodeResult) {
+                                        boolean includeContext, boolean encodeResult, boolean forceAddSchemeHostAndPort,
+                                        boolean escapeAmp) {
         String finalAction = findString(action);
         String finalNamespace = determineNamespace(namespace, getStack(), req);
         ActionMapping mapping = new ActionMapping(finalAction, finalNamespace, method, parameters);
         String uri = actionMapper.getUriFromActionMapping(mapping);
-        return UrlHelper.buildUrl(uri, req, res, parameters, scheme, includeContext, encodeResult);
+        return UrlHelper.buildUrl(uri, req, res, parameters, scheme, includeContext, encodeResult, forceAddSchemeHostAndPort, escapeAmp);
     }
 
     /**

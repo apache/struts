@@ -20,6 +20,8 @@
  */
 package org.apache.struts2.views.util;
 
+import com.mockobjects.dynamic.Mock;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -28,10 +30,7 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
-
-import com.mockobjects.dynamic.Mock;
 
 
 /**
@@ -39,8 +38,6 @@ import com.mockobjects.dynamic.Mock;
  *
  */
 public class UrlHelperTest extends StrutsTestCase {
-
-
 
     public void testForceAddSchemeHostAndPort() throws Exception {
         String expectedUrl = "http://localhost/contextPath/path1/path2/myAction.action";
@@ -142,6 +139,25 @@ public class UrlHelperTest extends StrutsTestCase {
         params.put("foo", "bar");
 
         String urlString = UrlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params);
+        assertEquals(expectedString, urlString);
+    }
+    
+    /**
+     * just one &, not &amp;
+     */
+    public void testBuildUrlCorrectlyAddsDoNotEscapeAmp() {
+        String expectedString = "my.actionName?foo=bar&hello=world";
+        Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
+        mockHttpServletRequest.expectAndReturn("getScheme", "http");
+        Mock mockHttpServletResponse = new Mock(HttpServletResponse.class);
+        mockHttpServletResponse.expectAndReturn("encodeURL", expectedString, expectedString);
+
+        String actionName = "my.actionName";
+        TreeMap params = new TreeMap();
+        params.put("hello", "world");
+        params.put("foo", "bar");
+
+        String urlString = UrlHelper.buildUrl(actionName, (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse) mockHttpServletResponse.proxy(), params, null, true, true, false, false);
         assertEquals(expectedString, urlString);
     }
 

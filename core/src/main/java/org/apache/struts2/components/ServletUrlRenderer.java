@@ -1,3 +1,23 @@
+/*
+ * $Id$
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.struts2.components;
 
 import java.io.IOException;
@@ -29,7 +49,7 @@ public class ServletUrlRenderer implements UrlRenderer {
 
 	       String result;
 	        if (urlComponent.value == null && urlComponent.action != null) {
-	                result = urlComponent.determineActionURL(urlComponent.action, urlComponent.namespace, urlComponent.method, urlComponent.req, urlComponent.res, urlComponent.parameters, scheme, urlComponent.includeContext, urlComponent.encode);
+	                result = urlComponent.determineActionURL(urlComponent.action, urlComponent.namespace, urlComponent.method, urlComponent.req, urlComponent.res, urlComponent.parameters, scheme, urlComponent.includeContext, urlComponent.encode, false, urlComponent.escapeAmp);
 	        } else {
 	                String _value = urlComponent.value;
 
@@ -38,7 +58,7 @@ public class ServletUrlRenderer implements UrlRenderer {
 	                if (_value != null && _value.indexOf("?") > 0) {
 	                    _value = _value.substring(0, _value.indexOf("?"));
 	                }
-	                result = UrlHelper.buildUrl(_value, urlComponent.req, urlComponent.res, urlComponent.parameters, scheme, urlComponent.includeContext, urlComponent.encode);
+	                result = UrlHelper.buildUrl(_value, urlComponent.req, urlComponent.res, urlComponent.parameters, scheme, urlComponent.includeContext, urlComponent.encode, false, urlComponent.escapeAmp);
 	        }
 	        if ( urlComponent.anchor != null && urlComponent.anchor.length() > 0 ) {
 	            result += '#' + urlComponent.anchor;

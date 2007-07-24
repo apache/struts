@@ -18,7 +18,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.struts2.views.util;
 
 import java.io.UnsupportedEncodingException;
@@ -91,6 +90,10 @@ public class UrlHelper {
     }
 
     public static String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map params, String scheme, boolean includeContext, boolean encodeResult, boolean forceAddSchemeHostAndPort) {
+    	return buildUrl(action, request, response, params, scheme, includeContext, encodeResult, forceAddSchemeHostAndPort, true);
+    }
+    
+    public static String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map params, String scheme, boolean includeContext, boolean encodeResult, boolean forceAddSchemeHostAndPort, boolean escapeAmp) {
         StringBuffer link = new StringBuffer();
 
         boolean changedScheme = false;
@@ -169,7 +172,11 @@ public class UrlHelper {
         }
 
         //if the action was not explicitly set grab the params from the request
-        buildParametersString(params, link);
+        if (escapeAmp) {
+            buildParametersString(params, link);
+        } else {
+            buildParametersString(params, link, "&");
+        } 
 
         String result;
 

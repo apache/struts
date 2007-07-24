@@ -107,5 +107,3 @@
     </@s.iterator>
 </#if>
 </select>
-
-

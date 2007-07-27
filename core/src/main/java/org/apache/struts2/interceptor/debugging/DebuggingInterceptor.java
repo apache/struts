@@ -40,9 +40,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
-import org.apache.struts2.StrutsConstants;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -67,6 +67,10 @@ import com.opensymphony.xwork2.util.ValueStack;
  * the 'xml' mode is inserted at the top of the page.</li>
  * <li> <code>command</code> - Tests an OGNL expression and returns the
  * string result. Only used by the OGNL console.</li>
+ * <li><code>browser</code> Shows field values of an object specified in the 
+ * <code>object<code> parameter (#context by default). When the <code>object<code>
+ * parameters is set, the '#' character needs to be escaped to '%23'. Like
+ * debug=browser&object=%23parameters</li>
  * </ul>
  * <!-- END SNIPPET: parameters -->
  * <p/>
@@ -97,11 +101,14 @@ public class DebuggingInterceptor implements Interceptor {
     private final static String XML_MODE = "xml";
     private final static String CONSOLE_MODE = "console";
     private final static String COMMAND_MODE = "command";
+    private final static String BROWSER_MODE = "browser";
 
     private final static String SESSION_KEY = "org.apache.struts2.interceptor.debugging.VALUE_STACK";
 
     private final static String DEBUG_PARAM = "debug";
+    private final static String OBJECT_PARAM = "object";
     private final static String EXPRESSION_PARAM = "expression";
+    private final static String DECORATE_PARAM = "decorate";
 
     private boolean enableXmlWithConsole = false;
     
@@ -140,7 +147,7 @@ public class DebuggingInterceptor implements Interceptor {
      * @see com.opensymphony.xwork2.interceptor.Interceptor#invoke(com.opensymphony.xwork2.ActionInvocation)
      */
     public String intercept(ActionInvocation inv) throws Exception {
-
+        boolean actionOnly = false;
         boolean cont = true;
         if (devMode) {
             final ActionContext ctx = ActionContext.getContext();
@@ -204,11 +211,53 @@ public class DebuggingInterceptor implements Interceptor {
                     ex.printStackTrace();
                 }
                 cont = false;
+            } else if (BROWSER_MODE.equals(type)) {
+                actionOnly = true;
+                inv.addPreResultListener(
+                    new PreResultListener() {
+                        public void beforeResult(ActionInvocation inv, String actionResult) {
+                            String rootObjectExpression = getParameter(OBJECT_PARAM);
+                            if (rootObjectExpression == null)
+                                rootObjectExpression = "#context";
+                            String decorate = getParameter(DECORATE_PARAM);
+                            ValueStack stack = (ValueStack) ctx.get(ActionContext.VALUE_STACK);
+                            Object rootObject = stack.findValue(rootObjectExpression);
+                            
+                            try {
+                                StringWriter writer = new StringWriter();
+                                ObjectToHTMLWriter htmlWriter = new ObjectToHTMLWriter(writer);
+                                htmlWriter.write(rootObject, rootObjectExpression);
+                                String html = writer.toString();
+                                writer.close();
+                                
+                                stack.set("debugHtml", html);
+                                
+                                //on the first request, response can be decorated
+                                //but we need plain text on the other ones
+                                if ("false".equals(decorate))
+                                    ServletActionContext.getRequest().setAttribute("decorator", "none");
+                                
+                                FreemarkerResult result = new FreemarkerResult();
+                                result.setFreemarkerManager(freemarkerManager);
+                                result.setContentType("text/html");
+                                result.setLocation("/org/apache/struts2/interceptor/debugging/browser.ftl");
+                                result.execute(inv);
+                            } catch (Exception ex) {
+                                log.error("Unable to create debugging console", ex);
+                            }
+
+                        }
+                    });
             }
-        }
+        } 
         if (cont) {
             try {
-                return inv.invoke();
+                if (actionOnly) {
+                    inv.invokeActionOnly();
+                    return null;
+                } else {
+                    return inv.invoke();
+                }
             } finally {
                 if (devMode && consoleEnabled) {
                     final ActionContext ctx = ActionContext.getContext();

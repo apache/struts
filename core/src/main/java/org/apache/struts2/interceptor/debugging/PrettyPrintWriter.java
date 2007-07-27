@@ -35,6 +35,7 @@ public class PrettyPrintWriter {
     private boolean readyForNewLine;
     private boolean tagIsEmpty;
     private String newLine;
+    private boolean escape = true;
 
     private static final char[] NULL = "&#x0;".toCharArray();
     private static final char[] AMP = "&amp;".toCharArray();
@@ -125,7 +126,12 @@ public class PrettyPrintWriter {
                     this.writer.write(QUOT);
                     break;
                 case '\'':
-                    this.writer.write(APOS);
+                    //for some reason IE just doesn't like this when we use it from ObjectToHtmlWriter
+                    //it works on FF and Opera
+                    if (escape)
+                        this.writer.write(APOS);
+                    else
+                        this.writer.write(c);
                     break;
                 case '\r':
                     this.writer.write(SLASH_R);
@@ -180,5 +186,13 @@ public class PrettyPrintWriter {
 
     public void close() {
         writer.close();
+    }
+
+    public boolean isEscape() {
+        return escape;
+    }
+
+    public void setEscape(boolean escape) {
+        this.escape = escape;
     }
 }

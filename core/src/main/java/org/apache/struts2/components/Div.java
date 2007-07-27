@@ -33,7 +33,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: javadoc -->
  *
  */
-@StrutsTag(name="div", tldTagClass="org.apache.struts2.views.jsp.ui.DivTag", description="Render HTML div providing content from remote call via AJAX")
+@StrutsTag(name="div", tldTagClass="org.apache.struts2.views.jsp.ui.DivTag", description="Render an HTML div")
 public class Div extends ClosingUIBean {
 
     public static final String TEMPLATE = "div";

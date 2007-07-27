@@ -53,10 +53,17 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
     private StrutsMockHttpServletResponse response;
     private JSONValidationInterceptor interceptor;
     private StrutsMockHttpServletRequest request;
+    private AnnotationValidationInterceptor validationInterceptor;
 
     public void testValidationFails() throws Exception {
-
+        
         action.addActionError("General error");
+        
+        Map parameters = new HashMap();
+        parameters.put("struts.enableJSONValidation", "true");
+        request.setParameterMap(parameters);
+        
+        validationInterceptor.intercept(invocation);
         interceptor.setValidationFailedStatus(HttpServletResponse.SC_BAD_REQUEST);
         interceptor.intercept(invocation);
 
@@ -68,7 +75,7 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
         //json
         assertEquals(normalizedExpected, normalizedActual);
         //execution
-        assertFalse(invocation.isExecuted());
+        assertFalse(action.isExecuted());
         //http status
         assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
     }
@@ -78,14 +85,18 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
 
         action.setText("abcd@ggg.com");
         action.setValue(10);
+        
+        Map parameters = new HashMap();
+        parameters.put("struts.enableJSONValidation", "true");
+        request.setParameterMap(parameters);
 
+        validationInterceptor.intercept(invocation);
         interceptor.intercept(invocation);
 
         String json = stringWriter.toString();
 
         String normalizedActual = TestUtils.normalize(json, true);
         assertEquals("", normalizedActual);
-        assertTrue(invocation.isExecuted());
     }
     
     public void testValidationSucceedsValidateOnly() throws Exception {
@@ -97,22 +108,24 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
         //just validate
         Map parameters = new HashMap();
         parameters.put("struts.validateOnly", "true");
+        parameters.put("struts.enableJSONValidation", "true");
         request.setParameterMap(parameters);
         
+        validationInterceptor.intercept(invocation);
         interceptor.intercept(invocation);
 
         String json = stringWriter.toString();
 
         String normalizedActual = TestUtils.normalize(json, true);
         assertEquals("/*{}*/", normalizedActual);
-        assertFalse(invocation.isExecuted());
+        assertFalse(action.isExecuted());
     }
 
     protected void setUp() throws Exception {
         super.setUp();
         this.action = new TestAction();
         this.interceptor = new JSONValidationInterceptor();
-        
+        this.validationInterceptor = new AnnotationValidationInterceptor();
         this.request = new StrutsMockHttpServletRequest();
         stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);
@@ -129,21 +142,11 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
         StrutsMockServletContext servletContext = new StrutsMockServletContext();
 
         context.put(StrutsStatics.SERVLET_CONTEXT, servletContext);
-        invocation = new MockActionInvocation() {
-            private boolean executed;
-
-            public String invoke() throws Exception {
-                executed = true;
-                return "success";
-            }
-
-            public boolean isExecuted() {
-                return executed;
-            }
-        };
+        invocation = new MockActionInvocation(); 
         invocation.setAction(action);
         invocation.setInvocationContext(context);
         MockActionProxy proxy = new MockActionProxy();
+        proxy.setMethod("execute");
         proxy.setAction(action);
         invocation.setProxy(proxy);
     }
@@ -152,8 +155,10 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
     public static class TestAction extends ActionSupport {
         private String text = "x";
         private int value = -10;
-
+        private boolean executed = false;
+        
         public String execute() {
+            executed = true;
             return Action.SUCCESS;
         }
 
@@ -179,6 +184,10 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
         @IntRangeFieldValidator(min = "-1", message = "Min value is -1")
         public void setValue(int value) {
             this.value = value;
+        }
+
+        public boolean isExecuted() {
+            return executed;
         }
     }
 }

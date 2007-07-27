@@ -76,6 +76,7 @@
        </action>
        <action name="quizAjax" class="org.apache.struts2.showcase.validation.QuizAction">
             <interceptor-ref name="jsonValidationWorkflowStack"/>
+            <result name="input">/validation/quiz-ajax.jsp</result>
             <result>/validation/quiz-success.jsp</result>
        </action>
        <action name="getNodes" class="org.apache.struts2.showcase.ShowAjaxDynamicTreeAction">

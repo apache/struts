@@ -5,8 +5,8 @@
 
 <html>
 <head>
-    <title>Validation -Ajax</title>
-    <sx:head cache="true" compressed="false"/>
+    <title>Validation - Ajax</title>
+    <sx:head cache="false" compressed="false"/>
 </head>
 
 <s:url var="url" namespace="/validation" action="quizAjax"/>

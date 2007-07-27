@@ -36,21 +36,41 @@ import org.apache.struts2.ServletActionContext;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
+import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 
 /**
- * <p>Extends the annotations validator and returns a JSON string with the
- * validation errors. If validation succeeds the action is invoked.</p> 
+ * <p>Serializes validation and action errors into JSON. This interceptor does not
+ * perform any validation, so it must follow the 'validation' interceptor on the stack.
+ * </p>
  * 
+ * <p>This stack (defined in struts-default.xml) shows how to use this interceptor with the
+ * 'validation' interceptor</p>
+ * <pre>
+ * &lt;interceptor-stack name="jsonValidationWorkflowStack"&gt;
+ *      &lt;interceptor-ref name="basicStack"/&gt;
+ *      &lt;interceptor-ref name="validation"&gt;
+ *            &lt;param name="excludeMethods"&gt;input,back,cancel&lt;/param&gt;
+ *      &lt;/interceptor-ref&gt;
+ *      &lt;interceptor-ref name="jsonValidation"/&gt;
+ *      &lt;interceptor-ref name="workflow"/&gt;
+ * &lt;/interceptor-stack&gt;
+ * </pre>
  * <p>If 'validationFailedStatus' is set it will be used as the Response status
  * when validation fails.</p>
  * 
  * <p>If the request has a parameter 'struts.validateOnly' execution will return after 
  * validation (action won't be executed).</p>
+ * 
+ * <p>A request parameter named 'enableJSONValidation' must be set to 'true' to
+ * use this interceptor</p>
  */
-public class JSONValidationInterceptor extends AnnotationValidationInterceptor {
+public class JSONValidationInterceptor extends MethodFilterInterceptor {
     private static final Log LOG = LogFactory
         .getLog(JSONValidationInterceptor.class);
+    
     private static final String VALIDATE_ONLY_PARAM = "struts.validateOnly";
+    private static final String VALIDATE_JSON_PARAM = "struts.enableJSONValidation";
+    
     static char[] hex = "0123456789ABCDEF".toCharArray();
 
     private int validationFailedStatus = -1;
@@ -65,33 +85,34 @@ public class JSONValidationInterceptor extends AnnotationValidationInterceptor {
 
     @Override
     protected String doIntercept(ActionInvocation invocation) throws Exception {
-        //validate
-        doBeforeInvocation(invocation);
-
         HttpServletResponse response = ServletActionContext.getResponse();
         HttpServletRequest request = ServletActionContext.getRequest();
 
         Object action = invocation.getAction();
+        String jsonEnabled = request.getParameter(VALIDATE_JSON_PARAM);
+        
+        if (jsonEnabled != null && "true".equals(jsonEnabled)) {
+            if (action instanceof ValidationAware) {
+                // generate json
+                ValidationAware validationAware = (ValidationAware) action;
+                if (validationAware.hasErrors()) {
+                    if (validationFailedStatus >= 0)
+                        response.setStatus(validationFailedStatus);
+                    response.getWriter().print(buildResponse(validationAware));
+                    return Action.NONE;
+                }
+            }
 
-        if (action instanceof ValidationAware) {
-            // generate json
-            ValidationAware validationAware = (ValidationAware) action;
-            if (validationAware.hasErrors()) {
-                if (validationFailedStatus >= 0)
-                    response.setStatus(validationFailedStatus);
-                response.getWriter().print(buildResponse(validationAware));
+            String validateOnly = request.getParameter(VALIDATE_ONLY_PARAM);
+            if (validateOnly != null && "true".equals(validateOnly)) {
+                //there were no errors
+                response.getWriter().print("/* {} */");
                 return Action.NONE;
-            } 
-        }
-
-        String validateOnly = request.getParameter(VALIDATE_ONLY_PARAM);
-        if (validateOnly != null && "true".equals(validateOnly)) {
-            //there were no errors
-            response.getWriter().print("/* {} */");
-            return Action.NONE;
-        } else {
+            } else {
+                return invocation.invoke();
+            }
+        } else
             return invocation.invoke();
-        }
     }
 
     /**

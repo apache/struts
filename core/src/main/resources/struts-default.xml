@@ -140,9 +140,10 @@
             <!-- Sample JSON validation stack -->
             <interceptor-stack name="jsonValidationWorkflowStack">
                 <interceptor-ref name="basicStack"/>
-                <interceptor-ref name="jsonValidation">
+                <interceptor-ref name="validation">
                     <param name="excludeMethods">input,back,cancel</param>
                 </interceptor-ref>
+                <interceptor-ref name="jsonValidation"/>
                 <interceptor-ref name="workflow"/>
             </interceptor-stack>
 

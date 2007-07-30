@@ -162,25 +162,25 @@ import com.opensymphony.xwork2.inject.Container;
  */
 public class DefaultActionMapper implements ActionMapper {
 
-    static final String METHOD_PREFIX = "method:";
+    protected static final String METHOD_PREFIX = "method:";
 
-    static final String ACTION_PREFIX = "action:";
+    protected static final String ACTION_PREFIX = "action:";
 
-    static final String REDIRECT_PREFIX = "redirect:";
+    protected static final String REDIRECT_PREFIX = "redirect:";
 
-    static final String REDIRECT_ACTION_PREFIX = "redirect-action:";
+    protected static final String REDIRECT_ACTION_PREFIX = "redirect-action:";
 
-    private boolean allowDynamicMethodCalls = true;
+    protected boolean allowDynamicMethodCalls = true;
 
-    private boolean allowSlashesInActionNames = false;
+    protected boolean allowSlashesInActionNames = false;
     
-    private boolean alwaysSelectFullNamespace = false;
+    protected boolean alwaysSelectFullNamespace = false;
 
-    private PrefixTrie prefixTrie = null;
+    protected PrefixTrie prefixTrie = null;
     
-    List extensions = new ArrayList() {{ add("action");}};
+    protected List extensions = new ArrayList() {{ add("action");}};
 
-    private Container container;
+    protected  Container container;
 
     public DefaultActionMapper() {
         prefixTrie = new PrefixTrie() {
@@ -266,7 +266,16 @@ public class DefaultActionMapper implements ActionMapper {
     public void setContainer(Container container) {
         this.container = container;
     }
-
+    
+    @Inject(StrutsConstants.STRUTS_ACTION_EXTENSION)
+    public void setExtensions(String extensions) {
+        if (!"".equals(extensions)) {
+            this.extensions = Arrays.asList(extensions.split(","));
+        } else {
+            this.extensions = null;
+        }
+    }
+    
     /*
      * (non-Javadoc)
      *
@@ -347,7 +356,7 @@ public class DefaultActionMapper implements ActionMapper {
      * @param mapping
      *            The action mapping to populate
      */
-    void parseNameAndNamespace(String uri, ActionMapping mapping,
+    protected void parseNameAndNamespace(String uri, ActionMapping mapping,
             ConfigurationManager configManager) {
         String namespace, name;
         int lastSlash = uri.lastIndexOf("/");
@@ -401,7 +410,7 @@ public class DefaultActionMapper implements ActionMapper {
      *            The action name
      * @return The action name without its extension
      */
-    String dropExtension(String name) {
+    protected String dropExtension(String name) {
         if (extensions == null) {
             return name;
         }
@@ -419,7 +428,7 @@ public class DefaultActionMapper implements ActionMapper {
     /**
      * Returns null if no extension is specified.
      */
-    String getDefaultExtension() {
+    protected String getDefaultExtension() {
         if (extensions == null) {
             return null;
         } else {
@@ -427,15 +436,6 @@ public class DefaultActionMapper implements ActionMapper {
         }
     }
 
-    @Inject(StrutsConstants.STRUTS_ACTION_EXTENSION)
-    public void setExtensions(String extensions) {
-        if (!"".equals(extensions)) {
-            this.extensions = Arrays.asList(extensions.split(","));
-        } else {
-            this.extensions = null;
-        }
-    }
-    
     /**
      * Gets the uri from the request
      *
@@ -443,7 +443,7 @@ public class DefaultActionMapper implements ActionMapper {
      *            The request
      * @return The uri
      */
-    String getUri(HttpServletRequest request) {
+    protected String getUri(HttpServletRequest request) {
         // handle http dispatcher includes.
         String uri = (String) request
                 .getAttribute("javax.servlet.include.servlet_path");

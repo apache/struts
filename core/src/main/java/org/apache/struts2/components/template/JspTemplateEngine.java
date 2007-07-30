@@ -20,19 +20,16 @@
  */
 package org.apache.struts2.components.template;
 
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.PageContext;
-
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.components.Include;
 import org.apache.struts2.components.UIBean;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.PageContext;
+import java.util.List;
 
 /**
  * JSP based template engine.
@@ -50,11 +47,10 @@ public class JspTemplateEngine extends BaseTemplateEngine {
         ValueStack stack = templateContext.getStack();
         stack.push(tag);
         PageContext pageContext = (PageContext) stack.getContext().get(ServletActionContext.PAGE_CONTEXT);
-        List templates = template.getPossibleTemplates(this);
+        List<Template> templates = template.getPossibleTemplates(this);
         Exception exception = null;
         boolean success = false;
-        for (Iterator iterator = templates.iterator(); iterator.hasNext();) {
-            Template t = (Template) iterator.next();
+        for (Template t : templates) {
             try {
                 Include.include(getFinalTemplateName(t), pageContext.getOut(),
                         pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());

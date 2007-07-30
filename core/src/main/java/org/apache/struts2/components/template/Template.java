@@ -59,8 +59,8 @@ public class Template implements Cloneable {
         return name;
     }
 
-    public List getPossibleTemplates(TemplateEngine engine) {
-        List list = new ArrayList(3);
+    public List<Template> getPossibleTemplates(TemplateEngine engine) {
+        List<Template> list = new ArrayList<Template>(3);
         Template template = this;
         String parentTheme;
         list.add(template);

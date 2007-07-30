@@ -20,16 +20,7 @@
  */
 package org.apache.struts2.components.template;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
@@ -37,7 +28,13 @@ import org.apache.struts2.views.velocity.VelocityManager;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
 
-import com.opensymphony.xwork2.inject.Inject;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Velocity based template engine.
@@ -64,14 +61,13 @@ public class VelocityTemplateEngine extends BaseTemplateEngine {
         VelocityEngine velocityEngine = velocityManager.getVelocityEngine();
 
         // get the list of templates we can use
-        List templates = templateContext.getTemplate().getPossibleTemplates(this);
+        List<Template> templates = templateContext.getTemplate().getPossibleTemplates(this);
 
         // find the right template
         org.apache.velocity.Template template = null;
         String templateName = null;
         Exception exception = null;
-        for (Iterator iterator = templates.iterator(); iterator.hasNext();) {
-            Template t = (Template) iterator.next();
+        for (Template t : templates) {
             templateName = getFinalTemplateName(t);
             try {
                 // try to load, and if it works, stop at the first one

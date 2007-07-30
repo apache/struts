@@ -84,14 +84,13 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
         Configuration config = freemarkerManager.getConfiguration(servletContext);
 
         // get the list of templates we can use
-        List templates = templateContext.getTemplate().getPossibleTemplates(this);
+        List<Template> templates = templateContext.getTemplate().getPossibleTemplates(this);
 
         // find the right template
         freemarker.template.Template template = null;
         String templateName = null;
         Exception exception = null;
-        for (Object template1 : templates) {
-            Template t = (Template) template1;
+        for (Template t : templates) {
             templateName = getFinalTemplateName(t);
             if (freemarkerCaching) {
                 if (!isTemplateMissing(templateName)) {

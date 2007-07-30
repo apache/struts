@@ -20,32 +20,28 @@
  */
 package org.apache.struts2.components.template;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.ValueStack;
+import freemarker.template.Configuration;
+import freemarker.template.SimpleHash;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.ValueStack;
-
-import freemarker.template.Configuration;
-import freemarker.template.SimpleHash;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Freemarker based template engine.
@@ -54,8 +50,8 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
     static Class bodyContent = null;
     private FreemarkerManager freemarkerManager;
 
-    private HashMap<String, freemarker.template.Template> templates = new HashMap<String, freemarker.template.Template>();
-    private HashSet<String> missingTemplates = new HashSet<String>();
+    private final HashMap<String, freemarker.template.Template> templates = new HashMap<String, freemarker.template.Template>();
+    private final HashSet<String> missingTemplates = new HashSet<String>();
     private boolean freemarkerCaching = false;
 
     static {
@@ -95,8 +91,8 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
         freemarker.template.Template template = null;
         String templateName = null;
         Exception exception = null;
-        for (Iterator iterator = templates.iterator(); iterator.hasNext();) {
-            Template t = (Template) iterator.next();
+        for (Object template1 : templates) {
+            Template t = (Template) template1;
             templateName = getFinalTemplateName(t);
             if (freemarkerCaching) {
                 if (!isTemplateMissing(templateName)) {
@@ -202,14 +198,14 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
     
     protected freemarker.template.Template findInCache(String templateName) {
         synchronized(templates) {
-            return (freemarker.template.Template) templates.get(templateName);
+            return templates.get(templateName);
         }
     }
     
     /**
      * Enables or disables Struts caching of Freemarker templates. By default disabled.
      * Set struts.freemarker.templatesCache=true to enable cache
-     * @param caching true if the template engine should cache freemarker template
+     * @param cacheTemplates "true" if the template engine should cache freemarker template
      * internally
      */
     @Inject(StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE)

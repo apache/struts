@@ -311,7 +311,7 @@ public class Form extends ClosingUIBean {
         this.onsubmit = onsubmit;
     }
 
-    @StrutsTagAttribute(description="Set action nane to submit to, without .action suffix", defaultValue="current action")
+    @StrutsTagAttribute(description="Set action name to submit to, without .action suffix", defaultValue="current action")
     public void setAction(String action) {
         this.action = action;
     }
@@ -342,7 +342,7 @@ public class Form extends ClosingUIBean {
         this.validate = validate;
     }
 
-    @StrutsTagAttribute(description="he portlet mode to display after the form submit")
+    @StrutsTagAttribute(description="The portlet mode to display after the form submit")
     public void setPortletMode(String portletMode) {
         this.portletMode = portletMode;
     }

@@ -204,7 +204,7 @@ public class Form extends ClosingUIBean {
     }
 
     /**
-     * Form component determine the its HTML element id as follows:-
+     * The Form component determines its HTML element id as follows:-
      * <ol>
      *    <li>if an 'id' attribute is specified.</li>
      *    <li>if an 'action' attribute is specified, it will be used as the id.</li>
@@ -440,7 +440,7 @@ public class Form extends ClosingUIBean {
         this.onsubmit = onsubmit;
     }
 
-    @StrutsTagAttribute(description="Set action nane to submit to, without .action suffix", defaultValue="current action")
+    @StrutsTagAttribute(description="Set action name to submit to, without .action suffix", defaultValue="current action")
     public void setAction(String action) {
         this.action = action;
     }
@@ -471,7 +471,7 @@ public class Form extends ClosingUIBean {
         this.validate = validate;
     }
 
-    @StrutsTagAttribute(description="he portlet mode to display after the form submit")
+    @StrutsTagAttribute(description="The portlet mode to display after the form submit")
     public void setPortletMode(String portletMode) {
         this.portletMode = portletMode;
     }

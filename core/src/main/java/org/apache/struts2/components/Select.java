@@ -47,6 +47,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *        multiple="true"
  *        size="3"
  *        required="true"
+ *        value="%{petDao.pets.{id}}"
  * /&gt;
  *
  * &lt;s:select label="Months"
@@ -132,8 +133,8 @@ public class Select extends ListUIBean {
     }
 
     @StrutsTagAttribute(description=" Creates a multiple select. The tag will pre-select multiple values" +
-                " if the values are passed as an Array (of appropriate types) via the value attribute. Passing " +
-                "a Collection may work too? Haven't tested this.", type="Boolean", defaultValue="false")
+                " if the values are passed as an Array or a Collection(of appropriate types) via the value attribute. If one of the keys equals" +
+                " one of the values in the Collection or Array it wil be selected", type="Boolean", defaultValue="false")
     public void setMultiple(String multiple) {
         this.multiple = multiple;
     }

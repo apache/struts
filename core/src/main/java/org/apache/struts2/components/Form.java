@@ -29,6 +29,8 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsConstants;
@@ -95,6 +97,11 @@ import com.opensymphony.xwork2.validator.Validator;
  */
 @StrutsTag(name="form", tldTagClass="org.apache.struts2.views.jsp.ui.FormTag", description="Renders an input form")
 public class Form extends ClosingUIBean {
+    /**
+     * Provide a logging instance.
+     */
+    private static final Log LOG = LogFactory.getLog(Form.class);
+
     public static final String OPEN_TEMPLATE = "form";
     public static final String TEMPLATE = "form-close";
 
@@ -292,8 +299,14 @@ public class Form extends ClosingUIBean {
             }
         } else if (action != null) {
             // Since we can't find an action alias in the configuration, we just assume
-            // the action attribute supplied is the path to be used as the uri this
+            // the action attribute supplied is the path to be used as the URI this
             // form is submitting to.
+
+            // Warn user that the specified namespace/action combo
+            // was not found in the configuration.
+            if (namespace != null) {
+                LOG.warn("No configuration found for the specified action: '" + action + "' in namespace: '" + namespace + "'. Form action defaulting to 'action' attribute's literal value.");
+            }
 
             String result = UrlHelper.buildUrl(action, request, response, null);
             addParameter("action", result);

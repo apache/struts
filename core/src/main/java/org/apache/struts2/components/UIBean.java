@@ -907,7 +907,7 @@ public abstract class UIBean extends Component {
         this.cssClass = cssClass;
     }
 
-    @StrutsTagAttribute(description="The css style definitions for element ro use")
+    @StrutsTagAttribute(description="The css style definitions for element to use")
     public void setCssStyle(String cssStyle) {
         this.cssStyle = cssStyle;
     }

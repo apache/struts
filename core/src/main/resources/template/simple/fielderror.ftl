@@ -37,7 +37,16 @@
 				<#assign doneStartUlTag=true><#t/>
 			</#if><#t/>
 			<#list eValue as eEachValue><#t/>
-				<li><span class="errorMessage">${eEachValue}</span></li>
+				<li><span<#rt/>
+<#if parameters.cssClass?exists>
+ class="${parameters.cssClass?html}"<#rt/>
+<#else>
+ class="errorMessage"<#rt/>
+</#if>
+<#if parameters.cssStyle?exists>
+ style="${parameters.cssStyle?html}"<#rt/>
+</#if>
+>${eEachValue}</span></li>
 			</#list><#t/>			
 		</#if><#t/>
 		</#list><#t/>
@@ -46,13 +55,22 @@
 		</ul>
 		<#assign doneEndUlTag=true><#t/>
 	</#if><#t/>
-<#else><#t/>	
+<#else><#t/>
 	<#if (eKeysSize > 0)><#t/>
 		<ul>
 			<#list eKeys as eKey><#t/>
 				<#assign eValue = fieldErrors[eKey]><#t/>
 				<#list eValue as eEachValue><#t/>
-					<li><span class="errorMessage">${eEachValue}</span></li>
+					<li><span<#rt/>
+<#if parameters.cssClass?exists>
+ class="${parameters.cssClass?html}"<#rt/>
+<#else>
+ class="errorMessage"<#rt/>
+</#if>
+<#if parameters.cssStyle?exists>
+ style="${parameters.cssStyle?html}"<#rt/>
+</#if>
+>${eEachValue}</span></li>
 				</#list><#t/>
 			</#list><#t/>
 		</ul>

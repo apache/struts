@@ -23,7 +23,16 @@
 <#if (actionErrors?exists && actionErrors?size > 0)>
 	<ul>
 	<#list actionErrors as error>
-		<li><span class="errorMessage">${error}</span></li>
+		<li><span<#rt/>
+<#if parameters.cssClass?exists>
+ class="${parameters.cssClass?html}"<#rt/>
+<#else>
+ class="errorMessage"<#rt/>
+</#if>
+<#if parameters.cssStyle?exists>
+ style="${parameters.cssStyle?html}"<#rt/>
+</#if>
+>${error}</span></li>
 	</#list>
 	</ul>
 </#if>

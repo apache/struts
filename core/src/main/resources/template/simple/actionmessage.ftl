@@ -23,7 +23,16 @@
 <#if (actionMessages?exists && actionMessages?size > 0)>
 	<ul>
 		<#list actionMessages as message>
-			<li><span class="actionMessage">${message}</span></li>
+			<li><span<#rt/>
+<#if parameters.cssClass?exists>
+ class="${parameters.cssClass?html}"<#rt/>
+<#else>
+ class="actionMessage"<#rt/>
+</#if>
+<#if parameters.cssStyle?exists>
+ style="${parameters.cssStyle?html}"<#rt/>
+</#if>
+>${message}</span></li>
 		</#list>
 	</ul>
 </#if>

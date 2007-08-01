@@ -51,7 +51,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *         &lt;s:param&gt;field1&lt;/s:param&gt;
  *         &lt;s:param&gt;field2&lt;/s:param&gt;
  *    &lt;/s:fielderror&gt;
- *    &lt;s:form .... &gt;>
+ *    &lt;s:form .... &gt;
  *       ....
  *    &lt;/s:form&gt;
  *
@@ -61,7 +61,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *          &lt;s:param value="%{'field1'}" /&gt;
  *          &lt;s:param value="%{'field2'}" /&gt;
  *    &lt;/s:fielderror&gt;
- *    &lt;s:form .... &gt;>
+ *    &lt;s:form .... &gt;
  *       ....
  *    &lt;/s:form&gt;
  *

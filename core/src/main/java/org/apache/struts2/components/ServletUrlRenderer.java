@@ -23,6 +23,8 @@ package org.apache.struts2.components;
 import java.io.IOException;
 import java.io.Writer;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.util.UrlHelper;
@@ -36,6 +38,11 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
  * 
  */
 public class ServletUrlRenderer implements UrlRenderer {
+    /**
+     * Provide a logging instance.
+     */
+    private static final Log LOG = LogFactory.getLog(ServletUrlRenderer.class);
+
 
 	/**
 	 * {@inheritDoc}
@@ -152,10 +159,14 @@ public class ServletUrlRenderer implements UrlRenderer {
 			}
 		} else if (action != null) {
 			// Since we can't find an action alias in the configuration, we just
-			// assume
-			// the action attribute supplied is the path to be used as the uri
-			// this
-			// form is submitting to.
+			// assume the action attribute supplied is the path to be used as
+			// the URI this form is submitting to.
+
+      // Warn user that the specified namespace/action combo
+      // was not found in the configuration.
+      if (namespace != null) {
+          LOG.warn("No configuration found for the specified action: '" + action + "' in namespace: '" + namespace + "'. Form action defaulting to 'action' attribute's literal value.");
+      }
 
 			String result = UrlHelper.buildUrl(action, formComponent.request, formComponent.response, null);
 			formComponent.addParameter("action", result);
@@ -185,9 +196,7 @@ public class ServletUrlRenderer implements UrlRenderer {
 
 		// WW-1284
 		// evaluate if client-side js is to be enabled. (if validation
-		// interceptor
-		// does allow validation eg. method is not filtered out)
+		// interceptor does allow validation eg. method is not filtered out)
 		formComponent.evaluateClientSideJsEnablement(actionName, namespace, actionMethod);
 	}
-
 }

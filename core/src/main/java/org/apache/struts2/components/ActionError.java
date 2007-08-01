@@ -41,7 +41,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- START SNIPPET: example -->
  *
  *    &lt;s:actionerror /&gt;
- *    &lt;s:form .... &gt;>
+ *    &lt;s:form .... &gt;
  *       ....
  *    &lt;/s:form&gt;
  *

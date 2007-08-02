@@ -427,7 +427,7 @@ public class Component {
     /**
      * Add's the given key and value to this components own parameter.
      * <p/>
-     * If the provided key is <tt>null</tt> nothing happends.
+     * If the provided key is <tt>null</tt> nothing happens.
      * If the provided value is <tt>null</tt> any existing parameter with
      * the given key name is removed.
      * @param key  the key of the new parameter to add.

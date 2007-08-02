@@ -69,7 +69,7 @@ public class Component {
     }
 
     /**
-     * Get's the name of this component.
+     * Gets the name of this component.
      * @return the name of this component.
      */
     private String getComponentName() {
@@ -86,7 +86,7 @@ public class Component {
     }
     
     /**
-     * Get's the OGNL value stack assoicated with this component.
+     * Gets the OGNL value stack assoicated with this component.
      * @return the OGNL value stack assoicated with this component.
      */
     public ValueStack getStack() {
@@ -94,7 +94,7 @@ public class Component {
     }
 
     /**
-     * Get's the component stack of this component.
+     * Gets the component stack of this component.
      * @return the component stack of this component, never <tt>null</tt>.
      */
     public Stack getComponentStack() {
@@ -214,7 +214,7 @@ public class Component {
     }
 
     /**
-     * Constructs?a <code>RuntimeException</code> based on the given information.
+     * Constructs a <code>RuntimeException</code> based on the given information.
      * <p/>
      * A message is constructed and logged at ERROR level before being returned
      * as a <code>RuntimeException</code>.
@@ -409,7 +409,7 @@ public class Component {
     }
 
     /**
-     * Get's the parameters.
+     * Gets the parameters.
      * @return the parameters. Is never <tt>null</tt>.
      */
     public Map getParameters() {
@@ -417,7 +417,7 @@ public class Component {
     }
 
     /**
-     * Add's all the given parameters to this componenets own parameters.
+     * Adds all the given parameters to this component's own parameters.
      * @param params the parameters to add.
      */
     public void addAllParameters(Map params) {
@@ -425,7 +425,7 @@ public class Component {
     }
 
     /**
-     * Add's the given key and value to this components own parameter.
+     * Adds the given key and value to this component's own parameter.
      * <p/>
      * If the provided key is <tt>null</tt> nothing happens.
      * If the provided value is <tt>null</tt> any existing parameter with
@@ -452,5 +452,4 @@ public class Component {
     public boolean usesBody() {
         return false;
     }
-
 }

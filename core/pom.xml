@@ -141,7 +141,6 @@
                     <excludes>
                         <exclude>src/test/resources/org/apache/struts2/views/jsp/ui/*</exclude>
                         <exclude>src/main/etc/**</exclude>
-                        <exclude>src/main/resources/org/apache/struts2/static/domTT.js</exclude>
                         <exclude>src/main/resources/org/apache/struts2/static/dojo/src/**</exclude>
                         <exclude>src/main/resources/org/apache/struts2/static/dojo/*</exclude>
                         <exclude>src/main/resources/org/apache/struts2/static/niftycorners/**</exclude>

@@ -21,6 +21,7 @@
 package org.apache.struts2.portlet.dispatcher;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
@@ -37,6 +38,9 @@ import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,18 +59,21 @@ import org.apache.struts2.portlet.PortletRequestMap;
 import org.apache.struts2.portlet.PortletSessionMap;
 import org.apache.struts2.portlet.context.PortletActionContext;
 import org.apache.struts2.portlet.context.ServletContextHolderListener;
-import org.apache.struts2.portlet.util.HttpServletRequestMock;
+import org.apache.struts2.portlet.servlet.PortletServletContext;
+import org.apache.struts2.portlet.servlet.PortletServletRequest;
+import org.apache.struts2.portlet.servlet.PortletServletResponse;
 import org.apache.struts2.util.AttributeMap;
 
-import com.opensymphony.xwork2.util.FileManager;
-import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.TextUtils;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -339,11 +346,22 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
      */
     public HashMap createContextMap(Map requestMap, Map parameterMap,
             Map sessionMap, Map applicationMap, PortletRequest request,
-            PortletResponse response, PortletConfig portletConfig, Integer phase) {
+            PortletResponse response, PortletConfig portletConfig, Integer phase) throws IOException {
 
         // TODO Must put http request/response objects into map for use with
+    	HttpServletResponse dummyResponse = new PortletServletResponse(response);
+    	HttpServletRequest dummyRequest = new PortletServletRequest(request, getPortletContext());
+    	ServletContext dummyServletContext = new PortletServletContext(getPortletContext());
+    	if(EVENT_PHASE.equals(phase)) {
+    		dummyRequest = dispatcherUtils.wrapRequest(dummyRequest, dummyServletContext);
+    	}
         // ServletActionContext
         HashMap<String,Object> extraContext = new HashMap<String,Object>();
+        // The dummy servlet objects. Eases reuse of existing interceptors that uses the servlet objects.
+        extraContext.put(StrutsStatics.HTTP_REQUEST, dummyRequest);
+        extraContext.put(StrutsStatics.HTTP_RESPONSE, dummyResponse);
+        extraContext.put(StrutsStatics.SERVLET_CONTEXT, dummyServletContext);
+        // End dummy servlet objects
         extraContext.put(ActionContext.PARAMETERS, parameterMap);
         extraContext.put(ActionContext.SESSION, sessionMap);
         extraContext.put(ActionContext.APPLICATION, applicationMap);
@@ -400,13 +418,13 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
             Map sessionMap, Map applicationMap, String portletNamespace,
             Integer phase) throws PortletException {
         LOG.debug("serviceAction");
-        HashMap extraContext = createContextMap(requestMap, parameterMap,
-                sessionMap, applicationMap, request, response,
-                getPortletConfig(), phase);
         String actionName = mapping.getName();
         String namespace = mapping.getNamespace();
         Dispatcher.setInstance(dispatcherUtils);
         try {
+            HashMap extraContext = createContextMap(requestMap, parameterMap,
+                    sessionMap, applicationMap, request, response,
+                    getPortletConfig(), phase);
             LOG.debug("Creating action proxy for name = " + actionName
                     + ", namespace = " + namespace);
             ActionProxy proxy = factory.createActionProxy(namespace,
@@ -417,13 +435,12 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
             if (PortletActionConstants.RENDER_PHASE.equals(phase)
                     && TextUtils.stringSet(request
                             .getParameter(EVENT_ACTION))) {
-
-                ActionProxy action = (ActionProxy) request.getPortletSession()
+                Object action = request.getPortletSession()
                         .getAttribute(EVENT_ACTION);
                 if (action != null) {
                     ValueStack stack = proxy.getInvocation().getStack();
                     Object top = stack.pop();
-                    stack.push(action.getInvocation().getAction());
+                    stack.push(action);
                     stack.push(top);
                 }
             }
@@ -432,7 +449,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
                 // Store the executed action in the session for retrieval in the
                 // render phase.
                 ActionResponse actionResp = (ActionResponse) response;
-                request.getPortletSession().setAttribute(EVENT_ACTION, proxy);
+                request.getPortletSession().setAttribute(EVENT_ACTION, proxy.getAction());
                 actionResp.setRenderParameter(EVENT_ACTION, "true");
             }
         } catch (ConfigurationException e) {
@@ -447,7 +464,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         }
     }
 
-    /**
+	/**
      * Returns a Map of all application attributes. Copies all attributes from
      * the {@link PortletActionContext}into an {@link ApplicationMap}.
      *
@@ -481,9 +498,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
                 // Use the usual action mapper, but it is expecting an action extension
                 // on the uri, so we add the default one, which should be ok as the
                 // portlet is a portlet first, a servlet second
-                HttpServletRequestMock httpRequest = new HttpServletRequestMock()
-                    .setServletPath(actionPath + ".action")
-                    .setParameterMap(request.getParameterMap());
+                PortletServletRequest httpRequest = new PortletServletRequest(request, getPortletContext());
                 mapping = actionMapper.getMapping(httpRequest, dispatcherUtils.getConfigurationManager());
             }
         }
@@ -586,6 +601,12 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
             if (!currentMode.equals(originatingMode)) {
                 reset = true;
             }
+        }
+        if(reset) {
+        	request.setAttribute(ACTION_RESET, Boolean.TRUE);
+        }
+        else {
+        	request.setAttribute(ACTION_RESET, Boolean.FALSE);
         }
         return reset;
     }

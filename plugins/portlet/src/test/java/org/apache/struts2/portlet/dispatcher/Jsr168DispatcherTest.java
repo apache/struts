@@ -171,7 +171,7 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         initRequest(requestParams, new HashMap(), new HashMap(), new HashMap(), PortletMode.VIEW, WindowState.NORMAL, true, null);
         setupActionFactory("/view", "testAction", "success", ValueStackFactory.getFactory().createValueStack());
         Constraint[] paramConstraints = new Constraint[] {
-                eq(PortletActionConstants.EVENT_ACTION), same(mockActionProxy.proxy()) };
+                eq(PortletActionConstants.EVENT_ACTION), same(mockAction.proxy()) };
 
         mockSession.expects(once()).method("setAttribute").with(
                 paramConstraints);

@@ -25,11 +25,13 @@ import java.util.Map;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
+import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.portlet.PortletActionConstants;
 
@@ -192,6 +194,14 @@ public class PortletActionContext implements PortletActionConstants {
      */
     public static Map getModeNamespaceMap() {
         return (Map)getContext().get(MODE_NAMESPACE_MAP);
+    }
+    
+    /**
+     * Get the portlet context.
+     * @return The portlet context.
+     */
+    public static PortletContext getPortletContext() {
+    	return (PortletContext)getContext().get(StrutsStatics.STRUTS_PORTLET_CONTEXT);
     }
 
 }

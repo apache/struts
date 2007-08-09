@@ -40,11 +40,11 @@
 	   </result-types>
        
        <interceptors>
-        <interceptor name="portlet-preferences" class="org.apache.struts2.portlet.interceptor.PortletPreferencesInterceptor"/>
-        <interceptor name="servletConfig" class="org.apache.struts2.portlet.interceptor.PortletConfigInterceptor"/>
+        <interceptor name="portletAware" class="org.apache.struts2.portlet.interceptor.PortletAwareInterceptor"/>
+		   
         <interceptor-stack name="portletDefaultStack">
             <interceptor-ref name="defaultStack"/>
-            <interceptor-ref name="portlet-preferences" />
+            <interceptor-ref name="portletAware" />
         </interceptor-stack>
         
        </interceptors>

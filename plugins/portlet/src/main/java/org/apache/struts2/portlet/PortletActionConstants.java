@@ -103,4 +103,14 @@ public interface PortletActionConstants {
      * {@link org.apache.struts2.portlet.context.PortletActionContext}.
      */
     String DEFAULT_ACTION_FOR_MODE = "struts.portlet.defaultActionForMode";
+    
+    /**
+     * Key for request attribute indicating if the action has been reset. 
+     */
+    String ACTION_RESET = "struts.portlet.actionReset";
+    
+    /**
+     * Key for session attribute indicating the location of the render direct action.
+     */
+    String RENDER_DIRECT_LOCATION = "struts.portlet.renderDirectLocation";
 }

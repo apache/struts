@@ -21,6 +21,7 @@
 package org.apache.struts2.portlet.result;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import javax.portlet.ActionResponse;
@@ -48,7 +49,7 @@ import com.opensymphony.xwork2.util.TextUtils;
  * Result type that includes a JSP to render.
  *
  */
-public class PortletResult extends StrutsResultSupport {
+public class PortletResult extends StrutsResultSupport implements PortletActionConstants {
 
     private static final long serialVersionUID = 434251393926178567L;
 
@@ -131,11 +132,12 @@ public class PortletResult extends StrutsResultSupport {
             // View is rendered with a view action...luckily...
             finalLocation = finalLocation.substring(0, finalLocation
                     .lastIndexOf("."));
-            res.setRenderParameter(PortletActionConstants.ACTION_PARAM, finalLocation);
+            res.setRenderParameter(ACTION_PARAM, finalLocation);
         } else {
             // View is rendered outside an action...uh oh...
-            res.setRenderParameter(PortletActionConstants.ACTION_PARAM, "renderDirect");
-            res.setRenderParameter("location", finalLocation);
+            res.setRenderParameter(ACTION_PARAM, "renderDirect");
+            Map sessionMap = invocation.getInvocationContext().getSession();
+            sessionMap.put(RENDER_DIRECT_LOCATION, finalLocation);
         }
         res.setRenderParameter(PortletActionConstants.MODE_PARAM, PortletActionContext
                 .getRequest().getPortletMode().toString());

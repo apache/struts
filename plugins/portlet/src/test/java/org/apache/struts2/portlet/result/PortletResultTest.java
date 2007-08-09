@@ -34,6 +34,7 @@ import javax.portlet.RenderResponse;
 
 import junit.textui.TestRunner;
 
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
@@ -46,7 +47,7 @@ import com.opensymphony.xwork2.ActionInvocation;
  * PortletResultTest. Insert description.
  *
  */
-public class PortletResultTest extends MockObjectTestCase {
+public class PortletResultTest extends MockObjectTestCase implements PortletActionConstants {
 
     Mock mockInvocation = null;
     Mock mockConfig = null;
@@ -148,17 +149,18 @@ public class PortletResultTest extends MockObjectTestCase {
 
         Constraint[] params = new Constraint[]{eq(PortletActionConstants.ACTION_PARAM), eq("renderDirect")};
         mockResponse.expects(once()).method("setRenderParameter").with(params);
-        params = new Constraint[]{eq("location"), eq("/WEB-INF/pages/testJsp.jsp")};
-        mockResponse.expects(once()).method("setRenderParameter").with(params);
         params = new Constraint[]{eq(PortletActionConstants.MODE_PARAM), eq(PortletMode.VIEW.toString())};
         mockResponse.expects(once()).method("setRenderParameter").with(params);
         mockRequest.stubs().method("getPortletMode").will(returnValue(PortletMode.VIEW));
 
         ActionContext ctx = ActionContext.getContext();
 
+        Map session = new HashMap();
+        
         ctx.put(PortletActionConstants.REQUEST, mockRequest.proxy());
         ctx.put(PortletActionConstants.RESPONSE, mockResponse.proxy());
         ctx.put(PortletActionConstants.PHASE, PortletActionConstants.EVENT_PHASE);
+        ctx.put(ActionContext.SESSION, session);
 
         PortletResult result = new PortletResult();
         try {
@@ -168,6 +170,7 @@ public class PortletResultTest extends MockObjectTestCase {
             e.printStackTrace();
             fail("Error occured!");
         }
+        assertEquals("/WEB-INF/pages/testJsp.jsp", session.get(RENDER_DIRECT_LOCATION));
     }
 
     public void testDoExecute_event_locationHasQueryParams() {

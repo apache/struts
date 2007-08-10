@@ -96,12 +96,22 @@ public class PortletRequestMapTest extends MockObjectTestCase {
         assertEquals(2, entries.size());
         Iterator it = entries.iterator();
         Map.Entry entry = (Map.Entry)it.next();
-        assertEquals("testAttribute1", entry.getKey());
-        assertEquals("testValue1", entry.getValue());
+        checkEntry(entry);
         entry = (Map.Entry)it.next();
-        assertEquals("testAttribute2", entry.getKey());
-        assertEquals("testValue2", entry.getValue());
+        checkEntry(entry);
 
     }
+    
+	private void checkEntry(Map.Entry entry) {
+		if(entry.getKey().equals("testAttribute1")) {
+        	assertEquals("testValue1", entry.getValue());
+        }
+        else if(entry.getKey().equals("testAttribute2")) {
+        	assertEquals("testValue2", entry.getValue());
+        }
+        else {
+        	fail("Unexpected entry in etry set: " + entry);
+        }
+	}
 
 }

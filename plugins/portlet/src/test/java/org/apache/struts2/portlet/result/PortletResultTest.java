@@ -80,7 +80,6 @@ public class PortletResultTest extends MockObjectTestCase implements PortletActi
         Mock mockRequest = mock(RenderRequest.class);
         Mock mockResponse = mock(RenderResponse.class);
         Mock mockRd = mock(PortletRequestDispatcher.class);
-        Mock mockPrep = mock(PortletRequestDispatcher.class);
 
         RenderRequest req = (RenderRequest)mockRequest.proxy();
         RenderResponse res = (RenderResponse)mockResponse.proxy();
@@ -91,9 +90,7 @@ public class PortletResultTest extends MockObjectTestCase implements PortletActi
 
         Constraint[] params = new Constraint[]{same(req), same(res)};
         mockRd.expects(once()).method("include").with(params);
-        mockPrep.expects(once()).method("include").with(params);
         mockCtx.expects(once()).method("getRequestDispatcher").with(eq("/WEB-INF/pages/testPage.jsp")).will(returnValue(rd));
-        mockCtx.expects(once()).method("getNamedDispatcher").with(eq("preparator")).will(returnValue(mockPrep.proxy()));
         mockResponse.expects(once()).method("setContentType").with(eq("text/html"));
         mockConfig.expects(once()).method("getPortletContext").will(returnValue(ctx));
 
@@ -207,7 +204,6 @@ public class PortletResultTest extends MockObjectTestCase implements PortletActi
         Mock mockRequest = mock(RenderRequest.class);
         Mock mockResponse = mock(RenderResponse.class);
         Mock mockRd = mock(PortletRequestDispatcher.class);
-        Mock mockPrep = mock(PortletRequestDispatcher.class);
 
         RenderRequest req = (RenderRequest)mockRequest.proxy();
         RenderResponse res = (RenderResponse)mockResponse.proxy();
@@ -217,9 +213,7 @@ public class PortletResultTest extends MockObjectTestCase implements PortletActi
 
         Constraint[] params = new Constraint[]{same(req), same(res)};
         mockRd.expects(once()).method("include").with(params);
-        mockPrep.expects(once()).method("include").with(params);
         mockCtx.expects(once()).method("getRequestDispatcher").with(eq("/WEB-INF/pages/testPage.jsp")).will(returnValue(rd));
-        mockCtx.expects(once()).method("getNamedDispatcher").with(eq("preparator")).will(returnValue(mockPrep.proxy()));
         mockConfig.expects(once()).method("getPortletContext").will(returnValue(ctx));
 
         mockRequest.stubs().method("getPortletMode").will(returnValue(PortletMode.VIEW));

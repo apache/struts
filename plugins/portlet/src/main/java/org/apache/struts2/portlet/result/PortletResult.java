@@ -180,20 +180,6 @@ public class PortletResult extends StrutsResultSupport implements PortletActionC
             res.setTitle(title);
         }
         LOG.debug("Location: " + finalLocation);
-        PortletRequestDispatcher preparator = cfg.getPortletContext()
-                .getNamedDispatcher("preparator");
-        if(preparator == null) {
-            throw new PortletException("Cannot look up 'preparator' servlet. Make sure that you" +
-                    "have configured it correctly in the web.xml file.");
-        }
-        new IncludeTemplate() {
-            protected void when(PortletException e) {
-                LOG.error("PortletException while dispatching to 'preparator' servlet", e);
-            }
-            protected void when(IOException e) {
-                LOG.error("IOException while dispatching to 'preparator' servlet", e);
-            }
-        }.include(preparator, req, res);
         PortletRequestDispatcher dispatcher = cfg.getPortletContext().getRequestDispatcher(finalLocation);
         if(dispatcher == null) {
             throw new PortletException("Could not locate dispatcher for '" + finalLocation + "'");

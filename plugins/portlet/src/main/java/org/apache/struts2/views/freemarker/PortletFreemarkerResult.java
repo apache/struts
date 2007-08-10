@@ -136,7 +136,6 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
     private void executeRenderResult(String location,
                                      ActionInvocation invocation) throws TemplateException, IOException,
             TemplateModelException, PortletException {
-        prepareServletActionContext();
         this.location = location;
         this.invocation = invocation;
         this.configuration = getConfiguration();
@@ -162,17 +161,6 @@ public class PortletFreemarkerResult extends StrutsResultSupport {
                 postTemplateProcess(template, model);
             }
         }
-    }
-
-    /**
-     *
-     */
-    private void prepareServletActionContext() throws PortletException,
-            IOException {
-        PortletRequestDispatcher disp = PortletActionContext.getPortletConfig()
-                .getPortletContext().getNamedDispatcher("preparator");
-        disp.include(PortletActionContext.getRenderRequest(),
-                PortletActionContext.getRenderResponse());
     }
 
     /**

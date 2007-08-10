@@ -99,7 +99,6 @@ public class PortletVelocityResult extends StrutsResultSupport {
     
     private String defaultEncoding;
     private VelocityManager velocityManager;
-    
     public PortletVelocityResult() {
         super();
     }
@@ -160,7 +159,6 @@ public class PortletVelocityResult extends StrutsResultSupport {
      */
     public void executeRenderResult(String finalLocation,
             ActionInvocation invocation) throws Exception {
-        prepareServletActionContext();
         ValueStack stack = ActionContext.getContext().getValueStack();
 
         HttpServletRequest request = ServletActionContext.getRequest();
@@ -192,7 +190,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
             if (encoding != null) {
                 contentType = contentType + ";charset=" + encoding;
             }
-
+            response.setContentType(contentType);
             Template t = getTemplate(stack,
                     velocityManager.getVelocityEngine(), invocation,
                     finalLocation, encoding);
@@ -201,8 +199,6 @@ public class PortletVelocityResult extends StrutsResultSupport {
                     response, finalLocation);
             Writer writer = new OutputStreamWriter(response.getOutputStream(),
                     encoding);
-
-            response.setContentType(contentType);
 
             t.merge(context, writer);
 
@@ -292,16 +288,5 @@ public class PortletVelocityResult extends StrutsResultSupport {
             ValueStack stack, HttpServletRequest request,
             HttpServletResponse response, String location) {
         return velocityManager.createContext(stack, request, response);
-    }
-
-    /**
-     *  Prepares the servlet action context for this request
-     */
-    private void prepareServletActionContext() throws PortletException,
-            IOException {
-        PortletRequestDispatcher disp = PortletActionContext.getPortletConfig()
-                .getPortletContext().getNamedDispatcher("preparator");
-        disp.include(PortletActionContext.getRenderRequest(),
-                PortletActionContext.getRenderResponse());
     }
 }

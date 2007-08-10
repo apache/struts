@@ -44,7 +44,6 @@ import junit.textui.TestRunner;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.portlet.PortletActionConstants;
-import org.apache.struts2.portlet.context.ServletContextHolderListener;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import org.jmock.core.Constraint;
@@ -80,6 +79,7 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         mockConfig = mock(PortletConfig.class);
         mockCtx = mock(PortletContext.class);
         mockConfig.stubs().method(ANYTHING);
+        mockCtx.stubs().method(ANYTHING);
         setupStub(initParams, mockConfig, "getInitParameter");
         mockCtx.stubs().method("getAttributeNames").will(returnValue(Collections.enumeration(attributes.keySet())));
         setupStub(attributes, mockCtx, "getAttribute");
@@ -88,7 +88,6 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         setupStub(initParams, mockCtx, "getInitParameter");
         mockConfig.stubs().method("getInitParameterNames").will(returnValue(Collections.enumeration(initParams.keySet())));
         setupStub(initParams, mockConfig, "getInitParameter");
-
         mockConfig.stubs().method("getResourceBundle").will(returnValue(new ListResourceBundle() {
             protected Object[][] getContents() {
                 return new String[][]{{"javax.portlet.title", "MyTitle"}};
@@ -116,10 +115,7 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
     public void testRender_ok() {
         final Mock mockResponse = mock(RenderResponse.class);
         mockResponse.stubs().method(ANYTHING);
-        final Mock servletContext = mock(ServletContext.class);
-        servletContext.stubs().method(ANYTHING);
-        ServletContextEvent event = new ServletContextEvent((ServletContext)servletContext.proxy());
-        new ServletContextHolderListener().contextInitialized(event);
+
         PortletMode mode = PortletMode.VIEW;
 
         Map requestParams = new HashMap();
@@ -170,16 +166,6 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         initPortletConfig(initParams, new HashMap());
         initRequest(requestParams, new HashMap(), new HashMap(), new HashMap(), PortletMode.VIEW, WindowState.NORMAL, true, null);
         setupActionFactory("/view", "testAction", "success", ValueStackFactory.getFactory().createValueStack());
-        Constraint[] paramConstraints = new Constraint[] {
-                eq(PortletActionConstants.EVENT_ACTION), same(mockAction.proxy()) };
-
-        mockSession.expects(once()).method("setAttribute").with(
-                paramConstraints);
-
-        mockResponse.expects(once()).method("setRenderParameter").with(
-                new Constraint[] { eq(PortletActionConstants.EVENT_ACTION),
-                        eq("true") });
-
         //mockSession.expects(once()).method("setAttribute").with(new Constraint[]{eq(PortletActionConstants.LAST_MODE), eq(PortletMode.VIEW)});
         try {
             dispatcher

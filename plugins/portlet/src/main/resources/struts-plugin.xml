@@ -41,8 +41,9 @@
        
        <interceptors>
         <interceptor name="portletAware" class="org.apache.struts2.portlet.interceptor.PortletAwareInterceptor"/>
-		   
+		<interceptor name="portletState" class="org.apache.struts2.portlet.interceptor.PortletStateInterceptor"/>
         <interceptor-stack name="portletDefaultStack">
+			<interceptor-ref name="portletState"/>
             <interceptor-ref name="defaultStack"/>
             <interceptor-ref name="portletAware" />
         </interceptor-stack>

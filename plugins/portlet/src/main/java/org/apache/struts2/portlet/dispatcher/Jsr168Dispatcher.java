@@ -21,7 +21,6 @@
 package org.apache.struts2.portlet.dispatcher;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
@@ -58,7 +57,6 @@ import org.apache.struts2.portlet.PortletApplicationMap;
 import org.apache.struts2.portlet.PortletRequestMap;
 import org.apache.struts2.portlet.PortletSessionMap;
 import org.apache.struts2.portlet.context.PortletActionContext;
-import org.apache.struts2.portlet.context.ServletContextHolderListener;
 import org.apache.struts2.portlet.servlet.PortletServletContext;
 import org.apache.struts2.portlet.servlet.PortletServletRequest;
 import org.apache.struts2.portlet.servlet.PortletServletResponse;
@@ -67,13 +65,11 @@ import org.apache.struts2.util.AttributeMap;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.TextUtils;
-import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -84,7 +80,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </p>
  * <!-- END SNIPPET: javadoc -->
  *
- * @author <a href="nils-helge.garli@bekk.no">Nils-Helge Garli </a>
+ * @author Nils-Helge Garli
  * @author Rainer Hermanns
  *
  * <p><b>Init parameters</b></p>
@@ -196,8 +192,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
             params.put(name, value);
         }
         
-        Dispatcher.setPortletSupportActive(true);
-        dispatcherUtils = new Dispatcher(ServletContextHolderListener.getServletContext(), params);
+        dispatcherUtils = new Dispatcher(new PortletServletContext(cfg.getPortletContext()), params);
         dispatcherUtils.init();
         
         // For testability
@@ -432,26 +427,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
             proxy.setMethod(mapping.getMethod());
             request.setAttribute("struts.valueStack", proxy.getInvocation()
                     .getStack());
-            if (PortletActionConstants.RENDER_PHASE.equals(phase)
-                    && TextUtils.stringSet(request
-                            .getParameter(EVENT_ACTION))) {
-                Object action = request.getPortletSession()
-                        .getAttribute(EVENT_ACTION);
-                if (action != null) {
-                    ValueStack stack = proxy.getInvocation().getStack();
-                    Object top = stack.pop();
-                    stack.push(action);
-                    stack.push(top);
-                }
-            }
             proxy.execute();
-            if (PortletActionConstants.EVENT_PHASE.equals(phase)) {
-                // Store the executed action in the session for retrieval in the
-                // render phase.
-                ActionResponse actionResp = (ActionResponse) response;
-                request.getPortletSession().setAttribute(EVENT_ACTION, proxy.getAction());
-                actionResp.setRenderParameter(EVENT_ACTION, "true");
-            }
         } catch (ConfigurationException e) {
             LOG.error("Could not find action", e);
             throw new PortletException("Could not find action " + actionName, e);

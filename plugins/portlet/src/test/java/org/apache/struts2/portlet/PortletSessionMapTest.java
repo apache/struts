@@ -20,61 +20,43 @@
  */
 package org.apache.struts2.portlet;
 
-import java.util.Arrays;
-import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 
-import org.jmock.Mock;
-import org.jmock.MockObjectTestCase;
-import org.jmock.core.Constraint;
+import junit.framework.TestCase;
 
 
 /**
  * PortletSessionMapTest. Insert description.
  *
  */
-public class PortletSessionMapTest extends MockObjectTestCase {
+public class PortletSessionMapTest extends TestCase {
 
     public void testPut() {
 
-        Mock mockSession = mock(PortletSession.class);
-        Mock mockRequest = mock(PortletRequest.class);
+    	MockPortletRequest request = new MockPortletRequest(null, null, new HashMap<String, Object>());
 
-        PortletRequest req = (PortletRequest)mockRequest.proxy();
-        PortletSession session = (PortletSession)mockSession.proxy();
+        PortletSessionMap map = new PortletSessionMap(request);
+        assertEquals("testValue1", map.put("testAttribute1", "testValue1"));
+        assertEquals("testValue2", map.put("testAttribute2", "testValue2"));
 
-        mockRequest.expects(once()).method("getPortletSession").will(returnValue(session));
-        Constraint[] params = new Constraint[]{eq("testAttribute1"), eq("testValue1")};
-        mockSession.expects(once()).method("setAttribute").with(params);
-        mockSession.expects(once()).method("getAttribute").with(eq("testAttribute1")).will(returnValue("testValue1"));
-        params = new Constraint[]{eq("testAttribute2"), eq("testValue2")};
-        mockSession.expects(once()).method("setAttribute").with(params);
-        mockSession.expects(once()).method("getAttribute").with(eq("testAttribute2")).will(returnValue("testValue2"));
-
-        PortletSessionMap map = new PortletSessionMap(req);
-        map.put("testAttribute1", "testValue1");
-        map.put("testAttribute2", "testValue2");
-
+        PortletSession session = request.getPortletSession();
+        // Assert that the values has been propagated to the session
+        assertEquals("testValue1", session.getAttribute("testAttribute1"));
+        assertEquals("testValue2", session.getAttribute("testAttribute2"));
     }
 
     public void testGet() {
-        Mock mockSession = mock(PortletSession.class);
-        Mock mockRequest = mock(PortletRequest.class);
-
-        PortletRequest req = (PortletRequest)mockRequest.proxy();
-        PortletSession session = (PortletSession)mockSession.proxy();
-
-        mockRequest.expects(once()).method("getPortletSession").will(returnValue(session));
-        mockSession.expects(once()).method("getAttribute").with(eq("testAttribute1")).will(returnValue("testValue1"));
-        mockSession.expects(once()).method("getAttribute").with(eq("testAttribute2")).will(returnValue("testValue2"));
-
-        PortletSessionMap map = new PortletSessionMap(req);
+    	MockPortletRequest request = new MockPortletRequest(null, null, new HashMap<String, Object>());
+    	PortletSession session = request.getPortletSession();
+    	session.setAttribute("testAttribute1", "testValue1");
+    	session.setAttribute("testAttribute2", "testValue2");
+        PortletSessionMap map = new PortletSessionMap(request);
         Object val1 = map.get("testAttribute1");
         Object val2 = map.get("testAttribute2");
         assertEquals("testValue1", val1);
@@ -82,75 +64,46 @@ public class PortletSessionMapTest extends MockObjectTestCase {
     }
 
     public void testClear() {
-        Mock mockSession = mock(PortletSession.class);
-        Mock mockRequest = mock(PortletRequest.class);
+    	Map<String, Object> sessionMap = new HashMap<String, Object>();
+    	sessionMap.put("testAttribute1", "testValue1");
+    	sessionMap.put("testAttribute2", "testValue2");
 
-        PortletRequest req = (PortletRequest)mockRequest.proxy();
-        PortletSession session = (PortletSession)mockSession.proxy();
-
-        mockRequest.expects(once()).method("getPortletSession").will(returnValue(session));
-        mockSession.expects(once()).method("invalidate");
+        PortletRequest req = new MockPortletRequest(null, null, sessionMap);
 
         PortletSessionMap map = new PortletSessionMap(req);
         map.clear();
+        
+        assertEquals(0, sessionMap.size());
     }
 
     public void testRemove() {
-        Mock mockSession = mock(PortletSession.class);
-        Mock mockRequest = mock(PortletRequest.class);
+    	MockPortletRequest request = new MockPortletRequest(null, null, new HashMap<String, Object>());
+    	PortletSession session = request.getPortletSession();
+    	session.setAttribute("testAttribute1", "testValue1");
 
-        PortletRequest req = (PortletRequest)mockRequest.proxy();
-        PortletSession session = (PortletSession)mockSession.proxy();
-
-
-        mockRequest.expects(once()).method("getPortletSession").will(returnValue(session));
-        mockSession.stubs().method("getAttribute").with(eq("dummyKey")).will(returnValue("dummyValue"));
-        mockSession.expects(once()).method("removeAttribute").with(eq("dummyKey"));
-
-        PortletSessionMap map = new PortletSessionMap(req);
-        Object ret = map.remove("dummyKey");
-        assertEquals("dummyValue", ret);
+        PortletSessionMap map = new PortletSessionMap(request);
+        Object ret = map.remove("testAttribute1");
+        assertEquals("testValue1", ret);
+        assertNull(session.getAttribute("testAttribute1"));
     }
 
     public void testEntrySet() {
-        Mock mockSession = mock(PortletSession.class);
-        Mock mockRequest = mock(PortletRequest.class);
+    	MockPortletRequest request = new MockPortletRequest(null, null, new HashMap<String, Object>());
+    	PortletSession session = request.getPortletSession();
+    	session.setAttribute("testAttribute1", "testValue1");
+    	session.setAttribute("testAttribute2", "testValue2");
 
-        PortletRequest req = (PortletRequest)mockRequest.proxy();
-        PortletSession session = (PortletSession)mockSession.proxy();
-
-        Enumeration names = new Enumeration() {
-
-            List keys = Arrays.asList(new Object[]{"key1", "key2"});
-            Iterator it = keys.iterator();
-
-            public boolean hasMoreElements() {
-                return it.hasNext();
-            }
-
-            public Object nextElement() {
-                return it.next();
-            }
-
-        };
-
-        mockSession.stubs().method("getAttributeNames").will(returnValue(names));
-        mockSession.stubs().method("getAttribute").with(eq("key1")).will(returnValue("value1"));
-        mockSession.stubs().method("getAttribute").with(eq("key2")).will(returnValue("value2"));
-
-        mockRequest.expects(once()).method("getPortletSession").will(returnValue(session));
-
-        PortletSessionMap map = new PortletSessionMap(req);
+        PortletSessionMap map = new PortletSessionMap(request);
         Set entries = map.entrySet();
 
         assertEquals(2, entries.size());
         Iterator it = entries.iterator();
         Map.Entry entry = (Map.Entry)it.next();
-        assertEquals("key2", entry.getKey());
-        assertEquals("value2", entry.getValue());
+        assertEquals("testAttribute1", entry.getKey());
+        assertEquals("testValue1", entry.getValue());
         entry = (Map.Entry)it.next();
-        assertEquals("key1", entry.getKey());
-        assertEquals("value1", entry.getValue());
+        assertEquals("testAttribute2", entry.getKey());
+        assertEquals("testValue2", entry.getValue());
 
     }
 

@@ -52,15 +52,6 @@ public class PortletSessionMap extends AbstractMap {
      */
     public PortletSessionMap(PortletRequest request) {
         this.session = request.getPortletSession();
-        if(LOG.isDebugEnabled()) {
-            LOG.debug("Dumping session info: ");
-            Enumeration enumeration = session.getAttributeNames();
-            while(enumeration.hasMoreElements()) {
-                String key = (String)enumeration.nextElement();
-                Object val = session.getAttribute(key);
-                LOG.debug(key + " = " + val);
-            }
-        }
     }
 
     /**

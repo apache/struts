@@ -112,6 +112,13 @@
             <scope>test</scope>
         </dependency>
 		
+		 <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.9</version>
+            <scope>test</scope>
+        </dependency>
+		
         <!-- Mocks for unit testing (by Spring) -->
         <dependency>
             <groupId>org.springframework</groupId>

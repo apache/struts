@@ -49,15 +49,6 @@ public class PortletRequestMap extends AbstractMap {
      */
     public PortletRequestMap(PortletRequest request) {
         this.request = request;
-        if(LOG.isDebugEnabled()) {
-            LOG.debug("Dumping request parameters: ");
-            Iterator params = request.getParameterMap().keySet().iterator();
-            while(params.hasNext()) {
-                String key = (String)params.next();
-                String val = request.getParameter(key);
-                LOG.debug(key + " = " + val);
-            }
-        }
     }
 
     /**

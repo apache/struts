@@ -30,6 +30,7 @@
 	
 	<bean type="org.apache.struts2.components.UrlRenderer" name="portlet" class="org.apache.struts2.components.PortletUrlRenderer"/>
 	<constant name="struts.urlRenderer" value="portlet" />
+	<constant name="struts.portlet.useDispatcherServlet" value="false" />
 	
     <package name="struts-portlet-default" extends="struts-default">
 
@@ -42,16 +43,24 @@
        <interceptors>
         <interceptor name="portletAware" class="org.apache.struts2.portlet.interceptor.PortletAwareInterceptor"/>
 		<interceptor name="portletState" class="org.apache.struts2.portlet.interceptor.PortletStateInterceptor"/>
+		<!-- Default stack for operating in portlet environment -->
         <interceptor-stack name="portletDefaultStack">
 			<interceptor-ref name="portletState"/>
             <interceptor-ref name="defaultStack"/>
-            <interceptor-ref name="portletAware" />
+            <interceptor-ref name="portletAware"/>
         </interceptor-stack>
-        
+        <!-- Extension of the default portlet stack which also includes the token interceptor --> 
+		<interceptor-stack name="portletDefaultStackWithToken">
+			<interceptor-ref name="portletState"/>
+			<interceptor-ref name="token"/>
+			<interceptor-ref name="defaultStack"/>
+			<interceptor-ref name="portletAware"/>
+		</interceptor-stack>
+		   
        </interceptors>
        
        <default-interceptor-ref name="portletDefaultStack"/>
-       
+		
 	   <action name="renderDirect" class="org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction">
 	   		<result name="success">${location}</result>
 	   </action>

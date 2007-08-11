@@ -20,6 +20,8 @@
  */
 package org.apache.struts2.portlet;
 
+import org.apache.struts2.portlet.dispatcher.DispatcherServlet;
+
 /**
  * Interface defining some constants used in the Struts portlet implementation
  *
@@ -113,4 +115,9 @@ public interface PortletActionConstants {
      * Key for session attribute indicating the location of the render direct action.
      */
     String RENDER_DIRECT_LOCATION = "struts.portlet.renderDirectLocation";
+    
+    /**
+     * Key for the dispatch instruction for the {@link DispatcherServlet}
+     */
+	String DISPATCH_TO = "struts.portlet.dispatchTo";
 }

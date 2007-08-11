@@ -35,6 +35,7 @@ import javax.portlet.RenderResponse;
 import junit.textui.TestRunner;
 
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
@@ -56,11 +57,7 @@ public class PortletResultTest extends MockObjectTestCase implements PortletActi
     public void setUp() throws Exception {
         super.setUp();
         mockInvocation = mock(ActionInvocation.class);
-        mockConfig = mock(PortletConfig.class);
         mockCtx = mock(PortletContext.class);
-
-        mockConfig.stubs().method(ANYTHING);
-        mockConfig.stubs().method("getPortletContext").will(returnValue(mockCtx.proxy()));
 
         Map paramMap = new HashMap();
         Map sessionMap = new HashMap();
@@ -68,7 +65,7 @@ public class PortletResultTest extends MockObjectTestCase implements PortletActi
         Map context = new HashMap();
         context.put(ActionContext.SESSION, sessionMap);
         context.put(ActionContext.PARAMETERS, paramMap);
-        context.put(PortletActionConstants.PORTLET_CONFIG, mockConfig.proxy());
+        context.put(StrutsStatics.STRUTS_PORTLET_CONTEXT, mockCtx.proxy());
 
         ActionContext.setContext(new ActionContext(context));
 
@@ -84,7 +81,6 @@ public class PortletResultTest extends MockObjectTestCase implements PortletActi
         RenderRequest req = (RenderRequest)mockRequest.proxy();
         RenderResponse res = (RenderResponse)mockResponse.proxy();
         PortletRequestDispatcher rd = (PortletRequestDispatcher)mockRd.proxy();
-        PortletConfig cfg = (PortletConfig)mockConfig.proxy();
         PortletContext ctx = (PortletContext)mockCtx.proxy();
         ActionInvocation inv = (ActionInvocation)mockInvocation.proxy();
 
@@ -92,14 +88,13 @@ public class PortletResultTest extends MockObjectTestCase implements PortletActi
         mockRd.expects(once()).method("include").with(params);
         mockCtx.expects(once()).method("getRequestDispatcher").with(eq("/WEB-INF/pages/testPage.jsp")).will(returnValue(rd));
         mockResponse.expects(once()).method("setContentType").with(eq("text/html"));
-        mockConfig.expects(once()).method("getPortletContext").will(returnValue(ctx));
 
         mockRequest.stubs().method("getPortletMode").will(returnValue(PortletMode.VIEW));
 
         ActionContext ctxMap = ActionContext.getContext();
         ctxMap.put(PortletActionConstants.RESPONSE, res);
         ctxMap.put(PortletActionConstants.REQUEST, req);
-        ctxMap.put(PortletActionConstants.PORTLET_CONFIG, cfg);
+        ctxMap.put(StrutsStatics.SERVLET_CONTEXT, ctx);
         ctxMap.put(PortletActionConstants.PHASE, PortletActionConstants.RENDER_PHASE);
 
         PortletResult result = new PortletResult();
@@ -208,20 +203,18 @@ public class PortletResultTest extends MockObjectTestCase implements PortletActi
         RenderRequest req = (RenderRequest)mockRequest.proxy();
         RenderResponse res = (RenderResponse)mockResponse.proxy();
         PortletRequestDispatcher rd = (PortletRequestDispatcher)mockRd.proxy();
-        PortletConfig cfg = (PortletConfig)mockConfig.proxy();
         PortletContext ctx = (PortletContext)mockCtx.proxy();
 
         Constraint[] params = new Constraint[]{same(req), same(res)};
         mockRd.expects(once()).method("include").with(params);
         mockCtx.expects(once()).method("getRequestDispatcher").with(eq("/WEB-INF/pages/testPage.jsp")).will(returnValue(rd));
-        mockConfig.expects(once()).method("getPortletContext").will(returnValue(ctx));
 
         mockRequest.stubs().method("getPortletMode").will(returnValue(PortletMode.VIEW));
 
         ActionContext ctxMap = ActionContext.getContext();
         ctxMap.put(PortletActionConstants.RESPONSE, res);
         ctxMap.put(PortletActionConstants.REQUEST, req);
-        ctxMap.put(PortletActionConstants.PORTLET_CONFIG, cfg);
+        ctxMap.put(StrutsStatics.SERVLET_CONTEXT, ctx);
         ctxMap.put(PortletActionConstants.PHASE, PortletActionConstants.RENDER_PHASE);
 
         mockResponse.expects(atLeastOnce()).method("setTitle").with(eq("testTitle"));

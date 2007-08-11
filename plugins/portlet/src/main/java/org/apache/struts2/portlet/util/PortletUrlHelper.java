@@ -59,15 +59,16 @@ public class PortletUrlHelper {
      *
      * @param action The action the URL should invoke.
      * @param namespace The namespace of the action to invoke.
+     * @param method The method of the action to invoke.
      * @param params The parameters of the URL.
      * @param type The type of the url, either <tt>action</tt> or <tt>render</tt>
      * @param mode The PortletMode of the URL.
      * @param state The WindowState of the URL.
      * @return The URL String.
      */
-    public static String buildUrl(String action, String namespace, Map params,
+    public static String buildUrl(String action, String namespace, String method, Map params,
             String type, String mode, String state) {
-        return buildUrl(action, namespace, params, null, type, mode, state,
+        return buildUrl(action, namespace, method, params, null, type, mode, state,
                 true, true);
     }
 
@@ -76,9 +77,10 @@ public class PortletUrlHelper {
      *
      * @see #buildUrl(String, String, Map, String, String, String)
      */
-    public static String buildUrl(String action, String namespace, Map params,
+    public static String buildUrl(String action, String namespace, String method, Map params,
             String scheme, String type, String portletMode, String windowState,
             boolean includeContext, boolean encodeResult) {
+    	StringBuffer resultingAction = new StringBuffer();
         RenderRequest request = PortletActionContext.getRenderRequest();
         RenderResponse response = PortletActionContext.getRenderResponse();
         LOG.debug("Creating url. Action = " + action + ", Namespace = "
@@ -102,15 +104,17 @@ public class PortletUrlHelper {
             }
         }
         if (TextUtils.stringSet(namespace)) {
-            StringBuffer sb = new StringBuffer();
-            sb.append(namespace);
+            resultingAction.append(namespace);
             if(!action.startsWith("/") && !namespace.endsWith("/")) {
-                sb.append("/");
+                resultingAction.append("/");
             }
-            action = sb.append(action).toString();
+            resultingAction.append(action);
             LOG.debug("Resulting actionPath: " + action);
         }
-        params.put(PortletActionConstants.ACTION_PARAM, new String[] { action });
+        if(TextUtils.stringSet(method)) {
+        	resultingAction.append("!").append(method);
+        }
+        params.put(PortletActionConstants.ACTION_PARAM, new String[] { resultingAction.toString() });
 
         PortletURL url = null;
         if ("action".equalsIgnoreCase(type)) {

@@ -306,6 +306,23 @@ public class PortletUrlTagTest extends MockObjectTestCase {
         mockJspWriter.verify();
     }
 
+    public void testUrlWithMethod() throws Exception {
+    	PortletMode mode = PortletMode.VIEW;
+    	mockHttpReq.stubs().method("getQueryString").will(returnValue(""));
+        mockPortletRes.expects(once()).method("createRenderURL").will(
+                returnValue((PortletURL) mockPortletUrl.proxy()));
+    	tag.setAction("testAction");
+    	Map paramMap = new HashMap();
+        paramMap.put(PortletActionConstants.ACTION_PARAM, new String[]{"/view/testAction!input"});
+        paramMap.put(PortletActionConstants.MODE_PARAM, new String[]{mode.toString()});
+        mockPortletUrl.expects(once()).method("setParameters").with(new ParamMapConstraint(paramMap));
+        mockPortletUrl.expects(once()).method("setPortletMode").with(eq(PortletMode.VIEW));
+        mockPortletUrl.expects(once()).method("setWindowState").with(eq(WindowState.NORMAL));
+    	tag.setMethod("input");
+    	tag.doStartTag();
+    	tag.doEndTag();
+    }
+    
     private static class ParamMapConstraint implements Constraint {
 
         private Map myExpectedMap = null;
@@ -353,7 +370,17 @@ public class PortletUrlTagTest extends MockObjectTestCase {
          * @see org.jmock.core.SelfDescribing#describeTo(java.lang.StringBuffer)
          */
         public StringBuffer describeTo(StringBuffer sb) {
-            return sb.append(myExpectedMap);
+        	Iterator<String> it = myExpectedMap.keySet().iterator();
+        	while(it.hasNext()) {
+        		String key = it.next();
+        		sb.append(key).append("=");
+        		String[] value = (String[])myExpectedMap.get(key);
+        		sb.append(value[0]);
+        		if(it.hasNext()) {
+        			sb.append(", ");
+        		}
+        	}
+            return sb;
         }
 
 

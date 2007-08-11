@@ -50,7 +50,7 @@ public class PortletUrlRenderer implements UrlRenderer {
 
 	       String result;
 	        if (urlComponent.value == null && urlComponent.action != null) {
-	                result = PortletUrlHelper.buildUrl(urlComponent.action, urlComponent.namespace, urlComponent.parameters, urlComponent.portletUrlType, urlComponent.portletMode, urlComponent.windowState);
+	                result = PortletUrlHelper.buildUrl(urlComponent.action, urlComponent.namespace, urlComponent.method, urlComponent.parameters, urlComponent.portletUrlType, urlComponent.portletMode, urlComponent.windowState);
 	        } else {
 	                result = PortletUrlHelper.buildResourceUrl(urlComponent.value, urlComponent.parameters);
 	        }
@@ -91,7 +91,7 @@ public class PortletUrlRenderer implements UrlRenderer {
             }
         }
         if (action != null) {
-            String result = PortletUrlHelper.buildUrl(action, formComponent.namespace,
+            String result = PortletUrlHelper.buildUrl(action, formComponent.namespace, null,
                     formComponent.getParameters(), type, formComponent.portletMode, formComponent.windowState);
             formComponent.addParameter("action", result);
 

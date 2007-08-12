@@ -36,7 +36,8 @@
 
 	   <result-types>
 			<result-type name="dispatcher" class="org.apache.struts2.portlet.result.PortletResult" default="true"/>
-		    <result-type name="redirectAction" class="org.apache.struts2.portlet.result.PortletResult"/>
+            <result-type name="redirect" class="org.apache.struts2.portlet.result.PortletResult"/>
+		    <result-type name="redirectAction" class="org.apache.struts2.portlet.result.PortletActionRedirectResult"/>
 			<result-type name="freemarker" class="org.apache.struts2.views.freemarker.PortletFreemarkerResult"/>
 			<result-type name="velocity" class="org.apache.struts2.portlet.result.PortletVelocityResult"/>
 	   </result-types>

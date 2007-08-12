@@ -43,7 +43,6 @@
 			<result name="input">
 				/WEB-INF/view/formExampleInputValidation.jsp
 			</result>
-			<interceptor-ref name="validationWorkflowStack" />
 		</action>
 
 		<action name="tokenExample"
@@ -71,18 +70,6 @@
 			<result name="success">
 				/WEB-INF/view/springExample.jsp
 			</result>
-		</action>
-
-		<action name="ajaxExample"
-			class="com.opensymphony.xwork2.ActionSupport">
-			<result name="success">
-				/WEB-INF/view/ajaxExample.jsp
-			</result>
-		</action>
-
-		<action name="ajaxData"
-			class="com.opensymphony.xwork2.ActionSupport">
-			<result name="success">/WEB-INF/view/ajaxData.jsp</result>
 		</action>
 
 		<action name="freeMarkerExample"

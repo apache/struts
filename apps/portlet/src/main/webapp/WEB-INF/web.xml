@@ -24,5 +24,10 @@
 			</listener-class>
 	</listener>
 
-
+	<!-- Uncomment to use the dispatcher servlet -->
+	<!--<servlet id="dispatcherServlet">
+		<servlet-name>dispatcherServlet</servlet-name>
+		<servlet-class>org.apache.struts2.portlet.dispatcher.DispatcherServlet</servlet-class>
+	</servlet>-->
+	
 </web-app>

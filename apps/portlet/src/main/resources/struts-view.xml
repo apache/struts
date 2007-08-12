@@ -64,8 +64,7 @@
 			<result name="success">
 				/WEB-INF/view/tokenExample.jsp
 			</result>
-			<interceptor-ref name="token" />
-			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="portletDefaultStackWithToken" />
 		</action>
 
 		<action name="springExample" class="springAction">

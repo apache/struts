@@ -56,7 +56,7 @@ public class ServletUrlRenderer implements UrlRenderer {
 
 	       String result;
 	        if (urlComponent.value == null && urlComponent.action != null) {
-	                result = urlComponent.determineActionURL(urlComponent.action, urlComponent.namespace, urlComponent.method, urlComponent.req, urlComponent.res, urlComponent.parameters, scheme, urlComponent.includeContext, urlComponent.encode, false, urlComponent.escapeAmp);
+	                result = urlComponent.determineActionURL(urlComponent.action, urlComponent.namespace, urlComponent.method, urlComponent.req, urlComponent.res, urlComponent.parameters, scheme, urlComponent.includeContext, urlComponent.encode, urlComponent.forceAddSchemeHostAndPort, urlComponent.escapeAmp);
 	        } else {
 	                String _value = urlComponent.value;
 
@@ -65,7 +65,7 @@ public class ServletUrlRenderer implements UrlRenderer {
 	                if (_value != null && _value.indexOf("?") > 0) {
 	                    _value = _value.substring(0, _value.indexOf("?"));
 	                }
-	                result = UrlHelper.buildUrl(_value, urlComponent.req, urlComponent.res, urlComponent.parameters, scheme, urlComponent.includeContext, urlComponent.encode, false, urlComponent.escapeAmp);
+	                result = UrlHelper.buildUrl(_value, urlComponent.req, urlComponent.res, urlComponent.parameters, scheme, urlComponent.includeContext, urlComponent.encode, urlComponent.forceAddSchemeHostAndPort, urlComponent.escapeAmp);
 	        }
 	        if ( urlComponent.anchor != null && urlComponent.anchor.length() > 0 ) {
 	            result += '#' + urlComponent.anchor;

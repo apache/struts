@@ -49,6 +49,7 @@ public class URLTag extends ContextBeanTag {
     protected String windowState;
     protected String portletUrlType;
     protected String anchor;
+    protected String forceAddSchemeHostAndPort;
 
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new URL(stack, req, res);
@@ -77,6 +78,9 @@ public class URLTag extends ContextBeanTag {
         }
         if (escapeAmp != null) {
             url.setEscapeAmp(Boolean.valueOf(escapeAmp).booleanValue());
+        }
+	if (forceAddSchemeHostAndPort != null) {
+            url.setForceAddSchemeHostAndPort(Boolean.valueOf(forceAddSchemeHostAndPort).booleanValue());
         }
     }
 
@@ -115,17 +119,24 @@ public class URLTag extends ContextBeanTag {
     public void setValue(String value) {
         this.value = value;
     }
+
     public void setPortletMode(String portletMode) {
         this.portletMode = portletMode;
     }
+
     public void setPortletUrlType(String portletUrlType) {
         this.portletUrlType = portletUrlType;
     }
+
     public void setWindowState(String windowState) {
         this.windowState = windowState;
     }
 
     public void setAnchor(String anchor) {
         this.anchor = anchor;
+    }
+
+    public void setForceAddSchemeHostAndPort(String forceAddSchemeHostAndPort) {
+        this.forceAddSchemeHostAndPort = forceAddSchemeHostAndPort;
     }
 }

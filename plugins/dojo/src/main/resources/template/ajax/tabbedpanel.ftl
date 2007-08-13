@@ -21,6 +21,30 @@
  */
 -->
 <link rel="stylesheet" href="${base}/struts/TabbedPanel.css" type="text/css"/>
+<#if parameters.useSelectedTabCookie?exists && parameters.useSelectedTabCookie=="true">
+<script type="text/javascript">
+  dojo.require("dojo.io.cookie");
+  dojo.addOnLoad (
+        function() {
+            var tabContainer = dojo.widget.byId("${parameters.escapedId?html}");
+
+            <#if !(parameters.selectedTab?if_exists != "")>
+            var selectedTab = dojo.io.cookie.getCookie("Struts2TabbedPanel_selectedTab_${parameters.escapedId?html}");
+            if (selectedTab) {
+                tabContainer.selectChild(selectedTab, tabContainer.correspondingPageButton);
+            }
+
+            </#if>
+            dojo.event.connect(tabContainer, "selectChild",
+                    function (evt) {
+                        dojo.io.cookie.setCookie("Struts2TabbedPanel_selectedTab_${parameters.escapedId?html}", evt.widgetId, 1, null, null, null);
+                    }
+                )
+            }
+        );
+</script>
+</#if>
+
 <div dojoType="struts:StrutsTabContainer"
   <#if parameters.cssStyle?if_exists != "">
     style="${parameters.cssStyle?html}"<#rt/>

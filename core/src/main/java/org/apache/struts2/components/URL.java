@@ -88,6 +88,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *      <li>portletMode (String) - The resulting portlet mode.</li>
  *      <li>windowState (String) - The resulting portlet window state.</li>
  *      <li>portletUrlType (String) - Specifies if this should be a portlet render or action URL.</li>
+ *      <li>forceAddSchemeHostAndPort (Boolean) - Specifies whether to force the addition of scheme, host and port or not.</li>
  * </ul>
  *
  * <!-- END SNIPPET: params -->
@@ -150,6 +151,7 @@ public class URL extends Component {
     protected String windowState;
     protected String portletUrlType;
     protected String anchor;
+    protected boolean forceAddSchemeHostAndPort;
     protected String urlIncludeParams;
     protected ExtraParameterProvider extraParameterProvider;
 
@@ -247,14 +249,14 @@ public class URL extends Component {
 
         String result;
         if (value == null && action != null) {
-            if(Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
+            if (Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
                 result = PortletUrlHelper.buildUrl(action, namespace, parameters, portletUrlType, portletMode, windowState);
             }
             else {
-                result = determineActionURL(action, namespace, method, req, res, parameters, scheme, includeContext, encode, false, escapeAmp);
+                result = determineActionURL(action, namespace, method, req, res, parameters, scheme, includeContext, encode, forceAddSchemeHostAndPort, escapeAmp);
             }
         } else {
-            if(Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
+            if (Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
                 result = PortletUrlHelper.buildResourceUrl(value, parameters);
             }
             else {
@@ -265,7 +267,7 @@ public class URL extends Component {
                 if (_value != null && _value.indexOf("?") > 0) {
                     _value = _value.substring(0, _value.indexOf("?"));
                 }
-                result = UrlHelper.buildUrl(_value, req, res, parameters, scheme, includeContext, encode, false, escapeAmp);
+                result = UrlHelper.buildUrl(_value, req, res, parameters, scheme, includeContext, encode, forceAddSchemeHostAndPort, escapeAmp);
             }
         }
         if ( anchor != null && anchor.length() > 0 ) {
@@ -352,6 +354,11 @@ public class URL extends Component {
     @StrutsTagAttribute(description="Specifies whether to escape ampersand (&amp;) to (&amp;amp;) or not", type="Boolean", defaultValue="true")
     public void setEscapeAmp(boolean escapeAmp) {
         this.escapeAmp = escapeAmp;
+    }
+
+    @StrutsTagAttribute(description="Specifies whether to force the addition of scheme, host and port or not", type="Boolean", defaultValue="false")
+    public void setForceAddSchemeHostAndPort(boolean forceAddSchemeHostAndPort) {
+        this.forceAddSchemeHostAndPort = forceAddSchemeHostAndPort;
     }
 
 

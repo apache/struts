@@ -462,6 +462,15 @@ public class URLTagTest extends AbstractUITagTest {
         assertEquals("/myapp/company.action", writer.toString());
     }
 
+    public void testForceAddSchemeHostAndPort() throws Exception {
+        tag.setForceAddSchemeHostAndPort("true");
+        tag.setAction("company");
+        tag.doStartTag();
+        tag.doEndTag();
+
+        assertEquals("http://localhost/company.action", writer.toString());
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
 

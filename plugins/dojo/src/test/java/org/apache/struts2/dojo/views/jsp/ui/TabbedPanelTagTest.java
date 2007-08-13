@@ -20,8 +20,6 @@
  */
 package org.apache.struts2.dojo.views.jsp.ui;
 
-import org.apache.struts2.views.jsp.AbstractUITagTest;
-
 /**
  * TabbedPanelTagTest.
  */

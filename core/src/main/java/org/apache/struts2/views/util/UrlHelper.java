@@ -67,6 +67,7 @@ public class UrlHelper {
     private static int httpsPort = DEFAULT_HTTPS_PORT;
     private static String customEncoding;
 
+
     @Inject(StrutsConstants.STRUTS_URL_HTTP_PORT)
     public static void setHttpPort(String val) {
         httpPort = Integer.parseInt(val);
@@ -109,22 +110,30 @@ public class UrlHelper {
             link.append(request.getServerName());
 
             if (scheme != null) {
-                if ((scheme.equals("http") && (httpPort != DEFAULT_HTTP_PORT)) || (scheme.equals("https") && httpsPort != DEFAULT_HTTPS_PORT))
-                {
-                    link.append(":");
-                    link.append(scheme.equals("http") ? httpPort : httpsPort);
+                // If switching schemes, use the configured port for the particular scheme.
+                if (!scheme.equals(reqScheme)) {
+                    if ((scheme.equals("http") && (httpPort != DEFAULT_HTTP_PORT)) || (scheme.equals("https") && httpsPort != DEFAULT_HTTPS_PORT)) {
+                        link.append(":");
+                        link.append(scheme.equals("http") ? httpPort : httpsPort);
+                    }
+		// Else use the port from the current request.
+                } else {
+                    int reqPort = request.getServerPort();
+
+                    if ((scheme.equals("http") && (reqPort != DEFAULT_HTTP_PORT)) || (scheme.equals("https") && reqPort != DEFAULT_HTTPS_PORT)) {
+                        link.append(":");
+                        link.append(reqPort);
+                    }
                 }
             }
         }
-        else if (
-           (scheme != null) && !scheme.equals(request.getScheme())) {
+        else if ((scheme != null) && !scheme.equals(request.getScheme())) {
             changedScheme = true;
             link.append(scheme);
             link.append("://");
             link.append(request.getServerName());
 
-            if ((scheme.equals("http") && (httpPort != DEFAULT_HTTP_PORT)) || (scheme.equals("https") && httpsPort != DEFAULT_HTTPS_PORT))
-            {
+            if ((scheme.equals("http") && (httpPort != DEFAULT_HTTP_PORT)) || (scheme.equals("https") && httpsPort != DEFAULT_HTTPS_PORT)) {
                 link.append(":");
                 link.append(scheme.equals("http") ? httpPort : httpsPort);
             }

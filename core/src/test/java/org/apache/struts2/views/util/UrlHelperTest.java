@@ -40,8 +40,6 @@ import com.mockobjects.dynamic.Mock;
  */
 public class UrlHelperTest extends StrutsTestCase {
 
-
-
     public void testForceAddSchemeHostAndPort() throws Exception {
         String expectedUrl = "http://localhost/contextPath/path1/path2/myAction.action";
 
@@ -49,7 +47,8 @@ public class UrlHelperTest extends StrutsTestCase {
         mockHttpServletRequest.expectAndReturn("getScheme", "http");
         mockHttpServletRequest.expectAndReturn("getServerName", "localhost");
         mockHttpServletRequest.expectAndReturn("getContextPath", "/contextPath");
-
+	mockHttpServletRequest.expectAndReturn("getServerPort", 80);
+	
         Mock mockHttpServletResponse = new Mock(HttpServletResponse.class);
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedUrl, expectedUrl);
 
@@ -74,14 +73,30 @@ public class UrlHelperTest extends StrutsTestCase {
         assertEquals(expectedUrl, result);
     }
 
+    public void testForceAddSchemeHostAndPortWithNonStandardPort() throws Exception {
+        String expectedUrl = "http://localhost:9090/contextPath/path1/path2/myAction.action";
+
+        Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
+        mockHttpServletRequest.expectAndReturn("getScheme", "http");
+        mockHttpServletRequest.expectAndReturn("getServerName", "localhost");
+        mockHttpServletRequest.expectAndReturn("getContextPath", "/contextPath");
+        mockHttpServletRequest.expectAndReturn("getServerPort", 9090);
+
+        Mock mockHttpServletResponse = new Mock(HttpServletResponse.class);
+        mockHttpServletResponse.expectAndReturn("encodeURL", expectedUrl, expectedUrl);
+
+        String result = UrlHelper.buildUrl("/path1/path2/myAction.action", (HttpServletRequest) mockHttpServletRequest.proxy(), (HttpServletResponse)mockHttpServletResponse.proxy(), null, "http", true, true, true);
+        assertEquals(expectedUrl, result);
+        mockHttpServletRequest.verify();
+    }
+    
     public void testForceAddNullSchemeHostAndPort() throws Exception {
         String expectedUrl = "http://localhost/contextPath/path1/path2/myAction.action";
 
         Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
         mockHttpServletRequest.expectAndReturn("getScheme", "http");
         mockHttpServletRequest.expectAndReturn("getServerName", "localhost");
-        mockHttpServletRequest.expectAndReturn("getContextPath",
-            "/contextPath");
+        mockHttpServletRequest.expectAndReturn("getContextPath", "/contextPath");
 
         Mock mockHttpServletResponse = new Mock(HttpServletResponse.class);
         mockHttpServletResponse.expectAndReturn("encodeURL", expectedUrl,

@@ -31,7 +31,7 @@ Please do not edit it directly.
 					<td align="left" valign="top">action</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">The action to generate the URL for, if not using value</td>
 				</tr>
@@ -39,7 +39,7 @@ Please do not edit it directly.
 					<td align="left" valign="top">anchor</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">The anchor for this URL</td>
 				</tr>
@@ -47,7 +47,7 @@ Please do not edit it directly.
 					<td align="left" valign="top">encode</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">Boolean</td>
 					<td align="left" valign="top">Whether to encode parameters</td>
 				</tr>
@@ -55,7 +55,7 @@ Please do not edit it directly.
 					<td align="left" valign="top">escapeAmp</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">Boolean</td>
 					<td align="left" valign="top">Specifies whether to escape ampersand (&amp;) to (&amp;amp;) or not</td>
 				</tr>
@@ -63,7 +63,7 @@ Please do not edit it directly.
 					<td align="left" valign="top">id</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">Deprecated. Use 'var' instead</td>
 				</tr>
@@ -71,7 +71,7 @@ Please do not edit it directly.
 					<td align="left" valign="top">includeContext</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">true</td>
-					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">Boolean</td>
 					<td align="left" valign="top">Whether actual context should be included in URL</td>
 				</tr>
@@ -79,7 +79,7 @@ Please do not edit it directly.
 					<td align="left" valign="top">includeParams</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">get</td>
-					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">The includeParams attribute may have the value 'none', 'get' or 'all'</td>
 				</tr>
@@ -87,7 +87,7 @@ Please do not edit it directly.
 					<td align="left" valign="top">method</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">The method of action to use</td>
 				</tr>
@@ -95,7 +95,7 @@ Please do not edit it directly.
 					<td align="left" valign="top">namespace</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">The namespace to use</td>
 				</tr>
@@ -103,7 +103,7 @@ Please do not edit it directly.
 					<td align="left" valign="top">portletMode</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">The resulting portlet mode</td>
 				</tr>
@@ -111,15 +111,15 @@ Please do not edit it directly.
 					<td align="left" valign="top">portletUrlType</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">String</td>
-					<td align="left" valign="top">Specifies if this should be a portlet render or action URL</td>
+					<td align="left" valign="top">Specifies if this should be a portlet render or action URL. Default is "render". To create an action URL, use "action".</td>
 				</tr>
 				<tr>
 					<td align="left" valign="top">scheme</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">Set scheme attribute</td>
 				</tr>
@@ -127,7 +127,7 @@ Please do not edit it directly.
 					<td align="left" valign="top">value</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">The target value to use, if not using action</td>
 				</tr>
@@ -135,7 +135,7 @@ Please do not edit it directly.
 					<td align="left" valign="top">var</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">Name used to reference the value pushed into the Value Stack</td>
 				</tr>
@@ -143,7 +143,7 @@ Please do not edit it directly.
 					<td align="left" valign="top">windowState</td>
 					<td align="left" valign="top">false</td>
 					<td align="left" valign="top"></td>
-					<td align="left" valign="top">true</td>
+					<td align="left" valign="top">false</td>
 					<td align="left" valign="top">String</td>
 					<td align="left" valign="top">The resulting portlet window state</td>
 				</tr>

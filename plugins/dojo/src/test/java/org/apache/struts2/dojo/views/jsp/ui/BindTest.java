@@ -49,6 +49,7 @@ public class BindTest extends AbstractUITagTest {
         tag.setValidate("true");
         tag.setSeparateScripts("true");
         tag.setTransport("q");
+        tag.setParseContent("false");
         tag.doStartTag();
         tag.doEndTag();
 

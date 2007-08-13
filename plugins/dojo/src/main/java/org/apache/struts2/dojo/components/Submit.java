@@ -176,6 +176,7 @@ public class Submit extends FormButton implements RemoteBean {
     protected String ajaxAfterValidation;
     protected String separateScripts;
     protected String transport;
+    protected String parseContent;
     
     public Submit(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -242,6 +243,8 @@ public class Submit extends FormButton implements RemoteBean {
             addParameter("separateScripts", findValue(separateScripts, Boolean.class));
         if (transport != null)
             addParameter("transport", findString(transport));
+        if (parseContent != null)
+            addParameter("parseContent", findValue(parseContent, Boolean.class));
         
         Boolean validateValue = false;
         if (validate != null) {
@@ -454,5 +457,10 @@ public class Submit extends FormButton implements RemoteBean {
     @StrutsTagAttribute(description="Transport used by Dojo to make the request", defaultValue="XMLHTTPTransport")
     public void setTransport(String transport) {
         this.transport = transport;
+    }
+    
+    @StrutsTagAttribute(description="Parse returned HTML for Dojo widgets", defaultValue="true", type="Boolean")
+    public void setParseContent(String parseContent) {
+        this.parseContent = parseContent;
     }
 }

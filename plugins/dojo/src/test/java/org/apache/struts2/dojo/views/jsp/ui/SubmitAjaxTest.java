@@ -51,6 +51,7 @@ public class SubmitAjaxTest extends AbstractUITagTest {
         tag.setSeparateScripts("true");
         tag.setTabindex("1");
         tag.setTransport("p");
+        tag.setParseContent("false");
         tag.doStartTag();
         tag.doEndTag();
 

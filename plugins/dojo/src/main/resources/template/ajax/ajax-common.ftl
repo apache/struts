@@ -101,3 +101,6 @@
   <#if parameters.transport?if_exists != "">
     transport="${parameters.transport?html}"<#rt/>
   </#if>
+  <#if parameters.parseContent?exists>
+    parseContent="${parameters.parseContent?string?html}"<#rt/>
+  </#if>

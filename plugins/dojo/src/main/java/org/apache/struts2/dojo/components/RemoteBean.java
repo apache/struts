@@ -66,4 +66,6 @@ public interface RemoteBean {
     void setSeparateScripts(String separateScripts);
     
     void setTransport(String transport);
+    
+    void setParseContent(String parseContent);
 }

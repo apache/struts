@@ -62,6 +62,7 @@ public class SubmitTag extends AbstractUITag {
     protected String ajaxAfterValidation;
     protected String separateScripts;
     protected String transport;
+    protected String parseContent;
     
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Submit(stack, req, res);
@@ -97,6 +98,7 @@ public class SubmitTag extends AbstractUITag {
         submit.setAjaxAfterValidation(ajaxAfterValidation);
         submit.setSeparateScripts(separateScripts);
         submit.setTransport(transport);
+        submit.setParseContent(parseContent);
     }
 
     public void setMethod(String method) {
@@ -205,5 +207,9 @@ public class SubmitTag extends AbstractUITag {
 
     public void setTransport(String transport) {
         this.transport = transport;
+    }
+
+    public void setParseContent(String parseContent) {
+        this.parseContent = parseContent;
     }
 }

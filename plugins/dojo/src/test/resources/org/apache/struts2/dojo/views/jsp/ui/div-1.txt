@@ -22,5 +22,6 @@
   highlightColor="o"
   highlightDuration="p"
   scriptSeparation="false"
-  transport="q">
+  transport="q"
+  parseContent="false">
 </div>

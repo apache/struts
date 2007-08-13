@@ -26,7 +26,6 @@ import org.apache.struts2.dojo.TestAction;
  */
 public class AnchorTest extends AbstractUITagTest {
 
-
     public void testSimple() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");
@@ -54,6 +53,7 @@ public class AnchorTest extends AbstractUITagTest {
         tag.setAjaxAfterValidation("true");
         tag.setSeparateScripts("true");
         tag.setTransport("o");
+        tag.setParseContent("false");
         tag.doStartTag();
         tag.doEndTag();
 

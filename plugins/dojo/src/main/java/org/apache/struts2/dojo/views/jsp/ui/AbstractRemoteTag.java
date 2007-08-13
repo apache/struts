@@ -41,6 +41,7 @@ public abstract class AbstractRemoteTag extends AbstractClosingTag {
     protected String highlightDuration;
     protected String separateScripts;
     protected String transport;
+    protected String parseContent;
     
     protected void populateParams() {
         super.populateParams();
@@ -65,6 +66,7 @@ public abstract class AbstractRemoteTag extends AbstractClosingTag {
         remote.setHighlightDuration(highlightDuration);
         remote.setSeparateScripts(separateScripts);
         remote.setTransport(transport);
+        remote.setParseContent(parseContent);
     }
 
     public void setHref(String href) {
@@ -141,5 +143,9 @@ public abstract class AbstractRemoteTag extends AbstractClosingTag {
 
     public void setTransport(String transport) {
         this.transport = transport;
+    }
+
+    public void setParseContent(String parseContent) {
+        this.parseContent = parseContent;
     }
 }

@@ -23,4 +23,5 @@
   highlightDuration="o"
   scriptSeparation="true"
   transport="p"
+  parseContent="false"
   />

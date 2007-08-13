@@ -51,6 +51,7 @@ public abstract class AbstractRemoteBean extends ClosingUIBean implements Remote
     protected String highlightDuration;
     protected String separateScripts;
     protected String transport;
+    protected String parseContent;
     
     public AbstractRemoteBean(ValueStack stack, HttpServletRequest request,
             HttpServletResponse response) {
@@ -100,6 +101,10 @@ public abstract class AbstractRemoteBean extends ClosingUIBean implements Remote
             addParameter("separateScripts", findValue(separateScripts, Boolean.class));
         if (transport != null)
             addParameter("transport", findString(transport));
+        if (parseContent != null)
+            addParameter("parseContent", findValue(parseContent, Boolean.class));
+        else
+            addParameter("parseContent", true);
     }
 
     @Override
@@ -232,5 +237,10 @@ public abstract class AbstractRemoteBean extends ClosingUIBean implements Remote
     @StrutsTagAttribute(description="Transport used by Dojo to make the request", defaultValue="XMLHTTPTransport")
     public void setTransport(String transport) {
         this.transport = transport;
+    }
+
+    @StrutsTagAttribute(description="Parse returned HTML for Dojo widgets", defaultValue="true", type="Boolean")
+    public void setParseContent(String parseContent) {
+        this.parseContent = parseContent;
     }
 }

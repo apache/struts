@@ -156,6 +156,11 @@
                 <#assign firstField=false ><#t/>
                 "transport": "${parameters.transport?html}"<#t/>
             </#if>
+            <#if parameters.parseContent?exists>
+                <#if !firstField>,</#if><#t/>
+                <#assign firstField=false ><#t/>
+                "parseContent": ${parameters.parseContent?string?html}<#t/>
+            </#if>
 		});
 	});
 </script>

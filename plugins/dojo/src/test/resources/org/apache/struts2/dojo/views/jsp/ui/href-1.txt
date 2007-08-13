@@ -19,5 +19,6 @@
  highlightColor="m"
  highlightDuration="n"
  scriptSeparation="true"
- transport="o">
+ transport="o"
+ parseContent="false">
 </a>

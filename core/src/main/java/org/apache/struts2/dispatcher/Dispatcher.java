@@ -106,12 +106,6 @@ public class Dispatcher {
     private ConfigurationManager configurationManager;
 
     /**
-     * Store whether portlet support is active
-     * (set to true by Jsr168Dispatcher).
-     */
-    private static boolean portletSupportActive;
-
-    /**
      * Store state of  StrutsConstants.STRUTS_DEVMODE setting.
      */
     private static boolean devMode;
@@ -760,23 +754,6 @@ Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyExcepti
                 // we're already sending an error, not much else we can do if more stuff breaks
             }
         }
-    }
-
-    /**
-     * Return <tt>true</tt>, if portlet support is active, <tt>false</tt> otherwise.
-     *
-     * @return <tt>true</tt>, if portlet support is active, <tt>false</tt> otherwise.
-     */
-    public boolean isPortletSupportActive() {
-        return portletSupportActive;
-    }
-
-    /**
-     * Modify the portlet support mode.
-     * @param portletSupportActive <tt>true</tt> or <tt>false</tt>
-     */
-    public static void setPortletSupportActive(boolean portletSupportActive) {
-        Dispatcher.portletSupportActive = portletSupportActive;
     }
 
     /**

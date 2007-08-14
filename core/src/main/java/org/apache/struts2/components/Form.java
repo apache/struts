@@ -211,14 +211,10 @@ public class Form extends ClosingUIBean {
     protected void populateComponentHtmlId(Form form) {
         if (id != null) {
             addParameter("id", escape(id));
-        } else if (this.action != null) {
-            // if it isn't specified, we'll make somethig up
-            String action = findString(this.action);
-            if (action != null) {
-                addParameter("id", escape(action));
-            }
         }
 
+        // if no id given, it will be tried to generate it from the action attribute
+        // by the urlRenderer implementation
         urlRenderer.renderFormUrl(this);
     }
 

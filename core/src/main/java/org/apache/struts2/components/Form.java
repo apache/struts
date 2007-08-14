@@ -228,6 +228,8 @@ public class Form extends ClosingUIBean {
 
         if (id != null) {
             addParameter("id", escape(id));
+        } else if ( action != null ) {
+            addParameter("id", escape(action));
         }
         if (Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
             evaluateExtraParamsPortletRequest(namespace, action);

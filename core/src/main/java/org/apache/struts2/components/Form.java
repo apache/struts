@@ -20,26 +20,6 @@
  */
 package org.apache.struts2.components;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.views.annotations.StrutsTag;
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
-import org.apache.struts2.portlet.context.PortletActionContext;
-import org.apache.struts2.portlet.util.PortletUrlHelper;
-import org.apache.struts2.views.util.UrlHelper;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ObjectFactory;
@@ -49,12 +29,29 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptorUtil;
-import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.TextUtils;
+import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.validator.ActionValidatorManagerFactory;
 import com.opensymphony.xwork2.validator.FieldValidator;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
 import com.opensymphony.xwork2.validator.Validator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.portlet.context.PortletActionContext;
+import org.apache.struts2.portlet.util.PortletUrlHelper;
+import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
+import org.apache.struts2.views.util.UrlHelper;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -344,7 +341,7 @@ public class Form extends ClosingUIBean {
 
         // Only evaluate if Client-Side js is to be enable when validate=true
         Boolean validate = (Boolean) getParameters().get("validate");
-        if (validate != null && validate.booleanValue()) {
+        if (validate != null && validate) {
 
             addParameter("performValidation", Boolean.FALSE);
 
@@ -352,9 +349,8 @@ public class Form extends ClosingUIBean {
             ActionConfig actionConfig = runtimeConfiguration.getActionConfig(namespace, actionName);
 
             if (actionConfig != null) {
-                List interceptors = actionConfig.getInterceptors();
-                for (Iterator i = interceptors.iterator(); i.hasNext();) {
-                    InterceptorMapping interceptorMapping = (InterceptorMapping) i.next();
+                List<InterceptorMapping> interceptors = actionConfig.getInterceptors();
+                for (InterceptorMapping interceptorMapping : interceptors) {
                     if (ValidationInterceptor.class.isInstance(interceptorMapping.getInterceptor())) {
                         ValidationInterceptor validationInterceptor = (ValidationInterceptor) interceptorMapping.getInterceptor();
 
@@ -424,10 +420,9 @@ public class Form extends ClosingUIBean {
             return Collections.EMPTY_LIST;
         }
 
-        List all = ActionValidatorManagerFactory.getInstance().getValidators(actionClass, (String) getParameters().get("actionName"));
-        List validators = new ArrayList();
-        for (Iterator iterator = all.iterator(); iterator.hasNext();) {
-            Validator validator = (Validator) iterator.next();
+        List<Validator> all = ActionValidatorManagerFactory.getInstance().getValidators(actionClass, (String) getParameters().get("actionName"));
+        List<Validator> validators = new ArrayList<Validator>();
+        for (Validator validator : all) {
             if (validator instanceof FieldValidator) {
                 FieldValidator fieldValidator = (FieldValidator) validator;
                 if (fieldValidator.getFieldName().equals(name)) {

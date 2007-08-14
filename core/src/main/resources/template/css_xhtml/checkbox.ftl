@@ -94,4 +94,11 @@ lables
 >${parameters.label?html}</label><#rt/>
 </#if>
 </#if>
-<#include "/${parameters.templateDir}/css_xhtml/controlfooter.ftl" /><#nt/>
+<#if parameters.label?exists>
+<#if parameters.labelposition?default("top") == 'top'>
+</div> <#rt/>
+<#else>
+</span> <#rt/>
+</#if>
+</#if>
+</div>

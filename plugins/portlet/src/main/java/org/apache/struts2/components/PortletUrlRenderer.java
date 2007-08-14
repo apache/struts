@@ -20,20 +20,17 @@
  */
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.util.TextUtils;
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.portlet.util.PortletUrlHelper;
+
 import java.io.IOException;
 import java.io.Writer;
 
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.components.URL;
-import org.apache.struts2.components.UrlRenderer;
-import org.apache.struts2.portlet.util.PortletUrlHelper;
-
-import com.opensymphony.xwork2.util.TextUtils;
-
 /**
- * Implementation of the {@link URLRenderer} interface that renders URLs for portlet environments.
+ * Implementation of the {@link UrlRenderer} interface that renders URLs for portlet environments.
  * 
- * @see URLRenderer
+ * @see UrlRenderer
  *
  */
 public class PortletUrlRenderer implements UrlRenderer {
@@ -48,30 +45,30 @@ public class PortletUrlRenderer implements UrlRenderer {
 			scheme = urlComponent.scheme;
 		}
 
-	       String result;
-	        if (urlComponent.value == null && urlComponent.action != null) {
-	                result = PortletUrlHelper.buildUrl(urlComponent.action, urlComponent.namespace, urlComponent.method, urlComponent.parameters, urlComponent.portletUrlType, urlComponent.portletMode, urlComponent.windowState);
-	        } else {
-	                result = PortletUrlHelper.buildResourceUrl(urlComponent.value, urlComponent.parameters);
-	        }
-	        if ( urlComponent.anchor != null && urlComponent.anchor.length() > 0 ) {
-	            result += '#' + urlComponent.anchor;
-	        }
+        String result;
+        if (urlComponent.value == null && urlComponent.action != null) {
+                result = PortletUrlHelper.buildUrl(urlComponent.action, urlComponent.namespace, urlComponent.method, urlComponent.parameters, urlComponent.portletUrlType, urlComponent.portletMode, urlComponent.windowState);
+        } else {
+                result = PortletUrlHelper.buildResourceUrl(urlComponent.value, urlComponent.parameters);
+        }
+        if ( urlComponent.anchor != null && urlComponent.anchor.length() > 0 ) {
+            result += '#' + urlComponent.anchor;
+        }
 
-	        String var = urlComponent.getVar();
+        String var = urlComponent.getVar();
 
-	        if (var != null) {
-	        	urlComponent.putInContext(result);
+        if (var != null) {
+            urlComponent.putInContext(result);
 
-	            // add to the request and page scopes as well
-	        	urlComponent.req.setAttribute(var, result);
-	        } else {
-	            try {
-	                writer.write(result);
-	            } catch (IOException e) {
-	                throw new StrutsException("IOError: " + e.getMessage(), e);
-	            }
-	        }
+            // add to the request and page scopes as well
+            urlComponent.req.setAttribute(var, result);
+        } else {
+            try {
+                writer.write(result);
+            } catch (IOException e) {
+                throw new StrutsException("IOError: " + e.getMessage(), e);
+            }
+        }
 	}
 
 	/**

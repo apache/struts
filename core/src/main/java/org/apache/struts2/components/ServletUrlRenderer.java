@@ -93,13 +93,11 @@ public class ServletUrlRenderer implements UrlRenderer {
 	public void renderFormUrl(Form formComponent) {
 		String namespace = formComponent.determineNamespace(formComponent.namespace, formComponent.getStack(),
 				formComponent.request);
-		String action = null;
+		String action;
 
 		if(formComponent.action != null) {
 			action = formComponent.findString(formComponent.action);
-		}
-		
-		if (formComponent.action == null) {
+		} else {
 			// no action supplied? ok, then default to the current request
 			// (action or general URL)
 			ActionInvocation ai = (ActionInvocation) formComponent.getStack().getContext().get(
@@ -154,19 +152,19 @@ public class ServletUrlRenderer implements UrlRenderer {
 			}
 
 			// if the id isn't specified, use the action name
-			if (formComponent.getId() == null) {
-				formComponent.addParameter("id", action);
+			if (formComponent.getId() == null  && action!=null ) {
+				formComponent.addParameter("id", formComponent.escape(action));
 			}
 		} else if (action != null) {
 			// Since we can't find an action alias in the configuration, we just
 			// assume the action attribute supplied is the path to be used as
 			// the URI this form is submitting to.
 
-      // Warn user that the specified namespace/action combo
-      // was not found in the configuration.
-      if (namespace != null) {
-          LOG.warn("No configuration found for the specified action: '" + action + "' in namespace: '" + namespace + "'. Form action defaulting to 'action' attribute's literal value.");
-      }
+            // Warn user that the specified namespace/action combo
+            // was not found in the configuration.
+            if (namespace != null) {
+              LOG.warn("No configuration found for the specified action: '" + action + "' in namespace: '" + namespace + "'. Form action defaulting to 'action' attribute's literal value.");
+            }
 
 			String result = UrlHelper.buildUrl(action, formComponent.request, formComponent.response, null);
 			formComponent.addParameter("action", result);

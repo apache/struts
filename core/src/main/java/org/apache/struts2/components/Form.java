@@ -225,9 +225,10 @@ public class Form extends ClosingUIBean {
 
         if (id != null) {
             addParameter("id", escape(id));
-        } else if ( action != null ) {
-            addParameter("id", escape(action));
         }
+
+        // if no id given, it will be tried to generate it from the action attribute in the
+        // corresponding evaluateExtraParams method
         if (Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
             evaluateExtraParamsPortletRequest(namespace, action);
         } else {
@@ -293,8 +294,8 @@ public class Form extends ClosingUIBean {
             }
 
             // if the id isn't specified, use the action name
-            if (id == null) {
-                addParameter("id", action);
+            if (id == null && action!=null) {
+                addParameter("id", escape(action));
             }
         } else if (action != null) {
             // Since we can't find an action alias in the configuration, we just assume
@@ -373,11 +374,6 @@ public class Form extends ClosingUIBean {
      * @param action The action to create the URL for.
      */
     private void evaluateExtraParamsPortletRequest(String namespace, String action) {
-
-        if (this.action != null) {
-            // if it isn't specified, we'll make somethig up
-            action = findString(this.action);
-        }
 
         String type = "action";
         if (TextUtils.stringSet(method)) {

@@ -125,4 +125,9 @@ public interface PortletActionConstants {
 	 * Session key where the value stack from the event phase is stored.
 	 */
 	String STACK_FROM_EVENT_PHASE = "struts.portlet.valueStackFromEventPhase";
+
+	/**
+	 * Default name of dispatcher servlet in web.xml
+	 */
+	String DEFAULT_DISPATCHER_SERVLET_NAME = "Struts2PortletDispatcherServlet";
 }

@@ -55,6 +55,8 @@ public class PortletResult extends StrutsResultSupport implements PortletActionC
 	private static final long serialVersionUID = 434251393926178567L;
 
 	private boolean useDispatcherServlet;
+	
+	private String dispatcherServletName = DEFAULT_DISPATCHER_SERVLET_NAME;
 
 	/**
 	 * Logger instance.
@@ -176,9 +178,9 @@ public class PortletResult extends StrutsResultSupport implements PortletActionC
 		LOG.debug("Location: " + finalLocation);
 		if (useDispatcherServlet) {
 			req.setAttribute(DISPATCH_TO, finalLocation);
-			PortletRequestDispatcher dispatcher = ctx.getNamedDispatcher("dispatcherServlet");
+			PortletRequestDispatcher dispatcher = ctx.getNamedDispatcher(dispatcherServletName);
 			if(dispatcher == null) {
-				throw new PortletException("Could not locate dispatcherServlet. Please configure it in your web.xml file");
+				throw new PortletException("Could not locate dispatcher servlet \"" + dispatcherServletName + "\". Please configure it in your web.xml file");
 			}
 			dispatcher.include(req, res);
 		} else {
@@ -213,5 +215,10 @@ public class PortletResult extends StrutsResultSupport implements PortletActionC
 	@Inject("struts.portlet.useDispatcherServlet") 
 	public void setUseDispatcherServlet(String useDispatcherServlet) {
 		this.useDispatcherServlet = "true".equalsIgnoreCase(useDispatcherServlet);
+	}
+	
+	@Inject("struts.portlet.dispatcherServletName")
+	public void setDispatcherServletName(String dispatcherServletName) {
+		this.dispatcherServletName = dispatcherServletName;
 	}
 }

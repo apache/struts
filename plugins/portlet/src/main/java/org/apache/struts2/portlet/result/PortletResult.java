@@ -122,6 +122,7 @@ public class PortletResult extends StrutsResultSupport implements PortletActionC
 	protected void executeActionResult(String finalLocation, ActionInvocation invocation) {
 		LOG.debug("Executing result in Event phase");
 		ActionResponse res = PortletActionContext.getActionResponse();
+		Map sessionMap = invocation.getInvocationContext().getSession();
 		LOG.debug("Setting event render parameter: " + finalLocation);
 		if (finalLocation.indexOf('?') != -1) {
 			convertQueryParamsToRenderParams(res, finalLocation.substring(finalLocation.indexOf('?') + 1));
@@ -134,7 +135,6 @@ public class PortletResult extends StrutsResultSupport implements PortletActionC
 		} else {
 			// View is rendered outside an action...uh oh...
 			res.setRenderParameter(ACTION_PARAM, "renderDirect");
-			Map sessionMap = invocation.getInvocationContext().getSession();
 			sessionMap.put(RENDER_DIRECT_LOCATION, finalLocation);
 		}
 		res.setRenderParameter(PortletActionConstants.MODE_PARAM, PortletActionContext.getRequest().getPortletMode()

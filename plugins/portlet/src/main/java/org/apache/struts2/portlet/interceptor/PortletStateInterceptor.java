@@ -28,6 +28,7 @@ import javax.portlet.RenderRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.portlet.PortletActionConstants;
+import org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
@@ -58,27 +59,39 @@ public class PortletStateInterceptor extends AbstractInterceptor implements Port
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void saveStack(ActionInvocation invocation) {
 		Map session = invocation.getInvocationContext().getSession();
-		session.put("struts.portlet.valueStackFromEventPhase", invocation.getStack());
+		session.put(STACK_FROM_EVENT_PHASE, invocation.getStack());
 		ActionResponse actionResponse = (ActionResponse) invocation.getInvocationContext().get(RESPONSE);
 		actionResponse.setRenderParameter(EVENT_ACTION, "true");
 	}
 
+	@SuppressWarnings("unchecked")
 	private void restoreStack(ActionInvocation invocation) {
 		RenderRequest request = (RenderRequest) invocation.getInvocationContext().get(REQUEST);
 		if (TextUtils.stringSet(request.getParameter(EVENT_ACTION))) {
-			LOG.debug("Restoring value stack from event phase");
-			ValueStack oldStack = (ValueStack) invocation.getInvocationContext().getSession().get(
-					"struts.portlet.valueStackFromEventPhase");
-			if (oldStack != null) {
-				CompoundRoot oldRoot = oldStack.getRoot();
-				ValueStack currentStack = invocation.getStack();
-				CompoundRoot root = currentStack.getRoot();
-				root.addAll(oldRoot);
-				LOG.debug("Restored stack");
+			Map session = invocation.getInvocationContext().getSession();
+			if(!isProperPrg(invocation)) {
+				LOG.debug("Restoring value stack from event phase");
+				ValueStack oldStack = (ValueStack) invocation.getInvocationContext().getSession().get(
+				STACK_FROM_EVENT_PHASE);
+				if (oldStack != null) {
+					CompoundRoot oldRoot = oldStack.getRoot();
+					ValueStack currentStack = invocation.getStack();
+					CompoundRoot root = currentStack.getRoot();
+					root.addAll(oldRoot);
+					LOG.debug("Restored stack");
+				}
+			}
+			else {
+				LOG.debug("Won't restore stack from event phase since it's a proper PRG request");
 			}
 		}
+	}
+
+	private boolean isProperPrg(ActionInvocation invocation) {
+		return !(invocation.getAction() instanceof DirectRenderFromEventAction);
 	}
 
 }

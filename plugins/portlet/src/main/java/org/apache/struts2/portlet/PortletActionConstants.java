@@ -120,4 +120,9 @@ public interface PortletActionConstants {
      * Key for the dispatch instruction for the {@link DispatcherServlet}
      */
 	String DISPATCH_TO = "struts.portlet.dispatchTo";
+	
+	/**
+	 * Session key where the value stack from the event phase is stored.
+	 */
+	String STACK_FROM_EVENT_PHASE = "struts.portlet.valueStackFromEventPhase";
 }

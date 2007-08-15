@@ -68,10 +68,8 @@ END SNIPPET: supported-validators
                     while (value.substring(value.length-1, value.length) == ' ')
                         value = value.substring(0, value.length-1);
                 </#if>
-                if(value.length > 0 && (
-                        (${validator.minLength} > -1 && value.length < ${validator.minLength}) ||
-                        (${validator.maxLength} > -1 && value.length > ${validator.maxLength})
-                    )) {
+                if ((${validator.minLength?string} > -1 && value.length < ${validator.minLength?string}) ||
+                    (${validator.maxLength?string} > -1 && value.length > ${validator.maxLength?string})) {
                     addError(field, error);
                     errors = true;
                 }
@@ -94,9 +92,9 @@ END SNIPPET: supported-validators
             <#elseif validator.validatorType = "int">
             if (field.value != null) {
                 if (<#if validator.min?exists>parseInt(field.value) <
-                     ${validator.min}<#else>false</#if> ||
+                     ${validator.min?string}<#else>false</#if> ||
                         <#if validator.max?exists>parseInt(field.value) >
-                           ${validator.max}<#else>false</#if>) {
+                           ${validator.max?string}<#else>false</#if>) {
                     addError(field, error);
                     errors = true;
                 }
@@ -104,10 +102,10 @@ END SNIPPET: supported-validators
             <#elseif validator.validatorType = "double">
             if (field.value != null) {
                 var value = parseFloat(field.value);
-                if (<#if validator.minInclusive?exists>value < ${validator.minInclusive}<#else>false</#if> ||
-                        <#if validator.maxInclusive?exists>value > ${validator.maxInclusive}<#else>false</#if> ||
-                        <#if validator.minExclusive?exists>value <= ${validator.minExclusive}<#else>false</#if> ||
-                        <#if validator.maxExclusive?exists>value >= ${validator.maxExclusive}<#else>false</#if>) {
+                if (<#if validator.minInclusive?exists>value < ${validator.minInclusive?string}<#else>false</#if> ||
+                        <#if validator.maxInclusive?exists>value > ${validator.maxInclusive?string}<#else>false</#if> ||
+                        <#if validator.minExclusive?exists>value <= ${validator.minExclusive?string}<#else>false</#if> ||
+                        <#if validator.maxExclusive?exists>value >= ${validator.maxExclusive?string}<#else>false</#if>) {
                     addError(field, error);
                     errors = true;
                 }

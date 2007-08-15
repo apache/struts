@@ -25,9 +25,17 @@ function clearErrorMessages(form) {
 
 function clearErrorMessagesXHTML(form) {
 
-    var table = form.childNodes[1];
-    if( typeof table == "undefined" ) {
-        table = form.childNodes[0];
+    // get field table
+    var table;
+    for (var i = 0; i < form.childNodes.length; i++) {
+        if (form.childNodes[i].tagName != null && form.childNodes[i].tagName.toLowerCase() == 'table') {
+            table = form.childNodes[i];
+            break;
+        }
+    }
+
+    if (table == null) {
+        return;
     }
 
     // clear out any rows with an "errorFor" attribute

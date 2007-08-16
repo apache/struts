@@ -741,12 +741,15 @@ Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyExcepti
             }
         } else {
             try {
-                // send a http error response to use the servlet defined error handler
-                // make the exception availible to the web.xml defined error page
-                request.setAttribute("javax.servlet.error.exception", e);
+                // WW-1977: Only put errors in the request when code is a 500 error
+                if (code == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
+                    // send a http error response to use the servlet defined error handler
+                    // make the exception availible to the web.xml defined error page
+                    request.setAttribute("javax.servlet.error.exception", e);
 
-                // for compatibility
-                request.setAttribute("javax.servlet.jsp.jspException", e);
+                    // for compatibility
+                    request.setAttribute("javax.servlet.jsp.jspException", e);
+                }
 
                 // send the error response
                 response.sendError(code, e.getMessage());

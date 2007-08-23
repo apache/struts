@@ -341,7 +341,7 @@ public class URL extends Component {
         this.windowState = windowState;
     }
 
-    @StrutsTagAttribute(description="Specifies if this should be a portlet render or action URL")
+    @StrutsTagAttribute(description="Specifies if this should be a portlet render or action URL. Default is \"render\". To create an action URL, use \"action\".")
     public void setPortletUrlType(String portletUrlType) {
         this.portletUrlType = portletUrlType;
     }

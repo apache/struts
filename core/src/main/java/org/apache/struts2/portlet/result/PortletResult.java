@@ -20,20 +20,8 @@
  */
 package org.apache.struts2.portlet.result;
 
-import java.io.IOException;
-import java.util.StringTokenizer;
-
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletConfig;
-import javax.portlet.PortletException;
-import javax.portlet.PortletRequestDispatcher;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.TextUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
@@ -41,14 +29,20 @@ import org.apache.struts2.dispatcher.StrutsResultSupport;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.context.PortletActionContext;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.TextUtils;
+import javax.portlet.*;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.StringTokenizer;
+import java.util.Map;
 
 /**
  * Result type that includes a JSP to render.
  *
  */
-public class PortletResult extends StrutsResultSupport {
+public class PortletResult extends StrutsResultSupport implements PortletActionConstants {
 
     private static final long serialVersionUID = 434251393926178567L;
 
@@ -116,28 +110,26 @@ public class PortletResult extends StrutsResultSupport {
      * @param finalLocation
      * @param invocation
      */
-    protected void executeActionResult(String finalLocation,
-            ActionInvocation invocation) {
+    protected void executeActionResult(String finalLocation, ActionInvocation invocation) {
         LOG.debug("Executing result in Event phase");
         ActionResponse res = PortletActionContext.getActionResponse();
+        Map sessionMap = invocation.getInvocationContext().getSession();
         LOG.debug("Setting event render parameter: " + finalLocation);
         if (finalLocation.indexOf('?') != -1) {
-            convertQueryParamsToRenderParams(res, finalLocation
-                    .substring(finalLocation.indexOf('?') + 1));
-            finalLocation = finalLocation.substring(0, finalLocation
-                    .indexOf('?'));
+            convertQueryParamsToRenderParams(res, finalLocation.substring(finalLocation.indexOf('?') + 1));
+            finalLocation = finalLocation.substring(0, finalLocation.indexOf('?'));
         }
         if (finalLocation.endsWith(".action")) {
             // View is rendered with a view action...luckily...
             finalLocation = finalLocation.substring(0, finalLocation
                     .lastIndexOf("."));
-            res.setRenderParameter(PortletActionConstants.ACTION_PARAM, finalLocation);
+            res.setRenderParameter(ACTION_PARAM, finalLocation);
         } else {
             // View is rendered outside an action...uh oh...
             res.setRenderParameter(PortletActionConstants.ACTION_PARAM, "renderDirect");
-            res.setRenderParameter("location", finalLocation);
+            sessionMap.put(RENDER_DIRECT_LOCATION, finalLocation);
         }
-        res.setRenderParameter(PortletActionConstants.MODE_PARAM, PortletActionContext
+        res.setRenderParameter(MODE_PARAM, PortletActionContext
                 .getRequest().getPortletMode().toString());
     }
 
@@ -178,20 +170,6 @@ public class PortletResult extends StrutsResultSupport {
             res.setTitle(title);
         }
         LOG.debug("Location: " + finalLocation);
-        PortletRequestDispatcher preparator = cfg.getPortletContext()
-                .getNamedDispatcher("preparator");
-        if(preparator == null) {
-            throw new PortletException("Cannot look up 'preparator' servlet. Make sure that you" +
-                    "have configured it correctly in the web.xml file.");
-        }
-        new IncludeTemplate() {
-            protected void when(PortletException e) {
-                LOG.error("PortletException while dispatching to 'preparator' servlet", e);
-            }
-            protected void when(IOException e) {
-                LOG.error("IOException while dispatching to 'preparator' servlet", e);
-            }
-        }.include(preparator, req, res);
         PortletRequestDispatcher dispatcher = cfg.getPortletContext().getRequestDispatcher(finalLocation);
         if(dispatcher == null) {
             throw new PortletException("Could not locate dispatcher for '" + finalLocation + "'");

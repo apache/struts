@@ -26,15 +26,6 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
-    <listener>
-        <listener-class>org.apache.struts2.portlet.context.ServletContextHolderListener</listener-class>
-    </listener>
-
-    <servlet id="preparator">
-        <servlet-name>preparator</servlet-name>
-        <servlet-class>org.apache.struts2.portlet.context.PreparatorServlet</servlet-class>
-    </servlet>
-
     <servlet id="dwr">
         <servlet-name>dwr</servlet-name>
         <servlet-class>uk.ltd.getahead.dwr.DWRServlet</servlet-class>

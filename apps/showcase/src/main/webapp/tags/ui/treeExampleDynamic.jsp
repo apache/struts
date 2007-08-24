@@ -13,7 +13,7 @@
 <script language="JavaScript" type="text/javascript">
     dojo.event.topic.subscribe("treeSelected", function treeNodeSelected(node) {
         dojo.io.bind({
-            url: "<s:url value='/tags/ui/ajax/dynamicTreeSelectAction.action'/>&nodeId="+node.node.widgetId,
+            url: "<s:url value='/tags/ui/ajax/dynamicTreeSelectAction.action'/>?nodeId="+node.node.widgetId,
             load: function(type, data, evt) {
                 var divDisplay = dojo.byId("displayId");
                 divDisplay.innerHTML=data;

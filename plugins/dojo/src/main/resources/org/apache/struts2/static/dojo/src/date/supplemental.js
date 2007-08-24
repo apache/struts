@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.date.supplemental");
 dojo.date.getFirstDayOfWeek = function (locale) {
 	var firstDay = {mv:5, ae:6, af:6, bh:6, dj:6, dz:6, eg:6, er:6, et:6, iq:6, ir:6, jo:6, ke:6, kw:6, lb:6, ly:6, ma:6, om:6, qa:6, sa:6, sd:6, so:6, tn:6, ye:6, as:0, au:0, az:0, bw:0, ca:0, cn:0, fo:0, ge:0, gl:0, gu:0, hk:0, ie:0, il:0, is:0, jm:0, jp:0, kg:0, kr:0, la:0, mh:0, mo:0, mp:0, mt:0, nz:0, ph:0, pk:0, sg:0, th:0, tt:0, tw:0, um:0, us:0, uz:0, vi:0, za:0, zw:0, et:0, mw:0, ng:0, tj:0, gb:0, sy:4};

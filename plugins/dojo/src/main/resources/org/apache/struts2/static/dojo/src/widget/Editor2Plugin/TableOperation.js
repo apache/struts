@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.Editor2Plugin.TableOperation");
 dojo.require("dojo.widget.Editor2");
 dojo.event.topic.subscribe("dojo.widget.RichText::init", function (editor) {

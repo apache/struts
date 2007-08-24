@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.Dialog");
 dojo.require("dojo.widget.*");
 dojo.require("dojo.widget.ContentPane");

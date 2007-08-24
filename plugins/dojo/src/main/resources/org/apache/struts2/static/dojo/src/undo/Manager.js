@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.undo.Manager");
 dojo.require("dojo.lang.common");
 dojo.undo.Manager = function (parent) {

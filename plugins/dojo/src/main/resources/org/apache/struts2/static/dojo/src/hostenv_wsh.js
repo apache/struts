@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.hostenv.name_ = "wsh";
 if (typeof WScript == "undefined") {
 	dojo.raise("attempt to use WSH host environment when no WScript global");

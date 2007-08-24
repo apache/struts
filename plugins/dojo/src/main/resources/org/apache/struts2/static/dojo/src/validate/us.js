@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.validate.us");
 dojo.require("dojo.validate.common");
 dojo.validate.us.isCurrency = function (value, flags) {

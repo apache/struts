@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.data.old.provider.JotSpot");
 dojo.require("dojo.data.old.provider.Base");
 dojo.data.old.provider.JotSpot = function () {

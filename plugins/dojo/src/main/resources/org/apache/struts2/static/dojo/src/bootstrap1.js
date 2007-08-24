@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 var dj_global = this;
 var dj_currentContext = this;
 function dj_undef(name, object) {
@@ -23,7 +25,7 @@ dojo.global = function () {
 	return dj_currentContext;
 };
 dojo.locale = djConfig.locale;
-dojo.version = {major:0, minor:4, patch:2, flag:"", revision:Number("$Rev: 7616 $".match(/[0-9]+/)[0]), toString:function () {
+dojo.version = {major:0, minor:4, patch:3, flag:"", revision:Number("$Rev: 8617 $".match(/[0-9]+/)[0]), toString:function () {
 	with (dojo.version) {
 		return major + "." + minor + "." + patch + flag + " (" + revision + ")";
 	}

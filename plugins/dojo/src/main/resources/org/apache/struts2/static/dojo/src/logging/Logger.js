@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.logging.Logger");
 dojo.provide("dojo.logging.LogFilter");
 dojo.provide("dojo.logging.Record");

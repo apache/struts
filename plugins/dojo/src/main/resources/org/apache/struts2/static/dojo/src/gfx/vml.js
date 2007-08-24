@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.gfx.vml");
 dojo.require("dojo.dom");
 dojo.require("dojo.math");

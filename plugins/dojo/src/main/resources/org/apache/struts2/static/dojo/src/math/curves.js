@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.math.curves");
 dojo.require("dojo.math");
 dojo.math.curves = {Line:function (start, end) {

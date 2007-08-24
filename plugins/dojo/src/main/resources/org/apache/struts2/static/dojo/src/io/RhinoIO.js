@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.io.RhinoIO");
 dojo.require("dojo.io.common");
 dojo.require("dojo.lang.func");

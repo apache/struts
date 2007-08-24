@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.Editor");
 dojo.deprecated("dojo.widget.Editor", "is replaced by dojo.widget.Editor2", "0.5");
 dojo.require("dojo.io.*");

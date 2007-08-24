@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.debug.console");
 dojo.require("dojo.logging.ConsoleLogger");
 if (window.console) {

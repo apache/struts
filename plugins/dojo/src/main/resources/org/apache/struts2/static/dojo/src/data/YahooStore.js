@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.data.YahooStore");
 dojo.require("dojo.data.core.RemoteStore");
 dojo.require("dojo.lang.declare");

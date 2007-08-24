@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.RealNumberTextbox");
 dojo.require("dojo.widget.IntegerTextbox");
 dojo.require("dojo.validate.common");

@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.ns");
 dojo.ns = {namespaces:{}, failed:{}, loading:{}, loaded:{}, register:function (name, module, resolver, noOverride) {
 	if (!noOverride || !this.namespaces[name]) {

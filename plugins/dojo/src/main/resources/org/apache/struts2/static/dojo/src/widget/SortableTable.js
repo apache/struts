@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.SortableTable");
 dojo.deprecated("SortableTable will be removed in favor of FilteringTable.", "0.5");
 dojo.require("dojo.lang.common");

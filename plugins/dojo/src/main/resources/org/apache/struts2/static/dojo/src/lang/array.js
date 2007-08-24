@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.lang.array");
 dojo.require("dojo.lang.common");
 dojo.lang.mixin(dojo.lang, {has:function (obj, name) {

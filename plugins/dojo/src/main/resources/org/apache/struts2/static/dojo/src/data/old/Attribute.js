@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.data.old.Attribute");
 dojo.require("dojo.data.old.Item");
 dojo.require("dojo.lang.assert");

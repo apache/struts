@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.collections.Stack");
 dojo.require("dojo.collections.Collections");
 dojo.collections.Stack = function (arr) {

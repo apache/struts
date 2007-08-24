@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.require("dojo.io.common");
 dojo.provide("dojo.io.cometd");
 dojo.require("dojo.AdapterRegistry");
@@ -507,7 +509,7 @@ cometd.callbackPollTransport = new function () {
 			message.clientId = cometd.clientId;
 			var bindArgs = {url:cometd.url || djConfig["cometdRoot"], mimetype:"text/json", transport:"ScriptSrcTransport", jsonParamName:"jsonp", content:{message:dojo.json.serialize([message])}, load:dojo.lang.hitch(this, function (type, data, evt, args) {
 				cometd.deliver(data);
-			}), };
+			})};
 			return dojo.io.bind(bindArgs);
 		} else {
 			this.backlog.push(message);

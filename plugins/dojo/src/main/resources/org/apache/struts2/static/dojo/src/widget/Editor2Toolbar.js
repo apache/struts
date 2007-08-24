@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.Editor2Toolbar");
 dojo.require("dojo.lang.*");
 dojo.require("dojo.widget.*");

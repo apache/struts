@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.data.old.provider.Delicious");
 dojo.require("dojo.data.old.provider.FlatFile");
 dojo.require("dojo.data.old.format.Json");

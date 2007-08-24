@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.html.style");
 dojo.require("dojo.html.common");
 dojo.require("dojo.uri.Uri");
@@ -173,7 +175,7 @@ dojo.html.toSelectorCase = function (selector) {
 if (dojo.render.html.ie) {
 	dojo.html.getComputedStyle = function (node, property, value) {
 		node = dojo.byId(node);
-		if (!node || !node.style) {
+		if (!node || !node.currentStyle) {
 			return value;
 		}
 		return node.currentStyle[dojo.html.toCamelCase(property)];

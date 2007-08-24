@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.TreeExpandToNodeOnSelect");
 dojo.require("dojo.widget.HtmlWidget");
 dojo.widget.defineWidget("dojo.widget.TreeExpandToNodeOnSelect", dojo.widget.HtmlWidget, {selector:"", controller:"", withSelected:false, initialize:function () {

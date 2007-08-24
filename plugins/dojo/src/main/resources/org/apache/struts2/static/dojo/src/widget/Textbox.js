@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.Textbox");
 dojo.require("dojo.widget.*");
 dojo.require("dojo.widget.HtmlWidget");
@@ -17,7 +19,7 @@ dojo.require("dojo.xml.Parse");
 dojo.require("dojo.lang.array");
 dojo.require("dojo.lang.common");
 dojo.require("dojo.i18n.common");
-dojo.requireLocalization("dojo.widget", "validate", null, "fr,ja,zh-cn,ROOT");
+dojo.requireLocalization("dojo.widget", "validate", null, "zh-cn,ja,ROOT,fr");
 dojo.widget.defineWidget("dojo.widget.Textbox", dojo.widget.HtmlWidget, {className:"", name:"", value:"", type:"", trim:false, uppercase:false, lowercase:false, ucFirst:false, digit:false, htmlfloat:"none", templateString:"<span style='float:${this.htmlfloat};'>\n\t<input dojoAttachPoint='textbox' dojoAttachEvent='onblur;onfocus'\n\t\tid='${this.widgetId}' name='${this.name}'\n\t\tclass='${this.className}' type='${this.type}' >\n</span>\n", textbox:null, fillInTemplate:function () {
 	this.textbox.value = this.value;
 }, filter:function () {

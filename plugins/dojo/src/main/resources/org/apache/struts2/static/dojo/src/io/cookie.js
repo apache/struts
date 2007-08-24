@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.io.cookie");
 dojo.io.cookie.setCookie = function (name, value, days, path, domain, secure) {
 	var expires = -1;

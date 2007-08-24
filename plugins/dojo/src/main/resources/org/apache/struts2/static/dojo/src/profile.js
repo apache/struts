@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.profile");
 dojo.profile = {_profiles:{}, _pns:[], start:function (name) {
 	if (!this._profiles[name]) {

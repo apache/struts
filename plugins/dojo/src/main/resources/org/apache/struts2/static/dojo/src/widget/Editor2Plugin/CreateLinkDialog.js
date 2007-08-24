@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.Editor2Plugin.CreateLinkDialog");
 dojo.widget.defineWidget("dojo.widget.Editor2CreateLinkDialog", dojo.widget.Editor2DialogContent, {templateString:"<table>\n<tr><td>URL</td><td> <input type=\"text\" dojoAttachPoint=\"link_href\" name=\"dojo_createLink_href\"/></td></tr>\n<tr><td>Target </td><td><select dojoAttachPoint=\"link_target\">\n\t<option value=\"\">Self</option>\n\t<option value=\"_blank\">New Window</option>\n\t<option value=\"_top\">Top Window</option>\n\t</select></td></tr>\n<tr><td>Class </td><td><input type=\"text\" dojoAttachPoint=\"link_class\" /></td></tr>\n<tr><td colspan=\"2\">\n\t<table><tr>\n\t<td><button dojoType='Button' dojoAttachEvent='onClick:ok'>OK</button></td>\n\t<td><button dojoType='Button' dojoAttachEvent='onClick:cancel'>Cancel</button></td>\n\t</tr></table>\n\t</td></tr>\n</table>\n", editableAttributes:["href", "target", "class"], loadContent:function () {
 	var curInst = dojo.widget.Editor2Manager.getCurrentInstance();

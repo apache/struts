@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.Deferred");
 dojo.require("dojo.lang.func");
 dojo.Deferred = function (canceller) {

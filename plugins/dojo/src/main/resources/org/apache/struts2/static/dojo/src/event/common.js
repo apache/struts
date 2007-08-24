@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.event.common");
 dojo.require("dojo.lang.array");
 dojo.require("dojo.lang.extras");
@@ -161,6 +163,13 @@ dojo.event = new function () {
 			var ao = arguments[0];
 		} else {
 			var ao = interpolateArgs(arguments, true);
+		}
+		if (dojo.lang.isString(ao.srcFunc) && (ao.srcFunc.toLowerCase() == "onkey")) {
+			if (dojo.render.html.ie) {
+				ao.srcFunc = "onkeydown";
+				this.connect(ao);
+			}
+			ao.srcFunc = "onkeypress";
 		}
 		if (dojo.lang.isArray(ao.srcObj) && ao.srcObj != "") {
 			var tmpAO = {};

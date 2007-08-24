@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.require("dojo.html.style");
 dojo.provide("dojo.html.color");
 dojo.require("dojo.gfx.color");

@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.collections.Store");
 dojo.require("dojo.lang.common");
 dojo.collections.Store = function (jsonArray) {

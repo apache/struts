@@ -19,7 +19,8 @@
 	BY DEFAULT THIS FILE DOES NOT WORK SO THAT YOU DON'T ACCIDENTALLY EXPOSE
 	ALL OF YOUR XHR-ENABLED SERVICES ON YOUR SITE. 
 	
-	In order for this file to work, you should define a function with the following signature:
+	In order for this file to work, you need to uncomment the script element,
+	and you should define a function with the following signature:
 	
 	function isAllowedRequest(request){
 		return false;	
@@ -45,15 +46,9 @@
 	        
 	See xip_client.html for more info on the xip fragment identifier protocol.	
 	-->
-	<script type="text/javascript">
-	// <!--
-	djConfig = {
-		parseWidgets: false,
-		baseScriptUri: "./"
-	}
-	// -->
-	</script>
-	<script type="text/javascript">
+	
+	<!-- Security protection: uncomment the script tag to enable. -->
+	<!-- script type="text/javascript" -->
 	// <!--
 		//Core XHR handling taken from Dojo IO code.
 		dojo = {};
@@ -346,15 +341,28 @@
 
 		xipStateId = config.id;
 		xipClientUrl = config.client;
+		
+		//Make sure we don't have a javascript: url, just for good measure.
+		if(xipClientUrl.split(":")[0].match(/javascript/i)){
+			throw "Invalid client URL";
+		}
+		if(!xipStateId.match(/^XhrIframeProxy[0-9]+$/)){
+			throw "Invalid state ID";
+		}
+
 		xipUseFrameRecursion = config["fr"];
 
 		setInterval(pollHash, 10);
 		
 		if(xipUseFrameRecursion == "true"){
 			var serverUrl = window.location.href.split("#")[0];
-			document.getElementById("iframeHolder").innerHTML = '<iframe src="'
-				+ makeClientUrl("init", 'id=' + xipStateId + '&server=' + encodeURIComponent(serverUrl)
-				+ '&fr=endpoint') + '" name="' + xipStateId + '_clientEndPoint"></iframe>';
+			document.getElementById("iframeHolder").innerHTML = '<iframe name="'
+				+ xipStateId + '_clientEndPoint'
+				+ '" src="javascript:false">'
+				+ '</iframe>';
+			var iframeNode = document.getElementsByTagName("iframe")[0];
+			iframeNode.src = makeClientUrl("init", 'id=' + xipStateId + '&server='
+				+ encodeURIComponent(serverUrl) + '&fr=endpoint');
 		}else{
 			setClientUrl("loaded");
 		}

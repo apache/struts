@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.Manager");
 dojo.require("dojo.lang.array");
 dojo.require("dojo.lang.func");

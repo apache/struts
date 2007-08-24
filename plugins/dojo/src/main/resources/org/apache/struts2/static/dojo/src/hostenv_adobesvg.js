@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 if (typeof window == "undefined") {
 	dojo.raise("attempt to use adobe svg hostenv when no window object");
 }

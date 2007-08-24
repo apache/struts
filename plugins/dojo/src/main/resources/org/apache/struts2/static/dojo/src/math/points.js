@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.math.points");
 dojo.require("dojo.math");
 dojo.math.points = {translate:function (a, b) {

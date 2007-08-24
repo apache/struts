@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.graphics.color");
 dojo.require("dojo.gfx.color");
 dojo.deprecated("dojo.graphics.color.Color is now dojo.gfx.color.Color.", "0.5");

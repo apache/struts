@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.logging.ConsoleLogger");
 dojo.require("dojo.logging.Logger");
 dojo.lang.extend(dojo.logging.MemoryLogHandler, {debug:function () {

@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.debug.Firebug");
 dojo.deprecated("dojo.debug.Firebug is slated for removal in 0.5; use dojo.debug.console instead.", "0.5");
 if (dojo.render.html.moz) {

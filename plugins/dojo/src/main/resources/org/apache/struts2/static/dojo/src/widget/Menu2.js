@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.Menu2");
 dojo.require("dojo.widget.PopupContainer");
 dojo.declare("dojo.widget.MenuBase", null, function () {

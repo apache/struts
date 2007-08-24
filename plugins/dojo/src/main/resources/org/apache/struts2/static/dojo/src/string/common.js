@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.string.common");
 dojo.string.trim = function (str, wh) {
 	if (!str.replace) {

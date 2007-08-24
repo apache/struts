@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.validate.common");
 dojo.require("dojo.regexp");
 dojo.validate.isText = function (value, flags) {

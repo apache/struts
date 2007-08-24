@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.animation.Animation");
 dojo.require("dojo.animation.AnimationEvent");
 dojo.require("dojo.lang.func");

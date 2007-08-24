@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.graphics.color.hsl");
 dojo.require("dojo.gfx.color.hsl");
 dojo.deprecated("dojo.graphics.color.hsl has been replaced with dojo.gfx.color.hsl", "0.5");

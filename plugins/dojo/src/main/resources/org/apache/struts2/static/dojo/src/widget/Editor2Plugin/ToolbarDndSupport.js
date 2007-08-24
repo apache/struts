@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.Editor2Plugin.ToolbarDndSupport");
 dojo.require("dojo.dnd.*");
 dojo.event.topic.subscribe("dojo.widget.Editor2::preLoadingToolbar", function (editor) {

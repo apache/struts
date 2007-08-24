@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.dnd.HtmlDragManager");
 dojo.require("dojo.dnd.DragAndDrop");
 dojo.require("dojo.event.*");

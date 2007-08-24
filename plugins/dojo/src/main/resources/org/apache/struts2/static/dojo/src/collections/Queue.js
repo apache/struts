@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.collections.Queue");
 dojo.require("dojo.collections.Collections");
 dojo.collections.Queue = function (arr) {

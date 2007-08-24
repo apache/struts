@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.FisheyeList");
 dojo.require("dojo.widget.*");
 dojo.require("dojo.widget.HtmlWidget");

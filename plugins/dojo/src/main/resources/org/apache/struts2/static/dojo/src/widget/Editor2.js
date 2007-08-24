@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.Editor2");
 dojo.require("dojo.io.*");
 dojo.require("dojo.widget.RichText");

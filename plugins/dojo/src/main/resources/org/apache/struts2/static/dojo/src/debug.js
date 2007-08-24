@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.debug");
 dojo.debug = function () {
 	if (!djConfig.isDebug) {

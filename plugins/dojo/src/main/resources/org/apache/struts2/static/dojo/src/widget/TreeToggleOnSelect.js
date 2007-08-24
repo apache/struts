@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.TreeToggleOnSelect");
 dojo.require("dojo.widget.HtmlWidget");
 dojo.widget.defineWidget("dojo.widget.TreeToggleOnSelect", dojo.widget.HtmlWidget, {selector:"", controller:"", selectEvent:"select", initialize:function () {

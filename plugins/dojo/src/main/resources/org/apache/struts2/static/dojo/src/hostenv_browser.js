@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 if (typeof window != "undefined") {
 	(function () {
 		if (djConfig.allowQueryConfig) {
@@ -236,7 +238,9 @@ if (typeof window != "undefined") {
 		};
 		return true;
 	}
+	dojo.hostenv._djInitFired = false;
 	function dj_load_init(e) {
+		dojo.hostenv._djInitFired = true;
 		var type = (e && e.type) ? e.type.toLowerCase() : "load";
 		if (arguments.callee.initialized || (type != "domcontentloaded" && type != "load")) {
 			return;

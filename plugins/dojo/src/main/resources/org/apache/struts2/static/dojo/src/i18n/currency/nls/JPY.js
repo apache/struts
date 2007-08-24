@@ -8,4 +8,6 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 ({"displayName":"JPY", "symbol":"\xa5"})

@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.data.old.Kind");
 dojo.require("dojo.data.old.Item");
 dojo.data.old.Kind = function (dataProvider) {

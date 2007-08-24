@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.graphics.Colorspace");
 dojo.require("dojo.gfx.Colorspace");
 dojo.deprecated("dojo.graphics.Colorspace: use dojo.gfx.Colorspace instead.", "0.5");

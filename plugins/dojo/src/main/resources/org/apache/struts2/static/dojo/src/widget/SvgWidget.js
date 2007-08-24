@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.require("dojo.widget.DomWidget");
 dojo.provide("dojo.widget.SvgWidget");
 dojo.provide("dojo.widget.SVGWidget");

@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.dnd.Sortable");
 dojo.require("dojo.dnd.*");
 dojo.dnd.Sortable = function () {

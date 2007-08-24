@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.date.format");
 dojo.require("dojo.date.common");
 dojo.require("dojo.date.supplemental");
@@ -16,8 +18,8 @@ dojo.require("dojo.lang.common");
 dojo.require("dojo.lang.func");
 dojo.require("dojo.string.common");
 dojo.require("dojo.i18n.common");
-dojo.requireLocalization("dojo.i18n.calendar", "gregorian", null, "de,en,es,fi,fr,hu,ja,it,ko,nl,pt,sv,zh,pt-br,zh-cn,zh-hk,zh-tw,ROOT");
-dojo.requireLocalization("dojo.i18n.calendar", "gregorianExtras", null, "ja,zh,ROOT");
+dojo.requireLocalization("dojo.i18n.calendar", "gregorian", null, "ko,zh-cn,zh,sv,ja,en,zh-tw,it,hu,nl,fi,zh-hk,fr,pt,ROOT,es,de,pt-br");
+dojo.requireLocalization("dojo.i18n.calendar", "gregorianExtras", null, "zh,ROOT,ja");
 (function () {
 	dojo.date.format = function (dateObject, options) {
 		if (typeof options == "string") {

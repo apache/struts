@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.lfx.Animation");
 dojo.require("dojo.lang.func");
 dojo.lfx.Line = function (start, end) {

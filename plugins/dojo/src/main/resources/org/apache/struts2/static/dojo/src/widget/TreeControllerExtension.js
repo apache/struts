@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.TreeControllerExtension");
 dojo.declare("dojo.widget.TreeControllerExtension", null, {saveExpandedIndices:function (node, field) {
 	var obj = {};

@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.rpc.YahooService");
 dojo.require("dojo.rpc.RpcService");
 dojo.require("dojo.rpc.JsonService");

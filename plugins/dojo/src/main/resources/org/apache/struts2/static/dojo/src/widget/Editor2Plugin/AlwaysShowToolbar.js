@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.Editor2Plugin.AlwaysShowToolbar");
 dojo.event.topic.subscribe("dojo.widget.Editor2::onLoad", function (editor) {
 	if (editor.toolbarAlwaysVisible) {

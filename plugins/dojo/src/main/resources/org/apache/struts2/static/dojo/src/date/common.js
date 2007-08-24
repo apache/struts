@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.date.common");
 dojo.date.setDayOfYear = function (dateObject, dayOfYear) {
 	dateObject.setMonth(0);

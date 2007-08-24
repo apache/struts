@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.render.name = dojo.hostenv.name_ = "dashboard";
 dojo.hostenv.println = function (message) {
 	return alert(message);

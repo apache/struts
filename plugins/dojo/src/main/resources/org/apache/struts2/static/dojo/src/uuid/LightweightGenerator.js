@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.uuid.LightweightGenerator");
 dojo.uuid.LightweightGenerator = new function () {
 	var HEX_RADIX = 16;

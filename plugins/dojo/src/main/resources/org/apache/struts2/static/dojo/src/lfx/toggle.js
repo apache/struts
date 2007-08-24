@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.lfx.toggle");
 dojo.require("dojo.lfx.*");
 dojo.lfx.toggle.plain = {show:function (node, duration, easing, callback) {

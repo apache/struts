@@ -5,7 +5,8 @@
 <head>
 	<title></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
-	<script type="text/javascript">
+	<!-- Security protection: uncomment the script tag to enable. -->
+	<!-- script type="text/javascript" -->
 	// <!--
 	/*
 	This file is really focused on just sending one message to the server, and
@@ -222,6 +223,12 @@
 
 		//Remove the query param for the IE7 recursive case.
 		xipServerUrl = fixServerUrl(config.server).replace(/(\?|\&)dojo\.fr\=1/, "");
+		
+		//Make sure we don't have a javascript: url, just for good measure.
+		if(xipServerUrl.split(":")[0].match(/javascript/i)){
+			throw "Invalid server URL";
+		}
+
 		xipUseFrameRecursion = config["fr"];
 		
 		if(xipUseFrameRecursion == "endpoint"){
@@ -234,11 +241,10 @@
 		setInterval(pollHash, 10);
 
 		var clientUrl = window.location.href.split("#")[0];
-		document.getElementById("iframeHolder").innerHTML = '<iframe src="'
-			+ makeServerUrl("init", 'id=' + xipStateId + '&client=' + encodeURIComponent(clientUrl)
-			+ '&fr=' + xipUseFrameRecursion) + '" id="' + xipStateId + '_frame"></iframe>';
-			
-		
+		var iframeNode = document.getElementsByTagName("iframe")[0];
+		iframeNode.id = xipStateId + "_frame";
+		iframeNode.src = makeServerUrl("init", 'id=' + xipStateId + '&client='
+			+ encodeURIComponent(clientUrl) + '&fr=' + xipUseFrameRecursion);
 	}
 
 	if(typeof(window.addEventListener) == "undefined"){
@@ -256,6 +262,6 @@
 	<p>This file is used for Dojo's XMLHttpRequest Iframe Proxy. This is the "client" file used
 	internally by dojo.io.XhrIframeProxy.</p>
 	
-	<span id="iframeHolder"></span>
+	<iframe src="javascript:false"></iframe>
 </body>
 </html>

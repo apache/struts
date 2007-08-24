@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.DebugConsole");
 dojo.require("dojo.widget.Widget");
 dojo.require("dojo.widget.*");

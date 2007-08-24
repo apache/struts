@@ -8,13 +8,23 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.lang.func");
 dojo.require("dojo.lang.common");
 dojo.lang.hitch = function (thisObject, method) {
+	var args = [];
+	for (var x = 2; x < arguments.length; x++) {
+		args.push(arguments[x]);
+	}
 	var fcn = (dojo.lang.isString(method) ? thisObject[method] : method) || function () {
 	};
 	return function () {
-		return fcn.apply(thisObject, arguments);
+		var ta = args.concat([]);
+		for (var x = 0; x < arguments.length; x++) {
+			ta.push(arguments[x]);
+		}
+		return fcn.apply(thisObject, ta);
 	};
 };
 dojo.lang.anonCtr = 0;

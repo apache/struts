@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.lang.timing.Timer");
 dojo.require("dojo.lang.func");
 dojo.lang.timing.Timer = function (interval) {

@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.dnd.HtmlDragCopy");
 dojo.require("dojo.dnd.*");
 dojo.declare("dojo.dnd.HtmlDragCopySource", dojo.dnd.HtmlDragSource, function (node, type, copyOnce) {

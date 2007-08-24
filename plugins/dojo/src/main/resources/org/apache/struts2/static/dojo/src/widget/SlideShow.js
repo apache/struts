@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.SlideShow");
 dojo.require("dojo.event.*");
 dojo.require("dojo.widget.*");

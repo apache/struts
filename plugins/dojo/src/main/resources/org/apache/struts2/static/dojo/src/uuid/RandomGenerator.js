@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.uuid.RandomGenerator");
 dojo.uuid.RandomGenerator = new function () {
 	this.generate = function (returnType) {

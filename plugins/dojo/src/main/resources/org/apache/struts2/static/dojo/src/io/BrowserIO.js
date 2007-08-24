@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.io.BrowserIO");
 dojo.require("dojo.io.common");
 dojo.require("dojo.lang.array");
@@ -202,7 +204,7 @@ if (!dj_undef("window")) {
 			_cache = {};
 		};
 		function doLoad(kwArgs, http, url, query, useCache) {
-			if (((http.status >= 200) && (http.status < 300)) || (http.status == 304) || (location.protocol == "file:" && (http.status == 0 || http.status == undefined)) || (location.protocol == "chrome:" && (http.status == 0 || http.status == undefined))) {
+			if (((http.status >= 200) && (http.status < 300)) || (http.status == 304) || (http.status == 1223) || (location.protocol == "file:" && (http.status == 0 || http.status == undefined)) || (location.protocol == "chrome:" && (http.status == 0 || http.status == undefined))) {
 				var ret;
 				if (kwArgs.method.toLowerCase() == "head") {
 					var headers = http.getAllResponseHeaders();
@@ -228,9 +230,9 @@ if (!dj_undef("window")) {
 							ret = null;
 						}
 					} else {
-						if (kwArgs.mimetype == "text/json" || kwArgs.mimetype == "application/json") {
+						if (kwArgs.mimetype.substr(0, 9) == "text/json" || kwArgs.mimetype.substr(0, 16) == "application/json") {
 							try {
-								ret = dj_eval("(" + http.responseText + ")");
+								ret = dj_eval("(" + kwArgs.jsonFilter(http.responseText) + ")");
 							}
 							catch (e) {
 								dojo.debug(e);
@@ -324,7 +326,8 @@ if (!dj_undef("window")) {
 		};
 		var hasXmlHttp = dojo.hostenv.getXmlhttpObject() ? true : false;
 		this.canHandle = function (kwArgs) {
-			return hasXmlHttp && dojo.lang.inArray(["text/plain", "text/html", "application/xml", "text/xml", "text/javascript", "text/json", "application/json"], (kwArgs["mimetype"].toLowerCase() || "")) && !(kwArgs["formNode"] && dojo.io.formHasFile(kwArgs["formNode"]));
+			var mlc = kwArgs["mimetype"].toLowerCase() || "";
+			return hasXmlHttp && ((dojo.lang.inArray(["text/plain", "text/html", "application/xml", "text/xml", "text/javascript"], mlc)) || (mlc.substr(0, 9) == "text/json" || mlc.substr(0, 16) == "application/json")) && !(kwArgs["formNode"] && dojo.io.formHasFile(kwArgs["formNode"]));
 		};
 		this.multipartBoundary = "45309FFF-BD65-4d50-99C9-36986896A96F";
 		this.bind = function (kwArgs) {

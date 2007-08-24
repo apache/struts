@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.uri.Uri");
 dojo.uri = new function () {
 	this.dojoUri = function (uri) {

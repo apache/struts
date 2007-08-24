@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.dom");
 dojo.dom.ELEMENT_NODE = 1;
 dojo.dom.ATTRIBUTE_NODE = 2;

@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.require("dojo.crypto");
 dojo.provide("dojo.crypto.Blowfish");
 dojo.crypto.Blowfish = new function () {

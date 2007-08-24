@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.hostenv.resetXd = function () {
 	this.isXDomain = djConfig.useXDomain || false;
 	this.xdTimer = 0;
@@ -20,10 +22,14 @@ dojo.hostenv.resetXd = function () {
 dojo.hostenv.resetXd();
 dojo.hostenv.createXdPackage = function (contents, resourceName, resourcePath) {
 	var deps = [];
-	var depRegExp = /dojo.(require|requireIf|requireAll|provide|requireAfterIf|requireAfter|kwCompoundRequire|conditionalRequire|hostenv\.conditionalLoadModule|.hostenv\.loadModule|hostenv\.moduleLoaded)\(([\w\W]*?)\)/mg;
+	var depRegExp = /dojo.(requireLocalization|require|requireIf|requireAll|provide|requireAfterIf|requireAfter|kwCompoundRequire|conditionalRequire|hostenv\.conditionalLoadModule|.hostenv\.loadModule|hostenv\.moduleLoaded)\(([\w\W]*?)\)/mg;
 	var match;
 	while ((match = depRegExp.exec(contents)) != null) {
-		deps.push("\"" + match[1] + "\", " + match[2]);
+		if (match[1] == "requireLocalization") {
+			eval(match[0]);
+		} else {
+			deps.push("\"" + match[1] + "\", " + match[2]);
+		}
 	}
 	var output = [];
 	output.push("dojo.hostenv.packageLoaded({\n");
@@ -73,12 +79,12 @@ dojo.hostenv.loadUri = function (uri, cb, currentIsXDomain, module) {
 	if (this.loadedUris[uri]) {
 		return 1;
 	}
-	if (this.isXDomain) {
+	if (this.isXDomain && module) {
 		if (uri.indexOf("__package__") != -1) {
 			module += ".*";
 		}
 		this.xdOrderedReqs.push(module);
-		if (currentIsXDomain) {
+		if (currentIsXDomain || uri.indexOf("/nls/") == -1) {
 			this.xdInFlight[module] = true;
 			this.inFlightCount++;
 		}
@@ -369,7 +375,9 @@ dojo.hostenv.watchInFlightXDomain = function () {
 };
 dojo.hostenv.xdNotifyLoaded = function () {
 	this.inFlightCount = 0;
-	this.callLoaded();
+	if (this._djInitFired && !this.loadNotifying) {
+		this.callLoaded();
+	}
 };
 dojo.hostenv.flattenRequireArray = function (target) {
 	if (target) {
@@ -387,7 +395,6 @@ dojo.hostenv.xdRealCallLoaded = dojo.hostenv.callLoaded;
 dojo.hostenv.callLoaded = function () {
 	if (this.xdHasCalledPreload || dojo.hostenv.getModulePrefix("dojo") == "src" || !this.localesGenerated) {
 		this.xdRealCallLoaded();
-		this.xdHasCalledPreload = true;
 	} else {
 		if (this.localesGenerated) {
 			this.registerNlsPrefix = function () {
@@ -395,7 +402,7 @@ dojo.hostenv.callLoaded = function () {
 			};
 			this.preloadLocalizations();
 		}
-		this.xdHasCalledPreload = true;
 	}
+	this.xdHasCalledPreload = true;
 };
 

@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.data.old.format.Json");
 dojo.require("dojo.lang.assert");
 dojo.data.old.format.Json = new function () {

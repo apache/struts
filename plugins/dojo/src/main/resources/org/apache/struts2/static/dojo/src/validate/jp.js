@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.validate.jp");
 dojo.require("dojo.validate.common");
 dojo.validate.isJapaneseCurrency = function (value) {

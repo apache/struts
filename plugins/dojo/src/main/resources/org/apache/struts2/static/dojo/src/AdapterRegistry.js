@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.AdapterRegistry");
 dojo.require("dojo.lang.func");
 dojo.AdapterRegistry = function (returnWrappers) {

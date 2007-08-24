@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.gfx.common");
 dojo.require("dojo.gfx.color");
 dojo.require("dojo.lang.declare");

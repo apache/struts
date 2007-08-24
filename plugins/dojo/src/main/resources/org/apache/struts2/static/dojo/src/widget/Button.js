@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.Button");
 dojo.require("dojo.lang.extras");
 dojo.require("dojo.html.*");

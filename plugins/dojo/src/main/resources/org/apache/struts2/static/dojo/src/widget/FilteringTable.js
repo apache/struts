@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.FilteringTable");
 dojo.require("dojo.date.format");
 dojo.require("dojo.math");

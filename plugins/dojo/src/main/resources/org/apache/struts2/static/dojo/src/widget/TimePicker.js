@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.TimePicker");
 dojo.require("dojo.widget.*");
 dojo.require("dojo.widget.HtmlWidget");
@@ -16,7 +18,7 @@ dojo.require("dojo.date.serialize");
 dojo.require("dojo.date.format");
 dojo.require("dojo.dom");
 dojo.require("dojo.html.style");
-dojo.requireLocalization("dojo.i18n.calendar", "gregorian", null, "de,en,es,fi,fr,hu,ja,it,ko,nl,pt,sv,zh,pt-br,zh-cn,zh-hk,zh-tw,ROOT");
+dojo.requireLocalization("dojo.i18n.calendar", "gregorian", null, "ko,zh-cn,zh,sv,ja,en,zh-tw,it,hu,nl,fi,zh-hk,fr,pt,ROOT,es,de,pt-br");
 dojo.requireLocalization("dojo.widget", "TimePicker", null, "ROOT");
 dojo.widget.defineWidget("dojo.widget.TimePicker", dojo.widget.HtmlWidget, function () {
 	this.time = "";

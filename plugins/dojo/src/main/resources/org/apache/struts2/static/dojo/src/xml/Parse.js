@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.xml.Parse");
 dojo.require("dojo.dom");
 dojo.xml.Parse = function () {

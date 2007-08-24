@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.a11y");
 dojo.require("dojo.uri.*");
 dojo.require("dojo.html.common");

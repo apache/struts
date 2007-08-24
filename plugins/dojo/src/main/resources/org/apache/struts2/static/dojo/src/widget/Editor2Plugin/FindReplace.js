@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.Editor2Plugin.FindReplace");
 dojo.require("dojo.widget.Editor2");
 dojo.declare("dojo.widget.Editor2Plugin.FindCommand", dojo.widget.Editor2DialogCommand, {SearchOption:{CaseSensitive:4, SearchBackwards:64, WholeWord:2, WrapSearch:128}, find:function (text, option) {

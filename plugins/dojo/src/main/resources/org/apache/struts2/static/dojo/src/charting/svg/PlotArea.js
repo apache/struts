@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.charting.svg.PlotArea");
 dojo.require("dojo.lang.common");
 if (dojo.render.svg.capable) {

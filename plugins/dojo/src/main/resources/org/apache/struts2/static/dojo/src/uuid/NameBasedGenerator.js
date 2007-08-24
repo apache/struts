@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.uuid.NameBasedGenerator");
 dojo.uuid.NameBasedGenerator = new function () {
 	this.generate = function (returnType) {

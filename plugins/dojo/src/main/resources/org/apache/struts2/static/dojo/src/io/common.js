@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.io.common");
 dojo.require("dojo.string");
 dojo.require("dojo.lang.extras");
@@ -29,7 +31,19 @@ dojo.io.Request = function (url, mimetype, transport, changeUrl) {
 		}
 	}
 };
-dojo.lang.extend(dojo.io.Request, {url:"", mimetype:"text/plain", method:"GET", content:undefined, transport:undefined, changeUrl:undefined, formNode:undefined, sync:false, bindSuccess:false, useCache:false, preventCache:false, load:function (type, data, transportImplementation, kwArgs) {
+dojo.lang.extend(dojo.io.Request, {url:"", mimetype:"text/plain", method:"GET", content:undefined, transport:undefined, changeUrl:undefined, formNode:undefined, sync:false, bindSuccess:false, useCache:false, preventCache:false, jsonFilter:function (value) {
+	if ((this.mimetype == "text/json-comment-filtered") || (this.mimetype == "application/json-comment-filtered")) {
+		var cStartIdx = value.indexOf("/*");
+		var cEndIdx = value.lastIndexOf("*/");
+		if ((cStartIdx == -1) || (cEndIdx == -1)) {
+			dojo.debug("your JSON wasn't comment filtered!");
+			return "";
+		}
+		return value.substring(cStartIdx + 2, cEndIdx);
+	}
+	dojo.debug("please consider using a mimetype of text/json-comment-filtered to avoid potential security issues with JSON endpoints");
+	return value;
+}, load:function (type, data, transportImplementation, kwArgs) {
 }, error:function (type, error, transportImplementation, kwArgs) {
 }, timeout:function (type, empty, transportImplementation, kwArgs) {
 }, handle:function (type, data, transportImplementation, kwArgs) {

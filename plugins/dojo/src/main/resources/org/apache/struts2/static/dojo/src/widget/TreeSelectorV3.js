@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.TreeSelectorV3");
 dojo.require("dojo.widget.HtmlWidget");
 dojo.require("dojo.widget.TreeCommon");
@@ -46,7 +48,7 @@ dojo.widget.defineWidget("dojo.widget.TreeSelectorV3", [dojo.widget.HtmlWidget, 
 		}
 	}
 }, initialize:function (args) {
-	for (name in this.eventNamesDefault) {
+	for (var name in this.eventNamesDefault) {
 		if (dojo.lang.isUndefined(this.eventNames[name])) {
 			this.eventNames[name] = this.widgetId + "/" + this.eventNamesDefault[name];
 		}

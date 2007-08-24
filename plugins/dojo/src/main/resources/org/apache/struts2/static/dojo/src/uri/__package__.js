@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.kwCompoundRequire({common:[["dojo.uri.Uri", false, false]]});
 dojo.provide("dojo.uri.*");
 

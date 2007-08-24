@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.storage.browser");
 dojo.require("dojo.storage");
 dojo.require("dojo.flash");

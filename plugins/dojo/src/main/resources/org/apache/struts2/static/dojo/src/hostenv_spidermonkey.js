@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.hostenv.name_ = "spidermonkey";
 dojo.hostenv.println = print;
 dojo.hostenv.exit = function (exitcode) {

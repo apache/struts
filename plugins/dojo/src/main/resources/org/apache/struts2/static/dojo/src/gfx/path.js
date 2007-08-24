@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.gfx.path");
 dojo.require("dojo.math");
 dojo.require("dojo.gfx.shape");

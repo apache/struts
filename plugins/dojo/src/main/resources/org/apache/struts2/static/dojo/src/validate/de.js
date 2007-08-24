@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.validate.de");
 dojo.require("dojo.validate.common");
 dojo.validate.isGermanCurrency = function (value) {

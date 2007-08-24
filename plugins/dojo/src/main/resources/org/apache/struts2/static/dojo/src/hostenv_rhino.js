@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.hostenv.println = function (line) {
 	if (arguments.length > 0) {
 		print(arguments[0]);

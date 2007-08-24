@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.collections.ArrayList");
 dojo.require("dojo.collections.Collections");
 dojo.collections.ArrayList = function (arr) {

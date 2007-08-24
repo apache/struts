@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.gfx.svg");
 dojo.require("dojo.lang.declare");
 dojo.require("dojo.svg");

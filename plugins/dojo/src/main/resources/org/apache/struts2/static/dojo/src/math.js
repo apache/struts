@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.math");
 dojo.math.degToRad = function (x) {
 	return (x * Math.PI) / 180;

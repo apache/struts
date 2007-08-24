@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.uuid.NilGenerator");
 dojo.uuid.NilGenerator = new function () {
 	this.generate = function (returnType) {

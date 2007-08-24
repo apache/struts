@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.lang.assert");
 dojo.require("dojo.lang.common");
 dojo.require("dojo.lang.array");

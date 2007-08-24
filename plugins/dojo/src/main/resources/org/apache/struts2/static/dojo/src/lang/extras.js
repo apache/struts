@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.lang.extras");
 dojo.require("dojo.lang.common");
 dojo.lang.setTimeout = function (func, delay) {

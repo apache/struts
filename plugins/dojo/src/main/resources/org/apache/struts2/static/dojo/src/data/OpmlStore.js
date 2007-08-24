@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.data.OpmlStore");
 dojo.require("dojo.data.core.Read");
 dojo.require("dojo.data.core.Result");

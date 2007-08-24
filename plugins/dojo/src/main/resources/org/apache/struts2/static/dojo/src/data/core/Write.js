@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.data.core.Write");
 dojo.require("dojo.data.core.Read");
 dojo.require("dojo.lang.declare");

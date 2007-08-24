@@ -8,13 +8,15 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.widget.TreeSelector");
 dojo.require("dojo.widget.HtmlWidget");
 dojo.widget.defineWidget("dojo.widget.TreeSelector", dojo.widget.HtmlWidget, function () {
 	this.eventNames = {};
 	this.listenedTrees = [];
 }, {widgetType:"TreeSelector", selectedNode:null, dieWithTree:false, eventNamesDefault:{select:"select", destroy:"destroy", deselect:"deselect", dblselect:"dblselect"}, initialize:function () {
-	for (name in this.eventNamesDefault) {
+	for (var name in this.eventNamesDefault) {
 		if (dojo.lang.isUndefined(this.eventNames[name])) {
 			this.eventNames[name] = this.widgetId + "/" + this.eventNamesDefault[name];
 		}

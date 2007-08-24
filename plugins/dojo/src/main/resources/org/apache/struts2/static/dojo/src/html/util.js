@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.html.util");
 dojo.require("dojo.html.layout");
 dojo.html.getElementWindow = function (element) {

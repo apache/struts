@@ -8,6 +8,8 @@
 		http://dojotoolkit.org/community/licensing.shtml
 */
 
+
+
 dojo.provide("dojo.lang.timing.Streamer");
 dojo.require("dojo.lang.timing.Timer");
 dojo.lang.timing.Streamer = function (input, output, interval, minimum, initialData) {

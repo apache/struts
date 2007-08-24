@@ -44,4 +44,7 @@ public class FormExample extends ActionSupport {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+    public String displayResult() {
+    	return "displayResult";
+    }
 }

@@ -8,7 +8,7 @@
       <version>2.0.10-SNAPSHOT</version>
     </parent>
     <groupId>org.apache.struts</groupId>
-    <artifactId>struts2-portlet</artifactId>
+    <artifactId>struts2-portlet-branch</artifactId>
     <packaging>war</packaging>
     <name>Portlet Webapp</name>
 
@@ -29,6 +29,12 @@
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-spring-plugin</artifactId>
             <version>${pom.version}</version>
+<exclusions>
+<exclusion>
+           <groupId>javax.servlet</groupId>
+           <artifactId>servlet-api</artifactId>
+</exclusion>
+</exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.struts</groupId>
@@ -51,20 +57,25 @@
             <artifactId>commons-digester</artifactId>
             <version>1.8</version>
         </dependency>
-
-
-        <dependency>
-           <groupId>javax.servlet</groupId>
-           <artifactId>servlet-api</artifactId>
-           <version>2.4</version>
-           <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-            <version>2.0</version>
+            <version>2.1</version>
         </dependency>
-
-
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.12</version>
+		</dependency>
     </dependencies>
 </project>

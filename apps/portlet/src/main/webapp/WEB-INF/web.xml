@@ -26,14 +26,5 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
-    <servlet id="dwr">
-        <servlet-name>dwr</servlet-name>
-        <servlet-class>uk.ltd.getahead.dwr.DWRServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>dwr</servlet-name>
-        <url-pattern>/dwr/*</url-pattern>
-    </servlet-mapping>
 
 </web-app>

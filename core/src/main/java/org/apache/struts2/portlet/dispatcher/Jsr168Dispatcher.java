@@ -293,6 +293,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         LOG.debug("Entering render");
         resetActionContext();
         response.setTitle(getTitle(request));
+        if(!request.getWindowState().equals(WindowState.MINIMIZED)) {
         try {
             // Check to see if an event set the render to be included directly
             serviceAction(request, response, getActionMapping(request),
@@ -303,6 +304,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         } finally {
             resetActionContext();
         }
+	}
     }
 
     /**

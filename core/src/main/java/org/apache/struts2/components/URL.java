@@ -250,7 +250,7 @@ public class URL extends Component {
         String result;
         if (value == null && action != null) {
             if (Dispatcher.getInstance().isPortletSupportActive() && PortletActionContext.isPortletRequest()) {
-                result = PortletUrlHelper.buildUrl(action, namespace, parameters, portletUrlType, portletMode, windowState);
+                result = PortletUrlHelper.buildUrl(action, namespace, method, parameters, portletUrlType, portletMode, windowState);
             }
             else {
                 result = determineActionURL(action, namespace, method, req, res, parameters, scheme, includeContext, encode, forceAddSchemeHostAndPort, escapeAmp);

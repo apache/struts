@@ -382,7 +382,7 @@ public class Form extends ClosingUIBean {
             }
         }
         if (action != null) {
-            String result = PortletUrlHelper.buildUrl(action, namespace,
+            String result = PortletUrlHelper.buildUrl(action, namespace, null,
                     getParameters(), type, portletMode, windowState);
             addParameter("action", result);
 

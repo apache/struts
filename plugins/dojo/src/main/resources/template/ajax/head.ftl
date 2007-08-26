@@ -42,6 +42,8 @@
         	</#list>
           ]
         </#if>
+         ,parseWidgets : ${parameters.parseContent?string}
+        
     };
 </script>
 

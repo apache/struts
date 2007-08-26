@@ -10,7 +10,8 @@
 			"a",
 			"b",
 			"c"
-		]
+		],
+		parseWidgets: false
 		};
 </script>
 

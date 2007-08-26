@@ -21,6 +21,9 @@
 package org.apache.struts2.dojo.components;
 
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -144,6 +147,8 @@ public class Tree extends ClosingUIBean {
     protected String href;
     protected String errorNotifyTopics;
     
+    private List<String> childrenIds;
+    
     public Tree(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
@@ -261,7 +266,23 @@ public class Tree extends ClosingUIBean {
             addParameter("href", findString(href));
         if (errorNotifyTopics != null)
             addParameter("errorNotifyTopics", findString(errorNotifyTopics));
-       
+        
+        boolean generateId = !(Boolean)stack.getContext().get(Head.PARSE_CONTENT);
+        addParameter("pushId", generateId);
+        if ((this.id == null || this.id.length() == 0) && generateId) {
+            Random random = new Random();
+            this.id = "widget_" + Math.abs(random.nextInt());
+            addParameter("id", this.id);
+        }
+        
+        if (this.childrenIds != null)
+            addParameter("childrenIds", this.childrenIds);
+    }
+    
+    public void addChildrenId(String id) {
+        if (this.childrenIds == null)
+            this.childrenIds = new ArrayList<String>();
+        this.childrenIds.add(id);
     }
 
     @Override

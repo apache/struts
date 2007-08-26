@@ -62,3 +62,7 @@
 </div>
 </div>
 </div>
+<script language="JavaScript" type="text/javascript">
+    djConfig.searchIds.push("treeSelector_myTree");
+    djConfig.searchIds.push("myTree");
+</script>

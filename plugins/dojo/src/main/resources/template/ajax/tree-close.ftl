@@ -21,3 +21,16 @@
  */
 -->
 <#if parameters.label?exists></div></#if></div>
+<#if parameters.pushId>
+<script language="JavaScript" type="text/javascript">
+    djConfig.searchIds.push("treeSelector_${parameters.id?default("")?html}");
+    djConfig.searchIds.push("${parameters.id?html}");
+    <#if parameters.childrenIds?exists>
+        djConfig.searchIds.push(<#rt>
+        <#list parameters.childrenIds as childId>
+            "${childId?html}"<#if childId_has_next>,</#if><#t>
+        </#list>
+        );<#t>
+    </#if>  
+</script>
+</#if>

@@ -40,6 +40,7 @@ public class HeadTagTest extends AbstractUITagTest {
         tag.setBaseRelativePath("/path");
         tag.setLocale("es");
         tag.setCache("true");
+        tag.setParseContent("true");
         tag.doStartTag();
         tag.doEndTag();
 

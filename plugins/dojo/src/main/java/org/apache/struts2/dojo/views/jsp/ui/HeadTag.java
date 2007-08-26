@@ -42,6 +42,7 @@ public class HeadTag extends AbstractUITag {
     private String extraLocales;
     private String locale;
     private String cache;
+    private String parseContent;
     
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Head(stack, req, res);
@@ -57,6 +58,7 @@ public class HeadTag extends AbstractUITag {
         head.setExtraLocales(extraLocales);
         head.setLocale(locale);
         head.setCache(cache);
+        head.setParseContent(parseContent);
     }
 
     public void setDebug(String debug) {
@@ -81,5 +83,9 @@ public class HeadTag extends AbstractUITag {
 
     public void setCache(String cache) {
         this.cache = cache;
+    }
+
+    public void setParseContent(String parseContent) {
+        this.parseContent = parseContent;
     }
 }

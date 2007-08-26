@@ -40,3 +40,8 @@
     title="Child 4">
 </div>
 </div></div>
+<script language="JavaScript" type="text/javascript">
+   djConfig.searchIds.push("treeSelector_rootId");
+   djConfig.searchIds.push("rootId");
+   djConfig.searchIds.push("child1","child1","child2","gChild1","gChild1","gChild2","gChild2","gChild3","gChild3","child2","child3","child3");
+</script>

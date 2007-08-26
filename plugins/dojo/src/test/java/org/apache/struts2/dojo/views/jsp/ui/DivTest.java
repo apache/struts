@@ -21,6 +21,7 @@
 package org.apache.struts2.dojo.views.jsp.ui;
 
 import org.apache.struts2.dojo.TestAction;
+import org.apache.struts2.dojo.components.Head;
 
 
 /**

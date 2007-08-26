@@ -1,8 +1,8 @@
 To build the Struts Dojo profile:
 
-1. Checkout Dojo from svn (${dojo} refers to root dir)
+1. Checkout Dojo from svn (${dojo} refers to dojo's root dir) (make sure that ${dojo} is on the same folder as ${struts})
 
-2. Copy struts.profile.js tp ${dojo}/buildscripts/profiles
+2. Copy struts.profile.js to ${dojo}/buildscripts/profiles
 
 3. Copy /plugins/dojo/src/main/resources/org/apache/struts2/static/dojo/struts/ComboBox.css to
    ${dojo}/struts (Dojo build system doesn't resolve the relative paths that well in 0.4.2)

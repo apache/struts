@@ -20,6 +20,8 @@
  */
 package org.apache.struts2.dojo.components;
 
+import java.util.Random;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -341,6 +343,14 @@ public class Autocompleter extends ComboBox {
             addParameter("valueNotifyTopics", findString(valueNotifyTopics));
         if (resultsLimit != null)
             addParameter("searchLimit", findString(resultsLimit));
+        
+        boolean generateId = !(Boolean)stack.getContext().get(Head.PARSE_CONTENT);
+        addParameter("pushId", generateId);
+        if ((this.id == null || this.id.length() == 0) && generateId) {
+            Random random = new Random();
+            this.id = "widget_" + Math.abs(random.nextInt());
+            addParameter("id", this.id);
+        }
     }
 
     @Override

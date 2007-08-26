@@ -38,6 +38,7 @@ public class AutocompleterTest extends AbstractUITagTest {
         tag.setSearchType("b");
         tag.setDisabled("c");
         tag.setName("f");
+        tag.setId("f");
         tag.setValue("g");
         tag.setIndicator("h");
         tag.setKeyName("i");
@@ -70,6 +71,7 @@ public class AutocompleterTest extends AbstractUITagTest {
         tag.setSearchType("b");
         tag.setDisabled("c");
         tag.setName("f");
+        tag.setId("f");
         tag.setIconPath("i");
         tag.setTemplateCssPath("j");
         tag.setValueNotifyTopics("k");

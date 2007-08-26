@@ -30,7 +30,9 @@
  </script>
  <#if parameters.selectedNotifyTopics?exists || parameters.expandedNotifyTopics?exists
       || parameters.collapsedNotifyTopics?exists>  
- <struts:StrutsTreeSelector widgetId="treeSelector_${parameters.id?default("")}"
+ <struts:StrutsTreeSelector 
+   id="treeSelector_${parameters.id?default("")}"
+   widgetId="treeSelector_${parameters.id?default("")}"
   <#if parameters.selectedNotifyTopics?exists>
   	selectedNotifyTopics="${parameters.selectedNotifyTopics?html}"
   </#if> 

@@ -76,13 +76,17 @@ import com.opensymphony.xwork2.util.ValueStack;
  * 
  * <p>The "locale" attribute configures Dojo's locale:</p>
  * 
- * "The locale Dojo uses on a page may be overridden by setting djConfig.locale. This may be 
+ * <p>"The locale Dojo uses on a page may be overridden by setting djConfig.locale. This may be 
  * done to accomodate applications with a known user profile or server pages which do manual
  * assembly and assume a certain locale. You may also set djConfig.extraLocale to load 
  * localizations in addition to your own, in case you want to specify a particular 
  * translation or have multiple languages appear on your page."</p>
  * 
- * <p>Dojo 0.4.2 is distributed with the Dojo plugin, to use a different Dojo version, the 
+ * <p>To improve loading time, the property "parseContent" is set to false by default. This property will
+ * instruct Dojo to only build widgets using specific element ids. If the property is set to true
+ * Dojo will scan the whole document looking for widgets.</p>
+ * 
+ * <p>Dojo 0.4.3 is distributed with the Dojo plugin, to use a different Dojo version, the 
  * "baseRelativePath" attribute can be set to the URL of the Dojo root folder on your application.
  * </p>
  * <!-- END SNIPPET: javadoc -->
@@ -113,13 +117,15 @@ import com.opensymphony.xwork2.util.ValueStack;
 @StrutsTagSkipInheritance
 public class Head extends org.apache.struts2.components.Head {
     public static final String TEMPLATE = "head";
-
+    public static final String PARSE_CONTENT = "struts.dojo.head.parseContent";
+    
     private String debug;
     private String compressed;
     private String baseRelativePath;
     private String extraLocales;
     private String locale;
     private String cache;
+    private String parseContent;
     
     public Head(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -146,6 +152,14 @@ public class Head extends org.apache.struts2.components.Head {
             addParameter("locale", findString(this.locale));
         if (this.cache != null)
             addParameter("cache", findValue(this.cache, Boolean.class));
+        if (this.parseContent != null) {
+            Boolean shouldParseContent = (Boolean) findValue(this.parseContent, Boolean.class);
+            addParameter("parseContent", shouldParseContent);
+            stack.getContext().put(PARSE_CONTENT, shouldParseContent);
+        } else {
+            addParameter("parseContent", false);
+            stack.getContext().put(PARSE_CONTENT, false);
+        }
     }
 
     @Override
@@ -192,5 +206,10 @@ public class Head extends org.apache.struts2.components.Head {
                 "the browser", defaultValue="true", type="Boolean")
     public void setCache(String cache) {
         this.cache = cache;
+    }
+    
+    @StrutsTagAttribute(description="Parse the whole document for widgets", defaultValue="false", type="Boolean")
+    public void setParseContent(String parseContent) {
+        this.parseContent = parseContent;
     }
 }

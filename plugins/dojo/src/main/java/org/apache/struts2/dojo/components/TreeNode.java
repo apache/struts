@@ -20,6 +20,8 @@
  */
 package org.apache.struts2.dojo.components;
 
+import java.util.Random;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -109,6 +111,21 @@ public class TreeNode extends ClosingUIBean {
         return TEMPLATE;
     }
 
+    protected void evaluateExtraParams() {
+        super.evaluateExtraParams();
+        
+        boolean generateId = !(Boolean)stack.getContext().get(Head.PARSE_CONTENT);
+        addParameter("pushId", generateId);
+        if ((this.id == null || this.id.length() == 0) && generateId) {
+            Random random = new Random();
+            this.id = "widget_" + Math.abs(random.nextInt());
+            addParameter("id", this.id);
+        }
+        
+        Tree parentTree = (Tree) findAncestor(Tree.class);
+        parentTree.addChildrenId(this.id);
+    }
+    
     @StrutsTagAttribute(description="Label expression used for rendering tree node label.", required=true)
     public void setLabel(String label) {
         super.setLabel(label);

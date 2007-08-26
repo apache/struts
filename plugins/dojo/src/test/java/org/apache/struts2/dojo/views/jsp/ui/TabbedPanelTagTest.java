@@ -28,7 +28,7 @@ public class TabbedPanelTagTest extends AbstractUITagTest {
     public void testSimple() throws Exception {
         TabbedPanelTag tag = new TabbedPanelTag();
         tag.setPageContext(pageContext);
-
+        tag.setId("a");
         tag.doStartTag();
         tag.doEndTag();
 

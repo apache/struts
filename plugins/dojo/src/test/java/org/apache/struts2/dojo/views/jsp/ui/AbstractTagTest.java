@@ -35,6 +35,7 @@ import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.dojo.TestAction;
+import org.apache.struts2.dojo.components.Head;
 
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.Action;
@@ -85,6 +86,7 @@ public abstract class AbstractTagTest extends StrutsTestCase {
         stack = ValueStackFactory.getFactory().createValueStack();
         context = stack.getContext();
         stack.push(action);
+        context.put(Head.PARSE_CONTENT, false);
 
         request = new StrutsMockHttpServletRequest();
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);

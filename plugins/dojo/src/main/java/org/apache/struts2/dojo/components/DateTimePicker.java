@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -262,6 +263,14 @@ public class DateTimePicker extends UIBean {
             if(name != null) {
                 addParameter("nameValue", format(findValue(name)));
             }
+        }
+        
+        boolean generateId = !(Boolean)stack.getContext().get(Head.PARSE_CONTENT);
+        addParameter("pushId", generateId);
+        if ((this.id == null || this.id.length() == 0) && generateId) {
+            Random random = new Random();
+            this.id = "widget_" + Math.abs(random.nextInt());
+            addParameter("id", this.id);
         }
     }
     

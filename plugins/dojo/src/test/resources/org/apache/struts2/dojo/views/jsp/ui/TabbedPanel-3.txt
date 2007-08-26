@@ -11,3 +11,4 @@ dojo.addOnLoad(function(){
 </script>
 <div dojoType="struts:StrutsTabContainer" id="foo" selectedTab="bar" doLayout="false">
 </div>
+<script language="JavaScript" type="text/javascript">djConfig.searchIds.push("foo");</script>

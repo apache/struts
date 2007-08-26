@@ -22,3 +22,4 @@
  transport="o"
  parseContent="false">
 </a>
+<script language="JavaScript" type="text/javascript">djConfig.searchIds.push("mylink");</script>

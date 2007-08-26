@@ -21,3 +21,6 @@
  */
 -->
 </div>
+<#if parameters.pushId>
+<script language="JavaScript" type="text/javascript">djConfig.searchIds.push("${parameters.id?html}");</script>
+</#if>

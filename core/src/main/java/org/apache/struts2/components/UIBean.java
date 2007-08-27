@@ -310,7 +310,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  *
  * <!-- START SNIPPET: tooltipdescription -->
- * <b>tooltipConfig is deprecated, use individual tooltip configuration attributes instead </>
+ * <b>tooltipConfig is deprecated, use individual tooltip configuration attributes instead </b>
  *
  * Every Form UI component (in xhtml / css_xhtml or any other that extends them) can
  * have tooltips assigned to them. The Form component's tooltip related attribute, once

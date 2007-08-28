@@ -20,6 +20,12 @@
  */
 package org.apache.struts2.views.jsp.ui;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.DynamicAttributes;
+
 import org.apache.struts2.components.UIBean;
 import org.apache.struts2.views.jsp.ComponentTagSupport;
 
@@ -28,7 +34,7 @@ import org.apache.struts2.views.jsp.ComponentTagSupport;
  * Abstract base class for all UI tags.
  *
  */
-public abstract class AbstractUITag extends ComponentTagSupport {
+public abstract class AbstractUITag extends ComponentTagSupport implements DynamicAttributes {
     protected String cssClass;
     protected String cssStyle;
     protected String title;
@@ -70,6 +76,9 @@ public abstract class AbstractUITag extends ComponentTagSupport {
     protected String tooltipDelay;
     protected String tooltipCssClass;
     protected String tooltipIconPath;
+
+    // dynamic attributes.
+    protected Map<String,Object> dynamicAttributes = new HashMap<String,Object>();
 
     protected void populateParams() {
         super.populateParams();
@@ -114,6 +123,8 @@ public abstract class AbstractUITag extends ComponentTagSupport {
         uiBean.setAccesskey(accesskey);
         uiBean.setKey(key);
         uiBean.setId(id);
+	
+        uiBean.setDynamicAttributes(dynamicAttributes);
     }
 
     public void setId(String id) {
@@ -266,5 +277,9 @@ public abstract class AbstractUITag extends ComponentTagSupport {
 
     public void setLabelSeparator(String labelSeparator) {
         this.labelSeparator = labelSeparator;
-    }    
+    }
+
+    public void setDynamicAttribute(String uri, String localName, Object value) throws JspException {
+        dynamicAttributes.put(localName, value);
+    }
 }

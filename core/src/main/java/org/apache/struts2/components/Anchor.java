@@ -46,7 +46,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </pre>
  *
  */
-@StrutsTag(name="a", tldTagClass="org.apache.struts2.views.jsp.ui.AnchorTag", description="Render a HTML href element that when clicked can optionally call a URL via remote XMLHttpRequest and updates its targets")
+@StrutsTag(
+    name="a",
+    tldTagClass="org.apache.struts2.views.jsp.ui.AnchorTag",
+    description="Render a HTML href element that when clicked can optionally call a URL via remote XMLHttpRequest and updates its targets",
+    allowDynamicAttributes=true)
 public class Anchor extends ClosingUIBean {
     public static final String OPEN_TEMPLATE = "a";
     public static final String TEMPLATE = "a-close";

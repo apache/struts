@@ -39,4 +39,6 @@ public @interface StrutsTag {
     String tldTagClass();
 
     String description();
+
+    boolean allowDynamicAttributes() default false;
 }

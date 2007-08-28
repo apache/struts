@@ -51,7 +51,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </pre>
 
  */
-@StrutsTag(name="textfield", tldTagClass="org.apache.struts2.views.jsp.ui.TextFieldTag", description="Render an HTML input field of type text")
+@StrutsTag(
+    name="textfield",
+    tldTagClass="org.apache.struts2.views.jsp.ui.TextFieldTag",
+    description="Render an HTML input field of type text",
+    allowDynamicAttributes=true)
 public class TextField extends UIBean {
     /**
      * The name of the default template for the TextFieldTag

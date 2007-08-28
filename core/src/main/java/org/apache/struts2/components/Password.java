@@ -46,7 +46,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </pre>
  *
  */
-@StrutsTag(name="password", tldTagClass="org.apache.struts2.views.jsp.ui.PasswordTag", description="Render an HTML input tag of type password")
+@StrutsTag(
+    name="password",
+    tldTagClass="org.apache.struts2.views.jsp.ui.PasswordTag",
+    description="Render an HTML input tag of type password",
+    allowDynamicAttributes=true)
 public class Password extends TextField {
     final public static String TEMPLATE = "password";
 

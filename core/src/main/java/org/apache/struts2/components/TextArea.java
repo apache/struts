@@ -44,7 +44,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  * @see TabbedPanel
  *
  */
-@StrutsTag(name="textarea", tldTagClass="org.apache.struts2.views.jsp.ui.TextareaTag", description="Render HTML textarea tag.")
+@StrutsTag(
+    name="textarea",
+    tldTagClass="org.apache.struts2.views.jsp.ui.TextareaTag",
+    description="Render HTML textarea tag.",
+    allowDynamicAttributes=true)
 public class TextArea extends UIBean {
     final public static String TEMPLATE = "textarea";
 

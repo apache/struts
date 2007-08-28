@@ -45,7 +45,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  * text shown on the button face, but has issues with Microsoft Internet Explorer at least up to 6.0
  * <!-- END SNIPPET: javadoc -->
  */
-@StrutsTag(name="submit", tldTagClass="org.apache.struts2.views.jsp.ui.SubmitTag", description="Render a submit button")
+@StrutsTag(
+    name="submit",
+    tldTagClass="org.apache.struts2.views.jsp.ui.SubmitTag",
+    description="Render a submit button",
+    allowDynamicAttributes=true)
 public class Submit extends FormButton {
     
     private static final Log LOG = LogFactory.getLog(Submit.class);

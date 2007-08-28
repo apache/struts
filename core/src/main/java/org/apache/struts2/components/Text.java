@@ -113,7 +113,11 @@ import com.opensymphony.xwork2.TextProvider;
  * @see Param
  *
  */
-@StrutsTag(name="text", tldTagClass="org.apache.struts2.views.jsp.TextTag", description="Render a I18n text message")
+@StrutsTag(
+    name="text",
+    tldTagClass="org.apache.struts2.views.jsp.TextTag",
+    description="Render a I18n text message",
+    allowDynamicAttributes=true)
 public class Text extends ContextBean implements Param.UnnamedParametric {
     private static final Log LOG = LogFactory.getLog(Text.class);
 

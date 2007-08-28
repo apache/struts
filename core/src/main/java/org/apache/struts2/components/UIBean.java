@@ -21,6 +21,7 @@
 package org.apache.struts2.components;
 
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -465,6 +466,9 @@ public abstract class UIBean extends Component {
     protected String tooltipDelay;
     protected String tooltipCssClass;
     protected String tooltipIconPath;
+    
+    // dynamic attributes
+    protected Map<String,Object> dynamicAttributes = new HashMap<String,Object>();
 
     protected String defaultTemplateDir;
     protected String defaultUITheme;
@@ -760,9 +764,6 @@ public abstract class UIBean extends Component {
         }
 
 
-
-
-
         // tooltip & tooltipConfig
         if (tooltipConfig != null) {
             addParameter("tooltipConfig", findValue(tooltipConfig));
@@ -821,8 +822,10 @@ public abstract class UIBean extends Component {
             
 
         }
-        evaluateExtraParams();
 
+        addParameter("dynamicAttributes", dynamicAttributes);
+
+        evaluateExtraParams();
     }
 
     protected String escape(String name) {
@@ -1136,5 +1139,9 @@ public abstract class UIBean extends Component {
     @StrutsTagAttribute(description="Icon path used for image that will have the tooltip")
     public void setTooltipIconPath(String tooltipIconPath) {
         this.tooltipIconPath = tooltipIconPath;
+    }
+
+    public void setDynamicAttributes(Map<String,Object> dynamicAttributes) {
+        this.dynamicAttributes = dynamicAttributes;
     }
 }

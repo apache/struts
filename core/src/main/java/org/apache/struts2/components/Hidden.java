@@ -49,7 +49,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </pre>
  *
   */
-@StrutsTag(name="hidden", tldTagClass="org.apache.struts2.views.jsp.ui.HiddenTag", description="Render a hidden input field")
+@StrutsTag(
+    name="hidden",
+    tldTagClass="org.apache.struts2.views.jsp.ui.HiddenTag",
+    description="Render a hidden input field",
+    allowDynamicAttributes=true)
 public class Hidden extends UIBean {
     final public static String TEMPLATE = "hidden";
 

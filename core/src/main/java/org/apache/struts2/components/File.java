@@ -45,7 +45,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </pre>
  *
  */
-@StrutsTag(name="file", tldTagClass="org.apache.struts2.views.jsp.ui.FileTag", description="Render a file input field")
+@StrutsTag(
+    name="file",
+    tldTagClass="org.apache.struts2.views.jsp.ui.FileTag",
+    description="Render a file input field",
+    allowDynamicAttributes=true)
 public class File extends UIBean {
     private final static Log log = LogFactory.getLog(File.class);
 

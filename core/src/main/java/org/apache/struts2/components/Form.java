@@ -80,7 +80,11 @@ import java.util.Set;
  * </pre>
  *
  */
-@StrutsTag(name="form", tldTagClass="org.apache.struts2.views.jsp.ui.FormTag", description="Renders an input form")
+@StrutsTag(
+    name="form",
+    tldTagClass="org.apache.struts2.views.jsp.ui.FormTag",
+    description="Renders an input form",
+    allowDynamicAttributes=true)
 public class Form extends ClosingUIBean {
     public static final String OPEN_TEMPLATE = "form";
     public static final String TEMPLATE = "form-close";

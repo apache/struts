@@ -50,7 +50,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </pre>
  *
  */
-@StrutsTag(name="checkbox", tldTagClass="org.apache.struts2.views.jsp.ui.CheckboxTag", description="Render a checkbox input field")
+@StrutsTag(
+    name="checkbox",
+    tldTagClass="org.apache.struts2.views.jsp.ui.CheckboxTag",
+    description="Render a checkbox input field",
+    allowDynamicAttributes=true)
 public class Checkbox extends UIBean {
     final public static String TEMPLATE = "checkbox";
 

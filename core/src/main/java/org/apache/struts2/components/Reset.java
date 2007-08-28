@@ -56,7 +56,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </pre>
  *
  */
-@StrutsTag(name="reset", tldTagClass="org.apache.struts2.views.jsp.ui.ResetTag", description="Render a reset button")
+@StrutsTag(
+    name="reset",
+    tldTagClass="org.apache.struts2.views.jsp.ui.ResetTag",
+    description="Render a reset button",
+    allowDynamicAttributes=true)
 public class Reset extends FormButton {
     final public static String TEMPLATE = "reset";
 

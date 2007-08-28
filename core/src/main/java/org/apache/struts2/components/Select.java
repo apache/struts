@@ -78,7 +78,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: exnote -->
  *
  */
-@StrutsTag(name="select", tldTagClass="org.apache.struts2.views.jsp.ui.SelectTag", description="Render a select element")
+@StrutsTag(
+    name="select",
+    tldTagClass="org.apache.struts2.views.jsp.ui.SelectTag",
+    description="Render a select element",
+    allowDynamicAttributes=true)
 public class Select extends ListUIBean {
     final public static String TEMPLATE = "select";
 

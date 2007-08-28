@@ -28,7 +28,6 @@ import org.apache.struts2.views.jsp.AbstractUITagTest;
  */
 public class AnchorTest extends AbstractUITagTest {
 
-
     public void testSimple() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");
@@ -44,4 +43,21 @@ public class AnchorTest extends AbstractUITagTest {
         verify(AnchorTest.class.getResource("href-1.txt"));
     }
 
+    public void testDynamicAttribute() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        AnchorTag tag = new AnchorTag();
+        tag.setPageContext(pageContext);
+
+        tag.setId("mylink");
+        tag.setHref("a");
+
+        tag.setDynamicAttribute("uri", "dynAttrName", "dynAttrValue");
+
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(AnchorTest.class.getResource("Anchor-2.txt"));
+    }
 }

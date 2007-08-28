@@ -53,8 +53,11 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </pre>
  *
  */
-@StrutsTag(name="label", tldTagClass="org.apache.struts2.views.jsp.ui.LabelTag", description="Render a label that displays" +
-                " read-only information")
+@StrutsTag(
+    name="label",
+    tldTagClass="org.apache.struts2.views.jsp.ui.LabelTag",
+    description="Render a label that displays read-only information",
+    allowDynamicAttributes=true)
 public class Label extends UIBean {
     final public static String TEMPLATE = "label";
 

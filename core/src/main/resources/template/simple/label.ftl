@@ -37,6 +37,7 @@
  for="${parameters.for?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
+<#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
 ><#rt/>
 <#if parameters.nameValue?exists>
 <@s.property value="parameters.nameValue"/><#t/>

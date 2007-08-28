@@ -47,5 +47,6 @@
 </#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
+<#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
 />
 <input type="hidden" name="__checkbox_${parameters.name?html}" value="${parameters.fieldValue?html}" />

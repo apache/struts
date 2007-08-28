@@ -242,7 +242,7 @@ public class StrutsModels {
         return date;
     }
 
-    public DateTimePickerModel getDateTimePicker() {
+    public DateTimePickerModel getDatetimepicker() {
         if (dateTimePicker == null) {
             dateTimePicker = new DateTimePickerModel(stack, req, res);
         }

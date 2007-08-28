@@ -70,15 +70,23 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
                 }
             }
             pageLines = read(in, -1);
+
+            if (in != null) {
+                in.close();
+            }
         }
 
         if (className != null && className.trim().length() > 0) {
-            className = "/"+className.replace('.', '/') + ".java";
+            className = "/" + className.replace('.', '/') + ".java";
             InputStream in = getClass().getResourceAsStream(className);
             if (in == null) {
                 in = servletContext.getResourceAsStream("/WEB-INF/src"+className);
             }
             classLines = read(in, -1);
+
+            if (in != null) {
+                in.close();
+            }
         }
 
         if (config != null && config.trim().length() > 0) {
@@ -117,8 +125,6 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
     public void setPadding(int padding) {
         this.padding = padding;
     }
-
-
 
     /**
      * @return the classLines
@@ -215,6 +221,4 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
     public void setServletContext(ServletContext arg0) {
         this.servletContext = arg0;
     }
-
-
 }

@@ -105,7 +105,7 @@ import freemarker.template.TemplateModel;
  */
 public class FreemarkerManager {
 
-    private static final Log log = LogFactory.getLog(FreemarkerManager.class);
+    private static final Log LOG = LogFactory.getLog(FreemarkerManager.class);
     public static final String CONFIG_SERVLET_CONTEXT_KEY = "freemarker.Configuration";
     public static final String KEY_EXCEPTION = "exception";
 
@@ -262,7 +262,7 @@ public class FreemarkerManager {
             try {
                 templatePathLoader = new FileTemplateLoader(new File(templatePath));
             } catch (IOException e) {
-                log.error("Invalid template path specified: " + e.getMessage(), e);
+                LOG.error("Invalid template path specified: " + e.getMessage(), e);
             }
         }
 
@@ -317,8 +317,10 @@ public class FreemarkerManager {
      * @see freemarker.template.Configuration#setSettings for the definition of valid settings
      */
     protected void loadSettings(ServletContext servletContext, freemarker.template.Configuration configuration) {
+        InputStream in = null;
+
         try {
-            InputStream in = FileManager.loadFile("freemarker.properties", FreemarkerManager.class);
+            in = FileManager.loadFile("freemarker.properties", FreemarkerManager.class);
 
             if (in != null) {
                 Properties p = new Properties();
@@ -326,9 +328,17 @@ public class FreemarkerManager {
                 configuration.setSettings(p);
             }
         } catch (IOException e) {
-            log.error("Error while loading freemarker settings from /freemarker.properties", e);
+            LOG.error("Error while loading freemarker settings from /freemarker.properties", e);
         } catch (TemplateException e) {
-            log.error("Error while loading freemarker settings from /freemarker.properties", e);
+            LOG.error("Error while loading freemarker settings from /freemarker.properties", e);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch(IOException io) {
+                    LOG.warn("Unable to close input stream", io);
+                }
+            }
         }
     }
 

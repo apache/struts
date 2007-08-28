@@ -52,7 +52,7 @@ public abstract class BaseTemplateEngine implements TemplateEngine {
             if (props == null) {
                 String propName = template.getDir() + "/" + template.getTheme() + "/"+getThemePropertiesFileName();
 
-//              WW-1292
+                // WW-1292
                 // let's try getting it from the filesystem
                 File propFile = new File(propName);
                 InputStream is = null;
@@ -77,6 +77,12 @@ public abstract class BaseTemplateEngine implements TemplateEngine {
                         props.load(is);
                     } catch (IOException e) {
                         LOG.error("Could not load " + propName, e);
+                    } finally {
+                        try {
+                            is.close();
+                        } catch(IOException io) {
+                            LOG.warn("Unable to close input stream", io);
+                        }
                     }
                 }
 

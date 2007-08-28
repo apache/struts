@@ -72,6 +72,10 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
                 }
             }
             pageLines = read(in, -1);
+
+            if (in != null) {
+                in.close();
+            }
         }
 
         if (className != null && className.trim().length() > 0) {
@@ -81,6 +85,10 @@ public class ViewSourceAction extends ActionSupport implements ServletContextAwa
                 in = servletContext.getResourceAsStream("/WEB-INF/src"+className);
             }
             classLines = read(in, -1);
+
+            if (in != null) {
+                in.close();
+            }
         }
 
         String rootPath = ServletActionContext.getServletContext().getRealPath("/");

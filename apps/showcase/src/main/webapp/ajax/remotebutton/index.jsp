@@ -38,7 +38,7 @@ A submit button, that highlights (blue color) its targets
 
 A submit button, with an indicator
 <img id="indicator" src="${pageContext.request.contextPath}/images/indicator.gif" alt="Loading..." style="display:none"/>
-<sx:submit type="submit" value="submit" targets="t1" href="%{ajaxTest}" indicator="indicator"/>
+<sx:submit id="submit2" type="submit" value="submit" targets="t1" href="%{ajaxTest}" indicator="indicator"/>
 
 <br/><br/>
 

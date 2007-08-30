@@ -63,6 +63,7 @@ Using a JSON list returned from an action (href="/JSONList.action"), without aut
 Reload on type (loadOnTextChange="true"), after 3 characters (loadMinimumCount="3", it is "3" by default), without the down arrow button (showDownArrow="false")
 <br/>
 <sx:autocompleter  
+    id="auto2"
     indicator="indicator" 
     href="%{jsonList}" 
     cssStyle="width: 200px;" 

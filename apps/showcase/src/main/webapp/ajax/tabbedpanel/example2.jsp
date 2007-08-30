@@ -11,18 +11,15 @@
 
 <body>
 
-				<sx:tabbedpanel id="test2" cssStyle="width: 500px; height: 300px;" doLayout="true">
-                      <sx:div id="left" label="test1"  >
-                          I'm a Tab!!!
-                      </sx:div >
-                      <sx:div  id="middle" label="test2"   >
-                          I'm the other Tab!!!
-                      </sx:div >
-                     
-                  </sx:tabbedpanel>
+    <sx:tabbedpanel id="test2" cssStyle="width: 500px; height: 300px;" doLayout="true">
+        <sx:div label="test1"  >
+          I'm a Tab!!!
+        </sx:div >
+        <sx:div  id="middle" label="test2"   >
+          I'm the other Tab!!!
+        </sx:div >
+    </sx:tabbedpanel>
 				  
-				
-
 <s:include value="../footer.jsp"/>
 
 </body>

@@ -55,7 +55,7 @@
 <s:url var="ajaxTest" value="/AjaxTest.action" />
 <s:url var="test3" value="/Test3.action" />
 
-<sx:a  id="link0"
+<sx:a  
         href="%{#ajaxTest}"
         targets="t1"
         highlightColor="red"

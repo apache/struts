@@ -10,7 +10,7 @@
 <body>
 <table>
 <sx:datetimepicker label="toggleType='wipe'" value="%{'2006-10-31'}" toggleType="wipe" toggleDuration="300" name="test"/>
-<sx:datetimepicker label="toggleType='explode'" value="%{'2006-07-22'}" toggleType="explode" toggleDuration="500"/>
+<sx:datetimepicker label="toggleType='explode'" value="%{'2006-07-22'}" toggleType="explode" toggleDuration="500" id="dp2"/>
 <sx:datetimepicker label="toggleType='fade'" value="%{'2006-06-30'}" toggleType="fade" toggleDuration="500"/>
 <sx:datetimepicker label="With value='today'"  name="dddp1" value="%{'today'}" />
 <sx:datetimepicker label="US format, empty" name="dddp2" language="en-us" />

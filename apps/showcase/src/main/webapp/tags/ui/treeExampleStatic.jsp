@@ -3,7 +3,7 @@
 <html>
 <head>
 <title>Showcase - UI Tag Example - Tree Example (Static)</title>
-<sx:head />
+<sx:head/>
 </head>
 <body>
 
@@ -24,9 +24,9 @@
 
 
 <div style="float:left; margin-right: 50px;">
-<sx:tree label="parent" id="parentId" templateCssPath="/struts/tree.css" 
+<sx:tree label="parent"  templateCssPath="/struts/tree.css" 
 showRootGrid="true" showGrid="true" treeSelectedTopic="treeSelected">
-    <sx:treenode label="child1" id="child1Id">
+    <sx:treenode label="child1" >
         <sx:treenode label="grandchild1" id="grandchild1Id"/>
         <sx:treenode label="grandchild2" id="grandchild2Id"/>
         <sx:treenode label="grandchild3" id="grandchild3Id"/>

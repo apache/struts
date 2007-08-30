@@ -13,7 +13,6 @@
 
 <body>
 <sx:div
-        id="once"
         cssStyle="border: 1px solid yellow;"
         href="%{ajaxTest}">
     Initial Content</sx:div>

@@ -33,7 +33,7 @@
 <p>
     1. Attach to "onclick" event on button. Update content of Div 1. Use with indicator.
     <img id="indicator" src="${pageContext.request.contextPath}/images/indicator.gif" alt="Loading..." style="display:none"/>
-    <sx:bind id="ex1" href="%{#ajaxTest}" sources="button" targets="div1" events="onclick" indicator="indicator" />
+    <sx:bind href="%{#ajaxTest}" sources="button" targets="div1" events="onclick" indicator="indicator" />
      <br/>
     <s:submit theme="simple" type="submit" value="submit" id="button"/>
 </p>

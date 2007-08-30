@@ -33,6 +33,7 @@ public class DojoModels {
     protected SubmitModel submit;
     protected BindModel bind;
     protected HeadModel head;
+    protected TextAreaModel textarea;
     
     private ValueStack stack;
     private HttpServletRequest req;
@@ -50,6 +51,14 @@ public class DojoModels {
         }
 
         return bind;
+    }
+    
+    public TextAreaModel getTextarea() {
+        if (textarea == null) {
+            textarea = new TextAreaModel(stack, req, res);
+        }
+
+        return textarea;
     }
     
     public HeadModel getHead() {

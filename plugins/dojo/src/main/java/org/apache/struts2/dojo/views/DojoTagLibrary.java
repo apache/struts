@@ -35,6 +35,7 @@ import org.apache.struts2.dojo.views.velocity.components.DivDirective;
 import org.apache.struts2.dojo.views.velocity.components.HeadDirective;
 import org.apache.struts2.dojo.views.velocity.components.SubmitDirective;
 import org.apache.struts2.dojo.views.velocity.components.TabbedPanelDirective;
+import org.apache.struts2.dojo.views.velocity.components.TextAreaDirective;
 import org.apache.struts2.dojo.views.velocity.components.TreeDirective;
 import org.apache.struts2.dojo.views.velocity.components.TreeNodeDirective;
 import org.apache.struts2.views.TagLibrary;
@@ -60,7 +61,8 @@ public class DojoTagLibrary implements TagLibrary {
             TreeDirective.class,
             TreeNodeDirective.class,
             HeadDirective.class,
-            BindDirective.class
+            BindDirective.class,
+            TextAreaDirective.class
         };
         return Arrays.asList(directives);
     }

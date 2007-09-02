@@ -27,6 +27,9 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">
     
 <struts>
+
+    <bean class="org.apache.struts2.config_browser.ConfigurationHelper" />
+    
     <package name="config-browser" extends="struts-default" namespace="/config-browser">
         <interceptors>
             <interceptor-stack name="config-browser-default">
@@ -50,6 +53,14 @@
 
         <action name="showConfig" class="org.apache.struts2.config_browser.ShowConfigAction">
             <result type="freemarker" name="success">/config-browser/showConfig.ftl</result>
+        </action>
+        
+        <action name="showConstants" class="org.apache.struts2.config_browser.ShowConstantsAction">
+            <result type="freemarker" name="success">/config-browser/showConstants.ftl</result>
+        </action>
+        
+        <action name="showBeans" class="org.apache.struts2.config_browser.ShowBeansAction">
+            <result type="freemarker" name="success">/config-browser/showBeans.ftl</result>
         </action>
 
         <action name="showValidators" class="org.apache.struts2.config_browser.ListValidatorsAction">

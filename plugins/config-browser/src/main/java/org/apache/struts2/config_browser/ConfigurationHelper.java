@@ -26,25 +26,34 @@ import java.util.Set;
 
 import org.apache.struts2.dispatcher.Dispatcher;
 
+import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * ConfigurationHelper
  */
 public class ConfigurationHelper {
+    
+    private Configuration configuration;
 
-    public static Set getNamespaces() {
+    @Inject
+    public void setConfiguration(Configuration config) {
+        this.configuration = config;
+    }
+    
+    public Set getNamespaces() {
         Set namespaces = Collections.EMPTY_SET;
-        Map allActionConfigs = Dispatcher.getInstance().getConfigurationManager().getConfiguration().getRuntimeConfiguration().getActionConfigs();
+        Map allActionConfigs = configuration.getRuntimeConfiguration().getActionConfigs();
         if (allActionConfigs != null) {
             namespaces = allActionConfigs.keySet();
         }
         return namespaces;
     }
 
-    public static Set getActionNames(String namespace) {
+    public Set getActionNames(String namespace) {
         Set actionNames = Collections.EMPTY_SET;
-        Map allActionConfigs = Dispatcher.getInstance().getConfigurationManager().getConfiguration().getRuntimeConfiguration().getActionConfigs();
+        Map allActionConfigs = configuration.getRuntimeConfiguration().getActionConfigs();
         if (allActionConfigs != null) {
             Map actionMappings = (Map) allActionConfigs.get(namespace);
             if (actionMappings != null) {
@@ -54,9 +63,9 @@ public class ConfigurationHelper {
         return actionNames;
     }
 
-    public static ActionConfig getActionConfig(String namespace, String actionName) {
+    public ActionConfig getActionConfig(String namespace, String actionName) {
         ActionConfig config = null;
-        Map allActionConfigs = Dispatcher.getInstance().getConfigurationManager().getConfiguration().getRuntimeConfiguration().getActionConfigs();
+        Map allActionConfigs = configuration.getRuntimeConfiguration().getActionConfigs();
         if (allActionConfigs != null) {
             Map actionMappings = (Map) allActionConfigs.get(namespace);
             if (actionMappings != null) {

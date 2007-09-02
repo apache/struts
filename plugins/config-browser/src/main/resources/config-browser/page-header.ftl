@@ -46,7 +46,18 @@
 				<#-- Quick hack to show menu features :)
 -->				<#-- This should be done via contribution from the actions
 -->				<#-- themselves. E.g via a collection of MenuItems with url and name
--->				<div id="projecttools" class="toolgroup">
+-->				<div class="toolgroup">
+					<div class="label"><strong>Configuration</strong></div>
+					<div class="body">
+						<div><@s.url id="constantsLink" action="showConstants" includeParams="none" />
+							<a href="${constantsLink}">Constants</a>
+						</div>
+						<div><@s.url id="beansLink" action="showBeans" includeParams="none" />
+							<a href="${beansLink}">Beans</a>
+						</div>
+					</div>
+				</div>
+				<div id="projecttools" class="toolgroup">
 					<#if namespaces?exists>					<div class="label"><strong>Namespaces</strong></div>
 					<div class="body">
 						<#foreach namespace in namespaces>						<div><@s.url id="namespaceLink" action="actionNames" includeParams="none"><@s.param name="namespace">${namespace}</@s.param></@s.url><a href="${namespaceLink}"><#if namespace == ""> default <#else> ${namespace} </#if></a></div>

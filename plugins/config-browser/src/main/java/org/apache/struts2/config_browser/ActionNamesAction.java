@@ -26,6 +26,8 @@ import java.util.TreeSet;
 import org.apache.struts2.StrutsConstants;
 
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
 
@@ -41,7 +43,14 @@ public class ActionNamesAction extends ActionSupport {
     private String namespace = "";
     private Set namespaces;
     private String extension;
+    
+    private ConfigurationHelper configHelper;
 
+    @Inject
+    public void setConfigurationHelper(ConfigurationHelper cfg) {
+        this.configHelper = cfg;
+    }
+    
     public Set getActionNames() {
         return actionNames;
     }
@@ -60,7 +69,7 @@ public class ActionNamesAction extends ActionSupport {
     }
 
     public ActionConfig getConfig(String actionName) {
-        return ConfigurationHelper.getActionConfig(namespace, actionName);
+        return configHelper.getActionConfig(namespace, actionName);
     }
 
     public Set getNamespaces() {
@@ -75,7 +84,7 @@ public class ActionNamesAction extends ActionSupport {
     }
 
     public String execute() throws Exception {
-        namespaces = ConfigurationHelper.getNamespaces();
+        namespaces = configHelper.getNamespaces();
         if (namespaces.size() == 0) {
             addActionError("There are no namespaces in this configuration");
             return ERROR;
@@ -84,7 +93,7 @@ public class ActionNamesAction extends ActionSupport {
             namespace = "";
         }
         actionNames =
-                new TreeSet(ConfigurationHelper.getActionNames(namespace));
+                new TreeSet(configHelper.getActionNames(namespace));
         return SUCCESS;
     }
 }

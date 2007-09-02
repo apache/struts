@@ -30,7 +30,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * ShowConfigAction
@@ -48,6 +50,9 @@ public class ShowConfigAction extends ActionNamesAction {
     private String detailView = "results";
     private PropertyDescriptor[] properties;
     private static Log log = LogFactory.getLog(ShowConfigAction.class);
+    
+    private ConfigurationHelper configHelper;
+    private ObjectFactory objectFactory;
 
     public String getDetailView() {
         return detailView;
@@ -63,6 +68,16 @@ public class ShowConfigAction extends ActionNamesAction {
 
     public String getNamespace() {
         return namespace;
+    }
+    
+    @Inject
+    public void setConfigurationHelper(ConfigurationHelper cfg) {
+        this.configHelper = cfg;
+    }
+    
+    @Inject
+    public void setObjectFactory(ObjectFactory fac) {
+        this.objectFactory = fac;
     }
 
     public String stripPackage(Class clazz) {
@@ -91,11 +106,11 @@ public class ShowConfigAction extends ActionNamesAction {
 
     public String execute() throws Exception {
         super.execute();
-        config = ConfigurationHelper.getActionConfig(namespace, actionName);
+        config = configHelper.getActionConfig(namespace, actionName);
         actionNames =
-                new TreeSet(ConfigurationHelper.getActionNames(namespace));
+                new TreeSet(configHelper.getActionNames(namespace));
         try {
-            Class clazz = ObjectFactory.getObjectFactory().getClassInstance(getConfig().getClassName());
+            Class clazz = objectFactory.getClassInstance(getConfig().getClassName());
             java.util.Collection pds = OgnlRuntime.getPropertyDescriptors(clazz).values();
             properties = (PropertyDescriptor[]) pds.toArray(PDSAT);
         } catch (Exception e) {

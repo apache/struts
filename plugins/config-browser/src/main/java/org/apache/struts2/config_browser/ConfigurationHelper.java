@@ -20,15 +20,24 @@
  */
 package org.apache.struts2.config_browser;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.util.ClassLoaderUtils;
 
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.ResolverUtil;
 
 /**
  * ConfigurationHelper
@@ -73,5 +82,18 @@ public class ConfigurationHelper {
             }
         }
         return config;
+    }
+    
+    public List<Properties> getJarProperties() throws IOException {
+        ResolverUtil resolver = new ResolverUtil();
+        List<Properties> poms = new ArrayList<Properties>();
+        resolver.findNamedResource("pom.properties", "META-INF/maven");
+        Set<URL> urls = resolver.getResources();
+        for (URL url : urls) {
+            Properties p = new Properties();
+            p.load(url.openStream());
+            poms.add(p);
+        }
+        return poms;
     }
 }

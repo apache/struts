@@ -40,13 +40,4 @@
        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/plugins/config-browser/</url>
     </scm>
 
-    <!--
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts-core</artifactId>
-            <version>1.3.5</version>
-        </dependency>
-    </dependencies>
-    -->
 </project>

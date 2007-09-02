@@ -55,6 +55,9 @@
 						<div><@s.url id="beansLink" action="showBeans" includeParams="none" />
 							<a href="${beansLink}">Beans</a>
 						</div>
+						<div><@s.url id="jarsLink" action="showJars" includeParams="none" />
+							<a href="${jarsLink}">Jars (requires Maven 2 data)</a>
+						</div>
 					</div>
 				</div>
 				<div id="projecttools" class="toolgroup">

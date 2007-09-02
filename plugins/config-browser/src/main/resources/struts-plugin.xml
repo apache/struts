@@ -62,6 +62,10 @@
         <action name="showBeans" class="org.apache.struts2.config_browser.ShowBeansAction">
             <result type="freemarker" name="success">/config-browser/showBeans.ftl</result>
         </action>
+        
+        <action name="showJars" class="org.apache.struts2.config_browser.ShowJarsAction">
+            <result type="freemarker" name="success">/config-browser/showJars.ftl</result>
+        </action>
 
         <action name="showValidators" class="org.apache.struts2.config_browser.ListValidatorsAction">
             <result name="error" type="freemarker">/config-browser/simple-error.ftl</result>

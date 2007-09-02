@@ -44,7 +44,7 @@ public class ActionNamesAction extends ActionSupport {
     private Set namespaces;
     private String extension;
     
-    private ConfigurationHelper configHelper;
+    ConfigurationHelper configHelper;
 
     @Inject
     public void setConfigurationHelper(ConfigurationHelper cfg) {

@@ -383,7 +383,7 @@
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-container-default</artifactId>
-            <version>1.0-alpha-10-SNAPSHOT</version>
+            <version>1.0-alpha-10</version>
             <scope>provided</scope>
         </dependency>
 

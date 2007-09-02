@@ -43,7 +43,7 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ResolverUtil;
 import com.opensymphony.xwork2.util.TextUtils;
-import com.opensymphony.xwork2.util.ResolverUtil.Test;
+import com.opensymphony.xwork2.util.ResolverUtil.ClassTest;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 /**
@@ -231,7 +231,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
     protected void loadPackages(String[] pkgs) {
 
         ResolverUtil<Class> resolver = new ResolverUtil<Class>();
-        resolver.find(new Test() {
+        resolver.find(new ClassTest() {
             // Match Action implementations and classes ending with "Action"
             public boolean matches(Class type) {
                 // TODO: should also find annotated classes

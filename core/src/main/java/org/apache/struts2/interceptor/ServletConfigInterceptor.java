@@ -137,16 +137,16 @@ public class ServletConfigInterceptor extends AbstractInterceptor implements Str
             ((ParameterAware) action).setParameters(context.getParameters());
         }
 
-        if (action instanceof RequestAware) {
-            ((RequestAware) action).setRequest((Map) context.get("request"));
+        if (action instanceof ApplicationAware) {
+            ((ApplicationAware) action).setApplication(context.getApplication());
         }
-
+        
         if (action instanceof SessionAware) {
             ((SessionAware) action).setSession(context.getSession());
         }
-
-        if (action instanceof ApplicationAware) {
-            ((ApplicationAware) action).setApplication(context.getApplication());
+        
+        if (action instanceof RequestAware) {
+            ((RequestAware) action).setRequest((Map) context.get("request"));
         }
 
         if (action instanceof PrincipalAware) {

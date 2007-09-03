@@ -90,7 +90,7 @@ public class RadioTest extends AbstractUITagTest {
         tag.setLabel("mylabel");
         tag.setName("myname");
         tag.setValue("%{map['3']}");
-        tag.setList("#@java.util.HashMap@{\"1\":\"One\", \"2\":\"Two\", \"\":\"N/A\"}");
+        tag.setList("#@java.util.TreeMap@{\"1\":\"One\", \"2\":\"Two\", \"\":\"N/A\"}");
 
         tag.doStartTag();
         tag.doEndTag();

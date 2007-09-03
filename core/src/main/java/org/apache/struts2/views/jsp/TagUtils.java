@@ -38,6 +38,7 @@ import org.apache.struts2.util.AttributeMap;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 
@@ -55,6 +56,11 @@ public class TagUtils {
 
             HttpServletResponse res = (HttpServletResponse) pageContext.getResponse();
             Dispatcher du = Dispatcher.getInstance();
+            if (du == null) {
+                throw new ConfigurationException("The Struts dispatcher cannot be found.  This is usually caused by "+
+                        "using Struts tags without the associated filter. Struts tags are only usable when the request "+
+                        "has passed through its servlet filter, which initializes the Struts dispatcher needed for this tag.");
+            }
             Map extraContext = du.createContextMap(new RequestMap(req),
                     req.getParameterMap(),
                     new SessionMap(req),

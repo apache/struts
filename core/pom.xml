@@ -70,7 +70,7 @@
                 <groupId>org.apache.myfaces.tobago</groupId>
                 <artifactId>maven-apt-plugin</artifactId>
                 <configuration>
-                    <A>uri=/struts-tags,tlibVersion=2.2.3,jspVersion=1.2,shortName=s,displayName="Struts Tags",
+                    <A>uri=/struts-tags,tlibVersion=2.2.3,jspVersion=2.0,shortName=s,displayName="Struts Tags",
                     outFile=${basedir}/target/classes/META-INF/struts-tags.tld,
                     description="To make it easier to access dynamic data;
                     the Apache Struts framework includes a library of custom tags.

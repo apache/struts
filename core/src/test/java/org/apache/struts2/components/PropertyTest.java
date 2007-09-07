@@ -28,9 +28,9 @@ import ognl.Ognl;
 
 import org.apache.struts2.util.StrutsTypeConverter;
 
+import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
-import com.opensymphony.xwork2.util.XWorkConverter;
 
 /**
  *
@@ -137,7 +137,7 @@ public class PropertyTest extends TestCase {
     }
 
     /** a simple hack to simply register a custom converter in our test */
-    private final class TestDefaultConverter extends XWorkConverter {
+    private final class TestDefaultConverter extends XWorkConverter implements ognl.TypeConverter {
         protected TestDefaultConverter() {
             super();
             registerConverter("org.apache.struts2.components.PropertyTest$FooBar", new FooBarConverter());

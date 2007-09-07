@@ -38,6 +38,8 @@ import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
+import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Context;
@@ -45,8 +47,6 @@ import com.opensymphony.xwork2.inject.Factory;
 import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
-import com.opensymphony.xwork2.util.ObjectTypeDeterminer;
-import com.opensymphony.xwork2.util.XWorkConverter;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 /**

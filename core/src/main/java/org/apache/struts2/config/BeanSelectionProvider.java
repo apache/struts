@@ -173,7 +173,9 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         }
         
         String val = props.getProperty(StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS);
-        props.setProperty("allowStaticMethodAccess", val);
+        if (val != null) {
+            props.setProperty("allowStaticMethodAccess", val);
+        }
         
         // TODO: This should be moved to XWork after 2.0.4
         // struts.custom.i18n.resources

@@ -33,9 +33,9 @@
     <bean type="com.opensymphony.xwork2.ActionProxyFactory" name="xwork" class="com.opensymphony.xwork2.DefaultActionProxyFactory"/>
     <bean type="com.opensymphony.xwork2.ActionProxyFactory" name="struts" class="org.apache.struts2.impl.StrutsActionProxyFactory"/>
 
-    <bean type="com.opensymphony.xwork2.util.ObjectTypeDeterminer" name="tiger" class="com.opensymphony.xwork2.util.GenericsObjectTypeDeterminer"/>
-    <bean type="com.opensymphony.xwork2.util.ObjectTypeDeterminer" name="notiger" class="com.opensymphony.xwork2.util.DefaultObjectTypeDeterminer"/>
-    <bean type="com.opensymphony.xwork2.util.ObjectTypeDeterminer" name="struts" class="com.opensymphony.xwork2.util.DefaultObjectTypeDeterminer"/>
+    <bean type="com.opensymphony.xwork2.conversion.ObjectTypeDeterminer" name="tiger" class="com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer"/>
+    <bean type="com.opensymphony.xwork2.conversion.ObjectTypeDeterminer" name="notiger" class="com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer"/>
+    <bean type="com.opensymphony.xwork2.conversion.ObjectTypeDeterminer" name="struts" class="com.opensymphony.xwork2.conversion.impl.DefaultObjectTypeDeterminer"/>
 
     <bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="struts" class="org.apache.struts2.dispatcher.mapper.DefaultActionMapper" />
     <bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="composite" class="org.apache.struts2.dispatcher.mapper.CompositeActionMapper" />
@@ -55,8 +55,8 @@
     <bean type="org.apache.struts2.components.template.TemplateEngine" name="vm" class="org.apache.struts2.components.template.VelocityTemplateEngine" />
     <bean type="org.apache.struts2.components.template.TemplateEngine" name="jsp" class="org.apache.struts2.components.template.JspTemplateEngine" />
 
-    <bean type="com.opensymphony.xwork2.util.XWorkConverter" name="xwork1" class="com.opensymphony.xwork2.util.XWorkConverter" />
-    <bean type="com.opensymphony.xwork2.util.XWorkConverter" name="struts" class="com.opensymphony.xwork2.util.AnnotationXWorkConverter" />
+    <bean type="com.opensymphony.xwork2.conversion.impl.XWorkConverter" name="struts" class="com.opensymphony.xwork2.conversion.impl.XWorkConverter" />
+    <bean type="com.opensymphony.xwork2.conversion.impl.XWorkConverter" name="xwork1" class="com.opensymphony.xwork2.conversion.impl.XWorkConverter" />
 
     <bean type="com.opensymphony.xwork2.TextProvider" name="xwork1" class="com.opensymphony.xwork2.TextProviderSupport" />
     <bean type="com.opensymphony.xwork2.TextProvider" name="struts" class="com.opensymphony.xwork2.TextProviderSupport" />
@@ -65,7 +65,7 @@
 	
     <!--  Only have static injections -->
     <bean class="com.opensymphony.xwork2.ObjectFactory" static="true" />
-    <bean class="com.opensymphony.xwork2.util.XWorkConverter" static="true" />
+    <bean class="com.opensymphony.xwork2.conversion.impl.XWorkConverter" static="true" />
     <bean class="com.opensymphony.xwork2.util.OgnlValueStack" static="true" />
     <bean class="org.apache.struts2.dispatcher.Dispatcher" static="true" />
     <bean class="org.apache.struts2.components.Include" static="true" />

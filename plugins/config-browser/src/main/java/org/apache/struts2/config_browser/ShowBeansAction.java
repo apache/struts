@@ -35,10 +35,10 @@ import org.apache.struts2.views.velocity.VelocityManager;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
+import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ObjectTypeDeterminer;
-import com.opensymphony.xwork2.util.XWorkConverter;
 
 /**
  * Shows the beans loaded by the internal Guice container.  Only shows beans that are recognized by Struts as official

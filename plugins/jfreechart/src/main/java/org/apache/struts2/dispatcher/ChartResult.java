@@ -103,6 +103,7 @@ public class ChartResult implements Result {
     private static final String DEFAULT_VALUE = "chart";
 
     private JFreeChart chart; // the JFreeChart to render
+    private boolean chartSet;
     Integer height, width;
     String type = DEFAULT_TYPE; // supported are jpg, jpeg or png, defaults to png
     String value = DEFAULT_VALUE; // defaults to 'chart'
@@ -158,6 +159,7 @@ public class ChartResult implements Result {
     }
 
     public void setChart(JFreeChart chart) {
+        this.chartSet = true;
         this.chart = chart;
     }
 
@@ -172,7 +174,7 @@ public class ChartResult implements Result {
      * @throws Exception if an error occurs when creating or writing the chart to the servlet output stream.
      */
     public void execute(ActionInvocation invocation) throws Exception {
-        if (chart == null)
+        if (!chartSet) // if our chart hasn't been set (by the testcase), we'll look it up in the value stack
             chart = (JFreeChart) invocation.getStack().findValue(value, JFreeChart.class);
         if (chart == null) // we need to have a chart object - if not, blow up
             throw new NullPointerException("No JFreeChart object found on the stack with name " + value);

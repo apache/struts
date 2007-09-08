@@ -20,6 +20,8 @@
  */
 package org.apache.struts2.codebehind;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 
 import javax.servlet.ServletContext;
@@ -28,6 +30,7 @@ import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.config.NullResult;
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
 
+import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -71,6 +74,22 @@ public class CodebehindUnknownHandlerTest extends StrutsTestCase {
         assertEquals("/foo/", handler.determinePath("/", "/foo"));
         assertEquals("/foo/", handler.determinePath("/", "/foo/"));
         assertEquals("/foo/", handler.determinePath("/", "foo"));
+    }
+    
+    public void testLocateTemplate() throws MalformedURLException {
+        URL url = new URL("file:/foo.xml");
+        mockServletContext.expectAndReturn("getResource", C.args(C.eq("/foo.xml")), url);
+        assertEquals(url, handler.locateTemplate("/foo.xml"));
+        mockServletContext.verify();
+        
+    }
+    
+    public void testLocateTemplateFromClasspath() throws MalformedURLException {
+        mockServletContext.expectAndReturn("getResource", C.args(C.eq("struts-plugin.xml")), null);
+        URL url = handler.locateTemplate("struts-plugin.xml");
+        assertNotNull(url);
+        assertTrue(url.toString().endsWith("struts-plugin.xml"));
+        mockServletContext.verify();
     }
     
     public static class SomeResult implements Result {

@@ -21,6 +21,7 @@
 package org.apache.struts2.codebehind;
 
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ import javax.servlet.ServletContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.util.ClassLoaderUtils;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
@@ -107,7 +109,7 @@ public class CodebehindUnknownHandler implements UnknownHandler {
             }
             String path = string(pathPrefix, actionName, "." , ext);
             try {
-                if (servletContext.getResource(path) != null) {
+                if (locateTemplate(path) != null) {
                     actionConfig = buildActionConfig(path, namespace, actionName, resultsByExtension.get(ext));
                     break;
                 }
@@ -148,7 +150,7 @@ public class CodebehindUnknownHandler implements UnknownHandler {
             }
             String path = string(pathPrefix, actionName, "-", resultCode, "." , ext);
             try {
-                if (servletContext.getResource(path) != null) {
+                if (locateTemplate(path) != null) {
                     result = buildResult(path, resultCode, resultsByExtension.get(ext), actionContext);
                     break;
                 }
@@ -158,7 +160,7 @@ public class CodebehindUnknownHandler implements UnknownHandler {
             
             path = string(pathPrefix, actionName, "." , ext);
             try {
-                if (servletContext.getResource(path) != null) {
+                if (locateTemplate(path) != null) {
                     result = buildResult(path, resultCode, resultsByExtension.get(ext), actionContext);
                     break;
                 }
@@ -209,6 +211,22 @@ public class CodebehindUnknownHandler implements UnknownHandler {
         }
         return prefix + ns;
     }
+    
+    URL locateTemplate(String path) throws MalformedURLException {
+        URL template = servletContext.getResource(path);
+        if (template != null) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Loaded template '" + path + "' from servlet context.");
+            }
+        } else {
+            template = ClassLoaderUtils.getResource(path, getClass());
+            if (template != null && LOG.isDebugEnabled()) {
+                LOG.debug("Loaded template '" + path + "' from class path.");                
+            }
+        }
+        return template;
+    }
+
 
     /**
      * Not used

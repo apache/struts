@@ -228,7 +228,7 @@ public class DefaultActionMapper implements ActionMapper {
                         ServletRedirectResult redirect = new ServletRedirectResult();
                         container.inject(redirect);
                         String extension = getDefaultExtension();
-                        if (extension != null) {
+                        if (extension != null && extension.length() > 0) {
                             location += "." + extension;
                         }
                         redirect.setLocation(location);
@@ -499,8 +499,11 @@ public class DefaultActionMapper implements ActionMapper {
 
         String extension = getDefaultExtension();
         if (extension != null) {
-            if (uri.indexOf('.' + extension) == -1) {
-                uri.append(".").append(extension);
+            
+            if (extension.length() == 0 || (extension.length() > 0 && uri.indexOf('.' + extension) == -1)) {
+                if (extension.length() > 0) {
+                    uri.append(".").append(extension);
+                }
                 if (params.length() > 0) {
                     uri.append(params);
                 }

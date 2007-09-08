@@ -137,6 +137,13 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
     public void setLocation(String location) {
         this.location = location;
     }
+    
+    /**
+     * Gets the location it was created with, mainly for testing
+     */
+    public String getLocation() {
+        return location;
+    }
 
     /**
      * Returns the last parsed and encoded location value

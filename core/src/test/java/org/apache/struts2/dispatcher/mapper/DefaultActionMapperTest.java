@@ -27,6 +27,7 @@ import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.ServletRedirectResult;
+import org.apache.struts2.dispatcher.StrutsResultSupport;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletRequest;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
 
@@ -376,9 +377,34 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
         
 
-        Result result = actionMapping.getResult();
+        StrutsResultSupport result = (StrutsResultSupport) actionMapping.getResult();
         assertNotNull(result);
         assertTrue(result instanceof ServletRedirectResult);
+        
+        assertEquals("myAction.action", result.getLocation());
+
+        // TODO: need to test location but there's noaccess to the property/method, unless we use reflection
+    }
+    
+    public void testRedirectActionPrefixWithEmptyExtension() throws Exception {
+        Map parameterMap = new HashMap();
+        parameterMap.put(DefaultActionMapper.REDIRECT_ACTION_PREFIX + "myAction", "");
+
+        StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
+        request.setupGetServletPath("/someServletPath");
+        request.setParameterMap(parameterMap);
+
+        DefaultActionMapper defaultActionMapper = new DefaultActionMapper();
+        defaultActionMapper.setContainer(container);
+        defaultActionMapper.setExtensions(",,");
+        ActionMapping actionMapping = defaultActionMapper.getMapping(request, configManager);
+        
+
+        StrutsResultSupport result = (StrutsResultSupport) actionMapping.getResult();
+        assertNotNull(result);
+        assertTrue(result instanceof ServletRedirectResult);
+        
+        assertEquals("myAction", result.getLocation());
 
         // TODO: need to test location but there's noaccess to the property/method, unless we use reflection
     }
@@ -550,6 +576,18 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         String uri = mapper.getUriFromActionMapping(actionMapping);
 
         assertEquals("/myActionName.action", uri);
+    }
+    
+    public void testGetUriFromActionMapperWhenBlankExtension() throws Exception {
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setExtensions(",,");
+        ActionMapping actionMapping = new ActionMapping();
+        actionMapping.setMethod("myMethod");
+        actionMapping.setName("myActionName");
+        actionMapping.setNamespace("/myNamespace");
+        String uri = mapper.getUriFromActionMapping(actionMapping);
+
+        assertEquals("/myNamespace/myActionName!myMethod", uri);
     }
 
 }

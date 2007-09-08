@@ -411,6 +411,17 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         assertTrue("Name not right: "+name, "foo.action".equals(name));
 
     }
+    
+    public void testDropExtensionWhenBlank() throws Exception {
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setExtensions("action,,");
+        String name = mapper.dropExtension("foo.action");
+        assertTrue("Name not right: "+name, "foo".equals(name));
+        name = mapper.dropExtension("foo");
+        assertTrue("Name not right: "+name, "foo".equals(name));
+        assertNull(mapper.dropExtension("foo.bar"));
+        assertNull(mapper.dropExtension("foo."));
+    }
 
     public void testGetUriFromActionMapper1() throws Exception {
         DefaultActionMapper mapper = new DefaultActionMapper();

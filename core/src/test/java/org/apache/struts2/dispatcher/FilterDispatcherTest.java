@@ -132,8 +132,8 @@ public class FilterDispatcherTest extends StrutsTestCase {
                 return _dispatcher;
             }
         };
-        filter.setActionMapper(null);
         filter.init(filterConfig);
+        filter.setActionMapper(null);
         filter.doFilter(req, res, chain);
 
         assertFalse(_dispatcher.serviceRequest);

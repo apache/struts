@@ -22,11 +22,14 @@ package org.apache.struts2.dispatcher.mapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -178,7 +181,7 @@ public class DefaultActionMapper implements ActionMapper {
 
     protected PrefixTrie prefixTrie = null;
     
-    protected List extensions = new ArrayList() {{ add("action");}};
+    protected List<String> extensions = new ArrayList<String>() {{ add("action"); add("");}};
 
     protected  Container container;
 
@@ -270,7 +273,12 @@ public class DefaultActionMapper implements ActionMapper {
     @Inject(StrutsConstants.STRUTS_ACTION_EXTENSION)
     public void setExtensions(String extensions) {
         if (!"".equals(extensions)) {
-            this.extensions = Arrays.asList(extensions.split(","));
+            List<String> list = new ArrayList<String>();
+            Scanner scanner = new Scanner(extensions).useDelimiter(",");
+            while (scanner.hasNext()) {
+                list.add(scanner.next());
+            }
+            this.extensions = Collections.unmodifiableList(list);
         } else {
             this.extensions = null;
         }
@@ -414,13 +422,18 @@ public class DefaultActionMapper implements ActionMapper {
         if (extensions == null) {
             return name;
         }
-        Iterator it = extensions.iterator();
-        while (it.hasNext()) {
-            String extension = "." + (String) it.next();
-            if (name.endsWith(extension)) {
-                name = name.substring(0, name.length() - extension.length());
-                return name;
-            }
+        for (String ext : extensions) {
+            if ("".equals(ext)) {
+                if (name.indexOf('.') == -1) {
+                    return name;
+                }
+            } else {
+                String extension = "." + ext;
+                if (name.endsWith(extension)) {
+                    name = name.substring(0, name.length() - extension.length());
+                    return name;
+                }
+            } 
         }
         return null;
     }

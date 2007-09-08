@@ -26,88 +26,165 @@ import com.opensymphony.xwork2.Result;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 
-
 /**
+ * <!-- START SNIPPET: description -->
+ * <p/>
  * A custom Result type for chart data. Built on top of
  * <a href="http://www.jfree.org/jfreechart/" target="_blank">JFreeChart</a>. When executed
- * this Result will write the given chart as a PNG to the servlet output stream.
+ * this Result will write the given chart as a PNG or JPG to the servlet output stream.
+ * <p/>
+ * <!-- END SNIPPET: description -->
+ * <p/>
+ * <b>This result type takes the following parameters:</b>
+ * <p/>
+ * <!-- START SNIPPET: params -->
+ * <p/>
+ * <ul>
+ * <p/>
+ * <li><b>value</b> - the name of the JFreeChart object on the ValueStack, defaults to 'chart'.</li>
+ * <p/>
+ * <li><b>type</b> - the render type for this chart. Can be jpg (or jpeg) or png. Defaults to png.</li>
+ * <p/>
+ * <li><b>width (required)</b> - the width (in pixels) of the rendered chart.</li>
+ * <p/>
+ * <li><b>height (required)</b> - the height (in pixels) of the rendered chart.</li>
+ * <p/>
+ * </ul>
+ * <!-- END SNIPPET: params -->
+ * <p/>
+ * <b>Example:</b>
+ * <p/>
+ * <pre><!-- START SNIPPET: example -->
+ * public class ExampleChartAction extends ActionSupport {
  *
+ *	    private JFreeChart chart;
+ *
+ *	    public String execute() throws Exception {
+ *		    // chart creation logic...
+ *		    XYSeries dataSeries = new XYSeries(new Integer(1)); // pass a key for this serie
+ *		    for (int i = 0; i <= 100; i++) {
+ *			    dataSeries.add(i, RandomUtils.nextInt());
+ *		    }
+ *		    XYSeriesCollection xyDataset = new XYSeriesCollection(dataSeries);
+ *
+ *		    ValueAxis xAxis = new NumberAxis("Raw Marks");
+ *		    ValueAxis yAxis = new NumberAxis("Moderated Marks");
+ *
+ *		    // set my chart variable
+ *		    chart =
+ *			    new JFreeChart( "Moderation Function", JFreeChart.DEFAULT_TITLE_FONT,
+ *				    new XYPlot( xyDataset, xAxis, yAxis, new StandardXYItemRenderer(StandardXYItemRenderer.LINES)),
+ *				    false);
+ *		    chart.setBackgroundPaint(java.awt.Color.white);
+ *
+ *		    return SUCCESS;
+ *	    }
+ * 
+ *      // this method will get called if we specify &lt;param name="value"&gt;chart&lt;/param&gt;
+ *	    public JFreeChart getChart() {
+ *		    return chart;
+ *	    }
+ *  }
+ *
+ * &lt;result name="success" type="chart"&gt;
+ *   &lt;param name="value"&gt;chart&lt;/param&gt;
+ *   &lt;param name="type"&gt;png&lt;/param&gt;
+ *   &lt;param name="width"&gt;640&lt;/param&gt;
+ *   &lt;param name="height"&gt;480&lt;/param&gt;
+ * &lt;/result&gt;
+ * <!-- END SNIPPET: example --></pre>
  */
 public class ChartResult implements Result {
 
     private static final long serialVersionUID = -6484761870055986612L;
+    private static final String DEFAULT_TYPE = "png";
+    private static final String DEFAULT_VALUE = "chart";
 
-    JFreeChart chart;
-    boolean chartSet = false;
-    private int height;
-    private int width;
+    private JFreeChart chart; // the JFreeChart to render
+    Integer height, width;
+    String type = DEFAULT_TYPE; // supported are jpg, jpeg or png, defaults to png
+    String value = DEFAULT_VALUE; // defaults to 'chart'
+
+    // CONSTRUCTORS ----------------------------
 
     public ChartResult() {
         super();
     }
 
     public ChartResult(JFreeChart chart, int height, int width) {
-        setChart(chart);
-        this.height = height;
-        this.width = width;
-    }
-
-    /**
-     * Sets the JFreeChart to use.
-     *
-     * @param chart a JFreeChart object.
-     */
-    public ChartResult setChart(JFreeChart chart) {
         this.chart = chart;
-        chartSet = true;
-        return this;
-    }
-
-    /**
-     * Sets the chart height.
-     *
-     * @param height the height of the chart in pixels.
-     */
-    public ChartResult setHeight(int height) {
         this.height = height;
-        return this;
-    }
-
-    /**
-     * Sets the chart width.
-     *
-     * @param width the width of the chart in pixels.
-     */
-    public ChartResult setWidth(int width) {
         this.width = width;
-        return this;
     }
 
+    // ACCESSORS ----------------------------
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
+    }
+
+    public Integer getWidth() {
+        return width;
+    }
+
+    public void setWidth(Integer width) {
+        this.width = width;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    // OTHER METHODS -----------------------
+
+    // Required by com.opensymphony.xwork2.Result
+
     /**
-     * Executes the result. Writes the given chart as a PNG to the servlet output stream.
+     * Executes the result. Writes the given chart as a PNG or JPG to the servlet output stream.
      *
      * @param invocation an encapsulation of the action execution state.
      * @throws Exception if an error occurs when creating or writing the chart to the servlet output stream.
      */
     public void execute(ActionInvocation invocation) throws Exception {
-        JFreeChart chart = null;
+        chart = (JFreeChart) invocation.getStack().findValue(value, JFreeChart.class);
+        if (chart == null) // we need to have a chart object - if not, blow up
+            throw new NullPointerException("No JFreeChart object found on the stack with name " + value);
+        // make sure we have some value for the width and height
+        if (height == null)
+            throw new NullPointerException("No height parameter was given.");
+        if (width == null)
+            throw new NullPointerException("No width parameter was given.");
 
-        if (chartSet) {
-            chart = this.chart;
-        } else {
-            chart = (JFreeChart) invocation.getStack().findValue("chart");
+        // get a reference to the servlet output stream to write our chart image to
+        OutputStream os = ServletActionContext.getResponse().getOutputStream();
+        try {
+            // check the type to see what kind of output we have to produce
+            if ("png".equalsIgnoreCase(type))
+                ChartUtilities.writeChartAsPNG(os, chart, width, height);
+            else if ("jpg".equalsIgnoreCase(type) || "jpeg".equalsIgnoreCase(type))
+                ChartUtilities.writeChartAsJPEG(os, chart, width, height);
+            else
+                throw new IllegalArgumentException(type + " is not a supported render type (only JPG and PNG are).");
+        } finally {
+            if (os != null) os.flush();
         }
-
-        if (chart == null) {
-            throw new NullPointerException("No chart found");
-        }
-
-        HttpServletResponse response = ServletActionContext.getResponse();
-        OutputStream os = response.getOutputStream();
-        ChartUtilities.writeChartAsPNG(os, chart, width, height);
-        os.flush();
     }
 }

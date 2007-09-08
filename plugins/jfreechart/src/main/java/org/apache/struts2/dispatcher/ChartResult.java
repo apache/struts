@@ -153,6 +153,14 @@ public class ChartResult implements Result {
         this.value = value;
     }
 
+    public JFreeChart getChart() {
+        return chart;
+    }
+
+    public void setChart(JFreeChart chart) {
+        this.chart = chart;
+    }
+
     // OTHER METHODS -----------------------
 
     // Required by com.opensymphony.xwork2.Result
@@ -164,7 +172,8 @@ public class ChartResult implements Result {
      * @throws Exception if an error occurs when creating or writing the chart to the servlet output stream.
      */
     public void execute(ActionInvocation invocation) throws Exception {
-        chart = (JFreeChart) invocation.getStack().findValue(value, JFreeChart.class);
+        if (chart == null)
+            chart = (JFreeChart) invocation.getStack().findValue(value, JFreeChart.class);
         if (chart == null) // we need to have a chart object - if not, blow up
             throw new NullPointerException("No JFreeChart object found on the stack with name " + value);
         // make sure we have some value for the width and height

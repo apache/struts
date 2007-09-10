@@ -66,6 +66,11 @@
 
     <ciManagement/>
     <distributionManagement>
+        <repository>
+            <id>struts-staging</id>
+            <name>Apache Struts Staging Repository</name>
+            <url>scp://people.apache.org/www/people.apache.org/builds/struts/${pom.version}/m2-staging-repository</url>
+        </repository>
         <snapshotRepository>
            <id>apache.snapshots</id>
            <uniqueVersion>false</uniqueVersion>
@@ -272,6 +277,13 @@
                         </configuration>
                     </execution>
                   </executions>
+                </plugin>
+                <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>        
+                  <artifactId>maven-release-plugin</artifactId>
+                  <configuration>
+                    <useReleaseProfile>false</useReleaseProfile>
+                  </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

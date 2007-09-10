@@ -108,12 +108,12 @@ public class PortletUrlHelper {
             if(!action.startsWith("/") && !namespace.endsWith("/")) {
                 resultingAction.append("/");
             }
-            resultingAction.append(action);
-            LOG.debug("Resulting actionPath: " + action);
         }
+        resultingAction.append(action);
         if(TextUtils.stringSet(method)) {
         	resultingAction.append("!").append(method);
         }
+        LOG.debug("Resulting actionPath: " + resultingAction);
         params.put(PortletActionConstants.ACTION_PARAM, new String[] { resultingAction.toString() });
 
         PortletURL url = null;

@@ -9,13 +9,16 @@
           type="text/css"/>
 </head>
 
-<body onLoad="self.focus();document.Login.username.focus()">
+<body onload="self.focus();document.Login.username.focus()">
 
 <s:actionerror />
+<s:text name="doesntexist" />
 <s:form action="Login" validate="true">
     <s:textfield key="username" />
 
     <s:password key="password" showPassword="true"/>
+
+    <s:textfield name="doesntexist" />
 
     <s:submit key="button.save"/>
 

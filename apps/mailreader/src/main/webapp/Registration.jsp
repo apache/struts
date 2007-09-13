@@ -14,7 +14,7 @@
           type="text/css"/>
 </head>
 
-<body onLoad="self.focus();document.Registration_save_username.focus()">
+<body onload="self.focus();document.Registration_save_username.focus()">
 
 <s:actionerror/>
 <s:form action="Registration_save" validate="false">

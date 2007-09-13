@@ -17,7 +17,7 @@
           type="text/css"/>
 </head>
 
-<body onLoad="self.focus();document.Subscription.username.focus()">
+<body onload="self.focus();document.Subscription.username.focus()">
 
 <s:actionerror/>
 <s:form action="Subscription_save" validate="true">

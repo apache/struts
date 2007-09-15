@@ -131,8 +131,10 @@ public abstract class AbstractAdapterNode implements AdapterNode {
     public Node getChildBeforeOrAfter(Node child, boolean before) {
         log.debug("getChildBeforeOrAfter: ");
         List adapters = getChildAdapters();
-        log.debug("childAdapters = " + adapters);
-        log.debug("child = " + child);
+        if (log.isDebugEnabled()) {
+            log.debug("childAdapters = " + adapters);
+            log.debug("child = " + child);
+        }
         int index = adapters.indexOf(child);
         if (index < 0)
             throw new StrutsException(child + " is no child of " + this);
@@ -251,7 +253,7 @@ public abstract class AbstractAdapterNode implements AdapterNode {
                     + ((next == null) ? "null" : next.getNodeName()));
         }
 
-        return getParent().getChildAfter(this);
+        return next;
     }
 
     public Node getPreviousSibling() {

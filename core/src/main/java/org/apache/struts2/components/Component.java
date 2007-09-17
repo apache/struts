@@ -323,7 +323,7 @@ public class Component {
         }
     }
 
-    /**
+	/**
      * Renders an action URL by consulting the {@link org.apache.struts2.dispatcher.mapper.ActionMapper}.
      * @param action      the action
      * @param namespace   the namespace
@@ -338,10 +338,31 @@ public class Component {
      */
     protected String determineActionURL(String action, String namespace, String method,
                                         HttpServletRequest req, HttpServletResponse res, Map parameters, String scheme,
+                                        boolean includeContext, boolean encodeResult) {
+        return determineActionURL(action, namespace, method, req, res, parameters, scheme, includeContext, encodeResult, false, true);
+    }
+
+    /**
+     * Renders an action URL by consulting the {@link org.apache.struts2.dispatcher.mapper.ActionMapper}.
+     * @param action      the action
+     * @param namespace   the namespace
+     * @param method      the method
+     * @param req         HTTP request
+     * @param res         HTTP response
+     * @param parameters  parameters
+     * @param scheme      http or https
+     * @param includeContext  should the context path be included or not
+     * @param encodeResult    should the url be encoded
+	 * @param forceAddSchemeHostAndPort    should the scheme host and port be added to the url no matter what
+	 * @param escapeAmp    should the ampersands used separate parameters be escaped or not
+     * @return the action url.
+     */
+    protected String determineActionURL(String action, String namespace, String method,
+                                        HttpServletRequest req, HttpServletResponse res, Map parameters, String scheme,
                                         boolean includeContext, boolean encodeResult, boolean forceAddSchemeHostAndPort,
                                         boolean escapeAmp) {
         String finalAction = findString(action);
-	String finalMethod = method != null ? findString(method) : method;
+        String finalMethod = method != null ? findString(method) : method;
         String finalNamespace = determineNamespace(namespace, getStack(), req);
         ActionMapping mapping = new ActionMapping(finalAction, finalNamespace, finalMethod, parameters);
         String uri = actionMapper.getUriFromActionMapping(mapping);

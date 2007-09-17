@@ -336,6 +336,7 @@ public class Component {
      * @param encodeResult    should the url be encoded
      * @return the action url.
      */
+	 @Deprecated
     protected String determineActionURL(String action, String namespace, String method,
                                         HttpServletRequest req, HttpServletResponse res, Map parameters, String scheme,
                                         boolean includeContext, boolean encodeResult) {

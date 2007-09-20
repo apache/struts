@@ -46,7 +46,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </p>
  * <p>For troubleshooting javascript problems the following configuration is recommended:</p>
  * <pre>
- *   &lt;s:head debug="true" cache="false" compressed="false" /&gt;
+ *   &lt;sx:head debug="true" cache="false" compressed="false" /&gt;
  * </pre>
  *
  * <p>Dojo files are loaded as required by the Dojo loading mechanism. The problem with this

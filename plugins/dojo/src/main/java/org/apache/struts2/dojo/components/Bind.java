@@ -55,7 +55,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;form id="form1"&gt;
  *     &lt;s:checkbox name="data" label="Hit me" id="chk1"/&gt;
  * &lt;/form>
- * <!-- START SNIPPET: example2 -->
+ * <!-- END SNIPPET: example2 -->
  * 
  * <!-- START SNIPPET: example4 -->
  * &lt;script type="text/javascript"&gt;

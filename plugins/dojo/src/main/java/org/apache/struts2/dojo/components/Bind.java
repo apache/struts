@@ -40,35 +40,24 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <p>Examples</p>
  * 
  * <!-- START SNIPPET: example0 -->
- * <p>Without attaching to an event, listening to a topic (used to make an Ajax call)</p>
- * <pre>
  * &lt;sx:bind href="%{#ajaxTest}" listenTopics="/makecall"/&gt;
  * &lt;s:submit onclick="dojo.event.topic.publish('/makecall')"/&gt;
- * </pre>
  * <!-- END SNIPPET: example0 -->
  * 
  * <!-- START SNIPPET: example1 -->
- * <p>Attached to event 'onclick' on submit button</p>
- * <pre>
  * &lt;img id="indicator" src="${pageContext.request.contextPath}/images/indicator.gif" alt="Loading..." style="display:none"/&gt;
  * &lt;sx:bind id="ex1" href="%{#ajaxTest}" sources="button" targets="div1" events="onclick" indicator="indicator" /&gt;
  * &lt;s:submit theme="simple" type="submit" value="submit" id="button"/&gt;
- * </pre>
  * <!-- END SNIPPET: example1 -->
  * 
  * <!-- START SNIPPET: example2 -->
- * <p>Submit form</p>
- * <pre>
  * &lt;sx:bind id="ex3" href="%{#ajaxTest}" sources="chk1" targets="div1" events="onchange" formId="form1" /&gt;
  * &lt;form id="form1"&gt;
  *     &lt;s:checkbox name="data" label="Hit me" id="chk1"/&gt;
  * &lt;/form>
- * </pre>
  * <!-- START SNIPPET: example2 -->
  * 
  * <!-- START SNIPPET: example4 -->
- * <p>Using beforeNotifyTopics:</p>
- * <pre>
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/before", function(event, widget){
  *     alert('inside a topic event. before request');
@@ -79,12 +68,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  * 
  * &lt;input type="button" id="button"&gt; 
  * &lt;sx:bind id="ex1" href="%{#ajaxTest}" beforeNotifyTopics="/before" sources="button" events="onclick"/&gt; 
- * </pre> 
  * <!-- END SNIPPET: example4 -->
  * 
  * <!-- START SNIPPET: example5 -->
- * <p>Using afterNotifyTopics and highlight:</p>
- * <pre>
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/after", function(data, request, widget){
  *     alert('inside a topic event. after request');
@@ -96,12 +82,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  * 
  * &lt;input type="button" id="button"&gt;
  * &lt;sx:bind id="ex1" href="%{#ajaxTest}" highlightColor="red" afterNotifyTopics="/after" sources="button" events="onclick"/&gt;
- * </pre> 
  * <!-- END SNIPPET: example5 -->
  * 
  * <!-- START SNIPPET: example6 -->
- * <p>Using errorNotifyTopics and insicator:</p>
- * <pre>
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/error", function(error, request, widget){
  *     alert('inside a topic event. on error');
@@ -114,7 +97,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;input type="button" id="button"&gt;
  * &lt;img id="ind1" src="${pageContext.request.contextPath}/images/indicator.gif" style="display:none"/&gt;
  * &lt;sx:bind href="%{#ajaxTest}" indicator="ind1" errorNotifyTopics="/error" sources="button" events="onclick"/&gt;
- * </pre> 
  * <!-- END SNIPPET: example6 -->
  */
 @StrutsTag(name="bind", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.BindTag", description="Attach event listeners to elements to make AJAX calls")

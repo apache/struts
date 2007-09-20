@@ -112,8 +112,33 @@ import com.opensymphony.xwork2.validator.ActionValidatorManager;
  *     <td>singleton</td>
  *     <td>Loads and processes Velocity templates</td>
  *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.validator.ActionValidatorManager</td>
+ *     <td>struts.actionValidatorManager</td>
+ *     <td>singleton</td>
+ *     <td>Main interface for validation managers (regular and annotation based).  Handles both the loading of 
+ *         configuration and the actual validation (since 2.1)</td>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.util.ValueStackFactory</td>
+ *     <td>struts.valueStackFactory</td>
+ *     <td>singleton</td>
+ *     <td>Creates value stacks (since 2.1)</td>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.reflection.ReflectionProvider</td>
+ *     <td>struts.reflectionProvider</td>
+ *     <td>singleton</td>
+ *     <td>Provides reflection services, key place to plug in a custom expression language (since 2.1)</td>
+ *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.reflection.ReflectionContextFactory</td>
+ *     <td>struts.reflectionContextFactory</td>
+ *     <td>singleton</td>
+ *     <td>Creates reflection context maps used for reflection and expression language operations (since 2.1)</td>
+ *   </tr>
  * </table>
- *
+ * 
  * <!-- END SNIPPET: extensionPoints -->
  * </p>
  * <p>

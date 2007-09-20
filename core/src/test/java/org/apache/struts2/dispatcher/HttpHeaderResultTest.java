@@ -32,7 +32,8 @@ import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.util.OgnlUtil;
+import com.opensymphony.xwork2.ognl.OgnlUtil;
+import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 
 
 /**
@@ -45,6 +46,7 @@ public class HttpHeaderResultTest extends StrutsTestCase {
     HttpHeaderResult result;
     HttpServletResponse response;
     Mock responseMock;
+    ReflectionProvider reflectionProvider;
 
 
     public void testHeaderValuesAreNotParsedWhenParseIsFalse() throws Exception {
@@ -56,7 +58,7 @@ public class HttpHeaderResultTest extends StrutsTestCase {
         values.put("bar", "abc");
         ActionContext.getContext().getValueStack().push(values);
 
-        OgnlUtil.setProperties(params, result);
+        reflectionProvider.setProperties(params, result);
 
         responseMock.expect("addHeader", C.args(C.eq("foo"), C.eq("${bar}")));
         responseMock.expect("addHeader", C.args(C.eq("baz"), C.eq("baz")));
@@ -74,7 +76,7 @@ public class HttpHeaderResultTest extends StrutsTestCase {
         values.put("bar", "abc");
         ActionContext.getContext().getValueStack().push(values);
 
-        OgnlUtil.setProperties(params, result);
+        reflectionProvider.setProperties(params, result);
 
         responseMock.expect("addHeader", C.args(C.eq("foo"), C.eq("abc")));
         responseMock.expect("addHeader", C.args(C.eq("baz"), C.eq("baz")));
@@ -123,12 +125,12 @@ public class HttpHeaderResultTest extends StrutsTestCase {
         responseMock = new Mock(HttpServletResponse.class);
         response = (HttpServletResponse) responseMock.proxy();
         invocation = (ActionInvocation) new Mock(ActionInvocation.class).proxy();
+        reflectionProvider = container.getInstance(ReflectionProvider.class);
         ServletActionContext.setResponse(response);
     }
 
     protected void tearDown() throws Exception {
         super.tearDown();
-        ServletActionContext.setResponse(null);
         ActionContext.setContext(null);
     }
 }

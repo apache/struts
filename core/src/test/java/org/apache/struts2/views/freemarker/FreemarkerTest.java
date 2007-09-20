@@ -24,6 +24,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.util.ListEntry;
 import org.apache.struts2.util.StrutsUtil;
 
@@ -37,22 +38,13 @@ import freemarker.template.ObjectWrapper;
 
 /**
  */
-public class FreemarkerTest extends TestCase {
+public class FreemarkerTest extends StrutsTestCase {
 
     TestAction testAction = null;
 
 
-    /**
-     *
-     */
-    public FreemarkerTest(String name) {
-        super(name);
-    }
-
-
     public void testSelectHelper() {
         StrutsUtil wwUtil = new StrutsUtil(ActionContext.getContext().getValueStack(), null, null);
-
         List selectList = null;
 
         selectList = wwUtil.makeSelectList("ignored", "stringList", null, null);
@@ -78,9 +70,6 @@ public class FreemarkerTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
-        ActionContext.setContext(new ActionContext(stack.getContext()));
 
         testAction = new TestAction();
         ActionContext.getContext().getValueStack().push(testAction);

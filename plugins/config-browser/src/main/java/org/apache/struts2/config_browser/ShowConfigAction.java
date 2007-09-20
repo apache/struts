@@ -24,8 +24,6 @@ import java.beans.PropertyDescriptor;
 import java.util.Set;
 import java.util.TreeSet;
 
-import ognl.OgnlRuntime;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -33,6 +31,7 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 
 /**
  * ShowConfigAction
@@ -53,6 +52,7 @@ public class ShowConfigAction extends ActionNamesAction {
     
     private ConfigurationHelper configHelper;
     private ObjectFactory objectFactory;
+    private ReflectionProvider reflectionProvider;
 
     public String getDetailView() {
         return detailView;
@@ -78,6 +78,11 @@ public class ShowConfigAction extends ActionNamesAction {
     @Inject
     public void setObjectFactory(ObjectFactory fac) {
         this.objectFactory = fac;
+    }
+    
+    @Inject
+    public void setReflectionProvider(ReflectionProvider prov) {
+        this.reflectionProvider = prov;
     }
 
     public String stripPackage(Class clazz) {
@@ -111,8 +116,7 @@ public class ShowConfigAction extends ActionNamesAction {
                 new TreeSet(configHelper.getActionNames(namespace));
         try {
             Class clazz = objectFactory.getClassInstance(getConfig().getClassName());
-            java.util.Collection pds = OgnlRuntime.getPropertyDescriptors(clazz).values();
-            properties = (PropertyDescriptor[]) pds.toArray(PDSAT);
+            properties = reflectionProvider.getPropertyDescriptors(clazz);
         } catch (Exception e) {
             log.error("Unable to get properties for action " + actionName, e);
             addActionError("Unable to retrieve action properties: " + e.toString());

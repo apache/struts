@@ -67,7 +67,8 @@ public class InvocationSessionStoreTest extends StrutsTestCase {
     }
 
     protected void setUp() throws Exception {
-        stack = ValueStackFactory.getFactory().createValueStack();
+        super.setUp();
+        stack = ActionContext.getContext().getValueStack();
 
         ActionContext actionContext = new ActionContext(stack.getContext());
         ActionContext.setContext(actionContext);

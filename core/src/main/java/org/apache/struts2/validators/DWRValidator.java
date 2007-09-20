@@ -37,7 +37,9 @@ import org.apache.struts2.dispatcher.SessionMap;
 import uk.ltd.getahead.dwr.WebContextFactory;
 
 import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.DefaultActionInvocation;
 import com.opensymphony.xwork2.DefaultActionProxy;
 import com.opensymphony.xwork2.ObjectFactory;
@@ -46,6 +48,7 @@ import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.ValidationAwareSupport;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * <p/>
@@ -66,6 +69,13 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
  */
 public class DWRValidator {
     private static final Log LOG = LogFactory.getLog(DWRValidator.class);
+    
+    private ActionProxyFactory actionProxyFactory;
+    
+    @Inject
+    public void setActionProxyFactory(ActionProxyFactory fac) {
+        this.actionProxyFactory = fac;
+    }
 
     public ValidationAwareSupport doPost(String namespace, String action, Map params) throws Exception {
         HttpServletRequest req = WebContextFactory.get().getHttpServletRequest();
@@ -92,9 +102,8 @@ public class DWRValidator {
 
         try {
             Configuration cfg = du.getConfigurationManager().getConfiguration();
-            ValidatorActionProxy proxy = new ValidatorActionProxy(namespace, action, ctx);
-            cfg.getContainer().inject(proxy);
-            proxy.prepare();
+            ActionInvocation inv = new ValidatorActionInvocation(ctx, true);
+            ActionProxy proxy = actionProxyFactory.createActionProxy(inv, namespace, action, ctx, true, true);
             proxy.execute();
             Object a = proxy.getAction();
 
@@ -118,8 +127,8 @@ public class DWRValidator {
     public static class ValidatorActionInvocation extends DefaultActionInvocation {
         private static final long serialVersionUID = -7645433725470191275L;
 
-        protected ValidatorActionInvocation(ObjectFactory objectFactory, UnknownHandler handler, ActionProxy proxy, Map extraContext) throws Exception {
-            super(objectFactory, handler, proxy, extraContext, true);
+        protected ValidatorActionInvocation(Map extraContext, boolean pushAction) throws Exception {
+            super(extraContext, pushAction);
         }
 
         protected String invokeAction(Object action, ActionConfig actionConfig) throws Exception {
@@ -127,16 +136,4 @@ public class DWRValidator {
         }
     }
 
-    public static class ValidatorActionProxy extends DefaultActionProxy {
-        private static final long serialVersionUID = 5754781916414047963L;
-
-        protected ValidatorActionProxy(String namespace, String actionName, Map extraContext) throws Exception {
-            super(namespace, actionName, extraContext, false, true);
-        }
-
-        public void prepare() throws Exception {
-            super.prepare();
-            invocation = new ValidatorActionInvocation(objectFactory, unknownHandler, this, extraContext);
-        }
-    }
 }

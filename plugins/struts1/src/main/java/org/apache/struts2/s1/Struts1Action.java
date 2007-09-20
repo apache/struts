@@ -38,6 +38,7 @@ import org.apache.struts2.dispatcher.Dispatcher;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.ScopedModelDriven;
 
 /**
@@ -61,13 +62,19 @@ public class Struts1Action extends DefaultActionSupport implements ScopedModelDr
     private String className;
     private boolean validate;
     private String scopeKey;
+    private ObjectFactory objectFactory;
+    
+    @Inject
+    public void setObjectFactory(ObjectFactory fac) {
+        this.objectFactory = fac;
+    }
     
     public String execute() throws Exception {
         ActionContext ctx = ActionContext.getContext();
         ActionConfig actionConfig = ctx.getActionInvocation().getProxy().getConfig();
         Action action = null;
         try {
-            action = (Action) ObjectFactory.getObjectFactory().buildBean(className, null);
+            action = (Action) objectFactory.buildBean(className, null);
         } catch (Exception e) {
             throw new StrutsException("Unable to create the legacy Struts Action", e, actionConfig);
         }

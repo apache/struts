@@ -29,6 +29,7 @@ import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.*;
 import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ObjectFactory;
 
 import junit.framework.TestCase;
 
@@ -61,7 +62,6 @@ public class MethodConfigurationProviderTest extends TestCase {
      * Creates a mock Dispatcher and seeds Configuration.
      */
     public void setUp() {
-
         InternalConfigurationManager configurationManager = new InternalConfigurationManager();
         dispatcher = new Dispatcher(new MockServletContext(), new HashMap<String, String>());
         dispatcher.setConfigurationManager(configurationManager);
@@ -93,6 +93,7 @@ public class MethodConfigurationProviderTest extends TestCase {
 
         provider = new MethodConfigurationProvider();
         provider.init(configuration);
+        provider.setObjectFactory(new ObjectFactory());
         provider.loadPackages();
     }
 

@@ -251,10 +251,7 @@ public class ActionTagTest extends AbstractTagTest {
     }
 
     protected void tearDown() throws Exception {
-        configurationManager.destroyConfiguration();
 
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
-        ActionContext.setContext(new ActionContext(stack.getContext()));
         super.tearDown();
     }
 }

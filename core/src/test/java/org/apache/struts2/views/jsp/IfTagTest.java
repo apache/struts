@@ -324,7 +324,7 @@ public class IfTagTest extends StrutsTestCase {
         super.setUp();
         // create the needed objects
         tag = new IfTag();
-        stack = ValueStackFactory.getFactory().createValueStack();
+        stack = ActionContext.getContext().getValueStack();
 
         // create the mock http servlet request
         StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();

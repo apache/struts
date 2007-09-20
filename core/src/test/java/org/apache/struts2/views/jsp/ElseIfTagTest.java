@@ -30,6 +30,8 @@ import org.apache.struts2.components.If;
 
 import com.mockobjects.servlet.MockJspWriter;
 import com.mockobjects.servlet.MockPageContext;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 
@@ -98,7 +100,7 @@ public class ElseIfTagTest extends StrutsTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        stack = ValueStackFactory.getFactory().createValueStack();
+        stack = ActionContext.getContext().getValueStack();
 
         jspWriter = new MockJspWriter();
 

@@ -27,6 +27,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.util.UrlHelper;
@@ -34,6 +36,8 @@ import org.apache.struts2.views.util.UrlHelper;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.reflection.ReflectionException;
+import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -111,12 +115,14 @@ import com.opensymphony.xwork2.inject.Inject;
  *
  * @see ActionMapper
  */
-public class ServletActionRedirectResult extends ServletRedirectResult {
+public class ServletActionRedirectResult extends ServletRedirectResult implements ReflectionExceptionHandler {
 
     private static final long serialVersionUID = -9042425229314584066L;
 
     /** The default parameter */
     public static final String DEFAULT_PARAM = "actionName";
+    
+    private static final Log LOG = LogFactory.getLog(ServletActionRedirectResult.class);
 
     protected String actionName;
     protected String namespace;
@@ -223,6 +229,11 @@ public class ServletActionRedirectResult extends ServletRedirectResult {
     public ServletActionRedirectResult addParameter(String key, Object value) {
         requestParameters.put(key, String.valueOf(value));
         return this;
+    }
+
+    public void handle(ReflectionException ex) {
+        // Only log as debug as they are probably parameters to be appended to the url
+        LOG.debug(ex.getMessage(), ex);
     }
 
 }

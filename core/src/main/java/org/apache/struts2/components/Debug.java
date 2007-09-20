@@ -20,8 +20,9 @@
  */
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.OgnlUtil;
+import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -38,11 +39,20 @@ import org.apache.struts2.StrutsException;
         description="Prints debugging information")
 public class Debug extends UIBean {
     public static final String TEMPLATE = "debug";
+    
+    protected ReflectionProvider reflectionProvider;
+
+    
 
     public Debug(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
 
+    @Inject
+    public void setReflectionProvider(ReflectionProvider prov) {
+        this.reflectionProvider = prov;
+    }
+    
     protected String getDefaultTemplate() {
         return TEMPLATE;
     }
@@ -57,7 +67,7 @@ public class Debug extends UIBean {
             Object o = iter.next();
             Map values;
             try {
-                values = OgnlUtil.getBeanMap(o);
+                values = reflectionProvider.getBeanMap(o);
             } catch (Exception e) {
                 throw new StrutsException("Caught an exception while getting the property values of " + o, e);
             }

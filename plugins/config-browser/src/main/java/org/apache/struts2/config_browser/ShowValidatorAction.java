@@ -29,13 +29,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import ognl.Ognl;
-import ognl.OgnlException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.opensymphony.xwork2.util.OgnlUtil;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.reflection.ReflectionContextFactory;
+import com.opensymphony.xwork2.util.reflection.ReflectionException;
+import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import com.opensymphony.xwork2.validator.Validator;
 
 /**
@@ -49,7 +49,20 @@ public class ShowValidatorAction extends ListValidatorsAction {
 
     Set properties = Collections.EMPTY_SET;
     int selected = 0;
+    
+    ReflectionProvider reflectionProvider;
+    ReflectionContextFactory reflectionContextFactory;
 
+    @Inject
+    public void setReflectionProvider(ReflectionProvider prov) {
+        this.reflectionProvider = prov;
+    }
+    
+    @Inject
+    public void setReflectionContextFactory(ReflectionContextFactory fac) {
+        this.reflectionContextFactory = fac;
+    }
+    
     public int getSelected() {
         return selected;
     }
@@ -71,7 +84,7 @@ public class ShowValidatorAction extends ListValidatorsAction {
         Validator validator = getSelectedValidator();
         properties = new TreeSet();
         try {
-            Map context = Ognl.createDefaultContext(validator);
+            Map context = reflectionContextFactory.createDefaultContext(validator);
             BeanInfo beanInfoFrom = null;
             try {
                 beanInfoFrom = Introspector.getBeanInfo(validator.getClass(), Object.class);
@@ -91,10 +104,9 @@ public class ShowValidatorAction extends ListValidatorsAction {
                     value = "No read method for property";
                 } else {
                     try {
-                        Object expr = OgnlUtil.compile(name);
-                        value = Ognl.getValue(expr, context, validator);
-                    } catch (OgnlException e) {
-                        addActionError("Caught OGNL exception while getting property value for '" + name + "' on validator of type " + validator.getClass().getName());
+                        value = reflectionProvider.getValue(name, context, validator);
+                    } catch (ReflectionException e) {
+                        addActionError("Caught exception while getting property value for '" + name + "' on validator of type " + validator.getClass().getName());
                     }
                 }
                 properties.add(new PropertyInfo(name, pd.getPropertyType(), value));

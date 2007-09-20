@@ -35,6 +35,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockRequestDispatcher;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 
@@ -195,7 +196,7 @@ public class StrutsUtilTest extends StrutsTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        stack = ValueStackFactory.getFactory().createValueStack();
+        stack = ActionContext.getContext().getValueStack();
         request = new InternalMockHttpServletRequest();
         response = new MockHttpServletResponse();
         strutsUtil = new StrutsUtil(stack, request, response);

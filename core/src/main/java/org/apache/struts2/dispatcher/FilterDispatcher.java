@@ -161,22 +161,22 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     /**
      * Store state of StrutsConstants.STRUTS_SERVE_STATIC_CONTENT setting.
      */
-    private static boolean serveStatic;
+    private boolean serveStatic;
 
     /**
      * Store state of StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE setting.
      */
-    private static boolean serveStaticBrowserCache;
+    private boolean serveStaticBrowserCache;
 
     /**
      * Store state of StrutsConstants.STRUTS_I18N_ENCODING setting.
      */
-    private static String encoding;
+    private String encoding;
 
     /**
      * Provide ActionMapper instance, set by injection.
      */
-    private static ActionMapper actionMapper;
+    private ActionMapper actionMapper;
 
     /**
      * Provide FilterConfig instance, set on init.
@@ -199,6 +199,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
 
         dispatcher = createDispatcher(filterConfig);
         dispatcher.init();
+        dispatcher.getContainer().inject(this);
 
         String param = filterConfig.getInitParameter("packages");
         String packages = "org.apache.struts2.static template org.apache.struts2.interceptor.debugging";
@@ -244,7 +245,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      * @param val New setting
      */
     @Inject(StrutsConstants.STRUTS_SERVE_STATIC_CONTENT)
-    public static void setServeStaticContent(String val) {
+    public void setServeStaticContent(String val) {
         serveStatic = "true".equals(val);
     }
 
@@ -253,7 +254,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      * @param val New setting
      */
     @Inject(StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE)
-    public static void setServeStaticBrowserCache(String val) {
+    public void setServeStaticBrowserCache(String val) {
         serveStaticBrowserCache = "true".equals(val);
     }
 
@@ -262,7 +263,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      * @param val New setting
      */
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
-    public static void setEncoding(String val) {
+    public void setEncoding(String val) {
         encoding = val;
     }
 
@@ -271,7 +272,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      * @param mapper New instance
      */
     @Inject
-    public static void setActionMapper(ActionMapper mapper) {
+    public void setActionMapper(ActionMapper mapper) {
         actionMapper = mapper;
     }
 

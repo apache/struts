@@ -43,7 +43,9 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.ognl.OgnlValueStack;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  *  An abstract template page filter that sets up the proper contexts for
@@ -97,8 +99,8 @@ public abstract class TemplatePageFilter extends PageFilter {
         ServletContext servletContext = filterConfig.getServletContext();
         ActionContext ctx = ServletActionContext.getActionContext(req);
         if (ctx == null) {
-            // ok, one isn't associated with the request, so let's get a ThreadLocal one (which will create one if needed)
-            OgnlValueStack vs = new OgnlValueStack();
+            // ok, one isn't associated with the request, so let's create one using the current Dispatcher
+            ValueStack vs = Dispatcher.getInstance().getContainer().getInstance(ValueStackFactory.class).createValueStack();
             vs.getContext().putAll(Dispatcher.getInstance().createContextMap(req, res, null, servletContext));
             ctx = new ActionContext(vs.getContext());
             if (ctx.getActionInvocation() == null) {
@@ -165,7 +167,7 @@ public abstract class TemplatePageFilter extends PageFilter {
         public void setResultCode(String resultCode) {
         }
 
-        public OgnlValueStack getStack() {
+        public ValueStack getStack() {
             return null;
         }
 
@@ -181,6 +183,9 @@ public abstract class TemplatePageFilter extends PageFilter {
         }
 
         public void setActionEventListener(ActionEventListener listener) {
+        }
+
+        public void init(ActionProxy proxy) throws Exception {
         }
     }
 }

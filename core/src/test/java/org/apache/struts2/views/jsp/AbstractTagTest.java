@@ -82,7 +82,7 @@ public abstract class AbstractTagTest extends StrutsTestCase {
          * create our standard mock objects
          */
         action = this.getAction();
-        stack = ValueStackFactory.getFactory().createValueStack();
+        stack = ActionContext.getContext().getValueStack();
         context = stack.getContext();
         stack.push(action);
 

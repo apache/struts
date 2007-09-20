@@ -33,7 +33,8 @@ import org.apache.struts2.views.freemarker.tags.TagModel;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ognl.OgnlValueStack;
 
 import freemarker.ext.util.WrapperTemplateModel;
 import freemarker.template.AdapterTemplateModel;
@@ -56,7 +57,7 @@ public class TagModelTest extends StrutsTestCase {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        OgnlValueStack stack = new OgnlValueStack();
+        OgnlValueStack stack = (OgnlValueStack)ActionContext.getContext().getValueStack();
 
         Map params = new LinkedHashMap();
 
@@ -184,8 +185,8 @@ public class TagModelTest extends StrutsTestCase {
 
     public void testGetWriter() throws Exception {
 
-        OgnlValueStack stack = new OgnlValueStack();
-
+        OgnlValueStack stack = (OgnlValueStack)ActionContext.getContext().getValueStack();
+        
         final InternalBean bean = new InternalBean(stack);
 
         MockHttpServletRequest request = new MockHttpServletRequest();

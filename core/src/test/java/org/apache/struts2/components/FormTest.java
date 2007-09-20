@@ -36,6 +36,7 @@ public class FormTest extends AbstractUITagTest {
 
     public void testTestFormGetValidators() {
         Form form = new Form(stack, request, response);
+        container.inject(form);
         form.getParameters().put("actionClass", TestAction.class);
         List v = form.getValidators("foo");
         assertEquals(1, v.size());

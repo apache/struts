@@ -23,16 +23,31 @@ package org.apache.struts2.dispatcher;
 import java.util.HashMap;
 import java.util.Locale;
 
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.dispatcher.FilterDispatcherTest.InnerActionMapper;
+import org.apache.struts2.dispatcher.FilterDispatcherTest.InnerDestroyableObjectFactory;
+import org.apache.struts2.dispatcher.FilterDispatcherTest.InnerDispatcher;
+import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 
+import com.mockobjects.dynamic.C;
+import com.mockobjects.dynamic.Mock;
+import com.mockobjects.servlet.MockFilterChain;
+import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.inject.Context;
+import com.opensymphony.xwork2.inject.Factory;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 /**
@@ -129,6 +144,27 @@ public class DispatcherTest extends StrutsTestCase {
     	finally {
     		du.setInstance(null);
     	}
+    }
+    
+    public void testObjectFactoryDestroy() throws Exception {
+
+        final InnerDestroyableObjectFactory destroyedObjectFactory = new InnerDestroyableObjectFactory();
+        Dispatcher du = new Dispatcher(new MockServletContext(), new HashMap<String, String>());
+        ConfigurationManager cm = new ConfigurationManager();
+        Mock mockConfiguration = new Mock(Configuration.class);
+        cm.setConfiguration((Configuration)mockConfiguration.proxy());
+        
+        Mock mockContainer = new Mock(Container.class);
+        mockConfiguration.expectAndReturn("getContainer", mockContainer.proxy());
+        mockContainer.expectAndReturn("getInstance", C.args(C.eq(ObjectFactory.class)), destroyedObjectFactory);
+        mockConfiguration.expect("destroy");
+        
+        du.setConfigurationManager(cm);
+        assertFalse(destroyedObjectFactory.destroyed);
+        du.cleanup();
+        assertTrue(destroyedObjectFactory.destroyed);
+        mockConfiguration.verify();
+        mockContainer.verify();
     }
     
     class InternalConfigurationManager extends ConfigurationManager {

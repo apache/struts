@@ -38,7 +38,6 @@ import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.util.OgnlUtil;
 import com.opensymphony.xwork2.validator.Validator;
 
 /**
@@ -144,7 +143,7 @@ public class PlexusObjectFactory extends ObjectFactory {
             Map extraContext = new HashMap();
             extraContext.put(PLEXUS_COMPONENT_TYPE, Interceptor.class.getName());
             Interceptor interceptor = (Interceptor) buildBean(interceptorClassName, extraContext);
-            OgnlUtil.setProperties(params, interceptor);
+            reflectionProvider.setProperties(params, interceptor);
             interceptor.init();
 
             return interceptor;
@@ -195,7 +194,7 @@ public class PlexusObjectFactory extends ObjectFactory {
         Map context = new HashMap();
         context.put(PLEXUS_COMPONENT_TYPE, Validator.class.getName());
         Validator validator = (Validator) buildBean(className, context);
-        OgnlUtil.setProperties(params, validator);
+        reflectionProvider.setProperties(params, validator);
 
         return validator;
     }

@@ -172,8 +172,9 @@ public class TextTagTest extends AbstractTagTest {
         assertEquals(value1, writer.toString());
         final StringBuffer buffer = writer.getBuffer();
         buffer.delete(0, buffer.length());
-        ValueStack newStack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack newStack = container.getInstance(ValueStackFactory.class).createValueStack();
         newStack.getContext().put(ActionContext.LOCALE, foreignLocale);
+        newStack.getContext().put(ActionContext.CONTAINER, container);
         newStack.push(new TestAction1());
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, newStack);
         assertNotSame(ActionContext.getContext().getValueStack().peek(), newStack.peek());
@@ -203,8 +204,9 @@ public class TextTagTest extends AbstractTagTest {
         buffer.delete(0, buffer.length());
         String value_int = getLocalizedMessage(foreignLocale);
         assertFalse(value_default.equals(value_int));
-        ValueStack newStack = ValueStackFactory.getFactory().createValueStack(stack);
+        ValueStack newStack = container.getInstance(ValueStackFactory.class).createValueStack(stack);
         newStack.getContext().put(ActionContext.LOCALE, foreignLocale);
+        newStack.getContext().put(ActionContext.CONTAINER, container);
         assertNotSame(newStack.getContext().get(ActionContext.LOCALE), ActionContext.getContext().getLocale());
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, newStack);
         assertEquals(ActionContext.getContext().getValueStack().peek(), newStack.peek());
@@ -275,7 +277,6 @@ public class TextTagTest extends AbstractTagTest {
     }
 
     protected void tearDown() throws Exception {
-        ValueStack valueStack = ValueStackFactory.getFactory().createValueStack();
-        ActionContext.setContext(new ActionContext(valueStack.getContext()));
+        super.tearDown();
     }
 }

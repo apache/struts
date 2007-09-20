@@ -28,7 +28,7 @@ import com.opensymphony.xwork2.config.entities.InterceptorMapping;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptorUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.validator.ActionValidatorManagerFactory;
+import com.opensymphony.xwork2.validator.ActionValidatorManager;
 import com.opensymphony.xwork2.validator.FieldValidator;
 import com.opensymphony.xwork2.validator.ValidationInterceptor;
 import com.opensymphony.xwork2.validator.Validator;
@@ -107,6 +107,7 @@ public class Form extends ClosingUIBean {
     protected Configuration configuration;
     protected ObjectFactory objectFactory;
     protected UrlRenderer urlRenderer;
+    protected ActionValidatorManager actionValidatorManager;
 
     public Form(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -142,6 +143,11 @@ public class Form extends ClosingUIBean {
     @Inject
     public void setUrlRenderer(UrlRenderer urlRenderer) {
     	this.urlRenderer = urlRenderer;
+    }
+    
+    @Inject
+    public void setActionValidatorManager(ActionValidatorManager mgr) {
+        this.actionValidatorManager = mgr;
     }
 
 
@@ -264,7 +270,7 @@ public class Form extends ClosingUIBean {
             return Collections.EMPTY_LIST;
         }
 
-        List<Validator> all = ActionValidatorManagerFactory.getInstance().getValidators(actionClass, (String) getParameters().get("actionName"));
+        List<Validator> all = actionValidatorManager.getValidators(actionClass, (String) getParameters().get("actionName"));
         List<Validator> validators = new ArrayList<Validator>();
         for (Validator validator : all) {
             if (validator instanceof FieldValidator) {

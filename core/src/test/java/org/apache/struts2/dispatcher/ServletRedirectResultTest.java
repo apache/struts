@@ -132,6 +132,6 @@ public class ServletRedirectResultTest extends StrutsTestCase implements StrutsS
         MockActionInvocation ai = new MockActionInvocation();
         ai.setInvocationContext(ac);
         this.ai = ai;
-        ai.setStack(ValueStackFactory.getFactory().createValueStack());
+        ai.setStack(ActionContext.getContext().getValueStack());
     }
 }

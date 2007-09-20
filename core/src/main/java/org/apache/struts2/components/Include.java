@@ -115,7 +115,7 @@ public class Include extends Component {
     }
 
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
-    public static void setDefaultEncoding(String encoding) {
+    public void setDefaultEncoding(String encoding) {
         defaultEncoding = encoding;
     }
 

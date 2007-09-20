@@ -28,7 +28,6 @@ import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.interceptor.Interceptor;
-import com.opensymphony.xwork2.util.OgnlUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +50,7 @@ public class StrutsObjectFactory extends ObjectFactory {
             // interceptor instances are long-lived and used across user sessions, so don't try to pass in any extra
             // context
             Object o = buildBean(className, null);
-            OgnlUtil.setProperties(params, o);
+            reflectionProvider.setProperties(params, o);
 
             if (o instanceof Interceptor) {
                 Interceptor interceptor = (Interceptor) o;
@@ -92,7 +91,7 @@ public class StrutsObjectFactory extends ObjectFactory {
             return null;
 
         Object result = buildBean(resultClassName, extraContext);
-        OgnlUtil.setProperties(resultConfig.getParams(), result, extraContext);
+        reflectionProvider.setProperties(resultConfig.getParams(), result, extraContext);
 
         if (result instanceof Result)
             return (Result) result;

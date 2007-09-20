@@ -126,16 +126,15 @@ public class JSONValidationInterceptorTest extends StrutsTestCase {
         this.action = new TestAction();
         this.interceptor = new JSONValidationInterceptor();
         this.validationInterceptor = new AnnotationValidationInterceptor();
+        container.inject(validationInterceptor);
         this.request = new StrutsMockHttpServletRequest();
         stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);
         this.response = new StrutsMockHttpServletResponse();
         response.setWriter(writer);
 
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
-        ActionContext context = new ActionContext(stack.getContext());
+        ActionContext context = ActionContext.getContext();
 
-        ActionContext.setContext(context);
         context.put(StrutsStatics.HTTP_REQUEST, request);
         context.put(StrutsStatics.HTTP_RESPONSE, response);
 

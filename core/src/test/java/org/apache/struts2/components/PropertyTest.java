@@ -26,8 +26,10 @@ import java.util.Map;
 import junit.framework.TestCase;
 import ognl.Ognl;
 
+import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.util.StrutsTypeConverter;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
@@ -35,9 +37,9 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 /**
  *
  */
-public class PropertyTest extends TestCase {
+public class PropertyTest extends StrutsTestCase {
     public void testNormalBehaviour() {
-        final ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        final ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(new FooBar("foo-value", "bar-value"));
         final Property property = new Property(stack);
         property.setDefault("default");
@@ -46,7 +48,7 @@ public class PropertyTest extends TestCase {
     }
 
     public void testDefaultShouldBeOutputIfBeanNotAvailable() {
-        final ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        final ValueStack stack = ActionContext.getContext().getValueStack();
         final Property property = new Property(stack);
         property.setDefault("default");
         property.setValue("foo");
@@ -54,7 +56,7 @@ public class PropertyTest extends TestCase {
     }
 
     public void testDefaultShouldBeOutputIfPropertyIsNull() {
-        final ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        final ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(new FooBar(null, "bar-value"));
         final Property property = new Property(stack);
         property.setDefault("default");
@@ -63,7 +65,7 @@ public class PropertyTest extends TestCase {
     }
 
     public void testTopValueShouldReturnTopOfValueStack() {
-        final ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        final ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(new FooBar("foo-value", "bar-value"));
         final Property property = new Property(stack);
         property.setDefault("default");
@@ -72,7 +74,7 @@ public class PropertyTest extends TestCase {
     }
 
     public void testTypeConverterShouldBeUsed() {
-        final ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        final ValueStack stack = ActionContext.getContext().getValueStack();
         Ognl.setTypeConverter(stack.getContext(), new TestDefaultConverter());
 
         stack.push(new FooBar("foo-value", "bar-value"));
@@ -83,7 +85,7 @@ public class PropertyTest extends TestCase {
     }
 
     public void testTypeConverterReturningNullShouldLeadToDisplayOfDefaultValue() {
-        final ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        final ValueStack stack = ActionContext.getContext().getValueStack();
         Ognl.setTypeConverter(stack.getContext(), new TestDefaultConverter());
 
         stack.push(new FooBar("foo-value", null));

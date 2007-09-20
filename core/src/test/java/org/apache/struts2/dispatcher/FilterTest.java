@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
 
+import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.springframework.mock.web.MockFilterConfig;
@@ -50,7 +51,7 @@ import com.opensymphony.xwork2.inject.Container;
  *
  * @version $Date$ $Id$
  */
-public class FilterTest extends TestCase {
+public class FilterTest extends StrutsTestCase {
 
     protected MockFilterConfig filterConfig;
     protected MockHttpServletRequest request;
@@ -70,6 +71,7 @@ public class FilterTest extends TestCase {
 
     @Override
     protected void tearDown() throws Exception {
+        super.tearDown();
         filterConfig = null;
         request = null;
         response = null;
@@ -84,6 +86,7 @@ public class FilterTest extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
+        super.setUp();
         Dispatcher.setInstance(null);
 
         filterConfig = new MockFilterConfig();
@@ -145,7 +148,7 @@ public class FilterTest extends TestCase {
         assertFalse(_dispatcher2.service);
 
         filterDispatcher.init(filterConfig);
-        FilterDispatcher.setActionMapper(new FilterTest.InnerMapper());
+        filterDispatcher.setActionMapper(new FilterTest.InnerMapper());
         filterDispatcher.doFilter(request, response, filterChain2);
         filterDispatcher.destroy();
 
@@ -180,7 +183,7 @@ public class FilterTest extends TestCase {
         assertFalse(_dispatcher2.cleanUp);
 
         filterDispatcher.init(filterConfig);
-        FilterDispatcher.setActionMapper(new FilterTest.InnerMapper());
+        filterDispatcher.setActionMapper(new FilterTest.InnerMapper());
         filterDispatcher.doFilter(request, response, filterChain2);
         filterDispatcher.doFilter(request, response, filterChain2);
         filterDispatcher.destroy();
@@ -296,7 +299,7 @@ public class FilterTest extends TestCase {
         
         @Override 
         public Container getContainer() {
-            return null;
+            return container;
         }
 
         @Override

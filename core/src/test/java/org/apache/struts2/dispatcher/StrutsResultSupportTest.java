@@ -23,6 +23,7 @@ package org.apache.struts2.dispatcher;
 import org.apache.struts2.StrutsTestCase;
 import org.easymock.EasyMock;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -35,7 +36,7 @@ public class StrutsResultSupportTest extends StrutsTestCase {
 
 
     public void testParse() throws Exception {
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(new ActionSupport() {
             public String getMyLocation() {
                 return "ThisIsMyLocation";
@@ -60,7 +61,7 @@ public class StrutsResultSupportTest extends StrutsTestCase {
     }
 
     public void testParseAndEncode() throws Exception {
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(new ActionSupport() {
             public String getMyLocation() {
                 return "/myPage?param=value&param1=value1";
@@ -86,7 +87,7 @@ public class StrutsResultSupportTest extends StrutsTestCase {
 
 
     public void testNoParseAndEncode() throws Exception {
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(new ActionSupport() {
             public String getMyLocation() {
                 return "myLocation.jsp";

@@ -52,7 +52,7 @@ public class TagUtils {
         ValueStack stack = (ValueStack) req.getAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY);
 
         if (stack == null) {
-            stack = ValueStackFactory.getFactory().createValueStack();
+            stack = Dispatcher.getInstance().getContainer().getInstance(ValueStackFactory.class).createValueStack();
 
             HttpServletResponse res = (HttpServletResponse) pageContext.getResponse();
             Dispatcher du = Dispatcher.getInstance();

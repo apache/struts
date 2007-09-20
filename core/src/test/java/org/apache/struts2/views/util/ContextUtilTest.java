@@ -23,7 +23,12 @@ package org.apache.struts2.views.util;
 import junit.framework.TestCase;
 
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsTestCase;
 
+import com.mockobjects.dynamic.C;
+import com.mockobjects.dynamic.Mock;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 
@@ -31,77 +36,83 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
  * Test case for ContextUtil
  *
  */
-public class ContextUtilTest extends TestCase {
+public class ContextUtilTest extends StrutsTestCase {
 
+    private void setAltSyntax(ValueStack stack, String val) {
+        Mock container = new Mock(Container.class);
+        container.expectAndReturn("getInstance", C.args(C.eq(String.class), C.eq(StrutsConstants.STRUTS_TAG_ALTSYNTAX)), val);
+        stack.getContext().put(ActionContext.CONTAINER, container.proxy());
+    }
+    
     public void testAltSyntaxMethod1() throws Exception {
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
         stack.getContext().put("useAltSyntax", "true");
 
-        ContextUtil.setAltSyntax("true");
+        setAltSyntax(stack, "true");
         assertTrue(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
 
     public void testAltSyntaxMethod2() throws Exception {
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
         stack.getContext().put("useAltSyntax", "false");
 
-        ContextUtil.setAltSyntax("true");
+        setAltSyntax(stack, "true");
         assertTrue(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
 
     public void testAltSyntaxMethod3() throws Exception {
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
         stack.getContext().put("useAltSyntax", "true");
 
-        ContextUtil.setAltSyntax("false");
+        setAltSyntax(stack, "false");
         assertTrue(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
 
     public void testAltSyntaxMethod4() throws Exception {
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
         stack.getContext().put("useAltSyntax", "false");
 
-        ContextUtil.setAltSyntax("false");
+        setAltSyntax(stack, "false");
         assertFalse(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
 
     //========================================================
 
     public void testAltSyntaxMethod5() throws Exception {
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
         stack.getContext().put("useAltSyntax", Boolean.TRUE);
 
-        ContextUtil.setAltSyntax("true");
+        setAltSyntax(stack, "true");
         assertTrue(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
     public void testAltSyntaxMethod6() throws Exception {
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
         stack.getContext().put("useAltSyntax", Boolean.FALSE);
 
-        ContextUtil.setAltSyntax("true");
+        setAltSyntax(stack, "true");
         assertTrue(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
     public void testAltSyntaxMethod7() throws Exception {
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
         stack.getContext().put("useAltSyntax", Boolean.TRUE);
 
-        ContextUtil.setAltSyntax("false");
+        setAltSyntax(stack, "false");
         assertTrue(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
     public void testAltSyntaxMethod8() throws Exception {
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
         stack.getContext().put("useAltSyntax", Boolean.FALSE);
 
-        ContextUtil.setAltSyntax("false");
+        setAltSyntax(stack, "false");
         assertFalse(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
 
     // ==========================================
     public void testAltSyntaxMethod9() throws Exception {
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
         stack.getContext().put("useAltSyntax", null);
 
-        ContextUtil.setAltSyntax("true");
+        setAltSyntax(stack, "true");
         assertTrue(ContextUtil.isUseAltSyntax(stack.getContext()));
     }
 }

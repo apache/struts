@@ -26,7 +26,10 @@ import java.util.Map;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.springframework.mock.web.MockServletContext;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  * Generic test setup methods to be used with any unit testing framework. 
@@ -48,10 +51,17 @@ public class StrutsTestCaseHelper {
         Dispatcher du = new Dispatcher(new MockServletContext(), params);
         du.init();
         Dispatcher.setInstance(du);
+        
+        // Reset the value stack
+        ValueStack stack = du.getContainer().getInstance(ValueStackFactory.class).createValueStack();
+        stack.getContext().put(ActionContext.CONTAINER, du.getContainer());
+        ActionContext.setContext(new ActionContext(stack.getContext()));
+        
         return du;
     }
 
     public static void tearDown() throws Exception {
         Dispatcher.setInstance(null);
+        ActionContext.setContext(null);
     }
 }

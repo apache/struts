@@ -24,7 +24,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.EvaluationException;
 import javax.faces.el.VariableResolver;
 
-import com.opensymphony.xwork2.util.OgnlValueStack;
+import com.opensymphony.xwork2.ognl.OgnlValueStack;
 import com.opensymphony.xwork2.ActionContext;
 
 /**

@@ -29,6 +29,7 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsTestCase;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
@@ -42,7 +43,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * Unit test for {@link StreamResult}.
  *
  */
-public class StreamResultTest extends TestCase {
+public class StreamResultTest extends StrutsTestCase {
 
     private StreamResult result;
     private MockHttpServletResponse response;
@@ -166,11 +167,11 @@ public class StreamResultTest extends TestCase {
     }
 
     protected void setUp() throws Exception {
+        super.setUp();
         response = new MockHttpServletResponse();
 
         result = new StreamResult();
-        stack = ValueStackFactory.getFactory().createValueStack();
-        ActionContext.getContext().setValueStack(stack);
+        stack = ActionContext.getContext().getValueStack();
 
         MyImageAction action = new MyImageAction();
         contentLength = (int) action.getContentLength();
@@ -186,7 +187,8 @@ public class StreamResultTest extends TestCase {
 
 
 
-    protected void tearDown() {
+    protected void tearDown() throws Exception {
+        super.tearDown();
         response = null;
         result = null;
         stack = null;

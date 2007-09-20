@@ -32,6 +32,8 @@ import org.apache.struts2.views.jsp.ui.OgnlTool;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -51,13 +53,6 @@ public class ContextUtil {
     public static final String STRUTS = "struts";
     public static final String ACTION = "action";
     
-    public static boolean altSyntax;
-    
-    @Inject(StrutsConstants.STRUTS_TAG_ALTSYNTAX)
-    public static void setAltSyntax(String val) {
-        altSyntax = "true".equals(val);
-    }
-
     public static Map getStandardContext(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         HashMap map = new HashMap();
         map.put(REQUEST, req);
@@ -67,7 +62,7 @@ public class ContextUtil {
         map.put(SESSION, req.getSession(false));
         map.put(BASE, req.getContextPath());
         map.put(STACK, stack);
-        map.put(OGNL, OgnlTool.getInstance());
+        map.put(OGNL, ((Container)stack.getContext().get(ActionContext.CONTAINER)).getInstance(OgnlTool.class));
         map.put(STRUTS, new StrutsUtil(stack, req, res));
 
         ActionInvocation invocation = (ActionInvocation) stack.getContext().get(ActionContext.ACTION_INVOCATION);
@@ -86,12 +81,12 @@ public class ContextUtil {
         // We didn't make altSyntax static cause, if so, struts.configuration.xml.reload will not work
         // plus the Configuration implementation should cache the properties, which the framework's
         // configuration implementation does
-        return altSyntax ||(
+        return "true".equals(((Container)context.get(ActionContext.CONTAINER)).getInstance(String.class, StrutsConstants.STRUTS_TAG_ALTSYNTAX)) ||(
                 (context.containsKey("useAltSyntax") &&
                         context.get("useAltSyntax") != null &&
                         "true".equals(context.get("useAltSyntax").toString())));
     }
-
+    
     /**
      * Returns a String for overriding the default templateSuffix if templateSuffix is on the stack
      * @param context stack's context

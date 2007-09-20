@@ -50,6 +50,7 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -116,6 +117,7 @@ public class DebuggingInterceptor implements Interceptor {
     private FreemarkerManager freemarkerManager;
     
     private boolean consoleEnabled = false;
+    private ReflectionProvider reflectionProvider;
 
     @Inject(StrutsConstants.STRUTS_DEVMODE)
     public void setDevMode(String mode) {
@@ -125,6 +127,11 @@ public class DebuggingInterceptor implements Interceptor {
     @Inject
     public void setFreemarkerManager(FreemarkerManager mgr) {
         this.freemarkerManager = mgr;
+    }
+    
+    @Inject
+    public void setReflectionProvider(ReflectionProvider reflectionProvider) {
+        this.reflectionProvider = reflectionProvider;
     }
 
     /**
@@ -226,7 +233,7 @@ public class DebuggingInterceptor implements Interceptor {
                             try {
                                 StringWriter writer = new StringWriter();
                                 ObjectToHTMLWriter htmlWriter = new ObjectToHTMLWriter(writer);
-                                htmlWriter.write(rootObject, rootObjectExpression);
+                                htmlWriter.write(reflectionProvider, rootObject, rootObjectExpression);
                                 String html = writer.toString();
                                 writer.close();
                                 

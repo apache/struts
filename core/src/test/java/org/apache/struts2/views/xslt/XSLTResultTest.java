@@ -142,13 +142,13 @@ public class XSLTResultTest extends StrutsTestCase {
     }
 
     protected void setUp() throws Exception {
+        super.setUp();
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
         servletContext = new MockServletContext();
 
         result = new XSLTResult();
-        stack = ValueStackFactory.getFactory().createValueStack();
-        ActionContext.getContext().setValueStack(stack);
+        stack = ActionContext.getContext().getValueStack();
 
         MyAction action = new MyAction();
 
@@ -163,7 +163,8 @@ public class XSLTResultTest extends StrutsTestCase {
         ActionContext.getContext().put(ServletActionContext.SERVLET_CONTEXT, servletContext);
     }
 
-    protected void tearDown() {
+    protected void tearDown() throws Exception {
+        super.tearDown();
         request = null;
         response = null;
         servletContext = null;

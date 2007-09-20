@@ -27,7 +27,8 @@ import org.apache.struts2.util.ClassLoaderUtils;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.validator.ActionValidatorManagerFactory;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.validator.ActionValidatorManager;
 
 /**
  * ListValidatorsAction loads the validations for a given class and context
@@ -40,7 +41,14 @@ public class ListValidatorsAction extends ActionSupport {
     private String clazz;
     private String context;
     List validators = Collections.EMPTY_LIST;
+    private ActionValidatorManager actionValidatorManager;
 
+    
+    @Inject
+    public void setActionValidatorManager(ActionValidatorManager mgr) {
+        this.actionValidatorManager = mgr;
+    }
+    
     public String getClazz() {
         return clazz;
     }
@@ -77,7 +85,7 @@ public class ListValidatorsAction extends ActionSupport {
     protected void loadValidators() {
         Class value = getClassInstance();
         if ( value != null ) {
-            validators = ActionValidatorManagerFactory.getInstance().getValidators(value, context);
+            validators = actionValidatorManager.getValidators(value, context);
         }
     }
 

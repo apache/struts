@@ -47,7 +47,11 @@ import com.opensymphony.xwork2.inject.Factory;
 import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
+import com.opensymphony.xwork2.util.reflection.ReflectionContextFactory;
+import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
+import com.opensymphony.xwork2.validator.ActionValidatorManager;
 
 /**
  * Selects the implementations of key framework extension points, using the loaded
@@ -161,6 +165,10 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         alias(FreemarkerManager.class, StrutsConstants.STRUTS_FREEMARKER_MANAGER_CLASSNAME, builder, props);
         alias(VelocityManager.class, StrutsConstants.STRUTS_VELOCITY_MANAGER_CLASSNAME, builder, props);
         alias(UrlRenderer.class, StrutsConstants.STRUTS_URL_RENDERER, builder, props);
+        alias(ActionValidatorManager.class, StrutsConstants.STRUTS_ACTIONVALIDATORMANAGER, builder, props);
+        alias(ValueStackFactory.class, StrutsConstants.STRUTS_VALUESTACKFACTORY, builder, props);
+        alias(ReflectionProvider.class, StrutsConstants.STRUTS_REFLECTIONPROVIDER, builder, props);
+        alias(ReflectionContextFactory.class, StrutsConstants.STRUTS_REFLECTIONCONTEXTFACTORY, builder, props);
         
         if ("true".equalsIgnoreCase(props.getProperty(StrutsConstants.STRUTS_DEVMODE))) {
             props.setProperty(StrutsConstants.STRUTS_I18N_RELOAD, "true");

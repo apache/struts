@@ -27,6 +27,7 @@ import java.io.StringWriter;
 import junit.framework.TestCase;
 
 import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
@@ -41,7 +42,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * Test case for PlainTextResult.
  *
  */
-public class PlainTextResultTest extends TestCase {
+public class PlainTextResultTest extends StrutsTestCase {
 
     ValueStack stack;
     MockActionInvocation invocation;
@@ -133,7 +134,7 @@ public class PlainTextResultTest extends TestCase {
         response = new StrutsMockHttpServletResponse();
         response.setWriter(writer);
         servletContext = new StrutsMockServletContext();
-        stack = ValueStackFactory.getFactory().createValueStack();
+        stack = ActionContext.getContext().getValueStack();
         context = new ActionContext(stack.getContext());
         context.put(StrutsStatics.HTTP_RESPONSE, response);
         context.put(StrutsStatics.SERVLET_CONTEXT, servletContext);
@@ -144,6 +145,7 @@ public class PlainTextResultTest extends TestCase {
 
 
     protected void tearDown() throws Exception {
+        super.tearDown();
         stack = null;
         invocation = null;
         context = null;

@@ -28,9 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import ognl.OgnlException;
-
-import com.opensymphony.xwork2.util.OgnlUtil;
+import com.opensymphony.xwork2.util.reflection.ReflectionException;
+import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 
 /**
  * Writes an object as a table, where each field can be expanded if it is an Object/Collection/Array
@@ -45,8 +44,8 @@ class ObjectToHTMLWriter {
     }
 
     @SuppressWarnings("unchecked")
-    public void write(Object root, String expr) throws IntrospectionException,
-        OgnlException {
+    public void write(ReflectionProvider reflectionProvider, Object root, String expr) throws IntrospectionException,
+        ReflectionException {
         prettyWriter.startNode("table");
         prettyWriter.addAttribute("class", "debugTable");
 
@@ -76,7 +75,7 @@ class ObjectToHTMLWriter {
             }
         } else {
             //print properties
-            Map<String, Object> properties = OgnlUtil.getBeanMap(root);
+            Map<String, Object> properties = reflectionProvider.getBeanMap(root);
             for (Map.Entry<String, Object> property : properties.entrySet()) {
                 String name = property.getKey();
                 Object value = property.getValue();

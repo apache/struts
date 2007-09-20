@@ -121,7 +121,7 @@ public class TokenInterceptorTest extends StrutsTestCase {
         request.setParameterMap(params);
         extraContext.put(ServletActionContext.HTTP_REQUEST, request);
 
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
         stack.getContext().putAll(extraContext);
         oldContext = new ActionContext(stack.getContext());
         ActionContext.setContext(oldContext);
@@ -132,7 +132,6 @@ public class TokenInterceptorTest extends StrutsTestCase {
     }
 
     protected void tearDown() throws Exception {
-        configurationManager.destroyConfiguration();
-        ActionContext.setContext(null);
+        super.tearDown();
     }
 }

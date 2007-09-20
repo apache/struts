@@ -24,6 +24,7 @@ import org.apache.struts2.StrutsTestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 
@@ -36,7 +37,7 @@ public class FormButtonTest extends StrutsTestCase {
     public void testPopulateComponentHtmlId1() throws Exception {
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
 
         Form form = new Form(stack, req, res);
         form.getParameters().put("id", "formId");
@@ -52,7 +53,7 @@ public class FormButtonTest extends StrutsTestCase {
     public void testPopulateComponentHtmlId2() throws Exception {
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
 
         Form form = new Form(stack, req, res);
         form.getParameters().put("id", "formId");
@@ -68,7 +69,7 @@ public class FormButtonTest extends StrutsTestCase {
     public void testPopulateComponentHtmlId3() throws Exception {
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
 
         Form form = new Form(stack, req, res);
         form.getParameters().put("id", "formId");
@@ -85,7 +86,7 @@ public class FormButtonTest extends StrutsTestCase {
     public void testPopulateComponentHtmlId4() throws Exception {
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
 
         Submit submit = new Submit(stack, req, res);
         submit.setId("submitId");
@@ -98,7 +99,7 @@ public class FormButtonTest extends StrutsTestCase {
     public void testPopulateComponentHtmlId5() throws Exception {
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
 
         Submit submit = new Submit(stack, req, res);
         submit.setName("submitName");
@@ -111,7 +112,7 @@ public class FormButtonTest extends StrutsTestCase {
     public void testPopulateComponentHtmlId6() throws Exception {
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
 
         Submit submit = new Submit(stack, req, res);
         submit.setAction("submitAction");

@@ -27,6 +27,7 @@ import com.opensymphony.xwork2.config.RuntimeConfiguration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.ObjectFactory;
 
@@ -141,22 +142,9 @@ public class MethodConfigurationProvider implements ConfigurationProvider {
      * Updates ObjectFactory property.
      * @param factory
      */
+    @Inject
     public void setObjectFactory(ObjectFactory factory) {
         this.factory = factory;
-    }
-
-    /**
-     * Provides ObjectFactory property.
-     * @return
-     * @throws ConfigurationException if ObjectFactory has not been set.
-     */
-    private ObjectFactory getObjectFactory() throws ConfigurationException {
-        if (factory == null) {
-            factory = ObjectFactory.getObjectFactory();
-            if (factory == null) throw new
-                    ConfigurationException("MethodConfigurationProvider.getObjectFactory: ObjectFactory==null");
-        }
-        return factory;
     }
 
     /**
@@ -205,7 +193,6 @@ public class MethodConfigurationProvider implements ConfigurationProvider {
         String className = actionConfig.getClassName();
         Set actionMethods = new HashSet();
         Class actionClass;
-        ObjectFactory factory = getObjectFactory();
         try {
             actionClass = factory.getClassInstance(className);
         } catch (ClassNotFoundException e) {

@@ -120,6 +120,7 @@ public class ActionComponent extends ContextBean {
     protected HttpServletResponse res;
     protected HttpServletRequest req;
 
+    protected ValueStackFactory valueStackFactory;
     protected ActionProxyFactory actionProxyFactory;
     protected ActionProxy proxy;
     protected String name;
@@ -140,6 +141,11 @@ public class ActionComponent extends ContextBean {
     @Inject
     public void setActionProxyFactory(ActionProxyFactory actionProxyFactory) {
         this.actionProxyFactory = actionProxyFactory;
+    }
+    
+    @Inject
+    public void setValueStackFactory(ValueStackFactory valueStackFactory) {
+        this.valueStackFactory = valueStackFactory;
     }
 
     public boolean end(Writer writer, String body) {
@@ -192,7 +198,7 @@ public class ActionComponent extends ContextBean {
                 res,
                 servletContext);
 
-        ValueStack newStack = ValueStackFactory.getFactory().createValueStack(stack);
+        ValueStack newStack = valueStackFactory.createValueStack(stack);
         extraContext.put(ActionContext.VALUE_STACK, newStack);
 
         // add page context, such that ServletDispatcherResult will do an include

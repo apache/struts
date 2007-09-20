@@ -22,6 +22,7 @@ package org.apache.struts2.dispatcher;
 
 import junit.framework.TestCase;
 
+import org.apache.struts2.StrutsTestCase;
 import org.apache.velocity.Template;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.ParseErrorException;
@@ -38,7 +39,7 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 /**
  *
  */
-public class VelocityResultTest extends TestCase {
+public class VelocityResultTest extends StrutsTestCase {
 
     ActionInvocation actionInvocation;
     Mock mockActionProxy;
@@ -91,9 +92,10 @@ public class VelocityResultTest extends TestCase {
     }
 
     protected void setUp() throws Exception {
+        super.setUp();
         namespace = "/html";
         result = new VelocityResult();
-        stack = ValueStackFactory.getFactory().createValueStack();
+        stack = ActionContext.getContext().getValueStack();
         ActionContext.getContext().setValueStack(stack);
         velocity = new TestVelocityEngine();
         mockActionProxy = new Mock(ActionProxy.class);

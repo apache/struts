@@ -20,16 +20,24 @@
  */
 package org.apache.struts2.views.util;
 
+import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Scope.Strategy;
+import com.opensymphony.xwork2.util.ValueStack;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
 
 
@@ -38,6 +46,8 @@ import org.apache.struts2.StrutsTestCase;
  *
  */
 public class UrlHelperTest extends StrutsTestCase {
+    
+    private StubContainer stubContainer;
 
     public void testForceAddSchemeHostAndPort() throws Exception {
         String expectedUrl = "http://localhost/contextPath/path1/path2/myAction.action";
@@ -252,8 +262,8 @@ public class UrlHelperTest extends StrutsTestCase {
 
         String expectedString = "https://www.mydomain.com:7002/mywebapp/MyAction.action?foo=bar&amp;hello=earth&amp;hello=mars";
 
-        UrlHelper.setHttpPort("7001");
-        UrlHelper.setHttpsPort("7002");
+        setProp(StrutsConstants.STRUTS_URL_HTTP_PORT, "7001");
+        setProp(StrutsConstants.STRUTS_URL_HTTPS_PORT, "7002");
 
         Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
         mockHttpServletRequest.expectAndReturn("getServerName", "www.mydomain.com");
@@ -281,8 +291,8 @@ public class UrlHelperTest extends StrutsTestCase {
 
         String expectedString = "http://www.mydomain.com:7001/mywebapp/MyAction.action?foo=bar&amp;hello=earth&amp;hello=mars";
 
-        UrlHelper.setHttpPort("7001");
-        UrlHelper.setHttpsPort("7002");
+        setProp(StrutsConstants.STRUTS_URL_HTTP_PORT, "7001");
+        setProp(StrutsConstants.STRUTS_URL_HTTPS_PORT, "7002");
 
         Mock mockHttpServletRequest = new Mock(HttpServletRequest.class);
         mockHttpServletRequest.expectAndReturn("getServerName", "www.mydomain.com");
@@ -354,7 +364,7 @@ public class UrlHelperTest extends StrutsTestCase {
 
 
     public void testTranslateAndEncode() throws Exception {
-        UrlHelper.setCustomEncoding("UTF-8");
+        setProp(StrutsConstants.STRUTS_I18N_ENCODING, "UTF-8");
         String result = UrlHelper.translateAndEncode("\u65b0\u805e");
         String expectedResult = "%E6%96%B0%E8%81%9E";
 
@@ -362,10 +372,64 @@ public class UrlHelperTest extends StrutsTestCase {
     }
 
     public void testTranslateAndDecode() throws Exception {
-        UrlHelper.setCustomEncoding("UTF-8");
+        setProp(StrutsConstants.STRUTS_I18N_ENCODING, "UTF-8");
         String result = UrlHelper.translateAndDecode("%E6%96%B0%E8%81%9E");
         String expectedResult = "\u65b0\u805e";
 
         assertEquals(result, expectedResult);
+    }
+    
+    public void setUp() throws Exception {
+        super.setUp();
+        stubContainer = new StubContainer(container);
+        ActionContext.getContext().put(ActionContext.CONTAINER, stubContainer);
+    }
+    
+    private void setProp(String key, String val) {
+        stubContainer.overrides.put(key, val);
+    }
+    
+    class StubContainer implements Container {
+
+        Container parent;
+        
+        public StubContainer(Container parent) {
+            super();
+            this.parent = parent;
+        }
+        
+        public Map<String, Object> overrides = new HashMap<String,Object>();
+        public <T> T getInstance(Class<T> type, String name) {
+            if (String.class.isAssignableFrom(type) && overrides.containsKey(name)) {
+                return (T) overrides.get(name);
+            } else {
+                return parent.getInstance(type, name);
+            }
+        }
+
+        public <T> T getInstance(Class<T> type) {
+            return parent.getInstance(type);
+        }
+
+        public Set<String> getInstanceNames(Class<?> type) {
+            return parent.getInstanceNames(type);
+        }
+
+        public void inject(Object o) {
+            parent.inject(o);
+        }
+
+        public <T> T inject(Class<T> implementation) {
+            return parent.inject(implementation);
+        }
+
+        public void removeScopeStrategy() {
+            parent.removeScopeStrategy();
+            
+        }
+
+        public void setScopeStrategy(Strategy scopeStrategy) {
+            parent.setScopeStrategy(scopeStrategy);
+        }
     }
 }

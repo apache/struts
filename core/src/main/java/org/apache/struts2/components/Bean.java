@@ -30,8 +30,8 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.util.OgnlUtil;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -101,6 +101,7 @@ public class Bean extends ContextBean {
     protected Object bean;
     protected String name;
     protected ObjectFactory objectFactory;
+    protected ReflectionProvider reflectionProvider;
 
     public Bean(ValueStack stack) {
         super(stack);
@@ -109,6 +110,11 @@ public class Bean extends ContextBean {
     @Inject
     public void setObjectFactory(ObjectFactory objectFactory) {
         this.objectFactory = objectFactory;
+    }
+    
+    @Inject
+    public void setReflectionProvider(ReflectionProvider prov) {
+        this.reflectionProvider = prov;
     }
 
     public boolean start(Writer writer) {
@@ -142,7 +148,7 @@ public class Bean extends ContextBean {
     }
 
     public void addParameter(String key, Object value) {
-        OgnlUtil.setProperty(key, value, bean, getStack().getContext());
+        reflectionProvider.setProperty(key, value, bean, getStack().getContext());
     }
 
     @StrutsTagAttribute(description="The class name of the bean to be instantiated (must respect JavaBean specification)",

@@ -184,17 +184,6 @@ public class FormTagTest extends AbstractUITagTest {
                 }
             });
 
-            // used by form tag to get "actionClass" parameter
-            ObjectFactory.setObjectFactory(new ObjectFactory() {
-                public Class getClassInstance(String className) throws ClassNotFoundException {
-                    if (DefaultActionMapper.class.getName().equals(className)) {
-                        return DefaultActionMapper.class;
-                    }
-                    return ActionSupport.class;
-                }
-            });
-
-
             FormTag tag = new FormTag();
             tag.setPageContext(pageContext);
             tag.setName("myForm");
@@ -221,7 +210,6 @@ public class FormTagTest extends AbstractUITagTest {
         }
         finally {
             configurationManager.setConfiguration(originalConfiguration);
-            ObjectFactory.setObjectFactory(originalObjectFactory);
         }
     }
 
@@ -289,17 +277,6 @@ public class FormTagTest extends AbstractUITagTest {
                 }
             });
 
-            // used by form tag to get "actionClass" parameter
-            ObjectFactory.setObjectFactory(new ObjectFactory() {
-                public Class getClassInstance(String className) throws ClassNotFoundException {
-                    if (DefaultActionMapper.class.getName().equals(className)) {
-                        return DefaultActionMapper.class;
-                    }
-                    return ActionSupport.class;
-                }
-            });
-
-
             FormTag tag = new FormTag();
             tag.setPageContext(pageContext);
             tag.setName("myForm");
@@ -326,7 +303,6 @@ public class FormTagTest extends AbstractUITagTest {
         }
         finally {
             configurationManager.setConfiguration(originalConfiguration);
-            ObjectFactory.setObjectFactory(originalObjectFactory);
         }
     }
 

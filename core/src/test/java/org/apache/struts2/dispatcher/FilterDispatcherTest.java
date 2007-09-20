@@ -83,32 +83,7 @@ public class FilterDispatcherTest extends StrutsTestCase {
         assertEquals(result4[3], "foo/bar/package4/");
     }
 
-    public void testObjectFactoryDestroy() throws Exception {
-
-        final InnerDestroyableObjectFactory destroyedObjectFactory = new InnerDestroyableObjectFactory();
-        FilterDispatcher filterDispatcher = new FilterDispatcher() {
-            @Override
-            protected Dispatcher createDispatcher(FilterConfig cfg) {
-                return new Dispatcher(cfg.getServletContext(), new HashMap()) {
-                    Container cont = new ContainerBuilder()
-                        .factory(ObjectFactory.class, new Factory() {
-                            public Object create(Context context) throws Exception { return destroyedObjectFactory; }
-                        })
-                        .create(false);
-                    
-                    @Override
-                    public Container getContainer() {
-                        return cont;
-                    }
-                };
-            }
-        };
-        filterDispatcher.init(new MockFilterConfig((ServletContext) null));
-        
-        assertFalse(destroyedObjectFactory.destroyed);
-        filterDispatcher.destroy();
-        assertTrue(destroyedObjectFactory.destroyed);
-    }
+    
 
     public void testIfActionMapperIsNullDontServiceAction() throws Exception {
         MockServletContext servletContext = new MockServletContext();
@@ -125,8 +100,6 @@ public class FilterDispatcherTest extends StrutsTestCase {
         
 
 
-        ObjectFactory.setObjectFactory(new InnerObjectFactory());
-
         FilterDispatcher filter = new FilterDispatcher() {
             protected Dispatcher createDispatcher() {
                 return _dispatcher;
@@ -138,7 +111,7 @@ public class FilterDispatcherTest extends StrutsTestCase {
 
         assertFalse(_dispatcher.serviceRequest);
     }
-
+    
     public void testCharacterEncodingSetBeforeRequestWrappingAndActionService() throws Exception {
         MockServletContext servletContext = new MockServletContext();
         MockFilterConfig filterConfig = new MockFilterConfig(servletContext);
@@ -147,20 +120,6 @@ public class FilterDispatcherTest extends StrutsTestCase {
         MockFilterChain chain = new MockFilterChain();
         final InnerDispatcher _dispatcher = new InnerDispatcher(servletContext);
         Dispatcher.setInstance(null);
-
-        DefaultConfiguration conf = new DefaultConfiguration() {
-        	@Override
-        	public Container getContainer() {
-        		return new ContainerBuilder().create(false);
-        	}
-        };
-       
-        ConfigurationManager confManager = new ConfigurationManager();
-        confManager.setConfiguration(conf);
-        _dispatcher.setConfigurationManager(confManager);
-
-
-        ObjectFactory.setObjectFactory(new InnerObjectFactory());
 
         _dispatcher.setDefaultEncoding("UTF-16_DUMMY");
 
@@ -171,12 +130,12 @@ public class FilterDispatcherTest extends StrutsTestCase {
         };
         filter.setActionMapper(new InnerActionMapper());
         filter.init(filterConfig);
+        _dispatcher.setDefaultEncoding("UTF-16_DUMMY");
         filter.doFilter(req, res, chain);
 
         assertTrue(_dispatcher.wrappedRequest);
         assertTrue(_dispatcher.serviceRequest);
     }
-
 
     // === inner class ========
     public static class InnerObjectFactory extends ObjectFactory {
@@ -217,7 +176,7 @@ public class FilterDispatcherTest extends StrutsTestCase {
             // if we set the chracter encoding AFTER we do wrap request, we will get
             // a failing test
             assertNotNull(request.getCharacterEncoding());
-            assertEquals(request.getCharacterEncoding(), "UTF-16_DUMMY");
+            assertEquals("UTF-16_DUMMY", request.getCharacterEncoding());
 
             return request;
         }
@@ -227,7 +186,7 @@ public class FilterDispatcherTest extends StrutsTestCase {
             // if we set the chracter encoding AFTER we do wrap request, we will get
             // a failing test
             assertNotNull(request.getCharacterEncoding());
-            assertEquals(request.getCharacterEncoding(), "UTF-16_DUMMY");
+            assertEquals("UTF-16_DUMMY", request.getCharacterEncoding());
         }
     }
 

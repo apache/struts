@@ -165,4 +165,16 @@ public final class StrutsConstants {
 	/** The name of the parameter to determine whether static method access will be allowed in OGNL expressions or not */
 	public static final String STRUTS_ALLOW_STATIC_METHOD_ACCESS = "struts.ognl.allowStaticMethodAccess";
 
+	/** The com.opensymphony.xwork2.validator.ActionValidatorManager implementation class */
+    public static final String STRUTS_ACTIONVALIDATORMANAGER = "struts.actionValidatorManager";
+
+    /** The {@link com.opensymphony.xwork2.util.ValueStackFactory} implementation class */
+    public static final String STRUTS_VALUESTACKFACTORY = "struts.valueStackFactory";
+
+    /** The {@link com.opensymphony.xwork2.reflection.ReflectionProvider} implementation class */
+    public static final String STRUTS_REFLECTIONPROVIDER = "struts.reflectionProvider";
+
+    /** The {@link com.opensymphony.xwork2.reflection.ReflectionContextFactory} implementation class */
+    public static final String STRUTS_REFLECTIONCONTEXTFACTORY = "struts.reflectionContextFactory";
+
 }

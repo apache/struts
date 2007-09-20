@@ -42,7 +42,7 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 public class PropertyTagTest extends StrutsTestCase {
 
     StrutsMockHttpServletRequest request = new StrutsMockHttpServletRequest();
-    ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+    ValueStack stack;
 
 
     public void testDefaultValue() {
@@ -279,7 +279,7 @@ public class PropertyTagTest extends StrutsTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        ActionContext.getContext().setValueStack(stack);
+        stack = ActionContext.getContext().getValueStack();
         request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
     }
 

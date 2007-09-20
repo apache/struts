@@ -12,6 +12,7 @@
     <constant name="struts.devMode" value="true" />
     <constant name="struts.configuration.xml.reload" value="false" />
     <constant name="struts.custom.i18n.resources" value="globalMessages" />
+    <constant name="struts.action.extension" value="action,," />
 
     <constant name="struts.codebehind.defaultPackage" value="person" />
     <constant name="struts.freemarker.manager.classname" value="customFreemarkerManager" />

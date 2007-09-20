@@ -24,6 +24,7 @@ import org.apache.struts2.StrutsTestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 
@@ -34,7 +35,7 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 public class UIBeanTest extends StrutsTestCase {
 
     public void testPopulateComponentHtmlId1() throws Exception {
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
 
@@ -50,7 +51,7 @@ public class UIBeanTest extends StrutsTestCase {
     }
     
     public void testPopulateComponentHtmlIdWithOgnl() throws Exception {
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
 
@@ -66,7 +67,7 @@ public class UIBeanTest extends StrutsTestCase {
     }
 
     public void testPopulateComponentHtmlId2() throws Exception {
-        ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+        ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse res = new MockHttpServletResponse();
 

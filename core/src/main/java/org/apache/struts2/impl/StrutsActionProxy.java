@@ -23,6 +23,7 @@
 package org.apache.struts2.impl;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.DefaultActionProxy;
 
 import java.util.Map;
@@ -31,9 +32,9 @@ public class StrutsActionProxy extends DefaultActionProxy {
 
     private static final long serialVersionUID = -2434901249671934080L;
 
-    public StrutsActionProxy(String namespace, String actionName, Map extraContext,
+    public StrutsActionProxy(ActionInvocation inv, String namespace, String actionName, Map extraContext,
                              boolean executeResult, boolean cleanupContext) throws Exception {
-        super(namespace, actionName, extraContext, executeResult, cleanupContext);
+        super(inv, namespace, actionName, extraContext, executeResult, cleanupContext);
     }
 
     public String execute() throws Exception {

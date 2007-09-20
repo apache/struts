@@ -38,6 +38,7 @@ public class AnnotationValidationInterceptorTest extends StrutsTestCase {
         super.setUp();
         test = new TestAction();
         interceptor = new AnnotationValidationInterceptor();
+        container.inject(interceptor);
         mockActionInvocation = new Mock(ActionInvocation.class);
         mockActionProxy = new Mock(ActionProxy.class);
         mockActionInvocation.matchAndReturn("getProxy", (ActionProxy) mockActionProxy.proxy());

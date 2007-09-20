@@ -24,19 +24,17 @@ package org.apache.struts2.impl;
 
 import java.util.Map;
 
+import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.DefaultActionInvocation;
+import com.opensymphony.xwork2.DefaultActionProxy;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
 
 public class StrutsActionProxyFactory extends DefaultActionProxyFactory {
 
-    public ActionProxy createActionProxy(String namespace, String actionName, Map extraContext)
-            throws Exception {
-        return createActionProxy(namespace, actionName, extraContext, true, true);
-    }
-
-    public ActionProxy createActionProxy(String namespace, String actionName, Map extraContext,
-            boolean executeResult, boolean cleanupContext) throws Exception {
-        ActionProxy proxy = new StrutsActionProxy(namespace, actionName, extraContext, executeResult, cleanupContext);
+    public ActionProxy createActionProxy(ActionInvocation inv, String namespace, String actionName, Map extraContext, boolean executeResult, boolean cleanupContext) throws Exception {
+        
+        ActionProxy proxy = new StrutsActionProxy(inv, namespace, actionName, extraContext, executeResult, cleanupContext);
         container.inject(proxy);
         proxy.prepare();
         return proxy;

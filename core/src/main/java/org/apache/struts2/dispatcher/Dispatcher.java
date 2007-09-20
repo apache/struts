@@ -40,7 +40,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.config.*;
+import org.apache.struts2.config.BeanSelectionProvider;
+import org.apache.struts2.config.ClasspathConfigurationProvider;
+import org.apache.struts2.config.DefaultPropertiesProvider;
+import org.apache.struts2.config.LegacyPropertiesConfigurationProvider;
+import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 import org.apache.struts2.config.ClasspathConfigurationProvider.ClasspathPageLocator;
 import org.apache.struts2.config.ClasspathConfigurationProvider.PageLocator;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -51,25 +55,26 @@ import org.apache.struts2.util.ClassLoaderUtils;
 import org.apache.struts2.util.ObjectFactoryDestroyable;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
-import com.opensymphony.xwork2.util.FileManager;
-import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
-import com.opensymphony.xwork2.conversion.ObjectTypeDeterminer;
-import com.opensymphony.xwork2.conversion.ObjectTypeDeterminerFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
-import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 
 import freemarker.template.Template;
@@ -155,18 +160,6 @@ public class Dispatcher {
      */
     public static void setInstance(Dispatcher instance) {
         Dispatcher.instance.set(instance);
-
-        // Tie the ObjectFactory threadlocal instance to this Dispatcher instance
-        if (instance != null) {
-            Container cont = instance.getContainer();
-            if (cont != null) {
-                ObjectFactory.setObjectFactory(cont.getInstance(ObjectFactory.class));
-            } else {
-                LOG.warn("This dispatcher instance doesn't have a container, so the object factory won't be set.");
-            }
-        } else {
-            ObjectFactory.setObjectFactory(null);
-        }
     }
 
     /**
@@ -190,6 +183,8 @@ public class Dispatcher {
     private ServletContext servletContext;
     private Map<String, String> initParams;
 
+    private ValueStackFactory valueStackFactory;
+
 
     /**
      * Create the Dispatcher instance for a given ServletContext and set of initialization parameters.
@@ -207,7 +202,7 @@ public class Dispatcher {
      * @param mode New setting
      */
     @Inject(StrutsConstants.STRUTS_DEVMODE)
-    public static void setDevMode(String mode) {
+    public void setDevMode(String mode) {
         devMode = "true".equals(mode);
     }
 
@@ -216,7 +211,7 @@ public class Dispatcher {
      * @param val New setting
      */
     @Inject(value=StrutsConstants.STRUTS_LOCALE, required=false)
-    public static void setDefaultLocale(String val) {
+    public void setDefaultLocale(String val) {
         defaultLocale = val;
     }
 
@@ -225,7 +220,7 @@ public class Dispatcher {
      * @param val New setting
      */
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
-    public static void setDefaultEncoding(String val) {
+    public void setDefaultEncoding(String val) {
         defaultEncoding = val;
     }
 
@@ -234,8 +229,13 @@ public class Dispatcher {
      * @param val New setting
      */
     @Inject(StrutsConstants.STRUTS_MULTIPART_SAVEDIR)
-    public static void setMultipartSaveDir(String val) {
+    public void setMultipartSaveDir(String val) {
         multipartSaveDir = val;
+    }
+    
+    @Inject
+    public void setValueStackFactory(ValueStackFactory valueStackFactory) {
+        this.valueStackFactory = valueStackFactory;
     }
 
     /**
@@ -392,9 +392,6 @@ Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyExcepti
         boolean reloadi18n = Boolean.valueOf(container.getInstance(String.class, StrutsConstants.STRUTS_I18N_RELOAD));
         LocalizedTextUtil.setReloadBundles(reloadi18n);
 
-        ObjectTypeDeterminer objectTypeDeterminer = container.getInstance(ObjectTypeDeterminer.class);
-        ObjectTypeDeterminerFactory.setInstance(objectTypeDeterminer);
-
         return container;
     }
 
@@ -444,6 +441,7 @@ Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyExcepti
         init_AliasStandardObjects() ; // [7]
 
         Container container = init_PreloadConfiguration();
+        container.inject(this);
         init_CheckConfigurationReloading(container);
         init_CheckWebLogicWorkaround(container);
 
@@ -474,7 +472,7 @@ Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyExcepti
         // If there was a previous value stack, then create a new copy and pass it in to be used by the new Action
         ValueStack stack = (ValueStack) request.getAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY);
         if (stack != null) {
-            extraContext.put(ActionContext.VALUE_STACK, ValueStackFactory.getFactory().createValueStack(stack));
+            extraContext.put(ActionContext.VALUE_STACK, valueStackFactory.createValueStack(stack));
         }
 
         String timerKey = "Handling request from Dispatcher";

@@ -27,6 +27,7 @@ import junit.framework.TestCase;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.views.jsp.StrutsMockHttpServletResponse;
 import org.apache.struts2.views.jsp.StrutsMockServletContext;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -40,7 +41,7 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
  * Test case for FreeMarkerResult.
  *
  */
-public class FreeMarkerResultTest extends TestCase {
+public class FreeMarkerResultTest extends StrutsTestCase {
 
     ValueStack stack;
     MockActionInvocation invocation;
@@ -89,7 +90,7 @@ public class FreeMarkerResultTest extends TestCase {
         response.setWriter(writer);
         request = new MockHttpServletRequest();
         servletContext = new StrutsMockServletContext();
-        stack = ValueStackFactory.getFactory().createValueStack();
+        stack = ActionContext.getContext().getValueStack();
         context = new ActionContext(stack.getContext());
         context.put(StrutsStatics.HTTP_RESPONSE, response);
         context.put(StrutsStatics.HTTP_REQUEST, request);

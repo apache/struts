@@ -21,10 +21,12 @@
 
 package example;
 
+import org.apache.struts2.StrutsTestCase;
+
 import com.opensymphony.xwork2.ActionSupport;
 import junit.framework.TestCase;
 
-public class HelloWorldTest extends TestCase {
+public class HelloWorldTest extends StrutsTestCase {
 
     public void testHelloWorld() throws Exception {
         HelloWorld hello_world = new HelloWorld();

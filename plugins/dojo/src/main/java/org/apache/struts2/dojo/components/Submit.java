@@ -50,58 +50,41 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: javadoc -->
  *
  * <p>Examples</p>
- * <pre>
  * <!-- START SNIPPET: example1 -->
  * &lt;sx:submit value="%{'Submit'}" /&gt;
  * <!-- END SNIPPET: example1 -->
- * </pre>
- * <pre>
+ * 
  * <!-- START SNIPPET: example2 -->
- * Render an image submit:
  * &lt;sx:submit type="image" value="%{'Submit'}" label="Submit the form" src="submit.gif"/&gt;
  * <!-- END SNIPPET: example2 -->
- * </pre>
- * <pre>
+
  * <!-- START SNIPPET: example3 -->
- * Render an button submit:
  * &lt;sx:submit type="button" value="%{'Submit'}" label="Submit the form"/&gt;
  * <!-- END SNIPPET: example3 -->
- * </pre>
  *
  * <!-- START SNIPPET: example4 -->
- * <p>Update target content with html returned from an action:</p>
- * <pre>
  * &lt;div id="div1"&gt;Div 1&lt;/div&gt;
  * &lt;s:url id="ajaxTest" value="/AjaxTest.action"/&gt;
  * 
  * &lt;sx:submit id="link1" href="%{ajaxTest}" target="div1" /&gt;
- * </pre>
  * <!-- END SNIPPET: example4 -->
  * 
  * <!-- START SNIPPET: example5 -->
- * <p>Submit form(inside the form):</p>
- * <pre>
  * &lt;s:form id="form" action="AjaxTest"&gt;
  *      &lt;input type="textbox" name="data"&gt;
  *      &lt;sx:submit /&gt;          
  * &lt;/s:form&gt;
- * </pre>
  * <!-- END SNIPPET: example5 -->
  * 
  * <!-- START SNIPPET: example6 -->
- * <p>Submit form(outside the form)</p>
- * <pre>
  * &lt;s:form id="form" action="AjaxTest"&gt;
  *      &lt;input type="textbox" name="data"&gt;   
  * &lt;/s:form&gt;
  * 
  * &lt;sx:submit formId="form" /&gt;
- * </pre>
  * <!-- END SNIPPET: example6 -->
  * 
  * <!-- START SNIPPET: example7 -->
- * <p>Using beforeNotifyTopics:</p>
- * <pre>
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/before", function(event, widget){
  *     alert('inside a topic event. before request');
@@ -111,12 +94,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;/script&gt;         
  * 
  * &lt;sx:submit beforeNotifyTopics="/before" /&gt;
- * </pre> 
  * <!-- END SNIPPET: example7 -->
  * 
  * <!-- START SNIPPET: example8 -->
- * <p>Using afterNotifyTopics and highlight target:</p>
- * <pre>
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/after", function(data, request, widget){
  *     alert('inside a topic event. after request');
@@ -127,12 +107,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;/script&gt;        
  * 
  * &lt;sx:submit afterNotifyTopics="/after" highlightColor="red" href="%{#ajaxTest}" /&gt;
- * </pre> 
- * <!-- END SNIPPET: example5 -->
+ * <!-- END SNIPPET: example8 -->
  * 
- * <!-- START SNIPPET: example6 -->
- * <p>Using errorNotifyTopics and indicator:</p>
- * <pre>
+ * <!-- START SNIPPET: example9 -->
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/error", function(error, request, widget){
  *     alert('inside a topic event. on error');
@@ -144,8 +121,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * 
  * &lt;img id="ind1" src="${pageContext.request.contextPath}/images/indicator.gif" style="display:none"/&gt;
  * &lt;sx:submit errorNotifyTopics="/error" indicator="ind1" href="%{#ajaxTest}" /&gt;
- * </pre> 
- * <!-- END SNIPPET: example6 -->
+ * <!-- END SNIPPET: example9 -->
  */
 @StrutsTag(name="submit", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.SubmitTag", description="Render a submit button")
 public class Submit extends FormButton implements RemoteBean {

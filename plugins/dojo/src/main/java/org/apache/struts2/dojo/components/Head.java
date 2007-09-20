@@ -95,6 +95,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <pre>
  * <!-- START SNIPPET: example1 -->
+ * &lt;%@ taglib prefix="sx" uri="/struts-dojo-tags" %&gt;
  * &lt;head&gt;
  *   &lt;title&gt;My page&lt;/title&gt;
  *   &lt;sx:head/&gt;
@@ -104,6 +105,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <pre>
  * <!-- START SNIPPET: example3 -->
+ * &lt;%@ taglib prefix="sx" uri="/struts-dojo-tags" %&gt;
  * &lt;head&gt;
  *   &lt;title&gt;My page&lt;/title&gt;
  *   &lt;sx:head debug="true" extraLocales="en-us,nl-nl,de-de"/&gt;

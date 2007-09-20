@@ -91,17 +91,14 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: javadoc -->
  * <p>Examples</p>
  * <!-- START SNIPPET: example1 -->
- * <p>Autocompleter that gets its list from an action:</p>
  * &lt;sx:autocompleter name="autocompleter1" href="%{jsonList}"/&gt;
  * <!-- END SNIPPET: example1 -->
  * 
  * <!-- START SNIPPET: example2 -->
- * <p>Autocompleter that uses a list:</p>
  * &lt;s:autocompleter name="test"  list="{'apple','banana','grape','pear'}" autoComplete="false"/&gt;
  * <!-- END SNIPPET: example2 -->
  * 
  * <!-- START SNIPPET: example3 -->
- * <p>Autocompleter that reloads its content everytime the text changes (and the length of the text is greater than 3):</p>
  * &lt;sx:autocompleter name="mvc" href="%{jsonList}" loadOnTextChange="true" loadMinimumCount="3"/&gt;
  * 
  * The text entered on the autocompleter is passed as a parameter to the url specified in "href", like (text is "struts"):
@@ -110,7 +107,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example3 -->
  * 
  * <!-- START SNIPPET: example4 -->
- * <p>Linking two autocompleters:</p>
  * &lt;form id="selectForm"&gt;
  *      &lt;sx:autocompleter  name="select" list="{'fruits','colors'}"  valueNotifyTopics="/changed" /&gt;
  * &lt;/form&gt;  
@@ -118,7 +114,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example4 -->
  * 
  * <!-- START SNIPPET: example5 -->
- * <p>Set/Get selected values using JavaScript</p>
  * &lt;sx:autocompleter  href="%{jsonList}" id="auto"/&gt;
  * &lt;script type="text/javascript"&gt;
  *   function getValues() {
@@ -147,10 +142,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  *      autoCompleter.setAllValues("AL", "Alabama");
  *   }
  * &lt;/script&gt;
- * <!-- START SNIPPET: example5 -->
+ * <!-- END SNIPPET: example5 -->
  * 
  * <!-- START SNIPPET: example6 -->
- * <p>Using beforeNotifyTopics:</p>
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/before", function(event, widget){
  *     alert('inside a topic event. before request');
@@ -163,7 +157,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example6 -->
  * 
  * <!-- START SNIPPET: example7 -->
- * <p>Using afterNotifyTopics:</p>
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/after", function(data, request, widget){
  *     alert('inside a topic event. after request');
@@ -177,7 +170,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example7 -->
  * 
  * <!-- START SNIPPET: example8-->
- * <p>Using errorNotifyTopics:</p>
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/error", function(error, request, widget){
  *     alert('inside a topic event. on error');
@@ -191,7 +183,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example8 -->
  * 
  * <!-- START SNIPPET: example9 -->
- * <p>Using valueNotifyTopics and indicator:</p>
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/value", function(value, key, text, widget){
  *     alert('inside a topic event. after value changed');

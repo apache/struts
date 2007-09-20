@@ -40,40 +40,33 @@ import com.opensymphony.xwork2.util.ValueStack;
  * 
  * <!-- START SNIPPET: example1 -->
  * <p>Update target content with html returned from an action:</p>
- * <pre>
  * &lt;div id="div1"&gt;Div 1&lt;/div&gt;
  * &lt;s:url id="ajaxTest" value="/AjaxTest.action"/&gt;
  * 
  * &lt;sx:a id="link1" href="%{ajaxTest}" target="div1"&gt;
  *      Update Content
  * &lt;/sx:a&gt;
- * </pre>
  * <!-- END SNIPPET: example1 -->
  * 
  * <!-- START SNIPPET: example2 -->
  * <p>Submit form(anchor inside the form):</p>
- * <pre>
  * &lt;s:form id="form" action="AjaxTest"&gt;
  *      &lt;input type="textbox" name="data"&gt;
  *      &lt;sx:a&gt;Submit form&lt;/sx:a&gt;           
  * &lt;/s:form&gt;
- * </pre>
  * <!-- END SNIPPET: example2 -->
  * 
  * <!-- START SNIPPET: example3 -->
  * <p>Submit form(anchor outside the form)</p>
- * <pre>
  * &lt;s:form id="form" action="AjaxTest"&gt;
  *      &lt;input type="textbox" name="data"&gt;   
  * &lt;/s:form&gt;
  * 
  * &lt;sx:a formId="form"&gt;Submit form&lt;/sx:a&gt;
- * </pre>
  * <!-- END SNIPPET: example3 -->
  * 
  * <!-- START SNIPPET: example4 -->
  * <p>Using beforeNotifyTopics:</p>
- * <pre>
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/before", function(event, widget){
  *     alert('inside a topic event. before request');
@@ -83,12 +76,10 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;/script&gt;         
  * 
  * &lt;sx:a beforeNotifyTopics="/before"&gt;Publish topics&lt;/sx:a&gt;
- * </pre> 
  * <!-- END SNIPPET: example4 -->
  * 
  * <!-- START SNIPPET: example5 -->
  * <p>Using afterNotifyTopics and highlights target:</p>
- * <pre>
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/after", function(data, request, widget){
  *     alert('inside a topic event. after request');
@@ -99,12 +90,10 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;/script&gt;        
  * 
  * &lt;sx:a afterNotifyTopics="/after" highlightColor="red" href="%{#ajaxTest}"&gt;Publish topics&lt;/sx:a&gt;
- * </pre> 
  * <!-- END SNIPPET: example5 -->
  * 
  * <!-- START SNIPPET: example6 -->
  * <p>Using errorNotifyTopics and indicator:</p>
- * <pre>
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/error", function(error, request, widget){
  *     alert('inside a topic event. on error');
@@ -116,7 +105,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * 
  * &lt;img id="ind1" src="${pageContext.request.contextPath}/images/indicator.gif" style="display:none"/&gt;
  * &lt;sx:a errorNotifyTopics="/error" indicator="ind1" href="%{#ajaxTest}"&gt;Publish topics&lt;/sx:a&gt;
- * </pre> 
  * <!-- END SNIPPET: example6 -->
  */
 @StrutsTag(name="a", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.AnchorTag", description="Renders an HTML anchor element that when clicked calls a URL via remote XMLHttpRequest and updates " +

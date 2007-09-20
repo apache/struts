@@ -54,9 +54,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *           ["Alaska","AK"]
  *      ]
  * }     
- * 
  * or
- * 
  * {
  *      "state" : {
  *            "Alabama" : "AL",

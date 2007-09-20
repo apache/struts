@@ -28,6 +28,7 @@ import javax.portlet.RenderRequest;
 
 import junit.framework.TestCase;
 
+import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.dispatcher.DefaultActionSupport;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction;
@@ -38,11 +39,12 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 
-public class PortletStateInterceptorTest extends TestCase implements PortletActionConstants {
+public class PortletStateInterceptorTest extends StrutsTestCase implements PortletActionConstants {
 
 	private PortletStateInterceptor interceptor;
 	
 	public void setUp() throws Exception {
+	    super.setUp();
 		interceptor = new PortletStateInterceptor();
 	}
 	
@@ -60,7 +62,7 @@ public class PortletStateInterceptorTest extends TestCase implements PortletActi
 		EasyMock.expect(invocation.getInvocationContext()).andStubReturn(ctx);
 		actionResponse.setRenderParameter(EVENT_ACTION, "true");
 		
-		ValueStack stack = ValueStackFactory.getFactory().createValueStack();
+		ValueStack stack = container.getInstance(ValueStackFactory.class).createValueStack();
 		EasyMock.expect(invocation.getStack()).andStubReturn(stack);
 		
 		EasyMock.replay(actionResponse);
@@ -79,10 +81,11 @@ public class PortletStateInterceptorTest extends TestCase implements PortletActi
 		RenderRequest renderRequest = EasyMock.createNiceMock(RenderRequest.class);
 		ActionInvocation invocation = EasyMock.createNiceMock(ActionInvocation.class);
 		
-		ValueStack eventPhaseStack = ValueStackFactory.getFactory().createValueStack();
+		
+		ValueStack eventPhaseStack = container.getInstance(ValueStackFactory.class).createValueStack();
 		eventPhaseStack.set("testKey", "testValue");
 		
-		ValueStack currentStack = ValueStackFactory.getFactory().createValueStack();
+		ValueStack currentStack = container.getInstance(ValueStackFactory.class).createValueStack();
 		currentStack.set("anotherTestKey", "anotherTestValue");
 		
 		Map<String, Object> ctxMap = new HashMap<String, Object>();
@@ -118,10 +121,10 @@ public class PortletStateInterceptorTest extends TestCase implements PortletActi
 		RenderRequest renderRequest = EasyMock.createNiceMock(RenderRequest.class);
 		ActionInvocation invocation = EasyMock.createNiceMock(ActionInvocation.class);
 		
-		ValueStack eventPhaseStack = ValueStackFactory.getFactory().createValueStack();
+		ValueStack eventPhaseStack = container.getInstance(ValueStackFactory.class).createValueStack();
 		eventPhaseStack.set("testKey", "testValue");
 		
-		ValueStack currentStack = ValueStackFactory.getFactory().createValueStack();
+		ValueStack currentStack = container.getInstance(ValueStackFactory.class).createValueStack();
 		currentStack.set("anotherTestKey", "anotherTestValue");
 		
 		EasyMock.expect(invocation.getStack()).andStubReturn(currentStack);

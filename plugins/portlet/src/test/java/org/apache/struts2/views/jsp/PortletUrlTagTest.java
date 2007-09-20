@@ -86,7 +86,10 @@ public class PortletUrlTagTest extends MockObjectTestCase {
 
         mockPortletApiAvailable();
 
-        stack = ValueStackFactory.getFactory().createValueStack();
+        stack = du.getContainer().getInstance(ValueStackFactory.class).createValueStack();
+        stack.getContext().put(ActionContext.CONTAINER, du.getContainer());
+        ActionContext.setContext(new ActionContext(stack.getContext()));
+        
 
 
         mockHttpReq = mock(HttpServletRequest.class);

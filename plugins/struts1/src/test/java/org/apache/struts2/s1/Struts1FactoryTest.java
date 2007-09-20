@@ -32,6 +32,7 @@ import org.apache.struts.config.ActionConfig;
 import org.apache.struts.config.ExceptionConfig;
 import org.apache.struts.config.ForwardConfig;
 import org.apache.struts.config.ModuleConfig;
+import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -46,31 +47,21 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 /**
  * Test of Struts1Factory, which creates Struts 1.x wrappers around XWork config objects.
  */
-public class Struts1FactoryTest extends TestCase {
+public class Struts1FactoryTest extends StrutsTestCase {
 
     private static final String PACKAGE_NAME = "org/apache/struts2/s1";
     
     protected Struts1Factory factory = null;
-    protected Configuration config;
-
-    public Struts1FactoryTest(String name) throws Exception {
-        super(name);
-    }
-
-
-    public static void main(String args[]) {
-        junit.textui.TestRunner.run(Struts1FactoryTest.class);
-    }
 
     /**
      * Set up instance variables required by this test case.
+     * @throws Exception 
      */
-    public void setUp() {
-        ConfigurationManager manager = new ConfigurationManager();
-        StrutsXmlConfigurationProvider provider = new StrutsXmlConfigurationProvider(PACKAGE_NAME + "/test-struts-factory.xml", true, null);
-        manager.addConfigurationProvider(provider);
-        config = manager.getConfiguration();
-        factory = new Struts1Factory(config);
+    public void setUp() throws Exception {
+        super.setUp();
+        loadConfigurationProviders(new StrutsXmlConfigurationProvider(PACKAGE_NAME + "/test-struts-factory.xml", true, null));
+        factory = new Struts1Factory(configuration);
+        
     }
 
     /**
@@ -121,7 +112,7 @@ public class Struts1FactoryTest extends TestCase {
      * The ActionConfig is loaded from test-struts-factory.xml.
      */
     public void testCreateActionMapping() {
-        PackageConfig packageConfig = config.getPackageConfig(PACKAGE_NAME);
+        PackageConfig packageConfig = configuration.getPackageConfig(PACKAGE_NAME);
         com.opensymphony.xwork2.config.entities.ActionConfig actionConfig =
                 (com.opensymphony.xwork2.config.entities.ActionConfig) packageConfig.getActionConfigs().get("action1");
         ActionMapping mapping = factory.createActionMapping(actionConfig);
@@ -179,7 +170,7 @@ public class Struts1FactoryTest extends TestCase {
      * The ResultConfig is loaded from test-struts-factory.xml.
      */
     public void testCreateActionForward() {
-        PackageConfig packageConfig = config.getPackageConfig(PACKAGE_NAME);
+        PackageConfig packageConfig = configuration.getPackageConfig(PACKAGE_NAME);
         ResultConfig resultConfig = (ResultConfig) packageConfig.getGlobalResultConfigs().get("globalResult");
         ActionForward fwd = factory.createActionForward(resultConfig);
         assertNotNull(fwd);
@@ -196,7 +187,7 @@ public class Struts1FactoryTest extends TestCase {
      * The ExceptionConfig is loaded from test-struts-factory.xml.
      */
     public void testCreateExceptionConfig() {
-        PackageConfig packageConfig = config.getPackageConfig(PACKAGE_NAME);
+        PackageConfig packageConfig = configuration.getPackageConfig(PACKAGE_NAME);
         ExceptionMappingConfig cfg = (ExceptionMappingConfig) packageConfig.getGlobalExceptionMappingConfigs().get(0);
         ExceptionConfig exceptionConfig = factory.createExceptionConfig(cfg);
         assertNotNull(exceptionConfig);

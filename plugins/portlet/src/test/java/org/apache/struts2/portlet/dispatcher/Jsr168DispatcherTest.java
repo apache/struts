@@ -44,6 +44,7 @@ import junit.textui.TestRunner;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.portlet.PortletActionConstants;
+import org.easymock.EasyMock;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import org.jmock.core.Constraint;
@@ -133,7 +134,7 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
 
         initPortletConfig(initParams, new HashMap());
         initRequest(requestParams, new HashMap(), sessionMap, new HashMap(), PortletMode.VIEW, WindowState.NORMAL, false, null);
-        setupActionFactory("/view", "testAction", "success", ValueStackFactory.getFactory().createValueStack());
+        setupActionFactory("/view", "testAction", "success", EasyMock.createNiceMock(ValueStack.class));
 
         mockInvocation.expects(once()).method("getStack").will(
                 returnValue(null));
@@ -165,7 +166,7 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         initParams.put(StrutsConstants.STRUTS_ALWAYS_SELECT_FULL_NAMESPACE, "true");
         initPortletConfig(initParams, new HashMap());
         initRequest(requestParams, new HashMap(), new HashMap(), new HashMap(), PortletMode.VIEW, WindowState.NORMAL, true, null);
-        setupActionFactory("/view", "testAction", "success", ValueStackFactory.getFactory().createValueStack());
+        setupActionFactory("/view", "testAction", "success", EasyMock.createNiceMock(ValueStack.class));
         //mockSession.expects(once()).method("setAttribute").with(new Constraint[]{eq(PortletActionConstants.LAST_MODE), eq(PortletMode.VIEW)});
         try {
             dispatcher
@@ -266,7 +267,7 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
 
         initPortletConfig(initParams, new HashMap());
         initRequest(requestParams, new HashMap(), sessionMap, new HashMap(), mode, WindowState.NORMAL, false, null);
-        setupActionFactory("/edit", "default", "success", ValueStackFactory.getFactory().createValueStack());
+        setupActionFactory("/edit", "default", "success", EasyMock.createNiceMock(ValueStack.class));
 
         mockInvocation.expects(once()).method("getStack").will(
                 returnValue(null));

@@ -39,7 +39,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <p>Examples</p>
  * 
  * <!-- START SNIPPET: example1 -->
- * <p>Update target content with html returned from an action:</p>
  * &lt;div id="div1"&gt;Div 1&lt;/div&gt;
  * &lt;s:url id="ajaxTest" value="/AjaxTest.action"/&gt;
  * 
@@ -49,7 +48,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example1 -->
  * 
  * <!-- START SNIPPET: example2 -->
- * <p>Submit form(anchor inside the form):</p>
  * &lt;s:form id="form" action="AjaxTest"&gt;
  *      &lt;input type="textbox" name="data"&gt;
  *      &lt;sx:a&gt;Submit form&lt;/sx:a&gt;           
@@ -57,7 +55,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example2 -->
  * 
  * <!-- START SNIPPET: example3 -->
- * <p>Submit form(anchor outside the form)</p>
  * &lt;s:form id="form" action="AjaxTest"&gt;
  *      &lt;input type="textbox" name="data"&gt;   
  * &lt;/s:form&gt;
@@ -66,7 +63,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example3 -->
  * 
  * <!-- START SNIPPET: example4 -->
- * <p>Using beforeNotifyTopics:</p>
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/before", function(event, widget){
  *     alert('inside a topic event. before request');
@@ -79,7 +75,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example4 -->
  * 
  * <!-- START SNIPPET: example5 -->
- * <p>Using afterNotifyTopics and highlights target:</p>
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/after", function(data, request, widget){
  *     alert('inside a topic event. after request');
@@ -93,7 +88,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: example5 -->
  * 
  * <!-- START SNIPPET: example6 -->
- * <p>Using errorNotifyTopics and indicator:</p>
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/error", function(error, request, widget){
  *     alert('inside a topic event. on error');

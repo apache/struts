@@ -68,9 +68,9 @@ import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
  *
  * <p/><b>Important</b>: Because the action will be running in a seperate thread, you can't use ActionContext because it
  * is a ThreadLocal. This means if you need to access, for example, session data, you need to implement SessionAware
- * rather than calling ActionContext.getSesion().
+ * rather than calling ActionContext.getSession().
  *
- * <p/>The thread kicked off by this interceptor will be named in the form <b><u>actionName</u>BrackgroundProcess</b>.
+ * <p/>The thread kicked off by this interceptor will be named in the form <b><u>actionName</u>BackgroundProcess</b>.
  * For example, the <i>search</i> action would run as a thread named <i>searchBackgroundProcess</i>.
  *
  * <!-- END SNIPPET: description -->
@@ -197,7 +197,6 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
      * Returns the name to associate the background process.  Override to change the way background processes
      * are mapped to requests.
      * 
-     * @param actionInvocation The action invocation
      * @return the name of the background thread
      */
     protected String getBackgroundProcessName(ActionProxy proxy) {

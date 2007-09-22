@@ -45,12 +45,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <p/> <b>Examples</b>
  * <p/>
- * <!-- START SNIPPET: exdesc -->
- * The following is an example of a tabbedpanel and panel tag utilizing local and remote content.<p/>
- * <!-- END SNIPPET: exdesc -->
  * 
- * <!-- START SNIPPET: example -->
- * <pre>
+ * <!-- START SNIPPET: example1 -->
  * &lt;s:tabbedpanel id="test" &gt;
  *    &lt;s:div id="one" label="one" theme="ajax" labelposition="top" &gt;
  *        This is the first pane&lt;br/&gt;
@@ -63,12 +59,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  *        This is the remote tab
  *    &lt;/s:div&gt;
  * &lt;/s:tabbedpanel&gt;
- * </pre>
- * <!-- END SNIPPET: example -->
+ * <!-- END SNIPPET: example1 -->
  * 
  * <!-- START SNIPPET: example2 -->
- * <p>Use notify topics to prevent a tab from being selected</p>
- * <pre>
  * &lt;script type="text/javascript"&gt;
  * dojo.event.topic.subscribe("/beforeSelect", function(event, tab, tabContainer){
  *     event.cancel = true;
@@ -83,7 +76,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  *        Another tab
  *    &lt;/s:div&gt;
  * &lt;/s:tabbedpanel&gt;
- * </pre>
  * <!-- END SNIPPET: example2 -->
  */
 @StrutsTag(name="tabbedpanel", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.TabbedPanelTag", description="Render a tabbedPanel widget.")

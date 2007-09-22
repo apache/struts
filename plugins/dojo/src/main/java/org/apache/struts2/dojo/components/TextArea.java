@@ -30,7 +30,9 @@ import org.apache.struts2.views.annotations.StrutsTag;
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
+ * <!-- START SNIPPET: javadoc -->
  * Render Dojo Editor2 widget
+ * <!-- END SNIPPET: javadoc -->
  *
  */
 @StrutsTag(name="textarea", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.TextareaTag", description="Renders Dojo Editor2 widget")

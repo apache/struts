@@ -47,8 +47,6 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- END SNIPPET: javadoc -->
  *
  * <!-- START SNIPPET: example1 -->
- * <pre>
- * <p>Tree loaded statically</p>
  * &lt;s:tree id="..." label="..."&gt;
  *    &lt;s:treenode id="..." label="..." /&gt;
  *    &lt;s:treenode id="..." label="..."&gt;
@@ -57,34 +55,25 @@ import com.opensymphony.xwork2.util.ValueStack;
  *    &;lt;/s:treenode&gt;
  *    &lt;s:treenode id="..." label="..." /&gt;
  * &lt;/s:tree&gt;
- * </pre>
  * <!-- END SNIPPET: example1 -->
  * 
  * <!-- END SNIPPET: example2 -->
- * <p>Tree loaded dynamically</p>
- * <pre>
  * &lt;s:tree
  *          id="..."
  *          rootNode="..."
  *          nodeIdProperty="..."
  *          nodeTitleProperty="..."
  *          childCollectionProperty="..." /&gt;
- * </pre>
  * <!-- END SNIPPET: example2 -->
  * 
  * <!-- END SNIPPET: example3 -->
- * <p>Tree loaded dynamically using AJAX</p>
- * <pre>
  * &lt;s:url id="nodesUrl" namespace="/nodecorate" action="getNodes" /&gt;
  * &lt;div style="float:left; margin-right: 50px;"&gt;
  *     &lt;sx:tree id="tree" href="%{#nodesUrl}" /&gt;
  * &lt;/div&gt;
- * </pre>
  * 
- * <p>On this example the url specified on the "href" attibute will be called to load
+ * On this example the url specified on the "href" attibute will be called to load
  * the elements on the root. The response is expected to be a JSON array of objects like:
- * </p>
- * <pre>
  * [
  *      {
  *           label: "Node 1",
@@ -97,21 +86,18 @@ import com.opensymphony.xwork2.util.ValueStack;
  *           id: "Node2"
  *      },
  * ]
- * </pre>
  * 
- * <p>"label" is the text that will be displayed for the node. "hasChildren" marks the node has
+ * "label" is the text that will be displayed for the node. "hasChildren" marks the node has
  * having children or not (if true, a plus icon will be assigned to the node so it can be
  * expanded). The "id" attribute will be used to load the children of the node, when the node
  * is expanded. When a node is expanded a request will be made to the url in the "href" attribute
- * and the node's "id" will be passed in the parameter "nodeId".</p>
+ * and the node's "id" will be passed in the parameter "nodeId".
  * 
- * <p>The children collection for a node will be loaded only once, to reload the children of a 
+ * The children collection for a node will be loaded only once, to reload the children of a 
  * node, use the "reload()" function of the treenode widget. To reload the children nodes of "Node1"
  * from the example above use the following javascript:
  * 
- * <pre>
  * dojo.widget.byId("Node1").reload();
- * </pre> 
  * <!-- END SNIPPET: example3 -->
  */
 @StrutsTag(name="tree", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.TreeTag", description="Render a tree widget.")

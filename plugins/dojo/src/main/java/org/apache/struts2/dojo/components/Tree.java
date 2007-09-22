@@ -52,7 +52,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *    &lt;s:treenode id="..." label="..."&gt;
  *        &lt;s:treenode id="..." label="..." /&gt;
  *        &lt;s:treenode id="..." label="..." /&gt;
- *    &;lt;/s:treenode&gt;
+ *    &lt;/s:treenode&gt;
  *    &lt;s:treenode id="..." label="..." /&gt;
  * &lt;/s:tree&gt;
  * <!-- END SNIPPET: example1 -->
@@ -66,7 +66,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *          childCollectionProperty="..." /&gt;
  * <!-- END SNIPPET: example2 -->
  * 
- * <!-- END SNIPPET: example3 -->
+ * <!-- START SNIPPET: example3 -->
  * &lt;s:url id="nodesUrl" namespace="/nodecorate" action="getNodes" /&gt;
  * &lt;div style="float:left; margin-right: 50px;"&gt;
  *     &lt;sx:tree id="tree" href="%{#nodesUrl}" /&gt;

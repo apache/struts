@@ -49,26 +49,17 @@ import com.opensymphony.xwork2.util.ValueStack;
  * 
  * <p>Examples</p>
  * <!-- START SNIPPET: example1 -->
- * <p>Simple div that loads its content once:</p>
- * <pre>
  * &lt;sx:div href="%{#url}"&gt;Initial Content&lt;/sx:div&gt;
- * </pre>
  * <!-- END SNIPPET: example1 -->
  * 
- * <!-- START SNIPPET: example1 -->
- * <p>div that reloads its content every 2 seconds, and shows an indicator while reloading:</p>
- * <pre>
+ * <!-- START SNIPPET: example2 -->
  * &lt;img id="indicator" src="${pageContext.request.contextPath}/images/indicator.gif" style="display:none"/&gt;
  * &lt;sx:div href="%{#url}" updateFreq="2000" indicator="indicator"&gt;
  *   Initial Content
  * &lt;/sx:div&gt;
- * </pre>
- * <!-- END SNIPPET: example1 -->
+ * <!-- END SNIPPET: example2 -->
  * 
- * <!-- START SNIPPET: example1 -->
- * <p>div that uses topics to control the timer, highlights its content in red after reload, and submits
- * a form:</p>
- * <pre>
+ * <!-- START SNIPPET: example3 -->
  * &lt;form id="form"&gt;
  *   &lt;label for="textInput"&gt;Text to be submited when div reloads&lt;/label&gt;
  *   &lt;input type=textbox id="textInput" name="data"&gt;
@@ -83,8 +74,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *      formId="form"&gt;
  *  Initial Content
  * &lt;/sx:div&gt;
- * </pre>
- * <!-- END SNIPPET: example1 -->
+ * <!-- END SNIPPET: example3 -->
  */
 @StrutsTag(name="div", tldTagClass="org.apache.struts2.dojo.views.jsp.ui.DivTag", description="Render HTML div providing content from remote call via AJAX")
 public class Div extends AbstractRemoteBean {

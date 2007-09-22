@@ -38,15 +38,15 @@ import com.opensymphony.xwork2.util.ValueStack;
  * Renders a tree node within a tree widget with AJAX support.<p/>
  *
  * Either of the following combinations should be used depending on if the tree
- * is to be constrcted dynamically or statically. <p/>
+ * is to be constructed dynamically or statically. <p/>
  *
- * <b>Dynamically</b>
+ * <b>Dynamically:</b>
  * <ul>
  *      <li>id - id of this tree node</li>
  *      <li>title - label to be displayed for this tree node</li>
  * </ul>
  *
- * <b>Statically</b>
+ * <b>Statically:</b>
  * <ul>
  *      <li>rootNode - the parent node of which this tree is derived from</li>
  *      <li>nodeIdProperty - property to obtained this current tree node's id</li>
@@ -61,7 +61,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <pre>
  * <!-- START SNIPPET: example -->
  *
- * &lt-- statically --&gt;
+ * &lt;-- statically --&gt;
  * &lt;s:tree id="..." label="..."&gt;
  *    &lt;s:treenode id="..." label="..." /&gt;
  *    &lt;s:treenode id="..." label="..."&gt;

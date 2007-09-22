@@ -57,7 +57,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;/s:tree&gt;
  * <!-- END SNIPPET: example1 -->
  * 
- * <!-- END SNIPPET: example2 -->
+ * <!-- START SNIPPET: example2 -->
  * &lt;s:tree
  *          id="..."
  *          rootNode="..."

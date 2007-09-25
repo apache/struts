@@ -52,6 +52,8 @@ import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 import com.opensymphony.xwork2.ActionContext;
 
@@ -386,6 +388,12 @@ public class FilterDispatcher implements StrutsStatics, Filter {
 
         String timerKey = "FilterDispatcher_doFilter: ";
         try {
+            
+            // FIXME: this should be refactored better to not duplicate work with the action invocation
+            ValueStack stack = dispatcher.getContainer().getInstance(ValueStackFactory.class).createValueStack();
+            ActionContext ctx = new ActionContext(stack.getContext());
+            ActionContext.setContext(ctx);
+            
             UtilTimerStack.push(timerKey);
             request = prepareDispatcherAndWrapRequest(request, response);
             ActionMapping mapping;

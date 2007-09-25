@@ -162,7 +162,11 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
     @Override
     public boolean needsReload() {
         ActionContext ctx = ActionContext.getContext();
-        return ctx.get(reloadKey) == null && super.needsReload();
+        if (ctx != null) {
+            return ctx.get(reloadKey) == null && super.needsReload();
+        } else {
+            return true;
+        }
 
     }
     

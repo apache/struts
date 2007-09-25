@@ -53,7 +53,7 @@
   <#assign dojoFile="dojo.js.uncompressed.js">
 </#if>
 
-<#if parameters.cache?default(false)>
+<#if parameters.cache?default(true)>
   <#assign profile="struts_">
 <#else>
   <#assign profile="">

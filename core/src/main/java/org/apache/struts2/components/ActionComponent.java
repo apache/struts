@@ -279,9 +279,7 @@ public class ActionComponent extends ContextBean {
         try {
 
             proxy = actionProxyFactory.createActionProxy(namespace, actionName, createExtraContext(), executeResult, true);
-            if (null != methodName) {
-                proxy.setMethod(methodName);
-            }
+            proxy.setMethod(methodName);
             // set the new stack into the request for the taglib to use
             req.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, proxy.getInvocation().getStack());
             proxy.execute();

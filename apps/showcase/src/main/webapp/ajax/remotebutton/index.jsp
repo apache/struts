@@ -48,9 +48,9 @@ A submit button, with "notifyTopics"
 <br/><br/>
 
 Use an image as submit
-
+<s:url value="/images/struts-power.gif" var="imgUrl" />
 <sx:submit type="image" label="Alt Text" targets="t1"
-  src="${pageContext.request.contextPath}/images/struts-power.gif" href="%{ajaxTest}" />
+  src="%{imgUrl}" href="%{ajaxTest}" />
 <br/><br/>
 
 <label for="textInput">Text to be echoed</label>

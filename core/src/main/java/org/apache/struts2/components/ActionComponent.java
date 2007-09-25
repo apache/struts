@@ -22,7 +22,9 @@ package org.apache.struts2.components;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.Array;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -59,8 +61,8 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
  *      <li>id (String) - the id (if specified) to put the action under stack's context.
  *      <li>name* (String) - name of the action to be executed (without the extension suffix eg. .action)</li>
  *      <li>namespace (String) - default to the namespace where this action tag is invoked</li>
- *      <li>executeResult (Boolean) -  default is false. Decides wheather the result of this action is to be executed or not</li>
- *      <li>ignoreContextParams (Boolean) - default to false. Decides wheather the request parameters are to be included when the action is invoked</li>
+ *      <li>executeResult (Boolean) -  default is false. Decides whether the result of this action is to be executed or not</li>
+ *      <li>ignoreContextParams (Boolean) - default to false. Decides whether the request parameters are to be included when the action is invoked</li>
  * </ul>
  * <!-- END SNIPPET: params -->
  *
@@ -170,18 +172,8 @@ public class ActionComponent extends ContextBean {
         return end;
     }
 
-    private Map createExtraContext() {
-        Map parentParams = null;
-
-        if (!ignoreContextParams) {
-            parentParams = new ActionContext(getStack().getContext()).getParameters();
-        }
-
-        Map newParams = (parentParams != null) ? new HashMap(parentParams) : new HashMap();
-
-        if (parameters != null) {
-            newParams.putAll(parameters);
-        }
+    protected Map createExtraContext() {
+        Map newParams = createParametersForContext();
 
         ActionContext ctx = new ActionContext(stack.getContext());
         ServletContext servletContext = (ServletContext) ctx.get(ServletActionContext.SERVLET_CONTEXT);
@@ -205,6 +197,40 @@ public class ActionComponent extends ContextBean {
         extraContext.put(ServletActionContext.PAGE_CONTEXT, pageContext);
 
         return extraContext;
+    }
+
+    /**
+     * Creates parameters map using parameters from the value stack and component parameters.  Any non-String array
+     * values will be converted into a single-value String array.
+     * 
+     * @return A map of String[] parameters
+     */
+    protected Map<String,String[]> createParametersForContext() {
+        Map parentParams = null;
+
+        if (!ignoreContextParams) {
+            parentParams = new ActionContext(getStack().getContext()).getParameters();
+        }
+
+        Map<String,String[]> newParams = (parentParams != null) 
+            ? new HashMap<String,String[]>(parentParams) 
+            : new HashMap<String,String[]>();
+
+        if (parameters != null) {
+            Map<String,String[]> params = new HashMap<String,String[]>();
+            for (Iterator i = parameters.entrySet().iterator(); i.hasNext(); ) {
+                Map.Entry entry = (Map.Entry) i.next();
+                String key = (String) entry.getKey();
+                Object val = entry.getValue();
+                if (val.getClass().isArray() && String.class == val.getClass().getComponentType()) {
+                    params.put(key, (String[])val);
+                } else {
+                    params.put(key, new String[]{val.toString()});
+                }
+            }
+            newParams.putAll(params);
+        }
+        return newParams;
     }
 
     public ActionProxy getProxy() {

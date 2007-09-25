@@ -37,6 +37,7 @@ import org.apache.struts2.dispatcher.Dispatcher;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.ScopedModelDriven;
@@ -63,10 +64,16 @@ public class Struts1Action extends DefaultActionSupport implements ScopedModelDr
     private boolean validate;
     private String scopeKey;
     private ObjectFactory objectFactory;
+    private Configuration configuration;
     
     @Inject
     public void setObjectFactory(ObjectFactory fac) {
         this.objectFactory = fac;
+    }
+    
+    @Inject
+    public void setConfiguration(Configuration config) {
+        this.configuration = config;
     }
     
     public String execute() throws Exception {

@@ -33,6 +33,8 @@ import org.apache.struts2.dispatcher.Dispatcher;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.TextProviderFactory;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -86,9 +88,15 @@ import com.opensymphony.xwork2.util.ValueStack;
 public class I18n extends Component {
     protected boolean pushed;
     protected String name;
+    protected Container container;
 
     public I18n(ValueStack stack) {
         super(stack);
+    }
+    
+    @Inject
+    public void setContainer(Container container) {
+        this.container = container;
     }
 
     public boolean start(Writer writer) {
@@ -105,7 +113,7 @@ public class I18n extends Component {
             if (bundle != null) {
                 final Locale locale = (Locale) getStack().getContext().get(ActionContext.LOCALE);
                 TextProviderFactory tpf = new TextProviderFactory();
-                Dispatcher.getInstance().getContainer().inject(tpf);
+                container.inject(tpf);
                 getStack().push(tpf.createInstance(bundle, new LocaleProvider() {
                      public Locale getLocale() {
                          return locale;
@@ -129,7 +137,7 @@ public class I18n extends Component {
         return super.end(writer, body);
     }
 
-    @StrutsTagAttribute(description="Name of ressource bundle to use (eg foo/bar/customBundle)", required=true, defaultValue="String")
+    @StrutsTagAttribute(description="Name of resource bundle to use (eg foo/bar/customBundle)", required=true, defaultValue="String")
     public void setName(String name) {
         this.name = name;
     }

@@ -38,6 +38,7 @@ import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.parser.node.Node;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -63,7 +64,7 @@ public abstract class AbstractDirective extends Directive {
         HttpServletRequest req = (HttpServletRequest) stack.getContext().get(ServletActionContext.HTTP_REQUEST);
         HttpServletResponse res = (HttpServletResponse) stack.getContext().get(ServletActionContext.HTTP_RESPONSE);
         Component bean = getBean(stack, req, res);
-        Container container = Dispatcher.getInstance().getConfigurationManager().getConfiguration().getContainer();
+        Container container = (Container) stack.getContext().get(ActionContext.CONTAINER);
         container.inject(bean);
         // get the parameters
         Map params = createPropertyMap(ctx, node);

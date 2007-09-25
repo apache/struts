@@ -20,6 +20,7 @@
  */
 package org.apache.struts2.tiles;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Container;
 import org.apache.commons.logging.Log;
@@ -102,17 +103,14 @@ public class StrutsTilesRequestContext extends TilesRequestContextWrapper {
             HttpServletRequest request = (HttpServletRequest) getRequest();
             HttpServletResponse response = (HttpServletResponse) getResponse();
 
-            ActionInvocation invocation =
-                    ServletActionContext.getActionContext(request).getActionInvocation();
+            ActionContext ctx = ServletActionContext.getActionContext(request);
+            ActionInvocation invocation = ctx.getActionInvocation();
 
             try {
                 FreemarkerResult result = new FreemarkerResult();
                 result.setWriter(response.getWriter());
 
-                Container container = Dispatcher.getInstance()
-                        .getConfigurationManager()
-                        .getConfiguration().getContainer();
-
+                Container container = ctx.getContainer();
                 container.inject(result);
 
                 result.doExecute(include, invocation);

@@ -48,6 +48,8 @@ import org.xml.sax.SAXException;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.ScopedModelDriven;
 
@@ -68,6 +70,13 @@ public class ActionFormValidationInterceptor extends AbstractInterceptor {
      * Delimitter for Validator resources.
      */
     private final static String RESOURCE_DELIM = ",";
+    
+    protected Configuration configuration;
+
+    @Inject
+    public void setConfiguration(Configuration config) {
+        this.configuration = config;
+    }
     
     /**
      * Initializes the validation resources
@@ -113,7 +122,7 @@ public class ActionFormValidationInterceptor extends AbstractInterceptor {
             Object model = modelDriven.getModel();
             if (model != null) {
                 HttpServletRequest req = ServletActionContext.getRequest();
-                Struts1Factory strutsFactory = new Struts1Factory(Dispatcher.getInstance().getConfigurationManager().getConfiguration());
+                Struts1Factory strutsFactory = new Struts1Factory(configuration);
                 ActionMapping mapping = strutsFactory.createActionMapping(invocation.getProxy().getConfig());
                 ModuleConfig moduleConfig = strutsFactory.createModuleConfig(invocation.getProxy().getConfig().getPackageName());
                 req.setAttribute(Globals.MODULE_KEY, moduleConfig);

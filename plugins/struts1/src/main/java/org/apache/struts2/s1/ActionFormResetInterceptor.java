@@ -26,6 +26,8 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.Dispatcher;
 
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.ScopedModelDriven;
 
@@ -34,6 +36,13 @@ import com.opensymphony.xwork2.interceptor.ScopedModelDriven;
  */
 public class ActionFormResetInterceptor extends AbstractInterceptor {
 
+    protected Configuration configuration;
+
+    @Inject
+    public void setConfiguration(Configuration config) {
+        this.configuration = config;
+    }
+    
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         Object action = invocation.getAction();
@@ -42,7 +51,7 @@ public class ActionFormResetInterceptor extends AbstractInterceptor {
             ScopedModelDriven modelDriven = (ScopedModelDriven) action;
             Object model = modelDriven.getModel();
             if (model != null && model instanceof ActionForm) {
-                Struts1Factory factory = new Struts1Factory(Dispatcher.getInstance().getConfigurationManager().getConfiguration());
+                Struts1Factory factory = new Struts1Factory(configuration);
                 ActionMapping mapping = factory.createActionMapping(invocation.getProxy().getConfig());
                 HttpServletRequest req = ServletActionContext.getRequest();
                 ((ActionForm)model).reset(mapping, req);

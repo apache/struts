@@ -71,17 +71,17 @@
     name CDATA #REQUIRED
 >
 
-<!ELEMENT default-interceptor-ref (param*)>
+<!ELEMENT default-interceptor-ref (#PCDATA)>
 <!ATTLIST default-interceptor-ref
     name CDATA #REQUIRED
 >
 
-<!ELEMENT default-action-ref (param*)>
+<!ELEMENT default-action-ref (#PCDATA)>
 <!ATTLIST default-action-ref
     name CDATA #REQUIRED
 >
 
-<!ELEMENT default-class-ref (param*)>
+<!ELEMENT default-class-ref (#PCDATA)>
 <!ATTLIST default-class-ref
     class CDATA #REQUIRED
 >

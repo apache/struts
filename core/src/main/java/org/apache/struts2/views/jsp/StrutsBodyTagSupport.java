@@ -25,7 +25,6 @@ import java.io.PrintWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.struts2.util.FastByteArrayOutputStream;
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.util.ContextUtil;
 
 import com.opensymphony.xwork2.util.ValueStack;

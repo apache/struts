@@ -20,26 +20,15 @@
  */
 package org.apache.struts2.config;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.Properties;
-import java.util.StringTokenizer;
 
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
-
-import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Context;
 import com.opensymphony.xwork2.inject.Factory;
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 public class LegacyPropertiesConfigurationProvider implements ConfigurationProvider {

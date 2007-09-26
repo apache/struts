@@ -23,8 +23,6 @@ package org.apache.struts2.views.freemarker;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.struts2.StrutsConstants;
-
 import freemarker.core.CollectionAndSequence;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.MapModel;

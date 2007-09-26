@@ -27,9 +27,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 
 /**
  * Abstract wrapper class HTTP requests to handle multi-part data. <p>

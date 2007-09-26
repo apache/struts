@@ -25,11 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.components.ActionComponent;
 import org.apache.struts2.components.Component;
-import org.apache.struts2.dispatcher.Dispatcher;
 
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.config.Configuration;
-import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**

@@ -26,8 +26,6 @@ import java.util.Map;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.DefaultActionInvocation;
-import com.opensymphony.xwork2.DefaultActionProxy;
 import com.opensymphony.xwork2.DefaultActionProxyFactory;
 
 public class StrutsActionProxyFactory extends DefaultActionProxyFactory {

@@ -25,9 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.components.Component;
 import org.apache.struts2.components.Form;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
 
-import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 
 

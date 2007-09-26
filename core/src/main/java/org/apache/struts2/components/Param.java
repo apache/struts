@@ -24,7 +24,6 @@ import java.io.Writer;
 
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
-import org.apache.struts2.views.annotations.StrutsTagSkipInheritance;
 import org.apache.struts2.StrutsException;
 
 import com.opensymphony.xwork2.util.ValueStack;

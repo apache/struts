@@ -26,9 +26,7 @@ import java.util.ResourceBundle;
 
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
-import org.apache.struts2.views.annotations.StrutsTagSkipInheritance;
 import org.apache.struts2.StrutsException;
-import org.apache.struts2.dispatcher.Dispatcher;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.LocaleProvider;

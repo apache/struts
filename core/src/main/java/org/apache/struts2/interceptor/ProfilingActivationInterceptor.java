@@ -20,8 +20,6 @@
  */
 package org.apache.struts2.interceptor;
 
-import org.apache.struts2.dispatcher.Dispatcher;
-
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;

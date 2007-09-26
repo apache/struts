@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.components.Anchor;
 import org.apache.struts2.components.Component;
-import org.apache.struts2.components.UIBean;
 
 import com.opensymphony.xwork2.util.ValueStack;
 

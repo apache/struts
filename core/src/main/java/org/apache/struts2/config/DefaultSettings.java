@@ -28,7 +28,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
 
-import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 
 /**

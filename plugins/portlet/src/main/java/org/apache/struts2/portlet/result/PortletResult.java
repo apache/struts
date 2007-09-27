@@ -27,6 +27,7 @@ import java.util.StringTokenizer;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletException;
+import javax.portlet.PortletMode;
 import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
@@ -66,6 +67,8 @@ public class PortletResult extends StrutsResultSupport implements PortletActionC
 	private String contentType = "text/html";
 
 	private String title;
+	
+	protected PortletMode portletMode;
 
 	public PortletResult() {
 		super();
@@ -121,7 +124,7 @@ public class PortletResult extends StrutsResultSupport implements PortletActionC
 	 * @param finalLocation
 	 * @param invocation
 	 */
-	protected void executeActionResult(String finalLocation, ActionInvocation invocation) {
+	protected void executeActionResult(String finalLocation, ActionInvocation invocation) throws Exception {
 		LOG.debug("Executing result in Event phase");
 		ActionResponse res = PortletActionContext.getActionResponse();
 		Map sessionMap = invocation.getInvocationContext().getSession();
@@ -139,8 +142,14 @@ public class PortletResult extends StrutsResultSupport implements PortletActionC
 			res.setRenderParameter(ACTION_PARAM, "renderDirect");
 			sessionMap.put(RENDER_DIRECT_LOCATION, finalLocation);
 		}
-		res.setRenderParameter(PortletActionConstants.MODE_PARAM, PortletActionContext.getRequest().getPortletMode()
-				.toString());
+		if(portletMode != null) {
+			res.setPortletMode(portletMode);
+			res.setRenderParameter(PortletActionConstants.MODE_PARAM, portletMode.toString());
+		}
+		else {
+			res.setRenderParameter(PortletActionConstants.MODE_PARAM, PortletActionContext.getRequest().getPortletMode()
+					.toString());
+		}
 	}
 
 	/**
@@ -210,6 +219,12 @@ public class PortletResult extends StrutsResultSupport implements PortletActionC
 	 */
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	
+	public void setPortletMode(String portletMode) {
+		if(portletMode != null) {
+			this.portletMode = new PortletMode(portletMode);
+		}
 	}
 
 	@Inject("struts.portlet.useDispatcherServlet") 

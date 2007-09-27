@@ -137,7 +137,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * </p> The next example iterates over a an action collection and passes every iterator value to another action. The
  * trick here lies in the use of the '[0]' operator. It takes the current iterator value and passes it on to the edit
- * action. Using the '[0]' operator has the same effect as using &gt;s:property /&gt;. (The latter, however, does not
+ * action. Using the '[0]' operator has the same effect as using &lt;s:property /&gt;. (The latter, however, does not
  * work from inside the param tag). </p>
  *
  * <!-- END SNIPPET: example4description -->

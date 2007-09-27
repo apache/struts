@@ -20,21 +20,14 @@
  */
 package org.apache.struts2.portlet;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.portlet.PortletRequest;
 
-import org.jmock.Mock;
 import org.jmock.MockObjectTestCase;
-import org.jmock.core.Constraint;
+import org.springframework.mock.web.portlet.MockPortletRequest;
 
 
 /**
@@ -44,7 +37,7 @@ import org.jmock.core.Constraint;
 public class PortletRequestMapTest extends MockObjectTestCase {
 
     public void testGet() {
-    	PortletRequest request = new MockPortletRequest(new HashMap<String, String[]>(), new HashMap<String, Object>(), null);
+    	PortletRequest request = new MockPortletRequest();
     	request.setAttribute("testAttribute", "testValue");
 
     	PortletRequestMap map = new PortletRequestMap(request);
@@ -53,7 +46,7 @@ public class PortletRequestMapTest extends MockObjectTestCase {
     }
 
     public void testPut() {
-    	PortletRequest request = new MockPortletRequest(new HashMap<String, String[]>(), new HashMap<String, Object>(), null);
+    	PortletRequest request = new MockPortletRequest();
     	PortletRequestMap map = new PortletRequestMap(request);
         Object obj = map.put("testAttribute", "testValue1");
         
@@ -62,31 +55,28 @@ public class PortletRequestMapTest extends MockObjectTestCase {
     }
 
     public void testClear() {
-    	Map<String, Object> attribs = new HashMap<String, Object>();
-    	attribs.put("testAttribute1", "testValue1");
-    	attribs.put("testAttribute2", "testValue2");
-    	PortletRequest request = new MockPortletRequest(new HashMap<String, String[]>(), attribs, null);
+    	MockPortletRequest request = new MockPortletRequest();
+    	request.setAttribute("testAttribute1", "testValue1");
+    	request.setAttribute("testAttribute2", "testValue2");
 
 
         PortletRequestMap map = new PortletRequestMap(request);
         map.clear();
 
-        assertEquals(0, attribs.size());
+        assertFalse(request.getAttributeNames().hasMoreElements());
     }
 
     public void testRemove() {
-    	Map<String, Object> attribs = new HashMap<String, Object>();
-    	attribs.put("testAttribute1", "testValue1");
-
-        PortletRequest request = new MockPortletRequest(new HashMap<String, String[]>(), attribs, null);
-
+        MockPortletRequest request = new MockPortletRequest();
+        request.setAttribute("testAttribute1", "testValue1");
+        
         PortletRequestMap map = new PortletRequestMap(request);
         assertEquals("testValue1", map.remove("testAttribute1"));
         assertNull(request.getAttribute("testAttribute1"));
     }
 
     public void testEntrySet() {
-    	PortletRequest request = new MockPortletRequest(new HashMap<String, String[]>(), new HashMap<String, Object>(), null);
+    	MockPortletRequest request = new MockPortletRequest();
     	request.setAttribute("testAttribute1", "testValue1");
     	request.setAttribute("testAttribute2", "testValue2");
 

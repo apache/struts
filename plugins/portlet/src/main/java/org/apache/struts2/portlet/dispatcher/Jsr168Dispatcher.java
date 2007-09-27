@@ -201,21 +201,21 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         }
         portletNamespace = cfg.getInitParameter("portletNamespace");
         LOG.debug("PortletNamespace: " + portletNamespace);
-        parseModeConfig(cfg, PortletMode.VIEW, "viewNamespace",
+        parseModeConfig(actionMap, cfg, PortletMode.VIEW, "viewNamespace",
                 "defaultViewAction");
-        parseModeConfig(cfg, PortletMode.EDIT, "editNamespace",
+        parseModeConfig(actionMap, cfg, PortletMode.EDIT, "editNamespace",
                 "defaultEditAction");
-        parseModeConfig(cfg, PortletMode.HELP, "helpNamespace",
+        parseModeConfig(actionMap, cfg, PortletMode.HELP, "helpNamespace",
                 "defaultHelpAction");
-        parseModeConfig(cfg, new PortletMode("config"), "configNamespace",
+        parseModeConfig(actionMap, cfg, new PortletMode("config"), "configNamespace",
                 "defaultConfigAction");
-        parseModeConfig(cfg, new PortletMode("about"), "aboutNamespace",
+        parseModeConfig(actionMap, cfg, new PortletMode("about"), "aboutNamespace",
                 "defaultAboutAction");
-        parseModeConfig(cfg, new PortletMode("print"), "printNamespace",
+        parseModeConfig(actionMap, cfg, new PortletMode("print"), "printNamespace",
                 "defaultPrintAction");
-        parseModeConfig(cfg, new PortletMode("preview"), "previewNamespace",
+        parseModeConfig(actionMap, cfg, new PortletMode("preview"), "previewNamespace",
                 "defaultPreviewAction");
-        parseModeConfig(cfg, new PortletMode("edit_defaults"),
+        parseModeConfig(actionMap, cfg, new PortletMode("edit_defaults"),
                 "editDefaultsNamespace", "defaultEditDefaultsAction");
         if (!TextUtils.stringSet(portletNamespace)) {
             portletNamespace = "";
@@ -234,14 +234,15 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
 
     /**
      * Parse the mode to namespace mappings configured in portlet.xml
-     * @param portletConfig The PortletConfig
-     * @param portletMode The PortletMode
+     * @param actionMap The map with mode <-> default action mapping.
+     * @param portletConfig The PortletConfig.
+     * @param portletMode The PortletMode.
      * @param nameSpaceParam Name of the init parameter where the namespace for the mode
      * is configured.
      * @param defaultActionParam Name of the init parameter where the default action to
      * execute for the mode is configured.
      */
-    private void parseModeConfig(PortletConfig portletConfig,
+    void parseModeConfig(Map<PortletMode, ActionMapping> actionMap, PortletConfig portletConfig,
             PortletMode portletMode, String nameSpaceParam,
             String defaultActionParam) {
         String namespace = portletConfig.getInitParameter(nameSpaceParam);
@@ -251,8 +252,13 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         modeMap.put(portletMode, namespace);
         String defaultAction = portletConfig
                 .getInitParameter(defaultActionParam);
+        String method = null;
         if (!TextUtils.stringSet(defaultAction)) {
             defaultAction = DEFAULT_ACTION_NAME;
+        }
+        if(defaultAction.indexOf('!') >= 0) {
+        	method = defaultAction.substring(defaultAction.indexOf('!') + 1);
+        	defaultAction = defaultAction.substring(0, defaultAction.indexOf('!'));
         }
         StringBuffer fullPath = new StringBuffer();
         if (TextUtils.stringSet(portletNamespace)) {
@@ -267,6 +273,9 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         ActionMapping mapping = new ActionMapping();
         mapping.setName(getActionName(fullPath.toString()));
         mapping.setNamespace(getNamespace(fullPath.toString()));
+        if(method != null) {
+        	mapping.setMethod(method);
+        }
         actionMap.put(portletMode, mapping);
     }
 

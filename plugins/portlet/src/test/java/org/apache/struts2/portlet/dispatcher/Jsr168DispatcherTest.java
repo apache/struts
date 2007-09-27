@@ -43,11 +43,14 @@ import junit.textui.TestRunner;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.easymock.EasyMock;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import org.jmock.core.Constraint;
+import org.springframework.mock.web.portlet.MockPortletConfig;
+import org.springframework.mock.web.portlet.MockPortletContext;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -111,6 +114,23 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
         mockActionProxy.expects(once()).method("setMethod");
         mockInvocation.stubs().method("getStack").will(returnValue(stack));
 
+    }
+    
+    public void testParseConfigWithBang() {
+    	MockPortletContext portletContext = new MockPortletContext();
+    	MockPortletConfig portletConfig = new MockPortletConfig(portletContext);
+
+    	portletConfig.addInitParameter("viewNamespace", "/view");
+    	portletConfig.addInitParameter("defaultViewAction", "index!input");
+    	
+    	Map<PortletMode, ActionMapping> actionMap = new HashMap<PortletMode, ActionMapping>();
+    	
+    	dispatcher.parseModeConfig(actionMap, portletConfig, PortletMode.VIEW, "viewNamespace", "defaultViewAction");
+    	
+    	ActionMapping mapping = actionMap.get(PortletMode.VIEW);
+    	assertEquals("index", mapping.getName());
+    	assertEquals("/view", mapping.getNamespace());
+    	assertEquals("input", mapping.getMethod());
     }
 
     public void testRender_ok() {

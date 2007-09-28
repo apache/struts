@@ -90,7 +90,7 @@ dojo.locale  = djConfig.locale;
 dojo.version = {
 	// summary: version number of this instance of dojo.
 	major: 0, minor: 4, patch: 3, flag: "",
-	revision: Number("$Rev: 7616 $".match(/[0-9]+/)[0]),
+	revision: Number("$Rev: 8617 $".match(/[0-9]+/)[0]),
 	toString: function(){
 		with(dojo.version){
 			return major + "." + minor + "." + patch + flag + " (" + revision + ")";	// String
@@ -911,7 +911,7 @@ dojo.hostenv.searchLocalePath = function(/*String*/locale, /*Boolean*/down, /*Fu
 
 //These two functions are placed outside of preloadLocalizations
 //So that the xd loading can use/override them.
-dojo.hostenv.localesGenerated /***BUILD:localesGenerated***/; // value will be inserted here at build time, if necessary
+dojo.hostenv.localesGenerated =["ROOT","es-es","es","it-it","pt-br","de","fr-fr","zh-cn","pt","en-us","zh","fr","zh-tw","it","en-gb","xx","de-de","ko-kr","ja-jp","ko","en","ja"]; // value will be inserted here at build time, if necessary
 
 dojo.hostenv.registerNlsPrefix = function(){
 // summary:
@@ -1380,8 +1380,10 @@ if(typeof window != 'undefined'){
 		return true;
 	}
 
+	dojo.hostenv._djInitFired = false;
 	//	BEGIN DOMContentLoaded, from Dean Edwards (http://dean.edwards.name/weblog/2006/06/again/)
 	function dj_load_init(e){
+		dojo.hostenv._djInitFired = true;
 		// allow multiple calls, only first one will take effect
 		// A bug in khtml calls events callbacks for document for event which isnt supported
 		// for example a created contextmenu event calls DOMContentLoaded, workaround
@@ -2212,6 +2214,22 @@ dojo.lang.extend(dojo.io.Request, {
 
 	/** Prevent the browser from caching this by adding a query string argument to the URL */
 	preventCache: false,
+
+	jsonFilter: function(value){
+		if(	(this.mimetype == "text/json-comment-filtered")||
+			(this.mimetype == "application/json-comment-filtered")
+		){
+			var cStartIdx = value.indexOf("\/*");
+			var cEndIdx = value.lastIndexOf("*\/");
+			if((cStartIdx == -1)||(cEndIdx == -1)){
+				dojo.debug("your JSON wasn't comment filtered!"); // FIXME: throw exception instead?
+				return "";
+			}
+			return value.substring(cStartIdx+2, cEndIdx);
+		}
+		dojo.debug("please consider using a mimetype of text/json-comment-filtered to avoid potential security issues with JSON endpoints");
+		return value;
+	},
 	
 	// events stuff
 	load: function(/*String*/type, /*Object*/data, /*Object*/transportImplementation, /*Object*/kwArgs){
@@ -2882,13 +2900,16 @@ dojo.lang.mixin(dojo.lang, {
 dojo.provide("dojo.lang.func");
 
 
-dojo.lang.hitch = function(/*Object*/thisObject, /*Function|String*/method){
+dojo.lang.hitch = function(/*Object*/thisObject, /*Function|String*/method /*, ...*/){
 	// summary: 
 	//		Returns a function that will only ever execute in the a given scope
 	//		(thisObject). This allows for easy use of object member functions
 	//		in callbacks and other places in which the "this" keyword may
-	//		otherwise not reference the expected scope. Note that the order of
-	//		arguments may be reversed in a future version.
+	//		otherwise not reference the expected scope. Any number of default
+	//		positional arguments may be passed as parameters beyond "method".
+	//		Each of these values will be used to "placehold" (similar to curry)
+	//		for the hitched function. Note that the order of arguments may be
+	//		reversed in a future version.
 	// thisObject: the scope to run the method in
 	// method:
 	//		a function to be "bound" to thisObject or the name of the method in
@@ -2897,12 +2918,18 @@ dojo.lang.hitch = function(/*Object*/thisObject, /*Function|String*/method){
 	//		dojo.lang.hitch(foo, "bar")(); // runs foo.bar() in the scope of foo
 	//		dojo.lang.hitch(foo, myFunction); // returns a function that runs myFunction in the scope of foo
 
-	// FIXME:
-	//		should this be extended to "fixate" arguments in a manner similar
-	//		to dojo.lang.curry, but without the default execution of curry()?
+	var args = [];
+	for(var x=2; x<arguments.length; x++){
+		args.push(arguments[x]);
+	}
 	var fcn = (dojo.lang.isString(method) ? thisObject[method] : method) || function(){};
 	return function(){
-		return fcn.apply(thisObject, arguments); // Function
+		var ta = args.concat([]); // make a copy
+		for(var x=0; x<arguments.length; x++){
+			ta.push(arguments[x]);
+		}
+		return fcn.apply(thisObject, ta); // Function
+		// return fcn.apply(thisObject, arguments); // Function
 	};
 }
 
@@ -4482,6 +4509,7 @@ dojo.io.XMLHTTPTransport = new function(){
 	function doLoad(kwArgs, http, url, query, useCache) {
 		if(	((http.status>=200)&&(http.status<300))|| 	// allow any 2XX response code
 			(http.status==304)|| 						// get it out of the cache
+			(http.status==1223)|| 						// Internet Explorer mangled the status code
 			(location.protocol=="file:" && (http.status==0 || http.status==undefined))||
 			(location.protocol=="chrome:" && (http.status==0 || http.status==undefined))
 		){
@@ -4505,9 +4533,9 @@ dojo.io.XMLHTTPTransport = new function(){
 					dojo.debug(http.responseText);
 					ret = null;
 				}
-			}else if(kwArgs.mimetype == "text/json" || kwArgs.mimetype == "application/json"){
+			}else if(kwArgs.mimetype.substr(0, 9) == "text/json" || kwArgs.mimetype.substr(0, 16) == "application/json"){
 				try{
-					ret = dj_eval("("+http.responseText+")");
+					ret = dj_eval("("+kwArgs.jsonFilter(http.responseText)+")");
 				}catch(e){
 					dojo.debug(e);
 					dojo.debug(http.responseText);
@@ -4621,8 +4649,19 @@ dojo.io.XMLHTTPTransport = new function(){
 		// FIXME: we need to determine when form values need to be
 		// multi-part mime encoded and avoid using this transport for those
 		// requests.
+		var mlc = kwArgs["mimetype"].toLowerCase()||"";
 		return hasXmlHttp
-			&& dojo.lang.inArray(["text/plain", "text/html", "application/xml", "text/xml", "text/javascript", "text/json", "application/json"], (kwArgs["mimetype"].toLowerCase()||""))
+			&& (
+				(
+					dojo.lang.inArray([
+						"text/plain", "text/html", "application/xml", 
+						"text/xml", "text/javascript"
+						], mlc
+					)
+				) || (
+					mlc.substr(0, 9) == "text/json" || mlc.substr(0, 16) == "application/json"
+				)
+			)
 			&& !( kwArgs["formNode"] && dojo.io.formHasFile(kwArgs["formNode"]) ); //boolean
 	}
 
@@ -5302,7 +5341,6 @@ dojo.event = new function(){
 		}else{
 			var ao = interpolateArgs(arguments, true);
 		}
-		/*
 		if(dojo.lang.isString(ao.srcFunc) && (ao.srcFunc.toLowerCase() == "onkey") ){
 			if(dojo.render.html.ie){
 				ao.srcFunc = "onkeydown";
@@ -5310,7 +5348,6 @@ dojo.event = new function(){
 			}
 			ao.srcFunc = "onkeypress";
 		}
-		*/
 
 		if(dojo.lang.isArray(ao.srcObj) && ao.srcObj!=""){
 			var tmpAO = {};
@@ -7976,8 +8013,8 @@ if (dojo.render.html.ie) {
 	dojo.html.getComputedStyle = function(/*HTMLElement|String*/node, /*String*/property, /*String*/value) {
 		// summary
 		// Get the computed style value for style "property" on "node" (IE).
-		node = dojo.byId(node);  // FIXME: remove ability to access nodes by id for this time-critical function
-		if(!node || !node.style){return value;}
+		node = dojo.byId(node); // FIXME: remove ability to access nodes by id for this time-critical function
+		if(!node || !node.currentStyle){return value;}
 		// FIXME: standardize on camel-case input to improve speed
 		return node.currentStyle[dojo.html.toCamelCase(property)]; // String
 	}
@@ -28130,7 +28167,7 @@ dojo.widget.defineWidget("dojo.widget.TreeSelector", dojo.widget.HtmlWidget, fun
 
 	initialize: function() {
 
-		for(name in this.eventNamesDefault) {
+		for(var name in this.eventNamesDefault) {
 			if (dojo.lang.isUndefined(this.eventNames[name])) {
 				this.eventNames[name] = this.widgetId+"/"+this.eventNamesDefault[name];
 			}
@@ -29013,6 +29050,26 @@ dojo.widget.defineWidget(
 	}
 );
 
+/*
+ * $Id: pom.xml 559206 2007-07-24 21:01:18Z apetrelli $
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 dojo.provide("struts.widget.StrutsTabContainer");
 
 

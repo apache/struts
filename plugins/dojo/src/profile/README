@@ -11,4 +11,4 @@ To build the Struts Dojo profile:
    $ ant -Dversion=0.4.2 -Dprofile=struts clean release intern-strings
    $ cp ../release/dojo/dojo.js ${struts}/plugins/dojo/src/main/resources/org/apache/struts2/static/dojo/struts_dojo.js
    $ cp ../release/dojo/dojo.js.uncompressed.js  ${struts}/plugins/dojo/src/main/resources/org/apache/struts2/static/dojo/struts_dojo.js.uncompressed.js
-    
+   $ cp ../release/dojo/nls ${struts}/plugins/dojo/src/main/resources/org/apache/struts2/static/dojo/  

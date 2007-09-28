@@ -228,6 +228,7 @@ public class Autocompleter extends ComboBox {
     protected String resultsLimit;
     protected String transport;
     protected String preload;
+    protected String keyValue;
     
     public Autocompleter(ValueStack stack, HttpServletRequest request,
             HttpServletResponse response) {
@@ -303,8 +304,13 @@ public class Autocompleter extends ComboBox {
         if (preload != null)
             addParameter("preload", findValue(preload, Boolean.class));
         
-        String keyNameExpr = "%{" + keyName + "}";
-        addParameter("key", findString(keyNameExpr));
+        if (keyValue != null)
+            addParameter("nameKeyValue", findString(keyValue));
+        else {
+            String keyNameExpr = "%{" + keyName + "}";
+            addParameter("nameKeyValue", findString(keyNameExpr));
+        }
+        
         
         if (beforeNotifyTopics != null)
             addParameter("beforeNotifyTopics", findString(beforeNotifyTopics));
@@ -506,5 +512,10 @@ public class Autocompleter extends ComboBox {
     @StrutsTagAttribute(description="Load options when page is loaded", type="Boolean", defaultValue="true")
     public void setPreload(String preload) {
         this.preload = preload;
+    }
+
+    @StrutsTagAttribute(description="Initial key value")
+    public void setKeyValue(String keyValue) {
+        this.keyValue = keyValue;
     }
 }

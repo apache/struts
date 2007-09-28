@@ -72,8 +72,8 @@
 <#if parameters.nameValue?if_exists != "">
  initialValue="${parameters.nameValue}"<#rt/>
 </#if>
-<#if parameters.key?if_exists != "">
- initialKey="${parameters.key}"<#rt/>
+<#if parameters.nameKeyValue?if_exists != "">
+ initialKey="${parameters.nameKeyValue}"<#rt/>
 </#if>
 <#if parameters.readonly?default(false)>
  readonly="readonly"<#rt/>

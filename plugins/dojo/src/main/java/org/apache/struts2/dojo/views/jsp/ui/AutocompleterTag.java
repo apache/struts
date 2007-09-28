@@ -62,6 +62,7 @@ public class AutocompleterTag extends ComboBoxTag {
     protected String resultsLimit;
     protected String transport;
     protected String preload;
+    protected String keyValue;
     
     public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
         return new Autocompleter(stack, req, res);
@@ -98,6 +99,7 @@ public class AutocompleterTag extends ComboBoxTag {
         autocompleter.setResultsLimit(resultsLimit);
         autocompleter.setTransport(transport);
         autocompleter.setPreload(preload);
+        autocompleter.setKeyValue(keyValue);
     }
 
     public void setAutoComplete(String autoComplete) {
@@ -210,5 +212,9 @@ public class AutocompleterTag extends ComboBoxTag {
 
     public void setPreload(String preload) {
         this.preload = preload;
+    }
+
+    public void setKeyValue(String keyValue) {
+        this.keyValue = keyValue;
     }
 }

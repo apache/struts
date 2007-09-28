@@ -21,6 +21,10 @@
 <script language="JavaScript" type="text/javascript" src="/struts/ajax/dojoRequire.js">
 </script>
 
+<script language="JavaScript" type="text/javascript">
+    dojo.hostenv.writeIncludes(true);
+</script>
+
 <link rel="stylesheet" href="/struts/xhtml/styles.css" type="text/css"/>
 
 <script language="JavaScript" src="/struts/utils.js" type="text/javascript">

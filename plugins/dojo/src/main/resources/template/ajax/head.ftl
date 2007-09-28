@@ -69,7 +69,13 @@
 
 <script language="JavaScript" type="text/javascript"
         src="${base}/struts/ajax/dojoRequire.js"></script>
+<#if parameters.debug?default(false)>
+<script language="JavaScript" type="text/javascript">
+    dojo.hostenv.writeIncludes(true);
+</script>     
+</#if>        
 <link rel="stylesheet" href="${base}/struts/xhtml/styles.css" type="text/css"/>
+
 <script language="JavaScript" src="${base}/struts/utils.js" type="text/javascript"></script>
 <script language="JavaScript" src="${base}/struts/xhtml/validation.js" type="text/javascript"></script>
 <script language="JavaScript" src="${base}/struts/css_xhtml/validation.js" type="text/javascript"></script>

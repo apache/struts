@@ -137,6 +137,12 @@ import com.opensymphony.xwork2.validator.ActionValidatorManager;
  *     <td>singleton</td>
  *     <td>Creates reflection context maps used for reflection and expression language operations (since 2.1)</td>
  *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.config.PackageProvider</td>
+ *     <td>N/A</td>
+ *     <td>singleton</td>
+ *     <td>All beans registered as PackageProvider implementations will be automatically included in configuration building (since 2.1)</td>
+ *   </tr>
  * </table>
  * 
  * <!-- END SNIPPET: extensionPoints -->

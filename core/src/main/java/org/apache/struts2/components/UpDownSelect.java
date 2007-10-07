@@ -26,12 +26,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -81,7 +81,7 @@ import com.opensymphony.xwork2.util.ValueStack;
         description="Create a Select component with buttons to move the elements in the select component up and down")
 public class UpDownSelect extends Select {
 
-    private static final Log _log = LogFactory.getLog(UpDownSelect.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UpDownSelect.class);
 
 
     final public static String TEMPLATE = "updownselect";
@@ -155,7 +155,7 @@ public class UpDownSelect extends Select {
             ancestorForm.getParameters().put("updownselectIds", m);
         }
         else {
-            _log.warn("no ancestor form found for updownselect "+this+", therefore autoselect of all elements upon form submission will not work ");
+            LOG.warn("no ancestor form found for updownselect "+this+", therefore autoselect of all elements upon form submission will not work ");
         }
     }
 

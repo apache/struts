@@ -40,16 +40,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.views.annotations.StrutsTag;
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.util.FastByteArrayOutputStream;
+import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -97,7 +97,7 @@ import com.opensymphony.xwork2.util.ValueStack;
                 "(result of servlet or a JSP page)")
 public class Include extends Component {
 
-    private static final Log _log = LogFactory.getLog(Include.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Include.class);
 
     private static String encoding;
     private static boolean encodingDefined = true;
@@ -147,7 +147,7 @@ public class Include extends Component {
                     try {
                         urlBuf.append(URLEncoder.encode(values.get(i).toString(), "UTF-8"));
                     } catch (Exception e) {
-                        _log.warn("unable to url-encode "+values.get(i).toString()+", it will be ignored");
+                        LOG.warn("unable to url-encode "+values.get(i).toString()+", it will be ignored");
                     }
 
                     concat = "&";
@@ -161,7 +161,7 @@ public class Include extends Component {
         try {
             include(result, writer, req, res);
         } catch (Exception e) {
-            LogFactory.getLog(getClass()).warn("Exception thrown during include of " + result, e);
+            LOG.warn("Exception thrown during include of " + result, e);
         }
 
         return super.end(writer, body);

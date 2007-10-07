@@ -33,15 +33,16 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.codehaus.plexus.PlexusContainer;
+
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Creates a plexus container for the application, session, and request
  */
 public class PlexusFilter implements Filter {
-    private static final Log log = LogFactory.getLog(PlexusObjectFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PlexusObjectFactory.class);
     private static final String CHILD_CONTAINER_NAME = "request";
 
     private static boolean loaded = false;
@@ -80,7 +81,7 @@ public class PlexusFilter implements Filter {
                 }
 
                 if (parent.hasChildContainer(CHILD_CONTAINER_NAME)) {
-                    log.warn("Plexus container (scope: request) alredy exist.");
+                    LOG.warn("Plexus container (scope: request) alredy exist.");
                     child = parent.getChildContainer(CHILD_CONTAINER_NAME);
                 } else {
                     child = parent.createChildContainer(CHILD_CONTAINER_NAME, Collections.EMPTY_LIST, Collections.EMPTY_MAP);
@@ -90,7 +91,7 @@ public class PlexusFilter implements Filter {
                 }
                 PlexusThreadLocal.setPlexusContainer(child);
             } catch (Exception e) {
-                log.error("Error initializing plexus container (scope: request)", e);
+                LOG.error("Error initializing plexus container (scope: request)", e);
             }
 
             chain.doFilter(req, res);
@@ -102,7 +103,7 @@ public class PlexusFilter implements Filter {
                 }
                 PlexusThreadLocal.setPlexusContainer(null);
             } catch (Exception e) {
-                log.error("Error disposing plexus container (scope: request)", e);
+                LOG.error("Error disposing plexus container (scope: request)", e);
             }
         }
     }

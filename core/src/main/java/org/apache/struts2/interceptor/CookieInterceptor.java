@@ -28,15 +28,15 @@ import java.util.Set;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.apache.struts2.ServletActionContext;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
-import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.TextParseUtil;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -161,7 +161,7 @@ public class CookieInterceptor extends AbstractInterceptor {
 
     private static final long serialVersionUID = 4153142432948747305L;
 
-    private static final Log LOG = LogFactory.getLog(CookieInterceptor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CookieInterceptor.class);
 
     private Set cookiesNameSet = Collections.EMPTY_SET;
     private Set cookiesValueSet = Collections.EMPTY_SET;

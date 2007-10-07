@@ -25,12 +25,12 @@ import java.io.Writer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -52,7 +52,7 @@ import com.opensymphony.xwork2.util.ValueStack;
     allowDynamicAttributes=true)
 public class Submit extends FormButton {
     
-    private static final Log LOG = LogFactory.getLog(Submit.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Submit.class);
     final public static String TEMPLATE = "submit";
     protected String src;
 

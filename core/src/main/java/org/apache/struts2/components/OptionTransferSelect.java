@@ -26,12 +26,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -95,7 +95,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 @StrutsTag(name="optiontransferselect", tldTagClass="org.apache.struts2.views.jsp.ui.OptionTransferSelectTag", description="Renders an input form")
 public class OptionTransferSelect extends DoubleListUIBean {
 
-    private static final Log _log = LogFactory.getLog(OptionTransferSelect.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OptionTransferSelect.class);
 
     private static final String TEMPLATE = "optiontransferselect";
 
@@ -331,7 +331,7 @@ public class OptionTransferSelect extends DoubleListUIBean {
 
         }
         else {
-            _log.warn("form enclosing optiontransferselect "+this+" not found, auto select upon form submit of optiontransferselect will not work");
+            LOG.warn("form enclosing optiontransferselect "+this+" not found, auto select upon form submit of optiontransferselect will not work");
         }
     }
 

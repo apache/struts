@@ -31,9 +31,10 @@ import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.dispatcher.StrutsRequestWrapper;
+
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -53,7 +54,7 @@ import org.apache.struts2.dispatcher.StrutsRequestWrapper;
  *
  */
 public class MultiPartRequestWrapper extends StrutsRequestWrapper {
-    protected static final Log log = LogFactory.getLog(MultiPartRequestWrapper.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(MultiPartRequestWrapper.class);
 
     Collection<String> errors;
     MultiPartRequest multi;

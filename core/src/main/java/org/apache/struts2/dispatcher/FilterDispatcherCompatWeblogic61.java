@@ -26,9 +26,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.config.ServletContextSingleton;
+
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -48,8 +49,7 @@ import org.apache.struts2.config.ServletContextSingleton;
  */
 public class FilterDispatcherCompatWeblogic61 extends FilterDispatcher {
 
-    private static Log log =
-            LogFactory.getLog(FilterDispatcherCompatWeblogic61.class);
+    private static Logger LOG = LoggerFactory.getLogger(FilterDispatcherCompatWeblogic61.class);
 
     /**
      * dummy setter for {@link #filterConfig}; this method
@@ -67,7 +67,7 @@ public class FilterDispatcherCompatWeblogic61 extends FilterDispatcher {
         try {
             init(filterConfig);
         } catch (ServletException se) {
-            log.error("Couldn't set the filter configuration in this filter", se);
+            LOG.error("Couldn't set the filter configuration in this filter", se);
         }
 
         ServletContextSingleton singleton = ServletContextSingleton.getInstance();

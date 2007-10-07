@@ -20,20 +20,21 @@
  */
 package org.apache.struts2.tiles;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Container;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.views.freemarker.FreemarkerResult;
 import org.apache.tiles.context.TilesRequestContext;
 import org.apache.tiles.context.TilesRequestContextWrapper;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Default implementation of TilesUtil.
@@ -48,8 +49,7 @@ import java.io.IOException;
  */
 public class StrutsTilesRequestContext extends TilesRequestContextWrapper {
 
-    private static final Log LOG =
-            LogFactory.getLog(StrutsTilesRequestContext.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StrutsTilesRequestContext.class);
 
 
     /**

@@ -26,14 +26,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.util.UrlHelper;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
 
@@ -120,7 +120,7 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
     /** The default parameter */
     public static final String DEFAULT_PARAM = "actionName";
     
-    private static final Log LOG = LogFactory.getLog(ServletActionRedirectResult.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ServletActionRedirectResult.class);
 
     protected String actionName;
     protected String namespace;

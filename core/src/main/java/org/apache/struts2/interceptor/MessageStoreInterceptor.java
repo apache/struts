@@ -25,13 +25,12 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -140,7 +139,7 @@ public class MessageStoreInterceptor implements Interceptor {
 
     private static final long serialVersionUID = 4491997514314242420L;
 
-    private static final Log _log = LogFactory.getLog(MessageStoreInterceptor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MessageStoreInterceptor.class);
 
 
     public static final String STORE_MODE = "STORE";
@@ -189,13 +188,13 @@ public class MessageStoreInterceptor implements Interceptor {
     }
 
     public String intercept(ActionInvocation invocation) throws Exception {
-        _log.debug("entering MessageStoreInterceptor ...");
+        LOG.debug("entering MessageStoreInterceptor ...");
 
         before(invocation);
         String result = invocation.invoke();
         after(invocation, result);
 
-        _log.debug("exit executing MessageStoreInterceptor");
+        LOG.debug("exit executing MessageStoreInterceptor");
         return result;
     }
 
@@ -218,7 +217,7 @@ public class MessageStoreInterceptor implements Interceptor {
                 Map session = (Map) invocation.getInvocationContext().get(ActionContext.SESSION);
                 ValidationAware validationAwareAction = (ValidationAware) action;
 
-                _log.debug("retrieve error / message from session to populate into action ["+action+"]");
+                LOG.debug("retrieve error / message from session to populate into action ["+action+"]");
 
                 Collection actionErrors = (Collection) session.get(actionErrorsSessionKey);
                 Collection actionMessages = (Collection) session.get(actionMessagesSessionKey);
@@ -264,7 +263,7 @@ public class MessageStoreInterceptor implements Interceptor {
                 // store error / messages into session
                 Map session = (Map) invocation.getInvocationContext().get(ActionContext.SESSION);
 
-                _log.debug("store action ["+action+"] error/messages into session ");
+                LOG.debug("store action ["+action+"] error/messages into session ");
 
                 ValidationAware validationAwareAction = (ValidationAware) action;
                 session.put(actionErrorsSessionKey, validationAwareAction.getActionErrors());
@@ -272,7 +271,7 @@ public class MessageStoreInterceptor implements Interceptor {
                 session.put(fieldErrorsSessionKey, validationAwareAction.getFieldErrors());
             }
             else {
-                _log.debug("Action ["+action+"] is not ValidationAware, no message / error that are storeable");
+                LOG.debug("Action ["+action+"] is not ValidationAware, no message / error that are storeable");
             }
         }
     }

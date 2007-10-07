@@ -28,8 +28,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
 
 import com.opensymphony.module.sitemesh.Decorator;
@@ -39,6 +37,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 
 import freemarker.template.Configuration;
@@ -106,7 +106,7 @@ import freemarker.template.Template;
  *  @version $Date$ $Id$
  */
 public class FreeMarkerPageFilter extends TemplatePageFilter {
-    private static final Log LOG = LogFactory.getLog(FreeMarkerPageFilter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FreeMarkerPageFilter.class);
     
     private static FreemarkerManager freemarkerManager;
     

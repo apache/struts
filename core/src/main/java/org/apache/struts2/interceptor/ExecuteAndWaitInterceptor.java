@@ -23,14 +23,13 @@ package org.apache.struts2.interceptor;
 import java.util.Collections;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -165,7 +164,7 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
 
     private static final long serialVersionUID = -2754639196749652512L;
 
-    private static final Log LOG = LogFactory.getLog(ExecuteAndWaitInterceptor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExecuteAndWaitInterceptor.class);
 
     public static final String KEY = "__execWait";
     public static final String WAIT = "wait";

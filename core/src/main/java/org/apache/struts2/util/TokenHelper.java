@@ -24,11 +24,10 @@ import java.math.BigInteger;
 import java.util.Map;
 import java.util.Random;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * TokenHelper
@@ -45,7 +44,7 @@ public class TokenHelper {
      * The name of the field which will hold the token name
      */
     public static final String TOKEN_NAME_FIELD = "struts.token.name";
-    private static final Log LOG = LogFactory.getLog(TokenHelper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TokenHelper.class);
     private static final Random RANDOM = new Random();
 
 

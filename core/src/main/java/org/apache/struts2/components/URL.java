@@ -20,9 +20,6 @@
  */
 package org.apache.struts2.components;
 
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ValueStack;
-
 import java.io.Writer;
 import java.util.Collections;
 import java.util.Iterator;
@@ -32,12 +29,15 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.util.UrlHelper;
+
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -116,7 +116,7 @@ import org.apache.struts2.views.util.UrlHelper;
  */
 @StrutsTag(name="url", tldTagClass="org.apache.struts2.views.jsp.URLTag", description="This tag is used to create a URL")
 public class URL extends ContextBean {
-    private static final Log LOG = LogFactory.getLog(URL.class);
+    private static final Logger LOG = LoggerFactory.getLogger(URL.class);
 
     /**
      * The includeParams attribute may have the value 'none', 'get' or 'all'.

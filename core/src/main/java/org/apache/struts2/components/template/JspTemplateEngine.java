@@ -20,22 +20,24 @@
  */
 package org.apache.struts2.components.template;
 
-import com.opensymphony.xwork2.util.ValueStack;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.PageContext;
+
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.components.Include;
 import org.apache.struts2.components.UIBean;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.PageContext;
-import java.util.List;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * JSP based template engine.
  */
 public class JspTemplateEngine extends BaseTemplateEngine {
-    private static final Log LOG = LogFactory.getLog(JspTemplateEngine.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JspTemplateEngine.class);
 
     public void renderTemplate(TemplateRenderingContext templateContext) throws Exception {
         Template template = templateContext.getTemplate();

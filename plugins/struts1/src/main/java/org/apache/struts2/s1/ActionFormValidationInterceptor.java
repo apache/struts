@@ -26,11 +26,8 @@ import java.util.StringTokenizer;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.UnavailableException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.validator.ValidatorResources;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
@@ -41,8 +38,6 @@ import org.apache.struts.config.ModuleConfig;
 import org.apache.struts.validator.ValidatorPlugIn;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
-import org.apache.struts2.dispatcher.Dispatcher;
-import org.apache.struts2.util.ServletContextAware;
 import org.xml.sax.SAXException;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -52,6 +47,8 @@ import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.ScopedModelDriven;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  *  Calls the validate() method on the ActionForm, if it exists.  The errors are handled
@@ -64,7 +61,7 @@ public class ActionFormValidationInterceptor extends AbstractInterceptor {
     private boolean stopOnFirstError;
     private boolean initialized = false;
     
-    private static final Log log = LogFactory.getLog(ActionFormValidationInterceptor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ActionFormValidationInterceptor.class);
     
     /**
      * Delimitter for Validator resources.
@@ -163,8 +160,8 @@ public class ActionFormValidationInterceptor extends AbstractInterceptor {
             while (st.hasMoreTokens()) {
                 String validatorRules = st.nextToken().trim();
 
-                if (log.isInfoEnabled()) {
-                    log.info("Loading validation rules file from '"
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("Loading validation rules file from '"
                         + validatorRules + "'");
                 }
 
@@ -197,7 +194,7 @@ public class ActionFormValidationInterceptor extends AbstractInterceptor {
 
             resources =  new ValidatorResources(urlArray);
         } catch (SAXException sex) {
-            log.error("Skipping all validation", sex);
+            LOG.error("Skipping all validation", sex);
             throw new StrutsException("Skipping all validation because the validation files cannot be loaded", sex);
         }
         return resources;

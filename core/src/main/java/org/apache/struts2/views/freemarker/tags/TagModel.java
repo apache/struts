@@ -29,13 +29,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.components.Component;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.SimpleNumber;
@@ -45,7 +45,7 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateTransformModel;
 
 public abstract class TagModel implements TemplateTransformModel {
-    private static final Log LOG = LogFactory.getLog(TagModel.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TagModel.class);
 
     protected ValueStack stack;
     protected HttpServletRequest req;

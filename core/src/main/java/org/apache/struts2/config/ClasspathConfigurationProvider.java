@@ -27,9 +27,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
@@ -45,6 +42,8 @@ import com.opensymphony.xwork2.util.ResolverUtil;
 import com.opensymphony.xwork2.util.TextUtils;
 import com.opensymphony.xwork2.util.ResolverUtil.ClassTest;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * ClasspathConfigurationProvider loads the configuration
@@ -135,7 +134,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
     /**
      * Logging instance for this class.
      */
-    private static final Log LOG = LogFactory.getLog(ClasspathConfigurationProvider.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ClasspathConfigurationProvider.class);
 
     /**
      * The XWork Configuration for this application.

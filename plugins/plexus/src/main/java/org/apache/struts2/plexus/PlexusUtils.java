@@ -24,16 +24,17 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.configuration.PlexusConfigurationResourceException;
+
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Utility methods for dealing with Plexus
  */
 public class PlexusUtils {
-    private static final Log log = LogFactory.getLog(PlexusObjectFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PlexusObjectFactory.class);
 
     /**
      * Configures the container with the configuration file
@@ -45,7 +46,7 @@ public class PlexusUtils {
     public static void configure(PlexusContainer pc, String file) throws PlexusConfigurationResourceException {
         InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(file);
         if (is == null) {
-            log.info("Could not find " + file + ", skipping");
+            LOG.info("Could not find " + file + ", skipping");
             is = new ByteArrayInputStream("<plexus><components></components></plexus>".getBytes());
         }
         pc.setConfigurationResource(new InputStreamReader(is));

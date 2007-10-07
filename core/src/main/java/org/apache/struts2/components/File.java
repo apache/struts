@@ -23,12 +23,12 @@ package org.apache.struts2.components;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -51,7 +51,7 @@ import com.opensymphony.xwork2.util.ValueStack;
     description="Render a file input field",
     allowDynamicAttributes=true)
 public class File extends UIBean {
-    private final static Log log = LogFactory.getLog(File.class);
+    private final static Logger LOG = LoggerFactory.getLogger(File.class);
 
     final public static String TEMPLATE = "file";
 
@@ -74,13 +74,13 @@ public class File extends UIBean {
             String encType = (String) form.getParameters().get("enctype");
             if (!"multipart/form-data".equals(encType)) {
                 // uh oh, this isn't good! Let's warn the developer
-                log.warn("Struts has detected a file upload UI tag (s:file) being used without a form set to enctype 'multipart/form-data'. This is probably an error!");
+                LOG.warn("Struts has detected a file upload UI tag (s:file) being used without a form set to enctype 'multipart/form-data'. This is probably an error!");
             }
 
             String method = (String) form.getParameters().get("method");
             if (!"post".equalsIgnoreCase(method)) {
                 // uh oh, this isn't good! Let's warn the developer
-                log.warn("Struts has detected a file upload UI tag (s:file) being used without a form set to method 'POST'. This is probably an error!");
+                LOG.warn("Struts has detected a file upload UI tag (s:file) being used without a form set to method 'POST'. This is probably an error!");
             }
         }
 

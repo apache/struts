@@ -26,9 +26,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -67,7 +66,7 @@ public class SortIteratorFilter extends IteratorFilterSupport implements Iterato
         } else {
             try {
                 if (!MakeIterator.isIterable(source)) {
-                    LogFactory.getLog(SortIteratorFilter.class.getName()).warn("Cannot create SortIterator for source " + source);
+                    LoggerFactory.getLogger(SortIteratorFilter.class.getName()).warn("Cannot create SortIterator for source " + source);
 
                     return ERROR;
                 }
@@ -86,7 +85,7 @@ public class SortIteratorFilter extends IteratorFilterSupport implements Iterato
 
                 return SUCCESS;
             } catch (Exception e) {
-                LogFactory.getLog(SortIteratorFilter.class.getName()).warn("Error creating sort iterator.", e);
+                LoggerFactory.getLogger(SortIteratorFilter.class.getName()).warn("Error creating sort iterator.", e);
 
                 return ERROR;
             }

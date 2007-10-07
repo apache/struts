@@ -38,11 +38,11 @@ import org.apache.commons.fileupload.RequestContext;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
 
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Multipart form data request adapter for Jakarta Commons Fileupload package.
@@ -50,7 +50,7 @@ import com.opensymphony.xwork2.inject.Inject;
  */
 public class JakartaMultiPartRequest implements MultiPartRequest {
     
-    static final Log log = LogFactory.getLog(MultiPartRequest.class);
+    static final Logger LOG = LoggerFactory.getLogger(MultiPartRequest.class);
     
     // maps parameter name -> List of FileItem objects
     private Map<String,List<FileItem>> files = new HashMap<String,List<FileItem>>();
@@ -91,9 +91,9 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
 
             for (Object item1 : items) {
                 FileItem item = (FileItem) item1;
-                if (log.isDebugEnabled()) log.debug("Found item " + item.getFieldName());
+                if (LOG.isDebugEnabled()) LOG.debug("Found item " + item.getFieldName());
                 if (item.isFormField()) {
-                    log.debug("Item is a normal form field");
+                    LOG.debug("Item is a normal form field");
                     List<String> values;
                     if (params.get(item.getFieldName()) != null) {
                         values = params.get(item.getFieldName());
@@ -113,11 +113,11 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
                     }
                     params.put(item.getFieldName(), values);
                 } else {
-                    log.debug("Item is a file upload");
+                    LOG.debug("Item is a file upload");
 
                     // Skip file uploads that don't have a file name - meaning that no file was selected.
                     if (item.getName() == null || item.getName().trim().length() < 1) {
-                        log.debug("No file has been uploaded for the field: " + item.getFieldName());
+                        LOG.debug("No file has been uploaded for the field: " + item.getFieldName());
                         continue;
                     }
 
@@ -133,7 +133,7 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
                 }
             }
         } catch (FileUploadException e) {
-            log.error(e);
+            LOG.error("Unable to parse request", e);
             errors.add(e.getMessage());
         }
     }

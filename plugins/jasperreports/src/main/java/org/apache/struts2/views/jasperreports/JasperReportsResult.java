@@ -32,7 +32,14 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRExporter;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.export.JRCsvExporter;
 import net.sf.jasperreports.engine.export.JRCsvExporterParameter;
 import net.sf.jasperreports.engine.export.JRHtmlExporter;
@@ -42,14 +49,14 @@ import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXmlExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.opensymphony.xwork2.util.TextUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
+
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.TextUtils;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -122,7 +129,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
     private static final long serialVersionUID = -2523174799621182907L;
 
 
-    private final static Log LOG = LogFactory.getLog(JasperReportsResult.class);
+    private final static Logger LOG = LoggerFactory.getLogger(JasperReportsResult.class);
 
 
     protected String dataSource;

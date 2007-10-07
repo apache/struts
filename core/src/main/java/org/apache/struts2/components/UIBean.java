@@ -30,19 +30,19 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
 import org.apache.struts2.components.template.TemplateEngineManager;
 import org.apache.struts2.components.template.TemplateRenderingContext;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.util.ContextUtil;
 
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * UIBean is the standard superclass of all Struts UI componentns.
@@ -401,7 +401,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  */
 public abstract class UIBean extends Component {
-    private static final Log LOG = LogFactory.getLog(UIBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UIBean.class);
 
     protected HttpServletRequest request;
     protected HttpServletResponse response;

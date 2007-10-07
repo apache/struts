@@ -30,10 +30,10 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.sitegraph.model.Link;
+
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  */
@@ -41,7 +41,7 @@ public abstract class FileBasedView implements View {
     private String name;
     private String contents;
 
-    private static final Log log = LogFactory.getLog(FileBasedView.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FileBasedView.class);
 
     public FileBasedView(File file) {
         this.name = file.getName();
@@ -103,9 +103,9 @@ public abstract class FileBasedView implements View {
 
             return buffer.toString();
         } catch (FileNotFoundException e) {
-            log.warn("File not found");
+            LOG.warn("File not found");
         } catch (IOException e) {
-            log.error(e);
+            LOG.error("Cannot read file: "+file, e);
         }
 
         return null;

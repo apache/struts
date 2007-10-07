@@ -37,8 +37,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
@@ -58,6 +56,8 @@ import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -65,7 +65,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  */
 public class VelocityManager {
-    private static final Log log = LogFactory.getLog(VelocityManager.class);
+    private static final Logger LOG = LoggerFactory.getLogger(VelocityManager.class);
     public static final String STRUTS = "struts";
     private ObjectFactory objectFactory;
 
@@ -185,7 +185,7 @@ public class VelocityManager {
             ctx = ServletActionContext.getServletContext();
         } catch (NullPointerException npe) {
             // in case this was used outside the lifecycle of struts servlet
-            log.debug("internal toolbox context ignored");
+            LOG.debug("internal toolbox context ignored");
         }
 
         if (toolboxManager != null && ctx != null) {
@@ -219,7 +219,7 @@ public class VelocityManager {
                 VelocityContext velocityContext = (VelocityContext) objectFactory.buildBean(className, null);
                 contextList.add(velocityContext);
             } catch (Exception e) {
-                log.warn("Warning.  " + e.getClass().getName() + " caught while attempting to instantiate a chained VelocityContext, " + className + " -- skipping");
+                LOG.warn("Warning.  " + e.getClass().getName() + " caught while attempting to instantiate a chained VelocityContext, " + className + " -- skipping");
             }
         }
         if (contextList.size() > 0) {
@@ -258,7 +258,7 @@ public class VelocityManager {
     public Properties loadConfiguration(ServletContext context) {
         if (context == null) {
             String gripe = "Error attempting to create a loadConfiguration from a null ServletContext!";
-            log.error(gripe);
+            LOG.error(gripe);
             throw new IllegalArgumentException(gripe);
         }
 
@@ -326,11 +326,11 @@ public class VelocityManager {
 
             // if we've got something, load 'er up
             if (in != null) {
-                log.info("Initializing velocity using " + resourceLocation);
+                LOG.info("Initializing velocity using " + resourceLocation);
                 properties.load(in);
             }
         } catch (IOException e) {
-            log.warn("Unable to load velocity configuration " + resourceLocation, e);
+            LOG.warn("Unable to load velocity configuration " + resourceLocation, e);
         } finally {
             if (in != null) {
                 try {
@@ -361,16 +361,16 @@ public class VelocityManager {
 
 
         // for debugging purposes, allows users to dump out the properties that have been configured
-        if (log.isDebugEnabled()) {
-            log.debug("Initializing Velocity with the following properties ...");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Initializing Velocity with the following properties ...");
 
             for (Iterator iter = properties.keySet().iterator();
                  iter.hasNext();) {
                 String key = (String) iter.next();
                 String value = properties.getProperty(key);
 
-                if (log.isDebugEnabled()) {
-                    log.debug("    '" + key + "' = '" + value + "'");
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("    '" + key + "' = '" + value + "'");
                 }
             }
         }
@@ -455,7 +455,7 @@ public class VelocityManager {
     protected VelocityEngine newVelocityEngine(ServletContext context) {
         if (context == null) {
             String gripe = "Error attempting to create a new VelocityEngine from a null ServletContext!";
-            log.error(gripe);
+            LOG.error(gripe);
             throw new IllegalArgumentException(gripe);
         }
 

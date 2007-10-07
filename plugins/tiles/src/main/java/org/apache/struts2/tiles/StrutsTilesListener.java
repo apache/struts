@@ -20,16 +20,18 @@
  */
 package org.apache.struts2.tiles;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletContext;
+
 import org.apache.tiles.TilesContainer;
 import org.apache.tiles.TilesException;
 import org.apache.tiles.factory.TilesContainerFactory;
 import org.apache.tiles.web.startup.TilesListener;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
-import javax.servlet.ServletContext;
-import java.util.Map;
-import java.util.HashMap;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Listener used to automatically inject ServletContext
@@ -44,8 +46,7 @@ import java.util.HashMap;
  */
 public class StrutsTilesListener extends TilesListener {
 
-    private static final Log LOG =
-        LogFactory.getLog(StrutsTilesListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StrutsTilesListener.class);
 
     private static final Map<String, String> INIT;
 

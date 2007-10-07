@@ -20,28 +20,31 @@
  */
 package org.apache.struts2.components.template;
 
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.inject.Inject;
-import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.util.ValueStack;
-import freemarker.template.Configuration;
-import freemarker.template.SimpleHash;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.views.freemarker.FreemarkerManager;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
+
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+
+import freemarker.template.Configuration;
+import freemarker.template.SimpleHash;
 
 /**
  * Freemarker based template engine.
@@ -66,7 +69,7 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
         }
     }
 
-    private static final Log LOG = LogFactory.getLog(FreemarkerTemplateEngine.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FreemarkerTemplateEngine.class);
 
     @Inject
     public void setFreemarkerManager(FreemarkerManager mgr) {

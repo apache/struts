@@ -22,13 +22,14 @@ package org.apache.struts2.views.jsp.iterator;
 
 import javax.servlet.jsp.JspException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.views.annotations.StrutsTag;
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.util.SubsetIteratorFilter;
 import org.apache.struts2.util.SubsetIteratorFilter.Decider;
+import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
+
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -153,7 +154,7 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
 
     private static final long serialVersionUID = -6252696081713080102L;
 
-    private static final Log _log = LogFactory.getLog(SubsetIteratorTag.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SubsetIteratorTag.class);
 
     String countAttr;
     String sourceAttr;
@@ -230,7 +231,7 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
                     count = Integer.parseInt((String)countObj);
                 }
                 catch(NumberFormatException e) {
-                    _log.warn("unable to convert count attribute ["+countObj+"] to number, ignore count attribute", e);
+                    LOG.warn("unable to convert count attribute ["+countObj+"] to number, ignore count attribute", e);
                 }
             }
         }
@@ -256,7 +257,7 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
                     start = Integer.parseInt((String)startObj);
                 }
                 catch(NumberFormatException e) {
-                    _log.warn("unable to convert count attribute ["+startObj+"] to number, ignore count attribute", e);
+                    LOG.warn("unable to convert count attribute ["+startObj+"] to number, ignore count attribute", e);
                 }
             }
         }

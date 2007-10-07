@@ -24,8 +24,6 @@ import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.interceptor.PrincipalAware;
 import org.apache.struts2.portlet.PortletActionConstants;
@@ -33,12 +31,14 @@ import org.apache.struts2.portlet.PortletActionConstants;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 public class PortletAwareInterceptor extends AbstractInterceptor implements PortletActionConstants, StrutsStatics {
 
 	private static final long serialVersionUID = 2476509721059587700L;
 	
-	private static final Log LOG = LogFactory.getLog(PortletAwareInterceptor.class);
+	private static final Logger LOG = LoggerFactory.getLogger(PortletAwareInterceptor.class);
 
 	/**
      * Sets action properties based on the interfaces an action implements. Things like application properties,

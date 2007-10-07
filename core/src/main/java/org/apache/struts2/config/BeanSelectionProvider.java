@@ -23,8 +23,6 @@ package org.apache.struts2.config;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.UrlRenderer;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
@@ -49,6 +47,8 @@ import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 import com.opensymphony.xwork2.validator.ActionValidatorManager;
@@ -166,7 +166,7 @@ import com.opensymphony.xwork2.validator.ActionValidatorManager;
  */
 public class BeanSelectionProvider implements ConfigurationProvider {
     public static final String DEFAULT_BEAN_NAME = "struts";
-    private static final Log LOG = LogFactory.getLog(BeanSelectionProvider.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BeanSelectionProvider.class);
     
     public void destroy() {
         // NO-OP

@@ -29,14 +29,14 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -142,7 +142,7 @@ import com.opensymphony.xwork2.util.ValueStack;
 @StrutsTag(name="date", tldBodyContent="empty", tldTagClass="org.apache.struts2.views.jsp.DateTag", description="Render a formatted date.")
 public class Date extends ContextBean {
 
-    private static final Log LOG = LogFactory.getLog(Date.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Date.class);
     /**
      * Property name to fall back when no format is specified
      */

@@ -24,12 +24,12 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
 
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.util.location.Location;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -82,7 +82,7 @@ class Settings {
     /**
      * The Logging instance for this class.
      */
-    private static final Log LOG = LogFactory.getLog(Settings.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Settings.class);
 
     /**
      * Registers a custom Settings implementation (plugin),

@@ -26,10 +26,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.sitegraph.renderers.DOTRenderer;
+
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * // START SNIPPET: javadocs-intro
@@ -48,7 +49,7 @@ import org.apache.struts2.sitegraph.renderers.DOTRenderer;
  */
 public class SiteGraph {
 
-    private static final Log LOG = LogFactory.getLog(SiteGraph.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SiteGraph.class);
 
     private String configDir;
     private String views;

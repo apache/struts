@@ -26,10 +26,9 @@ import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 import javax.faces.lifecycle.Lifecycle;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Provides common lifecycle phase methods needed by interceptors and results.
@@ -39,7 +38,7 @@ public class FacesSupport {
     private static final String LIFECYCLE_KEY = "lifecycle";
 
     /** Log instance for each class */
-    protected Log log;
+    protected Logger log;
 
     /**
      * Marker key for the ActionContext to dictate whether to treat the request
@@ -49,7 +48,7 @@ public class FacesSupport {
 
     /** Initializes log instance for the instance object */
     protected FacesSupport() {
-        log = LogFactory.getLog(getClass());
+        log = LoggerFactory.getLogger(getClass());
     }
 
     /**

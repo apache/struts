@@ -24,14 +24,12 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.w3c.dom.Node;
-
 import org.xml.sax.InputSource;
 
 import com.opensymphony.xwork2.util.DomHelper;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * StringAdapter adapts a Java String value to a DOM Element with the specified
@@ -48,7 +46,7 @@ import com.opensymphony.xwork2.util.DomHelper;
  */
 public class StringAdapter extends AbstractAdapterElement {
 
-    private Log log = LogFactory.getLog(this.getClass());
+    private Logger log = LoggerFactory.getLogger(this.getClass());
     boolean parseStringAsXML;
 
     public StringAdapter() {

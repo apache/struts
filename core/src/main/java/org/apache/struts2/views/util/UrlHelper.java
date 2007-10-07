@@ -33,8 +33,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 
@@ -42,6 +40,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -49,7 +49,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  */
 public class UrlHelper {
-    private static final Log LOG = LogFactory.getLog(UrlHelper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UrlHelper.class);
 
     /**
      * Default HTTP port (80).

@@ -23,13 +23,13 @@ package org.apache.struts2.dispatcher;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsStatics;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.util.TextParseUtil;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -102,7 +102,7 @@ import com.opensymphony.xwork2.util.TextParseUtil;
  */
 public abstract class StrutsResultSupport implements Result, StrutsStatics {
 
-    private static final Log _log = LogFactory.getLog(StrutsResultSupport.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StrutsResultSupport.class);
 
     /** The default parameter */
     public static final String DEFAULT_PARAM = "location";
@@ -205,7 +205,7 @@ public abstract class StrutsResultSupport implements Result, StrutsStatics {
                                         return URLEncoder.encode(parsedValue.toString(), "UTF-8");
                                     }
                                     catch(UnsupportedEncodingException e) {
-                                        _log.warn("error while trying to encode ["+parsedValue+"]", e);
+                                        LOG.warn("error while trying to encode ["+parsedValue+"]", e);
                                     }
                                 }
                             }

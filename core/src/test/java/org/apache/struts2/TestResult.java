@@ -25,13 +25,12 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -43,7 +42,7 @@ public class TestResult implements Result {
     private static final long serialVersionUID = -4429258122011663164L;
 
 
-    private static final Log LOG = LogFactory.getLog(TestResult.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TestResult.class);
 
 
     private List expectedValues = new ArrayList();

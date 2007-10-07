@@ -21,14 +21,20 @@
 
 package mailreader2;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts.apps.mailreader.dao.impl.memory.MemoryUserDatabase;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.io.*;
+
+import org.apache.struts.apps.mailreader.dao.impl.memory.MemoryUserDatabase;
+
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <p><code>ServletContextListener</code> that initializes and finalizes the
@@ -94,7 +100,7 @@ public final class ApplicationListener implements ServletContextListener {
     /**
      * <p>Logging output for this plug in instance.</p>
      */
-    private Log log = LogFactory.getLog(this.getClass());
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     // ------------------------------------------------------------- Properties
 

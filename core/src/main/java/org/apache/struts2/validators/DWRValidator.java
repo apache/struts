@@ -27,8 +27,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.dispatcher.ApplicationMap;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
@@ -46,6 +44,8 @@ import com.opensymphony.xwork2.ValidationAwareSupport;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <p/>
@@ -65,7 +65,7 @@ import com.opensymphony.xwork2.inject.Inject;
  * </pre>
  */
 public class DWRValidator {
-    private static final Log LOG = LogFactory.getLog(DWRValidator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DWRValidator.class);
     
     private ActionProxyFactory actionProxyFactory;
     

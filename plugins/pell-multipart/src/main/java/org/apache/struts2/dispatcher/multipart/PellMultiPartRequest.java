@@ -20,15 +20,8 @@
  */
 package org.apache.struts2.dispatcher.multipart;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.StrutsConstants;
-
-import com.opensymphony.xwork2.inject.Inject;
-
 import http.utils.multipartrequest.ServletMultipartRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -37,6 +30,14 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts2.StrutsConstants;
+
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+
 
 /**
  * Multipart form data request adapter for Jason Pell's multipart utils package.
@@ -44,7 +45,7 @@ import java.util.List;
  */
 public class PellMultiPartRequest implements MultiPartRequest {
 
-    private static final Log LOG = LogFactory.getLog(PellMultiPartRequest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PellMultiPartRequest.class);
     private ServletMultipartRequest multi;
 
     private String defaultEncoding;

@@ -39,16 +39,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.jsp.ui.OgnlTool;
 import org.apache.struts2.views.util.UrlHelper;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.TextUtils;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ObjectFactory;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -57,7 +57,7 @@ import com.opensymphony.xwork2.ObjectFactory;
  */
 public class StrutsUtil {
 
-    protected static final Log log = LogFactory.getLog(StrutsUtil.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(StrutsUtil.class);
 
 
     protected HttpServletRequest request;

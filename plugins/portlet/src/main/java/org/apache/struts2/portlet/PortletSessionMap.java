@@ -29,8 +29,8 @@ import java.util.Set;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * A simple implementation of the {@link java.util.Map} interface to handle a collection of portlet session
@@ -40,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class PortletSessionMap extends AbstractMap {
 
-    private static final Log LOG = LogFactory.getLog(PortletSessionMap.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PortletSessionMap.class);
 
     private PortletSession session = null;
     private Set<Object> entries = null;

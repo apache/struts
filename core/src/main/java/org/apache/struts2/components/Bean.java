@@ -22,15 +22,15 @@ package org.apache.struts2.components;
 
 import java.io.Writer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
+import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
-import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 
 /**
@@ -96,7 +96,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 @StrutsTag(name="bean", tldTagClass="org.apache.struts2.views.jsp.BeanTag",
         description="Instantiate a JavaBean and place it in the context")
 public class Bean extends ContextBean {
-    protected static Log log = LogFactory.getLog(Bean.class);
+    protected static Logger LOG = LoggerFactory.getLogger(Bean.class);
 
     protected Object bean;
     protected String name;
@@ -126,7 +126,7 @@ public class Bean extends ContextBean {
             String beanName = findString(name, "name", "Bean name is required. Example: com.acme.FooBean");
             bean = objectFactory.buildBean(ClassLoaderUtil.loadClass(beanName, getClass()), stack.getContext());
         } catch (Exception e) {
-            log.error("Could not instantiate bean", e);
+            LOG.error("Could not instantiate bean", e);
 
             return false;
         }

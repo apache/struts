@@ -20,15 +20,17 @@
  */
 package org.apache.struts2.views.jasperreports;
 
-import org.apache.struts2.util.MakeIterator;
-import com.opensymphony.xwork2.util.ValueStack;
+import java.util.Iterator;
+
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
-import java.util.Iterator;
+import org.apache.struts2.util.MakeIterator;
+
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Ported to Struts.
@@ -39,7 +41,7 @@ public class ValueStackDataSource implements JRDataSource {
     /**
      * Logger for this class
      */
-    private static Log log = LogFactory.getLog(ValueStackDataSource.class);
+    private static Logger LOG = LoggerFactory.getLogger(ValueStackDataSource.class);
 
 
     Iterator iterator;
@@ -67,7 +69,7 @@ public class ValueStackDataSource implements JRDataSource {
                 iterator = MakeIterator.convert(array);
             }
         } else {
-            log.warn("Data source value for data source " + dataSource + " was null");
+            LOG.warn("Data source value for data source " + dataSource + " was null");
         }
     }
 
@@ -96,8 +98,8 @@ public class ValueStackDataSource implements JRDataSource {
 
         Object value = valueStack.findValue(expression);
 
-        if (log.isDebugEnabled()) {
-            log.debug("field: " + field.getName() + "/" + value);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("field: " + field.getName() + "/" + value);
         }
 
         if (MakeIterator.isIterable(value)) {
@@ -125,11 +127,11 @@ public class ValueStackDataSource implements JRDataSource {
 
         if ((iterator != null) && (iterator.hasNext())) {
             valueStack.push(iterator.next());
-            log.debug("Pushed next value: " + valueStack.findValue("."));
+            LOG.debug("Pushed next value: " + valueStack.findValue("."));
 
             return true;
         } else {
-            log.debug("No more values");
+            LOG.debug("No more values");
 
             return false;
         }

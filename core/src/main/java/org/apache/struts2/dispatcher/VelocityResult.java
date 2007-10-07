@@ -30,8 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspFactory;
 import javax.servlet.jsp.PageContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.JspSupportServlet;
@@ -44,6 +42,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -86,7 +86,7 @@ public class VelocityResult extends StrutsResultSupport {
 
     private static final long serialVersionUID = 7268830767762559424L;
 
-    private static final Log log = LogFactory.getLog(VelocityResult.class);
+    private static final Logger LOG = LoggerFactory.getLogger(VelocityResult.class);
     
     private String defaultEncoding;
     private VelocityManager velocityManager;
@@ -161,7 +161,7 @@ public class VelocityResult extends StrutsResultSupport {
             // to do it all the time (WW-829). Since Velocity support is being deprecated, we'll oblige :)
             writer.flush();
         } catch (Exception e) {
-            log.error("Unable to render Velocity Template, '" + finalLocation + "'", e);
+            LOG.error("Unable to render Velocity Template, '" + finalLocation + "'", e);
             throw e;
         } finally {
             if (usedJspFactory) {

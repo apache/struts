@@ -39,8 +39,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 
@@ -50,6 +48,8 @@ import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -207,7 +207,7 @@ public class XSLTResult implements Result {
     private static final long serialVersionUID = 6424691441777176763L;
 
     /** Log instance for this result. */
-    private static final Log LOG = LogFactory.getLog(XSLTResult.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XSLTResult.class);
 
     /** 'stylesheetLocation' parameter.  Points to the xsl. */
     public static final String DEFAULT_PARAM = "stylesheetLocation";

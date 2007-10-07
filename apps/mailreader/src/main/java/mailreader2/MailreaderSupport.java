@@ -21,18 +21,20 @@
 
 package mailreader2;
 
-import org.apache.struts2.interceptor.ApplicationAware;
-import org.apache.struts2.interceptor.SessionAware;
-import com.opensymphony.xwork2.ActionSupport;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.Map;
+
 import org.apache.struts.apps.mailreader.dao.ExpiredPasswordException;
 import org.apache.struts.apps.mailreader.dao.Subscription;
 import org.apache.struts.apps.mailreader.dao.User;
 import org.apache.struts.apps.mailreader.dao.UserDatabase;
 import org.apache.struts.apps.mailreader.dao.impl.memory.MemorySubscription;
 import org.apache.struts.apps.mailreader.dao.impl.memory.MemoryUser;
-import java.util.Map;
+import org.apache.struts2.interceptor.ApplicationAware;
+import org.apache.struts2.interceptor.SessionAware;
+
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <p> Base Action for MailreaderSupport application. </p>
@@ -386,7 +388,7 @@ public class MailreaderSupport extends ActionSupport
     /**
      * <p><code>Log</code> instance for this application. </p>
      */
-    protected Log log = LogFactory.getLog(Constants.PACKAGE);
+    protected Logger log = LoggerFactory.getLogger(Constants.PACKAGE);
 
     /**
      * <p> Persist the User object, including subscriptions, to the database.

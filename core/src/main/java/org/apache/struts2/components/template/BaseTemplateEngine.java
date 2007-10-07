@@ -29,17 +29,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Base class for template engines.
  */
 public abstract class BaseTemplateEngine implements TemplateEngine {
 
-    private static final Log LOG = LogFactory.getLog(BaseTemplateEngine.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BaseTemplateEngine.class);
 
     /** The default theme properties file name. Default is 'theme.properties' */
     public static final String DEFAULT_THEME_PROPERTIES_FILE_NAME = "theme.properties";

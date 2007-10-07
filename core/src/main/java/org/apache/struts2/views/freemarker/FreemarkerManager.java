@@ -35,8 +35,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.JspSupportServlet;
 import org.apache.struts2.views.TagLibrary;
@@ -46,6 +44,8 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
@@ -101,7 +101,7 @@ import freemarker.template.TemplateModel;
  */
 public class FreemarkerManager {
 
-    private static final Log LOG = LogFactory.getLog(FreemarkerManager.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FreemarkerManager.class);
     public static final String CONFIG_SERVLET_CONTEXT_KEY = "freemarker.Configuration";
     public static final String KEY_EXCEPTION = "exception";
 

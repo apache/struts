@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsException;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -33,6 +31,9 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.UserDataHandler;
+
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * AbstractAdapterNode is the base for childAdapters that expose a read-only view
@@ -80,7 +81,7 @@ public abstract class AbstractAdapterNode implements AdapterNode {
             };
 
     private List<Node> childAdapters;
-    private Log log = LogFactory.getLog(this.getClass());
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     // The domain object that we are adapting
     private Object propertyValue;
@@ -90,8 +91,8 @@ public abstract class AbstractAdapterNode implements AdapterNode {
 
 
     public AbstractAdapterNode() {
-        if (LogFactory.getLog(getClass()).isDebugEnabled()) {
-            LogFactory.getLog(getClass()).debug("Creating " + this);
+        if (LoggerFactory.getLogger(getClass()).isDebugEnabled()) {
+            LoggerFactory.getLogger(getClass()).debug("Creating " + this);
         }
     }
 

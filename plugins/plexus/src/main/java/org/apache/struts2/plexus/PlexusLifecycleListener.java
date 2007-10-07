@@ -29,16 +29,17 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.codehaus.plexus.DefaultPlexusContainer;
 import org.codehaus.plexus.PlexusContainer;
+
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Manages the Plexus lifecycle for the servlet and session contexts
  */
 public class PlexusLifecycleListener implements ServletContextListener, HttpSessionListener {
-    private static final Log log = LogFactory.getLog(PlexusObjectFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PlexusObjectFactory.class);
 
     private static boolean loaded = false;
     public static final String KEY = "struts.plexus.container";
@@ -65,7 +66,7 @@ public class PlexusLifecycleListener implements ServletContextListener, HttpSess
             pc.initialize();
             pc.start();
         } catch (Exception e) {
-            log.error("Error initializing plexus container (scope: application)", e);
+            LOG.error("Error initializing plexus container (scope: application)", e);
         }
     }
 
@@ -78,7 +79,7 @@ public class PlexusLifecycleListener implements ServletContextListener, HttpSess
             PlexusContainer pc = (PlexusContainer) ctx.getAttribute(KEY);
             pc.dispose();
         } catch (Exception e) {
-            log.error("Error disposing plexus container (scope: application)", e);
+            LOG.error("Error disposing plexus container (scope: application)", e);
         }
     }
 
@@ -96,7 +97,7 @@ public class PlexusLifecycleListener implements ServletContextListener, HttpSess
             child.initialize();
             child.start();
         } catch (Exception e) {
-            log.error("Error initializing plexus container (scope: session)", e);
+            LOG.error("Error initializing plexus container (scope: session)", e);
         }
     }
 
@@ -109,7 +110,7 @@ public class PlexusLifecycleListener implements ServletContextListener, HttpSess
             PlexusContainer child = (PlexusContainer) session.getAttribute(KEY);
             child.dispose();
         } catch (Exception e) {
-            log.error("Error initializing plexus container (scope: session)", e);
+            LOG.error("Error initializing plexus container (scope: session)", e);
         }
     }
 }

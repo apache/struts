@@ -42,20 +42,24 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.RequestUtils;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.util.ClassLoaderUtils;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.config.Configuration;
+import com.opensymphony.xwork2.config.ConfigurationException;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
-import com.opensymphony.xwork2.ActionContext;
 
 /**
  * Master filter for Struts that handles four distinct
@@ -126,6 +130,8 @@ import com.opensymphony.xwork2.ActionContext;
  *
  * <li><b>configProviders</b> - a comma-delimited list of Java classes that implement the
  * {@link ConfigurationProvider} interface that should be used for building the {@link Configuration}.</li>
+ * 
+ * <li><b>loggerFactory</b> - The class name of the {@link LoggerFactory} implementation.</li>
  *
  * <li><b>*</b> - any other parameters are treated as framework constants.</li>
  *
@@ -148,7 +154,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     /**
      * Provide a logging instance.
      */
-    private static final Log LOG = LogFactory.getLog(FilterDispatcher.class);
+    private Logger log;
 
     /**
      * Store set of path prefixes to use with static resources.
@@ -197,8 +203,10 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      * @param filterConfig The filter configuration
      */
     public void init(FilterConfig filterConfig) throws ServletException {
-       this.filterConfig = filterConfig;
-
+        this.filterConfig = filterConfig;
+       
+        initLogging();
+        
         dispatcher = createDispatcher(filterConfig);
         dispatcher.init();
         dispatcher.getContainer().inject(this);
@@ -211,6 +219,29 @@ public class FilterDispatcher implements StrutsStatics, Filter {
         this.pathPrefixes = parse(packages);
     }
 
+    private void initLogging() {
+        String factoryName = filterConfig.getInitParameter("loggerFactory");
+        if (factoryName != null) {
+            try {
+                Class cls = ClassLoaderUtils.loadClass(factoryName, this.getClass());
+                LoggerFactory fac = (LoggerFactory)cls.newInstance();
+                LoggerFactory.setLoggerFactory(fac);
+            } catch (InstantiationException e) {
+                System.err.println("Unable to instantiate logger factory: "+factoryName+", using default");
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                System.err.println("Unable to access logger factory: "+factoryName+", using default");
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                System.err.println("Unable to locate logger factory class: "+factoryName+", using default");
+                e.printStackTrace();
+            }
+        }
+        
+        log = LoggerFactory.getLogger(FilterDispatcher.class);
+        
+    }
+
     /**
      * Calls dispatcher.cleanup,
      * which in turn releases local threads and destroys any DispatchListeners.
@@ -219,7 +250,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      */
     public void destroy() {
         if (dispatcher == null) {
-            LOG.warn("something is seriously wrong, Dispatcher is not initialized (null) ");
+            log.warn("something is seriously wrong, Dispatcher is not initialized (null) ");
         } else {
             dispatcher.cleanup();
         }
@@ -333,7 +364,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
             request = dispatcher.wrapRequest(request, getServletContext());
         } catch (IOException e) {
             String message = "Could not wrap servlet request with MultipartRequestWrapper!";
-            LOG.error(message, e);
+            log.error(message, e);
             throw new ServletException(message, e);
         }
 
@@ -400,7 +431,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
             try {
                 mapping = actionMapper.getMapping(request, dispatcher.getConfigurationManager());
             } catch (Exception ex) {
-                LOG.error("error getting ActionMapping", ex);
+                log.error("error getting ActionMapping", ex);
                 dispatcher.sendError(request, response, servletContext, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
                 return;
             }
@@ -456,7 +487,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
                     try {
                       ifModifiedSince = request.getDateHeader("If-Modified-Since");
                     } catch (Exception e) {
-                      LOG.warn("Invalid If-Modified-Since header value: '" + request.getHeader("If-Modified-Since") + "', ignoring");
+                      log.warn("Invalid If-Modified-Since header value: '" + request.getHeader("If-Modified-Since") + "', ignoring");
                     }
             long lastModifiedMillis = lastModifiedCal.getTimeInMillis();
             long now = cal.getTimeInMillis();

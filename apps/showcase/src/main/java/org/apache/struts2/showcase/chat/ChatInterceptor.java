@@ -22,20 +22,19 @@ package org.apache.struts2.showcase.chat;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Authenticate showcase chat example, make sure everyone have a username.
  */
 public class ChatInterceptor implements Interceptor {
 
-    private static final Log _log = LogFactory.getLog(ChatInterceptor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChatInterceptor.class);
 
     private static final long serialVersionUID = 1L;
 
@@ -51,7 +50,7 @@ public class ChatInterceptor implements Interceptor {
         HttpSession session = (HttpSession) ActionContext.getContext().get(ActionContext.SESSION);
         User chatUser = (User) session.getAttribute(CHAT_USER_SESSION_KEY);
         if (chatUser == null) {
-            _log.debug("Chat user not logged in");
+            LOG.debug("Chat user not logged in");
             return Action.LOGIN;
         }
         return invocation.invoke();

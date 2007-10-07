@@ -27,8 +27,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.config.BeanSelectionProvider;
 import org.apache.struts2.config.DefaultPropertiesProvider;
 import org.apache.struts2.config.LegacyPropertiesConfigurationProvider;
@@ -42,13 +40,15 @@ import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Initializes and retrieves XWork config elements
  */
 public class StrutsConfigRetriever {
 
-    private static final Log LOG = LogFactory.getLog(StrutsConfigRetriever.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StrutsConfigRetriever.class);
     private static String configDir;
     private static String[] views;
     private static boolean isXWorkStarted = false;

@@ -23,8 +23,6 @@ package org.apache.struts2.components;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.util.UrlHelper;
@@ -32,6 +30,8 @@ import org.apache.struts2.views.util.UrlHelper;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Implementation of the {@link UrlRenderer} interface that creates URLs suitable in a servlet environment.
@@ -41,7 +41,7 @@ public class ServletUrlRenderer implements UrlRenderer {
     /**
      * Provide a logging instance.
      */
-    private static final Log LOG = LogFactory.getLog(ServletUrlRenderer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ServletUrlRenderer.class);
 
 
 	/**

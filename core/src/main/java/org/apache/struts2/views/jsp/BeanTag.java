@@ -23,12 +23,12 @@ package org.apache.struts2.views.jsp;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.components.Bean;
 import org.apache.struts2.components.Component;
 
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -38,7 +38,7 @@ public class BeanTag extends ContextBeanTag {
 
     private static final long serialVersionUID = -3863152522071209267L;
 
-    protected static Log log = LogFactory.getLog(BeanTag.class);
+    protected static Logger LOG = LoggerFactory.getLogger(BeanTag.class);
 
     protected String name;
 

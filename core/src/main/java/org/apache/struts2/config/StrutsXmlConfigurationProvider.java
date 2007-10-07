@@ -32,9 +32,6 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.providers.XmlConfigurationProvider;
@@ -42,13 +39,15 @@ import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Context;
 import com.opensymphony.xwork2.inject.Factory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Override Xwork class so we can use an arbitrary config file
  */
 public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
 
-    private static final Log LOG = LogFactory.getLog(StrutsXmlConfigurationProvider.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StrutsXmlConfigurationProvider.class);
     private File baseDir = null;
     private String filename;
     private String reloadKey;

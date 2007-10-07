@@ -20,16 +20,18 @@
  */
 package org.apache.struts2.components;
 
-import org.apache.struts2.views.annotations.StrutsTag;
-import org.apache.struts2.views.annotations.StrutsTagAttribute;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import com.opensymphony.xwork2.util.ValueStack;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
-import java.util.LinkedHashMap;
+
+import org.apache.struts2.views.annotations.StrutsTag;
+import org.apache.struts2.views.annotations.StrutsTagAttribute;
+
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -72,7 +74,7 @@ import java.util.LinkedHashMap;
 @StrutsTag(name="inputtransferselect", tldTagClass="org.apache.struts2.views.jsp.ui.InputTransferSelectTag", description="Renders an input form")
 public class InputTransferSelect extends ListUIBean {
 
-    private static final Log _log = LogFactory.getLog(InputTransferSelect.class);
+    private static final Logger LOG = LoggerFactory.getLogger(InputTransferSelect.class);
 
     private static final String TEMPLATE = "inputtransferselect";
 
@@ -198,7 +200,7 @@ public class InputTransferSelect extends ListUIBean {
 
         }
         else {
-            _log.warn("form enclosing inputtransferselect "+this+" not found, auto select upon form submit of inputtransferselect will not work");
+            LOG.warn("form enclosing inputtransferselect "+this+" not found, auto select upon form submit of inputtransferselect will not work");
         }
     }
 

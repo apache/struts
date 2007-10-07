@@ -20,12 +20,12 @@
  */
 package org.apache.struts2.interceptor;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -80,14 +80,14 @@ public class CreateSessionInterceptor extends AbstractInterceptor {
 
     private static final long serialVersionUID = -4590322556118858869L;
 
-    private static final Log _log = LogFactory.getLog(CreateSessionInterceptor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CreateSessionInterceptor.class);
 
 
     /* (non-Javadoc)
      * @see com.opensymphony.xwork2.interceptor.Interceptor#intercept(com.opensymphony.xwork2.ActionInvocation)
      */
     public String intercept(ActionInvocation invocation) throws Exception {
-        _log.debug("Creating HttpSession");
+        LOG.debug("Creating HttpSession");
         ServletActionContext.getRequest().getSession(true);
         return invocation.invoke();
     }

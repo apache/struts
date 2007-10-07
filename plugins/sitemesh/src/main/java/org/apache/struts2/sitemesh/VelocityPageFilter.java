@@ -28,9 +28,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.views.freemarker.FreemarkerManager;
 import org.apache.struts2.views.velocity.VelocityManager;
 import org.apache.velocity.Template;
 import org.apache.velocity.context.Context;
@@ -40,6 +37,8 @@ import com.opensymphony.module.sitemesh.HTMLPage;
 import com.opensymphony.module.sitemesh.Page;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -47,7 +46,7 @@ import com.opensymphony.xwork2.inject.Inject;
  *
  */
 public class VelocityPageFilter extends TemplatePageFilter {
-    private static final Log LOG = LogFactory.getLog(VelocityPageFilter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(VelocityPageFilter.class);
 
     private static VelocityManager velocityManager;
     

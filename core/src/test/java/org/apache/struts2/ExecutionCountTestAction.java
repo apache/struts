@@ -20,10 +20,9 @@
  */
 package org.apache.struts2;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -34,7 +33,7 @@ public class ExecutionCountTestAction extends ActionSupport {
     private static final long serialVersionUID = -2954211394678430609L;
 
 
-    private static final Log LOG = LogFactory.getLog(ExecutionCountTestAction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExecutionCountTestAction.class);
 
 
     private int executionCount = 0;

@@ -31,10 +31,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 
 /**
@@ -67,7 +66,7 @@ import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
  */
 public class ActionContextCleanUp implements Filter {
 
-    private static final Log LOG = LogFactory.getLog(ActionContextCleanUp.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ActionContextCleanUp.class);
 
     private static final String COUNTER = "__cleanup_recursion_counter";
 

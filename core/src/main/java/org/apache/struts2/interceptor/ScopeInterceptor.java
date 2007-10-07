@@ -20,13 +20,10 @@
  */
 package org.apache.struts2.interceptor;
 
+import java.io.Serializable;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-import java.io.Serializable;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.SessionMap;
@@ -37,6 +34,8 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -142,7 +141,7 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
 
     private static final long serialVersionUID = 9120762699600054395L;
 
-    private static final Log LOG = LogFactory.getLog(ScopeInterceptor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ScopeInterceptor.class);
 
     private String[] application = null;
     private String[] session = null;

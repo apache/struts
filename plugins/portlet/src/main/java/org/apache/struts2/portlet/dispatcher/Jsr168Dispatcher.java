@@ -41,8 +41,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.StrutsStatics;
@@ -70,6 +68,8 @@ import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.FileManager;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.TextUtils;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -164,7 +164,7 @@ import com.opensymphony.xwork2.util.TextUtils;
 public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
         PortletActionConstants {
 
-    private static final Log LOG = LogFactory.getLog(Jsr168Dispatcher.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Jsr168Dispatcher.class);
 
     private ActionProxyFactory factory = null;
 

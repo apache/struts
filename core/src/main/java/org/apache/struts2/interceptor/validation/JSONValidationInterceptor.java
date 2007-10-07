@@ -29,14 +29,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <p>Serializes validation and action errors into JSON. This interceptor does not
@@ -65,8 +65,7 @@ import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
  * use this interceptor</p>
  */
 public class JSONValidationInterceptor extends MethodFilterInterceptor {
-    private static final Log LOG = LogFactory
-        .getLog(JSONValidationInterceptor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JSONValidationInterceptor.class);
     
     private static final String VALIDATE_ONLY_PARAM = "struts.validateOnly";
     private static final String VALIDATE_JSON_PARAM = "struts.enableJSONValidation";

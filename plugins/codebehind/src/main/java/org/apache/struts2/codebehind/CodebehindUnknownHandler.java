@@ -22,7 +22,6 @@ package org.apache.struts2.codebehind;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -31,8 +30,6 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.util.ClassLoaderUtils;
 
 import com.opensymphony.xwork2.Action;
@@ -50,6 +47,8 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
 import com.opensymphony.xwork2.config.providers.InterceptorBuilder;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Uses code-behind conventions to solve the two unknown problems.  
@@ -63,7 +62,7 @@ public class CodebehindUnknownHandler implements UnknownHandler {
     protected Configuration configuration;
     protected ObjectFactory objectFactory;
     
-    protected static final Log LOG = LogFactory.getLog(CodebehindUnknownHandler.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(CodebehindUnknownHandler.class);
 
     @Inject
     public CodebehindUnknownHandler(@Inject("struts.codebehind.defaultPackage") String defaultPackage, 

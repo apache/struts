@@ -23,13 +23,12 @@ package org.apache.struts2.portlet;
 import java.util.AbstractMap;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import javax.portlet.PortletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * A simple implementation of the {@link java.util.Map} interface to handle a collection of request attributes.
@@ -37,7 +36,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class PortletRequestMap extends AbstractMap {
 
-    private static final Log LOG = LogFactory.getLog(PortletRequestMap.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PortletRequestMap.class);
 
     private Set<Object> entries = null;
     private PortletRequest request = null;

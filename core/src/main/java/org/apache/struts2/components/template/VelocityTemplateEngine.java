@@ -20,27 +20,29 @@
  */
 package org.apache.struts2.components.template;
 
-import com.opensymphony.xwork2.inject.Inject;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.views.velocity.VelocityManager;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.context.Context;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.views.velocity.VelocityManager;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.context.Context;
+
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+
 /**
  * Velocity based template engine.
  */
 public class VelocityTemplateEngine extends BaseTemplateEngine {
-    private static final Log LOG = LogFactory.getLog(VelocityTemplateEngine.class);
+    private static final Logger LOG = LoggerFactory.getLogger(VelocityTemplateEngine.class);
     
     private VelocityManager velocityManager;
     

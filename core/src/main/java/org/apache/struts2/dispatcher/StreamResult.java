@@ -25,10 +25,9 @@ import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -80,7 +79,7 @@ public class StreamResult extends StrutsResultSupport {
 
     private static final long serialVersionUID = -1468409635999059850L;
 
-    protected static final Log log = LogFactory.getLog(StreamResult.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(StreamResult.class);
 
     public static final String DEFAULT_PARAM = "inputName";
 
@@ -185,7 +184,7 @@ public class StreamResult extends StrutsResultSupport {
             if (inputStream == null) {
                 String msg = ("Can not find a java.io.InputStream with the name [" + inputName + "] in the invocation stack. " +
                     "Check the <param name=\"inputName\"> tag specified for this action.");
-                log.error(msg);
+                LOG.error(msg);
                 throw new IllegalArgumentException(msg);
             }
 
@@ -206,7 +205,7 @@ public class StreamResult extends StrutsResultSupport {
                     }
                 }
                 catch(NumberFormatException e) {
-                    log.warn("failed to recongnize "+_contentLength+" as a number, contentLength header will not be set", e);
+                    LOG.warn("failed to recongnize "+_contentLength+" as a number, contentLength header will not be set", e);
                 }
             }
 
@@ -218,19 +217,19 @@ public class StreamResult extends StrutsResultSupport {
             // Get the outputstream
             oOutput = oResponse.getOutputStream();
 
-            if (log.isDebugEnabled()) {
-                log.debug("Streaming result [" + inputName + "] type=[" + contentType + "] length=[" + contentLength +
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Streaming result [" + inputName + "] type=[" + contentType + "] length=[" + contentLength +
                     "] content-disposition=[" + contentDisposition + "]");
             }
 
             // Copy input to output
-            log.debug("Streaming to output buffer +++ START +++");
+            LOG.debug("Streaming to output buffer +++ START +++");
             byte[] oBuff = new byte[bufferSize];
             int iSize;
             while (-1 != (iSize = inputStream.read(oBuff))) {
                 oOutput.write(oBuff, 0, iSize);
             }
-            log.debug("Streaming to output buffer +++ END +++");
+            LOG.debug("Streaming to output buffer +++ END +++");
 
             // Flush
             oOutput.flush();

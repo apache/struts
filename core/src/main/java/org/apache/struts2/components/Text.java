@@ -27,14 +27,14 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
+import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.util.TextUtils;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.TextProvider;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -119,7 +119,7 @@ import com.opensymphony.xwork2.TextProvider;
     description="Render a I18n text message",
     allowDynamicAttributes=true)
 public class Text extends ContextBean implements Param.UnnamedParametric {
-    private static final Log LOG = LogFactory.getLog(Text.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Text.class);
 
     protected List values = Collections.EMPTY_LIST;
     protected String actualName;

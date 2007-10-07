@@ -35,8 +35,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
@@ -75,6 +73,8 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.location.Location;
 import com.opensymphony.xwork2.util.location.LocationUtils;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 
 import freemarker.template.Template;
@@ -92,7 +92,7 @@ public class Dispatcher {
     /**
      * Provide a logging instance.
      */
-    private static final Log LOG = LogFactory.getLog(Dispatcher.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Dispatcher.class);
 
     /**
      * Provide a thread local instance.

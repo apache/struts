@@ -20,11 +20,12 @@
  */
 package org.apache.struts2.views.xslt;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * ProxyNodeAdapter is a read-only delegating adapter for objects which already
@@ -34,7 +35,7 @@ import org.w3c.dom.Node;
  */
 public abstract class ProxyNodeAdapter extends AbstractAdapterNode {
 
-    private Log log = LogFactory.getLog(this.getClass());
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     public ProxyNodeAdapter(AdapterFactory factory, AdapterNode parent, Node value) {
         setContext(factory, parent, "document"/*propname unused*/, value);

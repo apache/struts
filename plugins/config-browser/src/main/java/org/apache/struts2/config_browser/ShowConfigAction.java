@@ -24,13 +24,11 @@ import java.beans.PropertyDescriptor;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 
 /**
@@ -48,7 +46,7 @@ public class ShowConfigAction extends ActionNamesAction {
     private Set actionNames;
     private String detailView = "results";
     private PropertyDescriptor[] properties;
-    private static Log log = LogFactory.getLog(ShowConfigAction.class);
+    private static Logger LOG = LoggerFactory.getLogger(ShowConfigAction.class);
     
     private ConfigurationHelper configHelper;
     private ObjectFactory objectFactory;
@@ -118,7 +116,7 @@ public class ShowConfigAction extends ActionNamesAction {
             Class clazz = objectFactory.getClassInstance(getConfig().getClassName());
             properties = reflectionProvider.getPropertyDescriptors(clazz);
         } catch (Exception e) {
-            log.error("Unable to get properties for action " + actionName, e);
+            LOG.error("Unable to get properties for action " + actionName, e);
             addActionError("Unable to retrieve action properties: " + e.toString());
         }
 

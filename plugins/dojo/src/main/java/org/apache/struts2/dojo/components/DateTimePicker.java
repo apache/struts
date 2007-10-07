@@ -31,14 +31,14 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.components.UIBean;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.annotations.StrutsTagSkipInheritance;
 
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -174,7 +174,7 @@ public class DateTimePicker extends UIBean {
     final public static String TEMPLATE = "datetimepicker";
     final private static SimpleDateFormat RFC3339_FORMAT = new SimpleDateFormat(
     "yyyy-MM-dd'T'HH:mm:ss");
-    final protected static Log LOG = LogFactory.getLog(DateTimePicker.class);
+    final protected static Logger LOG = LoggerFactory.getLogger(DateTimePicker.class);
     
     protected String iconPath;
     protected String formatLength;
@@ -393,7 +393,7 @@ public class DateTimePicker extends UIBean {
                     formats.add(displayFormat);
                 } catch (Exception e) {
                     // don't use it then (this attribute is used by Dojo, not java code)
-                    LOG.error(e);
+                    LOG.error("Cannot use attribute", e);
                 }
             }
             

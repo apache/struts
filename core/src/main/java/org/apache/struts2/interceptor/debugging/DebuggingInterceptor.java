@@ -37,8 +37,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
@@ -50,6 +48,8 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
 
 /**
@@ -91,7 +91,7 @@ public class DebuggingInterceptor implements Interceptor {
 
     private static final long serialVersionUID = -3097324155953078783L;
 
-    private final static Log log = LogFactory.getLog(DebuggingInterceptor.class);
+    private final static Logger LOG = LoggerFactory.getLogger(DebuggingInterceptor.class);
 
     private String[] ignorePrefixes = new String[]{"org.apache.struts.",
             "com.opensymphony.xwork2.", "xwork."};
@@ -191,7 +191,7 @@ public class DebuggingInterceptor implements Interceptor {
                                 try {
                                     result.execute(inv);
                                 } catch (Exception ex) {
-                                    log.error("Unable to create debugging console", ex);
+                                    LOG.error("Unable to create debugging console", ex);
                                 }
 
                             }
@@ -250,7 +250,7 @@ public class DebuggingInterceptor implements Interceptor {
                                 result.setLocation("/org/apache/struts2/interceptor/debugging/browser.ftl");
                                 result.execute(inv);
                             } catch (Exception ex) {
-                                log.error("Unable to create debugging console", ex);
+                                LOG.error("Unable to create debugging console", ex);
                             }
 
                         }
@@ -365,8 +365,8 @@ public class DebuggingInterceptor implements Interceptor {
         writer.flush();
         // Check stack for this object
         if ((bean != null) && (stack.contains(bean))) {
-            if (log.isInfoEnabled()) {
-                log.info("Circular reference detected, not serializing object: "
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Circular reference detected, not serializing object: "
                         + name);
             }
             return;
@@ -426,7 +426,7 @@ public class DebuggingInterceptor implements Interceptor {
                         }
                     }
                 } catch (Exception e) {
-                    log.error(e, e);
+                    LOG.error(e.toString(), e);
                 }
             }
         }

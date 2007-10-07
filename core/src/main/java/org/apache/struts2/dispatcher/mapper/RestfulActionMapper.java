@@ -28,11 +28,11 @@ import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.RequestUtils;
 
 import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -63,7 +63,7 @@ import com.opensymphony.xwork2.config.ConfigurationManager;
  *
  */
 public class RestfulActionMapper implements ActionMapper {
-    protected static final Log LOG = LogFactory.getLog(RestfulActionMapper.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(RestfulActionMapper.class);
 
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getMapping(javax.servlet.http.HttpServletRequest)
@@ -105,7 +105,7 @@ public class RestfulActionMapper implements ActionMapper {
                 }
             }
         } catch (Exception e) {
-            LOG.warn(e);
+            LOG.warn("Cannot determine url parameters", e);
         }
 
         return new ActionMapping(actionName, "", "", parameters);

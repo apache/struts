@@ -27,10 +27,9 @@ import java.nio.charset.Charset;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -76,7 +75,7 @@ public class PlainTextResult extends StrutsResultSupport {
 
     public static final int BUFFER_SIZE = 1024;
 
-    private static final Log _log = LogFactory.getLog(PlainTextResult.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PlainTextResult.class);
 
     private static final long serialVersionUID = 3633371605905583950L;
 
@@ -120,7 +119,7 @@ public class PlainTextResult extends StrutsResultSupport {
                 charset = Charset.forName(charSet);
             }
             else {
-                _log.warn("charset ["+charSet+"] is not recognized ");
+                LOG.warn("charset ["+charSet+"] is not recognized ");
                 charset = null;
             }
         }
@@ -148,7 +147,7 @@ public class PlainTextResult extends StrutsResultSupport {
                 reader = new InputStreamReader(servletContext.getResourceAsStream(finalLocation));
             }
             if (reader == null) {
-                _log.warn("resource at location ["+finalLocation+"] cannot be obtained (return null) from ServletContext !!! ");
+                LOG.warn("resource at location ["+finalLocation+"] cannot be obtained (return null) from ServletContext !!! ");
             }
             else {
                 char[] buffer = new char[BUFFER_SIZE];

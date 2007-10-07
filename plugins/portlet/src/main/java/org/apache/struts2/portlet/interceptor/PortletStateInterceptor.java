@@ -25,8 +25,6 @@ import java.util.Map;
 import javax.portlet.ActionResponse;
 import javax.portlet.RenderRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.dispatcher.DirectRenderFromEventAction;
 
@@ -35,10 +33,12 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.CompoundRoot;
 import com.opensymphony.xwork2.util.TextUtils;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 public class PortletStateInterceptor extends AbstractInterceptor implements PortletActionConstants {
 
-	private final static Log LOG = LogFactory.getLog(PortletStateInterceptor.class);
+	private final static Logger LOG = LoggerFactory.getLogger(PortletStateInterceptor.class);
 
 	private static final long serialVersionUID = 6138452063353911784L;
 

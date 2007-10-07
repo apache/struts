@@ -25,11 +25,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -89,7 +89,7 @@ public class ServletDispatcherResult extends StrutsResultSupport {
 
     private static final long serialVersionUID = -1970659272360685627L;
 
-    private static final Log log = LogFactory.getLog(ServletDispatcherResult.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ServletDispatcherResult.class);
 
     public ServletDispatcherResult() {
         super();
@@ -109,8 +109,8 @@ public class ServletDispatcherResult extends StrutsResultSupport {
      *                   HTTP request.
      */
     public void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
-        if (log.isDebugEnabled()) {
-            log.debug("Forwarding to location " + finalLocation);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Forwarding to location " + finalLocation);
         }
 
         PageContext pageContext = ServletActionContext.getPageContext();

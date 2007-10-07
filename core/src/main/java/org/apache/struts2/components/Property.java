@@ -23,13 +23,13 @@ package org.apache.struts2.components;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
-import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.TextUtils;
+import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -89,7 +89,7 @@ import com.opensymphony.xwork2.util.TextUtils;
 @StrutsTag(name="property", tldBodyContent="empty", tldTagClass="org.apache.struts2.views.jsp.PropertyTag",
     description="Print out expression which evaluates against the stack")
 public class Property extends Component {
-    private static final Log LOG = LogFactory.getLog(Property.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Property.class);
 
     public Property(ValueStack stack) {
         super(stack);

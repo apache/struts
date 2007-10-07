@@ -34,12 +34,13 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.context.PortletActionContext;
+
 import com.opensymphony.xwork2.util.TextUtils;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Helper class for creating Portlet URLs. Portlet URLs are fundamentally different from regular
@@ -52,7 +53,7 @@ import com.opensymphony.xwork2.util.TextUtils;
 public class PortletUrlHelper {
     public static final String ENCODING = "UTF-8";
 
-    private static final Log LOG = LogFactory.getLog(PortletUrlHelper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PortletUrlHelper.class);
 
     /**
      * Create a portlet URL with for the specified action and namespace.

@@ -22,8 +22,6 @@ package org.apache.struts2.spring;
 
 import javax.servlet.ServletContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -31,6 +29,8 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.spring.SpringObjectFactory;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 
@@ -42,7 +42,7 @@ import com.opensymphony.xwork2.spring.SpringObjectFactory;
  *
  */
 public class StrutsSpringObjectFactory extends SpringObjectFactory {
-    private static final Log log = LogFactory.getLog(StrutsSpringObjectFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StrutsSpringObjectFactory.class);
 
     @Inject
     public StrutsSpringObjectFactory(
@@ -52,7 +52,7 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
           
         super();
         boolean useClassCache = "true".equals(useClassCacheStr);
-        log.info("Initializing Struts-Spring integration...");
+        LOG.info("Initializing Struts-Spring integration...");
 
         ApplicationContext appContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
         if (appContext == null) {
@@ -64,7 +64,7 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
                     "    <listener>\n" +
                     "        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>\n" +
                     "    </listener>";
-            log.fatal(message);
+            LOG.fatal(message);
             return;
         }
 
@@ -84,6 +84,6 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
 
         this.setUseClassCache(useClassCache);
 
-        log.info("... initialized Struts-Spring integration successfully");
+        LOG.info("... initialized Struts-Spring integration successfully");
     }
 }

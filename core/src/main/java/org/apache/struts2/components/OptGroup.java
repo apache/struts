@@ -27,14 +27,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -79,7 +79,7 @@ public class OptGroup extends Component {
 
     public static final String INTERNAL_LIST_UI_BEAN_LIST_PARAMETER_KEY = "optGroupInternalListUiBeanList";
 
-    private static Log _log = LogFactory.getLog(OptGroup.class);
+    private static Logger LOG = LoggerFactory.getLogger(OptGroup.class);
 
     protected HttpServletRequest req;
     protected HttpServletResponse res;
@@ -105,7 +105,7 @@ public class OptGroup extends Component {
     public boolean end(Writer writer, String body) {
         Select select = (Select) findAncestor(Select.class);
         if (select == null) {
-            _log.error("incorrect use of OptGroup component, this component must be used within a Select component",
+            LOG.error("incorrect use of OptGroup component, this component must be used within a Select component",
                     new IllegalStateException("incorrect use of OptGroup component, this component must be used within a Select component"));
             return false;
         }

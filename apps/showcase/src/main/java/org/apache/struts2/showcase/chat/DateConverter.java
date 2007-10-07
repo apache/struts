@@ -25,13 +25,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.util.StrutsTypeConverter;
+
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 public class DateConverter extends StrutsTypeConverter {
 
-    private static final Log _log = LogFactory.getLog(DateConverter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DateConverter.class);
 
     public Object convertFromString(Map context, String[] values, Class toClass) {
 
@@ -41,7 +42,7 @@ public class DateConverter extends StrutsTypeConverter {
                 return sdf.parse(values[0]);
             }
             catch(ParseException e) {
-                _log.error("error converting value ["+values[0]+"] to Date ", e);
+                LOG.error("error converting value ["+values[0]+"] to Date ", e);
             }
         }
         return null;

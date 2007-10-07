@@ -23,14 +23,15 @@ package org.apache.struts2.views.xslt;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.TypeInfo;
+
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * ProxyElementAdapter is a pass-through adapter for objects which already
@@ -43,7 +44,7 @@ import org.w3c.dom.TypeInfo;
  */
 public class ProxyElementAdapter extends ProxyNodeAdapter implements Element {
 
-    private Log log = LogFactory.getLog(this.getClass());
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     public ProxyElementAdapter(AdapterFactory factory, AdapterNode parent, Element value) {
         super(factory, parent, value);

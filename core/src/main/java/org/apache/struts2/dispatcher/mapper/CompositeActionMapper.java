@@ -25,13 +25,13 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsConstants;
 
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -84,7 +84,7 @@ import com.opensymphony.xwork2.inject.Inject;
  */
 public class CompositeActionMapper implements ActionMapper {
 
-    private static final Log LOG = LogFactory.getLog(CompositeActionMapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CompositeActionMapper.class);
 
     protected Container container;
     

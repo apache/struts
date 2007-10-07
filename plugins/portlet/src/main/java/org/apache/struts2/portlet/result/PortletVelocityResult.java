@@ -20,13 +20,10 @@
  */
 package org.apache.struts2.portlet.result;
 
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 import javax.portlet.ActionResponse;
-import javax.portlet.PortletException;
-import javax.portlet.PortletRequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -34,8 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspFactory;
 import javax.servlet.jsp.PageContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
@@ -51,6 +46,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -94,8 +91,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
 
     private static final long serialVersionUID = -8241086555872212274L;
 
-    private static final Log log = LogFactory
-            .getLog(PortletVelocityResult.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PortletVelocityResult.class);
     
     private String defaultEncoding;
     private VelocityManager velocityManager;
@@ -208,7 +204,7 @@ public class PortletVelocityResult extends StrutsResultSupport {
             // deprecated, we'll oblige :)
             writer.flush();
         } catch (Exception e) {
-            log.error("Unable to render Velocity Template, '" + finalLocation
+            LOG.error("Unable to render Velocity Template, '" + finalLocation
                     + "'", e);
             throw e;
         } finally {

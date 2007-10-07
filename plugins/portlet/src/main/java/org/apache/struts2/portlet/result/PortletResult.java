@@ -36,8 +36,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
 import org.apache.struts2.portlet.PortletActionConstants;
@@ -46,6 +44,8 @@ import org.apache.struts2.portlet.context.PortletActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.TextUtils;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * Result type that includes a JSP to render.
@@ -62,7 +62,7 @@ public class PortletResult extends StrutsResultSupport implements PortletActionC
 	/**
 	 * Logger instance.
 	 */
-	private static final Log LOG = LogFactory.getLog(PortletResult.class);
+	private static final Logger LOG = LoggerFactory.getLogger(PortletResult.class);
 
 	private String contentType = "text/html";
 

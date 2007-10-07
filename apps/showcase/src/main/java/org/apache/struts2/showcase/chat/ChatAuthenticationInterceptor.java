@@ -21,20 +21,20 @@
 package org.apache.struts2.showcase.chat;
 
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.dispatcher.SessionMap;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 public class ChatAuthenticationInterceptor implements Interceptor {
 
     private static final long serialVersionUID = 1L;
 
-    private static final Log _log = LogFactory.getLog(ChatAuthenticationInterceptor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChatAuthenticationInterceptor.class);
 
     public static final String USER_SESSION_KEY = "chatUserSessionKey";
 
@@ -46,7 +46,7 @@ public class ChatAuthenticationInterceptor implements Interceptor {
 
     public String intercept(ActionInvocation invocation) throws Exception {
 
-        _log.debug("Authenticating chat user");
+        LOG.debug("Authenticating chat user");
 
         SessionMap session = (SessionMap) ActionContext.getContext().get(ActionContext.SESSION);
         User user = (User) session.get(USER_SESSION_KEY);

@@ -25,8 +25,6 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.codehaus.plexus.PlexusContainer;
 
 import com.opensymphony.xwork2.Action;
@@ -38,6 +36,8 @@ import com.opensymphony.xwork2.config.entities.InterceptorConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.validator.Validator;
 
 /**
@@ -70,7 +70,7 @@ import com.opensymphony.xwork2.validator.Validator;
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
  */
 public class PlexusObjectFactory extends ObjectFactory {
-    private static final Log log = LogFactory.getLog(PlexusObjectFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PlexusObjectFactory.class);
 
     private static final String PLEXUS_COMPONENT_TYPE = "plexus.component.type";
 
@@ -105,7 +105,7 @@ public class PlexusObjectFactory extends ObjectFactory {
                     "    <listener>\n" +
                     "        <listener-class>org.apache.struts2.plexus.PlexusLifecycleListener</listener-class>\n" +
                     "    </listener>";
-            log.fatal(message);
+            LOG.fatal(message);
             return;
         }
 
@@ -293,7 +293,7 @@ public class PlexusObjectFactory extends ObjectFactory {
             return pc.lookup(role, roleHint);
         }
         catch (Exception e) {
-            log.debug("Can't load component (" + role + "/" + roleHint + ") with plexus, try now with struts.", e);
+            LOG.debug("Can't load component (" + role + "/" + roleHint + ") with plexus, try now with struts.", e);
             Object o = super.buildBean(super.getClassInstance(role), extraContext);
             pc.autowire(o);
             return o;

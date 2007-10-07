@@ -25,10 +25,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -38,7 +37,7 @@ import com.opensymphony.xwork2.Action;
  */
 public class IteratorGenerator implements Iterator, Action {
 
-    private static final Log _log = LogFactory.getLog(IteratorGenerator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IteratorGenerator.class);
 
     List values;
     Object value;
@@ -93,7 +92,7 @@ public class IteratorGenerator implements Iterator, Action {
                             values.add(convertedObj);
                         }
                         catch(Exception e) { // make sure things, goes on, we just ignore the bad ones
-                            _log.warn("unable to convert ["+token+"], skipping this token, it will not appear in the generated iterator", e);
+                            LOG.warn("unable to convert ["+token+"], skipping this token, it will not appear in the generated iterator", e);
                         }
                     }
                     else {

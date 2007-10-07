@@ -24,14 +24,15 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
+
 public class ChatSessionListener implements HttpSessionListener {
 
-    private static final Log _log = LogFactory.getLog(ChatSessionListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChatSessionListener.class);
 
     public void sessionCreated(HttpSessionEvent event) {
     }
@@ -45,7 +46,7 @@ public class ChatSessionListener implements HttpSessionListener {
                 ChatService service = (ChatService) context.getBean("chatService");
                 service.logout(user.getName());
 
-                _log.info("session expired, logged user ["+user.getName()+"] out");
+                LOG.info("session expired, logged user ["+user.getName()+"] out");
             }
         }
     }

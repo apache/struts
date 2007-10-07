@@ -29,10 +29,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextFactory;
 import com.opensymphony.xwork2.util.reflection.ReflectionException;
 import com.opensymphony.xwork2.util.reflection.ReflectionProvider;
@@ -45,7 +44,7 @@ import com.opensymphony.xwork2.validator.Validator;
 public class ShowValidatorAction extends ListValidatorsAction {
     private static final long serialVersionUID = 4061534149317835177L;
 
-    private static Log log = LogFactory.getLog(ShowValidatorAction.class);
+    private static Logger LOG = LoggerFactory.getLogger(ShowValidatorAction.class);
 
     Set properties = Collections.EMPTY_SET;
     int selected = 0;
@@ -89,7 +88,7 @@ public class ShowValidatorAction extends ListValidatorsAction {
             try {
                 beanInfoFrom = Introspector.getBeanInfo(validator.getClass(), Object.class);
             } catch (IntrospectionException e) {
-                log.error("An error occurred", e);
+                LOG.error("An error occurred", e);
                 addActionError("An error occurred while introspecting a validator of type " + validator.getClass().getName());
                 return ERROR;
             }
@@ -112,7 +111,7 @@ public class ShowValidatorAction extends ListValidatorsAction {
                 properties.add(new PropertyInfo(name, pd.getPropertyType(), value));
             }
         } catch (Exception e) {
-            log.warn("Unable to retrieve properties.", e);
+            LOG.warn("Unable to retrieve properties.", e);
             addActionError("Unable to retrieve properties: " + e.toString());
         }
 

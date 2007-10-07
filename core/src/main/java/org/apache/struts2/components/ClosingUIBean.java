@@ -25,17 +25,17 @@ import java.io.Writer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * ClosingUIBean is the standard superclass for UI components such as div etc.
  */
 public abstract class ClosingUIBean extends UIBean {
-    private static final Log LOG = LogFactory.getLog(ClosingUIBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ClosingUIBean.class);
 
     protected ClosingUIBean(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);

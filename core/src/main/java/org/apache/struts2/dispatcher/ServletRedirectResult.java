@@ -23,8 +23,6 @@ package org.apache.struts2.dispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -32,6 +30,8 @@ import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -81,7 +81,7 @@ public class ServletRedirectResult extends StrutsResultSupport {
 
     private static final long serialVersionUID = 6316947346435301270L;
 
-    private static final Log log = LogFactory.getLog(ServletRedirectResult.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ServletRedirectResult.class);
 
     protected boolean prependServletContext = true;
 
@@ -146,8 +146,8 @@ public class ServletRedirectResult extends StrutsResultSupport {
             finalLocation = response.encodeRedirectURL(finalLocation);
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("Redirecting to finalLocation " + finalLocation);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Redirecting to finalLocation " + finalLocation);
         }
 
         response.sendRedirect(finalLocation);

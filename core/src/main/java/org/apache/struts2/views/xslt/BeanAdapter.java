@@ -30,11 +30,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsException;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 
 /**
@@ -64,7 +65,7 @@ public class BeanAdapter extends AbstractAdapterElement {
 
     //~ Instance fields ////////////////////////////////////////////////////////
 
-    private Log log = LogFactory.getLog(this.getClass());
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     //~ Constructors ///////////////////////////////////////////////////////////
 
@@ -121,7 +122,7 @@ public class BeanAdapter extends AbstractAdapterElement {
                 } catch (Exception e) {
                     if (e instanceof InvocationTargetException)
                         e = (Exception) ((InvocationTargetException) e).getTargetException();
-                    log.error(e);
+                    log.error("Cannot access bean property: "+propertyName, e);
                     continue;
                 }
 

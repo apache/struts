@@ -33,8 +33,6 @@ import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 
@@ -44,6 +42,8 @@ import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -162,7 +162,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
 
     private static final long serialVersionUID = -4764627478894962478L;
 
-    protected static final Log log = LogFactory.getLog(FileUploadInterceptor.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(FileUploadInterceptor.class);
     private static final String DEFAULT_DELIMITER = ",";
     private static final String DEFAULT_MESSAGE = "no.message.found";
 
@@ -199,9 +199,9 @@ public class FileUploadInterceptor extends AbstractInterceptor {
         HttpServletRequest request = (HttpServletRequest) ac.get(ServletActionContext.HTTP_REQUEST);
 
         if (!(request instanceof MultiPartRequestWrapper)) {
-            if (log.isDebugEnabled()) {
+            if (LOG.isDebugEnabled()) {
                 ActionProxy proxy = invocation.getProxy();
-                log.debug(getTextMessage("struts.messages.bypass.request", new Object[]{proxy.getNamespace(), proxy.getActionName()}, ActionContext.getContext().getLocale()));
+                LOG.debug(getTextMessage("struts.messages.bypass.request", new Object[]{proxy.getNamespace(), proxy.getActionName()}, ActionContext.getContext().getLocale()));
             }
 
             return invocation.invoke();
@@ -224,7 +224,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                     validation.addActionError(error);
                 }
 
-                log.error(error);
+                LOG.error(error);
             }
         }
 
@@ -257,10 +257,10 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                         }
                     }
                 } else {
-                    log.error(getTextMessage("struts.messages.invalid.file", new Object[]{inputName}, ActionContext.getContext().getLocale()));
+                    LOG.error(getTextMessage("struts.messages.invalid.file", new Object[]{inputName}, ActionContext.getContext().getLocale()));
                 }
             } else {
-                log.error(getTextMessage("struts.messages.invalid.content.type", new Object[]{inputName}, ActionContext.getContext().getLocale()));
+                LOG.error(getTextMessage("struts.messages.invalid.content.type", new Object[]{inputName}, ActionContext.getContext().getLocale()));
             }
         }
 
@@ -274,7 +274,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
             File[] file = multiWrapper.getFiles(inputValue);
             for (int index = 0; index < file.length; index++) {
                 File currentFile = file[index];
-                log.info(getTextMessage("struts.messages.removing.file", new Object[]{inputValue, currentFile}, ActionContext.getContext().getLocale()));
+                LOG.info(getTextMessage("struts.messages.removing.file", new Object[]{inputValue, currentFile}, ActionContext.getContext().getLocale()));
 
                 if ((currentFile != null) && currentFile.isFile()) {
                     currentFile.delete();
@@ -306,21 +306,21 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                 validation.addFieldError(inputName, errMsg);
             }
 
-            log.error(errMsg);
+            LOG.error(errMsg);
         } else if (maximumSize != null && maximumSize.longValue() < file.length()) {
             String errMsg = getTextMessage("struts.messages.error.file.too.large", new Object[]{inputName, file.getName(), "" + file.length()}, locale);
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
 
-            log.error(errMsg);
+            LOG.error(errMsg);
         } else if ((! allowedTypesSet.isEmpty()) && (!containsItem(allowedTypesSet, contentType))) {
             String errMsg = getTextMessage("struts.messages.error.content.type.not.allowed", new Object[]{inputName, file.getName(), contentType}, locale);
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
 
-            log.error(errMsg);
+            LOG.error(errMsg);
         } else {
             fileIsAcceptable = true;
         }

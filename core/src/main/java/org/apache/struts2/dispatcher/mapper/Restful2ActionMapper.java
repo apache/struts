@@ -20,17 +20,18 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
-import com.opensymphony.xwork2.config.ConfigurationManager;
-import com.opensymphony.xwork2.inject.Inject;
-
-import javax.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.StringTokenizer;
-import java.net.URLDecoder;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.struts2.StrutsConstants;
+
+import com.opensymphony.xwork2.config.ConfigurationManager;
+import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -93,7 +94,7 @@ import org.apache.struts2.StrutsConstants;
  */
 public class Restful2ActionMapper extends DefaultActionMapper {
 
-    protected static final Log LOG = LogFactory.getLog(Restful2ActionMapper.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(Restful2ActionMapper.class);
     public static final String HTTP_METHOD_PARAM = "__http_method";
     private String idParameterName = null;
     
@@ -203,7 +204,7 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                         mapping.getParams().putAll(parameters);
                     }
                 } catch (Exception e) {
-                    LOG.warn(e);
+                    LOG.warn("Unable to determine parameters from the url", e);
                 }
                 mapping.setName(actionName.substring(actionSlashPos+1));
             }

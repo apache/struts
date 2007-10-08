@@ -326,12 +326,6 @@
             <version>2.6.11</version>
         </dependency>
 
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.0.4</version>
-        </dependency>
-
         <!-- Ajax -->
         <dependency>
             <groupId>uk.ltd.getahead</groupId>

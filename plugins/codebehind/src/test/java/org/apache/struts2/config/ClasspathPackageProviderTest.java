@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ClasspathPackageProviderTest.java 501717 2007-01-31 03:51:11Z mrdon $
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -33,13 +33,14 @@ import com.opensymphony.xwork2.config.impl.DefaultConfiguration;
 
 import junit.framework.TestCase;
 
-public class ClasspathConfigurationProviderTest extends TestCase {
+public class ClasspathPackageProviderTest extends TestCase {
 
-    ClasspathConfigurationProvider provider;
+    ClasspathPackageProvider provider;
     Configuration config;
 
     public void setUp() {
-        provider = new ClasspathConfigurationProvider(new String[]{"org.apache.struts2.config"});
+        provider = new ClasspathPackageProvider();
+        provider.setActionPackages("org.apache.struts2.config");
         config = new DefaultConfiguration();
         PackageConfig strutsDefault = new PackageConfig("struts-default");
         strutsDefault.addResultTypeConfig(new ResultTypeConfig("dispatcher", ServletDispatcherResult.class.getName(), "location"));

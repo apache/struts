@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ClasspathPackageProvider.java 582626 2007-10-07 13:26:12Z mrdon $
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,15 +22,19 @@ package org.apache.struts2.config;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.ServletContext;
+
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.ConfigurationProvider;
+import com.opensymphony.xwork2.config.PackageProvider;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
@@ -46,14 +50,14 @@ import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
- * ClasspathConfigurationProvider loads the configuration
+ * ClasspathPackageProvider loads the configuration
  * by scanning the classpath or selected packages for Action classes.
  * <p>
  * This provider is only invoked if one or more action packages are passed to the dispatcher,
  * usually from the web.xml.
  * Configurations are created for objects that either implement Action or have classnames that end with "Action".
  */
-public class ClasspathConfigurationProvider implements ConfigurationProvider {
+public class ClasspathPackageProvider implements PackageProvider {
 
     /**
      * The default page prefix (or "path").
@@ -120,11 +124,6 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
     private boolean initialized = false;
 
     /**
-     * The list of packages to scan for Action classes.
-     */
-    private String[] packages;
-
-    /**
      * The package configurations for scanned Actions.
      *
      * @see #loadPackageConfig
@@ -134,7 +133,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
     /**
      * Logging instance for this class.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(ClasspathConfigurationProvider.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ClasspathPackageProvider.class);
 
     /**
      * The XWork Configuration for this application.
@@ -143,13 +142,16 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
      */
     private Configuration configuration;
 
+    private String actionPackages;
+
+    private ServletContext servletContext;
+
     /**
      * Create instance utilizing a list of packages to scan for Action classes.
      *
      * @param pkgs List of pacaktges to scan for Action Classes.
      */
-    public ClasspathConfigurationProvider(String[] pkgs) {
-        this.packages = pkgs;
+    public ClasspathPackageProvider() {
     }
 
     /**
@@ -166,6 +168,15 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
         public URL locate(String path) {
             return ClassLoaderUtil.getResource(path, getClass());
         }
+    }
+    
+    @Inject("actionPackages")
+    public void setActionPackages(String packages) {
+        this.actionPackages = packages;
+    }
+    
+    public void setServletContext(ServletContext ctx) {
+        this.servletContext = ctx;
     }
 
     /**
@@ -271,7 +282,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
         for (String pkg : pkgs) {
             if (name.startsWith(pkg)) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("ClasspathConfigurationProvider: Processing class "+name);
+                    LOG.debug("ClasspathPackageProvider: Processing class "+name);
                 }
                 name = name.substring(pkg.length() + 1);
 
@@ -298,7 +309,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
             String parent = ((ParentPackage)annotation).value();
             PackageConfig parentPkg = configuration.getPackageConfig(parent);
             if (parentPkg == null) {
-                throw new ConfigurationException("ClasspathConfigurationProvider: Unable to locate parent package "+parent, annotation);
+                throw new ConfigurationException("ClasspathPackageProvider: Unable to locate parent package "+parent, annotation);
             }
             pkgConfig.addParent(parentPkg);
 
@@ -363,7 +374,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
             }
 
             if (parent == null) {
-                throw new ConfigurationException("ClasspathConfigurationProvider: Unable to locate default parent package: " +
+                throw new ConfigurationException("ClasspathPackageProvider: Unable to locate default parent package: " +
                         defaultParentPackage);
             }
             pkgConfig.addParent(parent);
@@ -398,7 +409,14 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
      */
     public void loadPackages() throws ConfigurationException {
         loadedPackageConfigs.clear();
-        loadPackages(packages);
+        if (actionPackages != null) {
+            String[] names = actionPackages.split("\\s*[,]\\s*");
+            // Initialize the classloader scanner with the configured packages
+            if (names.length > 0) {
+                setPageLocator(new ServletContextPageLocator(servletContext));
+            }
+            loadPackages(names);
+        }
         initialized = true;
     }
 
@@ -501,7 +519,7 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
                 try {
                     resultClass = ClassLoaderUtil.loadClass(className, getClass());
                 } catch (ClassNotFoundException ex) {
-                    throw new ConfigurationException("ClasspathConfigurationProvider: Unable to locate result class "+className, actionClass);
+                    throw new ConfigurationException("ClasspathPackageProvider: Unable to locate result class "+className, actionClass);
                 }
             }
 
@@ -523,8 +541,30 @@ public class ClasspathConfigurationProvider implements ConfigurationProvider {
         }
     }
 
-    // See superclass for Javadoc
-    public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
-        // Override to provide functionality
+    /**
+     * Search classpath for a page.
+     */
+    private final class ServletContextPageLocator implements PageLocator {
+        private final ServletContext context;
+        private ClasspathPageLocator classpathPageLocator = new ClasspathPageLocator();
+
+        private ServletContextPageLocator(ServletContext context) {
+            this.context = context;
+        }
+
+        public URL locate(String path) {
+            URL url = null;
+            try {
+                url = context.getResource(path);
+                if (url == null) {
+                    url = classpathPageLocator.locate(path);
+                }
+            } catch (MalformedURLException e) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Unable to resolve path "+path+" against the servlet context");
+                }
+            }
+            return url;
+        }
     }
 }

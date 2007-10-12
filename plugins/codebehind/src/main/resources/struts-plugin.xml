@@ -28,6 +28,7 @@
 
 <struts>
     <bean type="com.opensymphony.xwork2.UnknownHandler" class="org.apache.struts2.codebehind.CodebehindUnknownHandler" />
+    <bean type="com.opensymphony.xwork2.config.PackageProvider" name="codebehind" class="org.apache.struts2.config.ClasspathPackageProvider" />
 
     <constant name="struts.codebehind.pathPrefix" value="/"/>
     <constant name="struts.codebehind.defaultPackage" value="codebehind-default"/>

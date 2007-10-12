@@ -22,6 +22,7 @@ package org.apache.struts2.codebehind;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
 
 import javax.servlet.ServletContext;
@@ -34,9 +35,11 @@ import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.Result;
 import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
+import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
 
 public class CodebehindUnknownHandlerTest extends StrutsTestCase {
 
@@ -44,7 +47,11 @@ public class CodebehindUnknownHandlerTest extends StrutsTestCase {
     Mock mockServletContext;
     
     public void setUp() throws Exception {
-        super.setUp();
+        configurationManager = XWorkTestCaseHelper.setUp();
+        configuration = configurationManager.getConfiguration();
+        container = configuration.getContainer();
+        actionProxyFactory = container.getInstance(ActionProxyFactory.class);
+        initDispatcher(Collections.singletonMap("actionPackages", "foo.bar"));
         mockServletContext = new Mock(ServletContext.class);
         handler = new CodebehindUnknownHandler("codebehind-default", configuration);
         handler.setPathPrefix("/");

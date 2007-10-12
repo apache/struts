@@ -39,12 +39,9 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.config.BeanSelectionProvider;
-import org.apache.struts2.config.ClasspathConfigurationProvider;
 import org.apache.struts2.config.DefaultPropertiesProvider;
 import org.apache.struts2.config.LegacyPropertiesConfigurationProvider;
 import org.apache.struts2.config.StrutsXmlConfigurationProvider;
-import org.apache.struts2.config.ClasspathConfigurationProvider.ClasspathPageLocator;
-import org.apache.struts2.config.ClasspathConfigurationProvider.PageLocator;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
@@ -302,19 +299,6 @@ public class Dispatcher {
         }
     }
 
-    private void init_ZeroConfiguration() {
-        String packages = initParams.get("actionPackages");
-        if (packages != null) {
-            String[] names = packages.split("\\s*[,]\\s*");
-            // Initialize the classloader scanner with the configured packages
-            if (names.length > 0) {
-                ClasspathConfigurationProvider provider = new ClasspathConfigurationProvider(names);
-                provider.setPageLocator(new ServletContextPageLocator(servletContext));
-                configurationManager.addConfigurationProvider(provider);
-            }
-        }
-    }
-
     private void init_CustomConfigurationProviders() {
         String configProvs = initParams.get("configProviders");
         if (configProvs != null) {
@@ -434,7 +418,6 @@ Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyExcepti
     	init_DefaultProperties(); // [1]
         init_TraditionalXmlConfigurations(); // [2]
         init_LegacyStrutsProperties(); // [3]
-        init_ZeroConfiguration(); // [4]
         init_CustomConfigurationProviders(); // [5]
         init_MethodConfigurationProvider();
         init_FilterInitParameters() ; // [6]
@@ -757,32 +740,7 @@ Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyExcepti
         }
     }
 
-    /**
-     * Search classpath for a page.
-     */
-    private final class ServletContextPageLocator implements PageLocator {
-        private final ServletContext context;
-        private ClasspathPageLocator classpathPageLocator = new ClasspathPageLocator();
-
-        private ServletContextPageLocator(ServletContext context) {
-            this.context = context;
-        }
-
-        public URL locate(String path) {
-            URL url = null;
-            try {
-                url = context.getResource(path);
-                if (url == null) {
-                    url = classpathPageLocator.locate(path);
-                }
-            } catch (MalformedURLException e) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Unable to resolve path "+path+" against the servlet context");
-                }
-            }
-            return url;
-        }
-    }
+    
 
     /**
      * Provide an accessor class for static XWork utility.

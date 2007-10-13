@@ -41,17 +41,17 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 /**
  * <!-- START SNIPPET: description -->
  *
- * The aim of this interceptor is to set values in the stack/action based on cookie name/value
+ * The aim of this intercepter is to set values in the stack/action based on cookie name/value
  * of interest. <p/>
  *
- * If an asterik is present in cookiesName parameter, it will be assume that
+ * If an asterisk is present in cookiesName parameter, it will be assume that
  * all cookies name are to be injected into struts' action, even though
- * cookiesName is comma-separated by other values, eg (cookie1,*,cookie2). <p/>
+ * cookiesName is comma-separated by other values, e.g. (cookie1,*,cookie2). <p/>
  *
  * If cookiesName is left empty it will assume that no cookie will be injected
  * into Struts' action. <p/>
  *
- * If an asterik is present in cookiesValue parameter, it will assume that all
+ * If an asterisk is present in cookiesValue parameter, it will assume that all
  * cookies name irrespective of its value will be injected into Struts' action so
  * long as the cookie name matches those specified in cookiesName parameter.<p/>
  *

@@ -176,5 +176,8 @@ public final class StrutsConstants {
 
     /** The {@link com.opensymphony.xwork2.reflection.ReflectionContextFactory} implementation class */
     public static final String STRUTS_REFLECTIONCONTEXTFACTORY = "struts.reflectionContextFactory";
+    
+    /** The {@link com.opensymphony.xwork2.util.PatternMatcher} implementation class */
+    public static final String STRUTS_PATTERNMATCHER = "struts.patternMatcher";
 
 }

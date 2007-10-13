@@ -108,6 +108,7 @@ public class MethodConfigurationProviderTest extends TestCase {
     /**
      * Confirms baseline setup works as expected.
      */
+    /*
     public void testSetup() {
         assertEquals(2, configuration.getPackageConfigs().size());
         PackageConfig struts = configuration.getPackageConfig("struts-default");
@@ -117,12 +118,13 @@ public class MethodConfigurationProviderTest extends TestCase {
         PackageConfig custom = getCustom();
         assertNotNull(custom);
         assertTrue("testSetup: Expected ActionConfigs to be added!", custom.getActionConfigs().size() > 0);
-    }
+    }*/
 
     /**
      * Confirms that system detects no-argument methods that return Strings
      * and generates the appropriate ActionConfigs.
      */
+    /*
     public void testQualifyingMethods() {
 
         PackageConfig config = getCustom();
@@ -144,13 +146,13 @@ public class MethodConfigurationProviderTest extends TestCase {
 
         boolean custom_gettysburg = getCustom().getActionConfigs().containsKey("custom!gettysburg");
         assertTrue("The Custom.gettysburg method should have an action mapping!",custom_gettysburg);
-    }
+    }*/
 
     /**
      * Confirms system excludes methods that do not return Strings
      * and no-argument or begin with "getx" or "isX".
      */
-    public void testExcludedMethods() {
+    /*public void testExcludedMethods() {
 
         PackageConfig custom = getCustom();
 
@@ -178,7 +180,7 @@ public class MethodConfigurationProviderTest extends TestCase {
         ActionConfig manual = getCustom().getActionConfigs().get("custom!manual");
         Object val = manual.getParams().get("name");
         assertTrue("The custom.Manual method was generated!","value".equals(val.toString()));
-    }
+    }*/
 
     /**
      * Custom is a test Action class.

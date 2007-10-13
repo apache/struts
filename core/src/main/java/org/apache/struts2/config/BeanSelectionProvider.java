@@ -45,6 +45,7 @@ import com.opensymphony.xwork2.inject.Factory;
 import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
+import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -143,6 +144,12 @@ import com.opensymphony.xwork2.validator.ActionValidatorManager;
  *     <td>singleton</td>
  *     <td>All beans registered as PackageProvider implementations will be automatically included in configuration building (since 2.1)</td>
  *   </tr>
+ *   <tr>
+ *     <td>com.opensymphony.xwork2.util.PatternMatcher</td>
+ *     <td>struts.patternMatcher</td>
+ *     <td>singleton</td>
+ *     <td>Matches patterns, such as action names, generally used in configuration (since 2.1)</td>
+ *   </tr>
  * </table>
  * 
  * <!-- END SNIPPET: extensionPoints -->
@@ -200,6 +207,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         alias(ValueStackFactory.class, StrutsConstants.STRUTS_VALUESTACKFACTORY, builder, props);
         alias(ReflectionProvider.class, StrutsConstants.STRUTS_REFLECTIONPROVIDER, builder, props);
         alias(ReflectionContextFactory.class, StrutsConstants.STRUTS_REFLECTIONCONTEXTFACTORY, builder, props);
+        alias(PatternMatcher.class, StrutsConstants.STRUTS_PATTERNMATCHER, builder, props);
         
         if ("true".equalsIgnoreCase(props.getProperty(StrutsConstants.STRUTS_DEVMODE))) {
             props.setProperty(StrutsConstants.STRUTS_I18N_RELOAD, "true");

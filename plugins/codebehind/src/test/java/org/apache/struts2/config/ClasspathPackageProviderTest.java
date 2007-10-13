@@ -20,9 +20,11 @@
  */
 package org.apache.struts2.config;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.struts2.dispatcher.ServletDispatcherResult;
+import org.apache.struts2.util.StrutsTestCaseHelper;
 
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
@@ -38,7 +40,7 @@ public class ClasspathPackageProviderTest extends TestCase {
     ClasspathPackageProvider provider;
     Configuration config;
 
-    public void setUp() {
+    public void setUp() throws Exception {
         provider = new ClasspathPackageProvider();
         provider.setActionPackages("org.apache.struts2.config");
         config = new DefaultConfiguration();
@@ -52,9 +54,14 @@ public class ClasspathPackageProviderTest extends TestCase {
         provider.init(config);
         provider.loadPackages();
     }
-
+    
+    public void tearDown() throws Exception {
+        provider = null;
+        config = null;
+    }
+    
     public void testFoundRootPackages() {
-        assertEquals(5, config.getPackageConfigs().size());
+        assertEquals(6, config.getPackageConfigs().size());
         PackageConfig pkg = config.getPackageConfig("org.apache.struts2.config");
         assertNotNull(pkg);
         Map configs = pkg.getActionConfigs();
@@ -85,7 +92,23 @@ public class ClasspathPackageProviderTest extends TestCase {
         ActionConfig ac = (ActionConfig) configs.get("customParentPackage");
         assertNotNull(ac);
     }
-
+    
+    public void testCustomActionAnnotation() {
+        PackageConfig pkg = config.getPackageConfig("org.apache.struts2.config.AnnotatedAction");
+        Map configs = pkg.getAllActionConfigs();
+        // assertEquals(2, configs.size());
+        ActionConfig config = (ActionConfig) configs.get("myaction");
+        assertNotNull(config);
+    }
+    
+    public void testCustomActionAnnotationOfAnyName() {
+        PackageConfig pkg = config.getPackageConfig("org.apache.struts2.config");
+        Map configs = pkg.getAllActionConfigs();
+        // assertEquals(2, configs.size());
+        ActionConfig config = (ActionConfig) configs.get("myaction2");
+        assertNotNull(config);
+    }
+    
     public void testResultAnnotations() {
         PackageConfig pkg = config.getPackageConfig("org.apache.struts2.config.cltest");
         assertEquals("/cltest", pkg.getNamespace());

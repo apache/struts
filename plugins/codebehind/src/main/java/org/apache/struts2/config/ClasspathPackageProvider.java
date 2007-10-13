@@ -246,7 +246,8 @@ public class ClasspathPackageProvider implements PackageProvider {
             public boolean matches(Class type) {
                 // TODO: should also find annotated classes
                 return (Action.class.isAssignableFrom(type) ||
-                        type.getSimpleName().endsWith("Action"));
+                        type.getSimpleName().endsWith("Action") ||
+                        type.getAnnotation(org.apache.struts2.config.Action.class) != null);
             }
 
         }, pkgs);
@@ -274,26 +275,53 @@ public class ClasspathPackageProvider implements PackageProvider {
      * @param cls Action or POJO instance to process
      * @param pkgs List of packages that were scanned for Actions
      */
-    protected void processActionClass(Class cls, String[] pkgs) {
+    protected void processActionClass(Class<?> cls, String[] pkgs) {
+        ActionConfig actionConfig = new ActionConfig();
         String name = cls.getName();
         String actionPackage = cls.getPackage().getName();
         String actionNamespace = null;
         String actionName = null;
-        for (String pkg : pkgs) {
-            if (name.startsWith(pkg)) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("ClasspathPackageProvider: Processing class "+name);
-                }
-                name = name.substring(pkg.length() + 1);
-
+        
+        org.apache.struts2.config.Action actionAnn = 
+            (org.apache.struts2.config.Action) cls.getAnnotation(org.apache.struts2.config.Action.class);
+        if (actionAnn != null) {
+            actionName = actionAnn.name();
+            if (actionAnn.namespace().equals(org.apache.struts2.config.Action.DEFAULT_NAMESPACE)) {
                 actionNamespace = "";
-                actionName = name;
-                int pos = name.lastIndexOf('.');
-                if (pos > -1) {
-                    actionNamespace = "/" + name.substring(0, pos).replace('.','/');
-                    actionName = name.substring(pos+1);
+            } else {
+                actionNamespace = actionAnn.namespace();
+            }
+        } else {
+            for (String pkg : pkgs) {
+                if (name.startsWith(pkg)) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("ClasspathPackageProvider: Processing class "+name);
+                    }
+                    name = name.substring(pkg.length() + 1);
+    
+                    actionNamespace = "";
+                    actionName = name;
+                    int pos = name.lastIndexOf('.');
+                    if (pos > -1) {
+                        actionNamespace = "/" + name.substring(0, pos).replace('.','/');
+                        actionName = name.substring(pos+1);
+                    }
+                    break;
                 }
-                break;
+            }
+            // Truncate Action suffix if found
+            if (actionName.endsWith(ACTION)) {
+                actionName = actionName.substring(0, actionName.length() - ACTION.length());
+            }
+
+            // Force initial letter of action to lowercase, if desired
+            if ((forceLowerCase) && (actionName.length() > 1)) {
+                int lowerPos = actionName.lastIndexOf('/') + 1;
+                StringBuilder sb = new StringBuilder();
+                sb.append(actionName.substring(0, lowerPos));
+                sb.append(Character.toLowerCase(actionName.charAt(lowerPos)));
+                sb.append(actionName.substring(lowerPos + 1));
+                actionName = sb.toString();
             }
         }
 
@@ -318,22 +346,6 @@ public class ClasspathPackageProvider implements PackageProvider {
             }
         }
 
-        // Truncate Action suffix if found
-        if (actionName.endsWith(ACTION)) {
-            actionName = actionName.substring(0, actionName.length() - ACTION.length());
-        }
-
-        // Force initial letter of action to lowercase, if desired
-        if ((forceLowerCase) && (actionName.length() > 1)) {
-            int lowerPos = actionName.lastIndexOf('/') + 1;
-            StringBuilder sb = new StringBuilder();
-            sb.append(actionName.substring(0, lowerPos));
-            sb.append(Character.toLowerCase(actionName.charAt(lowerPos)));
-            sb.append(actionName.substring(lowerPos + 1));
-            actionName = sb.toString();
-        }
-
-        ActionConfig actionConfig = new ActionConfig();
         actionConfig.setClassName(cls.getName());
         actionConfig.setPackageName(actionPackage);
 
@@ -355,15 +367,27 @@ public class ClasspathPackageProvider implements PackageProvider {
     protected PackageConfig loadPackageConfig(String actionNamespace, String actionPackage, Class actionClass) {
         PackageConfig parent = null;
 
+        // Check for the @Namespace annotation
         if (actionClass != null) {
             Namespace ns = (Namespace) actionClass.getAnnotation(Namespace.class);
             if (ns != null) {
                 parent = loadPackageConfig(actionNamespace, actionPackage, null);
                 actionNamespace = ns.value();
                 actionPackage = actionClass.getName();
+                
+            // See if the namespace has been overridden by the @Action annotation    
+            } else {
+                org.apache.struts2.config.Action actionAnn = 
+                    (org.apache.struts2.config.Action) actionClass.getAnnotation(org.apache.struts2.config.Action.class);
+                if (actionAnn != null && !actionAnn.DEFAULT_NAMESPACE.equals(actionAnn.namespace())) {
+                    // we pass null as the namespace in case the parent package hasn't been loaded yet
+                    parent = loadPackageConfig(null, actionPackage, null);
+                    actionPackage = actionClass.getName();
+                }
             }
         }
 
+        
         PackageConfig pkgConfig = loadedPackageConfigs.get(actionPackage);
         if (pkgConfig == null) {
             pkgConfig = new PackageConfig();
@@ -382,6 +406,10 @@ public class ClasspathPackageProvider implements PackageProvider {
             pkgConfig.setNamespace(actionNamespace);
 
             loadedPackageConfigs.put(actionPackage, pkgConfig);
+            
+        // if the parent package was first created by a child, ensure the namespace is correct
+        } else if (pkgConfig.getNamespace() == null) {
+            pkgConfig.setNamespace(actionNamespace);
         }
         return pkgConfig;
     }

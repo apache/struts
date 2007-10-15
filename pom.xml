@@ -366,6 +366,17 @@
             <releases><enabled>false</enabled></releases>
             <snapshots><enabled>true</enabled></snapshots>
         </repository>
+         <repository>
+            <id>opensymphony-m2</id>
+            <name>opensymphony-m2</name>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <url>http://maven2.opensymphony.com</url>
+        </repository>
         <repository>
             <id>opensymphony</id>
             <name>opensymphony</name>

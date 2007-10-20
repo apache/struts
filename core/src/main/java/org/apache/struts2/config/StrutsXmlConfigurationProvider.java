@@ -163,7 +163,7 @@ public class StrutsXmlConfigurationProvider extends XmlConfigurationProvider {
         if (ctx != null) {
             return ctx.get(reloadKey) == null && super.needsReload();
         } else {
-            return true;
+            return super.needsReload();
         }
 
     }

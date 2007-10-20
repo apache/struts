@@ -36,6 +36,7 @@ public class ActionMapping {
     private String name;
     private String namespace;
     private String method;
+    private String extension;
     private Map params;
     private Result result;
 
@@ -106,6 +107,13 @@ public class ActionMapping {
     public Result getResult() {
         return result;
     }
+    
+    /**
+     * @return The extension used during this request
+     */
+    public String getExtension() {
+        return extension;
+    }
 
     /**
      * @param result The result
@@ -140,5 +148,12 @@ public class ActionMapping {
      */
     public void setParams(Map params) {
         this.params = params;
+    }
+    
+    /**
+     * @param extension The extension used in the request
+     */
+    public void setExtension(String extension) {
+        this.extension = extension;
     }
 }

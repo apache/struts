@@ -62,6 +62,7 @@ public class MethodConfigurationProviderTest extends TestCase {
      * Creates a mock Dispatcher and seeds Configuration.
      */
     public void setUp() {
+        /*
         InternalConfigurationManager configurationManager = new InternalConfigurationManager();
         dispatcher = new Dispatcher(new MockServletContext(), new HashMap<String, String>());
         dispatcher.setConfigurationManager(configurationManager);
@@ -95,6 +96,7 @@ public class MethodConfigurationProviderTest extends TestCase {
         provider.init(configuration);
         provider.setObjectFactory(new ObjectFactory());
         provider.loadPackages();
+        */
     }
 
     /**
@@ -182,63 +184,63 @@ public class MethodConfigurationProviderTest extends TestCase {
         assertTrue("The custom.Manual method was generated!","value".equals(val.toString()));
     }*/
 
-    /**
-     * Custom is a test Action class.
-     */
-    public class Custom extends ActionSupport {
-
-        /**
-         * Tests ordinary methods.
-         * @return SUCCESS
-         */
-        public String custom() {
-            return SUCCESS;
-        }
-
-        /**
-         * Tests JavaBean property.
-         * @return SUCCESS
-         */
-        public boolean isIt() {
-            return true;
-        }
-
-        /**
-         * Tests manual override.
-         * @return SUCCESS
-         */
-        public String manual() {
-            return SUCCESS;
-        }
-
-        /**
-         * Tests dynamic configuration.
-         * @return SUCCESS
-         */
-        public String auto() {
-            return SUCCESS;
-        }
-
-        /**
-         * Tests method that looks like a JavaBean property.
-         * @return SUCCESS
-         */
-        public String gettysburg() {
-            return SUCCESS;
-        }
-    }
-
-    /**
-     * InternalConfigurationManager is a mock ConfigurationManager.
-     */
-    class InternalConfigurationManager extends ConfigurationManager {
-    	public boolean destroyConfiguration = false;
-
-    	@Override
-    	public synchronized void destroyConfiguration() {
-    		super.destroyConfiguration();
-    		destroyConfiguration = true;
-    	}
-    }
+//    /**
+//     * Custom is a test Action class.
+//     */
+//    public class Custom extends ActionSupport {
+//
+//        /**
+//         * Tests ordinary methods.
+//         * @return SUCCESS
+//         */
+//        public String custom() {
+//            return SUCCESS;
+//        }
+//
+//        /**
+//         * Tests JavaBean property.
+//         * @return SUCCESS
+//         */
+//        public boolean isIt() {
+//            return true;
+//        }
+//
+//        /**
+//         * Tests manual override.
+//         * @return SUCCESS
+//         */
+//        public String manual() {
+//            return SUCCESS;
+//        }
+//
+//        /**
+//         * Tests dynamic configuration.
+//         * @return SUCCESS
+//         */
+//        public String auto() {
+//            return SUCCESS;
+//        }
+//
+//        /**
+//         * Tests method that looks like a JavaBean property.
+//         * @return SUCCESS
+//         */
+//        public String gettysburg() {
+//            return SUCCESS;
+//        }
+//    }
+//
+//    /**
+//     * InternalConfigurationManager is a mock ConfigurationManager.
+//     */
+//    class InternalConfigurationManager extends ConfigurationManager {
+//    	public boolean destroyConfiguration = false;
+//
+//    	@Override
+//    	public synchronized void destroyConfiguration() {
+//    		super.destroyConfiguration();
+//    		destroyConfiguration = true;
+//    	}
+//    }
 
 }

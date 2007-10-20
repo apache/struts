@@ -32,10 +32,12 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.RequestUtils;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.ServletRedirectResult;
 import org.apache.struts2.util.PrefixTrie;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
@@ -292,7 +294,7 @@ public class DefaultActionMapper implements ActionMapper {
         ActionMapping mapping = new ActionMapping();
         String uri = getUri(request);
 
-        uri = dropExtension(uri);
+        uri = dropExtension(uri, mapping);
         if (uri == null) {
             return null;
         }
@@ -415,8 +417,21 @@ public class DefaultActionMapper implements ActionMapper {
      * @param name
      *            The action name
      * @return The action name without its extension
+     * @deprecated Since 2.1, use {@link #dropExtension(java.lang.String,org.apache.struts2.dispatcher.mapper.ActionMapping)} instead
      */
     protected String dropExtension(String name) {
+        return dropExtension(name, new ActionMapping());
+    }
+    
+    /**
+     * Drops the extension from the action name, storing it in the mapping for later use
+     *
+     * @param name
+     *            The action name
+     * @param mapping The action mapping to store the extension in 
+     * @return The action name without its extension
+     */
+    protected String dropExtension(String name, ActionMapping mapping) {
         if (extensions == null) {
             return name;
         }
@@ -429,6 +444,7 @@ public class DefaultActionMapper implements ActionMapper {
                 String extension = "." + ext;
                 if (name.endsWith(extension)) {
                     name = name.substring(0, name.length() - extension.length());
+                    mapping.setExtension(ext);
                     return name;
                 }
             } 
@@ -496,6 +512,15 @@ public class DefaultActionMapper implements ActionMapper {
         }
 
         String extension = getDefaultExtension();
+        
+        // Look for the current extension, if available
+        ActionContext context = ActionContext.getContext();
+        if (context != null) {
+            ActionMapping orig = (ActionMapping) context.get(ServletActionContext.ACTION_MAPPING);
+            if (orig != null) {
+                extension = orig.getExtension();
+            }
+        }
         if (extension != null) {
             
             if (extension.length() == 0 || (extension.length() > 0 && uri.indexOf('.' + extension) == -1)) {

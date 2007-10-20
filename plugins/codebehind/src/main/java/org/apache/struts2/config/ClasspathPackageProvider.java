@@ -241,16 +241,7 @@ public class ClasspathPackageProvider implements PackageProvider {
     protected void loadPackages(String[] pkgs) {
 
         ResolverUtil<Class> resolver = new ResolverUtil<Class>();
-        resolver.find(new ClassTest() {
-            // Match Action implementations and classes ending with "Action"
-            public boolean matches(Class type) {
-                // TODO: should also find annotated classes
-                return (Action.class.isAssignableFrom(type) ||
-                        type.getSimpleName().endsWith("Action") ||
-                        type.getAnnotation(org.apache.struts2.config.Action.class) != null);
-            }
-
-        }, pkgs);
+        resolver.find(createActionClassTest(), pkgs);
 
         Set<? extends Class<? extends Class>> actionClasses = resolver.getClasses();
         for (Object obj : actionClasses) {
@@ -263,6 +254,23 @@ public class ClasspathPackageProvider implements PackageProvider {
         for (String key : loadedPackageConfigs.keySet()) {
             configuration.addPackageConfig(key, loadedPackageConfigs.get(key));
         }
+    }
+
+    protected ClassTest createActionClassTest() {
+        return new ClassTest() {
+            // Match Action implementations and classes ending with "Action"
+            public boolean matches(Class type) {
+                // TODO: should also find annotated classes
+                return (Action.class.isAssignableFrom(type) ||
+                        type.getSimpleName().endsWith(getClassSuffix()) ||
+                        type.getAnnotation(org.apache.struts2.config.Action.class) != null);
+            }
+
+        };
+    }
+    
+    protected String getClassSuffix() {
+        return ACTION;
     }
 
     /**
@@ -310,8 +318,8 @@ public class ClasspathPackageProvider implements PackageProvider {
                 }
             }
             // Truncate Action suffix if found
-            if (actionName.endsWith(ACTION)) {
-                actionName = actionName.substring(0, actionName.length() - ACTION.length());
+            if (actionName.endsWith(getClassSuffix())) {
+                actionName = actionName.substring(0, actionName.length() - getClassSuffix().length());
             }
 
             // Force initial letter of action to lowercase, if desired

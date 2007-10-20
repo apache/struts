@@ -98,6 +98,10 @@ public class MethodConfigurationProviderTest extends TestCase {
         provider.loadPackages();
         */
     }
+    
+    public void testNothing() {
+        // now stop complaining!
+    }
 
     /**
      * Provides the "custom-package" configuration.

@@ -37,6 +37,7 @@ public class RequestUtilsTest extends TestCase {
 
     public void testGetServletPathWithServletPathSet() throws Exception {
         control.expectAndReturn(requestMock.getServletPath(), "/mycontext/");
+        control.expectAndReturn(requestMock.getRequestURI(), "/mycontext/");
         control.replay();
         assertEquals("/mycontext/", RequestUtils.getServletPath(requestMock));
         control.verify();
@@ -73,6 +74,14 @@ public class RequestUtilsTest extends TestCase {
         control.expectAndReturn(requestMock.getPathInfo(), null);
         control.replay();
         assertEquals("/mycontext/", RequestUtils.getServletPath(requestMock));
+        control.verify();
+    }
+    
+    public void testGetServletPathWithSemicolon() throws Exception {
+        control.expectAndReturn(requestMock.getRequestURI(), "/friend/mycontext/jim;bob");
+        control.expectAndReturn(requestMock.getServletPath(), "/mycontext/jim");
+        control.replay();
+        assertEquals("/mycontext/jim;bob", RequestUtils.getServletPath(requestMock));
         control.verify();
     }
 

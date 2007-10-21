@@ -24,7 +24,7 @@ import java.util.Map;
 
 
 /**
- * Actions that want access to the user's HTTP session should implement this interface.<p>
+ * Actions that want access to the user's HTTP session attributes should implement this interface.<p>
  * <p/>
  * This will give them access to a Map where they can put objects that can be made available
  * to subsequent requests.<p/>

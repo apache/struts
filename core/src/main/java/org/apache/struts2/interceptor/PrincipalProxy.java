@@ -25,8 +25,8 @@ import java.security.Principal;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Proxy interface used together with PrincipalAware interface. It allows to get indirect access to
- * HttpServletRequest or PortletRequest Principal related methods.
+ * Proxy interface used together with PrincipalAware interface. It allows indirect
+ * access to HttpServletRequest or PortletRequest Principal related methods.
  */
 public interface PrincipalProxy {
 

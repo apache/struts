@@ -27,9 +27,6 @@ import java.util.Map;
  * Actions that want access to the current serlvet request attributes should implement this interface.<p />
  *
  * This interface is only relevant if the Action is used in a servlet environment.<p/>
- *
- * Note that using this interface makes the Action tied to a servlet environment, so it should be
- * avoided if possible since things like unit testing will become more difficult.
  */
 public interface RequestAware {
 

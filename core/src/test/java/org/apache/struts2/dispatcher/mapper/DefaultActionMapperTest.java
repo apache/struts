@@ -73,7 +73,6 @@ public class DefaultActionMapperTest extends StrutsTestCase {
     }
 
     public void testGetMapping() throws Exception {
-        setUp();
         req.setupGetRequestURI("/my/namespace/actionName.action");
         req.setupGetServletPath("/my/namespace/actionName.action");
         req.setupGetAttribute(null);
@@ -142,7 +141,6 @@ public class DefaultActionMapperTest extends StrutsTestCase {
     }
 
     public void testGetMappingWithUnknownNamespace() throws Exception {
-        setUp();
         req.setupGetRequestURI("/bo/foo/actionName.action");
         req.setupGetServletPath("/bo/foo/actionName.action");
         req.setupGetAttribute(null);
@@ -157,7 +155,6 @@ public class DefaultActionMapperTest extends StrutsTestCase {
     }
     
     public void testGetMappingWithUnknownNamespaceButFullNamespaceSelect() throws Exception {
-        setUp();
         req.setupGetRequestURI("/bo/foo/actionName.action");
         req.setupGetServletPath("/bo/foo/actionName.action");
         req.setupGetAttribute(null);

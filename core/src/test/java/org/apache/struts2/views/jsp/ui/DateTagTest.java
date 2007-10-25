@@ -260,6 +260,7 @@ public class DateTagTest extends AbstractTagTest {
 
     protected void tearDown() throws Exception {
         super.tearDown();
+        tag = null;
     }
 
 }

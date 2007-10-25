@@ -130,8 +130,4 @@ public class TokenInterceptorTest extends StrutsTestCase {
     protected ActionProxy buildProxy(String actionName) throws Exception {
         return actionProxyFactory.createActionProxy("", actionName, extraContext, true, true);
     }
-
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
 }

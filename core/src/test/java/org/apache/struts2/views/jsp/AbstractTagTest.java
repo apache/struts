@@ -132,6 +132,7 @@ public abstract class AbstractTagTest extends StrutsTestCase {
     }
 
     protected void tearDown() throws Exception {
+        super.tearDown();
         pageContext.verify();
         request.verify();
     }

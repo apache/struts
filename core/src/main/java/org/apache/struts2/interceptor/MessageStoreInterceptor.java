@@ -25,6 +25,8 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.struts2.dispatcher.ServletRedirectResult;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ValidationAware;
@@ -42,12 +44,19 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * <p/>
  *
  * In the 'STORE' mode, the interceptor will store the {@link ValidationAware} action's message / errors
- * and field errors into Http session.
+ * and field errors into HTTP session.
  *
  * <p/>
  *
  * In the 'RETRIEVE' mode, the interceptor will retrieve the stored action's message / errors  and field
  * errors and put them back into the {@link ValidationAware} action.
+ * 
+ * <p/>
+ *
+ * In the 'AUTOMATIC' mode, the interceptor will always retrieve the stored action's message / errors 
+ * and field errors and put them back into the {@link ValidationAware} action, and after Action execution, 
+ * if the {@link Result} is an instance of {@link ServletRedirectResult}, the action's message / errors 
+ * and field errors into automatically be stored in the HTTP session..
  *
  * <p/>
  *
@@ -84,7 +93,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *      <li>requestParameterSwitch - The request parameter that will indicate what mode this
  *                                   interceptor is in. </li>
  *      <li>operationMode - The operation mode this interceptor should be in
- *                          (either 'STORE', 'RETRIEVE' or 'NONE'). 'NONE' being the default.</li>
+ *                          (either 'STORE', 'RETRIEVE', 'AUTOMATIC', or 'NONE'). 'NONE' being the default.</li>
  * </ul>
  *
  * <!-- END SNIPPET: parameters -->
@@ -141,7 +150,7 @@ public class MessageStoreInterceptor implements Interceptor {
 
     private static final Logger LOG = LoggerFactory.getLogger(MessageStoreInterceptor.class);
 
-
+    public static final String AUTOMATIC_MODE = "AUTOMATIC";
     public static final String STORE_MODE = "STORE";
     public static final String RETRIEVE_MODE = "RETRIEVE";
     public static final String NONE = "NONE";
@@ -209,7 +218,8 @@ public class MessageStoreInterceptor implements Interceptor {
         String reqOperationMode = getRequestOperationMode(invocation);
 
         if (RETRIEVE_MODE.equalsIgnoreCase(reqOperationMode) ||
-                RETRIEVE_MODE.equalsIgnoreCase(operationMode)) {
+                RETRIEVE_MODE.equalsIgnoreCase(operationMode) ||
+                AUTOMATIC_MODE.equalsIgnoreCase(operationMode)) {
 
             Object action = invocation.getAction();
             if (action instanceof ValidationAware) {
@@ -255,8 +265,10 @@ public class MessageStoreInterceptor implements Interceptor {
     protected void after(ActionInvocation invocation, String result) throws Exception {
 
         String reqOperationMode = getRequestOperationMode(invocation);
+        boolean isRedirect = invocation.getResult() instanceof ServletRedirectResult;
         if (STORE_MODE.equalsIgnoreCase(reqOperationMode) ||
-                STORE_MODE.equalsIgnoreCase(operationMode)) {
+                STORE_MODE.equalsIgnoreCase(operationMode) ||
+                (AUTOMATIC_MODE.equalsIgnoreCase(operationMode) && isRedirect)) {
 
             Object action = invocation.getAction();
             if (action instanceof ValidationAware) {

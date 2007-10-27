@@ -20,14 +20,7 @@
  */
 package org.apache.struts2.dispatcher.mapper;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -183,7 +176,7 @@ public class DefaultActionMapper implements ActionMapper {
     
     protected List<String> extensions = new ArrayList<String>() {{ add("action"); add("");}};
 
-    protected  Container container;
+    protected Container container;
 
     public DefaultActionMapper() {
         prefixTrie = new PrefixTrie() {
@@ -272,11 +265,14 @@ public class DefaultActionMapper implements ActionMapper {
     
     @Inject(StrutsConstants.STRUTS_ACTION_EXTENSION)
     public void setExtensions(String extensions) {
-        if (!"".equals(extensions)) {
+        if (extensions != null && !"".equals(extensions)) {
             List<String> list = new ArrayList<String>();
-            Scanner scanner = new Scanner(extensions).useDelimiter(",");
-            while (scanner.hasNext()) {
-                list.add(scanner.next());
+            String[] tokens = extensions.split(",");
+            for (String token : tokens) {
+                list.add(token);
+            }
+            if (extensions.endsWith(",")) {
+                list.add("");
             }
             this.extensions = Collections.unmodifiableList(list);
         } else {

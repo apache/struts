@@ -22,6 +22,7 @@ package org.apache.struts2.dispatcher.mapper;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Arrays;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.StrutsTestCase;
@@ -596,6 +597,31 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         String uri = mapper.getUriFromActionMapping(actionMapping);
 
         assertEquals("/myNamespace/myActionName!myMethod", uri);
+    }
+
+    public void testSetExtension() throws Exception {
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setExtensions("");
+        assertNull(mapper.extensions);
+        mapper.setExtensions(null);
+        assertNull(mapper.extensions);
+
+        mapper.setExtensions(",xml");
+        assertEquals(Arrays.asList("", "xml"), mapper.extensions);
+
+        mapper.setExtensions("html,xml,");
+        assertEquals(Arrays.asList("html", "xml", ""), mapper.extensions);
+
+        mapper.setExtensions("html,,xml");
+        assertEquals(Arrays.asList("html", "", "xml"), mapper.extensions);
+
+        mapper.setExtensions("xml");
+        assertEquals(Arrays.asList("xml"), mapper.extensions);
+
+        mapper.setExtensions(",");
+        assertEquals(Arrays.asList(""), mapper.extensions);
+
+
     }
 
 }

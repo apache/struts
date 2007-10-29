@@ -130,7 +130,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *   Hello &lt;xsl:value-of select="username"/&gt; how are you?
  *   &lt;/body&gt;
  *   &lt;/html&gt;
- * &lt;xsl:template/&gt;
+ * &lt;/xsl:template&gt;
  * </pre>
  *
  * <p>

@@ -27,7 +27,7 @@
     <parent>
         <groupId>org.apache.struts</groupId>
         <artifactId>struts2-plugins</artifactId>
-        <version>2.1.0-SNAPSHOT</version>
+        <version>2.1.0</version>
     </parent>
     <groupId>org.apache.struts</groupId>
     <artifactId>struts2-portlet-plugin</artifactId>
@@ -47,15 +47,15 @@
             <scope>test</scope>
             <version>3.8.1</version>
         </dependency>
-		
-	    <dependency>
+
+      <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jsp-api</artifactId>
             <version>2.0</version>
             <scope>provided</scope>
         </dependency>
-		
-		<!-- Velocity -->
+
+    <!-- Velocity -->
         <dependency>
             <groupId>velocity</groupId>
             <artifactId>velocity</artifactId>
@@ -69,7 +69,7 @@
             <version>1.1</version>
             <optional>true</optional>
         </dependency>
-		
+
         <!-- Portlet -->
         <dependency>
             <groupId>portlet-api</groupId>
@@ -77,60 +77,60 @@
             <version>1.0</version>
             <optional>true</optional>
         </dependency>
-		
+
         <dependency>
             <groupId>mockobjects</groupId>
             <artifactId>mockobjects-jdk1.3-j2ee1.3</artifactId>
             <version>0.09</version>
             <scope>test</scope>
-        </dependency>		
-		
+        </dependency>
+
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
             <version>2.0</version>
             <scope>test</scope>
         </dependency>
-		<dependency>
+    <dependency>
             <groupId>jmock</groupId>
             <artifactId>jmock</artifactId>
             <version>1.0.1</version>
             <scope>test</scope>
         </dependency>
-		
+
         <dependency>
             <groupId>jmock</groupId>
             <artifactId>jmock-cglib</artifactId>
             <version>1.0.1</version>
             <scope>test</scope>
         </dependency>
-		
+
         <dependency>
             <groupId>mockobjects</groupId>
             <artifactId>mockobjects-core</artifactId>
             <version>0.09</version>
             <scope>test</scope>
         </dependency>
-		
-		 <dependency>
+
+     <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.9</version>
             <scope>test</scope>
         </dependency>
-		
+
         <!-- Mocks for unit testing (by Spring) -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-mock</artifactId>
             <version>2.0.6</version>
-			<scope>test</scope>
+      <scope>test</scope>
         </dependency>
-		<dependency>
+    <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>2.0.6</version>
-			<scope>test</scope>
+      <scope>test</scope>
         </dependency>
    </dependencies>
 </project>

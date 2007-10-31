@@ -96,17 +96,17 @@ public class VelocityManager {
     private Properties velocityProperties;
 
     private String customConfigFile;
-    
+
     private List<TagLibrary> tagLibraries;
-    
+
     public VelocityManager() {
     }
-    
+
     @Inject
     public void setObjectFactory(ObjectFactory fac) {
         this.objectFactory = fac;
     }
-    
+
     @Inject
     public void setContainer(Container container) {
         List<TagLibrary> list = new ArrayList<TagLibrary>();
@@ -190,7 +190,7 @@ public class VelocityManager {
 
         if (toolboxManager != null && ctx != null) {
             ChainedContext chained = new ChainedContext(context, req, res, ctx);
-            chained.setToolbox(toolboxManager.getToolboxContext(chained));
+            chained.setToolbox(toolboxManager.getToolbox(chained));
             return chained;
         } else {
             return context;
@@ -539,7 +539,7 @@ public class VelocityManager {
 
         // components
         StringBuffer sb = new StringBuffer();
-        
+
         for (TagLibrary tagLibrary : tagLibraries) {
             List<Class> directives = tagLibrary.getVelocityDirectiveClasses();
             for (Class directive : directives) {

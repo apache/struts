@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractRemoteCallUITag.java 508285 2007-02-16 02:42:24Z musachy $
+ * $Id$
  *
  * Copyright 2006 The Apache Software Foundation.
  *

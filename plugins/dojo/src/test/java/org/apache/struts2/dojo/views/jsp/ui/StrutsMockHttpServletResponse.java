@@ -1,5 +1,5 @@
 /*
- * $Id: StrutsMockHttpServletResponse.java 490622 2006-12-28 00:55:27Z mrdon $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

@@ -1,5 +1,5 @@
 /*
- * $Id: ClasspathPackageProviderTest.java 501717 2007-01-31 03:51:11Z mrdon $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

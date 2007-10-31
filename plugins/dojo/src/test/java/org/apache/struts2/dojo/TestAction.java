@@ -1,5 +1,5 @@
 /*
- * $Id: TestAction.java 508508 2007-02-16 17:34:22Z hermanns $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

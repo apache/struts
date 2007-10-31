@@ -1,5 +1,5 @@
 /*
- * $Id: RemoteUICallBean.java 508285 2007-02-16 02:42:24Z musachy $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

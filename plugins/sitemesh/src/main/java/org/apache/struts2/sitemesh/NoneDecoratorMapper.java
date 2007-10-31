@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerPageFilter.java 475637 2006-11-16 08:32:03Z mrdon $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

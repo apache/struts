@@ -1,5 +1,5 @@
 /*
- * $Id: DateTimePicker.java 512580 2007-02-28 02:48:06Z musachy $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

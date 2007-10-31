@@ -1,5 +1,5 @@
 /*
- * $Id: DateTimePickerDirective.java 493867 2007-01-07 22:26:23Z mrdon $
+ * $Id$
  *
  * Copyright 2006 The Apache Software Foundation.
  *

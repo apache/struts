@@ -1,5 +1,5 @@
 /*
- * $Id: TabbedPanelTag.java 508575 2007-02-16 20:46:49Z musachy $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

@@ -1,5 +1,5 @@
 /*
- * $Id: AnchorTag.java 490079 2006-12-24 22:46:07Z husted $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

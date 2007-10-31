@@ -1,5 +1,5 @@
 /*
- * $Id: TreeDirective.java 471756 2006-11-06 15:01:43Z husted $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

@@ -1,5 +1,5 @@
 /*
- * $Id: AutocompleterTest.java 510743 2007-02-23 01:06:19Z musachy $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

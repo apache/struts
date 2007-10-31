@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractUITagTest.java 474560 2006-11-13 23:09:31Z hermanns $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

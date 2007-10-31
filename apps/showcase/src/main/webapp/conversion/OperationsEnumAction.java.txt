@@ -1,5 +1,5 @@
 /*
- * $Id: Person.java 440597 2006-09-06 03:34:39Z tmjee $
+ * $Id$
  *
  * Copyright 2006 The Apache Software Foundation.
  *

@@ -1,5 +1,5 @@
 /*
- * $Id: Tree.java 497654 2007-01-19 00:21:57Z rgielen $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

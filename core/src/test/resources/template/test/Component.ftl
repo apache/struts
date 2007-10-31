@@ -1,6 +1,6 @@
 <#--
 /*
- * $Id: layout.jsp 503802 2007-02-05 18:36:44Z germuska $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

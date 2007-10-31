@@ -1,5 +1,5 @@
 /*
- * $Id: AutocompleterDirective.java 502294 2007-02-01 17:28:00Z niallp $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

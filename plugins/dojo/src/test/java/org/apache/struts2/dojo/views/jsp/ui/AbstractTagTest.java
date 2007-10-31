@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractTagTest.java 476696 2006-11-19 03:56:18Z tmjee $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

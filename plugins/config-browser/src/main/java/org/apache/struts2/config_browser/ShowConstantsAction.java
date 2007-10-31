@@ -1,5 +1,5 @@
 /*
- * $Id: ActionNamesAction.java 474191 2006-11-13 08:30:40Z mrdon $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

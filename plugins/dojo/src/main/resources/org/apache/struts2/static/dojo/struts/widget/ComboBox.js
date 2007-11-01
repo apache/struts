@@ -490,7 +490,7 @@ dojo.widget.defineWidget(
     if(this.loadOnType) {
       if(searchStr.length >= this.loadMinimum) {
           var nuHref = this.dataUrl + (this.dataUrl.indexOf("?") > -1 ? "&" : "?");
-      nuHref += this.name + '=' + searchStr;
+      nuHref += this.name + '=' +  encodeURIComponent(searchStr);
       this.dataProvider.getData(nuHref);
       this._startSearch(searchStr);
       } else {

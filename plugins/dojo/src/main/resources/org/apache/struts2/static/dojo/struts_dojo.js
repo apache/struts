@@ -1,20 +1,20 @@
 /*
-  Copyright (c) 2004-2006, The Dojo Foundation
-  All Rights Reserved.
+	Copyright (c) 2004-2006, The Dojo Foundation
+	All Rights Reserved.
 
-  Licensed under the Academic Free License version 2.1 or above OR the
-  modified BSD license. For more information on Dojo licensing, see:
+	Licensed under the Academic Free License version 2.1 or above OR the
+	modified BSD license. For more information on Dojo licensing, see:
 
-    http://dojotoolkit.org/community/licensing.shtml
+		http://dojotoolkit.org/community/licensing.shtml
 */
 
 /*
-  This is a compiled version of Dojo, built for deployment and not for
-  development. To get an editable version, please visit:
+	This is a compiled version of Dojo, built for deployment and not for
+	development. To get an editable version, please visit:
 
-    http://dojotoolkit.org
+		http://dojotoolkit.org
 
-  for documentation and information on getting the source.
+	for documentation and information on getting the source.
 */
 
 if(typeof dojo=="undefined"){
@@ -15189,7 +15189,7 @@ var _ca7=this.textInputNode.value;
 if(this.loadOnType){
 if(_ca7.length>=this.loadMinimum){
 var _ca8=this.dataUrl+(this.dataUrl.indexOf("?")>-1?"&":"?");
-_ca8+=this.name+"="+_ca7;
+_ca8+=this.name+"="+encodeURIComponent(_ca7);
 this.dataProvider.getData(_ca8);
 this._startSearch(_ca7);
 }else{
@@ -16928,7 +16928,7 @@ if(this.clickedNode!=null){
 dojo.debug("adding selectedDate");
 dojo.html.addClass(this.clickedNode,this.classNames.selectedDate);
 this.selectedNode=this.clickedNode;
-}else if(this.value){
+}else{
 this._preInitUI(this.value,false,true);
 }
 this.clickedNode=null;

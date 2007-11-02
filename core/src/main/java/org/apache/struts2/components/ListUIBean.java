@@ -94,11 +94,11 @@ public abstract class ListUIBean extends UIBean {
         }
 
         if (value instanceof Collection) {
-            addParameter("listSize", new Integer(((Collection) value).size()));
+            addParameter("listSize", Integer.valueOf(((Collection) value).size()));
         } else if (value instanceof Map) {
-            addParameter("listSize", new Integer(((Map) value).size()));
+            addParameter("listSize", Integer.valueOf(((Map) value).size()));
         } else if (value != null && value.getClass().isArray()) {
-            addParameter("listSize", new Integer(Array.getLength(value)));
+            addParameter("listSize", Integer.valueOf(Array.getLength(value)));
         }
 
         if (listKey != null) {

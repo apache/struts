@@ -231,31 +231,31 @@ public class Date extends ContextBean {
         int years = days / 365;
 
         if (years > 0) {
-            args.add(new Long(years));
-            args.add(new Long(day));
+            args.add(Long.valueOf(years));
+            args.add(Long.valueOf(day));
             args.add(sb);
             args.add(null);
             sb.append(tp.getText(DATETAG_PROPERTY_YEARS, DATETAG_DEFAULT_YEARS, args));
         } else if (day > 0) {
-            args.add(new Long(day));
-            args.add(new Long(hour));
+            args.add(Long.valueOf(day));
+            args.add(Long.valueOf(hour));
             args.add(sb);
             args.add(null);
             sb.append(tp.getText(DATETAG_PROPERTY_DAYS, DATETAG_DEFAULT_DAYS, args));
         } else if (hour > 0) {
-            args.add(new Long(hour));
-            args.add(new Long(min));
+            args.add(Long.valueOf(hour));
+            args.add(Long.valueOf(min));
             args.add(sb);
             args.add(null);
             sb.append(tp.getText(DATETAG_PROPERTY_HOURS, DATETAG_DEFAULT_HOURS, args));
         } else if (min > 0) {
-            args.add(new Long(min));
-            args.add(new Long(sec));
+            args.add(Long.valueOf(min));
+            args.add(Long.valueOf(sec));
             args.add(sb);
             args.add(null);
             sb.append(tp.getText(DATETAG_PROPERTY_MINUTES, DATETAG_DEFAULT_MINUTES, args));
         } else {
-            args.add(new Long(sec));
+            args.add(Long.valueOf(sec));
             args.add(sb);
             args.add(null);
             sb.append(tp.getText(DATETAG_PROPERTY_SECONDS, DATETAG_DEFAULT_SECONDS, args));

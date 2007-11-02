@@ -114,7 +114,7 @@ public class Counter implements java.util.Iterator, Serializable {
     }
 
     public Object next() {
-        return new Long(getNext());
+        return Long.valueOf(getNext());
     }
 
     public void remove() {

@@ -37,7 +37,7 @@ public abstract class IteratorFilterSupport {
 
 
     // Wrapper for enumerations
-    public class EnumerationIterator implements Iterator {
+    public static class EnumerationIterator implements Iterator {
         Enumeration enumeration;
 
         public EnumerationIterator(Enumeration aEnum) {

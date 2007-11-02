@@ -66,7 +66,7 @@ public class MapAdapter extends AbstractAdapterElement {
         return children;
     }
 
-    class EntryElement extends AbstractAdapterElement {
+    static class EntryElement extends AbstractAdapterElement {
         Object key, value;
 
         public EntryElement(  AdapterFactory adapterFactory,

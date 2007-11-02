@@ -180,7 +180,7 @@ public class ScopeInterceptor extends AbstractInterceptor implements PreResultLi
      */
     public void setAutoCreateSession(String value) {
         if (value != null && value.length() > 0) {
-            this.autoCreateSession = new Boolean(value).booleanValue();
+            this.autoCreateSession = Boolean.valueOf(value).booleanValue();
         }
     }
 

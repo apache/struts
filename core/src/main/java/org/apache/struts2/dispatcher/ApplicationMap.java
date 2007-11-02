@@ -103,7 +103,7 @@ public class ApplicationMap extends AbstractMap implements Serializable {
                     }
 
                     public Object setValue(Object obj) {
-                        context.setAttribute(key.toString(), obj);
+                        context.setAttribute(key, obj);
 
                         return value;
                     }
@@ -136,7 +136,7 @@ public class ApplicationMap extends AbstractMap implements Serializable {
                     }
 
                     public Object setValue(Object obj) {
-                        context.setAttribute(key.toString(), obj);
+                        context.setAttribute(key, obj);
 
                         return value;
                     }

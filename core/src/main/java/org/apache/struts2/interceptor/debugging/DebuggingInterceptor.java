@@ -393,12 +393,12 @@ public class DebuggingInterceptor implements Interceptor {
             }
         } else if (bean instanceof Map) {
 
-            Map map = (Map) bean;
+            Map<Object, Object> map = (Map) bean;
 
             // Loop through keys and call ourselves
-            for (Object key : map.keySet()) {
-                Object Objvalue = map.get(key);
-                serializeIt(Objvalue, key.toString(), writer, stack);
+            for (Map.Entry<Object, Object> entry : map.entrySet()) {
+                Object objValue = entry.getValue();
+                serializeIt(objValue, entry.getKey().toString(), writer, stack);
             }
         } else if (bean.getClass().isArray()) {
             // It's an array, loop through it and keep calling ourselves
@@ -448,4 +448,5 @@ public class DebuggingInterceptor implements Interceptor {
 
 
 }
+
 

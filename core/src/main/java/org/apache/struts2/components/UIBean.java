@@ -887,7 +887,7 @@ public abstract class UIBean extends Component {
                 String value = null;
                 if (configEntry.length > 1) {
                     value = configEntry[1].trim();
-                    tooltipConfig.put(key, value.toString());
+                    tooltipConfig.put(key, value);
                 }
                 else {
                     LOG.warn("component "+component+" tooltip config param "+key+" has no value defined, skipped");

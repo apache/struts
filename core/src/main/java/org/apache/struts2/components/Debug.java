@@ -79,7 +79,7 @@ public class Debug extends UIBean {
         return result;
     }
 
-    private class DebugMapEntry implements Map.Entry {
+    private static class DebugMapEntry implements Map.Entry {
         private Object key;
         private Object value;
 

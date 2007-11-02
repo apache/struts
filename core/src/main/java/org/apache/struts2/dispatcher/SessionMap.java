@@ -134,7 +134,7 @@ public class SessionMap extends AbstractMap implements Serializable {
                         }
 
                         public Object setValue(Object obj) {
-                            session.setAttribute(key.toString(), obj);
+                            session.setAttribute(key, obj);
 
                             return value;
                         }

@@ -745,7 +745,7 @@ Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyExcepti
     /**
      * Provide an accessor class for static XWork utility.
      */
-    public class Locator {
+    public static class Locator {
         public Location getLocation(Object obj) {
             Location loc = LocationUtils.getLocation(obj);
             if (loc == null) {

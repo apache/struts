@@ -97,7 +97,7 @@ public class RequestMap extends AbstractMap implements Serializable {
                     }
 
                     public Object setValue(Object obj) {
-                        request.setAttribute(key.toString(), obj);
+                        request.setAttribute(key, obj);
 
                         return value;
                     }

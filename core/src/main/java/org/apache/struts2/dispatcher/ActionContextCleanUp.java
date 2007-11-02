@@ -85,10 +85,10 @@ public class ActionContextCleanUp implements Filter {
             try {
                 Integer count = (Integer)request.getAttribute(COUNTER);
                 if (count == null) {
-                    count = new Integer(1);
+                    count = Integer.valueOf(1);
                 }
                 else {
-                    count = new Integer(count.intValue()+1);
+                    count = Integer.valueOf(count.intValue()+1);
                 }
                 request.setAttribute(COUNTER, count);
 
@@ -98,7 +98,7 @@ public class ActionContextCleanUp implements Filter {
             } finally {
                 int counterVal = ((Integer)request.getAttribute(COUNTER)).intValue();
                 counterVal -= 1;
-                request.setAttribute(COUNTER, new Integer(counterVal));
+                request.setAttribute(COUNTER, Integer.valueOf(counterVal));
                 cleanUp(request);
             }
         }

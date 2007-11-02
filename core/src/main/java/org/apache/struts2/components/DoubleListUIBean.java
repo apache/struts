@@ -172,13 +172,13 @@ public abstract class DoubleListUIBean extends ListUIBean {
             if (doubleValue != null) {
                 addParameter("doubleNameValue", findValue(doubleValue, valueClazz));
             } else if (doubleName != null) {
-                addParameter("doubleNameValue", findValue(doubleName.toString(), valueClazz));
+                addParameter("doubleNameValue", findValue(doubleName, valueClazz));
             }
         } else {
             if (doubleValue != null) {
                 addParameter("doubleNameValue", findValue(doubleValue));
             } else if (doubleName != null) {
-                addParameter("doubleNameValue", findValue(doubleName.toString()));
+                addParameter("doubleNameValue", findValue(doubleName));
             }
         }
 

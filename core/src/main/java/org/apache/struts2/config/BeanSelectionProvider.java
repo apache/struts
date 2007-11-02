@@ -285,7 +285,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         }
     }
     
-    class ObjectFactoryDelegateFactory implements Factory {
+    static class ObjectFactoryDelegateFactory implements Factory {
         String name;
         Class type;
         ObjectFactoryDelegateFactory(String name, Class type) {

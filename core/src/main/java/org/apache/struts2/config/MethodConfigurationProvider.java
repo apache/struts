@@ -112,11 +112,11 @@ public class MethodConfigurationProvider implements ConfigurationProvider {
 
         boolean added = false;
         for (Object namespace : namespaces) {
-            Map actions = (Map) allActionConfigs.get(namespace);
-            Set actionNames = actions.keySet();
-            for (Object actionName : actionNames) {
-                ActionConfig actionConfig = (ActionConfig) actions.get(actionName);
-                added = added | addDynamicMethods(actions, (String) actionName, actionConfig);
+            Map<Object, Object> actions = (Map) allActionConfigs.get(namespace);
+            for (Map.Entry<Object, Object> actionEntry : actions.entrySet()) {
+                String actionName = (String) actionEntry.getKey();
+                ActionConfig actionConfig = (ActionConfig) actionEntry.getValue();
+                added = added | addDynamicMethods(actions, actionName, actionConfig);
             }
         }
 

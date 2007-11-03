@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -60,6 +61,9 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * (default = <code>1024</code>).</li>
  *
  * </ul>
+ *
+ * <p>These parameters can also be set by exposing a similarly named getter method on your Action.  For example, you can
+ * provide <code>getContentType()</code> to override that parameter for the current action.</p>N
  *
  * <!-- END SNIPPET: params -->
  *
@@ -173,6 +177,9 @@ public class StreamResult extends StrutsResultSupport {
      */
     protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
 
+        // Override any parameters using values on the stack
+        resolveParamsFromStack(invocation.getStack());
+
         OutputStream oOutput = null;
 
         try {
@@ -237,6 +244,38 @@ public class StreamResult extends StrutsResultSupport {
         finally {
             if (inputStream != null) inputStream.close();
             if (oOutput != null) oOutput.close();
+        }
+    }
+
+    /**
+     * Tries to lookup the parameters on the stack.  Will override any existing parameters
+     *
+     * @param stack The current value stack
+     */
+    protected void resolveParamsFromStack(ValueStack stack) {
+        String disposition = stack.findString("contentDisposition");
+        if (disposition != null) {
+            setContentDisposition(disposition);
+        }
+
+        String contentType = stack.findString("contentType");
+        if (contentType != null) {
+            setContentLength(contentType);
+        }
+
+        String inputName = stack.findString("inputName");
+        if (inputName != null) {
+            setInputName(inputName);
+        }
+
+        String contentLength = stack.findString("contentLength");
+        if (contentLength != null) {
+            setContentLength(contentLength);
+        }
+
+        Integer bufferSize = (Integer) stack.findValue("bufferSize", Integer.class);
+        if (bufferSize != null) {
+            setBufferSize(bufferSize.intValue());
         }
     }
 

@@ -22,6 +22,7 @@ package org.apache.struts2.dispatcher;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import static javax.servlet.http.HttpServletResponse.*;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
@@ -32,6 +33,8 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+
+import java.io.IOException;
 
 
 /**
@@ -87,6 +90,8 @@ public class ServletRedirectResult extends StrutsResultSupport {
 
     protected ActionMapper actionMapper;
 
+    protected int statusCode = SC_FOUND;
+
     public ServletRedirectResult() {
         super();
     }
@@ -98,6 +103,10 @@ public class ServletRedirectResult extends StrutsResultSupport {
     @Inject
     public void setActionMapper(ActionMapper mapper) {
         this.actionMapper = mapper;
+    }
+
+    public void setStatusCode(int code) {
+        this.statusCode = code;
     }
 
     /**
@@ -150,7 +159,27 @@ public class ServletRedirectResult extends StrutsResultSupport {
             LOG.debug("Redirecting to finalLocation " + finalLocation);
         }
 
-        response.sendRedirect(finalLocation);
+        sendRedirect(response, finalLocation);
+    }
+
+    /**
+     * Sends the redirection.  Can be overridden to customize how the redirect is handled (i.e. to use a different
+     * status code)
+     *
+     * @param response The response
+     * @param finalLocation The location URI
+     * @throws IOException
+     */
+    protected void sendRedirect(HttpServletResponse response, String finalLocation) throws IOException {
+        if (SC_FOUND == statusCode) {
+            response.sendRedirect(finalLocation);
+        } else {
+            response.setStatus(statusCode);
+            response.setHeader("Location", finalLocation);
+            response.getWriter().write(finalLocation);
+            response.getWriter().close();
+        }
+
     }
 
     private static boolean isPathUrl(String url) {

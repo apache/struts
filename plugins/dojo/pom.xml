@@ -43,6 +43,51 @@
             http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/plugins/dojo/
         </url>
     </scm>
+    <profiles>
+        <profile>
+            <id>release</id>
+            <activation>
+                <property>
+                    <name>release</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>rat-maven-plugin</artifactId>
+                        <version>1.0-alpha-2</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <configuration>
+                                    <addDefaultLicenseMatchers>false</addDefaultLicenseMatchers>
+                                    <licenseMatchers>
+                                        <classNames>
+                                            <className>rat.analysis.license.ApacheSoftwareLicense20</className>
+                                        </classNames>
+                                    </licenseMatchers>
+                                    <includes>
+                                        <include>pom.xml</include>
+                                        <include>src/**</include>
+                                    </includes>
+                                    <excludes>
+                                        <exclude>src/main/resources/org/apache/struts2/static/dojo/nls/**</exclude>
+                                        <exclude>src/main/resources/org/apache/struts2/static/dojo/src/**</exclude>
+                                        <exclude>src/main/resources/org/apache/struts2/static/dojo/*</exclude>
+                                        <exclude>src/test/resources/org/apache/struts2/dojo/views/jsp/ui/**</exclude>
+                                    </excludes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
@@ -230,6 +275,7 @@
                         <include>src/**</include>
                     </includes>
                     <excludes>
+                        <exclude>src/main/resources/org/apache/struts2/static/dojo/nls/**</exclude>
                         <exclude>src/main/resources/org/apache/struts2/static/dojo/src/**</exclude>
                         <exclude>src/main/resources/org/apache/struts2/static/dojo/*</exclude>
                         <exclude>src/test/resources/org/apache/struts2/dojo/views/jsp/ui/**</exclude>

@@ -208,6 +208,31 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>rat-maven-plugin</artifactId>
+                        <version>1.0-alpha-2</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <configuration>
+                                    <addDefaultLicenseMatchers>false</addDefaultLicenseMatchers>
+                                    <licenseMatchers>
+                                        <classNames>
+                                            <className>rat.analysis.license.ApacheSoftwareLicense20</className>
+                                        </classNames>
+                                    </licenseMatchers>
+                                    <includes>
+                                        <include>pom.xml</include>
+                                        <include>src/**</include>
+                                    </includes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                 </plugins>
             </build>
         </profile>

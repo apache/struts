@@ -11,7 +11,7 @@ public abstract class BasePortletTest extends WebTestCase {
 	
 	protected Server server;
 
-	private int port = 8080;
+	private int port = 9876;
 	
 	private String contextPath = "/test";
 	

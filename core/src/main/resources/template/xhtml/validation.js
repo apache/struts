@@ -94,7 +94,7 @@ function addError(e, errorText) {
 function addErrorXHTML(e, errorText) {
     try {
         // clear out any rows with an "errorFor" of e.id
-        var row = e.parentNode.parentNode;
+        var row = (e.type ? e : e[0]).parentNode.parentNode;
         var table = row.parentNode;
         var error = document.createTextNode(errorText);
         var tr = document.createElement("tr");

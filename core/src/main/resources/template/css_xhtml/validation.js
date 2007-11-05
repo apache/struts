@@ -24,8 +24,9 @@ function clearErrorMessages(form) {
 }
 
 function clearErrorMessagesCSS(form) {
-	// clear out any rows with an "errorFor" attribute
-	var divs = form.getElementsByTagName("div");
+    firstFieldErrorPosition = null;
+    // clear out any rows with an "errorFor" attribute
+    var divs = form.getElementsByTagName("div");
     var paragraphsToDelete = new Array();
 
     for(var i = 0; i < divs.length; i++) {
@@ -59,44 +60,94 @@ function clearErrorLabelsCSS(form) {
             }
         }
     }
-
 }
 
 function addError(e, errorText) {
     addErrorCSS(e, errorText);
 }
 
+var firstFieldErrorPosition = null;
 function addErrorCSS(e, errorText) {
     try {
-        var ctrlDiv = e.parentNode; // wwctrl_ div or span
-        var enclosingDiv = ctrlDiv.parentNode; // wwgrp_ div
+        if (!e)
+            return; //ignore errors for fields that are not in the form
+        var elem = (e.type ? e : e[0]); //certain input types return node list, while we single first node. I.e. set of radio buttons.
+        var enclosingDiv = findWWGrpNode(elem); // find wwgrp div/span
 
-		if (!ctrlDiv || (ctrlDiv.nodeName != "DIV" && ctrlDiv.nodeName != "SPAN") || !enclosingDiv || enclosingDiv.nodeName != "DIV") {
-			alert("do not validate:" + e.id);
-			return;
-		}
-		
+        //try to focus on first field
+        var fieldPos = findFieldPosition(elem);
+        if (fieldPos != null && (firstFieldErrorPosition == null || firstFieldErrorPosition > fieldPos)) {
+            firstFieldErrorPosition = fieldPos;
+        }
+
+        if (!enclosingDiv) {
+            alert("Could not validate: " + e.id);
+            return;
+        }
+        
         var label = enclosingDiv.getElementsByTagName("label")[0];
-		if (label) {
-	        label.setAttribute("class", "errorLabel"); //standard way.. works for ie mozilla
-	        label.setAttribute("className", "errorLabel"); //ie hack cause ie does not support setAttribute
-	    }
+        if (label) {
+            label.setAttribute("class", "errorLabel"); //standard way.. works for ie mozilla
+            label.setAttribute("className", "errorLabel"); //ie hack cause ie does not support setAttribute
+        }
 
-		var firstDiv = enclosingDiv.getElementsByTagName("div")[0]; // either wwctrl_ or wwlbl_
-		if (!firstDiv) {
-			firstDiv = enclosingDiv.getElementsByTagName("span")[0];
-		}
+        var firstCtrNode = findWWCtrlNode(enclosingDiv); // either wwctrl_ or wwlbl_
+        
         var error = document.createTextNode(errorText);
         var errorDiv = document.createElement("div");
 
         errorDiv.setAttribute("class", "errorMessage");//standard way.. works for ie mozilla
         errorDiv.setAttribute("className", "errorMessage");//ie hack cause ie does not support setAttribute
-        errorDiv.setAttribute("errorFor", e.id);;
+        errorDiv.setAttribute("errorFor", elem.id);
         errorDiv.appendChild(error);
-        enclosingDiv.insertBefore(errorDiv, firstDiv);
-    } catch (e) {
-        alert(e);
+        enclosingDiv.insertBefore(errorDiv, firstCtrNode);
+    } catch (err) {
+        alert("An exception occurred: " + err.name + ". Error message: " + err.message);
     }
 }
 
+function findWWGrpNode(elem) {
+    while (elem.parentNode) {
+        elem = elem.parentNode;
 
+        if (elem.className && elem.className.match(/wwgrp/))
+            return elem;
+    }
+    return null;
+}
+
+function findWWCtrlNode(enclosingDiv) {
+    for(var elem in enclosingDiv.getElementsByTagName("div")) {
+        if (elem.className && elem.className.match(/(wwlbl|wwctrl)/))
+            return elem
+    }
+    for(var elem in enclosingDiv.getElementsByTagName("span")) {
+        if (elem.className && elem.className.match(/(wwlbl|wwctrl)/))
+            return elem
+    }
+    return enclosingDiv.getElementsByTagName("span")[0];
+}
+
+//find field position in the form
+function findFieldPosition(elem) {
+    if (!elem.form) {
+        alert("no form for " + elem);
+    }
+    
+    var form = elem.form;
+    for (i = 0; i < form.elements.length; i++) { 
+        if (form.elements[i].name == elem.name) {
+            return i;
+        }
+    }
+    return null;
+}
+
+//focus first element
+var StrutsUtils_showValidationErrors = StrutsUtils.showValidationErrors;
+StrutsUtils.showValidationErrors = function(form, errors) {
+    StrutsUtils_showValidationErrors(form, errors);
+    if (firstFieldErrorPosition != null && form.elements[firstFieldErrorPosition].focus) {
+        form.elements[firstFieldErrorPosition].focus();
+    }
+}

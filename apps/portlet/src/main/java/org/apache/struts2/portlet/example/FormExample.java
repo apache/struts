@@ -20,18 +20,17 @@
  */
 package org.apache.struts2.portlet.example;
 
+import org.apache.struts2.dispatcher.DefaultActionSupport;
+
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
  */
-public class FormExample extends ActionSupport {
+public class FormExample extends DefaultActionSupport {
 
     String firstName = null;
     String lastName = null;
-    public String execute() throws Exception {
-        // TODO Auto-generated method stub
-        return super.execute();
-    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -43,5 +42,9 @@ public class FormExample extends ActionSupport {
     }
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+    
+    public String displayResult() {
+    	return "displayResult";
     }
 }

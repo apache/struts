@@ -28,6 +28,21 @@
 			</result>
 		</action>
 		
+		<action name="formExamplePrg" class="org.apache.struts2.portlet.example.FormExample">
+			<result name="input">
+				/WEB-INF/view/formExampleInputPrg.jsp
+			</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">formExamplePrg</param>
+				<param name="method">displayResult</param>
+				<param name="firstName">${firstName}</param>
+				<param name="lastName">${lastName}</param>
+			</result>
+			<result name="displayResult">
+				/WEB-INF/view/formExample.jsp
+			</result>
+		</action>
+		
 		<action name="formExampleModelDriven"
 			class="org.apache.struts2.portlet.example.FormExampleModelDriven">
 			<result name="input">

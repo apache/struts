@@ -4,6 +4,7 @@
 Here you'll find examples of what is possible with the Struts Portlet integration framework.
 <ul>
 <li><a href="<s:url action="formExample"/>">A simple form</a></li>
+<li><a href="<s:url action="formExamplePrg" method="input"/>">Form example with proper PRG</a></li>
 <li><a href="<s:url action="formExampleModelDriven" method="input"/>">Model driven example</li>
 <li><a href="<s:url action="validationExample"/>">Validation</a></li>
 <li><a href="<s:url action="tokenExample"/>">Token</a></li>

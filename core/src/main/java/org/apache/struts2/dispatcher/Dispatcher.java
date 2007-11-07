@@ -22,8 +22,6 @@ package org.apache.struts2.dispatcher;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -82,7 +80,6 @@ import freemarker.template.Template;
  * all requests.
  *
  * @see org.apache.struts2.dispatcher.FilterDispatcher
- * @see org.apache.struts2.portlet.dispatcher.Jsr168Dispatcher
  */
 public class Dispatcher {
 
@@ -110,22 +107,22 @@ public class Dispatcher {
     /**
      * Store state of  StrutsConstants.STRUTS_DEVMODE setting.
      */
-    private static boolean devMode;
+    private boolean devMode;
 
     /**
      * Store state of StrutsConstants.STRUTS_I18N_ENCODING setting.
      */
-    private static String defaultEncoding;
+    private String defaultEncoding;
 
     /**
      * Store state of StrutsConstants.STRUTS_LOCALE setting.
      */
-    private static String defaultLocale;
+    private String defaultLocale;
 
     /**
      * Store state of StrutsConstants.STRUTS_MULTIPART_SAVEDIR setting.
      */
-    private static String multipartSaveDir;
+    private String multipartSaveDir;
 
     /**
      * Provide list of default configuration files.
@@ -189,7 +186,7 @@ public class Dispatcher {
      * @param servletContext Our servlet context
      * @param initParams The set of initialization parameters
      */
-    public  Dispatcher(ServletContext servletContext, Map<String, String> initParams) {
+    public Dispatcher(ServletContext servletContext, Map<String, String> initParams) {
         this.servletContext = servletContext;
         this.initParams = initParams;
     }
@@ -229,7 +226,7 @@ public class Dispatcher {
     public void setMultipartSaveDir(String val) {
         multipartSaveDir = val;
     }
-    
+
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
         this.valueStackFactory = valueStackFactory;
@@ -508,17 +505,8 @@ Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyExcepti
         // request map wrapping the http request objects
         Map requestMap = new RequestMap(request);
 
-        // parameters map wrapping the http paraneters.
-        Map params = null;
-        if (mapping != null) {
-            params = mapping.getParams();
-        }
-        Map requestParams = new HashMap(request.getParameterMap());
-        if (params != null) {
-            params.putAll(requestParams);
-        } else {
-            params = requestParams;
-        }
+        // parameters map wrapping the http parameters.  ActionMapping parameters are now handled and applied separately
+        Map params = new HashMap(request.getParameterMap());
 
         // session map wrapping the http session
         Map session = new SessionMap(request);

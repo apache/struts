@@ -86,6 +86,32 @@
 
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>j4</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>retrotranslator-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>retrotranslate</id>
+                                <goals>
+                                    <goal>translate-project</goal>
+                                </goals>
+                                <configuration>
+                                    <classifier>j4</classifier>
+                                    <attach>true</attach>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <reporting>
         <plugins>
             <plugin>

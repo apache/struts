@@ -164,7 +164,7 @@
                                     <goal>translate-project</goal>
                                 </goals>
                                 <configuration>
-                                    <classifier>j4</classifier>
+                                    <classifier>backport</classifier>
                                     <attach>true</attach>
                                 </configuration>
                             </execution>

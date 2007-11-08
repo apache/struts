@@ -142,7 +142,7 @@ public class CodebehindUnknownHandler implements UnknownHandler {
         PackageConfig pkg = configuration.getPackageConfig(actionConfig.getPackageName());
         String ns = pkg.getNamespace();
         String pathPrefix = determinePath(templatePathPrefix, ns);
-        
+
         for (String ext : resultsByExtension.keySet()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Trying to locate result with extension ."+ext+" in directory "+pathPrefix);

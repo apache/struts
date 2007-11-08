@@ -146,11 +146,6 @@ public class ClasspathPackageProvider implements PackageProvider {
 
     private ServletContext servletContext;
 
-    /**
-     * Create instance utilizing a list of packages to scan for Action classes.
-     *
-     * @param pkgs List of pacaktges to scan for Action Classes.
-     */
     public ClasspathPackageProvider() {
     }
 

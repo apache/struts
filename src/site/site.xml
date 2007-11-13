@@ -25,7 +25,7 @@
     <bannerLeft>
         <name>Apache Software Foundation</name>
         <src>http://www.apache.org/images/asf-logo.gif</src>
-        <href>http://apache.org/foundation/sponsorship.html</href>
+        <href>http://www.apache.org/</href>
     </bannerLeft>
     <bannerRight>
         <name>Apache Struts</name>
@@ -34,7 +34,7 @@
     </bannerRight>
     <body>
         <links>
-            <item name="Apache" href="http://apache.org/foundation/sponsorship.html" />
+            <item name="Apache" href="http://www.apache.org/" />
             <item name="Struts" href="http://struts.apache.org/index.html" />
         </links>
         <menu name="Struts 2">
@@ -48,6 +48,9 @@
             <item
                     name="Thanks!"
                     href="http://apache.org/foundation/thanks.html"/>
+            <item
+                    name="Sponsorship"
+                    href="http://apache.org/foundation/sponsorship.html"/>
         </menu>
 
         <menu name="Documentation">

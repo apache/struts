@@ -39,6 +39,7 @@
         <module>mailreader</module>
         <module>portlet</module>
         <module>showcase</module>
+        <module>rest-showcase</module>
     </modules>
 
     <scm>

@@ -35,8 +35,11 @@ public class JsonLibHandlerTest extends TestCase {
         StringWriter writer = new StringWriter();
         JsonLibHandler handler = new JsonLibHandler();
         handler.fromObject(contact, "success", writer);
-
-        assertEquals("{\"age\":44,\"important\":true,\"name\":\"bob\"}", writer.toString());
+        String data = writer.toString();
+        assertTrue(data.startsWith("{"));
+        assertTrue(data.contains("\"age\":44"));
+        assertTrue(data.contains("\"important\":true"));
+        assertTrue(data.contains("\"name\":\"bob\""));
     }
 
     public void testFromObjectArray() throws IOException {
@@ -46,7 +49,11 @@ public class JsonLibHandlerTest extends TestCase {
         JsonLibHandler handler = new JsonLibHandler();
         handler.fromObject(Arrays.asList(contact), "success", writer);
 
-        assertEquals("[{\"age\":44,\"important\":true,\"name\":\"bob\"}]", writer.toString());
+        String data = writer.toString();
+        assertTrue(data.startsWith("[{"));
+        assertTrue(data.contains("\"age\":44"));
+        assertTrue(data.contains("\"important\":true"));
+        assertTrue(data.contains("\"name\":\"bob\""));
     }
 
     public void testToObject() throws IOException {

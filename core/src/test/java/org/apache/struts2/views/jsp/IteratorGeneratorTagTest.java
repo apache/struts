@@ -141,7 +141,7 @@ public class IteratorGeneratorTagTest extends AbstractTagTest {
         tag.doStartTag();
         tag.doEndTag();
 
-        Object pageContextIterator = pageContext.getAttribute("myPageContextAttId");
+        Object pageContextIterator = stack.findValue("myPageContextAttId");
 
         assertTrue(pageContextIterator instanceof Iterator);
         // 1

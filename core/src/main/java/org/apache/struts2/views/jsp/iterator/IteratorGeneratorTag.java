@@ -234,14 +234,11 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
 
         iteratorGenerator.execute();
 
-
-
-        // push resulting iterator into stack
+        // Push resulting iterator on stack and put into
+        // stack context if we have a "var" specified.
         getStack().push(iteratorGenerator);
         if (var != null && var.length() > 0) {
-            // if an id is specified, we have the resulting iterator set into
-            // the pageContext attribute as well
-            pageContext.setAttribute(var, iteratorGenerator);
+            getStack().getContext().put(var, iteratorGenerator);
         }
 
         return EVAL_BODY_INCLUDE;

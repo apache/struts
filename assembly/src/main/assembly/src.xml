@@ -101,6 +101,22 @@
         </includes>
       </fileSet>
       <fileSet>
+        <directory>../apps/rest-showcase</directory>
+        <outputDirectory>src/apps/rest-showcase</outputDirectory>
+        <includes>
+          <include>pom.xml</include>
+          <include>src/</include>
+        </includes>
+      </fileSet>
+      <fileSet>
+        <directory>../apps/mailreader</directory>
+        <outputDirectory>src/apps/mailreader</outputDirectory>
+        <includes>
+          <include>pom.xml</include>
+          <include>src/</include>
+        </includes>
+      </fileSet>
+      <fileSet>
         <directory>../assembly</directory>
         <outputDirectory>src/assembly</outputDirectory>
         <includes>
@@ -115,7 +131,15 @@
           <include>pom.xml</include>
           <include>src/</include>
         </includes>
-     </fileSet>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins</directory>
+        <outputDirectory>src/plugins</outputDirectory>
+        <excludes>
+          <exclude>*/target/**</exclude>
+          <exclude>target/**</exclude>
+        </excludes>
+      </fileSet>
 
   </fileSets>
 </assembly>

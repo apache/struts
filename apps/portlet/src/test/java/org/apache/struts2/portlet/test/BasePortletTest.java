@@ -10,10 +10,10 @@ import org.mortbay.jetty.webapp.WebAppContext;
 public abstract class BasePortletTest extends WebTestCase {
 	
 	protected Server server;
-
-	private int port = 9876;
 	
 	private String contextPath = "/test";
+	
+	private int port;
 	
 	public void setUp() throws Exception {
 		System.setProperty("org.apache.pluto.embedded.portletId", getPortletName());
@@ -26,6 +26,9 @@ public abstract class BasePortletTest extends WebTestCase {
 		webapp.addServlet(portletServlet, "/PlutoInvoker/" + getPortletName());
 		server.addHandler(webapp);
 		server.start();
+		// Retrieve the actual port that is used, in case a random, free port is
+		// picked
+		int port = server.getConnectors()[0].getLocalPort();
 		getTestContext().setBaseUrl("http://localhost:" + port + contextPath);
 	}
 	
@@ -58,10 +61,6 @@ public abstract class BasePortletTest extends WebTestCase {
 		clickElementByXPath("//span[@class='help']/..");
 	}
 	
-	public void setPort(int port) {
-		this.port = port;
-	}
-	
 	public void setContextPath(String contextPath) {
 		if(!contextPath.startsWith("/")) {
 			this.contextPath = "/" + contextPath;
@@ -69,6 +68,10 @@ public abstract class BasePortletTest extends WebTestCase {
 		else {
 			this.contextPath = contextPath;
 		}
+	}
+	
+	public void setPort(int port) {
+		this.port = port;
 	}
 	
 	public abstract String getPortletName();

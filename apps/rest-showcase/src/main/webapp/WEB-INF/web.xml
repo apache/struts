@@ -18,7 +18,7 @@
         	<param-value>org.apache.struts2.rest.example</param-value>
         </init-param>
         <init-param>
-        	<param-name>devMode</param-name>
+        	<param-name>struts.devMode</param-name>
         	<param-value>true</param-value>
         </init-param>
     </filter>

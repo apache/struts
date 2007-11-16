@@ -55,12 +55,12 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * ampersand escaping.</p> 
  * 
  * <b>NOTE:</b>
- * <p>When includeParams is 'all' or 'get', the parameter defined in &lt;param&gt; tag will take
- * precedence and will not be overriden if they exists in the parameter submitted. For
+ * <p>When includeParams is 'all' or 'get', the parameter defined in a &lt;param&gt; 
+ * tag will take precedence over any params included due to the includeParams attribute. For
  * example, in Example 3 below, if there is a id parameter in the url where the page this
  * tag is included like http://&lt;host&gt;:&lt;port&gt;/&lt;context&gt;/editUser.action?id=3333&name=John
  * the generated url will be http://&lt;host&gt;:&lt;port&gt;/&lt;context&gt;/editUser.action?id=22&name=John
- * cause the parameter defined in the param tag will take precedence.</p>
+ * because the parameter defined in the param tag will take precedence.</p>
  *
  * <!-- END SNIPPET: javadoc -->
  *

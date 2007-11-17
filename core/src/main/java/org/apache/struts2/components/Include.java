@@ -54,8 +54,11 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 /**
  * <!-- START SNIPPET: javadoc -->
  * <p>Include a servlet's output (result of servlet or a JSP page).</p>
- * <p>Note: Any additional params supplied to the included page are <b>not</b> accessible within the rendered page
- * through the &lt;s:property...&gt; tag!</p>
+ * <p>Note: Any additional params supplied to the included page are <b>not</b>
+ * accessible within the rendered page through the &lt;s:property...&gt; tag
+ * since no valuestack will be created. You can, however, access them in a 
+ * servlet via the HttpServletRequest object or from a JSP page via
+ * a scriptlet.</p>
  * <!-- END SNIPPET: javadoc -->
  *
  *
@@ -81,7 +84,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * &lt;-- Three: --&gt;
  * &lt;s:include value="myJsp.jsp"&gt;
  *    &lt;s:param name="param1"&gt;value1&lt;/s:param&gt;
- *    &lt;s:param name="param2"&gt;value2&lt;s:param&gt;
+ *    &lt;s:param name="param2"&gt;value2&lt;/s:param&gt;
  * &lt;/s:include&gt;
  * <!-- END SNIPPET: example -->
  *

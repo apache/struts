@@ -81,14 +81,14 @@ public class StreamResultTest extends StrutsTestCase {
 
         result.doExecute("helloworld", mai);
 
-        assertEquals("1185", result.getContentLength());
+        assertEquals(String.valueOf(contentLength), result.getContentLength());
         assertEquals("text/plain", result.getContentType());
         assertEquals("streamForImage", result.getInputName());
         assertEquals(1024, result.getBufferSize()); // 1024 is default
         assertEquals("inline", result.getContentDisposition());
 
         assertEquals("text/plain", response.getContentType());
-        assertEquals(1185, response.getContentLength());
+        assertEquals(contentLength, response.getContentLength());
         assertEquals("inline", response.getHeader("Content-disposition"));
     }
 

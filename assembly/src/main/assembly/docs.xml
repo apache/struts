@@ -19,37 +19,11 @@
 -->
 
 <assembly>
-  <id>all</id>
+  <id>docs</id>
   <formats>
     <format>zip</format>
   </formats>
-  <dependencySets>
-    <dependencySet>
-      <outputDirectory>lib</outputDirectory>
-      <scope>runtime</scope>
-      <excludes>
-        <exclude>net.sf.retrotranslator:retrotranslator-runtime</exclude>
-        <exclude>*:backport</exclude>
-      </excludes>
-    </dependencySet>
-  </dependencySets>
   <fileSets>
-    <fileSet>
-        <directory>src/main/resources</directory>
-        <outputDirectory></outputDirectory>
-      <includes>
-        <include>README*</include>
-        <include>LICENSE*</include>
-        <include>NOTICE*</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>target/apps</directory>
-      <outputDirectory>apps</outputDirectory>
-      <includes>
-        <include>*.war</include>
-      </includes>
-    </fileSet>
 
     <!-- Include the XWork Javadoc in the assembly -->
     <fileSet>
@@ -78,12 +52,6 @@
       </fileSet>
 
       <!-- Plugins -->
-      <!-- 
-      <fileSet>
-        <directory>../plugins/$plugin/target/site</directory>
-        <outputDirectory>docs/struts2-plugins/struts2-$plugin-plugin</outputDirectory>
-      </fileSet>
-      -->
       <fileSet>
         <directory>../plugins/codebehind/target/site</directory>
         <outputDirectory>docs/struts2-plugins/struts2-codebehind-plugin</outputDirectory>
@@ -145,94 +113,5 @@
         <outputDirectory>docs/struts2-plugins/struts2-tiles-plugin</outputDirectory>
       </fileSet>
 
-    <!-- Include the source code in the assembly -->
-    <fileSet>
-      <directory>../</directory>
-      <outputDirectory>src/</outputDirectory>
-      <includes>
-        <include>pom.xml</include>
-        <include>src/</include>
-      </includes>
-    </fileSet>
-      <fileSet>
-        <directory>../api</directory>
-        <outputDirectory>src/api</outputDirectory>
-        <includes>
-          <include>pom.xml</include>
-          <include>src/</include>
-        </includes>
-      </fileSet>
-    <fileSet>
-      <directory>../apps</directory>
-      <outputDirectory>src/apps</outputDirectory>
-      <includes>
-        <include>pom.xml</include>
-        <include>src/</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>../apps/blank</directory>
-      <outputDirectory>src/apps/blank</outputDirectory>
-      <includes>
-        <include>pom.xml</include>
-        <include>src/</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>../apps/portlet</directory>
-      <outputDirectory>src/apps/portlet</outputDirectory>
-      <includes>
-        <include>pom.xml</include>
-        <include>src/</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>../apps/showcase</directory>
-      <outputDirectory>src/apps/showcase</outputDirectory>
-      <includes>
-        <include>pom.xml</include>
-        <include>src/</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>../apps/rest-showcase</directory>
-      <outputDirectory>src/apps/rest-showcase</outputDirectory>
-      <includes>
-        <include>pom.xml</include>
-        <include>src/</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>../apps/mailreader</directory>
-      <outputDirectory>src/apps/mailreader</outputDirectory>
-      <includes>
-        <include>pom.xml</include>
-        <include>src/</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>../assembly</directory>
-      <outputDirectory>src/assembly</outputDirectory>
-      <includes>
-        <include>pom.xml</include>
-        <include>src/</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>../core</directory>
-      <outputDirectory>src/core</outputDirectory>
-      <includes>
-        <include>pom.xml</include>
-        <include>src/</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>../plugins</directory>
-      <outputDirectory>src/plugins</outputDirectory>
-      <excludes>
-        <exclude>*/target/**</exclude>
-        <exclude>target/**</exclude>
-      </excludes>
-    </fileSet>
   </fileSets>
 </assembly>

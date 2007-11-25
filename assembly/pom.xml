@@ -140,8 +140,10 @@
                     <descriptors>
                         <descriptor>src/main/assembly/all.xml</descriptor>
                         <descriptor>src/main/assembly/lib.xml</descriptor>
+                        <descriptor>src/main/assembly/lib-backport.xml</descriptor>
                         <descriptor>src/main/assembly/apps.xml</descriptor>
                         <descriptor>src/main/assembly/src.xml</descriptor>
+                        <descriptor>src/main/assembly/docs.xml</descriptor>
                     </descriptors>
                     <finalName>struts-${version}</finalName>
                     <outputDirectory>target/assembly/out</outputDirectory>
@@ -162,6 +164,30 @@
             <groupId>org.apache.struts</groupId>
             <artifactId>struts2-core</artifactId>
             <version>${version}</version>
+        </dependency>
+
+        <!-- Enable when XW-585 is resolved and XWork 2.1.1-SNAPSHOT is published.
+        See: http://jira.opensymphony.com/browse/XW-585
+
+        <dependency>
+            <groupId>com.opensymphony</groupId>
+            <artifactId>xwork</artifactId>
+            <version>2.1.1-SNAPSHOT</version>
+            <classifier>backport</classifier>
+            <scope>runtime</scope>
+        </dependency> -->
+
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-api</artifactId>
+            <version>${version}</version>
+            <classifier>backport</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-core</artifactId>
+            <version>${version}</version>
+            <classifier>backport</classifier>
         </dependency>
 
         <dependency>
@@ -228,6 +254,20 @@
             <groupId>org.apache.tiles</groupId>
             <artifactId>tiles-jsp</artifactId>
             <version>2.0.5</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.retrotranslator</groupId>
+            <artifactId>retrotranslator-runtime</artifactId>
+            <version>1.2.1</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>backport-util-concurrent</groupId>
+            <artifactId>backport-util-concurrent</artifactId>
+            <version>3.0</version>
             <scope>runtime</scope>
         </dependency>
 

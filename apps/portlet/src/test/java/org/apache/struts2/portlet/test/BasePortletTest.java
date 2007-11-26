@@ -1,5 +1,7 @@
 package org.apache.struts2.portlet.test;
 
+import java.io.File;
+
 import net.sourceforge.jwebunit.junit.WebTestCase;
 
 import org.apache.pluto.core.PortletServlet;
@@ -19,6 +21,7 @@ public abstract class BasePortletTest extends WebTestCase {
 		System.setProperty("org.apache.pluto.embedded.portletId", getPortletName());
 		server = new Server(port);
 		WebAppContext webapp = new WebAppContext("src/main/webapp", contextPath);
+		webapp.setTempDirectory(new File("target/work"));
 		webapp.setDefaultsDescriptor("/WEB-INF/jetty-pluto-web-default.xml");
 		ServletHolder portletServlet = new ServletHolder(new PortletServlet());
 		portletServlet.setInitParameter("portlet-name", getPortletName());

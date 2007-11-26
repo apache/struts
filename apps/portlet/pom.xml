@@ -39,22 +39,7 @@
        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/struts/struts2/trunk/apps/portlet/</developerConnection>
        <url>http://svn.apache.org/viewcvs.cgi/struts/struts2/trunk/apps/portlet/</url>
     </scm>
-	
-	<build>
-		<plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <!-- Excluded so the integration tests don't run in the main Bamboo build -->
-                    <excludes>
-						   <exclude>org/apache/struts2/portlet/test/*</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-		</plugins>
-	</build>
-	
+
 	<profiles>
 		<profile>
 			<id>pluto</id>

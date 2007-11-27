@@ -13,7 +13,7 @@
         <section name="About Apache Struts 2">
             <a name="Welcome"/>
 
-        <div style="text-align:left;min-height:200px">
+        <div style="text-align:left;height:200px">
         <a href="docs/home.html"><img src="images/struts2-merger2.png" alt="Struts 2 and WebWork merger" hspace="16" align="left"/></a>
 
         <p>
@@ -33,7 +33,7 @@
         <div>
         <table><tr><td>
         <a href="http://struts.apache.org/download.cgi#struts210">
-          <div style="background:url(images/download.gif) no-repeat scroll 0%; width:200px; min-height:80px; float:left;position:relative;margin:5px">
+          <div style="background:url(images/download.gif) no-repeat scroll 0%; width:200px; height:80px; float:left;position:relative;margin:5px">
             <span style="top:15px;position:absolute;color:white;padding-left:10px">
               <small>version 2.1.0</small>
               <br />
@@ -43,7 +43,7 @@
         </a>
         </td><td>
         <a href="docs/home.html" style="margin:10px">
-          <div style="background:url(images/help.gif) no-repeat scroll 0%; width:200px; min-height:80px; float:left;position:relative;margin:5px">
+          <div style="background:url(images/help.gif) no-repeat scroll 0%; width:200px; height:80px; float:left;position:relative;margin:5px">
             <span style="top:15px;position:absolute;color:white;padding-left:10px">
               <span style="font-weight: bold; font-size:140%">Get Started</span>
             </span>
@@ -51,7 +51,7 @@
         </a>
         </td><td>
         <a href="http://cwiki.apache.org/S2PLUGINS/home.html" style="margin:10px">
-          <div style="background:url(images/plugins.gif) no-repeat scroll 0%; width:200px; min-height:80px; float:left;position:relative;margin:5px">
+          <div style="background:url(images/plugins.gif) no-repeat scroll 0%; width:200px; height:80px; float:left;position:relative;margin:5px">
             <span style="top:15px;position:absolute;color:white;padding-left:10px">
               <span style="font-weight: bold; font-size:140%">Plugin Registry</span>
             </span>

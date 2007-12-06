@@ -71,7 +71,6 @@ public class PortletStateInterceptor extends AbstractInterceptor implements Port
 	private void restoreStack(ActionInvocation invocation) {
 		RenderRequest request = (RenderRequest) invocation.getInvocationContext().get(REQUEST);
 		if (TextUtils.stringSet(request.getParameter(EVENT_ACTION))) {
-			Map session = invocation.getInvocationContext().getSession();
 			if(!isProperPrg(invocation)) {
 				LOG.debug("Restoring value stack from event phase");
 				ValueStack oldStack = (ValueStack) invocation.getInvocationContext().getSession().get(

@@ -21,6 +21,7 @@
 package org.apache.struts2.portlet.dispatcher;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
@@ -50,6 +51,7 @@ import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.PortletApplicationMap;
 import org.apache.struts2.portlet.PortletRequestMap;
@@ -358,6 +360,11 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
     	ServletContext dummyServletContext = new PortletServletContext(getPortletContext());
     	if(EVENT_PHASE.equals(phase)) {
     		dummyRequest = dispatcherUtils.wrapRequest(dummyRequest, dummyServletContext);
+    		if(dummyRequest instanceof MultiPartRequestWrapper) {
+    			// Multipart request. Request parameters are encoded in the multipart data,
+    			// so we need to manually add them to the parameter map.
+    			parameterMap.putAll(dummyRequest.getParameterMap());
+    		}
     	}
         // ServletActionContext
         HashMap<String,Object> extraContext = new HashMap<String,Object>();

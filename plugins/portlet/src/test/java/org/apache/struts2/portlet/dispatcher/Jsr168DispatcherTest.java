@@ -20,6 +20,7 @@
  */
 package org.apache.struts2.portlet.dispatcher;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,19 +37,16 @@ import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-
-import junit.textui.TestRunner;
 
 import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.easymock.EasyMock;
 import org.jmock.Mock;
 import org.jmock.cglib.MockObjectTestCase;
 import org.jmock.core.Constraint;
+import org.springframework.mock.web.portlet.MockActionRequest;
+import org.springframework.mock.web.portlet.MockActionResponse;
 import org.springframework.mock.web.portlet.MockPortletConfig;
 import org.springframework.mock.web.portlet.MockPortletContext;
 
@@ -57,7 +55,6 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  * Jsr168DispatcherTest. Insert description.
@@ -65,6 +62,17 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
  */
 public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletActionConstants {
 
+	private final String MULTIPART_REQUEST = "-----------------------------4827543632391\r\n" 
+		+ "Content-Disposition: form-data; name=\"upload\"; filename=\"test.txt\"\r\n"
+		+ "Content-Type: text/plain\r\n"
+		+ "\r\n"
+		+ "This is a test file\r\n"
+		+ "-----------------------------4827543632391\r\n"
+		+ "Content-Disposition: form-data; name=\"caption\"\r\n"
+		+ "\r\n"
+		+ "TestCaption\r\n"
+		+ "-----------------------------4827543632391--";
+	
     Jsr168Dispatcher dispatcher = null;
     Mock mockConfig = null;
     Mock mockCtx = null;
@@ -304,9 +312,24 @@ public class Jsr168DispatcherTest extends MockObjectTestCase implements PortletA
             fail("Error occured");
         }
     }
-
-    public static void main(String[] args) {
-        TestRunner.run(Jsr168DispatcherTest.class);
+    
+    public void testMultipartRequest_parametersAreCopiedToActionInvocation() throws Exception {
+    	MockPortletContext ctx = new MockPortletContext();
+    	ctx.setAttribute("javax.servlet.context.tempdir", new File("target").getAbsoluteFile());
+    	MockActionRequest request = new MockActionRequest(ctx);
+    	request.setContent(MULTIPART_REQUEST.getBytes("US-ASCII"));
+    	request.setContentType("multipart/form-data; boundary=---------------------------4827543632391");
+    	request.setProperty("Content-Length", "" + MULTIPART_REQUEST.length());
+    	MockActionResponse response = new MockActionResponse();
+    	Map<String, Object> requestMap = new HashMap<String, Object>();
+    	Map<String, String[]> paramMap = new HashMap<String, String[]>();
+    	Map<String, Object> sessionMap = new HashMap<String, Object>();
+    	Map<String, Object> applicationMap = new HashMap<String, Object>();
+    	initPortletConfig(new HashMap(), new HashMap());
+    	MockPortletConfig config = new MockPortletConfig(ctx);
+    	dispatcher.init(config);
+    	dispatcher.createContextMap(requestMap, paramMap, sessionMap, applicationMap, request, response, config, PortletActionConstants.EVENT_PHASE);
+    	assertNotNull("Caption was not found in parameter map!", paramMap.get("caption"));
+    	assertEquals("TestCaption", paramMap.get("caption")[0]);
     }
-
 }

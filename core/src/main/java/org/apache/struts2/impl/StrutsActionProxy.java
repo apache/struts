@@ -32,9 +32,9 @@ public class StrutsActionProxy extends DefaultActionProxy {
 
     private static final long serialVersionUID = -2434901249671934080L;
 
-    public StrutsActionProxy(ActionInvocation inv, String namespace, String actionName, Map extraContext,
-                             boolean executeResult, boolean cleanupContext) throws Exception {
-        super(inv, namespace, actionName, extraContext, executeResult, cleanupContext);
+    public StrutsActionProxy(ActionInvocation inv, String namespace, String actionName, String methodName,
+                             boolean executeResult, boolean cleanupContext) {
+        super(inv, namespace, actionName, methodName, executeResult, cleanupContext);
     }
 
     public String execute() throws Exception {
@@ -54,4 +54,10 @@ public class StrutsActionProxy extends DefaultActionProxy {
                 ActionContext.setContext(previous);
         }
     }
+
+    @Override
+    protected void prepare() {
+        super.prepare();
+    }
+
 }

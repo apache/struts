@@ -120,19 +120,15 @@ public class CodebehindUnknownHandler implements UnknownHandler {
     }
 
     protected ActionConfig buildActionConfig(String path, String namespace, String actionName, ResultTypeConfig resultTypeConfig) {
-        Map<String,ResultConfig> results = new HashMap<String,ResultConfig>();
-        HashMap params = new HashMap();
-        if (resultTypeConfig.getParams() != null) {
-            params.putAll(resultTypeConfig.getParams());
-        }
-        params.put(resultTypeConfig.getDefaultResultParam(), path);
-        
         PackageConfig pkg = configuration.getPackageConfig(defaultPackageName);
-        List interceptors = InterceptorBuilder.constructInterceptorReference(pkg, pkg.getFullDefaultInterceptorRef(), 
-                Collections.EMPTY_MAP, null, objectFactory); 
-        ResultConfig config = new ResultConfig(Action.SUCCESS, resultTypeConfig.getClazz(), params);
-        results.put(Action.SUCCESS, config);
-        return new ActionConfig("execute", ActionSupport.class.getName(), defaultPackageName, new HashMap(), results, interceptors);
+        return new ActionConfig.Builder(defaultPackageName, "execute", ActionSupport.class.getName())
+                .addInterceptors(InterceptorBuilder.constructInterceptorReference(pkg, pkg.getFullDefaultInterceptorRef(),
+                Collections.EMPTY_MAP, null, objectFactory))
+                .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, resultTypeConfig.getClassName())
+                        .addParams(resultTypeConfig.getParams())
+                        .addParam(resultTypeConfig.getDefaultResultParam(), path)
+                        .build())
+                .build();
     }
 
     public Result handleUnknownResult(ActionContext actionContext, String actionName, 
@@ -172,15 +168,10 @@ public class CodebehindUnknownHandler implements UnknownHandler {
     }
     
     protected Result buildResult(String path, String resultCode, ResultTypeConfig config, ActionContext invocationContext) {
-        String resultClass = config.getClazz();
-
-        Map<String,String> params = new LinkedHashMap<String,String>();
-        if (config.getParams() != null) {
-            params.putAll(config.getParams());
-        }
-        params.put(config.getDefaultResultParam(), path);
-
-        ResultConfig resultConfig = new ResultConfig(resultCode, resultClass, params);
+        ResultConfig resultConfig = new ResultConfig.Builder(resultCode, config.getClassName())
+            .addParams(config.getParams())
+            .addParam(config.getDefaultResultParam(), path)
+            .build();
         try {
             return objectFactory.buildResult(resultConfig, invocationContext.getContextMap());
         } catch (Exception e) {

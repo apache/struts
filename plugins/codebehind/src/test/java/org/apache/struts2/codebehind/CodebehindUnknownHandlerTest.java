@@ -61,7 +61,7 @@ public class CodebehindUnknownHandlerTest extends StrutsTestCase {
 
     public void testBuildResult() {
         ActionContext ctx = new ActionContext(new HashMap());
-        ResultTypeConfig config = new ResultTypeConfig("null", SomeResult.class.getName(), "location");
+        ResultTypeConfig config = new ResultTypeConfig.Builder("null", SomeResult.class.getName()).defaultResultParam("location").build();
         
         Result result = handler.buildResult("/foo.jsp", "success", config, ctx);
         assertNotNull(result);

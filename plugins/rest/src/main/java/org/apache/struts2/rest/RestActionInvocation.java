@@ -78,7 +78,7 @@ public class RestActionInvocation extends DefaultActionInvocation {
     
     private ContentTypeHandlerManager handlerSelector;
 
-    protected RestActionInvocation(Map extraContext, boolean pushAction) throws Exception {
+    protected RestActionInvocation(Map extraContext, boolean pushAction) {
         super(extraContext, pushAction);
     }
 

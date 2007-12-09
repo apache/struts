@@ -100,7 +100,7 @@ public class DWRValidator {
         try {
             Configuration cfg = du.getConfigurationManager().getConfiguration();
             ActionInvocation inv = new ValidatorActionInvocation(ctx, true);
-            ActionProxy proxy = actionProxyFactory.createActionProxy(inv, namespace, action, ctx, true, true);
+            ActionProxy proxy = actionProxyFactory.createActionProxy(inv, namespace, action, null, true, true);
             proxy.execute();
             Object a = proxy.getAction();
 

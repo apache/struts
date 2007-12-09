@@ -138,7 +138,7 @@ public class Struts1FactoryTest extends StrutsTestCase {
 
         ExceptionConfig[] exceptionConfigs = mapping.findExceptionConfigs();
         assertNotNull(exceptionConfigs);
-        assertEquals(3, exceptionConfigs.length);
+        assertEquals(2, exceptionConfigs.length);
         
         ModuleConfig moduleConfig = mapping.getModuleConfig();
         assertNotNull(moduleConfig);

@@ -39,12 +39,7 @@
 <#if parameters.id?exists>
  id="${parameters.id?html}"<#rt/>
 </#if>
-<#if parameters.cssClass?exists>
- class="${parameters.cssClass?html}"<#rt/>
-</#if>
-<#if parameters.cssStyle?exists>
- style="${parameters.cssStyle?html}"<#rt/>
-</#if>
+<#include "/${parameters.templateDir}/simple/css.ftl" />
 <#if parameters.title?exists>
  title="${parameters.title?html}"<#rt/>
 </#if>

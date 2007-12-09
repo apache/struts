@@ -24,9 +24,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.ServletContext;
 
@@ -123,12 +121,7 @@ public class ClasspathPackageProvider implements PackageProvider {
      */
     private boolean initialized = false;
 
-    /**
-     * The package configurations for scanned Actions.
-     *
-     * @see #loadPackageConfig
-     */
-    private Map<String,PackageConfig> loadedPackageConfigs = new HashMap<String,PackageConfig>();
+    private PackageLoader packageLoader;
 
     /**
      * Logging instance for this class.
@@ -235,6 +228,7 @@ public class ClasspathPackageProvider implements PackageProvider {
      */
     protected void loadPackages(String[] pkgs) {
 
+        packageLoader = new PackageLoader();
         ResolverUtil<Class> resolver = new ResolverUtil<Class>();
         resolver.find(createActionClassTest(), pkgs);
 
@@ -246,8 +240,8 @@ public class ClasspathPackageProvider implements PackageProvider {
            }
         }
 
-        for (String key : loadedPackageConfigs.keySet()) {
-            configuration.addPackageConfig(key, loadedPackageConfigs.get(key));
+        for (PackageConfig config : packageLoader.createPackageConfigs()) {
+            configuration.addPackageConfig(config.getName(), config);
         }
     }
 
@@ -279,7 +273,6 @@ public class ClasspathPackageProvider implements PackageProvider {
      * @param pkgs List of packages that were scanned for Actions
      */
     protected void processActionClass(Class<?> cls, String[] pkgs) {
-        ActionConfig actionConfig = new ActionConfig();
         String name = cls.getName();
         String actionPackage = cls.getPackage().getName();
         String actionNamespace = null;
@@ -328,7 +321,7 @@ public class ClasspathPackageProvider implements PackageProvider {
             }
         }
 
-        PackageConfig pkgConfig = loadPackageConfig(actionNamespace, actionPackage, cls);
+        PackageConfig.Builder pkgConfig = loadPackageConfig(actionNamespace, actionPackage, cls);
 
         // In case the package changed due to namespace annotation processing
         if (!actionPackage.equals(pkgConfig.getName())) {
@@ -345,14 +338,14 @@ public class ClasspathPackageProvider implements PackageProvider {
             pkgConfig.addParent(parentPkg);
 
             if (!TextUtils.stringSet(pkgConfig.getNamespace()) && TextUtils.stringSet(parentPkg.getNamespace())) {
-                pkgConfig.setNamespace(parentPkg.getNamespace());
+                pkgConfig.namespace(parentPkg.getNamespace());
             }
         }
 
-        actionConfig.setClassName(cls.getName());
-        actionConfig.setPackageName(actionPackage);
-
-        actionConfig.setResults(new ResultMap<String,ResultConfig>(cls, actionName, pkgConfig));
+        ResultTypeConfig defaultResultType = packageLoader.getDefaultResultType(pkgConfig);
+        ActionConfig actionConfig = new ActionConfig.Builder(actionPackage, actionName, cls.getName())
+                .addResultConfigs(new ResultMap<String,ResultConfig>(cls, actionName, defaultResultType))
+                .build();
         pkgConfig.addActionConfig(actionName, actionConfig);
     }
 
@@ -367,8 +360,8 @@ public class ClasspathPackageProvider implements PackageProvider {
      * @param actionClass The Action class instance
      * @return PackageConfig object for the Action class
      */
-    protected PackageConfig loadPackageConfig(String actionNamespace, String actionPackage, Class actionClass) {
-        PackageConfig parent = null;
+    protected PackageConfig.Builder loadPackageConfig(String actionNamespace, String actionPackage, Class actionClass) {
+        PackageConfig.Builder parent = null;
 
         // Check for the @Namespace annotation
         if (actionClass != null) {
@@ -391,29 +384,34 @@ public class ClasspathPackageProvider implements PackageProvider {
         }
 
         
-        PackageConfig pkgConfig = loadedPackageConfigs.get(actionPackage);
+        PackageConfig.Builder pkgConfig = packageLoader.getPackage(actionPackage);
         if (pkgConfig == null) {
-            pkgConfig = new PackageConfig();
-            pkgConfig.setName(actionPackage);
+            pkgConfig = new PackageConfig.Builder(actionPackage);
 
+            pkgConfig.namespace(actionNamespace);
             if (parent == null) {
-                parent = configuration.getPackageConfig(defaultParentPackage);
-            }
-
-            if (parent == null) {
-                throw new ConfigurationException("ClasspathPackageProvider: Unable to locate default parent package: " +
+                PackageConfig cfg = configuration.getPackageConfig(defaultParentPackage);
+                if (cfg != null) {
+                    pkgConfig.addParent(cfg);
+                } else {
+                    throw new ConfigurationException("ClasspathPackageProvider: Unable to locate default parent package: " +
                         defaultParentPackage);
+                }
             }
-            pkgConfig.addParent(parent);
 
-            pkgConfig.setNamespace(actionNamespace);
+            packageLoader.registerPackage(pkgConfig);
 
-            loadedPackageConfigs.put(actionPackage, pkgConfig);
-            
         // if the parent package was first created by a child, ensure the namespace is correct
         } else if (pkgConfig.getNamespace() == null) {
-            pkgConfig.setNamespace(actionNamespace);
+            pkgConfig.namespace(actionNamespace);
         }
+
+        if (parent != null) {
+            packageLoader.registerChildToParent(pkgConfig, parent);
+        }
+
+        System.out.println("class:"+actionClass+" parent:"+parent+" current:"+(pkgConfig != null ? pkgConfig.getName() : ""));
+        
         return pkgConfig;
     }
 
@@ -439,7 +437,6 @@ public class ClasspathPackageProvider implements PackageProvider {
      * @throws ConfigurationException
      */
     public void loadPackages() throws ConfigurationException {
-        loadedPackageConfigs.clear();
         if (actionPackages != null) {
             String[] names = actionPackages.split("\\s*[,]\\s*");
             // Initialize the classloader scanner with the configured packages
@@ -467,12 +464,12 @@ public class ClasspathPackageProvider implements PackageProvider {
     class ResultMap<K,V> extends HashMap<K,V> {
         private Class actionClass;
         private String actionName;
-        private PackageConfig pkgConfig;
+        private ResultTypeConfig defaultResultType;
 
-        public ResultMap(Class actionClass, String actionName, PackageConfig pkgConfig) {
+        public ResultMap(Class actionClass, String actionName, ResultTypeConfig defaultResultType) {
             this.actionClass = actionClass;
             this.actionName = actionName;
-            this.pkgConfig = pkgConfig;
+            this.defaultResultType = defaultResultType;
 
             // check if any annotations are around
             while (!actionClass.getName().equals(Object.class.getName())) {
@@ -543,10 +540,8 @@ public class ClasspathPackageProvider implements PackageProvider {
                                                 String location,
                                                 Map<? extends Object,? extends Object > configParams) {
             if (resultClass == null) {
-                String defaultResultType = pkgConfig.getFullDefaultResultType();
-                ResultTypeConfig resultType = pkgConfig.getAllResultTypeConfigs().get(defaultResultType);
-                configParams = resultType.getParams();
-                String className = resultType.getClazz();
+                configParams = defaultResultType.getParams();
+                String className = defaultResultType.getClassName();
                 try {
                     resultClass = ClassLoaderUtil.loadClass(className, getClass());
                 } catch (ClassNotFoundException ex) {
@@ -568,7 +563,7 @@ public class ClasspathPackageProvider implements PackageProvider {
             }
 
             params.put(defaultParam, location);
-            return new ResultConfig((String) key, resultClass.getName(), params);
+            return new ResultConfig.Builder((String) key, resultClass.getName()).addParams(params).build();
         }
     }
 
@@ -596,6 +591,70 @@ public class ClasspathPackageProvider implements PackageProvider {
                 }
             }
             return url;
+        }
+    }
+
+    private static class PackageLoader {
+
+        /**
+         * The package configurations for scanned Actions.
+         */
+        private Map<String,PackageConfig.Builder> packageConfigBuilders = new HashMap<String,PackageConfig.Builder>();
+
+        private Map<PackageConfig.Builder,PackageConfig.Builder> childToParent = new HashMap<PackageConfig.Builder,PackageConfig.Builder>();
+
+        public PackageConfig.Builder getPackage(String name) {
+            return packageConfigBuilders.get(name);
+        }
+
+        public void registerChildToParent(PackageConfig.Builder child, PackageConfig.Builder parent) {
+            childToParent.put(child, parent);
+        }
+
+        public void registerPackage(PackageConfig.Builder builder) {
+            packageConfigBuilders.put(builder.getName(), builder);
+        }
+
+        public Collection<PackageConfig> createPackageConfigs() {
+            Map<String, PackageConfig> configs = new HashMap<String, PackageConfig>();
+
+            Set<PackageConfig.Builder> builders;
+            while ((builders = findPackagesWithNoParents()).size() > 0) {
+                for (PackageConfig.Builder parent : builders) {
+                    PackageConfig config = parent.build();
+                    configs.put(config.getName(), config);
+                    packageConfigBuilders.remove(config.getName());
+
+                    for (Iterator<Map.Entry<PackageConfig.Builder,PackageConfig.Builder>> i = childToParent.entrySet().iterator(); i.hasNext(); ) {
+                        Map.Entry<PackageConfig.Builder,PackageConfig.Builder> entry = i.next();
+                        if (entry.getValue() == parent) {
+                            entry.getKey().addParent(config);
+                            i.remove();
+                        }
+                    }
+                }
+            }
+            return configs.values();
+        }
+
+        Set<PackageConfig.Builder> findPackagesWithNoParents() {
+            Set<PackageConfig.Builder> builders = new HashSet<PackageConfig.Builder>();
+            for (PackageConfig.Builder child : packageConfigBuilders.values()) {
+                if (!childToParent.containsKey(child)) {
+                    builders.add(child);
+                }
+            }
+            return builders;
+        }
+
+        public ResultTypeConfig getDefaultResultType(PackageConfig.Builder pkgConfig) {
+            PackageConfig.Builder parent;
+            PackageConfig.Builder current = pkgConfig;
+
+            while ((parent = childToParent.get(current)) != null) {
+                current = parent;
+            }
+            return current.getResultType(current.getFullDefaultResultType());
         }
     }
 }

@@ -62,8 +62,9 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         req.setupGetContextPath("/my/namespace");
 
         config = new DefaultConfiguration();
-        PackageConfig pkg = new PackageConfig("myns", "/my/namespace", false, null);
-        PackageConfig pkg2 = new PackageConfig("my", "/my", false, null);
+        PackageConfig pkg = new PackageConfig.Builder("myns")
+            .namespace("/my/namespace").build();
+        PackageConfig pkg2 = new PackageConfig.Builder("my").namespace("/my").build();
         config.addPackageConfig("mvns", pkg);
         config.addPackageConfig("my", pkg2);
         configManager = new ConfigurationManager() {

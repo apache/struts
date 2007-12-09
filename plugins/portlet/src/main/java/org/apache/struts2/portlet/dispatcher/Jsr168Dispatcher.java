@@ -439,8 +439,7 @@ public class Jsr168Dispatcher extends GenericPortlet implements StrutsStatics,
             LOG.debug("Creating action proxy for name = " + actionName
                     + ", namespace = " + namespace);
             ActionProxy proxy = factory.createActionProxy(namespace,
-                    actionName, extraContext);
-            proxy.setMethod(mapping.getMethod());
+                    actionName, mapping.getMethod(), extraContext);
             request.setAttribute("struts.valueStack", proxy.getInvocation()
                     .getStack());
             proxy.execute();

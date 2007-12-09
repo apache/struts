@@ -24,8 +24,8 @@ public class RestActionMapperTest extends TestCase {
         mapper = new RestActionMapper();
 
         config = new DefaultConfiguration();
-        PackageConfig pkg = new PackageConfig("myns", "/animals", false, null);
-        PackageConfig pkg2 = new PackageConfig("my", "/my", false, null);
+        PackageConfig pkg = new PackageConfig.Builder("myns").namespace("/animals").build();
+        PackageConfig pkg2 = new PackageConfig.Builder("my").namespace("/my").build();
         config.addPackageConfig("mvns", pkg);
         config.addPackageConfig("my", pkg2);
         configManager = new ConfigurationManager() {

@@ -59,7 +59,6 @@ import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
  *
  *
  * @see FilterDispatcher
- * @see AbstractFilter
  * @see Dispatcher
  *
  * @version $Date$ $Id$

@@ -185,7 +185,7 @@ public abstract class TemplatePageFilter extends PageFilter {
         public void setActionEventListener(ActionEventListener listener) {
         }
 
-        public void init(ActionProxy proxy) throws Exception {
+        public void init(ActionProxy proxy) {
         }
     }
 }

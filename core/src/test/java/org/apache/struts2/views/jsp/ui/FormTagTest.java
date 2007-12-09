@@ -156,16 +156,14 @@ public class FormTagTest extends AbstractUITagTest {
                 public RuntimeConfiguration getRuntimeConfiguration() {
                     return new RuntimeConfiguration() {
                         public ActionConfig getActionConfig(String namespace, String name) {
-                            ActionConfig actionConfig = new ActionConfig() {
+                            ActionConfig actionConfig = new ActionConfig("", name, "") {
                                 public List getInterceptors() {
                                     List interceptors = new ArrayList();
 
                                     ValidationInterceptor validationInterceptor = new ValidationInterceptor();
                                     validationInterceptor.setIncludeMethods("*");
 
-                                    InterceptorMapping interceptorMapping = new InterceptorMapping();
-                                    interceptorMapping.setName("validation");
-                                    interceptorMapping.setInterceptor(validationInterceptor);
+                                    InterceptorMapping interceptorMapping = new InterceptorMapping("validation", validationInterceptor);
                                     interceptors.add(interceptorMapping);
 
                                     return interceptors;
@@ -249,16 +247,14 @@ public class FormTagTest extends AbstractUITagTest {
                 public RuntimeConfiguration getRuntimeConfiguration() {
                     return new RuntimeConfiguration() {
                         public ActionConfig getActionConfig(String namespace, String name) {
-                            ActionConfig actionConfig = new ActionConfig() {
+                            ActionConfig actionConfig = new ActionConfig("", name, "") {
                                 public List getInterceptors() {
                                     List interceptors = new ArrayList();
 
                                     ValidationInterceptor validationInterceptor = new ValidationInterceptor();
                                     validationInterceptor.setExcludeMethods("*");
 
-                                    InterceptorMapping interceptorMapping = new InterceptorMapping();
-                                    interceptorMapping.setName("validation");
-                                    interceptorMapping.setInterceptor(validationInterceptor);
+                                    InterceptorMapping interceptorMapping = new InterceptorMapping("validation", validationInterceptor);
                                     interceptors.add(interceptorMapping);
 
                                     return interceptors;

@@ -208,7 +208,7 @@ public class ActionFormValidationInterceptor extends AbstractInterceptor {
     }
 
     /**
-     * @param pathnames the pathnames to set
+     * @param pathNames the pathnames to set
      */
     public void setPathnames(String pathNames) {
         this.pathnames = pathNames;

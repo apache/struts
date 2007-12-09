@@ -12,9 +12,9 @@ digraph mygraph {
             fontcolor=grey;
             label="sitegraph";
             tutorial_sitegraph_guess [label="guess",color="coral1"];
-            tutorial_sitegraph_guess_error_ftl [label="guess-error.ftl",color="darkseagreen2"];
-            tutorial_sitegraph_guess_input_ftl [label="guess-input.ftl",color="darkseagreen2"];
             tutorial_sitegraph_guess_success_jsp [label="guess-success.jsp",color="darkseagreen2"];
+            tutorial_sitegraph_guess_input_ftl [label="guess-input.ftl",color="darkseagreen2"];
+            tutorial_sitegraph_guess_error_ftl [label="guess-error.ftl",color="darkseagreen2"];
         }
         tutorial_test [label="test",color="coral1"];
         tutorial_guess_input_ftl [label="guess-input.ftl",color="darkseagreen2"];

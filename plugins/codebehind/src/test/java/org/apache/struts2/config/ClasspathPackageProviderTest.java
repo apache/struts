@@ -44,12 +44,16 @@ public class ClasspathPackageProviderTest extends TestCase {
         provider = new ClasspathPackageProvider();
         provider.setActionPackages("org.apache.struts2.config");
         config = new DefaultConfiguration();
-        PackageConfig strutsDefault = new PackageConfig("struts-default");
-        strutsDefault.addResultTypeConfig(new ResultTypeConfig("dispatcher", ServletDispatcherResult.class.getName(), "location"));
-        strutsDefault.setDefaultResultType("dispatcher");
+        PackageConfig strutsDefault = new PackageConfig.Builder("struts-default")
+                .addResultTypeConfig(new ResultTypeConfig.Builder("dispatcher", ServletDispatcherResult.class.getName())
+                        .defaultResultParam("location")
+                        .build())
+                .defaultResultType("dispatcher")
+                .build();
         config.addPackageConfig("struts-default", strutsDefault);
-        PackageConfig customPackage = new PackageConfig("custom-package");
-        customPackage.setNamespace("/custom");
+        PackageConfig customPackage = new PackageConfig.Builder("custom-package")
+            .namespace("/custom")
+            .build();
         config.addPackageConfig("custom-package", customPackage);
         provider.init(config);
         provider.loadPackages();
@@ -59,7 +63,7 @@ public class ClasspathPackageProviderTest extends TestCase {
         provider = null;
         config = null;
     }
-    
+
     public void testFoundRootPackages() {
         assertEquals(6, config.getPackageConfigs().size());
         PackageConfig pkg = config.getPackageConfig("org.apache.struts2.config");

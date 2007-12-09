@@ -30,9 +30,10 @@ import com.opensymphony.xwork2.DefaultActionProxyFactory;
 
 public class StrutsActionProxyFactory extends DefaultActionProxyFactory {
 
-    public ActionProxy createActionProxy(ActionInvocation inv, String namespace, String actionName, Map extraContext, boolean executeResult, boolean cleanupContext) throws Exception {
+    @Override
+    public ActionProxy createActionProxy(ActionInvocation inv, String namespace, String actionName, String methodName, boolean executeResult, boolean cleanupContext) {
         
-        ActionProxy proxy = new StrutsActionProxy(inv, namespace, actionName, extraContext, executeResult, cleanupContext);
+        StrutsActionProxy proxy = new StrutsActionProxy(inv, namespace, actionName, methodName, executeResult, cleanupContext);
         container.inject(proxy);
         proxy.prepare();
         return proxy;

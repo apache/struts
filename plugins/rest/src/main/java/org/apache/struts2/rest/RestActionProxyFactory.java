@@ -35,10 +35,11 @@ import com.opensymphony.xwork2.inject.Inject;
  */
 public class RestActionProxyFactory extends DefaultActionProxyFactory {
 
-    public ActionProxy createActionProxy(String namespace, String actionName, Map extraContext, boolean executeResult, boolean cleanupContext) throws Exception {
+    @Override
+    public ActionProxy createActionProxy(String namespace, String actionName, String methodName, Map extraContext, boolean executeResult, boolean cleanupContext) {
         ActionInvocation inv = new RestActionInvocation(extraContext, true);
         container.inject(inv);
-        return createActionProxy(inv, namespace, actionName, extraContext, executeResult, cleanupContext);
+        return createActionProxy(inv, namespace, actionName, methodName, executeResult, cleanupContext);
     }
 
 }

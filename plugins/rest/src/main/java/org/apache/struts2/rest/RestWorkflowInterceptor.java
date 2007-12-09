@@ -43,7 +43,7 @@ import static javax.servlet.http.HttpServletResponse.*;
  * An interceptor that makes sure there are not validation errors before allowing the interceptor chain to continue.
  * <b>This interceptor does not perform any validation</b>.
  * 
- * <p>Copied from the {@link DefaultWorkflowInterceptor}, this interceptor adds support for error handling of Restful
+ * <p>Copied from the {@link com.opensymphony.xwork2.interceptor.DefaultWorkflowInterceptor}, this interceptor adds support for error handling of Restful
  * operations.  For example, if an validation error is discovered, a map of errors is created and processed to be
  * returned, using the appropriate content handler for rendering the body.</p>
  *

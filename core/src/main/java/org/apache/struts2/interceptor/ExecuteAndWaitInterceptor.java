@@ -242,8 +242,9 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
                             "provide an action-specific or global result named '" + WAIT +
                             "'! This requires FreeMarker support and won't work if you don't have it installed");
                     // no wait result? hmm -- let's try to do dynamically put it in for you!
-                    ResultConfig rc = new ResultConfig(WAIT, "org.apache.struts2.views.freemarker.FreemarkerResult",
-                            Collections.singletonMap("location", "/org/apache/struts2/interceptor/wait.ftl"));
+                    ResultConfig rc = new ResultConfig.Builder(WAIT, "org.apache.struts2.views.freemarker.FreemarkerResult")
+                            .addParams(Collections.singletonMap("location", "/org/apache/struts2/interceptor/wait.ftl"))
+                            .build();
                     results.put(WAIT, rc);
                 }
 

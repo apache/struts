@@ -77,80 +77,58 @@ public class TestConfigurationProvider implements ConfigurationProvider {
      * Initializes the configuration object.
      */
     public void loadPackages() {
-        PackageConfig defaultPackageConfig = new PackageConfig("");
-
-        HashMap results = new HashMap();
 
         HashMap successParams = new HashMap();
         successParams.put("propertyName", "executionCount");
         successParams.put("expectedValue", "1");
 
-        ResultConfig successConfig = new ResultConfig(Action.SUCCESS, TestResult.class.getName(), successParams);
+        ActionConfig executionCountActionConfig = new ActionConfig.Builder("", "", ExecutionCountTestAction.class.getName())
+            .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, TestResult.class.getName())
+                .addParams(successParams)
+                .build())
+            .build();
 
-        results.put(Action.SUCCESS, successConfig);
 
-        List interceptors = new ArrayList();
+        ActionConfig testActionConfig = new ActionConfig.Builder("", "", TestAction.class.getName())
+            .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, ServletDispatcherResult.class.getName())
+                    .addParam("location", "success.jsp")
+                    .build())
+            .addInterceptor(new InterceptorMapping("params", new ParametersInterceptor()))
+            .build();
 
-        ActionConfig executionCountActionConfig = new ActionConfig(null, ExecutionCountTestAction.class, null, results, interceptors);
-        defaultPackageConfig.addActionConfig(EXECUTION_COUNT_ACTION_NAME, executionCountActionConfig);
 
-        results = new HashMap();
+        ActionConfig tokenActionConfig = new ActionConfig.Builder("", "", TestAction.class.getName())
+            .addInterceptor(new InterceptorMapping("token", new TokenInterceptor()))
+            .addResultConfig(new ResultConfig.Builder("invalid.token", MockResult.class.getName()).build())
+            .addResultConfig(new ResultConfig.Builder("success", MockResult.class.getName()).build())
+            .build();
 
-        successParams = new HashMap();
-        successParams.put("location", "success.jsp");
-
-        successConfig = new ResultConfig(Action.SUCCESS, ServletDispatcherResult.class.getName(), successParams);
-
-        results.put(Action.SUCCESS, successConfig);
-
-        interceptors.add(new InterceptorMapping("params", new ParametersInterceptor()));
-
-        ActionConfig testActionConfig = new ActionConfig(null, TestAction.class, null, results, interceptors);
-        defaultPackageConfig.addActionConfig(TEST_ACTION_NAME, testActionConfig);
-
-        interceptors = new ArrayList();
-        interceptors.add(new InterceptorMapping("token", new TokenInterceptor()));
-
-        results = new HashMap();
-
-        ActionConfig tokenActionConfig = new ActionConfig(null, TestAction.class, null, results, interceptors);
-        tokenActionConfig.addResultConfig(new ResultConfig("invalid.token", MockResult.class.getName()));
-        tokenActionConfig.addResultConfig(new ResultConfig("success", MockResult.class.getName()));
-        defaultPackageConfig.addActionConfig(TOKEN_ACTION_NAME, tokenActionConfig);
-
-        interceptors = new ArrayList();
-        interceptors.add(new InterceptorMapping("token-session", new TokenSessionStoreInterceptor()));
-
-        results = new HashMap();
-
-        successParams = new HashMap();
-        successParams.put("actionName", EXECUTION_COUNT_ACTION_NAME);
-
-        successConfig = new ResultConfig(Action.SUCCESS, ActionChainResult.class.getName(), successParams);
-
-        results.put(Action.SUCCESS, successConfig);
 
         // empty results for token session unit test
-        results = new HashMap();
-        ActionConfig tokenSessionActionConfig = new ActionConfig(null, TestAction.class, null, results, interceptors);
-        tokenSessionActionConfig.addResultConfig(new ResultConfig("invalid.token", MockResult.class.getName()));
-        tokenSessionActionConfig.addResultConfig(new ResultConfig("success", MockResult.class.getName()));
-        defaultPackageConfig.addActionConfig(TOKEN_SESSION_ACTION_NAME, tokenSessionActionConfig);
+        ActionConfig tokenSessionActionConfig = new ActionConfig.Builder("", "", TestAction.class.getName())
+            .addResultConfig(new ResultConfig.Builder("invalid.token", MockResult.class.getName()).build())
+            .addResultConfig(new ResultConfig.Builder("success", MockResult.class.getName()).build())
+            .addInterceptor(new InterceptorMapping("token-session", new TokenSessionStoreInterceptor()))
+            .build();
+
+        PackageConfig defaultPackageConfig = new PackageConfig.Builder("")
+            .addActionConfig(EXECUTION_COUNT_ACTION_NAME, executionCountActionConfig)
+            .addActionConfig(TEST_ACTION_NAME, testActionConfig)
+            .addActionConfig(TOKEN_ACTION_NAME, tokenActionConfig)
+            .addActionConfig(TOKEN_SESSION_ACTION_NAME, tokenSessionActionConfig)
+            .addActionConfig("testActionTagAction", new ActionConfig.Builder("", "", TestAction.class.getName())
+                .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, TestActionTagResult.class.getName()).build())
+                .addResultConfig(new ResultConfig.Builder(Action.INPUT, TestActionTagResult.class.getName()).build())
+                .build())
+            .build();
 
         configuration.addPackageConfig("", defaultPackageConfig);
 
-        Map testActionTagResults = new HashMap();
-        testActionTagResults.put(Action.SUCCESS, new ResultConfig(Action.SUCCESS, TestActionTagResult.class.getName(), new HashMap()));
-        testActionTagResults.put(Action.INPUT, new ResultConfig(Action.INPUT, TestActionTagResult.class.getName(), new HashMap()));
-        ActionConfig testActionTagActionConfig = new ActionConfig((String) null, TestAction.class, (Map) null, testActionTagResults, new ArrayList());
-        defaultPackageConfig.addActionConfig("testActionTagAction", testActionTagActionConfig);
-
-        PackageConfig namespacePackageConfig = new PackageConfig("namespacePackage");
-        namespacePackageConfig.setNamespace(TEST_NAMESPACE);
-        namespacePackageConfig.addParent(defaultPackageConfig);
-
-        ActionConfig namespaceAction = new ActionConfig(null, TestAction.class, null, null, null);
-        namespacePackageConfig.addActionConfig(TEST_NAMESPACE_ACTION, namespaceAction);
+        PackageConfig namespacePackageConfig = new PackageConfig.Builder("namespacePackage")
+            .namespace(TEST_NAMESPACE)
+            .addParent(defaultPackageConfig)
+            .addActionConfig(TEST_NAMESPACE_ACTION, new ActionConfig.Builder("", "", TestAction.class.getName()).build())
+            .build();
 
         configuration.addPackageConfig("namespacePackage", namespacePackageConfig);
     }

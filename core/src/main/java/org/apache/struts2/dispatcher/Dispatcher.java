@@ -464,8 +464,8 @@ Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyExcepti
 
             Configuration config = configurationManager.getConfiguration();
             ActionProxy proxy = config.getContainer().getInstance(ActionProxyFactory.class).createActionProxy(
-                    namespace, name, extraContext, true, false);
-            proxy.setMethod(method);
+                    namespace, name, method, extraContext, true, false);
+
             request.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, proxy.getInvocation().getStack());
 
             // if the ActionMapping says to go straight to a result, do it!
@@ -484,7 +484,7 @@ Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyExcepti
             LOG.error("Could not find action or result", e);
             sendError(request, response, context, HttpServletResponse.SC_NOT_FOUND, e);
         } catch (Exception e) {
-            throw new ServletException(e);
+            sendError(request, response, context, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);
         } finally {
             UtilTimerStack.pop(timerKey);
         }

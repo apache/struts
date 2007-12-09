@@ -140,8 +140,7 @@ public class ServletRedirectResultTest extends StrutsTestCase implements StrutsS
     protected void setUp() throws Exception {
         super.setUp();
         configurationManager.getConfiguration().
-            addPackageConfig("foo", new PackageConfig("foo", "/namespace", false, null));
-
+            addPackageConfig("foo", new PackageConfig.Builder("foo").namespace("/namespace").build());
 
         view = new ServletRedirectResult();
         container.inject(view);

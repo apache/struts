@@ -55,7 +55,7 @@
         <module>tiles</module>
         <module>dojo</module>
         <module>rest</module>
-    <module>portlet</module>
+        <module>portlet</module>
     </modules>
 
     <dependencies>

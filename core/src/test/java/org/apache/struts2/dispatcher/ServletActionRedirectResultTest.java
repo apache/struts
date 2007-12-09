@@ -46,17 +46,18 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
 
     public void testIncludeParameterInResultWithConditionParseOn() throws Exception {
 
-        ResultConfig resultConfig = new ResultConfig();
-        resultConfig.addParam("actionName", "someActionName");
-        resultConfig.addParam("namespace", "someNamespace");
-        resultConfig.addParam("encode", "true");
-        resultConfig.addParam("parse", "true");
-        resultConfig.addParam("location", "someLocation");
-        resultConfig.addParam("prependServletContext", "true");
-        resultConfig.addParam("method", "someMethod");
-        resultConfig.addParam("param1", "${#value1}");
-        resultConfig.addParam("param2", "${#value2}");
-        resultConfig.addParam("param3", "${#value3}");
+        ResultConfig resultConfig = new ResultConfig.Builder("", "")
+            .addParam("actionName", "someActionName")
+            .addParam("namespace", "someNamespace")
+            .addParam("encode", "true")
+            .addParam("parse", "true")
+            .addParam("location", "someLocation")
+            .addParam("prependServletContext", "true")
+            .addParam("method", "someMethod")
+            .addParam("param1", "${#value1}")
+            .addParam("param2", "${#value2}")
+            .addParam("param3", "${#value3}")
+            .build();
 
 
 
@@ -74,8 +75,8 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
         Map<String, ResultConfig> results=  new HashMap<String, ResultConfig>();
         results.put("myResult", resultConfig);
 
-        ActionConfig actionConfig = new ActionConfig();
-        actionConfig.setResults(results);
+        ActionConfig actionConfig = new ActionConfig.Builder("", "", "")
+                .addResultConfigs(results).build();
 
         ServletActionRedirectResult result = new ServletActionRedirectResult();
         result.setActionName("myAction");
@@ -109,17 +110,18 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
 
     public void testIncludeParameterInResult() throws Exception {
 
-        ResultConfig resultConfig = new ResultConfig();
-        resultConfig.addParam("actionName", "someActionName");
-        resultConfig.addParam("namespace", "someNamespace");
-        resultConfig.addParam("encode", "true");
-        resultConfig.addParam("parse", "true");
-        resultConfig.addParam("location", "someLocation");
-        resultConfig.addParam("prependServletContext", "true");
-        resultConfig.addParam("method", "someMethod");
-        resultConfig.addParam("param1", "value 1");
-        resultConfig.addParam("param2", "value 2");
-        resultConfig.addParam("param3", "value 3");
+        ResultConfig resultConfig = new ResultConfig.Builder("", "")
+            .addParam("actionName", "someActionName")
+            .addParam("namespace", "someNamespace")
+            .addParam("encode", "true")
+            .addParam("parse", "true")
+            .addParam("location", "someLocation")
+            .addParam("prependServletContext", "true")
+            .addParam("method", "someMethod")
+            .addParam("param1", "value 1")
+            .addParam("param2", "value 2")
+            .addParam("param3", "value 3")
+            .build();
 
         ActionContext context = ActionContext.getContext();
         MockHttpServletRequest req = new MockHttpServletRequest();
@@ -131,8 +133,8 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
         Map<String, ResultConfig> results=  new HashMap<String, ResultConfig>();
         results.put("myResult", resultConfig);
 
-        ActionConfig actionConfig = new ActionConfig();
-        actionConfig.setResults(results);
+        ActionConfig actionConfig = new ActionConfig.Builder("", "", "")
+                .addResultConfigs(results).build();
 
         ServletActionRedirectResult result = new ServletActionRedirectResult();
         result.setActionName("myAction");

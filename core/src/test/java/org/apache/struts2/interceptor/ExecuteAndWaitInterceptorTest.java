@@ -170,7 +170,7 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
     }
 
     protected ActionProxy buildProxy(String actionName) throws Exception {
-        return actionProxyFactory.createActionProxy("", actionName, context);
+        return actionProxyFactory.createActionProxy("", actionName, null, context);
     }
 
     protected void setUp() throws Exception {
@@ -211,21 +211,19 @@ public class ExecuteAndWaitInterceptorTest extends StrutsTestCase {
         }
 
         public void loadPackages() throws ConfigurationException {
-            PackageConfig wait = new PackageConfig("");
 
-            Map results = new HashMap();
-            results.put(Action.SUCCESS, new ResultConfig(Action.SUCCESS, MockResult.class.getName(), null));
-            results.put(ExecuteAndWaitInterceptor.WAIT, new ResultConfig(ExecuteAndWaitInterceptor.WAIT, MockResult.class.getName(), null));
 
             // interceptors
             waitInterceptor = new ExecuteAndWaitInterceptor();
-            List interceptors = new ArrayList();
-            interceptors.add(new InterceptorMapping("params", new ParametersInterceptor()));
-            interceptors.add(new InterceptorMapping("execAndWait", waitInterceptor));
 
-            ActionConfig ac = new ActionConfig(null, ExecuteAndWaitDelayAction.class, null, results, interceptors);
-            wait.addActionConfig("action1", ac);
-
+            PackageConfig wait = new PackageConfig.Builder("")
+                .addActionConfig("action1", new ActionConfig.Builder("", "action1", ExecuteAndWaitDelayAction.class.getName())
+                    .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, MockResult.class.getName()).build())
+                    .addResultConfig(new ResultConfig.Builder(ExecuteAndWaitInterceptor.WAIT, MockResult.class.getName()).build())
+                    .addInterceptor(new InterceptorMapping("params", new ParametersInterceptor()))
+                    .addInterceptor(new InterceptorMapping("execAndWait", waitInterceptor))
+                .build())
+            .build();
             configuration.addPackageConfig("", wait);
         }
 

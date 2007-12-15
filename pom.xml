@@ -375,7 +375,7 @@
             <id>opensymphony-m2</id>
             <name>opensymphony-m2</name>
             <snapshots>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </snapshots>
             <releases>
                 <enabled>true</enabled>
@@ -392,7 +392,7 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </snapshots>
             <releases>
-                <enabled>true</enabled>
+                <enabled>false</enabled>
             </releases>
             <url>http://maven.opensymphony.com</url>
         </repository>

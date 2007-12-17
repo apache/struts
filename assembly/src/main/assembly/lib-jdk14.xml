@@ -28,8 +28,8 @@
       <outputDirectory>jdk14</outputDirectory>
       <outputFileNameMapping>${artifactId}-${version}.${extension}</outputFileNameMapping>
       <excludes>
+        <exclude>com.opensymphony:xwork:jar:default</exclude>
         <exclude>org.apache.struts:*:jar</exclude>
-        <exclude>*xwork*</exclude>
       </excludes>
     </dependencySet>
     <dependencySet useTransitiveFiltering="true">

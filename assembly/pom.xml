@@ -230,6 +230,20 @@
 
         <!-- Backported JDK 1.4 jars -->
         <dependency>
+            <groupId>net.sf.retrotranslator</groupId>
+            <artifactId>retrotranslator-runtime</artifactId>
+            <version>1.2.1</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>backport-util-concurrent</groupId>
+            <artifactId>backport-util-concurrent</artifactId>
+            <version>3.0</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.opensymphony</groupId>
             <artifactId>xwork</artifactId>
             <version>2.1.1-SNAPSHOT</version>

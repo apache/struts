@@ -83,6 +83,12 @@
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.apache.struts</groupId>
+                                    <artifactId>struts2-rest-showcase</artifactId>
+                                    <version>${version}</version>
+                                    <type>war</type>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.struts</groupId>
                                     <artifactId>struts2-mailreader</artifactId>
                                     <version>${version}</version>
                                     <type>war</type>
@@ -100,10 +106,10 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>opensymphony</groupId>
+                                    <groupId>com.opensymphony</groupId>
                                     <artifactId>xwork</artifactId>
                                     <classifier>javadoc</classifier>
-                                    <version>2.1-SNAPSHOT</version>
+                                    <version>2.1.1-SNAPSHOT</version>
                                 </artifactItem>
                             </artifactItems>
                             <outputDirectory>${project.build.directory}/xwork-apidocs</outputDirectory>
@@ -124,7 +130,7 @@
                                      dest="${project.build.directory}/docs.zip"
                                      ignoreerrors="false"/>
                                 <unzip src="${project.build.directory}/docs.zip"
-                                     dest="${project.build.directory}/cwiki"/>
+                                        dest="${project.build.directory}/cwiki"/>
                             </tasks>
                         </configuration>
                         <goals>
@@ -140,7 +146,7 @@
                     <descriptors>
                         <descriptor>src/main/assembly/all.xml</descriptor>
                         <descriptor>src/main/assembly/lib.xml</descriptor>
-                        <descriptor>src/main/assembly/lib-backport.xml</descriptor>
+                        <descriptor>src/main/assembly/lib-jdk14.xml</descriptor>
                         <descriptor>src/main/assembly/apps.xml</descriptor>
                         <descriptor>src/main/assembly/src.xml</descriptor>
                         <descriptor>src/main/assembly/docs.xml</descriptor>
@@ -155,40 +161,6 @@
 
     <dependencies>
 
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-api</artifactId>
-            <version>${version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-core</artifactId>
-            <version>${version}</version>
-        </dependency>
-
-        <!-- Enable when XW-585 is resolved and XWork 2.1.1-SNAPSHOT is published.
-        See: http://jira.opensymphony.com/browse/XW-585
-
-        <dependency>
-            <groupId>com.opensymphony</groupId>
-            <artifactId>xwork</artifactId>
-            <version>2.1.1-SNAPSHOT</version>
-            <classifier>backport</classifier>
-            <scope>runtime</scope>
-        </dependency> -->
-
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-api</artifactId>
-            <version>${version}</version>
-            <classifier>backport</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-core</artifactId>
-            <version>${version}</version>
-            <classifier>backport</classifier>
-        </dependency>
 
         <dependency>
             <groupId>org.apache.struts</groupId>
@@ -251,233 +223,104 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-jsp</artifactId>
-            <version>2.0.5</version>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-rest-plugin</artifactId>
+            <version>${version}</version>
+        </dependency>
+
+        <!-- Backported JDK 1.4 jars -->
+        <dependency>
+            <groupId>com.opensymphony</groupId>
+            <artifactId>xwork</artifactId>
+            <version>2.1.1-SNAPSHOT</version>
             <scope>runtime</scope>
+            <classifier>jdk14</classifier>
         </dependency>
 
         <dependency>
-            <groupId>net.sf.retrotranslator</groupId>
-            <artifactId>retrotranslator-runtime</artifactId>
-            <version>1.2.1</version>
-            <scope>runtime</scope>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-core</artifactId>
+            <version>${version}</version>
+            <classifier>jdk14</classifier>
         </dependency>
 
         <dependency>
-            <groupId>backport-util-concurrent</groupId>
-            <artifactId>backport-util-concurrent</artifactId>
-            <version>3.0</version>
-            <scope>runtime</scope>
-        </dependency>
-
-        <!-- Include optional dependencies -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.0</version>
-            <scope>provided</scope>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-config-browser-plugin</artifactId>
+            <version>${version}</version>
+            <classifier>jdk14</classifier>
         </dependency>
 
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Ajax -->
-        <dependency>
-            <groupId>uk.ltd.getahead</groupId>
-            <artifactId>dwr</artifactId>
-            <version>1.1-beta-3</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Velocity -->
-        <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity</artifactId>
-            <version>1.5</version>
-            <scope>provided</scope>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-jasperreports-plugin</artifactId>
+            <version>${version}</version>
+            <classifier>jdk14</classifier>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity-tools</artifactId>
-            <version>1.3</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- File upload -->
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.1.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Sitemesh -->
-        <dependency>
-            <groupId>opensymphony</groupId>
-            <artifactId>sitemesh</artifactId>
-            <version>2.2.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Quickstart -->
-        <dependency>
-            <groupId>jetty</groupId>
-            <artifactId>org.mortbay.jetty</artifactId>
-            <version>5.1.4</version>
-            <scope>provided</scope>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-jfreechart-plugin</artifactId>
+            <version>${version}</version>
+            <classifier>jdk14</classifier>
         </dependency>
 
         <dependency>
-            <groupId>eclipse</groupId>
-            <artifactId>jdtcore</artifactId>
-            <version>3.1.0</version>
-            <scope>provided</scope>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-jsf-plugin</artifactId>
+            <version>${version}</version>
+            <classifier>jdk14</classifier>
         </dependency>
 
         <dependency>
-            <groupId>ant</groupId>
-            <artifactId>ant</artifactId>
-            <version>1.6.5</version>
-            <scope>provided</scope>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-pell-multipart-plugin</artifactId>
+            <version>${version}</version>
+            <classifier>jdk14</classifier>
         </dependency>
 
         <dependency>
-            <groupId>tomcat</groupId>
-            <artifactId>jasper-compiler</artifactId>
-            <version>5.5.12</version>
-            <scope>provided</scope>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-plexus-plugin</artifactId>
+            <version>${version}</version>
+            <classifier>jdk14</classifier>
         </dependency>
 
         <dependency>
-            <groupId>tomcat</groupId>
-            <artifactId>jasper-runtime</artifactId>
-            <version>5.5.12</version>
-            <scope>provided</scope>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-sitegraph-plugin</artifactId>
+            <version>${version}</version>
+            <classifier>jdk14</classifier>
         </dependency>
 
         <dependency>
-            <groupId>tomcat</groupId>
-            <artifactId>jasper-compiler-jdt</artifactId>
-            <version>5.5.12</version>
-            <scope>provided</scope>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-sitemesh-plugin</artifactId>
+            <version>${version}</version>
+            <classifier>jdk14</classifier>
         </dependency>
 
         <dependency>
-            <groupId>commons-el</groupId>
-            <artifactId>commons-el</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-struts1-plugin</artifactId>
+            <version>${version}</version>
+            <classifier>jdk14</classifier>
         </dependency>
 
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-tiles-plugin</artifactId>
+            <version>${version}</version>
+            <classifier>jdk14</classifier>
         </dependency>
 
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.1</version>
-            <scope>provided</scope>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-rest-plugin</artifactId>
+            <version>${version}</version>
+            <classifier>jdk14</classifier>
         </dependency>
 
-        <!-- QuickStart -->
-        <dependency>
-            <groupId>xstream</groupId>
-            <artifactId>xstream</artifactId>
-            <version>1.1.2</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-digester</groupId>
-            <artifactId>commons-digester</artifactId>
-            <version>1.7</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Portlet -->
-        <dependency>
-            <groupId>portlet-api</groupId>
-            <artifactId>portlet-api</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.pluto</groupId>
-            <artifactId>pluto</artifactId>
-            <version>1.0.1-rc4</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Plexus -->
-        <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-container-default</artifactId>
-            <version>1.0-alpha-10</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Spring -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>2.0.7</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>2.0.7</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>2.0.7</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>2.0.7</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-mock</artifactId>
-            <version>2.0.7</version>
-            <scope>provided</scope>
-        </dependency>
-
-
-        <dependency>
-            <groupId>myfaces</groupId>
-            <artifactId>myfaces-jsf-api</artifactId>
-            <version>1.0.9</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Exclude transitive dependencies -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.4</version>
-            <scope>provided</scope>
-        </dependency>
 
     </dependencies>
 

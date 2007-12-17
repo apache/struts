@@ -28,8 +28,7 @@
       <outputDirectory>lib</outputDirectory>
       <scope>runtime</scope>
       <excludes>
-        <exclude>net.sf.retrotranslator:retrotranslator-runtime</exclude>
-        <exclude>*:backport</exclude>
+        <exclude>*:jdk14</exclude>
       </excludes>
     </dependencySet>
   </dependencySets>

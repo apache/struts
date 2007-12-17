@@ -19,33 +19,31 @@
 -->
 
 <assembly>
-  <id>lib-backport</id>
+  <id>lib-jdk14</id>
   <formats>
     <format>zip</format>
   </formats>
   <dependencySets>
-    <dependencySet>
-      <outputDirectory>backport</outputDirectory>
+    <dependencySet useTransitiveFiltering="true">
+      <outputDirectory>jdk14</outputDirectory>
       <outputFileNameMapping>${artifactId}-${version}.${extension}</outputFileNameMapping>
-      <includes>
-        <include>net.sf.retrotranslator:retrotranslator-runtime</include>
-        <include>backport-util-concurrent:backport-util-concurrent</include>
-      </includes>
+      <excludes>
+        <exclude>org.apache.struts:*:jar</exclude>
+        <exclude>*xwork*</exclude>
+      </excludes>
     </dependencySet>
-    <dependencySet>
-      <outputDirectory>backport</outputDirectory>
-      <outputFileNameMapping>${artifactId}-${version}-backport.${extension}</outputFileNameMapping>
+    <dependencySet useTransitiveFiltering="true">
+      <outputDirectory>jdk14</outputDirectory>
+      <outputFileNameMapping>${artifactId}-${version}-jdk14.${extension}</outputFileNameMapping>
       <includes>
-        <include>org.apache.struts:struts2-api:jar:backport</include>
-        <include>org.apache.struts:struts2-core:jar:backport</include>
-        <include>com.opensymphony:xwork:jar:backport</include>
+        <include>*:jdk14</include>
       </includes>
     </dependencySet>
   </dependencySets>
   <fileSets>
     <fileSet>
-    	<directory>../backport</directory>
-    	<outputDirectory>backport</outputDirectory>
+    	<directory>../jdk14</directory>
+    	<outputDirectory>jdk14</outputDirectory>
       <includes>
         <include>README*</include>
         <include>*LICENSE*</include>

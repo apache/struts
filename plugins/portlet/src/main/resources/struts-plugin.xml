@@ -50,15 +50,15 @@
 		<!-- Default stack for operating in portlet environment -->
         <interceptor-stack name="portletDefaultStack">
 			<interceptor-ref name="portletState"/>
-            <interceptor-ref name="defaultStack"/>
             <interceptor-ref name="portletAware"/>
+            <interceptor-ref name="defaultStack"/>
         </interceptor-stack>
         <!-- Extension of the default portlet stack which also includes the token interceptor --> 
 		<interceptor-stack name="portletDefaultStackWithToken">
 			<interceptor-ref name="portletState"/>
+			<interceptor-ref name="portletAware"/>
 			<interceptor-ref name="token"/>
 			<interceptor-ref name="defaultStack"/>
-			<interceptor-ref name="portletAware"/>
 		</interceptor-stack>
 		   
        </interceptors>

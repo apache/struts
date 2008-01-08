@@ -20,6 +20,8 @@
  */
 package org.apache.struts2.components;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.TextUtils;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
@@ -46,10 +48,13 @@ public class PortletUrlRenderer implements UrlRenderer {
 		}
 
         String result;
-        if (urlComponent.value == null && urlComponent.action != null) {
+        if (onlyActionSpecified(urlComponent)) {
                 result = PortletUrlHelper.buildUrl(urlComponent.action, urlComponent.namespace, urlComponent.method, urlComponent.parameters, urlComponent.portletUrlType, urlComponent.portletMode, urlComponent.windowState);
-        } else {
+        } else if(onlyValueSpecified(urlComponent)){
                 result = PortletUrlHelper.buildResourceUrl(urlComponent.value, urlComponent.parameters);
+        }
+        else {
+        	result = createDefaultUrl(urlComponent);
         }
         if ( urlComponent.anchor != null && urlComponent.anchor.length() > 0 ) {
             result += '#' + urlComponent.anchor;
@@ -71,14 +76,34 @@ public class PortletUrlRenderer implements UrlRenderer {
         }
 	}
 
+	private String createDefaultUrl(URL urlComponent) {
+		String result;
+		ActionInvocation ai = (ActionInvocation)urlComponent.getStack().getContext().get(
+				ActionContext.ACTION_INVOCATION);
+		String action = ai.getProxy().getActionName();
+		result = PortletUrlHelper.buildUrl(action, urlComponent.namespace, urlComponent.method, urlComponent.parameters, urlComponent.portletUrlType, urlComponent.portletMode, urlComponent.windowState);
+		return result;
+	}
+
+	private boolean onlyValueSpecified(URL urlComponent) {
+		return urlComponent.value != null && urlComponent.action == null;
+	}
+
+	private boolean onlyActionSpecified(URL urlComponent) {
+		return urlComponent.value == null && urlComponent.action != null;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public void renderFormUrl(Form formComponent) {
 		String action = null;
         if (formComponent.action != null) {
-            // if it isn't specified, we'll make somethig up
             action = formComponent.findString(formComponent.action);
+        }
+        else {
+        	ActionInvocation ai = (ActionInvocation) formComponent.getStack().getContext().get(ActionContext.ACTION_INVOCATION);
+        	action = ai.getProxy().getActionName();
         }
 
         String type = "action";

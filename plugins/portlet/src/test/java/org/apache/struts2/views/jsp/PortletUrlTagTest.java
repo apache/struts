@@ -20,7 +20,6 @@
  */
 package org.apache.struts2.views.jsp;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -48,11 +47,14 @@ import org.jmock.core.Constraint;
 
 import com.mockobjects.servlet.MockJspWriter;
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  */
+@SuppressWarnings("unchecked")
 public class PortletUrlTagTest extends MockObjectTestCase {
 
     URLTag tag = new URLTag();
@@ -83,8 +85,6 @@ public class PortletUrlTagTest extends MockObjectTestCase {
         Dispatcher du = new Dispatcher(null, new HashMap());
         du.init();
         Dispatcher.setInstance(du);
-
-        mockPortletApiAvailable();
 
         stack = du.getContainer().getInstance(ValueStackFactory.class).createValueStack();
         stack.getContext().put(ActionContext.CONTAINER, du.getContainer());
@@ -136,21 +136,6 @@ public class PortletUrlTagTest extends MockObjectTestCase {
         ActionContext ctx = new ActionContext(contextMap);
         ctx.setValueStack(stack);
         ActionContext.setContext(ctx);
-    }
-
-    /**
-     *
-     */
-    private void mockPortletApiAvailable() {
-        try {
-            Field field = Dispatcher.class.getDeclaredField("portletSupportActive");
-            field.setAccessible(true);
-            field.set(null, Boolean.TRUE);
-        }
-        catch(Exception e) {
-
-        }
-
     }
 
     public void testEnsureParamsAreStringArrays() {
@@ -324,6 +309,31 @@ public class PortletUrlTagTest extends MockObjectTestCase {
     	tag.setMethod("input");
     	tag.doStartTag();
     	tag.doEndTag();
+    }
+    
+    public void testUrlWithNoActionOrMethod() throws Exception {
+    	PortletMode mode = PortletMode.VIEW;
+    	mockHttpReq.stubs().method("getQueryString").will(returnValue(""));
+        mockPortletRes.expects(once()).method("createRenderURL").will(
+                returnValue((PortletURL) mockPortletUrl.proxy()));
+    	Map paramMap = new HashMap();
+    	
+    	Mock mockActionProxy = mock(ActionProxy.class);
+    	mockActionProxy.stubs().method("getActionName").will(returnValue("currentExecutingAction"));
+    	final ActionProxy proxy = (ActionProxy)mockActionProxy.proxy();
+    	
+    	Mock mockActionInvocation = mock(ActionInvocation.class);
+    	mockActionInvocation.stubs().method("getProxy").will(returnValue(proxy));
+    	ActionInvocation ai = (ActionInvocation)mockActionInvocation.proxy();
+
+    	stack.getContext().put(ActionContext.ACTION_INVOCATION, ai);
+        paramMap.put(PortletActionConstants.ACTION_PARAM, new String[]{"/view/currentExecutingAction"});
+        paramMap.put(PortletActionConstants.MODE_PARAM, new String[]{mode.toString()});
+        mockPortletUrl.expects(once()).method("setParameters").with(new ParamMapConstraint(paramMap));
+        mockPortletUrl.expects(once()).method("setPortletMode").with(eq(PortletMode.VIEW));
+        mockPortletUrl.expects(once()).method("setWindowState").with(eq(WindowState.NORMAL));
+    	tag.doStartTag();
+    	tag.doEndTag();    	
     }
     
     private static class ParamMapConstraint implements Constraint {

@@ -52,7 +52,6 @@ import org.apache.struts2.StrutsConstants;
  *
  * <pre>
  * <!-- START SNIPPET: example -->
- *
  * // to change the profiling key
  * &lt;action ...&gt;
  *   ...
@@ -61,7 +60,6 @@ import org.apache.struts2.StrutsConstants;
  *   &lt;/interceptor-ref&gt;
  *   ...
  * &lt;/action&gt;
- *
  * <!-- END SNIPPET: example -->
  * </pre>
  *

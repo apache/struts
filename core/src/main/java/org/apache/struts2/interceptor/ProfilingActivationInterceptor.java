@@ -54,13 +54,13 @@ import org.apache.struts2.StrutsConstants;
  * <!-- START SNIPPET: example -->
  *
  * // to change the profiling key
- * <action ...>
+ * &lt;action ...&gt;
  *   ...
- *   <interceptor-ref name="profiling">
- *      <param name="profilingKey">profilingKey</param>
- *   </interceptor-ref>
+ *   &lt;interceptor-ref name="profiling"&gt;
+ *      &lt;param name="profilingKey"&gt;profilingKey&lt;/param&gt;
+ *   &lt;/interceptor-ref&gt;
  *   ...
- * </action>
+ * &lt;/action&gt;
  *
  * <!-- END SNIPPET: example -->
  * </pre>

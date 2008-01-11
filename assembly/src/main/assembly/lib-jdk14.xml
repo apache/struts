@@ -27,31 +27,28 @@
     <dependencySet useTransitiveFiltering="true">
       <outputDirectory>jdk14</outputDirectory>
       <outputFileNameMapping>${artifactId}-${version}.${extension}</outputFileNameMapping>
-      <excludes>
-        <exclude>com.opensymphony:xwork:jar:default</exclude>
-        <exclude>org.apache.struts:*:jar</exclude>
-      </excludes>
+      <includes>
+        <include>net.sf.retrotranslator:retrotranslator-runtime</include>
+        <include>backport-util-concurrent:backport-util-concurrent</include>
+      </includes>
     </dependencySet>
     <dependencySet useTransitiveFiltering="true">
       <outputDirectory>jdk14</outputDirectory>
       <outputFileNameMapping>${artifactId}-${version}-jdk14.${extension}</outputFileNameMapping>
       <includes>
-        <include>*:jdk14</include>
+        <include>org.apache.struts:*:jar:jdk14</include>
       </includes>
     </dependencySet>
   </dependencySets>
   <fileSets>
     <fileSet>
-    	<directory>../jdk14</directory>
-    	<outputDirectory>jdk14</outputDirectory>
+        <directory>src/main/resources</directory>
+        <outputDirectory></outputDirectory>
       <includes>
         <include>README*</include>
         <include>*LICENSE*</include>
         <include>NOTICE*</include>
       </includes>
-      <excludes>
-        <exclude>ASM-*</exclude>
-      </excludes>
     </fileSet>
   </fileSets>
 </assembly>

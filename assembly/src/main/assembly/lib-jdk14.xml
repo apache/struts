@@ -32,11 +32,13 @@
         <include>backport-util-concurrent:backport-util-concurrent</include>
       </includes>
     </dependencySet>
-    <dependencySet useTransitiveFiltering="true">
+    <dependencySet>
+      <useTransitiveFiltering>true</useTransitiveFiltering>
       <outputDirectory>jdk14</outputDirectory>
       <outputFileNameMapping>${artifactId}-${version}-jdk14.${extension}</outputFileNameMapping>
       <includes>
         <include>org.apache.struts:*:jar:jdk14</include>
+        <include>com.opensymphony:xwork:jar:jdk14</include>
       </includes>
     </dependencySet>
   </dependencySets>

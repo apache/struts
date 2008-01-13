@@ -247,8 +247,9 @@
             <groupId>com.opensymphony</groupId>
             <artifactId>xwork</artifactId>
             <version>2.1.1-SNAPSHOT</version>
-            <scope>runtime</scope>
+            <type>jar</type>
             <classifier>jdk14</classifier>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>

@@ -105,6 +105,7 @@ public class Tree extends ClosingUIBean {
 
     private static final String TEMPLATE = "tree-close";
     private static final String OPEN_TEMPLATE = "tree";
+    private final static transient Random RANDOM = new Random();    
 
     protected String toggle;
     protected String selectedNotifyTopics;
@@ -256,8 +257,11 @@ public class Tree extends ClosingUIBean {
         boolean generateId = !(Boolean)stack.getContext().get(Head.PARSE_CONTENT);
         addParameter("pushId", generateId);
         if ((this.id == null || this.id.length() == 0) && generateId) {
-            Random random = new Random();
-            this.id = "widget_" + Math.abs(random.nextInt());
+            // resolves Math.abs(Integer.MIN_VALUE) issue reported by FindBugs 
+            // http://findbugs.sourceforge.net/bugDescriptions.html#RV_ABSOLUTE_VALUE_OF_RANDOM_INT
+            int nextInt = RANDOM.nextInt();
+            nextInt = nextInt == Integer.MIN_VALUE ? Integer.MAX_VALUE : Math.abs(nextInt);  
+            this.id = "widget_" + String.valueOf(nextInt);
             addParameter("id", this.id);
         }
         
@@ -539,4 +543,5 @@ public class Tree extends ClosingUIBean {
         this.errorNotifyTopics = errorNotifyTopics;
     }
 }
+
 

@@ -34,6 +34,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 public abstract class AbstractRemoteBean extends ClosingUIBean implements RemoteBean {
 
+    final private static transient Random RANDOM = new Random();    
+
     protected String href;
     protected String errorText;
     protected String executeScripts;
@@ -111,8 +113,11 @@ public abstract class AbstractRemoteBean extends ClosingUIBean implements Remote
         boolean generateId = !(Boolean)stack.getContext().get(Head.PARSE_CONTENT);
         addParameter("pushId", generateId);
         if ((this.id == null || this.id.length() == 0) && generateId) {
-            Random random = new Random();
-            this.id = "widget_" + Math.abs(random.nextInt());
+            // resolves Math.abs(Integer.MIN_VALUE) issue reported by FindBugs 
+            // http://findbugs.sourceforge.net/bugDescriptions.html#RV_ABSOLUTE_VALUE_OF_RANDOM_INT
+            int nextInt = RANDOM.nextInt();
+            nextInt = nextInt == Integer.MIN_VALUE ? Integer.MAX_VALUE : Math.abs(nextInt);  
+            this.id = "widget_" + String.valueOf(nextInt);
             addParameter("id", this.id);
         }
     }

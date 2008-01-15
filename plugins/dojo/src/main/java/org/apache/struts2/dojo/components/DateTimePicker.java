@@ -21,6 +21,8 @@
 package org.apache.struts2.dojo.components;
 
 import java.text.DateFormat;
+import java.text.Format;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -172,9 +174,14 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 public class DateTimePicker extends UIBean {
 
     final public static String TEMPLATE = "datetimepicker";
-    final private static SimpleDateFormat RFC3339_FORMAT = new SimpleDateFormat(
-    "yyyy-MM-dd'T'HH:mm:ss");
+    // SimpleDateFormat is not thread-safe see:
+    //   http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6231579
+    //   http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6178997
+    // solution is to use stateless MessageFormat instead:
+    final private static String RFC3339_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+    final private static String RFC3339_PATTERN = "{0,date," + RFC3339_FORMAT + "}";
     final protected static Logger LOG = LoggerFactory.getLogger(DateTimePicker.class);
+    final private static transient Random RANDOM = new Random();    
     
     protected String iconPath;
     protected String formatLength;
@@ -193,7 +200,7 @@ public class DateTimePicker extends UIBean {
     protected String language;
     protected String templateCssPath;
     protected String valueNotifyTopics;
-
+    
     public DateTimePicker(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
     }
@@ -256,8 +263,11 @@ public class DateTimePicker extends UIBean {
         boolean generateId = !(Boolean)stack.getContext().get(Head.PARSE_CONTENT);
         addParameter("pushId", generateId);
         if ((this.id == null || this.id.length() == 0) && generateId) {
-            Random random = new Random();
-            this.id = "widget_" + Math.abs(random.nextInt());
+            // resolves Math.abs(Integer.MIN_VALUE) issue reported by FindBugs 
+            // http://findbugs.sourceforge.net/bugDescriptions.html#RV_ABSOLUTE_VALUE_OF_RANDOM_INT
+            int nextInt = RANDOM.nextInt();
+            nextInt = nextInt == Integer.MIN_VALUE ? Integer.MAX_VALUE : Math.abs(nextInt);  
+            this.id = "widget_" + String.valueOf(nextInt);
             addParameter("id", this.id);
         }
     }
@@ -366,21 +376,21 @@ public class DateTimePicker extends UIBean {
             return null;
 
         if(obj instanceof Date) {
-            return RFC3339_FORMAT.format((Date) obj);
+            return MessageFormat.format(RFC3339_PATTERN, (Date) obj);
         } else if(obj instanceof Calendar) {
-            return RFC3339_FORMAT.format(((Calendar) obj).getTime());
+            return MessageFormat.format(RFC3339_PATTERN, ((Calendar) obj).getTime());
         }
         else {
             // try to parse a date
             String dateStr = obj.toString();
             if(dateStr.equalsIgnoreCase("today"))
-                return RFC3339_FORMAT.format(new Date());
+                return MessageFormat.format(RFC3339_PATTERN, new Date());
 
             
             Date date = null;
             //formats used to parse the date
             List<DateFormat> formats = new ArrayList<DateFormat>();
-            formats.add(RFC3339_FORMAT);
+            formats.add(new SimpleDateFormat(RFC3339_FORMAT));
             formats.add(SimpleDateFormat.getTimeInstance(DateFormat.SHORT));
             formats.add(SimpleDateFormat.getDateInstance(DateFormat.SHORT));
             formats.add(SimpleDateFormat.getDateInstance(DateFormat.MEDIUM));
@@ -401,7 +411,7 @@ public class DateTimePicker extends UIBean {
                 try {
                     date = format.parse(dateStr);
                     if (date != null)
-                        return RFC3339_FORMAT.format(date);
+                        return MessageFormat.format(RFC3339_PATTERN, date);
                 } catch (Exception e) {
                     //keep going
                 }

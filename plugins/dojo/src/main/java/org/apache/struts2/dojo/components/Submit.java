@@ -127,6 +127,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 public class Submit extends FormButton implements RemoteBean {
     
     private static final Logger LOG = LoggerFactory.getLogger(Submit.class);
+    private final static transient Random RANDOM = new Random();    
     
     final public static String TEMPLATE = "submit";
 
@@ -239,8 +240,11 @@ public class Submit extends FormButton implements RemoteBean {
         boolean generateId = !(Boolean)stack.getContext().get(Head.PARSE_CONTENT);
         addParameter("pushId", generateId);
         if ((this.id == null || this.id.length() == 0) && generateId) {
-            Random random = new Random();
-            this.id = "widget_" + Math.abs(random.nextInt());
+            // resolves Math.abs(Integer.MIN_VALUE) issue reported by FindBugs 
+            // http://findbugs.sourceforge.net/bugDescriptions.html#RV_ABSOLUTE_VALUE_OF_RANDOM_INT
+            int nextInt = RANDOM.nextInt();
+            nextInt = nextInt == Integer.MIN_VALUE ? Integer.MAX_VALUE : Math.abs(nextInt);  
+            this.id = "widget_" + String.valueOf(nextInt);
             addParameter("id", this.id);
         }
     }

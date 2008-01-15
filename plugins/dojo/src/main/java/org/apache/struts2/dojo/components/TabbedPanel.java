@@ -83,6 +83,7 @@ public class TabbedPanel extends ClosingUIBean {
     public static final String TEMPLATE = "tabbedpanel";
     public static final String TEMPLATE_CLOSE = "tabbedpanel-close";
     final private static String COMPONENT_NAME = TabbedPanel.class.getName();
+    private final static transient Random RANDOM = new Random();    
 
     protected String selectedTab;
     protected String closeButton;
@@ -130,8 +131,11 @@ public class TabbedPanel extends ClosingUIBean {
         boolean generateId = !(Boolean)stack.getContext().get(Head.PARSE_CONTENT);
         addParameter("pushId", generateId);
         if ((this.id == null || this.id.length() == 0) && generateId) {
-            Random random = new Random();
-            this.id = "widget_" + Math.abs(random.nextInt());
+            // resolves Math.abs(Integer.MIN_VALUE) issue reported by FindBugs 
+            // http://findbugs.sourceforge.net/bugDescriptions.html#RV_ABSOLUTE_VALUE_OF_RANDOM_INT
+            int nextInt = RANDOM.nextInt();
+            nextInt = nextInt == Integer.MIN_VALUE ? Integer.MAX_VALUE : Math.abs(nextInt);  
+            this.id = "widget_" + String.valueOf(nextInt);
             addParameter("id", this.id);
         }
     }

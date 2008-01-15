@@ -178,13 +178,13 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
      * @s.tagattribute required="false" type="Integer"
      * description="Indicate the starting index (eg. first entry is 0) of entries in the source to be available as the first entry in the resulting subset iterator"
      */
-    @StrutsTagAttribute(type="Integer", 
+    @StrutsTagAttribute(type="Integer",
             description="Indicate the starting index (eg. first entry is 0) of entries in the source to be available as the first entry in the resulting subset iterator")
     public void setStart(String start) {
         startAttr = start;
     }
 
-    @StrutsTagAttribute(type="org.apache.struts2.util.SubsetIteratorFilter.Decider", 
+    @StrutsTagAttribute(type="org.apache.struts2.util.SubsetIteratorFilter.Decider",
             description="Extension to plug-in a decider to determine if that particular entry is to be included in the resulting subset iterator")
     public void setDecider(String decider) {
         deciderAttr = decider;
@@ -194,7 +194,7 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
     public void setId(String string) {
         setVar(string);
     }
-    
+
     @StrutsTagAttribute(description="The name to store the resultant iterator into page context, if such name is supplied")
     public void setVar(String var) {
         this.var = var;
@@ -214,17 +214,8 @@ public class SubsetIteratorTag extends StrutsBodyTagSupport {
         int count = -1;
         if (countAttr != null && countAttr.length() > 0) {
             Object countObj = findValue(countAttr);
-            if (countObj instanceof Integer) {
-                count = ((Integer)countObj).intValue();
-            }
-            else if (countObj instanceof Float) {
-                count = ((Float)countObj).intValue();
-            }
-            else if (countObj instanceof Long) {
-                count = ((Long)countObj).intValue();
-            }
-            else if (countObj instanceof Double) {
-                count = ((Double)countObj).intValue();
+            if (countObj instanceof Number) {
+                count = ((Number)countObj).intValue();
             }
             else if (countObj instanceof String) {
                 try {

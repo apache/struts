@@ -137,17 +137,8 @@ public class ComboBox extends TextField {
                 Map tmp = (Map) value;
                 addParameter("list", MakeIterator.convert(tmp));
                 addParameter("listKey", "key");
-                addParameter("listValue", "value");
-            } else if (value.getClass().isArray()) {
-                Iterator i = MakeIterator.convert(value);
-                addParameter("list", i);
-                if (listKey != null) {
-                    addParameter("listKey", listKey);
-                }
-                if (listValue != null) {
-                    addParameter("listValue", listValue);
-                }
-            } else {
+                addParameter("listValue", "value");                
+            } else { // also covers "if (value.getClass().isArray())"
                 Iterator i = MakeIterator.convert(value);
                 addParameter("list", i);
                 if (listKey != null) {

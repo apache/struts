@@ -125,7 +125,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *
  * @see org.apache.struts2.util.IteratorGenerator
  */
-@StrutsTag(name="generator", tldTagClass="org.apache.struts2.views.jsp.iterator.IteratorGeneratorTag", 
+@StrutsTag(name="generator", tldTagClass="org.apache.struts2.views.jsp.iterator.IteratorGeneratorTag",
         description="Generate an iterator for a iterable source.")
 public class IteratorGeneratorTag extends StrutsBodyTagSupport {
 
@@ -175,7 +175,7 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
     public void setId(String string) {
         setVar(string);
     }
-    
+
     @StrutsTagAttribute(description="The name to store the resultant iterator into page context, if such name is supplied")
     public void setVar(String var) {
         this.var = var;
@@ -197,17 +197,8 @@ public class IteratorGeneratorTag extends StrutsBodyTagSupport {
         int count = 0;
         if (countAttr != null && countAttr.length() > 0) {
             Object countObj = findValue(countAttr);
-            if (countObj instanceof Integer) {
-                count = ((Integer)countObj).intValue();
-            }
-            else if (countObj instanceof Float) {
-                count = ((Float)countObj).intValue();
-            }
-            else if (countObj instanceof Long) {
-                count = ((Long)countObj).intValue();
-            }
-            else if (countObj instanceof Double) {
-                count = ((Double) countObj).intValue();
+            if (countObj instanceof Number) {
+                count = ((Number)countObj).intValue();
             }
             else if (countObj instanceof String) {
                 try {

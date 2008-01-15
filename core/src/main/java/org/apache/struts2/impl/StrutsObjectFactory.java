@@ -44,7 +44,6 @@ public class StrutsObjectFactory extends ObjectFactory {
             params.putAll(typeParams);
         if (refParams != null && !refParams.isEmpty())
             params.putAll(refParams);
-        params.putAll(refParams);
 
         try {
             // interceptor instances are long-lived and used across user sessions, so don't try to pass in any extra

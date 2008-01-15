@@ -30,6 +30,7 @@ import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.util.TokenHelper;
 
 
 /**
@@ -195,13 +196,13 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
     /**
      * Returns the name to associate the background process.  Override to change the way background processes
      * are mapped to requests.
-     * 
+     *
      * @return the name of the background thread
      */
     protected String getBackgroundProcessName(ActionProxy proxy) {
         return proxy.getActionName();
     }
-    
+
     /* (non-Javadoc)
      * @see com.opensymphony.xwork2.interceptor.MethodFilterInterceptor#doIntercept(com.opensymphony.xwork2.ActionInvocation)
      */
@@ -246,6 +247,10 @@ public class ExecuteAndWaitInterceptor extends MethodFilterInterceptor {
                             .addParams(Collections.singletonMap("location", "/org/apache/struts2/interceptor/wait.ftl"))
                             .build();
                     results.put(WAIT, rc);
+                }
+
+                if (TokenHelper.getToken() != null) {
+                    session.put(TokenHelper.getTokenName(), TokenHelper.getToken());
                 }
 
                 return WAIT;

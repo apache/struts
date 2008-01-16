@@ -62,6 +62,9 @@ import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
  * <li><b>namespace</b> - used to determine which namespace the action is in that we're redirecting to . If namespace is
  * null, this defaults to the current namespace</li>
  *
+ * <li><b>supressEmptyParameters</b> - optional boolean (defaults to false) that can prevent parameters with no values
+ * from being included in the redirect URL.</li>
+ *
  * </ul>
  *
  * <!-- END SNIPPET: params -->
@@ -104,6 +107,8 @@ import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
  *          &lt;param name="reportType"&gt;pie&lt;/param&gt;
  *          &lt;param name="width"&gt;100&lt;/param&gt;
  *          &lt;param name="height"&gt;100&lt;/param&gt;
+ *          &lt;param name="empty"&gt;&lt;/param&gt;
+ *          &lt;param name="supressEmptyParameters"&gt;true&lt;/param&gt;
  *       &lt;/result&gt;
  *    &lt;/action&gt;
  * &lt;/package&gt;
@@ -119,12 +124,13 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
 
     /** The default parameter */
     public static final String DEFAULT_PARAM = "actionName";
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(ServletActionRedirectResult.class);
 
     protected String actionName;
     protected String namespace;
     protected String method;
+    protected boolean supressEmptyParameters = false;
 
     private Map<String, String> requestParameters = new LinkedHashMap<String, String>();
 
@@ -146,10 +152,10 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
         this.actionName = actionName;
         this.method = method;
     }
-    
+
     protected List<String> prohibitedResultParam = Arrays.asList(new String[] {
             DEFAULT_PARAM, "namespace", "method", "encode", "parse", "location",
-            "prependServletContext" });
+            "prependServletContext", "supressEmptyParameters" });
 
     /**
      * @see com.opensymphony.xwork2.Result#execute(com.opensymphony.xwork2.ActionInvocation)
@@ -179,6 +185,10 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
                     requestParameters.put(e.getKey().toString(),
                             e.getValue() == null ? "":
                                 conditionalParse(e.getValue().toString(), invocation));
+                    String potentialValue = e.getValue() == null ? "": conditionalParse(e.getValue().toString(), invocation);
+                    if (!supressEmptyParameters || ((potentialValue != null) && (potentialValue.length() > 0))) {
+                      requestParameters.put(e.getKey().toString(), potentialValue);
+                    }
                 }
             }
         }
@@ -216,6 +226,15 @@ public class ServletActionRedirectResult extends ServletRedirectResult implement
      */
     public void setMethod(String method) {
         this.method = method;
+    }
+
+    /**
+     * Sets the supressEmptyParameters option
+     *
+     * @param suppress The new value for this option
+     */
+    public void setSupressEmptyParameters(boolean supressEmptyParameters) {
+        this.supressEmptyParameters = supressEmptyParameters;
     }
 
     /**

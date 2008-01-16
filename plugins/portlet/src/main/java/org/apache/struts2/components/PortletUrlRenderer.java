@@ -117,19 +117,12 @@ public class PortletUrlRenderer implements UrlRenderer {
                     formComponent.getParameters(), type, formComponent.portletMode, formComponent.windowState);
             formComponent.addParameter("action", result);
 
-            // namespace: cut out anything between the start and the last /
-            int slash = result.lastIndexOf('/');
-            if (slash != -1) {
-                formComponent.addParameter("namespace", result.substring(0, slash));
-            } else {
-                formComponent.addParameter("namespace", "");
-            }
 
             // name/id: cut out anything between / and . should be the id and
             // name
             String id = formComponent.getId();
             if (id == null) {
-                slash = action.lastIndexOf('/');
+                int slash = action.lastIndexOf('/');
                 int dot = action.indexOf('.', slash);
                 if (dot != -1) {
                     id = action.substring(slash + 1, dot);

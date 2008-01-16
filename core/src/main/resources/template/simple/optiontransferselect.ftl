@@ -261,9 +261,7 @@
         </#if><#t/>
         <#assign doubleItemKeyStr = doubleItemKey.toString() /><#t/>
         <#if parameters.doubleListValue?exists><#t/>
-            <#if stack.findString(parameters.doubleListValue)?has_content><#t/>
-                <#assign doubleItemValue = stack.findString(parameters.doubleListValue) /><#t/>
-            </#if><#t/>
+            <#assign doubleItemValue = stack.findString(parameters.doubleListValue)!"" /><#t/>
         <#else><#t/>
             <#assign doubleItemValue = stack.findString('top') /><#t/>
         </#if><#t/>

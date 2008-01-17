@@ -117,7 +117,7 @@ import com.opensymphony.xwork2.validator.ActionValidatorManager;
  *     <td>com.opensymphony.xwork2.validator.ActionValidatorManager</td>
  *     <td>struts.actionValidatorManager</td>
  *     <td>singleton</td>
- *     <td>Main interface for validation managers (regular and annotation based).  Handles both the loading of 
+ *     <td>Main interface for validation managers (regular and annotation based).  Handles both the loading of
  *         configuration and the actual validation (since 2.1)</td>
  *   </tr>
  *   <tr>
@@ -151,7 +151,7 @@ import com.opensymphony.xwork2.validator.ActionValidatorManager;
  *     <td>Matches patterns, such as action names, generally used in configuration (since 2.1)</td>
  *   </tr>
  * </table>
- * 
+ *
  * <!-- END SNIPPET: extensionPoints -->
  * </p>
  * <p>
@@ -174,7 +174,7 @@ import com.opensymphony.xwork2.validator.ActionValidatorManager;
 public class BeanSelectionProvider implements ConfigurationProvider {
     public static final String DEFAULT_BEAN_NAME = "struts";
     private static final Logger LOG = LoggerFactory.getLogger(BeanSelectionProvider.class);
-    
+
     public void destroy() {
         // NO-OP
     }
@@ -182,10 +182,10 @@ public class BeanSelectionProvider implements ConfigurationProvider {
     public void loadPackages() throws ConfigurationException {
         // NO-OP
     }
-    
+
     public void init(Configuration configuration) throws ConfigurationException {
         // NO-OP
-        
+
     }
 
     public boolean needsReload() {
@@ -195,7 +195,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
     public void register(ContainerBuilder builder, LocatableProperties props) {
         alias(ObjectFactory.class, StrutsConstants.STRUTS_OBJECTFACTORY, builder, props);
         alias(XWorkConverter.class, StrutsConstants.STRUTS_XWORKCONVERTER, builder, props);
-        alias(TextProvider.class, StrutsConstants.STRUTS_XWORKTEXTPROVIDER, builder, props);
+        alias(TextProvider.class, StrutsConstants.STRUTS_XWORKTEXTPROVIDER, builder, props, Scope.DEFAULT);
         alias(ActionProxyFactory.class, StrutsConstants.STRUTS_ACTIONPROXYFACTORY, builder, props);
         alias(ObjectTypeDeterminer.class, StrutsConstants.STRUTS_OBJECTTYPEDETERMINER, builder, props);
         alias(ActionMapper.class, StrutsConstants.STRUTS_MAPPER_CLASS, builder, props);
@@ -208,7 +208,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         alias(ReflectionProvider.class, StrutsConstants.STRUTS_REFLECTIONPROVIDER, builder, props);
         alias(ReflectionContextFactory.class, StrutsConstants.STRUTS_REFLECTIONCONTEXTFACTORY, builder, props);
         alias(PatternMatcher.class, StrutsConstants.STRUTS_PATTERNMATCHER, builder, props);
-        
+
         if ("true".equalsIgnoreCase(props.getProperty(StrutsConstants.STRUTS_DEVMODE))) {
             props.setProperty(StrutsConstants.STRUTS_I18N_RELOAD, "true");
             props.setProperty(StrutsConstants.STRUTS_CONFIGURATION_XML_RELOAD, "true");
@@ -218,21 +218,21 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         } else {
             props.setProperty("devMode", "false");
         }
-        
+
         String val = props.getProperty(StrutsConstants.STRUTS_ALLOW_STATIC_METHOD_ACCESS);
         if (val != null) {
             props.setProperty("allowStaticMethodAccess", val);
         }
-        
+
         // TODO: This should be moved to XWork after 2.0.4
         // struts.custom.i18n.resources
 
         LocalizedTextUtil.addDefaultResourceBundle("org/apache/struts2/struts-messages");
-        
+
         String bundles = props.getProperty(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES);
-        if (bundles != null && bundles.length() > 0) { 
+        if (bundles != null && bundles.length() > 0) {
             StringTokenizer customBundles = new StringTokenizer(props.getProperty(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES), ", ");
-            
+
             while (customBundles.hasMoreTokens()) {
                 String name = customBundles.nextToken();
                 try {
@@ -241,14 +241,14 @@ public class BeanSelectionProvider implements ConfigurationProvider {
                 } catch (Exception e) {
                     LOG.error("Could not find messages file " + name + ".properties. Skipping");
                 }
-            } 
+            }
         }
     }
-    
+
     void alias(Class type, String key, ContainerBuilder builder, Properties props) {
         alias(type, key, builder, props, Scope.SINGLETON);
     }
-    
+
     void alias(Class type, String key, ContainerBuilder builder, Properties props, Scope scope) {
         if (!builder.contains(type)) {
             String foundName = props.getProperty(key, DEFAULT_BEAN_NAME);
@@ -284,7 +284,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
             LOG.warn("Unable to alias bean type "+type+", default mapping already assigned.");
         }
     }
-    
+
     static class ObjectFactoryDelegateFactory implements Factory {
         String name;
         Class type;
@@ -292,7 +292,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
             this.name = name;
             this.type = type;
         }
-        
+
         public Object create(Context context) throws Exception {
             ObjectFactory objFactory = context.getContainer().getInstance(ObjectFactory.class);
             try {

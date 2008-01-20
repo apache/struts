@@ -49,17 +49,24 @@ public class PellMultiPartRequest implements MultiPartRequest {
     private ServletMultipartRequest multi;
 
     private String defaultEncoding;
+    private boolean maxSizeProvided;
+    private int maxSize;
     
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
     public void setDefaultEncoding(String enc) {
         this.defaultEncoding = enc;
     }
     
+    @Inject(StrutsConstants.STRUTS_MULTIPART_MAXSIZE)
+    public void setMaxSize(String maxSize) {
+    	this.maxSizeProvided = true;
+        this.maxSize = Integer.parseInt(maxSize);
+    }
+    
     /**
      * Creates a new request wrapper to handle multi-part data using methods adapted from Jason Pell's
      * multipart classes (see class description).
      *
-     * @param maxSize        maximum size post allowed
      * @param saveDir        the directory to save off the file
      * @param servletRequest the request containing the multipart
      */
@@ -68,7 +75,11 @@ public class PellMultiPartRequest implements MultiPartRequest {
         //calling the constructor.  See javadoc for MultipartRequest.setEncoding().
         synchronized (this) {
             setEncoding();
-            multi = new ServletMultipartRequest(servletRequest, saveDir);
+            if (maxSizeProvided){
+            	multi = new ServletMultipartRequest(servletRequest, saveDir, maxSize);
+            }else{
+            	multi = new ServletMultipartRequest(servletRequest, saveDir);
+            }
         }
     }
     

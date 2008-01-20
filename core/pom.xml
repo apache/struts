@@ -330,7 +330,7 @@
             <artifactId>junit</artifactId>
             <scope>compile</scope>
             <version>3.8.1</version>
-            <!-- has to be compile for StrutsTestCase, which is part of the base package so others can write unit tests -->
+            <!-- compile time dependency for StrutsTestCase, which is part of the base package so others can write unit tests -->
             <optional>true</optional>
         </dependency>
 

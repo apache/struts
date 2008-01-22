@@ -1,5 +1,5 @@
 /*
- * $Id: Restful2ActionMapper.java 540819 2007-05-23 02:48:36Z mrdon $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

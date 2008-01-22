@@ -129,6 +129,10 @@
 					<groupId>javax.servlet</groupId>
 					<artifactId>servlet-api</artifactId>
 				</exclusion>
+                <exclusion>
+                    <groupId>struts</groupId>
+                    <artifactId>struts</artifactId>
+                </exclusion>
 			</exclusions>
         </dependency>
         <dependency>

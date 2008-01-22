@@ -44,10 +44,9 @@
   </dependencySets>
   <fileSets>
     <fileSet>
-        <directory>src/main/resources</directory>
+        <directory>src/main/resources/backport</directory>
         <outputDirectory></outputDirectory>
       <includes>
-        <include>README*</include>
         <include>*LICENSE*</include>
         <include>NOTICE*</include>
       </includes>

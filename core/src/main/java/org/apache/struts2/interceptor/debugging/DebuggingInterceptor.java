@@ -338,7 +338,8 @@ public class DebuggingInterceptor implements Interceptor {
             }
         }
         writer.endNode();
-        serializeIt(ctx.getSession(), "request", writer, new ArrayList<Object>());
+        Map requestMap = (Map) ctx.get("request");
+        serializeIt(requestMap, "request", writer, filterValueStack(requestMap));
         serializeIt(ctx.getSession(), "session", writer, new ArrayList<Object>());
 
         ValueStack stack = (ValueStack) ctx.get(ActionContext.VALUE_STACK);
@@ -445,6 +446,15 @@ public class DebuggingInterceptor implements Interceptor {
         this.enableXmlWithConsole = enableXmlWithConsole;
     }
 
+    
+    private List<Object> filterValueStack(Map requestMap) {
+    	List<Object> filter = new ArrayList<Object>();
+    	Object valueStack = requestMap.get("struts.valueStack");
+    	if(valueStack != null) {
+    		filter.add(valueStack);
+    	}
+    	return filter;
+    }
 
 
 }

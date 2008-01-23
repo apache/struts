@@ -258,7 +258,7 @@
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts-annotations</artifactId>
-            <version>1.0.3-SNAPSHOT</version>
+            <version>1.0.3-20080123.123514-2</version>
             <optional>true</optional>
         </dependency>
     </dependencies>

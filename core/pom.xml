@@ -335,7 +335,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>compile</scope>
-            <version>3.8.1</version>
+            <version>3.8.2</version>
             <!-- compile time dependency for StrutsTestCase, which is part of the base package so others can write unit tests -->
             <optional>true</optional>
         </dependency>

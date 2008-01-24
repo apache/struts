@@ -101,7 +101,7 @@ public class Set extends ContextBean {
         }
 
         body="";
-        
+
         if ("application".equalsIgnoreCase(scope)) {
             stack.setValue("#application['" + getVar() + "']", o);
         } else if ("session".equalsIgnoreCase(scope)) {
@@ -118,14 +118,14 @@ public class Set extends ContextBean {
         return super.end(writer, body);
     }
 
-    /* 
+    /*
      * TODO: set required=true when 'id' is dropped after 2.1
      */
     @StrutsTagAttribute(description="Name used to reference the value pushed into the Value Stack")
     public void setVar(String var) {
        super.setVar(var);
     }
-    
+
     @StrutsTagAttribute(description="Deprecated. Use 'var' instead")
     public void setName(String name) {
         setVar(name);
@@ -140,5 +140,10 @@ public class Set extends ContextBean {
     @StrutsTagAttribute(description="The value that is assigned to the variable named <i>name</i>")
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @Override
+    public boolean usesBody() {
+        return true;
     }
 }

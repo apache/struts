@@ -4,3 +4,6 @@ Copyright 2000-2007 The Apache Software Foundation
 This product includes software developed by
 The Apache Software Foundation (http://www.apache.org/).
 domTT (http://www.mojavelinux.com/projects/domtooltip/).
+
+The binary distributions includes the following third party software:
+FreeMarker (http://freemarker.org/).

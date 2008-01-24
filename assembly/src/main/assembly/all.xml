@@ -45,6 +45,13 @@
       </includes>
     </fileSet>
     <fileSet>
+      <directory>../core/src/main/resources</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>FREEMARKER-LICENSE.txt</include>
+      </includes>
+    </fileSet>
+    <fileSet>
       <directory>../plugins/plexus/src/main/resources</directory>
       <outputDirectory></outputDirectory>
       <includes>

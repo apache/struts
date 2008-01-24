@@ -63,7 +63,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * </ul>
  *
  * <p>These parameters can also be set by exposing a similarly named getter method on your Action.  For example, you can
- * provide <code>getContentType()</code> to override that parameter for the current action.</p>N
+ * provide <code>getContentType()</code> to override that parameter for the current action.</p>
  *
  * <!-- END SNIPPET: params -->
  *

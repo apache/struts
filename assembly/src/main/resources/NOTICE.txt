@@ -8,3 +8,4 @@ domTT (http://www.mojavelinux.com/projects/domtooltip/).
 
 The binary distributions includes the following third party software:
 ANTLR (http://www.antlr.org/).
+Classworlds (http://classworlds.codehaus.org/).

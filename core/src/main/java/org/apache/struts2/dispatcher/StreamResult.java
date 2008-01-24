@@ -50,7 +50,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <li><b>contentLength</b> - the stream length in bytes (the browser displays a
  * progress bar).</li>
  *
- * <li><b>contentDispostion</b> - the content disposition header value for
+ * <li><b>contentDisposition</b> - the content disposition header value for
  * specifing the file name (default = <code>inline</code>, values are typically
  * <i>filename="document.pdf"</i>.</li>
  *

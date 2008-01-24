@@ -20,10 +20,7 @@
  */
 package org.apache.struts2;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.struts2.views.jsp.ui.User;
 
@@ -49,6 +46,19 @@ public class TestAction extends ActionSupport {
     private List list2;
     private List list3;
     private SomeEnum status = SomeEnum.COMPLETED;
+
+    private final Map texts = new HashMap();
+
+    public void setText(String key, String value) {
+        this.texts.put(key, value);
+    }
+
+    public String getText(String key) {
+        if (this.texts.containsKey(key)) {
+            return (String) this.texts.get(key);
+        }
+        return super.getText(key);
+    }
 
     public Collection getCollection() {
         return collection;

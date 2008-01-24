@@ -78,15 +78,17 @@ public class Label extends UIBean {
             addParameter("for", findString(forAttr));
         }
 
-        // try value first, then name (this overrides the default behavior in the superclass)
+        // try value, then key, then name (this overrides the default behavior in the superclass)
         if (value != null) {
             addParameter("nameValue", findString(value));
+        } else if (key != null) {
+            String expr = "%{getText('"+ key +"')}";
+            addParameter("nameValue", findString(expr));
         } else if (name != null) {
             String expr = name;
             if (altSyntax()) {
                 expr = "%{" + expr + "}";
             }
-
             addParameter("nameValue", findString(expr));
         }
     }

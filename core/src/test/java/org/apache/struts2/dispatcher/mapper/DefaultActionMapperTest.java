@@ -171,6 +171,35 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         assertNull(mapping.getMethod());
     }
 
+    public void testGetMappingWithActionName_methodAndName() throws Exception {
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        ActionMapping mapping = mapper.getMappingFromActionName("actionName!add");
+        assertEquals("actionName", mapping.getName());
+        assertEquals("add", mapping.getMethod());
+    }
+
+    public void testGetMappingWithActionName_name() throws Exception {
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        ActionMapping mapping = mapper.getMappingFromActionName("actionName");
+        assertEquals("actionName", mapping.getName());
+        assertEquals(null, mapping.getMethod());
+    }
+
+    public void testGetMappingWithActionName_noDynamicMethod() throws Exception {
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        mapper.setAllowDynamicMethodCalls("false");
+        ActionMapping mapping = mapper.getMappingFromActionName("actionName!add");
+        assertEquals("actionName!add", mapping.getName());
+        assertEquals(null, mapping.getMethod());
+    }
+
+    public void testGetMappingWithActionName_null() throws Exception {
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        ActionMapping mapping = mapper.getMappingFromActionName(null);
+        assertEquals(null, mapping.getName());
+        assertEquals(null, mapping.getMethod());
+    }
+
     public void testGetUri() throws Exception {
         req.setupGetParameterMap(new HashMap());
         req.setupGetRequestURI("/my/namespace/actionName.action");
@@ -598,6 +627,17 @@ public class DefaultActionMapperTest extends StrutsTestCase {
         String uri = mapper.getUriFromActionMapping(actionMapping);
 
         assertEquals("/myActionName.action", uri);
+    }
+
+    public void testGetUriFromActionMapper_justActionAndMethod() throws Exception {
+        DefaultActionMapper mapper = new DefaultActionMapper();
+        ActionMapping actionMapping = new ActionMapping();
+        actionMapping.setMethod("myMethod");
+        actionMapping.setName("myActionName");
+        actionMapping.setExtension("");
+        String uri = mapper.getUriFromActionMapping(actionMapping);
+
+        assertEquals("myActionName!myMethod", uri);
     }
     
     public void testGetUriFromActionMapperWhenBlankExtension() throws Exception {

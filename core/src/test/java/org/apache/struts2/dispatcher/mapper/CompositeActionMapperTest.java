@@ -97,6 +97,11 @@ public class CompositeActionMapperTest extends TestCase {
         public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
             return null;
         }
+
+        public ActionMapping getMappingFromActionName(String actionName) {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
         public String getUriFromActionMapping(ActionMapping mapping) {
             return null;
         }
@@ -108,6 +113,11 @@ public class CompositeActionMapperTest extends TestCase {
         public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
             return null;
         }
+
+        public ActionMapping getMappingFromActionName(String actionName) {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
         public String getUriFromActionMapping(ActionMapping mapping) {
             return null;
         }
@@ -119,6 +129,11 @@ public class CompositeActionMapperTest extends TestCase {
         public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
             return actionMapping;
         }
+
+        public ActionMapping getMappingFromActionName(String actionName) {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
         public String getUriFromActionMapping(ActionMapping mapping) {
             return uri;
         }

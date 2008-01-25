@@ -111,6 +111,10 @@ public class RestfulActionMapper implements ActionMapper {
         return new ActionMapping(actionName, "", "", parameters);
     }
 
+    public ActionMapping getMappingFromActionName(String actionName) {
+        return new ActionMapping(actionName, null, null, null);
+    }
+
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.mapper.ActionMapper#getUriFromActionMapping(org.apache.struts2.dispatcher.mapper.ActionMapping)
      */

@@ -279,6 +279,12 @@ public class DefaultActionMapper implements ActionMapper {
             this.extensions = null;
         }
     }
+
+    public ActionMapping getMappingFromActionName(String actionName) {
+        ActionMapping mapping = new ActionMapping();
+        mapping.setName(actionName);
+        return parseActionName(mapping);
+    }
     
     /*
      * (non-Javadoc)
@@ -306,6 +312,15 @@ public class DefaultActionMapper implements ActionMapper {
             return null;
         }
 
+        parseActionName(mapping);
+
+        return mapping;
+    }
+
+    protected ActionMapping parseActionName(ActionMapping mapping) {
+        if (mapping.getName() == null) {
+            return mapping;
+        }
         if (allowDynamicMethodCalls) {
             // handle "name!method" convention.
             String name = mapping.getName();
@@ -315,7 +330,6 @@ public class DefaultActionMapper implements ActionMapper {
                 mapping.setMethod(name.substring(exclamation + 1));
             }
         }
-
         return mapping;
     }
 
@@ -494,9 +508,11 @@ public class DefaultActionMapper implements ActionMapper {
     public String getUriFromActionMapping(ActionMapping mapping) {
         StringBuffer uri = new StringBuffer();
 
-        uri.append(mapping.getNamespace());
-        if (!"/".equals(mapping.getNamespace())) {
-            uri.append("/");
+        if (mapping.getNamespace() != null) {
+            uri.append(mapping.getNamespace());
+            if (!"/".equals(mapping.getNamespace())) {
+                uri.append("/");
+            }
         }
         String name = mapping.getName();
         String params = "";
@@ -510,16 +526,19 @@ public class DefaultActionMapper implements ActionMapper {
             uri.append("!").append(mapping.getMethod());
         }
 
-        String extension = getDefaultExtension();
-        
-        // Look for the current extension, if available
-        ActionContext context = ActionContext.getContext();
-        if (context != null) {
-            ActionMapping orig = (ActionMapping) context.get(ServletActionContext.ACTION_MAPPING);
-            if (orig != null) {
-                extension = orig.getExtension();
+        String extension = mapping.getExtension();
+        if (extension == null) {
+            extension = getDefaultExtension();
+            // Look for the current extension, if available
+            ActionContext context = ActionContext.getContext();
+            if (context != null) {
+                ActionMapping orig = (ActionMapping) context.get(ServletActionContext.ACTION_MAPPING);
+                if (orig != null) {
+                    extension = orig.getExtension();
+                }
             }
         }
+        
         if (extension != null) {
             
             if (extension.length() == 0 || (extension.length() > 0 && uri.indexOf('.' + extension) == -1)) {

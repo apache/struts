@@ -55,6 +55,15 @@ public interface ActionMapper {
     ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager);
 
     /**
+     * Expose the ActionMapping for the specified action name
+     *
+     * @param actionName The name of the action that may have other information embedded in it
+     * @return The appropriate action mapping
+     * @since 2.1.1
+     */
+    ActionMapping getMappingFromActionName(String actionName);
+
+    /**
      * Convert an ActionMapping into a URI string
      *
      * @param mapping The action mapping

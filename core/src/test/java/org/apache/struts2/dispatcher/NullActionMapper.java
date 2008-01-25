@@ -33,19 +33,24 @@ import com.opensymphony.xwork2.config.ConfigurationManager;
  */
 public class NullActionMapper implements ActionMapper {
 
-        private static ActionMapping _actionMapping;
+    private static ActionMapping _actionMapping;
 
-        public NullActionMapper() {}
+    public NullActionMapper() {
+    }
 
-        public static void setActionMapping(ActionMapping actionMappingToBeRetrned) {
-            _actionMapping = actionMappingToBeRetrned;
-        }
+    public static void setActionMapping(ActionMapping actionMappingToBeRetrned) {
+        _actionMapping = actionMappingToBeRetrned;
+    }
 
-        public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager config) {
-            return _actionMapping;
-        }
+    public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager config) {
+        return _actionMapping;
+    }
 
-        public String getUriFromActionMapping(ActionMapping mapping) {
-            throw new UnsupportedOperationException("operation not supported");
-        }
+    public ActionMapping getMappingFromActionName(String actionName) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public String getUriFromActionMapping(ActionMapping mapping) {
+        throw new UnsupportedOperationException("operation not supported");
+    }
 }

@@ -76,9 +76,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * <!-- END SNIPPET: description -->
  *
  * @see ActionMapper
- * @see ActionMapperFactory
  * @see ActionMapping
- * @see IndividualActionMapperEntry
  *
  * @version $Date$ $Id$
  */
@@ -113,6 +111,28 @@ public class CompositeActionMapper implements ActionMapper {
 
         for (ActionMapper actionMapper : actionMappers) {
             ActionMapping actionMapping = actionMapper.getMapping(request, configManager);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Using ActionMapper "+actionMapper);
+            }
+            if (actionMapping == null) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("ActionMapper "+actionMapper+" failed to return an ActionMapping (null)");
+                }
+            }
+            else {
+                return actionMapping;
+            }
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("exhausted from ActionMapper that could return an ActionMapping");
+        }
+        return null;
+    }
+
+    public ActionMapping getMappingFromActionName(String actionName) {
+
+        for (ActionMapper actionMapper : actionMappers) {
+            ActionMapping actionMapping = actionMapper.getMappingFromActionName(actionName);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Using ActionMapper "+actionMapper);
             }

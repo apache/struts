@@ -25,10 +25,12 @@ import java.io.Writer;
 
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.views.util.UrlHelper;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
@@ -43,8 +45,15 @@ public class ServletUrlRenderer implements UrlRenderer {
      */
     private static final Logger LOG = LoggerFactory.getLogger(ServletUrlRenderer.class);
 
+    private ActionMapper actionMapper;
 
-	/**
+    @Inject
+    public void setActionMapper(ActionMapper mapper) {
+        this.actionMapper = mapper;
+    }
+
+
+    /**
 	 * {@inheritDoc}
 	 */
 	public void renderUrl(Writer writer, URL urlComponent) {
@@ -112,21 +121,12 @@ public class ServletUrlRenderer implements UrlRenderer {
 			}
 		}
 
-		String actionMethod = "";
-		// FIXME: our implementation is flawed - the only concept of ! should be
-		// in DefaultActionMapper
-		// handle "name!method" convention.
-		if (formComponent.enableDynamicMethodInvocation) {
-			if (action.indexOf("!") != -1) {
-				int endIdx = action.lastIndexOf("!");
-				actionMethod = action.substring(endIdx + 1, action.length());
-				action = action.substring(0, endIdx);
-			}
-		}
+        ActionMapping nameMapping = actionMapper.getMappingFromActionName(action);
+        String actionName = nameMapping.getName();
+        String actionMethod = nameMapping.getMethod();
 
 		final ActionConfig actionConfig = formComponent.configuration.getRuntimeConfiguration().getActionConfig(
 				namespace, action);
-		String actionName = action;
 		if (actionConfig != null) {
 
 			ActionMapping mapping = new ActionMapping(action, namespace, actionMethod, formComponent.parameters);

@@ -24,8 +24,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.inject.Inject;
 
 /**
  * FormButton.
@@ -40,6 +43,7 @@ public abstract class FormButton extends UIBean {
     protected String method;
     protected String align;
     protected String type;
+    protected ActionMapper actionMapper;
 
     public FormButton(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -70,11 +74,13 @@ public abstract class FormButton extends UIBean {
             String name;
 
             if (action != null) {
-                name = "action:" + findString(action);
-
+                ActionMapping mapping = new ActionMapping();
+                mapping.setName(findString(action));
                 if (method != null) {
-                    name += "!" + findString(method);
+                    mapping.setMethod(findString(method));
                 }
+                mapping.setExtension("");
+                name = "action:" + actionMapper.getUriFromActionMapping(mapping);
             } else {
                 name = "method:" + findString(method);
             }
@@ -140,6 +146,11 @@ public abstract class FormButton extends UIBean {
      * @return <tt>true</tt> if type image is supported.
      */
     protected abstract boolean supportsImageType();
+
+    @Inject
+    public void setActionMapper(ActionMapper mapper) {
+        this.actionMapper = mapper;
+    }
 
     @StrutsTagAttribute(description="Set action attribute.")
     public void setAction(String action) {

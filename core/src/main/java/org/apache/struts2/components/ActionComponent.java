@@ -35,6 +35,8 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 import org.apache.struts2.views.jsp.TagUtils;
@@ -124,6 +126,7 @@ public class ActionComponent extends ContextBean {
     protected ValueStackFactory valueStackFactory;
     protected ActionProxyFactory actionProxyFactory;
     protected ActionProxy proxy;
+    protected ActionMapper actionMapper;
     protected String name;
     protected String namespace;
     protected boolean executeResult;
@@ -147,6 +150,11 @@ public class ActionComponent extends ContextBean {
     @Inject
     public void setValueStackFactory(ValueStackFactory valueStackFactory) {
         this.valueStackFactory = valueStackFactory;
+    }
+
+    @Inject
+    public void setActionMapper(ActionMapper mapper) {
+        this.actionMapper = mapper;
     }
 
     public boolean end(Writer writer, String body) {
@@ -255,14 +263,9 @@ public class ActionComponent extends ContextBean {
         final String actionName;
         final String methodName;
 
-        int exclamation = actualName.lastIndexOf("!");
-        if (exclamation != -1) {
-            actionName = actualName.substring(0, exclamation);
-            methodName = actualName.substring(exclamation + 1);
-        } else {
-            actionName = actualName;
-            methodName = null;
-        }
+        ActionMapping mapping = actionMapper.getMappingFromActionName(actualName);
+        actionName = mapping.getName();
+        methodName = mapping.getMethod();
 
         String namespace;
 

@@ -31,6 +31,8 @@ import org.apache.struts2.dispatcher.ApplicationMap;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.RequestMap;
 import org.apache.struts2.dispatcher.SessionMap;
+import org.apache.struts2.dispatcher.mapper.ActionMapper;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
 import uk.ltd.getahead.dwr.WebContextFactory;
 
@@ -68,7 +70,13 @@ public class DWRValidator {
     private static final Logger LOG = LoggerFactory.getLogger(DWRValidator.class);
     
     private ActionProxyFactory actionProxyFactory;
-    
+    private ActionMapper actionMapper;
+
+    @Inject
+    public void setActionMapper(ActionMapper actionMapper) {
+        this.actionMapper = actionMapper;
+    }
+
     @Inject
     public void setActionProxyFactory(ActionProxyFactory fac) {
         this.actionProxyFactory = fac;
@@ -98,9 +106,9 @@ public class DWRValidator {
                 servletContext);
 
         try {
-            Configuration cfg = du.getConfigurationManager().getConfiguration();
+            ActionMapping mapping = actionMapper.getMappingFromActionName(action);
             ActionInvocation inv = new ValidatorActionInvocation(ctx, true);
-            ActionProxy proxy = actionProxyFactory.createActionProxy(inv, namespace, action, null, true, true);
+            ActionProxy proxy = actionProxyFactory.createActionProxy(inv, namespace, mapping.getName(), mapping.getMethod(), true, true);
             proxy.execute();
             Object a = proxy.getAction();
 

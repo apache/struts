@@ -103,7 +103,6 @@ public class Form extends ClosingUIBean {
     protected String acceptcharset;
     protected String focusElement;
     
-    protected boolean enableDynamicMethodInvocation = true;
     protected Configuration configuration;
     protected ObjectFactory objectFactory;
     protected UrlRenderer urlRenderer;
@@ -123,11 +122,6 @@ public class Form extends ClosingUIBean {
 
     protected String getDefaultTemplate() {
         return TEMPLATE;
-    }
-
-    @Inject(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION)
-    public void setEnableDynamicMethodInvocation(String enable) {
-        enableDynamicMethodInvocation = "true".equals(enable);
     }
 
     @Inject

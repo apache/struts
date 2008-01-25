@@ -329,6 +329,10 @@ public class FilterTest extends StrutsTestCase {
             return null;
         }
 
+        public ActionMapping getMappingFromActionName(String actionName) {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
         public String getUriFromActionMapping(ActionMapping mapping) {
             return null;
         }
@@ -340,6 +344,10 @@ public class FilterTest extends StrutsTestCase {
 
         public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
             return new ActionMapping();
+        }
+
+        public ActionMapping getMappingFromActionName(String actionName) {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
 
         public String getUriFromActionMapping(ActionMapping mapping) {

@@ -28,6 +28,9 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 
+import java.util.Map;
+import java.util.Collections;
+
 /**
  *
  * @version $Date$ $Id$
@@ -80,5 +83,39 @@ public class UIBeanTest extends StrutsTestCase {
         txtFld.populateComponentHtmlId(form);
 
         assertEquals("formId_txtFldName", txtFld.getParameters().get("id"));
+    }
+
+    public void testGetThemeFromForm() throws Exception {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+
+        Form form = new Form(stack, req, res);
+        form.setTheme("foo");
+
+        TextField txtFld = new TextField(stack, req, res);
+        assertEquals("foo", txtFld.getTheme());
+    }
+
+    public void testGetThemeFromContext() throws Exception {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        Map context = Collections.singletonMap("theme", "bar");
+        ActionContext.getContext().put("attr", context);
+
+        TextField txtFld = new TextField(stack, req, res);
+        assertEquals("bar", txtFld.getTheme());
+    }
+
+    public void testGetThemeFromContextNonString() throws Exception {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        Map context = Collections.singletonMap("theme", new Integer(12));
+        ActionContext.getContext().put("attr", context);
+
+        TextField txtFld = new TextField(stack, req, res);
+        assertEquals("12", txtFld.getTheme());
     }
 }

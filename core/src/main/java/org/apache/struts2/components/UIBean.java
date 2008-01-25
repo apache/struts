@@ -552,7 +552,7 @@ public abstract class UIBean extends Component {
         // If templateDir is not explicitly given,
         // try to find attribute which states the dir set to use
         if ((templateDir == null) || (templateDir.equals(""))) {
-            templateDir = (String) stack.findValue("#attr.templateDir");
+            templateDir = stack.findString("#attr.templateDir");
         }
 
         // Default template set
@@ -585,7 +585,7 @@ public abstract class UIBean extends Component {
         // If theme set is not explicitly given,
         // try to find attribute which states the theme set to use
         if ((theme == null) || (theme.equals(""))) {
-            theme = (String) stack.findValue("#attr.theme");
+            theme = stack.findString("#attr.theme");
         }
 
         // Default theme set

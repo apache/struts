@@ -21,6 +21,8 @@
 package org.apache.struts2.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -88,6 +90,25 @@ public class ContainUtilTest extends TestCase {
         assertTrue(ContainUtil.contains(new MyObject("tm_jee", 22), new MyObject("tm_jee", 22)));
     }
 
+    public void testIterableObject() throws Exception {
+    	MyIterableObject i = new MyIterableObject("one", "two");
+
+        assertFalse(ContainUtil.contains(i, "thre"));
+        assertTrue(ContainUtil.contains(i, "one"));
+        assertTrue(ContainUtil.contains(i, "two"));
+    }
+    
+    public static class MyIterableObject implements Iterable<String> {
+    	private List<String> values;
+    	
+    	public MyIterableObject(String... strings) {
+    		values = Arrays.asList(strings);
+    	}
+    	
+		public Iterator<String> iterator() {
+			return values.iterator();
+		}
+    }
 
     public static class MyObject {
         private String name;

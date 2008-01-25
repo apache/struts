@@ -78,6 +78,7 @@ public class DateTimePickerTag extends AbstractUITag {
         dateTimePicker.setType(type);
         dateTimePicker.setTemplateCssPath(templateCssPath);
         dateTimePicker.setValueNotifyTopics(valueNotifyTopics);
+        dateTimePicker.setDisabled(disabled);
     }
 
     public void setAdjustWeeks(String adjustWeeks) {

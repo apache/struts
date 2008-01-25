@@ -218,6 +218,10 @@ public class DateTimePicker extends UIBean {
             addParameter("displayWeeks", findString(displayWeeks));
         if(adjustWeeks != null)
             addParameter("adjustWeeks", findValue(adjustWeeks, Boolean.class));
+
+        if(disabled != null)
+            addParameter("disabled", findValue(disabled, Boolean.class));
+
         if(startDate != null)
             addParameter("startDate", format(findValue(startDate)));
         if(endDate != null)

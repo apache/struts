@@ -91,6 +91,9 @@
   <#if parameters.valueNotifyTopics?if_exists != "">
 	valueNotifyTopics="${parameters.valueNotifyTopics?html}"<#rt/>
   </#if>
+  <#if parameters.disabled?exists>
+    disabled="${parameters.disabled?string?html}"<#rt/>
+  </#if>
   saveFormat="rfc"<#rt/>
   <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 ></div>

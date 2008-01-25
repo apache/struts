@@ -58,6 +58,32 @@ public class DateTimePickerTagTest extends AbstractUITagTest {
             .getResource("DateTimePickerTagTest-1.txt"));
     }
 
+    public void testSimpleDisabled() throws Exception {
+        DateTimePickerTag tag = new DateTimePickerTag();
+        tag.setPageContext(pageContext);
+
+        tag.setId("id");
+
+        tag.setAdjustWeeks("true");
+        tag.setDayWidth("b");
+        tag.setDisplayWeeks("true");
+        tag.setEndDate("%{'2008-01-01'}");
+        tag.setStartDate("%{'2008-02-02'}");
+        tag.setStaticDisplay("false");
+        tag.setWeekStartsOn("g");
+        tag.setName("h");
+        tag.setLanguage("i");
+        tag.setTemplateCssPath("j");
+        tag.setValueNotifyTopics("k");
+        tag.setValue("%{'2008-03-03'}");
+        tag.setDisabled("true");
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(DateTimePickerTagTest.class
+            .getResource("DateTimePickerTagTest-2.txt"));
+    }
+
     public void testTodayValue() throws Exception {
         DateTimePickerTag tag = new DateTimePickerTag();
         tag.setPageContext(pageContext);

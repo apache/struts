@@ -154,9 +154,6 @@ public abstract class AbstractUITagTest extends AbstractTagTest {
      * #verifyGenericProperties(org.apache.struts2.views.jsp.ui.AbstractUITag, String, String[])} as properties to
      * verify.<p/> This implementation defines testdata for all common AbstractUITag properties and may be overridden in
      * subclasses.
-     *
-     * @return A Map of PropertyHolders values bound to {@link org.apache.struts2.views.jsp.ui.AbstractUITagTest.PropertyHolder#getName()}
-     *         as key.
      */
     protected Map initializedGenericTagTestProperties() {
         Map result = new HashMap();

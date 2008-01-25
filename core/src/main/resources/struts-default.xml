@@ -217,10 +217,10 @@
             <interceptor-stack name="paramsPrepareParamsStack">
                 <interceptor-ref name="exception"/>
                 <interceptor-ref name="alias"/>
+                <interceptor-ref name="i18n"/>
                 <interceptor-ref name="params"/>
                 <interceptor-ref name="servletConfig"/>
                 <interceptor-ref name="prepare"/>
-                <interceptor-ref name="i18n"/>
                 <interceptor-ref name="chain"/>
                 <interceptor-ref name="modelDriven"/>
                 <interceptor-ref name="fileUpload"/>

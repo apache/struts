@@ -151,34 +151,28 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         return imageServletUrl;
     }
 
-    public JasperReportsResult setImageServletUrl(final String imageServletUrl) {
+    public void setImageServletUrl(final String imageServletUrl) {
         this.imageServletUrl = imageServletUrl;
-        return this;
     }
 
-    public JasperReportsResult setDataSource(String dataSource) {
+    public void setDataSource(String dataSource) {
         this.dataSource = dataSource;
-        return this;
     }
 
-    public JasperReportsResult setFormat(String format) {
+    public void setFormat(String format) {
         this.format = format;
-        return this;
     }
 
-    public JasperReportsResult setDocumentName(String documentName) {
+    public void setDocumentName(String documentName) {
         this.documentName = documentName;
-        return this;
     }
 
-    public JasperReportsResult setContentDisposition(String contentDisposition) {
+    public void setContentDisposition(String contentDisposition) {
         this.contentDisposition = contentDisposition;
-        return this;
     }
 
-    public JasperReportsResult setDelimiter(String delimiter) {
+    public void setDelimiter(String delimiter) {
         this.delimiter = delimiter;
-        return this;
     }
 
     protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {

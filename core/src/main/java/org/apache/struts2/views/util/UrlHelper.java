@@ -176,10 +176,9 @@ public class UrlHelper {
 
         String result = link.toString();
         
-        if (result.indexOf("<script>") >= 0){
+        while (result.indexOf("<script>") > 0){
         	result = result.replaceAll("<script>", "script");
-        }
-        
+        }        
         try {
             result = encodeResult ? response.encodeURL(result) : result;
         } catch (Exception ex) {

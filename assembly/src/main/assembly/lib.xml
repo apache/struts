@@ -63,6 +63,13 @@
       </includes>
     </fileSet>
     <fileSet>
+      <directory>../plugins/sitemesh/src/main/resources</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>SITEMESH-LICENSE.txt</include>
+      </includes>
+    </fileSet>
+    <fileSet>
       <directory>../plugins/struts1/src/main/resources</directory>
       <outputDirectory></outputDirectory>
       <includes>

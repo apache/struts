@@ -13,6 +13,7 @@
 <head>
     <title><s:property value="#title"/></title>
     <s:head/>
+    <sx:head/>
 </head>
 
 <body>

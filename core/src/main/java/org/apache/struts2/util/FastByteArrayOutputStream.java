@@ -20,12 +20,16 @@
  */
 package org.apache.struts2.util;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.RandomAccessFile;
-import java.io.Writer;
+import javax.servlet.jsp.JspWriter;
+import java.io.*;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.Charset;
+import java.nio.charset.CodingErrorAction;
+import java.nio.charset.CoderResult;
+import java.nio.CharBuffer;
+import java.nio.ByteBuffer;
 
 
 /**
@@ -35,62 +39,164 @@ import java.util.LinkedList;
  *
  */
 public class FastByteArrayOutputStream extends OutputStream {
-
-    // Static --------------------------------------------------------
     private static final int DEFAULT_BLOCK_SIZE = 8192;
 
-
-    private LinkedList buffers;
-
-    // Attributes ----------------------------------------------------
-    // internal buffer
-    private byte[] buffer;
-
-    // is the stream closed?
-    private boolean closed;
-    private int blockSize;
+    private LinkedList<byte[]> buffers;
+    private byte buffer[];
     private int index;
     private int size;
+    private int blockSize;
+    private boolean closed;
 
-
-    // Constructors --------------------------------------------------
     public FastByteArrayOutputStream() {
         this(DEFAULT_BLOCK_SIZE);
     }
 
-    public FastByteArrayOutputStream(int aSize) {
-        blockSize = aSize;
-        buffer = new byte[blockSize];
+    public FastByteArrayOutputStream(int blockSize) {
+        buffer = new byte[this.blockSize = blockSize];
     }
 
+    public void writeTo(OutputStream out) throws IOException {
+        if (buffers != null) {
+            for (byte[] bytes : buffers) {
+                out.write(bytes, 0, blockSize);
+            }
+        }
+        out.write(buffer, 0, index);
+    }
+
+    public void writeTo(RandomAccessFile out) throws IOException {
+        if (buffers != null) {
+            for (byte[] bytes : buffers) {
+                out.write(bytes, 0, blockSize);
+            }
+        }
+        out.write(buffer, 0, index);
+    }
+
+    /**
+     * This is a patched method (added for common Writer, needed for tests)
+     * @param out Writer
+     * @param encoding Encoding
+     * @throws IOException If some output failed
+     */
+    public void writeTo(Writer out, String encoding) throws IOException {
+        if (encoding != null) {
+            CharsetDecoder decoder = getDecoder(encoding);
+            // Create buffer for characters decoding
+            CharBuffer charBuffer = CharBuffer.allocate(buffer.length);
+            // Create buffer for bytes
+            float bytesPerChar = decoder.charset().newEncoder().maxBytesPerChar();
+            ByteBuffer byteBuffer = ByteBuffer.allocate((int) (buffer.length + bytesPerChar));
+            if (buffers != null) {
+                for (byte[] bytes : buffers) {
+                    decodeAndWriteOut(out, bytes, bytes.length, byteBuffer, charBuffer, decoder, false);
+                }
+            }
+            decodeAndWriteOut(out, buffer, index, byteBuffer, charBuffer, decoder, true);
+        } else {
+            if (buffers != null) {
+                for (byte[] bytes : buffers) {
+                    writeOut(out, bytes, bytes.length);
+                }
+            }
+            writeOut(out, buffer, index);
+        }
+    }
+
+    private CharsetDecoder getDecoder(String encoding) {
+        Charset charset = Charset.forName(encoding);
+        return charset.newDecoder().
+                onMalformedInput(CodingErrorAction.REPORT).
+                onUnmappableCharacter(CodingErrorAction.REPLACE);
+    }
+
+    /**
+     * This is a patched method (standard)
+     * @param out Writer
+     * @param encoding Encoding
+     * @throws IOException If some output failed
+     */
+    public void writeTo(JspWriter out, String encoding) throws IOException {
+        try {
+            writeTo((Writer) out, encoding);
+        } catch (IOException e) {
+            writeToFile();
+            throw e;
+        } catch (Throwable e) {
+            writeToFile();
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * This method is need only for debug. And needed for tests generated files.
+     */
+    private void writeToFile() {
+        try {
+            writeTo(new FileOutputStream("/tmp/" + getClass().getName() + System.currentTimeMillis() + ".log"));
+        } catch (IOException e) {
+            // Ignore
+        }
+    }
+
+    private void writeOut(Writer out, byte[] bytes, int length) throws IOException {
+        out.write(new String(bytes, 0, length));
+    }
+
+    private static void decodeAndWriteOut(Writer writer, byte[] bytes, int length, ByteBuffer in, CharBuffer out, CharsetDecoder decoder, boolean endOfInput) throws IOException {
+        // Append bytes to current buffer
+        // Previous data maybe partially decoded, this part will appended to previous
+        in.put(bytes, 0, length);
+        // To begin of data
+        in.flip();
+        decodeAndWriteBuffered(writer, in, out, decoder, endOfInput);
+    }
+
+    private static void decodeAndWriteBuffered(Writer writer, ByteBuffer in, CharBuffer out, CharsetDecoder decoder, boolean endOfInput) throws IOException {
+        // Decode
+        CoderResult result;
+        do {
+            result = decodeAndWrite(writer, in, out, decoder, endOfInput);
+            // Check that all data are decoded
+            if (in.hasRemaining()) {
+                // Move remaining to top of buffer
+                in.compact();
+                if (result.isOverflow() && !result.isError() && !result.isMalformed()) {
+                    // Not all buffer chars decoded, spin it again
+                    // Set to begin
+                    in.flip();
+                }
+            } else {
+                // Clean up buffer
+                in.clear();
+            }
+        } while (in.hasRemaining() && result.isOverflow() && !result.isError() && !result.isMalformed());
+    }
+
+    private static CoderResult decodeAndWrite(Writer writer, ByteBuffer in, CharBuffer out, CharsetDecoder decoder, boolean endOfInput) throws IOException {
+        CoderResult result = decoder.decode(in, out, endOfInput);
+        // To begin of decoded data
+        out.flip();
+        // Output
+        writer.write(out.toString());
+        return result;
+    }
 
     public int getSize() {
         return size + index;
     }
 
-    public void close() {
-        closed = true;
-    }
-
     public byte[] toByteArray() {
-        byte[] data = new byte[getSize()];
-
-        // Check if we have a list of buffers
-        int pos = 0;
-
+        byte data[] = new byte[getSize()];
+        int position = 0;
         if (buffers != null) {
-            Iterator iter = buffers.iterator();
-
-            while (iter.hasNext()) {
-                byte[] bytes = (byte[]) iter.next();
-                System.arraycopy(bytes, 0, data, pos, blockSize);
-                pos += blockSize;
+            for (byte[] bytes : buffers) {
+                System.arraycopy(bytes, 0, data, position, blockSize);
+                position += blockSize;
             }
         }
-
-        // write the internal buffer directly
-        System.arraycopy(buffer, 0, data, pos, index);
-
+        System.arraycopy(buffer, 0, data, position, index);
         return data;
     }
 
@@ -98,123 +204,57 @@ public class FastByteArrayOutputStream extends OutputStream {
         return new String(toByteArray());
     }
 
-    // OutputStream overrides ----------------------------------------
-    public void write(int datum) throws IOException {
-        if (closed) {
-            throw new IOException("Stream closed");
-        } else {
-            if (index == blockSize) {
-                addBuffer();
-            }
-
-            // store the byte
-            buffer[index++] = (byte) datum;
-        }
-    }
-
-    public void write(byte[] data, int offset, int length) throws IOException {
-        if (data == null) {
-            throw new NullPointerException();
-        } else if ((offset < 0) || ((offset + length) > data.length) || (length < 0)) {
-            throw new IndexOutOfBoundsException();
-        } else if (closed) {
-            throw new IOException("Stream closed");
-        } else {
-            if ((index + length) > blockSize) {
-                int copyLength;
-
-                do {
-                    if (index == blockSize) {
-                        addBuffer();
-                    }
-
-                    copyLength = blockSize - index;
-
-                    if (length < copyLength) {
-                        copyLength = length;
-                    }
-
-                    System.arraycopy(data, offset, buffer, index, copyLength);
-                    offset += copyLength;
-                    index += copyLength;
-                    length -= copyLength;
-                } while (length > 0);
-            } else {
-                // Copy in the subarray
-                System.arraycopy(data, offset, buffer, index, length);
-                index += length;
-            }
-        }
-    }
-
-    // Public
-    public void writeTo(OutputStream out) throws IOException {
-        // Check if we have a list of buffers
-        if (buffers != null) {
-            Iterator iter = buffers.iterator();
-
-            while (iter.hasNext()) {
-                byte[] bytes = (byte[]) iter.next();
-                out.write(bytes, 0, blockSize);
-            }
-        }
-
-        // write the internal buffer directly
-        out.write(buffer, 0, index);
-    }
-
-    public void writeTo(RandomAccessFile out) throws IOException {
-        // Check if we have a list of buffers
-        if (buffers != null) {
-            Iterator iter = buffers.iterator();
-
-            while (iter.hasNext()) {
-                byte[] bytes = (byte[]) iter.next();
-                out.write(bytes, 0, blockSize);
-            }
-        }
-
-        // write the internal buffer directly
-        out.write(buffer, 0, index);
-    }
-
-    public void writeTo(Writer out, String encoding) throws IOException {
-        // Check if we have a list of buffers
-        if (buffers != null) {
-            Iterator iter = buffers.iterator();
-
-            while (iter.hasNext()) {
-                byte[] bytes = (byte[]) iter.next();
-
-                if (encoding != null) {
-                    out.write(new String(bytes, encoding));
-                } else {
-                    out.write(new String(bytes));
-                }
-            }
-        }
-
-        // write the internal buffer directly
-        if (encoding != null) {
-            out.write(new String(buffer, 0, index, encoding));
-        } else {
-            out.write(new String(buffer, 0, index));
-        }
-    }
-
-    /**
-     * Create a new buffer and store the
-     * current one in linked list
-     */
     protected void addBuffer() {
         if (buffers == null) {
-            buffers = new LinkedList();
+            buffers = new LinkedList<byte[]>();
         }
-
         buffers.addLast(buffer);
-
         buffer = new byte[blockSize];
         size += index;
         index = 0;
+    }
+
+    public void write(int datum) throws IOException {
+        if (closed) {
+            throw new IOException("Stream closed");
+        }
+        if (index == blockSize) {
+            addBuffer();
+        }
+        buffer[index++] = (byte) datum;
+    }
+
+    public void write(byte data[], int offset, int length) throws IOException {
+        if (data == null) {
+            throw new NullPointerException();
+        }
+        if (offset < 0 || offset + length > data.length || length < 0) {
+            throw new IndexOutOfBoundsException();
+        }
+        if (closed) {
+            throw new IOException("Stream closed");
+        }
+        if (index + length > blockSize) {
+            do {
+                if (index == blockSize) {
+                    addBuffer();
+                }
+                int copyLength = blockSize - index;
+                if (length < copyLength) {
+                    copyLength = length;
+                }
+                System.arraycopy(data, offset, buffer, index, copyLength);
+                offset += copyLength;
+                index += copyLength;
+                length -= copyLength;
+            } while (length > 0);
+        } else {
+            System.arraycopy(data, offset, buffer, index, length);
+            index += length;
+        }
+    }
+
+    public void close() {
+        closed = true;
     }
 }

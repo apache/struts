@@ -74,9 +74,9 @@ public class Anchor extends ClosingUIBean {
         super.evaluateExtraParams();
 
         if (href != null)
-            addParameter("href", findString(href));
+            addParameter("href", ensureAttributeSafelyNotEscaped(findString(href)));
     }
-    
+
     @StrutsTagAttribute(description="The URL.")
     public void setHref(String href) {
         this.href = href;

@@ -43,6 +43,21 @@ public class AnchorTest extends AbstractUITagTest {
         verify(AnchorTest.class.getResource("href-1.txt"));
     }
 
+    public void testSimpleBadQuote() throws Exception {
+        TestAction testAction = (TestAction) action;
+        testAction.setFoo("bar");
+
+        AnchorTag tag = new AnchorTag();
+        tag.setPageContext(pageContext);
+
+        tag.setId("mylink");
+        tag.setHref("a\"");
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(AnchorTest.class.getResource("href-2.txt"));
+    }
+
     public void testDynamicAttribute() throws Exception {
         TestAction testAction = (TestAction) action;
         testAction.setFoo("bar");

@@ -12,3 +12,4 @@ Classworlds (http://classworlds.codehaus.org/).
 EZMorph (http://ezmorph.sourceforge.net/)
 FreeMarker (http://freemarker.org/).
 JSON-lib (http://json-lib.sourceforge.net/).
+OGNL (http://www.opensymphony.com/ognl/).

@@ -52,6 +52,7 @@
       <outputDirectory></outputDirectory>
       <includes>
         <include>FREEMARKER-LICENSE.txt</include>
+        <include>OGNL-LICENSE.txt</include>
       </includes>
     </fileSet>
     <fileSet>

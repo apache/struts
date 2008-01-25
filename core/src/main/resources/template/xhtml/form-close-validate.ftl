@@ -92,9 +92,9 @@ END SNIPPET: supported-validators
             <#elseif validator.validatorType = "int">
             if (field.value != null) {
                 if (<#if validator.min?exists>parseInt(field.value) <
-                     ${validator.min?string}<#else>false</#if> ||
+                     ${validator.min?c}<#else>false</#if> ||
                         <#if validator.max?exists>parseInt(field.value) >
-                           ${validator.max?string}<#else>false</#if>) {
+                           ${validator.max?c}<#else>false</#if>) {
                     addError(field, error);
                     errors = true;
                 }
@@ -102,10 +102,10 @@ END SNIPPET: supported-validators
             <#elseif validator.validatorType = "double">
             if (field.value != null) {
                 var value = parseFloat(field.value);
-                if (<#if validator.minInclusive?exists>value < ${validator.minInclusive?string}<#else>false</#if> ||
-                        <#if validator.maxInclusive?exists>value > ${validator.maxInclusive?string}<#else>false</#if> ||
-                        <#if validator.minExclusive?exists>value <= ${validator.minExclusive?string}<#else>false</#if> ||
-                        <#if validator.maxExclusive?exists>value >= ${validator.maxExclusive?string}<#else>false</#if>) {
+                if (<#if validator.minInclusive?exists>value < ${validator.minInclusive?c}<#else>false</#if> ||
+                        <#if validator.maxInclusive?exists>value > ${validator.maxInclusive?c}<#else>false</#if> ||
+                        <#if validator.minExclusive?exists>value <= ${validator.minExclusive?c}<#else>false</#if> ||
+                        <#if validator.maxExclusive?exists>value >= ${validator.maxExclusive?c}<#else>false</#if>) {
                     addError(field, error);
                     errors = true;
                 }

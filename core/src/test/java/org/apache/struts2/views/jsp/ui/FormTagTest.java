@@ -128,87 +128,79 @@ public class FormTagTest extends AbstractUITagTest {
      */
     public void testFormWithCustomOnsubmitEnabledWithValidateEnabled1() throws Exception {
 
-        com.opensymphony.xwork2.config.Configuration originalConfiguration = configurationManager.getConfiguration();
-        ObjectFactory originalObjectFactory = ObjectFactory.getObjectFactory();
+        final Container cont = container;
+        // used to determined if the form action needs js validation
+        configurationManager.setConfiguration(new com.opensymphony.xwork2.config.impl.DefaultConfiguration() {
+            private DefaultConfiguration self = this;
+            public Container getContainer() {
+                return new Container() {
+                    public <T> T inject(Class<T> implementation) {return null;}
+                    public void removeScopeStrategy() {}
+                    public void setScopeStrategy(Strategy scopeStrategy) {}
+                    public <T> T getInstance(Class<T> type, String name) {return null;}
+                    public <T> T getInstance(Class<T> type) {return null;}
+                    public Set<String> getInstanceNames(Class<?> type) {return null;}
 
-        try {
-            final Container cont = container;
-            // used to determined if the form action needs js validation
-            configurationManager.setConfiguration(new com.opensymphony.xwork2.config.impl.DefaultConfiguration() {
-                private DefaultConfiguration self = this;
-                public Container getContainer() {
-                    return new Container() {
-                        public <T> T inject(Class<T> implementation) {return null;}
-                        public void removeScopeStrategy() {}
-                        public void setScopeStrategy(Strategy scopeStrategy) {}
-                        public <T> T getInstance(Class<T> type, String name) {return null;}
-                        public <T> T getInstance(Class<T> type) {return null;}
-                        public Set<String> getInstanceNames(Class<?> type) {return null;}
+                    public void inject(Object o) {
+                        cont.inject(o);
+                        if (o instanceof Form) {
+                            ((Form)o).setConfiguration(self);
+                        }
+                    }
+                };
+            }
+            public RuntimeConfiguration getRuntimeConfiguration() {
+                return new RuntimeConfiguration() {
+                    public ActionConfig getActionConfig(String namespace, String name) {
+                        ActionConfig actionConfig = new ActionConfig("", name, "") {
+                            public List getInterceptors() {
+                                List interceptors = new ArrayList();
 
-                        public void inject(Object o) {
-                            cont.inject(o);
-                            if (o instanceof Form) {
-                                ((Form)o).setConfiguration(self);
+                                ValidationInterceptor validationInterceptor = new ValidationInterceptor();
+                                validationInterceptor.setIncludeMethods("*");
+
+                                InterceptorMapping interceptorMapping = new InterceptorMapping("validation", validationInterceptor);
+                                interceptors.add(interceptorMapping);
+
+                                return interceptors;
                             }
-                        }
-                    };
-                }
-                public RuntimeConfiguration getRuntimeConfiguration() {
-                    return new RuntimeConfiguration() {
-                        public ActionConfig getActionConfig(String namespace, String name) {
-                            ActionConfig actionConfig = new ActionConfig("", name, "") {
-                                public List getInterceptors() {
-                                    List interceptors = new ArrayList();
+                            public String getClassName() {
+                                return ActionSupport.class.getName();
+                            }
+                        };
+                        return actionConfig;
+                    }
 
-                                    ValidationInterceptor validationInterceptor = new ValidationInterceptor();
-                                    validationInterceptor.setIncludeMethods("*");
+                    public Map getActionConfigs() {
+                        return null;
+                    }
+                };
+            }
+        });
 
-                                    InterceptorMapping interceptorMapping = new InterceptorMapping("validation", validationInterceptor);
-                                    interceptors.add(interceptorMapping);
+        FormTag tag = new FormTag();
+        tag.setPageContext(pageContext);
+        tag.setName("myForm");
+        tag.setMethod("post");
+        tag.setAction("myAction");
+        tag.setAcceptcharset("UTF-8");
+        tag.setEnctype("myEncType");
+        tag.setTitle("mytitle");
+        tag.setOnsubmit("submitMe()");
+        tag.setValidate("true");
+        tag.setNamespace("");
 
-                                    return interceptors;
-                                }
-                                public String getClassName() {
-                                    return ActionSupport.class.getName();
-                                }
-                            };
-                            return actionConfig;
-                        }
+        UpDownSelectTag t = new UpDownSelectTag();
+        t.setPageContext(pageContext);
+        t.setName("myUpDownSelectTag");
+        t.setList("{}");
 
-                        public Map getActionConfigs() {
-                            return null;
-                        }
-                    };
-                }
-            });
+        tag.doStartTag();
+        t.doStartTag();
+        t.doEndTag();
+        tag.doEndTag();
 
-            FormTag tag = new FormTag();
-            tag.setPageContext(pageContext);
-            tag.setName("myForm");
-            tag.setMethod("post");
-            tag.setAction("myAction");
-            tag.setAcceptcharset("UTF-8");
-            tag.setEnctype("myEncType");
-            tag.setTitle("mytitle");
-            tag.setOnsubmit("submitMe()");
-            tag.setValidate("true");
-            tag.setNamespace("");
-
-            UpDownSelectTag t = new UpDownSelectTag();
-            t.setPageContext(pageContext);
-            t.setName("myUpDownSelectTag");
-            t.setList("{}");
-
-            tag.doStartTag();
-            t.doStartTag();
-            t.doEndTag();
-            tag.doEndTag();
-
-            verify(FormTag.class.getResource("Formtag-2.txt"));
-        }
-        finally {
-            configurationManager.setConfiguration(originalConfiguration);
-        }
+        verify(FormTag.class.getResource("Formtag-2.txt"));
     }
 
 
@@ -300,6 +292,87 @@ public class FormTagTest extends AbstractUITagTest {
         finally {
             configurationManager.setConfiguration(originalConfiguration);
         }
+    }
+
+    /**
+     * Tests the numbers are formatted correctly to not break the javascript
+     */
+    public void testFormWithCustomOnsubmitEnabledWithValidateEnabled3() throws Exception {
+
+        final Container cont = container;
+        // used to determined if the form action needs js validation
+        configurationManager.setConfiguration(new com.opensymphony.xwork2.config.impl.DefaultConfiguration() {
+            private DefaultConfiguration self = this;
+            public Container getContainer() {
+                return new Container() {
+                    public <T> T inject(Class<T> implementation) {return null;}
+                    public void removeScopeStrategy() {}
+                    public void setScopeStrategy(Strategy scopeStrategy) {}
+                    public <T> T getInstance(Class<T> type, String name) {return null;}
+                    public <T> T getInstance(Class<T> type) {return null;}
+                    public Set<String> getInstanceNames(Class<?> type) {return null;}
+
+                    public void inject(Object o) {
+                        cont.inject(o);
+                        if (o instanceof Form) {
+                            ((Form)o).setConfiguration(self);
+                        }
+                    }
+                };
+            }
+            public RuntimeConfiguration getRuntimeConfiguration() {
+                return new RuntimeConfiguration() {
+                    public ActionConfig getActionConfig(String namespace, String name) {
+                        ActionConfig actionConfig = new ActionConfig("", name, IntValidationAction.class.getName()) {
+                            public List getInterceptors() {
+                                List interceptors = new ArrayList();
+
+                                ValidationInterceptor validationInterceptor = new ValidationInterceptor();
+                                validationInterceptor.setIncludeMethods("*");
+
+                                InterceptorMapping interceptorMapping = new InterceptorMapping("validation", validationInterceptor);
+                                interceptors.add(interceptorMapping);
+
+                                return interceptors;
+                            }
+                            public String getClassName() {
+                                return IntValidationAction.class.getName();
+                            }
+                        };
+                        return actionConfig;
+                    }
+
+                    public Map getActionConfigs() {
+                        return null;
+                    }
+                };
+            }
+        });
+
+        FormTag tag = new FormTag();
+        tag.setPageContext(pageContext);
+        tag.setName("myForm");
+        tag.setMethod("post");
+        tag.setAction("myAction");
+        tag.setAcceptcharset("UTF-8");
+        tag.setEnctype("myEncType");
+        tag.setTitle("mytitle");
+        tag.setOnsubmit("submitMe()");
+        tag.setValidate("true");
+        tag.setNamespace("");
+
+        UpDownSelectTag t = new UpDownSelectTag();
+        t.setPageContext(pageContext);
+        t.setName("myUpDownSelectTag");
+        t.setList("{}");
+
+        tag.doStartTag();
+        tag.getComponent().getParameters().put("actionClass", IntValidationAction.class);
+        t.doStartTag();
+        t.doEndTag();
+        tag.doEndTag();
+
+        verify(FormTag.class.getResource("Formtag-22.txt"));
     }
 
     /**

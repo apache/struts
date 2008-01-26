@@ -274,8 +274,9 @@ public class FileUploadInterceptor extends AbstractInterceptor {
             File[] file = multiWrapper.getFiles(inputValue);
             for (int index = 0; index < file.length; index++) {
                 File currentFile = file[index];
-                LOG.info(getTextMessage("struts.messages.removing.file", new Object[]{inputValue, currentFile}, ActionContext.getContext().getLocale()));
-
+                if(LOG.isInfoEnabled()) {
+                	LOG.info(getTextMessage("struts.messages.removing.file", new Object[]{inputValue, currentFile}, ActionContext.getContext().getLocale()));
+                }
                 if ((currentFile != null) && currentFile.isFile()) {
                     currentFile.delete();
                 }

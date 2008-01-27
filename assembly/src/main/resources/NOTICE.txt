@@ -15,3 +15,6 @@ JSON-lib (http://json-lib.sourceforge.net/).
 OGNL (http://www.opensymphony.com/ognl/).
 Plexus (http://plexus.codehaus.org/).
 SiteMesh (http://www.opensymphony.com/sitemesh/).
+XWork (http://www.opensymphony.com/xwork/).
+XPP3 (http://www.extreme.indiana.edu/xgws/xsoap/xpp/).
+XStream (http://xstream.codehaus.org/).

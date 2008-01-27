@@ -8,3 +8,4 @@ domTT (http://www.mojavelinux.com/projects/domtooltip/).
 The binary distributions includes the following third party software:
 FreeMarker (http://freemarker.org/).
 OGNL (http://www.opensymphony.com/ognl/).
+XWork (http://www.opensymphony.com/xwork/).

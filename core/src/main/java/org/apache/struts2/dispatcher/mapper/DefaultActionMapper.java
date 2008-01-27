@@ -169,11 +169,11 @@ public class DefaultActionMapper implements ActionMapper {
     protected boolean allowDynamicMethodCalls = true;
 
     protected boolean allowSlashesInActionNames = false;
-    
+
     protected boolean alwaysSelectFullNamespace = false;
 
     protected PrefixTrie prefixTrie = null;
-    
+
     protected List<String> extensions = new ArrayList<String>() {{ add("action"); add("");}};
 
     protected Container container;
@@ -242,17 +242,17 @@ public class DefaultActionMapper implements ActionMapper {
     protected void addParameterAction(String prefix, ParameterAction parameterAction) {
         prefixTrie.put(prefix, parameterAction);
     }
-    
+
     @Inject(StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION)
     public void setAllowDynamicMethodCalls(String allow) {
         allowDynamicMethodCalls = "true".equals(allow);
     }
-    
+
     @Inject(StrutsConstants.STRUTS_ENABLE_SLASHES_IN_ACTION_NAMES)
     public void setSlashesInActionNames(String allow) {
         allowSlashesInActionNames = "true".equals(allow);
     }
-    
+
     @Inject(StrutsConstants.STRUTS_ALWAYS_SELECT_FULL_NAMESPACE)
     public void setAlwaysSelectFullNamespace(String val) {
         this.alwaysSelectFullNamespace = "true".equals(val);
@@ -262,7 +262,7 @@ public class DefaultActionMapper implements ActionMapper {
     public void setContainer(Container container) {
         this.container = container;
     }
-    
+
     @Inject(StrutsConstants.STRUTS_ACTION_EXTENSION)
     public void setExtensions(String extensions) {
         if (extensions != null && !"".equals(extensions)) {
@@ -285,7 +285,7 @@ public class DefaultActionMapper implements ActionMapper {
         mapping.setName(actionName);
         return parseActionName(mapping);
     }
-    
+
     /*
      * (non-Javadoc)
      *
@@ -295,10 +295,10 @@ public class DefaultActionMapper implements ActionMapper {
             ConfigurationManager configManager) {
         ActionMapping mapping = new ActionMapping();
         String uri = getUri(request);
-        
+
         int indexOfSemicolon = uri.indexOf(";");
         uri = (indexOfSemicolon > -1) ? uri.substring(0, indexOfSemicolon) : uri;
-        
+
         uri = dropExtension(uri, mapping);
         if (uri == null) {
             return null;
@@ -350,12 +350,12 @@ public class DefaultActionMapper implements ActionMapper {
         for (Iterator iterator = parameterMap.keySet().iterator(); iterator
                 .hasNext();) {
             String key = (String) iterator.next();
-            
+
             // Strip off the image button location info, if found
             if (key.endsWith(".x") || key.endsWith(".y")) {
                 key = key.substring(0, key.length() - 2);
             }
-            
+
             // Ensure a parameter doesn't get processed twice
             if (!uniqueParameters.contains(key)) {
                 ParameterAction parameterAction = (ParameterAction) prefixTrie
@@ -435,13 +435,13 @@ public class DefaultActionMapper implements ActionMapper {
     protected String dropExtension(String name) {
         return dropExtension(name, new ActionMapping());
     }
-    
+
     /**
      * Drops the extension from the action name, storing it in the mapping for later use
      *
      * @param name
      *            The action name
-     * @param mapping The action mapping to store the extension in 
+     * @param mapping The action mapping to store the extension in
      * @return The action name without its extension
      */
     protected String dropExtension(String name, ActionMapping mapping) {
@@ -450,7 +450,11 @@ public class DefaultActionMapper implements ActionMapper {
         }
         for (String ext : extensions) {
             if ("".equals(ext)) {
-                if (name.indexOf('.') == -1) {
+                // This should also handle cases such as /foo/bar-1.0/description. It is tricky to
+                // distinquish /foo/bar-1.0 but perhaps adding a numeric check in the future could
+                // work
+                int index = name.indexOf('.');
+                if (index == -1 || name.indexOf('/', index) >= 0) {
                     return name;
                 }
             } else {
@@ -460,7 +464,7 @@ public class DefaultActionMapper implements ActionMapper {
                     mapping.setExtension(ext);
                     return name;
                 }
-            } 
+            }
         }
         return null;
     }
@@ -538,9 +542,9 @@ public class DefaultActionMapper implements ActionMapper {
                 }
             }
         }
-        
+
         if (extension != null) {
-            
+
             if (extension.length() == 0 || (extension.length() > 0 && uri.indexOf('.' + extension) == -1)) {
                 if (extension.length() > 0) {
                     uri.append(".").append(extension);
@@ -553,10 +557,10 @@ public class DefaultActionMapper implements ActionMapper {
 
         return uri.toString();
     }
-    
+
 
 	public boolean isSlashesInActionNames() {
 		return allowSlashesInActionNames;
 	}
-	
+
 }

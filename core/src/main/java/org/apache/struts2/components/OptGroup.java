@@ -73,8 +73,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 @StrutsTag(
     name="optgroup",
     tldTagClass="org.apache.struts2.views.jsp.ui.OptGroupTag",
-    description="Renders a Select Tag's OptGroup Tag",
-    allowDynamicAttributes=true)
+    description="Renders a Select Tag's OptGroup Tag")
 public class OptGroup extends Component {
 
     public static final String INTERNAL_LIST_UI_BEAN_LIST_PARAMETER_KEY = "optGroupInternalListUiBeanList";

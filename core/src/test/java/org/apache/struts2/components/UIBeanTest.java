@@ -85,6 +85,23 @@ public class UIBeanTest extends StrutsTestCase {
         assertEquals("formId_txtFldName", txtFld.getParameters().get("id"));
     }
 
+    public void testEscape() throws Exception {
+        ValueStack stack = ActionContext.getContext().getValueStack();
+        MockHttpServletRequest req = new MockHttpServletRequest();
+        MockHttpServletResponse res = new MockHttpServletResponse();
+        UIBean bean = new UIBean(stack, req, res) {
+            protected String getDefaultTemplate() {
+                return null;
+            }
+        };
+
+        assertEquals(bean.escape("hello[world"), "hello_world");
+        assertEquals(bean.escape("hello.world"), "hello_world");
+        assertEquals(bean.escape("hello]world"), "hello_world");
+        assertEquals(bean.escape("hello!world"), "hello_world");
+        assertEquals(bean.escape("hello!@#$%^&*()world"), "hello__________world");
+    }
+
     public void testEscapeId() throws Exception {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();

@@ -26,7 +26,7 @@
 <head>
 <title>${pageTitle}</title>
 <meta http-equiv="Content-type" content="text/html; charset=ISO-8859-1" />
-<#include "/config-browser/config-styles.css" parse="n"></head>
+<#include "/config-browser/config-styles.css" parse="y"></head>
 <body class="composite" marginwidth="0" marginheight="0" leftmargin="0" topmargin="0">
 
 <div id="breadcrumbs">

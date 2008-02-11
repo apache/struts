@@ -30,7 +30,7 @@
           <sx:div  id="tab2" label="test2"  disabled="true" >
               Diabled Tab
           </sx:div >
-           <sx:div  id="tab3" label="test2" >
+           <sx:div  id="tab3" label="test3" >
               Some other Tab
           </sx:div >
       </sx:tabbedpanel>

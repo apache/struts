@@ -134,7 +134,8 @@ public class CheckboxListTest extends AbstractUITagTest {
         testAction.setFoo("hello");
         testAction.setList(new String[][]{
                 {"hello", "world"},
-                {"foo", "bar"}
+                {"foo", "bar"},
+                {"baz", null}
         });
 
         CheckboxListTag tag = new CheckboxListTag();

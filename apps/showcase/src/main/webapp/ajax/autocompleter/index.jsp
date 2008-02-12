@@ -78,6 +78,7 @@ Reload on type (loadOnTextChange="true"), after 3 characters (loadMinimumCount="
 Using a JSON list returned from an action (href="/JSONList.action"), with autoComplete (autoComplete="true")
 <br/>
 <sx:autocompleter  
+    name="auto3"
     href="%{#jsonList}" 
     cssStyle="width: 200px;" 
     autoComplete="true" />
@@ -92,21 +93,33 @@ Using a local list (list="%{'apple','banana','grape','pear'}")
 
 Force valid options (forceValidOption="true")
 <br/>
-<sx:autocompleter  href="%{#jsonList}" cssStyle="width: 200px;" forceValidOption="true"/>
+<sx:autocompleter  
+    name="auto4"
+    href="%{#jsonList}" 
+    cssStyle="width: 200px;" 
+    forceValidOption="true"/>
 
 <br/>
 <br/>
 
 Make dropdown's height to 180px  (dropdownHeight="180")
 <br/>
-<sx:autocompleter  href="%{#jsonList}" cssStyle="width: 200px;" dropdownHeight="180"/>
+<sx:autocompleter
+    name="auto5"
+    href="%{#jsonList}" 
+    cssStyle="width: 200px;" 
+    dropdownHeight="180"/>
 
 <br/>
 <br/>
 
 Disabled combobox (disabled="true")
 <br/>
-<sx:autocompleter  href="%{#jsonList}" cssStyle="width: 200px;" disabled="true"/>
+<sx:autocompleter
+    name="auto6"
+    href="%{#jsonList}" 
+    cssStyle="width: 200px;" 
+    disabled="true"/>
 
 <br/>
 <br/>
@@ -129,6 +142,7 @@ Link two autocompleter elements. When the selected value in 'Autocompleter 1' ch
 </form>
 Autocompleter 2 
 <sx:autocompleter
+     name="auto8"
      href="%{#autoex}"
      autoComplete="false"
      formId="selectForm"
@@ -140,6 +154,7 @@ Autocompleter 2
 Publish before/after/value notify topics
 <br/>
 <sx:autocompleter 
+    name="auto9"
     href="%{#jsonList}" 
     listenTopics="/reload"
     beforeNotifyTopics="/before"

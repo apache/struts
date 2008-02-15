@@ -20,6 +20,10 @@
  */
 package org.apache.struts2.rest;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
@@ -57,7 +61,9 @@ public class ContentTypeInterceptor implements Interceptor {
         }
         
         if (request.getContentLength() > 0) {
-            handler.toObject(request.getReader(), target);
+            InputStream is = (InputStream) request.getInputStream();
+            InputStreamReader reader = new InputStreamReader(is);
+            handler.toObject((Reader) reader, target);
         }
         return invocation.invoke();
     }

@@ -110,6 +110,18 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *          <td>define html style attribute</td>
  *       </tr>
  *       <tr>
+ *          <td>cssClass</td>
+ *          <td>simple</td>
+ *          <td>String</td>
+ *          <td>error class attribute</td>
+ *       </tr>
+ *       <tr>
+ *          <td>cssStyle</td>
+ *          <td>simple</td>
+ *          <td>String</td>
+ *          <td>error style attribute</td>
+ *       </tr>
+ *       <tr>
  *          <td>title</td>
  *          <td>simple</td>
  *          <td>String</td>
@@ -429,6 +441,8 @@ public abstract class UIBean extends Component {
     protected String id;
     protected String cssClass;
     protected String cssStyle;
+    protected String cssErrorClass;
+    protected String cssErrorStyle;
     protected String disabled;
     protected String label;
     protected String labelPosition;
@@ -466,7 +480,7 @@ public abstract class UIBean extends Component {
     protected String tooltipDelay;
     protected String tooltipCssClass;
     protected String tooltipIconPath;
-    
+
     // dynamic attributes
     protected Map<String,Object> dynamicAttributes = new HashMap<String,Object>();
 
@@ -622,7 +636,7 @@ public abstract class UIBean extends Component {
         if (label != null) {
             addParameter("label", findString(label));
         }
-        
+
         if (labelSeparator != null) {
             addParameter("labelseparator", findString(labelSeparator));
         }
@@ -715,6 +729,14 @@ public abstract class UIBean extends Component {
             addParameter("cssStyle", findString(cssStyle));
         }
 
+        if (cssErrorClass != null) {
+            addParameter("cssErrorClass", findString(cssErrorClass));
+        }
+
+        if (cssErrorStyle != null) {
+            addParameter("cssErrorStyle", findString(cssErrorStyle));
+        }
+
         if (title != null) {
             addParameter("title", findString(title));
         }
@@ -789,37 +811,37 @@ public abstract class UIBean extends Component {
             else {
                 LOG.warn("No ancestor Form found, javascript based tooltip will not work, however standard HTML tooltip using alt and title attribute will still work ");
             }
-            
+
             //TODO: this is to keep backward compatibility, remove once when tooltipConfig is dropped
             String  jsTooltipEnabled = (String) getParameters().get("jsTooltipEnabled");
             if (jsTooltipEnabled != null)
                 this.javascriptTooltip = jsTooltipEnabled;
-            
+
             //TODO: this is to keep backward compatibility, remove once when tooltipConfig is dropped
             String tooltipIcon = (String) getParameters().get("tooltipIcon");
-            if (tooltipIcon != null) 
+            if (tooltipIcon != null)
                 this.addParameter("tooltipIconPath", tooltipIcon);
             if (this.tooltipIconPath != null)
                 this.addParameter("tooltipIconPath", findString(this.tooltipIconPath));
-            
+
             //TODO: this is to keep backward compatibility, remove once when tooltipConfig is dropped
             String tooltipDelayParam = (String) getParameters().get("tooltipDelay");
-            if (tooltipDelayParam != null) 
+            if (tooltipDelayParam != null)
                 this.addParameter("tooltipDelay", tooltipDelayParam);
             if (this.tooltipDelay != null)
                 this.addParameter("tooltipDelay", findString(this.tooltipDelay));
-            
+
             if (this.javascriptTooltip != null) {
                 Boolean jsTooltips = (Boolean) findValue(this.javascriptTooltip, Boolean.class);
                 //TODO use a Boolean model when tooltipConfig is dropped
                 this.addParameter("jsTooltipEnabled", jsTooltips.toString());
-                
+
                 if (form != null)
                     form.addParameter("hasTooltip", jsTooltips);
                 if (this.tooltipCssClass != null)
                     this.addParameter("tooltipCssClass", findString(this.tooltipCssClass));
             }
-            
+
 
         }
 
@@ -994,6 +1016,16 @@ public abstract class UIBean extends Component {
         this.cssStyle = cssStyle;
     }
 
+    @StrutsTagAttribute(description="The css error class to use for element")
+    public void setCssErrorClass(String cssErrorClass) {
+        this.cssErrorClass = cssErrorClass;
+    }
+
+    @StrutsTagAttribute(description="The css error style definitions for element to use")
+    public void setCssErrorStyle(String cssErrorStyle) {
+        this.cssErrorStyle = cssErrorStyle;
+    }
+
     @StrutsTagAttribute(description="Set the html title attribute on rendered html element")
     public void setTitle(String title) {
         this.title = title;
@@ -1008,7 +1040,7 @@ public abstract class UIBean extends Component {
     public void setLabel(String label) {
         this.label = label;
     }
-    
+
     @StrutsTagAttribute(description="String that will be appended to the labe", defaultValue=":")
     public void setLabelSeparator(String labelseparator) {
         this.labelSeparator = labelseparator;

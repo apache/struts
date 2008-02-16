@@ -36,7 +36,9 @@ import org.apache.struts2.views.jsp.ComponentTagSupport;
  */
 public abstract class AbstractUITag extends ComponentTagSupport implements DynamicAttributes {
     protected String cssClass;
+    protected String cssErrorClass;
     protected String cssStyle;
+    protected String cssErrorStyle;
     protected String title;
     protected String disabled;
     protected String label;
@@ -66,7 +68,7 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
     protected String onchange;
     protected String accesskey;
     protected String id;
-    
+
     protected String key;
 
     // tooltip attributes
@@ -85,8 +87,9 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
 
         UIBean uiBean = (UIBean) component;
         uiBean.setCssClass(cssClass);
-        uiBean.setCssClass(cssClass);
         uiBean.setCssStyle(cssStyle);
+        uiBean.setCssErrorClass(cssErrorClass);
+        uiBean.setCssErrorStyle(cssErrorStyle);
         uiBean.setTitle(title);
         uiBean.setDisabled(disabled);
         uiBean.setLabel(label);
@@ -123,20 +126,28 @@ public abstract class AbstractUITag extends ComponentTagSupport implements Dynam
         uiBean.setAccesskey(accesskey);
         uiBean.setKey(key);
         uiBean.setId(id);
-	
+
         uiBean.setDynamicAttributes(dynamicAttributes);
     }
 
     public void setId(String id) {
         this.id = id;
     }
-    
+
     public void setCssClass(String cssClass) {
         this.cssClass = cssClass;
     }
 
     public void setCssStyle(String cssStyle) {
         this.cssStyle = cssStyle;
+    }
+
+    public void setCssErrorClass(String cssErrorClass) {
+        this.cssErrorClass = cssErrorClass;
+    }
+
+    public void setCssErrorStyle(String cssErrorStyle) {
+        this.cssErrorStyle = cssErrorStyle;
     }
 
     public void setTitle(String title) {

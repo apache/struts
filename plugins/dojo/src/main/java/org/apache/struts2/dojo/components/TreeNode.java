@@ -61,17 +61,17 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <pre>
  * <!-- START SNIPPET: example -->
  *
- * &lt;-- statically --&gt;
+ * &lt;-- Creating tree statically using hard-coded data. --&gt;
  * &lt;s:tree id="..." label="..."&gt;
  *    &lt;s:treenode id="..." label="..." /&gt;
  *    &lt;s:treenode id="..." label="..."&gt;
  *        &lt;s:treenode id="..." label="..." /&gt;
  *        &lt;s:treenode id="..." label="..." /&gt;
- *    &;lt;/s:treenode&gt;
+ *    &lt;/s:treenode&gt;
  *    &lt;s:treenode id="..." label="..." /&gt;
  * &lt;/s:tree&gt;
  *
- * &lt;-- dynamically --&gt;
+ * &lt;-- Creating tree dynamically using data from backing action. --&gt;
  * &lt;s:tree
  *          id="..."
  *          rootNode="..."

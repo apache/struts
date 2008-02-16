@@ -83,7 +83,10 @@ public final class StrutsConstants {
     
     /** Cache model instances at BeanWrapper level */
     public static final String STRUTS_FREEMARKER_BEANWRAPPER_CACHE = "struts.freemarker.beanwrapperCache";
-
+    
+    /** Maximum strong sizing for MruCacheStorage for freemarker */
+    public static final String STRUTS_FREEMARKER_MRU_MAX_STRONG_SIZE = "struts.freemarker.mru.max.strong.size";
+    
     /** org.apache.struts2.views.velocity.VelocityManager implementation class */
     public static final String STRUTS_VELOCITY_MANAGER_CLASSNAME = "struts.velocity.manager.classname";
 
@@ -171,10 +174,10 @@ public final class StrutsConstants {
     /** The {@link com.opensymphony.xwork2.util.ValueStackFactory} implementation class */
     public static final String STRUTS_VALUESTACKFACTORY = "struts.valueStackFactory";
 
-    /** The {@link com.opensymphony.xwork2.reflection.ReflectionProvider} implementation class */
+    /** The {@link com.opensymphony.xwork2.util.reflection.ReflectionProvider} implementation class */
     public static final String STRUTS_REFLECTIONPROVIDER = "struts.reflectionProvider";
 
-    /** The {@link com.opensymphony.xwork2.reflection.ReflectionContextFactory} implementation class */
+    /** The {@link com.opensymphony.xwork2.util.reflection.ReflectionContextFactory} implementation class */
     public static final String STRUTS_REFLECTIONCONTEXTFACTORY = "struts.reflectionContextFactory";
     
     /** The {@link com.opensymphony.xwork2.util.PatternMatcher} implementation class */

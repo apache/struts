@@ -121,6 +121,7 @@ public class FreemarkerManager {
     private String encoding;
     private boolean altMapWrapper;
     private boolean cacheBeanWrapper;
+    private int mruMaxStrongSize;
     private Map<String,TagLibrary> tagLibraries;
     
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
@@ -136,6 +137,11 @@ public class FreemarkerManager {
     @Inject(StrutsConstants.STRUTS_FREEMARKER_BEANWRAPPER_CACHE)
     public void setCacheBeanWrapper(String val) {
         cacheBeanWrapper = "true".equals(val);
+    }
+    
+    @Inject(StrutsConstants.STRUTS_FREEMARKER_MRU_MAX_STRONG_SIZE)
+    public void setMruMaxStrongSize(String size) {
+        mruMaxStrongSize = Integer.parseInt(size);
     }
     
     @Inject
@@ -305,6 +311,10 @@ public class FreemarkerManager {
         configuration.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
 
         configuration.setObjectWrapper(getObjectWrapper());
+        
+        if( mruMaxStrongSize > 0 ) {
+            configuration.setSetting(freemarker.template.Configuration.CACHE_STORAGE_KEY, "strong:" + mruMaxStrongSize);
+        }
 
         if (encoding != null) {
             configuration.setDefaultEncoding(encoding);

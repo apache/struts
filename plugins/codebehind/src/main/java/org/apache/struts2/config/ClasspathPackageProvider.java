@@ -480,7 +480,9 @@ public class ClasspathPackageProvider implements PackageProvider {
                     for (int i = 0; i < results.value().length; i++) {
                         Result result = results.value()[i];
                         ResultConfig config = createResultConfig(result);
-                        put((K)config.getName(), (V)config);
+						if (!containsKey((K)config.getName())) {
+                            put((K)config.getName(), (V)config);
+                        }
                     }
                 }
 
@@ -488,7 +490,9 @@ public class ClasspathPackageProvider implements PackageProvider {
                 Result result = (Result) actionClass.getAnnotation(Result.class);
                 if (result != null) {
                     ResultConfig config = createResultConfig(result);
-                    put((K)config.getName(), (V)config);
+                    if (!containsKey((K)config.getName())) {
+                        put((K)config.getName(), (V)config);
+                    }
                 }
 
                 actionClass = actionClass.getSuperclass();

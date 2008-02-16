@@ -34,6 +34,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -161,5 +162,25 @@ public class ServletActionRedirectResultTest extends StrutsTestCase {
         assertEquals("/myNamespace/myAction.action?param1=value+1&param2=value+2&param3=value+3", res.getRedirectedUrl());
 
         control.verify();
+    }
+
+    public void testBuildResultWithParameter() throws Exception {
+
+        ResultConfig resultConfig = new ResultConfig.Builder("", ServletActionRedirectResult.class.getName())
+            .addParam("actionName", "someActionName")
+            .addParam("namespace", "someNamespace")
+            .addParam("encode", "true")
+            .addParam("parse", "true")
+            .addParam("location", "someLocation")
+            .addParam("prependServletContext", "true")
+            .addParam("method", "someMethod")
+            .addParam("param1", "value 1")
+            .addParam("param2", "value 2")
+            .addParam("param3", "value 3")
+            .build();
+
+        ObjectFactory factory = container.getInstance(ObjectFactory.class);
+        ServletActionRedirectResult result = (ServletActionRedirectResult) factory.buildResult(resultConfig, new HashMap());
+        assertNotNull(result);
     }
 }

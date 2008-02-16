@@ -408,6 +408,7 @@ public class XSLTResult implements Result {
                 LOG.debug("Preparing XSLT stylesheet templates: " + path);
 
                 TransformerFactory factory = TransformerFactory.newInstance();
+                factory.setURIResolver(getURIResolver());
                 templates = factory.newTemplates(new StreamSource(resource.openStream()));
                 templatesCache.put(path, templates);
             }

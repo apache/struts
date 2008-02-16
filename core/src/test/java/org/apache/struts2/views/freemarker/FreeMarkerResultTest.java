@@ -20,6 +20,7 @@
  */
 package org.apache.struts2.views.freemarker;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -102,8 +103,8 @@ public class FreeMarkerResultTest extends StrutsTestCase {
         invocation = new MockActionInvocation();
         invocation.setStack(stack);
         invocation.setInvocationContext(context);
-        servletContext.setRealPath(FreeMarkerResultTest.class.getResource(
-            "someFreeMarkerFile.ftl").getFile());
+        servletContext.setRealPath(new File(FreeMarkerResultTest.class.getResource(
+					"someFreeMarkerFile.ftl").toURI()).toURL().getFile());
     }
 
     protected void tearDown() throws Exception {

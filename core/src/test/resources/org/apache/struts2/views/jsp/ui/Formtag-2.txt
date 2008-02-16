@@ -35,6 +35,7 @@
         clearErrorMessages(form);
         clearErrorLabels(form);
         var errors = false;
+        var continueValidation=true;
         return !errors; }
 </script>
 

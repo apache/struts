@@ -35,12 +35,13 @@
         clearErrorMessages(form);
         clearErrorLabels(form);
         var errors = false;
+        var continueValidation = true;
          //fieldname:myUpDownSelectTag
          //validatorname:int
          if(form.elements['myUpDownSelectTag']){
             field=form.elements['myUpDownSelectTag'];
             var error="bar must be between 6000 and 10000.";
-            if(field.value!=null){
+            if(continueValidation && field.value!=null){
                 if(parseInt(field.value)<6000||parseInt(field.value)>10000){
                     addError(field,error);
                     errors=true;

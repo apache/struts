@@ -121,9 +121,16 @@ public class Restful2ActionMapper extends DefaultActionMapper {
 
         String actionName = mapping.getName();
 
+        int lastSlashPos = actionName.lastIndexOf('/');
+        String id = null;
+        if (lastSlashPos > -1 && actionName != null) {
+            id = actionName.substring(lastSlashPos+1);
+        }
+
+
         // Only try something if the action name is specified
         if (actionName != null && actionName.length() > 0) {
-            int lastSlashPos = actionName.lastIndexOf('/');
+
 
             // If a method hasn't been explicitly named, try to guess using ReST-style patterns
             if (mapping.getMethod() == null) {
@@ -140,8 +147,6 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                     }
 
                 } else if (lastSlashPos > -1) {
-                    String id = actionName.substring(lastSlashPos+1);
-
                     // Viewing the form to create a new item e.g. foo/new
                     if (isGet(request) && "new".equals(id)) {
                         mapping.setMethod("editNew");
@@ -159,17 +164,18 @@ public class Restful2ActionMapper extends DefaultActionMapper {
                         mapping.setMethod("update");
                     }
                     
-                    if (idParameterName != null) {
-                    	if (mapping.getParams() == null) {
-                            mapping.setParams(new HashMap());
-                        }
-                    	mapping.getParams().put(idParameterName, id);
-                    }
                 }
                 
                 if (idParameterName != null && lastSlashPos > -1) {
                 	actionName = actionName.substring(0, lastSlashPos);
                 }
+            }
+
+            if (idParameterName != null && id != null) {
+                if (mapping.getParams() == null) {
+                    mapping.setParams(new HashMap());
+                }
+                mapping.getParams().put(idParameterName, id);
             }
 
             // Try to determine parameters from the url before the action name

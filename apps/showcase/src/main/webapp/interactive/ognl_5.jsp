@@ -5,33 +5,21 @@
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 %>
 <p>
-    <b>Static fields</b>
+    <b>Calling methods</b>
 </p>
 <p>
-   Static fields can easily be accessed in OGNL expressions using the notation 
-   <i>@some.package.ClassName@PROPERTY_NAME</i> for properties, and <i>@some.package.ClassName@METHOD_NAME()</i>
-   for methods.
+  OGNL follows Java's syntax to execute a method.
 </p>
-<p>To access the value of the <i>CONSTANT</i> field in the ExampleAction type:</p>
+<p>To execute the <i>getTitle()</i> method on the <i>book</i> object type:</p>
 <p>
-    <i id="example0">
-        @org.apache.struts2.showcase.action.ExampleAction@CONSTANT
+    <i id="example">
+        book.getTitle() 
     </i>
 </p>
 <p>
-    on the OGNL console and hit enter.  <a href="#" onclick="execOgnl('example0')">Do it for me</a>
-</p>
-<p>To execute the static method <i>getCurrentDate</i> in the ExampleAction type:</p>
-<p>
-    <i id="example1">
-        @org.apache.struts2.showcase.action.ExampleAction@getCurrentDate()
-    </i>
-</p>
-<p>
-    on the OGNL console and hit enter.  <a href="#" onclick="execOgnl('example1')">Do it for me</a>
+    on the OGNL console and hit enter.  <a href="#" onclick="execOgnl()">Do it for me</a>
 </p>
 <br/>
 <p>
-    <a href="#" onclick="window.open('http://www.ognl.org/2.6.9/Documentation/html/LanguageGuide/staticFields.html')">[More details on static fields]</a>
-    <a href="#" onclick="window.open('http://www.ognl.org/2.6.9/Documentation/html/LanguageGuide/staticMethods.html')">[More details on static methods]</a>
+    <a href="#" onclick="window.open('http://www.ognl.org/2.6.9/Documentation/html/LanguageGuide/methods.html')">[More details]</a>
 </p>

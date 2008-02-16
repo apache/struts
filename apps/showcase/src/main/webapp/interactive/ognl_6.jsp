@@ -5,21 +5,39 @@
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 %>
 <p>
-    <b>Calling methods</b>
+    <b>Expressions</b>
 </p>
 <p>
-  OGNL follows Java's syntax to execute a method.
+  OGNL supports expressions using primitive values.
 </p>
-<p>To execute the <i>getTitle()</i> method on the <i>book</i> object type:</p>
+<p>Arithmetic:</p>
 <p>
-    <i id="example">
-        book.getTitle() 
+    <i id="example0">
+        (6 - 2)/2
     </i>
 </p>
 <p>
-    on the OGNL console and hit enter.  <a href="#" onclick="execOgnl()">Do it for me</a>
+    on the OGNL console and hit enter.  <a href="#" onclick="execOgnl('example0')">Do it for me</a>
 </p>
-<br/>
+<p>Logical:</p>
 <p>
-    <a href="#" onclick="window.open('http://www.ognl.org/2.6.9/Documentation/html/LanguageGuide/methods.html')">[More details]</a>
+    <i id="example1">
+        (true || false) and true
+    </i>
+</p>
+<p>
+    on the OGNL console and hit enter.  <a href="#" onclick="execOgnl('example1')">Do it for me</a>
+</p>
+<p>Equality:</p>
+<p>
+    <i id="example2">
+        'a' == 'a'
+    </i>
+</p>
+<p>
+    on the OGNL console and hit enter.  <a href="#" onclick="execOgnl('example2')">Do it for me</a>
+</p>
+<p>
+    OGNL supports many more operators and expressions, see <a href="#" onclick="window.open('http://www.ognl.org/2.6.9/Documentation/html/LanguageGuide/apa.html#operators')">[Operators Reference]</a>
+    for more details.
 </p>

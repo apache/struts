@@ -180,6 +180,12 @@
             <artifactId>jwebunit-htmlunit-plugin</artifactId>
             <version>1.4.1</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 		
 		<dependency>

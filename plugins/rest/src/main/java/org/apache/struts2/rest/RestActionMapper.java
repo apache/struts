@@ -279,6 +279,10 @@ public class RestActionMapper extends DefaultActionMapper {
             // namespace anyway if not found in root namespace.
             namespace = "/";
             name = uri.substring(lastSlash + 1);
+        } else if (alwaysSelectFullNamespace) {
+            // Simply select the namespace as everything before the last slash
+            namespace = uri.substring(0, lastSlash);
+            name = uri.substring(lastSlash + 1);
         } else {
             // Try to find the namespace in those defined, defaulting to ""
             Configuration config = configManager.getConfiguration();

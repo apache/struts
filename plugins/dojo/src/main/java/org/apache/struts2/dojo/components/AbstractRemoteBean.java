@@ -109,8 +109,10 @@ public abstract class AbstractRemoteBean extends ClosingUIBean implements Remote
             addParameter("parseContent", findValue(parseContent, Boolean.class));
         else
             addParameter("parseContent", true);
+
+        Boolean parseContent = (Boolean)stack.getContext().get(Head.PARSE_CONTENT);
+        boolean generateId = (parseContent != null ? !parseContent : false);
         
-        boolean generateId = !(Boolean)stack.getContext().get(Head.PARSE_CONTENT);
         addParameter("pushId", generateId);
         if ((this.id == null || this.id.length() == 0) && generateId) {
             // resolves Math.abs(Integer.MIN_VALUE) issue reported by FindBugs 

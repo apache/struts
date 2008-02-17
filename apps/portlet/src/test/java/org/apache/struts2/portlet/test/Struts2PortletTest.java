@@ -5,7 +5,7 @@ public class Struts2PortletTest extends BasePortletTest {
 	private final static String PORTLET_NAME = "StrutsPortlet";
 
     public void testNone() {}
-/*	
+	
 	public void testIndexPage() throws Exception {
 		beginAt("pluto/index.jsp");
 		assertTextPresent("Welcome to the Struts example portlet");
@@ -76,7 +76,7 @@ public class Struts2PortletTest extends BasePortletTest {
 		switchEdit();
 		assertTextPresent("Back to view mode");
 	}
-*/
+
 	@Override
 	public String getPortletName() {
 		return PORTLET_NAME;

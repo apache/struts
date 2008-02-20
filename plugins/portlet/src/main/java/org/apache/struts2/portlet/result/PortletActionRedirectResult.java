@@ -1,5 +1,5 @@
 /*
- * $Id: $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -83,7 +83,7 @@ import com.opensymphony.xwork2.inject.Inject;
  *  &lt;package name=&quot;public&quot; extends=&quot;struts-default&quot;&gt;
  *      &lt;action name=&quot;login&quot; class=&quot;...&quot;&gt;
  *          &lt;!-- Redirect to another namespace --&gt;
- *          &lt;result type=&quot;redirect-action&quot;&gt;
+ *          &lt;result type=&quot;redirectAction&quot;&gt;
  *              &lt;param name=&quot;actionName&quot;&gt;dashboard&lt;/param&gt;
  *              &lt;param name=&quot;namespace&quot;&gt;/secure&lt;/param&gt;
  *          &lt;/result&gt;
@@ -94,7 +94,7 @@ import com.opensymphony.xwork2.inject.Inject;
  *      &lt;-- Redirect to an action in the same namespace --&gt;
  *      &lt;action name=&quot;dashboard&quot; class=&quot;...&quot;&gt;
  *          &lt;result&gt;dashboard.jsp&lt;/result&gt;
- *          &lt;result name=&quot;error&quot; type=&quot;redirect-action&quot;&gt;error&lt;/result&gt;
+ *          &lt;result name=&quot;error&quot; type=&quot;redirectAction&quot;&gt;error&lt;/result&gt;
  *      &lt;/action&gt;
  * 
  *      &lt;action name=&quot;error&quot; class=&quot;...&quot;&gt;
@@ -105,11 +105,11 @@ import com.opensymphony.xwork2.inject.Inject;
  *  &lt;package name=&quot;passingRequestParameters&quot; extends=&quot;struts-default&quot; namespace=&quot;/passingRequestParameters&quot;&gt;
  *     &lt;-- Pass parameters (reportType, width and height) --&gt;
  *     &lt;!--
- *     The redirect-action url generated will be :
+ *     The redirectAction url generated will be :
  *     /genReport/generateReport.action?reportType=pie&amp;width=100&amp;height=100
  *     --&gt;
  *     &lt;action name=&quot;gatherReportInfo&quot; class=&quot;...&quot;&gt;
- *        &lt;result name=&quot;showReportResult&quot; type=&quot;redirect-action&quot;&gt;
+ *        &lt;result name=&quot;showReportResult&quot; type=&quot;redirectAction&quot;&gt;
  *           &lt;param name=&quot;actionName&quot;&gt;generateReport&lt;/param&gt;
  *           &lt;param name=&quot;namespace&quot;&gt;/genReport&lt;/param&gt;
  *           &lt;param name=&quot;reportType&quot;&gt;pie&lt;/param&gt;

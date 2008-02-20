@@ -127,12 +127,13 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
             //action errors
             if (validationAware.hasActionErrors()) {
                 sb.append("\"errors\":");
-                sb.append(buildArray(validationAware.getActionErrors()));
-                sb.append(",");
+                sb.append(buildArray(validationAware.getActionErrors()));                
             }
 
             //field errors
             if (validationAware.hasFieldErrors()) {
+                if (validationAware.hasActionErrors())
+                    sb.append(",");
                 sb.append("\"fieldErrors\": {");
                 Map<String, List<String>> fieldErrors = validationAware
                     .getFieldErrors();

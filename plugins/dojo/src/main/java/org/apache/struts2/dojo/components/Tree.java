@@ -253,8 +253,11 @@ public class Tree extends ClosingUIBean {
             addParameter("href", findString(href));
         if (errorNotifyTopics != null)
             addParameter("errorNotifyTopics", findString(errorNotifyTopics));
-        
-        boolean generateId = !(Boolean)stack.getContext().get(Head.PARSE_CONTENT);
+                
+        // generate a random ID if not explicitly set and not parsing the content
+        Boolean parseContent = (Boolean)stack.getContext().get(Head.PARSE_CONTENT);
+        boolean generateId = (parseContent != null ? !parseContent : true);
+
         addParameter("pushId", generateId);
         if ((this.id == null || this.id.length() == 0) && generateId) {
             // resolves Math.abs(Integer.MIN_VALUE) issue reported by FindBugs 

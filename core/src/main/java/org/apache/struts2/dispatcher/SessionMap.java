@@ -56,7 +56,7 @@ public class SessionMap extends AbstractMap implements Serializable {
     public SessionMap(HttpServletRequest request) {
         // note, holding on to this request and relying on lazy session initalization will not work
         // if you are running your action invocation in a background task, such as using the
-        // "exec-and-wait" interceptor
+        // "execAndWait" interceptor
         this.request = request;
         this.session = request.getSession(false);
     }

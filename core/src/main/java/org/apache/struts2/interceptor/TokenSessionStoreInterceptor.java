@@ -81,7 +81,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  * <!-- START SNIPPET: example -->
  *
  * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
- *     &lt;interceptor-ref name="token-session/&gt;
+ *     &lt;interceptor-ref name="tokenSession/&gt;
  *     &lt;interceptor-ref name="basicStack"/&gt;
  *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;
@@ -89,9 +89,9 @@ import com.opensymphony.xwork2.util.ValueStack;
  * &lt;-- In this case, myMethod of the action class will not
  *        get checked for invalidity of token --&gt;
  * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
- *     &lt;interceptor-ref name="token-session&gt;
+ *     &lt;interceptor-ref name="tokenSession&gt;
  *         &lt;param name="excludeMethods"&gt;myMethod&lt;/param&gt;
- *     &lt;/interceptor-ref name="token-session&gt;
+ *     &lt;/interceptor-ref name="tokenSession&gt;
  *     &lt;interceptor-ref name="basicStack"/&gt;
  *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;

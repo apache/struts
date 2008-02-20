@@ -66,7 +66,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * <!-- START SNIPPET: example -->
  *
  * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
- *     &lt;interceptor-ref name="create-session"/&gt;
+ *     &lt;interceptor-ref name="createSession"/&gt;
  *     &lt;interceptor-ref name="defaultStack"/&gt;
  *     &lt;result name="input"&gt;input_with_token_tag.ftl&lt;/result&gt;
  * &lt;/action&gt;

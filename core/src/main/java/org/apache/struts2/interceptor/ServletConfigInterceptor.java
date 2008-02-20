@@ -93,7 +93,7 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
  * <pre>
  * <!-- START SNIPPET: example -->
  * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
- *     &lt;interceptor-ref name="servlet-config"/&gt;
+ *     &lt;interceptor-ref name="servletConfig"/&gt;
  *     &lt;interceptor-ref name="basicStack"/&gt;
  *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;

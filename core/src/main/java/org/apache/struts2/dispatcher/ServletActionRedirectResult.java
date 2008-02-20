@@ -75,7 +75,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
  * &lt;package name="public" extends="struts-default"&gt;
  *     &lt;action name="login" class="..."&gt;
  *         &lt;!-- Redirect to another namespace --&gt;
- *         &lt;result type="redirect-action"&gt;
+ *         &lt;result type="redirectAction"&gt;
  *             &lt;param name="actionName"&gt;dashboard&lt;/param&gt;
  *             &lt;param name="namespace"&gt;/secure&lt;/param&gt;
  *         &lt;/result&gt;
@@ -86,7 +86,7 @@ import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
  *     &lt;-- Redirect to an action in the same namespace --&gt;
  *     &lt;action name="dashboard" class="..."&gt;
  *         &lt;result&gt;dashboard.jsp&lt;/result&gt;
- *         &lt;result name="error" type="redirect-action"&gt;error&lt;/result&gt;
+ *         &lt;result name="error" type="redirectAction"&gt;error&lt;/result&gt;
  *     &lt;/action&gt;
  *
  *     &lt;action name="error" class="..."&gt;
@@ -97,11 +97,11 @@ import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
  * &lt;package name="passingRequestParameters" extends="struts-default" namespace="/passingRequestParameters"&gt;
  *    &lt;-- Pass parameters (reportType, width and height) --&gt;
  *    &lt;!--
- *    The redirect-action url generated will be :
+ *    The redirectAction url generated will be :
  *    /genReport/generateReport.action?reportType=pie&width=100&height=100
  *    --&gt;
  *    &lt;action name="gatherReportInfo" class="..."&gt;
- *       &lt;result name="showReportResult" type="redirect-action"&gt;
+ *       &lt;result name="showReportResult" type="redirectAction"&gt;
  *          &lt;param name="actionName"&gt;generateReport&lt;/param&gt;
  *          &lt;param name="namespace"&gt;/genReport&lt;/param&gt;
  *          &lt;param name="reportType"&gt;pie&lt;/param&gt;

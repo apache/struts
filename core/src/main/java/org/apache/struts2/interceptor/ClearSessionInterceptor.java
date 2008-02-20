@@ -63,7 +63,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * <!-- START SNIPPET: example -->
  *
  * &lt;action name="exampleAction" class="com.examples.ExampleAction"&gt;
- *     &lt;interceptor-ref name="clear-session"/&gt;
+ *     &lt;interceptor-ref name="clearSession"/&gt;
  *     &lt;interceptor-ref name="defaultStack"/&gt;
  *     &lt;result name="success"&gt;example.jsp&lt;/result&gt;
  * &lt;/action&gt;

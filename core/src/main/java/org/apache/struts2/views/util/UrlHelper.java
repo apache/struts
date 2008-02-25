@@ -188,10 +188,14 @@ public class UrlHelper {
             buildParametersString(params, link, "&");
         }
 
-        String result;
+        String result = link.toString();
+
+        while (result.indexOf("<script>") > 0) {
+            result = result.replaceAll("<script>", "script");
+        }
 
         try {
-            result = encodeResult ? response.encodeURL(link.toString()) : link.toString();
+             result = encodeResult ? response.encodeURL(result) : result;
         } catch (Exception ex) {
             // Could not encode the URL for some reason
             // Use it unchanged

@@ -60,7 +60,7 @@ public abstract class AbstractRemoteCallUIBean extends ClosingUIBean implements 
         super.evaluateExtraParams();
 
         if (href != null)
-            addParameter("href", findString(href));
+             addParameter("href", ensureAttributeSafelyNotEscaped(findString(href)));
         if (errorText != null)
             addParameter("errorText", findString(errorText));
         if (loadingText != null)

@@ -790,6 +790,20 @@ public abstract class UIBean extends Component {
         }
     }
 
+    /**
+     * Ensures an unescaped attribute value cannot be vulnerable to XSS attacks
+     *
+     * @param val The value to check
+     * @return The escaped value
+     */
+    protected String ensureAttributeSafelyNotEscaped(String val) {
+        if (val != null) {
+            return val.replaceAll("\"", "&#34;");
+        } else {
+            return "";
+        }
+    }
+
     protected void evaluateExtraParams() {
     }
 

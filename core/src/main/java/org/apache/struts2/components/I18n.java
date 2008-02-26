@@ -102,7 +102,7 @@ public class I18n extends Component {
 
         try {
             String name = this.findString(this.name, "name", "Resource bundle name is required. Example: foo or foo_en");
-            ResourceBundle bundle = (ResourceBundle) findValue("texts('" + name + "')");
+            ResourceBundle bundle = (ResourceBundle) findValue("getTexts('" + name + "')");
 
             if (bundle == null) {
                 bundle = LocalizedTextUtil.findResourceBundle(name, (Locale) getStack().getContext().get(ActionContext.LOCALE));

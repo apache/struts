@@ -96,7 +96,7 @@ public class DefaultHttpHeaders implements HttpHeaders {
         if (lastModified != null) {
             response.setDateHeader("Last-Modified", lastModified.getTime());
         }
-        if (etag == null && !noETag) {
+        if (etag == null && !noETag && target != null) {
             etag = String.valueOf(target.hashCode());
         }
         if (etag != null) {

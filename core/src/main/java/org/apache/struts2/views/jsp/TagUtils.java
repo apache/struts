@@ -52,7 +52,6 @@ public class TagUtils {
         ValueStack stack = (ValueStack) req.getAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY);
 
         if (stack == null) {
-            stack = Dispatcher.getInstance().getContainer().getInstance(ValueStackFactory.class).createValueStack();
 
             HttpServletResponse res = (HttpServletResponse) pageContext.getResponse();
             Dispatcher du = Dispatcher.getInstance();
@@ -61,6 +60,7 @@ public class TagUtils {
                         "using Struts tags without the associated filter. Struts tags are only usable when the request "+
                         "has passed through its servlet filter, which initializes the Struts dispatcher needed for this tag.");
             }
+            stack = du.getContainer().getInstance(ValueStackFactory.class).createValueStack();
             Map extraContext = du.createContextMap(new RequestMap(req),
                     req.getParameterMap(),
                     new SessionMap(req),

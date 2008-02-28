@@ -140,8 +140,33 @@ public class RestWorkflowInterceptor extends MethodFilterInterceptor {
 	private String inputResultName = Action.INPUT;
 	
 	private ContentTypeHandlerManager manager;
-	
-	@Inject
+
+    private String postMethodName = "create";
+    private String editMethodName = "edit";
+    private String newMethodName = "editNew";
+    private String putMethodName = "update";
+
+    @Inject(required=false,value="struts.mapper.postMethodName")
+    public void setPostMethodName(String postMethodName) {
+        this.postMethodName = postMethodName;
+    }
+
+    @Inject(required=false,value="struts.mapper.editMethodName")
+    public void setEditMethodName(String editMethodName) {
+        this.editMethodName = editMethodName;
+    }
+
+    @Inject(required=false,value="struts.mapper.newMethodName")
+    public void setNewMethodName(String newMethodName) {
+        this.newMethodName = newMethodName;
+    }
+
+    @Inject(required=false,value="struts.mapper.putMethodName")
+    public void setPutMethodName(String putMethodName) {
+        this.putMethodName = putMethodName;
+    }
+
+    @Inject
 	public void setContentTypeHandlerManager(ContentTypeHandlerManager mgr) {
 	    this.manager = mgr;
 	}
@@ -174,10 +199,10 @@ public class RestWorkflowInterceptor extends MethodFilterInterceptor {
             	}
             	ActionMapping mapping = (ActionMapping) ActionContext.getContext().get(ServletActionContext.ACTION_MAPPING);
             	String method = inputResultName;
-                if ("create".equals(mapping.getMethod())) {
-                    method = "editNew";
-                } else if ("update".equals(mapping.getMethod())) {
-                    method = "edit";
+                if (postMethodName.equals(mapping.getMethod())) {
+                   method = newMethodName;
+                } else if (putMethodName.equals(mapping.getMethod())) {
+                   method = editMethodName;
                 }
                 
                 

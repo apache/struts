@@ -40,14 +40,15 @@ function clearErrorMessagesXHTML(form) {
 
     // clear out any rows with an "errorFor" attribute
     var rows = table.rows;
-    var rowsToDelete = new Array();
     if (rows == null){
         return;
     }
 
+    var rowsToDelete = new Array();
     for(var i = 0; i < rows.length; i++) {
         var r = rows[i];
-        if (r.getAttribute("errorFor")) {
+        // allow blank errorFor values on dojo markup
+        if (r.getAttribute("errorFor") != null) {
             rowsToDelete.push(r);
         }
     }
@@ -68,18 +69,28 @@ function clearErrorLabelsXHTML(form) {
     // set all labels back to the normal class
     var elements = form.elements;
     for (var i = 0; i < elements.length; i++) {
-        var e = elements[i];
-        //parent could be a row, or a cell
-        var parent = e.parentNode.parentNode;
+
+        var parentEl = elements[i];
+        // search for the parent table row, abort if the form is reached
+        // the form may contain "non-wrapped" inputs inserted by Dojo
+        while (parentEl.nodeName.toUpperCase() != "TR" && parentEl.nodeName.toUpperCase() != "FORM") {
+            parentEl = parentEl.parentNode;
+        }
+        if (parentEl.nodeName.toUpperCase() == "FORM") {
+            parentEl = null;
+        }
+
          //if labelposition is 'top' the label is on the row above
-        if(parent.cells) {
-          var labelRow = parent.cells.length > 1 ? parent : StrutsUtils.previousElement(parent, "tr");
-          var cells = labelRow.cells;
-          if (cells && cells.length >= 1) {
-              var label = cells[0].getElementsByTagName("label")[0];
-              if (label) {
-                  label.setAttribute("class", "label");
-                  label.setAttribute("className", "label"); //ie hack cause ie does not support setAttribute
+        if(parentEl && parentEl.cells) {
+          var labelRow = parentEl.cells.length > 1 ? parentEl : StrutsUtils.previousElement(parentEl, "tr");
+          if (labelRow) {
+              var cells = labelRow.cells;
+              if (cells && cells.length >= 1) {
+                  var label = cells[0].getElementsByTagName("label")[0];
+                  if (label) {
+                      label.setAttribute("class", "label");
+                      label.setAttribute("className", "label"); //ie hack cause ie does not support setAttribute
+                  }
               }
           }
         }
@@ -93,8 +104,10 @@ function addError(e, errorText) {
 
 function addErrorXHTML(e, errorText) {
     try {
-        // clear out any rows with an "errorFor" of e.id
-        var row = (e.type ? e : e[0]).parentNode.parentNode;
+        var row = (e.type ? e : e[0]);
+        while(row.nodeName.toUpperCase() != "TR") {
+            row = row.parentNode;
+        }
         var table = row.parentNode;
         var error = document.createTextNode(errorText);
         var tr = document.createElement("tr");
@@ -108,7 +121,7 @@ function addErrorXHTML(e, errorText) {
         span.appendChild(error);
         td.appendChild(span);
         tr.appendChild(td);
-        tr.setAttribute("errorFor", e.id);;
+        tr.setAttribute("errorFor", e.id);
         table.insertBefore(tr, row);
 
         // update the label too

@@ -30,7 +30,7 @@
             <#assign itemKey = stack.findValue('top')/>
         </#if>
         <#if parameters.listValue?exists>
-            <#assign itemValue = stack.findString(parameters.listValue)?default("")/>
+            <#assign itemValue = stack.findString(parameters.listValue)/>
         <#else>
             <#assign itemValue = stack.findString('top')/>
         </#if>

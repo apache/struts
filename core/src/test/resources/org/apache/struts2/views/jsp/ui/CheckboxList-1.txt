@@ -5,7 +5,5 @@
 <label for="foo-1" class="checkboxLabel">world</label>
 <input type="checkbox" name="foo" value="foo" id="foo-2" title="mytitle" onchange="alert('foo');"/>
 <label for="foo-2" class="checkboxLabel">bar</label>
-<input type="checkbox" name="foo" value="baz" id="foo-3" title="mytitle" onchange="alert('foo');"/>
-<label for="foo-3" class="checkboxLabel"></label>
     </td>
 </tr>

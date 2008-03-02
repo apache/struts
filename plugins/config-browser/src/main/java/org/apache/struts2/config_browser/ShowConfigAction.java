@@ -48,7 +48,6 @@ public class ShowConfigAction extends ActionNamesAction {
     private PropertyDescriptor[] properties;
     private static Logger LOG = LoggerFactory.getLogger(ShowConfigAction.class);
     
-    private ConfigurationHelper configHelper;
     private ObjectFactory objectFactory;
     private ReflectionProvider reflectionProvider;
 

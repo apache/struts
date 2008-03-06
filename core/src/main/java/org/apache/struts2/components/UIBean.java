@@ -613,6 +613,7 @@ public abstract class UIBean extends Component {
     public void evaluateParams() {
         addParameter("templateDir", getTemplateDir());
         addParameter("theme", getTheme());
+        addParameter("dynamicAttributes", dynamicAttributes);
 
         String name = null;
 
@@ -844,8 +845,6 @@ public abstract class UIBean extends Component {
 
 
         }
-
-        addParameter("dynamicAttributes", dynamicAttributes);
 
         evaluateExtraParams();
     }

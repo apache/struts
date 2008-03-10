@@ -624,7 +624,9 @@ public abstract class UIBean extends Component {
             }
 
             if(this.label == null) {
-                this.label = "%{getText('"+ key +"')}";
+                // Escape the key prior to sending it down
+                String escaped = key.replace("'", "\\'");
+                this.label = "%{getText('" + escaped + "')}";
             }
 
         }

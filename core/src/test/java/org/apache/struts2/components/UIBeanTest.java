@@ -20,16 +20,15 @@
  */
 package org.apache.struts2.components;
 
+import java.util.Collections;
+import java.util.Map;
+
 import org.apache.struts2.StrutsTestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
-
-import java.util.Map;
-import java.util.Collections;
 
 /**
  *
@@ -52,7 +51,7 @@ public class UIBeanTest extends StrutsTestCase {
 
         assertEquals("txtFldId", txtFld.getParameters().get("id"));
     }
-    
+
     public void testPopulateComponentHtmlIdWithOgnl() throws Exception {
         ValueStack stack = ActionContext.getContext().getValueStack();
         MockHttpServletRequest req = new MockHttpServletRequest();
@@ -149,4 +148,22 @@ public class UIBeanTest extends StrutsTestCase {
         TextField txtFld = new TextField(stack, req, res);
         assertEquals("12", txtFld.getTheme());
     }
+
+//    I couldn't figure out how to make this test work. Bailing for now.
+//    public void testEscapeLabel() throws Exception {
+//        ValueStack stack = ActionContext.getContext().getValueStack();
+//        MockHttpServletRequest req = new MockHttpServletRequest();
+//        MockHttpServletResponse res = new MockHttpServletResponse();
+//        stack.push(this);
+//
+//        TextField txtFld = new TextField(stack, req, res);
+//        txtFld.setKey("test['foo']");
+//        txtFld.evaluateParams();
+//        assertEquals("test_label", txtFld.getParameters().get("label"));
+//    }
+//
+//    public String getText(String key) {
+//        assertEquals("test[\\'foo\\']", key);
+//        return "test_label";
+//    }
 }

@@ -63,7 +63,7 @@ import org.apache.struts2.dispatcher.mapper.ActionMapping;
  * <pre>
  * <!-- START SNIPPET: example -->
  * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
- *     &lt;interceptor-ref name="mapping-params"/&gt;
+ *     &lt;interceptor-ref name="mappingParams"/&gt;
  *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
  * &lt;/action&gt;
  * <!-- END SNIPPET: example -->

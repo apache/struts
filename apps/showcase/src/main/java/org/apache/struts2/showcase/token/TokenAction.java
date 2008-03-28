@@ -26,7 +26,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
- * Example to illustrate the <code>token</code> and <code>token-session</code> interceptor.
+ * Example to illustrate the <code>token</code> and <code>tokenSession</code> interceptor.
  *
  */
 public class TokenAction extends ActionSupport {

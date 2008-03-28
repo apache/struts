@@ -108,7 +108,7 @@ public class TestConfigurationProvider implements ConfigurationProvider {
         ActionConfig tokenSessionActionConfig = new ActionConfig.Builder("", "", TestAction.class.getName())
             .addResultConfig(new ResultConfig.Builder("invalid.token", MockResult.class.getName()).build())
             .addResultConfig(new ResultConfig.Builder("success", MockResult.class.getName()).build())
-            .addInterceptor(new InterceptorMapping("token-session", new TokenSessionStoreInterceptor()))
+            .addInterceptor(new InterceptorMapping("tokenSession", new TokenSessionStoreInterceptor()))
             .build();
 
         PackageConfig defaultPackageConfig = new PackageConfig.Builder("")

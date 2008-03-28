@@ -32,11 +32,11 @@
     
     <package name="config-browser" extends="struts-default" namespace="/config-browser">
         <interceptors>
-            <interceptor-stack name="config-browser-default">
+            <interceptor-stack name="configBrowserDefault">
                 <interceptor-ref name="validationWorkflowStack"/>
             </interceptor-stack>
         </interceptors>
-        <default-interceptor-ref name="config-browser-default"/>
+        <default-interceptor-ref name="configBrowserDefault"/>
 
         <global-results>
             <result name="error" type="freemarker">/config-browser/error.ftl</result>

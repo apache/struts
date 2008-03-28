@@ -44,7 +44,7 @@
                  may do more than you need. Also, the ordering can be
                  switched around (ex: if you wish to have your servlet-related
                  objects applied before prepare() is called, you'd need to move
-                 servlet-config interceptor up.
+                 servletConfig interceptor up.
 
                  This stack also excludes from the normal validation and workflow
                  the method names input, back, and cancel. These typically are

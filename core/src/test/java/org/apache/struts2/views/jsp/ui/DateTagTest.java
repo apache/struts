@@ -229,6 +229,7 @@ public class DateTagTest extends AbstractTagTest {
         Calendar future = Calendar.getInstance();
         future.setTime(now);
         future.add(Calendar.YEAR, 2);
+        future.add(Calendar.DATE, 1);
         future.add(Calendar.SECOND, 5); // always add a little slack otherwise we could calculate wrong
 
         context.put("myDate", future.getTime());

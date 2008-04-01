@@ -260,7 +260,7 @@ public class StreamResult extends StrutsResultSupport {
 
         String contentType = stack.findString("contentType");
         if (contentType != null) {
-            setContentLength(contentType);
+            setContentType(contentType);
         }
 
         String inputName = stack.findString("inputName");

@@ -297,6 +297,8 @@
        </interceptors>
 
         <default-interceptor-ref name="defaultStack"/>
+
+        <default-class-ref class="com.opensymphony.xwork2.ActionSupport" />
     </package>
 
 </struts>

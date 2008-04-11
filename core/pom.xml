@@ -334,18 +334,8 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <scope>compile</scope>
+            <scope>test</scope>
             <version>3.8.2</version>
-            <!-- compile time dependency for StrutsTestCase, which is part of the base package so others can write unit tests -->
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>5.1</version>
-            <optional>true</optional>
-            <classifier>jdk15</classifier>
         </dependency>
 
         <dependency>

@@ -47,6 +47,12 @@
             <scope>test</scope>
             <version>3.8.2</version>
         </dependency>
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>struts2-junit-plugin</artifactId>
+            <version>${pom.version}</version>
+            <scope>test</scope>
+        </dependency>
 
       <dependency>
             <groupId>javax.servlet</groupId>
@@ -81,7 +87,7 @@
             <groupId>portlet-api</groupId>
             <artifactId>portlet-api</artifactId>
             <version>1.0</version>
-            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

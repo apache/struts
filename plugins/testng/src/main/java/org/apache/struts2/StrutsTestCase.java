@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: TestNGStrutsTestCase.java 502294 2007-02-01 17:28:00Z niallp $
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -33,7 +33,7 @@ import com.opensymphony.xwork2.TestNGXWorkTestCase;
  * Base test class for TestNG unit tests.  Provides common Struts variables
  * and performs Struts setup and teardown processes
  */
-public class TestNGStrutsTestCase extends TestNGXWorkTestCase {
+public class StrutsTestCase extends TestNGXWorkTestCase {
 
     @BeforeTest
     protected void setUp() throws Exception {

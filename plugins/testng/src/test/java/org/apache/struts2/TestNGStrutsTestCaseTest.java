@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: TestNGStrutsTestCaseTest.java 502294 2007-02-01 17:28:00Z niallp $
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -49,12 +49,12 @@ public class TestNGStrutsTestCaseTest extends TestCase {
         }
     }
     
-    @Test
-    public static class RunTest extends TestNGStrutsTestCase {
+    public static class RunTest extends StrutsTestCase {
         public static boolean ran = false;
         public static ConfigurationManager mgr;
         public static Dispatcher du;
-        
+       
+        @Test 
         public void testRun() {
             ran = true;
             mgr = this.configurationManager;

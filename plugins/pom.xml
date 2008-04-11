@@ -56,6 +56,8 @@
         <module>dojo</module>
         <module>rest</module>
         <module>portlet</module>
+        <module>junit</module>
+        <module>testng</module>
     </modules>
 
     <dependencies>
@@ -72,8 +74,6 @@
             <artifactId>junit</artifactId>
             <scope>compile</scope>
             <version>3.8.2</version>
-            <!-- has to be compile for StrutsTestCase, which is part of the base package so others can write unit tests -->
-            <optional>true</optional>
         </dependency>
 
 

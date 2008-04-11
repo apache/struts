@@ -128,6 +128,7 @@
     </build>
 
     <dependencies>
+
         <!-- Core -->
         <dependency>
             <groupId>org.apache.struts</groupId>
@@ -155,20 +156,15 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <scope>compile</scope>
+            <scope>test</scope>
             <version>3.8.2</version>
-            <!-- has to be compile for StrutsTestCase, which is part of the base package so others can write unit tests -->
-            <optional>true</optional>
         </dependency>
-
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>5.1</version>
-            <optional>true</optional>
-            <classifier>jdk15</classifier>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>struts2-junit-plugin</artifactId>
+            <version>${pom.version}</version>
+            <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>jmock</groupId>
             <artifactId>jmock</artifactId>
@@ -242,7 +238,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-mock</artifactId>
             <version>2.0.8</version>
-            <optional>true</optional>
+            <scope>test</scope>
         </dependency>
 
         <dependency>

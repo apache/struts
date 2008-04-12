@@ -24,12 +24,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.struts2.dispatcher.Dispatcher;
-import org.springframework.mock.web.MockServletContext;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+
+import javax.servlet.ServletContext;
 
 /**
  * Generic test setup methods to be used with any unit testing framework. 
@@ -44,11 +45,11 @@ public class StrutsTestCaseHelper {
         LocalizedTextUtil.clearDefaultResourceBundles();
     }
     
-    public static Dispatcher initDispatcher(Map<String,String> params) {
+    public static Dispatcher initDispatcher(ServletContext ctx, Map<String,String> params) {
         if (params == null) {
             params = new HashMap<String,String>();
         }
-        Dispatcher du = new Dispatcher(new MockServletContext(), params);
+        Dispatcher du = new Dispatcher(ctx, params);
         du.init();
         Dispatcher.setInstance(du);
         

@@ -32,6 +32,7 @@ import java.util.logging.SimpleFormatter;
 
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.util.StrutsTestCaseHelper;
+import org.springframework.mock.web.MockServletContext;
 
 import com.opensymphony.xwork2.XWorkTestCase;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
@@ -81,7 +82,7 @@ public abstract class StrutsTestCase extends XWorkTestCase {
     }
     
     protected Dispatcher initDispatcher(Map<String,String> params) {
-        Dispatcher du = StrutsTestCaseHelper.initDispatcher(params);
+        Dispatcher du = StrutsTestCaseHelper.initDispatcher(new MockServletContext(), params);
         configurationManager = du.getConfigurationManager();
         configuration = configurationManager.getConfiguration();
         container = configuration.getContainer();

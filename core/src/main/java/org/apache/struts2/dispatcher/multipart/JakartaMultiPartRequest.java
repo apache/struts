@@ -87,6 +87,7 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
         try {
             ServletFileUpload upload = new ServletFileUpload(fac);
             upload.setSizeMax(maxSize);
+
             List items = upload.parseRequest(createRequestContext(servletRequest));
 
             for (Object item1 : items) {
@@ -298,6 +299,10 @@ public class JakartaMultiPartRequest implements MultiPartRequest {
             }
 
             public InputStream getInputStream() throws IOException {
+                InputStream in = req.getInputStream();
+                if (in == null) {
+                    throw new IOException("Missing content in the request");
+                }
                 return req.getInputStream();
             }
         };

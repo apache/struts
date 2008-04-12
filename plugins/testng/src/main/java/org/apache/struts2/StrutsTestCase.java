@@ -26,6 +26,7 @@ import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.util.StrutsTestCaseHelper;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
+import org.springframework.mock.web.MockServletContext;
 
 import com.opensymphony.xwork2.TestNGXWorkTestCase;
 
@@ -42,7 +43,7 @@ public class StrutsTestCase extends TestNGXWorkTestCase {
     }
     
     protected Dispatcher initDispatcher(Map<String,String> params) {
-        Dispatcher du = StrutsTestCaseHelper.initDispatcher(params);
+        Dispatcher du = StrutsTestCaseHelper.initDispatcher(new MockServletContext(), params);
         configurationManager = du.getConfigurationManager();
         configuration = configurationManager.getConfiguration();
         container = configuration.getContainer();

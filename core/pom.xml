@@ -263,14 +263,6 @@
             <version>2.6.11</version>
         </dependency>
 
-        <!-- Ajax -->
-        <dependency>
-            <groupId>uk.ltd.getahead</groupId>
-            <artifactId>dwr</artifactId>
-            <version>1.1.1</version>
-            <optional>true</optional>
-        </dependency>
-
         <!-- Velocity -->
         <dependency>
             <groupId>org.apache.velocity</groupId>

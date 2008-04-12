@@ -30,7 +30,9 @@ import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.util.StrutsTypeConverter;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ObjectFactory;
 import com.opensymphony.xwork2.conversion.impl.XWorkConverter;
+import com.opensymphony.xwork2.conversion.impl.XWorkBasicConverter;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 
@@ -38,6 +40,17 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
  *
  */
 public class PropertyTest extends StrutsTestCase {
+    private XWorkConverter converter;
+
+    public void setUp() throws Exception {
+        super.setUp();
+        converter = container.getInstance(XWorkConverter.class);
+    }
+
+    public void tearDown() throws Exception {
+        super.tearDown();
+        converter = null;
+    }
     public void testNormalBehaviour() {
         final ValueStack stack = ActionContext.getContext().getValueStack();
         stack.push(new FooBar("foo-value", "bar-value"));
@@ -75,8 +88,7 @@ public class PropertyTest extends StrutsTestCase {
 
     public void testTypeConverterShouldBeUsed() {
         final ValueStack stack = ActionContext.getContext().getValueStack();
-        Ognl.setTypeConverter(stack.getContext(), new TestDefaultConverter());
-
+        converter.registerConverter("org.apache.struts2.components.PropertyTest$FooBar", new FooBarConverter());
         stack.push(new FooBar("foo-value", "bar-value"));
         final Property property = new Property(stack);
         property.setDefault("default");
@@ -86,8 +98,7 @@ public class PropertyTest extends StrutsTestCase {
 
     public void testTypeConverterReturningNullShouldLeadToDisplayOfDefaultValue() {
         final ValueStack stack = ActionContext.getContext().getValueStack();
-        Ognl.setTypeConverter(stack.getContext(), new TestDefaultConverter());
-
+        converter.registerConverter("org.apache.struts2.components.PropertyTest$FooBar", new FooBarConverter());
         stack.push(new FooBar("foo-value", null));
         final Property property = new Property(stack);
         property.setDefault("default");
@@ -135,14 +146,6 @@ public class PropertyTest extends StrutsTestCase {
             } else {
                 return "*" + fooBar.getFoo() + " + " + fooBar.getBar() + "*";
             }
-        }
-    }
-
-    /** a simple hack to simply register a custom converter in our test */
-    private final class TestDefaultConverter extends XWorkConverter implements ognl.TypeConverter {
-        protected TestDefaultConverter() {
-            super();
-            registerConverter("org.apache.struts2.components.PropertyTest$FooBar", new FooBarConverter());
         }
     }
 }

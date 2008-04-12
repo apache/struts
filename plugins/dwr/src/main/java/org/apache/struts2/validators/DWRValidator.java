@@ -56,12 +56,12 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * <pre>
  * <!-- START SNIPPET: dwrConfiguration -->
  *
- * &lt;dwr&lt;
- *    &lt;allow&lt;
- *      &lt;create creator="new" javascript="validator" class="org.apache.struts2.validators.DWRValidator"/&lt;
- *      &lt;convert converter="bean" match="com.opensymphony.xwork2.ValidationAwareSupport"/&lt;
- *    &lt;/allow&lt;
- * &lt;/dwr&lt;
+ * &lt;dwr&gt;
+ *    &lt;allow&gt;
+ *      &lt;create creator="new" javascript="validator" class="org.apache.struts2.validators.DWRValidator"/&gt;
+ *      &lt;convert converter="bean" match="com.opensymphony.xwork2.ValidationAwareSupport"/&gt;
+ *    &lt;/allow&gt;
+ * &lt;/dwr&gt;
  *
  * <!-- END SNIPPET: dwrConfiguration -->
  * </pre>
@@ -69,19 +69,6 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 public class DWRValidator {
     private static final Logger LOG = LoggerFactory.getLogger(DWRValidator.class);
     
-    private ActionProxyFactory actionProxyFactory;
-    private ActionMapper actionMapper;
-
-    @Inject
-    public void setActionMapper(ActionMapper actionMapper) {
-        this.actionMapper = actionMapper;
-    }
-
-    @Inject
-    public void setActionProxyFactory(ActionProxyFactory fac) {
-        this.actionProxyFactory = fac;
-    }
-
     public ValidationAwareSupport doPost(String namespace, String action, Map params) throws Exception {
         HttpServletRequest req = WebContextFactory.get().getHttpServletRequest();
         ServletContext servletContext = WebContextFactory.get().getServletContext();
@@ -106,8 +93,10 @@ public class DWRValidator {
                 servletContext);
 
         try {
+            ActionMapper actionMapper = du.getContainer().getInstance(ActionMapper.class);
             ActionMapping mapping = actionMapper.getMappingFromActionName(action);
             ActionInvocation inv = new ValidatorActionInvocation(ctx, true);
+            ActionProxyFactory actionProxyFactory = du.getContainer().getInstance(ActionProxyFactory.class);
             ActionProxy proxy = actionProxyFactory.createActionProxy(inv, namespace, mapping.getName(), mapping.getMethod(), true, true);
             proxy.execute();
             Object a = proxy.getAction();

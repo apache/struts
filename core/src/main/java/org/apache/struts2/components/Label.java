@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
+import org.apache.struts2.util.TextProviderHelper;
 
 import com.opensymphony.xwork2.util.ValueStack;
 
@@ -82,8 +83,9 @@ public class Label extends UIBean {
         if (value != null) {
             addParameter("nameValue", findString(value));
         } else if (key != null) {
-            String expr = "%{getText('"+ key +"')}";
-            addParameter("nameValue", findString(expr));
+            // get the label from a TextProvider
+            String providedLabel = TextProviderHelper.getText(key, "", stack);
+            addParameter("nameValue", providedLabel);
         } else if (name != null) {
             String expr = name;
             if (altSyntax()) {

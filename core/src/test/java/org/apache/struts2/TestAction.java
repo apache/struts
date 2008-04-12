@@ -26,6 +26,7 @@ import org.apache.struts2.views.jsp.ui.User;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.util.ValueStack;
 
 
 /**
@@ -47,17 +48,36 @@ public class TestAction extends ActionSupport {
     private List list3;
     private SomeEnum status = SomeEnum.COMPLETED;
 
-    private final Map texts = new HashMap();
+    private final Map<String, String> texts = new HashMap<String, String>();
 
+    /**
+     * Define a text resource within this action that will be returned by the getText methods
+     * here before delegating to the default TextProvider
+     *
+     * call
+     * @param key
+     * @param value
+     */
     public void setText(String key, String value) {
         this.texts.put(key, value);
     }
 
+    /** Returns the test value if defined otherwise delegates to the default TextProvider */
     public String getText(String key) {
         if (this.texts.containsKey(key)) {
-            return (String) this.texts.get(key);
+            return this.texts.get(key);
         }
         return super.getText(key);
+    }
+
+    /** This is the method invoked by the {@link org.apache.struts2.util.TextProviderHelper}.
+     * Returns the test value if defined otherwise delegates to the default TextProvider */
+    public String getText(String key, String defaultValue, List args, ValueStack stack) {
+        if (this.texts.containsKey(key)) {
+            return this.texts.get(key);
+        } else {
+            return super.getText(key, defaultValue, args, stack);
+        }
     }
 
     public Collection getCollection() {

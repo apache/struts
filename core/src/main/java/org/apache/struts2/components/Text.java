@@ -24,13 +24,12 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
+import org.apache.struts2.util.TextProviderHelper;
 
-import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.util.TextUtils;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -149,20 +148,8 @@ public class Text extends ContextBean implements Param.UnnamedParametric {
         } else {
             defaultMessage = actualName;
         }
-        String msg = null;
-        ValueStack stack = getStack();
 
-        for (Iterator iterator = getStack().getRoot().iterator();
-             iterator.hasNext();) {
-            Object o = iterator.next();
-
-            if (o instanceof TextProvider) {
-                TextProvider tp = (TextProvider) o;
-                msg = tp.getText(actualName, defaultMessage, values, stack);
-
-                break;
-            }
-        }
+        String msg = TextProviderHelper.getText(actualName, defaultMessage, values, getStack());
 
         if (msg != null) {
             try {

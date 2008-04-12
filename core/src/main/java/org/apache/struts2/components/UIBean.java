@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.util.TextProviderHelper;
 import org.apache.struts2.components.template.Template;
 import org.apache.struts2.components.template.TemplateEngine;
 import org.apache.struts2.components.template.TemplateEngineManager;
@@ -616,17 +617,17 @@ public abstract class UIBean extends Component {
         addParameter("dynamicAttributes", dynamicAttributes);
 
         String name = null;
+        String providedLabel = null;
 
         if (this.key != null) {
 
-           if(this.name == null) {
+            if(this.name == null) {
                 this.name = key;
             }
 
             if(this.label == null) {
-                // Escape the key prior to sending it down
-                String escaped = key.replace("'", "\\'");
-                this.label = "%{getText('" + escaped + "')}";
+                // lookup the label from a TextProvider
+                providedLabel = TextProviderHelper.getText(key, "", stack);
             }
 
         }
@@ -638,6 +639,11 @@ public abstract class UIBean extends Component {
 
         if (label != null) {
             addParameter("label", findString(label));
+        } else {
+            if (providedLabel != null) {
+                // label found via a TextProvider
+                addParameter("label", providedLabel);
+            }
         }
 
         if (labelSeparator != null) {

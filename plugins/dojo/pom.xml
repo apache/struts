@@ -94,6 +94,7 @@
             <plugin>
                 <groupId>org.apache.myfaces.tobago</groupId>
                 <artifactId>maven-apt-plugin</artifactId>
+                <version>1.0.15</version>
                 <configuration>
                     <A>
                         uri=/struts-dojo-tags,tlibVersion=2.2.3,jspVersion=1.2,shortName=sx,displayName="Struts

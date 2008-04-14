@@ -3,6 +3,7 @@ package org.apache.struts2.views.jsp;
 import org.apache.struts2.TestAction;
 import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsException;
 import com.mockobjects.servlet.MockPageContext;
 import com.mockobjects.servlet.MockJspWriter;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -59,5 +60,41 @@ public class I18nTagTest extends StrutsTestCase {
             e.printStackTrace();
             fail();
         }
+    }
+
+    /**
+     * Asserts that an exception is thrown when something unexpected is popped off the stack by the closing tag
+     *
+     * @throws Exception
+     */
+    public void testUnexpectedPop() throws Exception {
+
+         // set the resource bundle
+        tag.setName("testmessages");
+
+        int result = 0;
+
+        try {
+            result = tag.doStartTag();
+        } catch (JspException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        stack.push("An new object on top of the stack");
+
+        assertEquals(TagSupport.EVAL_BODY_INCLUDE, result);
+
+        try {
+            result = tag.doEndTag();
+            fail();
+        } catch (JspException e) {
+            e.printStackTrace();
+            fail();
+        } catch (StrutsException e) {
+            e.printStackTrace();
+            // pass
+        }
+
     }
 }

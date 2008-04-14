@@ -31,10 +31,13 @@ import org.apache.struts2.StrutsException;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.TextProviderFactory;
+import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: javadoc -->
@@ -84,9 +87,13 @@ import com.opensymphony.xwork2.util.ValueStack;
 @StrutsTag(name="i18n", tldTagClass="org.apache.struts2.views.jsp.I18nTag", description="Get a resource bundle" +
                 " and place it on the value stack")
 public class I18n extends Component {
+
+    private static final Logger LOG = LoggerFactory.getLogger(I18n.class);
+
     protected boolean pushed;
     protected String name;
     protected Container container;
+    private TextProvider textProvider;
 
     public I18n(ValueStack stack) {
         super(stack);
@@ -112,11 +119,12 @@ public class I18n extends Component {
                 final Locale locale = (Locale) getStack().getContext().get(ActionContext.LOCALE);
                 TextProviderFactory tpf = new TextProviderFactory();
                 container.inject(tpf);
-                getStack().push(tpf.createInstance(bundle, new LocaleProvider() {
-                     public Locale getLocale() {
-                         return locale;
-                     }
-                }));
+                textProvider = tpf.createInstance(bundle, new LocaleProvider() {
+                    public Locale getLocale() {
+                        return locale;
+                    }
+                });
+                getStack().push(textProvider);
                 pushed = true;
             }
         } catch (Exception e) {
@@ -127,9 +135,15 @@ public class I18n extends Component {
         return result;
     }
 
-    public boolean end(Writer writer, String body) {
+    public boolean end(Writer writer, String body) throws StrutsException {
         if (pushed) {
-            getStack().pop();
+            Object o = getStack().pop();
+            if ((o == null) || (!o.equals(textProvider))) {
+                LOG.error("A closing i18n tag attempted to pop its own TextProvider from the top of the ValueStack but popped an unexpected object ("+(o != null ? o.getClass() : "null")+"). " +
+                            "Refactor the page within the i18n tags to ensure no objects are pushed onto the ValueStack without popping them prior to the closing tag. " +
+                            "If you see this message it's likely that the i18n's TextProvider is still on the stack and will continue to provide message resources after the closing tag.");
+                throw new StrutsException("A closing i18n tag attempted to pop its TextProvider from the top of the ValueStack but popped an unexpected object ("+(o != null ? o.getClass() : "null")+")");
+            }
         }
 
         return super.end(writer, body);

@@ -626,8 +626,8 @@ public abstract class UIBean extends Component {
             }
 
             if(this.label == null) {
-                // lookup the label from a TextProvider
-                providedLabel = TextProviderHelper.getText(key, "", stack);
+                // lookup the label from a TextProvider (default value is the key)
+                providedLabel = TextProviderHelper.getText(key, key, stack);
             }
 
         }

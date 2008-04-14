@@ -83,8 +83,8 @@ public class Label extends UIBean {
         if (value != null) {
             addParameter("nameValue", findString(value));
         } else if (key != null) {
-            // get the label from a TextProvider
-            String providedLabel = TextProviderHelper.getText(key, "", stack);
+            // get the label from a TextProvider (default value is the key)
+            String providedLabel = TextProviderHelper.getText(key, key, stack);
             addParameter("nameValue", providedLabel);
         } else if (name != null) {
             String expr = name;

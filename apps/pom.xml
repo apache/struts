@@ -109,6 +109,7 @@
             <plugin>
                 <groupId>org.codehaus.cargo</groupId>
                 <artifactId>cargo-maven2-plugin</artifactId>
+                <version>0.3.1</version>
                 <configuration>
                     <container>
                         <containerId>tomcat5x</containerId>

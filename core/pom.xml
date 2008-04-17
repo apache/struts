@@ -305,12 +305,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>2.0.8</version>
-            <scope>test</scope>
-        </dependency>
 
 
 
@@ -318,8 +312,9 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <scope>test</scope>
-            <version>3.8.2</version>
+              <scope>compile</scope>
+            <optional>true</optional>
+          <version>3.8.2</version>
         </dependency>
 
         <dependency>
@@ -390,13 +385,31 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- struts-annotations must be in compile scope for maven-apt-plugin to
-        function correctly. Marking it optional to exclude it from transitive
-        dependency resolution -->
+        <!-- These jars have to be in the compile scope in order to work with apt plugin
+             (struts-annotations) and javadoc (the rest to process xwork sources). Marking 
+             them optional to exclude them from transitive dependency resolution -->
+
         <dependency>
             <groupId>org.apache.struts</groupId>
             <artifactId>struts-annotations</artifactId>
             <version>1.0.3</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>5.1</version>
+             <scope>compile</scope>
+            <optional>true</optional>
+           <classifier>jdk15</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring</artifactId>
+            <version>2.0.8</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>

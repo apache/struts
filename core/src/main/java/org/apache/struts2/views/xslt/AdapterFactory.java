@@ -146,7 +146,7 @@ public class AdapterFactory {
 
         if (valueType.isArray())
             adapterClass = ArrayAdapter.class;
-        else if (value instanceof String || value instanceof Number || valueType.isPrimitive())
+        else if (value instanceof String || value instanceof Number || value instanceof Boolean || valueType.isPrimitive())
             adapterClass = StringAdapter.class;
         else if (value instanceof Collection)
             adapterClass = CollectionAdapter.class;

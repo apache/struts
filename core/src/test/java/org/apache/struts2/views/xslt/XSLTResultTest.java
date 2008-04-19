@@ -106,7 +106,7 @@ public class XSLTResultTest extends StrutsTestCase {
         assertTrue(out.indexOf("<html xmlns=\"http://www.w3.org/TR/xhtml1/strict\"") > -1);
         assertTrue(out.indexOf("Hello Santa Claus how are you?") > -1);
     }
-
+    
     public void testTransform3() throws Exception {
         result.setParse(false);
         result.setLocation("XSLTResultTest3.xsl");
@@ -118,6 +118,18 @@ public class XSLTResultTest extends StrutsTestCase {
         assertTrue(out.indexOf("Hello Santa Claus how are you?") > -1);
         assertTrue(out.indexOf("WebWork in Action by Patrick and Jason") > -1);
         assertTrue(out.indexOf("XWork not in Action by Superman") > -1);
+    }
+    
+    public void testTransformWithBoolean() throws Exception {
+        result.setParse(false);
+        result.setLocation("XSLTResultTest5.xsl");
+        result.execute(mai);
+
+        String out = response.getContentAsString();
+        assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        assertTrue(out.indexOf("<html xmlns=\"http://www.w3.org/TR/xhtml1/strict\"") > -1);
+        assertTrue(out.indexOf("Hello Santa Claus how are you?") > -1);
+        assertTrue(out.indexOf("You are active: true") > -1);
     }
     
     public void testTransform4WithDocumentInclude() throws Exception {
@@ -185,6 +197,10 @@ public class XSLTResultTest extends StrutsTestCase {
 
         public String getUsername() {
             return "Santa Claus";
+        }
+        
+        public boolean isActive() {
+            return true;
         }
 
         public List getBooks() {

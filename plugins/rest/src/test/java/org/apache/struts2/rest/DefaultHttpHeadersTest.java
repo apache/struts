@@ -54,7 +54,7 @@ public class DefaultHttpHeadersTest extends TestCase {
 
         headers.apply(mockRequest, mockResponse, new Object());
 
-        assertEquals(SC_OK, mockResponse.getStatus());
+        assertEquals(SC_CREATED, mockResponse.getStatus());
         assertEquals("http://localhost:80/foo/bar/44.xhtml", mockResponse.getHeader("Location"));
         assertEquals("asdf", mockResponse.getHeader("ETag"));
         assertEquals(now.getTime(), mockResponse.getHeader("Last-Modified"));
@@ -68,7 +68,7 @@ public class DefaultHttpHeadersTest extends TestCase {
 
         headers.apply(mockRequest, mockResponse, new Object());
         assertEquals("http://localhost:80/foo/bar/44", mockResponse.getHeader("Location"));
-
+        assertEquals(SC_CREATED, mockResponse.getStatus());
     }
 
     public void testApplyFullLocation() {
@@ -78,6 +78,7 @@ public class DefaultHttpHeadersTest extends TestCase {
 
         headers.apply(mockRequest, mockResponse, new Object());
         assertEquals("http://localhost/bar/44", mockResponse.getHeader("Location"));
+        assertEquals(SC_CREATED, mockResponse.getStatus());
 
     }
 

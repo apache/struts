@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import java.util.Date;
 
 /**
@@ -113,8 +114,10 @@ public class DefaultHttpHeaders implements HttpHeaders {
                 url += "/"+locationId;
             }
             response.setHeader("Location", url);
+            status = SC_CREATED;
         } else if (location != null) {
             response.setHeader("Location", location);
+            status = SC_CREATED;
         }
 
         if (status == SC_OK && !disableCaching) {

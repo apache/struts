@@ -59,36 +59,36 @@ public class StrutsNavigationHandler extends NavigationHandler {
     public void handleNavigation(FacesContext facesContext, String fromAction, String outcome) {
         ActionContext ctx = ActionContext.getContext();
         if (outcome != null) {
-        	if (ctx == null && ctx.getActionInvocation() == null) {
-        		delegateToParentNavigation(facesContext, fromAction, outcome);
-        	} else {
-	            ActionConfig config = ctx.getActionInvocation().getProxy().getConfig();
-	            Map results = config.getResults();
-	
-	            ResultConfig resultConfig = null;
-	
-	            synchronized (config) {
-	                try {
-	                    resultConfig = (ResultConfig) results.get(outcome);
-	                } catch (NullPointerException e) {
-	                }
-	                if (resultConfig == null) {
-	                    // If no result is found for the given resultCode, try to get a wildcard '*' match.
-	                    resultConfig = (ResultConfig) results.get("*");
-	                }
-	            }
-	            if (resultConfig != null) {
-	                ctx.getActionInvocation().setResultCode(outcome);
-	            } else {
-	                delegateToParentNavigation(facesContext, fromAction, outcome);
-	            }
-        	}
+            if (ctx == null && ctx.getActionInvocation() == null) {
+                delegateToParentNavigation(facesContext, fromAction, outcome);
+            } else {
+                ActionConfig config = ctx.getActionInvocation().getProxy().getConfig();
+                Map results = config.getResults();
+    
+                ResultConfig resultConfig = null;
+    
+                synchronized (config) {
+                    try {
+                        resultConfig = (ResultConfig) results.get(outcome);
+                    } catch (NullPointerException e) {
+                    }
+                    if (resultConfig == null) {
+                        // If no result is found for the given resultCode, try to get a wildcard '*' match.
+                        resultConfig = (ResultConfig) results.get("*");
+                    }
+                }
+                if (resultConfig != null) {
+                    ctx.getActionInvocation().setResultCode(outcome);
+                } else {
+                    delegateToParentNavigation(facesContext, fromAction, outcome);
+                }
+            }
         }
     }
 
-	private void delegateToParentNavigation(FacesContext facesContext, String fromAction, String outcome) {
-		// Failing over to parent handler
-		parent.handleNavigation(facesContext, fromAction, outcome);
-	}
+    private void delegateToParentNavigation(FacesContext facesContext, String fromAction, String outcome) {
+        // Failing over to parent handler
+        parent.handleNavigation(facesContext, fromAction, outcome);
+    }
 
 }

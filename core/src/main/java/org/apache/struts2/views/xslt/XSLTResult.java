@@ -315,7 +315,7 @@ public class XSLTResult implements Result {
         try {
             HttpServletResponse response = ServletActionContext.getResponse();
 
-            Writer writer = response.getWriter();
+            PrintWriter writer = response.getWriter();
 
             // Create a transformer for the stylesheet.
             Templates templates = null;
@@ -349,18 +349,15 @@ public class XSLTResult implements Result {
             Source xmlSource = getDOMSourceForStack(result);
 
             // Transform the source XML to System.out.
-            PrintWriter out = response.getWriter();
-
             LOG.debug("xmlSource = " + xmlSource);
-            transformer.transform(xmlSource, new StreamResult(out));
+            transformer.transform(xmlSource, new StreamResult(writer));
 
-            out.close(); // ...and flush...
+            writer.flush(); // ...and flush...
 
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Time:" + (System.currentTimeMillis() - startTime) + "ms");
             }
 
-            writer.flush();
         } catch (Exception e) {
             LOG.error("Unable to render XSLT Template, '" + location + "'", e);
             throw e;

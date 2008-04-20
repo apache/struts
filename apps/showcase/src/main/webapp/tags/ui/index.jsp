@@ -16,8 +16,8 @@
         <li><s:url var="url" namespace="/tags/ui" action="showDynamicTreeAction"/><s:a href="%{url}">Tree Example (dynamic)</s:a>
         <li><s:url var="url" namespace="/tags/ui" action="showDynamicAjaxTreeAction"/><s:a href="%{url}">Tree Example (dynamic ajax loading)</s:a>
         <li><s:url var="url" value="componentTagExample.jsp"/><s:a href="%{#url}">Component Tag Example</s:a>
-        <li><a href="datepicker">DateTime picker tag - Pick a date</a></li>
-        <li><a href="timepicker">DateTime picker tag - Pick a time</a></li>
+        <li><a href="datepicker/index.jsp">DateTime picker tag - Pick a date</a></li>
+        <li><a href="timepicker/index.jsp">DateTime picker tag - Pick a time</a></li>
         <%--li><s:url var="url" namespace="/tags/ui" action="populateUsingIterator" method="input" /><s:a href="%{url}">UI population using iterator tag</s:a></li--%>
     </ul>
 </body>

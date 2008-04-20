@@ -61,7 +61,7 @@ public class ClasspathPackageProvider implements PackageProvider {
      * The default page prefix (or "path").
      * Some applications may place pages under "/WEB-INF" as an extreme security precaution.
      */
-    private static final String DEFAULT_PAGE_PREFIX = "struts.configuration.classpath.defaultPagePrefix";
+    protected static final String DEFAULT_PAGE_PREFIX = "struts.configuration.classpath.defaultPagePrefix";
 
     /**
      * The default page prefix (none).
@@ -71,7 +71,7 @@ public class ClasspathPackageProvider implements PackageProvider {
     /**
      * The default page extension,  to use in place of ".jsp".
      */
-    private static final String DEFAULT_PAGE_EXTENSION = "struts.configuration.classpath.defaultPageExtension";
+    protected static final String DEFAULT_PAGE_EXTENSION = "struts.configuration.classpath.defaultPageExtension";
 
     /**
      * The defacto default page extension, usually associated with JavaServer Pages.
@@ -82,7 +82,12 @@ public class ClasspathPackageProvider implements PackageProvider {
      * A setting to indicate a custom default parent package,
      * to use in place of "struts-default".
      */
-    private static final String DEFAULT_PARENT_PACKAGE = "struts.configuration.classpath.defaultParentPackage";
+    protected static final String DEFAULT_PARENT_PACKAGE = "struts.configuration.classpath.defaultParentPackage";
+    
+    /**
+     * A setting to disable action scanning.
+     */
+    protected static final String DISABLE_ACTION_SCANNING = "struts.configuration.classpath.disableActionScanning";
 
     /**
      * Name of the framework's default configuration package,
@@ -94,7 +99,7 @@ public class ClasspathPackageProvider implements PackageProvider {
      * The default page prefix (or "path").
      * Some applications may place pages under "/WEB-INF" as an extreme security precaution.
      */
-    private static final String FORCE_LOWER_CASE = "struts.configuration.classpath.forceLowerCase";
+    protected static final String FORCE_LOWER_CASE = "struts.configuration.classpath.forceLowerCase";
 
     /**
      * Whether to use a lowercase letter as the initial letter of an action.
@@ -120,6 +125,8 @@ public class ClasspathPackageProvider implements PackageProvider {
      * @see #needsReload
      */
     private boolean initialized = false;
+    
+    private boolean disableActionScanning = false;
 
     private PackageLoader packageLoader;
 
@@ -167,6 +174,16 @@ public class ClasspathPackageProvider implements PackageProvider {
         this.servletContext = ctx;
     }
 
+    /**
+     * Disables action scanning.
+     *
+     * @param disableActionScanning True to disable
+     */
+    @Inject(value=DISABLE_ACTION_SCANNING, required=false)
+    public void setDisableActionScanning(String disableActionScanning) {
+        this.disableActionScanning = "true".equals(disableActionScanning);
+    }
+    
     /**
      * Register a default parent package for the actions.
      *
@@ -437,7 +454,7 @@ public class ClasspathPackageProvider implements PackageProvider {
      * @throws ConfigurationException
      */
     public void loadPackages() throws ConfigurationException {
-        if (actionPackages != null) {
+        if (actionPackages != null && !disableActionScanning) {
             String[] names = actionPackages.split("\\s*[,]\\s*");
             // Initialize the classloader scanner with the configured packages
             if (names.length > 0) {

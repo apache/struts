@@ -22,6 +22,11 @@
     <constant name="struts.mapper.class" value="rest" />
     <constant name="struts.mapper.idParameterName" value="id" />
     <constant name="struts.action.extension" value="xhtml,,xml,json" />
+    
+    <!--  Disable the scanning by the codebehind plugin to prevent duplicates -->
+    <constant name="struts.configuration.classpath.disableActionScanning" value="true" />
+    
+    <constant name="struts.configuration.rest.disableControllerScanning" value="false" />
     <constant name="struts.configuration.classpath.defaultParentPackage" value="rest-default" />
     
     <package name="rest-default" extends="struts-default">

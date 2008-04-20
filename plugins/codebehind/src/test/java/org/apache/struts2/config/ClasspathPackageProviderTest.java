@@ -74,6 +74,17 @@ public class ClasspathPackageProviderTest extends TestCase {
         ActionConfig actionConfig = (ActionConfig) configs.get("customParentPackage");
         assertNotNull(actionConfig);
     }
+    
+    public void testDisableScanning() {
+        provider = new ClasspathPackageProvider();
+        provider.setActionPackages("org.apache.struts2.config");
+        provider.setDisableActionScanning("true");
+        config = new DefaultConfiguration();
+        provider.init(config);
+        provider.loadPackages();
+        
+        assertEquals(0, config.getPackageConfigs().size());
+    }
 
     public void testParentPackage() {
         PackageConfig pkg = config.getPackageConfig("org.apache.struts2.config");

@@ -22,12 +22,18 @@ package org.apache.struts2.rest;
 
 import org.apache.struts2.config.ClasspathPackageProvider;
 
+import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ResolverUtil.ClassTest;
 
 /**
  * Checks for actions ending in Controller indicating a Rest controller
  */
 public class ControllerClasspathPackageProvider extends ClasspathPackageProvider {
+    
+    /**
+     * A setting to disable action scanning.
+     */
+    protected static final String DISABLE_REST_CONTROLLER_SCANNING = "struts.configuration.rest.disableControllerScanning";
     
     @Override
     protected ClassTest createActionClassTest() {
@@ -42,6 +48,27 @@ public class ControllerClasspathPackageProvider extends ClasspathPackageProvider
     @Override
     protected String getClassSuffix() {
         return "Controller";
+    }
+    
+    /**
+     * Ignore setting to disable action scanning from the codebehind plugin.
+     *
+     * @param disableActionScanning True to disable
+     */
+    @Override
+    @Inject(value=DISABLE_ACTION_SCANNING, required=false)
+    public void setDisableActionScanning(String disableActionScanning) {
+        // do nothing
+    }
+    
+    /**
+     * Disables controller scanning.
+     *
+     * @param disableActionScanning True to disable
+     */
+    @Inject(value=DISABLE_REST_CONTROLLER_SCANNING, required=false)
+    public void setDisableRestControllerScanning(String disableActionScanning) {
+        super.setDisableActionScanning(disableActionScanning);
     }
 
 }

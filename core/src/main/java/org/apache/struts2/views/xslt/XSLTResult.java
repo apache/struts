@@ -177,12 +177,6 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * <li><b>parse</b> - true by default. If set to false, the location param will
  * not be parsed for Ognl expressions.</li>
  *
- * <li><b>matchingPattern</b> - Pattern that matches only desired elements, by
- * default it matches everything.</li>
- *
- * <li><b>excludingPattern</b> - Pattern that eliminates unwanted elements, by
- * default it matches none.</li>
- *
  * </ul>
  *
  * <p>
@@ -277,22 +271,6 @@ public class XSLTResult implements Result {
 
     public void setExposedValue(String exposedValue) {
         this.exposedValue = exposedValue;
-    }
-
-    public String getMatchingPattern() {
-        return matchingPattern;
-    }
-
-    public void setMatchingPattern(String matchingPattern) {
-        this.matchingPattern = matchingPattern;
-    }
-
-    public String getExcludingPattern() {
-        return excludingPattern;
-    }
-
-    public void setExcludingPattern(String excludingPattern) {
-        this.excludingPattern = excludingPattern;
     }
 
     /**

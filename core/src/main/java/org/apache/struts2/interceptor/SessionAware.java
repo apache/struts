@@ -39,5 +39,5 @@ public interface SessionAware {
      *
      * @param session a Map of HTTP session attribute name/value pairs.
      */
-    public void setSession(Map session);
+    public void setSession(Map<String,Object> session);
 }

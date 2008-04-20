@@ -35,5 +35,5 @@ public interface RequestAware {
      *
      * @param request a Map of HTTP request attribute name/value pairs.
      */
-    public void setRequest(Map request);
+    public void setRequest(Map<String,Object> request);
 }

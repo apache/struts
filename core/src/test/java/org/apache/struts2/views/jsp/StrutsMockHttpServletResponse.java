@@ -37,6 +37,7 @@ public class StrutsMockHttpServletResponse extends MockHttpServletResponse {
     private PrintWriter writer;
     private int status;
     private String redirectURL;
+    private String contentType;
 
     public Locale getLocale() {
         return locale;
@@ -47,7 +48,12 @@ public class StrutsMockHttpServletResponse extends MockHttpServletResponse {
     }
 
     public String getContentType() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return contentType;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+    
+    @Override
+    public void setContentType(String type) {
+        this.contentType = type;
     }
 
     public PrintWriter getWriter() throws IOException {

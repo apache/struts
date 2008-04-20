@@ -98,6 +98,7 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
                     if (validationFailedStatus >= 0)
                         response.setStatus(validationFailedStatus);
                     response.getWriter().print(buildResponse(validationAware));
+                    response.setContentType("application/json");
                     return Action.NONE;
                 }
             }
@@ -106,6 +107,7 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
             if (validateOnly != null && "true".equals(validateOnly)) {
                 //there were no errors
                 response.getWriter().print("/* {} */");
+                response.setContentType("application/json");
                 return Action.NONE;
             } else {
                 return invocation.invoke();

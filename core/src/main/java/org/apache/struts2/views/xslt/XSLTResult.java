@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.ErrorListener;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
@@ -41,6 +42,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsException;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -327,6 +329,24 @@ public class XSLTResult implements Result {
                 transformer = TransformerFactory.newInstance().newTransformer();
 
             transformer.setURIResolver(getURIResolver());
+            transformer.setErrorListener(new ErrorListener() {
+
+                public void error(TransformerException exception)
+                        throws TransformerException {
+                    throw new StrutsException("Error transforming result", exception);
+                }
+
+                public void fatalError(TransformerException exception)
+                        throws TransformerException {
+                    throw new StrutsException("Fatal error transforming result", exception);
+                }
+
+                public void warning(TransformerException exception)
+                        throws TransformerException {
+                    LOG.warn(exception.getMessage(), exception);
+                }
+                
+            });
 
             String mimeType;
             if (templates == null)

@@ -152,7 +152,26 @@ public class XSLTResultTest extends StrutsTestCase {
         assertTrue(out.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
         assertTrue(out.indexOf("<validators>") > -1);
     }
-
+    
+    public void testTransformWithError() throws Exception {
+        result = new XSLTResult(){
+            protected URIResolver getURIResolver() {
+                return new URIResolver() {
+                    public Source resolve(String href, String base) throws TransformerException {
+                        throw new TransformerException("Some random error");
+                    }
+                };
+            }
+        };
+        result.setLocation("XSLTResultTest4.xsl");
+        try {
+            result.execute(mai);
+            fail("Should have thrown an exception");
+        } catch (Exception ex) {
+            assertEquals("Error transforming result", ex.getMessage());
+        }
+    }
+    
     protected void setUp() throws Exception {
         super.setUp();
         request = new MockHttpServletRequest();

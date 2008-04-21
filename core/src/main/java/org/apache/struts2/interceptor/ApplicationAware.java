@@ -38,5 +38,5 @@ public interface ApplicationAware {
      *
      * @param application a Map of application properties.
      */
-    public void setApplication(Map application);
+    public void setApplication(Map<String,Object> application);
 }

@@ -99,7 +99,7 @@ public final class StrutsConstants {
     /** List of Velocity context names */
     public static final String STRUTS_VELOCITY_CONTEXTS = "struts.velocity.contexts";
 
-    /** The directory containing UI templates */
+    /** The directory containing UI templates.  All templates must reside in this directory. */
     public static final String STRUTS_UI_TEMPLATEDIR = "struts.ui.templateDir";
 
     /** The default UI template theme */

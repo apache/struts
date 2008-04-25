@@ -68,6 +68,10 @@
         <outputDirectory>docs/struts2-plugins/struts2-dojo-plugin</outputDirectory>
       </fileSet>
       <fileSet>
+        <directory>../plugins/dojo/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-dwr-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
         <directory>../plugins/jasperreports/target/site</directory>
         <outputDirectory>docs/struts2-plugins/struts2-jasperreports-plugin</outputDirectory>
       </fileSet>
@@ -78,6 +82,10 @@
       <fileSet>
         <directory>../plugins/jsf/target/site</directory>
         <outputDirectory>docs/struts2-plugins/struts2-jsf-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/jsf/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-junit-plugin</outputDirectory>
       </fileSet>
       <fileSet>
         <directory>../plugins/pell-multipart/target/site</directory>
@@ -110,6 +118,10 @@
       <fileSet>
         <directory>../plugins/sitemesh/target/site</directory>
         <outputDirectory>docs/struts2-plugins/struts2-sitemesh-plugin</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../plugins/tiles/target/site</directory>
+        <outputDirectory>docs/struts2-plugins/struts2-testng-plugin</outputDirectory>
       </fileSet>
       <fileSet>
         <directory>../plugins/tiles/target/site</directory>

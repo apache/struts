@@ -45,6 +45,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
+import freemarker.core.ParseException;
 
 /**
  * Freemarker based template engine.
@@ -118,7 +119,12 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
                     // try to load, and if it works, stop at the first one
                     template = config.getTemplate(templateName);
                     break;
+                } catch (ParseException e) {
+                    // template was found but was invalid - always report this.
+                    exception = e;
+                    break;
                 } catch (IOException e) {
+                    // FileNotFoundException is anticipated - report the first IOException if no template found
                     if (exception == null) {
                         exception = e;
                     }
@@ -133,11 +139,6 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
                     LOG.error("Attempted: " + getFinalTemplateName(t));
                 }
                 LOG.error("The TemplateLoader provided by the FreeMarker Configuration was a: "+config.getTemplateLoader().getClass().getName());
-                if (freemarkerCaching) {
-                    LOG.error("FreeMarker Template caching is enabled ("+StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE+"=true) and this template is now cached as missing (the TemplateLoader won't be asked again)");
-                } else {
-                    LOG.error("FreeMarker Template caching is disabled ("+StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE+"=false)");
-                }
             }
             if (exception != null) {
                 throw exception;

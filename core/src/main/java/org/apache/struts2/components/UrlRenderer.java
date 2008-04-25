@@ -28,6 +28,13 @@ import java.io.Writer;
  *
  */
 public interface UrlRenderer {
+	
+	/**
+	 * Preprocessing step
+	 * @param urlComponent
+	 */
+	void beforeRenderUrl(URL urlComponent);
+	
 	/**
 	 * Render a URL.
 	 * @param writer A writer that the implementation can use to write the result to.
@@ -40,4 +47,5 @@ public interface UrlRenderer {
 	 * @param formComponent The {@link Form} component that "owns" this renderer.
 	 */
 	void renderFormUrl(Form formComponent);
+
 }

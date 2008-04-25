@@ -136,4 +136,7 @@ public class PortletUrlRenderer implements UrlRenderer {
 		
 	}
 
+	public void beforeRenderUrl(URL urlComponent) {
+	}
+
 }

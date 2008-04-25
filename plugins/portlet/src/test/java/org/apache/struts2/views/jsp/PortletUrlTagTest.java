@@ -38,6 +38,7 @@ import javax.servlet.jsp.PageContext;
 
 import junit.textui.TestRunner;
 
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
@@ -49,6 +50,7 @@ import com.mockobjects.servlet.MockJspWriter;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
 
@@ -334,6 +336,57 @@ public class PortletUrlTagTest extends MockObjectTestCase {
         mockPortletUrl.expects(once()).method("setWindowState").with(eq(WindowState.NORMAL));
     	tag.doStartTag();
     	tag.doEndTag();    	
+    }
+    
+    public void testUrlShouldNotIncludeParamsFromHttpQueryString() throws Exception {
+        PortletMode mode = PortletMode.VIEW;
+
+        mockHttpReq.stubs().method("getQueryString").will(returnValue("thisParamShouldNotBeIncluded=thisValueShouldNotBeIncluded"));
+
+        mockPortletRes.expects(once()).method("createRenderURL").will(
+                returnValue((PortletURL) mockPortletUrl.proxy()));
+
+        Map paramMap = new HashMap();
+        paramMap.put(PortletActionConstants.ACTION_PARAM, new String[]{"/view/testAction"});
+        paramMap.put("testParam1", new String[]{"testValue1"});
+        paramMap.put(PortletActionConstants.MODE_PARAM, new String[]{mode.toString()});
+
+        mockPortletUrl.expects(once()).method("setParameters").with(new ParamMapConstraint(paramMap));
+        mockPortletUrl.expects(once()).method("setPortletMode").with(eq(PortletMode.VIEW));
+        mockPortletUrl.expects(once()).method("setWindowState").with(eq(WindowState.NORMAL));
+        
+        // Mock the container. Need to do this to create test to reproduce WW-2504
+        Mock mockContainer = mock(Container.class);
+        mockContainer.stubs().method("getInstance").with(new Constraint[]{eq(String.class), eq(StrutsConstants.STRUTS_I18N_ENCODING)});
+        ActionContext ctx = ActionContext.getContext();
+        ctx.setContainer((Container)mockContainer.proxy());
+
+        tag.setAction("testAction?testParam1=testValue1");
+        tag.doStartTag();
+        tag.doEndTag();
+    }
+    
+    public void testUrlShouldIgnoreIncludeParams() throws Exception {
+        PortletMode mode = PortletMode.VIEW;
+
+        mockHttpReq.stubs().method("getQueryString").will(returnValue("thisParamShouldNotBeIncluded=thisValueShouldNotBeIncluded"));
+
+        mockPortletRes.expects(once()).method("createRenderURL").will(
+                returnValue((PortletURL) mockPortletUrl.proxy()));
+
+        Map paramMap = new HashMap();
+        paramMap.put(PortletActionConstants.ACTION_PARAM, new String[]{"/view/testAction"});
+        paramMap.put("testParam1", new String[]{"testValue1"});
+        paramMap.put(PortletActionConstants.MODE_PARAM, new String[]{mode.toString()});
+
+        mockPortletUrl.expects(once()).method("setParameters").with(new ParamMapConstraint(paramMap));
+        mockPortletUrl.expects(once()).method("setPortletMode").with(eq(PortletMode.VIEW));
+        mockPortletUrl.expects(once()).method("setWindowState").with(eq(WindowState.NORMAL));
+
+        tag.setAction("testAction?testParam1=testValue1");
+        tag.setIncludeParams("GET");
+        tag.doStartTag();
+        tag.doEndTag();
     }
     
     private static class ParamMapConstraint implements Constraint {

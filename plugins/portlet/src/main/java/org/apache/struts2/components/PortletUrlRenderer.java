@@ -20,19 +20,15 @@
  */
 package org.apache.struts2.components;
 
+import java.io.IOException;
+import java.io.Writer;
+
+import org.apache.struts2.StrutsException;
+import org.apache.struts2.portlet.util.PortletUrlHelper;
+
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.TextUtils;
-import org.apache.struts2.StrutsException;
-import org.apache.struts2.portlet.util.PortletUrlHelper;
-import org.apache.struts2.views.util.UrlHelper;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Implementation of the {@link UrlRenderer} interface that renders URLs for portlet environments.

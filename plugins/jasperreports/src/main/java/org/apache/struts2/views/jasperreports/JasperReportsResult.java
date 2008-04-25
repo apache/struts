@@ -96,13 +96,27 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *
  * <li><b>imageServletUrl</b> - name of the url that, when prefixed with the
  * context page, can return report images.</li>
+ * 
+ * <li>
+ *   <b>reportParameters</b> - (2.1.2+) OGNL expression used to retrieve a map of
+ *   report parameters from the value stack. The parameters may be accessed
+ *   in the report via the usual JR mechanism and might include data not
+ *   part of the dataSource, such as the user name of the report creator, etc.
+ * </li>
+ * 
+ * <li>
+ *   <b>exportParameters</b> - (2.1.2+) OGNL expression used to retrieve a map of
+ *   JR exporter parameters from the value stack. The export parameters are
+ *   used to customize the JR export. For example, a PDF export might enable
+ *   encryption and set the user password to a string known to the report creator.
+ * </li> 
  *
  * </ul>
  *
  * <p>
- * This result follows the same rules from {@link StrutsResultSupport}.
- * Specifically, all parameters will be parsed if the "parse" parameter is not
- * set to false.
+ *   This result follows the same rules from {@link StrutsResultSupport}.
+ *   Specifically, all parameters will be parsed if the "parse" parameter 
+ *   is not set to false.
  * </p>
  * <!-- END SNIPPET: params -->
  *

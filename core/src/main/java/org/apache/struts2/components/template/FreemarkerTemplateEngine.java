@@ -127,7 +127,18 @@ public class FreemarkerTemplateEngine extends BaseTemplateEngine {
         }
 
         if (template == null) {
-            LOG.error("Could not load template " + templateContext.getTemplate());
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Could not load the FreeMarker template named '" + templateContext.getTemplate().getName() +"':");
+                for (Template t : templates) {
+                    LOG.error("Attempted: " + getFinalTemplateName(t));
+                }
+                LOG.error("The TemplateLoader provided by the FreeMarker Configuration was a: "+config.getTemplateLoader().getClass().getName());
+                if (freemarkerCaching) {
+                    LOG.error("FreeMarker Template caching is enabled ("+StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE+"=true) and this template is now cached as missing (the TemplateLoader won't be asked again)");
+                } else {
+                    LOG.error("FreeMarker Template caching is disabled ("+StrutsConstants.STRUTS_FREEMARKER_TEMPLATES_CACHE+"=false)");
+                }
+            }
             if (exception != null) {
                 throw exception;
             } else {

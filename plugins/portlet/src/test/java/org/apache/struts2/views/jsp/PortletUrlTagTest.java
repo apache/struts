@@ -20,437 +20,330 @@
  */
 package org.apache.struts2.views.jsp;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
+import javax.portlet.PortletContext;
 import javax.portlet.PortletMode;
+import javax.portlet.PortletModeException;
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.PageContext;
+import javax.portlet.WindowStateException;
 
-import junit.textui.TestRunner;
-
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.StrutsTestCase;
 import org.apache.struts2.portlet.PortletActionConstants;
+import org.apache.struts2.portlet.servlet.PortletServletRequest;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
-import org.jmock.Mock;
-import org.jmock.cglib.MockObjectTestCase;
-import org.jmock.core.Constraint;
+import org.springframework.mock.web.portlet.MockPortalContext;
+import org.springframework.mock.web.portlet.MockPortletURL;
+import org.springframework.mock.web.portlet.MockRenderRequest;
+import org.springframework.mock.web.portlet.MockRenderResponse;
 
 import com.mockobjects.servlet.MockJspWriter;
+import com.mockobjects.servlet.MockPageContext;
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxy;
-import com.opensymphony.xwork2.inject.Container;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
+import com.opensymphony.xwork2.mock.MockActionProxy;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 
 /**
  */
 @SuppressWarnings("unchecked")
-public class PortletUrlTagTest extends MockObjectTestCase {
+public class PortletUrlTagTest extends StrutsTestCase {
 
-    URLTag tag = new URLTag();
+	private URLTag tag = new URLTag();
 
-    Mock mockHttpReq = null;
+	private ValueStack stack = null;
 
-    Mock mockHttpRes = null;
+	private ActionContext context = null;
 
-    Mock mockPortletReq = null;
+	private MockRenderRequest renderRequest;
 
-    Mock mockPortletRes = null;
+	private MockPortletUrl renderUrl;
 
-    Mock mockPageCtx = null;
+	private MockPortletUrl actionUrl;
 
-    Mock mockPortletUrl = null;
+	private MockRenderResponse renderResponse;
 
-    MockJspWriter mockJspWriter = null;
+	private MockPageContext pageContext;
 
-    ValueStack stack = null;
+	private MockActionInvocation actionInvocation;
 
-    public static void main(String[] args) {
-        TestRunner.run(PortletUrlTagTest.class);
-    }
+	private MockActionProxy actionProxy;
 
-    public void setUp() throws Exception {
-        super.setUp();
+	private MockJspWriter jspWriter;
 
-        Dispatcher du = new Dispatcher(null, new HashMap());
-        du.init();
-        Dispatcher.setInstance(du);
+	public void setUp() throws Exception {
+		super.setUp();
 
-        stack = du.getContainer().getInstance(ValueStackFactory.class).createValueStack();
-        stack.getContext().put(ActionContext.CONTAINER, du.getContainer());
-        ActionContext.setContext(new ActionContext(stack.getContext()));
-        
+		context = ActionContext.getContext();
+		stack = context.getValueStack();
 
+		renderRequest = new MockRenderRequest();
+		renderRequest.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
+		renderUrl = new MockPortletUrl("render");
+		actionUrl = new MockPortletUrl("action");
+		renderResponse = new MockRenderResponse() {
+			@Override
+			public PortletURL createRenderURL() {
+				return renderUrl;
+			}
 
-        mockHttpReq = mock(HttpServletRequest.class);
-        mockHttpRes = mock(HttpServletResponse.class);
-        mockPortletReq = mock(RenderRequest.class);
-        mockPortletRes = mock(RenderResponse.class);
-        mockPageCtx = mock(PageContext.class);
-        mockPortletUrl = mock(PortletURL.class);
-        mockJspWriter = new MockJspWriter();
+			@Override
+			public PortletURL createActionURL() {
+				return actionUrl;
+			}
+		};
 
-        mockPageCtx.stubs().method("getRequest").will(
-                returnValue((HttpServletRequest) mockHttpReq.proxy()));
-        mockPageCtx.stubs().method("getResponse").will(
-                returnValue((HttpServletResponse) mockHttpRes.proxy()));
-        mockPageCtx.stubs().method("getOut").will(returnValue(mockJspWriter));
+		Map modeMap = new HashMap();
+		modeMap.put(PortletMode.VIEW, "/view");
+		modeMap.put(PortletMode.HELP, "/help");
+		modeMap.put(PortletMode.EDIT, "/edit");
 
-        mockHttpReq.stubs().method("getScheme").will(returnValue("http"));
-        mockHttpReq.stubs().method("getAttribute").with(
-                eq("struts.valueStack")).will(returnValue(stack));
-        mockHttpReq.stubs().method("getAttribute").with(
-                eq("javax.portlet.response")).will(
-                returnValue((PortletResponse) mockPortletRes.proxy()));
-        mockHttpReq.stubs().method("getAttribute").with(
-                eq("javax.portlet.request")).will(
-                returnValue((PortletRequest) mockPortletReq.proxy()));
+		context.put(PortletActionConstants.REQUEST, renderRequest);
+		context.put(PortletActionConstants.RESPONSE, renderResponse);
+		context.put(PortletActionConstants.PHASE, PortletActionConstants.RENDER_PHASE);
+		context.put(PortletActionConstants.MODE_NAMESPACE_MAP, modeMap);
 
-        mockPortletReq.stubs().method("getPortletMode").will(returnValue(PortletMode.VIEW));
-        mockPortletReq.stubs().method("getWindowState").will(returnValue(WindowState.NORMAL));
-        mockPortletReq.stubs().method("getContextPath").will(returnValue("/contextPath"));
+		actionInvocation = new MockActionInvocation();
+		actionProxy = new MockActionProxy();
 
-        tag.setPageContext((PageContext) mockPageCtx.proxy());
+		actionInvocation.setAction(new Object());
+		actionInvocation.setProxy(actionProxy);
+		actionInvocation.setStack(stack);
 
-        Map modeMap = new HashMap();
-        modeMap.put(PortletMode.VIEW, "/view");
-        modeMap.put(PortletMode.HELP, "/help");
-        modeMap.put(PortletMode.EDIT, "/edit");
-        Map sessionMap = new HashMap();
-        Map contextMap = new HashMap();
-        contextMap.put(ActionContext.SESSION, sessionMap);
-        contextMap.put(PortletActionConstants.REQUEST, mockPortletReq.proxy());
-        contextMap.put(PortletActionConstants.RESPONSE, mockPortletRes.proxy());
-        contextMap.put(PortletActionConstants.PHASE, PortletActionConstants.RENDER_PHASE);
-        contextMap.put(PortletActionConstants.MODE_NAMESPACE_MAP, modeMap);
-        ActionContext ctx = new ActionContext(contextMap);
-        ctx.setValueStack(stack);
-        ActionContext.setContext(ctx);
-    }
+		context.setActionInvocation(actionInvocation);
 
-    public void testEnsureParamsAreStringArrays() {
-        Map params = new HashMap();
-        params.put("param1", "Test1");
-        params.put("param2", new String[] { "Test2" });
+		pageContext = new MockPageContext();
+		pageContext.setRequest(new PortletServletRequest(renderRequest, null));
+		jspWriter = new MockJspWriter();
+		pageContext.setJspWriter(jspWriter);
 
-        Map result = PortletUrlHelper.ensureParamsAreStringArrays(params);
-        assertEquals(2, result.size());
-        assertTrue(result.get("param1") instanceof String[]);
-    }
+		tag.setPageContext(pageContext);
 
-    public void testSetWindowState() throws Exception {
-
-        PortletMode mode = PortletMode.VIEW;
-
-        mockHttpReq.stubs().method("getQueryString").will(returnValue(""));
-
-        mockPortletRes.expects(once()).method("createRenderURL").will(
-                returnValue((PortletURL) mockPortletUrl.proxy()));
-
-        Map paramMap = new HashMap();
-        paramMap.put(PortletActionConstants.ACTION_PARAM, new String[]{"/view/testAction"});
-        paramMap.put(PortletActionConstants.MODE_PARAM, new String[]{mode.toString()});
-
-        mockPortletUrl.expects(once()).method("setParameters").with(new ParamMapConstraint(paramMap));
-        mockPortletUrl.expects(once()).method("setWindowState").with(eq(WindowState.MAXIMIZED));
-        mockPortletUrl.expects(once()).method("setPortletMode").with(eq(PortletMode.VIEW));
-
-        tag.setAction("testAction");
-        tag.setWindowState("maximized");
-        tag.doStartTag();
-        tag.doEndTag();
-
-    }
-
-    public void testSetPortletMode() throws Exception  {
-
-        PortletMode mode = PortletMode.HELP;
-
-        mockHttpReq.stubs().method("getQueryString").will(returnValue(""));
-
-        mockPortletRes.expects(once()).method("createRenderURL").will(
-                returnValue((PortletURL) mockPortletUrl.proxy()));
-
-        Map paramMap = new HashMap();
-        paramMap.put(PortletActionConstants.ACTION_PARAM, new String[]{"/help/testAction"});
-        paramMap.put(PortletActionConstants.MODE_PARAM, new String[]{mode.toString()});
-
-        mockPortletUrl.expects(once()).method("setParameters").with(new ParamMapConstraint(paramMap));
-        mockPortletUrl.expects(once()).method("setPortletMode").with(eq(PortletMode.HELP));
-        mockPortletUrl.expects(once()).method("setWindowState").with(eq(WindowState.NORMAL));
-
-        tag.setAction("testAction");
-        tag.setPortletMode("help");
-        tag.doStartTag();
-        tag.doEndTag();
-    }
-
-    public void testUrlWithQueryParams() throws Exception {
-
-        PortletMode mode = PortletMode.VIEW;
-
-        mockHttpReq.stubs().method("getQueryString").will(returnValue(""));
-
-        mockPortletRes.expects(once()).method("createRenderURL").will(
-                returnValue((PortletURL) mockPortletUrl.proxy()));
-
-        Map paramMap = new HashMap();
-        paramMap.put(PortletActionConstants.ACTION_PARAM, new String[]{"/view/testAction"});
-        paramMap.put("testParam1", new String[]{"testValue1"});
-        paramMap.put(PortletActionConstants.MODE_PARAM, new String[]{mode.toString()});
-
-        mockPortletUrl.expects(once()).method("setParameters").with(new ParamMapConstraint(paramMap));
-        mockPortletUrl.expects(once()).method("setPortletMode").with(eq(PortletMode.VIEW));
-        mockPortletUrl.expects(once()).method("setWindowState").with(eq(WindowState.NORMAL));
-
-        tag.setAction("testAction?testParam1=testValue1");
-        tag.doStartTag();
-        tag.doEndTag();
-    }
-
-    public void testActionUrl() throws Exception {
-
-        PortletMode mode = PortletMode.VIEW;
-
-        mockHttpReq.stubs().method("getQueryString").will(returnValue(""));
-
-        mockPortletRes.expects(once()).method("createActionURL").will(
-                returnValue((PortletURL) mockPortletUrl.proxy()));
-
-        Map paramMap = new HashMap();
-        paramMap.put(PortletActionConstants.ACTION_PARAM, new String[]{"/view/testAction"});
-        paramMap.put(PortletActionConstants.MODE_PARAM, new String[]{mode.toString()});
-
-        mockPortletUrl.expects(once()).method("setParameters").with(new ParamMapConstraint(paramMap));
-        mockPortletUrl.expects(once()).method("setPortletMode").with(eq(PortletMode.VIEW));
-        mockPortletUrl.expects(once()).method("setWindowState").with(eq(WindowState.NORMAL));
-
-        tag.setAction("testAction");
-        tag.setPortletUrlType("action");
-        tag.doStartTag();
-        tag.doEndTag();
-    }
-
-    public void testResourceUrl() throws Exception {
-        mockHttpReq.stubs().method("getQueryString").will(returnValue(""));
-        mockPortletRes.expects(once()).method("encodeURL").will(returnValue("/contextPath/image.gif"));
-        mockJspWriter.setExpectedData("/contextPath/image.gif");
-        tag.setValue("image.gif");
-        tag.doStartTag();
-        tag.doEndTag();
-        mockJspWriter.verify();
-    }
-
-    public void testResourceUrlWithNestedParam() throws Exception {
-        mockHttpReq.stubs().method("getQueryString").will(returnValue(""));
-        mockPortletRes.expects(once()).method("encodeURL").with(eq("/contextPath/image.gif?testParam1=testValue1")).will(returnValue("/contextPath/image.gif?testParam1=testValue1"));
-        mockJspWriter.setExpectedData("/contextPath/image.gif?testParam1=testValue1");
-
-        ParamTag paramTag = new ParamTag();
-        paramTag.setPageContext((PageContext)mockPageCtx.proxy());
-        paramTag.setParent(tag);
-        paramTag.setName("testParam1");
-        paramTag.setValue("'testValue1'");
-        tag.setValue("image.gif");
-        tag.doStartTag();
-        paramTag.doStartTag();
-        paramTag.doEndTag();
-        tag.doEndTag();
-        mockJspWriter.verify();
-    }
-
-    public void testResourceUrlWithTwoNestedParam() throws Exception {
-        mockHttpReq.stubs().method("getQueryString").will(returnValue(""));
-        mockPortletRes.expects(once()).method("encodeURL").with(eq("/contextPath/image.gif?testParam1=testValue1&testParam2=testValue2")).will(returnValue("/contextPath/image.gif?testParam1=testValue1&testParam2=testValue2"));
-        mockJspWriter.setExpectedData("/contextPath/image.gif?testParam1=testValue1&testParam2=testValue2");
-
-        ParamTag paramTag = new ParamTag();
-        paramTag.setPageContext((PageContext)mockPageCtx.proxy());
-        paramTag.setParent(tag);
-        paramTag.setName("testParam1");
-        paramTag.setValue("'testValue1'");
-        ParamTag paramTag2 = new ParamTag();
-        paramTag2.setPageContext((PageContext)mockPageCtx.proxy());
-        paramTag2.setParent(tag);
-        paramTag2.setName("testParam2");
-        paramTag2.setValue("'testValue2'");
-        tag.setValue("image.gif");
-        tag.doStartTag();
-        paramTag.doStartTag();
-        paramTag.doEndTag();
-        paramTag2.doStartTag();
-        paramTag2.doEndTag();
-        tag.doEndTag();
-        mockJspWriter.verify();
-    }
-
-    public void testUrlWithMethod() throws Exception {
-    	PortletMode mode = PortletMode.VIEW;
-    	mockHttpReq.stubs().method("getQueryString").will(returnValue(""));
-        mockPortletRes.expects(once()).method("createRenderURL").will(
-                returnValue((PortletURL) mockPortletUrl.proxy()));
-    	tag.setAction("testAction");
-    	Map paramMap = new HashMap();
-        paramMap.put(PortletActionConstants.ACTION_PARAM, new String[]{"/view/testAction!input"});
-        paramMap.put(PortletActionConstants.MODE_PARAM, new String[]{mode.toString()});
-        mockPortletUrl.expects(once()).method("setParameters").with(new ParamMapConstraint(paramMap));
-        mockPortletUrl.expects(once()).method("setPortletMode").with(eq(PortletMode.VIEW));
-        mockPortletUrl.expects(once()).method("setWindowState").with(eq(WindowState.NORMAL));
-    	tag.setMethod("input");
-    	tag.doStartTag();
-    	tag.doEndTag();
-    }
-    
-    public void testUrlWithNoActionOrMethod() throws Exception {
-    	PortletMode mode = PortletMode.VIEW;
-    	mockHttpReq.stubs().method("getQueryString").will(returnValue(""));
-        mockPortletRes.expects(once()).method("createRenderURL").will(
-                returnValue((PortletURL) mockPortletUrl.proxy()));
-    	Map paramMap = new HashMap();
-    	
-    	Mock mockActionProxy = mock(ActionProxy.class);
-    	mockActionProxy.stubs().method("getActionName").will(returnValue("currentExecutingAction"));
-    	final ActionProxy proxy = (ActionProxy)mockActionProxy.proxy();
-    	
-    	Mock mockActionInvocation = mock(ActionInvocation.class);
-    	mockActionInvocation.stubs().method("getProxy").will(returnValue(proxy));
-    	ActionInvocation ai = (ActionInvocation)mockActionInvocation.proxy();
-
-    	stack.getContext().put(ActionContext.ACTION_INVOCATION, ai);
-        paramMap.put(PortletActionConstants.ACTION_PARAM, new String[]{"/view/currentExecutingAction"});
-        paramMap.put(PortletActionConstants.MODE_PARAM, new String[]{mode.toString()});
-        mockPortletUrl.expects(once()).method("setParameters").with(new ParamMapConstraint(paramMap));
-        mockPortletUrl.expects(once()).method("setPortletMode").with(eq(PortletMode.VIEW));
-        mockPortletUrl.expects(once()).method("setWindowState").with(eq(WindowState.NORMAL));
-    	tag.doStartTag();
-    	tag.doEndTag();    	
-    }
-    
-    public void testUrlShouldNotIncludeParamsFromHttpQueryString() throws Exception {
-        PortletMode mode = PortletMode.VIEW;
-
-        mockHttpReq.stubs().method("getQueryString").will(returnValue("thisParamShouldNotBeIncluded=thisValueShouldNotBeIncluded"));
-
-        mockPortletRes.expects(once()).method("createRenderURL").will(
-                returnValue((PortletURL) mockPortletUrl.proxy()));
-
-        Map paramMap = new HashMap();
-        paramMap.put(PortletActionConstants.ACTION_PARAM, new String[]{"/view/testAction"});
-        paramMap.put("testParam1", new String[]{"testValue1"});
-        paramMap.put(PortletActionConstants.MODE_PARAM, new String[]{mode.toString()});
-
-        mockPortletUrl.expects(once()).method("setParameters").with(new ParamMapConstraint(paramMap));
-        mockPortletUrl.expects(once()).method("setPortletMode").with(eq(PortletMode.VIEW));
-        mockPortletUrl.expects(once()).method("setWindowState").with(eq(WindowState.NORMAL));
-        
-        // Mock the container. Need to do this to create test to reproduce WW-2504
-        Mock mockContainer = mock(Container.class);
-        mockContainer.stubs().method("getInstance").with(new Constraint[]{eq(String.class), eq(StrutsConstants.STRUTS_I18N_ENCODING)});
-        ActionContext ctx = ActionContext.getContext();
-        ctx.setContainer((Container)mockContainer.proxy());
-
-        tag.setAction("testAction?testParam1=testValue1");
-        tag.doStartTag();
-        tag.doEndTag();
-    }
-    
-    public void testUrlShouldIgnoreIncludeParams() throws Exception {
-        PortletMode mode = PortletMode.VIEW;
-
-        mockHttpReq.stubs().method("getQueryString").will(returnValue("thisParamShouldNotBeIncluded=thisValueShouldNotBeIncluded"));
-
-        mockPortletRes.expects(once()).method("createRenderURL").will(
-                returnValue((PortletURL) mockPortletUrl.proxy()));
-
-        Map paramMap = new HashMap();
-        paramMap.put(PortletActionConstants.ACTION_PARAM, new String[]{"/view/testAction"});
-        paramMap.put("testParam1", new String[]{"testValue1"});
-        paramMap.put(PortletActionConstants.MODE_PARAM, new String[]{mode.toString()});
-
-        mockPortletUrl.expects(once()).method("setParameters").with(new ParamMapConstraint(paramMap));
-        mockPortletUrl.expects(once()).method("setPortletMode").with(eq(PortletMode.VIEW));
-        mockPortletUrl.expects(once()).method("setWindowState").with(eq(WindowState.NORMAL));
-
-        tag.setAction("testAction?testParam1=testValue1");
-        tag.setIncludeParams("GET");
-        tag.doStartTag();
-        tag.doEndTag();
-    }
-    
-    private static class ParamMapConstraint implements Constraint {
-
-        private Map myExpectedMap = null;
-        private Map myActualMap = null;
-
-        public ParamMapConstraint(Map expectedMap) {
-            if(expectedMap == null) {
-                throw new IllegalArgumentException("Use an isNull constraint instead!");
-            }
-            myExpectedMap = expectedMap;
-        }
-
-        /* (non-Javadoc)
-         * @see org.jmock.core.Constraint#eval(java.lang.Object)
-         */
-        public boolean eval(Object val) {
-            myActualMap = (Map)val;
-            boolean result = false;
-            if(val != null) {
-                if(myExpectedMap.size() == myActualMap.size()) {
-                    Iterator keys = myExpectedMap.keySet().iterator();
-                    boolean allSame = true;
-                    while(keys.hasNext()) {
-                        Object key = keys.next();
-                        if(!myActualMap.containsKey(key)) {
-                            allSame = false;
-                            break;
-                        }
-                        else {
-                            String[] expected = (String[])myExpectedMap.get(key);
-                            String[] actual = (String[])myActualMap.get(key);
-                            if(!Arrays.equals(expected, actual)) {
-                                allSame = false;
-                                break;
-                            }
-                        }
-                    }
-                    result = allSame;
-                }
-            }
-            return result;
-        }
-
-        /* (non-Javadoc)
-         * @see org.jmock.core.SelfDescribing#describeTo(java.lang.StringBuffer)
-         */
-        public StringBuffer describeTo(StringBuffer sb) {
-        	Iterator<String> it = myExpectedMap.keySet().iterator();
-        	while(it.hasNext()) {
-        		String key = it.next();
-        		sb.append(key).append("=");
-        		String[] value = (String[])myExpectedMap.get(key);
-        		sb.append(value[0]);
-        		if(it.hasNext()) {
-        			sb.append(", ");
-        		}
-        	}
-            return sb;
-        }
-
-
-
-    }
-
+	}
+
+	public void testEnsureParamsAreStringArrays() {
+		Map params = new HashMap();
+		params.put("param1", "Test1");
+		params.put("param2", new String[] { "Test2" });
+
+		Map result = PortletUrlHelper.ensureParamsAreStringArrays(params);
+		assertEquals(2, result.size());
+		assertTrue(result.get("param1") instanceof String[]);
+	}
+
+	public void testSetWindowState() throws Exception {
+
+		tag.setAction("testAction");
+		tag.setWindowState("maximized");
+		tag.doStartTag();
+		tag.doEndTag();
+
+		assertEquals("/view/testAction", renderUrl.getParameter(PortletActionConstants.ACTION_PARAM));
+		assertEquals(PortletMode.VIEW.toString(), renderUrl.getParameter(PortletActionConstants.MODE_PARAM));
+		assertEquals(PortletMode.VIEW, renderUrl.getPortletMode());
+		assertEquals(WindowState.MAXIMIZED, renderUrl.getWindowState());
+
+	}
+
+	public void testSetPortletMode() throws Exception {
+
+		tag.setAction("testAction");
+		tag.setPortletMode("help");
+		tag.doStartTag();
+		tag.doEndTag();
+
+		assertEquals("/help/testAction", renderUrl.getParameter(PortletActionConstants.ACTION_PARAM));
+		assertEquals(PortletMode.HELP.toString(), renderUrl.getParameter(PortletActionConstants.MODE_PARAM));
+		assertEquals(PortletMode.HELP, renderUrl.getPortletMode());
+		assertEquals(WindowState.NORMAL, renderUrl.getWindowState());
+	}
+
+	public void testUrlWithQueryParams() throws Exception {
+
+		tag.setAction("testAction?testParam1=testValue1");
+		tag.doStartTag();
+		tag.doEndTag();
+
+		assertEquals("/view/testAction", renderUrl.getParameter(PortletActionConstants.ACTION_PARAM));
+		assertEquals("testValue1", renderUrl.getParameter("testParam1"));
+		assertEquals(PortletMode.VIEW.toString(), renderUrl.getParameter(PortletActionConstants.MODE_PARAM));
+		assertEquals(PortletMode.VIEW, renderUrl.getPortletMode());
+		assertEquals(WindowState.NORMAL, renderUrl.getWindowState());
+	}
+
+	public void testActionUrl() throws Exception {
+
+		tag.setAction("testAction");
+		tag.setPortletUrlType("action");
+		tag.doStartTag();
+		tag.doEndTag();
+
+		assertEquals("/view/testAction", actionUrl.getParameter(PortletActionConstants.ACTION_PARAM));
+		assertEquals(PortletMode.VIEW, actionUrl.getPortletMode());
+		assertEquals(WindowState.NORMAL, actionUrl.getWindowState());
+	}
+
+	public void testResourceUrl() throws Exception {
+		renderRequest.setContextPath("/myPortlet");
+		jspWriter.setExpectedData("/myPortlet/image.gif");
+		tag.setValue("image.gif");
+		tag.doStartTag();
+		tag.doEndTag();
+		jspWriter.verify();
+	}
+
+	public void testResourceUrlWithNestedParam() throws Exception {
+		renderRequest.setContextPath("/myPortlet");
+		jspWriter.setExpectedData("/myPortlet/image.gif?testParam1=testValue1");
+
+		ParamTag paramTag = new ParamTag();
+		paramTag.setPageContext(pageContext);
+		paramTag.setParent(tag);
+		paramTag.setName("testParam1");
+		paramTag.setValue("'testValue1'");
+		tag.setValue("image.gif");
+		tag.doStartTag();
+		paramTag.doStartTag();
+		paramTag.doEndTag();
+		tag.doEndTag();
+		jspWriter.verify();
+	}
+
+	public void testResourceUrlWithTwoNestedParam() throws Exception {
+		renderRequest.setContextPath("/myPortlet");
+		jspWriter.setExpectedData("/myPortlet/image.gif?testParam1=testValue1&testParam2=testValue2");
+
+		ParamTag paramTag = new ParamTag();
+		paramTag.setPageContext(pageContext);
+		paramTag.setParent(tag);
+		paramTag.setName("testParam1");
+		paramTag.setValue("'testValue1'");
+		ParamTag paramTag2 = new ParamTag();
+		paramTag2.setPageContext(pageContext);
+		paramTag2.setParent(tag);
+		paramTag2.setName("testParam2");
+		paramTag2.setValue("'testValue2'");
+		tag.setValue("image.gif");
+		tag.doStartTag();
+		paramTag.doStartTag();
+		paramTag.doEndTag();
+		paramTag2.doStartTag();
+		paramTag2.doEndTag();
+		tag.doEndTag();
+		jspWriter.verify();
+	}
+
+	public void testUrlWithMethod() throws Exception {
+		tag.setAction("testAction");
+		tag.setMethod("input");
+		tag.doStartTag();
+		tag.doEndTag();
+
+		assertEquals("/view/testAction!input", renderUrl.getParameter(PortletActionConstants.ACTION_PARAM));
+		assertEquals(PortletMode.VIEW.toString(), renderUrl.getParameter(PortletActionConstants.MODE_PARAM));
+		assertEquals(PortletMode.VIEW, renderUrl.getPortletMode());
+		assertEquals(WindowState.NORMAL, renderUrl.getWindowState());
+	}
+
+	public void testUrlWithNoActionOrMethod() throws Exception {
+		actionProxy.setActionName("currentExecutingAction");
+		actionProxy.setNamespace("/currentNamespace");
+		tag.doStartTag();
+		tag.doEndTag();
+
+		assertEquals("/view/currentNamespace/currentExecutingAction", renderUrl
+				.getParameter(PortletActionConstants.ACTION_PARAM));
+		assertEquals(PortletMode.VIEW.toString(), renderUrl.getParameter(PortletActionConstants.MODE_PARAM));
+		assertEquals(PortletMode.VIEW, renderUrl.getPortletMode());
+		assertEquals(WindowState.NORMAL, renderUrl.getWindowState());
+	}
+
+	public void testUrlShouldNotIncludeParamsFromHttpQueryString() throws Exception {
+
+		PortletServletRequestWithQueryString req = new PortletServletRequestWithQueryString(renderRequest, null);
+		req.setQueryString("thisParamShouldNotBeIncluded=thisValueShouldNotBeIncluded");
+		pageContext.setRequest(req);
+		tag.setAction("testAction?testParam1=testValue1");
+		tag.doStartTag();
+		tag.doEndTag();
+
+		assertEquals("/view/testAction", renderUrl.getParameter(PortletActionConstants.ACTION_PARAM));
+		assertEquals("testValue1", renderUrl.getParameter("testParam1"));
+		assertNull(renderUrl.getParameter("thisParamShouldNotBeIncluded"));
+		assertEquals(PortletMode.VIEW.toString(), renderUrl.getParameter(PortletActionConstants.MODE_PARAM));
+		assertEquals(PortletMode.VIEW, renderUrl.getPortletMode());
+		assertEquals(WindowState.NORMAL, renderUrl.getWindowState());
+	}
+
+	public void testUrlShouldIgnoreIncludeParams() throws Exception {
+		PortletServletRequestWithQueryString req = new PortletServletRequestWithQueryString(renderRequest, null);
+		req.setQueryString("thisParamShouldNotBeIncluded=thisValueShouldNotBeIncluded");
+		pageContext.setRequest(req);
+		tag.setAction("testAction?testParam1=testValue1");
+		tag.setIncludeParams("GET");
+		tag.doStartTag();
+		tag.doEndTag();
+
+		assertEquals("/view/testAction", renderUrl.getParameter(PortletActionConstants.ACTION_PARAM));
+		assertEquals("testValue1", renderUrl.getParameter("testParam1"));
+		assertNull(renderUrl.getParameter("thisParamShouldNotBeIncluded"));
+		assertEquals(PortletMode.VIEW.toString(), renderUrl.getParameter(PortletActionConstants.MODE_PARAM));
+		assertEquals(PortletMode.VIEW, renderUrl.getPortletMode());
+		assertEquals(WindowState.NORMAL, renderUrl.getWindowState());
+	}
+
+	private static class PortletServletRequestWithQueryString extends PortletServletRequest {
+
+		private String queryString;
+
+		public PortletServletRequestWithQueryString(PortletRequest portletRequest, PortletContext portletContext) {
+			super(portletRequest, portletContext);
+		}
+
+		public void setQueryString(String queryString) {
+			this.queryString = queryString;
+		}
+
+		@Override
+		public String getQueryString() {
+			return queryString;
+		}
+
+	}
+
+	private static class MockPortletUrl extends MockPortletURL {
+
+		private PortletMode portletMode;
+
+		private WindowState windowState;
+
+		public MockPortletUrl(String urlType) {
+			super(new MockPortalContext(), urlType);
+		}
+
+		@Override
+		public void setPortletMode(PortletMode portletMode) throws PortletModeException {
+			super.setPortletMode(portletMode);
+			this.portletMode = portletMode;
+		}
+
+		public PortletMode getPortletMode() {
+			return portletMode;
+		}
+
+		@Override
+		public void setWindowState(WindowState windowState) throws WindowStateException {
+			super.setWindowState(windowState);
+			this.windowState = windowState;
+		}
+
+		public WindowState getWindowState() {
+			return windowState;
+		}
+
+	}
 }

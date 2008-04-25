@@ -25,9 +25,14 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.TextUtils;
 import org.apache.struts2.StrutsException;
 import org.apache.struts2.portlet.util.PortletUrlHelper;
+import org.apache.struts2.views.util.UrlHelper;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Implementation of the {@link UrlRenderer} interface that renders URLs for portlet environments.
@@ -48,6 +53,7 @@ public class PortletUrlRenderer implements UrlRenderer {
 		}
 
         String result;
+        urlComponent.namespace = urlComponent.determineNamespace(urlComponent.namespace, urlComponent.stack, urlComponent.req);
         if (onlyActionSpecified(urlComponent)) {
                 result = PortletUrlHelper.buildUrl(urlComponent.action, urlComponent.namespace, urlComponent.method, urlComponent.parameters, urlComponent.portletUrlType, urlComponent.portletMode, urlComponent.windowState);
         } else if(onlyValueSpecified(urlComponent)){
@@ -97,6 +103,8 @@ public class PortletUrlRenderer implements UrlRenderer {
 	 * {@inheritDoc}
 	 */
 	public void renderFormUrl(Form formComponent) {
+		String namespace = formComponent.determineNamespace(formComponent.namespace, formComponent.getStack(),
+				formComponent.request);
 		String action = null;
         if (formComponent.action != null) {
             action = formComponent.findString(formComponent.action);
@@ -105,7 +113,6 @@ public class PortletUrlRenderer implements UrlRenderer {
         	ActionInvocation ai = (ActionInvocation) formComponent.getStack().getContext().get(ActionContext.ACTION_INVOCATION);
         	action = ai.getProxy().getActionName();
         }
-
         String type = "action";
         if (TextUtils.stringSet(formComponent.method)) {
             if ("GET".equalsIgnoreCase(formComponent.method.trim())) {
@@ -113,7 +120,7 @@ public class PortletUrlRenderer implements UrlRenderer {
             }
         }
         if (action != null) {
-            String result = PortletUrlHelper.buildUrl(action, formComponent.namespace, null,
+            String result = PortletUrlHelper.buildUrl(action, namespace, null,
                     formComponent.getParameters(), type, formComponent.portletMode, formComponent.windowState);
             formComponent.addParameter("action", result);
 

@@ -44,6 +44,7 @@ import net.sf.jasperreports.engine.export.JRCsvExporter;
 import net.sf.jasperreports.engine.export.JRCsvExporterParameter;
 import net.sf.jasperreports.engine.export.JRHtmlExporter;
 import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.JRRtfExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXmlExporter;
@@ -128,9 +129,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
 
     private static final long serialVersionUID = -2523174799621182907L;
 
-
     private final static Logger LOG = LoggerFactory.getLogger(JasperReportsResult.class);
-
 
     protected String dataSource;
     protected String format;
@@ -138,11 +137,31 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
     protected String contentDisposition;
     protected String delimiter;
     protected String imageServletUrl = "/images/";
+    
+    /**
+     * Names a report parameters map stack value, allowing 
+     * additional report parameters from the action. 
+     */
+    protected String reportParameters;
+    
+    /**
+     * Names an exporter parameters map stack value,
+     * allowing the use of custom export parameters.
+     */
+    protected String exportParameters;
 
+    /**
+     * Default ctor.
+     */
     public JasperReportsResult() {
         super();
     }
 
+    /**
+     * Default ctor with location.
+     * 
+     * @param location Result location.
+     */
     public JasperReportsResult(String location) {
         super(location);
     }
@@ -175,30 +194,199 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         this.delimiter = delimiter;
     }
 
-    protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
-        if (this.format == null) {
-            this.format = FORMAT_PDF;
-        }
+	public String getReportParameters() {
+		return reportParameters;
+	}
 
-        if (dataSource == null) {
-            String message = "No dataSource specified...";
-            LOG.error(message);
-            throw new RuntimeException(message);
-        }
+	public void setReportParameters(String reportParameters) {
+		this.reportParameters = reportParameters;
+	}
+	
+	public String getExportParameters() {
+		return exportParameters;
+	}
+
+	public void setExportParameters(String exportParameters) {
+		this.exportParameters = exportParameters;
+	}
+
+	protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
+		// Will throw a runtime exception if no "datasource" property. TODO Best place for that is...?
+        initializeProperties(invocation);
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Creating JasperReport for dataSource = " + dataSource + ", format = " + this.format);
+            LOG.debug("Creating JasperReport for dataSource = " + dataSource + ", format = " + format);
         }
 
         HttpServletRequest request = (HttpServletRequest) invocation.getInvocationContext().get(ServletActionContext.HTTP_REQUEST);
         HttpServletResponse response = (HttpServletResponse) invocation.getInvocationContext().get(ServletActionContext.HTTP_RESPONSE);
 
-        //construct the data source for the report
+        // Handle IE special case: it sends a "contype" request first.
+        // TODO Set content type to config settings?
+        if ("contype".equals(request.getHeader("User-Agent"))) {
+        	try {
+        		response.setContentType("application/pdf");
+        		response.setContentLength(0);
+        		
+        		ServletOutputStream outputStream = response.getOutputStream();
+        		outputStream.close();
+        	} catch (IOException e) {
+        		LOG.error("Error writing report output", e);
+        		throw new ServletException(e.getMessage(), e);
+        	}
+        	return;
+        }
+
+        // Construct the data source for the report.
         ValueStack stack = invocation.getStack();
         ValueStackDataSource stackDataSource = new ValueStackDataSource(stack, dataSource);
 
-        format = conditionalParse(format, invocation);
+        // Determine the directory that the report file is in and set the reportDirectory parameter
+        // For WW 2.1.7:
+        //  ServletContext servletContext = ((ServletConfig) invocation.getInvocationContext().get(ServletActionContext.SERVLET_CONFIG)).getServletContext();
+        ServletContext servletContext = (ServletContext) invocation.getInvocationContext().get(ServletActionContext.SERVLET_CONTEXT);
+        String systemId = servletContext.getRealPath(finalLocation);
+        Map parameters = new ValueStackShadowMap(stack);
+        File directory = new File(systemId.substring(0, systemId.lastIndexOf(File.separator)));
+        parameters.put("reportDirectory", directory);
+        parameters.put(JRParameter.REPORT_LOCALE, invocation.getInvocationContext().getLocale());
+
+        // Add any report parameters from action to param map.
+        Map reportParams = (Map) stack.findValue(reportParameters);
+        if (reportParams != null) {
+        	LOG.debug("Found report parameters; adding to parameters...");
+        	parameters.putAll(reportParams);
+        }
+
+        byte[] output;
+        JasperPrint jasperPrint;
+
+        // Fill the report and produce a print object
+        try {
+            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(systemId);
+            jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, stackDataSource);
+        } catch (JRException e) {
+            LOG.error("Error building report for uri " + systemId, e);
+            throw new ServletException(e.getMessage(), e);
+        }
+
+        // Export the print object to the desired output format
+        try {
+            if (contentDisposition != null || documentName != null) {
+                final StringBuffer tmp = new StringBuffer();
+                tmp.append((contentDisposition == null) ? "inline" : contentDisposition);
+
+                if (documentName != null) {
+                    tmp.append("; filename=");
+                    tmp.append(documentName);
+                    tmp.append(".");
+                    tmp.append(format.toLowerCase());
+                }
+
+                response.setHeader("Content-disposition", tmp.toString());
+            }
+
+            JRExporter exporter;
+
+            if (format.equals(FORMAT_PDF)) {
+                response.setContentType("application/pdf");
+                exporter = new JRPdfExporter();
+            } else if (format.equals(FORMAT_CSV)) {
+                response.setContentType("text/plain");
+                exporter = new JRCsvExporter();
+            } else if (format.equals(FORMAT_HTML)) {
+                response.setContentType("text/html");
+
+                // IMAGES_MAPS seems to be only supported as "backward compatible" from JasperReports 1.1.0
+
+                Map imagesMap = new HashMap();
+                request.getSession(true).setAttribute("IMAGES_MAP", imagesMap);
+
+                exporter = new JRHtmlExporter();
+                exporter.setParameter(JRHtmlExporterParameter.IMAGES_MAP, imagesMap);
+                exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI, request.getContextPath() + imageServletUrl);
+                
+                // Needed to support chart images:
+                exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+                request.getSession().setAttribute("net.sf.jasperreports.j2ee.jasper_print", jasperPrint);
+            } else if (format.equals(FORMAT_XLS)) {
+                response.setContentType("application/vnd.ms-excel");
+                exporter = new JRXlsExporter();
+            } else if (format.equals(FORMAT_XML)) {
+                response.setContentType("text/xml");
+                exporter = new JRXmlExporter();
+            } else if (format.equals(FORMAT_RTF)) {
+                response.setContentType("application/rtf");
+                exporter = new JRRtfExporter();
+            } else {
+                throw new ServletException("Unknown report format: " + format);
+            }
+            
+            Map exportParams = (Map) stack.findValue(exportParameters);
+            if (exportParams != null) {
+            	LOG.debug("Found export parameters; adding to exporter parameters...");
+            	exporter.getParameters().putAll(exportParams);
+            }
+
+            output = exportReportToBytes(jasperPrint, exporter);
+        } catch (JRException e) {
+            String message = "Error producing " + format + " report for uri " + systemId;
+            LOG.error(message, e);
+            throw new ServletException(e.getMessage(), e);
+        }
+
+        response.setContentLength(output.length);
+
+        // Will throw ServletException on IOException.
+        writeReport(response, output);
+    }
+
+	/**
+	 * Writes report bytes to response output stream.
+	 * 
+	 * @param response Current response.
+	 * @param output Report bytes to write.
+	 * @throws ServletException on stream IOException.
+	 */
+	private void writeReport(HttpServletResponse response, byte[] output) throws ServletException {
+		ServletOutputStream outputStream = null;
+        try {
+            outputStream = response.getOutputStream();
+            outputStream.write(output);
+            outputStream.flush();
+        } catch (IOException e) {
+            LOG.error("Error writing report output", e);
+            throw new ServletException(e.getMessage(), e);
+        } finally {
+        	try {
+        		if (outputStream != null) {
+        			outputStream.close();
+        		}
+        	} catch (IOException e) {
+        		LOG.error("Error closing report output stream", e);
+        		throw new ServletException(e.getMessage(), e);
+        	}
+        }
+	}
+
+	/**
+	 * Sets up result properties, parsing etc.
+	 * 
+	 * @param invocation Current invocation.
+	 * @throws Exception on initialization error.
+	 */
+	private void initializeProperties(ActionInvocation invocation) throws Exception {
+		if (dataSource == null) {
+            String message = "No dataSource specified...";
+            LOG.error(message);
+            throw new RuntimeException(message);
+        }
         dataSource = conditionalParse(dataSource, invocation);
+
+        format = conditionalParse(format, invocation);
+        if (!TextUtils.stringSet(format)) {
+            format = FORMAT_PDF;
+        }
 
         if (contentDisposition != null) {
             contentDisposition = conditionalParse(contentDisposition, invocation);
@@ -208,128 +396,9 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
             documentName = conditionalParse(documentName, invocation);
         }
 
-        // (Map) ActionContext.getContext().getSession().get("IMAGES_MAP");
-        if (!TextUtils.stringSet(format)) {
-            format = FORMAT_PDF;
-        }
-
-        if (!"contype".equals(request.getHeader("User-Agent"))) {
-            // Determine the directory that the report file is in and set the reportDirectory parameter
-            // For WW 2.1.7:
-            //  ServletContext servletContext = ((ServletConfig) invocation.getInvocationContext().get(ServletActionContext.SERVLET_CONFIG)).getServletContext();
-            ServletContext servletContext = (ServletContext) invocation.getInvocationContext().get(ServletActionContext.SERVLET_CONTEXT);
-            String systemId = servletContext.getRealPath(finalLocation);
-            Map parameters = new ValueStackShadowMap(stack);
-            File directory = new File(systemId.substring(0, systemId.lastIndexOf(File.separator)));
-            parameters.put("reportDirectory", directory);
-            parameters.put(JRParameter.REPORT_LOCALE, invocation.getInvocationContext().getLocale());
-
-            byte[] output;
-            JasperPrint jasperPrint;
-
-            // Fill the report and produce a print object
-            try {
-                JasperReport jasperReport = (JasperReport) JRLoader.loadObject(systemId);
-
-                jasperPrint =
-                        JasperFillManager.fillReport(jasperReport,
-                                parameters,
-                                stackDataSource);
-            } catch (JRException e) {
-                LOG.error("Error building report for uri " + systemId, e);
-                throw new ServletException(e.getMessage(), e);
-            }
-
-            // Export the print object to the desired output format
-            try {
-                if (contentDisposition != null || documentName != null) {
-                    final StringBuffer tmp = new StringBuffer();
-                    tmp.append((contentDisposition == null) ? "inline" : contentDisposition);
-
-                    if (documentName != null) {
-                        tmp.append("; filename=");
-                        tmp.append(documentName);
-                        tmp.append(".");
-                        tmp.append(format.toLowerCase());
-                    }
-
-                    response.setHeader("Content-disposition", tmp.toString());
-                }
-
-                if (format.equals(FORMAT_PDF)) {
-                    response.setContentType("application/pdf");
-
-                    // response.setHeader("Content-disposition", "inline; filename=report.pdf");
-                    output = JasperExportManager.exportReportToPdf(jasperPrint);
-                } else {
-                    JRExporter exporter;
-
-                    if (format.equals(FORMAT_CSV)) {
-                        response.setContentType("text/plain");
-                        exporter = new JRCsvExporter();
-                    } else if (format.equals(FORMAT_HTML)) {
-                        response.setContentType("text/html");
-
-                        // IMAGES_MAPS seems to be only supported as "backward compatible" from JasperReports 1.1.0
-
-                        Map imagesMap = new HashMap();
-
-                        request.getSession(true).setAttribute("IMAGES_MAP", imagesMap);
-                        exporter = new JRHtmlExporter();
-                        exporter.setParameter(JRHtmlExporterParameter.IMAGES_MAP, imagesMap);
-                        exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI, request.getContextPath() + imageServletUrl);
-                        // Needed to support chart images:
-                        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-                        request.getSession().setAttribute("net.sf.jasperreports.j2ee.jasper_print", jasperPrint);
-
-                    } else if (format.equals(FORMAT_XLS)) {
-                        response.setContentType("application/vnd.ms-excel");
-                        exporter = new JRXlsExporter();
-                    } else if (format.equals(FORMAT_XML)) {
-                        response.setContentType("text/xml");
-                        exporter = new JRXmlExporter();
-                    } else if (format.equals(FORMAT_RTF)) {
-                        response.setContentType("application/rtf");
-                        exporter = new JRRtfExporter();
-                    } else {
-                        throw new ServletException("Unknown report format: " + format);
-                    }
-
-                    output = exportReportToBytes(jasperPrint, exporter);
-                }
-            } catch (JRException e) {
-                String message = "Error producing " + format + " report for uri " + systemId;
-                LOG.error(message, e);
-                throw new ServletException(e.getMessage(), e);
-            }
-
-            response.setContentLength(output.length);
-
-            ServletOutputStream ouputStream;
-
-            try {
-                ouputStream = response.getOutputStream();
-                ouputStream.write(output);
-                ouputStream.flush();
-                ouputStream.close();
-            } catch (IOException e) {
-                LOG.error("Error writing report output", e);
-                throw new ServletException(e.getMessage(), e);
-            }
-        } else {
-            // Code to handle "contype" request from IE
-            try {
-                ServletOutputStream outputStream;
-                response.setContentType("application/pdf");
-                response.setContentLength(0);
-                outputStream = response.getOutputStream();
-                outputStream.close();
-            } catch (IOException e) {
-                LOG.error("Error writing report output", e);
-                throw new ServletException(e.getMessage(), e);
-            }
-        }
-    }
+        reportParameters = conditionalParse(reportParameters, invocation);
+        exportParameters = conditionalParse(exportParameters, invocation);
+	}
 
     /**
      * Run a Jasper report to CSV format and put the results in a byte array
@@ -356,4 +425,5 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
 
         return output;
     }
+
 }

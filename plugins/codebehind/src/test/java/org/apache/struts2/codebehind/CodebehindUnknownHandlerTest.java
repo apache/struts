@@ -33,12 +33,9 @@ import org.apache.struts2.dispatcher.ServletDispatcherResult;
 
 import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.ActionProxyFactory;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.Result;
+import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
 
 public class CodebehindUnknownHandlerTest extends StrutsTestCase {
@@ -98,7 +95,30 @@ public class CodebehindUnknownHandlerTest extends StrutsTestCase {
         assertTrue(url.toString().endsWith("struts-plugin.xml"));
         mockServletContext.verify();
     }
-    
+
+    /**
+     * Assert that an unknown action like /foo maps to ActionSupport with a ServletDispatcherResult to /foo.jsp
+     */
+    public void testBuildActionConfigForUnknownAction() throws MalformedURLException {
+        URL url = new URL("file:/foo.jsp");
+        mockServletContext.expectAndReturn("getResource", C.args(C.eq("/foo.jsp")), url);
+        ActionConfig actionConfig = handler.handleUnknownAction("/", "foo");
+        // we need a package
+        assertEquals("codebehind-default", actionConfig.getPackageName());
+        // a non-empty interceptor stack
+        assertTrue(actionConfig.getInterceptors().size() > 0);
+        // ActionSupport as the implementation
+        assertEquals(ActionSupport.class.getName(), actionConfig.getClassName());
+        // with one result
+        assertEquals(1, actionConfig.getResults().size());
+        // named success
+        assertNotNull(actionConfig.getResults().get("success"));
+        // of ServletDispatcherResult type
+        assertEquals(ServletDispatcherResult.class.getName(), actionConfig.getResults().get("success").getClassName());
+        // and finally pointing to foo.jsp!
+        assertEquals("/foo.jsp", actionConfig.getResults().get("success").getParams().get("location"));
+    }
+
     public static class SomeResult implements Result {
 
         public String location;

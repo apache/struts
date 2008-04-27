@@ -41,10 +41,7 @@ import com.opensymphony.xwork2.UnknownHandler;
 import com.opensymphony.xwork2.XWorkException;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.config.entities.PackageConfig;
-import com.opensymphony.xwork2.config.entities.ResultConfig;
-import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
+import com.opensymphony.xwork2.config.entities.*;
 import com.opensymphony.xwork2.config.providers.InterceptorBuilder;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -119,10 +116,15 @@ public class CodebehindUnknownHandler implements UnknownHandler {
         return actionConfig;
     }
 
+    /** Create a new ActionConfig in the default package, with the default interceptor stack and a single result */
     protected ActionConfig buildActionConfig(String path, String namespace, String actionName, ResultTypeConfig resultTypeConfig) {
-        PackageConfig pkg = configuration.getPackageConfig(defaultPackageName);
+        final PackageConfig pkg = configuration.getPackageConfig(defaultPackageName);
         return new ActionConfig.Builder(defaultPackageName, "execute", ActionSupport.class.getName())
-                .addInterceptors(InterceptorBuilder.constructInterceptorReference(pkg, pkg.getFullDefaultInterceptorRef(),
+                .addInterceptors(InterceptorBuilder.constructInterceptorReference(new InterceptorLocator() {
+                    public Object getInterceptorConfig(String name) {
+                        return pkg.getAllInterceptorConfigs().get(name); // recurse package hiearchy
+                    }
+                }, pkg.getFullDefaultInterceptorRef(),
                 Collections.EMPTY_MAP, null, objectFactory))
                 .addResultConfig(new ResultConfig.Builder(Action.SUCCESS, resultTypeConfig.getClassName())
                         .addParams(resultTypeConfig.getParams())

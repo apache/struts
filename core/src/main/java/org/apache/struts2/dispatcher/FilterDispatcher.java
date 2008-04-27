@@ -203,20 +203,24 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      * @param filterConfig The filter configuration
      */
     public void init(FilterConfig filterConfig) throws ServletException {
-        this.filterConfig = filterConfig;
-       
-        initLogging();
-        
-        dispatcher = createDispatcher(filterConfig);
-        dispatcher.init();
-        dispatcher.getContainer().inject(this);
+        try {
+            this.filterConfig = filterConfig;
 
-        String param = filterConfig.getInitParameter("packages");
-        String packages = "org.apache.struts2.static template org.apache.struts2.interceptor.debugging";
-        if (param != null) {
-            packages = param + " " + packages;
+            initLogging();
+
+            dispatcher = createDispatcher(filterConfig);
+            dispatcher.init();
+            dispatcher.getContainer().inject(this);
+
+            String param = filterConfig.getInitParameter("packages");
+            String packages = "org.apache.struts2.static template org.apache.struts2.interceptor.debugging";
+            if (param != null) {
+                packages = param + " " + packages;
+            }
+            this.pathPrefixes = parse(packages);
+        } finally {
+            ActionContext.setContext(null);
         }
-        this.pathPrefixes = parse(packages);
     }
 
     private void initLogging() {
@@ -252,7 +256,11 @@ public class FilterDispatcher implements StrutsStatics, Filter {
         if (dispatcher == null) {
             log.warn("something is seriously wrong, Dispatcher is not initialized (null) ");
         } else {
-            dispatcher.cleanup();
+            try {
+                dispatcher.cleanup();
+            } finally {
+                ActionContext.setContext(null);
+            }
         }
     }
 

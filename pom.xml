@@ -199,7 +199,6 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <!-- Commenting it out until it stops breaking the release
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>rat-maven-plugin</artifactId>
@@ -225,7 +224,6 @@
                             </execution>
                         </executions>
                     </plugin>
-                    -->
                 </plugins>
             </build>
         </profile>
@@ -311,6 +309,39 @@
                 </execution>
               </executions>
             </plugin>            
+            <!-- Commenting out the license plugin, until it works like we want.
+            To use the "license:format" goal, remove the "core" module before running,
+            otherwise it will ignore the file exclusions.
+ 	    
+            <plugin>
+	            <groupId>com.google.code.maven-license-plugin</groupId>
+	            <artifactId>maven-license-plugin</artifactId>
+	            <version>1.2.7-SNAPSHOT</version>
+	            <configuration>
+	            	<header>src/etc/header.txt</header>
+	            	<includes>
+	            		<include>pom.xml</include>
+	            		<include>src/**</include>
+	            		<include>core/pom.xml</include>
+	            		<include>core/src/**</include>
+	            		<include>plugins/**/pom.xml</include>
+	            		<include>plugins/**/src/**</include>
+	            		<include>apps/**/pom.xml</include>
+	            	</includes>
+	            	<excludes>
+	            		<exclude>**/*.txt</exclude>
+                        <exclude>core/src/test/resources/org/apache/struts2/views/jsp/ui/*</exclude>
+                        <exclude>core/src/main/resources/org/apache/struts2/static/domTT.js</exclude>
+                        <exclude>core/src/test/resources/org/apache/struts2/interceptor/validation/*</exclude>
+                        <exclude>core/src/site/resources/tags/**</exclude>
+                        <exclude>plugins/dojo/src/main/resources/org/apache/struts2/static/dojo/nls/**</exclude>
+                        <exclude>plugins/dojo/src/main/resources/org/apache/struts2/static/dojo/src/**</exclude>
+                        <exclude>plugins/dojo/src/main/resources/org/apache/struts2/static/dojo/*</exclude>
+                        <exclude>plugins/dojo/src/test/resources/org/apache/struts2/dojo/views/jsp/ui/**</exclude>
+	                    <exclude>apps/**/src/**</exclude>
+	            	</excludes>
+	            </configuration>
+	        </plugin> -->
 
         </plugins>
         <defaultGoal>install</defaultGoal>

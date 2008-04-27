@@ -98,6 +98,9 @@
                         <include>pom.xml</include>
                         <include>src/**</include>
                     </includes>
+                    <excludes>
+                        <exclude>src/main/resources/*LICENSE.txt</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>

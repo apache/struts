@@ -1,5 +1,5 @@
 /*
- * $Id: StrutsTestCase.java 588186 2007-10-25 10:01:04Z mrdon $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2;
 
 import java.text.SimpleDateFormat;

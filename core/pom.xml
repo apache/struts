@@ -129,7 +129,6 @@
                     </links>
                 </configuration>
             </plugin>
-            <!--
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>rat-maven-plugin</artifactId>
@@ -144,10 +143,10 @@
                         <exclude>src/main/resources/org/apache/struts2/static/domTT.js</exclude>
                         <exclude>src/test/resources/org/apache/struts2/interceptor/validation/*</exclude>
                         <exclude>src/site/resources/tags/**</exclude>
+                        <exclude>src/main/resources/*LICENSE.txt</exclude>
                     </excludes>
                 </configuration>
             </plugin>
-            -->
         </plugins>
     </reporting>
 

@@ -1,5 +1,5 @@
 /*
- * $Id: TestNGStrutsTestCase.java 502294 2007-02-01 17:28:00Z niallp $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.struts2;
 
 import java.util.Map;

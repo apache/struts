@@ -18,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 dojo.provide("struts.widget.StrutsTabContainer");
 
 dojo.require("dojo.widget.TabContainer");

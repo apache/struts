@@ -1,6 +1,6 @@
 <!--
 /*
- * $Id: XSLTResultTest5.xsl 590812 2007-10-31 20:32:54Z apetrelli $
+ * $Id$
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

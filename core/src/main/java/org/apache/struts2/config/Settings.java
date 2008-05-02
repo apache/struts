@@ -57,6 +57,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * <li>{@link #listImpl()}</li>
  * <li>{@link #isSetImpl(String)}</li>
  * </ul>
+ * @deprecated Since Struts 2.1.2
  */
 class Settings {
 
@@ -124,27 +125,7 @@ class Settings {
      * @see java.util.Locale#getDefault()
      */
     public static Locale getLocale() {
-        if (locale == null) {
-            try {
-                StringTokenizer localeTokens = new StringTokenizer(get(StrutsConstants.STRUTS_LOCALE), "_");
-                String lang = null;
-                String country = null;
-
-                if (localeTokens.hasMoreTokens()) {
-                    lang = localeTokens.nextToken();
-                }
-
-                if (localeTokens.hasMoreTokens()) {
-                    country = localeTokens.nextToken();
-                }
-
-                locale = new Locale(lang, country);
-            } catch (Throwable t) {
-                // Default
-                LOG.warn("Settings: Could not parse struts.locale setting, substituting default VM locale");
-                locale = Locale.getDefault();
-            }
-        }
+        // Locale processing has been moved to the LegacyPropertiesConfigurationProvider
 
         return locale;
     }

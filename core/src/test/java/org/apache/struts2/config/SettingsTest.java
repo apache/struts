@@ -44,9 +44,6 @@ public class SettingsTest extends StrutsTestCase {
         assertEquals("testvalue", Settings.get("testkey"));
         assertEquals("othertestvalue", Settings.get("othertestkey"));
 
-        Locale locale = Settings.getLocale();
-        assertEquals("de", locale.getLanguage());
-
         int count = getKeyCount();
         assertEquals(11, count);
     }

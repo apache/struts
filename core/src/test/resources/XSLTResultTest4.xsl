@@ -25,7 +25,7 @@
                 xmlns="http://www.w3.org/TR/xhtml1/strict">
 
     <xsl:template match="result">
-        <xsl:copy-of select="document('validators.xml')"/>
+        <xsl:copy-of select="document('XSLTResultTest-validators.xml')"/>
     </xsl:template>
 
 </xsl:stylesheet>

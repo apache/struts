@@ -65,90 +65,89 @@ import com.opensymphony.xwork2.util.profiling.UtilTimerStack;
 /**
  * Master filter for Struts that handles four distinct
  * responsibilities:
- *
+ * <p/>
  * <ul>
- *
+ * <p/>
  * <li>Executing actions</li>
- *
+ * <p/>
  * <li>Cleaning up the {@link ActionContext} (see note)</li>
- *
+ * <p/>
  * <li>Serving static content</li>
- *
+ * <p/>
  * <li>Kicking off XWork's interceptor chain for the request lifecycle</li>
- *
+ * <p/>
  * </ul>
- *
+ * <p/>
  * <p/> <b>IMPORTANT</b>: this filter must be mapped to all requests. Unless you know exactly what you are doing, always
  * map to this URL pattern: /*
- *
+ * <p/>
  * <p/> <b>Executing actions</b>
- *
+ * <p/>
  * <p/> This filter executes actions by consulting the {@link ActionMapper} and determining if the requested URL should
  * invoke an action. If the mapper indicates it should, <b>the rest of the filter chain is stopped</b> and the action is
  * invoked. This is important, as it means that filters like the SiteMesh filter must be placed <b>before</b> this
  * filter or they will not be able to decorate the output of actions.
- *
+ * <p/>
  * <p/> <b>Cleaning up the {@link ActionContext}</b>
- *
+ * <p/>
  * <p/> This filter will also automatically clean up the {@link ActionContext} for you, ensuring that no memory leaks
  * take place. However, this can sometimes cause problems integrating with other products like SiteMesh. See {@link
  * ActionContextCleanUp} for more information on how to deal with this.
- *
+ * <p/>
  * <p/> <b>Serving static content</b>
- *
+ * <p/>
  * <p/> This filter also serves common static content needed when using various parts of Struts, such as JavaScript
  * files, CSS files, etc. It works by looking for requests to /struts/*, and then mapping the value after "/struts/"
  * to common packages in Struts and, optionally, in your class path. By default, the following packages are
  * automatically searched:
- *
+ * <p/>
  * <ul>
- *
+ * <p/>
  * <li>org.apache.struts2.static</li>
- *
+ * <p/>
  * <li>template</li>
- *
+ * <p/>
  * </ul>
- *
+ * <p/>
  * <p/> This means that you can simply request /struts/xhtml/styles.css and the XHTML UI theme's default stylesheet
  * will be returned. Likewise, many of the AJAX UI components require various JavaScript files, which are found in the
  * org.apache.struts2.static package. If you wish to add additional packages to be searched, you can add a comma
  * separated (space, tab and new line will do as well) list in the filter init parameter named "packages". <b>Be
  * careful</b>, however, to expose any packages that may have sensitive information, such as properties file with
  * database access credentials.
- *
  * <p/>
- *
+ * <p/>
+ * <p/>
  * <p>
- *
+ * <p/>
  * This filter supports the following init-params:
  * <!-- START SNIPPET: params -->
- *
+ * <p/>
  * <ul>
- *
+ * <p/>
  * <li><b>config</b> - a comma-delimited list of XML configuration files to load.</li>
- *
+ * <p/>
  * <li><b>actionPackages</b> - a comma-delimited list of Java packages to scan for Actions.</li>
- *
+ * <p/>
  * <li><b>configProviders</b> - a comma-delimited list of Java classes that implement the
  * {@link ConfigurationProvider} interface that should be used for building the {@link Configuration}.</li>
- * 
+ * <p/>
  * <li><b>loggerFactory</b> - The class name of the {@link LoggerFactory} implementation.</li>
- *
+ * <p/>
  * <li><b>*</b> - any other parameters are treated as framework constants.</li>
- *
+ * <p/>
  * </ul>
- *
+ * <p/>
  * <!-- END SNIPPET: params -->
- *
+ * <p/>
  * </p>
- *
+ * <p/>
  * To use a custom {@link Dispatcher}, the <code>createDispatcher()</code> method could be overriden by
  * the subclass.
  *
+ * @version $Date$ $Id$
  * @see ActionMapper
  * @see ActionContextCleanUp
- *
- * @version $Date$ $Id$
  */
 public class FilterDispatcher implements StrutsStatics, Filter {
 
@@ -229,22 +228,22 @@ public class FilterDispatcher implements StrutsStatics, Filter {
         if (factoryName != null) {
             try {
                 Class cls = ClassLoaderUtils.loadClass(factoryName, this.getClass());
-                LoggerFactory fac = (LoggerFactory)cls.newInstance();
+                LoggerFactory fac = (LoggerFactory) cls.newInstance();
                 LoggerFactory.setLoggerFactory(fac);
             } catch (InstantiationException e) {
-                System.err.println("Unable to instantiate logger factory: "+factoryName+", using default");
+                System.err.println("Unable to instantiate logger factory: " + factoryName + ", using default");
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
-                System.err.println("Unable to access logger factory: "+factoryName+", using default");
+                System.err.println("Unable to access logger factory: " + factoryName + ", using default");
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
-                System.err.println("Unable to locate logger factory class: "+factoryName+", using default");
+                System.err.println("Unable to locate logger factory class: " + factoryName + ", using default");
                 e.printStackTrace();
             }
         }
-        
+
         log = LoggerFactory.getLogger(FilterDispatcher.class);
-        
+
     }
 
     /**
@@ -273,8 +272,8 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      * @return Initialized Dispatcher
      */
     protected Dispatcher createDispatcher(FilterConfig filterConfig) {
-        Map<String,String> params = new HashMap<String,String>();
-        for (Enumeration e = filterConfig.getInitParameterNames(); e.hasMoreElements(); ) {
+        Map<String, String> params = new HashMap<String, String>();
+        for (Enumeration e = filterConfig.getInitParameterNames(); e.hasMoreElements();) {
             String name = (String) e.nextElement();
             String value = filterConfig.getInitParameter(name);
             params.put(name, value);
@@ -284,6 +283,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
 
     /**
      * Modify state of StrutsConstants.STRUTS_SERVE_STATIC_CONTENT setting.
+     *
      * @param val New setting
      */
     @Inject(StrutsConstants.STRUTS_SERVE_STATIC_CONTENT)
@@ -293,6 +293,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
 
     /**
      * Modify state of StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE setting.
+     *
      * @param val New setting
      */
     @Inject(StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE)
@@ -302,6 +303,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
 
     /**
      * Modify state of StrutsConstants.STRUTS_I18N_ENCODING setting.
+     *
      * @param val New setting
      */
     @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
@@ -311,6 +313,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
 
     /**
      * Modify ActionMapper instance.
+     *
      * @param mapper New instance
      */
     @Inject
@@ -344,7 +347,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      * Wrap and return the given request, if needed, so as to to transparently
      * handle multipart data as a wrapped class around the given request.
      *
-     * @param request Our ServletRequest object
+     * @param request  Our ServletRequest object
      * @param response Our ServerResponse object
      * @return Wrapped HttpServletRequest object
      * @throws ServletException on any error
@@ -428,12 +431,12 @@ public class FilterDispatcher implements StrutsStatics, Filter {
 
         String timerKey = "FilterDispatcher_doFilter: ";
         try {
-            
+
             // FIXME: this should be refactored better to not duplicate work with the action invocation
             ValueStack stack = dispatcher.getContainer().getInstance(ValueStackFactory.class).createValueStack();
             ActionContext ctx = new ActionContext(stack.getContext());
             ActionContext.setContext(ctx);
-            
+
             UtilTimerStack.push(timerKey);
             request = prepareDispatcherAndWrapRequest(request, response);
             ActionMapping mapping;
@@ -479,8 +482,8 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      * Locate a static resource and copy directly to the response,
      * setting the appropriate caching headers.
      *
-     * @param name The resource name
-     * @param request The request
+     * @param name     The resource name
+     * @param request  The request
      * @param response The response
      * @throws IOException If anything goes wrong
      */
@@ -494,31 +497,31 @@ public class FilterDispatcher implements StrutsStatics, Filter {
                     // check for if-modified-since, prior to any other headers
                     long ifModifiedSince = 0;
                     try {
-                      ifModifiedSince = request.getDateHeader("If-Modified-Since");
+                        ifModifiedSince = request.getDateHeader("If-Modified-Since");
                     } catch (Exception e) {
-                      log.warn("Invalid If-Modified-Since header value: '" + request.getHeader("If-Modified-Since") + "', ignoring");
+                        log.warn("Invalid If-Modified-Since header value: '" + request.getHeader("If-Modified-Since") + "', ignoring");
                     }
-            long lastModifiedMillis = lastModifiedCal.getTimeInMillis();
-            long now = cal.getTimeInMillis();
+                    long lastModifiedMillis = lastModifiedCal.getTimeInMillis();
+                    long now = cal.getTimeInMillis();
                     cal.add(Calendar.DAY_OF_MONTH, 1);
                     long expires = cal.getTimeInMillis();
 
-            if (ifModifiedSince > 0 && ifModifiedSince <= lastModifiedMillis) {
-              // not modified, content is not sent - only basic headers and status SC_NOT_MODIFIED
+                    if (ifModifiedSince > 0 && ifModifiedSince <= lastModifiedMillis) {
+                        // not modified, content is not sent - only basic headers and status SC_NOT_MODIFIED
                         response.setDateHeader("Expires", expires);
-              response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-              is.close();
-              return;
-            }
+                        response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                        is.close();
+                        return;
+                    }
 
-                  // set the content-type header
+                    // set the content-type header
                     String contentType = getContentType(name);
                     if (contentType != null) {
                         response.setContentType(contentType);
                     }
 
                     if (serveStaticBrowserCache) {
-                      // set heading information for caching static content
+                        // set heading information for caching static content
                         response.setDateHeader("Date", now);
                         response.setDateHeader("Expires", expires);
                         response.setDateHeader("Retry-After", expires);
@@ -574,7 +577,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     /**
      * Copy bytes from the input stream to the output stream.
      *
-     * @param input The input stream
+     * @param input  The input stream
      * @param output The output stream
      * @throws IOException If anything goes wrong
      */
@@ -590,7 +593,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     /**
      * Look for a static resource in the classpath.
      *
-     * @param name The resource name
+     * @param name          The resource name
      * @param packagePrefix The package prefix to use to locate the resource
      * @return The inputstream of the resource
      * @throws IOException If there is a problem locating the resource

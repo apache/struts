@@ -60,7 +60,7 @@ public class FilterDispatcherTest extends StrutsTestCase {
 
     public void testParsePackages() throws Exception {
 
-        FilterDispatcher filterDispatcher = new FilterDispatcher();
+        DefaultStaticContentLoader filterDispatcher = new DefaultStaticContentLoader();
         String[] result1 = filterDispatcher.parse("foo.bar.package1 foo.bar.package2 foo.bar.package3");
         String[] result2 = filterDispatcher.parse("foo.bar.package1\tfoo.bar.package2\tfoo.bar.package3");
         String[] result3 = filterDispatcher.parse("foo.bar.package1,foo.bar.package2,foo.bar.package3");

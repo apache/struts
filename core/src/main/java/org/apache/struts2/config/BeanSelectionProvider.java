@@ -26,6 +26,8 @@ import java.util.StringTokenizer;
 
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.components.UrlRenderer;
+import org.apache.struts2.dispatcher.DefaultStaticContentLoader;
+import org.apache.struts2.dispatcher.StaticContentLoader;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 import org.apache.struts2.views.freemarker.FreemarkerManager;
@@ -151,6 +153,12 @@ import com.opensymphony.xwork2.validator.ActionValidatorManager;
  *     <td>singleton</td>
  *     <td>Matches patterns, such as action names, generally used in configuration (since 2.1)</td>
  *   </tr>
+ *   <tr>
+ *     <td>org.apache.struts2.views.dispatcher.DefaultStaticContentLoader</td>
+ *     <td>struts.staticContentLoader</td>
+ *     <td>singleton</td>
+ *     <td>Loads static resources (since 2.1)</td>
+ *   </tr>
  * </table>
  *
  * <!-- END SNIPPET: extensionPoints -->
@@ -209,6 +217,7 @@ public class BeanSelectionProvider implements ConfigurationProvider {
         alias(ReflectionProvider.class, StrutsConstants.STRUTS_REFLECTIONPROVIDER, builder, props);
         alias(ReflectionContextFactory.class, StrutsConstants.STRUTS_REFLECTIONCONTEXTFACTORY, builder, props);
         alias(PatternMatcher.class, StrutsConstants.STRUTS_PATTERNMATCHER, builder, props);
+        alias(StaticContentLoader.class, StrutsConstants.STRUTS_STATIC_CONTENT_LOADER, builder, props);
 
         if ("true".equalsIgnoreCase(props.getProperty(StrutsConstants.STRUTS_DEVMODE))) {
             props.setProperty(StrutsConstants.STRUTS_I18N_RELOAD, "true");

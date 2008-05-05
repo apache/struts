@@ -157,31 +157,6 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     private Logger log;
 
     /**
-     * Store set of path prefixes to use with static resources.
-     */
-    private String[] pathPrefixes;
-
-    /**
-     * Provide a formatted date for setting heading information when caching static content.
-     */
-    private final Calendar lastModifiedCal = Calendar.getInstance();
-
-    /**
-     * Store state of StrutsConstants.STRUTS_SERVE_STATIC_CONTENT setting.
-     */
-    private boolean serveStatic;
-
-    /**
-     * Store state of StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE setting.
-     */
-    private boolean serveStaticBrowserCache;
-
-    /**
-     * Store state of StrutsConstants.STRUTS_I18N_ENCODING setting.
-     */
-    private String encoding;
-
-    /**
      * Provide ActionMapper instance, set by injection.
      */
     private ActionMapper actionMapper;
@@ -195,6 +170,11 @@ public class FilterDispatcher implements StrutsStatics, Filter {
      * Expose Dispatcher instance to subclass.
      */
     protected Dispatcher dispatcher;
+
+    /**
+     * Loads stattic resources, set by injection
+     */
+    protected StaticContentLoader staticResourceLoader;
 
     /**
      * Initializes the filter by creating a default dispatcher
@@ -212,12 +192,7 @@ public class FilterDispatcher implements StrutsStatics, Filter {
             dispatcher.init();
             dispatcher.getContainer().inject(this);
 
-            String param = filterConfig.getInitParameter("packages");
-            String packages = "org.apache.struts2.static template org.apache.struts2.interceptor.debugging";
-            if (param != null) {
-                packages = param + " " + packages;
-            }
-            this.pathPrefixes = parse(packages);
+            staticResourceLoader.setFilterConfig(filterConfig);
         } finally {
             ActionContext.setContext(null);
         }
@@ -282,38 +257,16 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     }
 
     /**
-     * Modify state of StrutsConstants.STRUTS_SERVE_STATIC_CONTENT setting.
-     *
-     * @param val New setting
+     * Modify state of StrutsConstants.STRUTS_STATIC_CONTENT_LOADER setting.
+     * @param staticResourceLoader val New setting
      */
-    @Inject(StrutsConstants.STRUTS_SERVE_STATIC_CONTENT)
-    public void setServeStaticContent(String val) {
-        serveStatic = "true".equals(val);
-    }
-
-    /**
-     * Modify state of StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE setting.
-     *
-     * @param val New setting
-     */
-    @Inject(StrutsConstants.STRUTS_SERVE_STATIC_BROWSER_CACHE)
-    public void setServeStaticBrowserCache(String val) {
-        serveStaticBrowserCache = "true".equals(val);
-    }
-
-    /**
-     * Modify state of StrutsConstants.STRUTS_I18N_ENCODING setting.
-     *
-     * @param val New setting
-     */
-    @Inject(StrutsConstants.STRUTS_I18N_ENCODING)
-    public void setEncoding(String val) {
-        encoding = val;
+    @Inject
+    public void setStaticResourceLoader(StaticContentLoader staticResourceLoader) {
+        this.staticResourceLoader = staticResourceLoader;
     }
 
     /**
      * Modify ActionMapper instance.
-     *
      * @param mapper New instance
      */
     @Inject
@@ -384,31 +337,6 @@ public class FilterDispatcher implements StrutsStatics, Filter {
     }
 
     /**
-     * Create a string array from a comma-delimited list of packages.
-     *
-     * @param packages A comma-delimited String listing packages
-     * @return A string array of packages
-     */
-    protected String[] parse(String packages) {
-        if (packages == null) {
-            return null;
-        }
-        List<String> pathPrefixes = new ArrayList<String>();
-
-        StringTokenizer st = new StringTokenizer(packages, ", \n\t");
-        while (st.hasMoreTokens()) {
-            String pathPrefix = st.nextToken().replace('.', '/');
-            if (!pathPrefix.endsWith("/")) {
-                pathPrefix += "/";
-            }
-            pathPrefixes.add(pathPrefix);
-        }
-
-        return pathPrefixes.toArray(new String[pathPrefixes.size()]);
-    }
-
-
-    /**
      * Process an action or handle a request a static resource.
      * <p/>
      * The filter tries to match the request to an action mapping.
@@ -456,9 +384,8 @@ public class FilterDispatcher implements StrutsStatics, Filter {
                     resourcePath = request.getPathInfo();
                 }
 
-                if (serveStatic && resourcePath.startsWith("/struts")) {
-                    String name = resourcePath.substring("/struts".length());
-                    findStaticResource(name, request, response);
+                if (staticResourceLoader.canHandle(resourcePath)) {
+                    staticResourceLoader.findStaticResource(resourcePath, request, response);
                 } else {
                     // this is a normal request, let it pass through
                     chain.doFilter(request, response);
@@ -476,138 +403,5 @@ public class FilterDispatcher implements StrutsStatics, Filter {
                 UtilTimerStack.pop(timerKey);
             }
         }
-    }
-
-    /**
-     * Locate a static resource and copy directly to the response,
-     * setting the appropriate caching headers.
-     *
-     * @param name     The resource name
-     * @param request  The request
-     * @param response The response
-     * @throws IOException If anything goes wrong
-     */
-    protected void findStaticResource(String name, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (!name.endsWith(".class")) {
-            for (String pathPrefix : pathPrefixes) {
-                InputStream is = findInputStream(name, pathPrefix);
-                if (is != null) {
-                    Calendar cal = Calendar.getInstance();
-
-                    // check for if-modified-since, prior to any other headers
-                    long ifModifiedSince = 0;
-                    try {
-                        ifModifiedSince = request.getDateHeader("If-Modified-Since");
-                    } catch (Exception e) {
-                        log.warn("Invalid If-Modified-Since header value: '" + request.getHeader("If-Modified-Since") + "', ignoring");
-                    }
-                    long lastModifiedMillis = lastModifiedCal.getTimeInMillis();
-                    long now = cal.getTimeInMillis();
-                    cal.add(Calendar.DAY_OF_MONTH, 1);
-                    long expires = cal.getTimeInMillis();
-
-                    if (ifModifiedSince > 0 && ifModifiedSince <= lastModifiedMillis) {
-                        // not modified, content is not sent - only basic headers and status SC_NOT_MODIFIED
-                        response.setDateHeader("Expires", expires);
-                        response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-                        is.close();
-                        return;
-                    }
-
-                    // set the content-type header
-                    String contentType = getContentType(name);
-                    if (contentType != null) {
-                        response.setContentType(contentType);
-                    }
-
-                    if (serveStaticBrowserCache) {
-                        // set heading information for caching static content
-                        response.setDateHeader("Date", now);
-                        response.setDateHeader("Expires", expires);
-                        response.setDateHeader("Retry-After", expires);
-                        response.setHeader("Cache-Control", "public");
-                        response.setDateHeader("Last-Modified", lastModifiedMillis);
-                    } else {
-                        response.setHeader("Cache-Control", "no-cache");
-                        response.setHeader("Pragma", "no-cache");
-                        response.setHeader("Expires", "-1");
-                    }
-
-                    try {
-                        copy(is, response.getOutputStream());
-                    } finally {
-                        is.close();
-                    }
-                    return;
-                }
-            }
-        }
-
-        response.sendError(HttpServletResponse.SC_NOT_FOUND);
-    }
-
-    /**
-     * Determine the content type for the resource name.
-     *
-     * @param name The resource name
-     * @return The mime type
-     */
-    protected String getContentType(String name) {
-        // NOT using the code provided activation.jar to avoid adding yet another dependency
-        // this is generally OK, since these are the main files we server up
-        if (name.endsWith(".js")) {
-            return "text/javascript";
-        } else if (name.endsWith(".css")) {
-            return "text/css";
-        } else if (name.endsWith(".html")) {
-            return "text/html";
-        } else if (name.endsWith(".txt")) {
-            return "text/plain";
-        } else if (name.endsWith(".gif")) {
-            return "image/gif";
-        } else if (name.endsWith(".jpg") || name.endsWith(".jpeg")) {
-            return "image/jpeg";
-        } else if (name.endsWith(".png")) {
-            return "image/png";
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Copy bytes from the input stream to the output stream.
-     *
-     * @param input  The input stream
-     * @param output The output stream
-     * @throws IOException If anything goes wrong
-     */
-    protected void copy(InputStream input, OutputStream output) throws IOException {
-        final byte[] buffer = new byte[4096];
-        int n;
-        while (-1 != (n = input.read(buffer))) {
-            output.write(buffer, 0, n);
-        }
-        output.flush();
-    }
-
-    /**
-     * Look for a static resource in the classpath.
-     *
-     * @param name          The resource name
-     * @param packagePrefix The package prefix to use to locate the resource
-     * @return The inputstream of the resource
-     * @throws IOException If there is a problem locating the resource
-     */
-    protected InputStream findInputStream(String name, String packagePrefix) throws IOException {
-        String resourcePath;
-        if (packagePrefix.endsWith("/") && name.startsWith("/")) {
-            resourcePath = packagePrefix + name.substring(1);
-        } else {
-            resourcePath = packagePrefix + name;
-        }
-
-        resourcePath = URLDecoder.decode(resourcePath, encoding);
-
-        return ClassLoaderUtil.getResourceAsStream(resourcePath, getClass());
     }
 }

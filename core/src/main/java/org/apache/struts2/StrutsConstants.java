@@ -184,4 +184,7 @@ public final class StrutsConstants {
     /** The {@link com.opensymphony.xwork2.util.PatternMatcher} implementation class */
     public static final String STRUTS_PATTERNMATCHER = "struts.patternMatcher";
 
+    /** The {@link org.apache.struts2.dispatcher.StaticContentLoader} implementation class */
+    public static final String STRUTS_STATIC_CONTENT_LOADER = "struts.staticContentLoader";
+
 }

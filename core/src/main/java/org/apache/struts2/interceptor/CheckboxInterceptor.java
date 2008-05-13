@@ -22,6 +22,8 @@
 package org.apache.struts2.interceptor;
 
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 
 import java.util.Map;
@@ -53,6 +55,8 @@ public class CheckboxInterceptor implements Interceptor {
 
     private String uncheckedValue = Boolean.FALSE.toString();
 
+    private static final Logger LOG = LoggerFactory.getLogger(CheckboxInterceptor.class);
+
     public void destroy() {
     }
 
@@ -61,7 +65,7 @@ public class CheckboxInterceptor implements Interceptor {
 
     public String intercept(ActionInvocation ai) throws Exception {
         Map parameters = ai.getInvocationContext().getParameters();
-        Map<String, String> newParams = new HashMap<String, String>();
+        Map<String, String[]> newParams = new HashMap<String, String[]>();
         Set<String> keys = parameters.keySet();
         for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
             String key = iterator.next();
@@ -69,12 +73,17 @@ public class CheckboxInterceptor implements Interceptor {
             if (key.startsWith("__checkbox_")) {
                 String name = key.substring("__checkbox_".length());
 
+                Object values = parameters.get(key);
                 iterator.remove();
+                if (values != null && values instanceof String[] && ((String[])values).length > 1) {
+                    LOG.debug("Bypassing automatic checkbox detection due to multiple checkboxes of the same name: #1", name);
+                    continue;
+                }
 
                 // is this checkbox checked/submitted?
                 if (!parameters.containsKey(name)) {
                     // if not, let's be sure to default the value to false
-                    newParams.put(name, uncheckedValue);
+                    newParams.put(name, new String[]{uncheckedValue});
                 }
             }
         }

@@ -36,11 +36,11 @@ public class CheckboxInterceptorTest extends StrutsTestCase {
 
     private CheckboxInterceptor interceptor;
     private MockActionInvocation ai;
-    private Map<String, String> param;
+    private Map<String, Object> param;
     
     protected void setUp() throws Exception {
     	super.setUp();
-    	param = new HashMap<String, String>();
+    	param = new HashMap<String, Object>();
     	
     	interceptor = new CheckboxInterceptor();
     	ai = new MockActionInvocation();
@@ -103,7 +103,7 @@ public class CheckboxInterceptorTest extends StrutsTestCase {
 		
 		assertFalse(param.containsKey("__checkbox_superpower"));
 		assertEquals(3, param.size()); // should be 3 as __checkbox_ should be removed
-		assertEquals("false", param.get("superpower"));
+		assertEquals("false", ((String[])param.get("superpower"))[0]);
 	}
 
 	public void testOneCheckboxNoValueDifferentDefault() throws Exception {
@@ -119,10 +119,24 @@ public class CheckboxInterceptorTest extends StrutsTestCase {
 		
 		assertFalse(param.containsKey("__checkbox_superpower"));
 		assertEquals(3, param.size()); // should be 3 as __checkbox_ should be removed
-		assertEquals("off", param.get("superpower"));
+		assertEquals("off", ((String[])param.get("superpower"))[0]);
 	}
 
-	public void testTwoCheckboxMixed() throws Exception {
+    public void testTwoCheckboxNoValue() throws Exception {
+		param.put("user", "batman");
+		param.put("email", "batman@comic.org");
+		param.put("__checkbox_superpower", new String[]{"true","true"});
+
+		interceptor.init();
+		interceptor.intercept(ai);
+		interceptor.destroy();
+
+		assertFalse(param.containsKey("__checkbox_superpower"));
+		assertEquals(2, param.size()); // should be 2 as __checkbox_ should be removed
+		assertNull(param.get("superpower"));
+    }
+
+    public void testTwoCheckboxMixed() throws Exception {
 		param.put("user", "batman");
 		param.put("email", "batman@comic.org");
 		param.put("__checkbox_superpower", "true");
@@ -139,7 +153,7 @@ public class CheckboxInterceptorTest extends StrutsTestCase {
 		assertFalse(param.containsKey("__checkbox_cool"));
 		assertEquals(4, param.size()); // should be 4 as __checkbox_ should be removed
 		assertEquals("yes", param.get("superpower"));
-		assertEquals("false", param.get("cool")); // will use false as default and not 'no'
+		assertEquals("false", ((String[])param.get("cool"))[0]); // will use false as default and not 'no'
 	}
 
 	public void testTwoCheckboxMixedWithDifferentDefault() throws Exception {
@@ -160,7 +174,7 @@ public class CheckboxInterceptorTest extends StrutsTestCase {
 		assertFalse(param.containsKey("__checkbox_cool"));
 		assertEquals(4, param.size()); // should be 4 as __checkbox_ should be removed
 		assertEquals("yes", param.get("superpower"));
-		assertEquals("no", param.get("cool"));
+		assertEquals("no", ((String[])param.get("cool"))[0]);
 	}
 	
 }

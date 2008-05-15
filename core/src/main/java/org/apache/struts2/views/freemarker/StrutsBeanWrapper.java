@@ -53,22 +53,18 @@ import freemarker.template.TemplateModelException;
  */
 public class StrutsBeanWrapper extends BeansWrapper {
     private boolean altMapWrapper;
-    
+
     StrutsBeanWrapper(boolean altMapWrapper) {
         this.altMapWrapper = altMapWrapper;
     }
 
-    public TemplateModel wrap(Object object) throws TemplateModelException {
-        if (object instanceof TemplateBooleanModel) {
-            return super.wrap(object);
-        }
-
+    protected ModelFactory getModelFactory(Class clazz) {
         // attempt to get the best of both the SimpleMapModel and the MapModel of FM.
-        if (altMapWrapper && object instanceof Map) {
-            return getInstance(object, FriendlyMapModel.FACTORY);
+        if (altMapWrapper && Map.class.isAssignableFrom(clazz)) {
+            return FriendlyMapModel.FACTORY;
         }
 
-        return super.wrap(object);
+        return super.getModelFactory(clazz);
     }
 
     /**

@@ -49,6 +49,7 @@
             </div><!-- end search -->
 
             <hr/>
+            <div style="clear: both;"></div>
         </div>
     </div><!-- end header -->
 

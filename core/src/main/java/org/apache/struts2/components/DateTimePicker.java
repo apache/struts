@@ -21,7 +21,9 @@
 package org.apache.struts2.components;
 
 import java.text.ParseException;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -129,8 +131,10 @@ import com.opensymphony.xwork2.util.ValueStack;
 public class DateTimePicker extends UIBean {
 
     final public static String TEMPLATE = "datetimepicker";
-    final private static SimpleDateFormat RFC3339_FORMAT = new SimpleDateFormat(
-    "yyyy-MM-dd'T'HH:mm:ss");
+//  Backported changes from s2 trunk (r657936)
+//    final private static SimpleDateFormat RFC3339_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	final private static String RFC3339_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+    final private static String RFC3339_PATTERN = "{0,date," + RFC3339_FORMAT + "}";
     final protected static Log LOG = LogFactory.getLog(DateTimePicker.class);
     
     protected String iconPath;
@@ -294,12 +298,14 @@ public class DateTimePicker extends UIBean {
             return null;
 
         if(obj instanceof Date) {
-            return RFC3339_FORMAT.format((Date) obj);
+            return MessageFormat.format(RFC3339_PATTERN, (Date) obj);
+        } else if(obj instanceof Calendar) {
+            return MessageFormat.format(RFC3339_PATTERN, ((Calendar) obj).getTime());
         } else {
             // try to parse a date
             String dateStr = obj.toString();
             if(dateStr.equalsIgnoreCase("today"))
-                return RFC3339_FORMAT.format(new Date());
+                return MessageFormat.format(RFC3339_PATTERN, new Date());
 
             try {
                 Date date = null;
@@ -307,7 +313,7 @@ public class DateTimePicker extends UIBean {
                     SimpleDateFormat format = new SimpleDateFormat(
                             (String) getParameters().get("displayFormat"));
                     date = format.parse(dateStr);
-                    return RFC3339_FORMAT.format(date);
+                    return MessageFormat.format(RFC3339_PATTERN, date);
                 } else {
                     // last resource to assume already in correct/default format
                     return dateStr;

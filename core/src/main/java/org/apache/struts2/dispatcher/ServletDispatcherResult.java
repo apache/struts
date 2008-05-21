@@ -21,12 +21,15 @@
 
 package org.apache.struts2.dispatcher;
 
+import java.util.Map;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.views.util.UrlHelper;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.logging.Logger;
@@ -122,6 +125,17 @@ public class ServletDispatcherResult extends StrutsResultSupport {
             HttpServletRequest request = ServletActionContext.getRequest();
             HttpServletResponse response = ServletActionContext.getResponse();
             RequestDispatcher dispatcher = request.getRequestDispatcher(finalLocation);
+
+            //add parameters passed on the location to #parameters
+            // see WW-2120
+            if (invocation != null && finalLocation != null && finalLocation.length() > 0
+                    && finalLocation.indexOf("?") > 0) {
+                String queryString = finalLocation.substring(finalLocation.indexOf("?") + 1);
+                Map parameters = (Map) invocation.getInvocationContext().getContextMap().get("parameters");
+                Map queryParams = UrlHelper.parseQueryString(queryString, true);
+                if (queryParams != null && !queryParams.isEmpty())
+                    parameters.putAll(queryParams);
+            }
 
             // if the view doesn't exist, let's do a 404
             if (dispatcher == null) {

@@ -75,12 +75,12 @@ public class UrlHelper {
     public static String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map params, String scheme, boolean includeContext, boolean encodeResult, boolean forceAddSchemeHostAndPort) {
     	return buildUrl(action, request, response, params, scheme, includeContext, encodeResult, forceAddSchemeHostAndPort, true);
     }
-    
+
     public static String buildUrl(String action, HttpServletRequest request, HttpServletResponse response, Map params, String scheme, boolean includeContext, boolean encodeResult, boolean forceAddSchemeHostAndPort, boolean escapeAmp) {
         StringBuffer link = new StringBuffer();
 
         boolean changedScheme = false;
-        
+
         // FIXME: temporary hack until class is made a properly injected bean
         Container cont = ActionContext.getContext().getContainer();
         int httpPort = Integer.parseInt(cont.getInstance(String.class, StrutsConstants.STRUTS_URL_HTTP_PORT));
@@ -173,13 +173,13 @@ public class UrlHelper {
             buildParametersString(params, link);
         } else {
             buildParametersString(params, link, "&");
-        } 
+        }
 
         String result = link.toString();
-        
+
         while (result.indexOf("<script>") > 0){
         	result = result.replaceAll("<script>", "script");
-        }        
+        }
         try {
             result = encodeResult ? response.encodeURL(result) : result;
         } catch (Exception ex) {
@@ -236,23 +236,23 @@ public class UrlHelper {
                 } else {
                     link.append(buildParameterSubstring(name, value.toString()));
                 }
-                
+
                 if (iter.hasNext())
                     link.append(paramSeparator);
             }
         }
     }
 
-    
+
     private static String buildParameterSubstring(String name, String value) {
         StringBuilder builder = new StringBuilder();
         builder.append(name);
         builder.append('=');
         builder.append(translateAndEncode(value));
-        
+
         return builder.toString();
     }
-    
+
     /**
      * Translates any script expressions using {@link com.opensymphony.xwork2.util.TextParseUtil#translateVariables} and
      * encodes the URL using {@link java.net.URLEncoder#encode} with the encoding specified in the configuration.
@@ -292,11 +292,11 @@ public class UrlHelper {
 
     private static String getEncodingFromConfiguration() {
         final String encoding;
-        
+
         // FIXME: temporary hack until class is made a properly injected bean
         Container cont = ActionContext.getContext().getContainer();
         String customEncoding = cont.getInstance(String.class, StrutsConstants.STRUTS_I18N_ENCODING);
-        
+
         if (customEncoding != null) {
             encoding = customEncoding;
         } else {
@@ -306,6 +306,10 @@ public class UrlHelper {
     }
 
     public static Map parseQueryString(String queryString) {
+        return parseQueryString(queryString, false);
+    }
+
+    public static Map parseQueryString(String queryString, boolean forceValueArray) {
         Map queryParams = new LinkedHashMap();
         if (queryString != null) {
             String[] params = queryString.split("&");
@@ -323,7 +327,7 @@ public class UrlHelper {
                     if (paramName != null) {
                         String translatedParamValue = translateAndDecode(paramValue);
 
-                        if(queryParams.containsKey(paramName)) {
+                        if(queryParams.containsKey(paramName) || forceValueArray) {
                             // WW-1619 append new param value to existing value(s)
                             Object currentParam = queryParams.get(paramName);
                             if(currentParam instanceof String) {
@@ -331,13 +335,17 @@ public class UrlHelper {
                                         (String) currentParam, translatedParamValue});
                             } else {
                                 String currentParamValues[] = (String[]) currentParam;
-                                List paramList = new ArrayList(Arrays
-                                    .asList(currentParamValues));
-                                paramList.add(translatedParamValue);
-                                String newParamValues[] = new String[paramList
-                                    .size()];
-                                queryParams.put(paramName, paramList
-                                    .toArray(newParamValues));
+                                if (currentParamValues != null) {
+                                    List paramList = new ArrayList(Arrays
+                                        .asList(currentParamValues));
+                                    paramList.add(translatedParamValue);
+                                    String newParamValues[] = new String[paramList
+                                        .size()];
+                                    queryParams.put(paramName, paramList
+                                        .toArray(newParamValues));
+                                } else {
+                                    queryParams.put(paramName, new String[] {translatedParamValue});
+                                }
                             }
                         } else {
                             queryParams.put(paramName, translatedParamValue);

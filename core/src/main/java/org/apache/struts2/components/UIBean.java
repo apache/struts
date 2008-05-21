@@ -1049,7 +1049,7 @@ public abstract class UIBean extends Component {
         this.label = label;
     }
 
-    @StrutsTagAttribute(description="String that will be appended to the labe", defaultValue=":")
+    @StrutsTagAttribute(description="String that will be appended to the label", defaultValue=":")
     public void setLabelSeparator(String labelseparator) {
         this.labelSeparator = labelseparator;
     }

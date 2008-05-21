@@ -108,7 +108,7 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *
  * <!-- START SNIPPET: extending -->
  *
- * You can extend this interceptor and override the {@link #acceptFile} method to provide more control over which files
+ * You can extend this interceptor and override the acceptFile method to provide more control over which files
  * are supported and which are not.
  *
  * <!-- END SNIPPET: extending -->
@@ -116,27 +116,41 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  * <p/> <u>Example code:</u>
  *
  * <pre>
- * <!-- START SNIPPET: example -->
- * &lt;action name="doUpload" class="com.examples.UploadAction"&gt;
+ * <!-- START SNIPPET: example-configuration -->
+ * &lt;action name="doUpload" class="com.example.UploadAction"&gt;
  *     &lt;interceptor-ref name="fileUpload"/&gt;
  *     &lt;interceptor-ref name="basicStack"/&gt;
- *     &lt;result name="success"&gt;good_result.ftl&lt;/result&gt;
+ *     &lt;result name="success"&gt;good_result.jsp&lt;/result&gt;
  * &lt;/action&gt;
+ * <!-- END SNIPPET: example-configuration -->
  * </pre>
  *
- * And then you need to set encoding <code>multipart/form-data</code> in the form where the user selects the file to upload.
+ * <!-- START SNIPPET: multipart-note -->
+ *
+ * You must set the encoding to <code>multipart/form-data</code> in the form where the user selects the file to upload.
+ *
+ * <!-- END SNIPPET: multipart-note -->
+ *
  * <pre>
+ * <!-- START SNIPPET: example-form -->
  *   &lt;s:form action="doUpload" method="post" enctype="multipart/form-data"&gt;
  *       &lt;s:file name="upload" label="File"/&gt;
  *       &lt;s:submit/&gt;
  *   &lt;/s:form&gt;
+ * <!-- END SNIPPET: example-form -->
  * </pre>
  *
  * And then in your action code you'll have access to the File object if you provide setters according to the
  * naming convention documented in the start.
  *
  * <pre>
- *    public com.examples.UploadAction implemements Action {
+ * <!-- START SNIPPET: example-action -->
+ *    package com.example;
+ *
+ *    import java.io.File;
+ *    import com.opensymphony.xwork2.ActionSupport;
+ *
+ *    public UploadAction extends ActionSupport {
  *       private File file;
  *       private String contentType;
  *       private String filename;
@@ -153,10 +167,13 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *          this.filename = filename;
  *       }
  *
- *       ...
+ *       public String execute() {
+ *          //...
+ *          return SUCCESS;
+ *       }
  *  }
+ * <!-- END SNIPPET: example-action -->
  * </pre>
- * <!-- END SNIPPET: example -->
  *
  */
 public class FileUploadInterceptor extends AbstractInterceptor {

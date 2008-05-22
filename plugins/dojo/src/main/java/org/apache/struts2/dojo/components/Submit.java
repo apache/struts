@@ -425,7 +425,7 @@ public class Submit extends FormButton implements RemoteBean {
         this.highlightDuration = highlightDuration;
     }
 
-    @StrutsTagAttribute(description = "Perform Ajax calidation. 'ajaxValidation' interceptor must be applied to action", type="Boolean", 
+    @StrutsTagAttribute(description = "Perform Ajax validation. 'ajaxValidation' interceptor must be applied to action", type="Boolean", 
         defaultValue = "false")
     public void setValidate(String validate) {
         this.validate = validate;

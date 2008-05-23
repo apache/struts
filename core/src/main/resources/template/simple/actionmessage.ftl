@@ -32,7 +32,7 @@
 <#if parameters.cssStyle?exists>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
->${message}</span></li>
+>${message!}</span></li>
 		</#list>
 	</ul>
 </#if>

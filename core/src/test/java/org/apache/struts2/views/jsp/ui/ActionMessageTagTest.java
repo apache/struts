@@ -59,6 +59,18 @@ public class ActionMessageTagTest extends AbstractUITagTest {
         verify(ActionMessageTagTest.class.getResource("actionmessage-2.txt"));
     }
 
+    public void testNullMessage() throws Exception {
+
+        ActionMessageTag tag = new ActionMessageTag();
+        ((InternalActionSupport)action).setHasActionMessage(true);
+        ((InternalActionSupport)action).addActionMessage(null);
+        tag.setPageContext(pageContext);
+        tag.doStartTag();
+        tag.doEndTag();
+
+        verify(ActionMessageTagTest.class.getResource("actionmessage-2.txt"));
+    }
+
     public Action getAction() {
         return new InternalActionSupport();
     }

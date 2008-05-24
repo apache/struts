@@ -55,7 +55,6 @@ public class ActionTag extends ContextBeanTag {
         action.setExecuteResult(executeResult);
         action.setIgnoreContextParams(ignoreContextParams);
         action.setFlush(flush);
-        action.start(pageContext.getOut());
     }
 
     protected void addParameter(String name, Object value) {

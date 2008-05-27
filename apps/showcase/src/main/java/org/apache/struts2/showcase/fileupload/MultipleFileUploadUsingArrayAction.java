@@ -18,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+// START SNIPPET: entire-file
 package org.apache.struts2.showcase.fileupload;
 
 import java.io.File;
@@ -44,7 +45,6 @@ public class MultipleFileUploadUsingArrayAction extends ActionSupport {
     public String[] getUploadContentType() { return this.uploadContentTypes; }
     public void setUploadContentType(String[] uploadContentType) { this.uploadContentTypes = uploadContentType; }
 
-
     public String upload() throws Exception {
         System.out.println("\n\n upload2");
         System.out.println("files:");
@@ -62,5 +62,5 @@ public class MultipleFileUploadUsingArrayAction extends ActionSupport {
         System.out.println("\n\n");
         return SUCCESS;
     }
-
 }
+// END SNIPPET: entire-file

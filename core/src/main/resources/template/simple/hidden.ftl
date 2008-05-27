@@ -34,5 +34,8 @@
 <#if parameters.cssStyle?exists>
  style="${parameters.cssStyle?html}"<#rt/>
 </#if>
+<#if parameters.disabled?default(false)>
+ disabled="disabled"<#rt/>
+</#if>
 <#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
 />

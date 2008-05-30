@@ -54,22 +54,64 @@ public class AnnotationValidationInterceptorTest extends StrutsTestCase {
         interceptor.doIntercept((ActionInvocation)mockActionInvocation.proxy());
         mockActionProxy.verify();
     }
-    
+
     public void testShouldSkip() throws Exception {
         mockActionProxy.expectAndReturn("getMethod", "skipMe");
         interceptor.doIntercept((ActionInvocation)mockActionInvocation.proxy());
         mockActionProxy.verify();
     }
-    
-    public static class TestAction  {
-        
+
+    public void testShouldSkipBase() throws Exception {
+        mockActionProxy.expectAndReturn("getMethod", "skipMeBase");
+        interceptor.doIntercept((ActionInvocation)mockActionInvocation.proxy());
+        mockActionProxy.verify();
+    }
+
+    public void testShouldSkip2() throws Exception {
+        mockActionProxy.expectAndReturn("getMethod", "skipMe2");
+        interceptor.doIntercept((ActionInvocation)mockActionInvocation.proxy());
+        mockActionProxy.verify();
+    }
+
+    public void testDontShouldSkipBase() throws Exception {
+        mockActionProxy.expectAndReturn("getMethod", "dontSkipMeBase");
+        mockActionProxy.expectAndReturn("getActionName", "foo");
+        mockActionProxy.expectAndReturn("getMethod", "dontSkipMeBase");
+        interceptor.doIntercept((ActionInvocation)mockActionInvocation.proxy());
+        mockActionProxy.verify();
+    }
+
+    public static class TestAction extends TestActionBase {
+
         public String execute() {
             return "execute";
         }
-        
+
         @SkipValidation
         public String skipMe() {
             return "skipme";
         }
+
+        @SkipValidation
+        public String skipMe2() {
+            return "skipme2";
+        }
     }
+
+    public static class TestActionBase  {
+
+        @SkipValidation
+        public String skipMeBase() {
+            return "skipme";
+        }
+
+        public String dontSkipMeBase() {
+            return "dontskipme";
+        }
+
+        public String skipMe2() {
+            return "skipme2";
+        }
+    }
+
 }

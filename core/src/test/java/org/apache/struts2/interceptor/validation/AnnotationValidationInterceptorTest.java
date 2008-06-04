@@ -67,13 +67,19 @@ public class AnnotationValidationInterceptorTest extends StrutsTestCase {
         mockActionProxy.verify();
     }
 
+    public void testShouldSkipBase2() throws Exception {
+        mockActionProxy.expectAndReturn("getMethod", "skipMeBase2");
+        interceptor.doIntercept((ActionInvocation)mockActionInvocation.proxy());
+        mockActionProxy.verify();
+    }
+
     public void testShouldSkip2() throws Exception {
         mockActionProxy.expectAndReturn("getMethod", "skipMe2");
         interceptor.doIntercept((ActionInvocation)mockActionInvocation.proxy());
         mockActionProxy.verify();
     }
 
-    public void testDontShouldSkipBase() throws Exception {
+    public void testShouldNotSkipBase() throws Exception {
         mockActionProxy.expectAndReturn("getMethod", "dontSkipMeBase");
         mockActionProxy.expectAndReturn("getActionName", "foo");
         mockActionProxy.expectAndReturn("getMethod", "dontSkipMeBase");
@@ -96,12 +102,21 @@ public class AnnotationValidationInterceptorTest extends StrutsTestCase {
         public String skipMe2() {
             return "skipme2";
         }
+
+        public String skipMeBase() {
+            return "skipme";
+        }
     }
 
     public static class TestActionBase  {
 
         @SkipValidation
         public String skipMeBase() {
+            return "skipme";
+        }
+
+        @SkipValidation
+        public String skipMeBase2() {
             return "skipme";
         }
 

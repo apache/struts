@@ -24,13 +24,11 @@
 <!DOCTYPE struts PUBLIC
     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
     "http://struts.apache.org/dtds/struts-2.0.dtd">
-    
+
 <struts>
 
     <bean type="com.opensymphony.xwork2.ActionProxyFactory" name="rest" class="org.apache.struts2.rest.RestActionProxyFactory" />
 	<bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="rest" class="org.apache.struts2.rest.RestActionMapper" />
-	
-	<bean type="com.opensymphony.xwork2.config.PackageProvider" name="rest" class="org.apache.struts2.rest.ControllerClasspathPackageProvider" />
 
 	<bean class="org.apache.struts2.rest.ContentTypeHandlerManager" />
 
@@ -43,13 +41,14 @@
     <constant name="struts.mapper.class" value="rest" />
     <constant name="struts.mapper.idParameterName" value="id" />
     <constant name="struts.action.extension" value="xhtml,,xml,json" />
-    
+
     <!--  Disable the scanning by the codebehind plugin to prevent duplicates -->
-    <constant name="struts.configuration.classpath.disableActionScanning" value="true" />
-    
-    <constant name="struts.configuration.rest.disableControllerScanning" value="false" />
+    <constant name="struts.codebehind.classSuffix" value="Controller"/>
+    <constant name="struts.codebehind.action.checkImplementsAction" value="false"/>
+    <constant name="struts.codebehind.action.checkAnnotation" value="false"/>
+
     <constant name="struts.configuration.classpath.defaultParentPackage" value="rest-default" />
-    
+
     <package name="rest-default" extends="struts-default">
         <result-types>
             <result-type name="redirect" class="org.apache.struts2.dispatcher.ServletRedirectResult">
@@ -108,7 +107,7 @@
                     <param name="excludeMethods">input,back,cancel,browse,index,show,edit,editNew</param>
                 </interceptor-ref>
             </interceptor-stack>
-    
+
         </interceptors>
 
         <default-interceptor-ref name="restDefaultStack"/>

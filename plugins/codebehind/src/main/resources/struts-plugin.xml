@@ -34,5 +34,5 @@
     <constant name="struts.mapper.alwaysSelectFullNamespace" value="true" />
 
     <package name="codebehind-default" extends="struts-default">
-    </package>    
+    </package>
 </struts>

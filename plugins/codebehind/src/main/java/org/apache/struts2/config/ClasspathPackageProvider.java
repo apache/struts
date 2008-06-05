@@ -84,7 +84,7 @@ public class ClasspathPackageProvider implements PackageProvider {
      * to use in place of "struts-default".
      */
     protected static final String DEFAULT_PARENT_PACKAGE = "struts.configuration.classpath.defaultParentPackage";
-    
+
     /**
      * A setting to disable action scanning.
      */
@@ -109,10 +109,25 @@ public class ClasspathPackageProvider implements PackageProvider {
      */
     private boolean forceLowerCase = true;
 
+    protected static final String CLASS_SUFFIX = "struts.codebehind.classSuffix";
     /**
      * Default suffix that can be used to indicate POJO "Action" classes.
      */
-    private static final String ACTION = "Action";
+    protected String classSuffix = "Action";
+
+    protected static final String CHECK_IMPLEMENTS_ACTION = "struts.codebehind.checkImplementsAction";
+
+    /**
+     * When testing a class, check that it implements Action
+     */
+    protected boolean checkImplementsAction = true;
+
+    protected static final String CHECK_ANNOTATION = "struts.codebehind.checkAnnotation";
+
+    /**
+     * When testing a class, check that it has an @Action annotation
+     */
+    protected boolean checkAnnotation = true;
 
     /**
      * Helper class to scan class path for server pages.
@@ -126,7 +141,7 @@ public class ClasspathPackageProvider implements PackageProvider {
      * @see #needsReload
      */
     private boolean initialized = false;
-    
+
     private boolean disableActionScanning = false;
 
     private PackageLoader packageLoader;
@@ -165,12 +180,12 @@ public class ClasspathPackageProvider implements PackageProvider {
             return ClassLoaderUtil.getResource(path, getClass());
         }
     }
-    
+
     @Inject("actionPackages")
     public void setActionPackages(String packages) {
         this.actionPackages = packages;
     }
-    
+
     public void setServletContext(ServletContext ctx) {
         this.servletContext = ctx;
     }
@@ -184,7 +199,27 @@ public class ClasspathPackageProvider implements PackageProvider {
     public void setDisableActionScanning(String disableActionScanning) {
         this.disableActionScanning = "true".equals(disableActionScanning);
     }
-    
+
+    /**
+     * Check that the class implements Action
+     *
+     * @param checkImplementsAction True to check
+     */
+    @Inject(value=CHECK_IMPLEMENTS_ACTION, required=false)
+    public void setCheckImplementsAction(String checkImplementsAction) {
+        this.checkImplementsAction = "true".equals(checkImplementsAction);
+    }
+
+    /**
+     * Check that the class has an @Action annotation
+     *
+     * @param checkImplementsAction True to check
+     */
+    @Inject(value=CHECK_ANNOTATION, required=false)
+    public void setCheckAnnotation(String checkAnnotation) {
+        this.checkAnnotation = "true".equals(checkAnnotation);
+    }
+
     /**
      * Register a default parent package for the actions.
      *
@@ -214,10 +249,20 @@ public class ClasspathPackageProvider implements PackageProvider {
     public void setDefaultPagePrefix(String defaultPagePrefix) {
         this.defaultPagePrefix = defaultPagePrefix;
     }
-    
+
+    /**
+     * Default suffix that can be used to indicate POJO "Action" classes.
+     *
+     * @param defaultPagePrefix the defaultPagePrefix to set
+     */
+    @Inject(value=CLASS_SUFFIX, required=false)
+    public void setClassSuffix(String classSuffix) {
+        this.classSuffix = classSuffix;
+    }
+
     /**
      * Whether to use a lowercase letter as the initial letter of an action.
-     * 
+     *
      * @param force If false, actions will retain the initial uppercase letter from the Action class.
      * (<code>view.action</code> (true) versus <code>View.action</code> (false)).
      */
@@ -268,16 +313,16 @@ public class ClasspathPackageProvider implements PackageProvider {
             // Match Action implementations and classes ending with "Action"
             public boolean matches(Class type) {
                 // TODO: should also find annotated classes
-                return (Action.class.isAssignableFrom(type) ||
+                return ((checkImplementsAction && Action.class.isAssignableFrom(type)) ||
                         type.getSimpleName().endsWith(getClassSuffix()) ||
-                        type.getAnnotation(org.apache.struts2.config.Action.class) != null);
+                        (checkAnnotation && type.getAnnotation(org.apache.struts2.config.Action.class) != null));
             }
 
         };
     }
-    
+
     protected String getClassSuffix() {
-        return ACTION;
+        return classSuffix;
     }
 
     /**
@@ -295,8 +340,8 @@ public class ClasspathPackageProvider implements PackageProvider {
         String actionPackage = cls.getPackage().getName();
         String actionNamespace = null;
         String actionName = null;
-        
-        org.apache.struts2.config.Action actionAnn = 
+
+        org.apache.struts2.config.Action actionAnn =
             (org.apache.struts2.config.Action) cls.getAnnotation(org.apache.struts2.config.Action.class);
         if (actionAnn != null) {
             actionName = actionAnn.name();
@@ -312,7 +357,7 @@ public class ClasspathPackageProvider implements PackageProvider {
                         LOG.debug("ClasspathPackageProvider: Processing class "+name);
                     }
                     name = name.substring(pkg.length() + 1);
-    
+
                     actionNamespace = "";
                     actionName = name;
                     int pos = name.lastIndexOf('.');
@@ -360,6 +405,7 @@ public class ClasspathPackageProvider implements PackageProvider {
             }
         }
 
+
         ResultTypeConfig defaultResultType = packageLoader.getDefaultResultType(pkgConfig);
         ActionConfig actionConfig = new ActionConfig.Builder(actionPackage, actionName, cls.getName())
                 .addResultConfigs(new ResultMap<String,ResultConfig>(cls, actionName, defaultResultType))
@@ -388,10 +434,10 @@ public class ClasspathPackageProvider implements PackageProvider {
                 parent = loadPackageConfig(actionNamespace, actionPackage, null);
                 actionNamespace = ns.value();
                 actionPackage = actionClass.getName();
-                
-            // See if the namespace has been overridden by the @Action annotation    
+
+            // See if the namespace has been overridden by the @Action annotation
             } else {
-                org.apache.struts2.config.Action actionAnn = 
+                org.apache.struts2.config.Action actionAnn =
                     (org.apache.struts2.config.Action) actionClass.getAnnotation(org.apache.struts2.config.Action.class);
                 if (actionAnn != null && !actionAnn.DEFAULT_NAMESPACE.equals(actionAnn.namespace())) {
                     // we pass null as the namespace in case the parent package hasn't been loaded yet
@@ -401,7 +447,7 @@ public class ClasspathPackageProvider implements PackageProvider {
             }
         }
 
-        
+
         PackageConfig.Builder pkgConfig = packageLoader.getPackage(actionPackage);
         if (pkgConfig == null) {
             pkgConfig = new PackageConfig.Builder(actionPackage);
@@ -429,7 +475,7 @@ public class ClasspathPackageProvider implements PackageProvider {
         }
 
         System.out.println("class:"+actionClass+" parent:"+parent+" current:"+(pkgConfig != null ? pkgConfig.getName() : ""));
-        
+
         return pkgConfig;
     }
 

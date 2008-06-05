@@ -35,11 +35,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-codebehind-plugin</artifactId>
-            <version>${pom.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
             <version>1.2.2</version>

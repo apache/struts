@@ -42,7 +42,7 @@
     <constant name="struts.mapper.idParameterName" value="id" />
     <constant name="struts.action.extension" value="xhtml,,xml,json" />
 
-    <!--  Disable the scanning by the codebehind plugin to prevent duplicates -->
+    <!--  Overwrite Codebehind -->
     <constant name="struts.codebehind.classSuffix" value="Controller"/>
     <constant name="struts.codebehind.action.checkImplementsAction" value="false"/>
     <constant name="struts.codebehind.action.checkAnnotation" value="false"/>

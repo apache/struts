@@ -21,25 +21,7 @@
 
 package org.apache.struts2.codebehind;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-
-import org.apache.struts2.util.ClassLoaderUtils;
-
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.ObjectFactory;
-import com.opensymphony.xwork2.Result;
-import com.opensymphony.xwork2.UnknownHandler;
-import com.opensymphony.xwork2.XWorkException;
+import com.opensymphony.xwork2.*;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
 import com.opensymphony.xwork2.config.entities.*;
@@ -47,6 +29,14 @@ import com.opensymphony.xwork2.config.providers.InterceptorBuilder;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.util.ClassLoaderUtils;
+
+import javax.servlet.ServletContext;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Uses code-behind conventions to solve the two unknown problems.  

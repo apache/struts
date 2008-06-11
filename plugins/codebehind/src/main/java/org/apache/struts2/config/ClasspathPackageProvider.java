@@ -21,32 +21,28 @@
 
 package org.apache.struts2.config;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Modifier;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.*;
-
-import javax.servlet.ServletContext;
-
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.config.PackageProvider;
 import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
-import com.opensymphony.xwork2.inject.ContainerBuilder;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import com.opensymphony.xwork2.util.ResolverUtil;
-import com.opensymphony.xwork2.util.TextUtils;
 import com.opensymphony.xwork2.util.ResolverUtil.ClassTest;
-import com.opensymphony.xwork2.util.location.LocatableProperties;
+import com.opensymphony.xwork2.util.TextUtils;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+
+import javax.servlet.ServletContext;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 /**
  * ClasspathPackageProvider loads the configuration

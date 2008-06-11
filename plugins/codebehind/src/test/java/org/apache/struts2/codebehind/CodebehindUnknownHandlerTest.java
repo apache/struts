@@ -21,23 +21,20 @@
 
 package org.apache.struts2.codebehind;
 
+import com.mockobjects.dynamic.C;
+import com.mockobjects.dynamic.Mock;
+import com.opensymphony.xwork2.*;
+import com.opensymphony.xwork2.config.entities.ActionConfig;
+import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
+import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
+import org.apache.struts2.StrutsTestCase;
+import org.apache.struts2.dispatcher.ServletDispatcherResult;
+
+import javax.servlet.ServletContext;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
-
-import javax.servlet.ServletContext;
-
-import org.apache.struts2.StrutsTestCase;
-import org.apache.struts2.config.NullResult;
-import org.apache.struts2.dispatcher.ServletDispatcherResult;
-
-import com.mockobjects.dynamic.C;
-import com.mockobjects.dynamic.Mock;
-import com.opensymphony.xwork2.*;
-import com.opensymphony.xwork2.config.entities.ResultTypeConfig;
-import com.opensymphony.xwork2.config.entities.ActionConfig;
-import com.opensymphony.xwork2.util.XWorkTestCaseHelper;
 
 public class CodebehindUnknownHandlerTest extends StrutsTestCase {
 

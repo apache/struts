@@ -21,9 +21,9 @@
 
 package org.apache.struts2.rest.handler;
 
-import java.io.*;
-
-import com.opensymphony.xwork2.ActionInvocation;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 
 /**
  * Handles transferring content to and from objects for a specific content type

@@ -21,12 +21,14 @@
 
 package org.apache.struts2.rest.handler;
 
-import java.io.*;
-import java.util.Collection;
-
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
-import net.sf.json.JSONArray;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.util.Collection;
 
 /**
  * Handles JSON content using json-lib

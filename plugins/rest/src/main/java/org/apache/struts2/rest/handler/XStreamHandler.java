@@ -21,11 +21,11 @@
 
 package org.apache.struts2.rest.handler;
 
+import com.thoughtworks.xstream.XStream;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-
-import com.thoughtworks.xstream.XStream;
 
 /**
  * Handles XML content

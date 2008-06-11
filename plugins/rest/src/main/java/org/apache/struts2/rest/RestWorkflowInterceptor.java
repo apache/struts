@@ -21,12 +21,6 @@
 
 package org.apache.struts2.rest;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.mapper.ActionMapping;
-
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -35,8 +29,12 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 
-import static javax.servlet.http.HttpServletResponse.*;
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <!-- START SNIPPET: description -->

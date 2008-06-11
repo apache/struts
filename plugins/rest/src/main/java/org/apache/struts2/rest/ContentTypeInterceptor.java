@@ -21,19 +21,17 @@
 
 package org.apache.struts2.rest;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.rest.handler.ContentTypeHandler;
-
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.Interceptor;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.rest.handler.ContentTypeHandler;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 /**
  * Uses the content handler to apply the request body to the action

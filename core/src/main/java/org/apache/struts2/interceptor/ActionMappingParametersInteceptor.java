@@ -26,6 +26,7 @@ import com.opensymphony.xwork2.ActionContext;
 
 import java.util.Map;
 import java.util.Collections;
+import java.util.TreeMap;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
@@ -36,31 +37,31 @@ import org.apache.struts2.dispatcher.mapper.ActionMapping;
  * exactly like {@link ParametersInterceptor}, only the parameters come from the {@link ActionMapping}, not the
  * {@link ActionContext#getParameters()} method.
  * <!-- END SNIPPET: description -->
- *
+ * <p/>
  * <p/> <u>Interceptor parameters:</u>
- *
+ * <p/>
  * <!-- START SNIPPET: parameters -->
- *
+ * <p/>
  * <ul>
- *
+ * <p/>
  * <li>ordered - set to true if you want the top-down property setter behaviour</li>
- *
+ * <p/>
  * </ul>
- *
+ * <p/>
  * <!-- END SNIPPET: parameters -->
- *
+ * <p/>
  * <p/> <u>Extending the interceptor:</u>
- *
+ * <p/>
  * <!-- START SNIPPET: extending -->
- *
+ * <p/>
  * <p/> The best way to add behavior to this interceptor is to utilize the {@link com.opensymphony.xwork2.interceptor.ParameterNameAware} interface in your
  * actions. However, if you wish to apply a global rule that isn't implemented in your action, then you could extend
  * this interceptor and override the {@link #acceptableName(String)} method.
- *
+ * <p/>
  * <!-- END SNIPPET: extending -->
- *
+ * <p/>
  * <p/> <u>Example code:</u>
- *
+ * <p/>
  * <pre>
  * <!-- START SNIPPET: example -->
  * &lt;action name="someAction" class="com.examples.SomeAction"&gt;
@@ -75,14 +76,36 @@ public class ActionMappingParametersInteceptor extends ParametersInterceptor {
     /**
      * @param ac The action context
      * @return the parameters from the action mapping in the context.  If none found, returns
-     * an empty map.
+     *         an empty map.
      */
-    protected Map retrieveParametersFromContext(ActionContext ac) {
+    protected Map retrieveParameters(ActionContext ac) {
         ActionMapping mapping = (ActionMapping) ac.get(ServletActionContext.ACTION_MAPPING);
         if (mapping != null) {
             return mapping.getParams();
         } else {
             return Collections.EMPTY_MAP;
         }
+    }
+
+    /**
+     * Adds the parameters into context's ParameterMap
+     *
+     * @param ac        The action context
+     * @param newParams The parameter map to apply
+     *                  <p/>
+     *                  In this class this is a no-op, since the parameters were fetched from the same location.
+     *                  In subclasses both retrieveParameters() and addParametersToContext() should be overridden.
+     */
+    protected void addParametersToContext(ActionContext ac, Map newParams) {
+        Map previousParams = ac.getParameters();
+        Map combinedParams = null;
+        if (previousParams != null) {
+            combinedParams = new TreeMap(previousParams);
+        } else {
+            combinedParams = new TreeMap();
+        }
+        combinedParams.putAll(newParams);
+
+        ac.setParameters(combinedParams);
     }
 }

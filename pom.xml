@@ -397,4 +397,15 @@
         </plugins>
     </reporting>
 
+    <dependencyManagement>
+      <dependencies>
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts-annotations</artifactId>
+            <version>1.0.4-20080613.043201-1</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+      </dependencies>
+    </dependencyManagement>
 </project>

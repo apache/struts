@@ -140,6 +140,8 @@ dojo.widget.defineWidget(
        if(this.executeScripts) {
          //update targets content
          var parsed = this.parse(data);
+         this.setContent(parsed.text);
+           
          //eval scripts
          if(parsed.scripts && parsed.scripts.length > 0) {
            var scripts = "";
@@ -148,7 +150,6 @@ dojo.widget.defineWidget(
            }
            (new Function('_container_', scripts+'; return this;'))(this);
          }
-         this.setContent(parsed.text);
        }
        else {
          this.setContent(data);

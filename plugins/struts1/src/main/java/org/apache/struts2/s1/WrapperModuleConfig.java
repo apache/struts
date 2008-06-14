@@ -206,6 +206,10 @@ class WrapperModuleConfig implements ModuleConfig {
         return (ForwardConfig[]) _actionForwards.values().toArray(new ForwardConfig[_actionForwards.size()]);
     }
 
+    public ActionConfig findActionConfigId(String s) {
+        throw new UnsupportedOperationException("NYI");
+    }
+
     public MessageResourcesConfig findMessageResourcesConfig(String key) {
         throw new UnsupportedOperationException("NYI");
     }

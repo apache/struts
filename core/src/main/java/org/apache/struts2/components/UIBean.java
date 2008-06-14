@@ -1044,7 +1044,7 @@ public abstract class UIBean extends Component {
         this.disabled = disabled;
     }
 
-    @StrutsTagAttribute(description="Label expression used for rendering a element specific label")
+    @StrutsTagAttribute(description="Label expression used for rendering an element specific label")
     public void setLabel(String label) {
         this.label = label;
     }

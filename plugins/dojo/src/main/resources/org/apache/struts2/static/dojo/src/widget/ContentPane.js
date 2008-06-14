@@ -317,7 +317,7 @@ dojo.widget.defineWidget("dojo.widget.ContentPane", dojo.widget.HtmlWidget, func
 	this._styleNodes = [];
 	try {
 		var node = this.containerNode || this.domNode;
-		while (node.firstChild) {
+		while(node!=null && node.firstChild){ 
 			dojo.html.destroyNode(node.firstChild);
 		}
 		if (typeof cont != "string") {

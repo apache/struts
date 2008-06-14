@@ -175,9 +175,17 @@ public class FileUploadInterceptor extends AbstractInterceptor {
     private static final String DEFAULT_DELIMITER = ",";
     private static final String DEFAULT_MESSAGE = "no.message.found";
 
+    protected boolean useActionMessageBundle;
+
     protected Long maximumSize;
     protected String allowedTypes;
     protected Set allowedTypesSet = Collections.EMPTY_SET;
+
+
+
+    public void setUseActionMessageBundle(String value) {
+        this.useActionMessageBundle = Boolean.valueOf(value).booleanValue();
+    }
 
     /**
      * Sets the allowed mimetypes
@@ -205,6 +213,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
      */
     public String intercept(ActionInvocation invocation) throws Exception {
         ActionContext ac = invocation.getInvocationContext();
+
         HttpServletRequest request = (HttpServletRequest) ac.get(ServletActionContext.HTTP_REQUEST);
 
         if (!(request instanceof MultiPartRequestWrapper)) {
@@ -216,9 +225,10 @@ public class FileUploadInterceptor extends AbstractInterceptor {
             return invocation.invoke();
         }
 
-        final Object action = invocation.getAction();
         ValidationAware validation = null;
 
+        Object action = invocation.getAction();
+        
         if (action instanceof ValidationAware) {
             validation = (ValidationAware) action;
         }
@@ -262,7 +272,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                         String contentTypeName = inputName + "ContentType";
                         String fileNameName = inputName + "FileName";
                         for (int index = 0; index < files.length; index++) {
-                            if (acceptFile(files[index], contentType[index], inputName, validation, ac.getLocale())) {
+                            if (acceptFile(action, files[index], contentType[index], inputName, validation, ac.getLocale())) {
                                 acceptedFiles.add(files[index]);
                                 acceptedContentTypes.add(contentType[index]);
                                 acceptedFileNames.add(fileName[index]);
@@ -275,10 +285,10 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                         }
                     }
                 } else {
-                    LOG.error(getTextMessage("struts.messages.invalid.file", new Object[]{inputName}, ActionContext.getContext().getLocale()));
+                    LOG.error(getTextMessage(action, "struts.messages.invalid.file", new Object[]{inputName}, ActionContext.getContext().getLocale()));
                 }
             } else {
-                LOG.error(getTextMessage("struts.messages.invalid.content.type", new Object[]{inputName}, ActionContext.getContext().getLocale()));
+                LOG.error(getTextMessage(action, "struts.messages.invalid.content.type", new Object[]{inputName}, ActionContext.getContext().getLocale()));
             }
         }
 
@@ -293,7 +303,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
             for (int index = 0; index < file.length; index++) {
                 File currentFile = file[index];
                 if (LOG.isInfoEnabled()) {
-                    LOG.info(getTextMessage("struts.messages.removing.file", new Object[]{inputValue, currentFile}, ActionContext.getContext().getLocale()));
+                    LOG.info(getTextMessage(action, "struts.messages.removing.file", new Object[]{inputValue, currentFile}, ActionContext.getContext().getLocale()));
                 }
                 if ((currentFile != null) && currentFile.isFile()) {
                     currentFile.delete();
@@ -316,25 +326,42 @@ public class FileUploadInterceptor extends AbstractInterceptor {
      * @return true if the proposed file is acceptable by contentType and size.
      */
     protected boolean acceptFile(File file, String contentType, String inputName, ValidationAware validation, Locale locale) {
+        return acceptFile(null, file, contentType, inputName, validation, locale);
+
+    }
+    
+    /**
+     * Override for added functionality. Checks if the proposed file is acceptable based on contentType and size.
+     *
+     * @param action      - uploading action for message retrieval.
+     * @param file        - proposed upload file.
+     * @param contentType - contentType of the file.
+     * @param inputName   - inputName of the file.
+     * @param validation  - Non-null ValidationAware if the action implements ValidationAware, allowing for better
+     *                    logging.
+     * @param locale
+     * @return true if the proposed file is acceptable by contentType and size.
+     */
+    protected boolean acceptFile(Object action, File file, String contentType, String inputName, ValidationAware validation, Locale locale) {
         boolean fileIsAcceptable = false;
 
         // If it's null the upload failed
         if (file == null) {
-            String errMsg = getTextMessage("struts.messages.error.uploading", new Object[]{inputName}, locale);
+            String errMsg = getTextMessage(action, "struts.messages.error.uploading", new Object[]{inputName}, locale);
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
 
             LOG.error(errMsg);
         } else if (maximumSize != null && maximumSize.longValue() < file.length()) {
-            String errMsg = getTextMessage("struts.messages.error.file.too.large", new Object[]{inputName, file.getName(), "" + file.length()}, locale);
+            String errMsg = getTextMessage(action, "struts.messages.error.file.too.large", new Object[]{inputName, file.getName(), "" + file.length()}, locale);
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
 
             LOG.error(errMsg);
         } else if ((!allowedTypesSet.isEmpty()) && (!containsItem(allowedTypesSet, contentType))) {
-            String errMsg = getTextMessage("struts.messages.error.content.type.not.allowed", new Object[]{inputName, file.getName(), contentType}, locale);
+            String errMsg = getTextMessage(action, "struts.messages.error.content.type.not.allowed", new Object[]{inputName, file.getName(), contentType}, locale);
             if (validation != null) {
                 validation.addFieldError(inputName, errMsg);
             }
@@ -381,9 +408,20 @@ public class FileUploadInterceptor extends AbstractInterceptor {
     }
 
     private String getTextMessage(String messageKey, Object[] args, Locale locale) {
+        return getTextMessage(null, messageKey, args, locale);
+
+    }
+    
+    private String getTextMessage(Object action, String messageKey, Object[] args, Locale locale) {
         if (args == null || args.length == 0) {
-            return LocalizedTextUtil.findText(this.getClass(), messageKey, locale);
+            if ( action != null && useActionMessageBundle) {
+                return LocalizedTextUtil.findText(action.getClass(), messageKey, locale);
+            }
+            return LocalizedTextUtil.findText(this.getClass(), messageKey, locale);                        
         } else {
+            if ( action != null && useActionMessageBundle) {
+                return LocalizedTextUtil.findText(action.getClass(), messageKey, locale, DEFAULT_MESSAGE, args);
+            }
             return LocalizedTextUtil.findText(this.getClass(), messageKey, locale, DEFAULT_MESSAGE, args);
         }
     }

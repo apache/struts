@@ -36,6 +36,10 @@ import org.apache.struts2.portlet.PortletActionConstants;
 import org.apache.struts2.views.util.UrlHelper;
 
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
+import com.opensymphony.xwork2.util.reflection.ReflectionException;
+import com.opensymphony.xwork2.util.logging.Logger;
+import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
 
@@ -126,11 +130,13 @@ import com.opensymphony.xwork2.inject.Inject;
  * 
  * @see ActionMapper
  */
-public class PortletActionRedirectResult extends PortletResult {
+public class PortletActionRedirectResult extends PortletResult implements ReflectionExceptionHandler {
 
 	private static final long serialVersionUID = -7627388936683562557L;
 
-	/** The default parameter */
+    private static final Logger LOG = LoggerFactory.getLogger(PortletActionRedirectResult.class);
+
+    /** The default parameter */
 	public static final String DEFAULT_PARAM = "actionName";
 
 	protected String actionName;
@@ -256,4 +262,8 @@ public class PortletActionRedirectResult extends PortletResult {
 		return this;
 	}
 
+    public void handle(ReflectionException ex) {
+        // Only log as debug as they are probably parameters to be appended to the url
+        LOG.debug(ex.getMessage(), ex);
+    }
 }

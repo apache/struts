@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ParentPackage.java 651946 2008-04-27 13:41:38Z apetrelli $
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,19 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+@ParentPackage("custom-package")
+package org.apache.struts2.config.parenttest;
 
-package org.apache.struts2.config;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.lang.annotation.ElementType;
-
-/**
- * Allows an action class or package to specify an xwork package to inherit
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.PACKAGE})
-public @interface ParentPackage {
-    String[] value();
-}
+import org.apache.struts2.config.ParentPackage;

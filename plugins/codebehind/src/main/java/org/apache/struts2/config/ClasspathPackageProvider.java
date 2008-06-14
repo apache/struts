@@ -387,17 +387,14 @@ public class ClasspathPackageProvider implements PackageProvider {
             actionPackage = pkgConfig.getName();
         }
 
-        Annotation annotation = cls.getAnnotation(ParentPackage.class);
-        if (annotation != null) {
-            String parent = ((ParentPackage)annotation).value();
-            PackageConfig parentPkg = configuration.getPackageConfig(parent);
-            if (parentPkg == null) {
-                throw new ConfigurationException("ClasspathPackageProvider: Unable to locate parent package "+parent, annotation);
-            }
-            pkgConfig.addParent(parentPkg);
+        List<PackageConfig> parents = findAllParentPackages(cls);
+        if (parents.size() > 0) {
+            pkgConfig.addParents(parents);
 
-            if (!TextUtils.stringSet(pkgConfig.getNamespace()) && TextUtils.stringSet(parentPkg.getNamespace())) {
-                pkgConfig.namespace(parentPkg.getNamespace());
+            // Try to guess the namespace from the first package
+            PackageConfig firstParent = parents.get(0);
+            if (!TextUtils.stringSet(pkgConfig.getNamespace()) && TextUtils.stringSet(firstParent.getNamespace())) {
+                pkgConfig.namespace(firstParent.getNamespace());
             }
         }
 
@@ -407,6 +404,36 @@ public class ClasspathPackageProvider implements PackageProvider {
                 .addResultConfigs(new ResultMap<String,ResultConfig>(cls, actionName, defaultResultType))
                 .build();
         pkgConfig.addActionConfig(actionName, actionConfig);
+    }
+
+    /**
+     * Finds all parent packages by first looking at the ParentPackage annotation on the package, then the class
+     * @param cls The action class
+     * @return A list of unique packages to add
+     */
+    private List<PackageConfig> findAllParentPackages(Class<?> cls) {
+
+        List<PackageConfig> parents = new ArrayList<PackageConfig>();
+        // Favor parent package annotations from the package
+        Set<String> parentNames = new LinkedHashSet<String>();
+        ParentPackage annotation = cls.getPackage().getAnnotation(ParentPackage.class);
+        if (annotation != null) {
+            parentNames.addAll(Arrays.asList(annotation.value()));
+        }
+        annotation = cls.getAnnotation(ParentPackage.class);
+        if (annotation != null) {
+            parentNames.addAll(Arrays.asList(annotation.value()));
+        }
+        if (parentNames.size() > 0) {
+            for (String parent : parentNames) {
+                PackageConfig parentPkg = configuration.getPackageConfig(parent);
+                if (parentPkg == null) {
+                    throw new ConfigurationException("ClasspathPackageProvider: Unable to locate parent package "+parent, annotation);
+                }
+                parents.add(parentPkg);
+            }
+        }
+        return parents;
     }
 
     /**

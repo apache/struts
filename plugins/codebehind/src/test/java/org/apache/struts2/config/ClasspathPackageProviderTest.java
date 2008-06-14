@@ -39,7 +39,13 @@ public class ClasspathPackageProviderTest extends TestCase {
     public void setUp() throws Exception {
         provider = new ClasspathPackageProvider();
         provider.setActionPackages("org.apache.struts2.config");
-        config = new DefaultConfiguration();
+        config = createNewConfiguration();
+        provider.init(config);
+        provider.loadPackages();
+    }
+
+    private Configuration createNewConfiguration() {
+        Configuration config = new DefaultConfiguration();
         PackageConfig strutsDefault = new PackageConfig.Builder("struts-default")
                 .addResultTypeConfig(new ResultTypeConfig.Builder("dispatcher", ServletDispatcherResult.class.getName())
                         .defaultResultParam("location")
@@ -51,17 +57,16 @@ public class ClasspathPackageProviderTest extends TestCase {
             .namespace("/custom")
             .build();
         config.addPackageConfig("custom-package", customPackage);
-        provider.init(config);
-        provider.loadPackages();
+        return config;
     }
-    
+
     public void tearDown() throws Exception {
         provider = null;
         config = null;
     }
 
     public void testFoundRootPackages() {
-        assertEquals(6, config.getPackageConfigs().size());
+        assertEquals(7, config.getPackageConfigs().size());
         PackageConfig pkg = config.getPackageConfig("org.apache.struts2.config");
         assertNotNull(pkg);
         Map configs = pkg.getActionConfigs();
@@ -89,6 +94,23 @@ public class ClasspathPackageProviderTest extends TestCase {
         ActionConfig config = (ActionConfig) configs.get("customParentPackage");
         assertNotNull(config);
         assertEquals("/custom", pkg.getNamespace());
+    }
+
+    public void testParentPackageOnPackage() {
+        provider = new ClasspathPackageProvider();
+        provider.setActionPackages("org.apache.struts2.config.parenttest");
+        provider.init(createNewConfiguration());
+        provider.loadPackages();
+
+
+        PackageConfig pkg = config.getPackageConfig("org.apache.struts2.config.parenttest");
+        // assertEquals(2, pkg.getParents().size());
+        assertNotNull(pkg);
+
+        assertEquals("custom-package", pkg.getParents().get(0).getName());
+        Map configs = pkg.getActionConfigs();
+        ActionConfig config = (ActionConfig) configs.get("some");
+        assertNotNull(config);
     }
 
     public void testCustomNamespace() {

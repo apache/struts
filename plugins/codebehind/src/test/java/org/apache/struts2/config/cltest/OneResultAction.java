@@ -23,7 +23,7 @@ package org.apache.struts2.config.cltest;
 
 import org.apache.struts2.config.Result;
 
-@Result("foo.jsp")
+@Result(name="input", value="input-parent.jsp")
 public class OneResultAction {
 
 }

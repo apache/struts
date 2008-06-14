@@ -147,7 +147,14 @@ public class ClasspathPackageProviderTest extends TestCase {
         assertEquals("/cltest", pkg.getNamespace());
         ActionConfig acfg = pkg.getActionConfigs().get("twoResult");
         assertNotNull(acfg);
-        assertEquals(3, acfg.getResults().size());
+        assertEquals(2, acfg.getResults().size());
+        assertEquals("input.jsp", acfg.getResults().get("input").getParams().get("location"));
+        assertEquals("bob", acfg.getResults().get("chain").getParams().get("location"));
+
+        acfg = pkg.getActionConfigs().get("oneResult");
+        assertNotNull(acfg);
+        assertEquals(1, acfg.getResults().size());
+        assertEquals("input-parent.jsp", acfg.getResults().get("input").getParams().get("location"));
     }
 
     public void testActionImplementation() {

@@ -495,7 +495,8 @@ dojo.widget.defineWidget("dojo.widget.ComboBox", dojo.widget.HtmlWidget, {forceV
 			return false;
 		}
 	}
-	this.selectedResult = [tgt.getAttribute("resultName"), tgt.getAttribute("resultValue")];
+    this.textInputNode.value="";
+    this.selectedResult = [tgt.getAttribute("resultName"), tgt.getAttribute("resultValue")];
 	this.setAllValues(tgt.getAttribute("resultName"), tgt.getAttribute("resultValue"));
 	if (!evt.noHide) {
 		this._hideResultList();

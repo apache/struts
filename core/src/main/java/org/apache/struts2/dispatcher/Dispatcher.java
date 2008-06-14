@@ -317,39 +317,6 @@ public class Dispatcher {
         }
     }
 
-    private void init_MethodConfigurationProvider() {
-        // See https://issues.apache.org/struts/browse/WW-1522
-    /*
-    com.opensymphony.xwork2.inject.DependencyException: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyException: No mapping found for dependency [type=org.apache.struts2.dispatcher.mapper.ActionMapper, name='default'] in public static void org.apache.struts2.dispatcher.FilterDispatcher.setActionMapper(org.apache.struts2.dispatcher.mapper.ActionMapper).
-	at com.opensymphony.xwork2.inject.ContainerImpl.addInjectorsForMembers(ContainerImpl.java:135)
-	at com.opensymphony.xwork2.inject.ContainerImpl.addInjectorsForMethods(ContainerImpl.java:104)
-	at com.opensymphony.xwork2.inject.ContainerImpl.injectStatics(ContainerImpl.java:89)
-	at com.opensymphony.xwork2.inject.ContainerBuilder.create(ContainerBuilder.java:494)
-	at com.opensymphony.xwork2.config.impl.DefaultConfiguration.reload(DefaultConfiguration.java:140)
-	at com.opensymphony.xwork2.config.ConfigurationManager.getConfiguration(ConfigurationManager.java:52)
-	at org.apache.struts2.dispatcher.Dispatcher.init_MethodConfigurationProvider(Dispatcher.java:347)
-	at org.apache.struts2.dispatcher.Dispatcher.init(Dispatcher.java:421)
-	at org.apache.struts2.config.MethodConfigurationProviderTest.setUp(MethodConfigurationProviderTest.java:68)
-	at com.intellij.rt.execution.junit.JUnitStarter.main(JUnitStarter.java:40)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:90)
-Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyException: No mapping found for dependency [type=org.apache.struts2.dispatcher.mapper.ActionMapper, name='default'] in public static void org.apache.struts2.dispatcher.FilterDispatcher.setActionMapper(org.apache.struts2.dispatcher.mapper.ActionMapper).
-	at com.opensymphony.xwork2.inject.ContainerImpl.createParameterInjector(ContainerImpl.java:217)
-	at com.opensymphony.xwork2.inject.ContainerImpl.getParametersInjectors(ContainerImpl.java:207)
-	at com.opensymphony.xwork2.inject.ContainerImpl$MethodInjector.<init>(ContainerImpl.java:260)
-	at com.opensymphony.xwork2.inject.ContainerImpl$3.create(ContainerImpl.java:108)
-	at com.opensymphony.xwork2.inject.ContainerImpl$3.create(ContainerImpl.java:106)
-	at com.opensymphony.xwork2.inject.ContainerImpl.addInjectorsForMembers(ContainerImpl.java:132)
-	... 26 more
-
-        MethodConfigurationProvider provider = new MethodConfigurationProvider();
-        provider.init(configurationManager.getConfiguration());
-        provider.loadPackages();
-   */
-    }
-
     private void init_FilterInitParameters() {
         configurationManager.addConfigurationProvider(new ConfigurationProvider() {
             public void destroy() {}
@@ -417,7 +384,6 @@ Caused by: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyExcepti
         init_TraditionalXmlConfigurations(); // [2]
         init_LegacyStrutsProperties(); // [3]
         init_CustomConfigurationProviders(); // [5]
-        init_MethodConfigurationProvider();
         init_FilterInitParameters() ; // [6]
         init_AliasStandardObjects() ; // [7]
 

@@ -85,21 +85,4 @@ public class StrutsObjectFactory extends ObjectFactory {
         }
     }
 
-    public Result buildResult(ResultConfig resultConfig, Map extraContext) throws Exception {
-        String resultClassName = resultConfig.getClassName();
-        if (resultClassName == null)
-            return null;
-
-        Object result = buildBean(resultClassName, extraContext);
-        reflectionProvider.setProperties(resultConfig.getParams(), result, extraContext);
-
-        if (result instanceof Result)
-            return (Result) result;
-
-// This is for the new API:
-//        if (result instanceof org.apache.struts2.spi.Result)
-//            return new ResultAdapter((org.apache.struts2.spi.Result) result);
-
-        throw new ConfigurationException(result.getClass().getName() + " does not implement Result.");
-    }
 }

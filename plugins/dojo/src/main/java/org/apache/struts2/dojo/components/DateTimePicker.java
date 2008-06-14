@@ -258,10 +258,10 @@ public class DateTimePicker extends UIBean {
         
         // format the value to RFC 3399
         if(parameters.containsKey("value")) {
-            parameters.put("nameValue", parameters.get("value"));
+            addParameter("nameValue", parameters.get("value")); 
         } else {
-            if(name != null) {
-                addParameter("nameValue", format(findValue(name)));
+            if(parameters.containsKey("name")) {
+                addParameter("nameValue", format(findValue((String)parameters.get("name")))); 
             }
         }
         

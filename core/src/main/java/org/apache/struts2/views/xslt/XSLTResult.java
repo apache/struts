@@ -22,7 +22,6 @@ package org.apache.struts2.views.xslt;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -315,8 +314,6 @@ public class XSLTResult implements Result {
         try {
             HttpServletResponse response = ServletActionContext.getResponse();
 
-            Writer writer = response.getWriter();
-
             // Create a transformer for the stylesheet.
             Templates templates = null;
             Transformer transformer;
@@ -354,13 +351,11 @@ public class XSLTResult implements Result {
             LOG.debug("xmlSource = " + xmlSource);
             transformer.transform(xmlSource, new StreamResult(out));
 
-            out.close(); // ...and flush...
+            out.flush(); // ...and flush...
 
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Time:" + (System.currentTimeMillis() - startTime) + "ms");
             }
-
-            writer.flush();
         } catch (Exception e) {
             LOG.error("Unable to render XSLT Template, '" + location + "'", e);
             throw e;

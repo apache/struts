@@ -34,16 +34,16 @@ import com.opensymphony.xwork2.util.ValueStack;
 /**
  * <!-- START SNIPPET: javadoc -->
  *
- * <p>Iterator will iterate over a value. An iterable value can be either of: java.util.Collection, java.util.Iterator,
- * java.util.Enumeration, java.util.Map, array.</p> <p/> <!-- END SNIPPET: javadoc -->
+ * <p>Iterator will iterate over a value. An iterable value can be any of: java.util.Collection, java.util.Iterator,
+ * java.util.Enumeration, java.util.Map, or an array.</p> <p/> <!-- END SNIPPET: javadoc -->
  *
  * <!-- START SNIPPET: params -->
  *
  * <ul>
  *
- * <li>status (String) - if specified, an instanceof IteratorStatus will be pushed into stack upon each iteration</li>
+ * <li>status (String) - if specified, an instance of IteratorStatus will be pushed into stack upon each iteration</li>
  *
- * <li>value (Object) - the source to iterate over, must be iteratable, else an the object itself will be put into a
+ * <li>value (Object) - the source to iterate over, must be iteratable, else the object itself will be put into a
  * newly created List (see MakeIterator#convert(Object)</li>
  *
  * <li>id (String) - if specified the current iteration object will be place with this id in Struts stack's context
@@ -73,7 +73,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <p>The following example uses a {@link Bean} tag and places it into the ActionContext. The iterator tag will retrieve
  * that object from the ActionContext and then calls its getDays() method as above. The status attribute is also used to
- * create a {@link IteratorStatus} object, which in this example, its odd() method is used to alternate row
+ * create an {@link IteratorStatus} object, which in this example, its odd() method is used to alternate row
  * colours:</p>
  *
  * <!-- END SNIPPET: example2description -->
@@ -111,7 +111,7 @@ import com.opensymphony.xwork2.util.ValueStack;
  *
  * <p> The next example will further demonstrate the use of the status attribute, using a DAO obtained from the action
  * class through OGNL, iterating over groups and their users (in a security context). The last() method indicates if the
- * current object is the last available in the iteration, and if not, we need to seperate the users using a comma: </p>
+ * current object is the last available in the iteration, and if not, we need to separate the users using a comma: </p>
  *
  * <!-- END SNIPPET: example3description -->
  *
@@ -175,11 +175,30 @@ import com.opensymphony.xwork2.util.ValueStack;
  *    &lt;s:property value="#stat.index" /&gt;
  *
  *    &lt;!-- grab the top of the stack which should be the --&gt;
- *    &lt;!-- current iteration value (0, 1, ... 5) --&gt;
+ *    &lt;!-- current iteration value (1, ... 5) --&gt;
  *    &lt;s:property value="top" /&gt;
  * &lt;/s:iterator&gt;
  *
  * <!-- END SNIPPET: example5code -->
+ * </pre>
+ *
+ * <!-- START SNIPPET: example6description -->
+ *
+ * </p>Another way to create a simple loop, similar to JSTL's 
+ * &lt;c:forEach begin="..." end="..." ...&gt; is to use some 
+ * OGNL magic, which provides some under-the-covers magic to 
+ * make 0-n loops trivial. This example also loops five times.
+ *
+ * <!-- END SNIPPET: example6description -->
+ *
+ * <pre>
+ * <!-- START SNIPPET: example6code -->
+ *
+ * &lt;s:iterator status="stat" value="(5).{ #this }" &gt;
+ *    &lt;s:property value="#stat.count" /&gt; &lt;!-- Note that "count" is 1-based, "index" is 0-based. --&gt;
+ * &lt;/s:iterator&gt;
+ *
+ * <!-- END SNIPPET: example6code -->
  * </pre>
  *
  */

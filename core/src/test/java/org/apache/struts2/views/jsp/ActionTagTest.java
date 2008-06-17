@@ -39,6 +39,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
+import com.mockobjects.dynamic.Mock;
 
 
 /**
@@ -145,6 +146,27 @@ public class ActionTagTest extends AbstractTagTest {
         assertTrue(stack.getContext().containsKey(ServletActionContext.PAGE_CONTEXT));
         assertTrue(stack.getContext().get(ServletActionContext.PAGE_CONTEXT)instanceof PageContext);
         assertNull(result); // result is never executed, hence never set into invocation
+    }
+
+     public void testExecuteButResetReturnSameInvocation() throws Exception {
+        Mock mockActionInv = new Mock(ActionInvocation.class);
+        ActionTag tag = new ActionTag();
+        tag.setPageContext(pageContext);
+        tag.setNamespace("");
+        tag.setName("testActionTagAction");
+        tag.setExecuteResult(true);
+        ActionContext.getContext().setActionInvocation((ActionInvocation) mockActionInv.proxy());
+
+        ActionInvocation oldInvocation = ActionContext.getContext().getActionInvocation();
+        assertNotNull(oldInvocation);
+
+        tag.doStartTag();
+
+        // tag clear components on doEndTag
+        ActionComponent component = (ActionComponent) tag.getComponent();
+
+        tag.doEndTag();
+        assertTrue(oldInvocation == ActionContext.getContext().getActionInvocation());
     }
 
     public void testIngoreContextParamsFalse() throws Exception {

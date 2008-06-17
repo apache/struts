@@ -45,6 +45,7 @@ import org.apache.struts2.views.jsp.TagUtils;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
+import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.ValueStackFactory;
@@ -279,6 +280,7 @@ public class ActionComponent extends ContextBean {
         // get the old value stack from the request
         ValueStack stack = getStack();
         // execute at this point, after params have been set
+        ActionInvocation inv = ActionContext.getContext().getActionInvocation();
         try {
 
             proxy = actionProxyFactory.createActionProxy(namespace, actionName, methodName, createExtraContext(), executeResult, true);
@@ -292,6 +294,9 @@ public class ActionComponent extends ContextBean {
         } finally {
             // set the old stack back on the request
             req.setAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY, stack);
+            if (inv != null) {
+                ActionContext.getContext().setActionInvocation(inv);
+            }
         }
 
         if ((getVar() != null) && (proxy != null)) {

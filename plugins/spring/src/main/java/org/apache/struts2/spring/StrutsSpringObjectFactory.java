@@ -50,6 +50,23 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
             @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE,required=false) String autoWire,
             @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE,required=false) String useClassCacheStr,
             @Inject ServletContext servletContext) {
+        this(autoWire, "false", useClassCacheStr, servletContext);
+    }
+
+    /**
+     * Constructs the spring object factory
+     * @param autoWire The type of autowiring to use
+     * @param alwaysAutoWire Whether to always respect the autowiring or not
+     * @param useClassCacheStr Whether to use the class cache or not
+     * @param servletContext The servlet context
+     * @since 2.1.3
+     */
+    @Inject
+    public StrutsSpringObjectFactory(
+            @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE,required=false) String autoWire,
+            @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE_ALWAYS_RESPECT,required=false) String alwaysAutoWire,
+            @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE,required=false) String useClassCacheStr,
+            @Inject ServletContext servletContext) {
           
         super();
         boolean useClassCache = "true".equals(useClassCacheStr);
@@ -84,6 +101,8 @@ public class StrutsSpringObjectFactory extends SpringObjectFactory {
         this.setAutowireStrategy(type);
 
         this.setUseClassCache(useClassCache);
+
+        this.setAlwaysRespectAutowireStrategy("true".equalsIgnoreCase(alwaysAutoWire));
 
         LOG.info("... initialized Struts-Spring integration successfully");
     }

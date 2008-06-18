@@ -45,13 +45,13 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 public class StrutsSpringObjectFactory extends SpringObjectFactory {
     private static final Logger LOG = LoggerFactory.getLogger(StrutsSpringObjectFactory.class);
 
-    @Inject
-    public StrutsSpringObjectFactory(
-            @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE,required=false) String autoWire,
-            @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE,required=false) String useClassCacheStr,
-            @Inject ServletContext servletContext) {
-        this(autoWire, "false", useClassCacheStr, servletContext);
-    }
+    //@Inject
+    //public StrutsSpringObjectFactory(
+    //        @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_AUTOWIRE,required=false) String autoWire,
+    //        @Inject(value=StrutsConstants.STRUTS_OBJECTFACTORY_SPRING_USE_CLASS_CACHE,required=false) String useClassCacheStr,
+    //        @Inject ServletContext servletContext) {
+    //    this(autoWire, "false", useClassCacheStr, servletContext);
+    //}
 
     /**
      * Constructs the spring object factory

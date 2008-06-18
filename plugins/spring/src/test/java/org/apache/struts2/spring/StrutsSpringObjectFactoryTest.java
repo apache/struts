@@ -39,7 +39,7 @@ public class StrutsSpringObjectFactoryTest extends TestCase {
 
     public void testNoSpringContext() throws Exception {
         // to cover situations where there will be logged an error
-        StrutsSpringObjectFactory fac = new StrutsSpringObjectFactory(null, null, new MockServletContext());
+        StrutsSpringObjectFactory fac = new StrutsSpringObjectFactory(null, null, null, new MockServletContext());
 
         assertEquals(AutowireCapableBeanFactory.AUTOWIRE_BY_NAME, fac.getAutowireStrategy());
     }
@@ -53,7 +53,7 @@ public class StrutsSpringObjectFactoryTest extends TestCase {
         ac.setServletContext(msc);
         ac.setConfigLocations(new String[] {"org/apache/struts2/spring/StrutsSpringObjectFactoryTest-applicationContext.xml"});
         ac.refresh();
-        StrutsSpringObjectFactory fac = new StrutsSpringObjectFactory("constructor", null, msc);
+        StrutsSpringObjectFactory fac = new StrutsSpringObjectFactory("constructor", null, null, msc);
 
         assertEquals(AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR, fac.getAutowireStrategy());
     }

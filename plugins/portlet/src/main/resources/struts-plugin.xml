@@ -32,7 +32,8 @@
 	<constant name="struts.urlRenderer" value="portlet" />
 	<constant name="struts.portlet.useDispatcherServlet" value="false" />
 	<constant name="struts.portlet.dispatcherServletName" value="Struts2PortletDispatcherServlet" />
-	
+	<constant name="struts.objectFactory.spring.autoWire.alwaysRespect" value="false" />
+
     <package name="struts-portlet-default" extends="struts-default">
 
 	   <result-types>

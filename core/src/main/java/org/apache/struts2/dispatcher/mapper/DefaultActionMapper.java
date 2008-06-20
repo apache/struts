@@ -400,18 +400,26 @@ public class DefaultActionMapper implements ActionMapper {
             Configuration config = configManager.getConfiguration();
             String prefix = uri.substring(0, lastSlash);
             namespace = "";
+            boolean rootAvailable = false;
             // Find the longest matching namespace, defaulting to the default
-            for (Iterator i = config.getPackageConfigs().values().iterator(); i
-                    .hasNext();) {
-                String ns = ((PackageConfig) i.next()).getNamespace();
+            for (Object cfg : config.getPackageConfigs().values()) {
+                String ns = ((PackageConfig) cfg).getNamespace();
                 if (ns != null && prefix.startsWith(ns) && (prefix.length() == ns.length() || prefix.charAt(ns.length()) == '/')) {
                     if (ns.length() > namespace.length()) {
                         namespace = ns;
                     }
                 }
+                if ("/".equals(ns)) {
+                    rootAvailable = true;
+                }
             }
 
             name = uri.substring(namespace.length() + 1);
+
+            // Still none found, use root namespace if found
+            if (rootAvailable && "".equals(namespace)) {
+                namespace = "/";
+            }
         }
 
         if (!allowSlashesInActionNames && name != null) {

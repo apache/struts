@@ -44,7 +44,7 @@ public class ConfigTest extends StrutsTestCase {
                 ActionSupport.INPUT.equals(result));
     }
 
-    protected Map assertFieldErrors(ActionSupport action) throws Exception {
+    protected Map<String, List<String>> assertFieldErrors(ActionSupport action) throws Exception {
         assertTrue(action.hasFieldErrors());
         return action.getFieldErrors();
     }

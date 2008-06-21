@@ -43,7 +43,6 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.opensymphony.xwork2.util.ValueStackFactory;
 
 
 /**
@@ -52,8 +51,8 @@ import com.opensymphony.xwork2.util.ValueStackFactory;
  */
 public abstract class AbstractTagTest extends StrutsTestCase {
     protected Action action;
-    protected Map context;
-    protected Map session;
+    protected Map<String, Object> context;
+    protected Map<String, Object> session;
     protected ValueStack stack;
 
     /**
@@ -110,12 +109,12 @@ public abstract class AbstractTagTest extends StrutsTestCase {
         pageContext.setServletContext(servletContext);
 
         mockContainer = new Mock(Container.class);
-        Dispatcher du = new Dispatcher(pageContext.getServletContext(), new HashMap());
+        Dispatcher du = new Dispatcher(pageContext.getServletContext(), new HashMap<String, String>());
         du.init();
         Dispatcher.setInstance(du);
         du.setConfigurationManager(configurationManager);
-        session = new SessionMap(request);
-        Map extraContext = du.createContextMap(new RequestMap(request),
+        session = new SessionMap<String, Object>(request);
+        Map<String, Object> extraContext = du.createContextMap(new RequestMap(request),
                 request.getParameterMap(),
                 session,
                 new ApplicationMap(pageContext.getServletContext()),

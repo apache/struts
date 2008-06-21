@@ -62,7 +62,7 @@ public class TagUtils {
                         "has passed through its servlet filter, which initializes the Struts dispatcher needed for this tag.");
             }
             stack = du.getContainer().getInstance(ValueStackFactory.class).createValueStack();
-            Map extraContext = du.createContextMap(new RequestMap(req),
+            Map<String, Object> extraContext = du.createContextMap(new RequestMap(req),
                     req.getParameterMap(),
                     new SessionMap(req),
                     new ApplicationMap(pageContext.getServletContext()),
@@ -77,7 +77,7 @@ public class TagUtils {
             ActionContext.setContext(new ActionContext(stack.getContext()));
         } else {
             // let's make sure that the current page context is in the action context
-            Map context = stack.getContext();
+            Map<String, Object> context = stack.getContext();
             context.put(ServletActionContext.PAGE_CONTEXT, pageContext);
 
             AttributeMap attrMap = new AttributeMap(context);

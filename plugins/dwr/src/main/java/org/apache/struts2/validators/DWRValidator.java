@@ -75,7 +75,7 @@ public class DWRValidator {
         ServletContext servletContext = WebContextFactory.get().getServletContext();
         HttpServletResponse res = WebContextFactory.get().getHttpServletResponse();
 
-        Map requestParams = new HashMap(req.getParameterMap());
+        Map<String, Object> requestParams = new HashMap<String, Object>(req.getParameterMap());
         if (params != null) {
             requestParams.putAll(params);
         } else {
@@ -85,7 +85,7 @@ public class DWRValidator {
         Map session = new SessionMap(req);
         Map application = new ApplicationMap(servletContext);
         Dispatcher du = Dispatcher.getInstance();
-        HashMap ctx = du.createContextMap(requestMap,
+        HashMap<String, Object> ctx = du.createContextMap(requestMap,
                 params,
                 session,
                 application,
@@ -122,7 +122,7 @@ public class DWRValidator {
     public static class ValidatorActionInvocation extends DefaultActionInvocation {
         private static final long serialVersionUID = -7645433725470191275L;
 
-        protected ValidatorActionInvocation(Map extraContext, boolean pushAction) throws Exception {
+        protected ValidatorActionInvocation(Map<String, Object> extraContext, boolean pushAction) throws Exception {
             super(extraContext, pushAction);
         }
 

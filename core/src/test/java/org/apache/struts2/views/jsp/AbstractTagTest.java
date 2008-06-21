@@ -113,7 +113,7 @@ public abstract class AbstractTagTest extends StrutsTestCase {
         Dispatcher.setInstance(du);
         du.setConfigurationManager(configurationManager);
         session = new SessionMap(request);
-        Map extraContext = du.createContextMap(new RequestMap(request),
+        Map<String, Object> extraContext = du.createContextMap(new RequestMap(request),
                 request.getParameterMap(),
                 session,
                 new ApplicationMap(pageContext.getServletContext()),

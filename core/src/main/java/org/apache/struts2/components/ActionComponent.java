@@ -191,7 +191,7 @@ public class ActionComponent extends ContextBean {
         Map application = ctx.getApplication();
 
         Dispatcher du = Dispatcher.getInstance();
-        Map extraContext = du.createContextMap(new RequestMap(req),
+        Map<String, Object> extraContext = du.createContextMap(new RequestMap(req),
                 newParams,
                 session,
                 application,

@@ -87,7 +87,7 @@ import com.opensymphony.xwork2.util.ValueStack;
                 "or partial depending on param tag nested)if they exists")
 public class FieldError extends UIBean implements UnnamedParametric {
 
-    private List errorFieldNames = new ArrayList();
+    private List<String> errorFieldNames = new ArrayList<String>();
 
     public FieldError(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
         super(stack, request, response);
@@ -105,7 +105,7 @@ public class FieldError extends UIBean implements UnnamedParametric {
         }
     }
 
-    public List getFieldErrorFieldNames() {
+    public List<String> getFieldErrorFieldNames() {
         return errorFieldNames;
     }
 }

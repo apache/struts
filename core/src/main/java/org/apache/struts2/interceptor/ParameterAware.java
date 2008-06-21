@@ -42,5 +42,5 @@ public interface ParameterAware {
      *
      * @param parameters a Map of parameters (name/value Strings).
      */
-    public void setParameters(Map<String,String[]> parameters);
+    public void setParameters(Map<String, Object> parameters);
 }

@@ -88,7 +88,7 @@ public class ServletConfigInterceptorTest extends StrutsTestCase {
 
         MockActionInvocation mai = createActionInvocation(mock);
 
-        Map param = new HashMap();
+        Map<String, Object> param = new HashMap<String, Object>();
         mai.getInvocationContext().setParameters(param);
 
         mock.setParameters(param);
@@ -105,7 +105,7 @@ public class ServletConfigInterceptorTest extends StrutsTestCase {
 
         MockActionInvocation mai = createActionInvocation(mock);
 
-        Map session = new HashMap();
+        Map<String, Object> session = new HashMap<String, Object>();
         mai.getInvocationContext().setSession(session);
 
         mock.setSession(session);
@@ -122,7 +122,7 @@ public class ServletConfigInterceptorTest extends StrutsTestCase {
 
         MockActionInvocation mai = createActionInvocation(mock);
 
-        Map app = new HashMap();
+        Map<String, Object> app = new HashMap<String, Object>();
         mai.getInvocationContext().setApplication(app);
 
         mock.setApplication(app);

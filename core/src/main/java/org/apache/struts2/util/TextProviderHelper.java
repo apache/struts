@@ -29,6 +29,7 @@ import com.opensymphony.xwork2.TextProvider;
 import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.Collections;
 
 /**
  * Helper methods to access text from TextProviders
@@ -50,7 +51,7 @@ public class TextProviderHelper {
        *
      * @return the message if found, otherwise the defaultMessage
      */
-    public static String getText(String key, String defaultMessage, List<String> args, ValueStack stack) {
+    public static String getText(String key, String defaultMessage, List<Object> args, ValueStack stack) {
         String msg = null;
         TextProvider tp = null;
 
@@ -101,7 +102,7 @@ public class TextProviderHelper {
        *
      * @return the message if found, otherwise the defaultMessage
      */
-    public static String getText(String key, String defaultMessage,ValueStack stack) {
-        return getText(key, defaultMessage, new LinkedList<String>(), stack);
+    public static String getText(String key, String defaultMessage, ValueStack stack) {
+        return getText(key, defaultMessage, Collections.emptyList(), stack);
     }
 }

@@ -216,7 +216,7 @@ public class FieldErrorTagTest extends AbstractUITagTest {
             this.returnNullForFieldErrors = returnNullForFieldErrors;
         }
 
-        public Map getFieldErrors() {
+        public Map<String, List<String>> getFieldErrors() {
             if (haveFieldErrors) {
                 List err1 = new ArrayList();
                 err1.add("field error message number 1");
@@ -234,7 +234,7 @@ public class FieldErrorTagTest extends AbstractUITagTest {
                 return null;
             }
             else {
-                return Collections.EMPTY_MAP;
+                return Collections.emptyMap();
             }
         }
 

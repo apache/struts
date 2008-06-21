@@ -219,7 +219,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
         if (!(request instanceof MultiPartRequestWrapper)) {
             if (LOG.isDebugEnabled()) {
                 ActionProxy proxy = invocation.getProxy();
-                LOG.debug(getTextMessage("struts.messages.bypass.request", new Object[]{proxy.getNamespace(), proxy.getActionName()}, ActionContext.getContext().getLocale()));
+                LOG.debug(getTextMessage("struts.messages.bypass.request", new Object[]{proxy.getNamespace(), proxy.getActionName()}, ac.getLocale()));
             }
 
             return invocation.invoke();
@@ -285,10 +285,10 @@ public class FileUploadInterceptor extends AbstractInterceptor {
                         }
                     }
                 } else {
-                    LOG.error(getTextMessage(action, "struts.messages.invalid.file", new Object[]{inputName}, ActionContext.getContext().getLocale()));
+                    LOG.error(getTextMessage(action, "struts.messages.invalid.file", new Object[]{inputName}, ac.getLocale()));
                 }
             } else {
-                LOG.error(getTextMessage(action, "struts.messages.invalid.content.type", new Object[]{inputName}, ActionContext.getContext().getLocale()));
+                LOG.error(getTextMessage(action, "struts.messages.invalid.content.type", new Object[]{inputName}, ac.getLocale()));
             }
         }
 
@@ -303,7 +303,7 @@ public class FileUploadInterceptor extends AbstractInterceptor {
             for (int index = 0; index < file.length; index++) {
                 File currentFile = file[index];
                 if (LOG.isInfoEnabled()) {
-                    LOG.info(getTextMessage(action, "struts.messages.removing.file", new Object[]{inputValue, currentFile}, ActionContext.getContext().getLocale()));
+                    LOG.info(getTextMessage(action, "struts.messages.removing.file", new Object[]{inputValue, currentFile}, ac.getLocale()));
                 }
                 if ((currentFile != null) && currentFile.isFile()) {
                     currentFile.delete();

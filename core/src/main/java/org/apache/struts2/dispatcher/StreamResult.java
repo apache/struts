@@ -219,7 +219,7 @@ public class StreamResult extends StrutsResultSupport {
 
             // Set the content-disposition
             if (contentDisposition != null) {
-                oResponse.addHeader("Content-disposition", conditionalParse(contentDisposition, invocation));
+                oResponse.addHeader("Content-Disposition", conditionalParse(contentDisposition, invocation));
             }
 
             // Get the outputstream

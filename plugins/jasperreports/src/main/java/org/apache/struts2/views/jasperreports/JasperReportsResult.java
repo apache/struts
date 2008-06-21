@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -61,68 +62,68 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
 
 /**
  * <!-- START SNIPPET: description -->
- *
+ * <p/>
  * Generates a JasperReports report using the specified format or PDF if no
  * format is specified.
- *
+ * <p/>
  * <!-- END SNIPPET: description -->
  * <p />
  * <b>This result type takes the following parameters:</b>
- *
+ * <p/>
  * <!-- START SNIPPET: params -->
- *
+ * <p/>
  * <ul>
- *
+ * <p/>
  * <li><b>location (default)</b> - the location where the compiled jasper report
  * definition is (foo.jasper), relative from current URL.</li>
- *
+ * <p/>
  * <li><b>dataSource (required)</b> - the EL expression used to retrieve the
  * datasource from the value stack (usually a List).</li>
- *
+ * <p/>
  * <li><b>parse</b> - true by default. If set to false, the location param will
  * not be parsed for EL expressions.</li>
- *
+ * <p/>
  * <li><b>format</b> - the format in which the report should be generated. Valid
  * values can be found in {@link JasperReportConstants}. If no format is
  * specified, PDF will be used.</li>
- *
+ * <p/>
  * <li><b>contentDisposition</b> - disposition (defaults to "inline", values are
  * typically <i>filename="document.pdf"</i>).</li>
- *
+ * <p/>
  * <li><b>documentName</b> - name of the document (will generate the http header
  * <code>Content-disposition = X; filename=X.[format]</code>).</li>
- *
+ * <p/>
  * <li><b>delimiter</b> - the delimiter used when generating CSV reports. By
  * default, the character used is ",".</li>
- *
+ * <p/>
  * <li><b>imageServletUrl</b> - name of the url that, when prefixed with the
  * context page, can return report images.</li>
- * 
+ * <p/>
  * <li>
- *   <b>reportParameters</b> - (2.1.2+) OGNL expression used to retrieve a map of
- *   report parameters from the value stack. The parameters may be accessed
- *   in the report via the usual JR mechanism and might include data not
- *   part of the dataSource, such as the user name of the report creator, etc.
+ * <b>reportParameters</b> - (2.1.2+) OGNL expression used to retrieve a map of
+ * report parameters from the value stack. The parameters may be accessed
+ * in the report via the usual JR mechanism and might include data not
+ * part of the dataSource, such as the user name of the report creator, etc.
  * </li>
- * 
+ * <p/>
  * <li>
- *   <b>exportParameters</b> - (2.1.2+) OGNL expression used to retrieve a map of
- *   JR exporter parameters from the value stack. The export parameters are
- *   used to customize the JR export. For example, a PDF export might enable
- *   encryption and set the user password to a string known to the report creator.
- * </li> 
- *
+ * <b>exportParameters</b> - (2.1.2+) OGNL expression used to retrieve a map of
+ * JR exporter parameters from the value stack. The export parameters are
+ * used to customize the JR export. For example, a PDF export might enable
+ * encryption and set the user password to a string known to the report creator.
+ * </li>
+ * <p/>
  * </ul>
- *
+ * <p/>
  * <p>
- *   This result follows the same rules from {@link StrutsResultSupport}.
- *   Specifically, all parameters will be parsed if the "parse" parameter 
- *   is not set to false.
+ * This result follows the same rules from {@link StrutsResultSupport}.
+ * Specifically, all parameters will be parsed if the "parse" parameter
+ * is not set to false.
  * </p>
  * <!-- END SNIPPET: params -->
- *
+ * <p/>
  * <b>Example:</b>
- *
+ * <p/>
  * <pre><!-- START SNIPPET: example1 -->
  * &lt;result name="success" type="jasper"&gt;
  *   &lt;param name="location"&gt;foo.jasper&lt;/param&gt;
@@ -137,7 +138,6 @@ import com.opensymphony.xwork2.util.logging.LoggerFactory;
  *   &lt;param name="dataSource"&gt;mySource&lt;/param&gt;
  * &lt;/result&gt;
  * <!-- END SNIPPET: example2 --></pre>
- *
  */
 public class JasperReportsResult extends StrutsResultSupport implements JasperReportConstants {
 
@@ -151,13 +151,14 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
     protected String contentDisposition;
     protected String delimiter;
     protected String imageServletUrl = "/images/";
-    
+    protected String timeZone;
+
     /**
-     * Names a report parameters map stack value, allowing 
-     * additional report parameters from the action. 
+     * Names a report parameters map stack value, allowing
+     * additional report parameters from the action.
      */
     protected String reportParameters;
-    
+
     /**
      * Names an exporter parameters map stack value,
      * allowing the use of custom export parameters.
@@ -173,7 +174,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
 
     /**
      * Default ctor with location.
-     * 
+     *
      * @param location Result location.
      */
     public JasperReportsResult(String location) {
@@ -208,24 +209,33 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         this.delimiter = delimiter;
     }
 
-	public String getReportParameters() {
-		return reportParameters;
-	}
+    /**
+     * set time zone id
+     *
+     * @param timeZone
+     */
+    public void setTimeZone(final String timeZone) {
+        this.timeZone = timeZone;
+    }
 
-	public void setReportParameters(String reportParameters) {
-		this.reportParameters = reportParameters;
-	}
-	
-	public String getExportParameters() {
-		return exportParameters;
-	}
+    public String getReportParameters() {
+        return reportParameters;
+    }
 
-	public void setExportParameters(String exportParameters) {
-		this.exportParameters = exportParameters;
-	}
+    public void setReportParameters(String reportParameters) {
+        this.reportParameters = reportParameters;
+    }
 
-	protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
-		// Will throw a runtime exception if no "datasource" property. TODO Best place for that is...?
+    public String getExportParameters() {
+        return exportParameters;
+    }
+
+    public void setExportParameters(String exportParameters) {
+        this.exportParameters = exportParameters;
+    }
+
+    protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {
+        // Will throw a runtime exception if no "datasource" property. TODO Best place for that is...?
         initializeProperties(invocation);
 
         if (LOG.isDebugEnabled()) {
@@ -238,17 +248,17 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         // Handle IE special case: it sends a "contype" request first.
         // TODO Set content type to config settings?
         if ("contype".equals(request.getHeader("User-Agent"))) {
-        	try {
-        		response.setContentType("application/pdf");
-        		response.setContentLength(0);
-        		
-        		ServletOutputStream outputStream = response.getOutputStream();
-        		outputStream.close();
-        	} catch (IOException e) {
-        		LOG.error("Error writing report output", e);
-        		throw new ServletException(e.getMessage(), e);
-        	}
-        	return;
+            try {
+                response.setContentType("application/pdf");
+                response.setContentLength(0);
+
+                ServletOutputStream outputStream = response.getOutputStream();
+                outputStream.close();
+            } catch (IOException e) {
+                LOG.error("Error writing report output", e);
+                throw new ServletException(e.getMessage(), e);
+            }
+            return;
         }
 
         // Construct the data source for the report.
@@ -265,11 +275,21 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         parameters.put("reportDirectory", directory);
         parameters.put(JRParameter.REPORT_LOCALE, invocation.getInvocationContext().getLocale());
 
+        // put timezone in jasper report parameter
+        if (timeZone != null) {
+            timeZone = conditionalParse(timeZone, invocation);
+            final TimeZone tz = TimeZone.getTimeZone(timeZone);
+            if (tz != null) {
+                // put the report time zone
+                parameters.put(JRParameter.REPORT_TIME_ZONE, tz);
+            }
+        }
+
         // Add any report parameters from action to param map.
         Map reportParams = (Map) stack.findValue(reportParameters);
         if (reportParams != null) {
-        	LOG.debug("Found report parameters; adding to parameters...");
-        	parameters.putAll(reportParams);
+            LOG.debug("Found report parameters; adding to parameters...");
+            parameters.putAll(reportParams);
         }
 
         byte[] output;
@@ -319,7 +339,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
                 exporter = new JRHtmlExporter();
                 exporter.setParameter(JRHtmlExporterParameter.IMAGES_MAP, imagesMap);
                 exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI, request.getContextPath() + imageServletUrl);
-                
+
                 // Needed to support chart images:
                 exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
                 request.getSession().setAttribute("net.sf.jasperreports.j2ee.jasper_print", jasperPrint);
@@ -335,11 +355,11 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
             } else {
                 throw new ServletException("Unknown report format: " + format);
             }
-            
+
             Map exportParams = (Map) stack.findValue(exportParameters);
             if (exportParams != null) {
-            	LOG.debug("Found export parameters; adding to exporter parameters...");
-            	exporter.getParameters().putAll(exportParams);
+                LOG.debug("Found export parameters; adding to exporter parameters...");
+                exporter.getParameters().putAll(exportParams);
             }
 
             output = exportReportToBytes(jasperPrint, exporter);
@@ -355,15 +375,15 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
         writeReport(response, output);
     }
 
-	/**
-	 * Writes report bytes to response output stream.
-	 * 
-	 * @param response Current response.
-	 * @param output Report bytes to write.
-	 * @throws ServletException on stream IOException.
-	 */
-	private void writeReport(HttpServletResponse response, byte[] output) throws ServletException {
-		ServletOutputStream outputStream = null;
+    /**
+     * Writes report bytes to response output stream.
+     *
+     * @param response Current response.
+     * @param output   Report bytes to write.
+     * @throws ServletException on stream IOException.
+     */
+    private void writeReport(HttpServletResponse response, byte[] output) throws ServletException {
+        ServletOutputStream outputStream = null;
         try {
             outputStream = response.getOutputStream();
             outputStream.write(output);
@@ -372,25 +392,25 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
             LOG.error("Error writing report output", e);
             throw new ServletException(e.getMessage(), e);
         } finally {
-        	try {
-        		if (outputStream != null) {
-        			outputStream.close();
-        		}
-        	} catch (IOException e) {
-        		LOG.error("Error closing report output stream", e);
-        		throw new ServletException(e.getMessage(), e);
-        	}
+            try {
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (IOException e) {
+                LOG.error("Error closing report output stream", e);
+                throw new ServletException(e.getMessage(), e);
+            }
         }
-	}
+    }
 
-	/**
-	 * Sets up result properties, parsing etc.
-	 * 
-	 * @param invocation Current invocation.
-	 * @throws Exception on initialization error.
-	 */
-	private void initializeProperties(ActionInvocation invocation) throws Exception {
-		if (dataSource == null) {
+    /**
+     * Sets up result properties, parsing etc.
+     *
+     * @param invocation Current invocation.
+     * @throws Exception on initialization error.
+     */
+    private void initializeProperties(ActionInvocation invocation) throws Exception {
+        if (dataSource == null) {
             String message = "No dataSource specified...";
             LOG.error(message);
             throw new RuntimeException(message);
@@ -412,7 +432,7 @@ public class JasperReportsResult extends StrutsResultSupport implements JasperRe
 
         reportParameters = conditionalParse(reportParameters, invocation);
         exportParameters = conditionalParse(exportParameters, invocation);
-	}
+    }
 
     /**
      * Run a Jasper report to CSV format and put the results in a byte array

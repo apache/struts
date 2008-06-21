@@ -24,6 +24,7 @@ package org.apache.struts2.views.jsp.ui;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.struts2.TestAction;
 import org.apache.struts2.views.jsp.AbstractUITagTest;
@@ -124,14 +125,14 @@ public class RadioTest extends AbstractUITagTest {
     }
 
     public void testSimpleWithStringMap() throws Exception {
-        final Map<String, String> myMap = new HashMap<String, String>();
+        final Map<String, String> myMap = new TreeMap<String, String>();
         myMap.put("name", "Std.");
         stack.push(new HashMap() {{ put ("myMap", myMap); }});
 
         RadioTag tag = new RadioTag();
         tag.setPageContext(pageContext);
         tag.setName("myMap['name']");
-        tag.setList("#@java.util.HashMap@{\"Opt.\":\"Opt.\", \"Std.\":\"Std.\", \"\":\"N/A\"}");
+        tag.setList("#@java.util.TreeMap@{\"Opt.\":\"Opt.\", \"Std.\":\"Std.\", \"\":\"N/A\"}");
         tag.doStartTag();
         tag.doEndTag();
 

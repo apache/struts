@@ -136,8 +136,12 @@ public class PortletVelocityResult extends StrutsResultSupport {
             ActionInvocation invocation) {
         ActionResponse res = PortletActionContext.getActionResponse();
         // View is rendered outside an action...uh oh...
-        res.setRenderParameter(PortletActionConstants.ACTION_PARAM,
-                "freemarkerDirect");
+        String namespace = invocation.getProxy().getNamespace();
+        if ( namespace != null && namespace.length() > 0 && !namespace.endsWith("/")) {
+            namespace += namespace + "/";
+
+        }
+        res.setRenderParameter(PortletActionConstants.ACTION_PARAM, namespace + "freemarkerDirect");
         res.setRenderParameter("location", location);
         res.setRenderParameter(PortletActionConstants.MODE_PARAM, PortletActionContext
                 .getRequest().getPortletMode().toString());

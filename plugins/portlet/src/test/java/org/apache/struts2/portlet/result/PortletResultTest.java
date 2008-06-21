@@ -44,6 +44,9 @@ import org.jmock.core.Constraint;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.ActionProxy;
+import com.opensymphony.xwork2.mock.MockActionProxy;
+import com.opensymphony.xwork2.mock.MockActionInvocation;
 
 /**
  * PortletResultTest. Insert description.
@@ -139,12 +142,16 @@ public class PortletResultTest extends MockObjectTestCase implements PortletActi
     public void testDoExecute_event_locationIsJsp() {
         Mock mockRequest = mock(ActionRequest.class);
         Mock mockResponse = mock(ActionResponse.class);
+        Mock mockProxy = mock(ActionProxy.class);
 
         Constraint[] params = new Constraint[]{eq(PortletActionConstants.ACTION_PARAM), eq("renderDirect")};
         mockResponse.expects(once()).method("setRenderParameter").with(params);
         params = new Constraint[]{eq(PortletActionConstants.MODE_PARAM), eq(PortletMode.VIEW.toString())};
         mockResponse.expects(once()).method("setRenderParameter").with(params);
         mockRequest.stubs().method("getPortletMode").will(returnValue(PortletMode.VIEW));
+        mockProxy.stubs().method("getNamespace").will(returnValue(""));
+
+        mockInvocation.stubs().method("getProxy").will(returnValue(mockProxy.proxy()));
 
         ActionContext ctx = ActionContext.getContext();
 

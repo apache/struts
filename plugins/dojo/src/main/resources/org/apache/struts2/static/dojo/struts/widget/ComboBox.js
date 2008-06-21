@@ -39,7 +39,7 @@ struts.widget.ComboBoxDataProvider = function(combobox, node){
   this.formId = this.cbox.formId;
   this.formFilter = this.cbox.formFilter;
   this.transport = this.cbox.transport;
-  
+
   this.getData = function(/*String*/ url){
     //show indicator
     dojo.html.show(this.cbox.indicator);
@@ -58,7 +58,7 @@ struts.widget.ComboBoxDataProvider = function(combobox, node){
         if(!this.firstRequest || type == "error") {
           this.cbox.notify.apply(this.cbox, [data, type, evt]);
         }
-        
+
         this.firstRequest = false;
         var arrData = null;
         var dataByName = data[dojo.string.isBlank(this.cbox.dataFieldName) ? this.cbox.name : this.cbox.dataFieldName];
@@ -84,7 +84,7 @@ struts.widget.ComboBoxDataProvider = function(combobox, node){
                  arrData = data[key];
                  break;
                } else {
-                 //if nathing else is found, we will use values in this 
+                 //if nathing else is found, we will use values in this
                  //object as the data
                  tmpArrData.push([key, data[key]]);
                }
@@ -98,7 +98,7 @@ struts.widget.ComboBoxDataProvider = function(combobox, node){
                arrData = tmpArrData;
              }
            }
-           
+
            data = arrData;
         }
         this.setData(data);
@@ -106,7 +106,7 @@ struts.widget.ComboBoxDataProvider = function(combobox, node){
       mimetype: "text/json"
     });
   };
-  
+
   this.startSearch = function (searchStr, callback) {
     // FIXME: need to add timeout handling here!!
     this._preformSearch(searchStr, callback);
@@ -270,15 +270,15 @@ dojo.widget.defineWidget(
   //embedded the style in the template string in 0.4.2 release, not good
   templateCssString: null,
   templateCssPath: dojo.uri.dojoUri("struts/ComboBox.css"),
-  
+
   //how many results are shown
   searchLimit : 30,
-  
+
   transport : "",
-  
+
   //load options when page loads
   preload : true,
-  
+
   //from Dojo's  ComboBox
   showResultList: function() {
   // Our dear friend IE doesnt take max-height so we need to calculate that on our own every time
@@ -297,6 +297,8 @@ dojo.widget.defineWidget(
       var totalHeight = this.itemHeight * childs.length;
       if(totalHeight < this.dropdownHeight) {
         this.optionsListNode.style.height = totalHeight + 2 + "px";
+      } else {
+        this.optionsListNode.style.height = this.dropdownHeight + "px";
       }
 
       this.popupWidget.open(this.domNode, this, this.downArrowNode);
@@ -387,22 +389,22 @@ dojo.widget.defineWidget(
     if(!dojo.string.isBlank(this.notifyTopics)) {
       this.notifyTopicsArray = this.notifyTopics.split(",");
     }
-    
+
     //before topics
     if(!dojo.string.isBlank(this.beforeNotifyTopics)) {
       this.beforeNotifyTopicsArray = this.beforeNotifyTopics.split(",");
     }
-    
+
     //after topics
     if(!dojo.string.isBlank(this.afterNotifyTopics)) {
       this.afterNotifyTopicsArray = this.afterNotifyTopics.split(",");
     }
-    
+
     //error topics
     if(!dojo.string.isBlank(this.errorNotifyTopics)) {
       this.errorNotifyTopicsArray = this.errorNotifyTopics.split(",");
     }
-    
+
     //value topics
     if(!dojo.string.isBlank(this.valueNotifyTopics)) {
       this.valueNotifyTopicsArray = this.valueNotifyTopics.split(",");
@@ -449,7 +451,7 @@ dojo.widget.defineWidget(
         }
       });
     }
-    
+
     //before, after and error topics
     var topicsArray = null;
     switch(type) {
@@ -464,10 +466,10 @@ dojo.widget.defineWidget(
         break;
        case "valuechanged":
         this.notifyTo(this.valueNotifyTopicsArray, [this.getSelectedValue(), this.getSelectedKey(), this.getText(), this]);
-        break;  
+        break;
     }
   },
-  
+
   notifyTo : function(topicsArray, params) {
     var self = this;
     if(topicsArray) {
@@ -480,7 +482,7 @@ dojo.widget.defineWidget(
       });
     }
   },
-  
+
   log : function(text) {
     dojo.debug("[" + (this.widgetId ? this.widgetId : "unknown")  + "] " + text);
   },
@@ -501,7 +503,7 @@ dojo.widget.defineWidget(
 	  this._startSearch(searchStr);
 	}
   },
-  
+
   setSelectedKey : function(key) {
     var data = this.dataProvider.data;
     for(element in data) {
@@ -512,15 +514,15 @@ dojo.widget.defineWidget(
        }
     }
   },
-  
+
   getSelectedKey : function() {
     return this.comboBoxSelectionValue.value;
   },
- 
+
   getSelectedValue : function() {
     return this.comboBoxValue.value;
   },
-  
+
   getText : function() {
     return this.textInputNode.value;
   }

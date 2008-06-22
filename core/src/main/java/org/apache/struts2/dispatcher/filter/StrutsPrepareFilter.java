@@ -44,7 +44,9 @@ public class StrutsPrepareFilter implements StrutsStatics, Filter {
             prepare = new PrepareOperations(filterConfig.getServletContext(), dispatcher);
             cleanup = new CleanupOperations(dispatcher);
         } finally {
-            cleanup.cleanupInit();
+            if (cleanup != null) {
+                cleanup.cleanupInit();
+            }
         }
 
     }
